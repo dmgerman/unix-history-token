@@ -1248,8 +1248,6 @@ goto|;
 name|gpart_destroy
 argument_list|(
 name|gpart
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 name|gpart_partition
@@ -1315,8 +1313,6 @@ goto|;
 name|gpart_destroy
 argument_list|(
 name|gpart
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 block|}

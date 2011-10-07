@@ -435,19 +435,6 @@ argument_list|(
 name|aclp
 operator|->
 name|acl_cnt
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"aclp->acl_cnt> 0"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|aclp
-operator|->
-name|acl_cnt
 operator|<=
 name|ACL_MAX_ENTRIES
 argument_list|,
@@ -2881,19 +2868,6 @@ argument_list|(
 name|aclp
 operator|->
 name|acl_cnt
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"aclp->acl_cnt> 0"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|aclp
-operator|->
-name|acl_cnt
 operator|<=
 name|ACL_MAX_ENTRIES
 argument_list|,
@@ -3585,19 +3559,6 @@ argument_list|(
 name|parent_aclp
 operator|->
 name|acl_cnt
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"parent_aclp->acl_cnt> 0"
-operator|)
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|parent_aclp
-operator|->
-name|acl_cnt
 operator|<=
 name|ACL_MAX_ENTRIES
 argument_list|,
@@ -3998,19 +3959,6 @@ name|acl_entry
 modifier|*
 name|entry
 decl_stmt|;
-name|KASSERT
-argument_list|(
-name|parent_aclp
-operator|->
-name|acl_cnt
-operator|>
-literal|0
-argument_list|,
-operator|(
-literal|"parent_aclp->acl_cnt> 0"
-operator|)
-argument_list|)
-expr_stmt|;
 name|KASSERT
 argument_list|(
 name|parent_aclp

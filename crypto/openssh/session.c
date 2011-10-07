@@ -365,6 +365,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|WITH_SELINUX
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<selinux/selinux.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -7206,6 +7223,16 @@ argument_list|,
 literal|"You must change your password now and login again!\n"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|WITH_SELINUX
+name|setexeccon
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|PASSWD_NEEDS_USERNAME

@@ -167,9 +167,6 @@ decl_stmt|;
 name|bus_space_tag_t
 name|sc_pci_iot
 decl_stmt|;
-name|bus_space_tag_t
-name|sc_pci_memt
-decl_stmt|;
 name|bus_dma_tag_t
 name|sc_pci_dmat
 decl_stmt|;

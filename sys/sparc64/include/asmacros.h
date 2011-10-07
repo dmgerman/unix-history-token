@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2001 Jake Burkholder.  * Copyright (c) 2011 Marius Strobl<marius@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -152,7 +152,125 @@ parameter_list|,
 name|bits
 parameter_list|)
 define|\
-value|ldx	[r1], r2 ;						\ 9:	andn	r2, bits, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
+value|ldx	[r1], r2 ;						\ 9:	andn	r2, bits, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%xcc, 9b ;						\ 	 mov	r3, r2
+end_define
+
+begin_comment
+comment|/*  * Atomically load an integer from memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_LOAD_INT
+parameter_list|(
+name|r1
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|clr	val ;							\ 	casa	[r1] ASI_N, %g0, val
+end_define
+
+begin_comment
+comment|/*  * Atomically load a long from memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_LOAD_LONG
+parameter_list|(
+name|r1
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|clr	val ;							\ 	casxa	[r1] ASI_N, %g0, val
+end_define
+
+begin_comment
+comment|/*  * Atomically set a number of bits of an integer in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_SET_INT
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|,
+name|bits
+parameter_list|)
+define|\
+value|lduw	[r1], r2 ;						\ 9:	or	r2, bits, r3 ;						\ 	casa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
+end_define
+
+begin_comment
+comment|/*  * Atomically set a number of bits of a long in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_SET_LONG
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|,
+name|bits
+parameter_list|)
+define|\
+value|ldx	[r1], r2 ;						\ 9:	or	r2, bits, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%xcc, 9b ;						\ 	 mov	r3, r2
+end_define
+
+begin_comment
+comment|/*  * Atomically store an integer in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_STORE_INT
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|lduw	[r1], r2 ;						\ 9:	mov	val, r3 ;						\ 	casa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%icc, 9b ;						\ 	 mov	r3, r2
+end_define
+
+begin_comment
+comment|/*  * Atomically store a long in memory.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATOMIC_STORE_LONG
+parameter_list|(
+name|r1
+parameter_list|,
+name|r2
+parameter_list|,
+name|r3
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|ldx	[r1], r2 ;						\ 9:	mov	val, r3 ;						\ 	casxa	[r1] ASI_N, r2, r3 ;					\ 	cmp	r2, r3 ;						\ 	bne,pn	%xcc, 9b ;						\ 	 mov	r3, r2
 end_define
 
 begin_define

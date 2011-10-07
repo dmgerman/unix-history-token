@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: myproposal.h,v 1.27 2010/09/01 22:42:13 djm Exp $ */
+comment|/* $OpenBSD: myproposal.h,v 1.28 2011/08/02 01:22:11 djm Exp $ */
 end_comment
 
 begin_comment
@@ -153,12 +153,42 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_EVP_SHA256
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|SHA2_HMAC_MODES
+define|\
+value|"hmac-sha2-256," \ 	"hmac-sha2-256-96," \ 	"hmac-sha2-512," \ 	"hmac-sha2-512-96,"
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SHA2_HMAC_MODES
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|KEX_DEFAULT_MAC
 define|\
-value|"hmac-md5,hmac-sha1,umac-64@openssh.com,hmac-ripemd160," \ 	"hmac-ripemd160@openssh.com," \ 	"hmac-sha1-96,hmac-md5-96"
+value|"hmac-md5," \ 	"hmac-sha1," \ 	"umac-64@openssh.com," \ 	SHA2_HMAC_MODES \ 	"hmac-ripemd160," \ 	"hmac-ripemd160@openssh.com," \ 	"hmac-sha1-96," \ 	"hmac-md5-96"
 end_define
 
 begin_define

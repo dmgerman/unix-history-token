@@ -222,7 +222,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__sparc64__
+name|__powerpc__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|E500
 argument_list|)
 end_if
 
@@ -3916,6 +3921,9 @@ name|int
 name|move
 decl_stmt|;
 name|int
+name|cpu
+decl_stmt|;
+name|int
 name|diff
 decl_stmt|;
 name|int
@@ -4010,16 +4018,35 @@ argument_list|,
 name|low
 argument_list|)
 expr_stmt|;
-comment|/* 		 * IPI the target cpu to force it to reschedule with the new 		 * workload. 		 */
-name|ipi_cpu
-argument_list|(
+comment|/* 		 * In case the target isn't the current cpu IPI it to force a 		 * reschedule with the new workload. 		 */
+name|cpu
+operator|=
 name|TDQ_ID
 argument_list|(
 name|low
 argument_list|)
+expr_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cpu
+operator|!=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+condition|)
+name|ipi_cpu
+argument_list|(
+name|cpu
 argument_list|,
 name|IPI_PREEMPT
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 block|}
 name|tdq_unlock_pair

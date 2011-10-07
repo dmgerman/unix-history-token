@@ -180,14 +180,6 @@ directive|include
 file|<contrib/octeon-sdk/cvmx-mgmt-port.h>
 end_include
 
-begin_decl_stmt
-specifier|extern
-name|cvmx_bootinfo_t
-modifier|*
-name|octeon_bootinfo
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|octm_softc
@@ -693,7 +685,8 @@ name|mac
 operator|+
 literal|2
 argument_list|,
-name|octeon_bootinfo
+name|cvmx_sysinfo_get
+argument_list|()
 operator|->
 name|mac_addr_base
 argument_list|,

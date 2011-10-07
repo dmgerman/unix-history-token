@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sshd.c,v 1.381 2011/01/11 06:13:10 djm Exp $ */
+comment|/* $OpenBSD: sshd.c,v 1.385 2011/06/23 09:34:13 djm Exp $ */
 end_comment
 
 begin_comment
@@ -506,6 +506,12 @@ begin_include
 include|#
 directive|include
 file|"roaming.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"ssh-sandbox.h"
 end_include
 
 begin_include
@@ -2600,6 +2606,13 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
+name|struct
+name|ssh_sandbox
+modifier|*
+name|box
+init|=
+name|NULL
+decl_stmt|;
 comment|/* Set up unprivileged child process to deal with network data */
 name|pmonitor
 operator|=
@@ -2613,6 +2626,17 @@ name|m_pkex
 operator|=
 operator|&
 name|xxx_kex
+expr_stmt|;
+if|if
+condition|(
+name|use_privsep
+operator|==
+name|PRIVSEP_SANDBOX
+condition|)
+name|box
+operator|=
+name|ssh_sandbox_init
+argument_list|()
 expr_stmt|;
 name|pid
 operator|=
@@ -2651,11 +2675,17 @@ operator|)
 name|pid
 argument_list|)
 expr_stmt|;
-name|close
+if|if
+condition|(
+name|box
+operator|!=
+name|NULL
+condition|)
+name|ssh_sandbox_parent_preauth
 argument_list|(
-name|pmonitor
-operator|->
-name|m_recvfd
+name|box
+argument_list|,
+name|pid
 argument_list|)
 expr_stmt|;
 name|pmonitor
@@ -2669,13 +2699,6 @@ argument_list|(
 name|authctxt
 argument_list|,
 name|pmonitor
-argument_list|)
-expr_stmt|;
-name|close
-argument_list|(
-name|pmonitor
-operator|->
-name|m_sendfd
 argument_list|)
 expr_stmt|;
 comment|/* Sync memory */
@@ -2699,17 +2722,89 @@ argument_list|)
 operator|<
 literal|0
 condition|)
+block|{
 if|if
 condition|(
 name|errno
 operator|!=
 name|EINTR
 condition|)
-break|break;
+name|fatal
+argument_list|(
+literal|"%s: waitpid: %s"
+argument_list|,
+name|__func__
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|WIFEXITED
+argument_list|(
+name|status
+argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: preauth child exited with status %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|WEXITSTATUS
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|WIFSIGNALED
+argument_list|(
+name|status
+argument_list|)
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: preauth child terminated by signal %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|WTERMSIG
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|box
+operator|!=
+name|NULL
+condition|)
+name|ssh_sandbox_parent_finish
+argument_list|(
+name|box
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 literal|1
-operator|)
 return|;
 block|}
 else|else
@@ -2720,6 +2815,21 @@ argument_list|(
 name|pmonitor
 operator|->
 name|m_sendfd
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|pmonitor
+operator|->
+name|m_log_recvfd
+argument_list|)
+expr_stmt|;
+comment|/* Arrange for logging to be sent to the monitor */
+name|set_log_handler
+argument_list|(
+name|mm_log_handler
+argument_list|,
+name|pmonitor
 argument_list|)
 expr_stmt|;
 comment|/* Demote the child */
@@ -2745,12 +2855,21 @@ argument_list|,
 literal|"[net]"
 argument_list|)
 expr_stmt|;
-block|}
+if|if
+condition|(
+name|box
+operator|!=
+name|NULL
+condition|)
+name|ssh_sandbox_child
+argument_list|(
+name|box
+argument_list|)
+expr_stmt|;
 return|return
-operator|(
 literal|0
-operator|)
 return|;
+block|}
 block|}
 end_function
 
@@ -2855,13 +2974,6 @@ operator|->
 name|m_pid
 argument_list|)
 expr_stmt|;
-name|close
-argument_list|(
-name|pmonitor
-operator|->
-name|m_recvfd
-argument_list|)
-expr_stmt|;
 name|buffer_clear
 argument_list|(
 operator|&
@@ -2880,12 +2992,20 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* child */
 name|close
 argument_list|(
 name|pmonitor
 operator|->
 name|m_sendfd
 argument_list|)
+expr_stmt|;
+name|pmonitor
+operator|->
+name|m_sendfd
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 comment|/* Demote the private keys to public keys. */
 name|demote_sensitive_data
@@ -4890,6 +5010,12 @@ argument_list|)
 expr_stmt|;
 name|exit
 argument_list|(
+name|received_sigterm
+operator|==
+name|SIGTERM
+condition|?
+literal|0
+else|:
 literal|255
 argument_list|)
 expr_stmt|;
@@ -5664,9 +5790,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|init_rng
-argument_list|()
 expr_stmt|;
 comment|/* Save argv. Duplicate so setproctitle emulation doesn't clobber it */
 name|saved_argc

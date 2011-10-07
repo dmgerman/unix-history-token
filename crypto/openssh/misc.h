@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: misc.h,v 1.47 2010/11/21 01:01:13 djm Exp $ */
+comment|/* $OpenBSD: misc.h,v 1.48 2011/03/29 18:54:17 stevesk Exp $ */
 end_comment
 
 begin_comment
@@ -667,6 +667,17 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|iptos2str
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

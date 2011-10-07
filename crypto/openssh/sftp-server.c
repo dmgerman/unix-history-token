@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: sftp-server.c,v 1.93 2010/12/04 00:18:01 djm Exp $ */
+comment|/* $OpenBSD: sftp-server.c,v 1.94 2011/06/17 21:46:16 djm Exp $ */
 end_comment
 
 begin_comment
@@ -276,7 +276,7 @@ comment|/* Version of client */
 end_comment
 
 begin_decl_stmt
-name|int
+name|u_int
 name|version
 decl_stmt|;
 end_decl_stmt
@@ -2420,7 +2420,7 @@ argument_list|()
 expr_stmt|;
 name|verbose
 argument_list|(
-literal|"received client version %d"
+literal|"received client version %u"
 argument_list|,
 name|version
 argument_list|)
