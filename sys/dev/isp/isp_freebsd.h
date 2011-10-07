@@ -1686,7 +1686,7 @@ name|sense_ptr
 parameter_list|,
 name|slen
 parameter_list|)
-value|do {			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;		\ 		memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs),\ 		       slen)); 						\ 		if (slen< (xs)->sense_len) 				\ 			(xs)->sense_resid = (xs)->sense_len - slen;	\ 	} while (0);
+value|do {			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;		\ 		memset(&(xs)->sense_data, 0, sizeof(&(xs)->sense_data));\ 		memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs),\ 		       slen)); 						\ 		if (slen< (xs)->sense_len) 				\ 			(xs)->sense_resid = (xs)->sense_len - slen;	\ 	} while (0);
 end_define
 
 begin_define
