@@ -195,13 +195,6 @@ block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|HAVE_SYSCALL_ARGS_DEF
-value|1
-end_define
-
 begin_endif
 endif|#
 directive|endif
