@@ -435,6 +435,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 name|NULL
 argument_list|,
@@ -461,6 +463,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 name|NULL
 argument_list|,
@@ -487,6 +491,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 name|NULL
 argument_list|,
@@ -513,6 +519,8 @@ argument_list|,
 name|CTLTYPE_INT
 operator||
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 name|NULL
 argument_list|,
@@ -541,6 +549,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 operator|&
 name|kdb_break_to_debugger
@@ -577,6 +587,8 @@ operator||
 name|CTLFLAG_RW
 operator||
 name|CTLFLAG_TUN
+operator||
+name|CTLFLAG_SECURE
 argument_list|,
 operator|&
 name|kdb_alt_break_to_debugger
