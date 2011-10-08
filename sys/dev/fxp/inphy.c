@@ -90,7 +90,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/mii/inphyreg.h>
+file|<dev/fxp/inphyreg.h>
 end_include
 
 begin_include

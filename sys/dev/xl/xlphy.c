@@ -104,7 +104,7 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|exphy_probe
+name|xlphy_probe
 parameter_list|(
 name|device_t
 parameter_list|)
@@ -114,7 +114,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|exphy_attach
+name|xlphy_attach
 parameter_list|(
 name|device_t
 parameter_list|)
@@ -124,7 +124,7 @@ end_function_decl
 begin_decl_stmt
 specifier|static
 name|device_method_t
-name|exphy_methods
+name|xlphy_methods
 index|[]
 init|=
 block|{
@@ -133,14 +133,14 @@ name|DEVMETHOD
 argument_list|(
 name|device_probe
 argument_list|,
-name|exphy_probe
+name|xlphy_probe
 argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
 name|device_attach
 argument_list|,
-name|exphy_attach
+name|xlphy_attach
 argument_list|)
 block|,
 name|DEVMETHOD
@@ -169,19 +169,19 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|devclass_t
-name|exphy_devclass
+name|xlphy_devclass
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|driver_t
-name|exphy_driver
+name|xlphy_driver
 init|=
 block|{
 literal|"xlphy"
 block|,
-name|exphy_methods
+name|xlphy_methods
 block|,
 expr|sizeof
 operator|(
@@ -199,9 +199,9 @@ name|xlphy
 argument_list|,
 name|miibus
 argument_list|,
-name|exphy_driver
+name|xlphy_driver
 argument_list|,
-name|exphy_devclass
+name|xlphy_devclass
 argument_list|,
 literal|0
 argument_list|,
@@ -213,7 +213,7 @@ end_expr_stmt
 begin_function_decl
 specifier|static
 name|int
-name|exphy_service
+name|xlphy_service
 parameter_list|(
 name|struct
 name|mii_softc
@@ -231,7 +231,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|exphy_reset
+name|xlphy_reset
 parameter_list|(
 name|struct
 name|mii_softc
@@ -249,7 +249,7 @@ specifier|static
 specifier|const
 name|struct
 name|mii_phydesc
-name|exphys
+name|xlphys
 index|[]
 init|=
 block|{
@@ -278,14 +278,14 @@ specifier|static
 specifier|const
 name|struct
 name|mii_phy_funcs
-name|exphy_funcs
+name|xlphy_funcs
 init|=
 block|{
-name|exphy_service
+name|xlphy_service
 block|,
 name|ukphy_status
 block|,
-name|exphy_reset
+name|xlphy_reset
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -293,7 +293,7 @@ end_decl_stmt
 begin_function
 specifier|static
 name|int
-name|exphy_probe
+name|xlphy_probe
 parameter_list|(
 name|device_t
 name|dev
@@ -325,7 +325,7 @@ name|mii_phy_dev_probe
 argument_list|(
 name|dev
 argument_list|,
-name|exphys
+name|xlphys
 argument_list|,
 name|BUS_PROBE_DEFAULT
 argument_list|)
@@ -342,7 +342,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|exphy_attach
+name|xlphy_attach
 parameter_list|(
 name|device_t
 name|dev
@@ -358,7 +358,7 @@ operator||
 name|MIIF_NOMANPAUSE
 argument_list|,
 operator|&
-name|exphy_funcs
+name|xlphy_funcs
 argument_list|,
 literal|1
 argument_list|)
@@ -374,7 +374,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|exphy_service
+name|xlphy_service
 parameter_list|(
 name|struct
 name|mii_softc
@@ -475,7 +475,7 @@ end_function
 begin_function
 specifier|static
 name|void
-name|exphy_reset
+name|xlphy_reset
 parameter_list|(
 name|struct
 name|mii_softc
