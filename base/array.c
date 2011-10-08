@@ -551,7 +551,7 @@ parameter_list|(
 name|heim_array_t
 name|array
 parameter_list|,
-name|bool
+name|int
 function_decl|(
 modifier|^
 name|block

@@ -45,12 +45,10 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|__restrict
 parameter_list|,
 name|void
 modifier|*
 modifier|*
-name|__restrict
 parameter_list|,
 name|int
 function_decl|(

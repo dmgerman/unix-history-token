@@ -251,7 +251,7 @@ literal|"data->len--;\n"
 comment|/* don't move if its the last element */
 literal|"if (element< data->len)\n"
 literal|"\tmemmove(&data->val[element],&data->val[element + 1], \n"
-literal|"\t\tsizeof(data->val[0]) * data->len);\n"
+literal|"\t\tsizeof(data->val[0]) * (data->len - element));\n"
 comment|/* resize but don't care about failures since it doesn't matter */
 literal|"ptr = realloc(data->val, data->len * sizeof(data->val[0]));\n"
 literal|"if (ptr != NULL || data->len == 0) data->val = ptr;\n"

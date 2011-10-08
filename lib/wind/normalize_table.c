@@ -4,7 +4,7 @@ comment|/* ./normalize_table.c */
 end_comment
 
 begin_comment
-comment|/* Automatically generated at 2011-07-30T13:45:25.066453 */
+comment|/* Automatically generated at 2011-09-30T15:25:00.420261 */
 end_comment
 
 begin_include

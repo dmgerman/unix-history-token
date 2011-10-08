@@ -4,7 +4,7 @@ comment|/* ./punycode_examples.c */
 end_comment
 
 begin_comment
-comment|/* Automatically generated at 2011-07-30T13:45:28.666662 */
+comment|/* Automatically generated at 2011-09-30T15:25:05.829535 */
 end_comment
 
 begin_ifndef

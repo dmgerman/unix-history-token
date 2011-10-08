@@ -526,7 +526,7 @@ name|heim_array_filter
 parameter_list|(
 name|heim_array_t
 parameter_list|,
-name|bool
+name|int
 function_decl|(
 modifier|^
 function_decl|)

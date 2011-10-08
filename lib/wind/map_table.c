@@ -4,7 +4,7 @@ comment|/* ./map_table.c */
 end_comment
 
 begin_comment
-comment|/* Automatically generated at 2011-07-30T13:45:24.774703 */
+comment|/* Automatically generated at 2011-09-30T15:24:59.641639 */
 end_comment
 
 begin_include

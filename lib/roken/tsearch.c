@@ -465,13 +465,11 @@ parameter_list|(
 specifier|const
 name|void
 modifier|*
-name|__restrict
 name|vkey
 parameter_list|,
 name|void
 modifier|*
 modifier|*
-name|__restrict
 name|vrootp
 parameter_list|,
 name|int

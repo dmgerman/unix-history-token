@@ -114,9 +114,10 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tests
-name|tests
+name|hc_tests
 index|[]
 init|=
 block|{
@@ -831,12 +832,12 @@ name|i
 operator|<
 sizeof|sizeof
 argument_list|(
-name|tests
+name|hc_tests
 argument_list|)
 operator|/
 sizeof|sizeof
 argument_list|(
-name|tests
+name|hc_tests
 index|[
 literal|0
 index|]
@@ -848,7 +849,7 @@ control|)
 name|test_cipher
 argument_list|(
 operator|&
-name|tests
+name|hc_tests
 index|[
 name|i
 index|]

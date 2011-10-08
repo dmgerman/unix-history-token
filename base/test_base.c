@@ -347,13 +347,18 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|errx
+block|{
+name|printf
 argument_list|(
-literal|1
-argument_list|,
-literal|"the same string is not the same"
+literal|"the same string is not the same\n"
 argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 name|heim_release
 argument_list|(
 name|s1

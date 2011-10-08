@@ -4,7 +4,7 @@ comment|/* ./bidi_table.c */
 end_comment
 
 begin_comment
-comment|/* Automatically generated at 2011-07-30T13:45:24.532573 */
+comment|/* Automatically generated at 2011-09-30T15:24:58.936201 */
 end_comment
 
 begin_include
