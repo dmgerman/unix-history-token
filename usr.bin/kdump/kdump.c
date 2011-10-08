@@ -1040,9 +1040,6 @@ decl_stmt|;
 name|u_int
 name|sv_flags
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|setlocale
 argument_list|(
 name|LC_CTYPE
@@ -1070,9 +1067,6 @@ literal|1
 condition|)
 switch|switch
 condition|(
-operator|(
-name|char
-operator|)
 name|ch
 condition|)
 block|{
@@ -1230,10 +1224,6 @@ argument_list|()
 expr_stmt|;
 name|m
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|malloc
 argument_list|(
 name|size
@@ -1331,9 +1321,6 @@ operator|&&
 name|threads
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%6jd %6jd %-8.*s Events dropped.\n"
@@ -1379,9 +1366,6 @@ operator|!
 name|drop_logged
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%6jd %-8.*s Events dropped.\n"
@@ -1466,10 +1450,6 @@ condition|)
 block|{
 name|m
 operator|=
-operator|(
-name|void
-operator|*
-operator|)
 name|realloc
 argument_list|(
 name|m
@@ -1780,9 +1760,6 @@ if|if
 condition|(
 name|tail
 condition|)
-operator|(
-name|void
-operator|)
 name|fflush
 argument_list|(
 name|stdout
@@ -1835,9 +1812,6 @@ operator|&&
 name|tail
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|sleep
 argument_list|(
 literal|1
@@ -2295,9 +2269,6 @@ name|KTR_PROCDTOR
 case|:
 return|return;
 default|default:
-operator|(
-name|void
-operator|)
 name|sprintf
 argument_list|(
 name|unknown
@@ -2319,9 +2290,6 @@ if|if
 condition|(
 name|threads
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%6jd %6jd %-8.*s "
@@ -2356,9 +2324,6 @@ name|ktr_comm
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%6jd %-8.*s "
@@ -2444,9 +2409,6 @@ operator|=
 name|temp
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%jd.%06ld "
@@ -2468,9 +2430,6 @@ name|tv_usec
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%s  "
@@ -2580,9 +2539,6 @@ operator|<
 literal|0
 operator|)
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"[%d]"
@@ -2593,9 +2549,6 @@ name|ktr_code
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%s"
@@ -2686,9 +2639,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|",%s"
@@ -2702,9 +2652,6 @@ if|if
 condition|(
 name|decimal
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|",%jd"
@@ -2717,9 +2664,6 @@ name|ip
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|",%#jx "
@@ -2747,9 +2691,6 @@ block|}
 case|case
 name|SYS_ptrace
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -2790,9 +2731,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -2826,9 +2764,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -2885,9 +2820,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -2927,9 +2859,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -2963,9 +2892,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3008,9 +2934,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3053,9 +2976,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3089,9 +3009,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3137,9 +3054,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3194,9 +3108,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3236,9 +3147,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3272,9 +3180,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3299,9 +3204,6 @@ break|break;
 case|case
 name|SYS_reboot
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -3326,9 +3228,6 @@ break|break;
 case|case
 name|SYS_umask
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -3371,9 +3270,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3419,9 +3315,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3436,9 +3329,6 @@ operator|*
 name|ip
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3489,9 +3379,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3506,9 +3393,6 @@ operator|*
 name|ip
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3557,9 +3441,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3602,9 +3483,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3647,9 +3525,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3683,9 +3558,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3728,9 +3600,6 @@ block|{
 name|int
 name|sockdomain
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -3755,9 +3624,6 @@ expr_stmt|;
 name|narg
 operator|--
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3789,9 +3655,6 @@ operator|==
 name|PF_INET6
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3834,9 +3697,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3867,9 +3727,6 @@ expr_stmt|;
 name|narg
 operator|--
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3926,9 +3783,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -3974,9 +3828,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4010,9 +3861,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4049,9 +3897,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4085,9 +3930,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4112,9 +3954,6 @@ break|break;
 case|case
 name|SYS_socketpair
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4135,9 +3974,6 @@ expr_stmt|;
 name|narg
 operator|--
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4169,9 +4005,6 @@ case|:
 case|case
 name|SYS_setrlimit
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4209,9 +4042,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4240,9 +4070,6 @@ break|break;
 case|case
 name|SYS_nfssvc
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4271,9 +4098,6 @@ break|break;
 case|case
 name|SYS_rtprio
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4320,9 +4144,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4365,9 +4186,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4401,9 +4219,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4446,9 +4261,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4482,9 +4294,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4527,9 +4336,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4554,9 +4360,6 @@ break|break;
 case|case
 name|SYS_rfork
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4585,9 +4388,6 @@ break|break;
 case|case
 name|SYS_lio_listio
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4616,9 +4416,6 @@ break|break;
 case|case
 name|SYS_mlockall
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4652,9 +4449,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4682,9 +4476,6 @@ case|:
 case|case
 name|SYS_sched_get_priority_min
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4763,9 +4554,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4799,9 +4587,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4826,9 +4611,6 @@ break|break;
 case|case
 name|SYS_sigprocmask
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4899,9 +4681,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -4926,9 +4705,6 @@ break|break;
 case|case
 name|SYS_sigaction
 case|:
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'('
@@ -4966,9 +4742,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -5011,9 +4784,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -5056,9 +4826,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -5092,9 +4859,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -5128,9 +4892,6 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|','
@@ -5171,18 +4932,12 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|')'
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -5253,9 +5008,6 @@ operator|<
 literal|0
 operator|)
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"[%d] "
@@ -5264,9 +5016,6 @@ name|code
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%s "
@@ -5289,9 +5038,6 @@ condition|(
 name|fancy
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%ld"
@@ -5312,14 +5058,12 @@ name|ret
 operator|>
 literal|9
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"/%#lx"
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|ret
@@ -5332,9 +5076,6 @@ if|if
 condition|(
 name|decimal
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%ld"
@@ -5346,14 +5087,12 @@ name|ret
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%#lx"
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|ret
@@ -5368,9 +5107,6 @@ name|error
 operator|==
 name|ERESTART
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"RESTART"
@@ -5383,9 +5119,6 @@ name|error
 operator|==
 name|EJUSTRETURN
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"JUSTRETURN"
@@ -5393,9 +5126,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"-1 errno %d"
@@ -5409,9 +5139,6 @@ if|if
 condition|(
 name|fancy
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %s"
@@ -5425,9 +5152,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -5448,9 +5172,6 @@ name|int
 name|len
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\"%.*s\"\n"
@@ -5759,9 +5480,6 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"       \""
@@ -5785,9 +5503,6 @@ name|dp
 operator|++
 control|)
 block|{
-operator|(
-name|void
-operator|)
 name|vis
 argument_list|(
 name|visbuf
@@ -5817,9 +5532,6 @@ operator|==
 literal|0
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'\t'
@@ -5843,9 +5555,6 @@ name|col
 operator|=
 literal|0
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 literal|'\n'
@@ -5888,9 +5597,6 @@ literal|2
 operator|)
 condition|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\\\n\t"
@@ -5907,9 +5613,6 @@ name|width
 expr_stmt|;
 do|do
 block|{
-operator|(
-name|void
-operator|)
 name|putchar
 argument_list|(
 operator|*
@@ -5931,17 +5634,11 @@ name|col
 operator|==
 literal|0
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"       "
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\"\n"
@@ -6305,9 +6002,6 @@ name|signo
 operator|<
 name|NSIG
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"SIG%s "
@@ -6321,9 +6015,6 @@ index|]
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"SIG %d "
@@ -6341,9 +6032,6 @@ name|action
 operator|==
 name|SIG_DFL
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"SIG_DFL code=0x%x\n"
@@ -6355,9 +6043,6 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"caught handler=0x%lx mask=0x%x code=0x%x\n"
@@ -6397,9 +6082,6 @@ modifier|*
 name|cs
 parameter_list|)
 block|{
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%s %s\n"
@@ -7128,9 +6810,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"%d "
@@ -7147,9 +6826,6 @@ if|if
 condition|(
 name|decimal
 condition|)
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %d"
@@ -7160,9 +6836,6 @@ operator|++
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|" %02x"
@@ -7172,9 +6845,6 @@ name|p
 operator|++
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -7739,9 +7409,6 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strftime
 argument_list|(
 name|timestr
@@ -7830,9 +7497,6 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strftime
 argument_list|(
 name|timestr
@@ -7921,9 +7585,6 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strftime
 argument_list|(
 name|timestr
@@ -8012,9 +7673,6 @@ operator|.
 name|tv_sec
 argument_list|)
 expr_stmt|;
-operator|(
-name|void
-operator|)
 name|strftime
 argument_list|(
 name|timestr
@@ -8584,6 +8242,7 @@ argument_list|(
 literal|"/%#lx"
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|ret
@@ -8612,6 +8271,7 @@ argument_list|(
 literal|"%#lx"
 argument_list|,
 operator|(
+name|unsigned
 name|long
 operator|)
 name|ret
