@@ -157,6 +157,21 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
+name|public
+label|:
+typedef|typedef
+name|StringMap
+operator|<
+name|MCSymbol
+operator|*
+operator|,
+name|BumpPtrAllocator
+operator|&
+operator|>
+name|SymbolTable
+expr_stmt|;
+name|private
+label|:
 comment|/// The MCAsmInfo for this target.
 specifier|const
 name|MCAsmInfo
@@ -168,19 +183,25 @@ name|TargetAsmInfo
 modifier|*
 name|TAI
 decl_stmt|;
+comment|/// Allocator - Allocator object used for creating machine code objects.
+comment|///
+comment|/// We use a bump pointer allocator to avoid the need to track all allocated
+comment|/// objects.
+name|BumpPtrAllocator
+name|Allocator
+decl_stmt|;
 comment|/// Symbols - Bindings of names to symbols.
-name|StringMap
-operator|<
-name|MCSymbol
-operator|*
-operator|>
+name|SymbolTable
 name|Symbols
-expr_stmt|;
+decl_stmt|;
 comment|/// UsedNames - Keeps tracks of names that were used both for used declared
 comment|/// and artificial symbols.
 name|StringMap
 operator|<
 name|bool
+operator|,
+name|BumpPtrAllocator
+operator|&
 operator|>
 name|UsedNames
 expr_stmt|;
@@ -260,6 +281,12 @@ decl_stmt|;
 name|bool
 name|DwarfLocSeen
 decl_stmt|;
+comment|/// Honor temporary labels, this is useful for debugging semantic
+comment|/// differences between temporary and non-temporary labels (primarily on
+comment|/// Darwin).
+name|bool
+name|AllowTemporaryLabels
+decl_stmt|;
 comment|/// The dwarf line information from the .loc directives for the sections
 comment|/// with assembled machine instructions have after seeing .loc directives.
 name|DenseMap
@@ -285,13 +312,6 @@ operator|*
 operator|>
 name|MCLineSectionOrder
 expr_stmt|;
-comment|/// Allocator - Allocator object used for creating machine code objects.
-comment|///
-comment|/// We use a bump pointer allocator to avoid the need to track all allocated
-comment|/// objects.
-name|BumpPtrAllocator
-name|Allocator
-decl_stmt|;
 name|void
 modifier|*
 name|MachOUniquingMap
@@ -352,6 +372,18 @@ return|return
 operator|*
 name|TAI
 return|;
+block|}
+name|void
+name|setAllowTemporaryLabels
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|AllowTemporaryLabels
+operator|=
+name|Value
+expr_stmt|;
 block|}
 comment|/// @name Symbol Management
 comment|/// @{
@@ -418,6 +450,21 @@ name|Name
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// getSymbols - Get a reference for the symbol table for clients that
+comment|/// want to, for example, iterate over all symbols. 'const' because we
+comment|/// still want any modifications to the table itself to use the MCContext
+comment|/// APIs.
+specifier|const
+name|SymbolTable
+operator|&
+name|getSymbols
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Symbols
+return|;
+block|}
 comment|/// @}
 comment|/// @name Section Management
 comment|/// @{

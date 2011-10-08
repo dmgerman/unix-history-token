@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -224,7 +230,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_expr_stmt
@@ -317,13 +323,13 @@ name|_vfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
-name|nfs
+name|oldnfs
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"NFS filesystem"
+literal|"Old NFS filesystem"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -331,7 +337,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_STRUCT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|NFS_NFSSTATS
 argument_list|,
@@ -361,7 +367,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -394,7 +400,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -429,7 +435,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|NFS_TPRINTF_INITIAL_DELAY
 argument_list|,
@@ -463,7 +469,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|NFS_TPRINTF_DELAY
 argument_list|,
@@ -696,7 +702,7 @@ name|VFS_SET
 argument_list|(
 name|nfs_vfsops
 argument_list|,
-name|nfs
+name|oldnfs
 argument_list|,
 name|VFCF_NETWORK
 argument_list|)
@@ -710,7 +716,7 @@ end_comment
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 literal|1
 argument_list|)
@@ -720,7 +726,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|krpc
 argument_list|,
@@ -742,7 +748,7 @@ end_ifdef
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|kgssapi
 argument_list|,
@@ -763,7 +769,7 @@ end_endif
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|nfs_common
 argument_list|,
@@ -779,7 +785,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|nfs
+name|oldnfs
 argument_list|,
 name|nfslock
 argument_list|,
@@ -815,8 +821,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * This structure must be filled in by a primary bootstrap or bootstrap  * server for a diskless/dataless machine. It is initialized below just  * to ensure that it is allocated to initialized data (.data not .bss).  */
+comment|/*  * This structure is now defined in sys/nfs/nfs_diskless.c so that it  * can be shared by both NFS clients. It is declared here so that it  * will be defined for kernels built without NFS_ROOT, although it  * isn't used in that case.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_ROOT
+end_ifndef
 
 begin_decl_stmt
 name|struct
@@ -856,10 +868,15 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -880,7 +897,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_STRING
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -902,7 +919,7 @@ end_expr_stmt
 begin_expr_stmt
 name|SYSCTL_OPAQUE
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -4452,6 +4469,8 @@ literal|"principal"
 block|,
 literal|"negnametimeo"
 block|,
+literal|"nocto"
+block|,
 name|NULL
 block|}
 decl_stmt|;
@@ -5123,6 +5142,29 @@ operator|.
 name|flags
 operator||=
 name|NFSMNT_NFSV3
+expr_stmt|;
+if|if
+condition|(
+name|vfs_getopt
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|,
+literal|"nocto"
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|args
+operator|.
+name|flags
+operator||=
+name|NFSMNT_NOCTO
 expr_stmt|;
 if|if
 condition|(
@@ -6637,6 +6679,29 @@ goto|;
 block|}
 block|}
 block|}
+elseif|else
+if|if
+condition|(
+name|has_addr_opt
+operator|==
+literal|0
+condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"No server address"
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|error
 operator|=
 name|mountnfs
@@ -6960,7 +7025,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * V2 can only handle 32 bit filesizes.  A 4GB-1 limit may be too 	 * high, depending on whether we end up with negative offsets in 	 * the client or server somewhere.  2GB-1 may be safer. 	 * 	 * For V3, nfs_fsinfo will adjust this as necessary.  Assume maximum 	 * that we can handle until we find out otherwise. 	 * XXX Our "safe" limit on the client is what we can store in our 	 * buffer cache using signed(!) block numbers. 	 */
+comment|/* 	 * V2 can only handle 32 bit filesizes.  A 4GB-1 limit may be too 	 * high, depending on whether we end up with negative offsets in 	 * the client or server somewhere.  2GB-1 may be safer. 	 * 	 * For V3, nfs_fsinfo will adjust this as necessary.  Assume maximum 	 * that we can handle until we find out otherwise. 	 */
 if|if
 condition|(
 operator|(
@@ -6984,14 +7049,7 @@ name|nmp
 operator|->
 name|nm_maxfilesize
 operator|=
-operator|(
-name|u_int64_t
-operator|)
-literal|0x80000000
-operator|*
-name|DEV_BSIZE
-operator|-
-literal|1
+name|OFF_MAX
 expr_stmt|;
 name|nmp
 operator|->
@@ -7749,12 +7807,37 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|MNT_ILOCK
 argument_list|(
 name|mp
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If a forced dismount is in progress, return from here so that 	 * the umount(2) syscall doesn't get stuck in VFS_SYNC() before 	 * calling VFS_UNMOUNT(). 	 */
+if|if
+condition|(
+operator|(
+name|mp
+operator|->
+name|mnt_kern_flag
+operator|&
+name|MNTK_UNMOUNTF
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|MNT_IUNLOCK
+argument_list|(
+name|mp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
+block|}
+comment|/* 	 * Force stale buffer cache information to be flushed. 	 */
 name|loop
 label|:
 name|MNT_VNODE_FOREACH

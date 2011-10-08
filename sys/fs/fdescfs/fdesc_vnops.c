@@ -22,6 +22,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -1232,6 +1238,7 @@ operator|=
 name|fd1
 expr_stmt|;
 block|}
+comment|/* 	 * No rights to check since 'fp' isn't actually used. 	 */
 if|if
 condition|(
 operator|(
@@ -1242,6 +1249,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp
@@ -1786,6 +1795,8 @@ name|p_fd
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_EXTATTR_SET
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -1962,18 +1973,6 @@ name|off
 decl_stmt|,
 name|fcnt
 decl_stmt|;
-comment|/* 	 * We don't allow exporting fdesc mounts, and currently local 	 * requests do not need cookies. 	 */
-if|if
-condition|(
-name|ap
-operator|->
-name|a_ncookies
-condition|)
-name|panic
-argument_list|(
-literal|"fdesc_readdir: not hungry"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|VTOFDESC
@@ -1991,6 +1990,21 @@ name|panic
 argument_list|(
 literal|"fdesc_readdir: not dir"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ap
+operator|->
+name|a_ncookies
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|ap
+operator|->
+name|a_ncookies
+operator|=
+literal|0
 expr_stmt|;
 name|off
 operator|=

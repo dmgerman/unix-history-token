@@ -138,6 +138,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -324,7 +330,7 @@ end_comment
 
 begin_function
 name|int
-name|getpid
+name|sys_getpid
 parameter_list|(
 name|struct
 name|thread
@@ -424,7 +430,7 @@ end_comment
 
 begin_function
 name|int
-name|getppid
+name|sys_getppid
 parameter_list|(
 name|struct
 name|thread
@@ -505,7 +511,7 @@ end_endif
 
 begin_function
 name|int
-name|getpgrp
+name|sys_getpgrp
 parameter_list|(
 name|struct
 name|thread
@@ -586,7 +592,7 @@ end_endif
 
 begin_function
 name|int
-name|getpgid
+name|sys_getpgid
 parameter_list|(
 name|struct
 name|thread
@@ -730,7 +736,7 @@ end_endif
 
 begin_function
 name|int
-name|getsid
+name|sys_getsid
 parameter_list|(
 name|struct
 name|thread
@@ -874,7 +880,7 @@ end_comment
 
 begin_function
 name|int
-name|getuid
+name|sys_getuid
 parameter_list|(
 name|struct
 name|thread
@@ -957,7 +963,7 @@ end_comment
 
 begin_function
 name|int
-name|geteuid
+name|sys_geteuid
 parameter_list|(
 name|struct
 name|thread
@@ -1019,7 +1025,7 @@ end_comment
 
 begin_function
 name|int
-name|getgid
+name|sys_getgid
 parameter_list|(
 name|struct
 name|thread
@@ -1109,7 +1115,7 @@ end_comment
 
 begin_function
 name|int
-name|getegid
+name|sys_getegid
 parameter_list|(
 name|struct
 name|thread
@@ -1174,7 +1180,7 @@ end_endif
 
 begin_function
 name|int
-name|getgroups
+name|sys_getgroups
 parameter_list|(
 name|struct
 name|thread
@@ -1457,7 +1463,7 @@ end_comment
 
 begin_function
 name|int
-name|setsid
+name|sys_setsid
 parameter_list|(
 specifier|register
 name|struct
@@ -1701,7 +1707,7 @@ end_comment
 
 begin_function
 name|int
-name|setpgid
+name|sys_setpgid
 parameter_list|(
 name|struct
 name|thread
@@ -2179,7 +2185,7 @@ end_comment
 
 begin_function
 name|int
-name|setuid
+name|sys_setuid
 parameter_list|(
 name|struct
 name|thread
@@ -2446,6 +2452,20 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
+name|racct_proc_ucred_changed
+argument_list|(
+name|p
+argument_list|,
+name|oldcred
+argument_list|,
+name|newcred
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uifree
 argument_list|(
 name|uip
@@ -2514,7 +2534,7 @@ end_comment
 
 begin_function
 name|int
-name|seteuid
+name|sys_seteuid
 parameter_list|(
 name|struct
 name|thread
@@ -2750,7 +2770,7 @@ end_comment
 
 begin_function
 name|int
-name|setgid
+name|sys_setgid
 parameter_list|(
 name|struct
 name|thread
@@ -3071,7 +3091,7 @@ end_comment
 
 begin_function
 name|int
-name|setegid
+name|sys_setegid
 parameter_list|(
 name|struct
 name|thread
@@ -3290,7 +3310,7 @@ end_comment
 
 begin_function
 name|int
-name|setgroups
+name|sys_setgroups
 parameter_list|(
 name|struct
 name|thread
@@ -3630,7 +3650,7 @@ end_comment
 
 begin_function
 name|int
-name|setreuid
+name|sys_setreuid
 parameter_list|(
 specifier|register
 name|struct
@@ -3942,6 +3962,20 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
+name|racct_proc_ucred_changed
+argument_list|(
+name|p
+argument_list|,
+name|oldcred
+argument_list|,
+name|newcred
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uifree
 argument_list|(
 name|ruip
@@ -4023,7 +4057,7 @@ end_comment
 
 begin_function
 name|int
-name|setregid
+name|sys_setregid
 parameter_list|(
 specifier|register
 name|struct
@@ -4396,7 +4430,7 @@ end_comment
 
 begin_function
 name|int
-name|setresuid
+name|sys_setresuid
 parameter_list|(
 specifier|register
 name|struct
@@ -4743,6 +4777,20 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|RACCT
+name|racct_proc_ucred_changed
+argument_list|(
+name|p
+argument_list|,
+name|oldcred
+argument_list|,
+name|newcred
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|uifree
 argument_list|(
 name|ruip
@@ -4831,7 +4879,7 @@ end_comment
 
 begin_function
 name|int
-name|setresgid
+name|sys_setresgid
 parameter_list|(
 specifier|register
 name|struct
@@ -5235,7 +5283,7 @@ end_comment
 
 begin_function
 name|int
-name|getresuid
+name|sys_getresuid
 parameter_list|(
 specifier|register
 name|struct
@@ -5407,7 +5455,7 @@ end_comment
 
 begin_function
 name|int
-name|getresgid
+name|sys_getresgid
 parameter_list|(
 specifier|register
 name|struct
@@ -5576,7 +5624,7 @@ end_comment
 
 begin_function
 name|int
-name|issetugid
+name|sys_issetugid
 parameter_list|(
 specifier|register
 name|struct
@@ -5639,7 +5687,7 @@ end_function
 
 begin_function
 name|int
-name|__setugid
+name|sys___setugid
 parameter_list|(
 name|struct
 name|thread
@@ -8872,7 +8920,7 @@ end_comment
 
 begin_function
 name|int
-name|getlogin
+name|sys_getlogin
 parameter_list|(
 name|struct
 name|thread
@@ -9012,7 +9060,7 @@ end_comment
 
 begin_function
 name|int
-name|setlogin
+name|sys_setlogin
 parameter_list|(
 name|struct
 name|thread

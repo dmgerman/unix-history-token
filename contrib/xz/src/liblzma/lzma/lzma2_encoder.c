@@ -1522,7 +1522,7 @@ argument_list|,
 name|LZMA_DICT_SIZE_MIN
 argument_list|)
 decl_stmt|;
-comment|// Round up to to the next 2^n - 1 or 2^n + 2^(n - 1) - 1 depending
+comment|// Round up to the next 2^n - 1 or 2^n + 2^(n - 1) - 1 depending
 comment|// on which one is the next:
 operator|--
 name|d

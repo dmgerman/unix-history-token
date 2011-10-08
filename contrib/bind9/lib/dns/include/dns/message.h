@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: message.h,v 1.125.118.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: message.h,v 1.132 2010-03-04 23:50:34 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -61,7 +61,7 @@ file|<dst/dst.h>
 end_include
 
 begin_comment
-comment|/*! \file dns/message.h  * \brief Message Handling Module  *  * How this beast works:  *  * When a dns message is received in a buffer, dns_message_fromwire() is called  * on the memory region.  Various items are checked including the format  * of the message (if counts are right, if counts consume the entire sections,  * and if sections consume the entire message) and known pseudo-RRs in the  * additional data section are analyzed and removed.  *  * TSIG checking is also done at this layer, and any DNSSEC transaction  * signatures should also be checked here.  *  * Notes on using the gettemp*() and puttemp*() functions:  *  * These functions return items (names, rdatasets, etc) allocated from some  * internal state of the dns_message_t.  *  * Names and rdatasets must be put back into the dns_message_t in  * one of two ways.  Assume a name was allocated via  * dns_message_gettempname():  *  *\li	(1) insert it into a section, using dns_message_addname().  *  *\li	(2) return it to the message using dns_message_puttempname().  *  * The same applies to rdatasets.  *  * On the other hand, offsets, rdatalists and rdatas allocated using  * dns_message_gettemp*() will always be freed automatically  * when the message is reset or destroyed; calling dns_message_puttemp*()  * on rdatalists and rdatas is optional and serves only to enable the item  * to be reused multiple times during the lifetime of the message; offsets  * cannot be reused.  *  * Buffers allocated using isc_buffer_allocate() can be automatically freed  * as well by giving the buffer to the message using dns_message_takebuffer().  * Doing this will cause the buffer to be freed using isc_buffer_free()  * when the section lists are cleared, such as in a reset or in a destroy.  * Since the buffer itself exists until the message is destroyed, this sort  * of code can be written:  *  * \code  *	buffer = isc_buffer_allocate(mctx, 512);  *	name = NULL;  *	name = dns_message_gettempname(message,&name);  *	dns_name_init(name, NULL);  *	result = dns_name_fromtext(name,&source, dns_rootname, ISC_FALSE,  *				   buffer);  *	dns_message_takebuffer(message,&buffer);  * \endcode  *  *  * TODO:  *  * XXX Needed:  ways to set and retrieve EDNS information, add rdata to a  * section, move rdata from one section to another, remove rdata, etc.  */
+comment|/*! \file dns/message.h  * \brief Message Handling Module  *  * How this beast works:  *  * When a dns message is received in a buffer, dns_message_fromwire() is called  * on the memory region.  Various items are checked including the format  * of the message (if counts are right, if counts consume the entire sections,  * and if sections consume the entire message) and known pseudo-RRs in the  * additional data section are analyzed and removed.  *  * TSIG checking is also done at this layer, and any DNSSEC transaction  * signatures should also be checked here.  *  * Notes on using the gettemp*() and puttemp*() functions:  *  * These functions return items (names, rdatasets, etc) allocated from some  * internal state of the dns_message_t.  *  * Names and rdatasets must be put back into the dns_message_t in  * one of two ways.  Assume a name was allocated via  * dns_message_gettempname():  *  *\li	(1) insert it into a section, using dns_message_addname().  *  *\li	(2) return it to the message using dns_message_puttempname().  *  * The same applies to rdatasets.  *  * On the other hand, offsets, rdatalists and rdatas allocated using  * dns_message_gettemp*() will always be freed automatically  * when the message is reset or destroyed; calling dns_message_puttemp*()  * on rdatalists and rdatas is optional and serves only to enable the item  * to be reused multiple times during the lifetime of the message; offsets  * cannot be reused.  *  * Buffers allocated using isc_buffer_allocate() can be automatically freed  * as well by giving the buffer to the message using dns_message_takebuffer().  * Doing this will cause the buffer to be freed using isc_buffer_free()  * when the section lists are cleared, such as in a reset or in a destroy.  * Since the buffer itself exists until the message is destroyed, this sort  * of code can be written:  *  * \code  *	buffer = isc_buffer_allocate(mctx, 512);  *	name = NULL;  *	name = dns_message_gettempname(message,&name);  *	dns_name_init(name, NULL);  *	result = dns_name_fromtext(name,&source, dns_rootname, 0, buffer);  *	dns_message_takebuffer(message,&buffer);  * \endcode  *  *  * TODO:  *  * XXX Needed:  ways to set and retrieve EDNS information, add rdata to a  * section, move rdata from one section to another, remove rdata, etc.  */
 end_comment
 
 begin_define
@@ -297,6 +297,20 @@ name|DNS_MESSAGETEXTFLAG_NOHEADERS
 value|0x0002
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_MESSAGETEXTFLAG_ONESOA
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_MESSAGETEXTFLAG_OMITSOA
+value|0x0008
+end_define
+
 begin_comment
 comment|/*  * Dynamic update names for these sections.  */
 end_comment
@@ -465,6 +479,28 @@ end_define
 begin_comment
 comment|/*%< prefer AAAA records in 						  additional section. */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ALLOW_FILTER_AAAA_ON_V4
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DNS_MESSAGERENDER_FILTER_AAAA
+value|0x0020
+end_define
+
+begin_comment
+comment|/*%< filter AAAA records */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef
@@ -857,7 +893,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Convert all sections of message 'msg' to a cleartext representation  *  * Notes:  * \li     In flags, If #DNS_MESSAGETEXTFLAG_OMITDOT is set, then the  *      final '.' in absolute names will not be emitted.  If  *      #DNS_MESSAGETEXTFLAG_NOCOMMENTS is cleared, lines beginning  *      with ";;" will be emitted indicating section name.  If  *      #DNS_MESSAGETEXTFLAG_NOHEADERS is cleared, header lines will  *      be emitted.  *  * Requires:  *  *\li	'msg' is a valid message.  *  *\li	'style' is a valid master dump style.  *  *\li	'target' is a valid buffer.  *  * Ensures:  *  *\li	If the result is success:  *		The used space in 'target' is updated.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *\li	#ISC_R_NOMORE  *  *\li	Note: On error return, *target may be partially filled with data.  */
+comment|/*%<  * Convert all sections of message 'msg' to a cleartext representation  *  * Notes:  * \li     In flags, If #DNS_MESSAGETEXTFLAG_OMITDOT is set, then the  *      final '.' in absolute names will not be emitted.  If  *      #DNS_MESSAGETEXTFLAG_NOCOMMENTS is cleared, lines beginning  *      with ";;" will be emitted indicating section name.  If  *      #DNS_MESSAGETEXTFLAG_NOHEADERS is cleared, header lines will  *      be emitted.  *  *	If #DNS_MESSAGETEXTFLAG_ONESOA is set then only print the  *	first SOA record in the answer section.  If  *	#DNS_MESSAGETEXTFLAG_OMITSOA is set don't print any SOA records  *	in the answer section.  These are useful for suppressing the  *	display of the second SOA record in a AXFR by setting  *	#DNS_MESSAGETEXTFLAG_ONESOA on the first message in a AXFR stream  *	and #DNS_MESSAGETEXTFLAG_OMITSOA on subsequent messages.  *  * Requires:  *  *\li	'msg' is a valid message.  *  *\li	'style' is a valid master dump style.  *  *\li	'target' is a valid buffer.  *  * Ensures:  *  *\li	If the result is success:  *		The used space in 'target' is updated.  *  * Returns:  *  *\li	#ISC_R_SUCCESS  *\li	#ISC_R_NOSPACE  *\li	#ISC_R_NOMORE  *  *\li	Note: On error return, *target may be partially filled with data.  */
 end_comment
 
 begin_function_decl

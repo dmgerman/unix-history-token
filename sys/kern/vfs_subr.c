@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -201,6 +207,23 @@ directive|include
 file|<sys/vnode.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/watchdog.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -291,19 +314,6 @@ directive|define
 name|WI_GIANTQ
 value|1
 end_define
-
-begin_expr_stmt
-specifier|static
-name|MALLOC_DEFINE
-argument_list|(
-name|M_NETADDR
-argument_list|,
-literal|"subr_export_host"
-argument_list|,
-literal|"Export host address structure"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -1537,7 +1547,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Mark a mount point as busy. Used to synchronize access and to delay  * unmounting. Eventually, mountlist_mtx is not released on failure.  */
+comment|/*  * Mark a mount point as busy. Used to synchronize access and to delay  * unmounting. Eventually, mountlist_mtx is not released on failure.  *  * vfs_busy() is a custom lock, it can block the caller.  * vfs_busy() only sleeps if the unmount is active on the mount point.  * For a mountpoint mp, vfs_busy-enforced lock is before lock of any  * vnode belonging to mp.  *  * Lookup uses vfs_busy() to traverse mount points.  * root fs			var fs  * / vnode lock		A	/ vnode lock (/var)		D  * /var vnode lock	B	/log vnode lock(/var/log)	E  * vfs_busy lock	C	vfs_busy lock			F  *  * Within each file system, the lock order is C->A->B and F->D->E.  *  * When traversing across mounts, the system follows that lock order:  *  *        C->A->B  *              |  *              +->F->D->E  *  * The lookup() process for namei("/var") illustrates the process:  *  VOP_LOOKUP() obtains B while A is held  *  vfs_busy() obtains a shared lock on F while A and B are held  *  vput() releases lock on B  *  vput() releases lock on A  *  VFS_ROOT() obtains lock on D while shared lock on F is held  *  vfs_unbusy() releases shared lock on F  *  vn_lock() obtains lock on deadfs vnode vp_crossmp instead of A.  *    Attempt to lock A (instead of vp_crossmp) while D is held would  *    violate the global order, causing deadlocks.  *  * dounmount() locks B while F is drained.  */
 end_comment
 
 begin_function
@@ -1664,6 +1674,8 @@ name|mp
 argument_list|)
 argument_list|,
 name|PVFS
+operator||
+name|PDROP
 argument_list|,
 literal|"vfs_busy"
 argument_list|,
@@ -1680,6 +1692,11 @@ name|mtx_lock
 argument_list|(
 operator|&
 name|mountlist_mtx
+argument_list|)
+expr_stmt|;
+name|MNT_ILOCK
+argument_list|(
+name|mp
 argument_list|)
 expr_stmt|;
 block|}
@@ -3095,8 +3112,7 @@ name|yield
 label|:
 name|kern_yield
 argument_list|(
-operator|-
-literal|1
+name|PRI_UNCHANGED
 argument_list|)
 expr_stmt|;
 name|relock_mnt
@@ -3566,8 +3582,7 @@ block|}
 else|else
 name|kern_yield
 argument_list|(
-operator|-
-literal|1
+name|PRI_UNCHANGED
 argument_list|)
 expr_stmt|;
 block|}
@@ -5304,9 +5319,9 @@ operator|&
 name|V_SAVE
 operator|)
 condition|?
-name|TRUE
+name|OBJPR_CLEANONLY
 else|:
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 name|VM_OBJECT_UNLOCK
@@ -8535,6 +8550,22 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|SW_WATCHDOG
+if|if
+condition|(
+name|first_printf
+operator|==
+literal|0
+condition|)
+name|wdog_kern_pat
+argument_list|(
+name|WD_LASTVAL
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 if|if
 condition|(
@@ -12792,6 +12823,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_FLAG
 argument_list|(
+name|MNT_SUJ
+argument_list|)
+expr_stmt|;
+name|MNT_FLAG
+argument_list|(
 name|MNT_NOSYMFOLLOW
 argument_list|)
 expr_stmt|;
@@ -12915,11 +12951,6 @@ argument_list|(
 name|MNT_BYFSID
 argument_list|)
 expr_stmt|;
-name|MNT_FLAG
-argument_list|(
-name|MNT_SOFTDEP
-argument_list|)
-expr_stmt|;
 undef|#
 directive|undef
 name|MNT_FLAG
@@ -13041,11 +13072,6 @@ expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
 name|MNTK_SHARED_WRITES
-argument_list|)
-expr_stmt|;
-name|MNT_KERN_FLAG
-argument_list|(
-name|MNTK_SUJ
 argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
@@ -13813,9 +13839,11 @@ name|struct
 name|xvfsconf
 name|xvfsp
 decl_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"WARNING: userland calling deprecated sysctl, "
+name|LOG_WARNING
+argument_list|,
+literal|"userland calling deprecated sysctl, "
 literal|"please rebuild world\n"
 argument_list|)
 expr_stmt|;
@@ -15240,6 +15268,14 @@ modifier|*
 name|vi
 parameter_list|)
 block|{
+name|seldrain
+argument_list|(
+operator|&
+name|vi
+operator|->
+name|vpi_selinfo
+argument_list|)
+expr_stmt|;
 name|knlist_destroy
 argument_list|(
 operator|&
@@ -16416,7 +16452,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request (obsoleted).  Returns 0 on success, or an errno on failure.  *  * The ifdef'd CAPABILITIES version is here for reference, but is not  * actually used.  */
+comment|/*  * Common filesystem object access control check routine.  Accepts a  * vnode's type, "mode", uid and gid, requested access mode, credentials,  * and optional call-by-reference privused argument allowing vaccess()  * to indicate to the caller whether privilege was used to satisfy the  * request (obsoleted).  Returns 0 on success, or an errno on failure.  */
 end_comment
 
 begin_function

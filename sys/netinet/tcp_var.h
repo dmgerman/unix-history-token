@@ -599,10 +599,13 @@ modifier|*
 name|osd
 decl_stmt|;
 comment|/* storage for Khelp module data */
-name|int
+name|uint32_t
 name|t_ispare
+index|[
+literal|12
+index|]
 decl_stmt|;
-comment|/* explicit pad for 64bit alignment */
+comment|/* 4 keep timers, 5 UTO, 3 TBD */
 name|void
 modifier|*
 name|t_pspare2
@@ -614,10 +617,10 @@ comment|/* 4 TBD */
 name|uint64_t
 name|_pad
 index|[
-literal|12
+literal|6
 index|]
 decl_stmt|;
-comment|/* 7 UTO, 5 TBD (1-2 CC/RTT?) */
+comment|/* 6 TBD (1-2 CC/RTT?) */
 block|}
 struct|;
 end_struct
@@ -767,6 +770,17 @@ end_define
 
 begin_comment
 comment|/* don't push */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TF_PREVVALID
+value|0x002000
+end_define
+
+begin_comment
+comment|/* saved values for bad rxmit valid */
 end_comment
 
 begin_define
@@ -1193,6 +1207,10 @@ name|u_int8_t
 name|to_nsacks
 decl_stmt|;
 comment|/* number of SACK blocks */
+name|u_int32_t
+name|to_spare
+decl_stmt|;
+comment|/* UTO */
 block|}
 struct|;
 end_struct
@@ -1818,6 +1836,27 @@ name|u_long
 name|tcps_ecn_rcwnd
 decl_stmt|;
 comment|/* # times ECN reduced the cwnd */
+comment|/* TCP_SIGNATURE related stats */
+name|u_long
+name|tcps_sig_rcvgoodsig
+decl_stmt|;
+comment|/* Total matching signature received */
+name|u_long
+name|tcps_sig_rcvbadsig
+decl_stmt|;
+comment|/* Total bad signature received */
+name|u_long
+name|tcps_sig_err_buildsig
+decl_stmt|;
+comment|/* Mismatching signature received */
+name|u_long
+name|tcps_sig_err_sigopt
+decl_stmt|;
+comment|/* No signature expected by socket */
+name|u_long
+name|tcps_sig_err_nosigopt
+decl_stmt|;
+comment|/* No signature provided by segment */
 name|u_long
 name|_pad
 index|[
@@ -3148,6 +3187,33 @@ parameter_list|,
 name|int
 parameter_list|,
 name|u_char
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|tcp_signature_verify
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|tcpopt
+modifier|*
+parameter_list|,
+name|struct
+name|tcphdr
 modifier|*
 parameter_list|,
 name|u_int

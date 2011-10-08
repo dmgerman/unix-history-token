@@ -27,6 +27,12 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<sys/cpuset.h>
+end_include
+
 begin_comment
 comment|/*  * Topology of a NUMA or HTT system.  *  * The top level topology is an array of pointers to groups.  Each group  * contains a bitmask of cpus in its group or subgroups.  It may also  * contain a pointer to an array of child groups.  *  * The bitmasks at non leaf groups may be used by consumers who support  * a smaller depth than the hardware provides.  *  * The topology may be omitted by systems where all CPUs are equal.  */
 end_comment
@@ -47,15 +53,15 @@ modifier|*
 name|cg_child
 decl_stmt|;
 comment|/* Optional children groups. */
-name|cpumask_t
+name|cpuset_t
 name|cg_mask
 decl_stmt|;
 comment|/* Mask of cpus in this group. */
-name|int8_t
+name|int32_t
 name|cg_count
 decl_stmt|;
 comment|/* Count of cpus in this group. */
-name|int8_t
+name|int16_t
 name|cg_children
 decl_stmt|;
 comment|/* Number of children groups. */
@@ -270,7 +276,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|cpumask_t
+name|cpuset_t
 name|started_cpus
 decl_stmt|;
 end_decl_stmt
@@ -278,28 +284,21 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 specifier|volatile
-name|cpumask_t
+name|cpuset_t
 name|stopped_cpus
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|cpumask_t
-name|idle_cpus_mask
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|cpumask_t
+name|cpuset_t
 name|hlt_cpus_mask
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|cpumask_t
+name|cpuset_t
 name|logical_cpus_mask
 decl_stmt|;
 end_decl_stmt
@@ -344,7 +343,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|cpumask_t
+name|cpuset_t
 name|all_cpus
 decl_stmt|;
 end_decl_stmt
@@ -360,7 +359,7 @@ name|CPU_ABSENT
 parameter_list|(
 name|x_cpu
 parameter_list|)
-value|((all_cpus& (1<< (x_cpu))) == 0)
+value|(!CPU_ISSET(x_cpu,&all_cpus))
 end_define
 
 begin_comment
@@ -558,7 +557,7 @@ begin_function_decl
 name|int
 name|restart_cpus
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -567,7 +566,7 @@ begin_function_decl
 name|int
 name|stop_cpus
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -576,7 +575,7 @@ begin_function_decl
 name|int
 name|stop_cpus_hard
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -594,7 +593,7 @@ begin_function_decl
 name|int
 name|suspend_cpus
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -682,7 +681,7 @@ begin_function_decl
 name|void
 name|smp_rendezvous_cpus
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 parameter_list|,
 name|void
 function_decl|(

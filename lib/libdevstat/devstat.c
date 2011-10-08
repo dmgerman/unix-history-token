@@ -3755,8 +3755,6 @@ operator|<
 literal|5
 operator|)
 condition|;
-name|num_args
-operator|++
 control|)
 if|if
 condition|(
@@ -3766,6 +3764,10 @@ name|tempstr
 operator|!=
 literal|'\0'
 condition|)
+block|{
+name|num_args
+operator|++
+expr_stmt|;
 if|if
 condition|(
 operator|++
@@ -3778,6 +3780,7 @@ literal|5
 index|]
 condition|)
 break|break;
+block|}
 comment|/* The user gave us too many type arguments */
 if|if
 condition|(

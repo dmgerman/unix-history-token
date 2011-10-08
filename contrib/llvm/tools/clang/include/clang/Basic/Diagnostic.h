@@ -132,6 +132,9 @@ decl_stmt|;
 name|class
 name|DiagnosticErrorTrap
 decl_stmt|;
+name|class
+name|StoredDiagnostic
+decl_stmt|;
 comment|/// \brief Annotates a diagnostic with some code that should be
 comment|/// inserted, removed, or replaced to fix the problem.
 comment|///
@@ -971,6 +974,36 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Indicates that an unrecoverable error has occurred.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UnrecoverableErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Toggles for DiagnosticErrorTrap to check whether an error occurred
+end_comment
+
+begin_comment
+comment|/// during a parsing section, e.g. during parsing a function.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|TrapErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|bool
+name|TrapUnrecoverableErrorOccurred
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// LastDiagLevel - This is the level of the last diagnostic emitted.  This is
 end_comment
 
@@ -1105,6 +1138,15 @@ operator|,
 name|void
 operator|*
 name|Cookie
+operator|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|intptr_t
+operator|>
+operator|&
+name|QualTypeVals
 operator|)
 expr_stmt|;
 end_typedef
@@ -1747,6 +1789,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|ExtensionHandling
+name|getExtensionHandlingBehavior
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExtBehavior
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 comment|/// AllExtensionsSilenced - This is a counter bumped when an __extension__
 end_comment
@@ -1866,9 +1920,9 @@ begin_decl_stmt
 name|bool
 name|setDiagnosticGroupMapping
 argument_list|(
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|Group
 argument_list|,
 name|diag
@@ -1921,6 +1975,24 @@ specifier|const
 block|{
 return|return
 name|FatalErrorOccurred
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether any kind of unrecoverable error has occurred.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasUnrecoverableErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FatalErrorOccurred
+operator|||
+name|UnrecoverableErrorOccurred
 return|;
 block|}
 end_expr_stmt
@@ -2047,6 +2119,15 @@ name|char
 operator|>
 operator|&
 name|Output
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|intptr_t
+operator|>
+operator|&
+name|QualTypeVals
 argument_list|)
 decl|const
 block|{
@@ -2071,6 +2152,8 @@ argument_list|,
 name|Output
 argument_list|,
 name|ArgToStringCookie
+argument_list|,
+name|QualTypeVals
 argument_list|)
 expr_stmt|;
 block|}
@@ -2232,6 +2315,18 @@ name|Report
 parameter_list|(
 name|unsigned
 name|DiagID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|Report
+parameter_list|(
+specifier|const
+name|StoredDiagnostic
+modifier|&
+name|storedDiag
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2679,7 +2774,7 @@ comment|/// is used when the argument is not an std::string.  The specific value
 end_comment
 
 begin_comment
-comment|/// mangled into an intptr_t and the intepretation depends on exactly what
+comment|/// mangled into an intptr_t and the interpretation depends on exactly what
 end_comment
 
 begin_comment
@@ -2811,9 +2906,6 @@ name|Diagnostic
 modifier|&
 name|Diag
 decl_stmt|;
-name|unsigned
-name|PrevErrors
-decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -2826,14 +2918,12 @@ argument_list|)
 operator|:
 name|Diag
 argument_list|(
-name|Diag
+argument|Diag
 argument_list|)
-operator|,
-name|PrevErrors
-argument_list|(
-argument|Diag.NumErrors
-argument_list|)
-block|{}
+block|{
+name|reset
+argument_list|()
+block|; }
 comment|/// \brief Determine whether any errors have occurred since this
 comment|/// object instance was created.
 name|bool
@@ -2844,9 +2934,20 @@ block|{
 return|return
 name|Diag
 operator|.
-name|NumErrors
-operator|>
-name|PrevErrors
+name|TrapErrorOccurred
+return|;
+block|}
+comment|/// \brief Determine whether any unrecoverable errors have occurred since this
+comment|/// object instance was created.
+name|bool
+name|hasUnrecoverableErrorOccurred
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Diag
+operator|.
+name|TrapUnrecoverableErrorOccurred
 return|;
 block|}
 comment|// Set to initial state of "no errors occurred".
@@ -2854,11 +2955,17 @@ name|void
 name|reset
 parameter_list|()
 block|{
-name|PrevErrors
-operator|=
 name|Diag
 operator|.
-name|NumErrors
+name|TrapErrorOccurred
+operator|=
+name|false
+expr_stmt|;
+name|Diag
+operator|.
+name|TrapUnrecoverableErrorOccurred
+operator|=
+name|false
 expr_stmt|;
 block|}
 block|}
@@ -3303,14 +3410,6 @@ name|Hint
 argument_list|)
 decl|const
 block|{
-if|if
-condition|(
-name|Hint
-operator|.
-name|isNull
-argument_list|()
-condition|)
-return|return;
 name|assert
 argument_list|(
 name|NumFixItHints
@@ -3848,6 +3947,11 @@ name|Diagnostic
 modifier|*
 name|DiagObj
 decl_stmt|;
+name|llvm
+operator|::
+name|StringRef
+name|StoredDiagMessage
+expr_stmt|;
 name|public
 label|:
 name|explicit
@@ -3862,6 +3966,23 @@ operator|:
 name|DiagObj
 argument_list|(
 argument|DO
+argument_list|)
+block|{}
+name|DiagnosticInfo
+argument_list|(
+argument|const Diagnostic *DO
+argument_list|,
+argument|llvm::StringRef storedDiagMessage
+argument_list|)
+operator|:
+name|DiagObj
+argument_list|(
+name|DO
+argument_list|)
+operator|,
+name|StoredDiagMessage
+argument_list|(
+argument|storedDiagMessage
 argument_list|)
 block|{}
 specifier|const

@@ -336,25 +336,43 @@ end_comment
 
 begin_struct_decl
 struct_decl|struct
-name|kaudit_record
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|td_sched
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|nlminfo
+name|cpuset
 struct_decl|;
 end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
 name|kaioinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kaudit_record
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kdtrace_proc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|kdtrace_thread
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mqueue_notifier
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|nlminfo
 struct_decl|;
 end_struct_decl
 
@@ -372,7 +390,25 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|procdesc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|racct
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sleepqueue
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|td_sched
 struct_decl|;
 end_struct_decl
 
@@ -394,30 +430,6 @@ name|turnstile
 struct_decl|;
 end_struct_decl
 
-begin_struct_decl
-struct_decl|struct
-name|mqueue_notifier
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|kdtrace_proc
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|kdtrace_thread
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
-name|cpuset
-struct_decl|;
-end_struct_decl
-
 begin_comment
 comment|/*  * XXX: Does this belong in resource.h or resourcevar.h instead?  * Resource usage extension.  The times in rusage structs in the kernel are  * never up to date.  The actual times are kept as runtimes and tick counts  * (with control info in the "previous" times), and are converted when  * userland asks for rusage info.  Backwards compatibility prevents putting  * this directly in the user-visible rusage struct.  *  * Locking for p_rux: (cj) means (j) for p_rux and (c) for p_crux.  * Locking for td_rux: (t) for all fields.  */
 end_comment
@@ -426,31 +438,31 @@ begin_struct
 struct|struct
 name|rusage_ext
 block|{
-name|u_int64_t
+name|uint64_t
 name|rux_runtime
 decl_stmt|;
 comment|/* (cj) Real time. */
-name|u_int64_t
+name|uint64_t
 name|rux_uticks
 decl_stmt|;
 comment|/* (cj) Statclock hits in user mode. */
-name|u_int64_t
+name|uint64_t
 name|rux_sticks
 decl_stmt|;
 comment|/* (cj) Statclock hits in sys mode. */
-name|u_int64_t
+name|uint64_t
 name|rux_iticks
 decl_stmt|;
 comment|/* (cj) Statclock hits in intr mode. */
-name|u_int64_t
+name|uint64_t
 name|rux_uu
 decl_stmt|;
 comment|/* (c) Previous user time in usec. */
-name|u_int64_t
+name|uint64_t
 name|rux_su
 decl_stmt|;
 comment|/* (c) Previous sys time in usec. */
-name|u_int64_t
+name|uint64_t
 name|rux_tu
 decl_stmt|;
 comment|/* (c) Previous total time in usec. */
@@ -1574,12 +1586,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED80
+name|TDP_NOFAULTING
 value|0x00000080
 end_define
 
 begin_comment
-comment|/* available. */
+comment|/* Do not handle page faults. */
 end_comment
 
 begin_define
@@ -2200,7 +2212,7 @@ name|PRS_ZOMBIE
 block|}
 name|p_state
 enum|;
-comment|/* (j/c) S* process status. */
+comment|/* (j/c) Process status. */
 name|pid_t
 name|p_pid
 decl_stmt|;
@@ -2268,6 +2280,10 @@ name|pid_t
 name|p_oppid
 decl_stmt|;
 comment|/* (c + e) Save ppid in ptrace. XXX */
+name|int
+name|p_dbg_child
+decl_stmt|;
+comment|/* (c + e) # of debugged children in 							ptrace. */
 name|struct
 name|vmspace
 modifier|*
@@ -2408,6 +2424,12 @@ modifier|*
 name|p_itimers
 decl_stmt|;
 comment|/* (c) POSIX interval timers. */
+name|struct
+name|procdesc
+modifier|*
+name|p_procdesc
+decl_stmt|;
+comment|/* (e) Process descriptor, if any. */
 comment|/* End area that is zeroed on creation. */
 define|#
 directive|define
@@ -2559,6 +2581,16 @@ name|cv
 name|p_dbgwait
 decl_stmt|;
 comment|/* (*) wait cv for debugger attach 					   after fork. */
+name|uint64_t
+name|p_prev_runtime
+decl_stmt|;
+comment|/* (c) Resource usage accounting. */
+name|struct
+name|racct
+modifier|*
+name|p_racct
+decl_stmt|;
+comment|/* (b) Resource accounting. */
 block|}
 struct|;
 end_struct
@@ -3340,14 +3372,6 @@ begin_expr_stmt
 name|MALLOC_DECLARE
 argument_list|(
 name|M_SUBPROC
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_ZOMBIE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4177,6 +4201,11 @@ name|struct
 name|proc
 modifier|*
 modifier|*
+parameter_list|,
+name|int
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4464,6 +4493,35 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|proc_reap
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|int
+modifier|*
+name|status
+parameter_list|,
+name|int
+name|options
+parameter_list|,
+name|struct
+name|rusage
+modifier|*
+name|rusage
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4778,44 +4836,6 @@ modifier|*
 parameter_list|,
 name|struct
 name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_struct_decl
-struct_decl|struct
-name|syscall_args
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|int
-name|syscallenter
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|struct
-name|syscall_args
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|syscallret
-parameter_list|(
-name|struct
-name|thread
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-name|struct
-name|syscall_args
 modifier|*
 parameter_list|)
 function_decl|;
@@ -5315,6 +5335,74 @@ name|tid
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|curthread_pflags_set
+parameter_list|(
+name|int
+name|flags
+parameter_list|)
+block|{
+name|struct
+name|thread
+modifier|*
+name|td
+decl_stmt|;
+name|int
+name|save
+decl_stmt|;
+name|td
+operator|=
+name|curthread
+expr_stmt|;
+name|save
+operator|=
+operator|~
+name|flags
+operator||
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|flags
+operator|)
+expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator||=
+name|flags
+expr_stmt|;
+return|return
+operator|(
+name|save
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|curthread_pflags_restore
+parameter_list|(
+name|int
+name|save
+parameter_list|)
+block|{
+name|curthread
+operator|->
+name|td_pflags
+operator|&=
+name|save
+expr_stmt|;
+block|}
+end_function
 
 begin_endif
 endif|#

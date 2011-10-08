@@ -965,7 +965,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * set default blksz on read. APPNDs writes rdblksz on the last volume 	 * On all new archive volumes, we shift to wrblksz (if the user 	 * specified one, otherwize we will continue to use rdblksz). We 	 * must to set blocksize based on what kind of device the archive is 	 * stored. 	 */
+comment|/* 	 * set default blksz on read. APPNDs writes rdblksz on the last volume 	 * On all new archive volumes, we shift to wrblksz (if the user 	 * specified one, otherwise we will continue to use rdblksz). We 	 * must to set blocksize based on what kind of device the archive is 	 * stored. 	 */
 switch|switch
 condition|(
 name|artyp
@@ -1470,7 +1470,7 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-comment|/* 	 * If we have not determined the format yet, we just say how many bytes 	 * we have skipped over looking for a header to id. there is no way we 	 * could have written anything yet. 	 */
+comment|/* 	 * If we have not determined the format yet, we just say how many bytes 	 * we have skipped over looking for a header to id. There is no way we 	 * could have written anything yet. 	 */
 if|if
 condition|(
 name|frmt
@@ -2065,7 +2065,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ar_write()  *	Write a specified number of bytes in supplied buffer to the archive  *	device so it appears as a single "block". Deals with errors and tries  *	to recover when faced with short writes.  * Return:  *	Number of bytes written. 0 indicates end of volume reached and with no  *	flaws (as best that can be detected). A -1 indicates an unrecoverable  *	error in the archive occured.  */
+comment|/*  * ar_write()  *	Write a specified number of bytes in supplied buffer to the archive  *	device so it appears as a single "block". Deals with errors and tries  *	to recover when faced with short writes.  * Return:  *	Number of bytes written. 0 indicates end of volume reached and with no  *	flaws (as best that can be detected). A -1 indicates an unrecoverable  *	error in the archive occurred.  */
 end_comment
 
 begin_function
@@ -2330,7 +2330,7 @@ default|default:
 comment|/* 		 * we cannot fix errors to these devices 		 */
 break|break;
 block|}
-comment|/* 	 * Better tell the user the bad news... 	 * if this is a block aligned archive format, we may have a bad archive 	 * if the format wants the header to start at a BLKMULT boundary. While 	 * we can deal with the mis-aligned data, it violates spec and other 	 * archive readers will likely fail. if the format is not block 	 * aligned, the user may be lucky (and the archive is ok). 	 */
+comment|/* 	 * Better tell the user the bad news... 	 * if this is a block aligned archive format, we may have a bad archive 	 * if the format wants the header to start at a BLKMULT boundary. While 	 * we can deal with the mis-aligned data, it violates spec and other 	 * archive readers will likely fail. If the format is not block 	 * aligned, the user may be lucky (and the archive is ok). 	 */
 if|if
 condition|(
 name|res
@@ -2732,7 +2732,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * ar_fow()  *	Move the I/O position within the archive foward the specified number of  *	bytes as supported by the device. If we cannot move the requested  *	number of bytes, return the actual number of bytes moved in skipped.  * Return:  *	0 if moved the requested distance, -1 on complete failure, 1 on  *	partial move (the amount moved is in skipped)  */
+comment|/*  * ar_fow()  *	Move the I/O position within the archive forward the specified number of  *	bytes as supported by the device. If we cannot move the requested  *	number of bytes, return the actual number of bytes moved in skipped.  * Return:  *	0 if moved the requested distance, -1 on complete failure, 1 on  *	partial move (the amount moved is in skipped)  */
 end_comment
 
 begin_function
@@ -2769,7 +2769,7 @@ operator|(
 literal|0
 operator|)
 return|;
-comment|/* 	 * we cannot move foward at EOF or error 	 */
+comment|/* 	 * we cannot move forward at EOF or error 	 */
 if|if
 condition|(
 name|lstrval
@@ -2781,7 +2781,7 @@ operator|(
 name|lstrval
 operator|)
 return|;
-comment|/* 	 * Safer to read forward on devices where it is hard to find the end of 	 * the media without reading to it. With tapes we cannot be sure of the 	 * number of physical blocks to skip (we do not know physical block 	 * size at this point), so we must only read foward on tapes! 	 */
+comment|/* 	 * Safer to read forward on devices where it is hard to find the end of 	 * the media without reading to it. With tapes we cannot be sure of the 	 * number of physical blocks to skip (we do not know physical block 	 * size at this point), so we must only read forward on tapes! 	 */
 if|if
 condition|(
 name|artyp
@@ -3023,7 +3023,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 		 * we may try to go backwards past the start when the archive 		 * is only a single record. If this hapens and we are on a 		 * multi volume archive, we need to go to the end of the 		 * previous volume and continue our movement backwards from 		 * there. 		 */
+comment|/* 		 * we may try to go backwards past the start when the archive 		 * is only a single record. If this happens and we are on a 		 * multi volume archive, we need to go to the end of the 		 * previous volume and continue our movement backwards from 		 * there. 		 */
 if|if
 condition|(
 operator|(
@@ -3461,7 +3461,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* 	 * read foward to the file mark, then back up in front of the filemark 	 * (this is a bit paranoid, but should be safe to do). 	 */
+comment|/* 	 * read forward to the file mark, then back up in front of the filemark 	 * (this is a bit paranoid, but should be safe to do). 	 */
 while|while
 condition|(
 operator|(

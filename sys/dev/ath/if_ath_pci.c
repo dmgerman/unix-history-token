@@ -916,7 +916,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ath
+name|ath_pci
 argument_list|,
 name|pci
 argument_list|,
@@ -934,7 +934,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_VERSION
 argument_list|(
-name|ath
+name|ath_pci
 argument_list|,
 literal|1
 argument_list|)
@@ -944,7 +944,7 @@ end_expr_stmt
 begin_expr_stmt
 name|MODULE_DEPEND
 argument_list|(
-name|ath
+name|ath_pci
 argument_list|,
 name|wlan
 argument_list|,
@@ -959,6 +959,26 @@ end_expr_stmt
 
 begin_comment
 comment|/* 802.11 media layer */
+end_comment
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|ath_pci
+argument_list|,
+name|if_ath
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* if_ath driver */
 end_comment
 
 end_unit

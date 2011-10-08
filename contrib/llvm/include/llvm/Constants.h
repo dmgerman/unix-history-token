@@ -251,6 +251,28 @@ operator|&
 name|Context
 argument_list|)
 block|;
+specifier|static
+name|Constant
+operator|*
+name|getTrue
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
+specifier|static
+name|Constant
+operator|*
+name|getFalse
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+block|;
 comment|/// If Ty is a vector type, return a Constant with a splat of the given
 comment|/// value. Otherwise return a ConstantInt for the given value.
 specifier|static
@@ -491,20 +513,16 @@ argument_list|,
 argument|int64_t V
 argument_list|)
 block|;
-comment|/// This function will return true iff this constant represents the "null"
-comment|/// value that would be returned by the getNullValue method.
-comment|/// @returns true if this is the null integer value.
-comment|/// @brief Determine if the value is null.
-name|virtual
 name|bool
-name|isNullValue
+name|isNegative
 argument_list|()
 specifier|const
 block|{
 return|return
 name|Val
-operator|==
-literal|0
+operator|.
+name|isNegative
+argument_list|()
 return|;
 block|}
 comment|/// This is just a convenience method to make client code smaller for a
@@ -869,35 +887,6 @@ return|return
 name|Val
 return|;
 block|}
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  For ConstantFP, this is +0.0, but not -0.0.  To handle the
-comment|/// two the same, use isZero().
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|;
-comment|/// isNegativeZeroValue - Return true if the value is what would be returned
-comment|/// by getZeroValueForNegation.
-name|virtual
-name|bool
-name|isNegativeZeroValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Val
-operator|.
-name|isZero
-argument_list|()
-operator|&&
-name|Val
-operator|.
-name|isNegative
-argument_list|()
-return|;
-block|}
 comment|/// isZero - Return true if the value is positive or negative zero.
 name|bool
 name|isZero
@@ -908,6 +897,19 @@ return|return
 name|Val
 operator|.
 name|isZero
+argument_list|()
+return|;
+block|}
+comment|/// isNegative - Return true if the sign bit is set.
+name|bool
+name|isNegative
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Val
+operator|.
+name|isNegative
 argument_list|()
 return|;
 block|}
@@ -1122,18 +1124,6 @@ operator|*
 name|Ty
 argument_list|)
 block|;
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 name|virtual
 name|void
 name|destroyConstant
@@ -1238,28 +1228,12 @@ name|ArrayType
 operator|*
 name|T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|Constant
 operator|*
 operator|>
-operator|&
 name|V
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|get
-argument_list|(
-argument|const ArrayType *T
-argument_list|,
-argument|Constant *const *Vals
-argument_list|,
-argument|unsigned NumVals
 argument_list|)
 block|;
 comment|/// This method constructs a ConstantArray and initializes it with a text
@@ -1339,19 +1313,17 @@ name|getAsString
 argument_list|()
 specifier|const
 block|;
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  This always returns false because zero arrays are always
-comment|/// created as ConstantAggregateZero objects.
-name|virtual
-name|bool
-name|isNullValue
+comment|/// getAsCString - If this array is isCString(), then this method converts the
+comment|/// array (without the trailing null byte) to an std::string and returns it.
+comment|/// Otherwise, it asserts out.
+comment|///
+name|std
+operator|::
+name|string
+name|getAsCString
 argument_list|()
 specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
+block|;
 name|virtual
 name|void
 name|destroyConstant
@@ -1495,15 +1467,11 @@ name|StructType
 operator|*
 name|T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|Constant
 operator|*
 operator|>
-operator|&
 name|V
 argument_list|)
 block|;
@@ -1512,25 +1480,90 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|LLVMContext&Context
+argument|const StructType *T
 argument_list|,
-argument|const std::vector<Constant*>&V
-argument_list|,
-argument|bool Packed
+argument|...
 argument_list|)
+name|END_WITH_NULL
 block|;
+comment|/// getAnon - Return an anonymous struct that has the specified
+comment|/// elements.  If the struct is possibly empty, then you must specify a
+comment|/// context.
 specifier|static
 name|Constant
 operator|*
+name|getAnon
+argument_list|(
+argument|ArrayRef<Constant*> V
+argument_list|,
+argument|bool Packed = false
+argument_list|)
+block|{
+return|return
 name|get
 argument_list|(
-argument|LLVMContext&Context
+name|getTypeForElements
+argument_list|(
+name|V
 argument_list|,
-argument|Constant *const *Vals
+name|Packed
+argument_list|)
 argument_list|,
-argument|unsigned NumVals
+name|V
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Constant
+operator|*
+name|getAnon
+argument_list|(
+argument|LLVMContext&Ctx
 argument_list|,
-argument|bool Packed
+argument|ArrayRef<Constant*> V
+argument_list|,
+argument|bool Packed = false
+argument_list|)
+block|{
+return|return
+name|get
+argument_list|(
+name|getTypeForElements
+argument_list|(
+name|Ctx
+argument_list|,
+name|V
+argument_list|,
+name|Packed
+argument_list|)
+argument_list|,
+name|V
+argument_list|)
+return|;
+block|}
+comment|/// getTypeForElements - Return an anonymous struct type to use for a constant
+comment|/// with the specified set of elements.  The list must not be empty.
+specifier|static
+name|StructType
+operator|*
+name|getTypeForElements
+argument_list|(
+argument|ArrayRef<Constant*> V
+argument_list|,
+argument|bool Packed = false
+argument_list|)
+block|;
+comment|/// getTypeForElements - This version of the method allows an empty list.
+specifier|static
+name|StructType
+operator|*
+name|getTypeForElements
+argument_list|(
+argument|LLVMContext&Ctx
+argument_list|,
+argument|ArrayRef<Constant*> V
+argument_list|,
+argument|bool Packed = false
 argument_list|)
 block|;
 comment|/// Transparently provide more efficient getOperand methods.
@@ -1562,19 +1595,6 @@ operator|::
 name|getType
 argument_list|()
 operator|)
-return|;
-block|}
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  This always returns false because zero structs are always
-comment|/// created as ConstantAggregateZero objects.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
 return|;
 block|}
 name|virtual
@@ -1723,29 +1743,6 @@ operator|>
 name|V
 argument_list|)
 block|;
-comment|// FIXME: Eliminate this constructor form.
-specifier|static
-name|Constant
-operator|*
-name|get
-argument_list|(
-specifier|const
-name|VectorType
-operator|*
-name|T
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|Constant
-operator|*
-operator|>
-operator|&
-name|V
-argument_list|)
-block|;
 comment|/// Transparently provide more efficient getOperand methods.
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
@@ -1776,19 +1773,6 @@ operator|::
 name|getType
 argument_list|()
 operator|)
-return|;
-block|}
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.  This always returns false because zero vectors are always
-comment|/// created as ConstantAggregateZero objects.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
 return|;
 block|}
 comment|/// This function will return true iff every element in this vector constant
@@ -1981,18 +1965,6 @@ operator|*
 name|T
 argument_list|)
 block|;
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 name|virtual
 name|void
 name|destroyConstant
@@ -2184,18 +2156,6 @@ name|get
 argument_list|()
 return|;
 block|}
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 name|virtual
 name|void
 name|destroyConstant
@@ -2350,195 +2310,6 @@ argument_list|(
 name|Opcode
 argument_list|)
 block|;   }
-comment|// These private methods are used by the type resolution code to create
-comment|// ConstantExprs in intermediate forms.
-specifier|static
-name|Constant
-operator|*
-name|getTy
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|unsigned Opcode
-argument_list|,
-argument|Constant *C1
-argument_list|,
-argument|Constant *C2
-argument_list|,
-argument|unsigned Flags =
-literal|0
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getCompareTy
-argument_list|(
-argument|unsigned short pred
-argument_list|,
-argument|Constant *C1
-argument_list|,
-argument|Constant *C2
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getSelectTy
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|Constant
-operator|*
-name|C1
-argument_list|,
-name|Constant
-operator|*
-name|C2
-argument_list|,
-name|Constant
-operator|*
-name|C3
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|IndexTy
-operator|>
-specifier|static
-name|Constant
-operator|*
-name|getGetElementPtrTy
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|Constant *C
-argument_list|,
-argument|IndexTy const *Idxs
-argument_list|,
-argument|unsigned NumIdxs
-argument_list|,
-argument|bool InBounds
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getExtractElementTy
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|Constant
-operator|*
-name|Val
-argument_list|,
-name|Constant
-operator|*
-name|Idx
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getInsertElementTy
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|Constant
-operator|*
-name|Val
-argument_list|,
-name|Constant
-operator|*
-name|Elt
-argument_list|,
-name|Constant
-operator|*
-name|Idx
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getShuffleVectorTy
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|Ty
-argument_list|,
-name|Constant
-operator|*
-name|V1
-argument_list|,
-name|Constant
-operator|*
-name|V2
-argument_list|,
-name|Constant
-operator|*
-name|Mask
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getExtractValueTy
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|Constant *Agg
-argument_list|,
-argument|const unsigned *Idxs
-argument_list|,
-argument|unsigned NumIdxs
-argument_list|)
-block|;
-specifier|static
-name|Constant
-operator|*
-name|getInsertValueTy
-argument_list|(
-argument|const Type *Ty
-argument_list|,
-argument|Constant *Agg
-argument_list|,
-argument|Constant *Val
-argument_list|,
-argument|const unsigned *Idxs
-argument_list|,
-argument|unsigned NumIdxs
-argument_list|)
-block|;
-name|template
-operator|<
-name|typename
-name|IndexTy
-operator|>
-specifier|static
-name|Constant
-operator|*
-name|getGetElementPtrImpl
-argument_list|(
-argument|Constant *C
-argument_list|,
-argument|IndexTy const *IdxList
-argument_list|,
-argument|unsigned NumIdx
-argument_list|,
-argument|bool InBounds
-argument_list|)
-block|;
 name|public
 operator|:
 comment|// Static methods to construct a ConstantExpr of different kinds.  Note that
@@ -3531,29 +3302,19 @@ name|Constant
 operator|*
 name|getSelect
 argument_list|(
-argument|Constant *C
-argument_list|,
-argument|Constant *V1
-argument_list|,
-argument|Constant *V2
-argument_list|)
-block|{
-return|return
-name|getSelectTy
-argument_list|(
-name|V1
-operator|->
-name|getType
-argument_list|()
-argument_list|,
+name|Constant
+operator|*
 name|C
 argument_list|,
+name|Constant
+operator|*
 name|V1
 argument_list|,
+name|Constant
+operator|*
 name|V2
 argument_list|)
-return|;
-block|}
+block|;
 comment|/// get - Return a binary or shift operator constant expression,
 comment|/// folding if possible.
 comment|///
@@ -3612,7 +3373,7 @@ argument_list|,
 argument|Constant *RHS
 argument_list|)
 block|;
-comment|/// Getelementptr form.  std::vector<Value*> is only accepted for convenience:
+comment|/// Getelementptr form.  Value* is only accepted for convenience;
 comment|/// all elements must be Constant's.
 comment|///
 specifier|static
@@ -3628,7 +3389,25 @@ argument|unsigned NumIdx
 argument_list|,
 argument|bool InBounds = false
 argument_list|)
-block|;
+block|{
+return|return
+name|getGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+operator|(
+name|Value
+operator|*
+operator|*
+operator|)
+name|IdxList
+argument_list|,
+name|NumIdx
+argument_list|,
+name|InBounds
+argument_list|)
+return|;
+block|}
 specifier|static
 name|Constant
 operator|*
@@ -3750,11 +3529,15 @@ name|Constant
 operator|*
 name|getExtractValue
 argument_list|(
-argument|Constant *Agg
+name|Constant
+operator|*
+name|Agg
 argument_list|,
-argument|const unsigned *IdxList
-argument_list|,
-argument|unsigned NumIdx
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|)
 block|;
 specifier|static
@@ -3762,27 +3545,21 @@ name|Constant
 operator|*
 name|getInsertValue
 argument_list|(
-argument|Constant *Agg
+name|Constant
+operator|*
+name|Agg
 argument_list|,
-argument|Constant *Val
+name|Constant
+operator|*
+name|Val
 argument_list|,
-argument|const unsigned *IdxList
-argument_list|,
-argument|unsigned NumIdx
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
 argument_list|)
 block|;
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// getOpcode - Return the opcode at the root of this constant expression
 name|unsigned
 name|getOpcode
@@ -3803,14 +3580,10 @@ specifier|const
 block|;
 comment|/// getIndices - Assert that this is an insertvalue or exactvalue
 comment|/// expression and return the list of indices.
-specifier|const
-name|SmallVector
+name|ArrayRef
 operator|<
 name|unsigned
-block|,
-literal|4
 operator|>
-operator|&
 name|getIndices
 argument_list|()
 specifier|const
@@ -3836,42 +3609,37 @@ argument_list|)
 specifier|const
 block|;
 comment|/// getWithOperands - This returns the current constant expression with the
-comment|/// operands replaced with the specified values.  The specified operands must
-comment|/// match count and type with the existing ones.
+comment|/// operands replaced with the specified values.  The specified array must
+comment|/// have the same number of operands as our current one.
 name|Constant
 operator|*
 name|getWithOperands
 argument_list|(
-argument|const std::vector<Constant*>&Ops
+argument|ArrayRef<Constant*> Ops
 argument_list|)
 specifier|const
 block|{
 return|return
 name|getWithOperands
 argument_list|(
-operator|&
 name|Ops
-index|[
-literal|0
-index|]
 argument_list|,
-operator|(
-name|unsigned
-operator|)
-name|Ops
-operator|.
-name|size
+name|getType
 argument_list|()
 argument_list|)
 return|;
 block|}
+comment|/// getWithOperands - This returns the current constant expression with the
+comment|/// operands replaced with the specified values and with the specified result
+comment|/// type.  The specified array must have the same number of operands as our
+comment|/// current one.
 name|Constant
 operator|*
 name|getWithOperands
 argument_list|(
-argument|Constant *const *Ops
+argument|ArrayRef<Constant*> Ops
 argument_list|,
-argument|unsigned NumOps
+argument|const Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -4077,18 +3845,6 @@ operator|*
 name|T
 argument_list|)
 block|;
-comment|/// isNullValue - Return true if this is the value that would be returned by
-comment|/// getNullValue.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 name|virtual
 name|void
 name|destroyConstant

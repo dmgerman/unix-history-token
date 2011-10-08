@@ -310,18 +310,9 @@ case|case
 name|AR_EEP_TXGAIN_TYPE
 case|:
 return|return
-name|IS_VERS
-argument_list|(
-operator|>=
-argument_list|,
-name|AR5416_EEP_MINOR_VER_19
-argument_list|)
-condition|?
 name|pBase
 operator|->
 name|txGainType
-else|:
-name|AR5416_EEP_TXGAIN_ORIG
 return|;
 case|case
 name|AR_EEP_OL_PWRCTRL
@@ -477,7 +468,7 @@ end_function
 
 begin_function
 specifier|static
-name|HAL_BOOL
+name|HAL_STATUS
 name|v4kEepromSet
 parameter_list|(
 name|struct
@@ -1421,6 +1412,16 @@ operator|==
 name|AH_NULL
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Don't check magic if we're supplied with an EEPROM block, 	 * typically this is from Howl but it may also be from later 	 * boards w/ an embedded WMAC. 	 */
+if|if
+condition|(
+name|ah
+operator|->
+name|ah_eepromdata
+operator|==
+name|NULL
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -1449,6 +1450,7 @@ expr_stmt|;
 return|return
 name|HAL_EEREAD
 return|;
+block|}
 block|}
 name|HALDEBUG
 argument_list|(
@@ -1577,8 +1579,15 @@ return|;
 block|}
 block|}
 comment|/* Convert to eeprom native eeprom endian format */
+comment|/* 	 * XXX this is likely incorrect but will do for now 	 * XXX to get embedded boards working. 	 */
 if|if
 condition|(
+name|ah
+operator|->
+name|ah_eepromdata
+operator|==
+name|NULL
+operator|&&
 name|isBigEndian
 argument_list|()
 condition|)

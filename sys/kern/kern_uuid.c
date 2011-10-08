@@ -786,7 +786,7 @@ end_endif
 
 begin_function
 name|int
-name|uuidgen
+name|sys_uuidgen
 parameter_list|(
 name|struct
 name|thread

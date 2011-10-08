@@ -95,7 +95,7 @@ comment|/// @{
 name|public
 label|:
 comment|/// A constant TimeValue representing the smallest time
-comment|/// value permissable by the class. MinTime is some point
+comment|/// value permissible by the class. MinTime is some point
 comment|/// in the distant past, about 300 billion years BCE.
 comment|/// @brief The smallest possible time value.
 specifier|static
@@ -104,7 +104,7 @@ name|TimeValue
 name|MinTime
 decl_stmt|;
 comment|/// A constant TimeValue representing the largest time
-comment|/// value permissable by the class. MaxTime is some point
+comment|/// value permissible by the class. MaxTime is some point
 comment|/// in the distant future, about 300 billion years AD.
 comment|/// @brief The largest possible time value.
 specifier|static

@@ -296,22 +296,6 @@ name|true
 value|TRUE
 end_define
 
-begin_undef
-undef|#
-directive|undef
-name|msleep
-end_undef
-
-begin_define
-define|#
-directive|define
-name|msleep
-parameter_list|(
-name|x
-parameter_list|)
-value|DELAY((x) * 1000)
-end_define
-
 begin_define
 define|#
 directive|define
@@ -365,6 +349,20 @@ parameter_list|(
 name|x
 parameter_list|)
 value|(sizeof(x) / sizeof((x)[0]))
+end_define
+
+begin_define
+define|#
+directive|define
+name|container_of
+parameter_list|(
+name|p
+parameter_list|,
+name|s
+parameter_list|,
+name|f
+parameter_list|)
+value|((s *)(((uint8_t *)(p)) - offsetof(s, f)))
 end_define
 
 begin_define

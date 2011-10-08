@@ -95,7 +95,7 @@ comment|/// to exceed characters in size, although currently, clang only support
 comment|/// architectures where the two are the same size.
 comment|///
 comment|/// For portability, never assume that a target character is 8 bits wide. Use
-comment|/// CharUnit values whereever you calculate sizes, offsets, or alignments
+comment|/// CharUnit values wherever you calculate sizes, offsets, or alignments
 comment|/// in character units.
 name|class
 name|CharUnits
@@ -201,6 +201,36 @@ block|}
 name|CharUnits
 operator|&
 name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|Quantity
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CharUnits
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+block|{
+return|return
+name|CharUnits
+argument_list|(
+name|Quantity
+operator|++
+argument_list|)
+return|;
+block|}
+name|CharUnits
+operator|&
+name|operator
 operator|-=
 operator|(
 specifier|const
@@ -218,6 +248,36 @@ block|;
 return|return
 operator|*
 name|this
+return|;
+block|}
+name|CharUnits
+operator|&
+name|operator
+operator|--
+operator|(
+operator|)
+block|{
+operator|--
+name|Quantity
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|CharUnits
+name|operator
+operator|--
+operator|(
+name|int
+operator|)
+block|{
+return|return
+name|CharUnits
+argument_list|(
+name|Quantity
+operator|--
+argument_list|)
 return|;
 block|}
 comment|// Comparison operators.

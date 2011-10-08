@@ -152,9 +152,21 @@ comment|/// The hasREX_WPrefix field from the record
 name|bool
 name|HasREX_WPrefix
 decl_stmt|;
+comment|/// The hasVEXPrefix field from the record
+name|bool
+name|HasVEXPrefix
+decl_stmt|;
 comment|/// The hasVEX_4VPrefix field from the record
 name|bool
 name|HasVEX_4VPrefix
+decl_stmt|;
+comment|/// The hasVEX_WPrefix field from the record
+name|bool
+name|HasVEX_WPrefix
+decl_stmt|;
+comment|/// Inferred from the operands; indicates whether the L bit in the VEX prefix is set
+name|bool
+name|HasVEX_LPrefix
 decl_stmt|;
 comment|/// The hasLockPrefix field from the record
 name|bool
@@ -163,6 +175,10 @@ decl_stmt|;
 comment|/// The isCodeGenOnly filed from the record
 name|bool
 name|IsCodeGenOnly
+decl_stmt|;
+comment|// Whether the instruction has the predicate "Mode64Bit"
+name|bool
+name|Is64Bit
 decl_stmt|;
 comment|/// The instruction name as listed in the tables
 name|std
@@ -246,6 +262,18 @@ comment|///
 comment|/// @return - The degree of filtering to be applied (see filter_ret).
 name|filter_ret
 name|filter
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// hasFROperands - Returns true if any operand is a FR operand.
+name|bool
+name|hasFROperands
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// has256BitOperands - Returns true if any operand is a 256-bit SSE operand.
+name|bool
+name|has256BitOperands
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -387,6 +415,21 @@ name|s
 argument_list|,
 name|bool
 name|hasOpSizePrefix
+argument_list|)
+decl_stmt|;
+specifier|static
+name|OperandEncoding
+name|vvvvRegisterEncodingFromString
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|s
+argument_list|,
+name|bool
+name|HasOpSizePrefix
 argument_list|)
 decl_stmt|;
 comment|/// handleOperand - Converts a single operand from the LLVM table format to

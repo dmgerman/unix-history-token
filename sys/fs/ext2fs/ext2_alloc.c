@@ -755,8 +755,6 @@ decl_stmt|,
 name|newblk
 decl_stmt|,
 name|blkno
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|i
@@ -1067,7 +1065,7 @@ name|soff
 argument_list|,
 name|sbap
 argument_list|,
-name|blkno
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If the block range spans two block maps, get the second map. 	 */

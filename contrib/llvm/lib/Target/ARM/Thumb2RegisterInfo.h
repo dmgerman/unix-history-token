@@ -136,6 +136,8 @@ argument|ARMCC::CondCodes Pred = ARMCC::AL
 argument_list|,
 argument|unsigned PredReg =
 literal|0
+argument_list|,
+argument|unsigned MIFlags = MachineInstr::NoFlags
 argument_list|)
 specifier|const
 block|; }

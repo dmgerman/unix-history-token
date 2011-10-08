@@ -10718,8 +10718,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|old
+operator|==
+name|error_mark_node
 condition|)
 comment|/* No old declaration at all.  */
 goto|goto
@@ -14794,16 +14795,34 @@ condition|(
 name|binding
 condition|)
 block|{
-comment|/* Only namespace-scope bindings can be hidden.  */
-name|gcc_assert
-argument_list|(
-operator|!
+if|if
+condition|(
 name|hidden_name_p
 argument_list|(
 name|binding
 argument_list|)
+condition|)
+block|{
+comment|/* A non namespace-scope binding can only be hidden if 		   we are in a local class, due to friend declarations. 		   In particular, consider:  		   void f() { 		     struct A { 		       friend struct B; 		       void g() { B* b; } // error: B is hidden 		     } 		     struct B {}; 		   }  		   The standard says that "B" is a local class in "f" 		   (but not nested within "A") -- but that name lookup 		   for "B" does not find this declaration until it is 		   declared directly with "f".  		   In particular:  		   [class.friend]  		   If a friend declaration appears in a local class and 		   the name specified is an unqualified name, a prior 		   declaration is looked up without considering scopes 		   that are outside the innermost enclosing non-class 		   scope. For a friend class declaration, if there is no 		   prior declaration, the class that is specified  		   belongs to the innermost enclosing non-class scope, 		   but if it is subsequently referenced, its name is not 		   found by name lookup until a matching declaration is 		   provided in the innermost enclosing nonclass scope. 		*/
+name|gcc_assert
+argument_list|(
+name|current_class_type
+operator|&&
+name|LOCAL_CLASS_P
+argument_list|(
+name|current_class_type
+argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* This binding comes from a friend declaration in the local 		   class. The standard (11.4.8) states that the lookup can 		   only succeed if there is a non-hidden declaration in the 		   current scope, which is not the case here.  */
+name|POP_TIMEVAR_AND_RETURN
+argument_list|(
+name|TV_NAME_LOOKUP
+argument_list|,
+name|NULL_TREE
+argument_list|)
+expr_stmt|;
+block|}
 name|val
 operator|=
 name|binding

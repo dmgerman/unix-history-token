@@ -294,6 +294,14 @@ name|uint8_t
 modifier|*
 name|device_id
 decl_stmt|;
+name|uint8_t
+name|physpath_len
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|physpath
+decl_stmt|;
+comment|/* physical path string form */
 name|struct
 name|ata_params
 name|ident_data

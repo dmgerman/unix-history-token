@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_procdesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -51,6 +57,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -92,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/procdesc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/pioctl.h>
 end_include
 
@@ -123,6 +141,12 @@ begin_include
 include|#
 directive|include
 file|<sys/vnode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/racct.h>
 end_include
 
 begin_include
@@ -340,22 +364,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* Required to be non-static for SysVR4 emulator */
-end_comment
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_ZOMBIE
-argument_list|,
-literal|"zombie"
-argument_list|,
-literal|"zombie proc status"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Hook for NFS teardown procedure. */
 end_comment
 
@@ -380,7 +388,7 @@ end_comment
 
 begin_function
 name|void
-name|sys_exit
+name|sys_sys_exit
 parameter_list|(
 name|struct
 name|thread
@@ -558,6 +566,15 @@ name|p_numthreads
 operator|)
 argument_list|)
 expr_stmt|;
+name|racct_sub
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NTHR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Wakeup anyone in procfs' PIOCWAIT.  They should have a hold 	 * on our vmspace, so we should block below until they have 	 * released their reference to us.  Note that if they have 	 * requested S_EXIT stops we will block here until they ack 	 * via PIOCCONT. 	 */
 name|_STOPEVENT
 argument_list|(
@@ -689,7 +706,7 @@ argument_list|(
 name|q
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|q
 argument_list|,
@@ -1396,7 +1413,7 @@ operator|&=
 operator|~
 name|TDB_SUSPEND
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|q
 argument_list|,
@@ -1521,7 +1538,27 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Notify parent that we're gone.  If parent has the PS_NOCLDWAIT 	 * flag set, or if the handler is set to SIG_IGN, notify process 	 * 1 instead (and hope it will handle this situation). 	 */
+comment|/* 	 * If this is a process with a descriptor, we may not need to deliver 	 * a signal to the parent.  proctree_lock is held over 	 * procdesc_exit() to serialize concurrent calls to close() and 	 * exit(). 	 */
+ifdef|#
+directive|ifdef
+name|PROCDESC
+if|if
+condition|(
+name|p
+operator|->
+name|p_procdesc
+operator|==
+name|NULL
+operator|||
+name|procdesc_exit
+argument_list|(
+name|p
+argument_list|)
+condition|)
+block|{
+endif|#
+directive|endif
+comment|/* 		 * Notify parent that we're gone.  If parent has the 		 * PS_NOCLDWAIT flag set, or if the handler is set to SIG_IGN, 		 * notify process 1 instead (and hope it will handle this 		 * situation). 		 */
 name|PROC_LOCK
 argument_list|(
 name|p
@@ -1606,7 +1643,7 @@ operator|->
 name|p_pptr
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Notify parent, so in case he was wait(2)ing or 		 * executing waitpid(2) with our pid, he will 		 * continue. 		 */
+comment|/* 			 * Notify parent, so in case he was wait(2)ing or 			 * executing waitpid(2) with our pid, he will 			 * continue. 			 */
 name|wakeup
 argument_list|(
 name|pp
@@ -1634,7 +1671,7 @@ name|p_pptr
 operator|==
 name|initproc
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 operator|->
@@ -1668,7 +1705,7 @@ argument_list|)
 expr_stmt|;
 else|else
 comment|/* LINUX thread */
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 operator|->
@@ -1680,6 +1717,20 @@ name|p_sigparent
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|PROCDESC
+block|}
+else|else
+name|PROC_LOCK
+argument_list|(
+name|p
+operator|->
+name|p_pptr
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -1821,7 +1872,7 @@ end_endif
 
 begin_function
 name|int
-name|abort2
+name|sys_abort2
 parameter_list|(
 name|struct
 name|thread
@@ -2239,7 +2290,7 @@ end_comment
 
 begin_function
 name|int
-name|wait4
+name|sys_wait4
 parameter_list|(
 name|struct
 name|thread
@@ -2374,7 +2425,6 @@ comment|/*  * Reap the remains of a zombie process and optionally return status 
 end_comment
 
 begin_function
-specifier|static
 name|void
 name|proc_reap
 parameter_list|(
@@ -2575,18 +2625,25 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|p
-operator|->
-name|p_oppid
-operator|=
-literal|0
-expr_stmt|;
 name|proc_reparent
 argument_list|(
 name|p
 argument_list|,
 name|t
 argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|p_pptr
+operator|->
+name|p_dbg_child
+operator|--
+expr_stmt|;
+name|p
+operator|->
+name|p_oppid
+operator|=
+literal|0
 expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
@@ -2663,6 +2720,24 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PROCDESC
+if|if
+condition|(
+name|p
+operator|->
+name|p_procdesc
+operator|!=
+name|NULL
+condition|)
+name|procdesc_reap
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|sx_xunlock
 argument_list|(
 operator|&
@@ -2738,6 +2813,36 @@ operator|-
 literal|1
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Destroy resource accounting information associated with the process. 	 */
+ifdef|#
+directive|ifdef
+name|RACCT
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|racct_sub
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NPROC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|racct_proc_exit
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Free credentials, arguments, and sigacts. 	 */
@@ -2918,6 +3023,7 @@ name|q
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* If we don't know the option, just return. */
 if|if
 condition|(
 name|options
@@ -3315,6 +3421,20 @@ operator|&
 name|proctree_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_dbg_child
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+else|else
 return|return
 operator|(
 name|ECHILD

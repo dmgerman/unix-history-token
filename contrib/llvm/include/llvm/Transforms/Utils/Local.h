@@ -74,10 +74,22 @@ name|class
 name|BasicBlock
 decl_stmt|;
 name|class
+name|Function
+decl_stmt|;
+name|class
 name|BranchInst
 decl_stmt|;
 name|class
 name|Instruction
+decl_stmt|;
+name|class
+name|DbgDeclareInst
+decl_stmt|;
+name|class
+name|StoreInst
+decl_stmt|;
+name|class
+name|LoadInst
 decl_stmt|;
 name|class
 name|Value
@@ -97,6 +109,9 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|class
+name|DIBuilder
+decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -112,13 +127,20 @@ comment|/// ConstantFoldTerminator - If a terminator instruction is predicated o
 comment|/// constant value, convert it into an unconditional branch to the constant
 comment|/// destination.  This is a nontrivial operation because the successors of this
 comment|/// basic block must have their PHI nodes updated.
-comment|///
+comment|/// Also calls RecursivelyDeleteTriviallyDeadInstructions() on any branch/switch
+comment|/// conditions and indirectbr addresses this might make dead if
+comment|/// DeleteDeadConditions is true.
 name|bool
 name|ConstantFoldTerminator
 parameter_list|(
 name|BasicBlock
 modifier|*
 name|BB
+parameter_list|,
+name|bool
+name|DeleteDeadConditions
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
@@ -165,10 +187,6 @@ comment|/// simplify any instructions in it and recursively delete dead instruct
 comment|///
 comment|/// This returns true if it changed the code, note that it can delete
 comment|/// instructions in other blocks as well in this block.
-comment|///
-comment|/// WARNING: Do not use this function on unreachable blocks, as recursive
-comment|/// simplification is not able to handle corner-case scenarios that can
-comment|/// arise in them.
 name|bool
 name|SimplifyInstructionsInBlock
 parameter_list|(
@@ -389,6 +407,66 @@ name|TD
 argument_list|)
 return|;
 block|}
+comment|///===---------------------------------------------------------------------===//
+comment|///  Dbg Intrinsic utilities
+comment|///
+comment|/// Inserts a llvm.dbg.value instrinsic before the stores to an alloca'd value
+comment|/// that has an associated llvm.dbg.decl intrinsic.
+name|bool
+name|ConvertDebugDeclareToDebugValue
+parameter_list|(
+name|DbgDeclareInst
+modifier|*
+name|DDI
+parameter_list|,
+name|StoreInst
+modifier|*
+name|SI
+parameter_list|,
+name|DIBuilder
+modifier|&
+name|Builder
+parameter_list|)
+function_decl|;
+comment|/// Inserts a llvm.dbg.value instrinsic before the stores to an alloca'd value
+comment|/// that has an associated llvm.dbg.decl intrinsic.
+name|bool
+name|ConvertDebugDeclareToDebugValue
+parameter_list|(
+name|DbgDeclareInst
+modifier|*
+name|DDI
+parameter_list|,
+name|LoadInst
+modifier|*
+name|LI
+parameter_list|,
+name|DIBuilder
+modifier|&
+name|Builder
+parameter_list|)
+function_decl|;
+comment|/// LowerDbgDeclare - Lowers llvm.dbg.declare intrinsics into appropriate set
+comment|/// of llvm.dbg.value intrinsics.
+name|bool
+name|LowerDbgDeclare
+parameter_list|(
+name|Function
+modifier|&
+name|F
+parameter_list|)
+function_decl|;
+comment|/// FindAllocaDbgDeclare - Finds the llvm.dbg.declare intrinsic corresponding to
+comment|/// an alloca, if any.
+name|DbgDeclareInst
+modifier|*
+name|FindAllocaDbgDeclare
+parameter_list|(
+name|Value
+modifier|*
+name|V
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

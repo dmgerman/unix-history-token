@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<libprocstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -61,9 +67,6 @@ begin_function
 name|void
 name|procstat_threads
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -150,7 +153,9 @@ index|[
 literal|3
 index|]
 operator|=
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 expr_stmt|;
 name|len
 operator|=
@@ -189,7 +194,9 @@ name|warn
 argument_list|(
 literal|"sysctl: kern.proc.pid: %d"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 return|return;
@@ -247,7 +254,9 @@ name|warn
 argument_list|(
 literal|"sysctl: kern.proc.pid: %d"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|free
@@ -302,7 +311,9 @@ name|printf
 argument_list|(
 literal|"%5d "
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|printf
@@ -341,7 +352,7 @@ name|strlen
 argument_list|(
 name|kipp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 operator|&&
 operator|(
@@ -353,7 +364,7 @@ name|ki_comm
 argument_list|,
 name|kipp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 argument_list|)
 operator|!=
 literal|0
@@ -362,7 +373,7 @@ operator|)
 condition|?
 name|kipp
 operator|->
-name|ki_ocomm
+name|ki_tdname
 else|:
 literal|"-"
 argument_list|)

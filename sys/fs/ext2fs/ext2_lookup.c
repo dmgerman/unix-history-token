@@ -94,19 +94,25 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/ext2fs/ext2_extern.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/ext2fs/ext2fs.h>
 end_include
 
 begin_include
 include|#
 directive|include
+file|<fs/ext2fs/ext2_dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/ext2fs/ext2_dir.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<fs/ext2fs/ext2_extern.h>
 end_include
 
 begin_ifdef
@@ -328,11 +334,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Vnode op for reading directories.  *  * The routine below assumes that the on-disk format of a directory  * is the same as that defined by<sys/dirent.h>. If the on-disk  * format changes, then it will be necessary to do a conversion  * from the on-disk format that read returns to the format defined  * by<sys/dirent.h>.  */
-end_comment
-
-begin_comment
-comment|/*  * this is exactly what we do here - the problem is that the conversion  * will blow up some entries by four bytes, so it can't be done in place.  * This is too bad. Right now the conversion is done entry by entry, the  * converted entry is sent via uiomove.  *  * XXX allocate a buffer, convert as many entries as possible, then send  * the whole buffer to uiomove  */
+comment|/*  * Vnode op for reading directories.  *  * This function has to convert directory entries from the on-disk  * format to the format defined by<sys/dirent.h>.  Unfortunately, the  * conversion will blow up some entries by four bytes, so it can't be  * done in place.  Instead, the conversion is done entry by entry and  * the converted entry is sent via uiomove.  *  * XXX allocate a buffer, convert as many entries as possible, then send  * the whole buffer to uiomove  */
 end_comment
 
 begin_function
@@ -3403,6 +3405,26 @@ operator|)
 name|newentrysize
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DOINGASYNC
+argument_list|(
+name|dvp
+argument_list|)
+condition|)
+block|{
+name|bdwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+block|}
+else|else
+block|{
 name|error
 operator|=
 name|bwrite
@@ -3410,6 +3432,7 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 name|dp
 operator|->
 name|i_flag
@@ -3675,6 +3698,25 @@ name|rep
 operator|->
 name|e2d_reclen
 expr_stmt|;
+if|if
+condition|(
+name|DOINGASYNC
+argument_list|(
+name|dvp
+argument_list|)
+operator|&&
+name|dp
+operator|->
+name|i_count
+operator|!=
+literal|0
+condition|)
+name|bdwrite
+argument_list|(
+name|bp
+argument_list|)
+expr_stmt|;
+else|else
 name|error
 operator|=
 name|bwrite
@@ -4163,7 +4205,7 @@ goto|;
 block|}
 name|rootino
 operator|=
-name|ROOTINO
+name|EXT2_ROOTINO
 expr_stmt|;
 name|error
 operator|=

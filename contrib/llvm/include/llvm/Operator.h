@@ -931,7 +931,13 @@ name|Instruction
 operator|::
 name|Add
 operator|>
-block|{}
+block|{
+operator|~
+name|AddOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|SubOperator
@@ -945,7 +951,13 @@ name|Instruction
 operator|::
 name|Sub
 operator|>
-block|{}
+block|{
+operator|~
+name|SubOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|MulOperator
@@ -959,7 +971,13 @@ name|Instruction
 operator|::
 name|Mul
 operator|>
-block|{}
+block|{
+operator|~
+name|MulOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|ShlOperator
@@ -973,7 +991,13 @@ name|Instruction
 operator|::
 name|Shl
 operator|>
-block|{}
+block|{
+operator|~
+name|ShlOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|SDivOperator
@@ -987,7 +1011,13 @@ name|Instruction
 operator|::
 name|SDiv
 operator|>
-block|{}
+block|{
+operator|~
+name|SDivOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|UDivOperator
@@ -1001,7 +1031,13 @@ name|Instruction
 operator|::
 name|UDiv
 operator|>
-block|{}
+block|{
+operator|~
+name|UDivOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|AShrOperator
@@ -1015,7 +1051,13 @@ name|Instruction
 operator|::
 name|AShr
 operator|>
-block|{}
+block|{
+operator|~
+name|AShrOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|LShrOperator
@@ -1029,7 +1071,13 @@ name|Instruction
 operator|::
 name|LShr
 operator|>
-block|{}
+block|{
+operator|~
+name|LShrOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|}
 block|;
 name|class
 name|GEPOperator
@@ -1043,7 +1091,13 @@ name|Instruction
 operator|::
 name|GetElementPtr
 operator|>
-block|{   enum
+block|{
+operator|~
+name|GEPOperator
+argument_list|()
+block|;
+comment|// DO NOT IMPLEMENT
+block|enum
 block|{
 name|IsInBounds
 operator|=

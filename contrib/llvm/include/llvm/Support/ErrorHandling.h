@@ -262,15 +262,23 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/// Prints the message and location info to stderr in !NDEBUG builds.
+comment|/// Marks that the current location is not supposed to be reachable.
 end_comment
 
 begin_comment
-comment|/// This is intended to be used for "impossible" situations that imply
+comment|/// In !NDEBUG builds, prints the message and location info to stderr.
 end_comment
 
 begin_comment
-comment|/// a bug in the compiler.
+comment|/// In NDEBUG builds, becomes an optimizer hint that the current location
+end_comment
+
+begin_comment
+comment|/// is not supposed to be reachable.  On compilers that don't support
+end_comment
+
+begin_comment
+comment|/// such hints, prints a reduced message instead.
 end_comment
 
 begin_comment
@@ -278,15 +286,11 @@ comment|///
 end_comment
 
 begin_comment
-comment|/// In NDEBUG mode it only prints "UNREACHABLE executed".
+comment|/// Use this instead of assert(0).  It conveys intent more clearly and
 end_comment
 
 begin_comment
-comment|/// Use this instead of assert(0), so that the compiler knows this path
-end_comment
-
-begin_comment
-comment|/// is not reachable even for NDEBUG builds.
+comment|/// allows compilers to omit some unnecessary code.
 end_comment
 
 begin_ifndef
@@ -304,6 +308,25 @@ name|msg
 parameter_list|)
 define|\
 value|::llvm::llvm_unreachable_internal(msg, __FILE__, __LINE__)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|LLVM_BUILTIN_UNREACHABLE
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|llvm_unreachable
+parameter_list|(
+name|msg
+parameter_list|)
+value|LLVM_BUILTIN_UNREACHABLE
 end_define
 
 begin_else

@@ -148,9 +148,15 @@ argument|OffsetOfExpr *E
 argument_list|)
 block|{ }
 name|void
-name|VisitSizeOfAlignOfExpr
+name|VisitUnaryExprOrTypeTraitExpr
 argument_list|(
-argument|SizeOfAlignOfExpr *E
+argument|UnaryExprOrTypeTraitExpr *E
+argument_list|)
+block|{ }
+name|void
+name|VisitExpressionTraitExpr
+argument_list|(
+argument|ExpressionTraitExpr *E
 argument_list|)
 block|{ }
 name|void

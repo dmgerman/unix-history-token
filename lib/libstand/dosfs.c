@@ -2043,18 +2043,7 @@ modifier|*
 name|d
 parameter_list|)
 block|{
-name|DOS_FILE
-modifier|*
-name|f
-init|=
-operator|(
-name|DOS_FILE
-operator|*
-operator|)
-name|fd
-operator|->
-name|f_fsdata
-decl_stmt|;
+comment|/* DOS_FILE *f = (DOS_FILE *)fd->f_fsdata; */
 name|u_char
 name|fn
 index|[
@@ -2371,6 +2360,7 @@ name|d
 operator|->
 name|d_fileno
 operator|=
+operator|(
 name|dd
 operator|.
 name|de
@@ -2381,6 +2371,7 @@ literal|1
 index|]
 operator|<<
 literal|8
+operator|)
 operator|+
 name|dd
 operator|.

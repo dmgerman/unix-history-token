@@ -84,6 +84,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 0 = nosys */
@@ -105,6 +107,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 1 = isc_setostype */
@@ -129,6 +133,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 2 = ibcs2_rename */
@@ -153,6 +159,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 3 = ibcs2_sigaction */
@@ -177,6 +185,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 4 = ibcs2_sigprocmask */
@@ -201,6 +211,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 5 = ibcs2_sigpending */
@@ -214,7 +226,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getgroups
+name|sys_getgroups
 block|,
 name|AUE_GETGROUPS
 block|,
@@ -225,6 +237,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 6 = getgroups */
@@ -238,7 +252,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setgroups
+name|sys_setgroups
 block|,
 name|AUE_SETGROUPS
 block|,
@@ -249,6 +263,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 7 = setgroups */
@@ -273,6 +289,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 8 = ibcs2_pathconf */
@@ -297,6 +315,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 9 = ibcs2_fpathconf */
@@ -318,6 +338,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 10 = nosys */
@@ -342,6 +364,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 11 = ibcs2_wait */
@@ -352,7 +376,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setsid
+name|sys_setsid
 block|,
 name|AUE_SETSID
 block|,
@@ -363,6 +387,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 12 = setsid */
@@ -373,7 +399,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getpid
+name|sys_getpid
 block|,
 name|AUE_GETPID
 block|,
@@ -384,6 +410,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 13 = getpid */
@@ -405,6 +433,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 14 = isc_adduser */
@@ -426,6 +456,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 15 = isc_setuser */
@@ -450,6 +482,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 16 = ibcs2_sysconf */
@@ -474,6 +508,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 17 = ibcs2_sigsuspend */
@@ -498,6 +534,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 18 = ibcs2_symlink */
@@ -522,6 +560,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 19 = ibcs2_readlink */
@@ -543,6 +583,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 20 = isc_getmajor */

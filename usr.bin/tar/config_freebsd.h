@@ -124,6 +124,13 @@ name|HAVE_LIMITS_H
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|HAVE_LINK
+value|1
+end_define
+
 begin_undef
 undef|#
 directive|undef
@@ -343,6 +350,13 @@ begin_define
 define|#
 directive|define
 name|HAVE_WCTYPE_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_WCSCMP
 value|1
 end_define
 

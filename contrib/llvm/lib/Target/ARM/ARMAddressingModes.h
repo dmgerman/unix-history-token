@@ -1671,7 +1671,8 @@ comment|// addrmode2 := reg +/- imm12
 comment|//
 comment|// The first operand is always a Reg.  The second operand is a reg if in
 comment|// reg/reg form, otherwise it's reg#0.  The third field encodes the operation
-comment|// in bit 12, the immediate in bits 0-11, and the shift op in 13-15.
+comment|// in bit 12, the immediate in bits 0-11, and the shift op in 13-15. The
+comment|// fourth operand 16-17 encodes the index mode.
 comment|//
 comment|// If this addressing mode is a frame index (before prolog/epilog insertion
 comment|// and code rewriting), this operand will have the form:  FI#, reg0,<offs>
@@ -1690,6 +1691,11 @@ name|Imm12
 parameter_list|,
 name|ShiftOpc
 name|SO
+parameter_list|,
+name|unsigned
+name|IdxMode
+init|=
+literal|0
 parameter_list|)
 block|{
 name|assert
@@ -1728,6 +1734,12 @@ operator|(
 name|SO
 operator|<<
 literal|13
+operator|)
+operator||
+operator|(
+name|IdxMode
+operator|<<
+literal|16
 operator|)
 return|;
 block|}
@@ -1793,10 +1805,31 @@ call|(
 name|ShiftOpc
 call|)
 argument_list|(
+operator|(
 name|AM2Opc
 operator|>>
 literal|13
+operator|)
+operator|&
+literal|7
 argument_list|)
+return|;
+block|}
+specifier|static
+specifier|inline
+name|unsigned
+name|getAM2IdxMode
+parameter_list|(
+name|unsigned
+name|AM2Opc
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AM2Opc
+operator|>>
+literal|16
+operator|)
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -1810,7 +1843,8 @@ comment|// addrmode3 := reg +/- imm8
 comment|//
 comment|// The first operand is always a Reg.  The second operand is a reg if in
 comment|// reg/reg form, otherwise it's reg#0.  The third field encodes the operation
-comment|// in bit 8, the immediate in bits 0-7.
+comment|// in bit 8, the immediate in bits 0-7. The fourth operand 9-10 encodes the
+comment|// index mode.
 comment|/// getAM3Opc - This function encodes the addrmode3 opc field.
 specifier|static
 specifier|inline
@@ -1823,6 +1857,11 @@ parameter_list|,
 name|unsigned
 name|char
 name|Offset
+parameter_list|,
+name|unsigned
+name|IdxMode
+init|=
+literal|0
 parameter_list|)
 block|{
 name|bool
@@ -1843,6 +1882,12 @@ literal|8
 operator|)
 operator||
 name|Offset
+operator||
+operator|(
+name|IdxMode
+operator|<<
+literal|9
+operator|)
 return|;
 block|}
 specifier|static
@@ -1884,6 +1929,23 @@ condition|?
 name|sub
 else|:
 name|add
+return|;
+block|}
+specifier|static
+specifier|inline
+name|unsigned
+name|getAM3IdxMode
+parameter_list|(
+name|unsigned
+name|AM3Opc
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AM3Opc
+operator|>>
+literal|9
+operator|)
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//

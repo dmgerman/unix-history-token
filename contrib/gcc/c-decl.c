@@ -15866,6 +15866,19 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|warn_variable_decl
+condition|)
+name|warning
+argument_list|(
+literal|0
+argument_list|,
+literal|"variable-sized array %qs"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(

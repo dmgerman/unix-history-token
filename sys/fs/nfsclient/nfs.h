@@ -528,20 +528,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ncl_mountroot
+name|void
+name|ncl_nfsiodnew
 parameter_list|(
-name|struct
-name|mount
-modifier|*
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|ncl_nfsiodnew
+name|void
+name|ncl_nfsiodnew_tq
 parameter_list|(
+name|__unused
+name|void
+modifier|*
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;

@@ -77,7 +77,7 @@ name|failure
 argument_list|(
 literal|"File %s does not exist?!"
 argument_list|,
-name|testprog
+name|testprogfile
 argument_list|)
 expr_stmt|;
 if|if
@@ -89,7 +89,7 @@ literal|0
 argument_list|,
 name|stat
 argument_list|(
-name|testprog
+name|testprogfile
 argument_list|,
 operator|&
 name|st
@@ -105,7 +105,7 @@ name|failure
 argument_list|(
 literal|"%s is not executable?!"
 argument_list|,
-name|testprog
+name|testprogfile
 argument_list|)
 expr_stmt|;
 if|if

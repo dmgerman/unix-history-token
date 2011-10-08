@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -356,6 +356,35 @@ block|{
 literal|"visible"
 block|,
 name|ZFS_SNAPDIR_VISIBLE
+block|}
+block|,
+block|{
+name|NULL
+block|}
+block|}
+decl_stmt|;
+specifier|static
+name|zprop_index_t
+name|acl_mode_table
+index|[]
+init|=
+block|{
+block|{
+literal|"discard"
+block|,
+name|ZFS_ACL_DISCARD
+block|}
+block|,
+block|{
+literal|"groupmask"
+block|,
+name|ZFS_ACL_GROUPMASK
+block|}
+block|,
+block|{
+literal|"passthrough"
+block|,
+name|ZFS_ACL_PASSTHROUGH
 block|}
 block|,
 block|{
@@ -793,6 +822,25 @@ argument_list|,
 literal|"SNAPDIR"
 argument_list|,
 name|snapdir_table
+argument_list|)
+expr_stmt|;
+name|zprop_register_index
+argument_list|(
+name|ZFS_PROP_ACLMODE
+argument_list|,
+literal|"aclmode"
+argument_list|,
+name|ZFS_ACL_DISCARD
+argument_list|,
+name|PROP_INHERIT
+argument_list|,
+name|ZFS_TYPE_FILESYSTEM
+argument_list|,
+literal|"discard | groupmask | passthrough"
+argument_list|,
+literal|"ACLMODE"
+argument_list|,
+name|acl_mode_table
 argument_list|)
 expr_stmt|;
 name|zprop_register_index
@@ -1409,6 +1457,23 @@ argument_list|)
 expr_stmt|;
 name|zprop_register_number
 argument_list|(
+name|ZFS_PROP_REFRATIO
+argument_list|,
+literal|"refcompressratio"
+argument_list|,
+literal|0
+argument_list|,
+name|PROP_READONLY
+argument_list|,
+name|ZFS_TYPE_DATASET
+argument_list|,
+literal|"<1.00x or higher if compressed>"
+argument_list|,
+literal|"REFRATIO"
+argument_list|)
+expr_stmt|;
+name|zprop_register_number
+argument_list|(
 name|ZFS_PROP_VOLBLOCKSIZE
 argument_list|,
 literal|"volblocksize"
@@ -1759,22 +1824,6 @@ argument_list|,
 name|ZFS_TYPE_DATASET
 argument_list|,
 literal|"OBJSETID"
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Property to be removed once libbe is integrated 	 */
-name|zprop_register_hidden
-argument_list|(
-name|ZFS_PROP_PRIVATE
-argument_list|,
-literal|"priv_prop"
-argument_list|,
-name|PROP_TYPE_NUMBER
-argument_list|,
-name|PROP_READONLY
-argument_list|,
-name|ZFS_TYPE_FILESYSTEM
-argument_list|,
-literal|"PRIV_PROP"
 argument_list|)
 expr_stmt|;
 comment|/* oddball properties */

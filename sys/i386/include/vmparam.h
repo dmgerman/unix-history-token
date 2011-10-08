@@ -552,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_MAX
-value|(320 * 1024 * 1024)
+value|((VM_MAX_KERNEL_ADDRESS - \     VM_MIN_KERNEL_ADDRESS) * 2 / 5)
 end_define
 
 begin_endif
@@ -581,6 +581,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(64 * 1024)
+end_define
+
+begin_comment
+comment|/* 64KB */
+end_comment
 
 begin_endif
 endif|#

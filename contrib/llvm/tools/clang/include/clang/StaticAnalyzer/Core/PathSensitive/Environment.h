@@ -175,7 +175,7 @@ name|end
 argument_list|()
 return|;
 block|}
-comment|/// GetSVal - Fetches the current binding of the expression in the
+comment|/// getSVal - Fetches the current binding of the expression in the
 comment|///  Environment.
 name|SVal
 name|getSVal
@@ -188,6 +188,11 @@ argument_list|,
 name|SValBuilder
 operator|&
 name|svalBuilder
+argument_list|,
+name|bool
+name|useOnlyDirectBindings
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;

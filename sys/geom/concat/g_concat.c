@@ -62,6 +62,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -2818,13 +2824,6 @@ operator|->
 name|md_name
 argument_list|)
 expr_stmt|;
-name|gp
-operator|->
-name|softc
-operator|=
-name|NULL
-expr_stmt|;
-comment|/* for a moment */
 name|sc
 operator|=
 name|malloc
@@ -3567,7 +3566,8 @@ index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|strcmp
+operator|!
+name|g_compare_names
 argument_list|(
 name|md
 operator|.
@@ -3577,8 +3577,6 @@ name|pp
 operator|->
 name|name
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

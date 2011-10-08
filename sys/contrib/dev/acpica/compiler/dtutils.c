@@ -320,6 +320,10 @@ argument_list|,
 name|ExtraMessage
 argument_list|)
 expr_stmt|;
+comment|/*  * TBD: remove this entire function, DtFatal  *  * We cannot abort the compiler on error, because we may be compiling a  * list of files. We must move on to the next file.  */
+ifdef|#
+directive|ifdef
+name|__OBSOLETE
 name|CmCleanupAndExit
 argument_list|()
 expr_stmt|;
@@ -328,6 +332,8 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -585,7 +591,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtGetFieldValue  *  * PARAMETERS:  Field               - Current field list pointer  *              Name                - Field name  *  * RETURN:      Field value  *  * DESCRIPTION: Get field value  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtGetFieldValue  *  * PARAMETERS:  Field               - Current field list pointer  *  * RETURN:      Field value  *  * DESCRIPTION: Get field value  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -596,49 +602,25 @@ parameter_list|(
 name|DT_FIELD
 modifier|*
 name|Field
-parameter_list|,
-name|char
-modifier|*
-name|Name
 parameter_list|)
-block|{
-comment|/* Search the field list for the name */
-while|while
-condition|(
-name|Field
-condition|)
 block|{
 if|if
 condition|(
 operator|!
-name|ACPI_STRCMP
-argument_list|(
-name|Name
-argument_list|,
 name|Field
-operator|->
-name|Name
-argument_list|)
 condition|)
 block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|Field
 operator|->
 name|Value
-operator|)
-return|;
-block|}
-name|Field
-operator|=
-name|Field
-operator|->
-name|Next
-expr_stmt|;
-block|}
-return|return
-operator|(
-name|NULL
 operator|)
 return|;
 block|}
@@ -880,7 +862,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    DtGetFieldLength  *  * PARAMETERS:  Field               - Current field list pointer  *              Info                - Data table info  *  * RETURN:      Field length  *  * DESCRIPTION: Get length of bytes needed to compile the field  *  * Note: This function must remain in sync with AcpiDmDumpTable.  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    DtGetFieldLength  *  * PARAMETERS:  Field               - Current field  *              Info                - Data table info  *  * RETURN:      Field length  *  * DESCRIPTION: Get length of bytes needed to compile the field  *  * Note: This function must remain in sync with AcpiDmDumpTable.  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1078,10 +1060,6 @@ operator|=
 name|DtGetFieldValue
 argument_list|(
 name|Field
-argument_list|,
-name|Info
-operator|->
-name|Name
 argument_list|)
 expr_stmt|;
 if|if
@@ -1122,6 +1100,11 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -1154,10 +1137,6 @@ operator|=
 name|DtGetFieldValue
 argument_list|(
 name|Field
-argument_list|,
-name|Info
-operator|->
-name|Name
 argument_list|)
 expr_stmt|;
 if|if
@@ -1196,6 +1175,11 @@ argument_list|,
 name|MsgBuffer
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 break|break;
 case|case
@@ -1225,10 +1209,6 @@ operator|=
 name|DtGetFieldValue
 argument_list|(
 name|Field
-argument_list|,
-name|Info
-operator|->
-name|Name
 argument_list|)
 expr_stmt|;
 comment|/* TBD: error if Value is NULL? (as below?) */
@@ -1259,7 +1239,11 @@ argument_list|,
 literal|"Invalid table opcode"
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 return|return
 operator|(

@@ -1370,9 +1370,10 @@ operator|==
 name|MSDOSFSROOT_OFS
 condition|)
 return|return
-name|EROFS
+operator|(
+name|EBUSY
+operator|)
 return|;
-comment|/* really? XXX */
 comment|/* 		 * Write access to directory required to delete files. 		 */
 name|error
 operator|=
@@ -1487,9 +1488,10 @@ operator|==
 name|MSDOSFSROOT_OFS
 condition|)
 return|return
-name|EROFS
+operator|(
+name|EBUSY
+operator|)
 return|;
-comment|/* really? XXX */
 name|error
 operator|=
 name|VOP_ACCESS

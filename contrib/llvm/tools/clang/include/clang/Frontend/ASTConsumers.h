@@ -59,12 +59,6 @@ directive|define
 name|DRIVER_ASTCONSUMERS_H
 end_define
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -114,21 +108,6 @@ comment|// implementation is still incomplete.
 name|ASTConsumer
 modifier|*
 name|CreateASTPrinter
-argument_list|(
-name|llvm
-operator|::
-name|raw_ostream
-operator|*
-name|OS
-argument_list|)
-decl_stmt|;
-comment|// AST XML-printer: prints out the AST in a XML format
-comment|// The output is intended to be in a format such that
-comment|// clang or any other tool could re-parse the output back into the same AST,
-comment|// but the implementation is still incomplete.
-name|ASTConsumer
-modifier|*
-name|CreateASTPrinterXML
 argument_list|(
 name|llvm
 operator|::

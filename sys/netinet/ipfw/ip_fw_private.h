@@ -172,6 +172,12 @@ modifier|*
 name|next_hop
 decl_stmt|;
 comment|/* forward address		*/
+name|struct
+name|sockaddr_in6
+modifier|*
+name|next_hop6
+decl_stmt|;
+comment|/* ipv6 forward address		*/
 comment|/* 	 * On return, it points to the matching rule. 	 * On entry, rule.slot> 0 means the info is valid and 	 * contains the starting rule for an ipfw search. 	 * If chain_id == chain->id&& slot>0 then jump to that slot. 	 * Otherwise, we locate the first rule>= rulenum:rule_id 	 */
 name|struct
 name|ipfw_rule_ref
@@ -838,6 +844,10 @@ name|uint32_t
 name|id
 decl_stmt|;
 comment|/* ruleset id */
+name|uint32_t
+name|gencnt
+decl_stmt|;
+comment|/* generation count */
 block|}
 struct|;
 end_struct

@@ -1433,7 +1433,7 @@ comment|/// iplist - The subset of list functionality that can safely be used on
 end_comment
 
 begin_comment
-comment|/// of polymorphic types, i.e. a heterogenous list with a common base class that
+comment|/// of polymorphic types, i.e. a heterogeneous list with a common base class that
 end_comment
 
 begin_comment

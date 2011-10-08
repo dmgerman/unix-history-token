@@ -100,19 +100,25 @@ block|,
 comment|// Module sub-block id's.
 name|PARAMATTR_BLOCK_ID
 block|,
-name|TYPE_BLOCK_ID
+comment|/// TYPE_BLOCK_ID_OLD - This is the type descriptor block in LLVM 2.9 and
+comment|/// earlier, replaced with TYPE_BLOCK_ID2.  FIXME: Remove in LLVM 3.1.
+name|TYPE_BLOCK_ID_OLD
 block|,
 name|CONSTANTS_BLOCK_ID
 block|,
 name|FUNCTION_BLOCK_ID
 block|,
-name|TYPE_SYMTAB_BLOCK_ID
+comment|/// TYPE_SYMTAB_BLOCK_ID_OLD - This type descriptor is from LLVM 2.9 and
+comment|/// earlier bitcode files.  FIXME: Remove in LLVM 3.1
+name|TYPE_SYMTAB_BLOCK_ID_OLD
 block|,
 name|VALUE_SYMTAB_BLOCK_ID
 block|,
 name|METADATA_BLOCK_ID
 block|,
 name|METADATA_ATTACHMENT_ID
+block|,
+name|TYPE_BLOCK_ID_NEW
 block|}
 enum|;
 comment|/// MODULE blocks have a number of optional fields and subblocks.
@@ -237,7 +243,9 @@ init|=
 literal|9
 block|,
 comment|// FUNCTION: [vararg, retty, paramty x N]
-name|TYPE_CODE_STRUCT
+comment|// FIXME: This is the encoding used for structs in LLVM 2.9 and earlier.
+comment|// REMOVE this in LLVM 3.1
+name|TYPE_CODE_STRUCT_OLD
 init|=
 literal|10
 block|,
@@ -278,7 +286,22 @@ comment|// METADATA
 name|TYPE_CODE_X86_MMX
 init|=
 literal|17
+block|,
 comment|// X86 MMX
+name|TYPE_CODE_STRUCT_ANON
+init|=
+literal|18
+block|,
+comment|// STRUCT_ANON: [ispacked, eltty x N]
+name|TYPE_CODE_STRUCT_NAME
+init|=
+literal|19
+block|,
+comment|// STRUCT_NAME: [strchr x N]
+name|TYPE_CODE_STRUCT_NAMED
+init|=
+literal|20
+comment|// STRUCT_NAMED: [ispacked, eltty x N]
 block|}
 enum|;
 comment|// The type symbol table only has one code (TST_ENTRY_CODE).
@@ -314,56 +337,36 @@ init|=
 literal|1
 block|,
 comment|// MDSTRING:      [values]
-comment|// FIXME: Remove NODE in favor of NODE2 in LLVM 3.0
-name|METADATA_NODE
-init|=
-literal|2
-block|,
-comment|// NODE with potentially invalid metadata
-comment|// FIXME: Remove FN_NODE in favor of FN_NODE2 in LLVM 3.0
-name|METADATA_FN_NODE
-init|=
-literal|3
-block|,
-comment|// FN_NODE with potentially invalid metadata
+comment|// 2 is unused.
+comment|// 3 is unused.
 name|METADATA_NAME
 init|=
 literal|4
 block|,
 comment|// STRING:        [values]
-comment|// FIXME: Remove NAMED_NODE in favor of NAMED_NODE2 in LLVM 3.0
-name|METADATA_NAMED_NODE
-init|=
-literal|5
-block|,
-comment|// NAMED_NODE with potentially invalid metadata
+comment|// 5 is unused.
 name|METADATA_KIND
 init|=
 literal|6
 block|,
 comment|// [n x [id, name]]
-comment|// FIXME: Remove ATTACHMENT in favor of ATTACHMENT2 in LLVM 3.0
-name|METADATA_ATTACHMENT
-init|=
-literal|7
-block|,
-comment|// ATTACHMENT with potentially invalid metadata
-name|METADATA_NODE2
+comment|// 7 is unused.
+name|METADATA_NODE
 init|=
 literal|8
 block|,
-comment|// NODE2:         [n x (type num, value num)]
-name|METADATA_FN_NODE2
+comment|// NODE:          [n x (type num, value num)]
+name|METADATA_FN_NODE
 init|=
 literal|9
 block|,
-comment|// FN_NODE2:      [n x (type num, value num)]
-name|METADATA_NAMED_NODE2
+comment|// FN_NODE:       [n x (type num, value num)]
+name|METADATA_NAMED_NODE
 init|=
 literal|10
 block|,
-comment|// NAMED_NODE2:   [n x mdnodes]
-name|METADATA_ATTACHMENT2
+comment|// NAMED_NODE:    [n x mdnodes]
+name|METADATA_ATTACHMENT
 init|=
 literal|11
 comment|// [m x [value, [n x [id, mdnode]]]
@@ -707,16 +710,8 @@ init|=
 literal|16
 block|,
 comment|// PHI:        [ty, val0,bb0, ...]
-name|FUNC_CODE_INST_MALLOC
-init|=
-literal|17
-block|,
-comment|// MALLOC:     [instty, op, align]
-name|FUNC_CODE_INST_FREE
-init|=
-literal|18
-block|,
-comment|// FREE:       [opty, op]
+comment|// 17 is unused.
+comment|// 18 is unused.
 name|FUNC_CODE_INST_ALLOCA
 init|=
 literal|19
@@ -727,18 +722,8 @@ init|=
 literal|20
 block|,
 comment|// LOAD:       [opty, op, align, vol]
-comment|// FIXME: Remove STORE in favor of STORE2 in LLVM 3.0
-name|FUNC_CODE_INST_STORE
-init|=
-literal|21
-block|,
-comment|// STORE:      [valty,val,ptr, align, vol]
-comment|// FIXME: Remove CALL in favor of CALL2 in LLVM 3.0
-name|FUNC_CODE_INST_CALL
-init|=
-literal|22
-block|,
-comment|// CALL with potentially invalid metadata
+comment|// 21 is unused.
+comment|// 22 is unused.
 name|FUNC_CODE_INST_VAARG
 init|=
 literal|23
@@ -747,17 +732,12 @@ comment|// VAARG:      [valistty, valist, instty]
 comment|// This store code encodes the pointer type, rather than the value type
 comment|// this is so information only available in the pointer type (e.g. address
 comment|// spaces) is retained.
-name|FUNC_CODE_INST_STORE2
+name|FUNC_CODE_INST_STORE
 init|=
 literal|24
 block|,
 comment|// STORE:      [ptrty,ptr,val, align, vol]
-comment|// FIXME: Remove GETRESULT in favor of EXTRACTVAL in LLVM 3.0
-name|FUNC_CODE_INST_GETRESULT
-init|=
-literal|25
-block|,
-comment|// GETRESULT:  [ty, opval, n]
+comment|// 25 is unused.
 name|FUNC_CODE_INST_EXTRACTVAL
 init|=
 literal|26
@@ -791,26 +771,21 @@ init|=
 literal|31
 block|,
 comment|// INDIRECTBR: [opty, op0, op1, ...]
-comment|// FIXME: Remove DEBUG_LOC in favor of DEBUG_LOC2 in LLVM 3.0
-name|FUNC_CODE_DEBUG_LOC
-init|=
-literal|32
-block|,
-comment|// DEBUG_LOC with potentially invalid metadata
+comment|// 32 is unused.
 name|FUNC_CODE_DEBUG_LOC_AGAIN
 init|=
 literal|33
 block|,
 comment|// DEBUG_LOC_AGAIN
-name|FUNC_CODE_INST_CALL2
+name|FUNC_CODE_INST_CALL
 init|=
 literal|34
 block|,
-comment|// CALL2:      [attr, fnty, fnid, args...]
-name|FUNC_CODE_DEBUG_LOC2
+comment|// CALL:       [attr, fnty, fnid, args...]
+name|FUNC_CODE_DEBUG_LOC
 init|=
 literal|35
-comment|// DEBUG_LOC2: [Line,Col,ScopeVal, IAVal]
+comment|// DEBUG_LOC:  [Line,Col,ScopeVal, IAVal]
 block|}
 enum|;
 block|}

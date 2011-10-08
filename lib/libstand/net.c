@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/in_pcb.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip.h>
 end_include
 
@@ -273,8 +279,8 @@ operator|=
 name|tmo
 expr_stmt|;
 name|tmo
-operator|<<=
-literal|1
+operator|+=
+name|MINTMO
 expr_stmt|;
 if|if
 condition|(

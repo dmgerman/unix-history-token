@@ -56,7 +56,7 @@ comment|// allocated by either the VM, or by the linker in a static compiler.  A
 end_comment
 
 begin_comment
-comment|// variable may have an intial value, which is copied into the executables .data
+comment|// variable may have an initial value, which is copied into the executables .data
 end_comment
 
 begin_comment
@@ -285,22 +285,6 @@ argument_list|(
 name|Value
 argument_list|)
 expr_stmt|;
-comment|/// isDeclaration - Is this global variable lacking an initializer?  If so,
-comment|/// the global variable is defined in some other translation unit, and is thus
-comment|/// only a declaration here.
-name|virtual
-name|bool
-name|isDeclaration
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getNumOperands
-argument_list|()
-operator|==
-literal|0
-return|;
-block|}
 comment|/// hasInitializer - Unless a global variable isExternal(), it has an
 comment|/// initializer.  The initializer for the global variable/constant is held by
 comment|/// Initializer if an initializer is specified.
@@ -378,7 +362,7 @@ comment|/// illegal to call this method if the global is external, because we ca
 comment|/// tell what the value is initialized to!
 comment|///
 specifier|inline
-comment|/*const FIXME*/
+specifier|const
 name|Constant
 operator|*
 name|getInitializer

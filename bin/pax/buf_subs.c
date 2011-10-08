@@ -577,7 +577,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * appnd_start()  *	Set up the buffering system to append new members to an archive that  *	was just read. The last block(s) of an archive may contain a format  *	specific trailer. To append a new member, this trailer has to be  *	removed from the archive. The first byte of the trailer is replaced by  *	the start of the header of the first file added to the archive. The  *	format specific end read function tells us how many bytes to move  *	backwards in the archive to be positioned BEFORE the trailer. Two  *	different postions have to be adjusted, the O.S. file offset (e.g. the  *	position of the tape head) and the write point within the data we have  *	stored in the read (soon to become write) buffer. We may have to move  *	back several records (the number depends on the size of the archive  *	record and the size of the format trailer) to read up the record where  *	the first byte of the trailer is recorded. Trailers may span (and  *	overlap) record boundries.  *	We first calculate which record has the first byte of the trailer. We  *	move the OS file offset back to the start of this record and read it  *	up. We set the buffer write pointer to be at this byte (the byte where  *	the trailer starts). We then move the OS file pointer back to the  *	start of this record so a flush of this buffer will replace the record  *	in the archive.  *	A major problem is rewriting this last record. For archives stored  *	on disk files, this is trival. However, many devices are really picky  *	about the conditions under which they will allow a write to occur.  *	Often devices restrict the conditions where writes can be made writes,  *	so it may not be feasable to append archives stored on all types of  *	devices.  * Return:  *	0 for success, -1 for failure  */
+comment|/*  * appnd_start()  *	Set up the buffering system to append new members to an archive that  *	was just read. The last block(s) of an archive may contain a format  *	specific trailer. To append a new member, this trailer has to be  *	removed from the archive. The first byte of the trailer is replaced by  *	the start of the header of the first file added to the archive. The  *	format specific end read function tells us how many bytes to move  *	backwards in the archive to be positioned BEFORE the trailer. Two  *	different positions have to be adjusted, the O.S. file offset (e.g. the  *	position of the tape head) and the write point within the data we have  *	stored in the read (soon to become write) buffer. We may have to move  *	back several records (the number depends on the size of the archive  *	record and the size of the format trailer) to read up the record where  *	the first byte of the trailer is recorded. Trailers may span (and  *	overlap) record boundaries.  *	We first calculate which record has the first byte of the trailer. We  *	move the OS file offset back to the start of this record and read it  *	up. We set the buffer write pointer to be at this byte (the byte where  *	the trailer starts). We then move the OS file pointer back to the  *	start of this record so a flush of this buffer will replace the record  *	in the archive.  *	A major problem is rewriting this last record. For archives stored  *	on disk files, this is trivial. However, many devices are really picky  *	about the conditions under which they will allow a write to occur.  *	Often devices restrict the conditions where writes can be made writes,  *	so it may not be feasible to append archives stored on all types of  *	devices.  * Return:  *	0 for success, -1 for failure  */
 end_comment
 
 begin_function
@@ -1025,7 +1025,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pback()  *	push the data used during the archive id phase back into the I/O  *	buffer. This is required as we cannot be sure that the header does NOT  *	overlap a block boundry (as in the case we are trying to recover a  *	flawed archived). This was not designed to be used for any other  *	purpose. (What software engineering, HA!)  *	WARNING: do not even THINK of pback greater than BLKMULT, unless the  *	pback space is increased.  */
+comment|/*  * pback()  *	push the data used during the archive id phase back into the I/O  *	buffer. This is required as we cannot be sure that the header does NOT  *	overlap a block boundary (as in the case we are trying to recover a  *	flawed archived). This was not designed to be used for any other  *	purpose. (What software engineering, HA!)  *	WARNING: do not even THINK of pback greater than BLKMULT, unless the  *	pback space is increased.  */
 end_comment
 
 begin_function
@@ -1058,7 +1058,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * rd_skip()  *	skip foward in the archive during an archive read. Used to get quickly  *	past file data and padding for files the user did NOT select.  * Return:  *	0 if ok, -1 failure, and 1 when EOF on the archive volume was detected.  */
+comment|/*  * rd_skip()  *	skip forward in the archive during an archive read. Used to get quickly  *	past file data and padding for files the user did NOT select.  * Return:  *	0 if ok, -1 failure, and 1 when EOF on the archive volume was detected.  */
 end_comment
 
 begin_function
@@ -1080,7 +1080,7 @@ name|skipped
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * consume what data we have in the buffer. If we have to move foward 	 * whole records, we call the low level skip function to see if we can 	 * move within the archive without doing the expensive reads on data we 	 * do not want. 	 */
+comment|/* 	 * consume what data we have in the buffer. If we have to move forward 	 * whole records, we call the low level skip function to see if we can 	 * move within the archive without doing the expensive reads on data we 	 * do not want. 	 */
 if|if
 condition|(
 name|skcnt
@@ -1249,7 +1249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wr_fin()  *	flush out any data (and pad if required) the last block. We always pad  *	with zero (even though we do not have to). Padding with 0 makes it a  *	lot easier to recover if the archive is damaged. zero paddding SHOULD  *	BE a requirement....  */
+comment|/*  * wr_fin()  *	flush out any data (and pad if required) the last block. We always pad  *	with zero (even though we do not have to). Padding with 0 makes it a  *	lot easier to recover if the archive is damaged. zero padding SHOULD  *	BE a requirement....  */
 end_comment
 
 begin_function
@@ -1454,7 +1454,7 @@ literal|0
 operator|)
 condition|)
 block|{
-comment|/* 			 * read error, return what we got (or the error if 			 * no data was copied). The caller must know that an 			 * error occured and has the best knowledge what to 			 * do with it 			 */
+comment|/* 			 * read error, return what we got (or the error if 			 * no data was copied). The caller must know that an 			 * error occurred and has the best knowledge what to 			 * do with it 			 */
 if|if
 condition|(
 operator|(
@@ -1610,7 +1610,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wr_rdfile()  *	fill write buffer with the contents of a file. We are passed an	open  *	file descriptor to the file and the archive structure that describes the  *	file we are storing. The variable "left" is modified to contain the  *	number of bytes of the file we were NOT able to write to the archive.  *	it is important that we always write EXACTLY the number of bytes that  *	the format specific write routine told us to. The file can also get  *	bigger, so reading to the end of file would create an improper archive,  *	we just detect this case and warn the user. We never create a bad  *	archive if we can avoid it. Of course trying to archive files that are  *	active is asking for trouble. It we fail, we pass back how much we  *	could NOT copy and let the caller deal with it.  * Return:  *	0 ok, -1 if archive write failure. a short read of the file returns a  *	0, but "left" is set to be greater than zero.  */
+comment|/*  * wr_rdfile()  *	fill write buffer with the contents of a file. We are passed an open  *	file descriptor to the file and the archive structure that describes the  *	file we are storing. The variable "left" is modified to contain the  *	number of bytes of the file we were NOT able to write to the archive.  *	it is important that we always write EXACTLY the number of bytes that  *	the format specific write routine told us to. The file can also get  *	bigger, so reading to the end of file would create an improper archive,  *	we just detect this case and warn the user. We never create a bad  *	archive if we can avoid it. Of course trying to archive files that are  *	active is asking for trouble. It we fail, we pass back how much we  *	could NOT copy and let the caller deal with it.  * Return:  *	0 ok, -1 if archive write failure. a short read of the file returns a  *	0, but "left" is set to be greater than zero.  */
 end_comment
 
 begin_function
@@ -2640,7 +2640,7 @@ name|totcnt
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 * if we have reached the user specified byte count for each archive 	 * volume, prompt for the next volume. (The non-standrad -R flag). 	 * NOTE: If the wrlimit is smaller than wrcnt, we will always write 	 * at least one record. We always round limit UP to next blocksize. 	 */
+comment|/* 	 * if we have reached the user specified byte count for each archive 	 * volume, prompt for the next volume. (The non-standard -R flag). 	 * NOTE: If the wrlimit is smaller than wrcnt, we will always write 	 * at least one record. We always round limit UP to next blocksize. 	 */
 if|if
 condition|(
 operator|(
@@ -2810,7 +2810,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 			 * Oh drat we got a partial write! 			 * if format doesnt care about alignment let it go, 			 * we warned the user in ar_write().... but this means 			 * the last record on this volume violates pax spec.... 			 */
+comment|/* 			 * Oh drat we got a partial write! 			 * if format doesn't care about alignment let it go, 			 * we warned the user in ar_write().... but this means 			 * the last record on this volume violates pax spec.... 			 */
 name|totcnt
 operator|+=
 name|cnt

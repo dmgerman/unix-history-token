@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -113,7 +119,7 @@ end_comment
 
 begin_function
 name|int
-name|extattrctl
+name|sys_extattrctl
 parameter_list|(
 name|td
 parameter_list|,
@@ -786,7 +792,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_set_fd
+name|sys_extattr_set_fd
 parameter_list|(
 name|td
 parameter_list|,
@@ -877,6 +883,8 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_EXTATTR_SET
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -948,7 +956,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_set_file
+name|sys_extattr_set_file
 parameter_list|(
 name|td
 parameter_list|,
@@ -1119,7 +1127,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_set_link
+name|sys_extattr_set_link
 parameter_list|(
 name|td
 parameter_list|,
@@ -1568,7 +1576,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_get_fd
+name|sys_extattr_get_fd
 parameter_list|(
 name|td
 parameter_list|,
@@ -1659,6 +1667,8 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_EXTATTR_GET
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -1730,7 +1740,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_get_file
+name|sys_extattr_get_file
 parameter_list|(
 name|td
 parameter_list|,
@@ -1901,7 +1911,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_get_link
+name|sys_extattr_get_link
 parameter_list|(
 name|td
 parameter_list|,
@@ -2243,7 +2253,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_delete_fd
+name|sys_extattr_delete_fd
 parameter_list|(
 name|td
 parameter_list|,
@@ -2334,6 +2344,8 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_EXTATTR_DELETE
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -2397,7 +2409,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_delete_file
+name|sys_extattr_delete_file
 parameter_list|(
 name|td
 parameter_list|,
@@ -2560,7 +2572,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_delete_link
+name|sys_extattr_delete_link
 parameter_list|(
 name|td
 parameter_list|,
@@ -2991,7 +3003,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_list_fd
+name|sys_extattr_list_fd
 parameter_list|(
 name|td
 parameter_list|,
@@ -3046,6 +3058,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+name|CAP_EXTATTR_LIST
 argument_list|,
 operator|&
 name|fp
@@ -3116,7 +3130,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_list_file
+name|sys_extattr_list_file
 parameter_list|(
 name|td
 parameter_list|,
@@ -3250,7 +3264,7 @@ end_function
 
 begin_function
 name|int
-name|extattr_list_link
+name|sys_extattr_list_link
 parameter_list|(
 name|td
 parameter_list|,

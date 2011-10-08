@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MBlazeMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -86,6 +92,12 @@ name|class
 name|MCCodeEmitter
 decl_stmt|;
 name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|TargetAsmBackend
 decl_stmt|;
 name|class
@@ -96,12 +108,14 @@ modifier|*
 name|createMBlazeMCCodeEmitter
 parameter_list|(
 specifier|const
-name|Target
+name|MCInstrInfo
 modifier|&
+name|MCII
 parameter_list|,
-name|TargetMachine
+specifier|const
+name|MCSubtargetInfo
 modifier|&
-name|TM
+name|STI
 parameter_list|,
 name|MCContext
 modifier|&
@@ -141,40 +155,12 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
-specifier|extern
-name|Target
-name|TheMBlazeTarget
-decl_stmt|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for MBlaze registers.  This defines a mapping from
-end_comment
-
-begin_comment
-comment|// register name to register number.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"MBlazeGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the MBlaze instructions.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"MBlazeGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

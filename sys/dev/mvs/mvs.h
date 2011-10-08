@@ -3707,7 +3707,7 @@ index|[
 name|MVS_MAX_SLOTS
 index|]
 decl_stmt|;
-comment|/* Tags used for holden commands. */
+comment|/* Tags used for held commands. */
 name|struct
 name|mtx
 name|mtx
@@ -3790,9 +3790,9 @@ comment|/* Number of NCQ slots per dev */
 name|int
 name|numhslots
 decl_stmt|;
-comment|/* Number of holden slots */
+comment|/* Number of held slots */
 name|int
-name|readlog
+name|recoverycmd
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int
@@ -3807,6 +3807,14 @@ name|int
 name|taggedtarget
 decl_stmt|;
 comment|/* Last tagged target */
+name|int
+name|resetting
+decl_stmt|;
+comment|/* Hard-reset in progress. */
+name|int
+name|resetpolldiv
+decl_stmt|;
+comment|/* Hard-reset poll divider. */
 name|int
 name|out_idx
 decl_stmt|;
@@ -3842,6 +3850,11 @@ name|callout
 name|pm_timer
 decl_stmt|;
 comment|/* Power management events */
+name|struct
+name|callout
+name|reset_timer
+decl_stmt|;
+comment|/* Hard-reset timeout */
 name|struct
 name|mvs_device
 name|user

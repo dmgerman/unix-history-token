@@ -26,7 +26,7 @@ begin_define
 define|#
 directive|define
 name|NGM_NETFLOW_COOKIE
-value|1299079728
+value|1309868867
 end_define
 
 begin_define
@@ -408,6 +408,38 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* This structure is used in NGM_NETFLOW_SHOW request/responce */
+end_comment
+
+begin_struct
+struct|struct
+name|ngnf_show_header
+block|{
+name|u_char
+name|version
+decl_stmt|;
+comment|/* IPv4 or IPv6 */
+name|uint32_t
+name|hash_id
+decl_stmt|;
+comment|/* current hash index */
+name|uint32_t
+name|list_id
+decl_stmt|;
+comment|/* current record number in given hash */
+name|uint32_t
+name|nentries
+decl_stmt|;
+comment|/* number of records in response */
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* XXXGL  * Somewhere flow_rec6 is casted to flow_rec, and flow6_entry_data is  * casted to flow_entry_data. After casting, fle->r.fib is accessed.  * So beginning of these structs up to fib should be kept common.  */
+end_comment
+
+begin_comment
 comment|/* This is unique data, which identifies flow */
 end_comment
 
@@ -755,8 +787,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|NREC6_AT_ONCE
+value|(NREC_AT_ONCE * sizeof(struct flow_entry_data) / \ 				sizeof(struct flow6_entry_data))
+end_define
+
+begin_define
+define|#
+directive|define
 name|NGRESP_SIZE
-value|(sizeof(struct ngnf_flows) + (NREC_AT_ONCE * \ 				sizeof(struct flow_entry_data)))
+value|(sizeof(struct ngnf_show_header) + (NREC_AT_ONCE * \ 				sizeof(struct flow_entry_data)))
 end_define
 
 begin_define
@@ -765,31 +804,6 @@ directive|define
 name|SORCVBUF_SIZE
 value|(NGRESP_SIZE + 2 * sizeof(struct ng_mesg))
 end_define
-
-begin_comment
-comment|/* This struct is returned to userland, when "show cache ip flow" */
-end_comment
-
-begin_struct
-struct|struct
-name|ngnf_flows
-block|{
-name|uint32_t
-name|nentries
-decl_stmt|;
-name|uint32_t
-name|last
-decl_stmt|;
-name|struct
-name|flow_entry_data
-name|entries
-index|[
-literal|0
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/* Everything below is for kernel */
@@ -805,10 +819,6 @@ begin_struct
 struct|struct
 name|flow_entry
 block|{
-name|struct
-name|flow_entry_data
-name|f
-decl_stmt|;
 name|TAILQ_ENTRY
 argument_list|(
 argument|flow_entry
@@ -816,6 +826,10 @@ argument_list|)
 name|fle_hash
 expr_stmt|;
 comment|/* entries in hash slot */
+name|struct
+name|flow_entry_data
+name|f
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -824,17 +838,17 @@ begin_struct
 struct|struct
 name|flow6_entry
 block|{
+name|TAILQ_ENTRY
+argument_list|(
+argument|flow_entry
+argument_list|)
+name|fle_hash
+expr_stmt|;
+comment|/* entries in hash slot */
 name|struct
 name|flow6_entry_data
 name|f
 decl_stmt|;
-name|TAILQ_ENTRY
-argument_list|(
-argument|flow6_entry
-argument_list|)
-name|fle6_hash
-expr_stmt|;
-comment|/* entries in hash slot */
 block|}
 struct|;
 end_struct
@@ -1122,7 +1136,7 @@ name|uma_zone_t
 name|zone6
 decl_stmt|;
 name|struct
-name|flow6_hash_entry
+name|flow_hash_entry
 modifier|*
 name|hash6
 decl_stmt|;
@@ -1221,26 +1235,6 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|flow6_hash_entry
-block|{
-name|struct
-name|mtx
-name|mtx
-decl_stmt|;
-name|TAILQ_HEAD
-argument_list|(
-argument|f6head
-argument_list|,
-argument|flow6_entry
-argument_list|)
-name|head
-expr_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_define
 define|#
 directive|define
@@ -1327,7 +1321,7 @@ comment|/* Prototypes for netflow.c */
 end_comment
 
 begin_function_decl
-name|int
+name|void
 name|ng_netflow_cache_init
 parameter_list|(
 name|priv_p
@@ -1430,12 +1424,15 @@ name|ng_netflow_flow_show
 parameter_list|(
 name|priv_p
 parameter_list|,
-name|uint32_t
-name|last
+name|struct
+name|ngnf_show_header
+modifier|*
+name|req
 parameter_list|,
 name|struct
-name|ng_mesg
+name|ngnf_show_header
 modifier|*
+name|resp
 parameter_list|)
 function_decl|;
 end_function_decl

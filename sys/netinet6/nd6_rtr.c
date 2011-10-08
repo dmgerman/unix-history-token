@@ -631,11 +631,20 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-comment|/* If I'm not a router, ignore it. */
+comment|/* 	 * Accept RS only when V_ip6_forwarding=1 and the interface has 	 * no ND6_IFF_ACCEPT_RTADV. 	 */
 if|if
 condition|(
 operator|!
 name|V_ip6_forwarding
+operator|||
+name|ND_IFINFO
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_ACCEPT_RTADV
 condition|)
 goto|goto
 name|freeit
@@ -1026,11 +1035,9 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-comment|/* 	 * We only accept RAs only when 	 * the node is not a router and 	 * per-interface variable allows RAs on the receiving interface. 	 */
+comment|/* 	 * We only accept RAs only when the per-interface flag 	 * ND6_IFF_ACCEPT_RTADV is on the receiving interface. 	 */
 if|if
 condition|(
-name|V_ip6_forwarding
-operator|||
 operator|!
 operator|(
 name|ndi
@@ -1283,6 +1290,36 @@ name|nd_ra
 operator|->
 name|nd_ra_flags_reserved
 expr_stmt|;
+comment|/* 	 * Effectively-disable routes from RA messages when 	 * ND6_IFF_NO_RADR enabled on the receiving interface or 	 * (ip6.forwarding == 1&& ip6.rfc6204w3 != 1). 	 */
+if|if
+condition|(
+name|ndi
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_NO_RADR
+condition|)
+name|dr0
+operator|.
+name|rtlifetime
+operator|=
+literal|0
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|V_ip6_forwarding
+operator|&&
+operator|!
+name|V_ip6_rfc6204w3
+condition|)
+name|dr0
+operator|.
+name|rtlifetime
+operator|=
+literal|0
+expr_stmt|;
+else|else
 name|dr0
 operator|.
 name|rtlifetime
@@ -2690,8 +2727,16 @@ decl_stmt|;
 comment|/* 	 * Flush all the routing table entries that use the router 	 * as a next hop. 	 */
 if|if
 condition|(
-operator|!
-name|V_ip6_forwarding
+name|ND_IFINFO
+argument_list|(
+name|dr
+operator|->
+name|ifp
+argument_list|)
+operator|->
+name|flags
+operator|&
+name|ND6_IFF_ACCEPT_RTADV
 condition|)
 name|rt6_flush
 argument_list|(
@@ -2836,30 +2881,6 @@ name|ln
 init|=
 name|NULL
 decl_stmt|;
-comment|/* 	 * This function should be called only when acting as an autoconfigured 	 * host.  Although the remaining part of this function is not effective 	 * if the node is not an autoconfigured host, we explicitly exclude 	 * such cases here for safety. 	 */
-if|if
-condition|(
-name|V_ip6_forwarding
-condition|)
-block|{
-name|nd6log
-argument_list|(
-operator|(
-name|LOG_WARNING
-operator|,
-literal|"defrouter_select: called unexpectedly (forwarding=%d)\n"
-operator|,
-name|V_ip6_forwarding
-operator|)
-argument_list|)
-expr_stmt|;
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
 comment|/* 	 * Let's handle easy case (3) first: 	 * If default router list is empty, there's nothing to be done. 	 */
 if|if
 condition|(

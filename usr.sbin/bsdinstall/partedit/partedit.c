@@ -171,6 +171,49 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
+name|void
+name|sigint_handler
+parameter_list|(
+name|int
+name|sig
+parameter_list|)
+block|{
+name|struct
+name|gmesh
+name|mesh
+decl_stmt|;
+comment|/* Revert all changes and exit dialog-mode cleanly on SIGINT */
+name|geom_gettree
+argument_list|(
+operator|&
+name|mesh
+argument_list|)
+expr_stmt|;
+name|gpart_revert_all
+argument_list|(
+operator|&
+name|mesh
+argument_list|)
+expr_stmt|;
+name|geom_deletetree
+argument_list|(
+operator|&
+name|mesh
+argument_list|)
+expr_stmt|;
+name|end_dialog
+argument_list|()
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|int
 name|main
 parameter_list|(
@@ -272,6 +315,14 @@ name|i
 operator|=
 literal|0
 expr_stmt|;
+comment|/* Revert changes on SIGINT */
+name|signal
+argument_list|(
+name|SIGINT
+argument_list|,
+name|sigint_handler
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -294,7 +345,7 @@ comment|/* Guided */
 name|prompt
 operator|=
 literal|"Please review the disk setup. When complete, press "
-literal|"the Exit button."
+literal|"the Finish button."
 expr_stmt|;
 name|part_wizard
 argument_list|()
@@ -305,7 +356,7 @@ block|{
 name|prompt
 operator|=
 literal|"Create partitions for FreeBSD. No changes will be "
-literal|"made until you select Exit."
+literal|"made until you select Finish."
 expr_stmt|;
 block|}
 comment|/* Show the part editor either immediately, or to confirm wizard */
@@ -610,9 +661,15 @@ block|{
 comment|/* Finished */
 name|dialog_vars
 operator|.
-name|extra_button
+name|ok_label
 operator|=
-name|TRUE
+name|__DECONST
+argument_list|(
+name|char
+operator|*
+argument_list|,
+literal|"Commit"
+argument_list|)
 expr_stmt|;
 name|dialog_vars
 operator|.
@@ -623,19 +680,25 @@ argument_list|(
 name|char
 operator|*
 argument_list|,
-literal|"Abort"
+literal|"Revert& Exit"
 argument_list|)
 expr_stmt|;
 name|dialog_vars
 operator|.
-name|ok_label
+name|extra_button
+operator|=
+name|TRUE
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|cancel_label
 operator|=
 name|__DECONST
 argument_list|(
 name|char
 operator|*
 argument_list|,
-literal|"Save"
+literal|"Back"
 argument_list|)
 expr_stmt|;
 name|op
@@ -647,12 +710,19 @@ argument_list|,
 literal|"Your changes will "
 literal|"now be written to disk. If you have chosen to "
 literal|"overwrite existing data, it will be PERMANENTLY "
-literal|"ERASED. Are you sure you want to proceed?"
+literal|"ERASED. Are you sure you want to commit your "
+literal|"changes?"
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|ok_label
+operator|=
+name|NULL
 expr_stmt|;
 name|dialog_vars
 operator|.
@@ -662,7 +732,7 @@ name|FALSE
 expr_stmt|;
 name|dialog_vars
 operator|.
-name|ok_label
+name|cancel_label
 operator|=
 name|NULL
 expr_stmt|;
@@ -695,7 +765,7 @@ operator|==
 literal|3
 condition|)
 block|{
-comment|/* Don't save => Quit */
+comment|/* Quit */
 name|gpart_revert_all
 argument_list|(
 operator|&
@@ -1596,7 +1666,7 @@ name|fprintf
 argument_list|(
 name|fstab
 argument_list|,
-literal|"%s\t%s\t%s\t%s\t%d\t%d\n"
+literal|"%s\t%s\t\t%s\t%s\t%d\t%d\n"
 argument_list|,
 name|md
 operator|->

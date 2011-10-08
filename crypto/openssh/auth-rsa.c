@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth-rsa.c,v 1.78 2010/07/13 23:13:16 djm Exp $ */
+comment|/* $OpenBSD: auth-rsa.c,v 1.80 2011/05/23 03:30:07 djm Exp $ */
 end_comment
 
 begin_comment
@@ -351,16 +351,6 @@ decl_stmt|;
 name|int
 name|len
 decl_stmt|;
-if|if
-condition|(
-name|auth_key_is_revoked
-argument_list|(
-name|key
-argument_list|)
-condition|)
-return|return
-literal|0
-return|;
 comment|/* don't allow short keys */
 if|if
 condition|(
@@ -659,19 +649,21 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/*  * check if there's user key matching client_n,  * return key if login is allowed, NULL otherwise  */
-end_comment
-
 begin_function
+specifier|static
 name|int
-name|auth_rsa_key_allowed
+name|rsa_key_allowed_in_file
 parameter_list|(
 name|struct
 name|passwd
 modifier|*
 name|pw
 parameter_list|,
+name|char
+modifier|*
+name|file
+parameter_list|,
+specifier|const
 name|BIGNUM
 modifier|*
 name|client_n
@@ -687,9 +679,6 @@ name|line
 index|[
 name|SSH_MAX_PUBKEY_BYTES
 index|]
-decl_stmt|,
-modifier|*
-name|file
 decl_stmt|;
 name|int
 name|allowed
@@ -712,20 +701,6 @@ name|Key
 modifier|*
 name|key
 decl_stmt|;
-comment|/* Temporarily use the user's uid. */
-name|temporarily_use_uid
-argument_list|(
-name|pw
-argument_list|)
-expr_stmt|;
-comment|/* The authorized keys. */
-name|file
-operator|=
-name|authorized_keys_file
-argument_list|(
-name|pw
-argument_list|)
-expr_stmt|;
 name|debug
 argument_list|(
 literal|"trying public RSA key file %s"
@@ -733,6 +708,9 @@ argument_list|,
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
 name|f
 operator|=
 name|auth_openkeyfile
@@ -745,32 +723,14 @@ name|options
 operator|.
 name|strict_modes
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|f
-condition|)
-block|{
-name|xfree
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
-name|restore_uid
-argument_list|()
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
-return|;
-block|}
-comment|/* Flag indicating whether the key is allowed. */
-name|allowed
-operator|=
+operator|==
+name|NULL
+condition|)
+return|return
 literal|0
-expr_stmt|;
+return|;
+comment|/* 	 * Go though the accepted keys, looking for the current key.  If 	 * found, perform a challenge-response dialog to verify that the 	 * user really has the corresponding private key. 	 */
 name|key
 operator|=
 name|key_new
@@ -778,7 +738,6 @@ argument_list|(
 name|KEY_RSA1
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Go though the accepted keys, looking for the current key.  If 	 * found, perform a challenge-response dialog to verify that the 	 * user really has the corresponding private key. 	 */
 while|while
 condition|(
 name|read_keyfile_line
@@ -967,7 +926,7 @@ expr_stmt|;
 continue|continue;
 block|}
 comment|/* cp now points to the comment part. */
-comment|/* Check if the we have found the desired key (identified by its modulus). */
+comment|/* 		 * Check if the we have found the desired key (identified 		 * by its modulus). 		 */
 if|if
 condition|(
 name|BN_cmp
@@ -1030,6 +989,15 @@ argument_list|,
 name|bits
 argument_list|)
 expr_stmt|;
+comment|/* Never accept a revoked key */
+if|if
+condition|(
+name|auth_key_is_revoked
+argument_list|(
+name|key
+argument_list|)
+condition|)
+break|break;
 comment|/* We have found the desired key. */
 comment|/* 		 * If our options do not allow this key to be used, 		 * do not send challenge. 		 */
 if|if
@@ -1059,16 +1027,7 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-comment|/* Restore the privileged uid. */
-name|restore_uid
-argument_list|()
-expr_stmt|;
 comment|/* Close the file. */
-name|xfree
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
 name|fclose
 argument_list|(
 name|f
@@ -1095,9 +1054,107 @@ name|key
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|allowed
-operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * check if there's user key matching client_n,  * return key if login is allowed, NULL otherwise  */
+end_comment
+
+begin_function
+name|int
+name|auth_rsa_key_allowed
+parameter_list|(
+name|struct
+name|passwd
+modifier|*
+name|pw
+parameter_list|,
+name|BIGNUM
+modifier|*
+name|client_n
+parameter_list|,
+name|Key
+modifier|*
+modifier|*
+name|rkey
+parameter_list|)
+block|{
+name|char
+modifier|*
+name|file
+decl_stmt|;
+name|u_int
+name|i
+decl_stmt|,
+name|allowed
+init|=
+literal|0
+decl_stmt|;
+name|temporarily_use_uid
+argument_list|(
+name|pw
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+operator|!
+name|allowed
+operator|&&
+name|i
+operator|<
+name|options
+operator|.
+name|num_authkeys_files
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|file
+operator|=
+name|expand_authorized_keys
+argument_list|(
+name|options
+operator|.
+name|authorized_keys_files
+index|[
+name|i
+index|]
+argument_list|,
+name|pw
+argument_list|)
+expr_stmt|;
+name|allowed
+operator|=
+name|rsa_key_allowed_in_file
+argument_list|(
+name|pw
+argument_list|,
+name|file
+argument_list|,
+name|client_n
+argument_list|,
+name|rkey
+argument_list|)
+expr_stmt|;
+name|xfree
+argument_list|(
+name|file
+argument_list|)
+expr_stmt|;
+block|}
+name|restore_uid
+argument_list|()
+expr_stmt|;
+return|return
+name|allowed
 return|;
 block|}
 end_function

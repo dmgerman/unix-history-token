@@ -548,6 +548,9 @@ decl_stmt|;
 name|UINT64
 name|MaxValue
 decl_stmt|;
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
 comment|/* Output buffer byte length must be in range 1-8 */
 if|if
 condition|(
@@ -576,13 +579,26 @@ expr_stmt|;
 return|return;
 block|}
 comment|/* Resolve integer expression to a single integer value */
-name|Value
+name|Status
 operator|=
 name|DtResolveIntegerExpression
 argument_list|(
 name|Field
+argument_list|,
+operator|&
+name|Value
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return;
+block|}
 comment|/* Ensure that reserved fields are set to zero */
 comment|/* TBD: should we set to zero, or just make this an ERROR? */
 comment|/* TBD: Probably better to use a flag */

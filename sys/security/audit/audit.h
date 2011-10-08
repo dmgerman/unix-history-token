@@ -677,6 +677,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|audit_arg_rights
+parameter_list|(
+name|cap_rights_t
+name|rights
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|audit_sysclose
 parameter_list|(
 name|struct
@@ -1036,6 +1046,16 @@ parameter_list|(
 name|rgid
 parameter_list|)
 value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_rgid((rgid));					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_RIGHTS
+parameter_list|(
+name|rights
+parameter_list|)
+value|do {					\ 	if (AUDITING_TD(curthread))					\ 		audit_arg_rights((rights));				\ } while (0)
 end_define
 
 begin_define
@@ -1421,6 +1441,15 @@ directive|define
 name|AUDIT_ARG_RGID
 parameter_list|(
 name|rgid
+parameter_list|)
+end_define
+
+begin_define
+define|#
+directive|define
+name|AUDIT_ARG_RIGHTS
+parameter_list|(
+name|rights
 parameter_list|)
 end_define
 

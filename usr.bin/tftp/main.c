@@ -103,12 +103,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/stat.h>
 end_include
 
@@ -232,13 +226,13 @@ begin_comment
 comment|/* secs between rexmt's */
 end_comment
 
-begin_decl_stmt
-specifier|static
+begin_typedef
+typedef|typedef
 name|struct
 name|sockaddr_storage
 name|peeraddr
-decl_stmt|;
-end_decl_stmt
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
@@ -895,7 +889,7 @@ literal|"packetdrop"
 block|,
 name|setpacketdrop
 block|,
-literal|"artifical packetloss feature"
+literal|"artificial packetloss feature"
 block|}
 block|,
 block|{
@@ -4396,12 +4390,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[*] : RFC2834 options support required.\n"
+literal|"[*] : RFC2347 options support required.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[**] : Non-standard RFC2834 option.\n"
+literal|"[**] : Non-standard RFC2347 option.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4987,7 +4981,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"RFC2347 style options are not enabled "
-literal|"(but proceding anyway)\n"
+literal|"(but proceeding anyway)\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5170,7 +5164,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"RFC2347 style or non-RFC defined options are not enabled "
-literal|"(but proceding anyway)\n"
+literal|"(but proceeding anyway)\n"
 argument_list|)
 expr_stmt|;
 if|if

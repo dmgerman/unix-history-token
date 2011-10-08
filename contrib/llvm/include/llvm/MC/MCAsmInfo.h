@@ -84,13 +84,20 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCExpr
+decl_stmt|;
+name|class
 name|MCSection
+decl_stmt|;
+name|class
+name|MCStreamer
+decl_stmt|;
+name|class
+name|MCSymbol
 decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
-comment|/// MCAsmInfo - This class is intended to be used as a base class for asm
-comment|/// properties and features specific to the target.
 name|namespace
 name|ExceptionHandling
 block|{
@@ -99,14 +106,18 @@ name|ExceptionsType
 block|{
 name|None
 block|,
-name|DwarfTable
-block|,
 name|DwarfCFI
 block|,
 name|SjLj
+block|,
+name|ARM
+block|,
+name|Win64
 block|}
 enum|;
 block|}
+comment|/// MCAsmInfo - This class is intended to be used as a base class for asm
+comment|/// properties and features specific to the target.
 name|class
 name|MCAsmInfo
 block|{
@@ -115,6 +126,21 @@ label|:
 comment|//===------------------------------------------------------------------===//
 comment|// Properties to be set by the target writer, used to configure asm printer.
 comment|//
+comment|/// PointerSize - Pointer size in bytes.
+comment|///               Default is 4.
+name|unsigned
+name|PointerSize
+decl_stmt|;
+comment|/// IsLittleEndian - True if target is little endian.
+comment|///                  Default is true.
+name|bool
+name|IsLittleEndian
+decl_stmt|;
+comment|/// StackGrowsUp - True if target stack grow up.
+comment|///                Default is false.
+name|bool
+name|StackGrowsUp
+decl_stmt|;
 comment|/// HasSubsectionsViaSymbols - True if this target has the MachO
 comment|/// .subsections_via_symbols directive.
 name|bool
@@ -162,11 +188,12 @@ modifier|*
 name|PCSymbol
 decl_stmt|;
 comment|// Defaults to "$".
-comment|/// SeparatorChar - This character, if specified, is used to separate
-comment|/// instructions from each other when on the same line.  This is used to
-comment|/// measure inline asm instructions.
+comment|/// SeparatorString - This string, if specified, is used to separate
+comment|/// instructions from each other when on the same line.
+specifier|const
 name|char
-name|SeparatorChar
+modifier|*
+name|SeparatorString
 decl_stmt|;
 comment|// Defaults to ';'
 comment|/// CommentColumn - This indicates the comment num (zero-based) at
@@ -517,11 +544,6 @@ name|ExceptionsType
 name|ExceptionsType
 expr_stmt|;
 comment|// Defaults to None
-comment|/// RequiresFrameSection - true if the Dwarf2 output needs a frame section
-name|bool
-name|DwarfRequiresFrameSection
-decl_stmt|;
-comment|// Defaults to true.
 comment|/// DwarfUsesInlineInfoSection - True if DwarfDebugInlineSection is used to
 comment|/// encode inline subroutine information.
 name|bool
@@ -535,10 +557,10 @@ modifier|*
 name|DwarfSectionOffsetDirective
 decl_stmt|;
 comment|// Defaults to NULL
-comment|/// DwarfUsesAbsoluteLabelForStmtList - True if DW_AT_stmt_list needs
-comment|/// absolute label instead of offset.
+comment|/// DwarfRequiresRelocationForSectionOffset - True if we need to produce a
+comment|// relocation when we want a section offset in dwarf.
 name|bool
-name|DwarfUsesAbsoluteLabelForStmtList
+name|DwarfRequiresRelocationForSectionOffset
 decl_stmt|;
 comment|// Defaults to true;
 comment|// DwarfUsesLabelOffsetDifference - True if Dwarf2 output can
@@ -546,6 +568,12 @@ comment|// use EmitLabelOffsetDifference.
 name|bool
 name|DwarfUsesLabelOffsetForRanges
 decl_stmt|;
+comment|/// DwarfRegNumForCFI - True if dwarf register numbers are printed
+comment|/// instead of symbolic register names in .cfi_* directives.
+name|bool
+name|DwarfRegNumForCFI
+decl_stmt|;
+comment|// Defaults to false;
 comment|//===--- CBE Asm Translation Table -----------------------------------===//
 specifier|const
 name|char
@@ -583,6 +611,36 @@ name|unsigned
 name|Value
 parameter_list|)
 function_decl|;
+comment|/// getPointerSize - Get the pointer size in bytes.
+name|unsigned
+name|getPointerSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PointerSize
+return|;
+block|}
+comment|/// islittleendian - True if the target is little endian.
+name|bool
+name|isLittleEndian
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsLittleEndian
+return|;
+block|}
+comment|/// isStackGrowthDirectionUp - True if target stack grow up.
+name|bool
+name|isStackGrowthDirectionUp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StackGrowsUp
+return|;
+block|}
 name|bool
 name|hasSubsectionsViaSymbols
 argument_list|()
@@ -732,6 +790,45 @@ return|return
 literal|0
 return|;
 block|}
+name|virtual
+specifier|const
+name|MCExpr
+modifier|*
+name|getExprForPersonalitySymbol
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|)
+decl|const
+decl_stmt|;
+specifier|const
+name|MCExpr
+modifier|*
+name|getExprForFDESymbol
+argument_list|(
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+name|unsigned
+name|Encoding
+argument_list|,
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|usesSunStyleELFSectionSwitchSyntax
 argument_list|()
@@ -817,13 +914,15 @@ return|return
 name|PCSymbol
 return|;
 block|}
+specifier|const
 name|char
-name|getSeparatorChar
+operator|*
+name|getSeparatorString
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SeparatorChar
+name|SeparatorString
 return|;
 block|}
 name|unsigned
@@ -1217,23 +1316,20 @@ name|ExceptionsType
 operator|==
 name|ExceptionHandling
 operator|::
-name|DwarfTable
+name|DwarfCFI
 operator|||
 name|ExceptionsType
 operator|==
 name|ExceptionHandling
 operator|::
-name|DwarfCFI
+name|ARM
+operator|||
+name|ExceptionsType
+operator|==
+name|ExceptionHandling
+operator|::
+name|Win64
 operator|)
-return|;
-block|}
-name|bool
-name|doesDwarfRequireFrameSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfRequiresFrameSection
 return|;
 block|}
 name|bool
@@ -1257,12 +1353,12 @@ name|DwarfSectionOffsetDirective
 return|;
 block|}
 name|bool
-name|doesDwarfUsesAbsoluteLabelForStmtList
+name|doesDwarfRequireRelocationForSectionOffset
 argument_list|()
 specifier|const
 block|{
 return|return
-name|DwarfUsesAbsoluteLabelForStmtList
+name|DwarfRequiresRelocationForSectionOffset
 return|;
 block|}
 name|bool
@@ -1272,6 +1368,15 @@ specifier|const
 block|{
 return|return
 name|DwarfUsesLabelOffsetForRanges
+return|;
+block|}
+name|bool
+name|useDwarfRegNumForCFI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfRegNumForCFI
 return|;
 block|}
 specifier|const

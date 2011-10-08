@@ -2236,6 +2236,11 @@ block|{
 case|case
 literal|0x500
 case|:
+comment|/* 6401 and 6441 (Kirin) */
+case|case
+literal|0x520
+case|:
+comment|/* 6510 (Lynx) */
 name|strcat
 argument_list|(
 name|cpu_model
@@ -2279,6 +2284,7 @@ argument_list|,
 literal|"IDT WinChip C6"
 argument_list|)
 expr_stmt|;
+comment|/* 			 * http://www.centtech.com/c6_data_sheet.pdf 			 * 			 * I-12 RDTSC may return incoherent values in EDX:EAX 			 * I-13 RDTSC hangs when certain event counters are used 			 */
 name|tsc_freq
 operator|=
 literal|0
@@ -2292,6 +2298,17 @@ argument_list|(
 name|cpu_model
 argument_list|,
 literal|"IDT WinChip 2"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|0x590
+case|:
+name|strcpy
+argument_list|(
+name|cpu_model
+argument_list|,
+literal|"IDT WinChip 3"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2788,6 +2805,7 @@ argument_list|,
 name|cyrix_did
 argument_list|)
 expr_stmt|;
+comment|/* 		 * AMD CPUID Specification 		 * http://support.amd.com/us/Embedded_TechDocs/25481.pdf 		 * 		 * Intel Processor Identification and CPUID Instruction 		 * http://www.intel.com/assets/pdf/appnote/241618.pdf 		 */
 if|if
 condition|(
 name|cpu_high
@@ -2905,7 +2923,8 @@ comment|/* SSSE3 */
 literal|"\013CNXT-ID"
 comment|/* L1 context ID available */
 literal|"\014<b11>"
-literal|"\015<b12>"
+literal|"\015FMA"
+comment|/* Fused Multiply Add */
 literal|"\016CX16"
 comment|/* CMPXCHG16B Instruction */
 literal|"\017xTPR"
@@ -2914,28 +2933,37 @@ literal|"\020PDCM"
 comment|/* Perf/Debug Capability MSR */
 literal|"\021<b16>"
 literal|"\022PCID"
-comment|/* Process-context Identifiers */
+comment|/* Process-context Identifiers*/
 literal|"\023DCA"
 comment|/* Direct Cache Access */
 literal|"\024SSE4.1"
+comment|/* SSE 4.1 */
 literal|"\025SSE4.2"
+comment|/* SSE 4.2 */
 literal|"\026x2APIC"
 comment|/* xAPIC Extensions */
 literal|"\027MOVBE"
+comment|/* MOVBE Instruction */
 literal|"\030POPCNT"
-literal|"\031<b24>"
+comment|/* POPCNT Instruction */
+literal|"\031TSCDLT"
+comment|/* TSC-Deadline Timer */
 literal|"\032AESNI"
-comment|/* AES Crypto*/
+comment|/* AES Crypto */
 literal|"\033XSAVE"
+comment|/* XSAVE/XRSTOR States */
 literal|"\034OSXSAVE"
-literal|"\035<b28>"
-literal|"\036<b29>"
+comment|/* OS-Enabled State Management*/
+literal|"\035AVX"
+comment|/* Advanced Vector Extensions */
+literal|"\036F16C"
+comment|/* Half-precision conversions */
 literal|"\037<b30>"
-literal|"\040<b31>"
+literal|"\040HV"
+comment|/* Hypervisor */
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 			 * AMD64 Architecture Programmer's Manual Volume 3: 			 * General-Purpose and System Instructions 			 * http://www.amd.com/us-en/assets/content_type/white_papers_and_tech_docs/24594.pdf 			 * 			 * IA-32 Intel Architecture Software Developer's Manual, 			 * Volume 2A: Instruction Set Reference, A-M 			 * ftp://download.intel.com/design/Pentium4/manuals/25366617.pdf 			 */
 if|if
 condition|(
 name|amd_feature
@@ -3054,21 +3082,26 @@ literal|"\012OSVW"
 comment|/* OS visible workaround */
 literal|"\013IBS"
 comment|/* Instruction based sampling */
-literal|"\014SSE5"
-comment|/* SSE5 */
+literal|"\014XOP"
+comment|/* XOP extended instructions */
 literal|"\015SKINIT"
 comment|/* SKINIT/STGI */
 literal|"\016WDT"
 comment|/* Watchdog timer */
 literal|"\017<b14>"
-literal|"\020<b15>"
-literal|"\021<b16>"
+literal|"\020LWP"
+comment|/* Lightweight Profiling */
+literal|"\021FMA4"
+comment|/* 4-operand FMA instructions */
 literal|"\022<b17>"
 literal|"\023<b18>"
-literal|"\024<b19>"
+literal|"\024NodeId"
+comment|/* NodeId MSR support */
 literal|"\025<b20>"
-literal|"\026<b21>"
-literal|"\027<b22>"
+literal|"\026TBM"
+comment|/* Trailing Bit Manipulation */
+literal|"\027Topology"
+comment|/* Topology Extensions */
 literal|"\030<b23>"
 literal|"\031<b24>"
 literal|"\032<b25>"
@@ -3083,9 +3116,13 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|cpu_vendor_id
-operator|==
-name|CPU_VENDOR_CENTAUR
+name|via_feature_rng
+operator|!=
+literal|0
+operator|||
+name|via_feature_xcrypt
+operator|!=
+literal|0
 condition|)
 name|print_via_padlock_info
 argument_list|()
@@ -3112,11 +3149,22 @@ if|if
 condition|(
 name|tsc_is_invariant
 condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\n  TSC: P-state invariant"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tsc_perf_stat
+condition|)
+name|printf
+argument_list|(
+literal|", performance statistics"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 elseif|else
@@ -4021,6 +4069,47 @@ name|regs
 index|[
 literal|2
 index|]
+expr_stmt|;
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|cpu_vendor_id
+operator|==
+name|CPU_VENDOR_CENTAUR
+condition|)
+block|{
+name|init_exthigh
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cpu_exthigh
+operator|>=
+literal|0x80000001
+condition|)
+block|{
+name|do_cpuid
+argument_list|(
+literal|0x80000001
+argument_list|,
+name|regs
+argument_list|)
+expr_stmt|;
+name|amd_feature
+operator|=
+name|regs
+index|[
+literal|3
+index|]
+operator|&
+operator|~
+operator|(
+name|cpu_feature
+operator|&
+literal|0x0183f3ff
+operator|)
 expr_stmt|;
 block|}
 block|}
@@ -5920,57 +6009,6 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-comment|/* Check for supported models. */
-switch|switch
-condition|(
-name|cpu_id
-operator|&
-literal|0xff0
-condition|)
-block|{
-case|case
-literal|0x690
-case|:
-if|if
-condition|(
-operator|(
-name|cpu_id
-operator|&
-literal|0xf
-operator|)
-operator|<
-literal|3
-condition|)
-return|return;
-case|case
-literal|0x6a0
-case|:
-case|case
-literal|0x6d0
-case|:
-case|case
-literal|0x6f0
-case|:
-break|break;
-default|default:
-return|return;
-block|}
-name|do_cpuid
-argument_list|(
-literal|0xc0000000
-argument_list|,
-name|regs
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|regs
-index|[
-literal|0
-index|]
-operator|>=
-literal|0xc0000001
-condition|)
 name|do_cpuid
 argument_list|(
 literal|0xc0000001
@@ -5978,8 +6016,6 @@ argument_list|,
 name|regs
 argument_list|)
 expr_stmt|;
-else|else
-return|return;
 name|printf
 argument_list|(
 literal|"\n  VIA Padlock Features=0x%b"

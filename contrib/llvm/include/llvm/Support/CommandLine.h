@@ -220,6 +220,14 @@ function_decl|)
 parameter_list|()
 parameter_list|)
 function_decl|;
+comment|// PrintOptionValues - Print option values.
+comment|// With -print-options print the difference between option values and defaults.
+comment|// With -print-all-options print all option values.
+comment|// (Currently not perfect, but best-effort.)
+name|void
+name|PrintOptionValues
+parameter_list|()
+function_decl|;
 comment|// MarkOptionsChanged - Internal helper function.
 name|void
 name|MarkOptionsChanged
@@ -888,6 +896,20 @@ literal|0
 decl_stmt|;
 name|virtual
 name|void
+name|printOptionValue
+argument_list|(
+name|size_t
+name|GlobalWidth
+argument_list|,
+name|bool
+name|Force
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+name|virtual
+name|void
 name|getExtraOptionNames
 argument_list|(
 name|SmallVectorImpl
@@ -1186,8 +1208,547 @@ operator|)
 return|;
 block|}
 comment|//===----------------------------------------------------------------------===//
+comment|// OptionValue class
+comment|// Support value comparison outside the template.
+struct|struct
+name|GenericOptionValue
+block|{
+name|virtual
+operator|~
+name|GenericOptionValue
+argument_list|()
+block|{}
+name|virtual
+name|bool
+name|compare
+argument_list|(
+argument|const GenericOptionValue&V
+argument_list|)
+specifier|const
+operator|=
+literal|0
+expr_stmt|;
+block|}
+struct|;
+name|template
+operator|<
+name|class
+name|DataType
+operator|>
+expr|struct
+name|OptionValue
+expr_stmt|;
+comment|// The default value safely does nothing. Option value printing is only
+comment|// best-effort.
+name|template
+operator|<
+name|class
+name|DataType
+operator|,
+name|bool
+name|isClass
+operator|>
+expr|struct
+name|OptionValueBase
+operator|:
+name|public
+name|GenericOptionValue
+block|{
+comment|// Temporary storage for argument passing.
+typedef|typedef
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+name|WrapperType
+expr_stmt|;
+name|bool
+name|hasValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+specifier|const
+name|DataType
+operator|&
+name|getValue
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"no default value"
+argument_list|)
+block|; }
+comment|// Some options may take their value from a different data type.
+name|template
+operator|<
+name|class
+name|DT
+operator|>
+name|void
+name|setValue
+argument_list|(
+argument|const DT&
+comment|/*V*/
+argument_list|)
+block|{}
+name|bool
+name|compare
+argument_list|(
+argument|const DataType&
+comment|/*V*/
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|bool
+name|compare
+argument_list|(
+specifier|const
+name|GenericOptionValue
+operator|&
+comment|/*V*/
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+block|}
+empty_stmt|;
+comment|// Simple copy of the option value.
+name|template
+operator|<
+name|class
+name|DataType
+operator|>
+name|class
+name|OptionValueCopy
+operator|:
+name|public
+name|GenericOptionValue
+block|{
+name|DataType
+name|Value
+block|;
+name|bool
+name|Valid
+block|;
+name|public
+operator|:
+name|OptionValueCopy
+argument_list|()
+operator|:
+name|Valid
+argument_list|(
+argument|false
+argument_list|)
+block|{}
+name|bool
+name|hasValue
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Valid
+return|;
+block|}
+specifier|const
+name|DataType
+operator|&
+name|getValue
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|Valid
+operator|&&
+literal|"invalid option value"
+argument_list|)
+block|;
+return|return
+name|Value
+return|;
+block|}
+name|void
+name|setValue
+argument_list|(
+argument|const DataType&V
+argument_list|)
+block|{
+name|Valid
+operator|=
+name|true
+block|;
+name|Value
+operator|=
+name|V
+block|; }
+name|bool
+name|compare
+argument_list|(
+argument|const DataType&V
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Valid
+operator|&&
+operator|(
+name|Value
+operator|!=
+name|V
+operator|)
+return|;
+block|}
+name|virtual
+name|bool
+name|compare
+argument_list|(
+argument|const GenericOptionValue&V
+argument_list|)
+specifier|const
+block|{
+specifier|const
+name|OptionValueCopy
+operator|<
+name|DataType
+operator|>
+operator|&
+name|VC
+operator|=
+name|static_cast
+operator|<
+specifier|const
+name|OptionValueCopy
+operator|<
+name|DataType
+operator|>
+operator|&
+operator|>
+operator|(
+name|V
+operator|)
+block|;
+if|if
+condition|(
+operator|!
+name|VC
+operator|.
+name|hasValue
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|compare
+argument_list|(
+name|VC
+operator|.
+name|getValue
+argument_list|()
+argument_list|)
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Non-class option values.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|DataType
+operator|>
+expr|struct
+name|OptionValueBase
+operator|<
+name|DataType
+operator|,
+name|false
+operator|>
+operator|:
+name|OptionValueCopy
+operator|<
+name|DataType
+operator|>
+block|{
+typedef|typedef
+name|DataType
+name|WrapperType
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// Top-level option class.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|DataType
+operator|>
+expr|struct
+name|OptionValue
+operator|:
+name|OptionValueBase
+operator|<
+name|DataType
+operator|,
+name|is_class
+operator|<
+name|DataType
+operator|>
+operator|::
+name|value
+operator|>
+block|{
+name|OptionValue
+argument_list|()
+block|{}
+name|OptionValue
+argument_list|(
+argument|const DataType& V
+argument_list|)
+block|{
+name|this
+operator|->
+name|setValue
+argument_list|(
+name|V
+argument_list|)
+block|;   }
+comment|// Some options may take their value from a different data type.
+name|template
+operator|<
+name|class
+name|DT
+operator|>
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|DT
+operator|&
+name|V
+operator|)
+block|{
+name|this
+operator|->
+name|setValue
+argument_list|(
+name|V
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|// Other safe-to-copy-by-value common option types.
+end_comment
+
+begin_enum
+enum|enum
+name|boolOrDefault
+block|{
+name|BOU_UNSET
+block|,
+name|BOU_TRUE
+block|,
+name|BOU_FALSE
+block|}
+enum|;
+end_enum
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+expr|struct
+name|OptionValue
+operator|<
+name|cl
+operator|::
+name|boolOrDefault
+operator|>
+operator|:
+name|OptionValueCopy
+operator|<
+name|cl
+operator|::
+name|boolOrDefault
+operator|>
+block|{
+typedef|typedef
+name|cl
+operator|::
+name|boolOrDefault
+name|WrapperType
+expr_stmt|;
+name|OptionValue
+argument_list|()
+block|{}
+name|OptionValue
+argument_list|(
+argument|const cl::boolOrDefault& V
+argument_list|)
+block|{
+name|this
+operator|->
+name|setValue
+argument_list|(
+name|V
+argument_list|)
+block|;   }
+name|OptionValue
+operator|<
+name|cl
+operator|::
+name|boolOrDefault
+operator|>
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|cl
+operator|::
+name|boolOrDefault
+operator|&
+name|V
+operator|)
+block|{
+name|setValue
+argument_list|(
+name|V
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+operator|>
+expr|struct
+name|OptionValue
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|:
+name|OptionValueCopy
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+block|{
+typedef|typedef
+name|StringRef
+name|WrapperType
+typedef|;
+name|OptionValue
+argument_list|()
+block|{}
+name|OptionValue
+argument_list|(
+argument|const std::string& V
+argument_list|)
+block|{
+name|this
+operator|->
+name|setValue
+argument_list|(
+name|V
+argument_list|)
+block|;   }
+name|OptionValue
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|V
+operator|)
+block|{
+name|setValue
+argument_list|(
+name|V
+argument_list|)
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+unit|};
+comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Enum valued command line option
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_define
 define|#
 directive|define
 name|clEnumVal
@@ -1197,6 +1758,9 @@ parameter_list|,
 name|DESC
 parameter_list|)
 value|#ENUMVAL, int(ENUMVAL), DESC
+end_define
+
+begin_define
 define|#
 directive|define
 name|clEnumValN
@@ -1208,15 +1772,36 @@ parameter_list|,
 name|DESC
 parameter_list|)
 value|FLAGNAME, int(ENUMVAL), DESC
+end_define
+
+begin_define
 define|#
 directive|define
 name|clEnumValEnd
 value|(reinterpret_cast<void*>(0))
+end_define
+
+begin_comment
 comment|// values - For custom data types, allow specifying a group of values together
+end_comment
+
+begin_comment
 comment|// as the values that go into the mapping that the option handler uses.  Note
+end_comment
+
+begin_comment
 comment|// that the values list must always have a 0 at the end of the list to indicate
+end_comment
+
+begin_comment
 comment|// that the list has ended.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1440,8 +2025,10 @@ name|second
 argument_list|)
 expr_stmt|;
 block|}
-expr|}
-block|;
+end_expr_stmt
+
+begin_expr_stmt
+unit|};
 name|template
 operator|<
 name|class
@@ -1497,20 +2084,100 @@ return|return
 name|Vals
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|//===----------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// parser class - Parameterizable parser for different data types.  By default,
+end_comment
+
+begin_comment
 comment|// known data types (string, int, bool) have specialized parsers, that do what
+end_comment
+
+begin_comment
 comment|// you would expect.  The default parser, used for data types that are not
+end_comment
+
+begin_comment
 comment|// built-in, uses a mapping table to map specific options to values, which is
+end_comment
+
+begin_comment
 comment|// used, among other things, to handle enum types.
+end_comment
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// generic_parser_base - This class holds all the non-generic code that we do
+end_comment
+
+begin_comment
 comment|// not need replicated for every instance of the generic parser.  This also
+end_comment
+
+begin_comment
 comment|// allows us to put stuff into CommandLine.cpp
+end_comment
+
+begin_comment
 comment|//
-expr|struct
+end_comment
+
+begin_decl_stmt
+name|class
 name|generic_parser_base
 block|{
+name|protected
+label|:
+name|class
+name|GenericOptionInfo
+block|{
+name|public
+label|:
+name|GenericOptionInfo
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|name
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|helpStr
+argument_list|)
+operator|:
+name|Name
+argument_list|(
+name|name
+argument_list|)
+operator|,
+name|HelpStr
+argument_list|(
+argument|helpStr
+argument_list|)
+block|{}
+specifier|const
+name|char
+operator|*
+name|Name
+expr_stmt|;
+specifier|const
+name|char
+modifier|*
+name|HelpStr
+decl_stmt|;
+block|}
+empty_stmt|;
+name|public
+label|:
 name|virtual
 operator|~
 name|generic_parser_base
@@ -1527,42 +2194,60 @@ argument_list|()
 specifier|const
 operator|=
 literal|0
-block|;
+expr_stmt|;
 comment|// getOption - Return option name N.
 name|virtual
 specifier|const
 name|char
-operator|*
+modifier|*
 name|getOption
 argument_list|(
-argument|unsigned N
+name|unsigned
+name|N
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|// getDescription - Return description N
 name|virtual
 specifier|const
 name|char
-operator|*
+modifier|*
 name|getDescription
 argument_list|(
-argument|unsigned N
+name|unsigned
+name|N
 argument_list|)
-specifier|const
-operator|=
+decl|const
+init|=
 literal|0
-block|;
+decl_stmt|;
 comment|// Return the width of the option tag for printing...
 name|virtual
 name|size_t
 name|getOptionWidth
 argument_list|(
-argument|const Option&O
-argument_list|)
 specifier|const
-block|;
+name|Option
+operator|&
+name|O
+argument_list|)
+decl|const
+decl_stmt|;
+name|virtual
+specifier|const
+name|GenericOptionValue
+modifier|&
+name|getOptionValue
+argument_list|(
+name|unsigned
+name|N
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|// printOptionInfo - Print out information about this option.  The
 comment|// to-be-maintained width is specified.
 comment|//
@@ -1570,12 +2255,72 @@ name|virtual
 name|void
 name|printOptionInfo
 argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|printGenericOptionDiff
+argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+specifier|const
+name|GenericOptionValue
+operator|&
+name|V
+argument_list|,
+specifier|const
+name|GenericOptionValue
+operator|&
+name|Default
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
+comment|// printOptionDiff - print the value of an option and it's default.
+comment|//
+comment|// Template definition ensures that the option and default have the same
+comment|// DataType (via the same AnyOptionValue).
+name|template
+operator|<
+name|class
+name|AnyOptionValue
+operator|>
+name|void
+name|printOptionDiff
+argument_list|(
 argument|const Option&O
+argument_list|,
+argument|const AnyOptionValue&V
+argument_list|,
+argument|const AnyOptionValue&Default
 argument_list|,
 argument|size_t GlobalWidth
 argument_list|)
 specifier|const
-block|;
+block|{
+name|printGenericOptionDiff
+argument_list|(
+name|O
+argument_list|,
+name|V
+argument_list|,
+name|Default
+argument_list|,
+name|GlobalWidth
+argument_list|)
+block|;   }
 name|void
 name|initialize
 argument_list|(
@@ -1636,7 +2381,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-expr|enum
+block|enum
 name|ValueExpected
 name|getValueExpectedFlagDefault
 argument_list|()
@@ -1670,25 +2415,50 @@ comment|// argument string.  If the option is not found, getNumOptions() is retu
 comment|//
 name|unsigned
 name|findOption
-argument_list|(
+parameter_list|(
 specifier|const
 name|char
-operator|*
+modifier|*
 name|Name
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
 name|protected
-operator|:
+label|:
 name|bool
 name|hasArgStr
-block|; }
-block|;
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// Default parser implementation - This implementation depends on having a
+end_comment
+
+begin_comment
 comment|// mapping of recognized options to values of some sort.  In addition to this,
+end_comment
+
+begin_comment
 comment|// each entry in the mapping also tracks a help message that is printed with the
+end_comment
+
+begin_comment
 comment|// command line option for -help.  Because this is a simple mapping parser, the
+end_comment
+
+begin_comment
 comment|// data type can be any unsupported type.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -1704,6 +2474,9 @@ name|protected
 operator|:
 name|class
 name|OptionInfo
+operator|:
+name|public
+name|GenericOptionInfo
 block|{
 name|public
 operator|:
@@ -1716,33 +2489,23 @@ argument_list|,
 argument|const char *helpStr
 argument_list|)
 operator|:
-name|Name
+name|GenericOptionInfo
 argument_list|(
 name|name
+argument_list|,
+name|helpStr
 argument_list|)
 block|,
 name|V
 argument_list|(
-name|v
-argument_list|)
-block|,
-name|HelpStr
-argument_list|(
-argument|helpStr
+argument|v
 argument_list|)
 block|{}
-specifier|const
-name|char
-operator|*
-name|Name
-block|;
+name|OptionValue
+operator|<
 name|DataType
+operator|>
 name|V
-block|;
-specifier|const
-name|char
-operator|*
-name|HelpStr
 block|;   }
 block|;
 name|SmallVector
@@ -1811,6 +2574,26 @@ operator|.
 name|HelpStr
 return|;
 block|}
+comment|// getOptionValue - Return the value of option name N.
+name|virtual
+specifier|const
+name|GenericOptionValue
+operator|&
+name|getOptionValue
+argument_list|(
+argument|unsigned N
+argument_list|)
+specifier|const
+block|{
+return|return
+name|Values
+index|[
+name|N
+index|]
+operator|.
+name|V
+return|;
+block|}
 comment|// parse - Return true on error.
 name|bool
 name|parse
@@ -1840,6 +2623,9 @@ name|ArgVal
 operator|=
 name|ArgName
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|unsigned
@@ -1887,11 +2673,17 @@ name|i
 index|]
 operator|.
 name|V
+operator|.
+name|getValue
+argument_list|()
 expr_stmt|;
 return|return
 name|false
 return|;
 block|}
+end_for
+
+begin_return
 return|return
 name|O
 operator|.
@@ -1904,10 +2696,19 @@ operator|+
 literal|"'!"
 argument_list|)
 return|;
-block|}
+end_return
+
+begin_comment
+unit|}
 comment|/// addLiteralOption - Add an entry to the mapping table.
+end_comment
+
+begin_comment
 comment|///
-name|template
+end_comment
+
+begin_expr_stmt
+unit|template
 operator|<
 name|class
 name|DT
@@ -2003,11 +2804,22 @@ operator|+
 name|N
 argument_list|)
 block|;   }
-block|}
-empty_stmt|;
+end_expr_stmt
+
+begin_comment
+unit|};
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// basic_parser - Super class of parsers to provide boilerplate code
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_decl_stmt
 name|class
 name|basic_parser_impl
 block|{
@@ -2075,6 +2887,21 @@ name|GlobalWidth
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// printOptionNoValue - Print a placeholder for options that don't yet support
+comment|// printOptionDiff().
+name|void
+name|printOptionNoValue
+argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// getValueName - Overload in subclass to provide a better default value.
 name|virtual
 specifier|const
@@ -2094,11 +2921,42 @@ name|void
 name|anchor
 parameter_list|()
 function_decl|;
+name|protected
+label|:
+comment|// A helper for basic_parser::printOptionDiff.
+name|void
+name|printOptionName
+argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|// basic_parser - The real basic parser is just a template wrapper that provides
+end_comment
+
+begin_comment
 comment|// a typedef for the provided data type.
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -2116,11 +2974,32 @@ typedef|typedef
 name|DataType
 name|parser_data_type
 typedef|;
-block|}
-empty_stmt|;
+end_expr_stmt
+
+begin_typedef
+typedef|typedef
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+name|OptVal
+expr_stmt|;
+end_typedef
+
+begin_comment
+unit|};
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<bool>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2196,30 +3075,63 @@ return|return
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|printOptionDiff
+argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+name|bool
+name|V
+argument_list|,
+name|OptVal
+name|Default
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<bool>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<boolOrDefault>
-enum|enum
-name|boolOrDefault
-block|{
-name|BOU_UNSET
-block|,
-name|BOU_TRUE
-block|,
-name|BOU_FALSE
-block|}
-enum|;
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2272,21 +3184,67 @@ return|return
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|printOptionDiff
+argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+name|boolOrDefault
+name|V
+argument_list|,
+name|OptVal
+name|Default
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<boolOrDefault>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<int>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2330,21 +3288,58 @@ return|return
 literal|"int"
 return|;
 block|}
+name|void
+name|printOptionDiff
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|int V
+argument_list|,
+argument|OptVal Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<int>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<unsigned>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2388,21 +3383,58 @@ return|return
 literal|"uint"
 return|;
 block|}
+name|void
+name|printOptionDiff
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|unsigned V
+argument_list|,
+argument|OptVal Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<unsigned>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<double>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2446,21 +3478,58 @@ return|return
 literal|"number"
 return|;
 block|}
+name|void
+name|printOptionDiff
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|double V
+argument_list|,
+argument|OptVal Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<double>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<float>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2504,21 +3573,58 @@ return|return
 literal|"number"
 return|;
 block|}
+name|void
+name|printOptionDiff
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|float V
+argument_list|,
+argument|OptVal Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<float>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<std::string>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2577,21 +3683,67 @@ return|return
 literal|"string"
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|printOptionDiff
+argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+name|StringRef
+name|V
+argument_list|,
+name|OptVal
+name|Default
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<std::string>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|//--------------------------------------------------
+end_comment
+
+begin_comment
 comment|// parser<char>
+end_comment
+
+begin_comment
 comment|//
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2646,18 +3798,282 @@ return|return
 literal|"char"
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|void
+name|printOptionDiff
+argument_list|(
+specifier|const
+name|Option
+operator|&
+name|O
+argument_list|,
+name|char
+name|V
+argument_list|,
+name|OptVal
+name|Default
+argument_list|,
+name|size_t
+name|GlobalWidth
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|anchor
-argument_list|()
-block|; }
-expr_stmt|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<char>
 argument_list|)
+end_macro
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//--------------------------------------------------
+end_comment
+
+begin_comment
+comment|// PrintOptionDiff
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This collection of wrappers is the intermediary between class opt and class
+end_comment
+
+begin_comment
+comment|// parser to handle all the template nastiness.
+end_comment
+
+begin_comment
+comment|// This overloaded function is selected by the generic parser.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ParserClass
+operator|,
+name|class
+name|DT
+operator|>
+name|void
+name|printOptionDiff
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|const generic_parser_base&P
+argument_list|,
+argument|const DT&V
+argument_list|,
+argument|const OptionValue<DT>&Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+block|{
+name|OptionValue
+operator|<
+name|DT
+operator|>
+name|OV
+operator|=
+name|V
+block|;
+name|P
+operator|.
+name|printOptionDiff
+argument_list|(
+name|O
+argument_list|,
+name|OV
+argument_list|,
+name|Default
+argument_list|,
+name|GlobalWidth
+argument_list|)
+block|; }
+comment|// This is instantiated for basic parsers when the parsed value has a different
+comment|// type than the option value. e.g. HelpPrinter.
+name|template
+operator|<
+name|class
+name|ParserDT
+operator|,
+name|class
+name|ValDT
+operator|>
+expr|struct
+name|OptionDiffPrinter
+block|{
+name|void
+name|print
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|const parser<ParserDT> P
+argument_list|,
+argument|const ValDT&
+comment|/*V*/
+argument_list|,
+argument|const OptionValue<ValDT>&
+comment|/*Default*/
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+block|{
+name|P
+operator|.
+name|printOptionNoValue
+argument_list|(
+name|O
+argument_list|,
+name|GlobalWidth
+argument_list|)
+block|;   }
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// This is instantiated for basic parsers when the parsed value has the same
+end_comment
+
+begin_comment
+comment|// type as the option value.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|DT
+operator|>
+expr|struct
+name|OptionDiffPrinter
+operator|<
+name|DT
+operator|,
+name|DT
+operator|>
+block|{
+name|void
+name|print
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|const parser<DT> P
+argument_list|,
+argument|const DT&V
+argument_list|,
+argument|const OptionValue<DT>&Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+block|{
+name|P
+operator|.
+name|printOptionDiff
+argument_list|(
+name|O
+argument_list|,
+name|V
+argument_list|,
+name|Default
+argument_list|,
+name|GlobalWidth
+argument_list|)
+block|;   }
+block|}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// This overloaded function is selected by the basic parser, which may parse a
+end_comment
+
+begin_comment
+comment|// different type than the option type.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|class
+name|ParserClass
+operator|,
+name|class
+name|ValDT
+operator|>
+name|void
+name|printOptionDiff
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|const basic_parser<typename ParserClass::parser_data_type>&P
+argument_list|,
+argument|const ValDT&V
+argument_list|,
+argument|const OptionValue<ValDT>&Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+block|{
+name|OptionDiffPrinter
+operator|<
+name|typename
+name|ParserClass
+operator|::
+name|parser_data_type
+block|,
+name|ValDT
+operator|>
+name|printer
+block|;
+name|printer
+operator|.
+name|print
+argument_list|(
+name|O
+argument_list|,
+name|static_cast
+operator|<
+specifier|const
+name|ParserClass
+operator|&
+operator|>
+operator|(
+name|P
+operator|)
+argument_list|,
+name|V
+argument_list|,
+name|Default
+argument_list|,
+name|GlobalWidth
+argument_list|)
+block|; }
 comment|//===----------------------------------------------------------------------===//
 comment|// applicator class - This class is used because we must use partial
 comment|// specialization to handle literal string arguments specially (const char* does
@@ -2695,7 +4111,13 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Handle const char* as a special case...
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|unsigned
@@ -2733,6 +4155,9 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|unsigned
@@ -2771,6 +4196,9 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2805,6 +4233,9 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2832,6 +4263,9 @@ argument_list|)
 block|;   }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2859,6 +4293,9 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2886,6 +4323,9 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2913,6 +4353,9 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -2940,7 +4383,13 @@ argument_list|)
 block|; }
 block|}
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// apply method - Apply a modifier to an option in a type safe way.
+end_comment
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -2995,6 +4444,12 @@ operator|*
 name|Location
 block|;
 comment|// Where to store the object...
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+name|Default
+block|;
 name|void
 name|check
 argument_list|()
@@ -3046,10 +4501,17 @@ operator|=
 operator|&
 name|L
 block|;
+name|Default
+operator|=
+name|L
+block|;
 return|return
 name|false
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 name|class
@@ -3059,6 +4521,8 @@ name|void
 name|setValue
 argument_list|(
 argument|const T&V
+argument_list|,
+argument|bool initial = false
 argument_list|)
 block|{
 name|check
@@ -3068,20 +4532,35 @@ operator|*
 name|Location
 operator|=
 name|V
-block|;   }
+block|;
+if|if
+condition|(
+name|initial
+condition|)
+name|Default
+operator|=
+name|V
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_function
 name|DataType
-operator|&
+modifier|&
 name|getValue
-argument_list|()
+parameter_list|()
 block|{
 name|check
 argument_list|()
-block|;
+expr_stmt|;
 return|return
 operator|*
 name|Location
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|DataType
 operator|&
@@ -3097,6 +4576,9 @@ operator|*
 name|Location
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|operator
 name|DataType
 argument_list|()
@@ -3109,14 +4591,27 @@ name|getValue
 argument_list|()
 return|;
 block|}
-block|}
-end_decl_stmt
+end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+specifier|const
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+operator|&
+name|getDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Default
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|// Define how to hold a class type object, such as a string.  Since we can
 end_comment
 
@@ -3153,6 +4648,12 @@ name|DataType
 block|{
 name|public
 operator|:
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+name|Default
+block|;
 name|template
 operator|<
 name|class
@@ -3162,6 +4663,8 @@ name|void
 name|setValue
 argument_list|(
 argument|const T&V
+argument_list|,
+argument|bool initial = false
 argument_list|)
 block|{
 name|DataType
@@ -3171,7 +4674,16 @@ operator|=
 operator|(
 name|V
 operator|)
-block|; }
+block|;
+if|if
+condition|(
+name|initial
+condition|)
+name|Default
+operator|=
+name|V
+expr_stmt|;
+block|}
 name|DataType
 operator|&
 name|getValue
@@ -3182,6 +4694,9 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|DataType
 operator|&
@@ -3192,6 +4707,23 @@ block|{
 return|return
 operator|*
 name|this
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+operator|&
+name|getDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Default
 return|;
 block|}
 end_expr_stmt
@@ -3234,6 +4766,12 @@ operator|:
 name|DataType
 name|Value
 block|;
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+name|Default
+block|;
 comment|// Make sure we initialize the value with the default constructor for the
 comment|// type.
 name|opt_storage
@@ -3253,12 +4791,23 @@ name|void
 name|setValue
 argument_list|(
 argument|const T&V
+argument_list|,
+argument|bool initial = false
 argument_list|)
 block|{
 name|Value
 operator|=
 name|V
-block|; }
+block|;
+if|if
+condition|(
+name|initial
+condition|)
+name|Default
+operator|=
+name|V
+expr_stmt|;
+block|}
 name|DataType
 operator|&
 name|getValue
@@ -3268,6 +4817,9 @@ return|return
 name|Value
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|DataType
 name|getValue
 argument_list|()
@@ -3275,6 +4827,23 @@ specifier|const
 block|{
 return|return
 name|Value
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+specifier|const
+name|OptionValue
+operator|<
+name|DataType
+operator|>
+operator|&
+name|getDefault
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Default
 return|;
 block|}
 end_expr_stmt
@@ -3521,6 +5090,66 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_decl_stmt
+name|virtual
+name|void
+name|printOptionValue
+argument_list|(
+name|size_t
+name|GlobalWidth
+argument_list|,
+name|bool
+name|Force
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|Force
+operator|||
+name|this
+operator|->
+name|getDefault
+argument_list|()
+operator|.
+name|compare
+argument_list|(
+name|this
+operator|->
+name|getValue
+argument_list|()
+argument_list|)
+condition|)
+block|{
+name|cl
+operator|::
+name|printOptionDiff
+operator|<
+name|ParserClass
+operator|>
+operator|(
+operator|*
+name|this
+operator|,
+name|Parser
+operator|,
+name|this
+operator|->
+name|getValue
+argument_list|()
+operator|,
+name|this
+operator|->
+name|getDefault
+argument_list|()
+operator|,
+name|GlobalWidth
+operator|)
+expr_stmt|;
+block|}
+block|}
+end_decl_stmt
+
 begin_function
 name|void
 name|done
@@ -3564,6 +5193,8 @@ operator|->
 name|setValue
 argument_list|(
 name|V
+argument_list|,
+name|true
 argument_list|)
 expr_stmt|;
 block|}
@@ -4719,6 +6350,25 @@ name|GlobalWidth
 argument_list|)
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|// Unimplemented: list options don't currently store their default value.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|void
+name|printOptionValue
+argument_list|(
+name|size_t
+comment|/*GlobalWidth*/
+argument_list|,
+name|bool
+comment|/*Force*/
+argument_list|)
+decl|const
+block|{}
 end_decl_stmt
 
 begin_function
@@ -6049,6 +7699,25 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|// Unimplemented: bits options don't currently store their default values.
+end_comment
+
+begin_decl_stmt
+name|virtual
+name|void
+name|printOptionValue
+argument_list|(
+name|size_t
+comment|/*GlobalWidth*/
+argument_list|,
+name|bool
+comment|/*Force*/
+argument_list|)
+decl|const
+block|{}
+end_decl_stmt
+
 begin_function
 name|void
 name|done
@@ -6840,6 +8509,19 @@ argument|size_t GlobalWidth
 argument_list|)
 specifier|const
 block|;
+comment|// Aliases do not need to print their values.
+name|virtual
+name|void
+name|printOptionValue
+argument_list|(
+argument|size_t
+comment|/*GlobalWidth*/
+argument_list|,
+argument|bool
+comment|/*Force*/
+argument_list|)
+specifier|const
+block|{}
 name|void
 name|done
 argument_list|()

@@ -2174,6 +2174,18 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|uint64_t
+name|ar5211GetNextTBTT
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|HAL_BOOL
 name|ar5211IsInterruptPending
 parameter_list|(

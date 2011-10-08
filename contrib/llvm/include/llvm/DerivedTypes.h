@@ -94,153 +94,32 @@ block|{
 name|class
 name|Value
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|ValType
-operator|,
-name|class
-name|TypeClass
-operator|>
-name|class
-name|TypeMap
-expr_stmt|;
-name|class
-name|FunctionValType
-decl_stmt|;
-name|class
-name|ArrayValType
-decl_stmt|;
-name|class
-name|StructValType
-decl_stmt|;
-name|class
-name|PointerValType
-decl_stmt|;
-name|class
-name|VectorValType
-decl_stmt|;
-name|class
-name|IntegerValType
-decl_stmt|;
 name|class
 name|APInt
 decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
-name|class
-name|DerivedType
-range|:
-name|public
-name|Type
-block|{
-name|friend
-name|class
-name|Type
-block|;
-name|protected
-operator|:
-name|explicit
-name|DerivedType
-argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|TypeID id
-argument_list|)
-operator|:
-name|Type
-argument_list|(
-argument|C
-argument_list|,
-argument|id
-argument_list|)
-block|{}
-comment|/// notifyUsesThatTypeBecameConcrete - Notify AbstractTypeUsers of this type
-comment|/// that the current type has transitioned from being abstract to being
-comment|/// concrete.
-comment|///
-name|void
-name|notifyUsesThatTypeBecameConcrete
-argument_list|()
-block|;
-comment|/// dropAllTypeUses - When this (abstract) type is resolved to be equal to
-comment|/// another (more concrete) type, we must eliminate all references to other
-comment|/// types, to avoid some circular reference problems.
-comment|///
-name|void
-name|dropAllTypeUses
-argument_list|()
-block|;
-name|public
-operator|:
-comment|//===--------------------------------------------------------------------===//
-comment|// Abstract Type handling methods - These types have special lifetimes, which
-comment|// are managed by (add|remove)AbstractTypeUser. See comments in
-comment|// AbstractTypeUser.h for more information.
-comment|/// refineAbstractTypeTo - This function is used to when it is discovered that
-comment|/// the 'this' abstract type is actually equivalent to the NewType specified.
-comment|/// This causes all users of 'this' to switch to reference the more concrete
-comment|/// type NewType and for 'this' to be deleted.
-comment|///
-name|void
-name|refineAbstractTypeTo
-argument_list|(
-specifier|const
-name|Type
-operator|*
-name|NewType
-argument_list|)
-block|;
-name|void
-name|dump
-argument_list|()
-specifier|const
-block|{
-name|Type
-operator|::
-name|dump
-argument_list|()
-block|; }
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const DerivedType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
+name|template
+operator|<
+name|typename
 name|T
-operator|->
-name|isDerivedType
-argument_list|()
-return|;
-block|}
-expr|}
-block|;
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
 comment|/// Class to represent integer types. Note that this class is also used to
 comment|/// represent the built-in integer types: Int1Ty, Int8Ty, Int16Ty, Int32Ty and
 comment|/// Int64Ty.
 comment|/// @brief Integer representation type
 name|class
 name|IntegerType
-operator|:
+range|:
 name|public
-name|DerivedType
+name|Type
 block|{
 name|friend
 name|class
@@ -256,7 +135,7 @@ argument_list|,
 argument|unsigned NumBits
 argument_list|)
 operator|:
-name|DerivedType
+name|Type
 argument_list|(
 argument|C
 argument_list|,
@@ -268,15 +147,6 @@ argument_list|(
 name|NumBits
 argument_list|)
 block|;   }
-name|friend
-name|class
-name|TypeMap
-operator|<
-name|IntegerValType
-block|,
-name|IntegerType
-operator|>
-block|;
 name|public
 operator|:
 comment|/// This enum is just used to hold constants we need for IntegerType.
@@ -307,7 +177,6 @@ comment|/// that instance will be returned. Otherwise a new one will be created.
 comment|/// one instance with a given NumBits value is ever created.
 comment|/// @brief Get or create an IntegerType instance.
 specifier|static
-specifier|const
 name|IntegerType
 operator|*
 name|get
@@ -386,7 +255,7 @@ name|isPowerOf2ByteWidth
 argument_list|()
 specifier|const
 block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -424,20 +293,8 @@ name|class
 name|FunctionType
 operator|:
 name|public
-name|DerivedType
+name|Type
 block|{
-name|friend
-name|class
-name|TypeMap
-operator|<
-name|FunctionValType
-block|,
-name|FunctionType
-operator|>
-block|;
-name|bool
-name|isVarArgs
-block|;
 name|FunctionType
 argument_list|(
 specifier|const
@@ -462,7 +319,7 @@ name|FunctionType
 argument_list|(
 argument|const Type *Result
 argument_list|,
-argument|const std::vector<const Type*>&Params
+argument|ArrayRef<Type*> Params
 argument_list|,
 argument|bool IsVarArgs
 argument_list|)
@@ -479,12 +336,9 @@ name|get
 argument_list|(
 argument|const Type *Result
 argument_list|,
-comment|///< The result type
-argument|const std::vector<const Type*>&Params
+argument|ArrayRef<Type*> Params
 argument_list|,
-comment|///< The types of the parameters
 argument|bool isVarArg
-comment|///< Whether this is a variable argument length function
 argument_list|)
 block|;
 comment|/// FunctionType::get - Create a FunctionType taking no parameters.
@@ -496,31 +350,9 @@ name|get
 argument_list|(
 argument|const Type *Result
 argument_list|,
-comment|///< The result type
 argument|bool isVarArg
-comment|///< Whether this is a variable argument length function
 argument_list|)
-block|{
-return|return
-name|get
-argument_list|(
-name|Result
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|Type
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|isVarArg
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// isValidReturnType - Return true if the specified type is valid as a return
 comment|/// type.
 specifier|static
@@ -545,18 +377,16 @@ operator|*
 name|ArgTy
 argument_list|)
 block|;
-specifier|inline
 name|bool
 name|isVarArg
 argument_list|()
 specifier|const
 block|{
 return|return
-name|isVarArgs
+name|getSubclassData
+argument_list|()
 return|;
 block|}
-specifier|inline
-specifier|const
 name|Type
 operator|*
 name|getReturnType
@@ -600,8 +430,7 @@ name|NumContainedTys
 index|]
 return|;
 block|}
-comment|// Parameter type accessors...
-specifier|const
+comment|// Parameter type accessors.
 name|Type
 operator|*
 name|getParamType
@@ -633,33 +462,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|// Implement the AbstractTypeUser interface.
-name|virtual
-name|void
-name|refineAbstractType
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|OldTy
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|NewTy
-argument_list|)
-block|;
-name|virtual
-name|void
-name|typeBecameConcrete
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|AbsTy
-argument_list|)
-block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -692,29 +495,28 @@ block|}
 expr|}
 block|;
 comment|/// CompositeType - Common super class of ArrayType, StructType, PointerType
-comment|/// and VectorType
+comment|/// and VectorType.
 name|class
 name|CompositeType
 operator|:
 name|public
-name|DerivedType
+name|Type
 block|{
 name|protected
 operator|:
-specifier|inline
 name|explicit
 name|CompositeType
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|TypeID id
+argument|TypeID tid
 argument_list|)
 operator|:
-name|DerivedType
+name|Type
 argument_list|(
 argument|C
 argument_list|,
-argument|id
+argument|tid
 argument_list|)
 block|{ }
 name|public
@@ -722,8 +524,6 @@ operator|:
 comment|/// getTypeAtIndex - Given an index value into the type, return the type of
 comment|/// the element.
 comment|///
-name|virtual
-specifier|const
 name|Type
 operator|*
 name|getTypeAtIndex
@@ -731,11 +531,7 @@ argument_list|(
 argument|const Value *V
 argument_list|)
 specifier|const
-operator|=
-literal|0
 block|;
-name|virtual
-specifier|const
 name|Type
 operator|*
 name|getTypeAtIndex
@@ -743,30 +539,22 @@ argument_list|(
 argument|unsigned Idx
 argument_list|)
 specifier|const
-operator|=
-literal|0
 block|;
-name|virtual
 name|bool
 name|indexValid
 argument_list|(
 argument|const Value *V
 argument_list|)
 specifier|const
-operator|=
-literal|0
 block|;
-name|virtual
 name|bool
 name|indexValid
 argument_list|(
 argument|unsigned Idx
 argument_list|)
 specifier|const
-operator|=
-literal|0
 block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -819,7 +607,10 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// StructType - Class to represent struct types
+comment|/// StructType - Class to represent struct types, both normal and packed.
+comment|/// Besides being optionally packed, structs can be either "anonymous" or may
+comment|/// have an identity.  Anonymous structs are uniqued by structural equivalence,
+comment|/// but types are each unique when created, and optionally have a name.
 comment|///
 name|class
 name|StructType
@@ -827,15 +618,6 @@ operator|:
 name|public
 name|CompositeType
 block|{
-name|friend
-name|class
-name|TypeMap
-operator|<
-name|StructValType
-block|,
-name|StructType
-operator|>
-block|;
 name|StructType
 argument_list|(
 specifier|const
@@ -858,18 +640,114 @@ block|;
 comment|// Do not implement
 name|StructType
 argument_list|(
-argument|LLVMContext&C
-argument_list|,
-argument|const std::vector<const Type*>&Types
-argument_list|,
-argument|bool isPacked
+name|LLVMContext
+operator|&
+name|C
 argument_list|)
+operator|:
+name|CompositeType
+argument_list|(
+name|C
+argument_list|,
+name|StructTyID
+argument_list|)
+block|,
+name|SymbolTableEntry
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+expr|enum
+block|{
+comment|// This is the contents of the SubClassData field.
+name|SCDB_HasBody
+operator|=
+literal|1
+block|,
+name|SCDB_Packed
+operator|=
+literal|2
+block|,
+name|SCDB_IsAnonymous
+operator|=
+literal|4
+block|}
+block|;
+comment|/// SymbolTableEntry - For a named struct that actually has a name, this is a
+comment|/// pointer to the symbol table entry (maintained by LLVMContext) for the
+comment|/// struct.  This is null if the type is an anonymous struct or if it is
+comment|/// a named type that has an empty name.
+comment|///
+name|void
+operator|*
+name|SymbolTableEntry
 block|;
 name|public
 operator|:
+operator|~
+name|StructType
+argument_list|()
+block|{
+name|delete
+index|[]
+name|ContainedTys
+block|;
+comment|// Delete the body.
+block|}
+comment|/// StructType::createNamed - This creates a named struct with no body
+comment|/// specified.  If the name is empty, it creates an unnamed struct, which has
+comment|/// a unique identity but no actual name.
+specifier|static
+name|StructType
+operator|*
+name|createNamed
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|StringRef Name
+argument_list|)
+block|;
+specifier|static
+name|StructType
+operator|*
+name|createNamed
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|ArrayRef<Type*> Elements
+argument_list|,
+argument|bool isPacked = false
+argument_list|)
+block|;
+specifier|static
+name|StructType
+operator|*
+name|createNamed
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|StringRef Name
+argument_list|,
+argument|ArrayRef<Type*> Elements
+argument_list|,
+argument|bool isPacked = false
+argument_list|)
+block|;
+specifier|static
+name|StructType
+operator|*
+name|createNamed
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|Type *elt1
+argument_list|,
+argument|...
+argument_list|)
+name|END_WITH_NULL
+block|;
 comment|/// StructType::get - This static method is the primary way to create a
 comment|/// StructType.
-comment|///
 specifier|static
 name|StructType
 operator|*
@@ -877,9 +755,9 @@ name|get
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|const std::vector<const Type*>&Params
+argument|ArrayRef<Type*> Elements
 argument_list|,
-argument|bool isPacked=false
+argument|bool isPacked = false
 argument_list|)
 block|;
 comment|/// StructType::get - Create an empty structure type.
@@ -891,41 +769,118 @@ name|get
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|bool isPacked=false
+argument|bool isPacked = false
 argument_list|)
-block|{
-return|return
-name|get
-argument_list|(
-name|Context
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|Type
-operator|*
-operator|>
-operator|(
-operator|)
-argument_list|,
-name|isPacked
-argument_list|)
-return|;
-block|}
-comment|/// StructType::get - This static method is a convenience method for
-comment|/// creating structure types by specifying the elements as arguments.
-comment|/// Note that this method always returns a non-packed struct.  To get
-comment|/// an empty struct, pass NULL, NULL.
+block|;
+comment|/// StructType::get - This static method is a convenience method for creating
+comment|/// structure types by specifying the elements as arguments.  Note that this
+comment|/// method always returns a non-packed struct, and requires at least one
+comment|/// element type.
 specifier|static
 name|StructType
 operator|*
 name|get
 argument_list|(
-argument|LLVMContext&Context
+argument|Type *elt1
 argument_list|,
-argument|const Type *type
+argument|...
+argument_list|)
+name|END_WITH_NULL
+block|;
+name|bool
+name|isPacked
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassData
+argument_list|()
+operator|&
+name|SCDB_Packed
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// isAnonymous - Return true if this type is uniqued by structural
+comment|/// equivalence, false if it has an identity.
+name|bool
+name|isAnonymous
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassData
+argument_list|()
+operator|&
+name|SCDB_IsAnonymous
+operator|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// isOpaque - Return true if this is a type with an identity that has no body
+comment|/// specified yet.  These prints as 'opaque' in .ll files.
+name|bool
+name|isOpaque
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|getSubclassData
+argument_list|()
+operator|&
+name|SCDB_HasBody
+operator|)
+operator|==
+literal|0
+return|;
+block|}
+comment|/// hasName - Return true if this is a named struct that has a non-empty name.
+name|bool
+name|hasName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SymbolTableEntry
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// getName - Return the name for this struct type if it has an identity.
+comment|/// This may return an empty string for an unnamed struct type.  Do not call
+comment|/// this on an anonymous type.
+name|StringRef
+name|getName
+argument_list|()
+specifier|const
+block|;
+comment|/// setName - Change the name of this type to the specified name, or to a name
+comment|/// with a suffix if there is a collision.  Do not call this on an anonymous
+comment|/// type.
+name|void
+name|setName
+argument_list|(
+argument|StringRef Name
+argument_list|)
+block|;
+comment|/// setBody - Specify a body for an opaque type.
+name|void
+name|setBody
+argument_list|(
+argument|ArrayRef<Type*> Elements
+argument_list|,
+argument|bool isPacked = false
+argument_list|)
+block|;
+name|void
+name|setBody
+argument_list|(
+argument|Type *elt1
 argument_list|,
 argument|...
 argument_list|)
@@ -943,7 +898,7 @@ operator|*
 name|ElemTy
 argument_list|)
 block|;
-comment|// Iterator access to the elements
+comment|// Iterator access to the elements.
 typedef|typedef
 name|Type
 operator|::
@@ -972,6 +927,15 @@ name|NumContainedTys
 index|]
 return|;
 block|}
+comment|/// isLayoutIdentical - Return true if this is layout identical to the
+comment|/// specified struct.
+name|bool
+name|isLayoutIdentical
+argument_list|(
+argument|const StructType *Other
+argument_list|)
+specifier|const
+block|;
 comment|// Random access to the elements
 name|unsigned
 name|getNumElements
@@ -982,7 +946,6 @@ return|return
 name|NumContainedTys
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getElementType
@@ -1007,72 +970,7 @@ name|N
 index|]
 return|;
 block|}
-comment|/// getTypeAtIndex - Given an index value into the type, return the type of
-comment|/// the element.  For a structure type, this must be a constant value...
-comment|///
-name|virtual
-specifier|const
-name|Type
-operator|*
-name|getTypeAtIndex
-argument_list|(
-argument|const Value *V
-argument_list|)
-specifier|const
-block|;
-name|virtual
-specifier|const
-name|Type
-operator|*
-name|getTypeAtIndex
-argument_list|(
-argument|unsigned Idx
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|indexValid
-argument_list|(
-argument|const Value *V
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|indexValid
-argument_list|(
-argument|unsigned Idx
-argument_list|)
-specifier|const
-block|;
-comment|// Implement the AbstractTypeUser interface.
-name|virtual
-name|void
-name|refineAbstractType
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|OldTy
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|NewTy
-argument_list|)
-block|;
-name|virtual
-name|void
-name|typeBecameConcrete
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|AbsTy
-argument_list|)
-block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -1102,24 +1000,6 @@ operator|==
 name|StructTyID
 return|;
 block|}
-name|bool
-name|isPacked
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|(
-literal|0
-operator|!=
-name|getSubclassData
-argument_list|()
-operator|)
-operator|?
-name|true
-operator|:
-name|false
-return|;
-block|}
 expr|}
 block|;
 comment|/// SequentialType - This is the superclass of the array, pointer and vector
@@ -1136,10 +1016,11 @@ operator|:
 name|public
 name|CompositeType
 block|{
-name|PATypeHandle
+name|Type
+operator|*
 name|ContainedType
 block|;
-comment|///< Storage for the single contained type
+comment|///< Storage for the single contained type.
 name|SequentialType
 argument_list|(
 specifier|const
@@ -1160,23 +1041,13 @@ operator|&
 operator|)
 block|;
 comment|// Do not implement!
-comment|// avoiding warning: 'this' : used in base member initializer list
-name|SequentialType
-operator|*
-name|this_
-argument_list|()
-block|{
-return|return
-name|this
-return|;
-block|}
 name|protected
 operator|:
 name|SequentialType
 argument_list|(
 argument|TypeID TID
 argument_list|,
-argument|const Type *ElType
+argument|Type *ElType
 argument_list|)
 operator|:
 name|CompositeType
@@ -1192,8 +1063,6 @@ block|,
 name|ContainedType
 argument_list|(
 argument|ElType
-argument_list|,
-argument|this_()
 argument_list|)
 block|{
 name|ContainedTys
@@ -1207,8 +1076,6 @@ literal|1
 block|;   }
 name|public
 operator|:
-specifier|inline
-specifier|const
 name|Type
 operator|*
 name|getElementType
@@ -1222,64 +1089,7 @@ literal|0
 index|]
 return|;
 block|}
-name|virtual
-name|bool
-name|indexValid
-argument_list|(
-argument|const Value *V
-argument_list|)
-specifier|const
-block|;
-name|virtual
-name|bool
-name|indexValid
-argument_list|(
-argument|unsigned
-argument_list|)
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// getTypeAtIndex - Given an index value into the type, return the type of
-comment|/// the element.  For sequential types, there is only one subtype...
-comment|///
-name|virtual
-specifier|const
-name|Type
-operator|*
-name|getTypeAtIndex
-argument_list|(
-argument|const Value *
-argument_list|)
-specifier|const
-block|{
-return|return
-name|ContainedTys
-index|[
-literal|0
-index|]
-return|;
-block|}
-name|virtual
-specifier|const
-name|Type
-operator|*
-name|getTypeAtIndex
-argument_list|(
-argument|unsigned
-argument_list|)
-specifier|const
-block|{
-return|return
-name|ContainedTys
-index|[
-literal|0
-index|]
-return|;
-block|}
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -1325,7 +1135,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// ArrayType - Class to represent array types
+comment|/// ArrayType - Class to represent array types.
 comment|///
 name|class
 name|ArrayType
@@ -1333,15 +1143,6 @@ operator|:
 name|public
 name|SequentialType
 block|{
-name|friend
-name|class
-name|TypeMap
-operator|<
-name|ArrayValType
-block|,
-name|ArrayType
-operator|>
-block|;
 name|uint64_t
 name|NumElements
 block|;
@@ -1367,7 +1168,7 @@ block|;
 comment|// Do not implement
 name|ArrayType
 argument_list|(
-argument|const Type *ElType
+argument|Type *ElType
 argument_list|,
 argument|uint64_t NumEl
 argument_list|)
@@ -1399,7 +1200,6 @@ operator|*
 name|ElemTy
 argument_list|)
 block|;
-specifier|inline
 name|uint64_t
 name|getNumElements
 argument_list|()
@@ -1409,33 +1209,7 @@ return|return
 name|NumElements
 return|;
 block|}
-comment|// Implement the AbstractTypeUser interface.
-name|virtual
-name|void
-name|refineAbstractType
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|OldTy
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|NewTy
-argument_list|)
-block|;
-name|virtual
-name|void
-name|typeBecameConcrete
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|AbsTy
-argument_list|)
-block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -1467,7 +1241,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// VectorType - Class to represent vector types
+comment|/// VectorType - Class to represent vector types.
 comment|///
 name|class
 name|VectorType
@@ -1475,15 +1249,6 @@ operator|:
 name|public
 name|SequentialType
 block|{
-name|friend
-name|class
-name|TypeMap
-operator|<
-name|VectorValType
-block|,
-name|VectorType
-operator|>
-block|;
 name|unsigned
 name|NumElements
 block|;
@@ -1509,7 +1274,7 @@ block|;
 comment|// Do not implement
 name|VectorType
 argument_list|(
-argument|const Type *ElType
+argument|Type *ElType
 argument_list|,
 argument|unsigned NumEl
 argument_list|)
@@ -1517,7 +1282,7 @@ block|;
 name|public
 operator|:
 comment|/// VectorType::get - This static method is the primary way to construct an
-comment|/// VectorType
+comment|/// VectorType.
 comment|///
 specifier|static
 name|VectorType
@@ -1552,7 +1317,6 @@ operator|->
 name|getPrimitiveSizeInBits
 argument_list|()
 block|;
-specifier|const
 name|Type
 operator|*
 name|EltTy
@@ -1606,7 +1370,6 @@ operator|->
 name|getPrimitiveSizeInBits
 argument_list|()
 block|;
-specifier|const
 name|Type
 operator|*
 name|EltTy
@@ -1675,7 +1438,6 @@ operator|&&
 literal|"Cannot truncate vector element with odd bit-width"
 argument_list|)
 block|;
-specifier|const
 name|Type
 operator|*
 name|EltTy
@@ -1721,7 +1483,6 @@ name|ElemTy
 argument_list|)
 block|;
 comment|/// @brief Return the number of elements in the Vector type.
-specifier|inline
 name|unsigned
 name|getNumElements
 argument_list|()
@@ -1732,7 +1493,6 @@ name|NumElements
 return|;
 block|}
 comment|/// @brief Return the number of bits in the Vector type.
-specifier|inline
 name|unsigned
 name|getBitWidth
 argument_list|()
@@ -1748,33 +1508,7 @@ name|getPrimitiveSizeInBits
 argument_list|()
 return|;
 block|}
-comment|// Implement the AbstractTypeUser interface.
-name|virtual
-name|void
-name|refineAbstractType
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|OldTy
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|NewTy
-argument_list|)
-block|;
-name|virtual
-name|void
-name|typeBecameConcrete
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|AbsTy
-argument_list|)
-block|;
-comment|// Methods for support type inquiry through isa, cast, and dyn_cast:
+comment|// Methods for support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -1806,7 +1540,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// PointerType - Class to represent pointers
+comment|/// PointerType - Class to represent pointers.
 comment|///
 name|class
 name|PointerType
@@ -1814,18 +1548,6 @@ operator|:
 name|public
 name|SequentialType
 block|{
-name|friend
-name|class
-name|TypeMap
-operator|<
-name|PointerValType
-block|,
-name|PointerType
-operator|>
-block|;
-name|unsigned
-name|AddressSpace
-block|;
 name|PointerType
 argument_list|(
 specifier|const
@@ -1849,7 +1571,7 @@ comment|// Do not implement
 name|explicit
 name|PointerType
 argument_list|(
-argument|const Type *ElType
+argument|Type *ElType
 argument_list|,
 argument|unsigned AddrSpace
 argument_list|)
@@ -1909,36 +1631,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AddressSpace
+name|getSubclassData
+argument_list|()
 return|;
 block|}
-comment|// Implement the AbstractTypeUser interface.
-name|virtual
-name|void
-name|refineAbstractType
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|OldTy
-argument_list|,
-specifier|const
-name|Type
-operator|*
-name|NewTy
-argument_list|)
-block|;
-name|virtual
-name|void
-name|typeBecameConcrete
-argument_list|(
-specifier|const
-name|DerivedType
-operator|*
-name|AbsTy
-argument_list|)
-block|;
-comment|// Implement support type inquiry through isa, cast, and dyn_cast:
+comment|// Implement support type inquiry through isa, cast, and dyn_cast.
 specifier|static
 specifier|inline
 name|bool
@@ -1966,91 +1663,6 @@ name|getTypeID
 argument_list|()
 operator|==
 name|PointerTyID
-return|;
-block|}
-expr|}
-block|;
-comment|/// OpaqueType - Class to represent abstract types
-comment|///
-name|class
-name|OpaqueType
-operator|:
-name|public
-name|DerivedType
-block|{
-name|friend
-name|class
-name|LLVMContextImpl
-block|;
-name|OpaqueType
-argument_list|(
-specifier|const
-name|OpaqueType
-operator|&
-argument_list|)
-block|;
-comment|// DO NOT IMPLEMENT
-specifier|const
-name|OpaqueType
-operator|&
-name|operator
-operator|=
-operator|(
-specifier|const
-name|OpaqueType
-operator|&
-operator|)
-block|;
-comment|// DO NOT IMPLEMENT
-name|OpaqueType
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|)
-block|;
-name|public
-operator|:
-comment|/// OpaqueType::get - Static factory method for the OpaqueType class...
-comment|///
-specifier|static
-name|OpaqueType
-operator|*
-name|get
-argument_list|(
-name|LLVMContext
-operator|&
-name|C
-argument_list|)
-block|;
-comment|// Implement support for type inquiry through isa, cast, and dyn_cast:
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const OpaqueType *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-specifier|static
-specifier|inline
-name|bool
-name|classof
-argument_list|(
-argument|const Type *T
-argument_list|)
-block|{
-return|return
-name|T
-operator|->
-name|getTypeID
-argument_list|()
-operator|==
-name|OpaqueTyID
 return|;
 block|}
 expr|}

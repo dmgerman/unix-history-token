@@ -83,6 +83,18 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"X86GenInstrInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -722,7 +734,7 @@ literal|8
 block|,
 name|Op0Mask
 init|=
-literal|0xF
+literal|0x1F
 operator|<<
 name|Op0Shift
 block|,
@@ -806,7 +818,7 @@ literal|12
 operator|<<
 name|Op0Shift
 block|,
-comment|// T8, TA - Prefix after the 0x0F prefix.
+comment|// T8, TA, A6, A7 - Prefix after the 0x0F prefix.
 name|T8
 init|=
 literal|13
@@ -819,10 +831,22 @@ literal|14
 operator|<<
 name|Op0Shift
 block|,
+name|A6
+init|=
+literal|15
+operator|<<
+name|Op0Shift
+block|,
+name|A7
+init|=
+literal|16
+operator|<<
+name|Op0Shift
+block|,
 comment|// TF - Prefix before and after 0x0F
 name|TF
 init|=
-literal|15
+literal|17
 operator|<<
 name|Op0Shift
 block|,
@@ -834,7 +858,9 @@ comment|// statically determined.
 comment|//
 name|REXShift
 init|=
-literal|12
+name|Op0Shift
+operator|+
+literal|5
 block|,
 name|REX_W
 init|=
@@ -847,7 +873,9 @@ comment|// This three-bit field describes the size of an immediate operand.  Zer
 comment|// unused so that we can tell if we forgot to set a value.
 name|ImmShift
 init|=
-literal|13
+name|REXShift
+operator|+
+literal|1
 block|,
 name|ImmMask
 init|=
@@ -902,7 +930,9 @@ comment|// FP Instruction Classification...  Zero is non-fp instruction.
 comment|// FPTypeMask - Mask for all of the FP types...
 name|FPTypeShift
 init|=
-literal|16
+name|ImmShift
+operator|+
+literal|3
 block|,
 name|FPTypeMask
 init|=
@@ -974,7 +1004,9 @@ block|,
 comment|// Lock prefix
 name|LOCKShift
 init|=
-literal|19
+name|FPTypeShift
+operator|+
+literal|3
 block|,
 name|LOCK
 init|=
@@ -986,7 +1018,9 @@ comment|// Segment override prefixes. Currently we just need ability to address
 comment|// stuff in gs and fs segments.
 name|SegOvrShift
 init|=
-literal|20
+name|LOCKShift
+operator|+
+literal|1
 block|,
 name|SegOvrMask
 init|=
@@ -1006,24 +1040,28 @@ literal|2
 operator|<<
 name|SegOvrShift
 block|,
-comment|// Execution domain for SSE instructions in bits 22, 23.
-comment|// 0 in bits 22-23 means normal, non-SSE instruction.
+comment|// Execution domain for SSE instructions in bits 23, 24.
+comment|// 0 in bits 23-24 means normal, non-SSE instruction.
 name|SSEDomainShift
 init|=
-literal|22
+name|SegOvrShift
+operator|+
+literal|2
 block|,
 name|OpcodeShift
 init|=
-literal|24
-block|,
-name|OpcodeMask
-init|=
-literal|0xFF
-operator|<<
-name|OpcodeShift
+name|SSEDomainShift
+operator|+
+literal|2
 block|,
 comment|//===------------------------------------------------------------------===//
 comment|/// VEX - The opcode prefix used by AVX instructions
+name|VEXShift
+init|=
+name|OpcodeShift
+operator|+
+literal|8
+block|,
 name|VEX
 init|=
 literal|1U
@@ -1374,7 +1412,9 @@ init|=
 operator|(
 name|TSFlags
 operator|>>
-literal|32
+name|X86II
+operator|::
+name|VEXShift
 operator|)
 operator|&
 name|X86II
@@ -1790,7 +1830,7 @@ name|class
 name|X86InstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|X86GenInstrInfo
 block|{
 name|X86TargetMachine
 operator|&
@@ -2355,7 +2395,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// shouldScheduleLoadsNear - This is a used by the pre-regalloc scheduler to
-comment|/// determine (in conjuction with areLoadsFromSameBasePtr) if two loads should
+comment|/// determine (in conjunction with areLoadsFromSameBasePtr) if two loads should
 comment|/// be scheduled togther. On some targets if two loads are loading from
 comment|/// addresses in the same cache line, it's better if they are scheduled
 comment|/// together. This function takes two integers that represent the load offsets
@@ -2546,6 +2586,14 @@ name|Size
 argument_list|,
 name|unsigned
 name|Alignment
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|isHighLatencyDef
+argument_list|(
+name|int
+name|opc
 argument_list|)
 decl|const
 decl_stmt|;

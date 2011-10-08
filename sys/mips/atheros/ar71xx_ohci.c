@@ -119,12 +119,6 @@ directive|include
 file|<dev/usb/controller/ohcireg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
-end_include
-
 begin_function_decl
 specifier|static
 name|int

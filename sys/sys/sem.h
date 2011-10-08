@@ -478,9 +478,6 @@ struct|struct
 name|seminfo
 block|{
 name|int
-name|semmap
-decl_stmt|,
-comment|/* # of entries in semaphore map */
 name|semmni
 decl_stmt|,
 comment|/* # of semaphore identifiers */
@@ -538,6 +535,12 @@ modifier|*
 name|label
 decl_stmt|;
 comment|/* MAC framework label */
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+comment|/* creator's credentials */
 block|}
 struct|;
 end_struct

@@ -133,12 +133,24 @@ literal|1
 decl_stmt|;
 comment|/// Show machine parseable fix-its.
 name|unsigned
+name|ShowNames
+range|:
+literal|1
+decl_stmt|;
+comment|/// Show the diagnostic name
+name|unsigned
 name|ShowOptionNames
 range|:
 literal|1
 decl_stmt|;
-comment|/// Show the diagnostic name for mappable
+comment|/// Show the option name for mappable
 comment|/// diagnostics.
+name|unsigned
+name|ShowNoteIncludeStack
+range|:
+literal|1
+decl_stmt|;
+comment|/// Show include stacks for notes.
 name|unsigned
 name|ShowCategories
 range|:
@@ -146,6 +158,22 @@ literal|2
 decl_stmt|;
 comment|/// Show categories: 0 -> none, 1 -> Number,
 comment|/// 2 -> Full Name.
+name|unsigned
+name|Format
+range|:
+literal|2
+decl_stmt|;
+comment|/// Format for diagnostics:
+enum|enum
+name|TextDiagnosticFormat
+block|{
+name|Clang
+block|,
+name|Msvc
+block|,
+name|Vi
+block|}
+enum|;
 name|unsigned
 name|ShowColors
 range|:
@@ -174,8 +202,7 @@ comment|/// Limit # errors emitted.
 name|unsigned
 name|MacroBacktraceLimit
 decl_stmt|;
-comment|/// Limit depth of macro instantiation
-comment|/// backtrace.
+comment|/// Limit depth of macro expansion backtrace.
 name|unsigned
 name|TemplateBacktraceLimit
 decl_stmt|;
@@ -213,6 +240,12 @@ name|std
 operator|::
 name|string
 name|DumpBuildInformation
+expr_stmt|;
+comment|/// The file to log diagnostic output to.
+name|std
+operator|::
+name|string
+name|DiagnosticLogFile
 expr_stmt|;
 comment|/// The list of -W... options used to alter the diagnostic mappings, with the
 comment|/// prefixes removed.
@@ -281,6 +314,10 @@ name|ShowLocation
 operator|=
 literal|1
 expr_stmt|;
+name|ShowNames
+operator|=
+literal|0
+expr_stmt|;
 name|ShowOptionNames
 operator|=
 literal|0
@@ -288,6 +325,10 @@ expr_stmt|;
 name|ShowCategories
 operator|=
 literal|0
+expr_stmt|;
+name|Format
+operator|=
+name|Clang
 expr_stmt|;
 name|ShowSourceRanges
 operator|=

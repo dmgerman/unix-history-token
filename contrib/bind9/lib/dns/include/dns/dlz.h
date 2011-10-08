@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2005-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2005-2007, 2009-2011  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 2002 Stichting NLnet, Netherlands, stichting@nlnet.n
 end_comment
 
 begin_comment
-comment|/* $Id: dlz.h,v 1.7.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: dlz.h,v 1.12.14.2 2011-03-17 23:47:06 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -56,6 +56,12 @@ begin_include
 include|#
 directive|include
 file|<dns/view.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dst/dst.h>
 end_include
 
 begin_include
@@ -237,6 +243,76 @@ begin_comment
 comment|/*%<   * Method prototype.  Drivers implementing the DLZ interface MUST  * supply a find zone method.  This method is called when the DNS  * server is performing a query.  The find zone method will be called  * with the longest possible name first, and continue to be called  * with successively shorter domain names, until any of the following  * occur:  *  * \li	1) a match is found, and the function returns (ISC_R_SUCCESS)  *  * \li	2) a problem occurs, and the functions returns anything other  *	   than (ISC_R_NOTFOUND)  * \li	3) we run out of domain name labels. I.E. we have tried the  *	   shortest domain name  * \li	4) the number of labels in the domain name is less than  *	   min_labels for dns_dlzfindzone  *  * The driver's find zone method should return ISC_R_SUCCESS and a  * database pointer to the name server if the zone is supported by the  * database.  Otherwise it will return ISC_R_NOTFOUND, and a null  * pointer if the zone is not supported.  If an error occurs it should  * return a result code indicating the type of error.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+name|isc_result_t
+function_decl|(
+modifier|*
+name|dns_dlzconfigure_t
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|driverarg
+parameter_list|,
+name|void
+modifier|*
+name|dbdata
+parameter_list|,
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*%<  * Method prototype.  Drivers implementing the DLZ interface may  * optionally supply a configure method. If supplied, this will be  * called immediately after the create method is called. The driver  * may call configuration functions during the configure call  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|isc_boolean_t
+function_decl|(
+modifier|*
+name|dns_dlzssumatch_t
+function_decl|)
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|signer
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_netaddr_t
+modifier|*
+name|tcpaddr
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|,
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|void
+modifier|*
+name|driverarg
+parameter_list|,
+name|void
+modifier|*
+name|dbdata
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_comment
+comment|/*%<  * Method prototype.  Drivers implementing the DLZ interface may  * optionally supply a ssumatch method. If supplied, this will be  * called to authorize update requests  */
+end_comment
+
 begin_comment
 comment|/*% the methods supplied by a DLZ driver */
 end_comment
@@ -257,6 +333,12 @@ name|findzone
 decl_stmt|;
 name|dns_dlzallowzonexfr_t
 name|allowzonexfr
+decl_stmt|;
+name|dns_dlzconfigure_t
+name|configure
+decl_stmt|;
+name|dns_dlzssumatch_t
+name|ssumatch
 decl_stmt|;
 block|}
 name|dns_dlzmethods_t
@@ -299,8 +381,25 @@ block|}
 struct|;
 end_struct
 
+begin_typedef
+typedef|typedef
+name|isc_result_t
+function_decl|(
+modifier|*
+name|dlzconfigure_callback_t
+function_decl|)
+parameter_list|(
+name|dns_view_t
+modifier|*
+parameter_list|,
+name|dns_zone_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
 begin_comment
-comment|/*% an instance of a DLZ driver */
+comment|/*% An instance of a DLZ driver */
 end_comment
 
 begin_struct
@@ -323,6 +422,18 @@ name|void
 modifier|*
 name|dbdata
 decl_stmt|;
+name|dlzconfigure_callback_t
+name|configure_callback
+decl_stmt|;
+ifdef|#
+directive|ifdef
+name|BIND9
+name|dns_ssutable_t
+modifier|*
+name|ssutable
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -520,6 +631,86 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Removes the dlz driver from the list of registered dlz drivers.  * There must be no active dlz drivers of this type when this function  * is called.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|isc_result_t
+name|dns_dlz_writeablezone_t
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|zone_name
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+name|dns_dlz_writeablezone_t
+name|dns_dlz_writeablezone
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*%<  * creates a writeable DLZ zone. Must be called from within the  * configure() method of a DLZ driver.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_dlzconfigure
+parameter_list|(
+name|dns_view_t
+modifier|*
+name|view
+parameter_list|,
+name|dlzconfigure_callback_t
+name|callback
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * call a DLZ drivers configure method, if supplied  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_dlz_ssumatch
+parameter_list|(
+name|dns_dlzdb_t
+modifier|*
+name|dlzdatabase
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|signer
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|isc_netaddr_t
+modifier|*
+name|tcpaddr
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|,
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * call a DLZ drivers ssumatch method, if supplied. Otherwise return ISC_FALSE  */
 end_comment
 
 begin_macro

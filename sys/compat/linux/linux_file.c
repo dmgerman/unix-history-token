@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/conf.h>
 end_include
 
@@ -556,6 +562,8 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_IOCTL
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -1046,7 +1054,7 @@ name|whence
 expr_stmt|;
 name|error
 operator|=
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -1171,7 +1179,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -1538,6 +1546,8 @@ argument_list|,
 name|args
 operator|->
 name|fd
+argument_list|,
+name|CAP_READ
 argument_list|,
 operator|&
 name|fp
@@ -4753,7 +4763,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,
@@ -5133,7 +5143,7 @@ operator|->
 name|fd
 expr_stmt|;
 return|return
-name|fsync
+name|sys_fsync
 argument_list|(
 name|td
 argument_list|,
@@ -5209,7 +5219,7 @@ name|offset
 expr_stmt|;
 name|error
 operator|=
-name|pread
+name|sys_pread
 argument_list|(
 name|td
 argument_list|,
@@ -5237,6 +5247,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+name|CAP_READ
 argument_list|,
 operator|&
 name|vp
@@ -5340,7 +5352,7 @@ operator|->
 name|offset
 expr_stmt|;
 return|return
-name|pwrite
+name|sys_pwrite
 argument_list|(
 name|td
 argument_list|,
@@ -5850,7 +5862,7 @@ expr_stmt|;
 comment|/* XXX correct? */
 return|return
 operator|(
-name|unmount
+name|sys_unmount
 argument_list|(
 name|td
 argument_list|,
@@ -7045,6 +7057,8 @@ argument_list|,
 name|args
 operator|->
 name|fd
+argument_list|,
+name|CAP_FCNTL
 argument_list|,
 operator|&
 name|fp

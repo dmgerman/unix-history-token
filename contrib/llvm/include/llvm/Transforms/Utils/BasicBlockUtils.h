@@ -79,6 +79,12 @@ directive|include
 file|"llvm/Support/CFG.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/DebugLoc.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -639,6 +645,17 @@ parameter_list|,
 name|BasicBlock
 modifier|*
 name|Pred
+parameter_list|)
+function_decl|;
+comment|/// GetFirstDebugLocInBasicBlock - Return first valid DebugLoc entry in a
+comment|/// given basic block.
+name|DebugLoc
+name|GetFirstDebugLocInBasicBlock
+parameter_list|(
+specifier|const
+name|BasicBlock
+modifier|*
+name|BB
 parameter_list|)
 function_decl|;
 block|}

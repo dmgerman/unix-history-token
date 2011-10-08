@@ -123,7 +123,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|8
+literal|10
 argument_list|,
 operator|&
 name|attr
@@ -135,7 +135,7 @@ name|partitions
 argument_list|,
 name|y
 argument_list|,
-literal|15
+literal|17
 argument_list|)
 expr_stmt|;
 name|wattrset
@@ -302,7 +302,29 @@ literal|"Revert"
 block|,
 literal|"Auto"
 block|,
-literal|"Exit"
+literal|"Finish"
+block|,
+name|NULL
+block|}
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|help_text
+index|[]
+init|=
+block|{
+literal|"Add a new partition"
+block|,
+literal|"Delete selected partition or partitions"
+block|,
+literal|"Change partition type or mountpoint"
+block|,
+literal|"Revert changes to disk setup"
+block|,
+literal|"Use guided partitioning tool"
+block|,
+literal|"Exit partitioner (will ask whether to save changes)"
 block|,
 name|NULL
 block|}
@@ -623,6 +645,14 @@ argument_list|,
 name|menubox_attr
 argument_list|)
 expr_stmt|;
+name|dlg_item_help
+argument_list|(
+name|help_text
+index|[
+name|cur_button
+index|]
+argument_list|)
+expr_stmt|;
 name|dlg_draw_buttons
 argument_list|(
 name|dialog
@@ -830,6 +860,14 @@ name|cur_button
 operator|=
 name|i
 expr_stmt|;
+name|dlg_item_help
+argument_list|(
+name|help_text
+index|[
+name|cur_button
+index|]
+argument_list|)
+expr_stmt|;
 name|dlg_draw_buttons
 argument_list|(
 name|dialog
@@ -886,6 +924,14 @@ name|cur_button
 operator|=
 literal|0
 expr_stmt|;
+name|dlg_item_help
+argument_list|(
+name|help_text
+index|[
+name|cur_button
+index|]
+argument_list|)
+expr_stmt|;
 name|dlg_draw_buttons
 argument_list|(
 name|dialog
@@ -929,6 +975,14 @@ condition|)
 name|cur_button
 operator|=
 literal|0
+expr_stmt|;
+name|dlg_item_help
+argument_list|(
+name|help_text
+index|[
+name|cur_button
+index|]
+argument_list|)
 expr_stmt|;
 name|dlg_draw_buttons
 argument_list|(
@@ -1119,6 +1173,16 @@ operator|)
 expr_stmt|;
 if|if
 condition|(
+name|cur_scroll
+operator|<
+literal|0
+condition|)
+name|cur_scroll
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
 name|cur_part
 operator|<
 name|cur_scroll
@@ -1195,6 +1259,16 @@ operator|-
 literal|2
 operator|)
 expr_stmt|;
+if|if
+condition|(
+name|cur_scroll
+operator|<
+literal|0
+condition|)
+name|cur_scroll
+operator|=
+literal|0
+expr_stmt|;
 name|cur_part
 operator|=
 name|cur_scroll
@@ -1222,6 +1296,14 @@ operator|=
 name|key
 operator|-
 name|M_EVENT
+expr_stmt|;
+name|dlg_item_help
+argument_list|(
+name|help_text
+index|[
+name|cur_button
+index|]
+argument_list|)
 expr_stmt|;
 name|dlg_draw_buttons
 argument_list|(

@@ -539,6 +539,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -683,6 +689,17 @@ directive|define
 name|PML4pml4e
 value|((pd_entry_t *)(addr_PML4pml4e))
 end_define
+
+begin_decl_stmt
+specifier|extern
+name|u_int64_t
+name|KPDPphys
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* physical address of kernel level 3 */
+end_comment
 
 begin_decl_stmt
 specifier|extern
@@ -929,7 +946,7 @@ argument_list|)
 name|pm_pvchunk
 expr_stmt|;
 comment|/* list of mappings in pmap */
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */
@@ -1421,6 +1438,33 @@ name|void
 name|pmap_invalidate_cache
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_invalidate_cache_pages
+parameter_list|(
+name|vm_page_t
+modifier|*
+name|pages
+parameter_list|,
+name|int
+name|count
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_invalidate_cache_range
+parameter_list|(
+name|vm_offset_t
+name|sva
+parameter_list|,
+name|vm_offset_t
+name|eva
 parameter_list|)
 function_decl|;
 end_function_decl

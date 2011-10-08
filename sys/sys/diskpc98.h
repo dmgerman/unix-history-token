@@ -32,6 +32,12 @@ begin_comment
 comment|/* DOS boot block relative sector number */
 end_comment
 
+begin_undef
+undef|#
+directive|undef
+name|DOSPARTOFF
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -39,12 +45,24 @@ name|DOSPARTOFF
 value|0
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|DOSPARTSIZE
+end_undef
+
 begin_define
 define|#
 directive|define
 name|DOSPARTSIZE
 value|32
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|NDOSPART
+end_undef
 
 begin_define
 define|#
@@ -122,6 +140,12 @@ directive|define
 name|DOSSID_386BSD
 value|(PC98_SID_386BSD | PC98_SID_ACTIVE)
 end_define
+
+begin_undef
+undef|#
+directive|undef
+name|DOSPTYP_386BSD
+end_undef
 
 begin_define
 define|#

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: refcount.c,v 1.5 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: refcount.c,v 1.5 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_include

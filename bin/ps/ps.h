@@ -50,6 +50,27 @@ end_enum
 begin_typedef
 typedef|typedef
 struct|struct
+name|kinfo_str
+block|{
+name|STAILQ_ENTRY
+argument_list|(
+argument|kinfo_str
+argument_list|)
+name|ks_next
+expr_stmt|;
+name|char
+modifier|*
+name|ks_str
+decl_stmt|;
+comment|/* formatted string */
+block|}
+name|KINFO_STR
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
 name|kinfo
 block|{
 name|struct
@@ -94,6 +115,13 @@ comment|/* calculated in decendant_sort() */
 block|}
 name|ki_d
 union|;
+name|STAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|kinfo_str
+argument_list|)
+name|ki_ks
+expr_stmt|;
 block|}
 name|KINFO
 typedef|;
@@ -169,11 +197,6 @@ value|0x04
 comment|/* needs user structure */
 define|#
 directive|define
-name|DSIZ
-value|0x08
-comment|/* field size is dynamic*/
-define|#
-directive|define
 name|INF127
 value|0x10
 comment|/* values>127 displayed as 127 */
@@ -181,7 +204,8 @@ name|u_int
 name|flag
 decl_stmt|;
 comment|/* output routine */
-name|void
+name|char
+modifier|*
 function_decl|(
 modifier|*
 name|oproc
@@ -196,22 +220,6 @@ name|varent
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* sizing routine*/
-name|int
-function_decl|(
-modifier|*
-name|sproc
-function_decl|)
-parameter_list|(
-name|struct
-name|kinfo
-modifier|*
-parameter_list|)
-function_decl|;
-name|short
-name|width
-decl_stmt|;
-comment|/* printing width */
 comment|/* 	 * The following (optional) elements are hooks for passing information 	 * to the generic output routine pvar (which prints simple elements 	 * from the well known kinfo_proc structure). 	 */
 name|size_t
 name|off
@@ -229,10 +237,9 @@ name|fmt
 decl_stmt|;
 comment|/* printf format */
 name|short
-name|dwidth
+name|width
 decl_stmt|;
-comment|/* dynamic printing width */
-comment|/* 	 * glue to link selected fields together 	 */
+comment|/* calculated width */
 block|}
 name|VAR
 typedef|;

@@ -712,7 +712,7 @@ name|s
 parameter_list|,
 name|n
 parameter_list|)
-value|(memset (s, '\0', n), (s))
+value|((void) (memset (s, '\0', n), (s)))
 end_define
 
 begin_else

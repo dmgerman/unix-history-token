@@ -2505,7 +2505,7 @@ expr_stmt|;
 comment|/* 	 * Verify the max read request size was set to 4KB 	 * before trying the test with 4KB. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -13827,6 +13827,15 @@ operator|*
 name|ptr
 operator|==
 literal|'C'
+operator|||
+operator|*
+operator|(
+name|ptr
+operator|+
+literal|1
+operator|)
+operator|==
+literal|'C'
 condition|)
 block|{
 comment|/* -C is CX4 */
@@ -14873,7 +14882,59 @@ name|void
 modifier|*
 name|arg
 parameter_list|)
-block|{ }
+block|{
+name|mxge_softc_t
+modifier|*
+name|sc
+init|=
+name|arg
+decl_stmt|;
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+init|=
+name|sc
+operator|->
+name|ifp
+decl_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|driver_mtx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|mxge_open
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|driver_mtx
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -18614,7 +18675,7 @@ decl_stmt|;
 comment|/* find the PCIe link width and set max read request to 4KB*/
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -18787,7 +18848,7 @@ decl_stmt|;
 comment|/* find the vendor specific offset */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

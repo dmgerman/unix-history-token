@@ -98,6 +98,39 @@ value|void LLVMInitialize##TargetName##Target();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|void LLVMInitialize##TargetName##MCAsmInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|void LLVMInitialize##TargetName##MCInstrInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+define|\
+value|void LLVMInitialize##TargetName##MCSubtargetInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
 comment|// Declare all of the available assembly printer initialization functions.
 define|#
 directive|define
@@ -127,6 +160,7 @@ name|LLVM_DISASSEMBLER
 parameter_list|(
 name|TargetName
 parameter_list|)
+define|\
 value|void LLVMInitialize##TargetName##Disassembler();
 include|#
 directive|include
@@ -180,6 +214,71 @@ parameter_list|(
 name|TargetName
 parameter_list|)
 value|LLVMInitialize##TargetName##Target();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+block|}
+comment|/// InitializeAllMCAsmInfos - The main program should call this function
+comment|/// if it wants access to all available assembly infos for targets that
+comment|/// LLVM is configured to support, to make them available via the
+comment|/// TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
+specifier|inline
+name|void
+name|InitializeAllMCAsmInfos
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##MCAsmInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+block|}
+comment|/// InitializeAllMCInstrInfos - The main program should call this function
+comment|/// if it wants access to all available instruction infos for targets that
+comment|/// LLVM is configured to support, to make them available via the
+comment|/// TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
+specifier|inline
+name|void
+name|InitializeAllMCInstrInfos
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##MCInstrInfo();
+include|#
+directive|include
+file|"llvm/Config/Targets.def"
+block|}
+comment|/// InitializeAllMCSubtargetInfos - The main program should call this function
+comment|/// if it wants access to all available subtarget infos for targets that LLVM
+comment|/// is configured to support, to make them available via the TargetRegistry.
+comment|///
+comment|/// It is legal for a client to make multiple calls to this function.
+specifier|inline
+name|void
+name|InitializeAllMCSubtargetInfos
+parameter_list|()
+block|{
+define|#
+directive|define
+name|LLVM_TARGET
+parameter_list|(
+name|TargetName
+parameter_list|)
+value|LLVMInitialize##TargetName##MCSubtargetInfo();
 include|#
 directive|include
 file|"llvm/Config/Targets.def"
@@ -267,6 +366,9 @@ expr_stmt|;
 name|LLVM_NATIVE_TARGET
 argument_list|()
 expr_stmt|;
+name|LLVM_NATIVE_MCASMINFO
+argument_list|()
+expr_stmt|;
 return|return
 name|false
 return|;
@@ -290,6 +392,31 @@ ifdef|#
 directive|ifdef
 name|LLVM_NATIVE_ASMPRINTER
 name|LLVM_NATIVE_ASMPRINTER
+argument_list|()
+expr_stmt|;
+return|return
+name|false
+return|;
+else|#
+directive|else
+return|return
+name|true
+return|;
+endif|#
+directive|endif
+block|}
+comment|/// InitializeNativeTargetAsmParser - The main program should call
+comment|/// this function to initialize the native target asm parser.
+specifier|inline
+name|bool
+name|InitializeNativeTargetAsmParser
+parameter_list|()
+block|{
+comment|// If we have a native target, initialize the corresponding asm parser.
+ifdef|#
+directive|ifdef
+name|LLVM_NATIVE_ASMPARSER
+name|LLVM_NATIVE_ASMPARSER
 argument_list|()
 expr_stmt|;
 return|return

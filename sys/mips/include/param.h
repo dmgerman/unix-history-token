@@ -246,12 +246,23 @@ name|MAXSMPCPU
 value|32
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXCPU
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MAXCPU
 value|MAXSMPCPU
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -558,17 +569,6 @@ end_define
 
 begin_comment
 comment|/* max supported pagesizes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BLKDEV_IOSIZE
-value|2048
-end_define
-
-begin_comment
-comment|/* xxx: Why is this 1/2 page? */
 end_comment
 
 begin_define

@@ -2269,7 +2269,7 @@ name|tp
 operator|->
 name|t_maxseg
 operator|)
-operator|>
+operator|>=
 literal|2
 condition|)
 name|num_segs

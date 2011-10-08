@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/ValueHandle.h"
 end_include
 
@@ -460,26 +466,9 @@ operator|,
 name|bool
 name|GVsWithCode
 operator|,
-name|CodeModel
-operator|::
-name|Model
-name|CMM
-operator|,
-name|StringRef
-name|MArch
-operator|,
-name|StringRef
-name|MCPU
-operator|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|MAttrs
+name|TargetMachine
+operator|*
+name|TM
 operator|)
 expr_stmt|;
 specifier|static
@@ -512,26 +501,9 @@ operator|,
 name|bool
 name|GVsWithCode
 operator|,
-name|CodeModel
-operator|::
-name|Model
-name|CMM
-operator|,
-name|StringRef
-name|MArch
-operator|,
-name|StringRef
-name|MCPU
-operator|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-operator|&
-name|MAttrs
+name|TargetMachine
+operator|*
+name|TM
 operator|)
 expr_stmt|;
 specifier|static
@@ -589,10 +561,13 @@ argument_list|;
 name|EERegisterFn
 name|ExceptionTableDeregister
 argument_list|;
-name|std
-operator|::
-name|vector
+comment|/// This maps functions to their exception tables frames.
+name|DenseMap
 operator|<
+specifier|const
+name|Function
+operator|*
+argument_list|,
 name|void
 operator|*
 operator|>
@@ -623,7 +598,7 @@ comment|///
 comment|/// \param GVsWithCode - Allocating globals with code breaks
 comment|/// freeMachineCodeForFunction and is probably unsafe and bad for performance.
 comment|/// However, we have clients who depend on this behavior, so we must support
-comment|/// it.  Eventually, when we're willing to break some backwards compatability,
+comment|/// it.  Eventually, when we're willing to break some backwards compatibility,
 comment|/// this flag should be flipped to false, so that by default
 comment|/// freeMachineCodeForFunction works.
 specifier|static
@@ -1229,6 +1204,11 @@ comment|/// uses the ExceptionTableRegister function.
 name|void
 name|RegisterTable
 parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|fn
+parameter_list|,
 name|void
 modifier|*
 name|res
@@ -1245,12 +1225,75 @@ name|res
 argument_list|)
 expr_stmt|;
 name|AllExceptionTables
-operator|.
-name|push_back
-argument_list|(
+index|[
+name|fn
+index|]
+operator|=
 name|res
+expr_stmt|;
+block|}
+block|}
+comment|/// DeregisterTable - Deregisters the exception frame previously registered
+comment|/// for the given function.
+name|void
+name|DeregisterTable
+parameter_list|(
+specifier|const
+name|Function
+modifier|*
+name|Fn
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ExceptionTableDeregister
+condition|)
+block|{
+name|DenseMap
+operator|<
+specifier|const
+name|Function
+operator|*
+operator|,
+name|void
+operator|*
+operator|>
+operator|::
+name|iterator
+name|frame
+operator|=
+name|AllExceptionTables
+operator|.
+name|find
+argument_list|(
+name|Fn
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|frame
+operator|!=
+name|AllExceptionTables
+operator|.
+name|end
+argument_list|()
+condition|)
+block|{
+name|ExceptionTableDeregister
+argument_list|(
+name|frame
+operator|->
+name|second
+argument_list|)
+expr_stmt|;
+name|AllExceptionTables
+operator|.
+name|erase
+argument_list|(
+name|frame
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/// DeregisterAllTables - Deregisters all previously registered pointers to an
@@ -1669,7 +1712,8 @@ return|;
 block|}
 comment|/// setUseMCJIT - Set whether the MC-JIT implementation should be used
 comment|/// (experimental).
-name|void
+name|EngineBuilder
+modifier|&
 name|setUseMCJIT
 parameter_list|(
 name|bool
@@ -1680,6 +1724,10 @@ name|UseMCJIT
 operator|=
 name|Value
 expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
 block|}
 comment|/// setMAttrs - Set cpu-specific attributes.
 name|template
@@ -1719,6 +1767,40 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// selectTarget - Pick a target either via -march or by guessing the native
+comment|/// arch.  Add any CPU features specified via -mcpu or -mattr.
+specifier|static
+name|TargetMachine
+modifier|*
+name|selectTarget
+argument_list|(
+name|Module
+operator|*
+name|M
+argument_list|,
+name|StringRef
+name|MArch
+argument_list|,
+name|StringRef
+name|MCPU
+argument_list|,
+specifier|const
+name|SmallVectorImpl
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|MAttrs
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|Err
+argument_list|)
+decl_stmt|;
 name|ExecutionEngine
 modifier|*
 name|create

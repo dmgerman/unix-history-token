@@ -884,17 +884,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|ip_fini
-parameter_list|(
-name|void
-modifier|*
-name|xtp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|ip_fragment
 parameter_list|(
@@ -1432,6 +1421,17 @@ end_define
 
 begin_comment
 comment|/* rule reference */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MTAG_IPFW_CALL
+value|1308397630
+end_define
+
+begin_comment
+comment|/* call stack */
 end_comment
 
 begin_struct_decl

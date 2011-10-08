@@ -1681,7 +1681,7 @@ expr_stmt|;
 block|}
 name|ypcnt
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 name|data
 operator|.
@@ -1756,10 +1756,15 @@ operator|==
 literal|'-'
 operator|)
 condition|)
+block|{
 name|yp_enabled
 operator|=
 literal|1
 expr_stmt|;
+name|ypcnt
+operator|++
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|is_comment
@@ -2474,9 +2479,6 @@ argument_list|(
 name|store
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ypcnt
-operator|++
 expr_stmt|;
 name|key
 operator|.
@@ -3199,9 +3201,6 @@ argument_list|(
 name|store
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ypcnt
-operator|++
 expr_stmt|;
 name|key
 operator|.

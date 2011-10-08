@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: logconf.c,v 1.42 2007/06/19 23:46:59 tbox Exp $ */
+comment|/* $Id: logconf.c,v 1.42.816.3 2011-03-05 23:52:06 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -15,6 +15,12 @@ begin_include
 include|#
 directive|include
 file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/file.h>
 end_include
 
 begin_include
@@ -1051,7 +1057,30 @@ name|FILE
 modifier|*
 name|fp
 decl_stmt|;
-comment|/* 		 * Test that the file can be opened, since isc_log_open() 		 * can't effectively report failures when called in 		 * isc_log_doit(). 		 */
+comment|/* 		 * Test to make sure that file is a plain file. 		 * Fix defect #22771 		*/
+name|result
+operator|=
+name|isc_file_isplainfile
+argument_list|(
+name|dest
+operator|.
+name|file
+operator|.
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+operator|||
+name|result
+operator|==
+name|ISC_R_FILENOTFOUND
+condition|)
+block|{
+comment|/* 			 * Test that the file can be opened, since 			 * isc_log_open() can't effectively report 			 * failures when called in 			 * isc_log_doit(). 			 */
 name|result
 operator|=
 name|isc_stdio_open
@@ -1074,19 +1103,12 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-name|isc_log_write
+block|{
+name|syslog
 argument_list|(
-name|ns_g_lctx
+name|LOG_ERR
 argument_list|,
-name|CFG_LOGCATEGORY_CONFIG
-argument_list|,
-name|NS_LOGMODULE_SERVER
-argument_list|,
-name|ISC_LOG_ERROR
-argument_list|,
-literal|"logging channel '%s' file '%s': %s"
-argument_list|,
-name|channelname
+literal|"isc_stdio_open '%s' failed: %s"
 argument_list|,
 name|dest
 operator|.
@@ -1100,6 +1122,25 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"isc_stdio_open '%s' failed: %s"
+argument_list|,
+name|dest
+operator|.
+name|file
+operator|.
+name|name
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 operator|(
 name|void
@@ -1109,11 +1150,46 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Allow named to continue by returning success. 		 */
+block|}
+else|else
+block|{
+name|syslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"isc_file_isplainfile '%s' failed: %s"
+argument_list|,
+name|dest
+operator|.
+name|file
+operator|.
+name|name
+argument_list|,
+name|isc_result_totext
+argument_list|(
 name|result
-operator|=
-name|ISC_R_SUCCESS
+argument_list|)
+argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"isc_file_isplainfile '%s' failed: %s"
+argument_list|,
+name|dest
+operator|.
+name|file
+operator|.
+name|name
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 return|return
 operator|(

@@ -162,12 +162,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vm/vm_object.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<vm/vm_extern.h>
 end_include
 
@@ -210,7 +204,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfs_kdtrace.h>
+file|<nfs/nfs_kdtrace.h>
 end_include
 
 begin_include
@@ -1029,7 +1023,7 @@ end_define
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1046,7 +1040,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1076,7 +1070,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1106,7 +1100,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1136,7 +1130,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1165,7 +1159,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1198,7 +1192,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_nfs
+name|_vfs_oldnfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -1223,7 +1217,7 @@ literal|0
 end_if
 
 begin_endif
-unit|SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_hits, CTLFLAG_RD,&nfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_nfs, OID_AUTO, access_cache_misses, CTLFLAG_RD,&nfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
+unit|SYSCTL_INT(_vfs_oldnfs, OID_AUTO, access_cache_hits, CTLFLAG_RD,&nfsstats.accesscache_hits, 0, "NFS ACCESS cache hit count");  SYSCTL_INT(_vfs_oldnfs, OID_AUTO, access_cache_misses, CTLFLAG_RD,&nfsstats.accesscache_misses, 0, "NFS ACCESS cache miss count");
 endif|#
 directive|endif
 end_endif
@@ -4788,6 +4782,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+operator|(
+name|nmp
+operator|->
+name|nm_flag
+operator|&
+name|NFSMNT_NOCTO
+operator|)
+operator|&&
 operator|(
 name|flags
 operator|&
@@ -6356,6 +6359,9 @@ name|nfsmount
 modifier|*
 name|nmp
 decl_stmt|;
+name|off_t
+name|end
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -6414,17 +6420,27 @@ operator|->
 name|nm_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|end
+operator|=
 name|uiop
 operator|->
 name|uio_offset
 operator|+
 name|tsiz
+expr_stmt|;
+if|if
+condition|(
+name|end
 operator|>
 name|nmp
 operator|->
 name|nm_maxfilesize
+operator|||
+name|end
+operator|<
+name|uiop
+operator|->
+name|uio_offset
 condition|)
 block|{
 name|mtx_unlock
@@ -6800,6 +6816,9 @@ operator|->
 name|v_mount
 argument_list|)
 decl_stmt|;
+name|off_t
+name|end
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -6864,17 +6883,27 @@ operator|->
 name|nm_mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+name|end
+operator|=
 name|uiop
 operator|->
 name|uio_offset
 operator|+
 name|tsiz
+expr_stmt|;
+if|if
+condition|(
+name|end
 operator|>
 name|nmp
 operator|->
 name|nm_maxfilesize
+operator|||
+name|end
+operator|<
+name|uiop
+operator|->
+name|uio_offset
 condition|)
 block|{
 name|mtx_unlock

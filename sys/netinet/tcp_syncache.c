@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_pcbgroup.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -2983,6 +2989,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 comment|/* Insert new socket into PCB hash list. */
 name|inp
 operator|->
@@ -3054,6 +3066,7 @@ name|INET6
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Install in the reservation hash table for now, but don't yet 	 * install a connection group since the full 4-tuple isn't yet 	 * configured. 	 */
 name|inp
 operator|->
 name|inp_lport
@@ -3069,7 +3082,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|in_pcbinshash
+name|in_pcbinshash_nopcbgroup
 argument_list|(
 name|inp
 argument_list|)
@@ -3158,6 +3171,12 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -3327,7 +3346,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|in6_pcbconnect
+name|in6_pcbconnect_mbuf
 argument_list|(
 name|inp
 argument_list|,
@@ -3342,6 +3361,8 @@ argument_list|,
 name|thread0
 operator|.
 name|td_ucred
+argument_list|,
+name|m
 argument_list|)
 operator|)
 operator|!=
@@ -3397,6 +3418,12 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
@@ -3418,9 +3445,26 @@ operator|->
 name|sc_flowlabel
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 else|else
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|{
 name|struct
 name|in_addr
@@ -3552,7 +3596,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|in_pcbconnect
+name|in_pcbconnect_mbuf
 argument_list|(
 name|inp
 argument_list|,
@@ -3567,6 +3611,8 @@ argument_list|,
 name|thread0
 operator|.
 name|td_ucred
+argument_list|,
+name|m
 argument_list|)
 operator|)
 operator|!=
@@ -3622,11 +3668,26 @@ name|M_TCPLOG
 argument_list|)
 expr_stmt|;
 block|}
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 goto|goto
 name|abort
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
+comment|/* INET */
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 name|tp
 operator|=
 name|intotcpcb
@@ -4768,6 +4829,9 @@ decl_stmt|;
 name|u_int32_t
 name|flowtmp
 decl_stmt|;
+name|u_int
+name|ltflags
+decl_stmt|;
 name|int
 name|win
 decl_stmt|,
@@ -4776,8 +4840,6 @@ decl_stmt|,
 name|ip_ttl
 decl_stmt|,
 name|ip_tos
-decl_stmt|,
-name|noopt
 decl_stmt|;
 name|char
 modifier|*
@@ -4928,14 +4990,18 @@ name|so_rcv
 operator|.
 name|sb_hiwat
 expr_stmt|;
-name|noopt
+name|ltflags
 operator|=
 operator|(
 name|tp
 operator|->
 name|t_flags
 operator|&
+operator|(
 name|TF_NOOPT
+operator||
+name|TF_SIGNATURE
+operator|)
 operator|)
 expr_stmt|;
 comment|/* By the time we drop the lock these should no longer be used. */
@@ -5014,6 +5080,9 @@ operator|)
 condition|)
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|ipopts
 operator|=
 operator|(
@@ -5027,6 +5096,14 @@ argument_list|)
 else|:
 name|NULL
 expr_stmt|;
+else|#
+directive|else
+name|ipopts
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * See if we already have an entry for this connection. 	 * If we do, resend the SYN,ACK, and reset the retransmit timer. 	 * 	 * XXX: should the syncache be re-initialized with the contents 	 * of the new SYN here (which may have different options?) 	 * 	 * XXX: We do not check the sequence number to see if this is a 	 * real retransmit or a new connection attempt.  The question is 	 * how to handle such a case; either ignore it as spoofed, or 	 * drop the current entry and create a new one? 	 */
 name|sc
 operator|=
@@ -5611,6 +5688,10 @@ operator|->
 name|to_flags
 operator|&
 name|TOF_SIGNATURE
+operator|||
+name|ltflags
+operator|&
+name|TF_SIGNATURE
 condition|)
 name|sc
 operator|->
@@ -5653,7 +5734,9 @@ expr_stmt|;
 comment|/* peer mss may be zero */
 if|if
 condition|(
-name|noopt
+name|ltflags
+operator|&
+name|TF_NOOPT
 condition|)
 name|sc
 operator|->
@@ -5901,12 +5984,17 @@ name|struct
 name|tcphdr
 modifier|*
 name|th
+init|=
+name|NULL
 decl_stmt|;
 name|int
 name|optlen
 decl_stmt|,
 name|error
+init|=
+literal|0
 decl_stmt|;
+comment|/* Make compiler happy */
 name|u_int16_t
 name|hlen
 decl_stmt|,
@@ -6179,9 +6267,25 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 else|else
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|{
 name|ip
 operator|=
@@ -6315,6 +6419,9 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+comment|/* INET */
 name|th
 operator|->
 name|th_sport
@@ -6749,9 +6856,25 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 else|else
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 block|{
 name|th
 operator|->
@@ -6825,6 +6948,8 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 return|return
 operator|(
 name|error

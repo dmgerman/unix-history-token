@@ -146,34 +146,6 @@ name|OCP85XX_PORDEVSR2
 value|(CCSRBAR_VA + 0xe0014)
 end_define
 
-begin_define
-define|#
-directive|define
-name|OCP85XX_DEVDISR
-value|(CCSRBAR_VA + 0xe0070)
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCP85XX_DEVDISR_PCIE0
-value|0x20000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCP85XX_DEVDISR_PCIE1
-value|0x04000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|OCP85XX_DEVDISR_PCIE2
-value|0x02000000
-end_define
-
 begin_comment
 comment|/*  * Status Registers.  */
 end_comment

@@ -867,9 +867,6 @@ decl_stmt|;
 name|char
 name|blink_in_progress
 decl_stmt|;
-name|char
-name|suspend_in_progress
-decl_stmt|;
 name|struct
 name|mtx
 name|video_mtx
@@ -978,6 +975,14 @@ decl_stmt|;
 name|u_char
 name|mouse_char
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|KDB
+name|int
+name|sc_altbrk
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 name|sc_softc_t
 typedef|;

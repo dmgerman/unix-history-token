@@ -501,6 +501,16 @@ modifier|*
 name|P
 parameter_list|)
 block|{
+if|if
+condition|(
+name|findImplPass
+argument_list|(
+name|PI
+argument_list|)
+operator|==
+name|P
+condition|)
+return|return;
 name|std
 operator|::
 name|pair

@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/bus.h>
 end_include
 
@@ -39,12 +33,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/malloc.h>
 end_include
 
 begin_include
@@ -68,18 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<x86/apicreg.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<x86/mptable.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/frame.h>
 end_include
 
@@ -93,18 +69,6 @@ begin_include
 include|#
 directive|include
 file|<machine/apicvar.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/md_var.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/specialreg.h>
 end_include
 
 begin_include
@@ -357,44 +321,6 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_function
-name|int
-name|mptable_pci_probe_table
-parameter_list|(
-name|int
-name|bus
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|int
-name|mptable_pci_route_interrupt
-parameter_list|(
-name|device_t
-name|pcib
-parameter_list|,
-name|device_t
-name|dev
-parameter_list|,
-name|int
-name|pin
-parameter_list|)
-block|{
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-end_function
 
 end_unit
 

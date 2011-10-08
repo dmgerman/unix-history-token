@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_altq.c,v 1.91 2006/11/28 00:08:50 henning Exp $	*/
+comment|/*	$OpenBSD: pfctl_altq.c,v 1.93 2007/10/15 02:16:35 deraadt Exp $	*/
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -833,6 +833,7 @@ modifier|*
 name|a
 parameter_list|,
 name|unsigned
+name|int
 name|level
 parameter_list|,
 name|struct
@@ -1048,6 +1049,7 @@ modifier|*
 name|a
 parameter_list|,
 name|unsigned
+name|int
 name|level
 parameter_list|,
 name|struct
@@ -1065,6 +1067,7 @@ name|qopts
 parameter_list|)
 block|{
 name|unsigned
+name|int
 name|i
 decl_stmt|;
 ifdef|#
@@ -4896,16 +4899,6 @@ operator|)
 return|;
 block|}
 comment|/*  * admission control using generalized service curve  */
-ifndef|#
-directive|ifndef
-name|INFINITY
-define|#
-directive|define
-name|INFINITY
-value|HUGE_VAL
-comment|/* positive infinity defined in<math.h> */
-endif|#
-directive|endif
 comment|/* add a new service curve to a generalized service curve */
 specifier|static
 name|void
@@ -6147,25 +6140,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|shutdown
-argument_list|(
-name|s
-argument_list|,
-name|SHUT_RDWR
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"shutdown"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|close
 argument_list|(
 name|s
@@ -6311,25 +6285,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|shutdown
-argument_list|(
-name|s
-argument_list|,
-name|SHUT_RDWR
-argument_list|)
-operator|==
-operator|-
-literal|1
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-literal|"shutdown"
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|close

@@ -1374,7 +1374,7 @@ begin_function
 name|int
 name|hexstr
 parameter_list|(
-name|char
+name|uschar
 modifier|*
 modifier|*
 name|pp
@@ -1502,7 +1502,7 @@ operator|*
 name|pp
 operator|=
 operator|(
-name|char
+name|uschar
 operator|*
 operator|)
 name|p
@@ -1531,7 +1531,7 @@ begin_function
 name|int
 name|quoted
 parameter_list|(
-name|char
+name|uschar
 modifier|*
 modifier|*
 name|pp
@@ -1539,7 +1539,7 @@ parameter_list|)
 comment|/* pick up next thing after a \\ */
 comment|/* and increment *pp */
 block|{
-name|char
+name|uschar
 modifier|*
 name|p
 init|=
@@ -1909,11 +1909,6 @@ name|c
 operator|=
 name|quoted
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)
@@ -1971,11 +1966,6 @@ name|c2
 operator|=
 name|quoted
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|p
 argument_list|)
@@ -4632,7 +4622,7 @@ end_ifndef
 begin_function
 name|int
 function|(
-name|isblank
+name|xisblank
 function|)
 parameter_list|(
 name|int
@@ -4698,6 +4688,20 @@ block|,
 name|isalpha
 block|}
 block|,
+ifndef|#
+directive|ifndef
+name|HAS_ISBLANK
+block|{
+literal|"blank"
+block|,
+literal|5
+block|,
+name|isspace
+block|}
+block|,
+comment|/* was isblank */
+else|#
+directive|else
 block|{
 literal|"blank"
 block|,
@@ -4706,6 +4710,8 @@ block|,
 name|isblank
 block|}
 block|,
+endif|#
+directive|endif
 block|{
 literal|"cntrl"
 block|,
@@ -4900,11 +4906,6 @@ name|rlxval
 operator|=
 name|quoted
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|*
-operator|)
 operator|&
 name|prestr
 argument_list|)

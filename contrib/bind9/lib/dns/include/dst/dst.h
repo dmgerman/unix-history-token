@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dst.h,v 1.12.50.3 2010-12-09 01:12:55 marka Exp $ */
+comment|/* $Id: dst.h,v 1.31.10.1 2011-03-21 19:53:35 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -33,7 +33,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/stdtime.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dns/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/name.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/secalg.h>
 end_include
 
 begin_include
@@ -153,6 +171,13 @@ define|#
 directive|define
 name|DST_ALG_RSASHA512
 value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_ALG_ECCGOST
+value|12
 end_define
 
 begin_define
@@ -297,6 +322,123 @@ value|0x4000000
 end_define
 
 begin_comment
+comment|/* Key timing metadata definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_TIME_CREATED
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_TIME_PUBLISH
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_TIME_ACTIVATE
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_TIME_REVOKE
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_TIME_INACTIVE
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_TIME_DELETE
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_TIME_DSPUBLISH
+value|6
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_MAX_TIMES
+value|6
+end_define
+
+begin_comment
+comment|/* Numeric metadata definitions */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_NUM_PREDECESSOR
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_NUM_SUCCESSOR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_NUM_MAXTTL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_NUM_ROLLPERIOD
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_MAX_NUMERIC
+value|3
+end_define
+
+begin_comment
+comment|/*  * Current format version number of the private key parser.  *  * When parsing a key file with the same major number but a higher minor  * number, the key parser will ignore any fields it does not recognize.  * Thus, DST_MINOR_VERSION should be incremented whenever new  * fields are added to the private key file (such as new metadata).  *  * When rewriting these keys, those fields will be dropped, and the  * format version set back to the current one..  *  * When a key is seen with a higher major number, the key parser will  * reject it as invalid.  Thus, DST_MAJOR_VERSION should be incremented  * and DST_MINOR_VERSION set to zero whenever there is a format change  * which is not backward compatible to previous versions of the dst_key  * parser, such as change in the syntax of an existing field, the removal  * of a currently mandatory field, or a new field added which would  * alter the functioning of the key if it were absent.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_MAJOR_VERSION
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DST_MINOR_VERSION
+value|3
+end_define
+
+begin_comment
 comment|/***  *** Functions  ***/
 end_comment
 
@@ -319,8 +461,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dst_lib_init2
+parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|isc_entropy_t
+modifier|*
+name|ectx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|engine
+parameter_list|,
+name|unsigned
+name|int
+name|eflags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Initializes the DST subsystem.  *  * Requires:  * \li 	"mctx" is a valid memory context  * \li	"ectx" is a valid entropy context  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOMEMORY  *  * Ensures:  * \li	DST is properly initialized.  */
+comment|/*%<  * Initializes the DST subsystem.  *  * Requires:  * \li 	"mctx" is a valid memory context  * \li	"ectx" is a valid entropy context  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	ISC_R_NOMEMORY  * \li	DST_R_NOENGINE  *  * Ensures:  * \li	DST is properly initialized.  */
 end_comment
 
 begin_function_decl
@@ -522,6 +688,11 @@ name|char
 modifier|*
 name|filename
 parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|dirname
+parameter_list|,
 name|int
 name|type
 parameter_list|,
@@ -538,7 +709,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Reads a key from permanent storage.  The key can either be a public or  * key, and is specified by filename.  If a private key is specified, the  * public key must also be present.  *  * Requires:  * \li	"filename" is not NULL  * \li	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union  *		  DST_TYPE_KEY look for a KEY record otherwise DNSKEY  * \li	"mctx" is a valid memory context  * \li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, *keyp will contain a valid key.  */
+comment|/*%<  * Reads a key from permanent storage.  The key can either be a public or  * key, and is specified by filename.  If a private key is specified, the  * public key must also be present.  *  * If 'dirname' is not NULL, and 'filename' is a relative path,  * then the file is looked up relative to the given directory.  * If 'filename' is an absolute path, 'dirname' is ignored.  *  * Requires:  * \li	"filename" is not NULL  * \li	"type" is DST_TYPE_PUBLIC, DST_TYPE_PRIVATE, or the bitwise union  *		  DST_TYPE_KEY look for a KEY record otherwise DNSKEY  * \li	"mctx" is a valid memory context  * \li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  * \li	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  * \li	If successful, *keyp will contain a valid key.  */
 end_comment
 
 begin_function_decl
@@ -761,6 +932,10 @@ name|dst_key_t
 modifier|*
 modifier|*
 name|keyp
+parameter_list|,
+name|isc_region_t
+modifier|*
+name|intoken
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -861,6 +1036,58 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dst_key_generate2
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|int
+name|alg
+parameter_list|,
+name|unsigned
+name|int
+name|bits
+parameter_list|,
+name|unsigned
+name|int
+name|param
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|,
+name|unsigned
+name|int
+name|protocol
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|dst_key_t
+modifier|*
+modifier|*
+name|keyp
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*%<  * Generate a DST key (or keypair) with the supplied parameters.  The  * interpretation of the "param" field depends on the algorithm:  * \code  * 	RSA:	exponent  * 		0	use exponent 3  * 		!0	use Fermat4 (2^16 + 1)  * 	DH:	generator  * 		0	default - use well known prime if bits == 768 or 1024,  * 			otherwise use 2 as the generator.  * 		!0	use this value as the generator.  * 	DSA:	unused  * 	HMACMD5: entropy  *		0	default - require good entropy  *		!0	lack of good entropy is ok  *\endcode  *  * Requires:  *\li	"name" is a valid absolute dns name.  *\li	"keyp" is not NULL and "*keyp" is NULL.  *  * Returns:  *\li 	ISC_R_SUCCESS  * \li	any other result indicates failure  *  * Ensures:  *\li	If successful, *keyp will contain a valid key.  */
 end_comment
@@ -883,7 +1110,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Compares two DST keys.  *  * Requires:  *\li	"key1" is a valid key.  *\li	"key2" is a valid key.  *  * Returns:  *\li 	ISC_TRUE  * \li	ISC_FALSE  */
+comment|/*%<  * Compares two DST keys.  Returns true if they match, false otherwise.  *  * Keys ARE NOT considered to match if one of them is the revoked version  * of the other.  *  * Requires:  *\li	"key1" is a valid key.  *\li	"key2" is a valid key.  *  * Returns:  *\li 	ISC_TRUE  * \li	ISC_FALSE  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dst_key_pubcompare
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key1
+parameter_list|,
+specifier|const
+name|dst_key_t
+modifier|*
+name|key2
+parameter_list|,
+name|isc_boolean_t
+name|match_revoked_key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Compares only the public portions of two DST keys.  Returns true  * if they match, false otherwise.  This allows us, for example, to  * determine whether a public key found in a zone matches up with a  * key pair found on disk.  *  * If match_revoked_key is TRUE, then keys ARE considered to match if one  * of them is the revoked version of the other. Otherwise, they are not.  *  * Requires:  *\li	"key1" is a valid key.  *\li	"key2" is a valid key.  *  * Returns:  *\li 	ISC_TRUE  * \li	ISC_FALSE  */
 end_comment
 
 begin_function_decl
@@ -940,7 +1191,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Release all memory associated with the key.  *  * Requires:  *\li	"keyp" is not NULL and "*keyp" is a valid key.  *  * Ensures:  *\li	All memory associated with "*keyp" will be freed.  *\li	*keyp == NULL  */
+comment|/*%<  * Decrement the key's reference counter and, when it reaches zero,  * release all memory associated with the key.  *  * Requires:  *\li	"keyp" is not NULL and "*keyp" is a valid key.  *\li	reference counter greater than zero.  *  * Ensures:  *\li	All memory associated with "*keyp" will be freed.  *\li	*keyp == NULL  */
 end_comment
 
 begin_comment
@@ -1174,7 +1425,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Get the number of digest bits required (0 == MAX).  *  * Requires:  *	"key" is a valid key.  */
+comment|/*%<  * Get the number of digest bits required (0 == MAX).  *  * Requires:  *	"key" is a valid key.  */
 end_comment
 
 begin_function_decl
@@ -1192,8 +1443,311 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Set the number of digest bits required (0 == MAX).  *  * Requires:  *	"key" is a valid key.  */
+comment|/*%<  * Set the number of digest bits required (0 == MAX).  *  * Requires:  *	"key" is a valid key.  */
 end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_setflags
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_uint32_t
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Set the key flags, and recompute the key ID.  *  * Requires:  *	"key" is a valid key.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_getnum
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|isc_uint32_t
+modifier|*
+name|valuep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get a member of the numeric metadata array and place it in '*valuep'.  *  * Requires:  *	"key" is a valid key.  *	"type" is no larger than DST_MAX_NUMERIC  *	"timep" is not null.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_setnum
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|isc_uint32_t
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set a member of the numeric metadata array.  *  * Requires:  *	"key" is a valid key.  *	"type" is no larger than DST_MAX_NUMERIC  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_unsetnum
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Flag a member of the numeric metadata array as "not set".  *  * Requires:  *	"key" is a valid key.  *	"type" is no larger than DST_MAX_NUMERIC  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_gettime
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|isc_stdtime_t
+modifier|*
+name|timep
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get a member of the timing metadata array and place it in '*timep'.  *  * Requires:  *	"key" is a valid key.  *	"type" is no larger than DST_MAX_TIMES  *	"timep" is not null.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_settime
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|isc_stdtime_t
+name|when
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set a member of the timing metadata array.  *  * Requires:  *	"key" is a valid key.  *	"type" is no larger than DST_MAX_TIMES  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_unsettime
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Flag a member of the timing metadata array as "not set".  *  * Requires:  *	"key" is a valid key.  *	"type" is no larger than DST_MAX_TIMES  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_getprivateformat
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+modifier|*
+name|majorp
+parameter_list|,
+name|int
+modifier|*
+name|minorp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Get the private key format version number.  (If the key does not have  * a private key associated with it, the version will be 0.0.)  The major  * version number is placed in '*majorp', and the minor version number in  * '*minorp'.  *  * Requires:  *	"key" is a valid key.  *	"majorp" is not NULL.  *	"minorp" is not NULL.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dst_key_setprivateformat
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|int
+name|major
+parameter_list|,
+name|int
+name|minor
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Set the private key format version number.  *  * Requires:  *	"key" is a valid key.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DST_KEY_FORMATSIZE
+value|(DNS_NAME_FORMATSIZE + DNS_SECALG_FORMATSIZE + 7)
+end_define
+
+begin_function_decl
+name|void
+name|dst_key_format
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|char
+modifier|*
+name|cp
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Write the uniquely identifying information about the key (name,  * algorithm, key ID) into a string 'cp' of size 'size'.  */
+end_comment
+
+begin_function_decl
+name|isc_buffer_t
+modifier|*
+name|dst_key_tkeytoken
+parameter_list|(
+specifier|const
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Return the token from the TKEY request, if any.  If this key was  * not negotiated via TKEY, return NULL.  *  * Requires:  *	"key" is a valid key.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_dump
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|buffer
+parameter_list|,
+name|int
+modifier|*
+name|length
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Allocate 'buffer' and dump the key into it in base64 format. The buffer  * is not NUL terminated. The length of the buffer is returned in *length.  *  * 'buffer' needs to be freed using isc_mem_put(mctx, buffer, length);  *  * Requires:  *	'buffer' to be non NULL and *buffer to be NULL.  *	'length' to be non NULL and *length to be zero.  *  * Returns:  *	ISC_R_SUCCESS  *	ISC_R_NOMEMORY  *	ISC_R_NOTIMPLEMENTED  *	others.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dst_key_restore
+parameter_list|(
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|unsigned
+name|int
+name|alg
+parameter_list|,
+name|unsigned
+name|int
+name|flags
+parameter_list|,
+name|unsigned
+name|int
+name|protocol
+parameter_list|,
+name|dns_rdataclass_t
+name|rdclass
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|keystr
+parameter_list|,
+name|dst_key_t
+modifier|*
+modifier|*
+name|keyp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|ISC_LANG_ENDDECLS

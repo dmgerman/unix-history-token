@@ -80,6 +80,9 @@ block|{
 name|class
 name|MemoryBuffer
 decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
 name|namespace
 name|object
 block|{
@@ -588,8 +591,70 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// @}
+comment|/// @name Object Dump Facilities
+comment|/// @{
+comment|/// dump - Support for debugging, callable in GDB: V->dump()
+comment|//
+name|void
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|dumpHeader
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// print - Implement operator<< on Value.
+comment|///
+name|void
+name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|printHeader
+argument_list|(
+name|raw_ostream
+operator|&
+name|O
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// @}
 block|}
 empty_stmt|;
+specifier|inline
+name|raw_ostream
+operator|&
+name|operator
+operator|<<
+operator|(
+name|raw_ostream
+operator|&
+name|OS
+operator|,
+specifier|const
+name|MachOObject
+operator|&
+name|V
+operator|)
+block|{
+name|V
+operator|.
+name|print
+argument_list|(
+name|OS
+argument_list|)
+block|;
+return|return
+name|OS
+return|;
+block|}
 block|}
 comment|// end namespace object
 block|}

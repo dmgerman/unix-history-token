@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rcode.c,v 1.8.48.2 2010/01/15 23:47:33 tbox Exp $ */
+comment|/* $Id: rcode.c,v 1.16.14.2 2011-02-28 01:20:02 tbox Exp $ */
 end_comment
 
 begin_include
@@ -180,7 +180,7 @@ value|{ dns_tsigerror_badsig, "BADSIG", 0}, \ 	{ dns_tsigerror_badkey, "BADKEY",
 end_define
 
 begin_comment
-comment|/* RFC2538 section 2.1 */
+comment|/* RFC4398 section 2.1 */
 end_comment
 
 begin_define
@@ -188,7 +188,7 @@ define|#
 directive|define
 name|CERTNAMES
 define|\
-value|{ 1, "PKIX", 0}, \ 	{ 2, "SPKI", 0}, \ 	{ 3, "PGP", 0}, \ 	{ 253, "URI", 0}, \ 	{ 254, "OID", 0}, \ 	{ 0, NULL, 0}
+value|{ 1, "PKIX", 0}, \ 	{ 2, "SPKI", 0}, \ 	{ 3, "PGP", 0}, \ 	{ 4, "IPKIX", 0}, \ 	{ 5, "ISPKI", 0}, \ 	{ 6, "IPGP", 0}, \ 	{ 7, "ACPKIX", 0}, \ 	{ 8, "IACPKIX", 0}, \ 	{ 253, "URI", 0}, \ 	{ 254, "OID", 0}, \ 	{ 0, NULL, 0}
 end_define
 
 begin_comment
@@ -200,7 +200,7 @@ define|#
 directive|define
 name|SECALGNAMES
 define|\
-value|{ DNS_KEYALG_RSAMD5, "RSAMD5", 0 }, \ 	{ DNS_KEYALG_RSAMD5, "RSA", 0 }, \ 	{ DNS_KEYALG_DH, "DH", 0 }, \ 	{ DNS_KEYALG_DSA, "DSA", 0 }, \ 	{ DNS_KEYALG_NSEC3DSA, "NSEC3DSA", 0 }, \ 	{ DNS_KEYALG_ECC, "ECC", 0 }, \ 	{ DNS_KEYALG_RSASHA1, "RSASHA1", 0 }, \ 	{ DNS_KEYALG_NSEC3RSASHA1, "NSEC3RSASHA1", 0 }, \ 	{ DNS_KEYALG_RSASHA256, "RSASHA256", 0 }, \ 	{ DNS_KEYALG_RSASHA512, "RSASHA512", 0 }, \ 	{ DNS_KEYALG_INDIRECT, "INDIRECT", 0 }, \ 	{ DNS_KEYALG_PRIVATEDNS, "PRIVATEDNS", 0 }, \ 	{ DNS_KEYALG_PRIVATEOID, "PRIVATEOID", 0 }, \ 	{ 0, NULL, 0}
+value|{ DNS_KEYALG_RSAMD5, "RSAMD5", 0 }, \ 	{ DNS_KEYALG_RSAMD5, "RSA", 0 }, \ 	{ DNS_KEYALG_DH, "DH", 0 }, \ 	{ DNS_KEYALG_DSA, "DSA", 0 }, \ 	{ DNS_KEYALG_NSEC3DSA, "NSEC3DSA", 0 }, \ 	{ DNS_KEYALG_ECC, "ECC", 0 }, \ 	{ DNS_KEYALG_RSASHA1, "RSASHA1", 0 }, \ 	{ DNS_KEYALG_NSEC3RSASHA1, "NSEC3RSASHA1", 0 }, \ 	{ DNS_KEYALG_RSASHA256, "RSASHA256", 0 }, \ 	{ DNS_KEYALG_RSASHA512, "RSASHA512", 0 }, \ 	{ DNS_KEYALG_ECCGOST, "ECCGOST", 0 }, \ 	{ DNS_KEYALG_INDIRECT, "INDIRECT", 0 }, \ 	{ DNS_KEYALG_PRIVATEDNS, "PRIVATEDNS", 0 }, \ 	{ DNS_KEYALG_PRIVATEOID, "PRIVATEOID", 0 }, \ 	{ 0, NULL, 0}
 end_define
 
 begin_comment
@@ -1376,6 +1376,102 @@ block|}
 end_function
 
 begin_function
+name|void
+name|dns_secalg_format
+parameter_list|(
+name|dns_secalg_t
+name|alg
+parameter_list|,
+name|char
+modifier|*
+name|cp
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
+block|{
+name|isc_buffer_t
+name|b
+decl_stmt|;
+name|isc_region_t
+name|r
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|cp
+operator|!=
+name|NULL
+operator|&&
+name|size
+operator|>
+literal|0
+argument_list|)
+expr_stmt|;
+name|isc_buffer_init
+argument_list|(
+operator|&
+name|b
+argument_list|,
+name|cp
+argument_list|,
+name|size
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|dns_secalg_totext
+argument_list|(
+name|alg
+argument_list|,
+operator|&
+name|b
+argument_list|)
+expr_stmt|;
+name|isc_buffer_usedregion
+argument_list|(
+operator|&
+name|b
+argument_list|,
+operator|&
+name|r
+argument_list|)
+expr_stmt|;
+name|r
+operator|.
+name|base
+index|[
+name|r
+operator|.
+name|length
+index|]
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|r
+operator|.
+name|base
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|isc_result_t
 name|dns_secproto_fromtext
 parameter_list|(
@@ -2156,6 +2252,13 @@ decl_stmt|;
 name|isc_buffer_t
 name|buf
 decl_stmt|;
+if|if
+condition|(
+name|size
+operator|==
+literal|0U
+condition|)
+return|return;
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -2214,26 +2317,15 @@ name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
-name|snprintf
+name|strlcpy
 argument_list|(
 name|array
 argument_list|,
-name|size
-argument_list|,
 literal|"<unknown>"
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
-name|array
-index|[
-name|size
-operator|-
-literal|1
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
 block|}
 end_function
 

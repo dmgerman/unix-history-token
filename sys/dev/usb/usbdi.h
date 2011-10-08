@@ -83,6 +83,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|usb_fs_privdata
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|mbuf
 struct_decl|;
 end_struct_decl
@@ -837,6 +843,34 @@ struct|;
 end_struct
 
 begin_comment
+comment|/*  * Use these macro when defining USB device ID arrays if you want to  * have your driver module automatically loaded in host, device or  * both modes respectivly:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_HOST_ID
+define|\
+value|struct usb_device_id __section("usb_host_id")
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DEVICE_ID
+define|\
+value|struct usb_device_id __section("usb_device_id")
+end_define
+
+begin_define
+define|#
+directive|define
+name|STRUCT_USB_DUAL_ID
+define|\
+value|struct usb_device_id __section("usb_dual_id")
+end_define
+
+begin_comment
 comment|/*  * The following structure is used when looking up an USB driver for  * an USB device. It is inspired by the Linux structure called  * "usb_device_id".  */
 end_comment
 
@@ -933,6 +967,11 @@ name|match_flag_int_protocol
 range|:
 literal|1
 decl_stmt|;
+name|uint8_t
+name|match_flag_unused
+range|:
+literal|6
+decl_stmt|;
 if|#
 directive|if
 name|USB_HAVE_COMPAT_LINUX
@@ -983,8 +1022,39 @@ value|0x0200
 endif|#
 directive|endif
 block|}
+name|__aligned
+argument_list|(
+literal|32
+argument_list|)
 struct|;
 end_struct
+
+begin_comment
+comment|/* check that the size of the structure above is correct */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|usb_device_id_assert
+index|[
+operator|(
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|usb_device_id
+argument_list|)
+operator|==
+literal|32
+operator|)
+condition|?
+literal|1
+else|:
+operator|-
+literal|1
+index|]
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
@@ -1259,10 +1329,6 @@ comment|/* host or device mode */
 name|uint8_t
 name|port
 decl_stmt|;
-name|uint8_t
-name|use_generic
-decl_stmt|;
-comment|/* hint for generic drivers */
 name|uint8_t
 name|dev_state
 decl_stmt|;
@@ -1543,7 +1609,7 @@ literal|2
 index|]
 decl_stmt|;
 name|struct
-name|cdev
+name|usb_fs_privdata
 modifier|*
 name|dev
 decl_stmt|;
@@ -1777,6 +1843,21 @@ specifier|const
 name|char
 modifier|*
 name|pnpinfo
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb_error_t
+name|usbd_add_dynamic_quirk
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|,
+name|uint16_t
+name|quirk
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2164,6 +2245,21 @@ name|struct
 name|usb_device
 modifier|*
 name|udev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|usb_frlength_t
+name|usbd_xfer_old_frame_length
+parameter_list|(
+name|struct
+name|usb_xfer
+modifier|*
+name|xfer
+parameter_list|,
+name|usb_frcount_t
+name|frindex
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2671,6 +2767,18 @@ name|offset
 parameter_list|,
 name|usb_frlength_t
 name|len
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|usbd_start_re_enumerate
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
 parameter_list|)
 function_decl|;
 end_function_decl

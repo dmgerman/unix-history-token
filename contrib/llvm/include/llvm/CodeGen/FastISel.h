@@ -591,34 +591,6 @@ name|MVT
 name|ImmType
 parameter_list|)
 function_decl|;
-comment|/// FastEmit_rf_ - This method is a wrapper of FastEmit_rf. It first tries
-comment|/// to emit an instruction with an immediate operand using FastEmit_rf.
-comment|/// If that fails, it materializes the immediate into a register and try
-comment|/// FastEmit_rr instead.
-name|unsigned
-name|FastEmit_rf_
-parameter_list|(
-name|MVT
-name|VT
-parameter_list|,
-name|unsigned
-name|Opcode
-parameter_list|,
-name|unsigned
-name|Op0
-parameter_list|,
-name|bool
-name|Op0IsKill
-parameter_list|,
-specifier|const
-name|ConstantFP
-modifier|*
-name|FPImm
-parameter_list|,
-name|MVT
-name|ImmType
-parameter_list|)
-function_decl|;
 comment|/// FastEmit_i - This method is called by target-independent code
 comment|/// to request that an instruction with the given type, opcode, and
 comment|/// immediate operand be emitted.
@@ -724,8 +696,41 @@ name|bool
 name|Op1IsKill
 parameter_list|)
 function_decl|;
-comment|/// FastEmitInst_ri - Emit a MachineInstr with two register operands
+comment|/// FastEmitInst_rrr - Emit a MachineInstr with three register operands
 comment|/// and a result register in the given register class.
+comment|///
+name|unsigned
+name|FastEmitInst_rrr
+parameter_list|(
+name|unsigned
+name|MachineInstOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
+name|unsigned
+name|Op1
+parameter_list|,
+name|bool
+name|Op1IsKill
+parameter_list|,
+name|unsigned
+name|Op2
+parameter_list|,
+name|bool
+name|Op2IsKill
+parameter_list|)
+function_decl|;
+comment|/// FastEmitInst_ri - Emit a MachineInstr with a register operand,
+comment|/// an immediate, and a result register in the given register class.
 comment|///
 name|unsigned
 name|FastEmitInst_ri
@@ -746,6 +751,33 @@ name|Op0IsKill
 parameter_list|,
 name|uint64_t
 name|Imm
+parameter_list|)
+function_decl|;
+comment|/// FastEmitInst_rii - Emit a MachineInstr with one register operand
+comment|/// and two immediate operands.
+comment|///
+name|unsigned
+name|FastEmitInst_rii
+parameter_list|(
+name|unsigned
+name|MachineInstOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|unsigned
+name|Op0
+parameter_list|,
+name|bool
+name|Op0IsKill
+parameter_list|,
+name|uint64_t
+name|Imm1
+parameter_list|,
+name|uint64_t
+name|Imm2
 parameter_list|)
 function_decl|;
 comment|/// FastEmitInst_rf - Emit a MachineInstr with two register operands
@@ -821,6 +853,25 @@ name|uint64_t
 name|Imm
 parameter_list|)
 function_decl|;
+comment|/// FastEmitInst_ii - Emit a MachineInstr with a two immediate operands.
+name|unsigned
+name|FastEmitInst_ii
+parameter_list|(
+name|unsigned
+name|MachineInstrOpcode
+parameter_list|,
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|,
+name|uint64_t
+name|Imm1
+parameter_list|,
+name|uint64_t
+name|Imm2
+parameter_list|)
+function_decl|;
 comment|/// FastEmitInst_extractsubreg - Emit a MachineInstr for an extract_subreg
 comment|/// from a specified index of a superregister to a specified type.
 name|unsigned
@@ -868,7 +919,7 @@ name|DebugLoc
 name|DL
 parameter_list|)
 function_decl|;
-name|unsigned
+name|void
 name|UpdateValueMap
 parameter_list|(
 specifier|const
@@ -878,6 +929,11 @@ name|I
 parameter_list|,
 name|unsigned
 name|Reg
+parameter_list|,
+name|unsigned
+name|NumRegs
+init|=
+literal|1
 parameter_list|)
 function_decl|;
 name|unsigned
@@ -915,6 +971,20 @@ specifier|const
 name|AllocaInst
 modifier|*
 name|C
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+name|virtual
+name|unsigned
+name|TargetMaterializeFloatZero
+parameter_list|(
+specifier|const
+name|ConstantFP
+modifier|*
+name|CF
 parameter_list|)
 block|{
 return|return
@@ -981,6 +1051,15 @@ name|I
 parameter_list|,
 name|unsigned
 name|Opcode
+parameter_list|)
+function_decl|;
+name|bool
+name|SelectExtractValue
+parameter_list|(
+specifier|const
+name|User
+modifier|*
+name|I
 parameter_list|)
 function_decl|;
 comment|/// HandlePHINodesInSuccessorBlocks - Handle PHI nodes in successor blocks.

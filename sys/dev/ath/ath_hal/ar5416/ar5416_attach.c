@@ -284,7 +284,21 @@ operator|=
 literal|100
 block|, 	}
 decl_stmt|;
-comment|/* NB: ANI is not enabled yet */
+comment|/* NB: disable ANI noise immmunity for reliable RIFS rx */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_ani_function
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+operator|)
+expr_stmt|;
 name|ar5416AniAttach
 argument_list|(
 name|ah
@@ -295,7 +309,7 @@ argument_list|,
 operator|&
 name|aniparams
 argument_list|,
-name|AH_FALSE
+name|AH_TRUE
 argument_list|)
 expr_stmt|;
 block|}
@@ -534,6 +548,18 @@ expr_stmt|;
 comment|/* Receive Functions */
 name|ah
 operator|->
+name|ah_getRxFilter
+operator|=
+name|ar5416GetRxFilter
+expr_stmt|;
+name|ah
+operator|->
+name|ah_setRxFilter
+operator|=
+name|ar5416SetRxFilter
+expr_stmt|;
+name|ah
+operator|->
 name|ah_startPcuReceive
 operator|=
 name|ar5416StartPcuReceive
@@ -625,6 +651,12 @@ name|ar5416GpioSetIntr
 expr_stmt|;
 name|ah
 operator|->
+name|ah_getTsf64
+operator|=
+name|ar5416GetTsf64
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetTsf
 operator|=
 name|ar5416ResetTsf
@@ -655,6 +687,12 @@ name|ar5416SetCoverageClass
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setQuiet
+operator|=
+name|ar5416SetQuiet
+expr_stmt|;
+name|ah
+operator|->
 name|ah_resetKeyCacheEntry
 operator|=
 name|ar5416ResetKeyCacheEntry
@@ -664,6 +702,31 @@ operator|->
 name|ah_setKeyCacheEntry
 operator|=
 name|ar5416SetKeyCacheEntry
+expr_stmt|;
+comment|/* DFS Functions */
+name|ah
+operator|->
+name|ah_enableDfs
+operator|=
+name|ar5416EnableDfs
+expr_stmt|;
+name|ah
+operator|->
+name|ah_getDfsThresh
+operator|=
+name|ar5416GetDfsThresh
+expr_stmt|;
+name|ah
+operator|->
+name|ah_procRadarEvent
+operator|=
+name|ar5416ProcessRadarEvent
+expr_stmt|;
+name|ah
+operator|->
+name|ah_isFastClockEnabled
+operator|=
+name|ar5416IsFastClockEnabled
 expr_stmt|;
 comment|/* Power Management Functions */
 name|ah
@@ -696,6 +759,12 @@ operator|->
 name|ah_resetStationBeaconTimers
 operator|=
 name|ar5416ResetStaBeaconTimers
+expr_stmt|;
+name|ah
+operator|->
+name|ah_getNextTBTT
+operator|=
+name|ar5416GetNextTBTT
 expr_stmt|;
 comment|/* 802.11n Functions */
 name|ah
@@ -839,6 +908,16 @@ name|ah_spurMitigate
 operator|=
 name|ar5416SpurMitigate
 expr_stmt|;
+comment|/* Internal baseband ops */
+name|AH5416
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_initPLL
+operator|=
+name|ar5416InitPLL
+expr_stmt|;
 comment|/* Internal calibration ops */
 name|AH5416
 argument_list|(
@@ -904,7 +983,17 @@ argument_list|)
 operator|->
 name|ah_ani_function
 operator|=
-name|HAL_ANI_ALL
+literal|0xffffffff
+expr_stmt|;
+comment|/* Set overridable ANI methods */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
+operator|=
+name|ar5416AniControl
 expr_stmt|;
 block|}
 end_function
@@ -1816,6 +1905,22 @@ argument_list|,
 name|AH_NULL
 argument_list|)
 expr_stmt|;
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_currentRDext
+operator|=
+name|ath_hal_eepromGet
+argument_list|(
+name|ah
+argument_list|,
+name|AR_EEP_REGDMN_1
+argument_list|,
+name|AH_NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * ah_miscMode is populated by ar5416FillCapabilityInfo() 	 * starting from griffin. Set here to make sure that 	 * AR_MISC_MODE_MIC_NEW_LOC_ENABLE is set before a GTK is 	 * placed into hardware. 	 */
 if|if
 condition|(
@@ -2040,6 +2145,30 @@ operator|->
 name|ah_magic
 operator|==
 name|AR5416_MAGIC
+argument_list|)
+expr_stmt|;
+comment|/* Make sure that chip is awake before writing to it */
+if|if
+condition|(
+operator|!
+name|ar5416SetPowerMode
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_PM_AWAKE
+argument_list|,
+name|AH_TRUE
+argument_list|)
+condition|)
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_UNMASKABLE
+argument_list|,
+literal|"%s: failed to wake up chip\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|ar5416AniDetach
@@ -4570,14 +4699,22 @@ name|pCap
 operator|->
 name|halMcastKeySrchSupport
 operator|=
-name|AH_FALSE
+name|AH_TRUE
 expr_stmt|;
+comment|/* Works on AR5416 and later */
 name|pCap
 operator|->
 name|halTsfAddSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+name|pCap
+operator|->
+name|hal4AddrAggrSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
+comment|/* Broken in Owl */
 if|if
 condition|(
 name|ath_hal_eepromGet
@@ -4726,6 +4863,13 @@ name|hal4kbSplitTransSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* Disable this so Block-ACK works correctly */
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
+operator|=
+name|AH_FALSE
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -4792,8 +4936,9 @@ name|pCap
 operator|->
 name|halMbssidAggrSupport
 operator|=
-name|AH_TRUE
+name|AH_FALSE
 expr_stmt|;
+comment|/* Broken on Owl */
 name|pCap
 operator|->
 name|halForcePpmSupport
@@ -4809,6 +4954,31 @@ expr_stmt|;
 name|pCap
 operator|->
 name|halBssidMatchSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halGTTSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halCSTSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halEnhancedDfsSupport
+operator|=
+name|AH_FALSE
+expr_stmt|;
+comment|/* Hardware supports 32 bit TSF values in the RX descriptor */
+name|pCap
+operator|->
+name|halHasLongRxDescTsf
 operator|=
 name|AH_TRUE
 expr_stmt|;

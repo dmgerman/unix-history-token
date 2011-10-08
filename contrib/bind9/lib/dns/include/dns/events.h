@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: events.h,v 1.49.332.4 2010-05-10 23:48:14 tbox Exp $ */
+comment|/* $Id: events.h,v 1.56 2010-12-21 03:11:42 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -322,6 +322,41 @@ define|#
 directive|define
 name|DNS_EVENT_RBTPRUNE
 value|(ISC_EVENTCLASS_DNS + 41)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_MANAGEKEYS
+value|(ISC_EVENTCLASS_DNS + 42)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_CLIENTRESDONE
+value|(ISC_EVENTCLASS_DNS + 43)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_CLIENTREQDONE
+value|(ISC_EVENTCLASS_DNS + 44)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_ADBGROWENTRIES
+value|(ISC_EVENTCLASS_DNS + 45)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_EVENT_ADBGROWNAMES
+value|(ISC_EVENTCLASS_DNS + 46)
 end_define
 
 begin_define

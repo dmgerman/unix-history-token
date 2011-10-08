@@ -309,6 +309,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_INTEL_PPT1
+value|HDA_MODEL_CONSTRUCT(INTEL, 0x1e20)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_INTEL_82801F
 value|HDA_MODEL_CONSTRUCT(INTEL, 0x2668)
 end_define
@@ -1215,6 +1222,13 @@ define|#
 directive|define
 name|LENOVO_3KN200_SUBVENDOR
 value|HDA_MODEL_CONSTRUCT(LENOVO, 0x384e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|LENOVO_B450_SUBVENDOR
+value|HDA_MODEL_CONSTRUCT(LENOVO, 0x3a0d)
 end_define
 
 begin_define
@@ -2295,6 +2309,14 @@ block|{
 name|HDA_INTEL_PATSBURG
 block|,
 literal|"Intel Patsburg"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_INTEL_PPT1
+block|,
+literal|"Intel Panther Point"
 block|,
 literal|0
 block|}
@@ -4182,8 +4204,78 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_CX20584
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5068)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_CX20585
 value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5069)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20590
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x506e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20631
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5097)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20632
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x5098)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20641
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50a1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20642
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50a2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20651
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50ab)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20652
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50ac)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20664
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50b8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CX20665
+value|HDA_CODEC_CONSTRUCT(CONEXANT, 0x50b9)
 end_define
 
 begin_define
@@ -4646,43 +4738,50 @@ end_comment
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_1
+name|HDA_CODEC_INTELIP
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x0054)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_INTELBL
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2801)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_2
+name|HDA_CODEC_INTELCA
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2802)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_3
+name|HDA_CODEC_INTELEL
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2803)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_4
+name|HDA_CODEC_INTELIP2
 value|HDA_CODEC_CONSTRUCT(INTEL, 0x2804)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELG45_5
-value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
+name|HDA_CODEC_INTELCPT
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x2805)
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDA_CODEC_INTELQ57
-value|HDA_CODEC_CONSTRUCT(INTEL, 0x0054)
+name|HDA_CODEC_INTELCL
+value|HDA_CODEC_CONSTRUCT(INTEL, 0x29fb)
 end_define
 
 begin_define
@@ -5308,9 +5407,69 @@ literal|"Conexant CX20583 (Pebble HSF)"
 block|}
 block|,
 block|{
+name|HDA_CODEC_CX20584
+block|,
+literal|"Conexant CX20584"
+block|}
+block|,
+block|{
 name|HDA_CODEC_CX20585
 block|,
 literal|"Conexant CX20585"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20590
+block|,
+literal|"Conexant CX20590"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20631
+block|,
+literal|"Conexant CX20631"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20632
+block|,
+literal|"Conexant CX20632"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20641
+block|,
+literal|"Conexant CX20641"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20642
+block|,
+literal|"Conexant CX20642"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20651
+block|,
+literal|"Conexant CX20651"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20652
+block|,
+literal|"Conexant CX20652"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20664
+block|,
+literal|"Conexant CX20664"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CX20665
+block|,
+literal|"Conexant CX20665"
 block|}
 block|,
 block|{
@@ -5668,39 +5827,45 @@ literal|"NVidia GT240 HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_1
+name|HDA_CODEC_INTELIP
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Ibex Peak HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_2
+name|HDA_CODEC_INTELBL
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Bearlake HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_3
+name|HDA_CODEC_INTELCA
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Cantiga HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_4
+name|HDA_CODEC_INTELEL
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Eaglelake HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELG45_5
+name|HDA_CODEC_INTELIP2
 block|,
-literal|"Intel G45 HDMI"
+literal|"Intel Ibex Peak HDMI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_INTELQ57
+name|HDA_CODEC_INTELCPT
 block|,
-literal|"Intel Q57 HDMI"
+literal|"Intel Cougar Point HDMI"
+block|}
+block|,
+block|{
+name|HDA_CODEC_INTELCL
+block|,
+literal|"Intel Crestline HDMI"
 block|}
 block|,
 block|{
@@ -12954,6 +13119,35 @@ literal|"as=1 seq=15"
 expr_stmt|;
 break|break;
 block|}
+block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|id
+operator|==
+name|HDA_CODEC_CX20561
+operator|&&
+name|sc
+operator|->
+name|pci_subvendor
+operator|==
+name|LENOVO_B450_SUBVENDOR
+condition|)
+block|{
+switch|switch
+condition|(
+name|nid
+condition|)
+block|{
+case|case
+literal|22
+case|:
+name|patch
+operator|=
+literal|"as=1 seq=15"
+expr_stmt|;
+break|break;
 block|}
 block|}
 if|if
@@ -21413,15 +21607,13 @@ decl_stmt|;
 name|uint8_t
 name|v
 decl_stmt|;
-name|device_printf
+name|HDA_BOOTVERBOSE
 argument_list|(
-name|dev
-argument_list|,
+argument|device_printf(dev,
 literal|"HDA Driver Revision: %s\n"
-argument_list|,
-name|HDA_DRV_TEST_REV
+argument|, 		    HDA_DRV_TEST_REV);
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 name|model
 operator|=
 operator|(
@@ -25503,6 +25695,95 @@ argument_list|(
 name|devinfo
 argument_list|,
 literal|24
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|0
+index|]
+operator|=
+literal|0
+expr_stmt|;
+break|break;
+case|case
+name|HDA_CODEC_CX20582
+case|:
+case|case
+name|HDA_CODEC_CX20583
+case|:
+case|case
+name|HDA_CODEC_CX20584
+case|:
+case|case
+name|HDA_CODEC_CX20585
+case|:
+case|case
+name|HDA_CODEC_CX20590
+case|:
+comment|/* 		 * These codecs have extra connectivity on record side 		 * too reach for the present parser. 		 */
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|20
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|21
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|w
+operator|!=
+name|NULL
+condition|)
+name|w
+operator|->
+name|connsenable
+index|[
+literal|1
+index|]
+operator|=
+literal|0
+expr_stmt|;
+name|w
+operator|=
+name|hdac_widget_get
+argument_list|(
+name|devinfo
+argument_list|,
+literal|22
 argument_list|)
 expr_stmt|;
 if|if

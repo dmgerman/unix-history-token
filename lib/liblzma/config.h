@@ -427,7 +427,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"XZ Utils 5.0.0"
+value|"XZ Utils 5.0.3"
 end_define
 
 begin_define
@@ -448,7 +448,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"5.0.0"
+value|"5.0.3"
 end_define
 
 begin_define
@@ -573,7 +573,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"5.0.0"
+value|"5.0.3"
 end_define
 
 begin_if
@@ -584,6 +584,33 @@ argument_list|(
 name|__FreeBSD__
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|<sys/_types.h>
+end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__NO_STRICT_ALIGNMENT
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|TUKLIB_FAST_UNALIGNED_ACCESS
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#

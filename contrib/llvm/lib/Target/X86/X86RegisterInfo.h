@@ -65,10 +65,16 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"X86GenRegisterInfo.h.inc"
+file|"X86GenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -180,11 +186,6 @@ comment|///
 name|unsigned
 name|SlotSize
 block|;
-comment|/// StackAlign - Default stack alignment.
-comment|///
-name|unsigned
-name|StackAlign
-block|;
 comment|/// StackPtr - X86 physical register used as stack ptr.
 comment|///
 name|unsigned
@@ -218,19 +219,38 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-name|unsigned
-name|getStackAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StackAlign
-return|;
-block|}
 comment|/// getDwarfRegNum - allows modification of X86GenRegisterInfo::getDwarfRegNum
 comment|/// (created by TableGen) for target dependencies.
 name|int
 name|getDwarfRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLLVMRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
+name|int
+name|getSEHRegNum
+argument_list|(
+argument|unsigned i
+argument_list|)
+specifier|const
+block|;
+comment|/// getCompactUnwindRegNum - This function maps the register to the number for
+comment|/// compact unwind encoding. Return -1 if the register isn't valid.
+name|int
+name|getCompactUnwindRegNum
 argument_list|(
 argument|unsigned RegNum
 argument_list|,
@@ -257,6 +277,15 @@ argument|unsigned Idx
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getLargestLegalSuperClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
 comment|/// getPointerRegClass - Returns a TargetRegisterClass used for pointer
 comment|/// values.
 specifier|const
@@ -278,6 +307,15 @@ operator|*
 name|getCrossCopyRegClass
 argument_list|(
 argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;

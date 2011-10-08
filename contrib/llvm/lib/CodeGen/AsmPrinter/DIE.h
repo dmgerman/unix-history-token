@@ -225,11 +225,6 @@ block|,
 name|Data
 argument_list|()
 block|{}
-name|virtual
-operator|~
-name|DIEAbbrev
-argument_list|()
-block|{}
 comment|// Accessors.
 name|unsigned
 name|getTag

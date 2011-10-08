@@ -168,7 +168,7 @@ block|{
 comment|/// The options used in this compiler instance.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|CompilerInvocation
 operator|>
@@ -186,7 +186,7 @@ expr_stmt|;
 comment|/// The target being compiled for.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|TargetInfo
 operator|>
@@ -195,7 +195,7 @@ expr_stmt|;
 comment|/// The file manager.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|FileManager
 operator|>
@@ -204,7 +204,7 @@ expr_stmt|;
 comment|/// The source manager.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|SourceManager
 operator|>
@@ -213,7 +213,7 @@ expr_stmt|;
 comment|/// The preprocessor.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|Preprocessor
 operator|>
@@ -222,7 +222,7 @@ expr_stmt|;
 comment|/// The AST context.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|ASTContext
 operator|>
@@ -437,20 +437,7 @@ operator|*
 name|Invocation
 return|;
 block|}
-name|CompilerInvocation
-modifier|*
-name|takeInvocation
-parameter_list|()
-block|{
-return|return
-name|Invocation
-operator|.
-name|take
-argument_list|()
-return|;
-block|}
-comment|/// setInvocation - Replace the current invocation; the compiler instance
-comment|/// takes ownership of \arg Value.
+comment|/// setInvocation - Replace the current invocation.
 name|void
 name|setInvocation
 parameter_list|(
@@ -750,6 +737,7 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// Get the current diagnostics engine.
 name|Diagnostic
 operator|&
 name|getDiagnostics
@@ -768,8 +756,7 @@ operator|*
 name|Diagnostics
 return|;
 block|}
-comment|/// setDiagnostics - Replace the current diagnostics engine; the compiler
-comment|/// instance takes ownership of \arg Value.
+comment|/// setDiagnostics - Replace the current diagnostics engine.
 name|void
 name|setDiagnostics
 parameter_list|(
@@ -836,22 +823,7 @@ operator|*
 name|Target
 return|;
 block|}
-comment|/// takeTarget - Remove the current diagnostics engine and give ownership
-comment|/// to the caller.
-name|TargetInfo
-modifier|*
-name|takeTarget
-parameter_list|()
-block|{
-return|return
-name|Target
-operator|.
-name|take
-argument_list|()
-return|;
-block|}
-comment|/// setTarget - Replace the current diagnostics engine; the compiler
-comment|/// instance takes ownership of \arg Value.
+comment|/// Replace the current diagnostics engine.
 name|void
 name|setTarget
 parameter_list|(
@@ -874,6 +846,7 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// Return the current file manager to the caller.
 name|FileManager
 operator|&
 name|getFileManager
@@ -892,22 +865,17 @@ operator|*
 name|FileMgr
 return|;
 block|}
-comment|/// takeFileManager - Remove the current file manager and give ownership to
-comment|/// the caller.
-name|FileManager
-modifier|*
-name|takeFileManager
+name|void
+name|resetAndLeakFileManager
 parameter_list|()
 block|{
-return|return
 name|FileMgr
 operator|.
-name|take
+name|resetWithoutRelease
 argument_list|()
-return|;
+expr_stmt|;
 block|}
-comment|/// setFileManager - Replace the current file manager; the compiler instance
-comment|/// takes ownership of \arg Value.
+comment|/// setFileManager - Replace the current file manager.
 name|void
 name|setFileManager
 parameter_list|(
@@ -930,6 +898,7 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// Return the current source manager.
 name|SourceManager
 operator|&
 name|getSourceManager
@@ -948,22 +917,17 @@ operator|*
 name|SourceMgr
 return|;
 block|}
-comment|/// takeSourceManager - Remove the current source manager and give ownership
-comment|/// to the caller.
-name|SourceManager
-modifier|*
-name|takeSourceManager
+name|void
+name|resetAndLeakSourceManager
 parameter_list|()
 block|{
-return|return
 name|SourceMgr
 operator|.
-name|take
+name|resetWithoutRelease
 argument_list|()
-return|;
+expr_stmt|;
 block|}
-comment|/// setSourceManager - Replace the current source manager; the compiler
-comment|/// instance takes ownership of \arg Value.
+comment|/// setSourceManager - Replace the current source manager.
 name|void
 name|setSourceManager
 parameter_list|(
@@ -986,6 +950,7 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// Return the current preprocessor.
 name|Preprocessor
 operator|&
 name|getPreprocessor
@@ -1004,22 +969,17 @@ operator|*
 name|PP
 return|;
 block|}
-comment|/// takePreprocessor - Remove the current preprocessor and give ownership to
-comment|/// the caller.
-name|Preprocessor
-modifier|*
-name|takePreprocessor
+name|void
+name|resetAndLeakPreprocessor
 parameter_list|()
 block|{
-return|return
 name|PP
 operator|.
-name|take
+name|resetWithoutRelease
 argument_list|()
-return|;
+expr_stmt|;
 block|}
-comment|/// setPreprocessor - Replace the current preprocessor; the compiler instance
-comment|/// takes ownership of \arg Value.
+comment|/// Replace the current preprocessor.
 name|void
 name|setPreprocessor
 parameter_list|(
@@ -1060,22 +1020,17 @@ operator|*
 name|Context
 return|;
 block|}
-comment|/// takeASTContext - Remove the current AST context and give ownership to the
-comment|/// caller.
-name|ASTContext
-modifier|*
-name|takeASTContext
+name|void
+name|resetAndLeakASTContext
 parameter_list|()
 block|{
-return|return
 name|Context
 operator|.
-name|take
+name|resetWithoutRelease
 argument_list|()
-return|;
+expr_stmt|;
 block|}
-comment|/// setASTContext - Replace the current AST context; the compiler instance
-comment|/// takes ownership of \arg Value.
+comment|/// setASTContext - Replace the current AST context.
 name|void
 name|setASTContext
 parameter_list|(
@@ -1361,6 +1316,9 @@ comment|/// \param Client If non-NULL, a diagnostic client that will be
 comment|/// attached to (and, then, owned by) the returned Diagnostic
 comment|/// object.
 comment|///
+comment|/// \param CodeGenOpts If non-NULL, the code gen options in use, which may be
+comment|/// used by some diagnostics printers (for logging purposes only).
+comment|///
 comment|/// \return The new object on success, or null on failure.
 specifier|static
 name|llvm
@@ -1378,6 +1336,9 @@ argument_list|,
 argument|const char* const *Argv
 argument_list|,
 argument|DiagnosticClient *Client =
+literal|0
+argument_list|,
+argument|const CodeGenOptions *CodeGenOpts =
 literal|0
 argument_list|)
 expr_stmt|;

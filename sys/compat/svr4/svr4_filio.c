@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -249,7 +255,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|poll
+name|sys_poll
 argument_list|(
 name|td
 argument_list|,
@@ -469,6 +475,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+name|CAP_READ
 argument_list|,
 operator|&
 name|fp

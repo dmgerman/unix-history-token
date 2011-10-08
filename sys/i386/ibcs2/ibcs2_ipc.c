@@ -607,7 +607,7 @@ operator|->
 name|msgflg
 expr_stmt|;
 return|return
-name|msgget
+name|sys_msgget
 argument_list|(
 name|td
 argument_list|,
@@ -915,7 +915,7 @@ name|msgflg
 expr_stmt|;
 return|return
 operator|(
-name|msgrcv
+name|sys_msgrcv
 argument_list|(
 name|td
 argument_list|,
@@ -1011,7 +1011,7 @@ name|msgflg
 expr_stmt|;
 return|return
 operator|(
-name|msgsnd
+name|sys_msgsnd
 argument_list|(
 name|td
 argument_list|,
@@ -1882,7 +1882,7 @@ name|semflg
 expr_stmt|;
 return|return
 operator|(
-name|semget
+name|sys_semget
 argument_list|(
 name|td
 argument_list|,
@@ -1968,7 +1968,7 @@ name|nsops
 expr_stmt|;
 return|return
 operator|(
-name|semop
+name|sys_semop
 argument_list|(
 name|td
 argument_list|,
@@ -2340,7 +2340,7 @@ name|shmflg
 expr_stmt|;
 return|return
 operator|(
-name|shmat
+name|sys_shmat
 argument_list|(
 name|td
 argument_list|,
@@ -2619,7 +2619,7 @@ name|shmaddr
 expr_stmt|;
 return|return
 operator|(
-name|shmdt
+name|sys_shmdt
 argument_list|(
 name|td
 argument_list|,
@@ -2703,7 +2703,7 @@ name|shmflg
 expr_stmt|;
 return|return
 operator|(
-name|shmget
+name|sys_shmget
 argument_list|(
 name|td
 argument_list|,

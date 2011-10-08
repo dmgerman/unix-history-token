@@ -40,7 +40,7 @@ comment|//  This file defines the ExternalASTSource interface, which enables
 end_comment
 
 begin_comment
-comment|//  construction of AST nodes from some external source.x
+comment|//  construction of AST nodes from some external source.
 end_comment
 
 begin_comment
@@ -75,12 +75,6 @@ directive|include
 file|<cassert>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<vector>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -107,15 +101,6 @@ name|class
 name|CXXBaseSpecifier
 decl_stmt|;
 name|class
-name|Decl
-decl_stmt|;
-name|class
-name|DeclContext
-decl_stmt|;
-name|class
-name|DeclContextLookupResult
-decl_stmt|;
-name|class
 name|DeclarationName
 decl_stmt|;
 name|class
@@ -134,6 +119,22 @@ decl_stmt|;
 name|class
 name|TagDecl
 decl_stmt|;
+comment|/// \brief Enumeration describing the result of loading information from
+comment|/// an external source.
+enum|enum
+name|ExternalLoadResult
+block|{
+comment|/// \brief Loading the external information has succeeded.
+name|ELR_Success
+block|,
+comment|/// \brief Loading the external information has failed.
+name|ELR_Failure
+block|,
+comment|/// \brief The external information has already been loaded, and therefore
+comment|/// no additional processing is required.
+name|ELR_AlreadyLoaded
+block|}
+enum|;
 comment|/// \brief Abstract interface for external sources of AST nodes.
 comment|///
 comment|/// External AST sources provide AST nodes constructed from some
@@ -218,6 +219,8 @@ comment|/// building a new declaration.
 comment|///
 comment|/// This method only needs to be implemented if the AST source ever
 comment|/// passes back decl sets as VisibleDeclaration objects.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Decl
 modifier|*
@@ -226,13 +229,13 @@ parameter_list|(
 name|uint32_t
 name|ID
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Resolve a selector ID into a selector.
 comment|///
 comment|/// This operation only needs to be implemented if the AST source
 comment|/// returns non-zero for GetNumKnownSelectors().
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Selector
 name|GetExternalSelector
@@ -240,17 +243,15 @@ parameter_list|(
 name|uint32_t
 name|ID
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Returns the number of selectors known to the external AST
 comment|/// source.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|uint32_t
 name|GetNumExternalSelectors
 parameter_list|()
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Resolve the offset of a statement in the decl stream into
 comment|/// a statement.
@@ -258,6 +259,8 @@ comment|///
 comment|/// This operation is meant to be used via a LazyOffsetPtr.  It only
 comment|/// needs to be implemented if the AST source uses methods like
 comment|/// FunctionDecl::setLazyBody when building decls.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|Stmt
 modifier|*
@@ -266,11 +269,11 @@ parameter_list|(
 name|uint64_t
 name|Offset
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Resolve the offset of a set of C++ base specifiers in the decl
 comment|/// stream into an array of specifiers.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|CXXBaseSpecifier
 modifier|*
@@ -279,8 +282,6 @@ parameter_list|(
 name|uint64_t
 name|Offset
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Finds all declarations with the given name in the
 comment|/// given context.
@@ -288,6 +289,8 @@ comment|///
 comment|/// Generally the final step of this method is either to call
 comment|/// SetExternalVisibleDeclsForName or to recursively call lookup on
 comment|/// the DeclContext after calling SetExternalVisibleDecls.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|DeclContextLookupResult
 name|FindExternalVisibleDeclsByName
@@ -300,8 +303,6 @@ parameter_list|,
 name|DeclarationName
 name|Name
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Deserialize all the visible declarations from external storage.
 comment|///
@@ -309,6 +310,8 @@ comment|/// Name lookup deserializes visible declarations lazily, thus a DeclCon
 comment|/// may not have a complete name lookup table. This function deserializes
 comment|/// the rest of visible declarations from the external storage and completes
 comment|/// the name lookup table of the DeclContext.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
 name|void
 name|MaterializeVisibleDecls
@@ -318,8 +321,6 @@ name|DeclContext
 modifier|*
 name|DC
 parameter_list|)
-init|=
-literal|0
 function_decl|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext, after applying an optional filter predicate.
@@ -328,9 +329,11 @@ comment|/// \param isKindWeWant a predicate function that returns true if the pa
 comment|/// declaration kind is one we are looking for. If NULL, all declarations
 comment|/// are returned.
 comment|///
-comment|/// \return true if an error occurred
+comment|/// \return an indication of whether the load succeeded or failed.
+comment|///
+comment|/// The default implementation of this method is a no-op.
 name|virtual
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
 specifier|const
@@ -359,14 +362,12 @@ operator|>
 operator|&
 name|Result
 argument_list|)
-init|=
-literal|0
 decl_stmt|;
 comment|/// \brief Finds all declarations lexically contained within the given
 comment|/// DeclContext.
 comment|///
 comment|/// \return true if an error occurred
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
 specifier|const
@@ -401,7 +402,7 @@ operator|<
 name|typename
 name|DeclTy
 operator|>
-name|bool
+name|ExternalLoadResult
 name|FindExternalLexicalDeclsBy
 argument_list|(
 argument|const DeclContext *DC
@@ -489,6 +490,71 @@ name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Queries for performance analysis.
+comment|//===--------------------------------------------------------------------===//
+struct|struct
+name|MemoryBufferSizes
+block|{
+name|size_t
+name|malloc_bytes
+decl_stmt|;
+name|size_t
+name|mmap_bytes
+decl_stmt|;
+name|MemoryBufferSizes
+argument_list|(
+argument|size_t malloc_bytes
+argument_list|,
+argument|size_t mmap_bytes
+argument_list|)
+block|:
+name|malloc_bytes
+argument_list|(
+name|malloc_bytes
+argument_list|)
+operator|,
+name|mmap_bytes
+argument_list|(
+argument|mmap_bytes
+argument_list|)
+block|{}
+block|}
+struct|;
+comment|/// Return the amount of memory used by memory buffers, breaking down
+comment|/// by heap-backed versus mmap'ed memory.
+name|MemoryBufferSizes
+name|getMemoryBufferSizes
+argument_list|()
+specifier|const
+block|{
+name|MemoryBufferSizes
+name|sizes
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|;
+name|getMemoryBufferSizes
+argument_list|(
+name|sizes
+argument_list|)
+block|;
+return|return
+name|sizes
+return|;
+block|}
+name|virtual
+name|void
+name|getMemoryBufferSizes
+argument_list|(
+name|MemoryBufferSizes
+operator|&
+name|sizes
+argument_list|)
+decl|const
+decl_stmt|;
 name|protected
 label|:
 specifier|static

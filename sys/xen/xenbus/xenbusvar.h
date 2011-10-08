@@ -85,12 +85,6 @@ directive|include
 file|<xen/xenstore/xenstorevar.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|"xenbus_if.h"
-end_include
-
 begin_comment
 comment|/* XenBus allocations including XenStore data returned to clients. */
 end_comment
@@ -215,7 +209,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Initialize and register a watch on the given path (client suplied storage).  *  * \param dev       The XenBus device requesting the watch service.  * \param path      The XenStore path of the object to be watched.  The  *                  storage for this string must be stable for the lifetime  *                  of the watch.  * \param watch     The watch object to use for this request.  This object  *                  must be stable for the lifetime of the watch.  * \param callback  The function to call when XenStore objects at or below  *                  path are modified.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  *  * \note  On error, the device 'dev' will be switched to the XenbusStateClosing  *        state and the returned error is saved in the per-device error node  *        for dev in the XenStore.  */
+comment|/**  * Initialize and register a watch on the given path (client suplied storage).  *  * \param dev       The XenBus device requesting the watch service.  * \param path      The XenStore path of the object to be watched.  The  *                  storage for this string must be stable for the lifetime  *                  of the watch.  * \param watch     The watch object to use for this request.  This object  *                  must be stable for the lifetime of the watch.  * \param callback  The function to call when XenStore objects at or below  *                  path are modified.  * \param cb_data   Client data that can be retrieved from the watch object  *                  during the callback.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  *  * \note  On error, the device 'dev' will be switched to the XenbusStateClosing  *        state and the returned error is saved in the per-device error node  *        for dev in the XenStore.  */
 end_comment
 
 begin_function_decl
@@ -237,12 +231,15 @@ parameter_list|,
 name|xs_watch_cb_t
 modifier|*
 name|callback
+parameter_list|,
+name|uintptr_t
+name|cb_data
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Initialize and register a watch at path/path2 in the XenStore.  *  * \param dev       The XenBus device requesting the watch service.  * \param path      The base XenStore path of the object to be watched.  * \param path2     The tail XenStore path of the object to be watched.  * \param watch     The watch object to use for this request.  This object  *                  must be stable for the lifetime of the watch.  * \param callback  The function to call when XenStore objects at or below  *                  path are modified.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  *  * \note  On error, \a dev will be switched to the XenbusStateClosing  *        state and the returned error is saved in the per-device error node  *        for \a dev in the XenStore.  *  * Similar to xenbus_watch_path, however the storage for the path to the  * watched object is allocated from the heap and filled with "path '/' path2".  * Should a call to this function succeed, it is the callers responsibility  * to free watch->node using the M_XENBUS malloc type.  */
+comment|/**  * Initialize and register a watch at path/path2 in the XenStore.  *  * \param dev       The XenBus device requesting the watch service.  * \param path      The base XenStore path of the object to be watched.  * \param path2     The tail XenStore path of the object to be watched.  * \param watch     The watch object to use for this request.  This object  *                  must be stable for the lifetime of the watch.  * \param callback  The function to call when XenStore objects at or below  *                  path are modified.  * \param cb_data   Client data that can be retrieved from the watch object  *                  during the callback.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  *  * \note  On error, \a dev will be switched to the XenbusStateClosing  *        state and the returned error is saved in the per-device error node  *        for \a dev in the XenStore.  *  * Similar to xenbus_watch_path, however the storage for the path to the  * watched object is allocated from the heap and filled with "path '/' path2".  * Should a call to this function succeed, it is the callers responsibility  * to free watch->node using the M_XENBUS malloc type.  */
 end_comment
 
 begin_function_decl
@@ -270,6 +267,9 @@ parameter_list|,
 name|xs_watch_cb_t
 modifier|*
 name|callback
+parameter_list|,
+name|uintptr_t
+name|cb_data
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -510,6 +510,31 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/**  * Default callback invoked when a change to the local XenStore sub-tree  * for a device is modified.  *   * \param dev   The XenBus device whose tree was modified.  * \param path  The tree relative sub-path to the modified node.  The empty  *              string indicates the root of the tree was destroyed.  */
+end_comment
+
+begin_function_decl
+name|void
+name|xenbus_localend_changed
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_include
+include|#
+directive|include
+file|"xenbus_if.h"
+end_include
 
 begin_endif
 endif|#

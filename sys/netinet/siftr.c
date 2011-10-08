@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2007-2009  * 	Swinburne University of Technology, M
 end_comment
 
 begin_comment
-comment|/******************************************************  * Statistical Information For TCP Research (SIFTR)  *  * A FreeBSD kernel module that adds very basic intrumentation to the  * TCP stack, allowing internal stats to be recorded to a log file  * for experimental, debugging and performance analysis purposes.  *  * SIFTR was first released in 2007 by James Healy and Lawrence Stewart whilst  * working on the NewTCP research project at Swinburne University's Centre for  * Advanced Internet Architectures, Melbourne, Australia, which was made  * possible in part by a grant from the Cisco University Research Program Fund  * at Community Foundation Silicon Valley. More details are available at:  *   http://caia.swin.edu.au/urp/newtcp/  *  * Work on SIFTR v1.2.x was sponsored by the FreeBSD Foundation as part of  * the "Enhancing the FreeBSD TCP Implementation" project 2008-2009.  * More details are available at:  *   http://www.freebsdfoundation.org/  *   http://caia.swin.edu.au/freebsd/etcp09/  *  * Lawrence Stewart is the current maintainer, and all contact regarding  * SIFTR should be directed to him via email: lastewart@swin.edu.au  *  * Initial release date: June 2007  * Most recent update: September 2010  ******************************************************/
+comment|/******************************************************  * Statistical Information For TCP Research (SIFTR)  *  * A FreeBSD kernel module that adds very basic intrumentation to the  * TCP stack, allowing internal stats to be recorded to a log file  * for experimental, debugging and performance analysis purposes.  *  * SIFTR was first released in 2007 by James Healy and Lawrence Stewart whilst  * working on the NewTCP research project at Swinburne University of  * Technology's Centre for Advanced Internet Architectures, Melbourne,  * Australia, which was made possible in part by a grant from the Cisco  * University Research Program Fund at Community Foundation Silicon Valley.  * More details are available at:  *   http://caia.swin.edu.au/urp/newtcp/  *  * Work on SIFTR v1.2.x was sponsored by the FreeBSD Foundation as part of  * the "Enhancing the FreeBSD TCP Implementation" project 2008-2009.  * More details are available at:  *   http://www.freebsdfoundation.org/  *   http://caia.swin.edu.au/freebsd/etcp09/  *  * Lawrence Stewart is the current maintainer, and all contact regarding  * SIFTR should be directed to him via email: lastewart@swin.edu.au  *  * Initial release date: June 2007  * Most recent update: September 2010  ******************************************************/
 end_comment
 
 begin_include
@@ -473,14 +473,7 @@ value|((X)& 0x000000FF)
 end_define
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_SIFTR
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SIFTR
@@ -493,14 +486,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_SIFTR_PKTNODE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SIFTR_PKTNODE
@@ -513,14 +499,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_SIFTR_HASHNODE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SIFTR_HASHNODE
@@ -2726,12 +2705,6 @@ operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-name|INP_INFO_RLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|dir
@@ -2745,7 +2718,7 @@ name|ipver
 operator|==
 name|INP_IPV4
 condition|?
-name|in_pcblookup_hash
+name|in_pcblookup
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2762,7 +2735,7 @@ name|ip_dst
 argument_list|,
 name|dport
 argument_list|,
-literal|0
+name|INPLOOKUP_RLOCKPCB
 argument_list|,
 name|m
 operator|->
@@ -2774,7 +2747,7 @@ else|:
 ifdef|#
 directive|ifdef
 name|SIFTR_IPV6
-name|in6_pcblookup_hash
+name|in6_pcblookup
 argument_list|(
 argument|&V_tcbinfo
 argument_list|,
@@ -2786,7 +2759,7 @@ argument|&((struct ip6_hdr *)ip)->ip6_dst
 argument_list|,
 argument|dport
 argument_list|,
-literal|0
+argument|INPLOOKUP_RLOCKPCB
 argument_list|,
 argument|m->m_pkthdr.rcvif
 argument_list|)
@@ -2805,7 +2778,7 @@ name|ipver
 operator|==
 name|INP_IPV4
 condition|?
-name|in_pcblookup_hash
+name|in_pcblookup
 argument_list|(
 operator|&
 name|V_tcbinfo
@@ -2822,7 +2795,7 @@ name|ip_src
 argument_list|,
 name|sport
 argument_list|,
-literal|0
+name|INPLOOKUP_RLOCKPCB
 argument_list|,
 name|m
 operator|->
@@ -2834,7 +2807,7 @@ else|:
 ifdef|#
 directive|ifdef
 name|SIFTR_IPV6
-name|in6_pcblookup_hash
+name|in6_pcblookup
 argument_list|(
 argument|&V_tcbinfo
 argument_list|,
@@ -2846,7 +2819,7 @@ argument|&((struct ip6_hdr *)ip)->ip6_src
 argument_list|,
 argument|sport
 argument_list|,
-literal|0
+argument|INPLOOKUP_RLOCKPCB
 argument_list|,
 argument|m->m_pkthdr.rcvif
 argument_list|)
@@ -2883,26 +2856,6 @@ name|nskip_out_inpcb
 operator|++
 expr_stmt|;
 block|}
-else|else
-block|{
-comment|/* Acquire the inpcb lock. */
-name|INP_UNLOCK_ASSERT
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-name|INP_RLOCK
-argument_list|(
-name|inp
-argument_list|)
-expr_stmt|;
-block|}
-name|INP_INFO_RUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|inp

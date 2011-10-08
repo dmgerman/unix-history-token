@@ -186,9 +186,6 @@ comment|// ARM fmstat instruction.
 name|CMOV
 block|,
 comment|// ARM conditional move instructions.
-name|CNEG
-block|,
-comment|// ARM conditional negate instructions.
 name|BCC_i64
 block|,
 name|RBIT
@@ -388,6 +385,12 @@ comment|// unzip (deinterleave)
 name|VTRN
 block|,
 comment|// transpose
+name|VTBL1
+block|,
+comment|// 1-register shuffle with mask
+name|VTBL2
+block|,
+comment|// 2-register shuffle with mask
 comment|// Vector multiply long:
 name|VMULLs
 block|,
@@ -415,6 +418,9 @@ name|VORRIMM
 block|,
 comment|// Vector AND with NOT of immediate
 name|VBICIMM
+block|,
+comment|// Vector bitwise select
+name|VBSL
 block|,
 comment|// Vector load N-element structure to all lanes:
 name|VLD2DUP
@@ -571,6 +577,15 @@ argument|MachineBasicBlock *MBB
 argument_list|)
 specifier|const
 block|;
+name|SDValue
+name|PerformCMOVCombine
+argument_list|(
+argument|SDNode *N
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|SDValue
 name|PerformDAGCombine
@@ -629,6 +644,18 @@ comment|/// the immediate into a register.
 name|virtual
 name|bool
 name|isLegalICmpImmediate
+argument_list|(
+argument|int64_t Imm
+argument_list|)
+specifier|const
+block|;
+comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// add immediate, that is the target has add instructions which can
+comment|/// add a register and the immediate without having to materialize
+comment|/// the immediate into a register.
+name|virtual
+name|bool
+name|isLegalAddImmediate
 argument_list|(
 argument|int64_t Imm
 argument_list|)
@@ -736,20 +763,6 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
 comment|/// LowerAsmOperandForConstraint - Lower the specified operand into the Ops
 comment|/// vector.  If it is invalid, don't add anything to Ops. If hasMemory is
 comment|/// true it means one of the asm constraint of the inline asm instruction
@@ -760,7 +773,7 @@ name|LowerAsmOperandForConstraint
 argument_list|(
 argument|SDValue Op
 argument_list|,
-argument|char ConstraintLetter
+argument|std::string&Constraint
 argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
@@ -790,15 +803,6 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 comment|/// getMaximalGlobalOffset - Returns the maximal possible offset which can
 comment|/// be used for loads / stores from the global.
 name|virtual
@@ -824,15 +828,6 @@ name|Preference
 name|getSchedulingPreference
 argument_list|(
 argument|SDNode *N
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getRegPressureLimit
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
@@ -1429,6 +1424,50 @@ name|InVals
 argument_list|)
 decl|const
 decl_stmt|;
+name|void
+name|VarArgStyleRegisters
+argument_list|(
+name|CCState
+operator|&
+name|CCInfo
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SDValue
+operator|&
+name|Chain
+argument_list|,
+name|unsigned
+name|ArgOffset
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|computeRegArea
+argument_list|(
+name|CCState
+operator|&
+name|CCInfo
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
+argument_list|,
+name|unsigned
+operator|&
+name|VARegSize
+argument_list|,
+name|unsigned
+operator|&
+name|VARegSaveSize
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|SDValue
 name|LowerCall
@@ -1492,6 +1531,19 @@ name|SDValue
 operator|>
 operator|&
 name|InVals
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// HandleByVal - Target-specific cleanup for ByVal support.
+name|virtual
+name|void
+name|HandleByVal
+argument_list|(
+name|CCState
+operator|*
+argument_list|,
+name|unsigned
+operator|&
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1604,6 +1656,16 @@ name|N
 argument_list|)
 decl|const
 decl_stmt|;
+name|virtual
+name|bool
+name|mayBeEmittedAsTailCall
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|getARMCmp
 argument_list|(
@@ -1646,6 +1708,18 @@ name|DAG
 argument_list|,
 name|DebugLoc
 name|dl
+argument_list|)
+decl|const
+decl_stmt|;
+name|SDValue
+name|duplicateCmp
+argument_list|(
+name|SDValue
+name|Cmp
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
 argument_list|)
 decl|const
 decl_stmt|;
@@ -1695,6 +1769,44 @@ name|Size
 argument_list|,
 name|unsigned
 name|BinOpcode
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitAtomicBinaryMinMax
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Size
+argument_list|,
+name|bool
+name|signExtend
+argument_list|,
+name|ARMCC
+operator|::
+name|CondCodes
+name|Cond
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|RemapAddSubWithFlags
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|BB
 argument_list|)
 decl|const
 decl_stmt|;

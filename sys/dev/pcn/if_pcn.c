@@ -2816,7 +2816,7 @@ name|PCN_TX_LIST_CNT
 operator|-
 literal|1
 expr_stmt|;
-comment|/* 	 * Do MII setup.  Note that loopback support isn't implemented. 	 * See the comment in pcn_miibus_readreg() for why we can't 	 * universally pass MIIF_NOISOLATE here. 	 */
+comment|/* 	 * Do MII setup. 	 * See the comment in pcn_miibus_readreg() for why we can't 	 * universally pass MIIF_NOISOLATE here. 	 */
 name|sc
 operator|->
 name|pcn_extphyaddr
@@ -2847,7 +2847,7 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-name|MIIF_NOLOOP
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

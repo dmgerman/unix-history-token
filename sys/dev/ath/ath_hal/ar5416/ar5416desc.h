@@ -1005,6 +1005,124 @@ value|0x80000000
 end_define
 
 begin_comment
+comment|/* ds_ctl8 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl0
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl0_S
+value|0
+end_define
+
+begin_comment
+comment|/* Xmit 0 TPC is AR_XmitPower in ctl0 */
+end_comment
+
+begin_comment
+comment|/* ds_ctl9 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl1
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl1_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XmitPower1
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XmitPower1_S
+value|24
+end_define
+
+begin_comment
+comment|/* ds_ctl10 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl2
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl2_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XmitPower2
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XmitPower2_S
+value|24
+end_define
+
+begin_comment
+comment|/* ds_ctl11 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl3
+value|0x00ffffff
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_AntCtl3_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XmitPower3
+value|0xff000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_XmitPower3_S
+value|24
+end_define
+
+begin_comment
 comment|/*************  * TX Status *  *************/
 end_comment
 
@@ -2016,7 +2134,7 @@ parameter_list|,
 name|ads
 parameter_list|)
 define|\
-value|(AR_SREV_OWL_20_OR_LATER(ah) ? \ 	 MS((ads)->ds_rxstatus0, AR_RxRate) : \ 	 ((ads)->ds_rxstatus3>> 2)& 0xFF)
+value|(AR_SREV_5416_V20_OR_LATER(ah) ? \ 	 MS((ads)->ds_rxstatus0, AR_RxRate) : \ 	 ((ads)->ds_rxstatus3>> 2)& 0xFF)
 end_define
 
 begin_define
@@ -2029,7 +2147,7 @@ parameter_list|,
 name|ads
 parameter_list|)
 define|\
-value|(AR_SREV_OWL_20_OR_LATER(ah) ?	\ 	 MS((ads)->ds_rxstatus3, AR_Parallel40) : \ 	 ((ads)->ds_rxstatus3>> 10)& 0x1)
+value|(AR_SREV_5416_V20_OR_LATER(ah) ?	\ 	 MS((ads)->ds_rxstatus3, AR_Parallel40) : \ 	 ((ads)->ds_rxstatus3>> 10)& 0x1)
 end_define
 
 begin_endif

@@ -314,6 +314,13 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
+name|bus_adjust_resource
+argument_list|,
+name|bus_generic_adjust_resource
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_release_resource
 argument_list|,
 name|bus_generic_release_resource
@@ -1389,7 +1396,11 @@ call|(
 name|uintptr_t
 call|)
 argument_list|(
+name|atomic_load_acq_64
+argument_list|(
+operator|&
 name|tsc_freq
+argument_list|)
 operator|/
 literal|1000000
 argument_list|)

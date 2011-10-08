@@ -88,12 +88,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/linker_set.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/module.h>
 end_include
 
@@ -303,8 +297,7 @@ end_comment
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|mos_devs
 index|[]
 init|=
@@ -911,13 +904,6 @@ argument_list|(
 name|bus_print_child
 argument_list|,
 name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
 argument_list|)
 block|,
 comment|/* MII interface */

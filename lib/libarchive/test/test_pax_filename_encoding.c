@@ -859,6 +859,11 @@ name|badname_utf8
 argument_list|)
 condition|)
 block|{
+name|archive_entry_free
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
 name|skipping
 argument_list|(
 literal|"Cannot test conversion failures."
@@ -866,6 +871,11 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|archive_entry_free
+argument_list|(
+name|entry
+argument_list|)
+expr_stmt|;
 name|assert
 argument_list|(
 operator|(

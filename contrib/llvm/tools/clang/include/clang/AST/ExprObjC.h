@@ -128,6 +128,8 @@ argument_list|,
 name|false
 argument_list|,
 name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|String
@@ -340,6 +342,14 @@ operator|->
 name|getType
 argument_list|()
 operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|EncodedType
+operator|->
+name|getType
+argument_list|()
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -532,6 +542,8 @@ argument_list|,
 name|VK_RValue
 argument_list|,
 name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -732,6 +744,8 @@ argument_list|,
 name|VK_RValue
 argument_list|,
 name|OK_Ordinary
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -943,6 +957,11 @@ argument_list|,
 name|base
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|isInstantiationDependent
 argument_list|()
 argument_list|,
 name|base
@@ -1285,6 +1304,11 @@ argument_list|()
 argument_list|,
 name|base
 operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -1345,6 +1369,11 @@ comment|/*TypeDependent=*/
 name|false
 argument_list|,
 name|false
+argument_list|,
+name|st
+operator|->
+name|isInstantiationDependentType
+argument_list|()
 argument_list|,
 name|st
 operator|->
@@ -1415,6 +1444,11 @@ argument_list|()
 argument_list|,
 name|Base
 operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|Base
+operator|->
 name|containsUnexpandedParameterPack
 argument_list|()
 argument_list|)
@@ -1478,6 +1512,8 @@ argument_list|,
 name|false
 argument_list|,
 name|false
+argument_list|,
+name|false
 argument_list|)
 block|,
 name|PropertyOrGetter
@@ -1535,6 +1571,8 @@ argument_list|,
 name|VK
 argument_list|,
 name|OK
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|,
@@ -1812,6 +1850,182 @@ operator|)
 argument_list|,
 literal|0
 argument_list|)
+return|;
+block|}
+name|QualType
+name|getGetterResultType
+argument_list|()
+specifier|const
+block|{
+name|QualType
+name|ResultType
+block|;
+if|if
+condition|(
+name|isExplicitProperty
+argument_list|()
+condition|)
+block|{
+specifier|const
+name|ObjCPropertyDecl
+modifier|*
+name|PDecl
+init|=
+name|getExplicitProperty
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|Getter
+init|=
+name|PDecl
+operator|->
+name|getGetterMethodDecl
+argument_list|()
+condition|)
+name|ResultType
+operator|=
+name|Getter
+operator|->
+name|getResultType
+argument_list|()
+expr_stmt|;
+else|else
+name|ResultType
+operator|=
+name|getType
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|Getter
+init|=
+name|getImplicitPropertyGetter
+argument_list|()
+decl_stmt|;
+name|ResultType
+operator|=
+name|Getter
+operator|->
+name|getResultType
+argument_list|()
+expr_stmt|;
+comment|// with reference!
+block|}
+return|return
+name|ResultType
+return|;
+block|}
+name|QualType
+name|getSetterArgType
+argument_list|()
+specifier|const
+block|{
+name|QualType
+name|ArgType
+block|;
+if|if
+condition|(
+name|isImplicitProperty
+argument_list|()
+condition|)
+block|{
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|Setter
+init|=
+name|getImplicitPropertySetter
+argument_list|()
+decl_stmt|;
+name|ObjCMethodDecl
+operator|::
+name|param_iterator
+name|P
+operator|=
+name|Setter
+operator|->
+name|param_begin
+argument_list|()
+expr_stmt|;
+name|ArgType
+operator|=
+operator|(
+operator|*
+name|P
+operator|)
+operator|->
+name|getType
+argument_list|()
+expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|ObjCPropertyDecl
+modifier|*
+name|PDecl
+init|=
+name|getExplicitProperty
+argument_list|()
+condition|)
+if|if
+condition|(
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|Setter
+init|=
+name|PDecl
+operator|->
+name|getSetterMethodDecl
+argument_list|()
+condition|)
+block|{
+name|ObjCMethodDecl
+operator|::
+name|param_iterator
+name|P
+operator|=
+name|Setter
+operator|->
+name|param_begin
+argument_list|()
+expr_stmt|;
+name|ArgType
+operator|=
+operator|(
+operator|*
+name|P
+operator|)
+operator|->
+name|getType
+argument_list|()
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|ArgType
+operator|.
+name|isNull
+argument_list|()
+condition|)
+name|ArgType
+operator|=
+name|getType
+argument_list|()
+expr_stmt|;
+block|}
+return|return
+name|ArgType
 return|;
 block|}
 name|ObjCInterfaceDecl
@@ -2154,7 +2368,14 @@ comment|/// have a selector.
 name|unsigned
 name|HasMethod
 operator|:
-literal|8
+literal|1
+block|;
+comment|/// \brief Whether this message send is a "delegate init call",
+comment|/// i.e. a call of an init method on self from within an init method.
+name|unsigned
+name|IsDelegateInitCall
+operator|:
+literal|1
 block|;
 comment|/// \brief When the message expression is a send to 'super', this is
 comment|/// the location of the 'super' keyword.
@@ -2203,6 +2424,11 @@ literal|0
 argument_list|)
 block|,
 name|HasMethod
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|IsDelegateInitCall
 argument_list|(
 literal|0
 argument_list|)
@@ -2981,7 +3207,37 @@ expr_stmt|;
 block|}
 end_block
 
+begin_expr_stmt
+name|ObjCMethodFamily
+name|getMethodFamily
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|HasMethod
+condition|)
+return|return
+name|getMethodDecl
+argument_list|()
+operator|->
+name|getMethodFamily
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getSelector
+argument_list|()
+operator|.
+name|getMethodFamily
+argument_list|()
+return|;
+end_return
+
 begin_comment
+unit|}
 comment|/// \brief Return the number of actual arguments in this message,
 end_comment
 
@@ -2989,10 +3245,13 @@ begin_comment
 comment|/// not counting the receiver.
 end_comment
 
-begin_expr_stmt
-name|unsigned
+begin_macro
+unit|unsigned
 name|getNumArgs
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -3170,6 +3429,45 @@ name|Arg
 index|]
 operator|=
 name|ArgExpr
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// isDelegateInitCall - Answers whether this message send has been
+end_comment
+
+begin_comment
+comment|/// tagged as a "delegate init call", i.e. a call to a method in the
+end_comment
+
+begin_comment
+comment|/// -init family on self from within an -init method implementation.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isDelegateInitCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsDelegateInitCall
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setDelegateInitCall
+parameter_list|(
+name|bool
+name|isDelegate
+parameter_list|)
+block|{
+name|IsDelegateInitCall
+operator|=
+name|isDelegate
 expr_stmt|;
 block|}
 end_function
@@ -3425,7 +3723,7 @@ comment|/// ObjCIsaExpr - Represent X->isa and X.isa when X is an ObjC 'id' type
 end_comment
 
 begin_comment
-comment|/// (similiar in spirit to MemberExpr).
+comment|/// (similar in spirit to MemberExpr).
 end_comment
 
 begin_decl_stmt
@@ -3477,6 +3775,11 @@ argument_list|,
 name|base
 operator|->
 name|isValueDependent
+argument_list|()
+argument_list|,
+name|base
+operator|->
+name|isInstantiationDependent
 argument_list|()
 argument_list|,
 comment|/*ContainsUnexpandedParameterPack=*/
@@ -3651,7 +3954,429 @@ argument_list|)
 return|;
 block|}
 expr|}
-block|;  }
+block|;
+comment|/// ObjCIndirectCopyRestoreExpr - Represents the passing of a function
+comment|/// argument by indirect copy-restore in ARC.  This is used to support
+comment|/// passing indirect arguments with the wrong lifetime, e.g. when
+comment|/// passing the address of a __strong local variable to an 'out'
+comment|/// parameter.  This expression kind is only valid in an "argument"
+comment|/// position to some sort of call expression.
+comment|///
+comment|/// The parameter must have type 'pointer to T', and the argument must
+comment|/// have type 'pointer to U', where T and U agree except possibly in
+comment|/// qualification.  If the argument value is null, then a null pointer
+comment|/// is passed;  otherwise it points to an object A, and:
+comment|/// 1. A temporary object B of type T is initialized, either by
+comment|///    zero-initialization (used when initializing an 'out' parameter)
+comment|///    or copy-initialization (used when initializing an 'inout'
+comment|///    parameter).
+comment|/// 2. The address of the temporary is passed to the function.
+comment|/// 3. If the call completes normally, A is move-assigned from B.
+comment|/// 4. Finally, A is destroyed immediately.
+comment|///
+comment|/// Currently 'T' must be a retainable object lifetime and must be
+comment|/// __autoreleasing;  this qualifier is ignored when initializing
+comment|/// the value.
+name|class
+name|ObjCIndirectCopyRestoreExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|Stmt
+operator|*
+name|Operand
+block|;
+comment|// unsigned ObjCIndirectCopyRestoreBits.ShouldCopy : 1;
+name|friend
+name|class
+name|ASTReader
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|void
+name|setShouldCopy
+argument_list|(
+argument|bool shouldCopy
+argument_list|)
+block|{
+name|ObjCIndirectCopyRestoreExprBits
+operator|.
+name|ShouldCopy
+operator|=
+name|shouldCopy
+block|;   }
+name|explicit
+name|ObjCIndirectCopyRestoreExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|ObjCIndirectCopyRestoreExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|public
+operator|:
+name|ObjCIndirectCopyRestoreExpr
+argument_list|(
+argument|Expr *operand
+argument_list|,
+argument|QualType type
+argument_list|,
+argument|bool shouldCopy
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+name|ObjCIndirectCopyRestoreExprClass
+argument_list|,
+name|type
+argument_list|,
+name|VK_LValue
+argument_list|,
+name|OK_Ordinary
+argument_list|,
+name|operand
+operator|->
+name|isTypeDependent
+argument_list|()
+argument_list|,
+name|operand
+operator|->
+name|isValueDependent
+argument_list|()
+argument_list|,
+name|operand
+operator|->
+name|isInstantiationDependent
+argument_list|()
+argument_list|,
+name|operand
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|Operand
+argument_list|(
+argument|operand
+argument_list|)
+block|{
+name|setShouldCopy
+argument_list|(
+name|shouldCopy
+argument_list|)
+block|;   }
+name|Expr
+operator|*
+name|getSubExpr
+argument_list|()
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Operand
+operator|)
+return|;
+block|}
+specifier|const
+name|Expr
+operator|*
+name|getSubExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|Operand
+operator|)
+return|;
+block|}
+comment|/// shouldCopy - True if we should do the 'copy' part of the
+comment|/// copy-restore.  If false, the temporary will be zero-initialized.
+name|bool
+name|shouldCopy
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ObjCIndirectCopyRestoreExprBits
+operator|.
+name|ShouldCopy
+return|;
+block|}
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Operand
+argument_list|,
+operator|&
+name|Operand
+operator|+
+literal|1
+argument_list|)
+return|;
+block|}
+comment|// Source locations are determined by the subexpression.
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Operand
+operator|->
+name|getSourceRange
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getExprLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSubExpr
+argument_list|()
+operator|->
+name|getExprLoc
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *s
+argument_list|)
+block|{
+return|return
+name|s
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCIndirectCopyRestoreExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCIndirectCopyRestoreExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief An Objective-C "bridged" cast expression, which casts between
+comment|/// Objective-C pointers and C pointers, transferring ownership in the process.
+comment|///
+comment|/// \code
+comment|/// NSString *str = (__bridge_transfer NSString *)CFCreateString();
+comment|/// \endcode
+name|class
+name|ObjCBridgedCastExpr
+operator|:
+name|public
+name|ExplicitCastExpr
+block|{
+name|SourceLocation
+name|LParenLoc
+block|;
+name|SourceLocation
+name|BridgeKeywordLoc
+block|;
+name|unsigned
+name|Kind
+operator|:
+literal|2
+block|;
+name|friend
+name|class
+name|ASTStmtReader
+block|;
+name|friend
+name|class
+name|ASTStmtWriter
+block|;
+name|public
+operator|:
+name|ObjCBridgedCastExpr
+argument_list|(
+argument|SourceLocation LParenLoc
+argument_list|,
+argument|ObjCBridgeCastKind Kind
+argument_list|,
+argument|SourceLocation BridgeKeywordLoc
+argument_list|,
+argument|TypeSourceInfo *TSInfo
+argument_list|,
+argument|Expr *Operand
+argument_list|)
+operator|:
+name|ExplicitCastExpr
+argument_list|(
+name|ObjCBridgedCastExprClass
+argument_list|,
+name|TSInfo
+operator|->
+name|getType
+argument_list|()
+argument_list|,
+name|VK_RValue
+argument_list|,
+name|CK_BitCast
+argument_list|,
+name|Operand
+argument_list|,
+literal|0
+argument_list|,
+name|TSInfo
+argument_list|)
+block|,
+name|LParenLoc
+argument_list|(
+name|LParenLoc
+argument_list|)
+block|,
+name|BridgeKeywordLoc
+argument_list|(
+name|BridgeKeywordLoc
+argument_list|)
+block|,
+name|Kind
+argument_list|(
+argument|Kind
+argument_list|)
+block|{ }
+comment|/// \brief Construct an empty Objective-C bridged cast.
+name|explicit
+name|ObjCBridgedCastExpr
+argument_list|(
+argument|EmptyShell Shell
+argument_list|)
+operator|:
+name|ExplicitCastExpr
+argument_list|(
+argument|ObjCBridgedCastExprClass
+argument_list|,
+argument|Shell
+argument_list|,
+literal|0
+argument_list|)
+block|{ }
+name|SourceLocation
+name|getLParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|LParenLoc
+return|;
+block|}
+comment|/// \brief Determine which kind of bridge is being performed via this cast.
+name|ObjCBridgeCastKind
+name|getBridgeKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|ObjCBridgeCastKind
+operator|>
+operator|(
+name|Kind
+operator|)
+return|;
+block|}
+comment|/// \brief Retrieve the kind of bridge being performed as a string.
+name|llvm
+operator|::
+name|StringRef
+name|getBridgeKindName
+argument_list|()
+specifier|const
+block|;
+comment|/// \brief The location of the bridge keyword.
+name|SourceLocation
+name|getBridgeKeywordLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BridgeKeywordLoc
+return|;
+block|}
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|LParenLoc
+argument_list|,
+name|getSubExpr
+argument_list|()
+operator|->
+name|getLocEnd
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|ObjCBridgedCastExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ObjCBridgedCastExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;    }
 end_decl_stmt
 
 begin_comment

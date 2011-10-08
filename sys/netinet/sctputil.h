@@ -1280,8 +1280,18 @@ value|do { \ 	atomic_add_int(&stcb->asoc.total_output_queue_size,sz); \ 	if ((st
 end_define
 
 begin_comment
-comment|/* new functions to start/stop udp tunneling */
+comment|/* functions to start/stop udp tunneling */
 end_comment
+
+begin_comment
+comment|/* XXX: Remove the #ifdef after tunneling over IPv6 works also on FreeBSD. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_function_decl
 name|void
@@ -1300,6 +1310,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -1336,46 +1351,6 @@ parameter_list|,
 name|int
 modifier|*
 name|flagsp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/* For those not passing mbufs, this does the  * translations for you. Caller owns memory  * of size controllen returned in controlp.  */
-end_comment
-
-begin_function_decl
-name|int
-name|sctp_l_soreceive
-parameter_list|(
-name|struct
-name|socket
-modifier|*
-name|so
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-modifier|*
-name|name
-parameter_list|,
-name|struct
-name|uio
-modifier|*
-name|uio
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|controlp
-parameter_list|,
-name|int
-modifier|*
-name|controllen
-parameter_list|,
-name|int
-modifier|*
-name|flag
 parameter_list|)
 function_decl|;
 end_function_decl

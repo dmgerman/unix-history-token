@@ -551,7 +551,7 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
@@ -797,7 +797,7 @@ operator|->
 name|count
 argument_list|)
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -967,7 +967,7 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|newval
@@ -986,7 +986,7 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 for|for
@@ -1185,7 +1185,7 @@ expr|struct
 name|ng_patch_stats
 argument_list|)
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
 name|bcopy

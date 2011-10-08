@@ -65,10 +65,16 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"XCoreGenRegisterInfo.h.inc"
+file|"XCoreGenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -171,6 +177,13 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+name|bool
+name|useFPForScavengingIndex
+argument_list|(
+argument|const MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -249,6 +262,15 @@ block|;
 comment|//! Get DWARF debugging register number
 name|int
 name|getDwarfRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLLVMRegNum
 argument_list|(
 argument|unsigned RegNum
 argument_list|,

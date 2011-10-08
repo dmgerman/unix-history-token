@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2011  Internet Systems Conso
 end_comment
 
 begin_comment
-comment|/* $Id: mutex.c,v 1.16.112.2 2011-01-04 23:45:43 tbox Exp $ */
+comment|/* $Id: mutex.c,v 1.18 2011-01-04 23:47:14 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -1497,7 +1497,7 @@ name|pp
 operator|->
 name|sectorsize
 argument_list|,
-literal|0xffffffff
+name|UINT32_MAX
 argument_list|)
 operator|-
 literal|1
@@ -2265,10 +2265,7 @@ argument_list|(
 name|buf
 argument_list|)
 operator|==
-name|be16toh
-argument_list|(
 name|APM_DDR_SIG
-argument_list|)
 condition|)
 block|{
 comment|/* Normal Apple DDR */
@@ -2331,6 +2328,27 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|table
+operator|->
+name|ddr
+operator|.
+name|ddr_blkcount
+operator|>
+name|pp
+operator|->
+name|mediasize
+operator|/
+name|pp
+operator|->
+name|sectorsize
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 block|}
 else|else
 block|{
@@ -2383,6 +2401,8 @@ name|ddr
 operator|.
 name|ddr_blkcount
 operator|=
+name|MIN
+argument_list|(
 name|pp
 operator|->
 name|mediasize
@@ -2390,8 +2410,10 @@ operator|/
 name|pp
 operator|->
 name|sectorsize
+argument_list|,
+name|UINT32_MAX
+argument_list|)
 expr_stmt|;
-comment|/* XXX */
 name|table
 operator|->
 name|tivo_series1

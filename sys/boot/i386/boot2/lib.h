@@ -13,8 +13,17 @@ name|sio_init
 parameter_list|(
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(regparm
+parameter_list|(
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|void
@@ -31,8 +40,17 @@ name|sio_putc
 parameter_list|(
 name|int
 parameter_list|)
-function_decl|;
+function_decl|__attribute__
+parameter_list|(
+function_decl|(regparm
+parameter_list|(
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int

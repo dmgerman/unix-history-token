@@ -23,6 +23,11 @@ begin_struct
 struct|struct
 name|psycho_softc
 block|{
+name|struct
+name|bus_dma_methods
+modifier|*
+name|sc_dma_methods
+decl_stmt|;
 name|device_t
 name|sc_dev
 decl_stmt|;
@@ -89,9 +94,6 @@ decl_stmt|;
 comment|/* Tags for PCI access */
 name|bus_space_tag_t
 name|sc_pci_cfgt
-decl_stmt|;
-name|bus_space_tag_t
-name|sc_pci_memt
 decl_stmt|;
 name|bus_space_tag_t
 name|sc_pci_iot

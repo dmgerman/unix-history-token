@@ -208,6 +208,13 @@ directive|include
 file|<amd64/linux32/linux32_systrace_args.c>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MODNAME
+value|"linux32"
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -241,6 +248,13 @@ directive|include
 file|<i386/linux/linux_systrace_args.c>
 end_include
 
+begin_define
+define|#
+directive|define
+name|MODNAME
+value|"linux"
+end_define
+
 begin_else
 else|#
 directive|else
@@ -265,13 +279,6 @@ name|linux_sysent
 index|[]
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|MODNAME
-value|"linux32"
-end_define
 
 begin_define
 define|#
@@ -648,7 +655,8 @@ name|LINUX_SYSTRACE
 operator|.
 name|d_name
 operator|=
-literal|"linsystrace"
+literal|"systrace_"
+name|MODNAME
 block|,
 else|#
 directive|else

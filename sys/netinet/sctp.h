@@ -231,6 +231,10 @@ value|0x0000000c
 end_define
 
 begin_comment
+comment|/* deprecated */
+end_comment
+
+begin_comment
 comment|/* Without this applied we will give V4 and V6 addresses on a V6 socket */
 end_comment
 
@@ -390,6 +394,48 @@ define|#
 directive|define
 name|SCTP_AUTH_DEACTIVATE_KEY
 value|0x0000001d
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_EVENT
+value|0x0000001e
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RECVRCVINFO
+value|0x0000001f
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_RECVNXTINFO
+value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_SNDINFO
+value|0x00000021
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEFAULT_PRINFO
+value|0x00000022
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PEER_ADDR_THLDS
+value|0x00000023
 end_define
 
 begin_comment
@@ -851,6 +897,48 @@ define|#
 directive|define
 name|SCTP_CC_OPT_STEADY_STEP
 value|0x00002002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_OFF
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_BASE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_RPV1
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_RPV2
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_MPTCP
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CMT_MAX
+value|SCTP_CMT_MPTCP
 end_define
 
 begin_comment
@@ -1833,9 +1921,20 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCTP_PCB_FLAGS_DO_NOT_PMTUD
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_PCB_FLAGS_EXT_RCVINFO
 value|0x00000002
 end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
 
 begin_define
 define|#
@@ -1903,6 +2002,10 @@ directive|define
 name|SCTP_PCB_FLAGS_RECVDATAIOEVNT
 value|0x00000400
 end_define
+
+begin_comment
+comment|/* deprecated */
+end_comment
 
 begin_define
 define|#
@@ -2007,6 +2110,20 @@ define|#
 directive|define
 name|SCTP_PCB_FLAGS_DRYEVNT
 value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_RECVRCVINFO
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_PCB_FLAGS_RECVNXTINFO
+value|0x10000000
 end_define
 
 begin_comment
@@ -2122,13 +2239,6 @@ define|#
 directive|define
 name|SCTP_CWND_LOGGING_ENABLE
 value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_EARLYFR_LOGGING_ENABLE
-value|0x00000010
 end_define
 
 begin_define

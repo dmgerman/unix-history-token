@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: bsd-misc.h,v 1.18 2005/02/25 23:07:38 dtucker Exp $ */
+comment|/* $Id: bsd-misc.h,v 1.19 2010/11/08 22:26:23 tim Exp $ */
 end_comment
 
 begin_comment
@@ -500,6 +500,26 @@ name|b
 parameter_list|)
 value|mysignal(a,b)
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ISBLANK
+end_ifndef
+
+begin_function_decl
+name|int
+name|isblank
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

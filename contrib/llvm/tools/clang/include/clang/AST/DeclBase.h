@@ -243,6 +243,22 @@ end_macro
 
 begin_block
 block|{
+comment|/// \brief Captures the result of checking the availability of a
+comment|/// declaration.
+enum|enum
+name|AvailabilityResult
+block|{
+name|AR_Available
+init|=
+literal|0
+block|,
+name|AR_NotYetIntroduced
+block|,
+name|AR_Deprecated
+block|,
+name|AR_Unavailable
+block|}
+enum|;
 comment|/// Decl - This represents one declaration (or definition), e.g. a variable,
 comment|/// typedef, function, struct, etc.
 comment|///
@@ -394,9 +410,20 @@ init|=
 literal|0x0400
 block|}
 enum|;
-comment|/// ObjCDeclQualifier - Qualifier used on types in method declarations
-comment|/// for remote messaging. They are meant for the arguments though and
-comment|/// applied to the Decls (ObjCMethodDecl and ParmVarDecl).
+comment|/// ObjCDeclQualifier - 'Qualifiers' written next to the return and
+comment|/// parameter types in method declarations.  Other than remembering
+comment|/// them and mangling them into the method's signature string, these
+comment|/// are ignored by the compiler; they are consumed by certain
+comment|/// remote-messaging frameworks.
+comment|///
+comment|/// in, inout, and out are mutually exclusive and apply only to
+comment|/// method parameters.  bycopy and byref are mutually exclusive and
+comment|/// apply only to method parameters (?).  oneway applies only to
+comment|/// results.  All of these expect their corresponding parameter to
+comment|/// have a particular type.  None of this is currently enforced by
+comment|/// clang.
+comment|///
+comment|/// This should be kept in sync with ObjCDeclSpec::ObjCDeclQualifier.
 enum|enum
 name|ObjCDeclQualifier
 block|{
@@ -590,6 +617,15 @@ name|Used
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this declaration was "referenced".
+comment|/// The difference with 'Used' is whether the reference appears in a
+comment|/// evaluated context or not, e.g. functions used in uninstantiated templates
+comment|/// are regarded as "referenced" but not "used".
+name|unsigned
+name|Referenced
+range|:
+literal|1
+decl_stmt|;
 name|protected
 label|:
 comment|/// Access - Used by C++ decls for the access specifier.
@@ -697,6 +733,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|Referenced
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Access
 argument_list|(
 name|AS_none
@@ -771,6 +812,11 @@ name|false
 argument_list|)
 operator|,
 name|Used
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Referenced
 argument_list|(
 name|false
 argument_list|)
@@ -1223,6 +1269,96 @@ operator|<
 name|typename
 name|T
 operator|>
+name|void
+name|dropAttr
+argument_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|HasAttrs
+condition|)
+return|return;
+name|AttrVec
+operator|&
+name|Attrs
+operator|=
+name|getAttrs
+argument_list|()
+expr_stmt|;
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|Attrs
+operator|.
+name|size
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+comment|/* in loop */
+control|)
+block|{
+if|if
+condition|(
+name|isa
+operator|<
+name|T
+operator|>
+operator|(
+name|Attrs
+index|[
+name|i
+index|]
+operator|)
+condition|)
+block|{
+name|Attrs
+operator|.
+name|erase
+argument_list|(
+name|Attrs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|i
+argument_list|)
+expr_stmt|;
+operator|--
+name|e
+expr_stmt|;
+block|}
+else|else
+operator|++
+name|i
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|Attrs
+operator|.
+name|empty
+argument_list|()
+condition|)
+name|HasAttrs
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|specific_attr_iterator
 operator|<
 name|T
@@ -1419,6 +1555,129 @@ operator|=
 name|U
 expr_stmt|;
 block|}
+comment|/// \brief Whether this declaration was referenced.
+name|bool
+name|isReferenced
+argument_list|()
+specifier|const
+expr_stmt|;
+name|void
+name|setReferenced
+parameter_list|(
+name|bool
+name|R
+init|=
+name|true
+parameter_list|)
+block|{
+name|Referenced
+operator|=
+name|R
+expr_stmt|;
+block|}
+comment|/// \brief Determine the availability of the given declaration.
+comment|///
+comment|/// This routine will determine the most restrictive availability of
+comment|/// the given declaration (e.g., preferring 'unavailable' to
+comment|/// 'deprecated').
+comment|///
+comment|/// \param Message If non-NULL and the result is not \c
+comment|/// AR_Available, will be set to a (possibly empty) message
+comment|/// describing why the declaration has not been introduced, is
+comment|/// deprecated, or is unavailable.
+name|AvailabilityResult
+name|getAvailability
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Message
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \brief Determine whether this declaration is marked 'deprecated'.
+comment|///
+comment|/// \param Message If non-NULL and the declaration is deprecated,
+comment|/// this will be set to the message describing why the declaration
+comment|/// was deprecated (which may be empty).
+name|bool
+name|isDeprecated
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Message
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+return|return
+name|getAvailability
+argument_list|(
+name|Message
+argument_list|)
+operator|==
+name|AR_Deprecated
+return|;
+block|}
+comment|/// \brief Determine whether this declaration is marked 'unavailable'.
+comment|///
+comment|/// \param Message If non-NULL and the declaration is unavailable,
+comment|/// this will be set to the message describing why the declaration
+comment|/// was made unavailable (which may be empty).
+name|bool
+name|isUnavailable
+argument_list|(
+name|std
+operator|::
+name|string
+operator|*
+name|Message
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+return|return
+name|getAvailability
+argument_list|(
+name|Message
+argument_list|)
+operator|==
+name|AR_Unavailable
+return|;
+block|}
+comment|/// \brief Determine whether this is a weak-imported symbol.
+comment|///
+comment|/// Weak-imported symbols are typically marked with the
+comment|/// 'weak_import' attribute, but may also be marked with an
+comment|/// 'availability' attribute where we're targing a platform prior to
+comment|/// the introduction of this feature.
+name|bool
+name|isWeakImported
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Determines whether this symbol can be weak-imported,
+comment|/// e.g., whether it would be well-formed to add the weak_import
+comment|/// attribute.
+comment|///
+comment|/// \param IsDefinition Set to \c true to indicate that this
+comment|/// declaration cannot be weak-imported because it has a definition.
+name|bool
+name|canBeWeakImported
+argument_list|(
+name|bool
+operator|&
+name|IsDefinition
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve the level of precompiled header from which this
 comment|/// declaration was generated.
 comment|///
@@ -1926,9 +2185,21 @@ name|Current
 return|;
 block|}
 block|}
+end_block
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// \brief Returns iterator for all the redeclarations of the same decl.
+end_comment
+
+begin_comment
 comment|/// It will iterate at least once (when this decl is the only one).
+end_comment
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_begin
 argument_list|()
@@ -1948,6 +2219,9 @@ operator|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|redecl_iterator
 name|redecls_end
 argument_list|()
@@ -1958,9 +2232,21 @@ name|redecl_iterator
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getBody - If this Decl represents a declaration for a body of code,
+end_comment
+
+begin_comment
 comment|///  such as a function or method definition, this method returns the
+end_comment
+
+begin_comment
 comment|///  top-level Stmt* of that body.  Otherwise this method returns null.
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|Stmt
 operator|*
@@ -1972,8 +2258,17 @@ return|return
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Returns true if this Decl represents a declaration for a body of
+end_comment
+
+begin_comment
 comment|/// code, such as a function or method definition.
+end_comment
+
+begin_expr_stmt
 name|virtual
 name|bool
 name|hasBody
@@ -1987,14 +2282,29 @@ operator|!=
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getBodyRBrace - Gets the right brace of the body, if a body exists.
+end_comment
+
+begin_comment
 comment|/// This works whether the body is a CompoundStmt or a CXXTryStmt.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getBodyRBrace
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// global temp stats (until we have a per-module visitor)
+end_comment
+
+begin_function_decl
 specifier|static
 name|void
 name|add
@@ -2003,6 +2313,9 @@ name|Kind
 name|k
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|bool
 name|CollectingStats
@@ -2013,44 +2326,101 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// isTemplateParameter - Determines whether this declaration is a
+end_comment
+
+begin_comment
 comment|/// template parameter.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isTemplateParameter
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// isTemplateParameter - Determines whether this declaration is a
+end_comment
+
+begin_comment
 comment|/// template parameter pack.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isTemplateParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this declaration is a parameter pack.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isParameterPack
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this declaration is a function or function template.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isFunctionOrFunctionTemplate
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Changes the namespace of this declaration to reflect that it's
+end_comment
+
+begin_comment
 comment|/// the object of a friend declaration.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// These declarations appear in the lexical context of the friending
+end_comment
+
+begin_comment
 comment|/// class, but in the semantic context of the actual entity.  This property
+end_comment
+
+begin_comment
 comment|/// applies only to a specific decl object;  other redeclarations of the
+end_comment
+
+begin_comment
 comment|/// same entity may not (and probably don't) share this property.
+end_comment
+
+begin_function
 name|void
 name|setObjectOfFriendDecl
 parameter_list|(
@@ -2160,6 +2530,9 @@ name|IDNS_Ordinary
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_enum
 enum|enum
 name|FriendObjectKind
 block|{
@@ -2173,10 +2546,25 @@ name|FOK_Undeclared
 comment|// a friend of a previously-undeclared entity
 block|}
 enum|;
+end_enum
+
+begin_comment
 comment|/// \brief Determines whether this declaration is the object of a
+end_comment
+
+begin_comment
 comment|/// friend declaration and, if so, what kind.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// There is currently no direct way to find the associated FriendDecl.
+end_comment
+
+begin_expr_stmt
 name|FriendObjectKind
 name|getFriendObjectKind
 argument_list|()
@@ -2203,6 +2591,9 @@ condition|)
 return|return
 name|FOK_None
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 operator|(
 name|IdentifierNamespace
@@ -2218,17 +2609,20 @@ else|:
 name|FOK_Undeclared
 operator|)
 return|;
-block|}
-end_block
+end_return
 
 begin_comment
+unit|}
 comment|/// Specifies that this declaration is a C++ overloaded non-member.
 end_comment
 
-begin_function
-name|void
+begin_macro
+unit|void
 name|setNonMemberOperator
-parameter_list|()
+argument_list|()
+end_macro
+
+begin_block
 block|{
 name|assert
 argument_list|(
@@ -2259,7 +2653,7 @@ operator||=
 name|IDNS_NonMemberOperator
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_comment
 comment|// Implement isa/cast/dyncast/etc.
@@ -5129,21 +5523,14 @@ block|{
 comment|/// isa<T>(DeclContext*)
 name|template
 operator|<
-name|class
-name|ToTy
+name|typename
+name|To
 operator|>
 expr|struct
-name|isa_impl_wrap
+name|isa_impl
 operator|<
-name|ToTy
+name|To
 operator|,
-specifier|const
-operator|::
-name|clang
-operator|::
-name|DeclContext
-operator|,
-specifier|const
 operator|::
 name|clang
 operator|::
@@ -5158,7 +5545,7 @@ argument|const ::clang::DeclContext&Val
 argument_list|)
 block|{
 return|return
-name|ToTy
+name|To
 operator|::
 name|classofKind
 argument_list|(
@@ -5175,49 +5562,6 @@ end_block
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|class
-name|ToTy
-operator|>
-expr|struct
-name|isa_impl_wrap
-operator|<
-name|ToTy
-operator|,
-operator|::
-name|clang
-operator|::
-name|DeclContext
-operator|,
-operator|::
-name|clang
-operator|::
-name|DeclContext
-operator|>
-operator|:
-name|public
-name|isa_impl_wrap
-operator|<
-name|ToTy
-operator|,
-specifier|const
-operator|::
-name|clang
-operator|::
-name|DeclContext
-operator|,
-specifier|const
-operator|::
-name|clang
-operator|::
-name|DeclContext
-operator|>
-block|{}
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/// cast<T>(DeclContext*)

@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file declares the ARM specific subclass of TargetSubtarget.
+comment|// This file declares the ARM specific subclass of TargetSubtargetInfo.
 end_comment
 
 begin_comment
@@ -62,19 +62,19 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrItineraries.h"
+file|"MCTargetDesc/ARMMCTargetDesc.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtarget.h"
+file|"llvm/MC/MCInstrItineraries.h"
 end_include
 
 begin_include
@@ -89,6 +89,18 @@ directive|include
 file|<string>
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_SUBTARGETINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"ARMGenSubtargetInfo.inc"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -97,35 +109,17 @@ name|class
 name|GlobalValue
 decl_stmt|;
 name|class
+name|StringRef
+decl_stmt|;
+name|class
 name|ARMSubtarget
 range|:
 name|public
-name|TargetSubtarget
+name|ARMGenSubtargetInfo
 block|{
 name|protected
 operator|:
 expr|enum
-name|ARMArchEnum
-block|{
-name|V4
-block|,
-name|V4T
-block|,
-name|V5T
-block|,
-name|V5TE
-block|,
-name|V6
-block|,
-name|V6M
-block|,
-name|V6T2
-block|,
-name|V7A
-block|,
-name|V7M
-block|}
-block|;    enum
 name|ARMProcFamilyEnum
 block|{
 name|Others
@@ -134,37 +128,41 @@ name|CortexA8
 block|,
 name|CortexA9
 block|}
-block|;    enum
-name|ARMFPEnum
-block|{
-name|None
-block|,
-name|VFPv2
-block|,
-name|VFPv3
-block|,
-name|NEON
-block|}
-block|;    enum
-name|ThumbTypeEnum
-block|{
-name|Thumb1
-block|,
-name|Thumb2
-block|}
-block|;
-comment|/// ARMArchVersion - ARM architecture version: V4, V4T (base), V5T, V5TE,
-comment|/// V6, V6T2, V7A, V7M.
-name|ARMArchEnum
-name|ARMArchVersion
 block|;
 comment|/// ARMProcFamily - ARM processor family: Cortex-A8, Cortex-A9, and others.
 name|ARMProcFamilyEnum
 name|ARMProcFamily
 block|;
-comment|/// ARMFPUType - Floating Point Unit type.
-name|ARMFPEnum
-name|ARMFPUType
+comment|/// HasV4TOps, HasV5TOps, HasV5TEOps, HasV6Ops, HasV6T2Ops, HasV7Ops -
+comment|/// Specify whether target support specific ARM ISA variants.
+name|bool
+name|HasV4TOps
+block|;
+name|bool
+name|HasV5TOps
+block|;
+name|bool
+name|HasV5TEOps
+block|;
+name|bool
+name|HasV6Ops
+block|;
+name|bool
+name|HasV6T2Ops
+block|;
+name|bool
+name|HasV7Ops
+block|;
+comment|/// HasVFPv2, HasVFPv3, HasNEON - Specify what floating point ISAs are
+comment|/// supported.
+name|bool
+name|HasVFPv2
+block|;
+name|bool
+name|HasVFPv3
+block|;
+name|bool
+name|HasNEON
 block|;
 comment|/// UseNEONForSinglePrecisionFP - if the NEONFP attribute has been
 comment|/// specified. Use the method useNEONForSinglePrecisionFP() to
@@ -177,17 +175,22 @@ comment|/// whether the FP VML[AS] instructions are slow (if so, don't use them)
 name|bool
 name|SlowFPVMLx
 block|;
+comment|/// HasVMLxForwarding - If true, NEON has special multiplier accumulator
+comment|/// forwarding to allow mul + mla being issued back to back.
+name|bool
+name|HasVMLxForwarding
+block|;
 comment|/// SlowFPBrcc - True if floating point compare + branch is slow.
 name|bool
 name|SlowFPBrcc
 block|;
-comment|/// IsThumb - True if we are in thumb mode, false if in ARM mode.
+comment|/// InThumbMode - True if compiling for Thumb, false for ARM.
 name|bool
-name|IsThumb
+name|InThumbMode
 block|;
-comment|/// ThumbMode - Indicates supported Thumb version.
-name|ThumbTypeEnum
-name|ThumbMode
+comment|/// HasThumb2 - True if Thumb2 instructions are supported.
+name|bool
+name|HasThumb2
 block|;
 comment|/// NoARM - True if subtarget does not support ARM mode execution.
 name|bool
@@ -235,6 +238,12 @@ comment|/// over 16-bit ones.
 name|bool
 name|Pref32BitThumb
 block|;
+comment|/// AvoidCPSRPartialUpdate - If true, codegen would avoid using instructions
+comment|/// that partially update CPSR and add false dependency on the previous
+comment|/// CPSR setting instruction.
+name|bool
+name|AvoidCPSRPartialUpdate
+block|;
 comment|/// HasMPExtension - True if the subtarget supports Multiprocessing
 comment|/// extension (ARMv7 only).
 name|bool
@@ -250,6 +259,11 @@ comment|/// accesses for some types.  For details, see
 comment|/// ARMTargetLowering::allowsUnalignedMemoryAccesses().
 name|bool
 name|AllowsUnalignedMem
+block|;
+comment|/// Thumb2DSP - If true, the subtarget supports the v7 DSP (saturating arith
+comment|/// and such) instructions in Thumb2 code.
+name|bool
+name|Thumb2DSP
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -293,11 +307,26 @@ comment|/// of the specified triple.
 comment|///
 name|ARMSubtarget
 argument_list|(
-argument|const std::string&TT
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
 argument_list|,
-argument|const std::string&FS
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
-argument|bool isThumb
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
 argument_list|)
 block|;
 comment|/// getMaxInlineSizeThreshold - Returns the maximum memset / memcpy size
@@ -320,24 +349,12 @@ return|;
 block|}
 comment|/// ParseSubtargetFeatures - Parses features string setting specified
 comment|/// subtarget options.  Definition of function is auto generated by tblgen.
-name|std
-operator|::
-name|string
+name|void
 name|ParseSubtargetFeatures
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef FS
 argument_list|)
 block|;
 name|void
@@ -350,9 +367,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMArchVersion
-operator|>=
-name|V4T
+name|HasV4TOps
 return|;
 block|}
 name|bool
@@ -361,9 +376,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMArchVersion
-operator|>=
-name|V5T
+name|HasV5TOps
 return|;
 block|}
 name|bool
@@ -372,9 +385,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMArchVersion
-operator|>=
-name|V5TE
+name|HasV5TEOps
 return|;
 block|}
 name|bool
@@ -383,9 +394,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMArchVersion
-operator|>=
-name|V6
+name|HasV6Ops
 return|;
 block|}
 name|bool
@@ -394,9 +403,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMArchVersion
-operator|>=
-name|V6T2
+name|HasV6T2Ops
 return|;
 block|}
 name|bool
@@ -405,9 +412,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMArchVersion
-operator|>=
-name|V7A
+name|HasV7Ops
 return|;
 block|}
 name|bool
@@ -448,9 +453,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMFPUType
-operator|>=
-name|VFPv2
+name|HasVFPv2
 return|;
 block|}
 name|bool
@@ -459,9 +462,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMFPUType
-operator|>=
-name|VFPv3
+name|HasVFPv3
 return|;
 block|}
 name|bool
@@ -470,9 +471,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ARMFPUType
-operator|>=
-name|NEON
+name|HasNEON
 return|;
 block|}
 name|bool
@@ -525,6 +524,15 @@ name|SlowFPVMLx
 return|;
 block|}
 name|bool
+name|hasVMLxForwarding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasVMLxForwarding
+return|;
+block|}
+name|bool
 name|isFPBrccSlow
 argument_list|()
 specifier|const
@@ -552,12 +560,30 @@ name|Pref32BitThumb
 return|;
 block|}
 name|bool
+name|avoidCPSRPartialUpdate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AvoidCPSRPartialUpdate
+return|;
+block|}
+name|bool
 name|hasMPExtension
 argument_list|()
 specifier|const
 block|{
 return|return
 name|HasMPExtension
+return|;
+block|}
+name|bool
+name|hasThumb2DSP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Thumb2DSP
 return|;
 block|}
 name|bool
@@ -578,6 +604,17 @@ return|return
 name|HasD16
 return|;
 block|}
+specifier|const
+name|Triple
+operator|&
+name|getTargetTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+return|;
+block|}
 name|bool
 name|isTargetDarwin
 argument_list|()
@@ -586,12 +623,8 @@ block|{
 return|return
 name|TargetTriple
 operator|.
-name|getOS
+name|isOSDarwin
 argument_list|()
-operator|==
-name|Triple
-operator|::
-name|Darwin
 return|;
 block|}
 name|bool
@@ -633,7 +666,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IsThumb
+name|InThumbMode
 return|;
 block|}
 name|bool
@@ -642,13 +675,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IsThumb
+name|InThumbMode
 operator|&&
-operator|(
-name|ThumbMode
-operator|==
-name|Thumb1
-operator|)
+operator|!
+name|HasThumb2
 return|;
 block|}
 name|bool
@@ -657,13 +687,9 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|IsThumb
+name|InThumbMode
 operator|&&
-operator|(
-name|ThumbMode
-operator|==
-name|Thumb2
-operator|)
+name|HasThumb2
 return|;
 block|}
 name|bool
@@ -672,9 +698,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ThumbMode
-operator|>=
-name|Thumb2
+name|HasThumb2
 return|;
 block|}
 name|bool
@@ -731,7 +755,7 @@ name|enablePostRAScheduler
 argument_list|(
 argument|CodeGenOpt::Level OptLevel
 argument_list|,
-argument|TargetSubtarget::AntiDepBreakMode& Mode
+argument|TargetSubtargetInfo::AntiDepBreakMode& Mode
 argument_list|,
 argument|RegClassVector& CriticalPathRCs
 argument_list|)

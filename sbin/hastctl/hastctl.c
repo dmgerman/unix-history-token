@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -1649,6 +1643,96 @@ name|ii
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"  statistics:\n"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    reads: %ju\n"
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_read%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    writes: %ju\n"
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_write%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    deletes: %ju\n"
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_delete%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    flushes: %ju\n"
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_flush%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"    activemap updates: %ju\n"
+argument_list|,
+operator|(
+name|uint64_t
+operator|)
+name|nv_get_uint64
+argument_list|(
+name|nv
+argument_list|,
+literal|"stat_activemap_update%u"
+argument_list|,
+name|ii
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 operator|(
@@ -1890,9 +1974,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Invalid extentsize"
 argument_list|)
@@ -1913,9 +1997,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Invalid keepdirty"
 argument_list|)
@@ -1936,9 +2020,9 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|err
+name|errx
 argument_list|(
-literal|1
+name|EX_USAGE
 argument_list|,
 literal|"Invalid mediasize"
 argument_list|)
@@ -2002,7 +2086,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|cfg
 operator|!=
@@ -2031,9 +2115,8 @@ name|keepdirty
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"What are we doing here?!"
 argument_list|)
 expr_stmt|;
@@ -2050,9 +2133,8 @@ name|argv
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"What are we doing here?!"
 argument_list|)
 expr_stmt|;
@@ -2258,10 +2340,9 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
-literal|"Impossible role!"
+literal|"Impossible command!"
 argument_list|)
 expr_stmt|;
 block|}
@@ -2324,7 +2405,7 @@ if|if
 condition|(
 name|drop_privs
 argument_list|(
-name|true
+name|NULL
 argument_list|)
 operator|!=
 literal|0
@@ -2373,18 +2454,12 @@ expr_stmt|;
 comment|/* ...and receive reply. */
 if|if
 condition|(
-name|hast_proto_recv
+name|hast_proto_recv_hdr
 argument_list|(
-name|NULL
-argument_list|,
 name|controlconn
 argument_list|,
 operator|&
 name|nv
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
 argument_list|)
 operator|<
 literal|0
@@ -2468,10 +2543,9 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
-literal|"Impossible role!"
+literal|"Impossible command!"
 argument_list|)
 expr_stmt|;
 block|}

@@ -2742,10 +2742,6 @@ condition|(
 name|cd
 operator|->
 name|nonblock
-operator|&&
-name|i
-operator|!=
-name|cnt
 condition|)
 block|{
 comment|/* 				 * For non-blocking connections, do not 				 * take more than 2 seconds writing the 				 * data out. 				 * 				 * XXX 2 is an arbitrary amount. 				 */
@@ -2784,6 +2780,10 @@ operator|)
 return|;
 block|}
 block|}
+name|i
+operator|=
+literal|0
+expr_stmt|;
 block|}
 block|}
 return|return

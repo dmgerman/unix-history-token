@@ -504,6 +504,11 @@ name|void
 name|EnableStatistics
 parameter_list|()
 function_decl|;
+comment|/// \brief Check if statistics are enabled.
+name|bool
+name|AreStatisticsEnabled
+parameter_list|()
+function_decl|;
 comment|/// \brief Print statistics to the file returned by CreateInfoOutputFile().
 name|void
 name|PrintStatistics

@@ -375,6 +375,10 @@ name|int
 name|pipe_present
 decl_stmt|;
 comment|/* still present? */
+name|ino_t
+name|pipe_ino
+decl_stmt|;
+comment|/* fake inode for stat(2) */
 block|}
 struct|;
 end_struct

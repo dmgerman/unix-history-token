@@ -56,7 +56,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|__THUMM_FRAMEINFO_H_
+name|__THUMB_FRAMEINFO_H_
 end_define
 
 begin_include

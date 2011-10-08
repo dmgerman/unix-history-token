@@ -639,6 +639,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.kdb_on_nmi"
+argument_list|,
+operator|&
+name|kdb_on_nmi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -670,6 +681,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Panic on NMI"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"machdep.panic_on_nmi"
+argument_list|,
+operator|&
+name|panic_on_nmi
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2033,7 +2055,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-block|PROC_LOCK(p); 				psignal(p, SIGBUS); 				PROC_UNLOCK(p);
+block|PROC_LOCK(p); 				kern_psignal(p, SIGBUS); 				PROC_UNLOCK(p);
 endif|#
 directive|endif
 goto|goto
@@ -2743,6 +2765,43 @@ name|vm
 operator|->
 name|vm_map
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|usermode
+operator|&&
+operator|(
+name|td
+operator|->
+name|td_intr_nesting_level
+operator|!=
+literal|0
+operator|||
+name|PCPU_GET
+argument_list|(
+name|curpcb
+argument_list|)
+operator|->
+name|pcb_onfault
+operator|==
+name|NULL
+operator|)
+condition|)
+block|{
+name|trap_fatal
+argument_list|(
+name|frame
+argument_list|,
+name|eva
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 block|}
 comment|/* 	 * PGEX_I is defined only if the execute disable bit capability is 	 * supported and enabled. 	 */
 if|if
@@ -3835,6 +3894,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_include
+include|#
+directive|include
+file|"../../kern/subr_syscall.c"
+end_include
 
 begin_comment
 comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */

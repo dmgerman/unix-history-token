@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/AsmPrinter.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -384,20 +390,25 @@ range|:
 name|public
 name|DwarfException
 block|{
-comment|/// shouldEmitTable - Per-function flag to indicate if EH tables should
-comment|/// be emitted.
+comment|/// shouldEmitPersonality - Per-function flag to indicate if .cfi_personality
+comment|/// should be emitted.
 name|bool
-name|shouldEmitTable
+name|shouldEmitPersonality
+block|;
+comment|/// shouldEmitLSDA - Per-function flag to indicate if .cfi_lsda
+comment|/// should be emitted.
+name|bool
+name|shouldEmitLSDA
 block|;
 comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
 comment|/// should be emitted.
 name|bool
 name|shouldEmitMoves
 block|;
-comment|/// shouldEmitTableModule - Per-module flag to indicate if EH tables
-comment|/// should be emitted.
-name|bool
-name|shouldEmitTableModule
+name|AsmPrinter
+operator|::
+name|CFIMoveType
+name|moveTypeModule
 block|;
 name|public
 operator|:
@@ -443,7 +454,7 @@ argument_list|()
 block|; }
 decl_stmt|;
 name|class
-name|DwarfTableException
+name|ARMException
 range|:
 name|public
 name|DwarfException
@@ -463,143 +474,12 @@ comment|/// should be emitted.
 name|bool
 name|shouldEmitTableModule
 block|;
-comment|/// shouldEmitMovesModule - Per-module flag to indicate if frame moves
-comment|/// should be emitted.
-name|bool
-name|shouldEmitMovesModule
-block|;    struct
-name|FunctionEHFrameInfo
-block|{
-name|MCSymbol
-operator|*
-name|FunctionEHSym
-block|;
-comment|// L_foo.eh
-name|unsigned
-name|Number
-block|;
-name|unsigned
-name|PersonalityIndex
-block|;
-name|bool
-name|adjustsStack
-block|;
-name|bool
-name|hasLandingPads
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineMove
-operator|>
-name|Moves
-block|;
-specifier|const
-name|Function
-operator|*
-name|function
-block|;
-name|FunctionEHFrameInfo
-argument_list|(
-argument|MCSymbol *EHSym
-argument_list|,
-argument|unsigned Num
-argument_list|,
-argument|unsigned P
-argument_list|,
-argument|bool hC
-argument_list|,
-argument|bool hL
-argument_list|,
-argument|const std::vector<MachineMove>&M
-argument_list|,
-argument|const Function *f
-argument_list|)
-operator|:
-name|FunctionEHSym
-argument_list|(
-name|EHSym
-argument_list|)
-block|,
-name|Number
-argument_list|(
-name|Num
-argument_list|)
-block|,
-name|PersonalityIndex
-argument_list|(
-name|P
-argument_list|)
-block|,
-name|adjustsStack
-argument_list|(
-name|hC
-argument_list|)
-block|,
-name|hasLandingPads
-argument_list|(
-name|hL
-argument_list|)
-block|,
-name|Moves
-argument_list|(
-name|M
-argument_list|)
-block|,
-name|function
-argument_list|(
-argument|f
-argument_list|)
-block|{ }
-block|}
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|FunctionEHFrameInfo
-operator|>
-name|EHFrames
-block|;
-comment|/// UsesLSDA - Indicates whether an FDE that uses the CIE at the given index
-comment|/// uses an LSDA. If so, then we need to encode that information in the CIE's
-comment|/// augmentation.
-name|DenseMap
-operator|<
-name|unsigned
-block|,
-name|bool
-operator|>
-name|UsesLSDA
-block|;
-comment|/// EmitCIE - Emit a Common Information Entry (CIE). This holds information
-comment|/// that is shared among many Frame Description Entries.  There is at least
-comment|/// one CIE in every non-empty .debug_frame section.
-name|void
-name|EmitCIE
-argument_list|(
-argument|const Function *Personality
-argument_list|,
-argument|unsigned Index
-argument_list|)
-block|;
-comment|/// EmitFDE - Emit the Frame Description Entry (FDE) for the function.
-name|void
-name|EmitFDE
-argument_list|(
-specifier|const
-name|FunctionEHFrameInfo
-operator|&
-name|EHFrameInfo
-argument_list|)
-block|;
 name|public
 operator|:
 comment|//===--------------------------------------------------------------------===//
 comment|// Main entry points.
 comment|//
-name|DwarfTableException
+name|ARMException
 argument_list|(
 name|AsmPrinter
 operator|*
@@ -608,7 +488,71 @@ argument_list|)
 block|;
 name|virtual
 operator|~
-name|DwarfTableException
+name|ARMException
+argument_list|()
+block|;
+comment|/// EndModule - Emit all exception information that should come after the
+comment|/// content.
+name|virtual
+name|void
+name|EndModule
+argument_list|()
+block|;
+comment|/// BeginFunction - Gather pre-function exception information.  Assumes being
+comment|/// emitted immediately after the function entry point.
+name|virtual
+name|void
+name|BeginFunction
+argument_list|(
+specifier|const
+name|MachineFunction
+operator|*
+name|MF
+argument_list|)
+block|;
+comment|/// EndFunction - Gather and emit post-function exception information.
+name|virtual
+name|void
+name|EndFunction
+argument_list|()
+block|; }
+decl_stmt|;
+name|class
+name|Win64Exception
+range|:
+name|public
+name|DwarfException
+block|{
+comment|/// shouldEmitPersonality - Per-function flag to indicate if personality
+comment|/// info should be emitted.
+name|bool
+name|shouldEmitPersonality
+block|;
+comment|/// shouldEmitLSDA - Per-function flag to indicate if the LSDA
+comment|/// should be emitted.
+name|bool
+name|shouldEmitLSDA
+block|;
+comment|/// shouldEmitMoves - Per-function flag to indicate if frame moves info
+comment|/// should be emitted.
+name|bool
+name|shouldEmitMoves
+block|;
+name|public
+operator|:
+comment|//===--------------------------------------------------------------------===//
+comment|// Main entry points.
+comment|//
+name|Win64Exception
+argument_list|(
+name|AsmPrinter
+operator|*
+name|A
+argument_list|)
+block|;
+name|virtual
+operator|~
+name|Win64Exception
 argument_list|()
 block|;
 comment|/// EndModule - Emit all exception information that should come after the

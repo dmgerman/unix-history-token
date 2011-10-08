@@ -18,6 +18,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -62,7 +68,7 @@ comment|/* usage of this mapping */
 ifdef|#
 directive|ifdef
 name|SMP
-name|cpumask_t
+name|cpuset_t
 name|cpumask
 decl_stmt|;
 comment|/* cpus on which mapping is valid */

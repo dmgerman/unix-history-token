@@ -443,7 +443,7 @@ literal|2
 condition|)
 name|panic
 argument_list|(
-literal|"free: guard2 fail @ %p + %d from %s:%d"
+literal|"free: guard2 fail @ %p + %zu from %s:%d"
 argument_list|,
 name|ptr
 argument_list|,
@@ -527,16 +527,16 @@ name|int
 name|line
 parameter_list|)
 block|{
-name|iaddr_t
+name|uintptr_t
 name|bytes
 init|=
 operator|(
-name|iaddr_t
+name|uintptr_t
 operator|)
 name|n1
 operator|*
 operator|(
-name|iaddr_t
+name|uintptr_t
 operator|)
 name|n2
 decl_stmt|;

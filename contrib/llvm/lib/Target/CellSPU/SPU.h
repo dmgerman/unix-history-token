@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/SPUMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -100,26 +106,8 @@ modifier|&
 name|tm
 parameter_list|)
 function_decl|;
-specifier|extern
-name|Target
-name|TheCellSPUTarget
-decl_stmt|;
 block|}
 end_decl_stmt
-
-begin_comment
-comment|// Defines symbolic names for the SPU instructions.
-end_comment
-
-begin_comment
-comment|//
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"SPUGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

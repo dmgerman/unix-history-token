@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
+file|<string>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<string>
+file|<vector>
 end_include
 
 begin_include
@@ -140,7 +140,7 @@ name|colon
 block|,
 name|semi
 block|,
-comment|// ; :
+comment|// : ;
 name|comma
 block|,
 name|period
@@ -265,6 +265,17 @@ comment|/// by the SourceMgr object.
 name|int
 name|CurBuffer
 decl_stmt|;
+comment|/// Dependencies - This is the list of all included files.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|Dependencies
+expr_stmt|;
 name|public
 label|:
 name|TGLexer
@@ -289,6 +300,24 @@ name|CurCode
 operator|=
 name|LexToken
 argument_list|()
+return|;
+block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+operator|&
+name|getDependencies
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Dependencies
 return|;
 block|}
 name|tgtok
@@ -371,34 +400,6 @@ name|getLoc
 argument_list|()
 specifier|const
 expr_stmt|;
-name|void
-name|PrintError
-argument_list|(
-specifier|const
-name|char
-operator|*
-name|Loc
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Msg
-argument_list|)
-decl|const
-decl_stmt|;
-name|void
-name|PrintError
-argument_list|(
-name|SMLoc
-name|Loc
-argument_list|,
-specifier|const
-name|Twine
-operator|&
-name|Msg
-argument_list|)
-decl|const
-decl_stmt|;
 name|private
 label|:
 comment|/// LexToken - Read the next token and return its code.

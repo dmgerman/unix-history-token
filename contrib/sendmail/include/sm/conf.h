@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2009 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.139 2009/06/16 23:41:32 ca Exp $  */
+comment|/*  * Copyright (c) 1998-2011 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  *  *	$Id: conf.h,v 1.144 2011/05/03 16:24:00 ca Exp $  */
 end_comment
 
 begin_comment
@@ -2313,6 +2313,51 @@ begin_comment
 comment|/* ! __svr4__ */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|SOLARIS
+operator|>=
+literal|21100
+end_if
+
+begin_include
+include|#
+directive|include
+file|<paths.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* SOLARIS>= 21100 */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_PATH_VARRUN
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_PATH_VARRUN
+value|"/var/run/"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _PATH_VARRUN */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2932,7 +2977,7 @@ begin_define
 define|#
 directive|define
 name|_PATH_SENDMAILPID
-value|"/var/run/sendmail.pid"
+value|_PATH_VARRUN "sendmail.pid"
 end_define
 
 begin_ifndef
@@ -3124,6 +3169,28 @@ end_define
 
 begin_comment
 comment|/* moved from librt to libc in S11 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKADDR_LEN_T
+value|socklen_t
+end_define
+
+begin_comment
+comment|/* arg#3 to accept, getsockname */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SOCKOPT_LEN_T
+value|socklen_t
+end_define
+
+begin_comment
+comment|/* arg#5 to getsockopt */
 end_comment
 
 begin_endif
@@ -7162,6 +7229,38 @@ if|#
 directive|if
 name|__FreeBSD_version
 operator|>=
+literal|300000
+end_if
+
+begin_comment
+comment|/* 3.0.0-release and later */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_NANOSLEEP
+value|1
+end_define
+
+begin_comment
+comment|/* has nanosleep(2) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD_version>= 300000 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|>=
 literal|330000
 end_if
 
@@ -7529,6 +7628,34 @@ end_endif
 
 begin_comment
 comment|/* OpenBSD>= 200505 */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|OpenBSD
+operator|>=
+literal|200800
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAVE_NANOSLEEP
+value|1
+end_define
+
+begin_comment
+comment|/* has nanosleep(2) */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* OpenBSD>= 200800 */
 end_comment
 
 begin_endif
@@ -18148,7 +18275,7 @@ literal|255
 end_if
 
 begin_comment
-comment|/*    **  override Linux wierdness: a FQHN can be 255 chars long    **  SUSv3 requires HOST_NAME_MAX ("Maximum length of a host    **  name (not including the terminating null) as returned from the    **  gethostname() function.") to be at least 255.  c.f.:    **  http://www.opengroup.org/onlinepubs/009695399    **  but Linux defines that to 64 too.    */
+comment|/*    **  override Linux weirdness: a FQHN can be 255 chars long    **  SUSv3 requires HOST_NAME_MAX ("Maximum length of a host    **  name (not including the terminating null) as returned from the    **  gethostname() function.") to be at least 255.  c.f.:    **  http://www.opengroup.org/onlinepubs/009695399    **  but Linux defines that to 64 too.    */
 end_comment
 
 begin_undef

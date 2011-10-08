@@ -43,6 +43,10 @@ directive|include
 file|<sys/dirent.h>
 end_include
 
+begin_comment
+comment|/* this header intentionally exports NULL from<string.h> */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -74,24 +78,6 @@ modifier|...
 parameter_list|)
 value|{printf("%s(%d): " fmt "\n", __func__, __LINE__ , ##args); getchar();}
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Avoid unwanted userlandish components */

@@ -153,7 +153,7 @@ name|out
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|,
@@ -164,7 +164,7 @@ name|out_pos
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|,
@@ -173,7 +173,7 @@ name|out_size
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|,
@@ -182,7 +182,7 @@ name|action
 name|lzma_attribute
 argument_list|(
 operator|(
-name|unused
+name|__unused__
 operator|)
 argument_list|)
 argument_list|)

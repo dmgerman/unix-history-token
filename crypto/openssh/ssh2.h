@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh2.h,v 1.13 2010/02/26 20:29:54 djm Exp $ */
+comment|/* $OpenBSD: ssh2.h,v 1.14 2010/08/31 11:54:45 djm Exp $ */
 end_comment
 
 begin_comment
@@ -232,6 +232,24 @@ define|#
 directive|define
 name|SSH2_MSG_KEX_DH_GEX_REQUEST
 value|34
+end_define
+
+begin_comment
+comment|/* ecdh */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_ECDH_INIT
+value|30
+end_define
+
+begin_define
+define|#
+directive|define
+name|SSH2_MSG_KEX_ECDH_REPLY
+value|31
 end_define
 
 begin_comment

@@ -36,12 +36,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<bitstring.h>
 end_include
 
@@ -78,8 +72,41 @@ end_include
 begin_include
 include|#
 directive|include
-file|<activemap.h>
+file|<pjdlog.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"activemap.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PJDLOG_ASSERT
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ASSERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|assert(__VA_ARGS__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -302,7 +329,7 @@ block|{
 name|int
 name|extent
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|offset
 operator|>=
@@ -325,7 +352,7 @@ operator|->
 name|am_extentshift
 operator|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|extent
 operator|>=
@@ -365,7 +392,7 @@ block|{
 name|off_t
 name|offset
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|extent
 operator|>=
@@ -391,7 +418,7 @@ operator|->
 name|am_extentshift
 operator|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|offset
 operator|>=
@@ -462,7 +489,7 @@ operator|+
 literal|1
 operator|)
 return|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|ext
 operator|==
@@ -545,28 +572,28 @@ name|activemap
 modifier|*
 name|amp
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|ampp
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|mediasize
 operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|extentsize
 operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|powerof2
 argument_list|(
@@ -574,14 +601,14 @@ name|extentsize
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|sectorsize
 operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|powerof2
 argument_list|(
@@ -589,7 +616,7 @@ name|sectorsize
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|keepdirty
 operator|>
@@ -955,7 +982,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|bool
 name|keepdirty_add
 parameter_list|(
 name|struct
@@ -1013,7 +1040,11 @@ argument_list|,
 name|kd_next
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+name|false
+operator|)
+return|;
 block|}
 comment|/* 	 * Add new element, but first remove the most unused one if 	 * we have too many. 	 */
 if|if
@@ -1039,7 +1070,7 @@ argument_list|,
 name|skeepdirty
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|kd
 operator|!=
@@ -1063,7 +1094,7 @@ operator|->
 name|am_nkeepdirty
 operator|--
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1122,6 +1153,11 @@ name|kd_next
 argument_list|)
 expr_stmt|;
 block|}
+return|return
+operator|(
+name|true
+operator|)
+return|;
 block|}
 end_function
 
@@ -1219,7 +1255,7 @@ name|kd
 argument_list|)
 expr_stmt|;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1245,7 +1281,7 @@ modifier|*
 name|amp
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1325,7 +1361,7 @@ decl_stmt|;
 name|int
 name|ext
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1334,7 +1370,7 @@ operator|==
 name|ACTIVEMAP_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|length
 operator|>
@@ -1391,7 +1427,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 operator|!
 name|bit_test
@@ -1418,17 +1454,19 @@ operator|->
 name|am_ndirty
 operator|++
 expr_stmt|;
-name|modified
-operator|=
-name|true
-expr_stmt|;
 block|}
+if|if
+condition|(
 name|keepdirty_add
 argument_list|(
 name|amp
 argument_list|,
 name|ext
 argument_list|)
+condition|)
+name|modified
+operator|=
+name|true
 expr_stmt|;
 block|}
 return|return
@@ -1468,7 +1506,7 @@ decl_stmt|;
 name|int
 name|ext
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1477,7 +1515,7 @@ operator|==
 name|ACTIVEMAP_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|length
 operator|>
@@ -1521,7 +1559,7 @@ operator|++
 control|)
 block|{
 comment|/* 		 * If the number of pending writes goes down to 0, we have to 		 * mark the extent as clean also in on-disk bitmap. 		 * By returning true we inform the caller that on-disk bitmap 		 * was modified and has to be flushed to disk. 		 */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1533,7 +1571,7 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|bit_test
 argument_list|(
@@ -1572,6 +1610,17 @@ operator|->
 name|am_ndirty
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|keepdirty_find
+argument_list|(
+name|amp
+argument_list|,
+name|ext
+argument_list|)
+operator|==
+name|NULL
+condition|)
 name|modified
 operator|=
 name|true
@@ -1609,7 +1658,7 @@ decl_stmt|;
 name|int
 name|reqs
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1618,7 +1667,7 @@ operator|==
 name|ACTIVEMAP_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|extent
 operator|>=
@@ -1644,7 +1693,7 @@ argument_list|,
 name|extent
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1665,7 +1714,7 @@ index|]
 operator|-=
 name|reqs
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|bit_test
 argument_list|(
@@ -1731,7 +1780,7 @@ modifier|*
 name|amp
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1765,7 +1814,7 @@ modifier|*
 name|amp
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1812,7 +1861,7 @@ modifier|*
 name|amp
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1846,7 +1895,7 @@ modifier|*
 name|amp
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1891,7 +1940,7 @@ block|{
 name|int
 name|ext
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -1900,7 +1949,7 @@ operator|==
 name|ACTIVEMAP_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>=
@@ -2036,7 +2085,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Function merges the given bitmap with existng one.  */
+comment|/*  * Function merges the given bitmap with existing one.  */
 end_comment
 
 begin_function
@@ -2073,7 +2122,7 @@ decl_stmt|;
 name|int
 name|ext
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -2082,7 +2131,7 @@ operator|==
 name|ACTIVEMAP_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>=
@@ -2241,7 +2290,7 @@ modifier|*
 name|sizep
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -2322,21 +2371,21 @@ name|nextents
 decl_stmt|,
 name|mapsize
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|mediasize
 operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|extentsize
 operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|powerof2
 argument_list|(
@@ -2344,14 +2393,14 @@ name|extentsize
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|sectorsize
 operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|powerof2
 argument_list|(
@@ -2415,7 +2464,7 @@ block|{
 name|int
 name|ext
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -2497,7 +2546,7 @@ decl_stmt|;
 name|int
 name|ext
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -2506,14 +2555,14 @@ operator|==
 name|ACTIVEMAP_MAGIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|lengthp
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|syncextp
 operator|!=
@@ -2764,7 +2813,7 @@ name|left
 operator|=
 name|MAXPHYS
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|left
 operator|>=
@@ -2775,7 +2824,7 @@ operator|<=
 name|MAXPHYS
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|syncoff
 operator|>=
@@ -2788,7 +2837,7 @@ operator|->
 name|am_mediasize
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|syncoff
 operator|+
@@ -2847,7 +2896,7 @@ decl_stmt|;
 name|int
 name|ext
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|amp
 operator|->
@@ -2905,7 +2954,7 @@ argument_list|)
 condition|)
 block|{
 comment|/* Already marked for synchronization. */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|bit_test
 argument_list|(

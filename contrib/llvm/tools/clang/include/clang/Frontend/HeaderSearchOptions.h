@@ -63,7 +63,9 @@ name|namespace
 name|frontend
 block|{
 comment|/// IncludeDirGroup - Identifiers the group a include entry belongs to, which
-comment|/// represents its relative positive in the search list.
+comment|/// represents its relative positive in the search list.  A #include of a ""
+comment|/// path starts at the -iquote group, then searches the Angled group, then
+comment|/// searches the system group, etc.
 enum|enum
 name|IncludeDirGroup
 block|{
@@ -71,10 +73,10 @@ name|Quoted
 init|=
 literal|0
 block|,
-comment|///< `#include ""` paths. Thing `gcc -iquote`.
+comment|///< '#include ""' paths, added by'gcc -iquote'.
 name|Angled
 block|,
-comment|///< Paths for both `#include ""` and `#include<>`. (`-I`)
+comment|///< Paths for '#include<>' added by '-I'.
 name|System
 block|,
 comment|///< Like Angled, but marks system directories.
@@ -116,11 +118,11 @@ name|IsFramework
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsSysRootRelative - This is true if an absolute path should be treated
-comment|/// relative to the sysroot, or false if it should always be the absolute
+comment|/// IgnoreSysRoot - This is false if an absolute path should be treated
+comment|/// relative to the sysroot, or true if it should always be the absolute
 comment|/// path.
 name|unsigned
-name|IsSysRootRelative
+name|IgnoreSysRoot
 range|:
 literal|1
 decl_stmt|;
@@ -134,7 +136,7 @@ argument|bool isUserSupplied
 argument_list|,
 argument|bool isFramework
 argument_list|,
-argument|bool isSysRootRelative
+argument|bool ignoreSysRoot
 argument_list|)
 block|:
 name|Path
@@ -157,9 +159,9 @@ argument_list|(
 name|isFramework
 argument_list|)
 operator|,
-name|IsSysRootRelative
+name|IgnoreSysRoot
 argument_list|(
-argument|isSysRootRelative
+argument|ignoreSysRoot
 argument_list|)
 block|{}
 block|}
@@ -235,6 +237,12 @@ name|UseStandardCXXIncludes
 range|:
 literal|1
 decl_stmt|;
+comment|/// Use libc++ instead of the default libstdc++.
+name|unsigned
+name|UseLibcxx
+range|:
+literal|1
+decl_stmt|;
 comment|/// Whether header search information should be output as for -v.
 name|unsigned
 name|Verbose
@@ -269,6 +277,11 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
+name|UseLibcxx
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Verbose
 argument_list|(
 argument|false
@@ -286,7 +299,7 @@ argument|bool IsUserSupplied
 argument_list|,
 argument|bool IsFramework
 argument_list|,
-argument|bool IsSysRootRelative
+argument|bool IgnoreSysRoot
 argument_list|)
 block|{
 name|UserEntries
@@ -303,7 +316,7 @@ name|IsUserSupplied
 argument_list|,
 name|IsFramework
 argument_list|,
-name|IsSysRootRelative
+name|IgnoreSysRoot
 argument_list|)
 argument_list|)
 block|;   }

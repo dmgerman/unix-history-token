@@ -102,17 +102,6 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__LP64__
-end_ifndef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|__sparc64__
 end_ifndef
 

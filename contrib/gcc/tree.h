@@ -18,6 +18,35 @@ end_define
 begin_include
 include|#
 directive|include
+file|<sys/param.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__PAST_END
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__PAST_END
+parameter_list|(
+name|array
+parameter_list|,
+name|offset
+parameter_list|)
+value|(((typeof(*(array)) *)(array))[offset])
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
 file|"hashtab.h"
 end_include
 
@@ -2015,7 +2044,7 @@ name|T
 parameter_list|,
 name|I
 parameter_list|)
-value|((T)->vec.a[I])
+value|__PAST_END((T)->vec.a, I)
 end_define
 
 begin_define
@@ -2027,7 +2056,7 @@ name|T
 parameter_list|,
 name|I
 parameter_list|)
-value|((T)->exp.operands[I])
+value|__PAST_END((T)->exp.operands, I)
 end_define
 
 begin_define
@@ -2041,7 +2070,7 @@ name|CODE
 parameter_list|,
 name|I
 parameter_list|)
-value|((T)->exp.operands[I])
+value|__PAST_END((T)->exp.operands, I)
 end_define
 
 begin_define
@@ -2079,7 +2108,7 @@ name|T
 parameter_list|,
 name|i
 parameter_list|)
-value|((T)->omp_clause.ops[i])
+value|__PAST_END((T)->omp_clause.ops, i)
 end_define
 
 begin_define
@@ -14448,6 +14477,21 @@ name|int
 modifier|*
 parameter_list|,
 name|bool
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Given an expression EXP that may be a COMPONENT_REF or an ARRAY_REF,    look for whether EXP or any nested component-refs within EXP is marked    as PACKED.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|bool
+name|contains_packed_reference
+parameter_list|(
+name|tree
+name|exp
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -136,7 +136,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {										\ 		device_printf(sc->bxe_dev, fmt, ##args);\ 	}while(0)
+value|do {								\ 		device_printf(sc->dev, fmt, ##args);			\ 	}while(0)
 end_define
 
 begin_ifdef
@@ -453,7 +453,7 @@ parameter_list|,
 name|len32
 parameter_list|)
 define|\
-value|do {												\ 		bxe_read_dmae(sc, offset, len32);				\ 		memcpy(val, BXE_SP(sc, wb_data[0]), len32 * 4); \ 	} while (0)
+value|do {								\ 		bxe_read_dmae(sc, offset, len32);			\ 		memcpy(val, BXE_SP(sc, wb_data[0]), len32 * 4); 	\ 	} while (0)
 end_define
 
 begin_define
@@ -470,7 +470,7 @@ parameter_list|,
 name|len32
 parameter_list|)
 define|\
-value|do { 												\ 		memcpy(BXE_SP(sc, wb_data[0]), val, len32 * 4); \ 		bxe_write_dmae(sc, BXE_SP_MAPPING(sc, wb_data), \ 			offset, len32);								\ 	} while (0)
+value|do { 								\ 		memcpy(BXE_SP(sc, wb_data[0]), val, len32 * 4); 	\ 		bxe_write_dmae(sc, BXE_SP_MAPPING(sc, wb_data), 	\ 			offset, len32);					\ 	} while (0)
 end_define
 
 begin_define
@@ -482,7 +482,7 @@ name|sc
 parameter_list|,
 name|field
 parameter_list|)
-value|(sc->common.shmem_base + \ 	offsetof(struct shmem_region, field))
+value|(sc->common.shmem_base + 		\ 	offsetof(struct shmem_region, field))
 end_define
 
 begin_define
@@ -535,7 +535,7 @@ name|sc
 parameter_list|,
 name|field
 parameter_list|)
-value|(sc->common.shmem2_base + \ 									 offsetof(struct shmem2_region, field))
+value|(sc->common.shmem2_base + 	\ 	offsetof(struct shmem2_region, field))
 end_define
 
 begin_define

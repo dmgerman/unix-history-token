@@ -2188,9 +2188,9 @@ comment|/* Number of tagged slots */
 name|int
 name|numhslots
 decl_stmt|;
-comment|/* Number of holden slots */
+comment|/* Number of held slots */
 name|int
-name|readlog
+name|recoverycmd
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int

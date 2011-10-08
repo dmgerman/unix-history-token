@@ -192,6 +192,14 @@ name|MCSection
 modifier|*
 name|LSDASection
 decl_stmt|;
+comment|/// CompactUnwindSection - If exception handling is supported by the target
+comment|/// and the target can support a compact representation of the CIE and FDE,
+comment|/// this is the section to emit them into.
+specifier|const
+name|MCSection
+modifier|*
+name|CompactUnwindSection
+decl_stmt|;
 comment|// Dwarf sections for debug info.  If a target supports debug info, these must
 comment|// be set.
 specifier|const
@@ -272,11 +280,6 @@ comment|/// weak_definition of constant 0 for an omitted EH frame.
 name|bool
 name|SupportsWeakOmittedEHFrame
 decl_stmt|;
-comment|/// IsFunctionEHSymbolGlobal - This flag is set to true if the ".eh" symbol
-comment|/// for a function should be marked .globl.
-name|bool
-name|IsFunctionEHSymbolGlobal
-decl_stmt|;
 comment|/// IsFunctionEHFrameSymbolPrivate - This flag is set to true if the
 comment|/// "EH_frame" symbol for EH information should be an assembler temporary (aka
 comment|/// private linkage, aka an L or .L label) or false if it should be a normal
@@ -324,15 +327,6 @@ operator|=
 operator|&
 name|ctx
 expr_stmt|;
-block|}
-name|bool
-name|isFunctionEHSymbolGlobal
-argument_list|()
-specifier|const
-block|{
-return|return
-name|IsFunctionEHSymbolGlobal
-return|;
 block|}
 name|bool
 name|isFunctionEHFrameSymbolPrivate
@@ -427,6 +421,17 @@ return|return
 name|LSDASection
 return|;
 block|}
+specifier|const
+name|MCSection
+operator|*
+name|getCompactUnwindSection
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompactUnwindSection
+return|;
+block|}
 name|virtual
 specifier|const
 name|MCSection
@@ -437,6 +442,26 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
+name|virtual
+name|void
+name|emitPersonalityValue
+argument_list|(
+name|MCStreamer
+operator|&
+name|Streamer
+argument_list|,
+specifier|const
+name|TargetMachine
+operator|&
+name|TM
+argument_list|,
+specifier|const
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|MCSection
 operator|*
@@ -580,6 +605,32 @@ return|return
 name|TLSExtraDataSection
 return|;
 block|}
+name|virtual
+specifier|const
+name|MCSection
+modifier|*
+name|getWin64EHFuncTableSection
+argument_list|(
+name|StringRef
+name|suffix
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+name|virtual
+specifier|const
+name|MCSection
+modifier|*
+name|getWin64EHTableSection
+argument_list|(
+name|StringRef
+name|suffix
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
 comment|/// shouldEmitUsedDirectiveFor - This hook allows targets to selectively
 comment|/// decide not to emit the UsedDirective for some symbols in llvm.used.
 comment|/// FIXME: REMOVE this (rdar://7071300)
@@ -789,6 +840,27 @@ name|Streamer
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// getCFIPersonalitySymbol - The symbol that gets passed to .cfi_personality.
+name|virtual
+name|MCSymbol
+modifier|*
+name|getCFIPersonalitySymbol
+argument_list|(
+specifier|const
+name|GlobalValue
+operator|*
+name|GV
+argument_list|,
+name|Mangler
+operator|*
+name|Mang
+argument_list|,
+name|MachineModuleInfo
+operator|*
+name|MMI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|///
 specifier|const
 name|MCExpr
@@ -799,14 +871,6 @@ specifier|const
 name|MCSymbol
 operator|*
 name|Sym
-argument_list|,
-name|Mangler
-operator|*
-name|Mang
-argument_list|,
-name|MachineModuleInfo
-operator|*
-name|MMI
 argument_list|,
 name|unsigned
 name|Encoding
@@ -832,9 +896,12 @@ expr_stmt|;
 name|virtual
 name|unsigned
 name|getFDEEncoding
-argument_list|()
-specifier|const
-expr_stmt|;
+argument_list|(
+name|bool
+name|CFI
+argument_list|)
+decl|const
+decl_stmt|;
 name|virtual
 name|unsigned
 name|getTTypeEncoding

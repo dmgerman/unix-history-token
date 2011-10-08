@@ -1216,11 +1216,15 @@ decl_stmt|;
 specifier|static
 name|u_int
 name|blen
+init|=
+name|MAXPHYS
 decl_stmt|;
 specifier|static
 name|char
 modifier|*
 name|bp
+init|=
+name|NULL
 decl_stmt|;
 name|mode_t
 name|oldmode
@@ -1252,7 +1256,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"fastcopy: open() failed (from): %s"
 argument_list|,
 name|from
 argument_list|)
@@ -1265,26 +1269,10 @@ return|;
 block|}
 if|if
 condition|(
-name|blen
-operator|<
-name|sbp
-operator|->
-name|st_blksize
-condition|)
-block|{
-if|if
-condition|(
 name|bp
-operator|!=
+operator|==
 name|NULL
-condition|)
-name|free
-argument_list|(
-name|bp
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 operator|(
 name|bp
 operator|=
@@ -1293,22 +1281,18 @@ argument_list|(
 operator|(
 name|size_t
 operator|)
-name|sbp
-operator|->
-name|st_blksize
+name|blen
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
 block|{
-name|blen
-operator|=
-literal|0
-expr_stmt|;
 name|warnx
 argument_list|(
-literal|"malloc failed"
+literal|"malloc(%u) failed"
+argument_list|,
+name|blen
 argument_list|)
 expr_stmt|;
 return|return
@@ -1316,13 +1300,6 @@ operator|(
 literal|1
 operator|)
 return|;
-block|}
-name|blen
-operator|=
-name|sbp
-operator|->
-name|st_blksize
-expr_stmt|;
 block|}
 while|while
 condition|(
@@ -1364,7 +1341,7 @@ condition|)
 continue|continue;
 name|warn
 argument_list|(
-literal|"%s"
+literal|"fastcopy: open() failed (to): %s"
 argument_list|,
 name|to
 argument_list|)
@@ -1422,7 +1399,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"fastcopy: write() failed: %s"
 argument_list|,
 name|to
 argument_list|)
@@ -1440,7 +1417,7 @@ condition|)
 block|{
 name|warn
 argument_list|(
-literal|"%s"
+literal|"fastcopy: read() failed: %s"
 argument_list|,
 name|from
 argument_list|)

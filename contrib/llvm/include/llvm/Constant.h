@@ -149,48 +149,22 @@ name|void
 name|destroyConstantImpl
 argument_list|()
 block|;
-name|void
-name|setOperand
-argument_list|(
-argument|unsigned i
-argument_list|,
-argument|Value *V
-argument_list|)
-block|{
-name|User
-operator|::
-name|setOperand
-argument_list|(
-name|i
-argument_list|,
-name|V
-argument_list|)
-block|;   }
 name|public
 operator|:
 comment|/// isNullValue - Return true if this is the value that would be returned by
 comment|/// getNullValue.
-name|virtual
 name|bool
 name|isNullValue
 argument_list|()
 specifier|const
-operator|=
-literal|0
 block|;
 comment|/// isNegativeZeroValue - Return true if the value is what would be returned
 comment|/// by getZeroValueForNegation.
-name|virtual
 name|bool
 name|isNegativeZeroValue
 argument_list|()
 specifier|const
-block|{
-return|return
-name|isNullValue
-argument_list|()
-return|;
-block|}
+block|;
 comment|/// canTrap - Return true if evaluation of this constant could trap.  This is
 comment|/// true for things like constant expressions that could divide by zero.
 name|bool
@@ -239,57 +213,6 @@ name|getRelocationInfo
 argument_list|()
 specifier|const
 block|;
-comment|// Specialize get/setOperand for Users as their operands are always
-comment|// constants or BasicBlocks as well.
-name|User
-operator|*
-name|getOperand
-argument_list|(
-argument|unsigned i
-argument_list|)
-block|{
-return|return
-name|static_cast
-operator|<
-name|User
-operator|*
-operator|>
-operator|(
-name|User
-operator|::
-name|getOperand
-argument_list|(
-name|i
-argument_list|)
-operator|)
-return|;
-block|}
-specifier|const
-name|User
-operator|*
-name|getOperand
-argument_list|(
-argument|unsigned i
-argument_list|)
-specifier|const
-block|{
-return|return
-name|static_cast
-operator|<
-specifier|const
-name|User
-operator|*
-operator|>
-operator|(
-name|User
-operator|::
-name|getOperand
-argument_list|(
-name|i
-argument_list|)
-operator|)
-return|;
-block|}
 comment|/// getVectorElements - This method, which is only valid on constant of vector
 comment|/// type, returns the elements of the vector in the specified smallvector.
 comment|/// This handles breaking down a vector undef into undef elements, etc.  For

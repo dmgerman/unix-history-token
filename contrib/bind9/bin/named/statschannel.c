@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2008-2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2008-2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: statschannel.c,v 1.14.64.11 2010/02/04 23:47:46 tbox Exp $ */
+comment|/* $Id: statschannel.c,v 1.26.150.2 2011-03-12 04:59:14 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -63,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<isc/task.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/cache.h>
 end_include
 
 begin_include
@@ -3160,8 +3166,6 @@ block|{
 name|FILE
 modifier|*
 name|fp
-init|=
-name|arg
 decl_stmt|;
 name|isc_buffer_t
 name|b
@@ -4143,7 +4147,7 @@ argument_list|,
 argument|ISC_XMLCHAR
 literal|"name"
 argument_list|,
-argument|ISC_XMLCHAR 							 view->name
+argument|ISC_XMLCHAR 					 dns_cache_getname(view->cache)
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -7065,13 +7069,31 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"[View: %s]\n"
+literal|"[View: %s (Cache: %s)]\n"
 argument_list|,
 name|view
 operator|->
 name|name
+argument_list|,
+name|dns_cache_getname
+argument_list|(
+name|view
+operator|->
+name|cache
+argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|dns_view_iscacheshared
+argument_list|(
+name|view
+argument_list|)
+condition|)
+block|{
+comment|/* 			 * Avoid dumping redundant statistics when the cache is 			 * shared. 			 */
+continue|continue;
+block|}
 name|dns_rdatasetstats_dump
 argument_list|(
 name|cachestats

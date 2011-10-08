@@ -825,7 +825,7 @@ name|i
 decl_stmt|;
 name|printf
 argument_list|(
-literal|"| antCtrlCommon: 0x%.4x |\n"
+literal|"| antCtrlCommon: 0x%.8x |\n"
 argument_list|,
 name|mh
 operator|->
@@ -861,7 +861,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| antCtrlChain:        0:0x%.4x 1:0x%.4x 2:0x%.4x |\n"
+literal|"| antCtrlChain:        0:0x%.8x 1:0x%.8x 2:0x%.8x |\n"
 argument_list|,
 name|mh
 operator|->
@@ -1918,7 +1918,7 @@ name|eep
 operator|->
 name|ee_base
 operator|.
-name|calPierData2G
+name|calPierData5G
 index|[
 name|n
 index|]
@@ -1936,7 +1936,7 @@ name|eep
 operator|->
 name|ee_base
 operator|.
-name|calPierData2G
+name|calPierData5G
 index|[
 name|n
 index|]

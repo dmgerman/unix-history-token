@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdatalist.c,v 1.36.50.2 2010-02-25 10:56:41 tbox Exp $ */
+comment|/* $Id: rdatalist.c,v 1.40.40.2 2011-02-28 01:20:02 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -113,6 +113,13 @@ modifier|*
 name|rdatalist
 parameter_list|)
 block|{
+name|REQUIRE
+argument_list|(
+name|rdatalist
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Initialize rdatalist. 	 */
 name|rdatalist
 operator|->
@@ -397,6 +404,13 @@ name|dns_rdata_t
 modifier|*
 name|rdata
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|rdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|rdata
 operator|=
 name|rdataset
@@ -463,6 +477,13 @@ name|dns_rdata_t
 modifier|*
 name|list_rdata
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|rdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|list_rdata
 operator|=
 name|rdataset
@@ -499,6 +520,20 @@ modifier|*
 name|target
 parameter_list|)
 block|{
+name|REQUIRE
+argument_list|(
+name|source
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
+name|target
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 operator|*
 name|target
 operator|=
@@ -537,6 +572,13 @@ name|unsigned
 name|int
 name|count
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|rdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|rdatalist
 operator|=
 name|rdataset
@@ -614,6 +656,13 @@ decl_stmt|;
 name|dns_ttl_t
 name|ttl
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|rdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|rdset
@@ -856,6 +905,13 @@ name|private6
 decl_stmt|;
 name|REQUIRE
 argument_list|(
+name|rdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+name|REQUIRE
+argument_list|(
 operator|(
 name|rdataset
 operator|->
@@ -1058,6 +1114,13 @@ decl_stmt|;
 name|dns_ttl_t
 name|ttl
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|rdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|rdset
@@ -1298,6 +1361,13 @@ name|rdataset
 operator|->
 name|private7
 decl_stmt|;
+name|REQUIRE
+argument_list|(
+name|rdataset
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|REQUIRE
 argument_list|(
 operator|(

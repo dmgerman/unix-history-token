@@ -116,6 +116,26 @@ init|=
 literal|0x00080000
 block|,
 comment|/* interrupt handling */
+name|HAL_DEBUG_DIVERSITY
+init|=
+literal|0x00100000
+block|,
+comment|/* diversity debugging */
+name|HAL_DEBUG_DFS
+init|=
+literal|0x00200000
+block|,
+comment|/* DFS debugging */
+name|HAL_DEBUG_HANG
+init|=
+literal|0x00400000
+block|,
+comment|/* BB/MAC hang debugging */
+name|HAL_DEBUG_UNMASKABLE
+init|=
+literal|0xf0000000
+block|,
+comment|/* always printed */
 name|HAL_DEBUG_ANY
 init|=
 literal|0xffffffff

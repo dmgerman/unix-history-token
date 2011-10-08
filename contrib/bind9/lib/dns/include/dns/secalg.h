@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: secalg.h,v 1.19 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: secalg.h,v 1.21 2009-10-12 23:48:02 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -72,6 +72,35 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Put a textual representation of the DNSSEC security algorithm 'secalg'  * into 'target'.  *  * Requires:  *\li	'secalg' is a valid secalg.  *  *\li	'target' is a valid text buffer.  *  * Ensures,  *	if the result is success:  *\li		The used space in 'target' is updated.  *  * Returns:  *\li	ISC_R_SUCCESS			on success  *\li	ISC_R_NOSPACE			target buffer is too small  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_SECALG_FORMATSIZE
+value|20
+end_define
+
+begin_function_decl
+name|void
+name|dns_secalg_format
+parameter_list|(
+name|dns_secalg_t
+name|alg
+parameter_list|,
+name|char
+modifier|*
+name|cp
+parameter_list|,
+name|unsigned
+name|int
+name|size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Wrapper for dns_secalg_totext(), writing text into 'cp'  */
 end_comment
 
 begin_macro

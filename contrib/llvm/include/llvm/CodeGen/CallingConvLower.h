@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
@@ -589,12 +595,28 @@ operator|&
 name|State
 argument_list|)
 typedef|;
+comment|/// ParmContext - This enum tracks whether calling convention lowering is in
+comment|/// the context of prologue or call generation. Not all backends make use of
+comment|/// this information.
+typedef|typedef
+enum|enum
+block|{
+name|Unknown
+block|,
+name|Prologue
+block|,
+name|Call
+block|}
+name|ParmContext
+typedef|;
 comment|/// CCState - This class holds information needed while lowering arguments and
 comment|/// return values.  It captures which registers are already assigned and which
 comment|/// stack slots are used.  It provides accessors to allocate these values.
 name|class
 name|CCState
 block|{
+name|private
+label|:
 name|CallingConv
 operator|::
 name|ID
@@ -602,6 +624,10 @@ name|CallingConv
 expr_stmt|;
 name|bool
 name|IsVarArg
+decl_stmt|;
+name|MachineFunction
+modifier|&
+name|MF
 decl_stmt|;
 specifier|const
 name|TargetMachine
@@ -637,6 +663,17 @@ literal|16
 operator|>
 name|UsedRegs
 expr_stmt|;
+name|unsigned
+name|FirstByValReg
+decl_stmt|;
+name|bool
+name|FirstByValRegValid
+decl_stmt|;
+name|protected
+label|:
+name|ParmContext
+name|CallOrPrologue
+decl_stmt|;
 name|public
 label|:
 name|CCState
@@ -644,6 +681,8 @@ argument_list|(
 argument|CallingConv::ID CC
 argument_list|,
 argument|bool isVarArg
+argument_list|,
+argument|MachineFunction&MF
 argument_list|,
 argument|const TargetMachine&TM
 argument_list|,
@@ -691,6 +730,16 @@ specifier|const
 block|{
 return|return
 name|TM
+return|;
+block|}
+name|MachineFunction
+operator|&
+name|getMachineFunction
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MF
 return|;
 block|}
 name|CallingConv
@@ -1238,6 +1287,65 @@ name|ArgFlagsTy
 name|ArgFlags
 argument_list|)
 decl_stmt|;
+comment|// First GPR that carries part of a byval aggregate that's split
+comment|// between registers and memory.
+name|unsigned
+name|getFirstByValReg
+parameter_list|()
+block|{
+return|return
+name|FirstByValRegValid
+condition|?
+name|FirstByValReg
+else|:
+literal|0
+return|;
+block|}
+name|void
+name|setFirstByValReg
+parameter_list|(
+name|unsigned
+name|r
+parameter_list|)
+block|{
+name|FirstByValReg
+operator|=
+name|r
+expr_stmt|;
+name|FirstByValRegValid
+operator|=
+name|true
+expr_stmt|;
+block|}
+name|void
+name|clearFirstByValReg
+parameter_list|()
+block|{
+name|FirstByValReg
+operator|=
+literal|0
+expr_stmt|;
+name|FirstByValRegValid
+operator|=
+name|false
+expr_stmt|;
+block|}
+name|bool
+name|isFirstByValRegValid
+parameter_list|()
+block|{
+return|return
+name|FirstByValRegValid
+return|;
+block|}
+name|ParmContext
+name|getCallOrPrologue
+parameter_list|()
+block|{
+return|return
+name|CallOrPrologue
+return|;
+block|}
 name|private
 label|:
 comment|/// MarkAllocated - Mark a register and all of its aliases as allocated.

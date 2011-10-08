@@ -115,9 +115,6 @@ name|class
 name|AttrListPtr
 decl_stmt|;
 name|class
-name|TypeSymbolTable
-decl_stmt|;
-name|class
 name|ValueSymbolTable
 decl_stmt|;
 name|class
@@ -128,23 +125,15 @@ name|ValueEnumerator
 block|{
 name|public
 label|:
-comment|// For each type, we remember its Type* and occurrence frequency.
 typedef|typedef
 name|std
 operator|::
 name|vector
 operator|<
-name|std
-operator|::
-name|pair
-operator|<
 specifier|const
 name|Type
 operator|*
-operator|,
-name|unsigned
 operator|>
-expr|>
 name|TypeList
 expr_stmt|;
 comment|// For each value, we remember its Value* and occurrence frequency.
@@ -670,15 +659,6 @@ specifier|const
 name|AttrListPtr
 modifier|&
 name|PAL
-parameter_list|)
-function_decl|;
-name|void
-name|EnumerateTypeSymbolTable
-parameter_list|(
-specifier|const
-name|TypeSymbolTable
-modifier|&
-name|ST
 parameter_list|)
 function_decl|;
 name|void

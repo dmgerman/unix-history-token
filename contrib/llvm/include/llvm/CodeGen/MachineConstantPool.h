@@ -264,7 +264,7 @@ block|}
 name|Val
 union|;
 comment|/// The required alignment for this entry. The top bit is set when Val is
-comment|/// a MachineConstantPoolValue.
+comment|/// a target specific MachineConstantPoolValue.
 name|unsigned
 name|Alignment
 decl_stmt|;
@@ -321,6 +321,9 @@ literal|1
 operator|)
 expr_stmt|;
 block|}
+comment|/// isMachineConstantPoolEntry - Return true if the MachineConstantPoolEntry
+comment|/// is indeed a target specific constantpool entry, not a wrapper over a
+comment|/// Constant.
 name|bool
 name|isMachineConstantPoolEntry
 argument_list|()

@@ -91,6 +91,9 @@ struct_decl|struct
 name|fltSemantics
 struct_decl|;
 name|class
+name|APSInt
+decl_stmt|;
+name|class
 name|StringRef
 decl_stmt|;
 comment|/* When bits of a floating point number are truncated, this enum is      used to indicate what fraction of the LSB those bits represented.      It essentially combines the roles of guard and sticky bits.  */
@@ -744,6 +747,19 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|opStatus
+name|convertToInteger
+argument_list|(
+name|APSInt
+operator|&
+argument_list|,
+name|roundingMode
+argument_list|,
+name|bool
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
+name|opStatus
 name|convertFromAPInt
 parameter_list|(
 specifier|const
@@ -1007,6 +1023,17 @@ name|unsigned
 name|FormatMaxPadding
 operator|=
 literal|3
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getExactInverse - If this value has an exact multiplicative inverse,
+comment|/// store it in inv and return true.
+name|bool
+name|getExactInverse
+argument_list|(
+name|APFloat
+operator|*
+name|inv
 argument_list|)
 decl|const
 decl_stmt|;

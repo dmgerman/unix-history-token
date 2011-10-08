@@ -1225,6 +1225,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIR_BIOS_1
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_BRIDGECTL_1
 value|0x3e
 end_define
@@ -2145,6 +2152,13 @@ define|#
 directive|define
 name|PCIP_SERIALBUS_USB_EHCI
 value|0x20
+end_define
+
+begin_define
+define|#
+directive|define
+name|PCIP_SERIALBUS_USB_XHCI
+value|0x30
 end_define
 
 begin_define

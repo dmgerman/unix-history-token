@@ -144,12 +144,23 @@ name|KLD_MODULE
 argument_list|)
 end_if
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAXCPU
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|MAXCPU
-value|4
+value|8
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#

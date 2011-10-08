@@ -327,6 +327,14 @@ decl_stmt|;
 name|uint32_t
 name|rs_evm2
 decl_stmt|;
+name|uint32_t
+name|rs_evm3
+decl_stmt|;
+comment|/* needed for ar9300 and later */
+name|uint32_t
+name|rs_evm4
+decl_stmt|;
+comment|/* needed for ar9300 and later */
 endif|#
 directive|endif
 comment|/* AH_SUPPORT_AR5416 */
@@ -528,7 +536,7 @@ init|=
 literal|7
 block|,
 comment|/* Transmit override receive */
-comment|/* NB: these are specific to the 5212 */
+comment|/* NB: these are specific to the 5212 and later */
 name|HAL_PHYERR_OFDM_TIMING
 init|=
 literal|17
@@ -564,6 +572,11 @@ init|=
 literal|23
 block|,
 comment|/* */
+name|HAL_PHYERR_FALSE_RADAR_EXT
+init|=
+literal|24
+block|,
+comment|/* */
 name|HAL_PHYERR_CCK_TIMING
 init|=
 literal|25
@@ -587,6 +600,32 @@ comment|/* */
 name|HAL_PHYERR_CCK_RESTART
 init|=
 literal|31
+block|,
+comment|/* */
+name|HAL_PHYERR_CCK_LENGTH_ILLEGAL
+init|=
+literal|32
+block|,
+comment|/* */
+name|HAL_PHYERR_CCK_POWER_DROP
+init|=
+literal|33
+block|,
+comment|/* */
+comment|/* AR5416 and later */
+name|HAL_PHYERR_HT_CRC_ERROR
+init|=
+literal|34
+block|,
+comment|/* */
+name|HAL_PHYERR_HT_LENGTH_ILLEGAL
+init|=
+literal|35
+block|,
+comment|/* */
+name|HAL_PHYERR_HT_RATE_ILLEGAL
+init|=
+literal|36
 block|,
 comment|/* */
 block|}

@@ -104,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -705,7 +711,7 @@ argument_list|()
 expr_stmt|;
 name|G_GATE_DEBUG
 argument_list|(
-literal|0
+literal|1
 argument_list|,
 literal|"Device %s destroyed."
 argument_list|,
@@ -935,6 +941,9 @@ case|:
 case|case
 name|BIO_WRITE
 case|:
+case|case
+name|BIO_FLUSH
+case|:
 comment|/* XXX: Hack to allow read-only mounts. */
 if|if
 condition|(
@@ -991,6 +1000,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sc
+operator|->
+name|sc_queue_size
+operator|>
+literal|0
+operator|&&
 name|sc
 operator|->
 name|sc_queue_count
@@ -2330,9 +2345,7 @@ index|[
 name|unit
 index|]
 operator|->
-name|sc_provider
-operator|->
-name|name
+name|sc_name
 argument_list|)
 operator|!=
 literal|0
@@ -2365,6 +2378,12 @@ name|EEXIST
 operator|)
 return|;
 block|}
+name|sc
+operator|->
+name|sc_name
+operator|=
+name|name
+expr_stmt|;
 name|g_gate_units
 index|[
 name|sc
@@ -2472,6 +2491,39 @@ argument_list|)
 expr_stmt|;
 name|g_topology_unlock
 argument_list|()
+expr_stmt|;
+name|mtx_lock
+argument_list|(
+operator|&
+name|g_gate_units_lock
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_name
+operator|=
+name|sc
+operator|->
+name|sc_provider
+operator|->
+name|name
+expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|g_gate_units_lock
+argument_list|)
+expr_stmt|;
+name|G_GATE_DEBUG
+argument_list|(
+literal|1
+argument_list|,
+literal|"Device %s created."
+argument_list|,
+name|gp
+operator|->
+name|name
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -3181,6 +3233,9 @@ case|:
 case|case
 name|BIO_DELETE
 case|:
+case|case
+name|BIO_FLUSH
+case|:
 break|break;
 case|case
 name|BIO_WRITE
@@ -3518,6 +3573,9 @@ name|BIO_DELETE
 case|:
 case|case
 name|BIO_WRITE
+case|:
+case|case
+name|BIO_FLUSH
 case|:
 break|break;
 block|}

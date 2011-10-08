@@ -1103,29 +1103,8 @@ name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* Level 0 really does result in larger data. */
-name|failure
-argument_list|(
-literal|"Compression-level=0 wrote %d bytes; default wrote %d bytes"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|used2
-argument_list|,
-operator|(
-name|int
-operator|)
-name|used1
-argument_list|)
-expr_stmt|;
-name|assert
-argument_list|(
-name|used2
-operator|>
-name|used1
-argument_list|)
-expr_stmt|;
+comment|/* I would like to assert that compression-level=0 results in 	 * larger data than the default compression, but that's not true 	 * for all versions of liblzma. */
+comment|/* 	failure("Compression-level=0 wrote %d bytes; default wrote %d bytes", 	    (int)used2, (int)used1); 	assert(used2> used1); 	*/
 name|assert
 argument_list|(
 operator|(

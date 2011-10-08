@@ -1602,6 +1602,11 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|vhold
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|object
@@ -1616,6 +1621,11 @@ operator||
 name|LK_RETRY
 argument_list|)
 expr_stmt|;
+name|vdrop
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -1626,6 +1636,30 @@ operator|->
 name|ref_count
 operator|--
 expr_stmt|;
+if|if
+condition|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_DEAD
+condition|)
+block|{
+name|VM_OBJECT_UNLOCK
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+name|VOP_UNLOCK
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 if|if
 condition|(
 name|object
@@ -1651,6 +1685,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
@@ -3030,6 +3065,17 @@ condition|)
 goto|goto
 name|rescan
 goto|;
+comment|/* 		 * If the VOP_PUTPAGES() did a truncated write, so 		 * that even the first page of the run is not fully 		 * written, vm_pageout_flush() returns 0 as the run 		 * length.  Since the condition that caused truncated 		 * write may be permanent, e.g. exhausted free space, 		 * accepting n == 0 would cause an infinite loop. 		 * 		 * Forwarding the iterator leaves the unwritten page 		 * behind, but there is not much we can do there if 		 * filesystem refuses to write it. 		 */
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+condition|)
+name|n
+operator|=
+literal|1
+expr_stmt|;
 name|np
 operator|=
 name|vm_page_find_least
@@ -3312,7 +3358,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Note that there is absolutely no sense in writing out  * anonymous objects, so we track down the vnode object  * to write out.  * We invalidate (remove) all pages from the address space  * for semantic correctness.  *  * Note: certain anonymous maps, such as MAP_NOSYNC maps,  * may start out with a NULL object.  */
+comment|/*  * Note that there is absolutely no sense in writing out  * anonymous objects, so we track down the vnode object  * to write out.  * We invalidate (remove) all pages from the address space  * for semantic correctness.  *  * If the backing object is a device object with unmanaged pages, then any  * mappings to the specified range of pages must be removed before this  * function is called.  *  * Note: certain anonymous maps, such as MAP_NOSYNC maps,  * may start out with a NULL object.  */
 end_comment
 
 begin_function
@@ -3571,20 +3617,32 @@ operator|&&
 name|invalidate
 condition|)
 block|{
-name|boolean_t
-name|purge
-decl_stmt|;
-name|purge
-operator|=
-name|old_msync
-operator|||
-operator|(
+if|if
+condition|(
 name|object
 operator|->
 name|type
 operator|==
 name|OBJT_DEVICE
-operator|)
+condition|)
+comment|/* 			 * The option OBJPR_NOTMAPPED must be passed here 			 * because vm_object_page_remove() cannot remove 			 * unmanaged mappings. 			 */
+name|flags
+operator|=
+name|OBJPR_NOTMAPPED
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|old_msync
+condition|)
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+else|else
+name|flags
+operator|=
+name|OBJPR_CLEANONLY
 expr_stmt|;
 name|vm_object_page_remove
 argument_list|(
@@ -3604,11 +3662,7 @@ operator|+
 name|PAGE_MASK
 argument_list|)
 argument_list|,
-name|purge
-condition|?
-name|FALSE
-else|:
-name|TRUE
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -3911,11 +3965,26 @@ name|m
 operator|->
 name|flags
 operator|&
-operator|(
 name|PG_FICTITIOUS
-operator||
-name|PG_UNMANAGED
 operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_object_madvise: page %p is fictitious"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|oflags
+operator|&
+name|VPO_UNMANAGED
 operator|)
 operator|==
 literal|0
@@ -3950,18 +4019,12 @@ name|MADV_WILLNEED
 condition|)
 block|{
 comment|/* 				 * Reference the page before unlocking and 				 * sleeping so that the page daemon is less 				 * likely to reclaim it.  				 */
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
-name|vm_page_flag_set
+name|vm_page_aflag_set
 argument_list|(
 name|m
 argument_list|,
-name|PG_REFERENCED
+name|PGA_REFERENCED
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 name|vm_page_unlock
@@ -5296,6 +5359,36 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|op
+operator|&
+name|OBSC_COLLAPSE_NOWAIT
+operator|)
+operator|!=
+literal|0
+operator|&&
+operator|(
+name|pp
+operator|!=
+name|NULL
+operator|&&
+name|pp
+operator|->
+name|valid
+operator|==
+literal|0
+operator|)
+condition|)
+block|{
+comment|/* 				 * The page in the parent is not (yet) valid. 				 * We don't know anything about the state of 				 * the original page.  It might be mapped, 				 * so we must avoid the next if here. 				 * 				 * This is due to a race in vm_fault() where 				 * we must unbusy the original (backing_obj) 				 * page before we can (re)lock the parent. 				 * Hence we can get here. 				 */
+name|p
+operator|=
+name|next
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
 name|pp
 operator|!=
 name|NULL
@@ -5934,7 +6027,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_remove:  *  *	For the given object, either frees or invalidates each of the  *	specified pages.  In general, a page is freed.  However, if a  *	page is wired for any reason other than the existence of a  *	managed, wired mapping, then it may be invalidated but not  *	removed from the object.  Pages are specified by the given  *	range ["start", "end") and Boolean "clean_only".  As a  *	special case, if "end" is zero, then the range extends from  *	"start" to the end of the object.  If "clean_only" is TRUE,  *	then only the non-dirty pages within the specified range are  *	affected.  *  *	In general, this operation should only be performed on objects  *	that contain managed pages.  There are two exceptions.  First,  *	it may be performed on the kernel and kmem objects.  Second,  *	it may be used by msync(..., MS_INVALIDATE) to invalidate  *	device-backed pages.  In both of these cases, "clean_only"  *	must be FALSE.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_remove:  *  *	For the given object, either frees or invalidates each of the  *	specified pages.  In general, a page is freed.  However, if a page is  *	wired for any reason other than the existence of a managed, wired  *	mapping, then it may be invalidated but not removed from the object.  *	Pages are specified by the given range ["start", "end") and the option  *	OBJPR_CLEANONLY.  As a special case, if "end" is zero, then the range  *	extends from "start" to the end of the object.  If the option  *	OBJPR_CLEANONLY is specified, then only the non-dirty pages within the  *	specified range are affected.  If the option OBJPR_NOTMAPPED is  *	specified, then the pages within the specified range must have no  *	mappings.  Otherwise, if this option is not specified, any mappings to  *	the specified pages are removed before the pages are freed or  *	invalidated.  *  *	In general, this operation should only be performed on objects that  *	contain managed pages.  There are, however, two exceptions.  First, it  *	is performed on the kernel and kmem objects by vm_map_entry_delete().  *	Second, it is used by msync(..., MS_INVALIDATE) to invalidate device-  *	backed pages.  In both of these cases, the option OBJPR_CLEANONLY must  *	not be specified and the option OBJPR_NOTMAPPED must be specified.  *  *	The object must be locked.  */
 end_comment
 
 begin_function
@@ -5950,8 +6043,8 @@ parameter_list|,
 name|vm_pindex_t
 name|end
 parameter_list|,
-name|boolean_t
-name|clean_only
+name|int
+name|options
 parameter_list|)
 block|{
 name|vm_page_t
@@ -5969,6 +6062,41 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_DEVICE
+operator|&&
+name|object
+operator|->
+name|type
+operator|!=
+name|OBJT_PHYS
+operator|)
+operator|||
+operator|(
+name|options
+operator|&
+operator|(
+name|OBJPR_CLEANONLY
+operator||
+name|OBJPR_NOTMAPPED
+operator|)
+operator|)
+operator|==
+name|OBJPR_NOTMAPPED
+argument_list|,
+operator|(
+literal|"vm_object_page_remove: illegal options for object %p"
+operator|,
+name|object
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|object
@@ -5980,28 +6108,6 @@ condition|)
 goto|goto
 name|skipmemq
 goto|;
-comment|/* 	 * Since physically-backed objects do not use managed pages, we can't 	 * remove pages from the object (we must instead remove the page 	 * references, and then destroy the object). 	 */
-name|KASSERT
-argument_list|(
-name|object
-operator|->
-name|type
-operator|!=
-name|OBJT_PHYS
-operator|||
-name|object
-operator|==
-name|kernel_object
-operator|||
-name|object
-operator|==
-name|kmem_object
-argument_list|,
-operator|(
-literal|"attempt to remove pages from a physical object"
-operator|)
-argument_list|)
-expr_stmt|;
 name|vm_object_pip_add
 argument_list|(
 name|object
@@ -6020,7 +6126,7 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Assert: the variable p is either (1) the page with the 	 * least pindex greater than or equal to the parameter pindex 	 * or (2) NULL. 	 */
+comment|/* 	 * Here, the variable "p" is either (1) the page with the least pindex 	 * greater than or equal to the parameter "start" or (2) NULL.  	 */
 for|for
 control|(
 init|;
@@ -6054,7 +6160,7 @@ argument_list|,
 name|listq
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the page is wired for any reason besides the 		 * existence of managed, wired mappings, then it cannot 		 * be freed.  For example, fictitious pages, which 		 * represent device memory, are inherently wired and 		 * cannot be freed.  They can, however, be invalidated 		 * if "clean_only" is FALSE. 		 */
+comment|/* 		 * If the page is wired for any reason besides the existence 		 * of managed, wired mappings, then it cannot be freed.  For 		 * example, fictitious pages, which represent device memory, 		 * are inherently wired and cannot be freed.  They can, 		 * however, be invalidated if the option OBJPR_CLEANONLY is 		 * not specified. 		 */
 name|vm_page_lock
 argument_list|(
 name|p
@@ -6086,35 +6192,45 @@ operator|->
 name|wire_count
 condition|)
 block|{
-comment|/* Fictitious pages do not have managed mappings. */
 if|if
 condition|(
 operator|(
-name|p
-operator|->
-name|flags
+name|options
 operator|&
-name|PG_FICTITIOUS
+name|OBJPR_NOTMAPPED
 operator|)
 operator|==
 literal|0
 condition|)
+block|{
 name|pmap_remove_all
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* Account for removal of managed, wired mappings. */
+comment|/* Account for removal of wired mappings. */
+if|if
+condition|(
+name|wirings
+operator|!=
+literal|0
+condition|)
 name|p
 operator|->
 name|wire_count
 operator|-=
 name|wirings
 expr_stmt|;
+block|}
 if|if
 condition|(
-operator|!
-name|clean_only
+operator|(
+name|options
+operator|&
+name|OBJPR_CLEANONLY
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|p
@@ -6171,13 +6287,31 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|clean_only
+operator|(
+name|options
+operator|&
+name|OBJPR_CLEANONLY
+operator|)
+operator|!=
+literal|0
 operator|&&
 name|p
 operator|->
 name|valid
+operator|!=
+literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|OBJPR_NOTMAPPED
+operator|)
+operator|==
+literal|0
+condition|)
 name|pmap_remove_write
 argument_list|(
 name|p
@@ -6198,12 +6332,23 @@ expr_stmt|;
 continue|continue;
 block|}
 block|}
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|OBJPR_NOTMAPPED
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
 name|pmap_remove_all
 argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* Account for removal of managed, wired mappings. */
+comment|/* Account for removal of wired mappings. */
 if|if
 condition|(
 name|wirings
@@ -6216,6 +6361,7 @@ name|wire_count
 operator|-=
 name|wirings
 expr_stmt|;
+block|}
 name|vm_page_free
 argument_list|(
 name|p
@@ -6659,7 +6805,7 @@ name|next_pindex
 operator|+
 name|next_size
 argument_list|,
-name|FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

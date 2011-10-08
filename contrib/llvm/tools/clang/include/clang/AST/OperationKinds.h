@@ -298,6 +298,21 @@ block|,
 comment|/// \brief Converts from an integral complex to a floating complex.
 comment|///   _Complex unsigned -> _Complex float
 name|CK_IntegralComplexToFloatingComplex
+block|,
+comment|/// \brief Produces a retainable object pointer so that it may be
+comment|/// consumed, e.g. by being passed to a consuming parameter.  Calls
+comment|/// objc_retain.
+name|CK_ObjCProduceObject
+block|,
+comment|/// \brief Consumes a retainable object pointer that has just been
+comment|/// produced, e.g. as the return value of a retaining call.  Enters
+comment|/// a cleanup to call objc_release at some indefinite time.
+name|CK_ObjCConsumeObject
+block|,
+comment|/// \brief Reclaim a retainable object pointer object that may have
+comment|/// been produced and autoreleased as part of a function return
+comment|/// sequence.
+name|CK_ObjCReclaimReturnedObject
 block|}
 enum|;
 define|#
@@ -423,6 +438,23 @@ block|,
 comment|// "__real expr"/"__imag expr" Extension.
 name|UO_Extension
 comment|// __extension__ marker.
+block|}
+enum|;
+comment|/// \brief The kind of bridging performed by the Objective-C bridge cast.
+enum|enum
+name|ObjCBridgeCastKind
+block|{
+comment|/// \brief Bridging via __bridge, which does nothing but reinterpret
+comment|/// the bits.
+name|OBC_Bridge
+block|,
+comment|/// \brief Bridging via __bridge_transfer, which transfers ownership of an
+comment|/// Objective-C pointer into ARC.
+name|OBC_BridgeTransfer
+block|,
+comment|/// \brief Bridging via __bridge_retain, which makes an ARC object available
+comment|/// as a +1 C pointer.
+name|OBC_BridgeRetained
 block|}
 enum|;
 block|}

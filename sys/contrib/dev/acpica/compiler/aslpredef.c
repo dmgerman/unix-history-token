@@ -538,7 +538,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-name|void
+name|BOOLEAN
 name|ApCheckForPredefinedMethod
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -591,7 +591,11 @@ name|ACPI_COMPILER_RESERVED_NAME
 case|:
 comment|/* A _Txx that was not emitted by compiler */
 comment|/* Just return, nothing to do */
-break|break;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
 case|case
 name|ACPI_EVENT_RESERVED_NAME
 case|:
@@ -804,6 +808,11 @@ expr_stmt|;
 block|}
 break|break;
 block|}
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 block|}
 end_function
 

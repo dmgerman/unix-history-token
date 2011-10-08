@@ -604,6 +604,12 @@ name|RegionSpace
 operator|<
 name|ACPI_USER_REGION_BEGIN
 operator|)
+operator|&&
+operator|(
+name|RegionSpace
+operator|!=
+name|ACPI_ADR_SPACE_DATA_TABLE
+operator|)
 condition|)
 block|{
 name|ACPI_ERROR

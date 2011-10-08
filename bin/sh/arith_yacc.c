@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/limits.h>
+file|<limits.h>
 end_include
 
 begin_include
@@ -357,6 +357,19 @@ operator|=
 name|lookupvar
 argument_list|(
 name|varname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|uflag
+operator|&&
+name|str
+operator|==
+name|NULL
+condition|)
+name|yyerror
+argument_list|(
+literal|"variable not set"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1565,7 +1578,7 @@ end_comment
 
 begin_function
 name|int
-name|expcmd
+name|letcmd
 parameter_list|(
 name|int
 name|argc

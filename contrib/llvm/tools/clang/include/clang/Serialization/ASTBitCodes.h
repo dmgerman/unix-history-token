@@ -609,7 +609,12 @@ name|ORIGINAL_FILE_NAME
 init|=
 literal|19
 block|,
-comment|/// Record #20 intentionally left blank.
+comment|/// \brief Record code for the file ID of the original file used to
+comment|/// generate the AST file.
+name|ORIGINAL_FILE_ID
+init|=
+literal|20
+block|,
 comment|/// \brief Record code for the version control branch and revision
 comment|/// information of the compiler used to build this AST file.
 name|VERSION_CONTROL_BRANCH_REVISION
@@ -738,6 +743,23 @@ comment|/// \brief Record code for enabled OpenCL extensions.
 name|OPENCL_EXTENSIONS
 init|=
 literal|43
+block|,
+comment|/// \brief The list of delegating constructor declarations.
+name|DELEGATING_CTORS
+init|=
+literal|44
+block|,
+comment|/// \brief Record code for the table of offsets into the block
+comment|/// of file source-location information.
+name|FILE_SOURCE_LOCATION_OFFSETS
+init|=
+literal|45
+block|,
+comment|/// \brief Record code for the set of known namespaces, which are used
+comment|/// for typo correction.
+name|KNOWN_NAMESPACES
+init|=
+literal|46
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -764,8 +786,8 @@ init|=
 literal|3
 block|,
 comment|/// \brief Describes a source location entry (SLocEntry) for a
-comment|/// macro instantiation.
-name|SM_SLOC_INSTANTIATION_ENTRY
+comment|/// macro expansion.
+name|SM_SLOC_EXPANSION_ENTRY
 init|=
 literal|4
 block|,
@@ -806,9 +828,8 @@ comment|/// \brief Record types used within a preprocessor detail block.
 enum|enum
 name|PreprocessorDetailRecordTypes
 block|{
-comment|/// \brief Describes a macro instantiation within the preprocessing
-comment|/// record.
-name|PPD_MACRO_INSTANTIATION
+comment|/// \brief Describes a macro expansion within the preprocessing record.
+name|PPD_MACRO_EXPANSION
 init|=
 literal|0
 block|,
@@ -984,6 +1005,16 @@ comment|/// \brief The ObjC 'SEL' type.
 name|PREDEF_TYPE_OBJC_SEL
 init|=
 literal|28
+block|,
+comment|/// \brief The 'unknown any' placeholder type.
+name|PREDEF_TYPE_UNKNOWN_ANY
+init|=
+literal|29
+block|,
+comment|/// \brief The placeholder type for bound member functions.
+name|PREDEF_TYPE_BOUND_MEMBER
+init|=
+literal|30
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -996,6 +1027,13 @@ name|unsigned
 name|NUM_PREDEF_TYPE_IDS
 init|=
 literal|100
+decl_stmt|;
+comment|/// \brief The number of allowed abbreviations in bits
+specifier|const
+name|unsigned
+name|NUM_ALLOWED_ABBREVS_SIZE
+init|=
+literal|4
 decl_stmt|;
 comment|/// \brief Record codes for each kind of type.
 comment|///
@@ -1190,6 +1228,11 @@ comment|/// \brief A AutoType record.
 name|TYPE_AUTO
 init|=
 literal|38
+block|,
+comment|/// \brief A UnaryTransformType record.
+name|TYPE_UNARY_TRANSFORM
+init|=
+literal|39
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -1284,6 +1327,16 @@ comment|/// \brief Whether __[u]int128_t identifier is installed.
 name|SPECIAL_TYPE_INT128_INSTALLED
 init|=
 literal|16
+block|,
+comment|/// \brief Cached "auto" deduction type.
+name|SPECIAL_TYPE_AUTO_DEDUCT
+init|=
+literal|17
+block|,
+comment|/// \brief Cached "auto&&" deduction type.
+name|SPECIAL_TYPE_AUTO_RREF_DEDUCT
+init|=
+literal|18
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of declaration.
@@ -1302,6 +1355,9 @@ literal|50
 block|,
 comment|/// \brief A TypedefDecl record.
 name|DECL_TYPEDEF
+block|,
+comment|/// \brief A TypeAliasDecl record.
+name|DECL_TYPEALIAS
 block|,
 comment|/// \brief An EnumDecl record.
 name|DECL_ENUM
@@ -1462,6 +1518,9 @@ name|DECL_NON_TYPE_TEMPLATE_PARM
 block|,
 comment|/// \brief A TemplateTemplateParmDecl record.
 name|DECL_TEMPLATE_TEMPLATE_PARM
+block|,
+comment|/// \brief A TypeAliasTemplateDecl record.
+name|DECL_TYPE_ALIAS_TEMPLATE
 block|,
 comment|/// \brief A StaticAssertDecl record.
 name|DECL_STATIC_ASSERT
@@ -1646,6 +1705,9 @@ block|,
 comment|/// \brief A BlockDeclRef record.
 name|EXPR_BLOCK_DECL_REF
 block|,
+comment|/// \brief A GenericSelectionExpr record.
+name|EXPR_GENERIC_SELECTION
+block|,
 comment|// Objective-C
 comment|/// \brief An ObjCStringLiteral record.
 name|EXPR_OBJC_STRING_LITERAL
@@ -1674,6 +1736,9 @@ block|,
 comment|/// \brief An ObjCIsa Expr record.
 name|EXPR_OBJC_ISA
 block|,
+comment|/// \breif An ObjCIndirectCopyRestoreExpr record.
+name|EXPR_OBJC_INDIRECT_COPY_RESTORE
+block|,
 comment|/// \brief An ObjCForCollectionStmt record.
 name|STMT_OBJC_FOR_COLLECTION
 block|,
@@ -1692,12 +1757,18 @@ block|,
 comment|/// \brief An ObjCAtThrowStmt record.
 name|STMT_OBJC_AT_THROW
 block|,
+comment|/// \brief An ObjCAutoreleasePoolStmt record.
+name|STMT_OBJC_AUTORELEASE_POOL
+block|,
 comment|// C++
 comment|/// \brief A CXXCatchStmt record.
 name|STMT_CXX_CATCH
 block|,
 comment|/// \brief A CXXTryStmt record.
 name|STMT_CXX_TRY
+block|,
+comment|/// \brief A CXXForRangeStmt record.
+name|STMT_CXX_FOR_RANGE
 block|,
 comment|/// \brief A CXXOperatorCallExpr record.
 name|EXPR_CXX_OPERATOR_CALL
@@ -1738,12 +1809,6 @@ comment|// CXXTypeidExpr (of expr).
 name|EXPR_CXX_TYPEID_TYPE
 block|,
 comment|// CXXTypeidExpr (of type).
-name|EXPR_CXX_UUIDOF_EXPR
-block|,
-comment|// CXXUuidofExpr (of expr).
-name|EXPR_CXX_UUIDOF_TYPE
-block|,
-comment|// CXXUuidofExpr (of type).
 name|EXPR_CXX_THIS
 block|,
 comment|// CXXThisExpr
@@ -1789,6 +1854,9 @@ comment|// UnresolvedLookupExpr
 name|EXPR_CXX_UNARY_TYPE_TRAIT
 block|,
 comment|// UnaryTypeTraitExpr
+name|EXPR_CXX_EXPRESSION_TRAIT
+block|,
+comment|// ExpressionTraitExpr
 name|EXPR_CXX_NOEXCEPT
 block|,
 comment|// CXXNoexceptExpr
@@ -1801,18 +1869,51 @@ comment|// BinaryConditionalOperator
 name|EXPR_BINARY_TYPE_TRAIT
 block|,
 comment|// BinaryTypeTraitExpr
+name|EXPR_ARRAY_TYPE_TRAIT
+block|,
+comment|// ArrayTypeTraitIntExpr
 name|EXPR_PACK_EXPANSION
 block|,
 comment|// PackExpansionExpr
 name|EXPR_SIZEOF_PACK
 block|,
 comment|// SizeOfPackExpr
+name|EXPR_SUBST_NON_TYPE_TEMPLATE_PARM
+block|,
+comment|// SubstNonTypeTemplateParmExpr
 name|EXPR_SUBST_NON_TYPE_TEMPLATE_PARM_PACK
 block|,
 comment|// SubstNonTypeTemplateParmPackExpr
+name|EXPR_MATERIALIZE_TEMPORARY
+block|,
+comment|// MaterializeTemporaryExpr
 comment|// CUDA
 name|EXPR_CUDA_KERNEL_CALL
+block|,
 comment|// CUDAKernelCallExpr
+comment|// OpenCL
+name|EXPR_ASTYPE
+block|,
+comment|// AsTypeExpr
+comment|// Microsoft
+name|EXPR_CXX_UUIDOF_EXPR
+block|,
+comment|// CXXUuidofExpr (of expr).
+name|EXPR_CXX_UUIDOF_TYPE
+block|,
+comment|// CXXUuidofExpr (of type).
+name|STMT_SEH_EXCEPT
+block|,
+comment|// SEHExceptStmt
+name|STMT_SEH_FINALLY
+block|,
+comment|// SEHFinallyStmt
+name|STMT_SEH_TRY
+block|,
+comment|// SEHTryStmt
+comment|// ARC
+name|EXPR_OBJC_BRIDGED_CAST
+comment|// ObjCBridgedCastExpr
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a
@@ -1840,6 +1941,20 @@ comment|/// \brief GNU array range designator.
 name|DESIG_ARRAY_RANGE
 init|=
 literal|3
+block|}
+enum|;
+comment|/// \brief The different kinds of data that can occur in a
+comment|/// CtorInitializer.
+enum|enum
+name|CtorInitializerType
+block|{
+name|CTOR_INITIALIZER_BASE
+block|,
+name|CTOR_INITIALIZER_DELEGATING
+block|,
+name|CTOR_INITIALIZER_MEMBER
+block|,
+name|CTOR_INITIALIZER_INDIRECT_MEMBER
 block|}
 enum|;
 comment|/// @}

@@ -120,9 +120,9 @@ name|class
 name|RecordRecTy
 decl_stmt|;
 comment|// Init subclasses.
-struct_decl|struct
+name|class
 name|Init
-struct_decl|;
+decl_stmt|;
 name|class
 name|UnsetInit
 decl_stmt|;
@@ -3557,9 +3557,11 @@ block|;
 comment|//===----------------------------------------------------------------------===//
 comment|//  Initializer Classes
 comment|//===----------------------------------------------------------------------===//
-block|struct
+name|class
 name|Init
 block|{
+name|public
+operator|:
 name|virtual
 operator|~
 name|Init
@@ -4530,6 +4532,7 @@ specifier|const
 name|std
 operator|::
 name|string
+operator|&
 name|getValue
 argument_list|()
 specifier|const
@@ -7862,6 +7865,24 @@ argument|StringRef FieldName
 argument_list|)
 specifier|const
 block|;
+comment|/// getValueAsListOfStrings - This method looks up the specified field and
+comment|/// returns its value as a vector of strings, throwing an exception if the
+comment|/// field does not exist or if the value is not the right type.
+comment|///
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|getValueAsListOfStrings
+argument_list|(
+argument|StringRef FieldName
+argument_list|)
+specifier|const
+block|;
 comment|/// getValueAsDef - This method looks up the specified field and returns its
 comment|/// value as a Record, throwing an exception if the field does not exist or if
 comment|/// the value is not the right type.
@@ -8457,60 +8478,6 @@ return|;
 block|}
 expr|}
 block|;
-name|class
-name|TGError
-block|{
-name|SMLoc
-name|Loc
-block|;
-name|std
-operator|::
-name|string
-name|Message
-block|;
-name|public
-operator|:
-name|TGError
-argument_list|(
-argument|SMLoc loc
-argument_list|,
-argument|const std::string&message
-argument_list|)
-operator|:
-name|Loc
-argument_list|(
-name|loc
-argument_list|)
-block|,
-name|Message
-argument_list|(
-argument|message
-argument_list|)
-block|{}
-name|SMLoc
-name|getLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Loc
-return|;
-block|}
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|getMessage
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Message
-return|;
-block|}
-expr|}
-block|;
 name|raw_ostream
 operator|&
 name|operator
@@ -8525,14 +8492,6 @@ name|RecordKeeper
 operator|&
 name|RK
 operator|)
-block|;
-name|void
-name|PrintError
-argument_list|(
-argument|SMLoc ErrorLoc
-argument_list|,
-argument|const Twine&Msg
-argument_list|)
 block|;  }
 end_decl_stmt
 

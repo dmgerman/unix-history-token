@@ -698,9 +698,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|devs
 index|[]
 init|=

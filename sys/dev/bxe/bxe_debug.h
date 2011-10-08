@@ -124,6 +124,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BXE_CP_TPA
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BXE_CP_ALL
 value|0x00FFFFFF
 end_define
@@ -642,6 +649,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|BXE_WARN_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_WARN)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_INFO_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_INFO)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_VERBOSE_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_VERBOSE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_EXTREME_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_EXTREME)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BXE_INSANE_TPA
+value|(BXE_CP_TPA | BXE_LEVEL_INSANE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|BXE_FATAL
 value|(BXE_CP_ALL | BXE_LEVEL_FATAL)
 end_define
@@ -736,7 +778,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {													\ 		if (BXE_LOG_MSG(level)) {							\ 			device_printf(sc->bxe_dev, format, ## args);	\ 		}													\ 	} while (0)
+value|do {								\ 		if (BXE_LOG_MSG(level)) {				\ 			device_printf(sc->dev, format, ## args);	\ 		}							\ 	} while (0)
 end_define
 
 begin_comment
@@ -752,7 +794,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|do {						\ 		args;					\ 	} while (0)
+value|do {								\ 		args;							\ 	} while (0)
 end_define
 
 begin_comment
@@ -770,7 +812,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BXE_MSG_LEVEL(level)) { \ 		args; 					\ 	}
+value|if (BXE_MSG_LEVEL(level)) { 					\ 		args; 							\ 	}
 end_define
 
 begin_comment
@@ -788,7 +830,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BXE_CODE_PATH(cp)) { 	\ 		args; 					\ 	}
+value|if (BXE_CODE_PATH(cp)) { 					\ 		args; 							\ 	}
 end_define
 
 begin_comment
@@ -806,7 +848,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (cond) {					\ 		args;					\ 	}
+value|if (cond) {							\ 		args;							\ 	}
 end_define
 
 begin_comment
@@ -824,7 +866,7 @@ name|args
 modifier|...
 parameter_list|)
 define|\
-value|if (BXE_LOG_MSG(msg)) {		\ 		args;					\ 	}
+value|if (BXE_LOG_MSG(msg)) {						\ 		args;							\ 	}
 end_define
 
 begin_comment
@@ -843,7 +885,6 @@ value|DBPRINT(sc, (cond), "%s(enter:%d)\n", __FUNCTION__, curcpu)
 end_define
 
 begin_comment
-unit|\
 comment|/* Announces function exit. */
 end_comment
 
@@ -859,7 +900,6 @@ value|DBPRINT(sc, (cond), "%s(exit:%d)\n", __FUNCTION__, curcpu)
 end_define
 
 begin_comment
-unit|\
 comment|/* Needed for random() function which is only used in debugging. */
 end_comment
 
@@ -900,7 +940,7 @@ name|DB_AND_RANDOMFALSE
 parameter_list|(
 name|defects
 parameter_list|)
-value|&& (random()> ddfects)
+value|&& (random()> defects)
 end_define
 
 begin_comment

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALPHA_FRAMEINFO_H
+name|MIPS_FRAMEINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ALPHA_FRAMEINFO_H
+name|MIPS_FRAMEINFO_H
 end_define
 
 begin_include
@@ -107,11 +107,10 @@ name|MipsSubtarget
 operator|&
 name|sti
 argument_list|)
-comment|// FIXME: Is this correct at all?
 operator|:
 name|TargetFrameLowering
 argument_list|(
-name|StackGrowsUp
+name|StackGrowsDown
 argument_list|,
 literal|8
 argument_list|,
@@ -123,11 +122,9 @@ argument_list|(
 argument|sti
 argument_list|)
 block|{   }
-name|void
-name|adjustMipsStackFrame
-argument_list|(
-argument|MachineFunction&MF
-argument_list|)
+name|bool
+name|targetHandlesStackFrameRounding
+argument_list|()
 specifier|const
 block|;
 comment|/// emitProlog/emitEpilog - These methods insert prolog and epilog code into
@@ -156,9 +153,18 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|processFunctionBeforeFrameFinalized
+name|getInitialFrameState
+argument_list|(
+argument|std::vector<MachineMove>&Moves
+argument_list|)
+specifier|const
+block|;
+name|void
+name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF
+argument_list|,
+argument|RegScavenger *RS
 argument_list|)
 specifier|const
 block|; }

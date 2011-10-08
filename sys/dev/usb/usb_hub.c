@@ -1022,9 +1022,22 @@ expr_stmt|;
 if|if
 condition|(
 name|err
-operator|==
+operator|!=
 literal|0
 condition|)
+block|{
+name|DPRINTF
+argument_list|(
+literal|"Unconfigure failed: "
+literal|"%s: Ignored.\n"
+argument_list|,
+name|usbd_errstr
+argument_list|(
+name|err
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|err
 operator|=
 name|usbd_req_re_enumerate
@@ -5111,7 +5124,9 @@ literal|"vendor=0x%04x product=0x%04x "
 literal|"devclass=0x%02x devsubclass=0x%02x "
 literal|"sernum=\"%s\" "
 literal|"release=0x%04x "
-literal|"intclass=0x%02x intsubclass=0x%02x"
+literal|"mode=%s "
+literal|"intclass=0x%02x intsubclass=0x%02x "
+literal|"intprotocol=0x%02x "
 literal|"%s%s"
 argument_list|,
 name|UGETW
@@ -5170,6 +5185,22 @@ operator|.
 name|bcdDevice
 argument_list|)
 argument_list|,
+operator|(
+name|res
+operator|.
+name|udev
+operator|->
+name|flags
+operator|.
+name|usb_mode
+operator|==
+name|USB_MODE_HOST
+operator|)
+condition|?
+literal|"host"
+else|:
+literal|"device"
+argument_list|,
 name|iface
 operator|->
 name|idesc
@@ -5181,6 +5212,12 @@ operator|->
 name|idesc
 operator|->
 name|bInterfaceSubClass
+argument_list|,
+name|iface
+operator|->
+name|idesc
+operator|->
+name|bInterfaceProtocol
 argument_list|,
 name|iface
 operator|->
@@ -9126,6 +9163,48 @@ operator|(
 name|temp
 operator|)
 return|;
+block|}
+end_function
+
+begin_comment
+comment|/*------------------------------------------------------------------------*  *	usbd_start_re_enumerate  *  * This function starts re-enumeration of the given USB device. This  * function does not need to be called BUS-locked. This function does  * not wait until the re-enumeration is completed.  *------------------------------------------------------------------------*/
+end_comment
+
+begin_function
+name|void
+name|usbd_start_re_enumerate
+parameter_list|(
+name|struct
+name|usb_device
+modifier|*
+name|udev
+parameter_list|)
+block|{
+if|if
+condition|(
+name|udev
+operator|->
+name|re_enumerate_wait
+operator|==
+literal|0
+condition|)
+block|{
+name|udev
+operator|->
+name|re_enumerate_wait
+operator|=
+literal|1
+expr_stmt|;
+name|usb_needs_explore
+argument_list|(
+name|udev
+operator|->
+name|bus
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

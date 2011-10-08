@@ -92,6 +92,12 @@ name|class
 name|SSAUpdaterTraits
 expr_stmt|;
 name|class
+name|DbgDeclareInst
+decl_stmt|;
+name|class
+name|DIBuilder
+decl_stmt|;
+name|class
 name|BumpPtrAllocator
 decl_stmt|;
 comment|/// SSAUpdater - This class updates SSA form for a set of values defined in
@@ -421,6 +427,16 @@ comment|/// This is called before each instruction is deleted.
 name|virtual
 name|void
 name|instructionDeleted
+argument_list|(
+argument|Instruction *I
+argument_list|)
+specifier|const
+block|{   }
+comment|/// updateDebugInfo - This is called to update debug info associated with the
+comment|/// instruction.
+name|virtual
+name|void
+name|updateDebugInfo
 argument_list|(
 argument|Instruction *I
 argument_list|)

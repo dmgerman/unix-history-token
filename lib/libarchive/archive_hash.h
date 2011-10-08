@@ -20,8 +20,25 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SYS_TYPES_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Hash function support in various Operating Systems:  *  * NetBSD:  * - MD5 and SHA1 in libc: without _ after algorithm name  * - SHA2 in libc: with _ after algorithm name  *  * OpenBSD:  * - MD5, SHA1 and SHA2 in libc: without _ after algorithm name  * - OpenBSD 4.4 and earlier have SHA2 in libc with _ after algorithm name  *  * DragonFly and FreeBSD (XXX not used yet):  * - MD5 and SHA1 in libmd: without _ after algorithm name  * - SHA256: with _ after algorithm name  *  * OpenSSL:  * - MD5, SHA1 and SHA2 in libcrypto: with _ after algorithm name  */
+comment|/*  * Hash function support in various Operating Systems:  *  * NetBSD:  * - MD5 and SHA1 in libc: without _ after algorithm name  * - SHA2 in libc: with _ after algorithm name  *  * OpenBSD:  * - MD5, SHA1 and SHA2 in libc: without _ after algorithm name  * - OpenBSD 4.4 and earlier have SHA2 in libc with _ after algorithm name  *  * DragonFly and FreeBSD (XXX not used yet):  * - MD5 and SHA1 in libmd: without _ after algorithm name  * - SHA256: with _ after algorithm name  *  * Mac OS X (10.4 and later):  * - MD5, SHA1 and SHA2 in libSystem: with CC_ prefix and _ after algorithm name  *  * OpenSSL:  * - MD5, SHA1 and SHA2 in libcrypto: with _ after algorithm name  *  * Windows:  * - MD5, SHA1 and SHA2 in archive_windows.c: without algorithm name  *   and with __la_ prefix.  */
 end_comment
 
 begin_if
@@ -29,12 +46,115 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_MD5_H
+name|ARCHIVE_HASH_MD5_WIN
 argument_list|)
-operator|&&
+operator|||
+expr|\
 name|defined
 argument_list|(
-name|HAVE_MD5INIT
+name|ARCHIVE_HASH_SHA1_WIN
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_SHA256_WIN
+argument_list|)
+operator|||
+expr|\
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_SHA384_WIN
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_SHA512_WIN
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<wincrypt.h>
+end_include
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|valid
+decl_stmt|;
+name|HCRYPTPROV
+name|cryptProv
+decl_stmt|;
+name|HCRYPTHASH
+name|hash
+decl_stmt|;
+block|}
+name|Digest_CTX
+typedef|;
+end_typedef
+
+begin_function_decl
+specifier|extern
+name|void
+name|__la_hash_Init
+parameter_list|(
+name|Digest_CTX
+modifier|*
+parameter_list|,
+name|ALG_ID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|__la_hash_Final
+parameter_list|(
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|Digest_CTX
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|__la_hash_Update
+parameter_list|(
+name|Digest_CTX
+modifier|*
+parameter_list|,
+specifier|const
+name|unsigned
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_MD5_LIBC
 argument_list|)
 end_if
 
@@ -98,7 +218,71 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_MD5_H
+name|ARCHIVE_HASH_MD5_LIBSYSTEM
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<CommonCrypto/CommonDigest.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_MD5
+end_define
+
+begin_typedef
+typedef|typedef
+name|CC_MD5_CTX
+name|archive_md5_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_md5_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|CC_MD5_Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_md5_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|CC_MD5_Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_md5_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|CC_MD5_Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_MD5_OPENSSL
 argument_list|)
 end_elif
 
@@ -162,18 +346,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CALG_MD5
+name|ARCHIVE_HASH_MD5_WIN
 argument_list|)
 end_elif
 
@@ -183,9 +356,16 @@ directive|define
 name|ARCHIVE_HAS_MD5
 end_define
 
+begin_define
+define|#
+directive|define
+name|MD5_DIGEST_LENGTH
+value|16
+end_define
+
 begin_typedef
 typedef|typedef
-name|MD5_CTX
+name|Digest_CTX
 name|archive_md5_ctx
 typedef|;
 end_typedef
@@ -197,7 +377,7 @@ name|archive_md5_init
 parameter_list|(
 name|ctx
 parameter_list|)
-value|MD5_Init(ctx)
+value|__la_hash_Init(ctx, CALG_MD5)
 end_define
 
 begin_define
@@ -209,7 +389,7 @@ name|ctx
 parameter_list|,
 name|buf
 parameter_list|)
-value|MD5_Final(buf, ctx)
+value|__la_hash_Final(buf, MD5_DIGEST_LENGTH, ctx)
 end_define
 
 begin_define
@@ -223,7 +403,7 @@ name|buf
 parameter_list|,
 name|n
 parameter_list|)
-value|MD5_Update(ctx, buf, n)
+value|__la_hash_Update(ctx, buf, n)
 end_define
 
 begin_endif
@@ -236,12 +416,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_RMD160_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_RMD160INIT
+name|ARCHIVE_HASH_RMD160_LIBC
 argument_list|)
 end_if
 
@@ -305,7 +480,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_RIPEMD_H
+name|ARCHIVE_HASH_RMD160_OPENSSL
 argument_list|)
 end_elif
 
@@ -374,12 +549,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_SHA1_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SHA1INIT
+name|ARCHIVE_HASH_SHA1_LIBC
 argument_list|)
 end_if
 
@@ -443,7 +613,71 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_SHA_H
+name|ARCHIVE_HASH_SHA1_LIBSYSTEM
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<CommonCrypto/CommonDigest.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_SHA1
+end_define
+
+begin_typedef
+typedef|typedef
+name|CC_SHA1_CTX
+name|archive_sha1_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_sha1_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|CC_SHA1_Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha1_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|CC_SHA1_Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha1_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|CC_SHA1_Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_SHA1_OPENSSL
 argument_list|)
 end_elif
 
@@ -507,18 +741,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CALG_SHA1
+name|ARCHIVE_HASH_SHA1_WIN
 argument_list|)
 end_elif
 
@@ -528,9 +751,16 @@ directive|define
 name|ARCHIVE_HAS_SHA1
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHA1_DIGEST_LENGTH
+value|20
+end_define
+
 begin_typedef
 typedef|typedef
-name|SHA1_CTX
+name|Digest_CTX
 name|archive_sha1_ctx
 typedef|;
 end_typedef
@@ -542,7 +772,7 @@ name|archive_sha1_init
 parameter_list|(
 name|ctx
 parameter_list|)
-value|SHA1_Init(ctx)
+value|__la_hash_Init(ctx, CALG_SHA1)
 end_define
 
 begin_define
@@ -554,7 +784,7 @@ name|ctx
 parameter_list|,
 name|buf
 parameter_list|)
-value|SHA1_Final(buf, ctx)
+value|__la_hash_Final(buf, SHA1_DIGEST_LENGTH, ctx)
 end_define
 
 begin_define
@@ -568,7 +798,7 @@ name|buf
 parameter_list|,
 name|n
 parameter_list|)
-value|SHA1_Update(ctx, buf, n)
+value|__la_hash_Update(ctx, buf, n)
 end_define
 
 begin_endif
@@ -581,12 +811,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_SHA2_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SHA256_INIT
+name|ARCHIVE_HASH_SHA256_LIBC
 argument_list|)
 end_if
 
@@ -650,12 +875,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_SHA2_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SHA256INIT
+name|ARCHIVE_HASH_SHA256_LIBC2
 argument_list|)
 end_elif
 
@@ -719,12 +939,135 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_SHA_H
+name|ARCHIVE_HASH_SHA256_LIBC3
 argument_list|)
-operator|&&
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sha2.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_SHA256
+end_define
+
+begin_typedef
+typedef|typedef
+name|SHA2_CTX
+name|archive_sha256_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_sha256_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|SHA256Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha256_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|SHA256Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha256_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|SHA256Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_SHA256_INIT
+name|ARCHIVE_HASH_SHA256_LIBSYSTEM
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<CommonCrypto/CommonDigest.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_SHA256
+end_define
+
+begin_typedef
+typedef|typedef
+name|CC_SHA256_CTX
+name|archive_shs256_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_shs256_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|CC_SHA256_Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_shs256_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|CC_SHA256_Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_shs256_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|CC_SHA256_Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_SHA256_OPENSSL
 argument_list|)
 end_elif
 
@@ -788,18 +1131,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CALG_SHA_256
+name|ARCHIVE_HASH_SHA256_WIN
 argument_list|)
 end_elif
 
@@ -809,9 +1141,16 @@ directive|define
 name|ARCHIVE_HAS_SHA256
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHA256_DIGEST_LENGTH
+value|32
+end_define
+
 begin_typedef
 typedef|typedef
-name|SHA256_CTX
+name|Digest_CTX
 name|archive_sha256_ctx
 typedef|;
 end_typedef
@@ -823,7 +1162,7 @@ name|archive_sha256_init
 parameter_list|(
 name|ctx
 parameter_list|)
-value|SHA256_Init(ctx)
+value|__la_hash_Init(ctx, CALG_SHA_256)
 end_define
 
 begin_define
@@ -835,7 +1174,7 @@ name|ctx
 parameter_list|,
 name|buf
 parameter_list|)
-value|SHA256_Final(buf, ctx)
+value|__la_hash_Final(buf, SHA256_DIGEST_LENGTH, ctx)
 end_define
 
 begin_define
@@ -849,7 +1188,7 @@ name|buf
 parameter_list|,
 name|n
 parameter_list|)
-value|SHA256_Update(ctx, buf, n)
+value|__la_hash_Update(ctx, buf, n)
 end_define
 
 begin_endif
@@ -862,12 +1201,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_SHA2_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SHA384_INIT
+name|ARCHIVE_HASH_SHA384_LIBC
 argument_list|)
 end_if
 
@@ -931,12 +1265,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_SHA2_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SHA384INIT
+name|ARCHIVE_HASH_SHA384_LIBC2
 argument_list|)
 end_elif
 
@@ -1000,12 +1329,135 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_SHA_H
+name|ARCHIVE_HASH_SHA384_LIBC3
 argument_list|)
-operator|&&
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sha2.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_SHA384
+end_define
+
+begin_typedef
+typedef|typedef
+name|SHA2_CTX
+name|archive_sha384_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_sha384_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|SHA384Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha384_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|SHA384Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha384_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|SHA384Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_SHA384_INIT
+name|ARCHIVE_HASH_SHA384_LIBSYSTEM
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<CommonCrypto/CommonDigest.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_SHA384
+end_define
+
+begin_typedef
+typedef|typedef
+name|CC_SHA512_CTX
+name|archive_shs384_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_shs384_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|CC_SHA384_Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_shs384_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|CC_SHA384_Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_shs384_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|CC_SHA384_Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_SHA384_OPENSSL
 argument_list|)
 end_elif
 
@@ -1069,18 +1521,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CALG_SHA_384
+name|ARCHIVE_HASH_SHA384_WIN
 argument_list|)
 end_elif
 
@@ -1090,9 +1531,16 @@ directive|define
 name|ARCHIVE_HAS_SHA384
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHA384_DIGEST_LENGTH
+value|48
+end_define
+
 begin_typedef
 typedef|typedef
-name|SHA512_CTX
+name|Digest_CTX
 name|archive_sha384_ctx
 typedef|;
 end_typedef
@@ -1104,7 +1552,7 @@ name|archive_sha384_init
 parameter_list|(
 name|ctx
 parameter_list|)
-value|SHA384_Init(ctx)
+value|__la_hash_Init(ctx, CALG_SHA_384)
 end_define
 
 begin_define
@@ -1116,7 +1564,7 @@ name|ctx
 parameter_list|,
 name|buf
 parameter_list|)
-value|SHA384_Final(buf, ctx)
+value|__la_hash_Final(buf, SHA384_DIGEST_LENGTH, ctx)
 end_define
 
 begin_define
@@ -1130,7 +1578,7 @@ name|buf
 parameter_list|,
 name|n
 parameter_list|)
-value|SHA384_Update(ctx, buf, n)
+value|__la_hash_Update(ctx, buf, n)
 end_define
 
 begin_endif
@@ -1143,12 +1591,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|HAVE_SHA2_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SHA512_INIT
+name|ARCHIVE_HASH_SHA512_LIBC
 argument_list|)
 end_if
 
@@ -1212,12 +1655,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_SHA2_H
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|HAVE_SHA512INIT
+name|ARCHIVE_HASH_SHA512_LIBC2
 argument_list|)
 end_elif
 
@@ -1281,12 +1719,135 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_SHA_H
+name|ARCHIVE_HASH_SHA512_LIBC3
 argument_list|)
-operator|&&
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<sha2.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_SHA512
+end_define
+
+begin_typedef
+typedef|typedef
+name|SHA2_CTX
+name|archive_sha512_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_sha512_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|SHA512Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha512_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|SHA512Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_sha512_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|SHA512Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
-name|HAVE_OPENSSL_SHA512_INIT
+name|ARCHIVE_HASH_SHA512_LIBSYSTEM
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<CommonCrypto/CommonDigest.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_HAS_SHA512
+end_define
+
+begin_typedef
+typedef|typedef
+name|CC_SHA512_CTX
+name|archive_shs512_ctx
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|archive_shs512_init
+parameter_list|(
+name|ctx
+parameter_list|)
+value|CC_SHA512_Init(ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_shs512_final
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|)
+value|CC_SHA512_Final(buf, ctx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|archive_shs512_update
+parameter_list|(
+name|ctx
+parameter_list|,
+name|buf
+parameter_list|,
+name|n
+parameter_list|)
+value|CC_SHA512_Update(ctx, buf, n)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|ARCHIVE_HASH_SHA512_OPENSSL
 argument_list|)
 end_elif
 
@@ -1350,18 +1911,7 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
-name|_WIN32
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|CALG_SHA_512
+name|ARCHIVE_HASH_SHA512_WIN
 argument_list|)
 end_elif
 
@@ -1371,9 +1921,16 @@ directive|define
 name|ARCHIVE_HAS_SHA512
 end_define
 
+begin_define
+define|#
+directive|define
+name|SHA512_DIGEST_LENGTH
+value|64
+end_define
+
 begin_typedef
 typedef|typedef
-name|SHA512_CTX
+name|Digest_CTX
 name|archive_sha512_ctx
 typedef|;
 end_typedef
@@ -1385,7 +1942,7 @@ name|archive_sha512_init
 parameter_list|(
 name|ctx
 parameter_list|)
-value|SHA512_Init(ctx)
+value|__la_hash_Init(ctx, CALG_SHA_512)
 end_define
 
 begin_define
@@ -1397,7 +1954,7 @@ name|ctx
 parameter_list|,
 name|buf
 parameter_list|)
-value|SHA512_Final(buf, ctx)
+value|__la_hash_Final(buf, SHA512_DIGEST_LENGTH, ctx)
 end_define
 
 begin_define
@@ -1411,7 +1968,7 @@ name|buf
 parameter_list|,
 name|n
 parameter_list|)
-value|SHA512_Update(ctx, buf, n)
+value|__la_hash_Update(ctx, buf, n)
 end_define
 
 begin_endif

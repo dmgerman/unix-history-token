@@ -1470,6 +1470,24 @@ begin_comment
 comment|/*  * MIMO antenna/radio state.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MAX_CHAINS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MAX_EVM_PILOTS
+value|6
+end_define
+
+begin_comment
+comment|/*  * XXX This doesn't yet export both ctl/ext chain details  */
+end_comment
+
 begin_struct
 struct|struct
 name|ieee80211_mimo_info
@@ -1477,14 +1495,14 @@ block|{
 name|int8_t
 name|rssi
 index|[
-literal|3
+name|IEEE80211_MAX_CHAINS
 index|]
 decl_stmt|;
 comment|/* per-antenna rssi */
 name|int8_t
 name|noise
 index|[
-literal|3
+name|IEEE80211_MAX_CHAINS
 index|]
 decl_stmt|;
 comment|/* per-antenna noise floor */

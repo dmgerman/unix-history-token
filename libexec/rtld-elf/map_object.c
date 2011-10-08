@@ -957,7 +957,7 @@ block|{
 comment|/* There is something to do */
 if|if
 condition|(
-name|mprotect
+name|mmap
 argument_list|(
 name|bss_addr
 argument_list|,
@@ -966,15 +966,27 @@ operator|-
 name|bss_vaddr
 argument_list|,
 name|data_prot
+argument_list|,
+name|data_flags
+operator||
+name|MAP_ANON
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+literal|0
 argument_list|)
 operator|==
+operator|(
+name|caddr_t
+operator|)
 operator|-
 literal|1
 condition|)
 block|{
 name|_rtld_error
 argument_list|(
-literal|"%s: mprotect of bss failed: %s"
+literal|"%s: mmap of bss failed: %s"
 argument_list|,
 name|path
 argument_list|,

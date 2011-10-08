@@ -81,6 +81,12 @@ decl_stmt|;
 name|class
 name|ClassTemplateSpecializationDecl
 decl_stmt|;
+name|class
+name|FunctionDecl
+decl_stmt|;
+name|class
+name|FunctionTemplateDecl
+decl_stmt|;
 comment|/// \brief An abstract interface that should be implemented by listeners
 comment|/// that want to be notified when an AST entity gets modified after its
 comment|/// initial creation.
@@ -150,6 +156,45 @@ name|TD
 parameter_list|,
 specifier|const
 name|ClassTemplateSpecializationDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief A template specialization (or partial one) was added to the
+comment|/// template declaration.
+name|virtual
+name|void
+name|AddedCXXTemplateSpecialization
+parameter_list|(
+specifier|const
+name|FunctionTemplateDecl
+modifier|*
+name|TD
+parameter_list|,
+specifier|const
+name|FunctionDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief An implicit member got a definition.
+name|virtual
+name|void
+name|CompletedImplicitDefinition
+parameter_list|(
+specifier|const
+name|FunctionDecl
+modifier|*
+name|D
+parameter_list|)
+block|{}
+comment|/// \brief A static data member was implicitly instantiated.
+name|virtual
+name|void
+name|StaticDataMemberInstantiated
+parameter_list|(
+specifier|const
+name|VarDecl
 modifier|*
 name|D
 parameter_list|)

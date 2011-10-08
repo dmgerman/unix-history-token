@@ -717,6 +717,31 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// \brief Set whether the name lookup is triggered by a
+comment|/// using declaration.
+name|void
+name|setUsingDeclaration
+parameter_list|(
+name|bool
+name|U
+parameter_list|)
+block|{
+name|UsingDeclaration
+operator|=
+name|U
+expr_stmt|;
+block|}
+comment|/// \brief Returns whether the name lookup is triggered by a
+comment|/// using declaration.
+name|bool
+name|isUsingDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsingDeclaration
+return|;
+block|}
 comment|/// \brief Returns the 'naming class' for this lookup, i.e. the
 comment|/// class which was looked into to find these results.
 comment|///
@@ -1247,6 +1272,10 @@ expr_stmt|;
 name|Paths
 operator|=
 name|NULL
+expr_stmt|;
+name|NamingClass
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function
@@ -1958,6 +1987,20 @@ end_decl_stmt
 begin_decl_stmt
 name|bool
 name|Diagnose
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief True if the lookup is triggered by a using declaration.
+end_comment
+
+begin_comment
+comment|/// Necessary to handle a MSVC bug.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|UsingDeclaration
 decl_stmt|;
 end_decl_stmt
 

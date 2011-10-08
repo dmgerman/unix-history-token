@@ -136,6 +136,12 @@ literal|"a backslash character"
 block|}
 block|,
 block|{
+literal|"CSBACK"
+block|,
+literal|"a backslash character in single quotes"
+block|}
+block|,
+block|{
 literal|"CSQUOTE"
 block|,
 literal|"single quote"
@@ -1116,6 +1122,13 @@ argument_list|(
 literal|"\n"
 argument_list|,
 literal|"CNL"
+argument_list|)
+expr_stmt|;
+name|add
+argument_list|(
+literal|"\\"
+argument_list|,
+literal|"CSBACK"
 argument_list|)
 expr_stmt|;
 name|add

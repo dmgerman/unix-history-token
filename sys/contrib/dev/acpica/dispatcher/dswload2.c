@@ -1448,7 +1448,7 @@ else|else
 block|{
 name|RegionSpace
 operator|=
-name|REGION_DATA_TABLE
+name|ACPI_ADR_SPACE_DATA_TABLE
 expr_stmt|;
 block|}
 comment|/*              * The OpRegion is not fully parsed at this time. The only valid              * argument is the SpaceId. (We must save the address of the              * AML of the address and length operands)              *              * If we have a valid region, initialize it. The namespace is              * unlocked at this point.              *              * Need to unlock interpreter if it is locked (if we are running              * a control method), in order to allow _REG methods to be run              * during AcpiEvInitializeRegion.              */

@@ -630,15 +630,6 @@ name|task
 init|=
 name|arg
 decl_stmt|;
-name|ASSERT
-argument_list|(
-name|task
-operator|->
-name|ost_magic
-operator|==
-name|TASKQ_MAGIC
-argument_list|)
-expr_stmt|;
 name|task
 operator|->
 name|ost_func
@@ -647,12 +638,6 @@ name|task
 operator|->
 name|ost_arg
 argument_list|)
-expr_stmt|;
-name|task
-operator|->
-name|ost_magic
-operator|=
-literal|0
 expr_stmt|;
 block|}
 end_function
@@ -684,15 +669,6 @@ block|{
 name|int
 name|prio
 decl_stmt|;
-name|ASSERT
-argument_list|(
-name|task
-operator|->
-name|ost_magic
-operator|!=
-name|TASKQ_MAGIC
-argument_list|)
-expr_stmt|;
 comment|/*  	 * If TQ_FRONT is given, we want higher priority for this task, so it 	 * can go at the front of the queue. 	 */
 name|prio
 operator|=
@@ -703,12 +679,6 @@ name|flags
 operator|&
 name|TQ_FRONT
 operator|)
-expr_stmt|;
-name|task
-operator|->
-name|ost_magic
-operator|=
-name|TASKQ_MAGIC
 expr_stmt|;
 name|task
 operator|->

@@ -1194,5 +1194,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HAVE_ISBLANK
+end_ifndef
+
+begin_function
+name|int
+name|isblank
+parameter_list|(
+name|int
+name|c
+parameter_list|)
+block|{
+return|return
+operator|(
+name|c
+operator|==
+literal|' '
+operator|||
+name|c
+operator|==
+literal|'\t'
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

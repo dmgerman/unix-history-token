@@ -1853,7 +1853,7 @@ name|SHT_INIT_ARRAY
 init|=
 literal|14
 block|,
-comment|// Pointers to initialisation functions.
+comment|// Pointers to initialization functions.
 name|SHT_FINI_ARRAY
 init|=
 literal|15
@@ -1873,7 +1873,7 @@ name|SHT_SYMTAB_SHNDX
 init|=
 literal|18
 block|,
-comment|// Indicies for SHN_XINDEX entries.
+comment|// Indices for SHN_XINDEX entries.
 name|SHT_LOOS
 init|=
 literal|0x60000000
@@ -2338,7 +2338,7 @@ name|STT_COMMON
 init|=
 literal|5
 block|,
-comment|// An uninitialised common block
+comment|// An uninitialized common block
 name|STT_TLS
 init|=
 literal|6
@@ -3114,7 +3114,7 @@ name|DT_TEXTREL
 init|=
 literal|22
 block|,
-comment|// Relocations exist for non-writable segements.
+comment|// Relocations exist for non-writable segments.
 name|DT_JMPREL
 init|=
 literal|23

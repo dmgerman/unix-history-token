@@ -112,6 +112,20 @@ name|AR71XX_GPIO_PINS
 value|12
 end_define
 
+begin_define
+define|#
+directive|define
+name|AR724X_GPIO_PINS
+value|18
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR91XX_GPIO_PINS
+value|22
+end_define
+
 begin_struct
 struct|struct
 name|ar71xx_gpio_softc

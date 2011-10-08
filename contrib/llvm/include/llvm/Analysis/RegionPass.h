@@ -164,7 +164,7 @@ block|;
 comment|/// @brief Get a pass to print the LLVM IR in the region.
 comment|///
 comment|/// @param O      The ouput stream to print the Region.
-comment|/// @param Banner The banner to seperate different printed passes.
+comment|/// @param Banner The banner to separate different printed passes.
 comment|///
 comment|/// @return The pass to print the LLVM IR in the region.
 name|Pass
@@ -338,7 +338,7 @@ argument_list|(
 argument|unsigned Offset
 argument_list|)
 block|;
-comment|/// @brief Print passes contained by this manager.
+comment|/// @brief Get passes contained by this manager.
 name|Pass
 operator|*
 name|getContainedPass

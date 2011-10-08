@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: tkey.h,v 1.26.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: tkey.h,v 1.32 2011-01-08 23:47:01 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -113,6 +113,10 @@ decl_stmt|;
 name|isc_entropy_t
 modifier|*
 name|ectx
+decl_stmt|;
+name|char
+modifier|*
+name|gssapi_keytab
 decl_stmt|;
 block|}
 struct|;
@@ -244,12 +248,21 @@ name|context
 parameter_list|,
 name|isc_boolean_t
 name|win2k
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|err_message
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  *	Builds a query containing a TKEY that will generate a GSSAPI context.  *	The key is requested to have the specified lifetime (in seconds).  *  *	Requires:  *\li		'msg'	  is a valid message  *\li		'name'	  is a valid name  *\li		'gname'	  is a valid name  *\li		'context' is a pointer to a valid gss_ctx_id_t  *			  (which may have the value GSS_C_NO_CONTEXT)  *\li		'win2k'   when true says to turn on some hacks to work  *			  with the non-standard GSS-TSIG of Windows 2000  *  *	Returns:  *\li		ISC_R_SUCCESS	msg was successfully updated to include the  *				query to be sent  *\li		other		an error occurred while building the message  */
+comment|/*%<  *	Builds a query containing a TKEY that will generate a GSSAPI context.  *	The key is requested to have the specified lifetime (in seconds).  *  *	Requires:  *\li		'msg'	  is a valid message  *\li		'name'	  is a valid name  *\li		'gname'	  is a valid name  *\li		'context' is a pointer to a valid gss_ctx_id_t  *			  (which may have the value GSS_C_NO_CONTEXT)  *\li		'win2k'   when true says to turn on some hacks to work  *			  with the non-standard GSS-TSIG of Windows 2000  *  *	Returns:  *\li		ISC_R_SUCCESS	msg was successfully updated to include the  *				query to be sent  *\li		other		an error occurred while building the message  *\li		*err_message	optional error message  */
 end_comment
 
 begin_function_decl
@@ -339,6 +352,11 @@ parameter_list|,
 name|dns_tsig_keyring_t
 modifier|*
 name|ring
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|err_message
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -401,6 +419,11 @@ name|ring
 parameter_list|,
 name|isc_boolean_t
 name|win2k
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|err_message
 parameter_list|)
 function_decl|;
 end_function_decl

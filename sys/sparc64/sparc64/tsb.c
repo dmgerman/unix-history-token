@@ -847,9 +847,9 @@ condition|(
 operator|(
 name|m
 operator|->
-name|flags
+name|oflags
 operator|&
-name|PG_UNMANAGED
+name|VPO_UNMANAGED
 operator|)
 operator|==
 literal|0

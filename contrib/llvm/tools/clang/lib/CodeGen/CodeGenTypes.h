@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"GlobalDecl.h"
+file|"clang/AST/GlobalDecl.h"
 end_include
 
 begin_include
@@ -100,12 +100,6 @@ name|class
 name|Module
 decl_stmt|;
 name|class
-name|OpaqueType
-decl_stmt|;
-name|class
-name|PATypeHolder
-decl_stmt|;
-name|class
 name|TargetData
 decl_stmt|;
 name|class
@@ -113,6 +107,9 @@ name|Type
 decl_stmt|;
 name|class
 name|LLVMContext
+decl_stmt|;
+name|class
+name|StructType
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -142,6 +139,9 @@ name|CXXDestructorDecl
 decl_stmt|;
 name|class
 name|CXXMethodDecl
+decl_stmt|;
+name|class
+name|CodeGenOptions
 decl_stmt|;
 name|class
 name|FieldDecl
@@ -225,54 +225,11 @@ name|CGCXXABI
 modifier|&
 name|TheCXXABI
 decl_stmt|;
-name|llvm
-operator|::
-name|SmallVector
-operator|<
-name|std
-operator|::
-name|pair
-operator|<
-name|QualType
-operator|,
-name|llvm
-operator|::
-name|OpaqueType
-operator|*
-operator|>
-operator|,
-literal|8
-operator|>
-name|PointersToResolve
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
 specifier|const
-name|Type
-operator|*
-operator|,
-name|llvm
-operator|::
-name|PATypeHolder
-operator|>
-name|TagDeclTypes
-expr_stmt|;
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|Type
-operator|*
-operator|,
-name|llvm
-operator|::
-name|PATypeHolder
-operator|>
-name|FunctionTypes
-expr_stmt|;
+name|CodeGenOptions
+modifier|&
+name|CodeGenOpts
+decl_stmt|;
 comment|/// The opaque type map for Objective-C interfaces. All direct
 comment|/// manipulation is done by the runtime interfaces, which are
 comment|/// responsible for coercing to the appropriate type; these opaque
@@ -285,7 +242,6 @@ specifier|const
 name|ObjCInterfaceType
 operator|*
 operator|,
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -308,21 +264,8 @@ operator|*
 operator|>
 name|CGRecordLayouts
 expr_stmt|;
-comment|/// FunctionInfos - Hold memoized CGFunctionInfo results.
-name|llvm
-operator|::
-name|FoldingSet
-operator|<
-name|CGFunctionInfo
-operator|>
-name|FunctionInfos
-expr_stmt|;
-name|private
-label|:
-comment|/// TypeCache - This map keeps cache of llvm::Types (through PATypeHolder)
-comment|/// and maps llvm::Types to corresponding clang::Type. llvm::PATypeHolder is
-comment|/// used instead of llvm::Type because it allows us to bypass potential
-comment|/// dangling type pointers due to type refinement on llvm side.
+comment|/// RecordDeclTypes - This contains the LLVM IR type for any converted
+comment|/// RecordDecl.
 name|llvm
 operator|::
 name|DenseMap
@@ -333,31 +276,84 @@ operator|*
 operator|,
 name|llvm
 operator|::
-name|PATypeHolder
+name|StructType
+operator|*
 operator|>
-name|TypeCache
+name|RecordDeclTypes
 expr_stmt|;
-comment|/// ConvertNewType - Convert type T into a llvm::Type. Do not use this
-comment|/// method directly because it does not do any type caching. This method
-comment|/// is available only for ConvertType(). CovertType() is preferred
-comment|/// interface to convert type T into a llvm::Type.
+comment|/// FunctionInfos - Hold memoized CGFunctionInfo results.
+name|llvm
+operator|::
+name|FoldingSet
+operator|<
+name|CGFunctionInfo
+operator|>
+name|FunctionInfos
+expr_stmt|;
+comment|/// RecordsBeingLaidOut - This set keeps track of records that we're currently
+comment|/// converting to an IR type.  For example, when converting:
+comment|/// struct A { struct B { int x; } } when processing 'x', the 'A' and 'B'
+comment|/// types will be in this set.
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
 specifier|const
+name|Type
+operator|*
+operator|,
+literal|4
+operator|>
+name|RecordsBeingLaidOut
+expr_stmt|;
+name|llvm
+operator|::
+name|SmallPtrSet
+operator|<
+specifier|const
+name|CGFunctionInfo
+operator|*
+operator|,
+literal|4
+operator|>
+name|FunctionsBeingProcessed
+expr_stmt|;
+comment|/// SkippedLayout - True if we didn't layout a function due to a being inside
+comment|/// a recursive struct conversion, set this to true.
+name|bool
+name|SkippedLayout
+decl_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+specifier|const
+name|RecordDecl
+operator|*
+operator|,
+literal|8
+operator|>
+name|DeferredRecords
+expr_stmt|;
+name|private
+label|:
+comment|/// TypeCache - This map keeps cache of llvm::Types
+comment|/// and maps llvm::Types to corresponding clang::Type.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|Type
+operator|*
+operator|,
 name|llvm
 operator|::
 name|Type
 operator|*
-name|ConvertNewType
-argument_list|(
-argument|QualType T
-argument_list|)
+operator|>
+name|TypeCache
 expr_stmt|;
-comment|/// HandleLateResolvedPointers - For top-level ConvertType calls, this handles
-comment|/// pointers that are referenced but have not been converted yet.  This is
-comment|/// used to handle cyclic structures properly.
-name|void
-name|HandleLateResolvedPointers
-parameter_list|()
-function_decl|;
 name|public
 label|:
 name|CodeGenTypes
@@ -387,6 +383,11 @@ argument_list|,
 name|CGCXXABI
 operator|&
 name|CXXABI
+argument_list|,
+specifier|const
+name|CodeGenOptions
+operator|&
+name|Opts
 argument_list|)
 expr_stmt|;
 operator|~
@@ -438,6 +439,17 @@ return|return
 name|TheABIInfo
 return|;
 block|}
+specifier|const
+name|CodeGenOptions
+operator|&
+name|getCodeGenOpts
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeGenOpts
+return|;
+block|}
 name|CGCXXABI
 operator|&
 name|getCXXABI
@@ -463,24 +475,11 @@ argument_list|()
 return|;
 block|}
 comment|/// ConvertType - Convert type T into a llvm::Type.
-specifier|const
 name|llvm
 operator|::
 name|Type
 operator|*
 name|ConvertType
-argument_list|(
-argument|QualType T
-argument_list|,
-argument|bool IsRecursive = false
-argument_list|)
-expr_stmt|;
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|ConvertTypeRecursive
 argument_list|(
 argument|QualType T
 argument_list|)
@@ -489,7 +488,6 @@ comment|/// ConvertTypeForMem - Convert type T into a llvm::Type.  This differs 
 comment|/// ConvertType in that it is used to convert to the memory representation for
 comment|/// a type.  For example, the scalar representation for _Bool is i1, but the
 comment|/// memory representation is usually i8 or i32, depending on the target.
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -497,31 +495,9 @@ operator|*
 name|ConvertTypeForMem
 argument_list|(
 argument|QualType T
-argument_list|,
-argument|bool IsRecursive = false
 argument_list|)
 expr_stmt|;
-specifier|const
-name|llvm
-operator|::
-name|Type
-operator|*
-name|ConvertTypeForMemRecursive
-argument_list|(
-argument|QualType T
-argument_list|)
-block|{
-return|return
-name|ConvertTypeForMem
-argument_list|(
-name|T
-argument_list|,
-name|true
-argument_list|)
-return|;
-block|}
 comment|/// GetFunctionType - Get the LLVM function type for \arg Info.
-specifier|const
 name|llvm
 operator|::
 name|FunctionType
@@ -531,11 +507,8 @@ argument_list|(
 argument|const CGFunctionInfo&Info
 argument_list|,
 argument|bool IsVariadic
-argument_list|,
-argument|bool IsRecursive = false
 argument_list|)
 expr_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|FunctionType
@@ -545,19 +518,23 @@ argument_list|(
 argument|GlobalDecl GD
 argument_list|)
 expr_stmt|;
-comment|/// VerifyFuncTypeComplete - Utility to check whether a function type can
+comment|/// isFuncTypeConvertible - Utility to check whether a function type can
 comment|/// be converted to an LLVM type (i.e. doesn't depend on an incomplete tag
 comment|/// type).
-specifier|static
-specifier|const
-name|TagType
-modifier|*
-name|VerifyFuncTypeComplete
+name|bool
+name|isFuncTypeConvertible
 parameter_list|(
 specifier|const
-name|Type
+name|FunctionType
 modifier|*
-name|T
+name|FT
+parameter_list|)
+function_decl|;
+name|bool
+name|isFuncTypeArgumentConvertible
+parameter_list|(
+name|QualType
+name|Ty
 parameter_list|)
 function_decl|;
 comment|/// GetFunctionTypeForVTable - Get the LLVM function type for use in a vtable,
@@ -593,6 +570,14 @@ name|TagDecl
 modifier|*
 name|TD
 parameter_list|)
+function_decl|;
+comment|/// getNullaryFunctionInfo - Get the function info for a void()
+comment|/// function with standard CC.
+specifier|const
+name|CGFunctionInfo
+modifier|&
+name|getNullaryFunctionInfo
+parameter_list|()
 function_decl|;
 comment|/// getFunctionInfo - Get the function info for the specified function decl.
 specifier|const
@@ -708,11 +693,6 @@ operator|<
 name|FunctionProtoType
 operator|>
 name|Ty
-argument_list|,
-name|bool
-name|IsRecursive
-operator|=
-name|false
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -725,11 +705,6 @@ operator|<
 name|FunctionNoProtoType
 operator|>
 name|Ty
-argument_list|,
-name|bool
-name|IsRecursive
-operator|=
-name|false
 argument_list|)
 decl_stmt|;
 comment|/// getFunctionInfo - Get the function info for a member function of
@@ -823,38 +798,59 @@ operator|::
 name|ExtInfo
 operator|&
 name|Info
-argument_list|,
-name|bool
-name|IsRecursive
-operator|=
-name|false
 argument_list|)
 decl_stmt|;
 comment|/// \brief Compute a new LLVM record layout object for the given record.
 name|CGRecordLayout
 modifier|*
 name|ComputeRecordLayout
-parameter_list|(
+argument_list|(
 specifier|const
 name|RecordDecl
-modifier|*
+operator|*
 name|D
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|StructType
+operator|*
+name|Ty
+argument_list|)
+decl_stmt|;
+comment|/// addRecordTypeName - Compute a name from the given record decl with an
+comment|/// optional suffix and name the given LLVM type using it.
+name|void
+name|addRecordTypeName
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+name|RD
+argument_list|,
+name|llvm
+operator|::
+name|StructType
+operator|*
+name|Ty
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|suffix
+argument_list|)
+decl_stmt|;
 name|public
 label|:
 comment|// These are internal details of CGT that shouldn't be used externally.
-comment|/// ConvertTagDeclType - Lay out a tagged decl type like struct or union or
-comment|/// enum.
-specifier|const
+comment|/// ConvertRecordDeclType - Lay out a tagged decl type like struct or union.
 name|llvm
 operator|::
-name|Type
+name|StructType
 operator|*
-name|ConvertTagDeclType
+name|ConvertRecordDeclType
 argument_list|(
 specifier|const
-name|TagDecl
+name|RecordDecl
 operator|*
 name|TD
 argument_list|)
@@ -866,23 +862,19 @@ name|void
 name|GetExpandedTypes
 argument_list|(
 name|QualType
-name|Ty
+name|type
 argument_list|,
-name|std
+name|llvm
 operator|::
-name|vector
+name|SmallVectorImpl
 operator|<
-specifier|const
 name|llvm
 operator|::
 name|Type
 operator|*
 operator|>
 operator|&
-name|ArgTys
-argument_list|,
-name|bool
-name|IsRecursive
+name|expanded
 argument_list|)
 decl_stmt|;
 comment|/// IsZeroInitializable - Return whether a type can be
@@ -905,6 +897,47 @@ modifier|*
 name|RD
 parameter_list|)
 function_decl|;
+name|bool
+name|isRecordLayoutComplete
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|noRecordsBeingLaidOut
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RecordsBeingLaidOut
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+name|bool
+name|isRecordBeingLaidOut
+argument_list|(
+specifier|const
+name|Type
+operator|*
+name|Ty
+argument_list|)
+decl|const
+block|{
+return|return
+name|RecordsBeingLaidOut
+operator|.
+name|count
+argument_list|(
+name|Ty
+argument_list|)
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

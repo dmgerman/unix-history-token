@@ -916,10 +916,21 @@ name|ar5212AniParams
 modifier|*
 name|params
 init|=
+name|AH_NULL
+decl_stmt|;
+comment|/* 	 * This function may be called before there's a current 	 * channel (eg to disable ANI.) 	 */
+if|if
+condition|(
+name|aniState
+operator|!=
+name|AH_NULL
+condition|)
+name|params
+operator|=
 name|aniState
 operator|->
 name|params
-decl_stmt|;
+expr_stmt|;
 name|OS_MARK
 argument_list|(
 name|ah
@@ -1569,11 +1580,15 @@ argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-name|ar5212SetRxFilter
+name|ah
+operator|->
+name|ah_setRxFilter
 argument_list|(
 name|ah
 argument_list|,
-name|ar5212GetRxFilter
+name|ah
+operator|->
+name|ah_getRxFilter
 argument_list|(
 name|ah
 argument_list|)
@@ -1643,11 +1658,15 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ar5212SetRxFilter
+name|ah
+operator|->
+name|ah_setRxFilter
 argument_list|(
 name|ah
 argument_list|,
-name|ar5212GetRxFilter
+name|ah
+operator|->
+name|ah_getRxFilter
 argument_list|(
 name|ah
 argument_list|)
@@ -2732,12 +2751,16 @@ expr_stmt|;
 comment|/* 	 * Turn off PHY error frame delivery while we futz with settings. 	 */
 name|rxfilter
 operator|=
-name|ar5212GetRxFilter
+name|ah
+operator|->
+name|ah_getRxFilter
 argument_list|(
 name|ah
 argument_list|)
 expr_stmt|;
-name|ar5212SetRxFilter
+name|ah
+operator|->
+name|ah_setRxFilter
 argument_list|(
 name|ah
 argument_list|,
@@ -2747,6 +2770,31 @@ operator|~
 name|HAL_RX_FILTER_PHYERR
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If ANI is disabled at this point, don't set the default 	 * ANI parameter settings - leave the HAL settings there. 	 * This is (currently) needed for reliable radar detection. 	 */
+if|if
+condition|(
+operator|!
+name|ANI_ENA
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+block|{
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_ANI
+argument_list|,
+literal|"%s: ANI disabled\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+goto|goto
+name|finish
+goto|;
+block|}
 comment|/* 	 * Automatic processing is done only in station mode right now. 	 */
 if|if
 condition|(
@@ -2893,6 +2941,18 @@ operator||=
 name|CHANNEL_ANI_SETUP
 expr_stmt|;
 block|}
+comment|/* 	 * In case the counters haven't yet been setup; set them up. 	 */
+name|enableAniMIBCounters
+argument_list|(
+name|ah
+argument_list|,
+name|ahp
+operator|->
+name|ah_curani
+operator|->
+name|params
+argument_list|)
+expr_stmt|;
 name|ar5212AniRestart
 argument_list|(
 name|ah
@@ -2900,8 +2960,12 @@ argument_list|,
 name|aniState
 argument_list|)
 expr_stmt|;
+name|finish
+label|:
 comment|/* restore RX filter mask */
-name|ar5212SetRxFilter
+name|ah
+operator|->
+name|ah_setRxFilter
 argument_list|(
 name|ah
 argument_list|,

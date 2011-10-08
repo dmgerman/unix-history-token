@@ -148,7 +148,7 @@ specifier|const
 expr_stmt|;
 comment|/// matches - Match the regex against a given \arg String.
 comment|///
-comment|/// \param Matches - If given, on a succesful match this will be filled in
+comment|/// \param Matches - If given, on a successful match this will be filled in
 comment|/// with references to the matched group expressions (inside \arg String),
 comment|/// the first group is always the entire pattern.
 comment|///

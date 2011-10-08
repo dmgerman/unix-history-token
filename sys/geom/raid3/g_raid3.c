@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -17495,7 +17501,8 @@ index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|strcmp
+operator|!
+name|g_compare_names
 argument_list|(
 name|md
 operator|.
@@ -17505,8 +17512,6 @@ name|pp
 operator|->
 name|name
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

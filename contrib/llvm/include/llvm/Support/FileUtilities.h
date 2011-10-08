@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/FileSystem.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Path.h"
 end_include
 
@@ -75,7 +81,7 @@ name|llvm
 block|{
 comment|/// DiffFilesWithTolerance - Compare the two files specified, returning 0 if
 comment|/// the files match, 1 if they are different, and 2 if there is a file error.
-comment|/// This function allows you to specify an absolete and relative FP error that
+comment|/// This function allows you to specify an absolute and relative FP error that
 comment|/// is allowed to exist.  If you specify a string to fill in for the error
 comment|/// option, it will set the string to an error message if an error occurs, or
 comment|/// if the files are different.
@@ -119,9 +125,10 @@ comment|///
 name|class
 name|FileRemover
 block|{
-name|sys
-operator|::
-name|Path
+name|SmallString
+operator|<
+literal|128
+operator|>
 name|Filename
 expr_stmt|;
 name|bool
@@ -140,21 +147,23 @@ block|{}
 name|explicit
 name|FileRemover
 argument_list|(
-argument|const sys::Path&filename
+argument|const Twine& filename
 argument_list|,
 argument|bool deleteIt = true
 argument_list|)
 operator|:
-name|Filename
-argument_list|(
-name|filename
-argument_list|)
-operator|,
 name|DeleteIt
 argument_list|(
 argument|deleteIt
 argument_list|)
-block|{}
+block|{
+name|filename
+operator|.
+name|toVector
+argument_list|(
+name|Filename
+argument_list|)
+block|;     }
 operator|~
 name|FileRemover
 argument_list|()
@@ -165,10 +174,22 @@ name|DeleteIt
 condition|)
 block|{
 comment|// Ignore problems deleting the file.
+name|bool
+name|existed
+decl_stmt|;
+name|sys
+operator|::
+name|fs
+operator|::
+name|remove
+argument_list|(
 name|Filename
 operator|.
-name|eraseFromDisk
+name|str
 argument_list|()
+argument_list|,
+name|existed
+argument_list|)
 expr_stmt|;
 block|}
 block|}
@@ -178,7 +199,7 @@ comment|/// had ownership of a file, remove it first.
 name|void
 name|setFile
 argument_list|(
-argument|const sys::Path&filename
+argument|const Twine& filename
 argument_list|,
 argument|bool deleteIt = true
 argument_list|)
@@ -187,14 +208,37 @@ if|if
 condition|(
 name|DeleteIt
 condition|)
+block|{
+comment|// Ignore problems deleting the file.
+name|bool
+name|existed
+decl_stmt|;
+name|sys
+operator|::
+name|fs
+operator|::
+name|remove
+argument_list|(
 name|Filename
 operator|.
-name|eraseFromDisk
+name|str
+argument_list|()
+argument_list|,
+name|existed
+argument_list|)
+expr_stmt|;
+block|}
+name|Filename
+operator|.
+name|clear
 argument_list|()
 expr_stmt|;
-name|Filename
-operator|=
 name|filename
+operator|.
+name|toVector
+argument_list|(
+name|Filename
+argument_list|)
 expr_stmt|;
 name|DeleteIt
 operator|=

@@ -75,10 +75,16 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"MBlazeGenRegisterInfo.h.inc"
+file|"MBlazeGenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -165,6 +171,20 @@ argument_list|(
 argument|unsigned RegEnum
 argument_list|)
 block|;
+specifier|static
+name|bool
+name|isRegister
+argument_list|(
+argument|unsigned RegEnum
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|isSpecialRegister
+argument_list|(
+argument|unsigned RegEnum
+argument_list|)
+block|;
 comment|/// Get PIC indirect call register
 specifier|static
 name|unsigned
@@ -245,6 +265,15 @@ specifier|const
 block|;
 name|int
 name|getDwarfRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLLVMRegNum
 argument_list|(
 argument|unsigned RegNum
 argument_list|,

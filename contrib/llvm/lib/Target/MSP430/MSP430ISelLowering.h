@@ -203,15 +203,6 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 name|SDValue
 name|LowerShifts
 argument_list|(

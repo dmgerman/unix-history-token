@@ -419,6 +419,23 @@ init|=
 literal|64
 block|,
 comment|/* At least 64 mandated by the firmware spec */
+name|INTR_IQ_QSIZE
+init|=
+literal|64
+block|,
+name|INTR_IQ_ESIZE
+init|=
+literal|64
+block|,
+comment|/* Handles some CPLs too, do not reduce */
+name|CTRL_EQ_QSIZE
+init|=
+literal|128
+block|,
+name|CTRL_EQ_ESIZE
+init|=
+literal|64
+block|,
 name|RX_IQ_QSIZE
 init|=
 literal|1024
@@ -476,6 +493,37 @@ end_enum
 begin_enum
 enum|enum
 block|{
+comment|/* adapter intr_type */
+name|INTR_INTX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+name|INTR_MSI
+init|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+name|INTR_MSIX
+init|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|}
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+block|{
 comment|/* adapter flags */
 name|FULL_INIT_DONE
 init|=
@@ -493,7 +541,7 @@ operator|<<
 literal|1
 operator|)
 block|,
-name|INTR_FWD
+name|INTR_SHARED
 init|=
 operator|(
 literal|1
@@ -501,6 +549,7 @@ operator|<<
 literal|2
 operator|)
 block|,
+comment|/* one set of intrq's for all ports */
 name|CXGBE_BUSY
 init|=
 operator|(
@@ -789,9 +838,9 @@ name|desc_used
 decl_stmt|;
 comment|/* # of hardware descriptors used by the WR */
 name|uint8_t
-name|map_used
+name|credits
 decl_stmt|;
-comment|/* # of frames sent out in the WR */
+comment|/* NIC txq: # of frames sent out in the WR */
 block|}
 struct|;
 end_struct
@@ -831,7 +880,19 @@ literal|2
 operator|)
 block|,
 comment|/* started */
-block|}
+comment|/* iq state */
+name|IQS_DISABLED
+init|=
+literal|0
+block|,
+name|IQS_BUSY
+init|=
+literal|1
+block|,
+name|IQS_IDLE
+init|=
+literal|2
+block|, }
 enum|;
 end_enum
 
@@ -882,9 +943,9 @@ modifier|*
 name|desc
 decl_stmt|;
 comment|/* KVA of descriptor ring */
-name|struct
-name|mtx
-name|iq_lock
+specifier|volatile
+name|uint32_t
+name|state
 decl_stmt|;
 name|struct
 name|adapter
@@ -951,7 +1012,7 @@ literal|2
 operator|)
 block|,
 comment|/* started */
-name|EQ_STALLED
+name|EQ_CRFLUSHED
 init|=
 operator|(
 literal|1
@@ -959,7 +1020,7 @@ operator|<<
 literal|3
 operator|)
 block|,
-comment|/* currently stalled */
+comment|/* expecting an update from SGE */
 block|}
 enum|;
 end_enum
@@ -972,10 +1033,6 @@ begin_struct
 struct|struct
 name|sge_eq
 block|{
-name|bus_dma_tag_t
-name|tx_tag
-decl_stmt|;
-comment|/* tag for transmit buffers */
 name|bus_dma_tag_t
 name|desc_tag
 decl_stmt|;
@@ -1006,18 +1063,6 @@ name|bus_addr_t
 name|ba
 decl_stmt|;
 comment|/* bus address of descriptor ring */
-name|struct
-name|tx_sdesc
-modifier|*
-name|sdesc
-decl_stmt|;
-comment|/* KVA of software descriptor ring */
-name|struct
-name|buf_ring
-modifier|*
-name|br
-decl_stmt|;
-comment|/* tx buffer ring */
 name|struct
 name|sge_qstat
 modifier|*
@@ -1052,37 +1097,12 @@ name|uint16_t
 name|iqid
 decl_stmt|;
 comment|/* iq that gets egr_update for the eq */
-name|uint32_t
+name|unsigned
+name|int
 name|cntxt_id
 decl_stmt|;
 comment|/* SGE context id for the eq */
-comment|/* DMA maps used for tx */
-name|struct
-name|tx_map
-modifier|*
-name|maps
-decl_stmt|;
-name|uint32_t
-name|map_total
-decl_stmt|;
-comment|/* # of DMA maps */
-name|uint32_t
-name|map_pidx
-decl_stmt|;
-comment|/* next map to be used */
-name|uint32_t
-name|map_cidx
-decl_stmt|;
-comment|/* reclaimed up to this index */
-name|uint32_t
-name|map_avail
-decl_stmt|;
-comment|/* # of available maps */
 block|}
-name|__aligned
-argument_list|(
-name|CACHE_LINE_SIZE
-argument_list|)
 struct|;
 end_struct
 
@@ -1167,7 +1187,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* txq: SGE egress queue + miscellaneous items */
+comment|/* txq: SGE egress queue + what's needed for Ethernet NIC */
 end_comment
 
 begin_struct
@@ -1180,6 +1200,28 @@ name|eq
 decl_stmt|;
 comment|/* MUST be first */
 name|struct
+name|ifnet
+modifier|*
+name|ifp
+decl_stmt|;
+comment|/* the interface this txq belongs to */
+name|bus_dma_tag_t
+name|tx_tag
+decl_stmt|;
+comment|/* tag for transmit buffers */
+name|struct
+name|buf_ring
+modifier|*
+name|br
+decl_stmt|;
+comment|/* tx buffer ring */
+name|struct
+name|tx_sdesc
+modifier|*
+name|sdesc
+decl_stmt|;
+comment|/* KVA of software descriptor ring */
+name|struct
 name|mbuf
 modifier|*
 name|m
@@ -1189,12 +1231,28 @@ name|struct
 name|task
 name|resume_tx
 decl_stmt|;
+comment|/* DMA maps used for tx */
 name|struct
-name|ifnet
+name|tx_map
 modifier|*
-name|ifp
+name|maps
 decl_stmt|;
-comment|/* the interface this txq belongs to */
+name|uint32_t
+name|map_total
+decl_stmt|;
+comment|/* # of DMA maps */
+name|uint32_t
+name|map_pidx
+decl_stmt|;
+comment|/* next map to be used */
+name|uint32_t
+name|map_cidx
+decl_stmt|;
+comment|/* reclaimed up to this index */
+name|uint32_t
+name|map_avail
+decl_stmt|;
+comment|/* # of available maps */
 comment|/* stats for common events first */
 name|uint64_t
 name|txcsum
@@ -1242,6 +1300,10 @@ name|egr_update
 decl_stmt|;
 comment|/* # of SGE_EGR_UPDATE notifications for txq */
 block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
 struct|;
 end_struct
 
@@ -1314,6 +1376,33 @@ argument_list|)
 struct|;
 end_struct
 
+begin_comment
+comment|/* ctrlq: SGE egress queue + stats for control queue */
+end_comment
+
+begin_struct
+struct|struct
+name|sge_ctrlq
+block|{
+name|struct
+name|sge_eq
+name|eq
+decl_stmt|;
+comment|/* MUST be first */
+comment|/* stats for common events first */
+comment|/* stats for not-that-common events */
+name|uint32_t
+name|no_desc
+decl_stmt|;
+comment|/* out of hardware descriptors */
+block|}
+name|__aligned
+argument_list|(
+name|CACHE_LINE_SIZE
+argument_list|)
+struct|;
+end_struct
+
 begin_struct
 struct|struct
 name|sge
@@ -1329,6 +1418,9 @@ name|counter_val
 index|[
 name|SGE_NCOUNTERS
 index|]
+decl_stmt|;
+name|int
+name|fl_starve_threshold
 decl_stmt|;
 name|int
 name|nrxq
@@ -1352,11 +1444,17 @@ name|fwq
 decl_stmt|;
 comment|/* Firmware event queue */
 name|struct
+name|sge_ctrlq
+modifier|*
+name|ctrlq
+decl_stmt|;
+comment|/* Control queues */
+name|struct
 name|sge_iq
 modifier|*
-name|fiq
+name|intrq
 decl_stmt|;
-comment|/* Forwarded interrupt queues (INTR_FWD) */
+comment|/* Interrupt queues */
 name|struct
 name|sge_txq
 modifier|*
@@ -1488,6 +1586,12 @@ name|NCHAN
 index|]
 decl_stmt|;
 name|struct
+name|l2t_data
+modifier|*
+name|l2t
+decl_stmt|;
+comment|/* L2 table */
+name|struct
 name|tid_info
 name|tids
 decl_stmt|;
@@ -1513,6 +1617,26 @@ decl_stmt|;
 name|struct
 name|t4_virt_res
 name|vres
+decl_stmt|;
+name|struct
+name|sysctl_ctx_list
+name|ctx
+decl_stmt|;
+comment|/* from first_port_up to last_port_down */
+name|struct
+name|sysctl_oid
+modifier|*
+name|oid_fwq
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|oid_ctrlq
+decl_stmt|;
+name|struct
+name|sysctl_oid
+modifier|*
+name|oid_intrq
 decl_stmt|;
 name|struct
 name|mtx
@@ -1611,46 +1735,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IQ_LOCK
-parameter_list|(
-name|iq
-parameter_list|)
-value|mtx_lock(&(iq)->iq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IQ_UNLOCK
-parameter_list|(
-name|iq
-parameter_list|)
-value|mtx_unlock(&(iq)->iq_lock)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IQ_LOCK_ASSERT_OWNED
-parameter_list|(
-name|iq
-parameter_list|)
-value|mtx_assert(&(iq)->iq_lock, MA_OWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IQ_LOCK_ASSERT_NOTOWNED
-parameter_list|(
-name|iq
-parameter_list|)
-value|mtx_assert(&(iq)->iq_lock, MA_NOTOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
 name|FL_LOCK
 parameter_list|(
 name|fl
@@ -1696,46 +1780,6 @@ parameter_list|(
 name|fl
 parameter_list|)
 value|mtx_assert(&(fl)->fl_lock, MA_NOTOWNED)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RXQ_LOCK
-parameter_list|(
-name|rxq
-parameter_list|)
-value|IQ_LOCK(&(rxq)->iq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RXQ_UNLOCK
-parameter_list|(
-name|rxq
-parameter_list|)
-value|IQ_UNLOCK(&(rxq)->iq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RXQ_LOCK_ASSERT_OWNED
-parameter_list|(
-name|rxq
-parameter_list|)
-value|IQ_LOCK_ASSERT_OWNED(&(rxq)->iq)
-end_define
-
-begin_define
-define|#
-directive|define
-name|RXQ_LOCK_ASSERT_NOTOWNED
-parameter_list|(
-name|rxq
-parameter_list|)
-value|IQ_LOCK_ASSERT_NOTOWNED(&(rxq)->iq)
 end_define
 
 begin_define
@@ -1908,14 +1952,25 @@ define|\
 value|rxq =&pi->adapter->sge.rxq[pi->first_rxq]; \ 	for (iter = 0; iter< pi->nrxq; ++iter, ++rxq)
 end_define
 
+begin_comment
+comment|/* One for errors, one for firmware events */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|NFIQ
+name|T4_EXTRA_INTR
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|NINTRQ
 parameter_list|(
 name|sc
 parameter_list|)
-value|((sc)->intr_count> 1 ? (sc)->intr_count - 1 : 1)
+value|((sc)->intr_count> T4_EXTRA_INTR ? \     (sc)->intr_count - T4_EXTRA_INTR : 1)
 end_define
 
 begin_function
@@ -2491,7 +2546,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t4_setup_adapter_iqs
+name|t4_setup_adapter_queues
 parameter_list|(
 name|struct
 name|adapter
@@ -2502,7 +2557,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|t4_teardown_adapter_iqs
+name|t4_teardown_adapter_queues
 parameter_list|(
 name|struct
 name|adapter
@@ -2545,7 +2600,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|t4_intr_fwd
+name|t4_intr
 parameter_list|(
 name|void
 modifier|*
@@ -2574,10 +2629,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|t4_intr_data
+name|int
+name|t4_mgmt_tx
 parameter_list|(
-name|void
+name|struct
+name|adapter
+modifier|*
+parameter_list|,
+name|struct
+name|mbuf
 modifier|*
 parameter_list|)
 function_decl|;

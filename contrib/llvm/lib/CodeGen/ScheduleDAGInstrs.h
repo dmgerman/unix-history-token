@@ -627,17 +627,6 @@ operator|>
 expr|>
 name|Uses
 block|;
-comment|/// DbgValueVec - Remember DBG_VALUEs that refer to a particular
-comment|/// register.
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineInstr
-operator|*
-operator|>
-name|DbgValueVec
-block|;
 comment|/// PendingLoads - Remember where unknown loads are after the most recent
 comment|/// unknown store, as we iterate. As with Defs and Uses, this is here
 comment|/// to minimize construction/destruction.
@@ -666,38 +655,96 @@ literal|8
 operator|>
 name|LoopLiveInRegs
 block|;
-name|public
+name|protected
 operator|:
+comment|/// DbgValues - Remember instruction that preceeds DBG_VALUE.
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|MachineInstr
+operator|*
+operator|,
+name|MachineInstr
+operator|*
+operator|>
+expr|>
+name|DbgValueVector
+expr_stmt|;
+name|DbgValueVector
+name|DbgValues
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|MachineInstr
+modifier|*
+name|FirstDbgValue
+decl_stmt|;
+end_decl_stmt
+
+begin_label
+name|public
+label|:
+end_label
+
+begin_expr_stmt
 name|MachineBasicBlock
 operator|::
 name|iterator
 name|Begin
-block|;
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// The beginning of the range to
+end_comment
+
+begin_comment
 comment|// be scheduled. The range extends
+end_comment
+
+begin_comment
 comment|// to InsertPos.
+end_comment
+
+begin_decl_stmt
 name|unsigned
 name|InsertPosIndex
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// The index in BB of InsertPos.
+end_comment
+
+begin_function_decl
 name|explicit
 name|ScheduleDAGInstrs
-argument_list|(
+parameter_list|(
 name|MachineFunction
-operator|&
+modifier|&
 name|mf
-argument_list|,
+parameter_list|,
 specifier|const
 name|MachineLoopInfo
-operator|&
+modifier|&
 name|mli
-argument_list|,
+parameter_list|,
 specifier|const
 name|MachineDominatorTree
-operator|&
+modifier|&
 name|mdt
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|virtual
 operator|~
 name|ScheduleDAGInstrs
@@ -793,110 +840,230 @@ name|back
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// Run - perform scheduling.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|void
 name|Run
 argument_list|(
-argument|MachineBasicBlock *bb
+name|MachineBasicBlock
+operator|*
+name|bb
 argument_list|,
-argument|MachineBasicBlock::iterator begin
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|begin
 argument_list|,
-argument|MachineBasicBlock::iterator end
+name|MachineBasicBlock
+operator|::
+name|iterator
+name|end
 argument_list|,
-argument|unsigned endindex
+name|unsigned
+name|endindex
 argument_list|)
-block|;
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// BuildSchedGraph - Build SUnits from the MachineBasicBlock that we are
+end_comment
+
+begin_comment
 comment|/// input.
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|BuildSchedGraph
-argument_list|(
+parameter_list|(
 name|AliasAnalysis
-operator|*
+modifier|*
 name|AA
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// AddSchedBarrierDeps - Add dependencies from instructions in the current
+end_comment
+
+begin_comment
 comment|/// list of instructions being scheduled to scheduling barrier. We want to
+end_comment
+
+begin_comment
 comment|/// make sure instructions which define registers that are either used by
+end_comment
+
+begin_comment
 comment|/// the terminator or are live-out are properly scheduled. This is
+end_comment
+
+begin_comment
 comment|/// especially important when the definition latency of the return value(s)
+end_comment
+
+begin_comment
 comment|/// are too high to be hidden by the branch or when the liveout registers
+end_comment
+
+begin_comment
 comment|/// used by instructions in the fallthrough block.
+end_comment
+
+begin_function_decl
 name|void
 name|AddSchedBarrierDeps
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ComputeLatency - Compute node latency.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|ComputeLatency
-argument_list|(
+parameter_list|(
 name|SUnit
-operator|*
+modifier|*
 name|SU
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// ComputeOperandLatency - Override dependence edge latency using
+end_comment
+
+begin_comment
 comment|/// operand use/def information
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|virtual
 name|void
 name|ComputeOperandLatency
 argument_list|(
-argument|SUnit *Def
+name|SUnit
+operator|*
+name|Def
 argument_list|,
-argument|SUnit *Use
+name|SUnit
+operator|*
+name|Use
 argument_list|,
-argument|SDep& dep
+name|SDep
+operator|&
+name|dep
 argument_list|)
-specifier|const
-block|;
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|virtual
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|EmitSchedule
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// StartBlock - Prepare to perform scheduling in the given block.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|StartBlock
-argument_list|(
+parameter_list|(
 name|MachineBasicBlock
-operator|*
+modifier|*
 name|BB
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// Schedule - Order nodes according to selected style, filling
+end_comment
+
+begin_comment
 comment|/// in the Sequence member.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|Schedule
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-block|;
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// FinishBlock - Clean up after scheduling in the given block.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_function_decl
 name|virtual
 name|void
 name|FinishBlock
-argument_list|()
-block|;
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|virtual
 name|void
 name|dumpNode
 argument_list|(
-argument|const SUnit *SU
-argument_list|)
 specifier|const
-block|;
+name|SUnit
+operator|*
+name|SU
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
 name|virtual
 name|std
 operator|::
@@ -906,12 +1073,11 @@ argument_list|(
 argument|const SUnit *SU
 argument_list|)
 specifier|const
-block|;   }
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
-unit|}
+unit|}; }
 endif|#
 directive|endif
 end_endif

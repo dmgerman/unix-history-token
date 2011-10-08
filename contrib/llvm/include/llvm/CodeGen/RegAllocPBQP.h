@@ -384,9 +384,7 @@ operator|>
 name|VReg2Node
 expr_stmt|;
 typedef|typedef
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|unsigned
 operator|,
@@ -608,6 +606,12 @@ operator|<
 name|PBQPBuilder
 operator|>
 name|builder
+argument_list|,
+name|char
+operator|*
+name|customPassID
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 block|}

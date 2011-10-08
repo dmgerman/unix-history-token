@@ -2968,6 +2968,22 @@ name|minimum_command_size
 operator|=
 literal|6
 expr_stmt|;
+comment|/* 	 * Refcount and block open attempts until we are setup 	 * Can't block 	 */
+operator|(
+name|void
+operator|)
+name|cam_periph_hold
+argument_list|(
+name|periph
+argument_list|,
+name|PRIBIO
+argument_list|)
+expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Load the user's default, if any. 	 */
 name|snprintf
 argument_list|(
@@ -3026,11 +3042,6 @@ operator|=
 literal|10
 expr_stmt|;
 comment|/* 	 * We need to register the statistics structure for this device, 	 * but we don't have the blocksize yet for it.  So, we register 	 * the structure and indicate that we don't have the blocksize 	 * yet.  Unlike other SCSI peripheral drivers, we explicitly set 	 * the device type here to be CDROM, rather than just ORing in 	 * the device type.  This is because this driver can attach to either 	 * CDROM or WORM devices, and we want this peripheral driver to 	 * show up in the devstat list as a CD peripheral driver, not a 	 * WORM peripheral driver.  WORM drives will also have the WORM 	 * driver attached to them. 	 */
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 name|softc
 operator|->
 name|disk
@@ -3058,7 +3069,12 @@ name|DEVSTAT_BS_UNAVAILABLE
 argument_list|,
 name|DEVSTAT_TYPE_CDROM
 operator||
-name|DEVSTAT_TYPE_IF_SCSI
+name|XPORT_DEVSTAT_TYPE
+argument_list|(
+name|cpi
+operator|.
+name|transport
+argument_list|)
 argument_list|,
 name|DEVSTAT_PRIORITY_CD
 argument_list|)
@@ -4156,17 +4172,6 @@ block|}
 block|}
 name|cdregisterexit
 label|:
-comment|/* 	 * Refcount and block open attempts until we are setup 	 * Can't block 	 */
-operator|(
-name|void
-operator|)
-name|cam_periph_hold
-argument_list|(
-name|periph
-argument_list|,
-name|PRIBIO
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7007,9 +7012,17 @@ name|csio
 operator|->
 name|sense_data
 expr_stmt|;
-name|scsi_extract_sense
+name|scsi_extract_sense_len
 argument_list|(
 name|sense
+argument_list|,
+name|csio
+operator|->
+name|sense_len
+operator|-
+name|csio
+operator|->
+name|sense_resid
 argument_list|,
 operator|&
 name|error_code
@@ -7022,6 +7035,9 @@ name|asc
 argument_list|,
 operator|&
 name|ascq
+argument_list|,
+comment|/*show_errors*/
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -8897,7 +8913,7 @@ name|th
 argument_list|)
 argument_list|,
 comment|/*sense_flags*/
-literal|0
+name|SF_NO_PRINT
 argument_list|)
 expr_stmt|;
 if|if
@@ -13812,7 +13828,7 @@ name|asc
 decl_stmt|,
 name|ascq
 decl_stmt|;
-name|scsi_extract_sense
+name|scsi_extract_sense_len
 argument_list|(
 operator|&
 name|ccb
@@ -13820,6 +13836,18 @@ operator|->
 name|csio
 operator|.
 name|sense_data
+argument_list|,
+name|ccb
+operator|->
+name|csio
+operator|.
+name|sense_len
+operator|-
+name|ccb
+operator|->
+name|csio
+operator|.
+name|sense_resid
 argument_list|,
 operator|&
 name|error_code
@@ -13832,6 +13860,9 @@ name|asc
 argument_list|,
 operator|&
 name|ascq
+argument_list|,
+comment|/*show_errors*/
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

@@ -203,6 +203,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|kdb_alt_break_gdb
+parameter_list|(
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|kdb_break
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|kdb_backtrace
 parameter_list|(
@@ -524,7 +545,7 @@ value|"trapsig"
 end_define
 
 begin_comment
-comment|/* Sun4v/Sparc fault. */
+comment|/* Sparc fault. */
 end_comment
 
 begin_define

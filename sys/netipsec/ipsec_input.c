@@ -389,12 +389,17 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
+name|INET
+ifdef|#
+directive|ifdef
 name|IPSEC_NAT_T
 name|struct
 name|m_tag
 modifier|*
 name|tag
 decl_stmt|;
+endif|#
+directive|endif
 endif|#
 directive|endif
 name|IPSEC_ISTAT
@@ -2278,6 +2283,11 @@ name|m
 argument_list|)
 expr_stmt|;
 comment|/* record data transfer */
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DEV_ENC

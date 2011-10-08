@@ -352,7 +352,17 @@ operator|.
 name|fo_close
 operator|=
 name|svr4_soo_close
-block|}
+block|,
+operator|.
+name|fo_chmod
+operator|=
+name|invfo_chmod
+block|,
+operator|.
+name|fo_chown
+operator|=
+name|invfo_chown
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -984,6 +994,8 @@ name|fp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=

@@ -994,6 +994,12 @@ decl_stmt|;
 name|uint8_t
 name|is_opened
 decl_stmt|;
+name|uint8_t
+name|parent_address
+decl_stmt|;
+name|uint8_t
+name|parent_port
+decl_stmt|;
 name|char
 name|usb_desc
 index|[

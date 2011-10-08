@@ -338,6 +338,8 @@ name|ASL_MSG_RESERVED_NO_RETURN_VAL
 block|,
 name|ASL_MSG_GPE_NAME_CONFLICT
 block|,
+name|ASL_MSG_NO_REGION
+block|,
 name|ASL_MSG_INVALID_FIELD_NAME
 block|,
 name|ASL_MSG_INTEGER_SIZE
@@ -774,6 +776,9 @@ literal|"Reserved method should not return a value"
 block|,
 comment|/*    ASL_MSG_GPE_NAME_CONFLICT */
 literal|"Name conflicts with a previous GPE method"
+block|,
+comment|/*    ASL_MSG_NO_REGION */
+literal|"_REG has no corresponding Operation Region"
 block|,
 comment|/* These messages are used by the data table compiler only */
 comment|/*    ASL_MSG_INVALID_FIELD_NAME */

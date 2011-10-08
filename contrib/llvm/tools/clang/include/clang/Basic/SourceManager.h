@@ -92,7 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/MemoryBuffer.h"
 end_include
 
 begin_include
@@ -111,9 +123,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MemoryBuffer
-decl_stmt|;
 name|class
 name|StringRef
 decl_stmt|;
@@ -138,6 +147,9 @@ name|FileEntry
 decl_stmt|;
 name|class
 name|LineTableInfo
+decl_stmt|;
+name|class
+name|LangOptions
 decl_stmt|;
 comment|/// SrcMgr - Public enums and private classes that are part of the
 comment|/// SourceManager implementation.
@@ -200,13 +212,22 @@ name|Buffer
 expr_stmt|;
 name|public
 label|:
-comment|/// Reference to the file entry.  This reference does not own
-comment|/// the FileEntry object.  It is possible for this to be NULL if
+comment|/// Reference to the file entry representing this ContentCache.
+comment|/// This reference does not own the FileEntry object.
+comment|/// It is possible for this to be NULL if
 comment|/// the ContentCache encapsulates an imaginary text buffer.
 specifier|const
 name|FileEntry
 modifier|*
-name|Entry
+name|OrigEntry
+decl_stmt|;
+comment|/// \brief References the file which the contents were actually loaded from.
+comment|/// Can be different from 'Entry' if we overridden the contents of one file
+comment|/// with the contents of another file.
+specifier|const
+name|FileEntry
+modifier|*
+name|ContentsEntry
 decl_stmt|;
 comment|/// SourceLineCache - A bump pointer allocated array of offsets for each
 comment|/// source line.  This is lazily computed.  This is owned by the
@@ -222,7 +243,7 @@ name|NumLines
 decl_stmt|;
 comment|/// getBuffer - Returns the memory buffer for the associated content.
 comment|///
-comment|/// \param Diag Object through which diagnostics will be emitted it the
+comment|/// \param Diag Object through which diagnostics will be emitted if the
 comment|/// buffer cannot be retrieved.
 comment|///
 comment|/// \param Loc If specified, is the location that invalid file diagnostics
@@ -261,6 +282,17 @@ comment|///  this ContentCache.  This can be 0 if the MemBuffer was not actually
 comment|///  instantiated.
 name|unsigned
 name|getSizeBytesMapped
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// Returns the kind of memory used to back the memory buffer for
+comment|/// this content cache.  This is used for performance analysis.
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|::
+name|BufferKind
+name|getMemoryBufferKind
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -388,9 +420,54 @@ argument_list|,
 name|false
 argument_list|)
 operator|,
-name|Entry
+name|OrigEntry
 argument_list|(
 name|Ent
+argument_list|)
+operator|,
+name|ContentsEntry
+argument_list|(
+name|Ent
+argument_list|)
+operator|,
+name|SourceLineCache
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumLines
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|ContentCache
+argument_list|(
+specifier|const
+name|FileEntry
+operator|*
+name|Ent
+argument_list|,
+specifier|const
+name|FileEntry
+operator|*
+name|contentEnt
+argument_list|)
+operator|:
+name|Buffer
+argument_list|(
+literal|0
+argument_list|,
+name|false
+argument_list|)
+operator|,
+name|OrigEntry
+argument_list|(
+name|Ent
+argument_list|)
+operator|,
+name|ContentsEntry
+argument_list|(
+name|contentEnt
 argument_list|)
 operator|,
 name|SourceLineCache
@@ -409,7 +486,7 @@ argument_list|()
 expr_stmt|;
 comment|/// The copy ctor does not allow copies where source object has either
 comment|///  a non-NULL Buffer or SourceLineCache.  Ownership of allocated memory
-comment|///  is not transfered, so this is a logical error.
+comment|///  is not transferred, so this is a logical error.
 name|ContentCache
 argument_list|(
 specifier|const
@@ -430,11 +507,17 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
-name|Entry
+name|OrigEntry
 operator|=
 name|RHS
 operator|.
-name|Entry
+name|OrigEntry
+block|;
+name|ContentsEntry
+operator|=
+name|RHS
+operator|.
+name|ContentsEntry
 block|;
 name|assert
 argument_list|(
@@ -679,7 +762,9 @@ decl_stmt|;
 comment|/// InstantiationLocStart/InstantiationLocEnd - In a macro expansion, these
 comment|/// indicate the start and end of the instantiation.  In object-like macros,
 comment|/// these will be the same.  In a function-like macro instantiation, the
-comment|/// start will be the identifier and the end will be the ')'.
+comment|/// start will be the identifier and the end will be the ')'.  Finally, in
+comment|/// macro-argument instantitions, the end will be 'SourceLocation()', an
+comment|/// invalid location.
 name|unsigned
 name|InstantiationLocStart
 decl_stmt|,
@@ -720,13 +805,26 @@ name|getInstantiationLocEnd
 argument_list|()
 specifier|const
 block|{
-return|return
+name|SourceLocation
+name|EndLoc
+operator|=
 name|SourceLocation
 operator|::
 name|getFromRawEncoding
 argument_list|(
 name|InstantiationLocEnd
 argument_list|)
+block|;
+return|return
+name|EndLoc
+operator|.
+name|isInvalid
+argument_list|()
+condition|?
+name|getInstantiationLocStart
+argument_list|()
+else|:
+name|EndLoc
 return|;
 block|}
 name|std
@@ -754,23 +852,47 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// get - Return a InstantiationInfo for an expansion.  IL specifies
-comment|/// the instantiation location (where the macro is expanded), and SL
-comment|/// specifies the spelling location (where the characters from the token
-comment|/// come from).  IL and PL can both refer to normal File SLocs or
+name|bool
+name|isMacroArgInstantiation
+argument_list|()
+specifier|const
+block|{
+comment|// Note that this needs to return false for default constructed objects.
+return|return
+name|getInstantiationLocStart
+argument_list|()
+operator|.
+name|isValid
+argument_list|()
+operator|&&
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|InstantiationLocEnd
+argument_list|)
+operator|.
+name|isInvalid
+argument_list|()
+return|;
+block|}
+comment|/// create - Return a InstantiationInfo for an expansion. ILStart and
+comment|/// ILEnd specify the instantiation range (where the macro is expanded),
+comment|/// and SL specifies the spelling location (where the characters from the
+comment|/// token come from). All three can refer to normal File SLocs or
 comment|/// instantiation locations.
 specifier|static
 name|InstantiationInfo
-name|get
+name|create
 parameter_list|(
+name|SourceLocation
+name|SL
+parameter_list|,
 name|SourceLocation
 name|ILStart
 parameter_list|,
 name|SourceLocation
 name|ILEnd
-parameter_list|,
-name|SourceLocation
-name|SL
 parameter_list|)
 block|{
 name|InstantiationInfo
@@ -805,6 +927,50 @@ argument_list|()
 expr_stmt|;
 return|return
 name|X
+return|;
+block|}
+comment|/// createForMacroArg - Return a special InstantiationInfo for the
+comment|/// expansion of a macro argument into a function-like macro's body. IL
+comment|/// specifies the instantiation location (where the macro is expanded).
+comment|/// This doesn't need to be a range because a macro is always instantiated
+comment|/// at a macro parameter reference, and macro parameters are always exactly
+comment|/// one token. SL specifies the spelling location (where the characters
+comment|/// from the token come from). IL and SL can both refer to normal File
+comment|/// SLocs or instantiation locations.
+comment|///
+comment|/// Given the code:
+comment|/// \code
+comment|///   #define F(x) f(x)
+comment|///   F(42);
+comment|/// \endcode
+comment|///
+comment|/// When expanding '\c F(42)', the '\c x' would call this with an SL
+comment|/// pointing at '\c 42' anad an IL pointing at its location in the
+comment|/// definition of '\c F'.
+specifier|static
+name|InstantiationInfo
+name|createForMacroArg
+parameter_list|(
+name|SourceLocation
+name|SL
+parameter_list|,
+name|SourceLocation
+name|IL
+parameter_list|)
+block|{
+comment|// We store an intentionally invalid source location for the end of the
+comment|// instantiation range to mark that this is a macro argument instantation
+comment|// rather than a normal one.
+return|return
+name|create
+argument_list|(
+name|SL
+argument_list|,
+name|IL
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|)
 return|;
 block|}
 block|}
@@ -990,8 +1156,11 @@ name|ExternalSLocEntrySource
 argument_list|()
 expr_stmt|;
 comment|/// \brief Read the source location entry with index ID.
+comment|///
+comment|/// \returns true if an error occurred that prevented the source-location
+comment|/// entry from being loaded.
 name|virtual
-name|void
+name|bool
 name|ReadSLocEntry
 parameter_list|(
 name|unsigned
@@ -1152,26 +1321,34 @@ comment|/// objects, turning them into either spelling or instantiation location
 comment|/// Spelling locations represent where the bytes corresponding to a token came
 comment|/// from and instantiation locations represent where the location is in the
 comment|/// user's view.  In the case of a macro expansion, for example, the spelling
-comment|/// location indicates where the expanded token came from and the instantiation
+comment|/// location indicates  where the expanded token came from and the instantiation
 comment|/// location specifies where it was expanded.
 name|class
 name|SourceManager
+range|:
+name|public
+name|llvm
+operator|::
+name|RefCountedBase
+operator|<
+name|SourceManager
+operator|>
 block|{
 comment|/// \brief Diagnostic object.
 name|Diagnostic
-modifier|&
+operator|&
 name|Diag
-decl_stmt|;
+block|;
 name|FileManager
-modifier|&
+operator|&
 name|FileMgr
-decl_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
 name|BumpPtrAllocator
 name|ContentCacheAlloc
-expr_stmt|;
+block|;
 comment|/// FileInfos - Memoized information about all of the files tracked by this
 comment|/// SourceManager.  This set allows us to merge ContentCache entries based
 comment|/// on their FileEntry*.  All ContentCache objects will thus have unique,
@@ -1183,14 +1360,34 @@ operator|<
 specifier|const
 name|FileEntry
 operator|*
-operator|,
+block|,
 name|SrcMgr
 operator|::
 name|ContentCache
 operator|*
 operator|>
 name|FileInfos
-expr_stmt|;
+block|;
+comment|/// \brief True if the ContentCache for files that are overriden by other
+comment|/// files, should report the original file name. Defaults to true.
+name|bool
+name|OverridenFilesKeepOriginalName
+block|;
+comment|/// \brief Files that have been overriden with the contents from another file.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FileEntry
+operator|*
+block|,
+specifier|const
+name|FileEntry
+operator|*
+operator|>
+name|OverriddenFiles
+block|;
 comment|/// MemBufferInfos - Information about various memory buffers that we have
 comment|/// read in.  All FileEntry* within the stored ContentCache objects are NULL,
 comment|/// as they do not refer to a file.
@@ -1204,7 +1401,7 @@ name|ContentCache
 operator|*
 operator|>
 name|MemBufferInfos
-expr_stmt|;
+block|;
 comment|/// SLocEntryTable - This is an array of SLocEntry's that we have created.
 comment|/// FileID is an index into this vector.  This array is sorted by the offset.
 name|std
@@ -1216,12 +1413,12 @@ operator|::
 name|SLocEntry
 operator|>
 name|SLocEntryTable
-expr_stmt|;
+block|;
 comment|/// NextOffset - This is the next available offset that a new SLocEntry can
 comment|/// start at.  It is SLocEntryTable.back().getOffset()+size of back() entry.
 name|unsigned
 name|NextOffset
-decl_stmt|;
+block|;
 comment|/// \brief If source location entries are being lazily loaded from
 comment|/// an external source, this vector indicates whether the Ith source
 comment|/// location entry has already been loaded from the external storage.
@@ -1232,82 +1429,90 @@ operator|<
 name|bool
 operator|>
 name|SLocEntryLoaded
-expr_stmt|;
+block|;
 comment|/// \brief An external source for source location entries.
 name|ExternalSLocEntrySource
-modifier|*
+operator|*
 name|ExternalSLocEntries
-decl_stmt|;
+block|;
 comment|/// LastFileIDLookup - This is a one-entry cache to speed up getFileID.
 comment|/// LastFileIDLookup records the last FileID looked up or created, because it
 comment|/// is very common to look up many tokens from the same file.
 name|mutable
 name|FileID
 name|LastFileIDLookup
-decl_stmt|;
+block|;
 comment|/// LineTable - This holds information for #line directives.  It is referenced
 comment|/// by indices from SLocEntryTable.
 name|LineTableInfo
-modifier|*
+operator|*
 name|LineTable
-decl_stmt|;
+block|;
 comment|/// LastLineNo - These ivars serve as a cache used in the getLineNumber
 comment|/// method which is used to speedup getLineNumber calls to nearby locations.
 name|mutable
 name|FileID
 name|LastLineNoFileIDQuery
-decl_stmt|;
+block|;
 name|mutable
 name|SrcMgr
 operator|::
 name|ContentCache
 operator|*
 name|LastLineNoContentCache
-expr_stmt|;
+block|;
 name|mutable
 name|unsigned
 name|LastLineNoFilePos
-decl_stmt|;
+block|;
 name|mutable
 name|unsigned
 name|LastLineNoResult
-decl_stmt|;
+block|;
 comment|/// MainFileID - The file ID for the main source file of the translation unit.
 name|FileID
 name|MainFileID
-decl_stmt|;
+block|;
 comment|// Statistics for -print-stats.
 name|mutable
 name|unsigned
 name|NumLinearScans
-decl_stmt|,
+block|,
 name|NumBinaryProbes
-decl_stmt|;
+block|;
 comment|// Cache results for the isBeforeInTranslationUnit method.
 name|mutable
 name|IsBeforeInTranslationUnitCache
 name|IsBeforeInTUCache
-decl_stmt|;
+block|;
+comment|// Cache for the "fake" buffer used for error-recovery purposes.
+name|mutable
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|FakeBufferForRecovery
+block|;
 comment|// SourceManager doesn't support copy construction.
 name|explicit
 name|SourceManager
-parameter_list|(
+argument_list|(
 specifier|const
 name|SourceManager
-modifier|&
-parameter_list|)
-function_decl|;
+operator|&
+argument_list|)
+block|;
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|SourceManager
 operator|&
 operator|)
-decl_stmt|;
+block|;
 name|public
-label|:
+operator|:
 name|SourceManager
 argument_list|(
 name|Diagnostic
@@ -1318,15 +1523,15 @@ name|FileManager
 operator|&
 name|FileMgr
 argument_list|)
-expr_stmt|;
+block|;
 operator|~
 name|SourceManager
 argument_list|()
-expr_stmt|;
+block|;
 name|void
 name|clearIDTables
-parameter_list|()
-function_decl|;
+argument_list|()
+block|;
 name|Diagnostic
 operator|&
 name|getDiagnostics
@@ -1347,6 +1552,18 @@ return|return
 name|FileMgr
 return|;
 block|}
+comment|/// \brief Set true if the SourceManager should report the original file name
+comment|/// for contents of files that were overriden by other files.Defaults to true.
+name|void
+name|setOverridenFilesKeepOriginalName
+argument_list|(
+argument|bool value
+argument_list|)
+block|{
+name|OverridenFilesKeepOriginalName
+operator|=
+name|value
+block|;   }
 comment|//===--------------------------------------------------------------------===//
 comment|// MainFileID creation and querying methods.
 comment|//===--------------------------------------------------------------------===//
@@ -1363,12 +1580,9 @@ block|}
 comment|/// createMainFileID - Create the FileID for the main source file.
 name|FileID
 name|createMainFileID
-parameter_list|(
-specifier|const
-name|FileEntry
-modifier|*
-name|SourceFile
-parameter_list|)
+argument_list|(
+argument|const FileEntry *SourceFile
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1379,7 +1593,7 @@ argument_list|()
 operator|&&
 literal|"MainFileID already set!"
 argument_list|)
-expr_stmt|;
+block|;
 name|MainFileID
 operator|=
 name|createFileID
@@ -1393,7 +1607,7 @@ name|SrcMgr
 operator|::
 name|C_User
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|MainFileID
 return|;
@@ -1402,10 +1616,9 @@ comment|/// \brief Set the file ID for the precompiled preamble, which is also t
 comment|/// main file.
 name|void
 name|SetPreambleFileID
-parameter_list|(
-name|FileID
-name|Preamble
-parameter_list|)
+argument_list|(
+argument|FileID Preamble
+argument_list|)
 block|{
 name|assert
 argument_list|(
@@ -1416,44 +1629,32 @@ argument_list|()
 operator|&&
 literal|"MainFileID already set!"
 argument_list|)
-expr_stmt|;
+block|;
 name|MainFileID
 operator|=
 name|Preamble
-expr_stmt|;
-block|}
+block|;   }
 comment|//===--------------------------------------------------------------------===//
 comment|// Methods to create new FileID's and instantiations.
 comment|//===--------------------------------------------------------------------===//
 comment|/// createFileID - Create a new FileID that represents the specified file
-comment|/// being #included from the specified IncludePosition.  This returns 0 on
-comment|/// error and translates NULL into standard input.
+comment|/// being #included from the specified IncludePosition.  This translates NULL
+comment|/// into standard input.
 comment|/// PreallocateID should be non-zero to specify which pre-allocated,
 comment|/// lazily computed source location is being filled in by this operation.
 name|FileID
 name|createFileID
 argument_list|(
-specifier|const
-name|FileEntry
-operator|*
-name|SourceFile
+argument|const FileEntry *SourceFile
 argument_list|,
-name|SourceLocation
-name|IncludePos
+argument|SourceLocation IncludePos
 argument_list|,
-name|SrcMgr
-operator|::
-name|CharacteristicKind
-name|FileCharacter
+argument|SrcMgr::CharacteristicKind FileCharacter
 argument_list|,
-name|unsigned
-name|PreallocatedID
-operator|=
+argument|unsigned PreallocatedID =
 literal|0
 argument_list|,
-name|unsigned
-name|Offset
-operator|=
+argument|unsigned Offset =
 literal|0
 argument_list|)
 block|{
@@ -1468,14 +1669,14 @@ name|getOrCreateContentCache
 argument_list|(
 name|SourceFile
 argument_list|)
-expr_stmt|;
+block|;
 name|assert
 argument_list|(
 name|IR
 operator|&&
 literal|"getOrCreateContentCache() cannot return NULL"
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|createFileID
 argument_list|(
@@ -1497,21 +1698,12 @@ comment|/// ownership of the MemoryBuffer, so only pass a MemoryBuffer to this o
 name|FileID
 name|createFileIDForMemBuffer
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|Buffer
+argument|const llvm::MemoryBuffer *Buffer
 argument_list|,
-name|unsigned
-name|PreallocatedID
-operator|=
+argument|unsigned PreallocatedID =
 literal|0
 argument_list|,
-name|unsigned
-name|Offset
-operator|=
+argument|unsigned Offset =
 literal|0
 argument_list|)
 block|{
@@ -1542,12 +1734,7 @@ comment|///  of when this would be used is when the main source is read from STD
 name|FileID
 name|createMainFileIDForMemBuffer
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
-name|Buffer
+argument|const llvm::MemoryBuffer *Buffer
 argument_list|)
 block|{
 name|assert
@@ -1559,47 +1746,53 @@ argument_list|()
 operator|&&
 literal|"MainFileID already set!"
 argument_list|)
-expr_stmt|;
+block|;
 name|MainFileID
 operator|=
 name|createFileIDForMemBuffer
 argument_list|(
 name|Buffer
 argument_list|)
-expr_stmt|;
+block|;
 return|return
 name|MainFileID
 return|;
 block|}
+comment|/// createMacroArgInstantiationLoc - Return a new SourceLocation that encodes
+comment|/// the fact that a token from SpellingLoc should actually be referenced from
+comment|/// InstantiationLoc, and that it represents the instantiation of a macro
+comment|/// argument into the function-like macro body.
+name|SourceLocation
+name|createMacroArgInstantiationLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceLocation InstantiationLoc
+argument_list|,
+argument|unsigned TokLength
+argument_list|)
+block|;
 comment|/// createInstantiationLoc - Return a new SourceLocation that encodes the fact
-comment|/// that a token at Loc should actually be referenced from InstantiationLoc.
-comment|/// TokLength is the length of the token being instantiated.
+comment|/// that a token from SpellingLoc should actually be referenced from
+comment|/// InstantiationLoc.
 name|SourceLocation
 name|createInstantiationLoc
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|SourceLocation
-name|InstantiationLocStart
-parameter_list|,
-name|SourceLocation
-name|InstantiationLocEnd
-parameter_list|,
-name|unsigned
-name|TokLength
-parameter_list|,
-name|unsigned
-name|PreallocatedID
-init|=
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|SourceLocation InstantiationLocStart
+argument_list|,
+argument|SourceLocation InstantiationLocEnd
+argument_list|,
+argument|unsigned TokLength
+argument_list|,
+argument|unsigned PreallocatedID =
 literal|0
-parameter_list|,
-name|unsigned
-name|Offset
-init|=
+argument_list|,
+argument|unsigned Offset =
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// \brief Retrieve the memory buffer associated with the given file.
 comment|///
 comment|/// \param Invalid If non-NULL, will be set \c true if an error
@@ -1622,7 +1815,7 @@ name|Invalid
 operator|=
 literal|0
 argument_list|)
-expr_stmt|;
+block|;
 comment|/// \brief Override the contents of the given source file by providing an
 comment|/// already-allocated buffer.
 comment|///
@@ -1636,24 +1829,33 @@ comment|/// source manager is destroyed.
 name|void
 name|overrideFileContents
 argument_list|(
+argument|const FileEntry *SourceFile
+argument_list|,
+argument|const llvm::MemoryBuffer *Buffer
+argument_list|,
+argument|bool DoNotFree = false
+argument_list|)
+block|;
+comment|/// \brief Override the the given source file with another one.
+comment|///
+comment|/// \param SourceFile the source file which will be overriden.
+comment|///
+comment|/// \param NewFile the file whose contents will be used as the
+comment|/// data instead of the contents of the given source file.
+name|void
+name|overrideFileContents
+argument_list|(
 specifier|const
 name|FileEntry
 operator|*
 name|SourceFile
 argument_list|,
 specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
+name|FileEntry
 operator|*
-name|Buffer
-argument_list|,
-name|bool
-name|DoNotFree
-operator|=
-name|false
+name|NewFile
 argument_list|)
-decl_stmt|;
+block|;
 comment|//===--------------------------------------------------------------------===//
 comment|// FileID manipulation methods.
 comment|//===--------------------------------------------------------------------===//
@@ -1676,11 +1878,53 @@ literal|0
 argument_list|)
 specifier|const
 block|{
-return|return
+name|bool
+name|MyInvalid
+operator|=
+name|false
+block|;
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|Entry
+operator|=
 name|getSLocEntry
 argument_list|(
 name|FID
+argument_list|,
+operator|&
+name|MyInvalid
 argument_list|)
+block|;
+if|if
+condition|(
+name|MyInvalid
+operator|||
+operator|!
+name|Entry
+operator|.
+name|isFile
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|Invalid
+condition|)
+operator|*
+name|Invalid
+operator|=
+name|true
+expr_stmt|;
+return|return
+name|getFakeBufferForRecovery
+argument_list|()
+return|;
+block|}
+return|return
+name|Entry
 operator|.
 name|getFile
 argument_list|()
@@ -1715,11 +1959,53 @@ literal|0
 argument_list|)
 specifier|const
 block|{
-return|return
+name|bool
+name|MyInvalid
+operator|=
+name|false
+block|;
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|Entry
+operator|=
 name|getSLocEntry
 argument_list|(
 name|FID
+argument_list|,
+operator|&
+name|MyInvalid
 argument_list|)
+block|;
+if|if
+condition|(
+name|MyInvalid
+operator|||
+operator|!
+name|Entry
+operator|.
+name|isFile
+argument_list|()
+condition|)
+block|{
+if|if
+condition|(
+name|Invalid
+condition|)
+operator|*
+name|Invalid
+operator|=
+name|true
+expr_stmt|;
+return|return
+name|getFakeBufferForRecovery
+argument_list|()
+return|;
+block|}
+return|return
+name|Entry
 operator|.
 name|getFile
 argument_list|()
@@ -1744,19 +2030,48 @@ block|}
 comment|/// getFileEntryForID - Returns the FileEntry record for the provided FileID.
 specifier|const
 name|FileEntry
-modifier|*
+operator|*
 name|getFileEntryForID
 argument_list|(
-name|FileID
-name|FID
+argument|FileID FID
 argument_list|)
-decl|const
+specifier|const
 block|{
-return|return
+name|bool
+name|MyInvalid
+operator|=
+name|false
+block|;
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|Entry
+operator|=
 name|getSLocEntry
 argument_list|(
 name|FID
+argument_list|,
+operator|&
+name|MyInvalid
 argument_list|)
+block|;
+if|if
+condition|(
+name|MyInvalid
+operator|||
+operator|!
+name|Entry
+operator|.
+name|isFile
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|Entry
 operator|.
 name|getFile
 argument_list|()
@@ -1764,7 +2079,34 @@ operator|.
 name|getContentCache
 argument_list|()
 operator|->
-name|Entry
+name|OrigEntry
+return|;
+block|}
+comment|/// Returns the FileEntry record for the provided SLocEntry.
+specifier|const
+name|FileEntry
+modifier|*
+name|getFileEntryForSLocEntry
+argument_list|(
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|sloc
+argument_list|)
+decl|const
+block|{
+return|return
+name|sloc
+operator|.
+name|getFile
+argument_list|()
+operator|.
+name|getContentCache
+argument_list|()
+operator|->
+name|OrigEntry
 return|;
 block|}
 comment|/// getBufferData - Return a StringRef to the source buffer data for the
@@ -1852,26 +2194,44 @@ operator|&&
 literal|"FileID out of range"
 argument_list|)
 expr_stmt|;
-name|assert
-argument_list|(
+name|bool
+name|Invalid
+init|=
+name|false
+decl_stmt|;
+specifier|const
+name|SrcMgr
+operator|::
+name|SLocEntry
+operator|&
+name|Entry
+operator|=
 name|getSLocEntry
 argument_list|(
 name|FID
+argument_list|,
+operator|&
+name|Invalid
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Invalid
+operator|||
+operator|!
+name|Entry
 operator|.
 name|isFile
 argument_list|()
-operator|&&
-literal|"FileID is not a file"
-argument_list|)
-expr_stmt|;
+condition|)
+return|return
+name|SourceLocation
+argument_list|()
+return|;
 name|unsigned
 name|FileOffset
 init|=
-name|getSLocEntry
-argument_list|(
-name|FID
-argument_list|)
+name|Entry
 operator|.
 name|getOffset
 argument_list|()
@@ -2107,14 +2467,24 @@ return|return
 name|getDecomposedInstantiationLocSlowCase
 argument_list|(
 name|E
-argument_list|,
-name|Offset
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getDecomposedSpellingLoc - Decompose the specified location into a raw
+end_comment
+
+begin_comment
 comment|/// FileID + Offset pair.  If the location is an instantiation record, walk
+end_comment
+
+begin_comment
 comment|/// through it until we find its spelling record.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -2180,6 +2550,9 @@ argument_list|,
 name|Offset
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|getDecomposedSpellingLocSlowCase
 argument_list|(
@@ -2188,10 +2561,10 @@ argument_list|,
 name|Offset
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// getFileOffset - This method returns the offset from the start
 end_comment
 
@@ -2203,14 +2576,16 @@ begin_comment
 comment|/// meaningful for a macro ID.
 end_comment
 
-begin_decl_stmt
-name|unsigned
+begin_macro
+unit|unsigned
 name|getFileOffset
 argument_list|(
-name|SourceLocation
-name|SpellingLoc
+argument|SourceLocation SpellingLoc
 argument_list|)
-decl|const
+end_macro
+
+begin_expr_stmt
+specifier|const
 block|{
 return|return
 name|getDecomposedLoc
@@ -2221,6 +2596,37 @@ operator|.
 name|second
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// isMacroArgInstantiation - This method tests whether the given source
+end_comment
+
+begin_comment
+comment|/// location represents a macro argument's instantiation into the
+end_comment
+
+begin_comment
+comment|/// function-like macro definition. Such source locations only appear inside
+end_comment
+
+begin_comment
+comment|/// of the instantiation locations representing where a particular
+end_comment
+
+begin_comment
+comment|/// function-like macro was expanded.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isMacroArgInstantiation
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|)
+decl|const
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -2702,6 +3108,178 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Given a specific chunk of a FileID (FileID with offset+length),
+end_comment
+
+begin_comment
+comment|/// returns true if \arg Loc is inside that chunk and sets relative offset
+end_comment
+
+begin_comment
+comment|/// (offset of \arg Loc from beginning of chunk) to \arg relativeOffset.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isInFileID
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|FileID
+name|FID
+argument_list|,
+name|unsigned
+name|offset
+argument_list|,
+name|unsigned
+name|length
+argument_list|,
+name|unsigned
+operator|*
+name|relativeOffset
+operator|=
+literal|0
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+operator|!
+name|FID
+operator|.
+name|isInvalid
+argument_list|()
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Loc
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+return|return
+name|false
+return|;
+name|unsigned
+name|start
+init|=
+name|getSLocEntry
+argument_list|(
+name|FID
+argument_list|)
+operator|.
+name|getOffset
+argument_list|()
+operator|+
+name|offset
+decl_stmt|;
+name|unsigned
+name|end
+init|=
+name|start
+operator|+
+name|length
+decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+comment|// Make sure offset/length describe a chunk inside the given FileID.
+name|unsigned
+name|NextOffset
+decl_stmt|;
+if|if
+condition|(
+name|FID
+operator|.
+name|ID
+operator|+
+literal|1
+operator|==
+name|SLocEntryTable
+operator|.
+name|size
+argument_list|()
+condition|)
+name|NextOffset
+operator|=
+name|getNextOffset
+argument_list|()
+expr_stmt|;
+else|else
+name|NextOffset
+operator|=
+name|getSLocEntry
+argument_list|(
+name|FID
+operator|.
+name|ID
+operator|+
+literal|1
+argument_list|)
+operator|.
+name|getOffset
+argument_list|()
+expr_stmt|;
+name|assert
+argument_list|(
+name|start
+operator|<
+name|NextOffset
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|end
+operator|<
+name|NextOffset
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|if
+condition|(
+name|Loc
+operator|.
+name|getOffset
+argument_list|()
+operator|>=
+name|start
+operator|&&
+name|Loc
+operator|.
+name|getOffset
+argument_list|()
+operator|<
+name|end
+condition|)
+block|{
+if|if
+condition|(
+name|relativeOffset
+condition|)
+operator|*
+name|relativeOffset
+operator|=
+name|Loc
+operator|.
+name|getOffset
+argument_list|()
+operator|-
+name|start
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
 
@@ -2721,20 +3299,17 @@ begin_comment
 comment|///
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 name|unsigned
 name|getLineTableFilenameID
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Ptr
-parameter_list|,
-name|unsigned
-name|Len
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
+name|Str
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// AddLineNote - Add a line note to the line table for the FileID and offset
@@ -2827,6 +3402,90 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
+comment|// Queries for performance analysis.
+end_comment
+
+begin_comment
+comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// Return the total amount of physical memory allocated by the
+end_comment
+
+begin_comment
+comment|/// ContentCache allocator.
+end_comment
+
+begin_expr_stmt
+name|size_t
+name|getContentCacheSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ContentCacheAlloc
+operator|.
+name|getTotalMemory
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_struct
+struct|struct
+name|MemoryBufferSizes
+block|{
+specifier|const
+name|size_t
+name|malloc_bytes
+decl_stmt|;
+specifier|const
+name|size_t
+name|mmap_bytes
+decl_stmt|;
+name|MemoryBufferSizes
+argument_list|(
+argument|size_t malloc_bytes
+argument_list|,
+argument|size_t mmap_bytes
+argument_list|)
+block|:
+name|malloc_bytes
+argument_list|(
+name|malloc_bytes
+argument_list|)
+operator|,
+name|mmap_bytes
+argument_list|(
+argument|mmap_bytes
+argument_list|)
+block|{}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// Return the amount of memory used by memory buffers, breaking down
+end_comment
+
+begin_comment
+comment|/// by heap-backed versus mmap'ed memory.
+end_comment
+
+begin_expr_stmt
+name|MemoryBufferSizes
+name|getMemoryBufferSizes
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
 comment|// Other miscellaneous methods.
 end_comment
 
@@ -2893,6 +3552,71 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Determines the order of 2 source locations in the "source location
+end_comment
+
+begin_comment
+comment|/// address space".
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isBeforeInSourceLocationOffset
+parameter_list|(
+name|SourceLocation
+name|LHS
+parameter_list|,
+name|SourceLocation
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|isBeforeInSourceLocationOffset
+argument_list|(
+name|LHS
+argument_list|,
+name|RHS
+operator|.
+name|getOffset
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determines the order of a source location and a source location
+end_comment
+
+begin_comment
+comment|/// offset in the "source location address space".
+end_comment
+
+begin_function
+specifier|static
+name|bool
+name|isBeforeInSourceLocationOffset
+parameter_list|(
+name|SourceLocation
+name|LHS
+parameter_list|,
+name|unsigned
+name|RHS
+parameter_list|)
+block|{
+return|return
+name|LHS
+operator|.
+name|getOffset
+argument_list|()
+operator|<
+name|RHS
+return|;
+block|}
+end_function
 
 begin_comment
 comment|// Iterators over FileInfos.
@@ -3043,6 +3767,9 @@ operator|&
 name|getSLocEntry
 argument_list|(
 argument|unsigned ID
+argument_list|,
+argument|bool *Invalid =
+literal|0
 argument_list|)
 specifier|const
 block|{
@@ -3058,6 +3785,8 @@ operator|&&
 literal|"Invalid id"
 argument_list|)
 block|;
+comment|// If we haven't loaded this source-location entry from the external source
+comment|// yet, do so now.
 if|if
 condition|(
 name|ExternalSLocEntries
@@ -3074,13 +3803,20 @@ name|SLocEntryLoaded
 index|[
 name|ID
 index|]
-condition|)
+operator|&&
 name|ExternalSLocEntries
 operator|->
 name|ReadSLocEntry
 argument_list|(
 name|ID
 argument_list|)
+operator|&&
+name|Invalid
+condition|)
+operator|*
+name|Invalid
+operator|=
+name|true
 expr_stmt|;
 end_expr_stmt
 
@@ -3102,6 +3838,9 @@ operator|&
 name|getSLocEntry
 argument_list|(
 argument|FileID FID
+argument_list|,
+argument|bool *Invalid =
+literal|0
 argument_list|)
 specifier|const
 block|{
@@ -3111,6 +3850,8 @@ argument_list|(
 name|FID
 operator|.
 name|ID
+argument_list|,
+name|Invalid
 argument_list|)
 return|;
 block|}
@@ -3172,6 +3913,57 @@ begin_label
 name|private
 label|:
 end_label
+
+begin_expr_stmt
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+name|getFakeBufferForRecovery
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// createInstantiationLoc - Implements the common elements of storing an
+end_comment
+
+begin_comment
+comment|/// instantiation info struct into the SLocEntry table and producing a source
+end_comment
+
+begin_comment
+comment|/// location that refers to it.
+end_comment
+
+begin_decl_stmt
+name|SourceLocation
+name|createInstantiationLocImpl
+argument_list|(
+specifier|const
+name|SrcMgr
+operator|::
+name|InstantiationInfo
+operator|&
+name|II
+argument_list|,
+name|unsigned
+name|TokLength
+argument_list|,
+name|unsigned
+name|PreallocatedID
+operator|=
+literal|0
+argument_list|,
+name|unsigned
+name|Offset
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// isOffsetInFileID - Return true if the specified FileID contains the
@@ -3391,8 +4183,6 @@ operator|>
 name|getDecomposedInstantiationLocSlowCase
 argument_list|(
 argument|const SrcMgr::SLocEntry *E
-argument_list|,
-argument|unsigned Offset
 argument_list|)
 specifier|const
 expr_stmt|;

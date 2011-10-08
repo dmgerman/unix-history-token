@@ -16,6 +16,58 @@ name|__T4_OFFLOAD_H__
 end_define
 
 begin_comment
+comment|/* CPL message priority levels */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|CPL_PRIORITY_DATA
+init|=
+literal|0
+block|,
+comment|/* data messages */
+name|CPL_PRIORITY_SETUP
+init|=
+literal|1
+block|,
+comment|/* connection setup messages */
+name|CPL_PRIORITY_TEARDOWN
+init|=
+literal|0
+block|,
+comment|/* connection teardown messages */
+name|CPL_PRIORITY_LISTEN
+init|=
+literal|1
+block|,
+comment|/* listen start/stop messages */
+name|CPL_PRIORITY_ACK
+init|=
+literal|1
+block|,
+comment|/* RX ACK messages */
+name|CPL_PRIORITY_CONTROL
+init|=
+literal|1
+comment|/* control messages */
+block|}
+enum|;
+end_enum
+
+begin_define
+define|#
+directive|define
+name|INIT_TP_WR
+parameter_list|(
+name|w
+parameter_list|,
+name|tid
+parameter_list|)
+value|do { \ 	(w)->wr.wr_hi = htonl(V_FW_WR_OP(FW_TP_WR) | \                               V_FW_WR_IMMDLEN(sizeof(*w) - sizeof(w->wr))); \ 	(w)->wr.wr_mid = htonl(V_FW_WR_LEN16(DIV_ROUND_UP(sizeof(*w), 16)) | \                                V_FW_WR_FLOWID(tid)); \ 	(w)->wr.wr_lo = cpu_to_be64(0); \ } while (0)
+end_define
+
+begin_comment
 comment|/*  * Max # of ATIDs.  The absolute HW max is 16K but we keep it lower.  */
 end_comment
 
@@ -99,6 +151,11 @@ name|unsigned
 name|int
 name|natids
 decl_stmt|;
+name|struct
+name|filter_entry
+modifier|*
+name|ftid_tab
+decl_stmt|;
 name|unsigned
 name|int
 name|nftids
@@ -106,6 +163,10 @@ decl_stmt|;
 name|unsigned
 name|int
 name|ftid_base
+decl_stmt|;
+name|unsigned
+name|int
+name|ftids_in_use
 decl_stmt|;
 name|union
 name|aopen_entry

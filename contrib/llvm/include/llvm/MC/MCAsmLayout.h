@@ -119,8 +119,8 @@ literal|16
 operator|>
 name|SectionOrder
 expr_stmt|;
-comment|/// The last fragment which was layed out, or 0 if nothing has been layed
-comment|/// out. Fragments are always layed out in order, so all fragments with a
+comment|/// The last fragment which was laid out, or 0 if nothing has been laid
+comment|/// out. Fragments are always laid out in order, so all fragments with a
 comment|/// lower ordinal will be up to date.
 name|mutable
 name|DenseMap
@@ -187,7 +187,7 @@ name|F
 parameter_list|)
 function_decl|;
 comment|/// \brief Perform layout for a single fragment, assuming that the previous
-comment|/// fragment has already been layed out correctly, and the parent section has
+comment|/// fragment has already been laid out correctly, and the parent section has
 comment|/// been initialized.
 name|void
 name|LayoutFragment

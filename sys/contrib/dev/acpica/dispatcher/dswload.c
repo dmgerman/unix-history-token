@@ -1155,7 +1155,7 @@ name|Named
 operator|.
 name|Length
 argument_list|,
-name|REGION_DATA_TABLE
+name|ACPI_ADR_SPACE_DATA_TABLE
 argument_list|,
 name|WalkState
 argument_list|)

@@ -211,7 +211,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nfsclient/nfsdiskless.h>
+file|<nfs/nfsdiskless.h>
 end_include
 
 begin_ifdef
@@ -1499,16 +1499,6 @@ argument_list|(
 name|ENAMETOOLONG
 argument_list|,
 name|ENAMETOOLONG
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|ASSYM
-argument_list|(
-name|MAXCPU
-argument_list|,
-name|MAXCPU
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: log.c,v 1.46.334.3 2009/01/07 01:50:14 jinmei Exp $ */
+comment|/* $Id: log.c,v 1.49 2009-01-07 01:46:40 jinmei Exp $ */
 end_comment
 
 begin_comment

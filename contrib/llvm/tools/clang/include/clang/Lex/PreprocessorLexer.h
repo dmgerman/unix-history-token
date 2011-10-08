@@ -77,12 +77,6 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
@@ -112,7 +106,7 @@ comment|//===-------------------------------------------------------------------
 comment|// Context-specific lexing flags set by the preprocessor.
 comment|//===--------------------------------------------------------------------===//
 comment|/// ParsingPreprocessorDirective - This is true when parsing #XXX.  This turns
-comment|/// '\n' into a tok::eom token.
+comment|/// '\n' into a tok::eod token.
 name|bool
 name|ParsingPreprocessorDirective
 decl_stmt|;
@@ -407,7 +401,7 @@ comment|//===-------------------------------------------------------------------
 comment|// Misc. lexing methods.
 comment|/// LexIncludeFilename - After the preprocessor has parsed a #include, lex and
 comment|/// (potentially) macro expand the filename.  If the sequence parsed is not
-comment|/// lexically legal, emit a diagnostic and return a result EOM token.
+comment|/// lexically legal, emit a diagnostic and return a result EOD token.
 name|void
 name|LexIncludeFilename
 parameter_list|(

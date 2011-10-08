@@ -227,6 +227,19 @@ modifier|*
 name|cmd
 parameter_list|)
 block|{
+if|if
+condition|(
+name|cmd
+operator|->
+name|control
+operator|&
+literal|0x04
+condition|)
+return|return
+operator|(
+literal|"SOFT_RESET"
+operator|)
+return|;
 switch|switch
 condition|(
 name|cmd
@@ -816,6 +829,22 @@ case|:
 return|return
 operator|(
 literal|"SETFEATURES SPIN-UP"
+operator|)
+return|;
+case|case
+literal|0x10
+case|:
+return|return
+operator|(
+literal|"SETFEATURES ENABLE SATA FEATURE"
+operator|)
+return|;
+case|case
+literal|0x90
+case|:
+return|return
+operator|(
+literal|"SETFEATURES DISABLE SATA FEATURE"
 operator|)
 return|;
 case|case
@@ -1563,6 +1592,16 @@ name|product
 argument_list|,
 name|revision
 argument_list|,
+operator|(
+name|ident_data
+operator|->
+name|config
+operator|==
+name|ATA_PROTO_CFA
+operator|)
+condition|?
+literal|"CFA"
+else|:
 operator|(
 name|ident_data
 operator|->

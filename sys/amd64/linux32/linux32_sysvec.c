@@ -1254,8 +1254,6 @@ name|caddr_t
 operator|)
 name|arginfo
 operator|-
-name|linux_szsigcode
-operator|-
 name|linux_szplatform
 operator|)
 expr_stmt|;

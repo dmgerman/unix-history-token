@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Mostek MK48T02, MK48T08, MK48T18, MK48T59 time-of-day chip subroutines  */
+comment|/*  * Mostek MK48T02, MK48T08, MK48T18, MK48T37 and MK48T59 time-of-day chip  * subroutines  */
 end_comment
 
 begin_include
@@ -207,6 +207,16 @@ block|,
 name|MK48T18_CLKOFF
 block|,
 literal|0
+block|}
+block|,
+block|{
+literal|"mk48t37"
+block|,
+name|MK48T37_CLKSZ
+block|,
+name|MK48T37_CLKOFF
+block|,
+name|MK48TXX_EXT_REGISTERS
 block|}
 block|,
 block|{

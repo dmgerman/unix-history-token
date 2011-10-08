@@ -113,12 +113,6 @@ directive|include
 file|<vector>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<set>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -221,9 +215,6 @@ name|PtrToIntInst
 decl_stmt|;
 name|class
 name|ReturnInst
-decl_stmt|;
-name|class
-name|SDISelAsmOperandInfo
 decl_stmt|;
 name|class
 name|SDDbgValue
@@ -1377,6 +1368,16 @@ name|void
 name|clear
 parameter_list|()
 function_decl|;
+comment|/// clearDanglingDebugInfo - Clear the dangling debug information
+comment|/// map. This function is seperated from the clear so that debug
+comment|/// information that is dangling in a basic block can be properly
+comment|/// resolved in a different basic block. This allows the
+comment|/// SelectionDAG to resolve dangling debug information attached
+comment|/// to PHI nodes.
+name|void
+name|clearDanglingDebugInfo
+parameter_list|()
+function_decl|;
 comment|/// getRoot - Return the current virtual root of the Selection DAG,
 comment|/// flushing any PendingLoad items. This must be done before emitting
 comment|/// a store or any other node that may need to be ordered after any
@@ -1574,32 +1575,6 @@ operator|=
 name|NewN
 expr_stmt|;
 block|}
-name|void
-name|GetRegistersForValue
-argument_list|(
-name|SDISelAsmOperandInfo
-operator|&
-name|OpInfo
-argument_list|,
-name|std
-operator|::
-name|set
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|OutputRegs
-argument_list|,
-name|std
-operator|::
-name|set
-operator|<
-name|unsigned
-operator|>
-operator|&
-name|InputRegs
-argument_list|)
-decl_stmt|;
 name|void
 name|FindMergedConditions
 parameter_list|(
@@ -1881,6 +1856,30 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|SwitchBB
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|getEdgeWeight
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|Src
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|Dst
+parameter_list|)
+function_decl|;
+name|void
+name|addSuccessorWithWeight
+parameter_list|(
+name|MachineBasicBlock
+modifier|*
+name|Src
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|Dst
 parameter_list|)
 function_decl|;
 name|public
@@ -2189,17 +2188,7 @@ name|User
 modifier|&
 name|I
 parameter_list|)
-block|{
-name|visitBinary
-argument_list|(
-name|I
-argument_list|,
-name|ISD
-operator|::
-name|SDIV
-argument_list|)
-expr_stmt|;
-block|}
+function_decl|;
 name|void
 name|visitFDiv
 parameter_list|(

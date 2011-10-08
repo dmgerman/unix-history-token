@@ -6634,6 +6634,9 @@ name|debuglink_vma
 operator|=
 literal|0x1000
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|bfd_set_section_vma
 argument_list|(
 name|obfd

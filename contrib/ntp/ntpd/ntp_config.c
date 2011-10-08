@@ -2209,6 +2209,8 @@ name|keyid_t
 operator|,
 name|u_char
 operator|*
+operator|,
+name|u_char
 operator|)
 argument_list|)
 decl_stmt|;
@@ -4053,6 +4055,8 @@ name|save_resolve
 argument_list|(
 name|tokens
 index|[
+name|istart
+operator|-
 literal|1
 index|]
 argument_list|,
@@ -4071,6 +4075,10 @@ argument_list|,
 name|peerkey
 argument_list|,
 name|peerkeystr
+argument_list|,
+name|peeraddr
+operator|.
+name|ss_family
 argument_list|)
 expr_stmt|;
 block|}
@@ -9952,6 +9960,9 @@ parameter_list|,
 name|u_char
 modifier|*
 name|keystr
+parameter_list|,
+name|u_char
+name|peeraf
 parameter_list|)
 block|{
 ifndef|#
@@ -10123,9 +10134,11 @@ name|fprintf
 argument_list|(
 name|res_fp
 argument_list|,
-literal|"%s %d %d %d %d %d %d %u %s\n"
+literal|"%s %u %d %d %d %d %d %d %u %s\n"
 argument_list|,
 name|name
+argument_list|,
+name|peeraf
 argument_list|,
 name|mode
 argument_list|,
@@ -10155,9 +10168,11 @@ literal|1
 condition|)
 name|printf
 argument_list|(
-literal|"config: %s %d %d %d %d %x %d %u %s\n"
+literal|"config: %s %u %d %d %d %d %x %d %u %s\n"
 argument_list|,
 name|name
+argument_list|,
+name|peeraf
 argument_list|,
 name|mode
 argument_list|,

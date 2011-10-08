@@ -534,6 +534,8 @@ argument_list|,
 name|tsize
 argument_list|,
 name|tsize
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if

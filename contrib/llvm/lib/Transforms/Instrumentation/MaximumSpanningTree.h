@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This module privides means for calculating a maximum spanning tree for a
+comment|// This module provides means for calculating a maximum spanning tree for a
 end_comment
 
 begin_comment

@@ -1430,7 +1430,7 @@ name|LogFile
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 expr_stmt|;
 block|}

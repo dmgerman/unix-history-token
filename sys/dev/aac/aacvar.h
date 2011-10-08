@@ -1365,7 +1365,7 @@ name|AAC_AIFFLAGS_RUNNING
 value|(1<< 0)
 define|#
 directive|define
-name|AAC_AIFFLAGS_AIF
+name|AAC_AIFFLAGS_UNUSED0
 value|(1<< 1)
 define|#
 directive|define
@@ -1377,7 +1377,7 @@ name|AAC_AIFFLAGS_EXITED
 value|(1<< 3)
 define|#
 directive|define
-name|AAC_AIFFLAGS_PRINTF
+name|AAC_AIFFLAGS_UNUSED1
 value|(1<< 4)
 define|#
 directive|define
@@ -1386,7 +1386,7 @@ value|(1<< 5)
 define|#
 directive|define
 name|AAC_AIFFLAGS_PENDING
-value|(AAC_AIFFLAGS_AIF | AAC_AIFFLAGS_PRINTF | \ 				 AAC_AIFFLAGS_ALLOCFIBS)
+value|AAC_AIFFLAGS_ALLOCFIBS
 name|u_int32_t
 name|flags
 decl_stmt|;

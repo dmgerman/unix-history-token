@@ -1832,6 +1832,17 @@ value|X86
 end_define
 
 begin_comment
+comment|/* LLVM name for the native AsmParser init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_ASMPARSER
+value|LLVMInitializeX86AsmParser
+end_define
+
+begin_comment
 comment|/* LLVM name for the native AsmPrinter init function, if available */
 end_comment
 
@@ -1840,6 +1851,17 @@ define|#
 directive|define
 name|LLVM_NATIVE_ASMPRINTER
 value|LLVMInitializeX86AsmPrinter
+end_define
+
+begin_comment
+comment|/* LLVM name for the native MCAsmInfo init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_MCASMINFO
+value|LLVMInitializeX86MCAsmInfo
 end_define
 
 begin_comment
@@ -2064,7 +2086,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"llvm 2.9svn"
+value|"llvm 3.0svn"
 end_define
 
 begin_comment
@@ -2086,7 +2108,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"2.9svn"
+value|"3.0svn"
 end_define
 
 begin_comment
@@ -2159,6 +2181,14 @@ directive|define
 name|USE_UDIS86
 value|0
 end_define
+
+begin_comment
+comment|/* Type of 1st arg on ELM Callback */
+end_comment
+
+begin_comment
+comment|/* #undef WIN32_ELMCB_PCSTR */
+end_comment
 
 begin_comment
 comment|/* Define to empty if `const' does not conform to ANSI C. */

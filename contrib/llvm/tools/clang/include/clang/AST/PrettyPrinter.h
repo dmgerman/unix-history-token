@@ -146,12 +146,22 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|SuppressTagKeyword
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|SuppressTag
 argument_list|(
 name|false
 argument_list|)
 operator|,
 name|SuppressScope
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|SuppressInitializers
 argument_list|(
 name|false
 argument_list|)
@@ -168,7 +178,12 @@ argument_list|)
 operator|,
 name|AnonymousTagLocations
 argument_list|(
-argument|true
+name|true
+argument_list|)
+operator|,
+name|SuppressStrongLifetime
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
 comment|/// \brief The number of spaces to use to indent each line.
@@ -201,6 +216,19 @@ name|SuppressSpecifiers
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether type printing should skip printing the tag keyword.
+comment|///
+comment|/// This is used when printing the inner type of elaborated types,
+comment|/// (as the tag keyword is part of the elaborated type):
+comment|///
+comment|/// \code
+comment|/// struct Geometry::Point;
+comment|/// \endcode
+name|bool
+name|SuppressTagKeyword
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Whether type printing should skip printing the actual tag type.
 comment|///
 comment|/// This is used when the caller needs to print a tag definition in front
@@ -217,6 +245,22 @@ decl_stmt|;
 comment|/// \brief Suppresses printing of scope specifiers.
 name|bool
 name|SuppressScope
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Suppress printing of variable initializers.
+comment|///
+comment|/// This flag is used when printing the loop variable in a for-range
+comment|/// statement. For example, given:
+comment|///
+comment|/// \code
+comment|/// for (auto x : coll)
+comment|/// \endcode
+comment|///
+comment|/// SuppressInitializers will be true when printing "auto x", so that the
+comment|/// internal initializer constructed for x will not be printed.
+name|bool
+name|SuppressInitializers
 range|:
 literal|1
 decl_stmt|;
@@ -255,6 +299,13 @@ comment|/// that entity (e.g., "enum<anonymous at t.h:10:5>"). Otherwise, just
 comment|/// prints "<anonymous>" for the name.
 name|bool
 name|AnonymousTagLocations
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief When true, suppress printing of the __strong lifetime qualifier in
+comment|/// ARC.
+name|unsigned
+name|SuppressStrongLifetime
 range|:
 literal|1
 decl_stmt|;

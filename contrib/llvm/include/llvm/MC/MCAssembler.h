@@ -2817,7 +2817,7 @@ comment|/// evaluates to.
 end_comment
 
 begin_comment
-comment|/// \param Value [out] On return, the value of the fixup as currently layed
+comment|/// \param Value [out] On return, the value of the fixup as currently laid
 end_comment
 
 begin_comment
@@ -3056,7 +3056,7 @@ label|:
 end_label
 
 begin_comment
-comment|/// Compute the effective fragment size assuming it is layed out at the given
+comment|/// Compute the effective fragment size assuming it is laid out at the given
 end_comment
 
 begin_comment

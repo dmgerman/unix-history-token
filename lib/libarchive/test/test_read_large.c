@@ -268,6 +268,9 @@ argument_list|)
 expr_stmt|;
 name|assertA
 argument_list|(
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|testdata

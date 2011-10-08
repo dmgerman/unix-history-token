@@ -395,6 +395,10 @@ comment|/// directly after this structure.
 struct|struct
 name|TemplateIdAnnotation
 block|{
+comment|/// \brief The nested-name-specifier that precedes the template name.
+name|CXXScopeSpec
+name|SS
+decl_stmt|;
 comment|/// TemplateNameLoc - The location of the template name within the
 comment|/// source.
 name|SourceLocation
@@ -491,6 +495,14 @@ name|NumArgs
 operator|=
 name|NumArgs
 expr_stmt|;
+comment|// Default-construct nested-name-specifier.
+name|new
+argument_list|(
+argument|&TemplateId->SS
+argument_list|)
+name|CXXScopeSpec
+argument_list|()
+expr_stmt|;
 comment|// Default-construct parsed template arguments.
 name|ParsedTemplateArgument
 modifier|*
@@ -530,6 +542,12 @@ name|void
 name|Destroy
 parameter_list|()
 block|{
+name|SS
+operator|.
+expr|~
+name|CXXScopeSpec
+argument_list|()
+expr_stmt|;
 name|free
 argument_list|(
 name|this

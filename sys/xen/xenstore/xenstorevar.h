@@ -162,6 +162,10 @@ name|xs_watch_cb_t
 modifier|*
 name|callback
 decl_stmt|;
+comment|/* Callback client data untouched by the XenStore watch mechanism. */
+name|uintptr_t
+name|callback_data
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -594,7 +598,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Register a XenStore watch.  *  * XenStore watches allow a client to be notified via a callback (embedded  * within the watch object) of changes to an object in the XenStore.  *  * \param watch  A xenbus_watch struct with it's node and callback fields  *               properly initialized.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of write failure.  EEXIST errors from the XenStore  *          are supressed, allowing multiple, physically different,  *          xenbus_watch objects, to watch the same path in the XenStore.  */
+comment|/**  * Register a XenStore watch.  *  * XenStore watches allow a client to be notified via a callback (embedded  * within the watch object) of changes to an object in the XenStore.  *  * \param watch  An xs_watch struct with it's node and callback fields  *               properly initialized.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of write failure.  EEXIST errors from the XenStore  *          are supressed, allowing multiple, physically different,  *          xenbus_watch objects, to watch the same path in the XenStore.  */
 end_comment
 
 begin_function_decl

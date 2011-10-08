@@ -10243,21 +10243,6 @@ operator|->
 name|sc_name
 argument_list|)
 expr_stmt|;
-name|KASSERT
-argument_list|(
-name|pp
-operator|!=
-name|NULL
-argument_list|,
-operator|(
-literal|"Cannot create %s.journal."
-operator|,
-name|sc
-operator|->
-name|sc_name
-operator|)
-argument_list|)
-expr_stmt|;
 name|pp
 operator|->
 name|mediasize
@@ -12412,7 +12397,8 @@ index|]
 operator|!=
 literal|'\0'
 operator|&&
-name|strcmp
+operator|!
+name|g_compare_names
 argument_list|(
 name|md
 operator|.
@@ -12422,8 +12408,6 @@ name|pp
 operator|->
 name|name
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(

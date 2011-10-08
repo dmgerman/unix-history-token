@@ -2499,11 +2499,33 @@ operator|*
 name|dp
 argument_list|)
 block|{
-return|return
-name|__builtin_ia32_loadupd
+struct|struct
+name|__loadu_pd
+block|{
+name|__m128d
+name|v
+decl_stmt|;
+block|}
+name|__attribute__
 argument_list|(
-name|dp
+operator|(
+name|packed
+operator|,
+name|may_alias
+operator|)
 argument_list|)
+struct|;
+return|return
+operator|(
+operator|(
+expr|struct
+name|__loadu_pd
+operator|*
+operator|)
+name|dp
+operator|)
+operator|->
+name|v
 return|;
 block|}
 end_decl_stmt
@@ -2566,21 +2588,18 @@ name|dp
 argument_list|)
 block|{
 return|return
-name|__builtin_shufflevector
-argument_list|(
-name|a
-argument_list|,
-operator|*
 operator|(
 name|__m128d
-operator|*
 operator|)
-name|dp
-argument_list|,
+block|{
+name|a
+index|[
 literal|0
-argument_list|,
-literal|2
-argument_list|)
+index|]
+block|,
+operator|*
+name|dp
+block|}
 return|;
 block|}
 end_decl_stmt
@@ -2609,21 +2628,18 @@ name|dp
 argument_list|)
 block|{
 return|return
-name|__builtin_shufflevector
-argument_list|(
-name|a
-argument_list|,
-operator|*
 operator|(
 name|__m128d
-operator|*
 operator|)
+block|{
+operator|*
 name|dp
-argument_list|,
-literal|2
-argument_list|,
+block|,
+name|a
+index|[
 literal|1
-argument_list|)
+index|]
+block|}
 return|;
 block|}
 end_decl_stmt
@@ -5771,19 +5787,33 @@ operator|*
 name|p
 argument_list|)
 block|{
-return|return
-operator|(
+struct|struct
+name|__loadu_si128
+block|{
 name|__m128i
-operator|)
-name|__builtin_ia32_loaddqu
+name|v
+decl_stmt|;
+block|}
+name|__attribute__
 argument_list|(
 operator|(
-name|char
-specifier|const
+name|packed
+operator|,
+name|may_alias
+operator|)
+argument_list|)
+struct|;
+return|return
+operator|(
+operator|(
+expr|struct
+name|__loadu_si128
 operator|*
 operator|)
 name|p
-argument_list|)
+operator|)
+operator|->
+name|v
 return|;
 block|}
 end_decl_stmt
@@ -7209,7 +7239,7 @@ parameter_list|,
 name|imm
 parameter_list|)
 define|\
-value|((__m128i)__builtin_shufflevector((__v4si)(a), (__v4si) {0}, \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6))
+value|((__m128i)__builtin_shufflevector((__v4si)(a), (__v4si) _mm_set1_epi32(0), \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6))
 end_define
 
 begin_define
@@ -7222,7 +7252,7 @@ parameter_list|,
 name|imm
 parameter_list|)
 define|\
-value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) {0}, \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                     4, 5, 6, 7))
+value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) _mm_set1_epi16(0), \                                     (imm)& 0x3, ((imm)& 0xc)>> 2, \                                     ((imm)& 0x30)>> 4, ((imm)& 0xc0)>> 6, \                                     4, 5, 6, 7))
 end_define
 
 begin_define
@@ -7235,7 +7265,7 @@ parameter_list|,
 name|imm
 parameter_list|)
 define|\
-value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) {0}, 0, 1, 2, 3, \                                     4 + (((imm)& 0x03)>> 0), \                                     4 + (((imm)& 0x0c)>> 2), \                                     4 + (((imm)& 0x30)>> 4), \                                     4 + (((imm)& 0xc0)>> 6)))
+value|((__m128i)__builtin_shufflevector((__v8hi)(a), (__v8hi) _mm_set1_epi16(0), 0, 1, 2, 3, \                                     4 + (((imm)& 0x03)>> 0), \                                     4 + (((imm)& 0x0c)>> 2), \                                     4 + (((imm)& 0x30)>> 4), \                                     4 + (((imm)& 0xc0)>> 6)))
 end_define
 
 begin_decl_stmt

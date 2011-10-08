@@ -159,12 +159,16 @@ parameter_list|,
 name|DESC
 parameter_list|,
 name|GROUP
-parameter_list|,
+parameter_list|,\
 name|SFINAE
 parameter_list|,
 name|ACCESS
 parameter_list|,
 name|CATEGORY
+parameter_list|,
+name|BRIEF
+parameter_list|,
+name|FULL
 parameter_list|)
 value|ENUM,
 include|#
@@ -211,11 +215,17 @@ name|MAP_WARNING_NO_WERROR
 init|=
 literal|5
 block|,
+comment|/// Map this diagnostic to "warning", but make it immune to
+comment|/// -Wno-system-headers.
+name|MAP_WARNING_SHOW_IN_SYSTEM_HEADER
+init|=
+literal|6
+block|,
 comment|/// Map this diagnostic to "error", but make it immune to -Wfatal-errors.
 comment|/// This happens for -Wno-fatal-errors=foo.
 name|MAP_ERROR_NO_WFATAL
 init|=
-literal|6
+literal|7
 block|}
 enum|;
 block|}
@@ -283,16 +293,16 @@ comment|// Diagnostic classification and reporting interfaces.
 comment|//
 comment|/// getDescription - Given a diagnostic ID, return a description of the
 comment|/// issue.
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getDescription
 argument_list|(
 argument|unsigned DiagID
 argument_list|)
 specifier|const
 block|;
-comment|/// isNoteWarningOrExtension - Return true if the unmapped diagnostic
+comment|/// isBuiltinWarningOrExtension - Return true if the unmapped diagnostic
 comment|/// level of the specified diagnostic ID is a Warning or Extension.
 comment|/// This only works on builtin diagnostics, not custom ones, and is not legal to
 comment|/// call on NOTEs.
@@ -352,15 +362,15 @@ comment|/// getWarningOptionForDiag - Return the lowest-level warning option tha
 comment|/// enables the specified diagnostic.  If there is no -Wfoo flag that controls
 comment|/// the diagnostic, this returns null.
 specifier|static
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getWarningOptionForDiag
 argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-comment|/// getWarningOptionForDiag - Return the category number that a specified
+comment|/// getCategoryNumberForDiag - Return the category number that a specified
 comment|/// DiagID belongs to, or 0 if no category.
 specifier|static
 name|unsigned
@@ -369,12 +379,18 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
+comment|/// getNumberOfCategories - Return the number of categories
+specifier|static
+name|unsigned
+name|getNumberOfCategories
+argument_list|()
+block|;
 comment|/// getCategoryNameFromID - Given a category ID, return the name of the
 comment|/// category.
 specifier|static
-specifier|const
-name|char
-operator|*
+name|llvm
+operator|::
+name|StringRef
 name|getCategoryNameFromID
 argument_list|(
 argument|unsigned CategoryID
@@ -423,6 +439,46 @@ argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
+comment|/// getName - Given a diagnostic ID, return its name
+specifier|static
+name|llvm
+operator|::
+name|StringRef
+name|getName
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
+comment|/// getIdFromName - Given a diagnostic name, return its ID, or 0
+specifier|static
+name|unsigned
+name|getIdFromName
+argument_list|(
+argument|llvm::StringRef Name
+argument_list|)
+block|;
+comment|/// getBriefExplanation - Given a diagnostic ID, return a brief explanation
+comment|/// of the issue
+specifier|static
+name|llvm
+operator|::
+name|StringRef
+name|getBriefExplanation
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
+comment|/// getFullExplanation - Given a diagnostic ID, return a full explanation
+comment|/// of the issue
+specifier|static
+name|llvm
+operator|::
+name|StringRef
+name|getFullExplanation
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
 name|private
 operator|:
 comment|/// setDiagnosticGroupMapping - Change an entire diagnostic group (e.g.
@@ -431,7 +487,7 @@ comment|/// ignores the request if "Group" was unknown, false otherwise.
 name|bool
 name|setDiagnosticGroupMapping
 argument_list|(
-argument|const char *Group
+argument|llvm::StringRef Group
 argument_list|,
 argument|diag::Mapping Map
 argument_list|,
@@ -492,6 +548,15 @@ name|bool
 name|ProcessDiag
 argument_list|(
 argument|Diagnostic&Diag
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Whether the diagnostic may leave the AST in a state where some
+comment|/// invariants can break.
+name|bool
+name|isUnrecoverable
+argument_list|(
+argument|unsigned DiagID
 argument_list|)
 specifier|const
 block|;

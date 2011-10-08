@@ -198,20 +198,6 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|bool
 name|isOffsetFoldingLegal
@@ -226,13 +212,6 @@ operator|*
 name|getTargetNodeName
 argument_list|(
 argument|unsigned Opcode
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
 argument_list|)
 specifier|const
 block|;

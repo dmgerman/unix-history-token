@@ -65,10 +65,6 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
-begin_comment
-comment|//#include "llvm/ADT/IndexedMap.h"
-end_comment
-
 begin_include
 include|#
 directive|include

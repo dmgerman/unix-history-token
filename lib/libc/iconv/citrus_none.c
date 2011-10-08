@@ -911,9 +911,6 @@ name|hooks
 name|__unused
 parameter_list|)
 block|{
-name|int
-name|ret
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -957,10 +954,11 @@ operator|)
 operator|-
 literal|1
 expr_stmt|;
-name|ret
-operator|=
+return|return
+operator|(
 name|E2BIG
-expr_stmt|;
+operator|)
+return|;
 block|}
 operator|*
 name|nresult

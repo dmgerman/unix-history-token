@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007-2008 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<err.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libprocstat.h>
 end_include
 
 begin_include
@@ -55,9 +61,6 @@ begin_function
 name|void
 name|procstat_cred
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -92,7 +95,7 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %-16s %5s %5s %5s %5s %5s %5s %-20s\n"
+literal|"%5s %-16s %5s %5s %5s %5s %5s %5s %5s %-15s\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -110,6 +113,8 @@ literal|"RGID"
 argument_list|,
 literal|"SVGID"
 argument_list|,
+literal|"FLAGS"
+argument_list|,
 literal|"GROUPS"
 argument_list|)
 expr_stmt|;
@@ -117,7 +122,9 @@ name|printf
 argument_list|(
 literal|"%5d "
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|printf
@@ -186,6 +193,26 @@ operator|->
 name|ki_svgid
 argument_list|)
 expr_stmt|;
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|kipp
+operator|->
+name|ki_cr_flags
+operator|&
+name|CRED_FLAG_CAPMODE
+condition|?
+literal|"C"
+else|:
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"     "
+argument_list|)
+expr_stmt|;
 comment|/* 	 * We may have too many groups to fit in kinfo_proc's statically 	 * sized storage.  If that occurs, attempt to retrieve them via 	 * sysctl. 	 */
 if|if
 condition|(
@@ -222,7 +249,9 @@ index|[
 literal|3
 index|]
 operator|=
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 expr_stmt|;
 name|ngroups
 operator|=
@@ -290,7 +319,9 @@ argument_list|(
 literal|"sysctl: kern.proc.groups: %d "
 literal|"group list truncated"
 argument_list|,
-name|pid
+name|kipp
+operator|->
+name|ki_pid
 argument_list|)
 expr_stmt|;
 name|free

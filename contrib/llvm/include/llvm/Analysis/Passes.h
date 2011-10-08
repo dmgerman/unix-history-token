@@ -183,6 +183,16 @@ parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|//
+comment|// createObjCARCAliasAnalysisPass - This pass implements ObjC-ARC-based
+comment|// alias analysis.
+comment|//
+name|ImmutablePass
+modifier|*
+name|createObjCARCAliasAnalysisPass
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|//
 comment|// createProfileLoaderPass - This pass loads information from a profile dump
 comment|// file.
 comment|//
@@ -292,15 +302,6 @@ comment|//
 name|ModulePass
 modifier|*
 name|createSteensgaardPass
-parameter_list|()
-function_decl|;
-comment|//===--------------------------------------------------------------------===//
-comment|//
-comment|// createLiveValuesPass - This creates an instance of the LiveValues pass.
-comment|//
-name|FunctionPass
-modifier|*
-name|createLiveValuesPass
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

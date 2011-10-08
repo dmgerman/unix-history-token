@@ -11,6 +11,18 @@ begin_comment
 comment|/* ---------------------------------------------------------------------      Conversions between UTF32, UTF-16, and UTF-8.  Header file.      Several funtions are included here, forming a complete set of     conversions between the three formats.  UTF-7 is not included     here, but is handled in a separate source file.      Each of these routines takes pointers to input buffers and output     buffers.  The input buffers are const.      Each routine converts the text between *sourceStart and sourceEnd,     putting the result into the buffer between *targetStart and     targetEnd. Note: the end pointers are *after* the last item: e.g.     *(sourceEnd - 1) is the last item.      The return result indicates whether the conversion was successful,     and if not, whether the problem was in the source or target buffers.     (Only the first encountered problem is indicated.)      After the conversion, *sourceStart and *targetStart are both     updated to point to the end of last text successfully converted in     the respective buffers.      Input parameters:         sourceStart - pointer to a pointer to the source buffer.                 The contents of this are modified on return so that                 it points at the next thing to be converted.         targetStart - similarly, pointer to pointer to the target buffer.         sourceEnd, targetEnd - respectively pointers to the ends of the                 two buffers, for overflow checking only.      These conversion functions take a ConversionFlags argument. When this     flag is set to strict, both irregular sequences and isolated surrogates     will cause an error.  When the flag is set to lenient, both irregular     sequences and isolated surrogates are converted.      Whether the flag is strict or lenient, all illegal sequences will cause     an error return. This includes sequences such as:<F4 90 80 80>,<C0 80>,     or<A0> in UTF-8, and values above 0x10FFFF in UTF-32. Conformant code     must check for illegal sequences.      When the flag is set to lenient, characters over 0x10FFFF are converted     to the replacement character; otherwise (when the flag is set to strict)     they constitute an error.      Output parameters:         The value "sourceIllegal" is returned from some routines if the input         sequence is malformed.  When "sourceIllegal" is returned, the source         value will point to the illegal value that caused the problem. E.g.,         in UTF-8 when a sequence is malformed, it points to the start of the         malformed sequence.      Author: Mark E. Davis, 1994.     Rev History: Rick McGowan, fixes& updates May 2001.          Fixes& updates, Sept 2001.  ------------------------------------------------------------------------ */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|CLANG_BASIC_CONVERTUTF_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|CLANG_BASIC_CONVERTUTF_H
+end_define
+
 begin_comment
 comment|/* ---------------------------------------------------------------------     The following 4 definitions are compiler-specific.     The C standard does not guarantee that wchar_t has at least     16 bits, so wchar_t is no less portable than unsigned short!     All should be unsigned values to avoid sign extension during     bit mask& shift operations. ------------------------------------------------------------------------ */
 end_comment
@@ -338,6 +350,11 @@ directive|ifdef
 name|__cplusplus
 block|}
 end_extern
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -208,6 +208,17 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|SESTYP_ENCLOSURE
+case|:
+name|sprintf
+argument_list|(
+name|rbuf
+argument_list|,
+literal|"Enclosure"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|SESTYP_SCSIXVR
 case|:
 name|sprintf
@@ -292,6 +303,39 @@ argument_list|(
 name|rbuf
 argument_list|,
 literal|"Simple sub-enclosure"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SESTYP_ARRAY
+case|:
+name|sprintf
+argument_list|(
+name|rbuf
+argument_list|,
+literal|"Array device"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SESTYP_SASEXPANDER
+case|:
+name|sprintf
+argument_list|(
+name|rbuf
+argument_list|,
+literal|"SAS Expander"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|SESTYP_SASCONNECTOR
+case|:
+name|sprintf
+argument_list|(
+name|rbuf
+argument_list|,
+literal|"SAS Connector"
 argument_list|)
 expr_stmt|;
 break|break;

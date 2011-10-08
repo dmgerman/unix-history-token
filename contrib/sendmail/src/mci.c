@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2005 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2005, 2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: mci.c,v 8.221 2007/11/13 23:44:25 gshapiro Exp $"
+literal|"@(#)$Id: mci.c,v 8.223 2010/03/10 04:35:28 ca Exp $"
 argument_list|)
 end_macro
 
@@ -981,6 +981,62 @@ name|doquit
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_comment
+comment|/* **  MCI_CLR_EXTENSIONS -- clear knowledge about SMTP extensions ** **	Parameters: **		mci -- the connection to clear. ** **	Returns: **		none. */
+end_comment
+
+begin_function
+name|void
+name|mci_clr_extensions
+parameter_list|(
+name|mci
+parameter_list|)
+name|MCI
+modifier|*
+name|mci
+decl_stmt|;
+block|{
+if|if
+condition|(
+name|mci
+operator|==
+name|NULL
+condition|)
+return|return;
+name|mci
+operator|->
+name|mci_flags
+operator|&=
+operator|~
+name|MCIF_EXTENS
+expr_stmt|;
+name|mci
+operator|->
+name|mci_maxsize
+operator|=
+literal|0
+expr_stmt|;
+name|mci
+operator|->
+name|mci_min_by
+operator|=
+literal|0
+expr_stmt|;
+if|#
+directive|if
+name|SASL
+name|mci
+operator|->
+name|mci_saslcap
+operator|=
+name|NULL
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* SASL */
 block|}
 end_function
 
@@ -1961,6 +2017,12 @@ block|{
 name|MCIF_AUTH
 block|,
 literal|"AUTH"
+block|}
+block|,
+block|{
+name|MCIF_AUTH2
+block|,
+literal|"AUTH2"
 block|}
 block|,
 block|{

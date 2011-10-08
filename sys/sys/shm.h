@@ -386,6 +386,12 @@ modifier|*
 name|label
 decl_stmt|;
 comment|/* MAC label */
+name|struct
+name|ucred
+modifier|*
+name|cred
+decl_stmt|;
+comment|/* creator's credendials */
 block|}
 struct|;
 end_struct

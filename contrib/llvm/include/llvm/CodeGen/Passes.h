@@ -178,24 +178,11 @@ name|char
 modifier|&
 name|StrongPHIEliminationID
 decl_stmt|;
-specifier|extern
-name|char
-modifier|&
-name|PreAllocSplittingID
-decl_stmt|;
 comment|/// LiveStacks pass. An analysis keeping track of the liveness of stack slots.
 specifier|extern
 name|char
 modifier|&
 name|LiveStacksID
-decl_stmt|;
-comment|/// SimpleRegisterCoalescing pass.  Aggressively coalesces every register
-comment|/// copy it can.
-comment|///
-specifier|extern
-name|char
-modifier|&
-name|SimpleRegisterCoalescingID
 decl_stmt|;
 comment|/// TwoAddressInstruction pass - This pass reduces two-address instructions to
 comment|/// use two operands. This destroys SSA information but it is desired by
@@ -281,12 +268,12 @@ modifier|*
 name|createDefaultPBQPRegisterAllocator
 parameter_list|()
 function_decl|;
-comment|/// SimpleRegisterCoalescing Pass - Coalesce all copies possible.  Can run
+comment|/// RegisterCoalescer Pass - Coalesce all copies possible.  Can run
 comment|/// independently of the register allocator.
 comment|///
 name|RegisterCoalescer
 modifier|*
-name|createSimpleRegisterCoalescer
+name|createRegisterCoalescer
 parameter_list|()
 function_decl|;
 comment|/// PrologEpilogCodeInserter Pass - This pass inserts prolog and epilog code,

@@ -118,17 +118,27 @@ block|,
 comment|// Handle gp_rel (small data/bss sections) relocation.
 name|GPRel
 block|,
-comment|// Select CC Pseudo Instruction
-name|SelectCC
+comment|// General Dynamic TLS
+name|TlsGd
 block|,
-comment|// Floating Point Select CC Pseudo Instruction
-name|FPSelectCC
+comment|// Local Exec TLS
+name|TprelHi
+block|,
+name|TprelLo
+block|,
+comment|// Thread Pointer
+name|ThreadPointer
 block|,
 comment|// Floating Point Branch Conditional
 name|FPBrcond
 block|,
 comment|// Floating Point Compare
 name|FPCmp
+block|,
+comment|// Floating Point Conditional Moves
+name|CMovFP_T
+block|,
+name|CMovFP_F
 block|,
 comment|// Floating Point Rounding
 name|FPRound
@@ -144,6 +154,19 @@ block|,
 name|MSub
 block|,
 name|MSubu
+block|,
+comment|// DivRem(u)
+name|DivRem
+block|,
+name|DivRemU
+block|,
+name|BuildPairF64
+block|,
+name|ExtractElementF64
+block|,
+name|WrapperPIC
+block|,
+name|DynAlloc
 block|}
 enum|;
 block|}
@@ -199,15 +222,6 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|SDValue
 name|PerformDAGCombine
@@ -250,15 +264,6 @@ specifier|const
 block|;
 comment|// Lower Operand specifics
 name|SDValue
-name|LowerANDOR
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
 name|LowerBRCOND
 argument_list|(
 argument|SDValue Op
@@ -286,7 +291,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerFP_TO_SINT
+name|LowerGlobalAddress
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -295,7 +300,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerGlobalAddress
+name|LowerBlockAddress
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -331,7 +336,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerSETCC
+name|LowerVASTART
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -340,7 +345,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerVASTART
+name|LowerFCOPYSIGN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFRAMEADDR
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -464,20 +478,6 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
 name|virtual
 name|bool
 name|isOffsetFoldingLegal
@@ -496,6 +496,62 @@ argument_list|(
 argument|const APFloat&Imm
 argument_list|,
 argument|EVT VT
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicBinary
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned BinOpcode
+argument_list|,
+argument|bool Nand = false
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicBinaryPartword
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|,
+argument|unsigned BinOpcode
+argument_list|,
+argument|bool Nand = false
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicCmpSwap
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitAtomicCmpSwapPartword
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|unsigned Size
 argument_list|)
 specifier|const
 block|;   }

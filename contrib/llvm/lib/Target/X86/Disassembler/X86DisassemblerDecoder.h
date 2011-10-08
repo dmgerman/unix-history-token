@@ -53,70 +53,154 @@ name|modFromModRM
 parameter_list|(
 name|modRM
 parameter_list|)
-value|((modRM& 0xc0)>> 6)
+value|(((modRM)& 0xc0)>> 6)
 define|#
 directive|define
 name|regFromModRM
 parameter_list|(
 name|modRM
 parameter_list|)
-value|((modRM& 0x38)>> 3)
+value|(((modRM)& 0x38)>> 3)
 define|#
 directive|define
 name|rmFromModRM
 parameter_list|(
 name|modRM
 parameter_list|)
-value|(modRM& 0x7)
+value|((modRM)& 0x7)
 define|#
 directive|define
 name|scaleFromSIB
 parameter_list|(
 name|sib
 parameter_list|)
-value|((sib& 0xc0)>> 6)
+value|(((sib)& 0xc0)>> 6)
 define|#
 directive|define
 name|indexFromSIB
 parameter_list|(
 name|sib
 parameter_list|)
-value|((sib& 0x38)>> 3)
+value|(((sib)& 0x38)>> 3)
 define|#
 directive|define
 name|baseFromSIB
 parameter_list|(
 name|sib
 parameter_list|)
-value|(sib& 0x7)
+value|((sib)& 0x7)
 define|#
 directive|define
 name|wFromREX
 parameter_list|(
 name|rex
 parameter_list|)
-value|((rex& 0x8)>> 3)
+value|(((rex)& 0x8)>> 3)
 define|#
 directive|define
 name|rFromREX
 parameter_list|(
 name|rex
 parameter_list|)
-value|((rex& 0x4)>> 2)
+value|(((rex)& 0x4)>> 2)
 define|#
 directive|define
 name|xFromREX
 parameter_list|(
 name|rex
 parameter_list|)
-value|((rex& 0x2)>> 1)
+value|(((rex)& 0x2)>> 1)
 define|#
 directive|define
 name|bFromREX
 parameter_list|(
 name|rex
 parameter_list|)
-value|(rex& 0x1)
+value|((rex)& 0x1)
+define|#
+directive|define
+name|rFromVEX2of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((~(vex))& 0x80)>> 7)
+define|#
+directive|define
+name|xFromVEX2of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((~(vex))& 0x40)>> 6)
+define|#
+directive|define
+name|bFromVEX2of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((~(vex))& 0x20)>> 5)
+define|#
+directive|define
+name|mmmmmFromVEX2of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|((vex)& 0x1f)
+define|#
+directive|define
+name|wFromVEX3of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((vex)& 0x80)>> 7)
+define|#
+directive|define
+name|vvvvFromVEX3of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((~(vex))& 0x78)>> 3)
+define|#
+directive|define
+name|lFromVEX3of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((vex)& 0x4)>> 2)
+define|#
+directive|define
+name|ppFromVEX3of3
+parameter_list|(
+name|vex
+parameter_list|)
+value|((vex)& 0x3)
+define|#
+directive|define
+name|rFromVEX2of2
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((~(vex))& 0x80)>> 7)
+define|#
+directive|define
+name|vvvvFromVEX2of2
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((~(vex))& 0x78)>> 3)
+define|#
+directive|define
+name|lFromVEX2of2
+parameter_list|(
+name|vex
+parameter_list|)
+value|(((vex)& 0x4)>> 2)
+define|#
+directive|define
+name|ppFromVEX2of2
+parameter_list|(
+name|vex
+parameter_list|)
+value|((vex)& 0x3)
 comment|/*  * These enums represent Intel registers for use by the decoder.  */
 define|#
 directive|define
@@ -165,6 +249,11 @@ define|\
 value|ENTRY(XMM0)     \   ENTRY(XMM1)     \   ENTRY(XMM2)     \   ENTRY(XMM3)     \   ENTRY(XMM4)     \   ENTRY(XMM5)     \   ENTRY(XMM6)     \   ENTRY(XMM7)     \   ENTRY(XMM8)     \   ENTRY(XMM9)     \   ENTRY(XMM10)    \   ENTRY(XMM11)    \   ENTRY(XMM12)    \   ENTRY(XMM13)    \   ENTRY(XMM14)    \   ENTRY(XMM15)
 define|#
 directive|define
+name|REGS_YMM
+define|\
+value|ENTRY(YMM0)     \   ENTRY(YMM1)     \   ENTRY(YMM2)     \   ENTRY(YMM3)     \   ENTRY(YMM4)     \   ENTRY(YMM5)     \   ENTRY(YMM6)     \   ENTRY(YMM7)     \   ENTRY(YMM8)     \   ENTRY(YMM9)     \   ENTRY(YMM10)    \   ENTRY(YMM11)    \   ENTRY(YMM12)    \   ENTRY(YMM13)    \   ENTRY(YMM14)    \   ENTRY(YMM15)
+define|#
+directive|define
 name|REGS_SEGMENT
 define|\
 value|ENTRY(ES)          \   ENTRY(CS)          \   ENTRY(SS)          \   ENTRY(DS)          \   ENTRY(FS)          \   ENTRY(GS)
@@ -192,7 +281,7 @@ define|#
 directive|define
 name|ALL_REGS
 define|\
-value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
+value|REGS_8BIT           \   REGS_16BIT          \   REGS_32BIT          \   REGS_64BIT          \   REGS_MMX            \   REGS_XMM            \   REGS_YMM            \   REGS_SEGMENT        \   REGS_DEBUG          \   REGS_CONTROL        \   ENTRY(RIP)
 comment|/*  * EABase - All possible values of the base field for effective-address   *   computations, a.k.a. the Mod and R/M fields of the ModR/M byte.  We  *   distinguish between bases (EA_BASE_*) and registers that just happen to be  *   referred to when Mod == 0b11 (EA_REG_*).  */
 typedef|typedef
 enum|enum
@@ -322,6 +411,46 @@ name|SEG_OVERRIDE_max
 block|}
 name|SegmentOverride
 typedef|;
+comment|/*  * VEXLeadingOpcodeByte - Possible values for the VEX.m-mmmm field  */
+typedef|typedef
+enum|enum
+block|{
+name|VEX_LOB_0F
+init|=
+literal|0x1
+block|,
+name|VEX_LOB_0F38
+init|=
+literal|0x2
+block|,
+name|VEX_LOB_0F3A
+init|=
+literal|0x3
+block|}
+name|VEXLeadingOpcodeByte
+typedef|;
+comment|/*  * VEXPrefixCode - Possible values for the VEX.pp field  */
+typedef|typedef
+enum|enum
+block|{
+name|VEX_PREFIX_NONE
+init|=
+literal|0x0
+block|,
+name|VEX_PREFIX_66
+init|=
+literal|0x1
+block|,
+name|VEX_PREFIX_F3
+init|=
+literal|0x2
+block|,
+name|VEX_PREFIX_F2
+init|=
+literal|0x3
+block|}
+name|VEXPrefixCode
+typedef|;
 typedef|typedef
 name|uint8_t
 name|BOOL
@@ -418,13 +547,20 @@ index|[
 literal|0x100
 index|]
 decl_stmt|;
+comment|/* The value of the VEX prefix, if present */
+name|uint8_t
+name|vexPrefix
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* The length of the VEX prefix (0 if not present) */
+name|uint8_t
+name|vexSize
+decl_stmt|;
 comment|/* The value of the REX prefix, if present */
 name|uint8_t
 name|rexPrefix
-decl_stmt|;
-comment|/* The location of the REX prefix */
-name|uint64_t
-name|rexLocation
 decl_stmt|;
 comment|/* The location where a mandatory prefix would have to be (i.e., right before      the opcode, or right before the REX prefix if one is present) */
 name|uint64_t
@@ -481,6 +617,10 @@ modifier|*
 name|spec
 decl_stmt|;
 comment|/* state for additional bytes, consumed during operand decode.  Pattern:      consumed___ indicates that the byte was already consumed and does not      need to be consumed again */
+comment|/* The VEX.vvvv field, which contains a third register operand for some AVX      instructions */
+name|Reg
+name|vvvv
+decl_stmt|;
 comment|/* The ModR/M byte, which contains most register operands and some portion of      all memory operands */
 name|BOOL
 name|consumedModRM

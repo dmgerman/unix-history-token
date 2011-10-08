@@ -247,6 +247,17 @@ begin_comment
 comment|/* 	 * Get the offset of the first device's optimal access block in bytes. 	 * This should be a multiple of the sector size. 	 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|DIOCGPHYSPATH
+value|_IOR('d', 141, char[MAXPATHLEN])
+end_define
+
+begin_comment
+comment|/* 	 * Get a string defining the physical path for a given provider. 	 * This has similar rules to ident, but is intended to uniquely 	 * identify the physical location of the device, not the current 	 * occupant of that location. 	 */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

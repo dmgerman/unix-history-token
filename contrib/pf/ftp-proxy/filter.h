@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: filter.h,v 1.3 2005/06/07 14:12:07 camield Exp $ */
+comment|/*	$OpenBSD: filter.h,v 1.4 2007/08/01 09:31:41 henning Exp $ */
 end_comment
 
 begin_comment
@@ -109,6 +109,11 @@ begin_function_decl
 name|void
 name|init_filter
 parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

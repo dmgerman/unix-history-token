@@ -393,22 +393,6 @@ define|\
 value|unsigned long name[BITS_TO_LONGS(bits)]
 end_define
 
-begin_typedef
-typedef|typedef
-struct|struct
-block|{
-name|DECLARE_BITMAP
-argument_list|(
-name|bits
-argument_list|,
-name|NR_CPUS
-argument_list|)
-expr_stmt|;
-block|}
-name|xen_cpumask_t
-typedef|;
-end_typedef
-
 begin_function_decl
 name|int
 name|xen_create_contiguous_region

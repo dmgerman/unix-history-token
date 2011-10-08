@@ -732,6 +732,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SIOCGIFFIB
+value|_IOWR('i', 92, struct ifreq)
+end_define
+
+begin_comment
+comment|/* get IF fib */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCSIFFIB
+value|_IOW('i', 93, struct ifreq)
+end_define
+
+begin_comment
+comment|/* set IF fib */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SIOCSDRVSPEC
 value|_IOW('i', 123, struct ifdrv)
 end_define

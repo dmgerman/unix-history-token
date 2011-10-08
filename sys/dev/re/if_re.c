@@ -394,6 +394,16 @@ literal|"D-Link DGE-528(T) Gigabit Ethernet Adapter"
 block|}
 block|,
 block|{
+name|DLINK_VENDORID
+block|,
+name|DLINK_DEVICEID_530T_REVC
+block|,
+literal|0
+block|,
+literal|"D-Link DGE-530(T) Gigabit Ethernet Adapter"
+block|}
+block|,
+block|{
 name|RT_VENDORID
 block|,
 name|RT_DEVICEID_8139
@@ -5829,7 +5839,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -7536,7 +7546,7 @@ expr_stmt|;
 comment|/* Enable WOL if PM is supported. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -16942,7 +16952,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -17353,7 +17363,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

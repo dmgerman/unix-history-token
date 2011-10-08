@@ -265,13 +265,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"if_runreg.h"
+file|<dev/usb/wlan/if_runreg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"if_runvar.h"
+file|<dev/usb/wlan/if_runvar.h>
 end_include
 
 begin_define
@@ -387,8 +387,7 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|run_devs
 index|[]
 init|=
@@ -3717,6 +3716,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|run_match
 parameter_list|(
@@ -5850,6 +5850,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run_load_microcode
 parameter_list|(

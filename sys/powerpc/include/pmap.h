@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -163,7 +169,7 @@ index|]
 decl_stmt|;
 endif|#
 directive|endif
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 name|struct
@@ -316,17 +322,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|PVO_FAKE
-value|0x100UL
-end_define
-
-begin_comment
-comment|/* fictitious phys page */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|PVO_LARGE
 value|0x200UL
 end_define
@@ -343,16 +338,6 @@ parameter_list|(
 name|pvo
 parameter_list|)
 value|((pvo)->pvo_vaddr& ~ADDR_POFF)
-end_define
-
-begin_define
-define|#
-directive|define
-name|PVO_ISFAKE
-parameter_list|(
-name|pvo
-parameter_list|)
-value|((pvo)->pvo_vaddr& PVO_FAKE)
 end_define
 
 begin_define
@@ -619,7 +604,7 @@ name|MAXCPU
 index|]
 decl_stmt|;
 comment|/* TID to identify this pmap entries in TLB */
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */

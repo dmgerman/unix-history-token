@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: serverloop.c,v 1.159 2009/05/28 16:50:16 andreas Exp $ */
+comment|/* $OpenBSD: serverloop.c,v 1.160 2011/05/15 08:09:01 djm Exp $ */
+end_comment
+
+begin_comment
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -611,7 +615,7 @@ index|]
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 operator|==
 operator|-
@@ -628,7 +632,7 @@ index|]
 argument_list|,
 name|F_SETFD
 argument_list|,
-literal|1
+name|FD_CLOEXEC
 argument_list|)
 operator|==
 operator|-
@@ -2965,7 +2969,8 @@ argument_list|()
 expr_stmt|;
 name|debug
 argument_list|(
-literal|"End of interactive session; stdin %ld, stdout (read %ld, sent %ld), stderr %ld bytes."
+literal|"End of interactive session; stdin %ld, stdout (read %ld, "
+literal|"sent %ld), stderr %ld bytes."
 argument_list|,
 name|stdin_bytes
 argument_list|,
@@ -4026,6 +4031,12 @@ condition|)
 goto|goto
 name|done
 goto|;
+if|if
+condition|(
+name|options
+operator|.
+name|hpn_disabled
+condition|)
 name|c
 operator|=
 name|channel_new
@@ -4042,6 +4053,35 @@ operator|-
 literal|1
 argument_list|,
 name|CHAN_TCP_WINDOW_DEFAULT
+argument_list|,
+name|CHAN_TCP_PACKET_DEFAULT
+argument_list|,
+literal|0
+argument_list|,
+literal|"tun"
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+else|else
+name|c
+operator|=
+name|channel_new
+argument_list|(
+literal|"tun"
+argument_list|,
+name|SSH_CHANNEL_OPEN
+argument_list|,
+name|sock
+argument_list|,
+name|sock
+argument_list|,
+operator|-
+literal|1
+argument_list|,
+name|options
+operator|.
+name|hpn_buffer_size
 argument_list|,
 name|CHAN_TCP_PACKET_DEFAULT
 argument_list|,
@@ -4168,6 +4208,23 @@ literal|"server-session"
 argument_list|,
 literal|1
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|options
+operator|.
+name|hpn_disabled
+operator|&&
+name|options
+operator|.
+name|tcp_rcv_buf_poll
+condition|)
+name|c
+operator|->
+name|dynamic_window
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(

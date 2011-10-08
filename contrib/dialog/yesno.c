@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: yesno.c,v 1.49 2010/01/15 10:54:54 tom Exp $  *  *  yesno.c -- implements the yes/no box  *  *  Copyright 1999-2009,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
+comment|/*  *  $Id: yesno.c,v 1.51 2011/06/27 08:20:57 tom Exp $  *  *  yesno.c -- implements the yes/no box  *  *  Copyright 1999-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  *  *  An earlier version of this program lists as authors  *	Savio Lam (lam836@cs.cuhk.hk)  */
 end_comment
 
 begin_include
@@ -47,6 +47,8 @@ name|binding
 index|[]
 init|=
 block|{
+name|HELPKEY_BINDINGS
+block|,
 name|ENTERKEY_BINDINGS
 block|,
 name|DLG_KEYS_DATA
@@ -335,6 +337,13 @@ argument_list|(
 name|dialog
 argument_list|,
 name|title
+argument_list|)
+expr_stmt|;
+name|dlg_draw_helpline
+argument_list|(
+name|dialog
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|wattrset

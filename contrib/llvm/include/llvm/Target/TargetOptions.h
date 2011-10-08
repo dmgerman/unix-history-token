@@ -229,12 +229,6 @@ specifier|extern
 name|bool
 name|JITEmitDebugInfoToDisk
 decl_stmt|;
-comment|/// UnwindTablesMandatory - This flag indicates that unwind tables should
-comment|/// be emitted for all functions.
-specifier|extern
-name|bool
-name|UnwindTablesMandatory
-decl_stmt|;
 comment|/// GuaranteedTailCallOpt - This flag is enabled when -tailcallopt is
 comment|/// specified on the commandline. When the flag is on, participating targets
 comment|/// will perform tail call optimization on all calls which use the fastcc
@@ -245,10 +239,10 @@ specifier|extern
 name|bool
 name|GuaranteedTailCallOpt
 decl_stmt|;
-comment|/// StackAlignment - Override default stack alignment for target.
+comment|/// StackAlignmentOverride - Override default stack alignment for target.
 specifier|extern
 name|unsigned
-name|StackAlignment
+name|StackAlignmentOverride
 decl_stmt|;
 comment|/// RealignStack - This flag indicates whether the stack should be
 comment|/// automatically realigned, if needed.
@@ -275,6 +269,14 @@ specifier|extern
 name|bool
 name|StrongPHIElim
 decl_stmt|;
+comment|/// getTrapFunctionName - If this returns a non-empty string, this means isel
+comment|/// should lower Intrinsic::trap to a call to the specified function name
+comment|/// instead of an ISD::TRAP node.
+specifier|extern
+name|StringRef
+name|getTrapFunctionName
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

@@ -528,7 +528,6 @@ operator|~
 name|Function
 argument_list|()
 expr_stmt|;
-specifier|const
 name|Type
 operator|*
 name|getReturnType
@@ -536,7 +535,6 @@ argument_list|()
 specifier|const
 expr_stmt|;
 comment|// Return the type of the ret val
-specifier|const
 name|FunctionType
 operator|*
 name|getFunctionType
@@ -559,23 +557,6 @@ name|isVarArg
 argument_list|()
 specifier|const
 expr_stmt|;
-comment|/// isDeclaration - Is the body of this function unknown? (The basic block
-comment|/// list is empty if so.) This is true for function declarations, but not
-comment|/// true for function definitions.
-comment|///
-name|virtual
-name|bool
-name|isDeclaration
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BasicBlocks
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
 comment|/// getIntrinsicID - This method returns the ID number of the specified
 comment|/// function, or Intrinsic::not_intrinsic if the function is not an
 comment|/// instrinsic, or if the pointer is null.  This value is always defined to be
@@ -1019,6 +1000,66 @@ operator|::
 name|NoUnwind
 argument_list|)
 expr_stmt|;
+block|}
+comment|/// @brief True if the ABI mandates (or the user requested) that this
+comment|/// function be in a unwind table.
+name|bool
+name|hasUWTable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|UWTable
+argument_list|)
+return|;
+block|}
+name|void
+name|setHasUWTable
+parameter_list|(
+name|bool
+name|HasUWTable
+init|=
+name|true
+parameter_list|)
+block|{
+if|if
+condition|(
+name|HasUWTable
+condition|)
+name|addFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|UWTable
+argument_list|)
+expr_stmt|;
+else|else
+name|removeFnAttr
+argument_list|(
+name|Attribute
+operator|::
+name|UWTable
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// @brief True if this function needs an unwind table.
+name|bool
+name|needsUnwindTableEntry
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasUWTable
+argument_list|()
+operator|||
+operator|!
+name|doesNotThrow
+argument_list|()
+return|;
 block|}
 comment|/// @brief Determine if the function returns a structure through first
 comment|/// pointer argument.
@@ -1620,6 +1661,13 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// callsFunctionThatReturnsTwice - Return true if the function has a call to
+comment|/// setjmp or other function that gcc recognizes as "returning twice".
+name|bool
+name|callsFunctionThatReturnsTwice
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 comment|// Shadow Value::setValueSubclassData with a private forwarding method so that

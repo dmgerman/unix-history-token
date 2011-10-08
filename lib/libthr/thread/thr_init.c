@@ -1899,15 +1899,6 @@ name|cancel_async
 operator|=
 literal|0
 expr_stmt|;
-name|thr_set_name
-argument_list|(
-name|thread
-operator|->
-name|tid
-argument_list|,
-literal|"initial thread"
-argument_list|)
-expr_stmt|;
 comment|/* Initialize the mutex queue: */
 name|TAILQ_INIT
 argument_list|(

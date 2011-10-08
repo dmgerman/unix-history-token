@@ -78,6 +78,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 0 = nosys */
@@ -99,6 +101,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 1 = xenix_xlocking */
@@ -120,6 +124,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 2 = xenix_creatsem */
@@ -141,6 +147,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 3 = xenix_opensem */
@@ -162,6 +170,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 4 = xenix_sigsem */
@@ -183,6 +193,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 5 = xenix_waitsem */
@@ -204,6 +216,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 6 = xenix_nbwaitsem */
@@ -228,6 +242,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 7 = xenix_rdchk */
@@ -249,6 +265,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 8 = nosys */
@@ -270,6 +288,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 9 = nosys */
@@ -294,6 +314,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 10 = xenix_chsize */
@@ -318,6 +340,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 11 = xenix_ftime */
@@ -342,6 +366,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 12 = xenix_nap */
@@ -363,6 +389,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 13 = xenix_sdget */
@@ -384,6 +412,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 14 = xenix_sdfree */
@@ -405,6 +435,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 15 = xenix_sdenter */
@@ -426,6 +458,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 16 = xenix_sdleave */
@@ -447,6 +481,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 17 = xenix_sdgetv */
@@ -468,6 +504,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 18 = xenix_sdwaitv */
@@ -489,6 +527,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 19 = nosys */
@@ -510,6 +550,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 20 = nosys */
@@ -531,6 +573,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 21 = xenix_scoinfo */
@@ -552,6 +596,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 22 = nosys */
@@ -573,6 +619,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 23 = nosys */
@@ -594,6 +642,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 24 = nosys */
@@ -615,6 +665,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 25 = nosys */
@@ -636,6 +688,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 26 = nosys */
@@ -657,6 +711,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 27 = nosys */
@@ -678,6 +734,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 28 = nosys */
@@ -699,6 +757,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 29 = nosys */
@@ -720,6 +780,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 30 = nosys */
@@ -741,6 +803,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 31 = nosys */
@@ -762,6 +826,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 32 = xenix_proctl */
@@ -783,6 +849,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 33 = xenix_execseg */
@@ -804,6 +872,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 34 = xenix_unexecseg */
@@ -825,6 +895,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 35 = nosys */
@@ -838,7 +910,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|select
+name|sys_select
 block|,
 name|AUE_SELECT
 block|,
@@ -849,6 +921,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 36 = select */
@@ -873,6 +947,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 37 = xenix_eaccess */
@@ -894,6 +970,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 38 = xenix_paccess */
@@ -918,6 +996,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 39 = ibcs2_sigaction */
@@ -942,6 +1022,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 40 = ibcs2_sigprocmask */
@@ -966,6 +1048,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 41 = ibcs2_sigpending */
@@ -990,6 +1074,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 42 = ibcs2_sigsuspend */
@@ -1014,6 +1100,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 43 = ibcs2_getgroups */
@@ -1038,6 +1126,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 44 = ibcs2_setgroups */
@@ -1062,6 +1152,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 45 = ibcs2_sysconf */
@@ -1086,6 +1178,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 46 = ibcs2_pathconf */
@@ -1110,6 +1204,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 47 = ibcs2_fpathconf */
@@ -1134,6 +1230,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 48 = ibcs2_rename */
@@ -1155,6 +1253,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 49 = nosys */
@@ -1179,6 +1279,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 50 = xenix_utsname */
@@ -1200,6 +1302,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 51 = nosys */
@@ -1221,6 +1325,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 52 = nosys */
@@ -1242,6 +1348,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 53 = nosys */
@@ -1263,6 +1371,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_ABSENT
 block|}
 block|,
 comment|/* 54 = nosys */
@@ -1276,7 +1386,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getitimer
+name|sys_getitimer
 block|,
 name|AUE_GETITIMER
 block|,
@@ -1287,6 +1397,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 55 = getitimer */
@@ -1300,7 +1412,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|setitimer
+name|sys_setitimer
 block|,
 name|AUE_SETITIMER
 block|,
@@ -1311,6 +1423,8 @@ block|,
 literal|0
 block|,
 literal|0
+block|,
+name|SY_THR_STATIC
 block|}
 block|,
 comment|/* 56 = setitimer */

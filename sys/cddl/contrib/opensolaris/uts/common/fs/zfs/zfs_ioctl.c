@@ -2866,7 +2866,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Destroying snapshots with delegated permissions requires  * descendent mount and destroy permissions.  * Reassemble the full filesystem@snap name so dsl_deleg_access()  * can do the correct permission check.  *  * Since this routine is used when doing a recursive destroy of snapshots  * and destroying snapshots requires descendent permissions, a successfull  * check of the top level snapshot applies to snapshots of all descendent  * datasets as well.  */
+comment|/*  * Destroying snapshots with delegated permissions requires  * descendent mount and destroy permissions.  * Reassemble the full filesystem@snap name so dsl_deleg_access()  * can do the correct permission check.  *  * Since this routine is used when doing a recursive destroy of snapshots  * and destroying snapshots requires descendent permissions, a successfull  * check of the top level snapshot applies to snapshots of all descendent  * datasets as well.  *  * The top level snapshot may not exist when doing a recursive destroy.  * In this case fallback to permissions of the parent dataset.  */
 end_comment
 
 begin_function
@@ -2910,6 +2910,23 @@ operator|=
 name|zfs_secpolicy_destroy_perms
 argument_list|(
 name|dsname
+argument_list|,
+name|cr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+name|ENOENT
+condition|)
+name|error
+operator|=
+name|zfs_secpolicy_destroy_perms
+argument_list|(
+name|zc
+operator|->
+name|zc_name
 argument_list|,
 name|cr
 argument_list|)
@@ -8525,6 +8542,17 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|dataset_name_hidden
+argument_list|(
+name|zc
+operator|->
+name|zc_name
+argument_list|)
+condition|)
 operator|(
 name|void
 operator|)
@@ -8537,6 +8565,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 do|do
 block|{
@@ -17576,7 +17605,7 @@ condition|)
 block|{
 name|error
 operator|=
-name|xcopyout
+name|ddi_copyout
 argument_list|(
 name|buf
 argument_list|,
@@ -17594,6 +17623,10 @@ argument_list|,
 name|zc
 operator|->
 name|zc_nvlist_dst_size
+argument_list|,
+name|zc
+operator|->
+name|zc_iflags
 argument_list|)
 expr_stmt|;
 block|}
@@ -21017,7 +21050,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21101,7 +21134,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21205,7 +21238,7 @@ argument_list|(
 name|MUTEX_HELD
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -21344,7 +21377,7 @@ block|{
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|error
@@ -21357,7 +21390,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -21404,7 +21437,7 @@ return|return;
 name|mutex_enter
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 name|zo
@@ -21426,7 +21459,7 @@ block|{
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 return|return;
@@ -21441,7 +21474,7 @@ expr_stmt|;
 name|mutex_exit
 argument_list|(
 operator|&
-name|zfsdev_state_lock
+name|spa_namespace_lock
 argument_list|)
 expr_stmt|;
 block|}

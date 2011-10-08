@@ -1452,37 +1452,6 @@ specifier|static
 name|struct
 name|alias_link
 modifier|*
-name|AddLink
-parameter_list|(
-name|struct
-name|libalias
-modifier|*
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|struct
-name|in_addr
-parameter_list|,
-name|u_short
-parameter_list|,
-name|u_short
-parameter_list|,
-name|int
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|struct
-name|alias_link
-modifier|*
 name|ReLink
 parameter_list|(
 name|struct
@@ -1591,20 +1560,6 @@ define|#
 directive|define
 name|GET_NEW_PORT_MAX_ATTEMPTS
 value|20
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_ALIAS_PORT
-value|-1
-end_define
-
-begin_define
-define|#
-directive|define
-name|GET_ALIAS_ID
-value|GET_ALIAS_PORT
 end_define
 
 begin_define
@@ -2943,7 +2898,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|struct
 name|alias_link
 modifier|*
@@ -2975,17 +2929,13 @@ parameter_list|,
 name|int
 name|alias_port_param
 parameter_list|,
-comment|/* if less than zero, alias   */
 name|int
 name|link_type
 parameter_list|)
 block|{
-comment|/* port will be automatically */
-comment|/* chosen. 				 * If greater than    */
 name|u_int
 name|start_point
 decl_stmt|;
-comment|/* zero, equal to alias port  */
 name|struct
 name|alias_link
 modifier|*
@@ -9192,6 +9142,30 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|_KERNEL
+undef|#
+directive|undef
+name|malloc
+comment|/* XXX: ugly */
+name|la
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+expr|*
+name|la
+argument_list|,
+name|M_ALIAS
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|la
 operator|=
 name|calloc
@@ -9214,6 +9188,8 @@ operator|(
 name|la
 operator|)
 return|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|_KERNEL

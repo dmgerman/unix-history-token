@@ -11219,7 +11219,7 @@ expr_stmt|;
 comment|/* 	 * setup PCI resources and interrupt. 	 */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

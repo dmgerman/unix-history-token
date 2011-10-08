@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DelayedCleanupPool.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/Preprocessor.h"
 end_include
 
@@ -107,12 +113,6 @@ directive|include
 file|<stack>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<list>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|clang
@@ -140,6 +140,12 @@ name|ColonProtectionRAIIObject
 decl_stmt|;
 name|class
 name|InMessageExpressionRAIIObject
+decl_stmt|;
+name|class
+name|PoisonSEHIdentifiersRAIIObject
+decl_stmt|;
+name|class
+name|VersionTuple
 decl_stmt|;
 comment|/// PrettyStackTraceParserEntry - If a crash happens while the parser is active,
 comment|/// an entry is printed for it.
@@ -291,10 +297,11 @@ name|InMessageExpressionRAIIObject
 block|;
 name|friend
 name|class
-name|ParenBraceBracketBalancer
+name|PoisonSEHIdentifiersRAIIObject
 block|;
-name|PrettyStackTraceParserEntry
-name|CrashInfo
+name|friend
+name|class
+name|ParenBraceBracketBalancer
 block|;
 name|Preprocessor
 operator|&
@@ -348,6 +355,41 @@ index|[
 name|ScopeCacheSize
 index|]
 block|;
+comment|/// Identifiers used for SEH handling in Borland. These are only
+comment|/// allowed in particular circumstances
+name|IdentifierInfo
+operator|*
+name|Ident__exception_code
+block|,
+operator|*
+name|Ident___exception_code
+block|,
+operator|*
+name|Ident_GetExceptionCode
+block|;
+comment|// __except block
+name|IdentifierInfo
+operator|*
+name|Ident__exception_info
+block|,
+operator|*
+name|Ident___exception_info
+block|,
+operator|*
+name|Ident_GetExceptionInfo
+block|;
+comment|// __except filter expression
+name|IdentifierInfo
+operator|*
+name|Ident__abnormal_termination
+block|,
+operator|*
+name|Ident___abnormal_termination
+block|,
+operator|*
+name|Ident_AbnormalTermination
+block|;
+comment|// __finally
 comment|/// Ident_super - IdentifierInfo for "super", to support fast
 comment|/// comparison.
 name|IdentifierInfo
@@ -364,6 +406,26 @@ block|;
 name|IdentifierInfo
 operator|*
 name|Ident_pixel
+block|;
+comment|/// \brief Identifier for "introduced".
+name|IdentifierInfo
+operator|*
+name|Ident_introduced
+block|;
+comment|/// \brief Identifier for "deprecated".
+name|IdentifierInfo
+operator|*
+name|Ident_deprecated
+block|;
+comment|/// \brief Identifier for "obsoleted".
+name|IdentifierInfo
+operator|*
+name|Ident_obsoleted
+block|;
+comment|/// \brief Identifier for "unavailable".
+name|IdentifierInfo
+operator|*
+name|Ident_unavailable
 block|;
 comment|/// C++0x contextual keywords.
 name|mutable
@@ -414,6 +476,14 @@ name|OwningPtr
 operator|<
 name|PragmaHandler
 operator|>
+name|MSStructHandler
+block|;
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+name|PragmaHandler
+operator|>
 name|UnusedHandler
 block|;
 name|llvm
@@ -454,7 +524,7 @@ comment|/// ColonProtectionRAIIObject RAII object.
 name|bool
 name|ColonIsSacred
 block|;
-comment|/// \brief When true, we are directly inside an Ojective-C messsage
+comment|/// \brief When true, we are directly inside an Objective-C messsage
 comment|/// send expression.
 comment|///
 comment|/// This is managed by the \c InMessageExpressionRAIIObject class, and
@@ -467,10 +537,13 @@ name|unsigned
 name|TemplateParameterDepth
 block|;
 comment|/// Factory object for creating AttributeList objects.
-name|AttributeList
-operator|::
-name|Factory
+name|AttributeFactory
 name|AttrFactory
+block|;
+comment|/// \brief Gathers and cleans up objects when parsing of a top-level
+comment|/// declaration is finished.
+name|DelayedCleanupPool
+name|TopLevelDeclCleanupPool
 block|;
 name|public
 operator|:
@@ -1373,20 +1446,84 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// TryAnnotateTypeOrScopeToken - If the current token position is on a
-comment|/// typename (possibly qualified in C++) or a C++ scope specifier not followed
-comment|/// by a typename, TryAnnotateTypeOrScopeToken will replace one or more tokens
-comment|/// with a single annotation token representing the typename or C++ scope
-comment|/// respectively.
-comment|/// This simplifies handling of C++ scope specifiers and allows efficient
-comment|/// backtracking without the need to re-parse and resolve nested-names and
-comment|/// typenames.
-comment|/// It will mainly be called when we expect to treat identifiers as typenames
-comment|/// (if they are typenames). For example, in C we do not expect identifiers
-comment|/// inside expressions to be treated as typenames so it will not be called
-comment|/// for expressions in C.
-comment|///
-comment|/// This returns true if the token was annotated.
+comment|/// \brief Read an already-translated primary expression out of an annotation
+comment|/// token.
+specifier|static
+name|ExprResult
+name|getExprAnnotation
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Tok
+operator|.
+name|getAnnotationValue
+argument_list|()
+condition|)
+return|return
+name|ExprResult
+argument_list|(
+operator|(
+name|Expr
+operator|*
+operator|)
+name|Tok
+operator|.
+name|getAnnotationValue
+argument_list|()
+argument_list|)
+return|;
+return|return
+name|ExprResult
+argument_list|(
+name|true
+argument_list|)
+return|;
+block|}
+comment|/// \brief Set the primary expression corresponding to the given annotation
+comment|/// token.
+specifier|static
+name|void
+name|setExprAnnotation
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|,
+name|ExprResult
+name|ER
+parameter_list|)
+block|{
+if|if
+condition|(
+name|ER
+operator|.
+name|isInvalid
+argument_list|()
+condition|)
+name|Tok
+operator|.
+name|setAnnotationValue
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+else|else
+name|Tok
+operator|.
+name|setAnnotationValue
+argument_list|(
+name|ER
+operator|.
+name|get
+argument_list|()
+argument_list|)
+expr_stmt|;
+block|}
 name|bool
 name|TryAnnotateTypeOrScopeToken
 parameter_list|(
@@ -1396,9 +1533,6 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// TryAnnotateCXXScopeToken - Like TryAnnotateTypeOrScopeToken but
-comment|/// only annotates C++ scope specifiers.  This returns true if there
-comment|/// was an unrecoverable error.
 name|bool
 name|TryAnnotateCXXScopeToken
 parameter_list|(
@@ -1537,6 +1671,19 @@ modifier|&
 name|isInvalid
 parameter_list|)
 function_decl|;
+comment|/// \brief Get the TemplateIdAnnotation from the token and put it in the
+comment|/// cleanup pool so that it gets destroyed when parsing the current top level
+comment|/// declaration is finished.
+name|TemplateIdAnnotation
+modifier|*
+name|takeTemplateIdAnnotation
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|tok
+parameter_list|)
+function_decl|;
 comment|/// TentativeParsingAction - An object that is used as a kind of "tentative
 comment|/// parsing transaction". It gets instantiated to mark the token position and
 comment|/// after the token consumption is done, Commit() or Revert() is called to
@@ -1657,12 +1804,6 @@ argument_list|)
 block|;     }
 block|}
 empty_stmt|;
-comment|/// MatchRHSPunctuation - For punctuation with a LHS and RHS (e.g. '['/']'),
-comment|/// this helper function matches and consumes the specified RHS token if
-comment|/// present.  If not present, it emits the specified diagnostic indicating
-comment|/// that the parser failed to match the RHS of the token at LHSLoc.  LHSName
-comment|/// should be the name of the unmatched LHS token.  This returns the location
-comment|/// of the consumed token.
 name|SourceLocation
 name|MatchRHSPunctuation
 argument_list|(
@@ -1838,6 +1979,52 @@ name|void
 name|ExitScope
 parameter_list|()
 function_decl|;
+comment|/// \brief RAII object used to modify the scope flags for the current scope.
+name|class
+name|ParseScopeFlags
+block|{
+name|Scope
+modifier|*
+name|CurScope
+decl_stmt|;
+name|unsigned
+name|OldFlags
+decl_stmt|;
+name|ParseScopeFlags
+argument_list|(
+specifier|const
+name|ParseScopeFlags
+operator|&
+argument_list|)
+expr_stmt|;
+comment|// do not implement
+name|void
+name|operator
+init|=
+operator|(
+specifier|const
+name|ParseScopeFlags
+operator|&
+operator|)
+decl_stmt|;
+comment|// do not implement
+name|public
+label|:
+name|ParseScopeFlags
+argument_list|(
+argument|Parser *Self
+argument_list|,
+argument|unsigned ScopeFlags
+argument_list|,
+argument|bool ManageFlags = true
+argument_list|)
+empty_stmt|;
+operator|~
+name|ParseScopeFlags
+argument_list|()
+expr_stmt|;
+block|}
+empty_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Diagnostic Emission and Error recovery.
 name|public
@@ -2021,8 +2208,8 @@ comment|/// [class.mem]p1: "... the class is regarded as complete within
 comment|/// - function bodies
 comment|/// - default arguments
 comment|/// - exception-specifications (TODO: C++0x)
-comment|/// - and brace-or-equal-initializers (TODO: C++0x)
-comment|/// for non-static data members (including such things in nested classes)."
+comment|/// - and brace-or-equal-initializers for non-static data members
+comment|/// (including such things in nested classes)."
 comment|/// LateParsedDeclarations build the tree of those elements so they can
 comment|/// be parsed after parsing the top-level class.
 name|class
@@ -2038,6 +2225,11 @@ expr_stmt|;
 name|virtual
 name|void
 name|ParseLexedMethodDeclarations
+parameter_list|()
+function_decl|;
+name|virtual
+name|void
+name|ParseLexedMemberInitializers
 parameter_list|()
 function_decl|;
 name|virtual
@@ -2076,6 +2268,11 @@ block|;
 name|virtual
 name|void
 name|ParseLexedMethodDeclarations
+argument_list|()
+block|;
+name|virtual
+name|void
+name|ParseLexedMemberInitializers
 argument_list|()
 block|;
 name|virtual
@@ -2272,9 +2469,59 @@ operator|>
 name|DefaultArgs
 block|;   }
 decl_stmt|;
+comment|/// LateParsedMemberInitializer - An initializer for a non-static class data
+comment|/// member whose parsing must to be delayed until the class is completely
+comment|/// defined (C++11 [class.mem]p2).
+name|struct
+name|LateParsedMemberInitializer
+range|:
+name|public
+name|LateParsedDeclaration
+block|{
+name|LateParsedMemberInitializer
+argument_list|(
+name|Parser
+operator|*
+name|P
+argument_list|,
+name|Decl
+operator|*
+name|FD
+argument_list|)
+operator|:
+name|Self
+argument_list|(
+name|P
+argument_list|)
+block|,
+name|Field
+argument_list|(
+argument|FD
+argument_list|)
+block|{ }
+name|virtual
+name|void
+name|ParseLexedMemberInitializers
+argument_list|()
+block|;
+name|Parser
+operator|*
+name|Self
+block|;
+comment|/// Field - The field declaration.
+name|Decl
+operator|*
+name|Field
+block|;
+comment|/// CachedTokens - The sequence of tokens that comprises the initializer,
+comment|/// including any leading '='.
+name|CachedTokens
+name|Toks
+block|;   }
+decl_stmt|;
 comment|/// LateParsedDeclarationsContainer - During parsing of a top (non-nested)
 comment|/// C++ class, its method declarations that contain parts that won't be
-comment|/// parsed until after the definiton is completed (C++ [class.mem]p2),
+comment|/// parsed until after the definition is completed (C++ [class.mem]p2),
 comment|/// the method declarations and possibly attached inline definitions
 comment|/// will be stored here with the tokens that will be parsed to create those entities.
 typedef|typedef
@@ -2604,21 +2851,16 @@ operator|&
 name|P
 argument_list|)
 operator|:
+name|DeclSpec
+argument_list|(
+name|P
+operator|.
+name|AttrFactory
+argument_list|)
+block|,
 name|ParsingRAII
 argument_list|(
 argument|P
-argument_list|)
-block|{}
-name|ParsingDeclSpec
-argument_list|(
-name|ParsingDeclRAIIObject
-operator|&
-name|RAII
-argument_list|)
-operator|:
-name|ParsingRAII
-argument_list|(
-argument|RAII
 argument_list|)
 block|{}
 name|ParsingDeclSpec
@@ -2632,6 +2874,13 @@ operator|*
 name|RAII
 argument_list|)
 operator|:
+name|DeclSpec
+argument_list|(
+name|P
+operator|.
+name|AttrFactory
+argument_list|)
+block|,
 name|ParsingRAII
 argument_list|(
 argument|P
@@ -2978,6 +3227,93 @@ argument_list|()
 specifier|const
 block|;   }
 block|;
+comment|/// \brief Contains a late templated function.
+comment|/// Will be parsed at the end of the translation unit.
+block|struct
+name|LateParsedTemplatedFunction
+block|{
+name|explicit
+name|LateParsedTemplatedFunction
+argument_list|(
+name|Parser
+operator|*
+name|P
+argument_list|,
+name|Decl
+operator|*
+name|MD
+argument_list|)
+operator|:
+name|D
+argument_list|(
+argument|MD
+argument_list|)
+block|{}
+name|CachedTokens
+name|Toks
+block|;
+comment|/// \brief The template function declaration to be late parsed.
+name|Decl
+operator|*
+name|D
+block|;    }
+block|;
+name|void
+name|LexTemplateFunctionForLateParsing
+argument_list|(
+name|CachedTokens
+operator|&
+name|Toks
+argument_list|)
+block|;
+name|void
+name|ParseLateTemplatedFuncDef
+argument_list|(
+name|LateParsedTemplatedFunction
+operator|&
+name|LMT
+argument_list|)
+block|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FunctionDecl
+operator|*
+operator|,
+name|LateParsedTemplatedFunction
+operator|*
+operator|>
+name|LateParsedTemplateMapT
+expr_stmt|;
+name|LateParsedTemplateMapT
+name|LateParsedTemplateMap
+block|;
+specifier|static
+name|void
+name|LateTemplateParserCallback
+argument_list|(
+name|void
+operator|*
+name|P
+argument_list|,
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|)
+block|;
+name|void
+name|LateTemplateParser
+argument_list|(
+specifier|const
+name|FunctionDecl
+operator|*
+name|FD
+argument_list|)
+block|;
 name|Sema
 operator|::
 name|ParsingClassState
@@ -3015,6 +3351,16 @@ argument_list|,
 argument|const ParsedTemplateInfo&TemplateInfo
 argument_list|,
 argument|const VirtSpecifiers& VS
+argument_list|,
+argument|ExprResult& Init
+argument_list|)
+block|;
+name|void
+name|ParseCXXNonStaticMemberInitializer
+argument_list|(
+name|Decl
+operator|*
+name|VarD
 argument_list|)
 block|;
 name|void
@@ -3047,6 +3393,22 @@ argument_list|(
 name|LexedMethod
 operator|&
 name|LM
+argument_list|)
+block|;
+name|void
+name|ParseLexedMemberInitializers
+argument_list|(
+name|ParsingClass
+operator|&
+name|Class
+argument_list|)
+block|;
+name|void
+name|ParseLexedMemberInitializer
+argument_list|(
+name|LateParsedMemberInitializer
+operator|&
+name|MI
 argument_list|)
 block|;
 name|bool
@@ -3097,6 +3459,18 @@ name|ParsedAttributesWithRange
 operator|:
 name|ParsedAttributes
 block|{
+name|ParsedAttributesWithRange
+argument_list|(
+name|AttributeFactory
+operator|&
+name|factory
+argument_list|)
+operator|:
+name|ParsedAttributes
+argument_list|(
+argument|factory
+argument_list|)
+block|{}
 name|SourceRange
 name|Range
 block|;   }
@@ -3118,7 +3492,6 @@ block|;
 name|bool
 name|isDeclarationAfterDeclarator
 argument_list|()
-specifier|const
 block|;
 name|bool
 name|isStartOfFunctionDefinition
@@ -3349,12 +3722,21 @@ name|isTokIdentifier_in
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief The context in which we are parsing an Objective-C type name.
+block|enum
+name|ObjCTypeNameContext
+block|{
+name|OTN_ResultType
+block|,
+name|OTN_ParameterType
+block|}
+block|;
 name|ParsedType
 name|ParseObjCTypeName
 argument_list|(
 argument|ObjCDeclSpec&DS
 argument_list|,
-argument|bool IsParameter
+argument|ObjCTypeNameContext Context
 argument_list|)
 block|;
 name|void
@@ -3368,6 +3750,8 @@ argument_list|(
 argument|Decl *classOrCat
 argument_list|,
 argument|tok::ObjCKeywordKind MethodImplKind = tok::objc_not_keyword
+argument_list|,
+argument|bool MethodDefinition = true
 argument_list|)
 block|;
 name|Decl
@@ -3381,6 +3765,8 @@ argument_list|,
 argument|Decl *classDecl
 argument_list|,
 argument|tok::ObjCKeywordKind MethodImplKind = tok::objc_not_keyword
+argument_list|,
+argument|bool MethodDefinition=true
 argument_list|)
 block|;
 name|void
@@ -3444,7 +3830,7 @@ argument|bool isAddressOfOperand
 argument_list|,
 argument|bool&NotCastExpr
 argument_list|,
-argument|ParsedType TypeOfCast
+argument|bool isTypeCast
 argument_list|)
 block|;
 name|ExprResult
@@ -3454,7 +3840,7 @@ argument|bool isUnaryExpression
 argument_list|,
 argument|bool isAddressOfOperand = false
 argument_list|,
-argument|ParsedType TypeOfCast = ParsedType()
+argument|bool isTypeCast = false
 argument_list|)
 block|;
 comment|/// Returns true if the next token would start a postfix-expression
@@ -3520,7 +3906,7 @@ argument|ExprResult LHS
 argument_list|)
 block|;
 name|ExprResult
-name|ParseSizeofAlignofExpression
+name|ParseUnaryExprOrTypeTraitExpression
 argument_list|()
 block|;
 name|ExprResult
@@ -3528,7 +3914,7 @@ name|ParseBuiltinPrimaryExpression
 argument_list|()
 block|;
 name|ExprResult
-name|ParseExprAfterTypeofSizeofAlignof
+name|ParseExprAfterUnaryExprOrTypeTrait
 argument_list|(
 specifier|const
 name|Token
@@ -3602,16 +3988,16 @@ operator|(
 name|Scope
 operator|*
 name|S
-expr|,
+operator|,
 name|Expr
 operator|*
 name|Data
-expr|,
+operator|,
 name|Expr
 operator|*
 operator|*
 name|Args
-expr|,
+operator|,
 name|unsigned
 name|NumArgs
 operator|)
@@ -3652,8 +4038,8 @@ parameter_list|,
 name|bool
 name|stopIfCastExpr
 parameter_list|,
-name|ParsedType
-name|TypeOfCast
+name|bool
+name|isTypeCast
 parameter_list|,
 name|ParsedType
 modifier|&
@@ -3700,6 +4086,10 @@ name|ExprResult
 name|ParseStringLiteralExpression
 parameter_list|()
 function_decl|;
+name|ExprResult
+name|ParseGenericSelectionExpression
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C++ Expressions
 name|ExprResult
@@ -3729,6 +4119,11 @@ modifier|*
 name|MayBePseudoDestructor
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|IsTypename
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
@@ -3785,13 +4180,12 @@ name|ExprResult
 name|ParseThrowExpression
 parameter_list|()
 function_decl|;
-comment|// EndLoc is filled with the location of the last token of the specification.
-name|bool
-name|ParseExceptionSpecification
+name|ExceptionSpecificationType
+name|MaybeParseExceptionSpecification
 argument_list|(
-name|SourceLocation
+name|SourceRange
 operator|&
-name|EndLoc
+name|SpecificationRange
 argument_list|,
 name|llvm
 operator|::
@@ -3800,7 +4194,38 @@ operator|<
 name|ParsedType
 operator|>
 operator|&
-name|Exns
+name|DynamicExceptions
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|SourceRange
+operator|>
+operator|&
+name|DynamicExceptionRanges
+argument_list|,
+name|ExprResult
+operator|&
+name|NoexceptExpr
+argument_list|)
+decl_stmt|;
+comment|// EndLoc is filled with the location of the last token of the specification.
+name|ExceptionSpecificationType
+name|ParseDynamicExceptionSpecification
+argument_list|(
+name|SourceRange
+operator|&
+name|SpecificationRange
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|ParsedType
+operator|>
+operator|&
+name|Exceptions
 argument_list|,
 name|llvm
 operator|::
@@ -3810,10 +4235,6 @@ name|SourceRange
 operator|>
 operator|&
 name|Ranges
-argument_list|,
-name|bool
-operator|&
-name|hasAnyExceptionSpec
 argument_list|)
 decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
@@ -4104,6 +4525,14 @@ name|false
 parameter_list|)
 function_decl|;
 name|StmtResult
+name|ParseExprStatement
+parameter_list|(
+name|ParsedAttributes
+modifier|&
+name|Attrs
+parameter_list|)
+function_decl|;
+name|StmtResult
 name|ParseLabeledStatement
 parameter_list|(
 name|ParsedAttributes
@@ -4117,6 +4546,17 @@ parameter_list|(
 name|ParsedAttributes
 modifier|&
 name|Attr
+parameter_list|,
+name|bool
+name|MissingCase
+init|=
+name|false
+parameter_list|,
+name|ExprResult
+name|Expr
+init|=
+name|ExprResult
+argument_list|()
 parameter_list|)
 function_decl|;
 name|StmtResult
@@ -4138,6 +4578,20 @@ name|bool
 name|isStmtExpr
 init|=
 name|false
+parameter_list|)
+function_decl|;
+name|StmtResult
+name|ParseCompoundStatement
+parameter_list|(
+name|ParsedAttributes
+modifier|&
+name|Attr
+parameter_list|,
+name|bool
+name|isStmtExpr
+parameter_list|,
+name|unsigned
+name|ScopeFlags
 parameter_list|)
 function_decl|;
 name|StmtResult
@@ -4256,6 +4710,39 @@ name|AsmLoc
 parameter_list|)
 function_decl|;
 name|bool
+name|ParseMicrosoftIfExistsCondition
+parameter_list|(
+name|bool
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
+name|void
+name|ParseMicrosoftIfExistsStatement
+parameter_list|(
+name|StmtVector
+modifier|&
+name|Stmts
+parameter_list|)
+function_decl|;
+name|void
+name|ParseMicrosoftIfExistsExternalDeclaration
+parameter_list|()
+function_decl|;
+name|void
+name|ParseMicrosoftIfExistsClassDeclaration
+argument_list|(
+name|DeclSpec
+operator|::
+name|TST
+name|TagType
+argument_list|,
+name|AccessSpecifier
+operator|&
+name|CurAS
+argument_list|)
+decl_stmt|;
+name|bool
 name|ParseAsmOperandsOpt
 argument_list|(
 name|llvm
@@ -4311,6 +4798,37 @@ name|ParseCXXCatchBlock
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//
+comment|// MS: SEH Statements and Blocks
+name|StmtResult
+name|ParseSEHTryBlock
+parameter_list|(
+name|ParsedAttributes
+modifier|&
+name|Attr
+parameter_list|)
+function_decl|;
+name|StmtResult
+name|ParseSEHTryBlockCommon
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+name|StmtResult
+name|ParseSEHExceptBlock
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+name|StmtResult
+name|ParseSEHFinallyBlock
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
 comment|// Objective-C Statements
 name|StmtResult
 name|ParseObjCAtStatement
@@ -4340,6 +4858,13 @@ name|SourceLocation
 name|atLoc
 parameter_list|)
 function_decl|;
+name|StmtResult
+name|ParseObjCAutoreleasePoolStmt
+parameter_list|(
+name|SourceLocation
+name|atLoc
+parameter_list|)
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// C99 6.7: Declarations.
 comment|/// A context for parsing declaration specifiers.  TODO: flesh this
@@ -4358,6 +4883,31 @@ name|DSC_top_level
 comment|// top-level/namespace declaration context
 block|}
 enum|;
+comment|/// Information on a C++0x for-range-initializer found while parsing a
+comment|/// declaration which turns out to be a for-range-declaration.
+struct|struct
+name|ForRangeInit
+block|{
+name|SourceLocation
+name|ColonLoc
+decl_stmt|;
+name|ExprResult
+name|RangeExpr
+decl_stmt|;
+name|bool
+name|ParsedForRangeDecl
+parameter_list|()
+block|{
+return|return
+operator|!
+name|ColonLoc
+operator|.
+name|isInvalid
+argument_list|()
+return|;
+block|}
+block|}
+struct|;
 name|DeclGroupPtrTy
 name|ParseDeclaration
 parameter_list|(
@@ -4397,6 +4947,12 @@ name|attrs
 parameter_list|,
 name|bool
 name|RequireSemi
+parameter_list|,
+name|ForRangeInit
+modifier|*
+name|FRI
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|DeclGroupPtrTy
@@ -4415,6 +4971,12 @@ parameter_list|,
 name|SourceLocation
 modifier|*
 name|DeclEnd
+init|=
+literal|0
+parameter_list|,
+name|ForRangeInit
+modifier|*
+name|FRI
 init|=
 literal|0
 parameter_list|)
@@ -4436,6 +4998,31 @@ name|ParsedTemplateInfo
 argument_list|()
 parameter_list|)
 function_decl|;
+name|bool
+name|ParseAttributesAfterDeclarator
+parameter_list|(
+name|Declarator
+modifier|&
+name|D
+parameter_list|)
+function_decl|;
+name|Decl
+modifier|*
+name|ParseDeclarationAfterDeclaratorAndAttributes
+parameter_list|(
+name|Declarator
+modifier|&
+name|D
+parameter_list|,
+specifier|const
+name|ParsedTemplateInfo
+modifier|&
+name|TemplateInfo
+init|=
+name|ParsedTemplateInfo
+argument_list|()
+parameter_list|)
+function_decl|;
 name|Decl
 modifier|*
 name|ParseFunctionStatementBody
@@ -4443,6 +5030,10 @@ parameter_list|(
 name|Decl
 modifier|*
 name|Decl
+parameter_list|,
+name|ParseScope
+modifier|&
+name|BodyScope
 parameter_list|)
 function_decl|;
 name|Decl
@@ -4452,6 +5043,10 @@ parameter_list|(
 name|Decl
 modifier|*
 name|Decl
+parameter_list|,
+name|ParseScope
+modifier|&
+name|BodyScope
 parameter_list|)
 function_decl|;
 comment|/// \brief When in code-completion, skip parsing of the function/method body
@@ -4556,6 +5151,11 @@ parameter_list|(
 name|DeclSpec
 modifier|&
 name|DS
+parameter_list|,
+name|AccessSpecifier
+name|AS
+init|=
+name|AS_none
 parameter_list|)
 function_decl|;
 name|void
@@ -4565,8 +5165,8 @@ name|ObjCDeclSpec
 modifier|&
 name|DS
 parameter_list|,
-name|bool
-name|IsParameter
+name|ObjCTypeNameContext
+name|Context
 parameter_list|)
 function_decl|;
 name|void
@@ -5090,6 +5690,24 @@ operator|=
 name|Declarator
 operator|::
 name|TypeNameContext
+argument_list|,
+name|ObjCDeclSpec
+operator|*
+name|objcQuals
+operator|=
+literal|0
+argument_list|,
+name|AccessSpecifier
+name|AS
+operator|=
+name|AS_none
+argument_list|,
+name|Decl
+operator|*
+operator|*
+name|OwnedType
+operator|=
+literal|0
 argument_list|)
 decl_stmt|;
 name|void
@@ -5151,6 +5769,9 @@ condition|)
 block|{
 name|ParsedAttributes
 name|attrs
+argument_list|(
+name|AttrFactory
+argument_list|)
 decl_stmt|;
 name|SourceLocation
 name|endLoc
@@ -5165,12 +5786,9 @@ argument_list|)
 expr_stmt|;
 name|D
 operator|.
-name|addAttributes
+name|takeAttributes
 argument_list|(
 name|attrs
-operator|.
-name|getList
-argument_list|()
 argument_list|,
 name|endLoc
 argument_list|)
@@ -5245,6 +5863,9 @@ condition|)
 block|{
 name|ParsedAttributesWithRange
 name|attrs
+argument_list|(
+name|AttrFactory
+argument_list|)
 decl_stmt|;
 name|SourceLocation
 name|endLoc
@@ -5259,12 +5880,9 @@ argument_list|)
 expr_stmt|;
 name|D
 operator|.
-name|addAttributes
+name|takeAttributes
 argument_list|(
 name|attrs
-operator|.
-name|getList
-argument_list|()
 argument_list|,
 name|endLoc
 argument_list|)
@@ -5298,6 +5916,9 @@ condition|)
 block|{
 name|ParsedAttributesWithRange
 name|attrsWithRange
+argument_list|(
+name|AttrFactory
+argument_list|)
 decl_stmt|;
 name|ParseCXX0XAttributes
 argument_list|(
@@ -5308,12 +5929,9 @@ argument_list|)
 expr_stmt|;
 name|attrs
 operator|.
-name|append
+name|takeAllFrom
 argument_list|(
 name|attrsWithRange
-operator|.
-name|getList
-argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -5449,6 +6067,41 @@ name|attrs
 parameter_list|)
 function_decl|;
 name|void
+name|ParseOpenCLQualifiers
+parameter_list|(
+name|DeclSpec
+modifier|&
+name|DS
+parameter_list|)
+function_decl|;
+name|VersionTuple
+name|ParseVersionTuple
+parameter_list|(
+name|SourceRange
+modifier|&
+name|Range
+parameter_list|)
+function_decl|;
+name|void
+name|ParseAvailabilityAttribute
+parameter_list|(
+name|IdentifierInfo
+modifier|&
+name|Availability
+parameter_list|,
+name|SourceLocation
+name|AvailabilityLoc
+parameter_list|,
+name|ParsedAttributes
+modifier|&
+name|attrs
+parameter_list|,
+name|SourceLocation
+modifier|*
+name|endLoc
+parameter_list|)
+function_decl|;
+name|void
 name|ParseTypeofSpecifier
 parameter_list|(
 name|DeclSpec
@@ -5458,6 +6111,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|ParseDecltypeSpecifier
+parameter_list|(
+name|DeclSpec
+modifier|&
+name|DS
+parameter_list|)
+function_decl|;
+name|void
+name|ParseUnderlyingTypeSpecifier
 parameter_list|(
 name|DeclSpec
 modifier|&
@@ -5486,21 +6147,10 @@ modifier|&
 name|VS
 parameter_list|)
 function_decl|;
-name|ClassVirtSpecifiers
-operator|::
-name|Specifier
-name|isCXX0XClassVirtSpecifier
-argument_list|()
-specifier|const
-expr_stmt|;
-name|void
-name|ParseOptionalCXX0XClassVirtSpecifierSeq
-parameter_list|(
-name|ClassVirtSpecifiers
-modifier|&
-name|CVS
-parameter_list|)
-function_decl|;
+name|bool
+name|isCXX0XFinalKeyword
+parameter_list|()
+function|const;
 comment|/// DeclaratorScopeObj - RAII object used in Parser::ParseDirectDeclarator to
 comment|/// enter a new C++ declarator scope and exit it when the function is
 comment|/// finished.
@@ -5744,24 +6394,60 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
+name|bool
+name|isFunctionDeclaratorIdentifierList
+parameter_list|()
+function_decl|;
 name|void
 name|ParseFunctionDeclaratorIdentifierList
-parameter_list|(
-name|SourceLocation
-name|LParenLoc
-parameter_list|,
-name|IdentifierInfo
-modifier|*
-name|FirstIdent
-parameter_list|,
-name|SourceLocation
-name|FirstIdentLoc
-parameter_list|,
+argument_list|(
 name|Declarator
-modifier|&
+operator|&
 name|D
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|DeclaratorChunk
+operator|::
+name|ParamInfo
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|ParamInfo
+argument_list|)
+decl_stmt|;
+name|void
+name|ParseParameterDeclarationClause
+argument_list|(
+name|Declarator
+operator|&
+name|D
+argument_list|,
+name|ParsedAttributes
+operator|&
+name|attrs
+argument_list|,
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|DeclaratorChunk
+operator|::
+name|ParamInfo
+argument_list|,
+literal|16
+operator|>
+operator|&
+name|ParamInfo
+argument_list|,
+name|SourceLocation
+operator|&
+name|EllipsisLoc
+argument_list|)
+decl_stmt|;
 name|void
 name|ParseBracketDeclarator
 parameter_list|(
@@ -5807,6 +6493,58 @@ name|SourceLocation
 argument_list|()
 parameter_list|)
 function_decl|;
+name|void
+name|ParseInnerNamespace
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|IdentLoc
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|IdentifierInfo
+operator|*
+operator|>
+operator|&
+name|Ident
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|NamespaceLoc
+argument_list|,
+name|unsigned
+name|int
+name|index
+argument_list|,
+name|SourceLocation
+operator|&
+name|InlineLoc
+argument_list|,
+name|SourceLocation
+operator|&
+name|LBrace
+argument_list|,
+name|ParsedAttributes
+operator|&
+name|attrs
+argument_list|,
+name|SourceLocation
+operator|&
+name|RBraceLoc
+argument_list|)
+decl_stmt|;
 name|Decl
 modifier|*
 name|ParseLinkage
@@ -5838,6 +6576,13 @@ parameter_list|,
 name|ParsedAttributesWithRange
 modifier|&
 name|attrs
+parameter_list|,
+name|Decl
+modifier|*
+modifier|*
+name|OwnedType
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|Decl
@@ -5882,6 +6627,13 @@ name|AccessSpecifier
 name|AS
 init|=
 name|AS_none
+parameter_list|,
+name|Decl
+modifier|*
+modifier|*
+name|OwnedType
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|Decl
@@ -5922,10 +6674,8 @@ modifier|&
 name|EndLocation
 parameter_list|,
 name|CXXScopeSpec
-modifier|*
+modifier|&
 name|SS
-init|=
-literal|0
 parameter_list|)
 function_decl|;
 name|void
@@ -5974,6 +6724,17 @@ parameter_list|,
 name|Decl
 modifier|*
 name|TagDecl
+parameter_list|)
+function_decl|;
+name|ExprResult
+name|ParseCXXMemberInitializer
+parameter_list|(
+name|bool
+name|IsFunction
+parameter_list|,
+name|SourceLocation
+modifier|&
+name|EqualLoc
 parameter_list|)
 function_decl|;
 name|void
@@ -6295,7 +7056,7 @@ name|TemplateNameLoc
 parameter_list|,
 specifier|const
 name|CXXScopeSpec
-modifier|*
+modifier|&
 name|SS
 parameter_list|,
 name|bool
@@ -6323,9 +7084,8 @@ parameter_list|,
 name|TemplateNameKind
 name|TNK
 parameter_list|,
-specifier|const
 name|CXXScopeSpec
-modifier|*
+modifier|&
 name|SS
 parameter_list|,
 name|UnqualifiedId
@@ -6346,14 +7106,7 @@ parameter_list|)
 function_decl|;
 name|void
 name|AnnotateTemplateIdTokenAsType
-parameter_list|(
-specifier|const
-name|CXXScopeSpec
-modifier|*
-name|SS
-init|=
-literal|0
-parameter_list|)
+parameter_list|()
 function_decl|;
 name|bool
 name|IsTemplateArgumentList
@@ -6403,6 +7156,16 @@ parameter_list|()
 function_decl|;
 name|ExprResult
 name|ParseBinaryTypeTrait
+parameter_list|()
+function_decl|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Embarcadero: Arary and Expression Traits
+name|ExprResult
+name|ParseArrayTypeTrait
+parameter_list|()
+function_decl|;
+name|ExprResult
+name|ParseExpressionTrait
 parameter_list|()
 function_decl|;
 comment|//===--------------------------------------------------------------------===//

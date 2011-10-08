@@ -177,6 +177,9 @@ name|class
 name|CallInst
 decl_stmt|;
 name|class
+name|CCState
+decl_stmt|;
+name|class
 name|Function
 decl_stmt|;
 name|class
@@ -315,6 +318,36 @@ block|,
 comment|// Try to expand this to other ops, otherwise use a libcall.
 name|Custom
 comment|// Use the LowerOperation hook to implement custom lowering.
+block|}
+enum|;
+comment|/// LegalizeAction - This enum indicates whether a types are legal for a
+comment|/// target, and if not, what action should be used to make them valid.
+enum|enum
+name|LegalizeTypeAction
+block|{
+name|TypeLegal
+block|,
+comment|// The target natively supports this type.
+name|TypePromoteInteger
+block|,
+comment|// Replace this integer with a larger one.
+name|TypeExpandInteger
+block|,
+comment|// Split this integer into two of half the size.
+name|TypeSoftenFloat
+block|,
+comment|// Convert this float to a same size integer type.
+name|TypeExpandFloat
+block|,
+comment|// Split this float into two of half the size.
+name|TypeScalarizeVector
+block|,
+comment|// Replace this one-element vector with its element.
+name|TypeSplitVector
+block|,
+comment|// Split this vector into two of half the size.
+name|TypeWidenVector
+comment|// This vector should be widened into a larger vector.
 block|}
 enum|;
 enum|enum
@@ -661,28 +694,6 @@ name|SimpleTy
 index|]
 return|;
 block|}
-comment|/// getRegPressureLimit - Return the register pressure "high water mark" for
-comment|/// the specific register class. The scheduler is in high register pressure
-comment|/// mode (for the specific register class) if it goes over the limit.
-name|virtual
-name|unsigned
-name|getRegPressureLimit
-argument_list|(
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|RC
-argument_list|,
-name|MachineFunction
-operator|&
-name|MF
-argument_list|)
-decl|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 comment|/// isTypeLegal - Return true if the target has native support for the
 comment|/// specified value type.  This means that it has a register that directly
 comment|/// holds it without promotions or expansions.
@@ -740,7 +751,7 @@ block|}
 name|class
 name|ValueTypeActionImpl
 block|{
-comment|/// ValueTypeActions - For each value type, keep a LegalizeAction enum
+comment|/// ValueTypeActions - For each value type, keep a LegalizeTypeAction enum
 comment|/// that indicates how instruction selection should deal with the type.
 name|uint8_t
 name|ValueTypeActions
@@ -750,181 +761,6 @@ operator|::
 name|LAST_VALUETYPE
 index|]
 decl_stmt|;
-name|LegalizeAction
-name|getExtendedTypeAction
-argument_list|(
-name|EVT
-name|VT
-argument_list|)
-decl|const
-block|{
-comment|// Handle non-vector integers.
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isVector
-argument_list|()
-condition|)
-block|{
-name|assert
-argument_list|(
-name|VT
-operator|.
-name|isInteger
-argument_list|()
-operator|&&
-literal|"Unsupported extended type!"
-argument_list|)
-expr_stmt|;
-name|unsigned
-name|BitSize
-init|=
-name|VT
-operator|.
-name|getSizeInBits
-argument_list|()
-decl_stmt|;
-comment|// First promote to a power-of-two size, then expand if necessary.
-if|if
-condition|(
-name|BitSize
-operator|<
-literal|8
-operator|||
-operator|!
-name|isPowerOf2_32
-argument_list|(
-name|BitSize
-argument_list|)
-condition|)
-return|return
-name|Promote
-return|;
-return|return
-name|Expand
-return|;
-block|}
-comment|// Vectors with only one element are always scalarized.
-if|if
-condition|(
-name|VT
-operator|.
-name|getVectorNumElements
-argument_list|()
-operator|==
-literal|1
-condition|)
-return|return
-name|Expand
-return|;
-comment|// Vectors with a number of elements that is not a power of two are always
-comment|// widened, for example<3 x float> -><4 x float>.
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isPow2VectorType
-argument_list|()
-condition|)
-return|return
-name|Promote
-return|;
-comment|// Vectors with a crazy element type are always expanded, for example
-comment|//<4 x i2> is expanded into two vectors of type<2 x i2>.
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|getVectorElementType
-argument_list|()
-operator|.
-name|isSimple
-argument_list|()
-condition|)
-return|return
-name|Expand
-return|;
-comment|// If this type is smaller than a legal vector type then widen it,
-comment|// otherwise expand it.  E.g.<2 x float> -><4 x float>.
-name|MVT
-name|EltType
-init|=
-name|VT
-operator|.
-name|getVectorElementType
-argument_list|()
-operator|.
-name|getSimpleVT
-argument_list|()
-decl_stmt|;
-name|unsigned
-name|NumElts
-init|=
-name|VT
-operator|.
-name|getVectorNumElements
-argument_list|()
-decl_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
-block|{
-comment|// Round up to the next power of 2.
-name|NumElts
-operator|=
-operator|(
-name|unsigned
-operator|)
-name|NextPowerOf2
-argument_list|(
-name|NumElts
-argument_list|)
-expr_stmt|;
-comment|// If there is no simple vector type with this many elements then there
-comment|// cannot be a larger legal vector type.  Note that this assumes that
-comment|// there are no skipped intermediate vector types in the simple types.
-name|MVT
-name|LargerVector
-init|=
-name|MVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|EltType
-argument_list|,
-name|NumElts
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|LargerVector
-operator|==
-name|MVT
-argument_list|()
-condition|)
-return|return
-name|Expand
-return|;
-comment|// If this type is legal then widen the vector.
-if|if
-condition|(
-name|getTypeAction
-argument_list|(
-name|LargerVector
-argument_list|)
-operator|==
-name|Legal
-condition|)
-return|return
-name|Promote
-return|;
-block|}
-block|}
 name|public
 label|:
 name|ValueTypeActionImpl
@@ -945,39 +781,7 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-name|LegalizeAction
-name|getTypeAction
-argument_list|(
-name|EVT
-name|VT
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-operator|!
-name|VT
-operator|.
-name|isExtended
-argument_list|()
-condition|)
-return|return
-name|getTypeAction
-argument_list|(
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
-argument_list|)
-return|;
-return|return
-name|getExtendedTypeAction
-argument_list|(
-name|VT
-argument_list|)
-return|;
-block|}
-name|LegalizeAction
+name|LegalizeTypeAction
 name|getTypeAction
 argument_list|(
 name|MVT
@@ -987,7 +791,7 @@ decl|const
 block|{
 return|return
 operator|(
-name|LegalizeAction
+name|LegalizeTypeAction
 operator|)
 name|ValueTypeActions
 index|[
@@ -1003,7 +807,7 @@ parameter_list|(
 name|EVT
 name|VT
 parameter_list|,
-name|LegalizeAction
+name|LegalizeTypeAction
 name|Action
 parameter_list|)
 block|{
@@ -1042,24 +846,30 @@ comment|/// getTypeAction - Return how we should legalize values of this type, e
 comment|/// it is already legal (return 'Legal') or we need to promote it to a larger
 comment|/// type (return 'Promote'), or we need to expand it into multiple registers
 comment|/// of smaller integer type (return 'Expand').  'Custom' is not an option.
-name|LegalizeAction
+name|LegalizeTypeAction
 name|getTypeAction
 argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
 name|EVT
 name|VT
 argument_list|)
 decl|const
 block|{
 return|return
-name|ValueTypeActions
-operator|.
-name|getTypeAction
+name|getTypeConversion
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|)
+operator|.
+name|first
 return|;
 block|}
-name|LegalizeAction
+name|LegalizeTypeAction
 name|getTypeAction
 argument_list|(
 name|MVT
@@ -1094,221 +904,16 @@ name|VT
 argument_list|)
 decl|const
 block|{
-if|if
-condition|(
-name|VT
-operator|.
-name|isSimple
-argument_list|()
-condition|)
-block|{
-name|assert
-argument_list|(
-operator|(
-name|unsigned
-operator|)
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-operator|<
-name|array_lengthof
-argument_list|(
-name|TransformToType
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|EVT
-name|NVT
-init|=
-name|TransformToType
-index|[
-name|VT
-operator|.
-name|getSimpleVT
-argument_list|()
-operator|.
-name|SimpleTy
-index|]
-decl_stmt|;
-name|assert
-argument_list|(
-name|getTypeAction
-argument_list|(
-name|NVT
-argument_list|)
-operator|!=
-name|Promote
-operator|&&
-literal|"Promote may not follow Expand or Promote"
-argument_list|)
-expr_stmt|;
 return|return
-name|NVT
-return|;
-block|}
-if|if
-condition|(
-name|VT
-operator|.
-name|isVector
-argument_list|()
-condition|)
-block|{
-name|EVT
-name|NVT
-init|=
-name|VT
-operator|.
-name|getPow2VectorType
-argument_list|(
-name|Context
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|NVT
-operator|==
-name|VT
-condition|)
-block|{
-comment|// Vector length is a power of 2 - split to half the size.
-name|unsigned
-name|NumElts
-init|=
-name|VT
-operator|.
-name|getVectorNumElements
-argument_list|()
-decl_stmt|;
-name|EVT
-name|EltVT
-init|=
-name|VT
-operator|.
-name|getVectorElementType
-argument_list|()
-decl_stmt|;
-return|return
-operator|(
-name|NumElts
-operator|==
-literal|1
-operator|)
-condition|?
-name|EltVT
-else|:
-name|EVT
-operator|::
-name|getVectorVT
-argument_list|(
-name|Context
-argument_list|,
-name|EltVT
-argument_list|,
-name|NumElts
-operator|/
-literal|2
-argument_list|)
-return|;
-block|}
-comment|// Promote to a power of two size, avoiding multi-step promotion.
-return|return
-name|getTypeAction
-argument_list|(
-name|NVT
-argument_list|)
-operator|==
-name|Promote
-condition|?
-name|getTypeToTransformTo
-argument_list|(
-name|Context
-argument_list|,
-name|NVT
-argument_list|)
-else|:
-name|NVT
-return|;
-block|}
-elseif|else
-if|if
-condition|(
-name|VT
-operator|.
-name|isInteger
-argument_list|()
-condition|)
-block|{
-name|EVT
-name|NVT
-init|=
-name|VT
-operator|.
-name|getRoundIntegerType
-argument_list|(
-name|Context
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|NVT
-operator|==
-name|VT
-condition|)
-comment|// Size is a power of two - expand to half the size.
-return|return
-name|EVT
-operator|::
-name|getIntegerVT
+name|getTypeConversion
 argument_list|(
 name|Context
 argument_list|,
 name|VT
+argument_list|)
 operator|.
-name|getSizeInBits
-argument_list|()
-operator|/
-literal|2
-argument_list|)
+name|second
 return|;
-comment|// Promote to a power of two size, avoiding multi-step promotion.
-return|return
-name|getTypeAction
-argument_list|(
-name|NVT
-argument_list|)
-operator|==
-name|Promote
-condition|?
-name|getTypeToTransformTo
-argument_list|(
-name|Context
-argument_list|,
-name|NVT
-argument_list|)
-else|:
-name|NVT
-return|;
-block|}
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Unsupported extended type!"
-argument_list|)
-expr_stmt|;
-return|return
-name|MVT
-argument_list|(
-name|MVT
-operator|::
-name|Other
-argument_list|)
-return|;
-comment|// Not reached
 block|}
 comment|/// getTypeToExpandTo - For types supported by the target, this is an
 comment|/// identity function.  For types that must be expanded (i.e. integer types
@@ -1344,6 +949,8 @@ switch|switch
 condition|(
 name|getTypeAction
 argument_list|(
+name|Context
+argument_list|,
 name|VT
 argument_list|)
 condition|)
@@ -3078,6 +2685,28 @@ return|return
 name|MinStackArgumentAlignment
 return|;
 block|}
+comment|/// getMinFunctionAlignment - return the minimum function alignment.
+comment|///
+name|unsigned
+name|getMinFunctionAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MinFunctionAlignment
+return|;
+block|}
+comment|/// getPrefFunctionAlignment - return the preferred function alignment.
+comment|///
+name|unsigned
+name|getPrefFunctionAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PrefFunctionAlignment
+return|;
+block|}
 comment|/// getPrefLoopAlignment - return the preferred loop alignment.
 comment|///
 name|unsigned
@@ -3271,19 +2900,6 @@ operator|*
 name|GA
 argument_list|)
 decl|const
-decl_stmt|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-specifier|const
-name|Function
-operator|*
-argument_list|)
-decl|const
-init|=
-literal|0
 decl_stmt|;
 comment|/// getStackCookieLocation - Return true if the target stores stack
 comment|/// protector cookies at a fixed offset in some non-standard address
@@ -3636,6 +3252,14 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+name|void
+name|RemoveFromWorklist
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
 name|SDValue
 name|CombineTo
 argument_list|(
@@ -3975,7 +3599,7 @@ name|isExpensive
 expr_stmt|;
 block|}
 comment|/// JumpIsExpensive - Tells the code generator not to expand sequence of
-comment|/// operations into a seperate sequences that increases the amount of
+comment|/// operations into a separate sequences that increases the amount of
 comment|/// flow control.
 name|void
 name|setJumpIsExpensive
@@ -4603,6 +4227,34 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
+comment|/// setMinFunctionAlignment - Set the target's minimum function alignment.
+name|void
+name|setMinFunctionAlignment
+parameter_list|(
+name|unsigned
+name|Align
+parameter_list|)
+block|{
+name|MinFunctionAlignment
+operator|=
+name|Align
+expr_stmt|;
+block|}
+comment|/// setPrefFunctionAlignment - Set the target's preferred function alignment.
+comment|/// This should be set if there is a performance benefit to
+comment|/// higher-than-minimum alignment
+name|void
+name|setPrefFunctionAlignment
+parameter_list|(
+name|unsigned
+name|Align
+parameter_list|)
+block|{
+name|PrefFunctionAlignment
+operator|=
+name|Align
+expr_stmt|;
+block|}
 comment|/// setPrefLoopAlignment - Set the target's preferred loop alignment. Default
 comment|/// alignment is zero, it means the target does not care about loop alignment.
 name|void
@@ -4934,6 +4586,19 @@ argument_list|()
 return|;
 comment|// this is here to silence compiler errors
 block|}
+comment|/// HandleByVal - Target-specific cleanup for formal ByVal parameters.
+name|virtual
+name|void
+name|HandleByVal
+argument_list|(
+name|CCState
+operator|*
+argument_list|,
+name|unsigned
+operator|&
+argument_list|)
+decl|const
+block|{}
 comment|/// CanLowerReturn - This hook should be implemented to check whether the
 comment|/// return values described by the Outs array can fit into the return
 comment|/// registers.  If false is returned, an sret-demotion is performed.
@@ -4946,6 +4611,10 @@ name|CallingConv
 operator|::
 name|ID
 name|CallConv
+argument_list|,
+name|MachineFunction
+operator|&
+name|MF
 argument_list|,
 name|bool
 name|isVarArg
@@ -5046,6 +4715,73 @@ decl|const
 block|{
 return|return
 name|false
+return|;
+block|}
+comment|/// mayBeEmittedAsTailCall - Return true if the target may be able emit the
+comment|/// call instruction as a tail call. This is used by optimization passes to
+comment|/// determine if it's profitable to duplicate return instructions to enable
+comment|/// tailcall optimization.
+name|virtual
+name|bool
+name|mayBeEmittedAsTailCall
+argument_list|(
+name|CallInst
+operator|*
+name|CI
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// getTypeForExtArgOrReturn - Return the type that should be used to zero or
+comment|/// sign extend a zeroext/signext integer argument or return value.
+comment|/// FIXME: Most C calling convention requires the return type to be promoted,
+comment|/// but this is not true all the time, e.g. i1 on x86-64. It is also not
+comment|/// necessary for non-C calling conventions. The frontend should handle this
+comment|/// and include all of the necessary information.
+name|virtual
+name|EVT
+name|getTypeForExtArgOrReturn
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|,
+name|ISD
+operator|::
+name|NodeType
+name|ExtendKind
+argument_list|)
+decl|const
+block|{
+name|EVT
+name|MinVT
+init|=
+name|getRegisterType
+argument_list|(
+name|Context
+argument_list|,
+name|MVT
+operator|::
+name|i32
+argument_list|)
+decl_stmt|;
+return|return
+name|VT
+operator|.
+name|bitsLT
+argument_list|(
+name|MinVT
+argument_list|)
+condition|?
+name|MinVT
+else|:
+name|VT
 return|;
 block|}
 comment|/// LowerOperationWrapper - This callback is invoked by the type legalizer
@@ -5486,24 +5222,6 @@ name|Constraint
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getRegClassForInlineAsmConstraint - Given a constraint letter (e.g. "r"),
-comment|/// return a list of registers that can be used to satisfy the constraint.
-comment|/// This should only be used for C_RegisterClass constraints.
-name|virtual
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-expr_stmt|;
 comment|/// getRegForInlineAsmConstraint - Given a physical register constraint (e.g.
 comment|/// {edx}), return the register number and the register class for the
 comment|/// register.
@@ -5557,8 +5275,11 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-name|char
-name|ConstraintLetter
+name|std
+operator|::
+name|string
+operator|&
+name|Constraint
 argument_list|,
 name|std
 operator|::
@@ -5791,9 +5512,44 @@ return|return
 name|true
 return|;
 block|}
+comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// add immediate, that is the target has add instructions which can add
+comment|/// a register with the immediate without having to materialize the
+comment|/// immediate into a register.
+name|virtual
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+name|int64_t
+name|Imm
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Div utility functions
 comment|//
+name|SDValue
+name|BuildExactSDIV
+argument_list|(
+name|SDValue
+name|Op1
+argument_list|,
+name|SDValue
+name|Op2
+argument_list|,
+name|DebugLoc
+name|dl
+argument_list|,
+name|SelectionDAG
+operator|&
+name|DAG
+argument_list|)
+decl|const
+decl_stmt|;
 name|SDValue
 name|BuildSDIV
 argument_list|(
@@ -5989,6 +5745,14 @@ name|TargetLoweringObjectFile
 modifier|&
 name|TLOF
 decl_stmt|;
+comment|/// We are in the process of implementing a new TypeLegalization action
+comment|/// which is the promotion of vector elements. This feature is under
+comment|/// development. Until this feature is complete, it is only enabled using a
+comment|/// flag. We pass this flag using a member because of circular dep issues.
+comment|/// This member will be removed with the flag once we complete the transition.
+name|bool
+name|mayPromoteElements
+decl_stmt|;
 comment|/// PointerTy - The type to use for pointers, usually i32 or i64.
 comment|///
 name|MVT
@@ -6060,7 +5824,20 @@ comment|///
 name|unsigned
 name|MinStackArgumentAlignment
 decl_stmt|;
-comment|/// PrefLoopAlignment - The perferred loop alignment.
+comment|/// MinFunctionAlignment - The minimum function alignment (used when
+comment|/// optimizing for size, and to prevent explicitly provided alignment
+comment|/// from leading to incorrect code).
+comment|///
+name|unsigned
+name|MinFunctionAlignment
+decl_stmt|;
+comment|/// PrefFunctionAlignment - The preferred function alignment (used when
+comment|/// alignment unspecified and optimizing for speed).
+comment|///
+name|unsigned
+name|PrefFunctionAlignment
+decl_stmt|;
+comment|/// PrefLoopAlignment - The preferred loop alignment.
 comment|///
 name|unsigned
 name|PrefLoopAlignment
@@ -6239,6 +6016,607 @@ decl_stmt|;
 name|ValueTypeActionImpl
 name|ValueTypeActions
 decl_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|pair
+operator|<
+name|LegalizeTypeAction
+operator|,
+name|EVT
+operator|>
+name|LegalizeKind
+expr_stmt|;
+name|LegalizeKind
+name|getTypeConversion
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|EVT
+name|VT
+argument_list|)
+decl|const
+block|{
+comment|// If this is a simple type, use the ComputeRegisterProp mechanism.
+if|if
+condition|(
+name|VT
+operator|.
+name|isSimple
+argument_list|()
+condition|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|unsigned
+operator|)
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+operator|<
+name|array_lengthof
+argument_list|(
+name|TransformToType
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|EVT
+name|NVT
+init|=
+name|TransformToType
+index|[
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+operator|.
+name|SimpleTy
+index|]
+decl_stmt|;
+name|LegalizeTypeAction
+name|LA
+init|=
+name|ValueTypeActions
+operator|.
+name|getTypeAction
+argument_list|(
+name|VT
+operator|.
+name|getSimpleVT
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+operator|(
+operator|!
+operator|(
+name|NVT
+operator|.
+name|isSimple
+argument_list|()
+operator|&&
+name|LA
+operator|!=
+name|TypeLegal
+operator|)
+operator|||
+name|ValueTypeActions
+operator|.
+name|getTypeAction
+argument_list|(
+name|NVT
+operator|.
+name|getSimpleVT
+argument_list|()
+argument_list|)
+operator|!=
+name|TypePromoteInteger
+operator|)
+operator|&&
+literal|"Promote may not follow Expand or Promote"
+argument_list|)
+expr_stmt|;
+return|return
+name|LegalizeKind
+argument_list|(
+name|LA
+argument_list|,
+name|NVT
+argument_list|)
+return|;
+block|}
+comment|// Handle Extended Scalar Types.
+if|if
+condition|(
+operator|!
+name|VT
+operator|.
+name|isVector
+argument_list|()
+condition|)
+block|{
+name|assert
+argument_list|(
+name|VT
+operator|.
+name|isInteger
+argument_list|()
+operator|&&
+literal|"Float types must be simple"
+argument_list|)
+expr_stmt|;
+name|unsigned
+name|BitSize
+init|=
+name|VT
+operator|.
+name|getSizeInBits
+argument_list|()
+decl_stmt|;
+comment|// First promote to a power-of-two size, then expand if necessary.
+if|if
+condition|(
+name|BitSize
+operator|<
+literal|8
+operator|||
+operator|!
+name|isPowerOf2_32
+argument_list|(
+name|BitSize
+argument_list|)
+condition|)
+block|{
+name|EVT
+name|NVT
+init|=
+name|VT
+operator|.
+name|getRoundIntegerType
+argument_list|(
+name|Context
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|NVT
+operator|!=
+name|VT
+operator|&&
+literal|"Unable to round integer VT"
+argument_list|)
+expr_stmt|;
+name|LegalizeKind
+name|NextStep
+init|=
+name|getTypeConversion
+argument_list|(
+name|Context
+argument_list|,
+name|NVT
+argument_list|)
+decl_stmt|;
+comment|// Avoid multi-step promotion.
+if|if
+condition|(
+name|NextStep
+operator|.
+name|first
+operator|==
+name|TypePromoteInteger
+condition|)
+return|return
+name|NextStep
+return|;
+comment|// Return rounded integer type.
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypePromoteInteger
+argument_list|,
+name|NVT
+argument_list|)
+return|;
+block|}
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeExpandInteger
+argument_list|,
+name|EVT
+operator|::
+name|getIntegerVT
+argument_list|(
+name|Context
+argument_list|,
+name|VT
+operator|.
+name|getSizeInBits
+argument_list|()
+operator|/
+literal|2
+argument_list|)
+argument_list|)
+return|;
+block|}
+comment|// Handle vector types.
+name|unsigned
+name|NumElts
+init|=
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+decl_stmt|;
+name|EVT
+name|EltVT
+init|=
+name|VT
+operator|.
+name|getVectorElementType
+argument_list|()
+decl_stmt|;
+comment|// Vectors with only one element are always scalarized.
+if|if
+condition|(
+name|NumElts
+operator|==
+literal|1
+condition|)
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeScalarizeVector
+argument_list|,
+name|EltVT
+argument_list|)
+return|;
+comment|// If we allow the promotion of vector elements using a flag,
+comment|// then try to widen vector elements until a legal type is found.
+if|if
+condition|(
+name|mayPromoteElements
+operator|&&
+name|EltVT
+operator|.
+name|isInteger
+argument_list|()
+condition|)
+block|{
+comment|// Vectors with a number of elements that is not a power of two are always
+comment|// widened, for example<3 x float> -><4 x float>.
+if|if
+condition|(
+operator|!
+name|VT
+operator|.
+name|isPow2VectorType
+argument_list|()
+condition|)
+block|{
+name|NumElts
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|NextPowerOf2
+argument_list|(
+name|NumElts
+argument_list|)
+expr_stmt|;
+name|EVT
+name|NVT
+init|=
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|Context
+argument_list|,
+name|EltVT
+argument_list|,
+name|NumElts
+argument_list|)
+decl_stmt|;
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeWidenVector
+argument_list|,
+name|NVT
+argument_list|)
+return|;
+block|}
+comment|// Examine the element type.
+name|LegalizeKind
+name|LK
+init|=
+name|getTypeConversion
+argument_list|(
+name|Context
+argument_list|,
+name|EltVT
+argument_list|)
+decl_stmt|;
+comment|// If type is to be expanded, split the vector.
+comment|//<4 x i140> -><2 x i140>
+if|if
+condition|(
+name|LK
+operator|.
+name|first
+operator|==
+name|TypeExpandInteger
+condition|)
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeSplitVector
+argument_list|,
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|Context
+argument_list|,
+name|EltVT
+argument_list|,
+name|NumElts
+operator|/
+literal|2
+argument_list|)
+argument_list|)
+return|;
+comment|// Promote the integer element types until a legal vector type is found
+comment|// or until the element integer type is too big. If a legal type was not
+comment|// found, fallback to the usual mechanism of widening/splitting the
+comment|// vector.
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+comment|// Increase the bitwidth of the element to the next pow-of-two
+comment|// (which is greater than 8 bits).
+name|EltVT
+operator|=
+name|EVT
+operator|::
+name|getIntegerVT
+argument_list|(
+name|Context
+argument_list|,
+literal|1
+operator|+
+name|EltVT
+operator|.
+name|getSizeInBits
+argument_list|()
+argument_list|)
+operator|.
+name|getRoundIntegerType
+argument_list|(
+name|Context
+argument_list|)
+expr_stmt|;
+comment|// Stop trying when getting a non-simple element type.
+comment|// Note that vector elements may be greater than legal vector element
+comment|// types. Example: X86 XMM registers hold 64bit element on 32bit systems.
+if|if
+condition|(
+operator|!
+name|EltVT
+operator|.
+name|isSimple
+argument_list|()
+condition|)
+break|break;
+comment|// Build a new vector type and check if it is legal.
+name|MVT
+name|NVT
+init|=
+name|MVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|EltVT
+operator|.
+name|getSimpleVT
+argument_list|()
+argument_list|,
+name|NumElts
+argument_list|)
+decl_stmt|;
+comment|// Found a legal promoted vector type.
+if|if
+condition|(
+name|NVT
+operator|!=
+name|MVT
+argument_list|()
+operator|&&
+name|ValueTypeActions
+operator|.
+name|getTypeAction
+argument_list|(
+name|NVT
+argument_list|)
+operator|==
+name|TypeLegal
+condition|)
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypePromoteInteger
+argument_list|,
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|Context
+argument_list|,
+name|EltVT
+argument_list|,
+name|NumElts
+argument_list|)
+argument_list|)
+return|;
+block|}
+block|}
+comment|// Try to widen the vector until a legal type is found.
+comment|// If there is no wider legal type, split the vector.
+while|while
+condition|(
+literal|1
+condition|)
+block|{
+comment|// Round up to the next power of 2.
+name|NumElts
+operator|=
+operator|(
+name|unsigned
+operator|)
+name|NextPowerOf2
+argument_list|(
+name|NumElts
+argument_list|)
+expr_stmt|;
+comment|// If there is no simple vector type with this many elements then there
+comment|// cannot be a larger legal vector type.  Note that this assumes that
+comment|// there are no skipped intermediate vector types in the simple types.
+if|if
+condition|(
+operator|!
+name|EltVT
+operator|.
+name|isSimple
+argument_list|()
+condition|)
+break|break;
+name|MVT
+name|LargerVector
+init|=
+name|MVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|EltVT
+operator|.
+name|getSimpleVT
+argument_list|()
+argument_list|,
+name|NumElts
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|LargerVector
+operator|==
+name|MVT
+argument_list|()
+condition|)
+break|break;
+comment|// If this type is legal then widen the vector.
+if|if
+condition|(
+name|ValueTypeActions
+operator|.
+name|getTypeAction
+argument_list|(
+name|LargerVector
+argument_list|)
+operator|==
+name|TypeLegal
+condition|)
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeWidenVector
+argument_list|,
+name|LargerVector
+argument_list|)
+return|;
+block|}
+comment|// Widen odd vectors to next power of two.
+if|if
+condition|(
+operator|!
+name|VT
+operator|.
+name|isPow2VectorType
+argument_list|()
+condition|)
+block|{
+name|EVT
+name|NVT
+init|=
+name|VT
+operator|.
+name|getPow2VectorType
+argument_list|(
+name|Context
+argument_list|)
+decl_stmt|;
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeWidenVector
+argument_list|,
+name|NVT
+argument_list|)
+return|;
+block|}
+comment|// Vectors with illegal element types are expanded.
+name|EVT
+name|NVT
+init|=
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|Context
+argument_list|,
+name|EltVT
+argument_list|,
+name|VT
+operator|.
+name|getVectorNumElements
+argument_list|()
+operator|/
+literal|2
+argument_list|)
+decl_stmt|;
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeSplitVector
+argument_list|,
+name|NVT
+argument_list|)
+return|;
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"Unable to handle this kind of vector type"
+argument_list|)
+expr_stmt|;
+return|return
+name|LegalizeKind
+argument_list|(
+name|TypeLegal
+argument_list|,
+name|VT
+argument_list|)
+return|;
+block|}
 name|std
 operator|::
 name|vector

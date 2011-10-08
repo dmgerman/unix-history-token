@@ -957,7 +957,7 @@ end_comment
 
 begin_function
 name|int
-name|ntp_gettime
+name|sys_ntp_gettime
 parameter_list|(
 name|struct
 name|thread
@@ -1268,7 +1268,7 @@ end_endif
 
 begin_function
 name|int
-name|ntp_adjtime
+name|sys_ntp_adjtime
 parameter_list|(
 name|struct
 name|thread
@@ -3555,7 +3555,7 @@ end_comment
 
 begin_function
 name|int
-name|adjtime
+name|sys_adjtime
 parameter_list|(
 name|struct
 name|thread

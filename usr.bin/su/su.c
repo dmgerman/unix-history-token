@@ -352,6 +352,8 @@ name|struct
 name|passwd
 modifier|*
 name|pwd
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|pam_conv
@@ -866,6 +868,12 @@ operator|=
 name|getlogin
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|username
+operator|!=
+name|NULL
+condition|)
 name|pwd
 operator|=
 name|getpwnam
@@ -875,10 +883,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|username
-operator|==
-name|NULL
-operator|||
 name|pwd
 operator|==
 name|NULL

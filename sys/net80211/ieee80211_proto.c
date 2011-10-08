@@ -843,14 +843,19 @@ name|iv_bmiss_max
 operator|=
 name|IEEE80211_BMISS_MAX
 expr_stmt|;
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|vap
 operator|->
 name|iv_swbmiss
 argument_list|,
-name|CALLOUT_MPSAFE
+name|IEEE80211_LOCK_OBJ
+argument_list|(
+name|ic
+argument_list|)
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|callout_init
@@ -5247,6 +5252,15 @@ operator|>
 literal|1
 condition|)
 return|return;
+comment|/* 	 * Clear the wme cap_info field so a qoscount from a previous 	 * vap doesn't confuse later code which only parses the beacon 	 * field and updates hardware when said field changes. 	 * Otherwise the hardware is programmed with defaults, not what 	 * the beacon actually announces. 	 */
+name|wme
+operator|->
+name|wme_wmeChanParams
+operator|.
+name|cap_info
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 	 * Select mode; we can be called early in which case we 	 * always use auto mode.  We know we'll be called when 	 * entering the RUN state with bsschan setup properly 	 * so state will eventually get set correctly 	 */
 if|if
 condition|(
@@ -7464,7 +7478,11 @@ name|ieee80211vap
 modifier|*
 name|vap
 decl_stmt|;
-comment|/* XXX locking */
+name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|vap
@@ -7503,6 +7521,11 @@ name|vap
 argument_list|)
 expr_stmt|;
 block|}
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -7526,21 +7549,41 @@ name|vap
 init|=
 name|arg
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|vap
+operator|->
+name|iv_ic
+decl_stmt|;
+name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
 operator|->
 name|iv_state
-operator|!=
+operator|==
 name|IEEE80211_S_RUN
 condition|)
-return|return;
+block|{
 comment|/* XXX Call multiple times if npending> zero? */
 name|vap
 operator|->
 name|iv_bmiss
 argument_list|(
 name|vap
+argument_list|)
+expr_stmt|;
+block|}
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 block|}
@@ -7575,6 +7618,11 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 comment|/* XXX sleep state? */
 name|KASSERT
 argument_list|(
@@ -7793,6 +7841,10 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Complete the channel switch by transitioning all CSA VAPs to RUN.  * This is called by both the completion and cancellation functions  * so each VAP is placed back in the RUN state and can thus transmit.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -7851,7 +7903,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Complete an 802.11h channel switch started by ieee80211_csa_startswitch.  * We clear state and move all vap's in CSA state to RUN state  * so they can again transmit.  */
+comment|/*  * Complete an 802.11h channel switch started by ieee80211_csa_startswitch.  * We clear state and move all vap's in CSA state to RUN state  * so they can again transmit.  *  * Although this may not be completely correct, update the BSS channel  * for each VAP to the newly configured channel. The setcurchan sets  * the current operating channel for the interface (so the radio does  * switch over) but the VAP BSS isn't updated, leading to incorrectly  * reported information via ioctl.  */
 end_comment
 
 begin_function
@@ -7864,6 +7916,11 @@ modifier|*
 name|ic
 parameter_list|)
 block|{
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+decl_stmt|;
 name|IEEE80211_LOCK_ASSERT
 argument_list|(
 name|ic
@@ -7890,6 +7947,32 @@ name|ic
 operator|->
 name|ic_csa_newchan
 argument_list|)
+expr_stmt|;
+name|TAILQ_FOREACH
+argument_list|(
+argument|vap
+argument_list|,
+argument|&ic->ic_vaps
+argument_list|,
+argument|iv_next
+argument_list|)
+if|if
+condition|(
+name|vap
+operator|->
+name|iv_state
+operator|==
+name|IEEE80211_S_CSA
+condition|)
+name|vap
+operator|->
+name|iv_bss
+operator|->
+name|ni_chan
+operator|=
+name|ic
+operator|->
+name|ic_curchan
 expr_stmt|;
 name|csa_completeswitch
 argument_list|(

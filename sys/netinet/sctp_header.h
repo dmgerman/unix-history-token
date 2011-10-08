@@ -240,14 +240,18 @@ decl_stmt|;
 name|uint32_t
 name|random_value2
 decl_stmt|;
-name|uint16_t
-name|user_req
-decl_stmt|;
 name|uint8_t
 name|addr_family
 decl_stmt|;
 name|uint8_t
 name|addr_len
+decl_stmt|;
+comment|/* make sure that this structure is 4 byte aligned */
+name|uint8_t
+name|padding
+index|[
+literal|2
+index|]
 decl_stmt|;
 name|char
 name|address

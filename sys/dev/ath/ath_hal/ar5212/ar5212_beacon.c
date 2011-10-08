@@ -40,6 +40,44 @@ file|"ar5212/ar5212desc.h"
 end_include
 
 begin_comment
+comment|/*  * Return the hardware NextTBTT in TSF  */
+end_comment
+
+begin_function
+name|uint64_t
+name|ar5212GetNextTBTT
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+define|#
+directive|define
+name|TU_TO_TSF
+parameter_list|(
+name|_tu
+parameter_list|)
+value|(((uint64_t)(_tu))<< 10)
+return|return
+name|TU_TO_TSF
+argument_list|(
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_TIMER0
+argument_list|)
+argument_list|)
+return|;
+undef|#
+directive|undef
+name|TU_TO_TSF
+block|}
+end_function
+
+begin_comment
 comment|/*  * Initialize all of the hardware registers used to  * send beacons.  Note that for station operation the  * driver calls ar5212SetStaBeaconTimers instead.  */
 end_comment
 
@@ -58,6 +96,16 @@ modifier|*
 name|bt
 parameter_list|)
 block|{
+name|struct
+name|ath_hal_5212
+modifier|*
+name|ahp
+init|=
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+decl_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -134,6 +182,18 @@ operator|->
 name|bt_intval
 argument_list|)
 expr_stmt|;
+name|ahp
+operator|->
+name|ah_beaconInterval
+operator|=
+operator|(
+name|bt
+operator|->
+name|bt_intval
+operator|&
+name|HAL_BEACON_PERIOD
+operator|)
+expr_stmt|;
 block|}
 end_function
 
@@ -209,7 +269,11 @@ operator|=
 operator|(
 name|next_beacon
 operator|-
-name|ath_hal_dma_beacon_response_time
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_dma_beacon_response_time
 operator|)
 operator|<<
 literal|3
@@ -222,7 +286,11 @@ operator|=
 operator|(
 name|next_beacon
 operator|-
-name|ath_hal_sw_beacon_response_time
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_sw_beacon_response_time
 operator|)
 operator|<<
 literal|3

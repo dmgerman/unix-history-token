@@ -209,6 +209,15 @@ name|string
 name|getClangFullVersion
 argument_list|()
 expr_stmt|;
+comment|/// \brief Retrieves a string representing the complete clang version suitable
+comment|///   for use in the CPP __VERSION__ macro, which includes the clang version
+comment|///   number, the repository version, and the vendor tag.
+name|std
+operator|::
+name|string
+name|getClangFullCPPVersion
+argument_list|()
+expr_stmt|;
 block|}
 end_decl_stmt
 

@@ -197,37 +197,6 @@ name|flags
 parameter_list|)
 value|((flags)& DRR_CHECKSUM_DEDUP)
 comment|/*  * zfs ioctl command structure  */
-typedef|typedef
-struct|struct
-name|dmu_replay_record
-block|{
-enum|enum
-block|{
-name|DRR_BEGIN
-block|,
-name|DRR_OBJECT
-block|,
-name|DRR_FREEOBJECTS
-block|,
-name|DRR_WRITE
-block|,
-name|DRR_FREE
-block|,
-name|DRR_END
-block|,
-name|DRR_WRITE_BYREF
-block|,
-name|DRR_SPILL
-block|,
-name|DRR_NUMTYPES
-block|}
-name|drr_type
-enum|;
-name|uint32_t
-name|drr_payloadlen
-decl_stmt|;
-union|union
-block|{
 struct|struct
 name|drr_begin
 block|{
@@ -260,7 +229,6 @@ name|MAXNAMELEN
 index|]
 decl_stmt|;
 block|}
-name|drr_begin
 struct|;
 struct|struct
 name|drr_end
@@ -272,7 +240,6 @@ name|uint64_t
 name|drr_toguid
 decl_stmt|;
 block|}
-name|drr_end
 struct|;
 struct|struct
 name|drr_object
@@ -309,7 +276,6 @@ name|drr_toguid
 decl_stmt|;
 comment|/* bonus content follows */
 block|}
-name|drr_object
 struct|;
 struct|struct
 name|drr_freeobjects
@@ -324,7 +290,6 @@ name|uint64_t
 name|drr_toguid
 decl_stmt|;
 block|}
-name|drr_freeobjects
 struct|;
 struct|struct
 name|drr_write
@@ -365,7 +330,6 @@ decl_stmt|;
 comment|/* deduplication key */
 comment|/* content follows */
 block|}
-name|drr_write
 struct|;
 struct|struct
 name|drr_free
@@ -383,7 +347,6 @@ name|uint64_t
 name|drr_toguid
 decl_stmt|;
 block|}
-name|drr_free
 struct|;
 struct|struct
 name|drr_write_byref
@@ -429,7 +392,6 @@ name|drr_key
 decl_stmt|;
 comment|/* deduplication key */
 block|}
-name|drr_write_byref
 struct|;
 struct|struct
 name|drr_spill
@@ -452,8 +414,70 @@ decl_stmt|;
 comment|/* needed for crypto */
 comment|/* spill data follows */
 block|}
-name|drr_spill
 struct|;
+typedef|typedef
+struct|struct
+name|dmu_replay_record
+block|{
+enum|enum
+block|{
+name|DRR_BEGIN
+block|,
+name|DRR_OBJECT
+block|,
+name|DRR_FREEOBJECTS
+block|,
+name|DRR_WRITE
+block|,
+name|DRR_FREE
+block|,
+name|DRR_END
+block|,
+name|DRR_WRITE_BYREF
+block|,
+name|DRR_SPILL
+block|,
+name|DRR_NUMTYPES
+block|}
+name|drr_type
+enum|;
+name|uint32_t
+name|drr_payloadlen
+decl_stmt|;
+union|union
+block|{
+name|struct
+name|drr_begin
+name|drr_begin
+decl_stmt|;
+name|struct
+name|drr_end
+name|drr_end
+decl_stmt|;
+name|struct
+name|drr_object
+name|drr_object
+decl_stmt|;
+name|struct
+name|drr_freeobjects
+name|drr_freeobjects
+decl_stmt|;
+name|struct
+name|drr_write
+name|drr_write
+decl_stmt|;
+name|struct
+name|drr_free
+name|drr_free
+decl_stmt|;
+name|struct
+name|drr_write_byref
+name|drr_write_byref
+decl_stmt|;
+name|struct
+name|drr_spill
+name|drr_spill
+decl_stmt|;
 block|}
 name|drr_u
 union|;
@@ -890,10 +914,6 @@ specifier|extern
 name|void
 modifier|*
 name|zfsdev_state
-decl_stmt|;
-specifier|extern
-name|kmutex_t
-name|zfsdev_state_lock
 decl_stmt|;
 endif|#
 directive|endif

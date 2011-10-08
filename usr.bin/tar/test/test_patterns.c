@@ -26,9 +26,11 @@ end_macro
 
 begin_block
 block|{
+name|FILE
+modifier|*
+name|f
+decl_stmt|;
 name|int
-name|fd
-decl_stmt|,
 name|r
 decl_stmt|;
 specifier|const
@@ -55,33 +57,38 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|p
+name|tar2aExpected
+index|[]
+init|=
+block|{
+literal|"/tmp/foo/bar/"
+block|,
+literal|"/tmp/foo/bar/baz"
+block|,
+name|NULL
+block|}
 decl_stmt|;
 comment|/* 	 * Test basic command-line pattern handling. 	 */
 comment|/* 	 * Test 1: Files on the command line that don't get matched 	 * didn't produce an error. 	 * 	 * John Baldwin reported this problem in PR bin/121598 	 */
-name|fd
+name|f
 operator|=
-name|open
+name|fopen
 argument_list|(
 literal|"foo"
 argument_list|,
-name|O_CREAT
-operator||
-name|O_WRONLY
-argument_list|,
-literal|0644
+literal|"w"
 argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-name|fd
-operator|>=
-literal|0
+name|f
+operator|!=
+name|NULL
 argument_list|)
 expr_stmt|;
-name|close
+name|fclose
 argument_list|(
-name|fd
+name|f
 argument_list|)
 expr_stmt|;
 name|r
@@ -104,7 +111,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s xfv tar1.tgz foo bar> tar1b.out 2> tar1b.err"
+literal|"%s xv --no-same-owner -f tar1.tgz foo bar> tar1b.out 2> tar1b.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -145,40 +152,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
+name|assertFileContainsLinesAnyOrder
 argument_list|(
-name|_WIN32
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__CYGWIN__
-argument_list|)
-name|p
-operator|=
-literal|"/tmp/foo/bar/\n/tmp/foo/bar/baz\n"
-expr_stmt|;
-else|#
-directive|else
-name|p
-operator|=
-literal|"/tmp/foo/bar/\r\n/tmp/foo/bar/baz\r\n"
-expr_stmt|;
-endif|#
-directive|endif
-name|assertFileContents
-argument_list|(
-name|p
-argument_list|,
-name|strlen
-argument_list|(
-name|p
-argument_list|)
-argument_list|,
 literal|"tar2a.out"
+argument_list|,
+name|tar2aExpected
 argument_list|)
 expr_stmt|;
 name|assertEmptyFile
@@ -197,7 +175,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s xf %s tmp/foo/bar> tar3a.out 2> tar3a.err"
+literal|"%s x --no-same-owner -f %s tmp/foo/bar> tar3a.out 2> tar3a.err"
 argument_list|,
 name|testprog
 argument_list|,
@@ -227,7 +205,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s xf %s /tmp/foo/baz> tar3b.out 2> tar3b.err"
+literal|"%s x --no-same-owner -f %s /tmp/foo/baz> tar3b.out 2> tar3b.err"
 argument_list|,
 name|testprog
 argument_list|,
@@ -256,7 +234,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s xf %s ./tmp/foo/bar> tar3c.out 2> tar3c.err"
+literal|"%s x --no-same-owner -f %s ./tmp/foo/bar> tar3c.out 2> tar3c.err"
 argument_list|,
 name|testprog
 argument_list|,
@@ -285,7 +263,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s xf %s ./tmp/foo/baz> tar3d.out 2> tar3d.err"
+literal|"%s x --no-same-owner -f %s ./tmp/foo/baz> tar3d.out 2> tar3d.err"
 argument_list|,
 name|testprog
 argument_list|,
@@ -309,16 +287,9 @@ argument_list|(
 literal|"tar3d.err"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|access
+name|assertFileExists
 argument_list|(
 literal|"tmp/foo/baz/bar"
-argument_list|,
-name|F_OK
-argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Test 4 archive has some entries starting with windows drive letters 	 * such as 'c:\', '//./c:/' or '//?/c:/'. 	 */
@@ -331,7 +302,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"%s xf %s -C tmp> tar4.out 2> tar4.err"
+literal|"%s x --no-same-owner -f %s -C tmp> tar4.out 2> tar4.err"
 argument_list|,
 name|testprog
 argument_list|,
@@ -522,17 +493,9 @@ case|case
 literal|54
 case|:
 comment|/* 			 * Not extracted patterns. 			 * D:../file05 			 * c:../../file06 			 * //?/UNC/../file17 			 * //?/unc/../file20 			 * z:..\file25 			 * c:..\..\file26 			 * \\?\UNC\..\file37 			 * \\?\unc\..\file40 			 * c:../..\file43 			 * \/?\UnC\../file54 			 */
-name|assertEqualInt
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|access
+name|assertFileNotExists
 argument_list|(
 name|filex
-argument_list|,
-name|F_OK
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|filex
@@ -572,32 +535,17 @@ name|r
 operator|%
 literal|10
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-operator|-
-literal|1
-argument_list|,
-name|access
+name|assertFileNotExists
 argument_list|(
 name|filex
-argument_list|,
-name|F_OK
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
 default|default:
 comment|/* Extracted patterns. */
-name|assertEqualInt
-argument_list|(
-literal|0
-argument_list|,
-name|access
+name|assertFileExists
 argument_list|(
 name|filex
-argument_list|,
-name|F_OK
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;

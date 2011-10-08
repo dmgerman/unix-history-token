@@ -71,10 +71,16 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"ARMGenRegisterInfo.h.inc"
+file|"ARMGenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -454,19 +460,29 @@ literal|0
 argument_list|)
 specifier|const
 block|;
-name|std
-operator|::
-name|pair
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getLargestLegalSuperClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|getRegPressureLimit
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|ArrayRef
 operator|<
-name|TargetRegisterClass
-operator|::
-name|iterator
-block|,
-name|TargetRegisterClass
-operator|::
-name|iterator
+name|unsigned
 operator|>
-name|getAllocationOrder
+name|getRawAllocationOrder
 argument_list|(
 argument|const TargetRegisterClass *RC
 argument_list|,
@@ -497,6 +513,14 @@ argument_list|,
 argument|unsigned NewReg
 argument_list|,
 argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|avoidWriteAfterWrite
+argument_list|(
+argument|const TargetRegisterClass *RC
 argument_list|)
 specifier|const
 block|;
@@ -621,6 +645,15 @@ argument|bool isEH
 argument_list|)
 specifier|const
 block|;
+name|int
+name|getLLVMRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
 name|bool
 name|isLowRegister
 argument_list|(
@@ -650,6 +683,8 @@ argument|ARMCC::CondCodes Pred = ARMCC::AL
 argument_list|,
 argument|unsigned PredReg =
 literal|0
+argument_list|,
+argument|unsigned MIFlags = MachineInstr::NoFlags
 argument_list|)
 specifier|const
 block|;

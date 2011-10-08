@@ -69,10 +69,16 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"BlackfinGenRegisterInfo.h.inc"
+file|"BlackfinGenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -151,7 +157,6 @@ operator|::
 name|PRegClass
 return|;
 block|}
-comment|// bool hasReservedCallFrame(MachineFunction&MF) const;
 name|bool
 name|requiresRegisterScavenging
 argument_list|(
@@ -206,6 +211,15 @@ specifier|const
 block|;
 name|int
 name|getDwarfRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLLVMRegNum
 argument_list|(
 argument|unsigned RegNum
 argument_list|,

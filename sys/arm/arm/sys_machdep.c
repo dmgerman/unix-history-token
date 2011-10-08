@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_capabilities.h"
+file|"opt_capsicum.h"
 end_include
 
 begin_include
@@ -338,8 +338,8 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|CAPABILITIES
-comment|/* 	 * Whitelist of operations which are safe enough for capability mode. 	 */
+name|CAPABILITY_MODE
+comment|/* 	 * When adding new operations, add a new case statement here to 	 * explicitly indicate whether or not the operation is safe to 	 * perform in capability mode. 	 */
 if|if
 condition|(
 name|IN_CAPABILITY_MODE

@@ -185,6 +185,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ia32_fixlimit
+parameter_list|(
+name|struct
+name|rlimit
+modifier|*
+name|rl
+parameter_list|,
+name|int
+name|which
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

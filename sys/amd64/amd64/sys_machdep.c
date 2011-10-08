@@ -20,7 +20,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_capabilities.h"
+file|"opt_capsicum.h"
 end_include
 
 begin_include
@@ -765,8 +765,8 @@ name|iargs
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|CAPABILITIES
-comment|/* 	 * Whitelist of operations which are safe enough for capability mode. 	 */
+name|CAPABILITY_MODE
+comment|/* 	 * When adding new operations, add a new case statement here to 	 * explicitly indicate whether or not the operation is safe to 	 * perform in capability mode. 	 */
 if|if
 condition|(
 name|IN_CAPABILITY_MODE
@@ -1035,13 +1035,6 @@ name|tf_fs
 operator|=
 name|_ufssel
 expr_stmt|;
-name|set_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_FULL_IRET
-argument_list|)
-expr_stmt|;
 name|update_gdt_fsbase
 argument_list|(
 name|td
@@ -1109,13 +1102,6 @@ operator|->
 name|pcb_gsbase
 operator|=
 name|i386base
-expr_stmt|;
-name|set_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_FULL_IRET
-argument_list|)
 expr_stmt|;
 name|td
 operator|->

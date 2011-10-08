@@ -616,6 +616,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 specifier|extern
+specifier|const
 name|char
 modifier|*
 name|zpool_state_to_name
@@ -623,6 +624,15 @@ parameter_list|(
 name|vdev_state_t
 parameter_list|,
 name|vdev_aux_t
+parameter_list|)
+function_decl|;
+specifier|extern
+specifier|const
+name|char
+modifier|*
+name|zpool_pool_state_to_name
+parameter_list|(
+name|pool_state_t
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -931,6 +941,7 @@ parameter_list|,
 name|zpool_handle_t
 modifier|*
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|)

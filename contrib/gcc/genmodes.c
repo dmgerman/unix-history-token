@@ -3595,7 +3595,7 @@ name|ARG
 parameter_list|,
 name|TAG
 parameter_list|)
-value|do {		\   int count_;						\   printf ("  " FMT ",%n", ARG,&count_);		\   printf ("%*s/* %s */\n", 27 - count_, "", TAG);	\ } while (0)
+value|do {		\   int count_;						\   count_ = printf ("  " FMT ",", ARG);			\   printf ("%*s/* %s */\n", 27 - count_, "", TAG);	\ } while (0)
 end_define
 
 begin_define
@@ -3712,16 +3712,15 @@ block|{
 name|int
 name|count_
 decl_stmt|;
+name|count_
+operator|=
 name|printf
 argument_list|(
-literal|"  %smode,%n"
+literal|"  %smode,"
 argument_list|,
 name|m
 operator|->
 name|name
-argument_list|,
-operator|&
-name|count_
 argument_list|)
 expr_stmt|;
 name|printf

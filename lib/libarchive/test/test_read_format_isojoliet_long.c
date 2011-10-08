@@ -423,7 +423,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-name|pathname
+literal|"hardlink"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -527,7 +527,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-literal|"hardlink"
+name|pathname
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -547,7 +547,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualString
 argument_list|(
-name|pathname
+literal|"hardlink"
 argument_list|,
 name|archive_entry_hardlink
 argument_list|(

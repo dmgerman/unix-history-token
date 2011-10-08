@@ -524,6 +524,32 @@ name|ah_setCoverageClass
 operator|=
 name|ar5212SetCoverageClass
 block|,
+operator|.
+name|ah_setQuiet
+operator|=
+name|ar5212SetQuiet
+block|,
+comment|/* DFS Functions */
+operator|.
+name|ah_enableDfs
+operator|=
+name|ar5212EnableDfs
+block|,
+operator|.
+name|ah_getDfsThresh
+operator|=
+name|ar5212GetDfsThresh
+block|,
+operator|.
+name|ah_procRadarEvent
+operator|=
+name|ar5212ProcessRadarEvent
+block|,
+operator|.
+name|ah_isFastClockEnabled
+operator|=
+name|ar5212IsFastClockEnabled
+block|,
 comment|/* Key Cache Functions */
 operator|.
 name|ah_getKeyCacheSize
@@ -581,6 +607,11 @@ operator|.
 name|ah_resetStationBeaconTimers
 operator|=
 name|ar5212ResetStaBeaconTimers
+block|,
+operator|.
+name|ah_getNextTBTT
+operator|=
+name|ar5212GetNextTBTT
 block|,
 comment|/* Interrupt Functions */
 operator|.
@@ -991,6 +1022,16 @@ name|aniparams
 argument_list|,
 name|AH_TRUE
 argument_list|)
+expr_stmt|;
+comment|/* Set overridable ANI methods */
+name|AH5212
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_aniControl
+operator|=
+name|ar5212AniControl
 expr_stmt|;
 block|}
 end_function
@@ -4151,6 +4192,12 @@ expr_stmt|;
 name|pCap
 operator|->
 name|hal4kbSplitTransSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+name|pCap
+operator|->
+name|halHasRxSelfLinkedTail
 operator|=
 name|AH_TRUE
 expr_stmt|;

@@ -86,12 +86,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -281,9 +275,9 @@ name|Create_PragmaLexer
 argument_list|(
 argument|SourceLocation SpellingLoc
 argument_list|,
-argument|SourceLocation InstantiationLocStart
+argument|SourceLocation ExpansionLocStart
 argument_list|,
-argument|SourceLocation InstantiationLocEnd
+argument|SourceLocation ExpansionLocEnd
 argument_list|,
 argument|unsigned TokLen
 argument_list|,
@@ -667,6 +661,32 @@ operator|=
 literal|0
 argument_list|)
 block|;
+comment|/// getSpelling - This method is used to get the spelling of the
+comment|/// token at the given source location.  If, as is usually true, it
+comment|/// is not necessary to copy any data, then the returned string may
+comment|/// not point into the provided buffer.
+comment|///
+comment|/// This method lexes at the expansion depth of the given
+comment|/// location and does not jump to the expansion or spelling
+comment|/// location.
+specifier|static
+name|llvm
+operator|::
+name|StringRef
+name|getSpelling
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|llvm::SmallVectorImpl<char>&buffer
+argument_list|,
+argument|const SourceManager&SourceMgr
+argument_list|,
+argument|const LangOptions&Features
+argument_list|,
+argument|bool *invalid =
+literal|0
+argument_list|)
+block|;
 comment|/// MeasureTokenLength - Relex the token at the specified location and return
 comment|/// its length in bytes in the input file.  If the token needs cleaning (e.g.
 comment|/// includes a trigraph or an escaped newline) then this count includes bytes
@@ -740,6 +760,32 @@ argument_list|,
 argument|const SourceManager&SM
 argument_list|,
 argument|const LangOptions&Features
+argument_list|)
+block|;
+comment|/// \brief Returns true if the given MacroID location points at the first
+comment|/// token of the macro expansion.
+specifier|static
+name|bool
+name|isAtStartOfMacroExpansion
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
+argument_list|)
+block|;
+comment|/// \brief Returns true if the given MacroID location points at the last
+comment|/// token of the macro expansion.
+specifier|static
+name|bool
+name|isAtEndOfMacroExpansion
+argument_list|(
+argument|SourceLocation loc
+argument_list|,
+argument|const SourceManager&SM
+argument_list|,
+argument|const LangOptions&LangOpts
 argument_list|)
 block|;
 comment|/// \brief Compute the preamble of the given file.

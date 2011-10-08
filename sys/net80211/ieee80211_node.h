@@ -555,6 +555,34 @@ name|int8_t
 name|ni_noise
 decl_stmt|;
 comment|/* noise floor */
+comment|/* mimo statistics */
+name|uint32_t
+name|ni_mimo_rssi_ctl
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint32_t
+name|ni_mimo_rssi_ext
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint8_t
+name|ni_mimo_noise_ctl
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint8_t
+name|ni_mimo_noise_ext
+index|[
+name|IEEE80211_MAX_CHAINS
+index|]
+decl_stmt|;
+name|uint8_t
+name|ni_mimo_chains
+decl_stmt|;
 comment|/* header */
 name|uint8_t
 name|ni_macaddr

@@ -166,9 +166,6 @@ name|public
 name|llvm
 operator|::
 name|RefCountedBaseVPTR
-operator|<
-name|Tool
-operator|>
 block|{
 name|public
 operator|:

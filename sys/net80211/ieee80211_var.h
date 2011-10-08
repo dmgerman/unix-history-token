@@ -1334,6 +1334,21 @@ name|ieee80211_tx_ampdu
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|ic_addba_response_timeout
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|)
+function_decl|;
 comment|/* BAR response received */
 name|void
 function_decl|(
@@ -2998,7 +3013,7 @@ define|#
 directive|define
 name|IEEE80211_FHT_BITS
 define|\
-value|"\20\1NONHT_PR" \ 	"\23GF\24HT\25AMDPU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
+value|"\20\1NONHT_PR" \ 	"\23GF\24HT\25AMPDU_TX\26AMPDU_TX" \ 	"\27AMSDU_TX\30AMSDU_RX\31USEHT40\32PUREN\33SHORTGI20\34SHORTGI40" \ 	"\35HTCOMPAT\36RIFS\37STBC_TX\40STBC_RX"
 end_define
 
 begin_define

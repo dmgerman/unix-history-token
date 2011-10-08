@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2007-2009 Robert N. M. Watson  * Copyright (c) 2010 Juniper Networks, Inc.  * All rights reserved.  *  * This software was developed by Robert N. M. Watson under contract  * to Juniper Networks, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2007-2009 Robert N. M. Watson  * Copyright (c) 2010-2011 Juniper Networks, Inc.  * All rights reserved.  *  * This software was developed by Robert N. M. Watson under contract  * to Juniper Networks, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -181,6 +181,54 @@ comment|/* Protocol determines CPU placement. */
 end_comment
 
 begin_comment
+comment|/*  * Protocol dispatch policy constants; selects whether and when direct  * dispatch is permitted.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_DISPATCH_DEFAULT
+value|0
+end_define
+
+begin_comment
+comment|/* Use global default. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_DISPATCH_DEFERRED
+value|1
+end_define
+
+begin_comment
+comment|/* Always defer dispatch. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_DISPATCH_HYBRID
+value|2
+end_define
+
+begin_comment
+comment|/* Allow hybrid dispatch. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NETISR_DISPATCH_DIRECT
+value|3
+end_define
+
+begin_comment
+comment|/* Always direct dispatch. */
+end_comment
+
+begin_comment
 comment|/*  * Monitoring data structures, exported by sysctl(2).  *  * Three sysctls are defined.  First, a per-protocol structure exported by  * net.isr.proto.  */
 end_comment
 
@@ -223,9 +271,13 @@ name|snp_flags
 decl_stmt|;
 comment|/* Various flags. */
 name|u_int
+name|snp_dispatch
+decl_stmt|;
+comment|/* Dispatch policy. */
+name|u_int
 name|_snp_ispare
 index|[
-literal|7
+literal|6
 index|]
 decl_stmt|;
 block|}
@@ -462,6 +514,17 @@ parameter_list|)
 function_decl|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|NETISR_CPUID_NONE
+value|((u_int)-1)
+end_define
+
+begin_comment
+comment|/* No affinity returned. */
+end_comment
+
 begin_comment
 comment|/*  * Data structure describing a protocol handler.  */
 end_comment
@@ -509,9 +572,13 @@ name|nh_policy
 decl_stmt|;
 comment|/* Work placement policy. */
 name|u_int
+name|nh_dispatch
+decl_stmt|;
+comment|/* Dispatch policy. */
+name|u_int
 name|nh_ispare
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
 comment|/* For future use. */

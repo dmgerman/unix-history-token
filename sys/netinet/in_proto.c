@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet6.h"
 end_include
 
@@ -113,6 +119,16 @@ directive|include
 file|<sys/sysctl.h>
 end_include
 
+begin_comment
+comment|/*  * While this file provides the domain and protocol switch tables for IPv4, it  * also provides the sysctl node declarations for net.inet.* often shared with  * IPv6 for common features or by upper layer protocols.  In case of no IPv4  * support compile out everything but these sysctl nodes.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -148,11 +164,45 @@ directive|include
 file|<net/vnet.h>
 end_include
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_include
 include|#
@@ -320,6 +370,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|inet
+argument_list|,
+literal|"Internet Protocol version 4"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 specifier|extern
@@ -538,7 +598,7 @@ block|{
 operator|.
 name|pr_type
 operator|=
-name|SOCK_DGRAM
+name|SOCK_SEQPACKET
 block|,
 operator|.
 name|pr_domain
@@ -586,55 +646,6 @@ name|sctp_finish
 block|,
 endif|#
 directive|endif
-operator|.
-name|pr_drain
-operator|=
-name|sctp_drain
-block|,
-operator|.
-name|pr_usrreqs
-operator|=
-operator|&
-name|sctp_usrreqs
-block|}
-block|,
-block|{
-operator|.
-name|pr_type
-operator|=
-name|SOCK_SEQPACKET
-block|,
-operator|.
-name|pr_domain
-operator|=
-operator|&
-name|inetdomain
-block|,
-operator|.
-name|pr_protocol
-operator|=
-name|IPPROTO_SCTP
-block|,
-operator|.
-name|pr_flags
-operator|=
-name|PR_WANTRCVD
-block|,
-operator|.
-name|pr_input
-operator|=
-name|sctp_input
-block|,
-operator|.
-name|pr_ctlinput
-operator|=
-name|sctp_ctlinput
-block|,
-operator|.
-name|pr_ctloutput
-operator|=
-name|sctp_ctloutput
-block|,
 operator|.
 name|pr_drain
 operator|=
@@ -1545,6 +1556,15 @@ name|inet
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_expr_stmt
 name|SYSCTL_NODE

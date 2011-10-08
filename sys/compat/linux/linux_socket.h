@@ -142,6 +142,13 @@ name|LINUX_SCM_RIGHTS
 value|0x01
 end_define
 
+begin_define
+define|#
+directive|define
+name|LINUX_SCM_CREDENTIALS
+value|0x02
+end_define
+
 begin_comment
 comment|/* Ancilliary data object information macros */
 end_comment
@@ -194,7 +201,7 @@ parameter_list|(
 name|msg
 parameter_list|)
 define|\
-value|((msg)->msg_controllen>= \ 				    sizeof(struct l_cmsghdr) ? \ 				    (struct l_cmsghdr *)((msg)->msg_control) : \ 				    (struct l_cmsghdr *)(NULL))
+value|((msg)->msg_controllen>= \ 				    sizeof(struct l_cmsghdr) ? \ 				    (struct l_cmsghdr *) \ 				        PTRIN((msg)->msg_control) : \ 				    (struct l_cmsghdr *)(NULL))
 end_define
 
 begin_define
@@ -207,7 +214,7 @@ parameter_list|,
 name|cmsg
 parameter_list|)
 define|\
-value|((((char *)(cmsg) + \ 				    LINUX_CMSG_ALIGN((cmsg)->cmsg_len) + \ 				    sizeof(*(cmsg)))> \ 				    (((char *)(msg)->msg_control) + \ 				    (msg)->msg_controllen)) ? \ 				    (struct l_cmsghdr *) NULL : \ 				    (struct l_cmsghdr *)((char *)(cmsg) + \ 				    LINUX_CMSG_ALIGN((cmsg)->cmsg_len)))
+value|((((char *)(cmsg) + \ 				    LINUX_CMSG_ALIGN((cmsg)->cmsg_len) + \ 				    sizeof(*(cmsg)))> \ 				    (((char *)PTRIN((msg)->msg_control)) + \ 				    (msg)->msg_controllen)) ? \ 				    (struct l_cmsghdr *) NULL : \ 				    (struct l_cmsghdr *)((char *)(cmsg) + \ 				    LINUX_CMSG_ALIGN((cmsg)->cmsg_len)))
 end_define
 
 begin_define

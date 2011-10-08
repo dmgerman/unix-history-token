@@ -329,8 +329,9 @@ expr_stmt|;
 if|if
 condition|(
 name|label
-operator|==
-literal|""
+operator|.
+name|empty
+argument_list|()
 condition|)
 continue|continue;
 name|hasEdgeSourceLabels
@@ -353,13 +354,11 @@ name|i
 operator|<<
 literal|">"
 operator|<<
-name|DTraits
-operator|.
-name|getEdgeSourceLabel
+name|DOT
+operator|::
+name|EscapeString
 argument_list|(
-name|Node
-argument_list|,
-name|EI
+name|label
 argument_list|)
 expr_stmt|;
 block|}
@@ -1238,8 +1237,9 @@ name|Node
 argument_list|,
 name|EI
 argument_list|)
-operator|==
-literal|""
+operator|.
+name|empty
+argument_list|()
 condition|)
 name|edgeidx
 operator|=
@@ -1279,6 +1279,8 @@ argument_list|(
 name|Node
 argument_list|,
 name|EI
+argument_list|,
+name|G
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1498,7 +1500,7 @@ name|DestNodePort
 operator|=
 literal|64
 expr_stmt|;
-comment|// Targetting the truncated part?
+comment|// Targeting the truncated part?
 name|O
 operator|<<
 literal|"\tNode"

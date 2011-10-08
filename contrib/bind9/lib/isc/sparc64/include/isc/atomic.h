@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: atomic.h,v 1.5 2007/06/19 23:47:18 tbox Exp $ */
+comment|/* $Id: atomic.h,v 1.5 2007-06-19 23:47:18 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -106,7 +106,7 @@ name|val
 expr_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 			"casa [%1] %2, %3, %0" 			: "+r"(swapped) 			: "r"(p), "n"(ASI_P), "r"(prev));
+asm|( 			"casa [%2] %3, %4, %0" 			: "+r"(swapped), "=m"(*p) 			: "r"(p), "n"(ASI_P), "r"(prev), "m"(*p));
 if|if
 condition|(
 name|swapped
@@ -170,7 +170,7 @@ name|val
 expr_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 			"casa [%1] %2, %3, %0" 			: "+r"(swapped) 			: "r"(p), "n"(ASI_P), "r"(prev) 			: "memory");
+asm|( 			"casa [%2] %3, %4, %0" 			: "+r"(swapped), "=m"(*p) 			: "r"(p), "n"(ASI_P), "r"(prev), "m"(*p));
 if|if
 condition|(
 name|swapped
@@ -210,7 +210,7 @@ name|val
 decl_stmt|;
 asm|__asm__
 specifier|volatile
-asm|( 		"casa [%1] %2, %3, %0" 		: "+r"(temp) 		: "r"(p), "n"(ASI_P), "r"(cmpval));
+asm|( 		"casa [%2] %3, %4, %0" 		: "+r"(temp), "=m"(*p) 		: "r"(p), "n"(ASI_P), "r"(cmpval), "m"(*p));
 return|return
 operator|(
 name|temp

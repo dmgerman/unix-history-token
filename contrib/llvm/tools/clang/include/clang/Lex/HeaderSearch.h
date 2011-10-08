@@ -104,6 +104,12 @@ name|isImport
 range|:
 literal|1
 decl_stmt|;
+comment|/// isPragmaOnce - True if this is  #pragma once file.
+name|unsigned
+name|isPragmaOnce
+range|:
+literal|1
+decl_stmt|;
 comment|/// DirInfo - Keep track of whether this is a system header, and if so,
 comment|/// whether it is C++ clean or not.  This can be set by the include paths or
 comment|/// by #pragma gcc system_header.  This is an instance of
@@ -157,6 +163,11 @@ name|HeaderFileInfo
 argument_list|()
 operator|:
 name|isImport
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|isPragmaOnce
 argument_list|(
 name|false
 argument_list|)
@@ -215,6 +226,8 @@ block|{
 return|return
 name|isImport
 operator|||
+name|isPragmaOnce
+operator|||
 name|NumIncludes
 operator|||
 name|ControllingMacro
@@ -266,10 +279,10 @@ name|FileMgr
 decl_stmt|;
 comment|/// #include search path information.  Requests for #include "x" search the
 comment|/// directory of the #including file first, then each directory in SearchDirs
-comment|/// consequtively. Requests for<x> search the current dir first, then each
-comment|/// directory in SearchDirs, starting at SystemDirIdx, consequtively.  If
+comment|/// consecutively. Requests for<x> search the current dir first, then each
+comment|/// directory in SearchDirs, starting at AngledDirIdx, consecutively.  If
 comment|/// NoCurDirSearch is true, then the check for the file in the current
-comment|/// directory is supressed.
+comment|/// directory is suppressed.
 name|std
 operator|::
 name|vector
@@ -278,6 +291,9 @@ name|DirectoryLookup
 operator|>
 name|SearchDirs
 expr_stmt|;
+name|unsigned
+name|AngledDirIdx
+decl_stmt|;
 name|unsigned
 name|SystemDirIdx
 decl_stmt|;
@@ -433,15 +449,38 @@ operator|&
 name|dirs
 argument_list|,
 name|unsigned
+name|angledDirIdx
+argument_list|,
+name|unsigned
 name|systemDirIdx
 argument_list|,
 name|bool
 name|noCurDirSearch
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|angledDirIdx
+operator|<=
+name|systemDirIdx
+operator|&&
+name|systemDirIdx
+operator|<=
+name|dirs
+operator|.
+name|size
+argument_list|()
+operator|&&
+literal|"Directory indicies are unordered"
+argument_list|)
+expr_stmt|;
 name|SearchDirs
 operator|=
 name|dirs
+expr_stmt|;
+name|AngledDirIdx
+operator|=
+name|angledDirIdx
 expr_stmt|;
 name|SystemDirIdx
 operator|=
@@ -502,13 +541,26 @@ name|ES
 expr_stmt|;
 block|}
 comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
-comment|/// return null on failure.  isAngled indicates whether the file reference is
-comment|/// a<> reference.  If successful, this returns 'UsedDir', the
-comment|/// DirectoryLookup member the file was found in, or null if not applicable.
-comment|/// If CurDir is non-null, the file was found in the specified directory
-comment|/// search location.  This is used to implement #include_next.  CurFileEnt, if
-comment|/// non-null, indicates where the #including file is, in case a relative
-comment|/// search is needed.
+comment|/// return null on failure.
+comment|///
+comment|/// \returns If successful, this returns 'UsedDir', the DirectoryLookup member
+comment|/// the file was found in, or null if not applicable.
+comment|///
+comment|/// \param isAngled indicates whether the file reference is a<> reference.
+comment|///
+comment|/// \param CurDir If non-null, the file was found in the specified directory
+comment|/// search location.  This is used to implement #include_next.
+comment|///
+comment|/// \param CurFileEnt If non-null, indicates where the #including file is, in
+comment|/// case a relative search is needed.
+comment|///
+comment|/// \param SearchPath If non-null, will be set to the search path relative
+comment|/// to which the file was found. If the include path is absolute, SearchPath
+comment|/// will be set to an empty string.
+comment|///
+comment|/// \param RelativePath If non-null, will be set to the path relative to
+comment|/// SearchPath at which the file was found. This only differs from the
+comment|/// Filename for framework includes.
 specifier|const
 name|FileEntry
 modifier|*
@@ -537,6 +589,24 @@ specifier|const
 name|FileEntry
 operator|*
 name|CurFileEnt
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|SearchPath
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|RelativePath
 argument_list|)
 decl_stmt|;
 comment|/// LookupSubframeworkHeader - Look up a subframework for the specified
@@ -558,6 +628,24 @@ specifier|const
 name|FileEntry
 operator|*
 name|RelativeFileEnt
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|SearchPath
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|*
+name|RelativePath
 argument_list|)
 decl_stmt|;
 comment|/// LookupFrameworkCache - Look up the specified framework name in our
@@ -637,12 +725,24 @@ modifier|*
 name|File
 parameter_list|)
 block|{
+name|HeaderFileInfo
+modifier|&
+name|FI
+init|=
 name|getFileInfo
 argument_list|(
 name|File
 argument_list|)
+decl_stmt|;
+name|FI
 operator|.
 name|isImport
+operator|=
+name|true
+expr_stmt|;
+name|FI
+operator|.
+name|isPragmaOnce
 operator|=
 name|true
 expr_stmt|;
@@ -717,6 +817,20 @@ operator|=
 name|ControllingMacro
 expr_stmt|;
 block|}
+comment|/// \brief Determine whether this file is intended to be safe from
+comment|/// multiple inclusions, e.g., it has #pragma once or a controlling
+comment|/// macro.
+comment|///
+comment|/// This routine does not consider the effect of #import
+name|bool
+name|isFileMultipleIncludeGuarded
+parameter_list|(
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
 comment|/// CreateHeaderMap - This method returns a HeaderMap for the specified
 comment|/// FileEntry, uniquing them through the the 'HeaderMaps' datastructure.
 specifier|const
@@ -796,6 +910,134 @@ name|unsigned
 name|UID
 parameter_list|)
 function_decl|;
+comment|// Used by external tools
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|DirectoryLookup
+operator|>
+operator|::
+name|const_iterator
+name|search_dir_iterator
+expr_stmt|;
+name|search_dir_iterator
+name|search_dir_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|search_dir_iterator
+name|search_dir_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|search_dir_size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|search_dir_iterator
+name|quoted_dir_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|search_dir_iterator
+name|quoted_dir_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|AngledDirIdx
+return|;
+block|}
+name|search_dir_iterator
+name|angled_dir_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|AngledDirIdx
+return|;
+block|}
+name|search_dir_iterator
+name|angled_dir_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|SystemDirIdx
+return|;
+block|}
+name|search_dir_iterator
+name|system_dir_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|begin
+argument_list|()
+operator|+
+name|SystemDirIdx
+return|;
+block|}
+name|search_dir_iterator
+name|system_dir_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SearchDirs
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
 name|void
 name|PrintStats
 parameter_list|()

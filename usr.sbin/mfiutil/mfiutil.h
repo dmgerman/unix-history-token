@@ -371,10 +371,54 @@ define|\
 value|SET_DECLARE(MFI_DATASET(name), struct mfiutil_command);		\ 									\ 	static int							\ 	mfiutil_ ## name ## _table_handler(int ac, char **av)		\ 	{								\ 		return (mfi_table_handler(SET_BEGIN(MFI_DATASET(name)), \ 		    SET_LIMIT(MFI_DATASET(name)), ac, av));		\ 	}								\ 	MFI_COMMAND(set, name, mfiutil_ ## name ## _table_handler)
 end_define
 
+begin_comment
+comment|/* Drive name printing options */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFI_DNAME_ES
+value|0x0001
+end_define
+
+begin_comment
+comment|/* E%u:S%u */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFI_DNAME_DEVICE_ID
+value|0x0002
+end_define
+
+begin_comment
+comment|/* %u */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MFI_DNAME_HONOR_OPTS
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Allow cmd line to override default */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|mfi_unit
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|u_int
+name|mfi_opts
 decl_stmt|;
 end_decl_stmt
 
@@ -750,6 +794,26 @@ name|mfi_status
 parameter_list|(
 name|u_int
 name|status_code
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|mfi_drive_name
+parameter_list|(
+name|struct
+name|mfi_pd_info
+modifier|*
+name|pinfo
+parameter_list|,
+name|uint16_t
+name|device_id
+parameter_list|,
+name|uint32_t
+name|def
 parameter_list|)
 function_decl|;
 end_function_decl

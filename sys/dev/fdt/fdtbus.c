@@ -924,7 +924,7 @@ expr_stmt|;
 name|end
 operator|=
 operator|~
-literal|0u
+literal|0ul
 expr_stmt|;
 name|sc
 operator|->

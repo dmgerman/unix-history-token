@@ -411,6 +411,7 @@ block|}
 comment|/// AddIncludeFile - Search for a file with the specified name in the current
 comment|/// directory or in one of the IncludeDirs.  If no file is found, this returns
 comment|/// ~0, otherwise it returns the buffer ID of the stacked file.
+comment|/// The full path to the included file can be found in IncludedFile.
 name|unsigned
 name|AddIncludeFile
 argument_list|(
@@ -423,6 +424,12 @@ name|Filename
 argument_list|,
 name|SMLoc
 name|IncludeLoc
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|IncludedFile
 argument_list|)
 decl_stmt|;
 comment|/// FindBufferContainingLoc - Return the ID of the buffer containing the
@@ -589,11 +596,19 @@ block|{}
 comment|// Diagnostic with no location (e.g. file not found, command line arg error).
 name|SMDiagnostic
 argument_list|(
-argument|const std::string&filename
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|filename
 argument_list|,
-argument|const std::string&Msg
-argument_list|,
-argument|bool showline = true
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Msg
 argument_list|)
 operator|:
 name|SM
@@ -625,7 +640,7 @@ argument_list|)
 operator|,
 name|ShowLine
 argument_list|(
-argument|showline
+argument|false
 argument_list|)
 block|{}
 comment|// Diagnostic with a location.
@@ -716,6 +731,7 @@ name|string
 operator|&
 name|getFilename
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Filename

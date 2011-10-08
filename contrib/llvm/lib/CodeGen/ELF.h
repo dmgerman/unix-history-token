@@ -805,7 +805,7 @@ comment|// sh_link - Section header table index link.
 name|unsigned
 name|Info
 block|;
-comment|// sh_info - Auxillary information.
+comment|// sh_info - Auxiliary information.
 name|unsigned
 name|Align
 block|;

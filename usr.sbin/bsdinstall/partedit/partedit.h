@@ -164,9 +164,6 @@ name|struct
 name|ggeom
 modifier|*
 name|lg_geom
-parameter_list|,
-name|int
-name|force
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -308,7 +305,9 @@ name|char
 modifier|*
 name|mountpoint
 parameter_list|,
-name|int
+specifier|const
+name|char
+modifier|*
 name|newfs
 parameter_list|)
 function_decl|;

@@ -1820,6 +1820,34 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|/// An opaque type for threading parsed type information through the
+end_comment
+
+begin_comment
+comment|/// parser.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|OpaquePtr
+operator|<
+name|QualType
+operator|>
+name|ParsedType
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|UnionOpaquePtr
+operator|<
+name|QualType
+operator|>
+name|UnionParsedType
+expr_stmt|;
+end_typedef
+
+begin_comment
 comment|/// A SmallVector of statements, with stack size 32 (as that is the only one
 end_comment
 
@@ -1854,6 +1882,22 @@ operator|,
 literal|12
 operator|>
 name|ExprVector
+expr_stmt|;
+end_typedef
+
+begin_comment
+comment|/// A SmallVector of types.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ASTOwningVector
+operator|<
+name|ParsedType
+operator|,
+literal|12
+operator|>
+name|TypeVector
 expr_stmt|;
 end_typedef
 
@@ -2050,34 +2094,6 @@ block|;   }
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/// An opaque type for threading parsed type information through the
-end_comment
-
-begin_comment
-comment|/// parser.
-end_comment
-
-begin_typedef
-typedef|typedef
-name|OpaquePtr
-operator|<
-name|QualType
-operator|>
-name|ParsedType
-expr_stmt|;
-end_typedef
-
-begin_typedef
-typedef|typedef
-name|UnionOpaquePtr
-operator|<
-name|QualType
-operator|>
-name|UnionParsedType
-expr_stmt|;
-end_typedef
-
 begin_typedef
 typedef|typedef
 name|ActionResult
@@ -2206,6 +2222,16 @@ name|Stmt
 operator|*
 operator|>
 name|MultiStmtArg
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ASTMultiPtr
+operator|<
+name|ParsedType
+operator|>
+name|MultiTypeArg
 expr_stmt|;
 end_typedef
 

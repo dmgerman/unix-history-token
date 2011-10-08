@@ -148,7 +148,6 @@ expr_stmt|;
 name|unsigned
 name|UIntVal
 decl_stmt|;
-specifier|const
 name|Type
 modifier|*
 name|TyVal
@@ -244,7 +243,6 @@ return|return
 name|StrVal
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getTyVal
@@ -340,6 +338,18 @@ parameter_list|()
 function_decl|;
 name|void
 name|SkipLineComment
+parameter_list|()
+function_decl|;
+name|lltok
+operator|::
+name|Kind
+name|ReadString
+argument_list|(
+argument|lltok::Kind kind
+argument_list|)
+expr_stmt|;
+name|bool
+name|ReadVarName
 parameter_list|()
 function_decl|;
 name|lltok

@@ -2040,7 +2040,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -4789,15 +4789,6 @@ operator|->
 name|miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-operator|!=
-literal|0
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|mii_sc
@@ -4806,12 +4797,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|mii_sc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|mii_mediachg
@@ -4903,7 +4893,7 @@ expr_stmt|;
 block|}
 name|error
 operator|=
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -7145,7 +7135,7 @@ name|val
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Configure PME. 	 */
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

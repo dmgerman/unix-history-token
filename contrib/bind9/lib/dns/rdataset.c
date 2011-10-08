@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdataset.c,v 1.82.50.4 2010-02-25 10:56:41 tbox Exp $ */
+comment|/* $Id: rdataset.c,v 1.86.148.4 2011-06-08 23:02:42 each Exp $ */
 end_comment
 
 begin_comment
@@ -76,6 +76,80 @@ include|#
 directive|include
 file|<dns/compress.h>
 end_include
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|trustnames
+index|[]
+init|=
+block|{
+literal|"none"
+block|,
+literal|"pending-additional"
+block|,
+literal|"pending-answer"
+block|,
+literal|"additional"
+block|,
+literal|"glue"
+block|,
+literal|"answer"
+block|,
+literal|"authauthority"
+block|,
+literal|"authanswer"
+block|,
+literal|"secure"
+block|,
+literal|"local"
+comment|/* aka ultimate */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+specifier|const
+name|char
+modifier|*
+name|dns_trust_totext
+parameter_list|(
+name|dns_trust_t
+name|trust
+parameter_list|)
+block|{
+if|if
+condition|(
+name|trust
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|trustnames
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+operator|*
+name|trustnames
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|"bad"
+operator|)
+return|;
+return|return
+operator|(
+name|trustnames
+index|[
+name|trust
+index|]
+operator|)
+return|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -1121,6 +1195,8 @@ name|int
 name|i
 decl_stmt|,
 name|count
+init|=
+literal|0
 decl_stmt|,
 name|added
 decl_stmt|,
@@ -1219,10 +1295,6 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|count
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1262,10 +1334,14 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
 name|rdataset
 operator|->
-name|type
-operator|==
+name|attributes
+operator|&
+name|DNS_RDATASETATTR_NEGATIVE
+operator|)
+operator|!=
 literal|0
 condition|)
 block|{

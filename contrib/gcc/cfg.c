@@ -3410,14 +3410,14 @@ name|first
 operator|=
 name|false
 expr_stmt|;
-name|fprintf
+name|fputs
 argument_list|(
-name|file
-argument_list|,
 name|bb_bitnames
 index|[
 name|i
 index|]
+argument_list|,
+name|file
 argument_list|)
 expr_stmt|;
 block|}

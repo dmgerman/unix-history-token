@@ -72,7 +72,8 @@ name|size
 parameter_list|,
 name|flag
 parameter_list|)
-value|(bcopy((from), (to), (size)), 0)
+define|\
+value|(copyin((from), (to), (size)), 0)
 end_define
 
 begin_define
@@ -88,7 +89,8 @@ name|size
 parameter_list|,
 name|flag
 parameter_list|)
-value|(bcopy((from), (to), (size)), 0)
+define|\
+value|(copyout((from), (to), (size)), 0)
 end_define
 
 begin_function_decl

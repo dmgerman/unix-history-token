@@ -63,6 +63,12 @@ directive|define
 name|LLVM_SUPPORT_DEBUGLOC_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMapInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -79,6 +85,53 @@ comment|/// operation.
 name|class
 name|DebugLoc
 block|{
+name|friend
+block|struct
+name|DenseMapInfo
+operator|<
+name|DebugLoc
+operator|>
+expr_stmt|;
+comment|/// getEmptyKey() - A private constructor that returns an unknown that is
+comment|/// not equal to the tombstone key or DebugLoc().
+specifier|static
+name|DebugLoc
+name|getEmptyKey
+parameter_list|()
+block|{
+name|DebugLoc
+name|DL
+decl_stmt|;
+name|DL
+operator|.
+name|LineCol
+operator|=
+literal|1
+expr_stmt|;
+return|return
+name|DL
+return|;
+block|}
+comment|/// getTombstoneKey() - A private constructor that returns an unknown that
+comment|/// is not equal to the empty key or DebugLoc().
+specifier|static
+name|DebugLoc
+name|getTombstoneKey
+parameter_list|()
+block|{
+name|DebugLoc
+name|DL
+decl_stmt|;
+name|DL
+operator|.
+name|LineCol
+operator|=
+literal|2
+expr_stmt|;
+return|return
+name|DL
+return|;
+block|}
 comment|/// LineCol - This 32-bit value encodes the line and column number for the
 comment|/// location, encoded as 24-bits for line and 8 bits for col.  A value of 0
 comment|/// for either means unknown.
@@ -126,6 +179,16 @@ comment|/// getFromDILocation - Translate the DILocation quad into a DebugLoc.
 specifier|static
 name|DebugLoc
 name|getFromDILocation
+parameter_list|(
+name|MDNode
+modifier|*
+name|N
+parameter_list|)
+function_decl|;
+comment|/// getFromDILexicalBlock - Translate the DILexicalBlock into a DebugLoc.
+specifier|static
+name|DebugLoc
+name|getFromDILexicalBlock
 parameter_list|(
 name|MDNode
 modifier|*
@@ -277,8 +340,63 @@ name|DL
 operator|)
 return|;
 block|}
+name|void
+name|dump
+argument_list|(
+specifier|const
+name|LLVMContext
+operator|&
+name|Ctx
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
+name|template
+operator|<
+operator|>
+expr|struct
+name|DenseMapInfo
+operator|<
+name|DebugLoc
+operator|>
+block|{
+specifier|static
+name|DebugLoc
+name|getEmptyKey
+argument_list|()
+block|;
+specifier|static
+name|DebugLoc
+name|getTombstoneKey
+argument_list|()
+block|;
+specifier|static
+name|unsigned
+name|getHashValue
+argument_list|(
+specifier|const
+name|DebugLoc
+operator|&
+name|Key
+argument_list|)
+block|;
+specifier|static
+name|bool
+name|isEqual
+argument_list|(
+specifier|const
+name|DebugLoc
+operator|&
+name|LHS
+argument_list|,
+specifier|const
+name|DebugLoc
+operator|&
+name|RHS
+argument_list|)
+block|;   }
+expr_stmt|;
 block|}
 end_decl_stmt
 

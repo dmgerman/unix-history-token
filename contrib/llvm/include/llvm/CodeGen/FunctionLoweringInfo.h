@@ -119,6 +119,12 @@ end_endif
 begin_include
 include|#
 directive|include
+file|"llvm/Analysis/BranchProbabilityInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/CodeGen/ValueTypes.h"
 end_include
 
@@ -221,6 +227,10 @@ decl_stmt|;
 name|MachineRegisterInfo
 modifier|*
 name|RegInfo
+decl_stmt|;
+name|BranchProbabilityInfo
+modifier|*
+name|BPI
 decl_stmt|;
 comment|/// CanLowerReturn - true iff the function's return value can be lowered to
 comment|/// registers.
@@ -680,13 +690,42 @@ modifier|*
 name|PN
 parameter_list|)
 block|{
+comment|// PHIs with no uses have no ValueMap entry.
+name|DenseMap
+operator|<
+specifier|const
+name|Value
+operator|*
+operator|,
+name|unsigned
+operator|>
+operator|::
+name|const_iterator
+name|It
+operator|=
+name|ValueMap
+operator|.
+name|find
+argument_list|(
+name|PN
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|It
+operator|==
+name|ValueMap
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return;
 name|unsigned
 name|Reg
 init|=
-name|ValueMap
-index|[
-name|PN
-index|]
+name|It
+operator|->
+name|second
 decl_stmt|;
 name|LiveOutRegInfo
 operator|.
@@ -761,19 +800,20 @@ modifier|*
 name|MBB
 parameter_list|)
 function_decl|;
-comment|/// CopyCatchInfo - Copy catch information from DestBB to SrcBB.
+comment|/// CopyCatchInfo - Copy catch information from SuccBB (or one of its
+comment|/// successors) to LPad.
 name|void
 name|CopyCatchInfo
 parameter_list|(
 specifier|const
 name|BasicBlock
 modifier|*
-name|SrcBB
+name|SuccBB
 parameter_list|,
 specifier|const
 name|BasicBlock
 modifier|*
-name|DestBB
+name|LPad
 parameter_list|,
 name|MachineModuleInfo
 modifier|*

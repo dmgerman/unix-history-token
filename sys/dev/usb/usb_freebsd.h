@@ -286,6 +286,28 @@ begin_comment
 comment|/* bytes */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|USB_CS_RESET_LIMIT
+value|20
+end_define
+
+begin_comment
+comment|/* failures = 20 * 50 ms = 1sec */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_MAX_AUTO_QUIRK
+value|4
+end_define
+
+begin_comment
+comment|/* maximum number of dynamic quirks */
+end_comment
+
 begin_typedef
 typedef|typedef
 name|uint32_t

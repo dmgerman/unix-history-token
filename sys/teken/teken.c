@@ -51,17 +51,6 @@ parameter_list|)
 value|MPASS(x)
 end_define
 
-begin_define
-define|#
-directive|define
-name|teken_printf
-parameter_list|(
-name|x
-parameter_list|,
-modifier|...
-parameter_list|)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -111,6 +100,19 @@ parameter_list|)
 value|assert(x)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __FreeBSD__&& _KERNEL */
+end_comment
+
+begin_comment
+comment|/* debug messages */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -120,29 +122,7 @@ name|x
 parameter_list|,
 modifier|...
 parameter_list|)
-value|do { \ 	if (df != NULL) \ 		fprintf(df, x, ## __VA_ARGS__); \ } while (0)
 end_define
-
-begin_comment
-comment|/* debug messages */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|FILE
-modifier|*
-name|df
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* __FreeBSD__&& _KERNEL */
-end_comment
 
 begin_comment
 comment|/* Private flags for t_stateflags. */
@@ -822,49 +802,6 @@ operator|=
 literal|80
 block|}
 decl_stmt|;
-if|#
-directive|if
-operator|!
-operator|(
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
-name|_KERNEL
-argument_list|)
-operator|)
-name|df
-operator|=
-name|fopen
-argument_list|(
-literal|"teken.log"
-argument_list|,
-literal|"w"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|df
-operator|!=
-name|NULL
-condition|)
-name|setvbuf
-argument_list|(
-name|df
-argument_list|,
-name|NULL
-argument_list|,
-name|_IOLBF
-argument_list|,
-name|BUFSIZ
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* !(__FreeBSD__&& _KERNEL) */
 name|t
 operator|->
 name|t_funcs

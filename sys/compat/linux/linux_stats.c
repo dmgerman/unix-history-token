@@ -448,6 +448,7 @@ name|major
 decl_stmt|,
 name|minor
 decl_stmt|;
+comment|/* 	 * No capability rights required here. 	 */
 if|if
 condition|(
 operator|(
@@ -473,6 +474,8 @@ argument_list|(
 name|td
 argument_list|,
 name|fd
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp

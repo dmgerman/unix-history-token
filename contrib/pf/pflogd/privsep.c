@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ioctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -75,12 +81,6 @@ directive|include
 file|<limits.h>
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
 begin_include
 include|#
 directive|include
@@ -92,11 +92,6 @@ include|#
 directive|include
 file|<pcap-int.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -127,33 +122,6 @@ include|#
 directive|include
 file|<string.h>
 end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__FreeBSD__
-end_ifdef
-
-begin_comment
-comment|/* XXX: pcap pollutes namespace with strlcpy if not present previously */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<pcap.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<pcap-int.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#

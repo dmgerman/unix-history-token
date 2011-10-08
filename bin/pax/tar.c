@@ -791,7 +791,7 @@ comment|/*  * Routines for old BSD style tar (also made portable to sysV tar)  *
 end_comment
 
 begin_comment
-comment|/*  * tar_id()  *	determine if a block given to us is a valid tar header (and not a USTAR  *	header). We have to be on the lookout for those pesky blocks of	all  *	zero's.  * Return:  *	0 if a tar header, -1 otherwise  */
+comment|/*  * tar_id()  *	determine if a block given to us is a valid tar header (and not a USTAR  *	header). We have to be on the lookout for those pesky blocks of all  *	zero's.  * Return:  *	0 if a tar header, -1 otherwise  */
 end_comment
 
 begin_function

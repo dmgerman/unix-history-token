@@ -15,6 +15,18 @@ directive|define
 name|__T4_IOCTL_H__
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<net/ethernet.h>
+end_include
+
 begin_comment
 comment|/*  * Ioctl commands specific to this driver.  */
 end_comment
@@ -22,29 +34,50 @@ end_comment
 begin_enum
 enum|enum
 block|{
-name|T4_GET32
+name|T4_GETREG
 init|=
 literal|0x40
 block|,
-comment|/* read 32 bit register */
-name|T4_SET32
+comment|/* read register */
+name|T4_SETREG
 block|,
-comment|/* write 32 bit register */
+comment|/* write register */
 name|T4_REGDUMP
 block|,
 comment|/* dump of all registers */
+name|T4_GET_FILTER_MODE
+block|,
+comment|/* get global filter mode */
+name|T4_SET_FILTER_MODE
+block|,
+comment|/* set global filter mode */
+name|T4_GET_FILTER
+block|,
+comment|/* get information about a filter */
+name|T4_SET_FILTER
+block|,
+comment|/* program a filter */
+name|T4_DEL_FILTER
+block|,
+comment|/* delete a filter */
+name|T4_GET_SGE_CONTEXT
+block|,
+comment|/* get SGE context for a queue */
 block|}
 enum|;
 end_enum
 
 begin_struct
 struct|struct
-name|t4_reg32
+name|t4_reg
 block|{
 name|uint32_t
 name|addr
 decl_stmt|;
 name|uint32_t
+name|size
+decl_stmt|;
+name|uint64_t
 name|val
 decl_stmt|;
 block|}
@@ -69,9 +102,530 @@ name|uint32_t
 name|len
 decl_stmt|;
 comment|/* bytes */
-name|uint8_t
+name|uint32_t
 modifier|*
 name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * A hardware filter is some valid combination of these.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IPv4
+value|0x1
+end_define
+
+begin_comment
+comment|/* IPv4 packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IPv6
+value|0x2
+end_define
+
+begin_comment
+comment|/* IPv6 packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IP_SADDR
+value|0x4
+end_define
+
+begin_comment
+comment|/* Source IP address or network */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IP_DADDR
+value|0x8
+end_define
+
+begin_comment
+comment|/* Destination IP address or network */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IP_SPORT
+value|0x10
+end_define
+
+begin_comment
+comment|/* Source IP port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IP_DPORT
+value|0x20
+end_define
+
+begin_comment
+comment|/* Destination IP port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_FCoE
+value|0x40
+end_define
+
+begin_comment
+comment|/* Fibre Channel over Ethernet packet */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_PORT
+value|0x80
+end_define
+
+begin_comment
+comment|/* Physical ingress port */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_OVLAN
+value|0x100
+end_define
+
+begin_comment
+comment|/* Outer VLAN ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IVLAN
+value|0x200
+end_define
+
+begin_comment
+comment|/* Inner VLAN ID */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IP_TOS
+value|0x400
+end_define
+
+begin_comment
+comment|/* IPv4 TOS/IPv6 Traffic Class */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IP_PROTO
+value|0x800
+end_define
+
+begin_comment
+comment|/* IP protocol */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_ETH_TYPE
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Ethernet Type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_MAC_IDX
+value|0x2000
+end_define
+
+begin_comment
+comment|/* MPS MAC address match index */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_MPS_HIT_TYPE
+value|0x4000
+end_define
+
+begin_comment
+comment|/* MPS match type */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|T4_FILTER_IP_FRAGMENT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* IP fragment */
+end_comment
+
+begin_comment
+comment|/* Filter action */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|FILTER_PASS
+init|=
+literal|0
+block|,
+comment|/* default */
+name|FILTER_DROP
+block|,
+name|FILTER_SWITCH
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* 802.1q manipulation on FILTER_SWITCH */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|VLAN_NOCHANGE
+init|=
+literal|0
+block|,
+comment|/* default */
+name|VLAN_REMOVE
+block|,
+name|VLAN_INSERT
+block|,
+name|VLAN_REWRITE
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* MPS match type */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|UCAST_EXACT
+init|=
+literal|0
+block|,
+comment|/* exact unicast match */
+name|UCAST_HASH
+init|=
+literal|1
+block|,
+comment|/* inexact (hashed) unicast match */
+name|MCAST_EXACT
+init|=
+literal|2
+block|,
+comment|/* exact multicast match */
+name|MCAST_HASH
+init|=
+literal|3
+block|,
+comment|/* inexact (hashed) multicast match */
+name|PROMISC
+init|=
+literal|4
+block|,
+comment|/* no match but port is promiscuous */
+name|HYPPROMISC
+init|=
+literal|5
+block|,
+comment|/* port is hypervisor-promisuous + not bcast */
+name|BCAST
+init|=
+literal|6
+block|,
+comment|/* broadcast packet */
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/* Rx steering */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+name|DST_MODE_QUEUE
+block|,
+comment|/* queue is directly specified by filter */
+name|DST_MODE_RSS_QUEUE
+block|,
+comment|/* filter specifies RSS entry containing queue */
+name|DST_MODE_RSS
+block|,
+comment|/* queue selected by default RSS hash lookup */
+name|DST_MODE_FILT_RSS
+comment|/* queue selected by hashing in filter-specified 				  RSS subtable */
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|t4_filter_tuple
+block|{
+comment|/* 	 * These are always available. 	 */
+name|uint8_t
+name|sip
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* source IP address (IPv4 in [3:0]) */
+name|uint8_t
+name|dip
+index|[
+literal|16
+index|]
+decl_stmt|;
+comment|/* destinatin IP address (IPv4 in [3:0]) */
+name|uint16_t
+name|sport
+decl_stmt|;
+comment|/* source port */
+name|uint16_t
+name|dport
+decl_stmt|;
+comment|/* destination port */
+comment|/* 	 * A combination of these (upto 36 bits) is available.  TP_VLAN_PRI_MAP 	 * is used to select the global mode and all filters are limited to the 	 * set of fields allowed by the global mode. 	 */
+name|uint16_t
+name|ovlan
+decl_stmt|;
+comment|/* outer VLAN */
+name|uint16_t
+name|ivlan
+decl_stmt|;
+comment|/* inner VLAN */
+name|uint16_t
+name|ethtype
+decl_stmt|;
+comment|/* Ethernet type */
+name|uint8_t
+name|tos
+decl_stmt|;
+comment|/* TOS/Traffic Type */
+name|uint8_t
+name|proto
+decl_stmt|;
+comment|/* protocol type */
+name|uint32_t
+name|fcoe
+range|:
+literal|1
+decl_stmt|;
+comment|/* FCoE packet */
+name|uint32_t
+name|iport
+range|:
+literal|3
+decl_stmt|;
+comment|/* ingress port */
+name|uint32_t
+name|matchtype
+range|:
+literal|3
+decl_stmt|;
+comment|/* MPS match type */
+name|uint32_t
+name|frag
+range|:
+literal|1
+decl_stmt|;
+comment|/* fragmentation extension header */
+name|uint32_t
+name|macidx
+range|:
+literal|9
+decl_stmt|;
+comment|/* exact match MAC index */
+name|uint32_t
+name|ivlan_vld
+range|:
+literal|1
+decl_stmt|;
+comment|/* inner VLAN valid */
+name|uint32_t
+name|ovlan_vld
+range|:
+literal|1
+decl_stmt|;
+comment|/* outer VLAN valid */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|t4_filter_specification
+block|{
+name|uint32_t
+name|hitcnts
+range|:
+literal|1
+decl_stmt|;
+comment|/* count filter hits in TCB */
+name|uint32_t
+name|prio
+range|:
+literal|1
+decl_stmt|;
+comment|/* filter has priority over active/server */
+name|uint32_t
+name|type
+range|:
+literal|1
+decl_stmt|;
+comment|/* 0 => IPv4, 1 => IPv6 */
+name|uint32_t
+name|action
+range|:
+literal|2
+decl_stmt|;
+comment|/* drop, pass, switch */
+name|uint32_t
+name|rpttid
+range|:
+literal|1
+decl_stmt|;
+comment|/* report TID in RSS hash field */
+name|uint32_t
+name|dirsteer
+range|:
+literal|1
+decl_stmt|;
+comment|/* 0 => RSS, 1 => steer to iq */
+name|uint32_t
+name|iq
+range|:
+literal|10
+decl_stmt|;
+comment|/* ingress queue */
+name|uint32_t
+name|maskhash
+range|:
+literal|1
+decl_stmt|;
+comment|/* dirsteer=0: store RSS hash in TCB */
+name|uint32_t
+name|dirsteerhash
+range|:
+literal|1
+decl_stmt|;
+comment|/* dirsteer=1: 0 => TCB contains RSS hash */
+comment|/*             1 => TCB contains IQ ID */
+comment|/* 	 * Switch proxy/rewrite fields.  An ingress packet which matches a 	 * filter with "switch" set will be looped back out as an egress 	 * packet -- potentially with some Ethernet header rewriting. 	 */
+name|uint32_t
+name|eport
+range|:
+literal|2
+decl_stmt|;
+comment|/* egress port to switch packet out */
+name|uint32_t
+name|newdmac
+range|:
+literal|1
+decl_stmt|;
+comment|/* rewrite destination MAC address */
+name|uint32_t
+name|newsmac
+range|:
+literal|1
+decl_stmt|;
+comment|/* rewrite source MAC address */
+name|uint32_t
+name|newvlan
+range|:
+literal|2
+decl_stmt|;
+comment|/* rewrite VLAN Tag */
+name|uint8_t
+name|dmac
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* new destination MAC address */
+name|uint8_t
+name|smac
+index|[
+name|ETHER_ADDR_LEN
+index|]
+decl_stmt|;
+comment|/* new source MAC address */
+name|uint16_t
+name|vlan
+decl_stmt|;
+comment|/* VLAN Tag to insert */
+comment|/* 	 * Filter rule value/mask pairs. 	 */
+name|struct
+name|t4_filter_tuple
+name|val
+decl_stmt|;
+name|struct
+name|t4_filter_tuple
+name|mask
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|t4_filter
+block|{
+name|uint32_t
+name|idx
+decl_stmt|;
+name|uint16_t
+name|l2tidx
+decl_stmt|;
+name|uint16_t
+name|smtidx
+decl_stmt|;
+name|uint64_t
+name|hits
+decl_stmt|;
+name|struct
+name|t4_filter_specification
+name|fs
 decl_stmt|;
 block|}
 struct|;
@@ -80,15 +634,58 @@ end_struct
 begin_define
 define|#
 directive|define
-name|CHELSIO_T4_GETREG32
-value|_IOWR('f', T4_GET32, struct t4_reg32)
+name|T4_SGE_CONTEXT_SIZE
+value|24
+end_define
+
+begin_enum
+enum|enum
+block|{
+name|SGE_CONTEXT_EGRESS
+block|,
+name|SGE_CONTEXT_INGRESS
+block|,
+name|SGE_CONTEXT_FLM
+block|,
+name|SGE_CONTEXT_CNM
+block|}
+enum|;
+end_enum
+
+begin_struct
+struct|struct
+name|t4_sge_context
+block|{
+name|uint32_t
+name|mem_id
+decl_stmt|;
+name|uint32_t
+name|cid
+decl_stmt|;
+name|uint32_t
+name|data
+index|[
+name|T4_SGE_CONTEXT_SIZE
+operator|/
+literal|4
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GETREG
+value|_IOWR('f', T4_GETREG, struct t4_reg)
 end_define
 
 begin_define
 define|#
 directive|define
-name|CHELSIO_T4_SETREG32
-value|_IOW('f', T4_SET32, struct t4_reg32)
+name|CHELSIO_T4_SETREG
+value|_IOW('f', T4_SETREG, struct t4_reg)
 end_define
 
 begin_define
@@ -96,6 +693,48 @@ define|#
 directive|define
 name|CHELSIO_T4_REGDUMP
 value|_IOWR('f', T4_REGDUMP, struct t4_regdump)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GET_FILTER_MODE
+value|_IOWR('f', T4_GET_FILTER_MODE, uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_SET_FILTER_MODE
+value|_IOW('f', T4_SET_FILTER_MODE, uint32_t)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GET_FILTER
+value|_IOWR('f', T4_GET_FILTER, struct t4_filter)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_SET_FILTER
+value|_IOW('f', T4_SET_FILTER, struct t4_filter)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_DEL_FILTER
+value|_IOW('f', T4_DEL_FILTER, struct t4_filter)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GET_SGE_CONTEXT
+value|_IOWR('f', T4_GET_SGE_CONTEXT, \     struct t4_sge_context)
 end_define
 
 begin_endif

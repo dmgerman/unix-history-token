@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mount.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/stat.h>
 end_include
 
@@ -150,6 +156,9 @@ name|mi_mode
 decl_stmt|;
 name|bool
 name|mi_have_mode
+decl_stmt|;
+name|bool
+name|mi_forced_pw
 decl_stmt|;
 block|}
 struct|;
@@ -626,7 +635,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:NnO:o:Pp:Ss:t:Uv:w:X"
+literal|"a:b:Cc:Dd:E:e:F:f:hi:LlMm:NnO:o:Pp:Ss:tUv:w:X"
 argument_list|)
 operator|)
 operator|!=
@@ -942,6 +951,12 @@ name|mi_have_mode
 operator|=
 name|true
 expr_stmt|;
+name|mi
+operator|.
+name|mi_forced_pw
+operator|=
+name|true
+expr_stmt|;
 name|free
 argument_list|(
 name|set
@@ -967,6 +982,18 @@ argument_list|,
 literal|"-s %s"
 argument_list|,
 name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'t'
+case|:
+name|argappend
+argument_list|(
+operator|&
+name|newfs_arg
+argument_list|,
+literal|"-t"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1002,6 +1029,12 @@ argument_list|,
 operator|&
 name|mi
 argument_list|)
+expr_stmt|;
+name|mi
+operator|.
+name|mi_forced_pw
+operator|=
+name|true
 expr_stmt|;
 break|break;
 case|case
@@ -1947,6 +1980,98 @@ modifier|*
 name|mip
 parameter_list|)
 block|{
+name|struct
+name|statfs
+name|sfs
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|mip
+operator|->
+name|mi_have_mode
+operator|&&
+operator|!
+name|mip
+operator|->
+name|mi_have_uid
+operator|&&
+operator|!
+name|mip
+operator|->
+name|mi_have_gid
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|norun
+condition|)
+block|{
+if|if
+condition|(
+name|statfs
+argument_list|(
+name|mtpoint
+argument_list|,
+operator|&
+name|sfs
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"statfs: %s"
+argument_list|,
+name|mtpoint
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+operator|(
+name|sfs
+operator|.
+name|f_flags
+operator|&
+name|MNT_RDONLY
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|mip
+operator|->
+name|mi_forced_pw
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"Not changing mode/owner of %s since it is read-only"
+argument_list|,
+name|mtpoint
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|debugprintf
+argument_list|(
+literal|"Not changing mode/owner of %s since it is read-only"
+argument_list|,
+name|mtpoint
+argument_list|)
+expr_stmt|;
+block|}
+return|return;
+block|}
+block|}
 if|if
 condition|(
 name|mip
@@ -3003,7 +3128,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: %s [-DLlMNnPSUX] [-a maxcontig] [-b block-size]\n"
+literal|"usage: %s [-DLlMNnPStUX] [-a maxcontig] [-b block-size]\n"
 literal|"\t[-c blocks-per-cylinder-group][-d max-extent-size] [-E path-mdconfig]\n"
 literal|"\t[-e maxbpg] [-F file] [-f frag-size] [-i bytes] [-m percent-free]\n"
 literal|"\t[-O optimization] [-o mount-options]\n"

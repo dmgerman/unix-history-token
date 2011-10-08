@@ -67,6 +67,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/_lock.h>
 end_include
 
@@ -307,7 +313,7 @@ modifier|*
 name|pm_pdir
 decl_stmt|;
 comment|/* KVA of page directory */
-name|cpumask_t
+name|cpuset_t
 name|pm_active
 decl_stmt|;
 comment|/* active on cpus */

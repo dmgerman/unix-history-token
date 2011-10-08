@@ -417,39 +417,12 @@ begin_comment
 comment|/*  * Note that the EXTSTAT bit indicates that there is extended status  * info available in register 15, but 802.3 section 22.2.4.3 also  * states that that all 1000 Mb/s capable PHYs will set this bit to 1.  */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_define
-define|#
-directive|define
-name|BMSR_MEDIAMASK
-value|(BMSR_100T4|BMSR_100TXFDX|BMSR_100TXHDX|BMSR_10TFDX| \ 			 BMSR_10THDX|BMSR_ANEG)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* NetBSD uses: */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|BMSR_MEDIAMASK
 value|(BMSR_100T4|BMSR_100TXFDX|BMSR_100TXHDX| \ 			 BMSR_10TFDX|BMSR_10THDX|BMSR_100T2FDX|BMSR_100T2HDX)
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * Convert BMSR media capabilities to ANAR bits for autonegotiation.  * Note the shift chopps off the BMSR_ANEG bit.  */
@@ -519,38 +492,6 @@ end_define
 begin_comment
 comment|/* vendor revision */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|MII_OUI
-parameter_list|(
-name|id1
-parameter_list|,
-name|id2
-parameter_list|)
-value|(((id1)<< 6) | ((id2)>> 10))
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_MODEL
-parameter_list|(
-name|id2
-parameter_list|)
-value|(((id2)& IDR2_MODEL)>> 4)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MII_REV
-parameter_list|(
-name|id2
-parameter_list|)
-value|((id2)& IDR2_REV)
-end_define
 
 begin_define
 define|#

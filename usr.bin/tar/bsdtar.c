@@ -227,6 +227,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|HAVE_ZLIB_H
+end_if
+
+begin_include
+include|#
+directive|include
+file|<zlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -328,6 +345,15 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|bsdtar
+modifier|*
+name|_bsdtar
+decl_stmt|;
+end_decl_stmt
 
 begin_if
 if|#
@@ -556,6 +582,8 @@ name|time_t
 name|now
 decl_stmt|;
 comment|/* 	 * Use a pointer for consistency, but stack-allocated storage 	 * for ease of cleanup. 	 */
+name|_bsdtar
+operator|=
 name|bsdtar
 operator|=
 operator|&
@@ -645,7 +673,7 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -672,7 +700,7 @@ argument_list|,
 name|NULL
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -686,7 +714,7 @@ directive|endif
 block|}
 endif|#
 directive|endif
-comment|/* Need bsdtar_progname before calling bsdtar_warnc. */
+comment|/* Need lafe_progname before calling lafe_warnc. */
 if|if
 condition|(
 operator|*
@@ -694,7 +722,7 @@ name|argv
 operator|==
 name|NULL
 condition|)
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 literal|"bsdtar"
 expr_stmt|;
@@ -712,7 +740,7 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -724,7 +752,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 name|strrchr
 argument_list|(
@@ -738,15 +766,15 @@ endif|#
 directive|endif
 if|if
 condition|(
-name|bsdtar_progname
+name|lafe_progname
 operator|!=
 name|NULL
 condition|)
-name|bsdtar_progname
+name|lafe_progname
 operator|++
 expr_stmt|;
 else|else
-name|bsdtar_progname
+name|lafe_progname
 operator|=
 operator|*
 name|argv
@@ -772,7 +800,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -968,7 +996,7 @@ name|t
 operator|>
 literal|8192
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1052,7 +1080,7 @@ operator|->
 name|optarg
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1195,7 +1223,7 @@ operator|->
 name|optarg
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1221,7 +1249,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1255,7 +1283,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1333,7 +1361,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1419,7 +1447,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1492,7 +1520,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1753,7 +1781,7 @@ argument_list|)
 expr_stmt|;
 else|#
 directive|else
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -1918,7 +1946,7 @@ operator|->
 name|optarg
 argument_list|)
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1956,7 +1984,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -1990,7 +2018,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2024,7 +2052,7 @@ name|create_compression
 operator|!=
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2097,7 +2125,7 @@ name|mode
 operator|==
 literal|'\0'
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2453,7 +2481,7 @@ name|return_value
 operator|!=
 literal|0
 condition|)
-name|bsdtar_warnc
+name|lafe_warnc
 argument_list|(
 literal|0
 argument_list|,
@@ -2498,7 +2526,7 @@ name|mode
 operator|!=
 name|opt
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2560,7 +2588,7 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-name|bsdtar_errc
+name|lafe_errc
 argument_list|(
 literal|1
 argument_list|,
@@ -2592,7 +2620,7 @@ name|p
 decl_stmt|;
 name|p
 operator|=
-name|bsdtar_progname
+name|lafe_progname
 expr_stmt|;
 name|fprintf
 argument_list|(
@@ -2729,7 +2757,7 @@ name|p
 decl_stmt|;
 name|prog
 operator|=
-name|bsdtar_progname
+name|lafe_progname
 expr_stmt|;
 name|fflush
 argument_list|(

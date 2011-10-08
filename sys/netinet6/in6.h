@@ -1208,6 +1208,14 @@ modifier|*
 name|ro_lle
 decl_stmt|;
 name|struct
+name|in6_addr
+modifier|*
+name|ro_ia6
+decl_stmt|;
+name|int
+name|ro_flags
+decl_stmt|;
+name|struct
 name|sockaddr_in6
 name|ro_dst
 decl_stmt|;
@@ -1361,7 +1369,7 @@ value|12
 end_define
 
 begin_comment
-comment|/* ip6_mreq; join a group membership */
+comment|/* ipv6_mreq; join a group membership */
 end_comment
 
 begin_define
@@ -1372,7 +1380,7 @@ value|13
 end_define
 
 begin_comment
-comment|/* ip6_mreq; leave a group membership */
+comment|/* ipv6_mreq; leave a group membership */
 end_comment
 
 begin_define
@@ -2650,8 +2658,41 @@ end_define
 begin_define
 define|#
 directive|define
-name|IPV6CTL_MAXID
+name|IPV6CTL_NO_RADR
 value|48
+end_define
+
+begin_comment
+comment|/* No defroute from RA */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_NORBIT_RAIF
+value|49
+end_define
+
+begin_comment
+comment|/* Disable R-bit in NA on RA 					 * receiving IF. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_RFC6204W3
+value|50
+end_define
+
+begin_comment
+comment|/* Accept defroute even when forwarding 					   enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IPV6CTL_MAXID
+value|51
 end_define
 
 begin_endif
@@ -2747,6 +2788,17 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|int
+name|in6_localip
+parameter_list|(
+name|struct
+name|in6_addr
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int

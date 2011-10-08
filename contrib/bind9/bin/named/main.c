@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: main.c,v 1.166.34.7 2010-09-15 12:16:49 marka Exp $ */
+comment|/* $Id: main.c,v 1.180.14.3 2011-03-11 06:47:00 marka Exp $ */
 end_comment
 
 begin_comment
@@ -39,6 +39,12 @@ begin_include
 include|#
 directive|include
 file|<isc/app.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<isc/backtrace.h>
 end_include
 
 begin_include
@@ -161,6 +167,12 @@ directive|include
 file|<dst/result.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<dlz/dlz_dlopen_driver.h>
+end_include
+
 begin_comment
 comment|/*  * Defining NS_MAIN provides storage declarations (rather than extern)  * for variables in named/globals.h.  */
 end_comment
@@ -247,6 +259,40 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|OPENSSL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<openssl/opensslv.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_LIBXML2
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<libxml/xmlversion.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Include header files for database drivers here.  */
 end_comment
@@ -255,21 +301,43 @@ begin_comment
 comment|/* #include "xxdb.h" */
 end_comment
 
-begin_comment
-comment|/*  * Include DLZ drivers if appropriate.  */
-end_comment
-
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|DLZ
+name|CONTRIB_DLZ
 end_ifdef
+
+begin_comment
+comment|/*  * Include contributed DLZ drivers if appropriate.  */
+end_comment
 
 begin_include
 include|#
 directive|include
 file|<dlz/dlz_drivers.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * The maximum number of stack frames to dump on assertion failure.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BACKTRACE_MAXFRAME
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|BACKTRACE_MAXFRAME
+value|128
+end_define
 
 begin_endif
 endif|#
@@ -332,6 +400,15 @@ specifier|static
 name|unsigned
 name|int
 name|maxsocks
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|maxudp
 init|=
 literal|0
 decl_stmt|;
@@ -527,6 +604,32 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|assertion_failed
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|file
+argument_list|,
+name|int
+name|line
+argument_list|,
+name|isc_assertiontype_t
+name|type
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|cond
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -549,6 +652,33 @@ modifier|*
 name|cond
 parameter_list|)
 block|{
+name|void
+modifier|*
+name|tracebuf
+index|[
+name|BACKTRACE_MAXFRAME
+index|]
+decl_stmt|;
+name|int
+name|i
+decl_stmt|,
+name|nframes
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|logsuffix
+init|=
+literal|""
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fname
+decl_stmt|;
 comment|/* 	 * Handle assertion failures. 	 */
 if|if
 condition|(
@@ -563,6 +693,32 @@ argument_list|(
 name|NULL
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
+name|isc_backtrace_gettrace
+argument_list|(
+name|tracebuf
+argument_list|,
+name|BACKTRACE_MAXFRAME
+argument_list|,
+operator|&
+name|nframes
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+operator|&&
+name|nframes
+operator|>
+literal|0
+condition|)
+name|logsuffix
+operator|=
+literal|", back trace"
+expr_stmt|;
 name|isc_log_write
 argument_list|(
 name|ns_g_lctx
@@ -573,7 +729,7 @@ name|NS_LOGMODULE_MAIN
 argument_list|,
 name|ISC_LOG_CRITICAL
 argument_list|,
-literal|"%s:%d: %s(%s) failed"
+literal|"%s:%d: %s(%s) failed%s"
 argument_list|,
 name|file
 argument_list|,
@@ -585,8 +741,112 @@ name|type
 argument_list|)
 argument_list|,
 name|cond
+argument_list|,
+name|logsuffix
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|nframes
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|unsigned
+name|long
+name|offset
+decl_stmt|;
+name|fname
+operator|=
+name|NULL
+expr_stmt|;
+name|result
+operator|=
+name|isc_backtrace_getsymbol
+argument_list|(
+name|tracebuf
+index|[
+name|i
+index|]
+argument_list|,
+operator|&
+name|fname
+argument_list|,
+operator|&
+name|offset
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_CRITICAL
+argument_list|,
+literal|"#%d %p in %s()+0x%lx"
+argument_list|,
+name|i
+argument_list|,
+name|tracebuf
+index|[
+name|i
+index|]
+argument_list|,
+name|fname
+argument_list|,
+name|offset
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_CRITICAL
+argument_list|,
+literal|"#%d %p in ??"
+argument_list|,
+name|i
+argument_list|,
+name|tracebuf
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
 name|isc_log_write
 argument_list|(
 name|ns_g_lctx
@@ -642,38 +902,37 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function_decl
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
 specifier|static
 name|void
 name|library_fatal_error
-parameter_list|(
+argument_list|(
 specifier|const
 name|char
-modifier|*
+operator|*
 name|file
-parameter_list|,
+argument_list|,
 name|int
 name|line
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|format
-parameter_list|,
+argument_list|,
 name|va_list
 name|args
-parameter_list|)
-function_decl|ISC_FORMAT_PRINTF
-parameter_list|(
-function_decl|3
-operator|,
-function_decl|0
-end_function_decl
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+argument_list|)
+name|ISC_FORMAT_PRINTF
+argument_list|(
+literal|3
+argument_list|,
+literal|0
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static
@@ -987,8 +1246,9 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: named [-4|-6] [-c conffile] [-d debuglevel] "
-literal|"[-f|-g] [-n number_of_cpus]\n"
-literal|"             [-p port] [-s] [-t chrootdir] [-u username]\n"
+literal|"[-E engine] [-f|-g]\n"
+literal|"             [-n number_of_cpus] [-p port] [-s] "
+literal|"[-t chrootdir] [-u username]\n"
 literal|"             [-m {usage|trace|record|size|mctx}]\n"
 argument_list|)
 expr_stmt|;
@@ -1546,7 +1806,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"46c:C:d:fgi:lm:n:N:p:P:"
+literal|"46c:C:d:E:fFgi:lm:n:N:p:P:"
 literal|"sS:t:T:u:vVx:"
 argument_list|)
 operator|)
@@ -1681,6 +1941,14 @@ name|isc_commandline_argument
 argument_list|,
 literal|"debug level"
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'E'
+case|:
+name|ns_g_engine
+operator|=
+name|isc_commandline_argument
 expr_stmt|;
 break|break;
 case|case
@@ -1868,14 +2136,13 @@ comment|/* NOT DOCUMENTED */
 comment|/* 			 * clienttest: make clients single shot with their 			 * 	       own memory context. 			 */
 if|if
 condition|(
+operator|!
 name|strcmp
 argument_list|(
 name|isc_commandline_argument
 argument_list|,
 literal|"clienttest"
 argument_list|)
-operator|==
-literal|0
 condition|)
 name|ns_g_clienttest
 operator|=
@@ -1910,6 +2177,36 @@ condition|)
 name|ns_g_noaa
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"maxudp512"
+argument_list|)
+condition|)
+name|maxudp
+operator|=
+literal|512
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|isc_commandline_argument
+argument_list|,
+literal|"maxudp1460"
+argument_list|)
+condition|)
+name|maxudp
+operator|=
+literal|1460
 expr_stmt|;
 else|else
 name|fprintf
@@ -1957,11 +2254,40 @@ argument_list|,
 name|ns_g_configargs
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|OPENSSL
+name|printf
+argument_list|(
+literal|"using OpenSSL version: %s\n"
+argument_list|,
+name|OPENSSL_VERSION_TEXT
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HAVE_LIBXML2
+name|printf
+argument_list|(
+literal|"using libxml2 version: %s\n"
+argument_list|,
+name|LIBXML_DOTTED_VERSION
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|exit
 argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
+case|case
+literal|'F'
+case|:
+comment|/* Reserved for FIPS mode */
+comment|/* FALLTHROUGH */
 case|case
 literal|'?'
 case|:
@@ -1986,6 +2312,7 @@ argument_list|,
 name|isc_commandline_option
 argument_list|)
 expr_stmt|;
+comment|/* FALLTHROUGH */
 default|default:
 name|ns_main_earlyfatal
 argument_list|(
@@ -2003,6 +2330,11 @@ expr_stmt|;
 name|argv
 operator|+=
 name|isc_commandline_index
+expr_stmt|;
+name|POST
+argument_list|(
+name|argv
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2209,6 +2541,13 @@ name|ISC_R_UNEXPECTED
 operator|)
 return|;
 block|}
+name|isc__socketmgr_maxudp
+argument_list|(
+name|ns_g_socketmgr
+argument_list|,
+name|maxudp
+argument_list|)
+expr_stmt|;
 name|result
 operator|=
 name|isc_socketmgr_getmaxsockets
@@ -2377,6 +2716,138 @@ comment|/* 	 * isc_hash_destroy() cannot be called as long as a resolver may be 
 name|isc_hash_destroy
 argument_list|()
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dump_symboltable
+parameter_list|()
+block|{
+name|int
+name|i
+decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|fname
+decl_stmt|;
+specifier|const
+name|void
+modifier|*
+name|addr
+decl_stmt|;
+if|if
+condition|(
+name|isc__backtrace_nsymbols
+operator|==
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
+operator|!
+name|isc_log_wouldlog
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|99
+argument_list|)
+argument_list|)
+condition|)
+return|return;
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|99
+argument_list|)
+argument_list|,
+literal|"Symbol table:"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+operator|,
+name|result
+operator|=
+name|ISC_R_SUCCESS
+init|;
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|addr
+operator|=
+name|NULL
+expr_stmt|;
+name|fname
+operator|=
+name|NULL
+expr_stmt|;
+name|result
+operator|=
+name|isc_backtrace_getsymbolfromindex
+argument_list|(
+name|i
+argument_list|,
+operator|&
+name|addr
+argument_list|,
+operator|&
+name|fname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|isc_log_write
+argument_list|(
+name|ns_g_lctx
+argument_list|,
+name|NS_LOGCATEGORY_GENERAL
+argument_list|,
+name|NS_LOGMODULE_MAIN
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|99
+argument_list|)
+argument_list|,
+literal|"[%d] %p %s"
+argument_list|,
+name|i
+argument_list|,
+name|addr
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 end_function
 
@@ -2653,6 +3124,9 @@ argument_list|,
 name|ns_g_configargs
 argument_list|)
 expr_stmt|;
+name|dump_symboltable
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Get the initial resource limits. 	 */
 operator|(
 name|void
@@ -2780,8 +3254,8 @@ name|ISC_R_SUCCESS
 condition|)
 name|ns_main_earlyfatal
 argument_list|(
-literal|"could not construct absolute path of "
-literal|"configuration file: %s"
+literal|"could not construct absolute path "
+literal|"of configuration file: %s"
 argument_list|,
 name|isc_result_totext
 argument_list|(
@@ -2847,8 +3321,37 @@ comment|/* 	 * Add calls to register sdb drivers here. 	 */
 comment|/* xxdb_init(); */
 ifdef|#
 directive|ifdef
-name|DLZ
-comment|/* 	 * Register any DLZ drivers. 	 */
+name|ISC_DLZ_DLOPEN
+comment|/* 	 * Register the DLZ "dlopen" driver. 	 */
+name|result
+operator|=
+name|dlz_dlopen_init
+argument_list|(
+name|ns_g_mctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|ns_main_earlyfatal
+argument_list|(
+literal|"dlz_dlopen_init() failed: %s"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|CONTRIB_DLZ
+comment|/* 	 * Register any other contributed DLZ drivers. 	 */
 name|result
 operator|=
 name|dlz_drivers_init
@@ -2907,9 +3410,18 @@ comment|/* 	 * Add calls to unregister sdb drivers here. 	 */
 comment|/* xxdb_clear(); */
 ifdef|#
 directive|ifdef
-name|DLZ
-comment|/* 	 * Unregister any DLZ drivers. 	 */
+name|CONTRIB_DLZ
+comment|/* 	 * Unregister contributed DLZ drivers. 	 */
 name|dlz_drivers_clear
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|ISC_DLZ_DLOPEN
+comment|/* 	 * Unregister "dlopen" DLZ driver. 	 */
+name|dlz_dlopen_clear
 argument_list|()
 expr_stmt|;
 endif|#
@@ -3416,6 +3928,17 @@ condition|)
 name|ns_g_lwresdonly
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+name|ns_main_earlyfatal
+argument_list|(
+literal|"failed to build internal symbol table"
+argument_list|)
 expr_stmt|;
 name|isc_assertion_setcallback
 argument_list|(

@@ -113,6 +113,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PF_OPT_NUMERIC
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PF_OPT_MERGE
 value|0x2000
 end_define
@@ -558,7 +565,7 @@ value|STAILQ_NEXT
 end_define
 
 begin_comment
-comment|/*#define SIMPLEQ_FOREACH		STAILQ_FOREACH*/
+comment|/*#define	SIMPLEQ_FOREACH			STAILQ_FOREACH*/
 end_comment
 
 begin_define
@@ -573,7 +580,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|for((var) = SIMPLEQ_FIRST(head);		\ 	(var) != SIMPLEQ_END(head);		\ 	(var) = SIMPLEQ_NEXT(var, field))
+value|for((var) = SIMPLEQ_FIRST(head);			\ 	(var) != SIMPLEQ_END(head);			\ 	(var) = SIMPLEQ_NEXT(var, field))
 end_define
 
 begin_define
@@ -751,9 +758,6 @@ parameter_list|(
 name|int
 parameter_list|,
 name|char
-modifier|*
-parameter_list|,
-name|FILE
 modifier|*
 parameter_list|,
 name|int
@@ -975,9 +979,9 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|parse_rules
+name|parse_config
 parameter_list|(
-name|FILE
+name|char
 modifier|*
 parameter_list|,
 name|struct
@@ -1057,6 +1061,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

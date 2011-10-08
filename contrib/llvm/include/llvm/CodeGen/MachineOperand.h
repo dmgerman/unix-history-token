@@ -82,6 +82,9 @@ name|class
 name|ConstantFP
 decl_stmt|;
 name|class
+name|ConstantInt
+decl_stmt|;
+name|class
 name|GlobalValue
 decl_stmt|;
 name|class
@@ -124,6 +127,9 @@ comment|///< Register operand.
 name|MO_Immediate
 block|,
 comment|///< Immediate operand
+name|MO_CImmediate
+block|,
+comment|///< Immediate>64bit operand
 name|MO_FPImmediate
 block|,
 comment|///< Floating-point immediate operand
@@ -227,8 +233,8 @@ name|IsDebug
 range|:
 literal|1
 decl_stmt|;
-comment|/// SmallContents - Thisreally should be part of the Contents union, but lives
-comment|/// out here so we can get a better packed struct.
+comment|/// SmallContents - This really should be part of the Contents union, but
+comment|/// lives out here so we can get a better packed struct.
 comment|/// MO_Register: Register number.
 comment|/// OffsetedInfo: Low bits of offset.
 union|union
@@ -264,6 +270,12 @@ modifier|*
 name|CFP
 decl_stmt|;
 comment|// For MO_FPImmediate.
+specifier|const
+name|ConstantInt
+modifier|*
+name|CI
+decl_stmt|;
+comment|// For MO_CImmediate. Integers> 64bit.
 name|int64_t
 name|ImmVal
 decl_stmt|;
@@ -490,6 +502,18 @@ return|return
 name|OpKind
 operator|==
 name|MO_Immediate
+return|;
+block|}
+comment|/// isCImm - Test if t his is a MO_CImmediate operand.
+name|bool
+name|isCImm
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OpKind
+operator|==
+name|MO_CImmediate
 return|;
 block|}
 comment|/// isFPImm - Tests if this is a MO_FPImmediate operand.
@@ -1135,6 +1159,27 @@ name|ImmVal
 return|;
 block|}
 specifier|const
+name|ConstantInt
+operator|*
+name|getCImm
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isCImm
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+name|Contents
+operator|.
+name|CI
+return|;
+block|}
+specifier|const
 name|ConstantFP
 operator|*
 name|getFPImm
@@ -1593,6 +1638,36 @@ return|;
 block|}
 specifier|static
 name|MachineOperand
+name|CreateCImm
+parameter_list|(
+specifier|const
+name|ConstantInt
+modifier|*
+name|CI
+parameter_list|)
+block|{
+name|MachineOperand
+name|Op
+argument_list|(
+name|MachineOperand
+operator|::
+name|MO_CImmediate
+argument_list|)
+decl_stmt|;
+name|Op
+operator|.
+name|Contents
+operator|.
+name|CI
+operator|=
+name|CI
+expr_stmt|;
+return|return
+name|Op
+return|;
+block|}
+specifier|static
+name|MachineOperand
 name|CreateFPImm
 parameter_list|(
 specifier|const
@@ -1800,7 +1875,7 @@ specifier|static
 name|MachineOperand
 name|CreateFI
 parameter_list|(
-name|unsigned
+name|int
 name|Idx
 parameter_list|)
 block|{

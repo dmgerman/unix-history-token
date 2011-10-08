@@ -681,7 +681,7 @@ literal|1
 argument_list|,
 name|wr
 argument_list|,
-literal|1
+name|wr
 argument_list|)
 expr_stmt|;
 if|if

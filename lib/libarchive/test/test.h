@@ -110,23 +110,6 @@ directive|include
 file|<sys/stat.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|USE_DMALLOC
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<dmalloc.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_if
 if|#
 directive|if
@@ -1857,6 +1840,23 @@ parameter_list|)
 define|\
 value|assertion_equal_string(__FILE__, __LINE__, (v1), #v1, (v2), #v2, (a))
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_DMALLOC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<dmalloc.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

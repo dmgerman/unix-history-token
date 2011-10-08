@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: ns_smf_globals.h,v 1.7 2007/06/19 23:46:59 tbox Exp $ */
+comment|/* $Id: ns_smf_globals.h,v 1.7 2007-06-19 23:46:59 tbox Exp $ */
 end_comment
 
 begin_ifndef

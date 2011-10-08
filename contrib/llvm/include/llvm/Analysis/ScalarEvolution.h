@@ -108,6 +108,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -257,6 +263,69 @@ block|;
 comment|// DO NOT IMPLEMENT
 name|public
 operator|:
+comment|/// NoWrapFlags are bitfield indices into SubclassData.
+comment|///
+comment|/// Add and Mul expressions may have no-unsigned-wrap<NUW> or
+comment|/// no-signed-wrap<NSW> properties, which are derived from the IR
+comment|/// operator. NSW is a misnomer that we use to mean no signed overflow or
+comment|/// underflow.
+comment|///
+comment|/// AddRec expression may have a no-self-wraparound<NW> property if the
+comment|/// result can never reach the start value. This property is independent of
+comment|/// the actual start value and step direction. Self-wraparound is defined
+comment|/// purely in terms of the recurrence's loop, step size, and
+comment|/// bitwidth. Formally, a recurrence with no self-wraparound satisfies:
+comment|/// abs(step) * max-iteration(loop)<= unsigned-max(bitwidth).
+comment|///
+comment|/// Note that NUW and NSW are also valid properties of a recurrence, and
+comment|/// either implies NW. For convenience, NW will be set for a recurrence
+comment|/// whenever either NUW or NSW are set.
+expr|enum
+name|NoWrapFlags
+block|{
+name|FlagAnyWrap
+operator|=
+literal|0
+block|,
+comment|// No guarantee.
+name|FlagNW
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|0
+operator|)
+block|,
+comment|// No self-wrap.
+name|FlagNUW
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|1
+operator|)
+block|,
+comment|// No unsigned wrap.
+name|FlagNSW
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|2
+operator|)
+block|,
+comment|// No signed wrap.
+name|NoWrapMask
+operator|=
+operator|(
+literal|1
+operator|<<
+literal|3
+operator|)
+operator|-
+literal|1
+block|}
+block|;
 name|explicit
 name|SCEV
 argument_list|(
@@ -515,6 +584,81 @@ name|ProperlyDominatesBlock
 comment|///< The SCEV properly dominates the block.
 block|}
 block|;
+comment|/// Convenient NoWrapFlags manipulation that hides enum casts and is
+comment|/// visible in the ScalarEvolution name space.
+specifier|static
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|maskFlags
+argument_list|(
+argument|SCEV::NoWrapFlags Flags
+argument_list|,
+argument|int Mask
+argument_list|)
+block|{
+return|return
+operator|(
+name|SCEV
+operator|::
+name|NoWrapFlags
+operator|)
+operator|(
+name|Flags
+operator|&
+name|Mask
+operator|)
+return|;
+block|}
+specifier|static
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|setFlags
+argument_list|(
+argument|SCEV::NoWrapFlags Flags
+argument_list|,
+argument|SCEV::NoWrapFlags OnFlags
+argument_list|)
+block|{
+return|return
+operator|(
+name|SCEV
+operator|::
+name|NoWrapFlags
+operator|)
+operator|(
+name|Flags
+operator||
+name|OnFlags
+operator|)
+return|;
+block|}
+specifier|static
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|clearFlags
+argument_list|(
+argument|SCEV::NoWrapFlags Flags
+argument_list|,
+argument|SCEV::NoWrapFlags OffFlags
+argument_list|)
+block|{
+return|return
+operator|(
+name|SCEV
+operator|::
+name|NoWrapFlags
+operator|)
+operator|(
+name|Flags
+operator|&
+operator|~
+name|OffFlags
+operator|)
+return|;
+block|}
 name|private
 operator|:
 comment|/// SCEVCallbackVH - A CallbackVH to arrange for ScalarEvolution to be
@@ -718,9 +862,7 @@ expr|}
 block|;
 comment|/// BackedgeTakenCounts - Cache the backedge-taken count of the loops for
 comment|/// this function as they are computed.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|Loop
@@ -735,9 +877,7 @@ comment|/// the PHI instructions that we attempt to compute constant evolutions 
 comment|/// This allows us to avoid potentially expensive recomputation of these
 comment|/// properties.  An instruction maps to null if we are unable to compute its
 comment|/// exit value.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 name|PHINode
 operator|*
@@ -750,9 +890,7 @@ block|;
 comment|/// ValuesAtScopes - This map contains entries for all the expressions
 comment|/// that we attempt to compute getSCEVAtScope information for, which can
 comment|/// be expensive in extreme cases.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|SCEV
@@ -774,9 +912,7 @@ expr|>
 name|ValuesAtScopes
 block|;
 comment|/// LoopDispositions - Memoized computeLoopDisposition results.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|SCEV
@@ -811,9 +947,7 @@ name|L
 argument_list|)
 block|;
 comment|/// BlockDispositions - Memoized computeBlockDisposition results.
-name|std
-operator|::
-name|map
+name|DenseMap
 operator|<
 specifier|const
 name|SCEV
@@ -1663,42 +1797,40 @@ operator|>
 operator|&
 name|Ops
 argument_list|,
-name|bool
-name|HasNUW
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
 operator|=
-name|false
-argument_list|,
-name|bool
-name|HasNSW
-operator|=
-name|false
+name|SCEV
+operator|::
+name|FlagAnyWrap
 argument_list|)
 decl_stmt|;
 specifier|const
 name|SCEV
 modifier|*
 name|getAddExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|LHS
-parameter_list|,
+argument_list|,
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|RHS
-parameter_list|,
-name|bool
-name|HasNUW
-init|=
-name|false
-parameter_list|,
-name|bool
-name|HasNSW
-init|=
-name|false
-parameter_list|)
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
+operator|=
+name|SCEV
+operator|::
+name|FlagAnyWrap
+argument_list|)
 block|{
 name|SmallVector
 operator|<
@@ -1729,9 +1861,7 @@ name|getAddExpr
 argument_list|(
 name|Ops
 argument_list|,
-name|HasNUW
-argument_list|,
-name|HasNSW
+name|Flags
 argument_list|)
 return|;
 block|}
@@ -1739,32 +1869,31 @@ specifier|const
 name|SCEV
 modifier|*
 name|getAddExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|Op0
-parameter_list|,
+argument_list|,
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|Op1
-parameter_list|,
+argument_list|,
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|Op2
-parameter_list|,
-name|bool
-name|HasNUW
-init|=
-name|false
-parameter_list|,
-name|bool
-name|HasNSW
-init|=
-name|false
-parameter_list|)
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
+operator|=
+name|SCEV
+operator|::
+name|FlagAnyWrap
+argument_list|)
 block|{
 name|SmallVector
 operator|<
@@ -1802,9 +1931,7 @@ name|getAddExpr
 argument_list|(
 name|Ops
 argument_list|,
-name|HasNUW
-argument_list|,
-name|HasNSW
+name|Flags
 argument_list|)
 return|;
 block|}
@@ -1822,42 +1949,40 @@ operator|>
 operator|&
 name|Ops
 argument_list|,
-name|bool
-name|HasNUW
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
 operator|=
-name|false
-argument_list|,
-name|bool
-name|HasNSW
-operator|=
-name|false
+name|SCEV
+operator|::
+name|FlagAnyWrap
 argument_list|)
 decl_stmt|;
 specifier|const
 name|SCEV
 modifier|*
 name|getMulExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|LHS
-parameter_list|,
+argument_list|,
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|RHS
-parameter_list|,
-name|bool
-name|HasNUW
-init|=
-name|false
-parameter_list|,
-name|bool
-name|HasNSW
-init|=
-name|false
-parameter_list|)
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
+operator|=
+name|SCEV
+operator|::
+name|FlagAnyWrap
+argument_list|)
 block|{
 name|SmallVector
 operator|<
@@ -1888,9 +2013,7 @@ name|getMulExpr
 argument_list|(
 name|Ops
 argument_list|,
-name|HasNUW
-argument_list|,
-name|HasNSW
+name|Flags
 argument_list|)
 return|;
 block|}
@@ -1914,33 +2037,28 @@ specifier|const
 name|SCEV
 modifier|*
 name|getAddRecExpr
-parameter_list|(
+argument_list|(
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|Start
-parameter_list|,
+argument_list|,
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|Step
-parameter_list|,
+argument_list|,
 specifier|const
 name|Loop
-modifier|*
+operator|*
 name|L
-parameter_list|,
-name|bool
-name|HasNUW
-init|=
-name|false
-parameter_list|,
-name|bool
-name|HasNSW
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
+argument_list|)
+decl_stmt|;
 specifier|const
 name|SCEV
 modifier|*
@@ -1960,15 +2078,10 @@ name|Loop
 operator|*
 name|L
 argument_list|,
-name|bool
-name|HasNUW
-operator|=
-name|false
-argument_list|,
-name|bool
-name|HasNSW
-operator|=
-name|false
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
 argument_list|)
 decl_stmt|;
 specifier|const
@@ -1991,15 +2104,10 @@ name|Loop
 operator|*
 name|L
 argument_list|,
-name|bool
-name|HasNUW
-operator|=
-name|false
-argument_list|,
-name|bool
-name|HasNSW
-operator|=
-name|false
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
 argument_list|)
 block|{
 name|SmallVector
@@ -2030,9 +2138,7 @@ name|NewOp
 argument_list|,
 name|L
 argument_list|,
-name|HasNUW
-argument_list|,
-name|HasNSW
+name|Flags
 argument_list|)
 return|;
 block|}
@@ -2231,35 +2337,32 @@ modifier|*
 name|V
 parameter_list|)
 function_decl|;
-comment|/// getMinusSCEV - Return LHS-RHS.  Minus is represented in SCEV as A+B*-1,
-comment|/// and thus the HasNUW and HasNSW bits apply to the resultant add, not
-comment|/// whether the sub would have overflowed.
+comment|/// getMinusSCEV - Return LHS-RHS.  Minus is represented in SCEV as A+B*-1.
 specifier|const
 name|SCEV
 modifier|*
 name|getMinusSCEV
-parameter_list|(
+argument_list|(
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|LHS
-parameter_list|,
+argument_list|,
 specifier|const
 name|SCEV
-modifier|*
+operator|*
 name|RHS
-parameter_list|,
-name|bool
-name|HasNUW
-init|=
-name|false
-parameter_list|,
-name|bool
-name|HasNSW
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SCEV
+operator|::
+name|NoWrapFlags
+name|Flags
+operator|=
+name|SCEV
+operator|::
+name|FlagAnyWrap
+argument_list|)
+decl_stmt|;
 comment|/// getTruncateOrZeroExtend - Return a SCEV corresponding to a conversion
 comment|/// of the input value to the specified type.  If the type must be
 comment|/// extended, it is zero extended.
@@ -2411,6 +2514,21 @@ specifier|const
 name|SCEV
 modifier|*
 name|RHS
+parameter_list|)
+function_decl|;
+comment|/// getPointerBase - Transitively follow the chain of pointer-type operands
+comment|/// until reaching a SCEV that does not have a single pointer operand. This
+comment|/// returns a SCEVUnknown pointer for well-formed pointer-type expressions,
+comment|/// but corner cases do exist.
+specifier|const
+name|SCEV
+modifier|*
+name|getPointerBase
+parameter_list|(
+specifier|const
+name|SCEV
+modifier|*
+name|V
 parameter_list|)
 function_decl|;
 comment|/// getSCEVAtScope - Return a SCEV expression for the specified value

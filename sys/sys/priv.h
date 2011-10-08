@@ -1946,6 +1946,17 @@ begin_comment
 comment|/* Set interface description. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PRIV_NET_SETIFFIB
+value|419
+end_define
+
+begin_comment
+comment|/* Set interface fib. */
+end_comment
+
 begin_comment
 comment|/*  * 802.11-related privileges.  */
 end_comment
@@ -2663,6 +2674,45 @@ comment|/* Can become the AFS daemon. */
 end_comment
 
 begin_comment
+comment|/*  * Resource Limits privileges.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_GET_RACCT
+value|670
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_GET_RULES
+value|671
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_GET_LIMITS
+value|672
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_ADD_RULE
+value|673
+end_define
+
+begin_define
+define|#
+directive|define
+name|PRIV_RCTL_REMOVE_RULE
+value|674
+end_define
+
+begin_comment
 comment|/*  * Track end of privilege list.  */
 end_comment
 
@@ -2670,7 +2720,7 @@ begin_define
 define|#
 directive|define
 name|_PRIV_HIGHEST
-value|662
+value|675
 end_define
 
 begin_comment

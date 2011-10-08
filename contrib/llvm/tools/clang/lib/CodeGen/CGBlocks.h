@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/Basic/TargetInfo.h"
 end_include
 
@@ -401,6 +395,11 @@ init|=
 literal|0x10
 block|,
 comment|/* declared __weak, only used in byref copy                                     helpers */
+name|BLOCK_FIELD_IS_ARC
+init|=
+literal|0x40
+block|,
+comment|/* field has ARC-specific semantics */
 name|BLOCK_BYREF_CALLER
 init|=
 literal|128
@@ -775,6 +774,14 @@ comment|/// HasCXXObject - True if the block's custom copy/dispose functions
 comment|/// need to be run even in GC mode.
 name|bool
 name|HasCXXObject
+range|:
+literal|1
+decl_stmt|;
+comment|/// UsesStret : True if the block uses an stret return.  Mutable
+comment|/// because it gets set later in the block-creation process.
+name|mutable
+name|bool
+name|UsesStret
 range|:
 literal|1
 decl_stmt|;

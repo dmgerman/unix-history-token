@@ -479,11 +479,11 @@ init|=
 literal|0x0d
 block|,
 comment|/* Freeze device queue */
-name|XPT_GDEV_ADVINFO
+name|XPT_DEV_ADVINFO
 init|=
 literal|0x0e
 block|,
-comment|/* Advanced device information */
+comment|/* Get/Set Device advanced information */
 comment|/* SCSI Control Functions: 0x10->0x1F */
 name|XPT_ABORT
 init|=
@@ -793,6 +793,36 @@ block|}
 name|cam_xport
 typedef|;
 end_typedef
+
+begin_define
+define|#
+directive|define
+name|XPORT_IS_ATA
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) == XPORT_ATA || (t) == XPORT_SATA)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPORT_IS_SCSI
+parameter_list|(
+name|t
+parameter_list|)
+value|((t) != XPORT_UNKNOWN&& \ 				 (t) != XPORT_UNSPECIFIED&& \ 				 !XPORT_IS_ATA(t))
+end_define
+
+begin_define
+define|#
+directive|define
+name|XPORT_DEVSTAT_TYPE
+parameter_list|(
+name|t
+parameter_list|)
+value|(XPORT_IS_ATA(t) ? DEVSTAT_TYPE_IF_IDE : \ 				 XPORT_IS_SCSI(t) ? DEVSTAT_TYPE_IF_SCSI : \ 				 DEVSTAT_TYPE_IF_OTHER)
+end_define
 
 begin_define
 define|#
@@ -1243,6 +1273,10 @@ name|DEV_MATCH_INQUIRY
 init|=
 literal|0x008
 block|,
+name|DEV_MATCH_DEVID
+init|=
+literal|0x010
+block|,
 name|DEV_MATCH_ANY
 init|=
 literal|0x00f
@@ -1250,6 +1284,23 @@ block|}
 name|dev_pattern_flags
 typedef|;
 end_typedef
+
+begin_struct
+struct|struct
+name|device_id_match_pattern
+block|{
+name|uint8_t
+name|id_len
+decl_stmt|;
+name|uint8_t
+name|id
+index|[
+literal|256
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_struct
 struct|struct
@@ -1264,13 +1315,22 @@ decl_stmt|;
 name|lun_id_t
 name|target_lun
 decl_stmt|;
+name|dev_pattern_flags
+name|flags
+decl_stmt|;
+union|union
+block|{
 name|struct
 name|scsi_static_inquiry_pattern
 name|inq_pat
 decl_stmt|;
-name|dev_pattern_flags
-name|flags
+name|struct
+name|device_id_match_pattern
+name|devid_pat
 decl_stmt|;
+block|}
+name|data
+union|;
 block|}
 struct|;
 end_struct
@@ -1689,7 +1749,7 @@ begin_define
 define|#
 directive|define
 name|CAM_VERSION
-value|0x15
+value|0x16
 end_define
 
 begin_comment
@@ -2399,6 +2459,11 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+name|AC_ADVINFO_CHANGED
+init|=
+literal|0x2000
+block|,
+comment|/* Advance info might have changes */
 name|AC_CONTRACT
 init|=
 literal|0x1000
@@ -2937,6 +3002,11 @@ directive|define
 name|CTS_SATA_CAPS_H_DMAAA
 value|0x00000010
 comment|/* Auto-activation */
+define|#
+directive|define
+name|CTS_SATA_CAPS_H_AN
+value|0x00000020
+comment|/* Async. notification */
 define|#
 directive|define
 name|CTS_SATA_CAPS_D
@@ -3594,12 +3664,12 @@ comment|/* for signaling a bad CCB to free */
 end_comment
 
 begin_comment
-comment|/*  * CCB for getting advanced device information.  This operates in a fashion  * similar to XPT_GDEV_TYPE.  Specify the target in ccb_h, the buffer  * type requested, and provide a buffer size/buffer to write to.  If the  * buffer is too small, the handler will set GDEVAI_FLAG_MORE.  */
+comment|/*  * CCB for working with advanced device information.  This operates in a fashion  * similar to XPT_GDEV_TYPE.  Specify the target in ccb_h, the buffer  * type requested, and provide a buffer size/buffer to write to.  If the  * buffer is too small, provsiz will be larger than bufsiz.  */
 end_comment
 
 begin_struct
 struct|struct
-name|ccb_getdev_advinfo
+name|ccb_dev_advinfo
 block|{
 name|struct
 name|ccb_hdr
@@ -3610,12 +3680,9 @@ name|flags
 decl_stmt|;
 define|#
 directive|define
-name|CGDAI_FLAG_TRANSPORT
+name|CDAI_FLAG_STORE
 value|0x1
-define|#
-directive|define
-name|CGDAI_FLAG_PROTO
-value|0x2
+comment|/* If set, action becomes store */
 name|uint32_t
 name|buftype
 decl_stmt|;
@@ -3623,8 +3690,16 @@ comment|/* IN: Type of data being requested */
 comment|/* NB: buftype is interpreted on a per-transport basis */
 define|#
 directive|define
-name|CGDAI_TYPE_SCSI_DEVID
+name|CDAI_TYPE_SCSI_DEVID
 value|1
+define|#
+directive|define
+name|CDAI_TYPE_SERIAL_NUM
+value|2
+define|#
+directive|define
+name|CDAI_TYPE_PHYS_PATH
+value|3
 name|off_t
 name|bufsiz
 decl_stmt|;
@@ -3781,8 +3856,8 @@ name|ccb_ataio
 name|ataio
 decl_stmt|;
 name|struct
-name|ccb_getdev_advinfo
-name|cgdai
+name|ccb_dev_advinfo
+name|cdai
 decl_stmt|;
 block|}
 union|;

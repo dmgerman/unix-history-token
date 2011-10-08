@@ -572,11 +572,6 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|PROC_SLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|p
@@ -587,11 +582,6 @@ block|{
 case|case
 name|PRS_NEW
 case|:
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
@@ -600,11 +590,6 @@ expr_stmt|;
 continue|continue;
 break|break;
 default|default:
-name|PROC_SUNLOCK
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
 name|FOREACH_THREAD_IN_PROC
 argument_list|(
 argument|p

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: request.c,v 1.82.72.2 2009/01/18 23:47:40 tbox Exp $ */
+comment|/* $Id: request.c,v 1.87.148.2 2011-03-12 04:59:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2148,10 +2148,6 @@ decl_stmt|;
 name|isc_result_t
 name|result
 decl_stmt|;
-name|unsigned
-name|int
-name|dispattr
-decl_stmt|;
 name|req_log
 argument_list|(
 name|ISC_LOG_DEBUG
@@ -2170,15 +2166,6 @@ name|VALID_REQUEST
 argument_list|(
 name|request
 argument_list|)
-argument_list|)
-expr_stmt|;
-name|dispattr
-operator|=
-name|dns_dispatch_getattributes
-argument_list|(
-name|request
-operator|->
-name|dispatch
 argument_list|)
 expr_stmt|;
 name|socket
@@ -5478,6 +5465,24 @@ return|;
 name|cleanup_cctx
 operator|=
 name|ISC_TRUE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|options
+operator|&
+name|DNS_REQUESTOPT_CASE
+operator|)
+operator|!=
+literal|0
+condition|)
+name|dns_compress_setsensitive
+argument_list|(
+operator|&
+name|cctx
+argument_list|,
+name|ISC_TRUE
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Render message. 	 */
 name|result

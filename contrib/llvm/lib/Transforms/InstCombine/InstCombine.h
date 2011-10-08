@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Operator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Pass.h"
 end_include
 
@@ -298,9 +304,6 @@ block|{
 name|TargetData
 modifier|*
 name|TD
-decl_stmt|;
-name|bool
-name|MustPreserveLCSSA
 decl_stmt|;
 name|bool
 name|MadeIRChange
@@ -1421,6 +1424,19 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
+name|Instruction
+modifier|*
+name|transformSExtICmp
+parameter_list|(
+name|ICmpInst
+modifier|*
+name|ICI
+parameter_list|,
+name|Instruction
+modifier|&
+name|CI
+parameter_list|)
+function_decl|;
 name|bool
 name|WillNotOverflowSignedAdd
 parameter_list|(
@@ -1431,15 +1447,6 @@ parameter_list|,
 name|Value
 modifier|*
 name|RHS
-parameter_list|)
-function_decl|;
-name|DbgDeclareInst
-modifier|*
-name|hasOneUsePlusDeclare
-parameter_list|(
-name|Value
-modifier|*
-name|V
 parameter_list|)
 function_decl|;
 name|Value
@@ -1517,6 +1524,41 @@ return|return
 name|New
 return|;
 block|}
+comment|// InsertNewInstWith - same as InsertNewInstBefore, but also sets the
+comment|// debug loc.
+comment|//
+name|Instruction
+modifier|*
+name|InsertNewInstWith
+parameter_list|(
+name|Instruction
+modifier|*
+name|New
+parameter_list|,
+name|Instruction
+modifier|&
+name|Old
+parameter_list|)
+block|{
+name|New
+operator|->
+name|setDebugLoc
+argument_list|(
+name|Old
+operator|.
+name|getDebugLoc
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|InsertNewInstBefore
+argument_list|(
+name|New
+argument_list|,
+name|Old
+argument_list|)
+return|;
+block|}
 comment|// ReplaceInstUsesWith - This method is to be used when an instruction is
 comment|// found to be dead, replacable with another preexisting expression.  Here
 comment|// we add all uses of I to the worklist, replace all uses of I with the new
@@ -1563,6 +1605,24 @@ name|I
 operator|.
 name|getType
 argument_list|()
+argument_list|)
+expr_stmt|;
+name|DEBUG
+argument_list|(
+name|errs
+argument_list|()
+operator|<<
+literal|"IC: Replacing "
+operator|<<
+name|I
+operator|<<
+literal|"\n"
+literal|"    with "
+operator|<<
+operator|*
+name|V
+operator|<<
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|I

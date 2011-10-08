@@ -3901,7 +3901,7 @@ name|pc_md
 decl_stmt|;
 name|db_printf
 argument_list|(
-literal|"MD: vhpt     = %#lx\n"
+literal|"MD: vhpt       = %#lx\n"
 argument_list|,
 name|md
 operator|->
@@ -3910,7 +3910,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"MD: lid      = %#lx\n"
+literal|"MD: lid        = %#lx\n"
 argument_list|,
 name|md
 operator|->
@@ -3919,20 +3919,34 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"MD: clock    = %#lx/%#lx\n"
+literal|"MD: clock      = %#lx\n"
 argument_list|,
 name|md
 operator|->
 name|clock
-argument_list|,
-name|md
-operator|->
-name|clockadj
 argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"MD: stats    = %p\n"
+literal|"MD: clock_mode = %u\n"
+argument_list|,
+name|md
+operator|->
+name|clock_mode
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"MD: clock_load = %#lx\n"
+argument_list|,
+name|md
+operator|->
+name|clock_load
+argument_list|)
+expr_stmt|;
+name|db_printf
+argument_list|(
+literal|"MD: stats      = %p\n"
 argument_list|,
 operator|&
 name|md
@@ -3942,7 +3956,7 @@ argument_list|)
 expr_stmt|;
 name|db_printf
 argument_list|(
-literal|"MD: pmap     = %p\n"
+literal|"MD: pmap       = %p\n"
 argument_list|,
 name|md
 operator|->

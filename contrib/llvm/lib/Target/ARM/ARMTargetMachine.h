@@ -176,13 +176,31 @@ name|public
 operator|:
 name|ARMBaseTargetMachine
 argument_list|(
-argument|const Target&T
+specifier|const
+name|Target
+operator|&
+name|T
 argument_list|,
-argument|const std::string&TT
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
 argument_list|,
-argument|const std::string&FS
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
-argument|bool isThumb
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
 argument_list|)
 block|;
 name|virtual
@@ -323,6 +341,13 @@ operator|::
 name|string
 operator|&
 name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
 specifier|const
 name|std
@@ -488,6 +513,13 @@ operator|::
 name|string
 operator|&
 name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
 specifier|const
 name|std

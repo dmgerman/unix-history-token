@@ -462,9 +462,9 @@ name|int
 name|pick_best_rate
 parameter_list|(
 name|struct
-name|sample_node
+name|ath_node
 modifier|*
-name|sn
+name|an
 parameter_list|,
 specifier|const
 name|HAL_RATE_TABLE
@@ -478,6 +478,16 @@ name|int
 name|require_acked_before
 parameter_list|)
 block|{
+name|struct
+name|sample_node
+modifier|*
+name|sn
+init|=
+name|ATH_NODE_SAMPLE
+argument_list|(
+name|an
+argument_list|)
+decl_stmt|;
 name|int
 name|best_rate_rix
 decl_stmt|,
@@ -535,6 +545,35 @@ literal|0
 condition|)
 comment|/* not a supported rate */
 continue|continue;
+comment|/* Don't pick a non-HT rate for a HT node */
+if|if
+condition|(
+operator|(
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+operator|)
+operator|&&
+operator|(
+name|rt
+operator|->
+name|info
+index|[
+name|rix
+index|]
+operator|.
+name|phy
+operator|!=
+name|IEEE80211_T_HT
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
 name|tt
 operator|=
 name|sn
@@ -641,9 +680,9 @@ modifier|*
 name|ssc
 parameter_list|,
 name|struct
-name|sample_node
+name|ath_node
 modifier|*
-name|sn
+name|an
 parameter_list|,
 specifier|const
 name|HAL_RATE_TABLE
@@ -668,6 +707,16 @@ parameter_list|(
 name|ix
 parameter_list|)
 value|(rt->info[ix].dot11Rate | IEEE80211_RATE_MCS)
+name|struct
+name|sample_node
+modifier|*
+name|sn
+init|=
+name|ATH_NODE_SAMPLE
+argument_list|(
+name|an
+argument_list|)
+decl_stmt|;
 name|int
 name|current_rix
 decl_stmt|,
@@ -696,6 +745,7 @@ literal|0
 condition|)
 block|{
 comment|/* no successes yet, send at the lowest bit-rate */
+comment|/* XXX should return MCS0 if HT */
 return|return
 literal|0
 return|;
@@ -780,6 +830,46 @@ literal|0
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* if the node is HT and the rate isn't HT, don't bother sample */
+if|if
+condition|(
+operator|(
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+operator|)
+operator|&&
+operator|(
+name|rt
+operator|->
+name|info
+index|[
+name|rix
+index|]
+operator|.
+name|phy
+operator|!=
+name|IEEE80211_T_HT
+operator|)
+condition|)
+block|{
+name|mask
+operator|&=
+operator|~
+operator|(
+literal|1
+operator|<<
+name|rix
+operator|)
+expr_stmt|;
+goto|goto
+name|nextrate
+goto|;
+block|}
 comment|/* this bit-rate is always worse than the current one */
 if|if
 condition|(
@@ -862,7 +952,21 @@ goto|goto
 name|nextrate
 goto|;
 block|}
-comment|/* don't sample more than 2 rates higher for rates> 11M */
+comment|/* Don't sample more than 2 rates higher for rates> 11M for non-HT rates */
+if|if
+condition|(
+operator|!
+operator|(
+name|an
+operator|->
+name|an_node
+operator|.
+name|ni_flags
+operator|&
+name|IEEE80211_NODE_HT
+operator|)
+condition|)
+block|{
 if|if
 condition|(
 name|DOT11RATE
@@ -893,6 +997,7 @@ expr_stmt|;
 goto|goto
 name|nextrate
 goto|;
+block|}
 block|}
 name|sn
 operator|->
@@ -1334,7 +1439,7 @@ name|best_rix
 operator|=
 name|pick_best_rate
 argument_list|(
-name|sn
+name|an
 argument_list|,
 name|rt
 argument_list|,
@@ -1407,7 +1512,7 @@ name|pick_sample_rate
 argument_list|(
 name|ssc
 argument_list|,
-name|sn
+name|an
 argument_list|,
 name|rt
 argument_list|,
@@ -2408,9 +2513,9 @@ name|an
 operator|->
 name|an_node
 operator|.
-name|ni_htcap
-operator|&
-name|IEEE80211_HTCAP_CHWIDTH40
+name|ni_chw
+operator|==
+literal|40
 operator|)
 decl_stmt|;
 if|if
@@ -4437,9 +4542,9 @@ argument_list|,
 operator|(
 name|ni
 operator|->
-name|ni_htcap
-operator|&
-name|IEEE80211_HTCAP_CHWIDTH40
+name|ni_chw
+operator|==
+literal|40
 operator|)
 argument_list|)
 argument_list|)
@@ -4657,9 +4762,9 @@ argument_list|,
 operator|(
 name|ni
 operator|->
-name|ni_htcap
-operator|&
-name|IEEE80211_HTCAP_CHWIDTH40
+name|ni_chw
+operator|==
+literal|40
 operator|)
 argument_list|)
 expr_stmt|;

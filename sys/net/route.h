@@ -38,12 +38,27 @@ modifier|*
 name|ro_lle
 decl_stmt|;
 name|struct
+name|in_ifaddr
+modifier|*
+name|ro_ia
+decl_stmt|;
+name|int
+name|ro_flags
+decl_stmt|;
+name|struct
 name|sockaddr
 name|ro_dst
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|RT_CACHING_CONTEXT
+value|0x1
+end_define
 
 begin_comment
 comment|/*  * These numbers are used by reliable protocols for determining  * retransmission behavior and are included in the routing structure.  */
@@ -285,28 +300,6 @@ end_decl_stmt
 
 begin_comment
 comment|/* number fo usable routing tables */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|tunnel_fib
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tunnels use these */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|fwd_fib
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* packets being forwarded use these routes */
 end_comment
 
 begin_comment
@@ -1614,6 +1607,25 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rt_missmsg_fib
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|rt_addrinfo
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|rt_newaddrmsg
 parameter_list|(
 name|int
@@ -1627,6 +1639,27 @@ parameter_list|,
 name|struct
 name|rtentry
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|rt_newaddrmsg_fib
+parameter_list|(
+name|int
+parameter_list|,
+name|struct
+name|ifaddr
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|struct
+name|rtentry
+modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

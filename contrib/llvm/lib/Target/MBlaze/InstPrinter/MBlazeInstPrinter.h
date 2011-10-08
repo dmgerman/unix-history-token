@@ -92,7 +92,7 @@ name|MCInstPrinter
 argument_list|(
 argument|MAI
 argument_list|)
-block|{     }
+block|{}
 name|virtual
 name|void
 name|printInst

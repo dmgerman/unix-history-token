@@ -1042,6 +1042,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdload
 parameter_list|(
@@ -1051,7 +1052,7 @@ modifier|*
 name|pers
 parameter_list|)
 block|{
-comment|/* Load is always successfull. */
+comment|/* Load is always successful. */
 return|return
 operator|(
 literal|0
@@ -1061,6 +1062,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdprobe
 parameter_list|(
@@ -1070,7 +1072,7 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-comment|/* Probe is always successfull. */
+comment|/* Probe is always successful. */
 return|return
 operator|(
 literal|0
@@ -1080,6 +1082,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdattach
 parameter_list|(
@@ -1089,7 +1092,7 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-comment|/* Attach is always successfull. */
+comment|/* Attach is always successful. */
 return|return
 operator|(
 literal|0
@@ -1099,6 +1102,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdenable
 parameter_list|(
@@ -1108,7 +1112,7 @@ modifier|*
 name|mpt
 parameter_list|)
 block|{
-comment|/* Enable is always successfull. */
+comment|/* Enable is always successful. */
 return|return
 operator|(
 literal|0
@@ -1118,6 +1122,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stdready
 parameter_list|(
@@ -1126,10 +1131,11 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdevent
 parameter_list|(
@@ -1172,6 +1178,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stdreset
 parameter_list|(
@@ -1183,10 +1190,11 @@ parameter_list|,
 name|int
 name|type
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stdshutdown
 parameter_list|(
@@ -1195,10 +1203,11 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_stddetach
 parameter_list|(
@@ -1207,10 +1216,11 @@ name|mpt_softc
 modifier|*
 name|mpt
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_stdunload
 parameter_list|(
@@ -1220,7 +1230,7 @@ modifier|*
 name|pers
 parameter_list|)
 block|{
-comment|/* Unload is always successfull. */
+comment|/* Unload is always successful. */
 return|return
 operator|(
 literal|0
@@ -2319,7 +2329,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|/* Some error occured that LSI wants logged */
+comment|/* Some error occurred that LSI wants logged */
 name|mpt_prt
 argument_list|(
 name|mpt
@@ -9620,6 +9630,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_load
 parameter_list|(
@@ -9698,6 +9709,7 @@ comment|/*  * Initialize per-instance driver data and perform  * initial control
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_attach
 parameter_list|(
@@ -9878,6 +9890,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_enable
 parameter_list|(
@@ -9964,6 +9977,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_core_shutdown
 parameter_list|(
@@ -9982,6 +9996,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mpt_core_detach
 parameter_list|(
@@ -10050,6 +10065,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mpt_core_unload
 parameter_list|(
@@ -10059,7 +10075,7 @@ modifier|*
 name|pers
 parameter_list|)
 block|{
-comment|/* Unload is always successfull. */
+comment|/* Unload is always successful. */
 return|return
 operator|(
 literal|0
@@ -10926,7 +10942,7 @@ literal|1
 operator|)
 return|;
 block|}
-comment|/* Allocate some DMA accessable memory for requests */
+comment|/* Allocate some DMA accessible memory for requests */
 if|if
 condition|(
 name|bus_dmamem_alloc
@@ -11840,7 +11856,7 @@ name|struct
 name|mpt_map_info
 name|mi
 decl_stmt|;
-comment|/* 		 * In some configurations, the IOC's firmware is 		 * stored in a shared piece of system NVRAM that 		 * is only accessable via the BIOS.  In this 		 * case, the firmware keeps a copy of firmware in 		 * RAM until the OS driver retrieves it.  Once 		 * retrieved, we are responsible for re-downloading 		 * the firmware after any hard-reset. 		 */
+comment|/* 		 * In some configurations, the IOC's firmware is 		 * stored in a shared piece of system NVRAM that 		 * is only accessible via the BIOS.  In this 		 * case, the firmware keeps a copy of firmware in 		 * RAM until the OS driver retrieves it.  Once 		 * retrieved, we are responsible for re-downloading 		 * the firmware after any hard-reset. 		 */
 name|mpt
 operator|->
 name|fw_image_size

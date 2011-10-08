@@ -68,8 +68,8 @@ comment|/// various APIs to take consecutive elements easily and conveniently.
 comment|///
 comment|/// This class does not own the underlying data, it is expected to be used in
 comment|/// situations where the data resides in some other buffer, whose lifetime
-comment|/// extends past that of the StringRef. For this reason, it is not in general
-comment|/// safe to store a ArrayRef.
+comment|/// extends past that of the ArrayRef. For this reason, it is not in general
+comment|/// safe to store an ArrayRef.
 comment|///
 comment|/// This is intended to be trivially copyable, so it should be passed by
 comment|/// value.
@@ -108,7 +108,7 @@ modifier|*
 name|Data
 decl_stmt|;
 comment|/// The number of elements.
-name|size_t
+name|size_type
 name|Length
 decl_stmt|;
 name|public
@@ -168,6 +168,30 @@ operator|,
 name|Length
 argument_list|(
 argument|length
+argument_list|)
+block|{}
+comment|/// Construct an ArrayRef from a range.
+name|ArrayRef
+argument_list|(
+specifier|const
+name|T
+operator|*
+name|begin
+argument_list|,
+specifier|const
+name|T
+operator|*
+name|end
+argument_list|)
+operator|:
+name|Data
+argument_list|(
+name|begin
+argument_list|)
+operator|,
+name|Length
+argument_list|(
+argument|end - begin
 argument_list|)
 block|{}
 comment|/// Construct an ArrayRef from a SmallVector.
@@ -301,6 +325,17 @@ operator|==
 literal|0
 return|;
 block|}
+specifier|const
+name|T
+operator|*
+name|data
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Data
+return|;
+block|}
 comment|/// size - Get the array size.
 name|size_t
 name|size
@@ -355,6 +390,139 @@ name|Length
 operator|-
 literal|1
 index|]
+return|;
+block|}
+comment|/// equals - Check for element-wise equality.
+name|bool
+name|equals
+argument_list|(
+name|ArrayRef
+name|RHS
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|Length
+operator|!=
+name|RHS
+operator|.
+name|Length
+condition|)
+return|return
+name|false
+return|;
+for|for
+control|(
+name|size_type
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|!=
+name|Length
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|Data
+index|[
+name|i
+index|]
+operator|!=
+name|RHS
+operator|.
+name|Data
+index|[
+name|i
+index|]
+condition|)
+return|return
+name|false
+return|;
+return|return
+name|true
+return|;
+block|}
+comment|/// slice(n) - Chop off the first N elements of the array.
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|slice
+argument_list|(
+argument|unsigned N
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|<=
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid specifier"
+argument_list|)
+block|;
+return|return
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|data
+argument_list|()
+operator|+
+name|N
+operator|,
+name|size
+argument_list|()
+operator|-
+name|N
+operator|)
+return|;
+block|}
+comment|/// slice(n, m) - Chop off the first N elements of the array, and keep M
+comment|/// elements in the array.
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|slice
+argument_list|(
+argument|unsigned N
+argument_list|,
+argument|unsigned M
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|N
+operator|+
+name|M
+operator|<=
+name|size
+argument_list|()
+operator|&&
+literal|"Invalid specifier"
+argument_list|)
+block|;
+return|return
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|data
+argument_list|()
+operator|+
+name|N
+operator|,
+name|M
+operator|)
 return|;
 block|}
 comment|/// @}
@@ -417,12 +585,124 @@ operator|)
 return|;
 block|}
 comment|/// @}
+comment|/// @name Conversion operators
+comment|/// @{
+name|operator
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|vector
+operator|<
+name|T
+operator|>
+operator|(
+name|Data
+operator|,
+name|Data
+operator|+
+name|Length
+operator|)
+return|;
+block|}
+comment|/// @}
 block|}
 end_decl_stmt
 
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// @name ArrayRef Comparison Operators
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|bool
+name|operator
+operator|==
+operator|(
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|LHS
+operator|,
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|RHS
+operator|)
+block|{
+return|return
+name|LHS
+operator|.
+name|equals
+argument_list|(
+name|RHS
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+specifier|inline
+name|bool
+name|operator
+operator|!=
+operator|(
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|LHS
+operator|,
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|RHS
+operator|)
+block|{
+return|return
+operator|!
+operator|(
+name|LHS
+operator|==
+name|RHS
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// @}
+end_comment
 
 begin_comment
 comment|// ArrayRefs can be treated like a POD type.

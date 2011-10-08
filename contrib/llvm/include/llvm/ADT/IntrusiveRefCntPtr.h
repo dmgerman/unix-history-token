@@ -129,10 +129,11 @@ operator|>
 name|class
 name|RefCountedBase
 block|{
+name|mutable
 name|unsigned
 name|ref_cnt
 block|;
-name|protected
+name|public
 operator|:
 name|RefCountedBase
 argument_list|()
@@ -145,6 +146,7 @@ block|{}
 name|void
 name|Retain
 argument_list|()
+specifier|const
 block|{
 operator|++
 name|ref_cnt
@@ -152,6 +154,7 @@ block|; }
 name|void
 name|Release
 argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -172,6 +175,7 @@ condition|)
 name|delete
 name|static_cast
 operator|<
+specifier|const
 name|Derived
 operator|*
 operator|>
@@ -180,14 +184,8 @@ name|this
 operator|)
 expr_stmt|;
 block|}
-name|friend
-name|class
-name|IntrusiveRefCntPtr
-operator|<
-name|Derived
-operator|>
-block|;   }
-expr_stmt|;
+expr|}
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// RefCountedBaseVPTR - A class that has the same function as
 comment|///  RefCountedBase, but with a virtual destructor. Should be used
@@ -196,14 +194,10 @@ comment|///  methods to enforce dynamic allocation via 'new'. Classes that
 comment|///  inherit from RefCountedBaseVPTR can't be allocated on stack -
 comment|///  attempting to do this will produce a compile error.
 comment|//===----------------------------------------------------------------------===//
-name|template
-operator|<
-name|class
-name|Derived
-operator|>
 name|class
 name|RefCountedBaseVPTR
 block|{
+name|mutable
 name|unsigned
 name|ref_cnt
 block|;
@@ -225,6 +219,7 @@ block|{}
 name|void
 name|Retain
 argument_list|()
+specifier|const
 block|{
 operator|++
 name|ref_cnt
@@ -232,6 +227,7 @@ block|; }
 name|void
 name|Release
 argument_list|()
+specifier|const
 block|{
 name|assert
 argument_list|(
@@ -253,14 +249,16 @@ name|delete
 name|this
 decl_stmt|;
 block|}
+name|template
+operator|<
+name|typename
+name|T
+operator|>
 name|friend
 name|class
 name|IntrusiveRefCntPtr
-operator|<
-name|Derived
-operator|>
 block|;   }
-expr_stmt|;
+block|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// IntrusiveRefCntPtr - A template class that implements a "smart pointer"
 comment|///  that assumes the wrapped object has a reference count associated
@@ -551,6 +549,18 @@ expr_stmt|;
 name|Obj
 operator|=
 name|tmp
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|resetWithoutRelease
+parameter_list|()
+block|{
+name|Obj
+operator|=
+literal|0
 expr_stmt|;
 block|}
 end_function

@@ -583,6 +583,17 @@ begin_comment
 comment|/* Reserved resource is allocated. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|RLE_PREFETCH
+value|0x0004
+end_define
+
+begin_comment
+comment|/* Resource is a prefetch range. */
+end_comment
+
 begin_function_decl
 name|void
 name|resource_list_init
@@ -974,6 +985,33 @@ name|name
 parameter_list|,
 name|int
 name|unit
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bus_generic_adjust_resource
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|u_long
+name|start
+parameter_list|,
+name|u_long
+name|end
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1546,6 +1584,30 @@ name|resource
 modifier|*
 modifier|*
 name|res
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|bus_adjust_resource
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|struct
+name|resource
+modifier|*
+name|r
+parameter_list|,
+name|u_long
+name|start
+parameter_list|,
+name|u_long
+name|end
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -3284,6 +3346,31 @@ end_struct
 begin_define
 define|#
 directive|define
+name|EARLY_DRIVER_MODULE_ORDERED
+parameter_list|(
+name|name
+parameter_list|,
+name|busname
+parameter_list|,
+name|driver
+parameter_list|,
+name|devclass
+parameter_list|,	\
+name|evh
+parameter_list|,
+name|arg
+parameter_list|,
+name|order
+parameter_list|,
+name|pass
+parameter_list|)
+define|\ 									\
+value|static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	(kobj_class_t)&driver,						\&devclass,							\ 	pass								\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, order)
+end_define
+
+begin_define
+define|#
+directive|define
 name|EARLY_DRIVER_MODULE
 parameter_list|(
 name|name
@@ -3300,8 +3387,31 @@ name|arg
 parameter_list|,
 name|pass
 parameter_list|)
-define|\ 									\
-value|static struct driver_module_data name##_##busname##_driver_mod = {	\ 	evh, arg,							\ 	#busname,							\ 	(kobj_class_t)&driver,						\&devclass,							\ 	pass								\ };									\ 									\ static moduledata_t name##_##busname##_mod = {				\ 	#busname "/" #name,						\ 	driver_module_handler,						\&name##_##busname##_driver_mod					\ };									\ DECLARE_MODULE(name##_##busname, name##_##busname##_mod,		\ 	       SI_SUB_DRIVERS, SI_ORDER_MIDDLE)
+define|\
+value|EARLY_DRIVER_MODULE_ORDERED(name, busname, driver, devclass,	\ 	    evh, arg, SI_ORDER_MIDDLE, pass)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DRIVER_MODULE_ORDERED
+parameter_list|(
+name|name
+parameter_list|,
+name|busname
+parameter_list|,
+name|driver
+parameter_list|,
+name|devclass
+parameter_list|,
+name|evh
+parameter_list|,
+name|arg
+parameter_list|,\
+name|order
+parameter_list|)
+define|\
+value|EARLY_DRIVER_MODULE_ORDERED(name, busname, driver, devclass,	\ 	    evh, arg, order, BUS_PASS_DEFAULT)
 end_define
 
 begin_define

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: cipher-3des1.c,v 1.6 2006/08/03 03:34:42 deraadt Exp $ */
+comment|/* $OpenBSD: cipher-3des1.c,v 1.7 2010/10/01 23:05:32 djm Exp $ */
 end_comment
 
 begin_comment
@@ -440,7 +440,7 @@ name|u_char
 modifier|*
 name|src
 parameter_list|,
-name|u_int
+name|LIBCRYPTO_EVP_INL_TYPE
 name|len
 parameter_list|)
 block|{

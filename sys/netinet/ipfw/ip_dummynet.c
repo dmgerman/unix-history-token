@@ -417,6 +417,26 @@ name|NULL
 decl_stmt|;
 if|if
 condition|(
+name|dflt
+operator|<
+name|lo
+condition|)
+name|dflt
+operator|=
+name|lo
+expr_stmt|;
+if|if
+condition|(
+name|dflt
+operator|>
+name|hi
+condition|)
+name|dflt
+operator|=
+name|hi
+expr_stmt|;
+if|if
+condition|(
 name|oldv
 operator|<
 name|lo
@@ -3973,6 +3993,7 @@ name|flags
 operator|&
 name|DN_HAVE_MASK
 condition|)
+block|{
 name|dn_ht_scan
 argument_list|(
 name|s
@@ -3984,6 +4005,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+name|dn_ht_free
+argument_list|(
+name|s
+operator|->
+name|siht
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -4313,6 +4344,18 @@ literal|8
 operator|*
 name|hz
 argument_list|)
+expr_stmt|;
+name|l
+operator|->
+name|delay
+operator|=
+name|l
+operator|->
+name|delay
+operator|*
+literal|1000
+operator|/
+name|hz
 expr_stmt|;
 block|}
 elseif|else
@@ -5814,7 +5857,7 @@ name|fs
 operator|.
 name|max_p
 expr_stmt|;
-name|D
+name|ND
 argument_list|(
 literal|"called"
 argument_list|)
@@ -6297,7 +6340,7 @@ name|dn_cfg
 operator|.
 name|red_max_pkt_size
 expr_stmt|;
-name|D
+name|ND
 argument_list|(
 literal|"exit"
 argument_list|)
@@ -9901,19 +9944,9 @@ name|l
 argument_list|,
 name|M_DUMMYNET
 argument_list|,
-name|M_WAIT
+name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cmd
-operator|==
-name|NULL
-condition|)
-return|return
-name|ENOMEM
-return|;
-comment|//XXX
 name|error
 operator|=
 name|sooptcopyin
@@ -10203,21 +10236,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|start
-operator|==
-name|NULL
-condition|)
-block|{
-name|error
-operator|=
-name|ENOMEM
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 block|}
 if|if
 condition|(
@@ -11333,7 +11351,7 @@ name|dn_cfg
 operator|.
 name|max_hash_size
 operator|=
-literal|1024
+literal|65536
 expr_stmt|;
 comment|/* max in the hash tables */
 name|dn_cfg
@@ -11547,11 +11565,9 @@ condition|(
 name|last
 condition|)
 block|{
-name|printf
+name|ND
 argument_list|(
-literal|"%s removing last instance\n"
-argument_list|,
-name|__FUNCTION__
+literal|"removing last instance\n"
 argument_list|)
 expr_stmt|;
 name|ip_dn_ctl_ptr
@@ -11894,7 +11910,7 @@ name|err
 init|=
 name|EINVAL
 decl_stmt|;
-name|D
+name|ND
 argument_list|(
 literal|"called for %s"
 argument_list|,
@@ -11933,7 +11949,7 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
-name|D
+name|ND
 argument_list|(
 literal|"ref_count = %d"
 argument_list|,

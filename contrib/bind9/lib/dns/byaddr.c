@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: byaddr.c,v 1.39 2007/06/19 23:47:16 tbox Exp $ */
+comment|/* $Id: byaddr.c,v 1.41 2009-09-02 23:48:02 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -120,73 +120,6 @@ end_include
 begin_comment
 comment|/*  * XXXRTH  We could use a static event...  */
 end_comment
-
-begin_struct
-struct|struct
-name|dns_byaddr
-block|{
-comment|/* Unlocked. */
-name|unsigned
-name|int
-name|magic
-decl_stmt|;
-name|isc_mem_t
-modifier|*
-name|mctx
-decl_stmt|;
-name|isc_mutex_t
-name|lock
-decl_stmt|;
-name|dns_fixedname_t
-name|name
-decl_stmt|;
-comment|/* Locked by lock. */
-name|unsigned
-name|int
-name|options
-decl_stmt|;
-name|dns_lookup_t
-modifier|*
-name|lookup
-decl_stmt|;
-name|isc_task_t
-modifier|*
-name|task
-decl_stmt|;
-name|dns_byaddrevent_t
-modifier|*
-name|event
-decl_stmt|;
-name|isc_boolean_t
-name|canceled
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|BYADDR_MAGIC
-value|ISC_MAGIC('B', 'y', 'A', 'd')
-end_define
-
-begin_define
-define|#
-directive|define
-name|VALID_BYADDR
-parameter_list|(
-name|b
-parameter_list|)
-value|ISC_MAGIC_VALID(b, BYADDR_MAGIC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MAX_RESTARTS
-value|16
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -537,7 +470,7 @@ name|buffer
 argument_list|,
 name|dns_rootname
 argument_list|,
-name|ISC_FALSE
+literal|0
 argument_list|,
 name|NULL
 argument_list|)
@@ -545,6 +478,79 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|BIND9
+end_ifdef
+
+begin_struct
+struct|struct
+name|dns_byaddr
+block|{
+comment|/* Unlocked. */
+name|unsigned
+name|int
+name|magic
+decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+decl_stmt|;
+name|isc_mutex_t
+name|lock
+decl_stmt|;
+name|dns_fixedname_t
+name|name
+decl_stmt|;
+comment|/* Locked by lock. */
+name|unsigned
+name|int
+name|options
+decl_stmt|;
+name|dns_lookup_t
+modifier|*
+name|lookup
+decl_stmt|;
+name|isc_task_t
+modifier|*
+name|task
+decl_stmt|;
+name|dns_byaddrevent_t
+modifier|*
+name|event
+decl_stmt|;
+name|isc_boolean_t
+name|canceled
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|BYADDR_MAGIC
+value|ISC_MAGIC('B', 'y', 'A', 'd')
+end_define
+
+begin_define
+define|#
+directive|define
+name|VALID_BYADDR
+parameter_list|(
+name|b
+parameter_list|)
+value|ISC_MAGIC_VALID(b, BYADDR_MAGIC)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAX_RESTARTS
+value|16
+end_define
 
 begin_function
 specifier|static
@@ -1548,6 +1554,15 @@ name|NULL
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* BIND9 */
+end_comment
 
 end_unit
 

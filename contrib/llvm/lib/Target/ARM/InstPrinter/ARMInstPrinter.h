@@ -115,6 +115,16 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
+name|virtual
+name|void
+name|printRegName
+argument_list|(
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned RegNo
+argument_list|)
+specifier|const
+block|;
 specifier|static
 specifier|const
 name|char
@@ -158,16 +168,6 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printSOImmOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
 name|printSORegOperand
 argument_list|(
 argument|const MCInst *MI
@@ -188,6 +188,26 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printAM2PostIndexOp
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAM2PreOrOffsetIndexOp
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printAddrMode2OffsetOperand
 argument_list|(
 argument|const MCInst *MI
@@ -199,6 +219,26 @@ argument_list|)
 block|;
 name|void
 name|printAddrMode3Operand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAM3PostIndexOp
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAM3PreOrOffsetIndexOp
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -239,6 +279,16 @@ argument_list|)
 block|;
 name|void
 name|printAddrMode6Operand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAddrMode7Operand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -470,27 +520,7 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printCPSOptionOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
 name|printMSRMaskOperand
-argument_list|(
-argument|const MCInst *MI
-argument_list|,
-argument|unsigned OpNum
-argument_list|,
-argument|raw_ostream&O
-argument_list|)
-block|;
-name|void
-name|printNegZeroOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

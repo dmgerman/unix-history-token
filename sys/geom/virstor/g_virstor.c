@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sbuf.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -4220,11 +4226,9 @@ literal|0
 index|]
 operator|!=
 literal|'\0'
-condition|)
-block|{
-if|if
-condition|(
-name|strcmp
+operator|&&
+operator|!
+name|g_compare_names
 argument_list|(
 name|md
 operator|.
@@ -4234,15 +4238,12 @@ name|pp
 operator|->
 name|name
 argument_list|)
-operator|!=
-literal|0
 condition|)
 return|return
 operator|(
 name|NULL
 operator|)
 return|;
-block|}
 comment|/* Iterate all geoms this class already knows about to see if a new 	 * geom instance of this class needs to be created (in case the provider 	 * is first from a (possibly) multi-consumer geom) or it just needs 	 * to be added to an existing instance. */
 name|sc
 operator|=

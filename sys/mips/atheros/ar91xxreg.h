@@ -298,13 +298,6 @@ name|AR91XX_GPIO_FUNC_USB_CLK_EN
 value|(1<< 4)
 end_define
 
-begin_define
-define|#
-directive|define
-name|AR91XX_GPIO_COUNT
-value|22
-end_define
-
 begin_endif
 endif|#
 directive|endif

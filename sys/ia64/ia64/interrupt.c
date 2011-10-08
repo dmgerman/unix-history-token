@@ -1,18 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
-end_comment
-
-begin_comment
-comment|/* $NetBSD: interrupt.c,v 1.23 1998/02/24 07:38:01 thorpej Exp $ */
-end_comment
-
-begin_comment
-comment|/*-  * Copyright (c) 1994, 1995, 1996 Carnegie-Mellon University.  * All rights reserved.  *  * Authors: Keith Bostic, Chris G. Demetriou  *   * Permission to use, copy, modify and distribute this software and  * its documentation is hereby granted, provided that both the copyright  * notice and this permission notice appear in all copies of the  * software, derivative works or modified versions, and any portions  * thereof, and that both notices appear in supporting documentation.  *   * CARNEGIE MELLON ALLOWS FREE USE OF THIS SOFTWARE IN ITS "AS IS"   * CONDITION.  CARNEGIE MELLON DISCLAIMS ANY LIABILITY OF ANY KIND   * FOR ANY DAMAGES WHATSOEVER RESULTING FROM THE USE OF THIS SOFTWARE.  *   * Carnegie Mellon requests users of this software to return to  *  *  Software Distribution Coordinator  or  Software.Distribution@CS.CMU.EDU  *  School of Computer Science  *  Carnegie Mellon University  *  Pittsburgh PA 15213-3890  *  * any improvements or extensions that they make and grant Carnegie the  * rights to redistribute these changes.  */
-end_comment
-
-begin_comment
-comment|/*-  * Additional Copyright (c) 1997 by Matthew Jacob for NASA/Ames Research Center.  * Redistribute and modify at will, leaving only this additional copyright  * notice.  */
+comment|/*-  * Copyright (c) 2010-2011 Marcel Moolenaar  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -27,9 +15,13 @@ directive|include
 file|<sys/cdefs.h>
 end_include
 
-begin_comment
-comment|/* RCS ID& Copyright macro defns */
-end_comment
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_include
 include|#
@@ -1372,6 +1364,11 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+name|struct
+name|trapframe
+modifier|*
+name|stf
+decl_stmt|;
 name|u_int
 name|xiv
 decl_stmt|;
@@ -1422,6 +1419,18 @@ block|}
 name|critical_enter
 argument_list|()
 expr_stmt|;
+name|stf
+operator|=
+name|td
+operator|->
+name|td_intr_frame
+expr_stmt|;
+name|td
+operator|->
+name|td_intr_frame
+operator|=
+name|tf
+expr_stmt|;
 do|do
 block|{
 name|CTR2
@@ -1442,6 +1451,9 @@ argument_list|,
 name|xiv
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 operator|(
 name|ia64_handler
 index|[
@@ -1455,7 +1467,8 @@ name|xiv
 operator|,
 name|tf
 operator|)
-expr_stmt|;
+condition|)
+block|{
 name|ia64_set_eoi
 argument_list|(
 literal|0
@@ -1464,6 +1477,7 @@ expr_stmt|;
 name|ia64_srlz_d
 argument_list|()
 expr_stmt|;
+block|}
 name|xiv
 operator|=
 name|ia64_get_ivr
@@ -1480,6 +1494,12 @@ operator|!=
 literal|15
 condition|)
 do|;
+name|td
+operator|->
+name|td_intr_frame
+operator|=
+name|stf
+expr_stmt|;
 name|critical_exit
 argument_list|()
 expr_stmt|;

@@ -60,6 +60,13 @@ name|tsc_is_invariant
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|tsc_perf_stat
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|void
 name|i8254_init
@@ -85,15 +92,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|init_TSC
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|init_TSC_tc
 parameter_list|(
 name|void
 parameter_list|)

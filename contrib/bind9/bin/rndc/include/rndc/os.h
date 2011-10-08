@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: os.h,v 1.9.332.2 2009/01/18 23:47:35 tbox Exp $ */
+comment|/* $Id: os.h,v 1.12 2009-06-10 00:27:21 each Exp $ */
 end_comment
 
 begin_comment
@@ -38,23 +38,6 @@ end_include
 
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
-name|FILE
-modifier|*
-name|safe_create
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|filename
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/*%<  * Open 'filename' for writing, truncate if necessary.  If the file was  * created ensure that only the owner can read/write it.  */
-end_comment
-
-begin_function_decl
 name|int
 name|set_user
 parameter_list|(

@@ -1278,6 +1278,9 @@ argument_list|,
 name|seg
 argument_list|)
 condition|)
+operator|(
+name|void
+operator|)
 name|bfd_set_section_alignment
 argument_list|(
 name|stdoutput
@@ -8926,6 +8929,9 @@ operator|->
 name|fr_var
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 name|ob

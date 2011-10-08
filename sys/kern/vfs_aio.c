@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -4696,7 +4702,7 @@ operator|->
 name|userproc
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|aiocbe
 operator|->
@@ -5266,7 +5272,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* The daemon resides in its own pgrp. */
-name|setsid
+name|sys_setsid
 argument_list|(
 name|td
 argument_list|,
@@ -7411,7 +7417,7 @@ name|uaiocb
 operator|.
 name|aio_lio_opcode
 expr_stmt|;
-comment|/* Fetch the file object for the specified file descriptor. */
+comment|/* 	 * Validate the opcode and fetch the file object for the specified 	 * file descriptor. 	 * 	 * XXXRW: Moved the opcode validation up here so that we don't 	 * retrieve a file descriptor without knowing what the capabiltity 	 * should be. 	 */
 name|fd
 operator|=
 name|aiocbe
@@ -7436,6 +7442,10 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_WRITE
+operator||
+name|CAP_SEEK
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -7452,12 +7462,18 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_READ
+operator||
+name|CAP_SEEK
+argument_list|,
 operator|&
 name|fp
 argument_list|)
 expr_stmt|;
 break|break;
-default|default:
+case|case
+name|LIO_SYNC
+case|:
 name|error
 operator|=
 name|fget
@@ -7466,9 +7482,35 @@ name|td
 argument_list|,
 name|fd
 argument_list|,
+name|CAP_FSYNC
+argument_list|,
 operator|&
 name|fp
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LIO_NOP
+case|:
+name|error
+operator|=
+name|fget
+argument_list|(
+name|td
+argument_list|,
+name|fd
+argument_list|,
+literal|0
+argument_list|,
+operator|&
+name|fp
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|error
+operator|=
+name|EINVAL
 expr_stmt|;
 block|}
 if|if
@@ -7640,35 +7682,6 @@ operator|(
 literal|0
 operator|)
 return|;
-block|}
-if|if
-condition|(
-operator|(
-name|opcode
-operator|!=
-name|LIO_READ
-operator|)
-operator|&&
-operator|(
-name|opcode
-operator|!=
-name|LIO_WRITE
-operator|)
-operator|&&
-operator|(
-name|opcode
-operator|!=
-name|LIO_SYNC
-operator|)
-condition|)
-block|{
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|aqueue_fail
-goto|;
 block|}
 if|if
 condition|(
@@ -8887,7 +8900,7 @@ end_function
 
 begin_function
 name|int
-name|aio_return
+name|sys_aio_return
 parameter_list|(
 name|struct
 name|thread
@@ -9214,7 +9227,7 @@ end_function
 
 begin_function
 name|int
-name|aio_suspend
+name|sys_aio_suspend
 parameter_list|(
 name|struct
 name|thread
@@ -9383,7 +9396,7 @@ end_comment
 
 begin_function
 name|int
-name|aio_cancel
+name|sys_aio_cancel
 parameter_list|(
 name|struct
 name|thread
@@ -9459,6 +9472,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|fp
@@ -10071,7 +10086,7 @@ end_function
 
 begin_function
 name|int
-name|aio_error
+name|sys_aio_error
 parameter_list|(
 name|struct
 name|thread
@@ -10108,7 +10123,7 @@ end_comment
 
 begin_function
 name|int
-name|oaio_read
+name|sys_oaio_read
 parameter_list|(
 name|struct
 name|thread
@@ -10150,7 +10165,7 @@ end_function
 
 begin_function
 name|int
-name|aio_read
+name|sys_aio_read
 parameter_list|(
 name|struct
 name|thread
@@ -10191,7 +10206,7 @@ end_comment
 
 begin_function
 name|int
-name|oaio_write
+name|sys_oaio_write
 parameter_list|(
 name|struct
 name|thread
@@ -10233,7 +10248,7 @@ end_function
 
 begin_function
 name|int
-name|aio_write
+name|sys_aio_write
 parameter_list|(
 name|struct
 name|thread
@@ -11014,7 +11029,7 @@ end_comment
 
 begin_function
 name|int
-name|olio_listio
+name|sys_olio_listio
 parameter_list|(
 name|struct
 name|thread
@@ -11262,7 +11277,7 @@ end_comment
 
 begin_function
 name|int
-name|lio_listio
+name|sys_lio_listio
 parameter_list|(
 name|struct
 name|thread
@@ -12116,7 +12131,7 @@ end_function
 
 begin_function
 name|int
-name|aio_waitcomplete
+name|sys_aio_waitcomplete
 parameter_list|(
 name|struct
 name|thread
@@ -12292,7 +12307,7 @@ end_function
 
 begin_function
 name|int
-name|aio_fsync
+name|sys_aio_fsync
 parameter_list|(
 name|struct
 name|thread
@@ -14002,7 +14017,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|aio_cancel
+name|sys_aio_cancel
 argument_list|(
 name|td
 argument_list|,

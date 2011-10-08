@@ -56,6 +56,16 @@ directive|include
 file|<net80211/_ieee80211.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_ah.h"
+end_include
+
+begin_comment
+comment|/* needed for AH_SUPPORT_AR5416 */
+end_comment
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -467,6 +477,11 @@ directive|define
 name|CHANNEL_ANI_SETUP
 value|0x04
 comment|/* ANI state setup */
+define|#
+directive|define
+name|CHANNEL_MIMO_NF_VALID
+value|0x04
+comment|/* Mimo NF values are valid */
 name|uint8_t
 name|calValid
 decl_stmt|;
@@ -483,6 +498,24 @@ decl_stmt|;
 name|int16_t
 name|noiseFloorAdjust
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
+name|int16_t
+name|noiseFloorCtl
+index|[
+name|AH_MIMO_MAX_CHAINS
+index|]
+decl_stmt|;
+name|int16_t
+name|noiseFloorExt
+index|[
+name|AH_MIMO_MAX_CHAINS
+index|]
+decl_stmt|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 name|uint16_t
 name|mainSpur
 decl_stmt|;
@@ -620,6 +653,10 @@ name|halHTSupport
 range|:
 literal|1
 decl_stmt|,
+name|halHTSGI20Support
+range|:
+literal|1
+decl_stmt|,
 name|halRfSilentSupport
 range|:
 literal|1
@@ -673,7 +710,15 @@ name|halRifsTxSupport
 range|:
 literal|1
 decl_stmt|,
+name|hal4AddrAggrSupport
+range|:
+literal|1
+decl_stmt|,
 name|halExtChanDfsSupport
+range|:
+literal|1
+decl_stmt|,
+name|halUseCombinedRadarRssi
 range|:
 literal|1
 decl_stmt|,
@@ -682,6 +727,10 @@ range|:
 literal|1
 decl_stmt|,
 name|halEnhancedPmSupport
+range|:
+literal|1
+decl_stmt|,
+name|halEnhancedDfsSupport
 range|:
 literal|1
 decl_stmt|,
@@ -694,6 +743,19 @@ range|:
 literal|1
 decl_stmt|,
 name|hal4kbSplitTransSupport
+range|:
+literal|1
+decl_stmt|,
+name|halHasRxSelfLinkedTail
+range|:
+literal|1
+decl_stmt|,
+name|halSupportsFastClock5GHz
+range|:
+literal|1
+decl_stmt|,
+comment|/* Hardware supports 5ghz fast clock; check eeprom/channel before using */
+name|halHasLongRxDescTsf
 range|:
 literal|1
 decl_stmt|;
@@ -920,7 +982,7 @@ name|void
 modifier|*
 parameter_list|)
 function_decl|;
-name|HAL_BOOL
+name|HAL_STATUS
 function_decl|(
 modifier|*
 name|ah_eepromSet
@@ -1054,6 +1116,14 @@ name|HAL_REG_DOMAIN
 name|ah_currentRD
 decl_stmt|;
 comment|/* EEPROM regulatory domain */
+name|HAL_REG_DOMAIN
+name|ah_currentRDext
+decl_stmt|;
+comment|/* EEPROM extended regdomain flags */
+name|HAL_DFS_DOMAIN
+name|ah_dfsDomain
+decl_stmt|;
+comment|/* current DFS domain */
 name|HAL_CHANNEL_INTERNAL
 name|ah_channels
 index|[
@@ -1659,58 +1729,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|HAL_ANI_PRESENT
-init|=
-literal|0x1
-block|,
-comment|/* is ANI support present */
-name|HAL_ANI_NOISE_IMMUNITY_LEVEL
-init|=
-literal|0x2
-block|,
-comment|/* set level */
-name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
-init|=
-literal|0x4
-block|,
-comment|/* enable/disable */
-name|HAL_ANI_CCK_WEAK_SIGNAL_THR
-init|=
-literal|0x8
-block|,
-comment|/* enable/disable */
-name|HAL_ANI_FIRSTEP_LEVEL
-init|=
-literal|0x10
-block|,
-comment|/* set level */
-name|HAL_ANI_SPUR_IMMUNITY_LEVEL
-init|=
-literal|0x20
-block|,
-comment|/* set level */
-name|HAL_ANI_MODE
-init|=
-literal|0x40
-block|,
-comment|/* 0 => manual, 1 => auto (XXX do not change) */
-name|HAL_ANI_PHYERR_RESET
-init|=
-literal|0x80
-block|,
-comment|/* reset phy error stats */
-name|HAL_ANI_ALL
-init|=
-literal|0xff
-block|}
-name|HAL_ANI_CMD
-typedef|;
-end_typedef
-
 begin_define
 define|#
 directive|define
@@ -1881,6 +1899,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|OS_REG_RMW
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_set
+parameter_list|,
+name|_clr
+parameter_list|)
+define|\
+value|OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)& ~(_clr)) | (_set))
+end_define
+
+begin_define
+define|#
+directive|define
 name|OS_REG_RMW_FIELD
 parameter_list|(
 name|_a
@@ -1945,43 +1980,6 @@ parameter_list|)
 define|\
 value|do { OS_REG_WRITE(_a, _r, (OS_REG_READ(_a, _r)&~ (_f)) | (((_v)<< _f##_S)& (_f))) ; OS_DELAY(100); } while (0)
 end_define
-
-begin_comment
-comment|/* system-configurable parameters */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_dma_beacon_response_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in TU's */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_sw_beacon_response_time
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in TU's */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ath_hal_additional_swba_backoff
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* in TU's */
-end_comment
 
 begin_comment
 comment|/* wait for the register contents to have the specified value */
@@ -2172,6 +2170,14 @@ name|ath_hal_debug
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* Global debug flags */
+end_comment
+
+begin_comment
+comment|/*  * The typecast is purely because some callers will pass in  * AH_NULL directly rather than using a NULL ath_hal pointer.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2184,7 +2190,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {							\ 		if (ath_hal_debug& (__m)) {			\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
+value|do {							\ 		if ((__m) == HAL_DEBUG_UNMASKABLE ||		\ 		    ath_hal_debug& (__m) ||			\ 		    ((_ah) != NULL&&				\ 		      ((struct ath_hal *) (_ah))->ah_config.ah_debug& (__m))) {	\ 			DO_HALDEBUG((_ah), (__m), __VA_ARGS__);	\ 		}						\ 	} while(0);
 end_define
 
 begin_function_decl
@@ -2232,8 +2238,6 @@ parameter_list|(
 name|_ah
 parameter_list|,
 name|__m
-parameter_list|,
-name|_fmt
 parameter_list|,
 modifier|...
 parameter_list|)
@@ -3363,6 +3367,27 @@ name|targetRight
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/* Whether 5ghz fast clock is needed */
+end_comment
+
+begin_comment
+comment|/*  * The chipset (Merlin, AR9300/later) should set the capability flag below;  * this flag simply says that the hardware can do it, not that the EEPROM  * says it can.  *  * Merlin 2.0/2.1 chips with an EEPROM version> 16 do 5ghz fast clock  *   if the relevant eeprom flag is set.  * Merlin 2.0/2.1 chips with an EEPROM version<= 16 do 5ghz fast clock  *   by default.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IS_5GHZ_FAST_CLOCK_EN
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_c
+parameter_list|)
+define|\
+value|(IEEE80211_IS_CHAN_5GHZ(_c)&& \ 	 AH_PRIVATE((_ah))->ah_caps.halSupportsFastClock5GHz&& \ 	ath_hal_eepromGetFlag((_ah), AR_EEP_FSTCLK_5G))
+end_define
 
 begin_endif
 endif|#

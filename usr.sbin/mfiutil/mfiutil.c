@@ -95,6 +95,12 @@ name|mfi_unit
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|u_int
+name|mfi_opts
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -107,7 +113,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: mfiutil [-u unit]<command> ...\n\n"
+literal|"usage: mfiutil [-de] [-u unit]<command> ...\n\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -170,6 +176,13 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
+literal|"    show logstate             - display event log sequence numbers\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
 literal|"    show volumes              - list logical volumes\n"
 argument_list|)
 expr_stmt|;
@@ -178,6 +191,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"    show patrol               - display patrol read status\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"    show progress             - display status of active operations\n"
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -434,7 +454,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"u:"
+literal|"deu:"
 argument_list|)
 operator|)
 operator|!=
@@ -447,6 +467,22 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'d'
+case|:
+name|mfi_opts
+operator||=
+name|MFI_DNAME_DEVICE_ID
+expr_stmt|;
+break|break;
+case|case
+literal|'e'
+case|:
+name|mfi_opts
+operator||=
+name|MFI_DNAME_ES
+expr_stmt|;
+break|break;
 case|case
 literal|'u'
 case|:

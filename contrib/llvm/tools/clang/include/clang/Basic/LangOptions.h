@@ -149,6 +149,12 @@ literal|1
 decl_stmt|;
 comment|// C99 Support
 name|unsigned
+name|C1X
+range|:
+literal|1
+decl_stmt|;
+comment|// C1X Support
+name|unsigned
 name|Microsoft
 range|:
 literal|1
@@ -209,6 +215,13 @@ literal|1
 decl_stmt|;
 comment|// Objective-C auto-synthesized properties.
 name|unsigned
+name|ObjCInferRelatedResultType
+range|:
+literal|1
+decl_stmt|;
+comment|// Infer Objective-C related return
+comment|// types
+name|unsigned
 name|AppleKext
 range|:
 literal|1
@@ -267,6 +280,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// Use setjmp-longjump exception handling.
+name|unsigned
+name|TraditionalCPP
+range|:
+literal|1
+decl_stmt|;
+comment|/// Enable some traditional CPP emulation.
 name|unsigned
 name|RTTI
 range|:
@@ -384,6 +403,12 @@ literal|1
 decl_stmt|;
 comment|// Should __NO_INLINE__ be defined.
 name|unsigned
+name|Deprecated
+range|:
+literal|1
+decl_stmt|;
+comment|// Should __DEPRECATED be defined.
+name|unsigned
 name|ObjCGCBitmapPrint
 range|:
 literal|1
@@ -475,6 +500,19 @@ decl_stmt|;
 comment|// Whether inline C++ methods have
 comment|// hidden visibility by default.
 name|unsigned
+name|ParseUnknownAnytype
+range|:
+literal|1
+decl_stmt|;
+comment|/// Let the user write __unknown_anytype.
+name|unsigned
+name|DebuggerSupport
+range|:
+literal|1
+decl_stmt|;
+comment|/// Do things that only make sense when
+comment|/// supporting a debugger
+name|unsigned
 name|SpellChecking
 range|:
 literal|1
@@ -508,6 +546,44 @@ name|NoBitFieldTypeAlign
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|ObjCAutoRefCount
+range|:
+literal|1
+decl_stmt|;
+comment|// Objective C automated reference counting
+name|unsigned
+name|ObjCRuntimeHasWeak
+range|:
+literal|1
+decl_stmt|;
+comment|// The ARC runtime supports __weak
+name|unsigned
+name|ObjCInferRelatedReturnType
+range|:
+literal|1
+decl_stmt|;
+comment|// Infer Objective-C related return
+comment|// types
+name|unsigned
+name|FakeAddressSpaceMap
+range|:
+literal|1
+decl_stmt|;
+comment|// Use a fake address space map, for
+comment|// testing languages such as OpenCL.
+name|unsigned
+name|MRTD
+range|:
+literal|1
+decl_stmt|;
+comment|// -mrtd calling convention
+name|unsigned
+name|DelayedTemplateParsing
+range|:
+literal|1
+decl_stmt|;
+comment|// Delayed template parsing
 name|private
 label|:
 comment|// We declare multibit enums as unsigned because MSVC insists on making enums
@@ -627,6 +703,18 @@ name|HexFloats
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCAutoRefCount
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCRuntimeHasWeak
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCInferRelatedReturnType
+operator|=
+literal|0
+expr_stmt|;
 name|GC
 operator|=
 name|ObjC1
@@ -647,6 +735,10 @@ name|ObjCDefaultSynthProperties
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCInferRelatedResultType
+operator|=
+literal|1
+expr_stmt|;
 name|NoConstantCFStrings
 operator|=
 literal|0
@@ -656,6 +748,8 @@ operator|=
 literal|0
 expr_stmt|;
 name|C99
+operator|=
+name|C1X
 operator|=
 name|Microsoft
 operator|=
@@ -687,6 +781,8 @@ name|SjLjExceptions
 operator|=
 literal|0
 expr_stmt|;
+name|TraditionalCPP
+operator|=
 name|Freestanding
 operator|=
 name|NoBuiltin
@@ -810,6 +906,10 @@ name|NoInline
 operator|=
 literal|0
 expr_stmt|;
+name|Deprecated
+operator|=
+literal|0
+expr_stmt|;
 name|CharIsSigned
 operator|=
 literal|1
@@ -851,6 +951,24 @@ operator|=
 literal|0
 expr_stmt|;
 name|NoBitFieldTypeAlign
+operator|=
+literal|0
+expr_stmt|;
+name|FakeAddressSpaceMap
+operator|=
+literal|0
+expr_stmt|;
+name|MRTD
+operator|=
+literal|0
+expr_stmt|;
+name|DelayedTemplateParsing
+operator|=
+literal|0
+expr_stmt|;
+name|ParseUnknownAnytype
+operator|=
+name|DebuggerSupport
 operator|=
 literal|0
 expr_stmt|;
@@ -970,12 +1088,15 @@ name|V
 expr_stmt|;
 block|}
 name|bool
-name|areExceptionsEnabled
+name|isSignedOverflowDefined
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Exceptions
+name|getSignedOverflowBehavior
+argument_list|()
+operator|==
+name|SOB_Defined
 return|;
 block|}
 block|}

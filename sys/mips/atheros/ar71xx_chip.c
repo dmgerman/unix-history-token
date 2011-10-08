@@ -20,24 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpuregs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<mips/sentry5/s5reg.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -122,6 +104,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpuregs.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/hwfunc.h>
 end_include
 
@@ -159,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|<mips/atheros/ar71xx_cpudef.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<mips/sentry5/s5reg.h>
 end_include
 
 begin_comment
@@ -668,6 +662,22 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|ar71xx_chip_ddr_flush_ip2
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|ar71xx_ddr_flush
+argument_list|(
+name|AR71XX_WB_FLUSH_PCI
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|uint32_t
 name|ar71xx_chip_get_eth_pll
 parameter_list|(
@@ -795,7 +805,8 @@ block|,
 operator|&
 name|ar71xx_chip_get_eth_pll
 block|,
-name|NULL
+operator|&
+name|ar71xx_chip_ddr_flush_ip2
 block|,
 operator|&
 name|ar71xx_chip_init_usb_peripheral

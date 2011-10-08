@@ -48,6 +48,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -2639,7 +2645,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|listen
+name|sys_listen
 argument_list|(
 name|td
 argument_list|,
@@ -3174,7 +3180,7 @@ operator|=
 name|fd
 expr_stmt|;
 return|return
-name|shutdown
+name|sys_shutdown
 argument_list|(
 name|td
 argument_list|,
@@ -4992,7 +4998,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|dup2
+name|sys_dup2
 argument_list|(
 name|td
 argument_list|,
@@ -5155,7 +5161,7 @@ operator|=
 name|S_IFIFO
 expr_stmt|;
 return|return
-name|mkfifo
+name|sys_mkfifo
 argument_list|(
 name|td
 argument_list|,
@@ -5219,7 +5225,7 @@ operator|=
 name|dat
 expr_stmt|;
 return|return
-name|unlink
+name|sys_unlink
 argument_list|(
 name|td
 argument_list|,
@@ -6576,6 +6582,8 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_WRITE
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -6995,7 +7003,7 @@ operator|.
 name|len
 expr_stmt|;
 return|return
-name|write
+name|sys_write
 argument_list|(
 name|td
 argument_list|,
@@ -7394,6 +7402,8 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+name|CAP_READ
 argument_list|,
 operator|&
 name|fp
@@ -8732,7 +8742,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|read
+name|sys_read
 argument_list|(
 name|td
 argument_list|,
@@ -9110,7 +9120,7 @@ literal|0
 expr_stmt|;
 return|return
 operator|(
-name|sendto
+name|sys_sendto
 argument_list|(
 name|td
 argument_list|,
@@ -9191,7 +9201,7 @@ name|NULL
 expr_stmt|;
 return|return
 operator|(
-name|recvfrom
+name|sys_recvfrom
 argument_list|(
 name|td
 argument_list|,
@@ -9289,7 +9299,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-name|sendto
+name|sys_sendto
 argument_list|(
 name|td
 argument_list|,

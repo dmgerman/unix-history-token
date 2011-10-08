@@ -179,7 +179,7 @@ name|public
 operator|:
 name|TargetLoweringObjectFileELF
 argument_list|()
-block|{}
+block|;
 operator|~
 name|TargetLoweringObjectFileELF
 argument_list|()
@@ -204,6 +204,46 @@ name|MCSection
 operator|*
 name|getEHFrameSection
 argument_list|()
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getWin64EHFuncTableSection
+argument_list|(
+argument|StringRef
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NULL
+return|;
+block|}
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getWin64EHTableSection
+argument_list|(
+argument|StringRef
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NULL
+return|;
+block|}
+name|virtual
+name|void
+name|emitPersonalityValue
+argument_list|(
+argument|MCStreamer&Streamer
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|,
+argument|const MCSymbol *Sym
+argument_list|)
 specifier|const
 block|;
 specifier|const
@@ -281,6 +321,20 @@ argument_list|,
 argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
+block|;
+comment|// getCFIPersonalitySymbol - The symbol that gets passed to .cfi_personality.
+name|virtual
+name|MCSymbol
+operator|*
+name|getCFIPersonalitySymbol
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|Mangler *Mang
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 name|class
@@ -305,7 +359,7 @@ operator|*
 name|TLSBSSSection
 block|;
 comment|// Defaults to ".tbss".
-comment|/// TLSTLVSection - Section for thread local structure infomation.
+comment|/// TLSTLVSection - Section for thread local structure information.
 comment|/// Contains the source code name of the variable, visibility and a pointer
 comment|/// to the initial value (.tdata or .tbss).
 specifier|const
@@ -391,7 +445,7 @@ name|public
 operator|:
 name|TargetLoweringObjectFileMachO
 argument_list|()
-block|{}
+block|;
 operator|~
 name|TargetLoweringObjectFileMachO
 argument_list|()
@@ -418,6 +472,34 @@ name|getEHFrameSection
 argument_list|()
 specifier|const
 block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getWin64EHFuncTableSection
+argument_list|(
+argument|StringRef
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NULL
+return|;
+block|}
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getWin64EHTableSection
+argument_list|(
+argument|StringRef
+argument_list|)
+specifier|const
+block|{
+return|return
+name|NULL
+return|;
+block|}
 name|virtual
 specifier|const
 name|MCSection
@@ -545,6 +627,20 @@ argument|MCStreamer&Streamer
 argument_list|)
 specifier|const
 block|;
+comment|// getCFIPersonalitySymbol - The symbol that gets passed to .cfi_personality.
+name|virtual
+name|MCSymbol
+operator|*
+name|getCFIPersonalitySymbol
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|Mangler *Mang
+argument_list|,
+argument|MachineModuleInfo *MMI
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|unsigned
 name|getPersonalityEncoding
@@ -560,7 +656,9 @@ block|;
 name|virtual
 name|unsigned
 name|getFDEEncoding
-argument_list|()
+argument_list|(
+argument|bool CFI
+argument_list|)
 specifier|const
 block|;
 name|virtual
@@ -581,11 +679,21 @@ name|MCSection
 operator|*
 name|DrectveSection
 block|;
+specifier|const
+name|MCSection
+operator|*
+name|PDataSection
+block|;
+specifier|const
+name|MCSection
+operator|*
+name|XDataSection
+block|;
 name|public
 operator|:
 name|TargetLoweringObjectFileCOFF
 argument_list|()
-block|{}
+block|;
 operator|~
 name|TargetLoweringObjectFileCOFF
 argument_list|()
@@ -610,6 +718,26 @@ name|MCSection
 operator|*
 name|getEHFrameSection
 argument_list|()
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getWin64EHFuncTableSection
+argument_list|(
+argument|StringRef
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|getWin64EHTableSection
+argument_list|(
+argument|StringRef
+argument_list|)
 specifier|const
 block|;
 name|virtual

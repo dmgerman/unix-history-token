@@ -158,9 +158,31 @@ end_decl_stmt
 
 begin_struct_decl
 struct_decl|struct
-name|swdevt
+name|xswdev
 struct_decl|;
 end_struct_decl
+
+begin_function_decl
+name|int
+name|swap_dev_info
+parameter_list|(
+name|int
+name|name
+parameter_list|,
+name|struct
+name|xswdev
+modifier|*
+name|xs
+parameter_list|,
+name|char
+modifier|*
+name|devname
+parameter_list|,
+name|size_t
+name|len
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void

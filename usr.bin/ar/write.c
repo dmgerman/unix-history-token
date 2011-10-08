@@ -266,6 +266,24 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|free_obj
+parameter_list|(
+name|struct
+name|bsdar
+modifier|*
+name|bsdar
+parameter_list|,
+name|struct
+name|ar_obj
+modifier|*
+name|obj
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|insert_obj
 parameter_list|(
 name|struct
@@ -496,7 +514,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create object from file, return created obj upon success, or NULL  * when an error occurs or the member is not newer than existing  * one while -u is specifed.  */
+comment|/*  * Create object from file, return created obj upon success, or NULL  * when an error occurs or the member is not newer than existing  * one while -u is specified.  */
 end_comment
 
 begin_function
@@ -1063,6 +1081,90 @@ block|}
 end_function
 
 begin_comment
+comment|/*  * Free object itself and its associated allocations.  */
+end_comment
+
+begin_function
+specifier|static
+name|void
+name|free_obj
+parameter_list|(
+name|struct
+name|bsdar
+modifier|*
+name|bsdar
+parameter_list|,
+name|struct
+name|ar_obj
+modifier|*
+name|obj
+parameter_list|)
+block|{
+if|if
+condition|(
+name|obj
+operator|->
+name|fd
+operator|==
+operator|-
+literal|1
+condition|)
+name|free
+argument_list|(
+name|obj
+operator|->
+name|maddr
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|obj
+operator|->
+name|maddr
+operator|!=
+name|NULL
+operator|&&
+name|munmap
+argument_list|(
+name|obj
+operator|->
+name|maddr
+argument_list|,
+name|obj
+operator|->
+name|size
+argument_list|)
+condition|)
+name|bsdar_warnc
+argument_list|(
+name|bsdar
+argument_list|,
+name|errno
+argument_list|,
+literal|"can't munmap file: %s"
+argument_list|,
+name|obj
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|obj
+operator|->
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|obj
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/*  * Insert obj to the tail, or before/after the pos obj.  */
 end_comment
 
@@ -1114,7 +1216,7 @@ name|obj
 operator|==
 name|pos
 condition|)
-comment|/* 		 * If the object to move happens to be the posistion obj, 		 * or if there is not a pos obj, move it to tail. 		 */
+comment|/* 		 * If the object to move happens to be the position obj, 		 * or if there is not a pos obj, move it to tail. 		 */
 goto|goto
 name|tail
 goto|;
@@ -1960,7 +2062,7 @@ operator|==
 literal|'A'
 condition|)
 block|{
-comment|/* 		 * Read objects from the target archive of ADDLIB command. 		 * If there are members spcified in argv, read those members 		 * only, otherwise the entire archive will be read. 		 */
+comment|/* 		 * Read objects from the target archive of ADDLIB command. 		 * If there are members specified in argv, read those members 		 * only, otherwise the entire archive will be read. 		 */
 name|read_objs
 argument_list|(
 name|bsdar
@@ -2024,7 +2126,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-comment|/* 		 * If can't find `pos' specified by user, 		 * sliently insert objects at tail. 		 */
+comment|/* 		 * If can't find `pos' specified by user, 		 * silently insert objects at tail. 		 */
 if|if
 condition|(
 name|pos
@@ -2221,27 +2323,13 @@ name|mode
 operator|==
 literal|'r'
 condition|)
-block|{
-name|free
+name|free_obj
 argument_list|(
-name|obj
-operator|->
-name|maddr
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|obj
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
+name|bsdar
+argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
-block|}
 if|if
 condition|(
 name|mode
@@ -2437,55 +2525,6 @@ argument_list|,
 argument|obj_temp
 argument_list|)
 block|{
-if|if
-condition|(
-name|obj
-operator|->
-name|fd
-operator|==
-operator|-
-literal|1
-condition|)
-name|free
-argument_list|(
-name|obj
-operator|->
-name|maddr
-argument_list|)
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|obj
-operator|->
-name|maddr
-operator|!=
-name|NULL
-operator|&&
-name|munmap
-argument_list|(
-name|obj
-operator|->
-name|maddr
-argument_list|,
-name|obj
-operator|->
-name|size
-argument_list|)
-condition|)
-name|bsdar_warnc
-argument_list|(
-name|bsdar
-argument_list|,
-name|errno
-argument_list|,
-literal|"can't munmap file: %s"
-argument_list|,
-name|obj
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2498,15 +2537,10 @@ argument_list|,
 name|objs
 argument_list|)
 expr_stmt|;
-name|free
+name|free_obj
 argument_list|(
-name|obj
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
+name|bsdar
+argument_list|,
 name|obj
 argument_list|)
 expr_stmt|;
@@ -3436,7 +3470,7 @@ operator|!=
 name|ELF_K_ELF
 condition|)
 block|{
-comment|/* Sliently ignore non-elf member. */
+comment|/* Silently ignore non-elf member. */
 name|elf_end
 argument_list|(
 name|e

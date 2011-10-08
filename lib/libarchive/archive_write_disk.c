@@ -10851,6 +10851,8 @@ begin_elif
 elif|#
 directive|elif
 name|HAVE_EXTATTR_SET_FILE
+operator|&&
+name|HAVE_DECL_EXTATTR_NAMESPACE_USER
 end_elif
 
 begin_comment

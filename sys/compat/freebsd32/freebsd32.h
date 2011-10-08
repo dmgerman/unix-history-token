@@ -150,7 +150,7 @@ name|dst
 parameter_list|,
 name|fld
 parameter_list|)
-value|do {			\ 	CP((src).fld,(dst).fld,tv_sec);		\ 	CP((src).fld,(dst).fld,tv_nsec);	\ } while (0);
+value|do {			\ 	CP((src).fld,(dst).fld,tv_sec);		\ 	CP((src).fld,(dst).fld,tv_nsec);	\ } while (0)
 end_define
 
 begin_struct
@@ -982,9 +982,9 @@ name|u_char
 name|ki_lastcpu
 decl_stmt|;
 name|char
-name|ki_ocomm
+name|ki_tdname
 index|[
-name|OCOMMLEN
+name|TDNAMLEN
 operator|+
 literal|1
 index|]
@@ -1103,6 +1103,76 @@ name|ki_sflag
 decl_stmt|;
 name|int
 name|ki_tdflags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|kld32_file_stat_1
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* set to sizeof(struct kld_file_stat_1) */
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|uint32_t
+name|address
+decl_stmt|;
+comment|/* load address */
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* size in bytes */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|kld32_file_stat
+block|{
+name|int
+name|version
+decl_stmt|;
+comment|/* set to sizeof(struct kld_file_stat) */
+name|char
+name|name
+index|[
+name|MAXPATHLEN
+index|]
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+name|int
+name|id
+decl_stmt|;
+name|uint32_t
+name|address
+decl_stmt|;
+comment|/* load address */
+name|uint32_t
+name|size
+decl_stmt|;
+comment|/* size in bytes */
+name|char
+name|pathname
+index|[
+name|MAXPATHLEN
+index|]
 decl_stmt|;
 block|}
 struct|;

@@ -155,10 +155,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -252,10 +249,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -370,10 +364,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -516,10 +507,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -606,10 +594,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -722,10 +707,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -811,10 +793,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -970,10 +949,7 @@ operator|)
 return|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

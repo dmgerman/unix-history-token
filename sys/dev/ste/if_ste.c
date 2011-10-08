@@ -2189,13 +2189,6 @@ operator|->
 name|ste_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -2204,12 +2197,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|mii_mediachg
@@ -5468,7 +5460,7 @@ name|IFCAP_VLAN_MTU
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -10588,7 +10580,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -11233,7 +11225,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

@@ -177,12 +177,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/rman.h>
 end_include
 
@@ -5401,7 +5395,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -10329,6 +10323,11 @@ name|mii_data
 modifier|*
 name|mii
 decl_stmt|;
+name|struct
+name|mii_softc
+modifier|*
+name|miisc
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -10352,18 +10351,6 @@ operator|->
 name|sis_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-condition|)
-block|{
-name|struct
-name|mii_softc
-modifier|*
-name|miisc
-decl_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -10372,12 +10359,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|mii_mediachg
@@ -11583,7 +11569,7 @@ else|else
 block|{
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

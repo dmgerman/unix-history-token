@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  * Copyright (c) 2006-2007 Robert N. M. Watson  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_usrreq.c	8.2 (Berkeley) 1/3/94  */
+comment|/*-  * Copyright (c) 1982, 1986, 1988, 1993  *	The Regents of the University of California.  * Copyright (c) 2006-2007 Robert N. M. Watson  * Copyright (c) 2010-2011 Juniper Networks, Inc.  * All rights reserved.  *  * Portions of this software were developed by Robert N. M. Watson under  * contract to Juniper Networks, Inc.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	From: @(#)tcp_usrreq.c	8.2 (Berkeley) 1/3/94  */
 end_comment
 
 begin_include
@@ -178,48 +178,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/in_systm.h>
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<netinet/ip6.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_include
-include|#
-directive|include
 file|<netinet/in_pcb.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_include
 include|#
 directive|include
-file|<netinet6/in6_pcb.h>
+file|<netinet/in_systm.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -238,6 +204,18 @@ ifdef|#
 directive|ifdef
 name|INET6
 end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<netinet/ip6.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<netinet6/in6_pcb.h>
+end_include
 
 begin_include
 include|#
@@ -325,6 +303,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -345,6 +329,15 @@ name|td
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -856,6 +849,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Give the socket an address.  */
 end_comment
@@ -957,12 +956,6 @@ operator|)
 return|;
 name|TCPDEBUG0
 expr_stmt|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|sotoinpcb
@@ -1017,6 +1010,12 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|in_pcbbind
@@ -1028,6 +1027,12 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
+argument_list|)
+expr_stmt|;
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 name|out
@@ -1042,12 +1047,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1055,6 +1054,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1155,12 +1163,6 @@ operator|)
 return|;
 name|TCPDEBUG0
 expr_stmt|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|sotoinpcb
@@ -1215,6 +1217,12 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 name|inp
 operator|->
 name|inp_vflag
@@ -1228,6 +1236,9 @@ name|inp_vflag
 operator||=
 name|INP_IPV6
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|(
@@ -1313,11 +1324,19 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
 block|}
 block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|in6_pcbbind
@@ -1331,6 +1350,12 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 name|out
 label|:
 name|TCPDEBUG2
@@ -1341,12 +1366,6 @@ expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -1365,6 +1384,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Prepare to accept connections.  */
@@ -1407,12 +1432,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|TCPDEBUG0
-expr_stmt|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
 expr_stmt|;
 name|inp
 operator|=
@@ -1480,6 +1499,12 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1508,6 +1533,12 @@ argument_list|,
 name|td
 operator|->
 name|td_ucred
+argument_list|)
+expr_stmt|;
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -1553,12 +1584,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1566,6 +1591,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -1610,12 +1644,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|TCPDEBUG0
-expr_stmt|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
 expr_stmt|;
 name|inp
 operator|=
@@ -1683,6 +1711,12 @@ argument_list|(
 name|so
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1740,6 +1774,12 @@ name|td_ucred
 argument_list|)
 expr_stmt|;
 block|}
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|error
@@ -1778,12 +1818,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1800,6 +1834,12 @@ end_endif
 begin_comment
 comment|/* INET6 */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Initiate connection to peer.  * Create a template for use in transmissions on this connection.  * Enter SYN_SENT state, and mark socket as connecting.  * Start keep-alive timer, and seed output sequence space.  * Send initial segment on connection.  */
@@ -1927,12 +1967,6 @@ operator|)
 return|;
 name|TCPDEBUG0
 expr_stmt|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|sotoinpcb
@@ -2028,12 +2062,6 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|error
@@ -2041,6 +2069,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -2141,12 +2178,6 @@ operator|(
 name|EAFNOSUPPORT
 operator|)
 return|;
-name|INP_INFO_WLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|inp
 operator|=
 name|sotoinpcb
@@ -2201,6 +2232,10 @@ expr_stmt|;
 name|TCPDEBUG1
 argument_list|()
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+comment|/* 	 * XXXRW: Some confusion: V4/V6 flags relate to binding, and 	 * therefore probably require the hash lock, which isn't held here. 	 * Is this a significant problem? 	 */
 if|if
 condition|(
 name|IN6_IS_ADDR_V4MAPPED
@@ -2320,6 +2355,8 @@ goto|goto
 name|out
 goto|;
 block|}
+endif|#
+directive|endif
 name|inp
 operator|->
 name|inp_vflag
@@ -2403,12 +2440,6 @@ expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
 name|inp
-argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 return|return
@@ -2552,6 +2583,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_comment
 comment|/*  * Accept a connection.  Essentially all the work is done at higher levels;  * just return the address of the peer, storing through addr.  *  * The rationale for acquiring the tcbinfo lock here is somewhat complicated,  * and is described in detail in the commit log entry for r175612.  Acquiring  * it delays an accept(2) racing with sonewconn(), which inserts the socket  * before the inpcb address/port fields are initialized.  A better fix would  * prevent the socket from being placed in the listen queue until all fields  * are fully initialized.  */
@@ -2731,6 +2768,15 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2824,6 +2870,12 @@ literal|"tcp6_usr_accept: inp == NULL"
 operator|)
 argument_list|)
 expr_stmt|;
+name|INP_INFO_RLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 name|INP_WLOCK
 argument_list|(
 name|inp
@@ -2912,6 +2964,12 @@ expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|INP_INFO_RUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -3283,11 +3341,6 @@ name|tp
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|headlocked
-init|=
-literal|0
-decl_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3298,33 +3351,19 @@ endif|#
 directive|endif
 name|TCPDEBUG0
 expr_stmt|;
-comment|/* 	 * We require the pcbinfo lock in two cases: 	 * 	 * (1) An implied connect is taking place, which can result in 	 *     binding IPs and ports and hence modification of the pcb hash 	 *     chains. 	 * 	 * (2) PRUS_EOF is set, resulting in explicit close on the send. 	 */
+comment|/* 	 * We require the pcbinfo lock if we will close the socket as part of 	 * this call. 	 */
 if|if
 condition|(
-operator|(
-name|nam
-operator|!=
-name|NULL
-operator|)
-operator|||
-operator|(
 name|flags
 operator|&
 name|PRUS_EOF
-operator|)
 condition|)
-block|{
 name|INP_INFO_WLOCK
 argument_list|(
 operator|&
 name|V_tcbinfo
 argument_list|)
 expr_stmt|;
-name|headlocked
-operator|=
-literal|1
-expr_stmt|;
-block|}
 name|inp
 operator|=
 name|sotoinpcb
@@ -3487,12 +3526,6 @@ name|TCPS_SYN_SENT
 condition|)
 block|{
 comment|/* 			 * Do implied connect if not yet connected, 			 * initialize window to default value, and 			 * initialize maxseg/maxopd using peer's cached 			 * MSS. 			 */
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3511,10 +3544,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|error
 operator|=
 name|tcp_connect
@@ -3526,6 +3575,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -3571,22 +3622,6 @@ name|tcp_usrclosed
 argument_list|(
 name|tp
 argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|headlocked
-condition|)
-block|{
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
-name|headlocked
-operator|=
-literal|0
 expr_stmt|;
 block|}
 if|if
@@ -3712,12 +3747,6 @@ name|TCPS_SYN_SENT
 condition|)
 block|{
 comment|/* 			 * Do implied connect if not yet connected, 			 * initialize window to default value, and 			 * initialize maxseg/maxopd using peer's cached 			 * MSS. 			 */
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -3736,10 +3765,26 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-else|else
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
 name|error
 operator|=
 name|tcp_connect
@@ -3751,6 +3796,8 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -3771,33 +3818,6 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
-name|headlocked
-operator|=
-literal|0
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|nam
-condition|)
-block|{
-name|INP_INFO_WUNLOCK
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
-name|headlocked
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|tp
@@ -3867,7 +3887,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|headlocked
+name|flags
+operator|&
+name|PRUS_EOF
 condition|)
 name|INP_INFO_WUNLOCK
 argument_list|(
@@ -4429,6 +4451,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|struct
 name|pr_usrreqs
@@ -4522,6 +4550,15 @@ name|tcp_usr_close
 block|, }
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4632,6 +4669,12 @@ begin_comment
 comment|/* INET6 */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_comment
 comment|/*  * Common subroutine to open a TCP connection to remote host specified  * by struct sockaddr_in in mbuf *nam.  Call in_pcbbind to assign a local  * port number if needed.  Call in_pcbconnect_setup to do the routing and  * to choose a local host address (interface).  If there is an existing  * incarnation of the same connection in TIME-WAIT state and if the remote  * host was sending CC options and if the connection duration was< MSL, then  * truncate the previous TIME-WAIT state and proceed.  * Initialize connection parameters and enter SYN-SENT state.  */
 end_comment
@@ -4688,15 +4731,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -4730,9 +4773,9 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 block|}
 comment|/* 	 * Cannot simply call in_pcbconnect, because there might be an 	 * earlier incarnation of this same connection still in 	 * TIME_WAIT state, creating an ADDRINUSE error. 	 */
 name|laddr
@@ -4791,16 +4834,22 @@ name|oinp
 operator|==
 name|NULL
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 if|if
 condition|(
 name|oinp
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|EADDRINUSE
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 name|inp
 operator|->
 name|inp_laddr
@@ -4810,6 +4859,12 @@ expr_stmt|;
 name|in_pcbrehash
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Compute window scaling to request: 	 * Scale to fit into sweet spot.  See tcp_syncache.c. 	 * XXX: This should move to tcp_output(). 	 */
@@ -4878,8 +4933,30 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|out
+label|:
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INET */
+end_comment
 
 begin_ifdef
 ifdef|#
@@ -4948,15 +5025,15 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|INP_INFO_WLOCK_ASSERT
-argument_list|(
-operator|&
-name|V_tcbinfo
-argument_list|)
-expr_stmt|;
 name|INP_WLOCK_ASSERT
 argument_list|(
 name|inp
+argument_list|)
+expr_stmt|;
+name|INP_HASH_WLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
 argument_list|)
 expr_stmt|;
 if|if
@@ -4990,11 +5067,11 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 block|}
-comment|/* 	 * Cannot simply call in_pcbconnect, because there might be an 	 * earlier incarnation of this same connection still in 	 * TIME_WAIT state, creating an ADDRINUSE error. 	 * in6_pcbladdr() also handles scope zone IDs. 	 */
+comment|/* 	 * Cannot simply call in_pcbconnect, because there might be an 	 * earlier incarnation of this same connection still in 	 * TIME_WAIT state, creating an ADDRINUSE error. 	 * in6_pcbladdr() also handles scope zone IDs. 	 * 	 * XXXRW: We wouldn't need to expose in6_pcblookup_hash_locked() 	 * outside of in6_pcb.c if there were an in6_pcbconnect_setup(). 	 */
 name|error
 operator|=
 name|in6_pcbladdr
@@ -5011,12 +5088,12 @@ if|if
 condition|(
 name|error
 condition|)
-return|return
-name|error
-return|;
+goto|goto
+name|out
+goto|;
 name|oinp
 operator|=
-name|in6_pcblookup_hash
+name|in6_pcblookup_hash_locked
 argument_list|(
 name|inp
 operator|->
@@ -5060,9 +5137,15 @@ if|if
 condition|(
 name|oinp
 condition|)
-return|return
+block|{
+name|error
+operator|=
 name|EADDRINUSE
-return|;
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|IN6_IS_ADDR_UNSPECIFIED
@@ -5130,6 +5213,12 @@ argument_list|(
 name|inp
 argument_list|)
 expr_stmt|;
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
 comment|/* Compute window scaling to request.  */
 while|while
 condition|(
@@ -5195,6 +5284,17 @@ argument_list|)
 expr_stmt|;
 return|return
 literal|0
+return|;
+name|out
+label|:
+name|INP_HASH_WUNLOCK
+argument_list|(
+operator|&
+name|V_tcbinfo
+argument_list|)
+expr_stmt|;
+return|return
+name|error
 return|;
 block|}
 end_function
@@ -5635,11 +5735,27 @@ name|sopt
 argument_list|)
 expr_stmt|;
 block|}
-else|else
-block|{
 endif|#
 directive|endif
 comment|/* INET6 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+else|else
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET
+block|{
 name|INP_WUNLOCK
 argument_list|(
 name|inp
@@ -5654,9 +5770,6 @@ argument_list|,
 name|sopt
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|INET6
 block|}
 endif|#
 directive|endif

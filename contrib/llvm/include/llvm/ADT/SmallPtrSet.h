@@ -510,7 +510,10 @@ function_decl|;
 comment|/// Grow - Allocate a larger backing store for the buckets and move it over.
 name|void
 name|Grow
-parameter_list|()
+parameter_list|(
+name|unsigned
+name|NewSize
+parameter_list|)
 function_decl|;
 name|void
 name|operator

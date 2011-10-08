@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: if_pflog.c,v 1.22 2006/12/15 09:31:20 otto Exp $	*/
+comment|/*	$OpenBSD: if_pflog.c,v 1.26 2007/10/18 21:58:18 mpf Exp $	*/
 end_comment
 
 begin_comment
@@ -264,17 +264,36 @@ directive|include
 file|<net/bpf.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
-end_ifdef
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+end_if
 
 begin_include
 include|#
 directive|include
 file|<netinet/in.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
 
 begin_include
 include|#
@@ -305,22 +324,11 @@ directive|ifdef
 name|INET6
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|INET
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|<netinet/in.h>
+file|<netinet6/in6_var.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -352,13 +360,13 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|INET
+name|__FreeBSD__
 end_ifdef
 
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__FreeBSD__
+name|INET
 end_ifdef
 
 begin_include
@@ -372,10 +380,18 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* INET */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_define
 define|#
@@ -444,12 +460,36 @@ name|struct
 name|sockaddr
 modifier|*
 parameter_list|,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 name|struct
 name|route
 modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_expr_stmt
+unit|struct
+name|rtentry
+operator|*
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 name|int
@@ -615,24 +655,6 @@ begin_comment
 comment|/* for fast access */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|ifqmaxlen
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 name|void
 name|pflogattach
@@ -670,22 +692,6 @@ index|]
 operator|=
 name|NULL
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-operator|(
-name|void
-operator|)
-name|pflog_clone_create
-argument_list|(
-operator|&
-name|pflog_cloner
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 name|if_clone_attach
 argument_list|(
 operator|&
@@ -773,6 +779,8 @@ argument_list|,
 name|M_DEVBUF
 argument_list|,
 name|M_NOWAIT
+operator||
+name|M_ZERO
 argument_list|)
 operator|)
 operator|==
@@ -783,17 +791,6 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
-name|bzero
-argument_list|(
-name|pflogif
-argument_list|,
-sizeof|sizeof
-argument_list|(
-operator|*
-name|pflogif
-argument_list|)
-argument_list|)
-expr_stmt|;
 name|pflogif
 operator|->
 name|sc_unit
@@ -989,6 +986,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+comment|/* XXX: Why pf(4) lock?! Better add a pflog lock?! */
 name|PF_LOCK
 argument_list|()
 expr_stmt|;
@@ -1281,30 +1279,42 @@ block|}
 block|}
 end_function
 
-begin_function
+begin_decl_stmt
 name|int
 name|pflogoutput
-parameter_list|(
-name|struct
+argument_list|(
+expr|struct
 name|ifnet
-modifier|*
+operator|*
 name|ifp
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|mbuf
-modifier|*
+operator|*
 name|m
-parameter_list|,
-name|struct
+argument_list|,
+expr|struct
 name|sockaddr
-modifier|*
+operator|*
 name|dst
-parameter_list|,
-name|struct
+argument_list|,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+expr|struct
 name|route
+operator|*
+name|rt
+argument_list|)
+else|#
+directive|else
+decl|struct
+name|rtentry
 modifier|*
-name|ro
-parameter_list|)
+name|rt
+decl_stmt|)
+endif|#
+directive|endif
 block|{
 name|m_freem
 argument_list|(
@@ -1317,7 +1327,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/* ARGSUSED */
@@ -1344,15 +1354,6 @@ condition|(
 name|cmd
 condition|)
 block|{
-case|case
-name|SIOCSIFADDR
-case|:
-case|case
-name|SIOCAIFADDR
-case|:
-case|case
-name|SIOCSIFDSTADDR
-case|:
 case|case
 name|SIOCSIFFLAGS
 case|:
@@ -1411,7 +1412,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|EINVAL
+name|ENOTTY
 operator|)
 return|;
 block|}
@@ -1501,7 +1502,6 @@ name|NULL
 condition|)
 return|return
 operator|(
-operator|-
 literal|1
 operator|)
 return|;
@@ -1607,7 +1607,6 @@ name|hdr
 operator|.
 name|subrulenr
 operator|=
-operator|-
 literal|1
 expr_stmt|;
 block|}
@@ -1686,7 +1685,7 @@ condition|)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-comment|/*  		 * XXX: This should not happen as we force an early lookup 		 * via debug.pfugidhack 		 */
+comment|/* 		 * XXX: This should not happen as we force an early lookup 		 * via debug.pfugidhack 		 */
 empty_stmt|;
 comment|/* empty */
 else|#

@@ -75,7 +75,7 @@ name|class
 name|raw_ostream
 decl_stmt|;
 comment|/// DisablePrettyStackTrace - Set this to true to disable this module. This
-comment|/// might be neccessary if the host application installs its own signal
+comment|/// might be necessary if the host application installs its own signal
 comment|/// handlers which conflict with the ones installed by this module.
 comment|/// Defaults to false.
 specifier|extern

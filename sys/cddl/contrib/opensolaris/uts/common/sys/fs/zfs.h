@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -145,9 +145,8 @@ name|ZFS_PROP_ZONED
 block|,
 name|ZFS_PROP_SNAPDIR
 block|,
-name|ZFS_PROP_PRIVATE
+name|ZFS_PROP_ACLMODE
 block|,
-comment|/* not exposed to user, temporary */
 name|ZFS_PROP_ACLINHERIT
 block|,
 name|ZFS_PROP_CREATETXG
@@ -223,6 +222,8 @@ block|,
 name|ZFS_PROP_MLSLABEL
 block|,
 name|ZFS_PROP_SYNC
+block|,
+name|ZFS_PROP_REFRATIO
 block|,
 name|ZFS_NUM_PROPS
 block|}

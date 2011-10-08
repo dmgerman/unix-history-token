@@ -560,7 +560,7 @@ argument_list|(
 name|self
 argument_list|)
 operator|==
-name|PCI_INTERFACE_XHCI
+name|PCIP_SERIALBUS_USB_XHCI
 operator|)
 condition|)
 block|{

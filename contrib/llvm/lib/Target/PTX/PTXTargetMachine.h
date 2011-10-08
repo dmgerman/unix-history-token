@@ -117,6 +117,10 @@ specifier|const
 name|TargetData
 name|DataLayout
 block|;
+name|PTXSubtarget
+name|Subtarget
+block|;
+comment|// has to be initialized before FrameLowering
 name|PTXFrameLowering
 name|FrameLowering
 block|;
@@ -126,31 +130,19 @@ block|;
 name|PTXTargetLowering
 name|TLInfo
 block|;
-name|PTXSubtarget
-name|Subtarget
-block|;
 name|public
 operator|:
 name|PTXTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|const std::string&TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|const std::string&CPU
+argument_list|,
+argument|const std::string&FS
+argument_list|,
+argument|bool is64Bit
 argument_list|)
 block|;
 name|virtual
@@ -254,6 +246,84 @@ argument_list|)
 block|; }
 decl_stmt|;
 comment|// class PTXTargetMachine
+name|class
+name|PTX32TargetMachine
+range|:
+name|public
+name|PTXTargetMachine
+block|{
+name|public
+operator|:
+name|PTX32TargetMachine
+argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
+argument_list|)
+block|; }
+decl_stmt|;
+comment|// class PTX32TargetMachine
+name|class
+name|PTX64TargetMachine
+range|:
+name|public
+name|PTXTargetMachine
+block|{
+name|public
+operator|:
+name|PTX64TargetMachine
+argument_list|(
+specifier|const
+name|Target
+operator|&
+name|T
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|FS
+argument_list|)
+block|; }
+decl_stmt|;
+comment|// class PTX32TargetMachine
 block|}
 end_decl_stmt
 

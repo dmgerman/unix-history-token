@@ -163,6 +163,12 @@ directive|include
 file|"LiveIntervalUnion.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"RegisterClassInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -207,6 +213,11 @@ operator|::
 name|Allocator
 name|UnionAllocator
 expr_stmt|;
+comment|// Cache tag for PhysReg2LiveUnion entries. Increment whenever virtual
+comment|// registers may have changed.
+name|unsigned
+name|UserTag
+decl_stmt|;
 name|protected
 label|:
 comment|// Array of LiveIntervalUnions indexed by physical register.
@@ -311,6 +322,9 @@ name|LiveIntervals
 modifier|*
 name|LIS
 decl_stmt|;
+name|RegisterClassInfo
+name|RegClassInfo
+decl_stmt|;
 name|LiveUnionArray
 name|PhysReg2LiveUnion
 decl_stmt|;
@@ -327,6 +341,11 @@ expr_stmt|;
 name|RegAllocBase
 argument_list|()
 operator|:
+name|UserTag
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|TRI
 argument_list|(
 literal|0
@@ -387,6 +406,8 @@ index|]
 operator|.
 name|init
 argument_list|(
+name|UserTag
+argument_list|,
 operator|&
 name|VirtReg
 argument_list|,
@@ -403,6 +424,16 @@ index|[
 name|PhysReg
 index|]
 return|;
+block|}
+comment|// Invalidate all cached information about virtual registers - live ranges may
+comment|// have changed.
+name|void
+name|invalidateVirtRegs
+parameter_list|()
+block|{
+operator|++
+name|UserTag
+expr_stmt|;
 block|}
 comment|// The top-level driver. The output is a VirtRegMap that us updated with
 comment|// physical register assignments.

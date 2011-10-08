@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
 end_include
 
@@ -119,7 +125,7 @@ comment|/// Byte offset from the field address, if any. This should generally be
 comment|/// unused as the cleanest IR comes from having a well-constructed LLVM type
 comment|/// with proper GEP instructions, but sometimes its use is required, for
 comment|/// example if an access is intended to straddle an LLVM field boundary.
-name|unsigned
+name|CharUnits
 name|FieldByteOffset
 decl_stmt|;
 comment|/// Bit offset in the accessed value to use. The width is implied by \see
@@ -137,7 +143,7 @@ comment|//
 comment|// FIXME: Remove use of 0 to encode default, instead have IRgen do the right
 comment|// thing when it generates the code, if avoiding align directives is
 comment|// desired.
-name|unsigned
+name|CharUnits
 name|AccessAlignment
 decl_stmt|;
 comment|/// Offset for the target value.
@@ -502,14 +508,16 @@ comment|/// The LLVM type corresponding to this record layout; used when
 comment|/// laying it out as a complete object.
 name|llvm
 operator|::
-name|PATypeHolder
+name|StructType
+operator|*
 name|CompleteObjectType
 expr_stmt|;
 comment|/// The LLVM type for the non-virtual part of this record layout;
 comment|/// used when laying it out as a base subobject.
 name|llvm
 operator|::
-name|PATypeHolder
+name|StructType
+operator|*
 name|BaseSubobjectType
 expr_stmt|;
 comment|/// Map from (non-bit-field) struct field to the corresponding llvm struct
@@ -587,9 +595,9 @@ name|public
 label|:
 name|CGRecordLayout
 argument_list|(
-argument|const llvm::StructType *CompleteObjectType
+argument|llvm::StructType *CompleteObjectType
 argument_list|,
-argument|const llvm::StructType *BaseSubobjectType
+argument|llvm::StructType *BaseSubobjectType
 argument_list|,
 argument|bool IsZeroInitializable
 argument_list|,
@@ -618,7 +626,6 @@ argument_list|)
 block|{}
 comment|/// \brief Return the "complete object" LLVM type associated with
 comment|/// this record.
-specifier|const
 name|llvm
 operator|::
 name|StructType
@@ -628,23 +635,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast
-operator|<
-name|llvm
-operator|::
-name|StructType
-operator|>
-operator|(
 name|CompleteObjectType
-operator|.
-name|get
-argument_list|()
-operator|)
 return|;
 block|}
 comment|/// \brief Return the "base subobject" LLVM type associated with
 comment|/// this record.
-specifier|const
 name|llvm
 operator|::
 name|StructType
@@ -654,18 +649,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast
-operator|<
-name|llvm
-operator|::
-name|StructType
-operator|>
-operator|(
 name|BaseSubobjectType
-operator|.
-name|get
-argument_list|()
-operator|)
 return|;
 block|}
 comment|/// \brief Check whether this struct can be C++ zero-initialized

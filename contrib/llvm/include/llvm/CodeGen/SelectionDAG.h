@@ -421,24 +421,63 @@ name|empty
 argument_list|()
 return|;
 block|}
-name|SmallVector
+name|ArrayRef
 operator|<
 name|SDDbgValue
 operator|*
-operator|,
-literal|2
 operator|>
-operator|&
 name|getSDDbgValues
 argument_list|(
 argument|const SDNode *Node
 argument_list|)
 block|{
-return|return
+name|DenseMap
+operator|<
+specifier|const
+name|SDNode
+operator|*
+block|,
+name|SmallVector
+operator|<
+name|SDDbgValue
+operator|*
+block|,
+literal|2
+operator|>
+expr|>
+operator|::
+name|iterator
+name|I
+operator|=
 name|DbgValMap
-index|[
+operator|.
+name|find
+argument_list|(
 name|Node
-index|]
+argument_list|)
+block|;
+if|if
+condition|(
+name|I
+operator|!=
+name|DbgValMap
+operator|.
+name|end
+argument_list|()
+condition|)
+return|return
+name|I
+operator|->
+name|second
+return|;
+return|return
+name|ArrayRef
+operator|<
+name|SDDbgValue
+operator|*
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 typedef|typedef
@@ -498,7 +537,13 @@ argument_list|()
 return|;
 block|}
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_enum
 enum|enum
 name|CombineLevel
 block|{
@@ -512,9 +557,15 @@ name|NoIllegalOperations
 comment|// Combine may only create legal operations and types.
 block|}
 enum|;
+end_enum
+
+begin_decl_stmt
 name|class
 name|SelectionDAG
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|void
 name|checkForCycles
 parameter_list|(
@@ -524,6 +575,9 @@ modifier|*
 name|N
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|checkForCycles
 parameter_list|(
@@ -533,17 +587,53 @@ modifier|*
 name|DAG
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// SelectionDAG class - This is used to represent a portion of an LLVM function
+end_comment
+
+begin_comment
 comment|/// in a low-level Data Dependence DAG representation suitable for instruction
+end_comment
+
+begin_comment
 comment|/// selection.  This DAG is constructed as the first step of instruction
+end_comment
+
+begin_comment
 comment|/// selection in order to allow implementation of machine specific optimizations
+end_comment
+
+begin_comment
 comment|/// and code simplifications.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The representation used by the SelectionDAG is a target-independent
+end_comment
+
+begin_comment
 comment|/// representation, which has some similarities to the GCC RTL representation,
+end_comment
+
+begin_comment
 comment|/// but is significantly more simple, powerful, and is a graph form instead of a
+end_comment
+
+begin_comment
 comment|/// linear form.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|class
 name|SelectionDAG
 block|{
@@ -1101,13 +1191,8 @@ comment|/// Note that this is an involved process that may invalidate pointers i
 comment|/// the graph.
 name|void
 name|Legalize
-argument_list|(
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-argument_list|)
-decl_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// LegalizeVectors - This transforms the SelectionDAG into a SelectionDAG
 comment|/// that only uses vector math operations supported by the target.  This is
 comment|/// necessary as a separate step from Legalize because unrolling a vector
@@ -3819,6 +3904,9 @@ comment|/// the target's desired shift amount type.
 name|SDValue
 name|getShiftAmountOperand
 parameter_list|(
+name|EVT
+name|LHSTy
+parameter_list|,
 name|SDValue
 name|Op
 parameter_list|)
@@ -4899,7 +4987,7 @@ comment|///
 comment|/// These functions only replace all existing uses. It's possible that as
 comment|/// these replacements are being performed, CSE may cause the From node
 comment|/// to be given new uses. These new uses of From are left in place, and
-comment|/// not automatically transfered to To.
+comment|/// not automatically transferred to To.
 comment|///
 name|void
 name|ReplaceAllUsesWith
@@ -5177,14 +5265,11 @@ name|isParameter
 parameter_list|)
 function_decl|;
 comment|/// GetDbgValues - Get the debug values which reference the given SDNode.
-name|SmallVector
+name|ArrayRef
 operator|<
 name|SDDbgValue
 operator|*
-operator|,
-literal|2
 operator|>
-operator|&
 name|GetDbgValues
 argument_list|(
 argument|const SDNode* SD
@@ -5483,16 +5568,6 @@ name|B
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// isVerifiedDebugInfoDesc - Returns true if the specified SDValue has
-comment|/// been verified as a debug information descriptor.
-name|bool
-name|isVerifiedDebugInfoDesc
-argument_list|(
-name|SDValue
-name|Op
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// UnrollVectorOp - Utility function used by legalize and lowering to
 comment|/// "unroll" a vector operation by splitting out the scalars and operating
 comment|/// on each element individually.  If the ResNE is 0, fully unroll the vector
@@ -5725,7 +5800,13 @@ operator|>
 name|TargetExternalSymbols
 expr_stmt|;
 block|}
+end_decl_stmt
+
+begin_empty_stmt
 empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
 name|template
 operator|<
 operator|>
@@ -5778,11 +5859,14 @@ argument_list|()
 return|;
 block|}
 block|}
+end_expr_stmt
+
+begin_empty_stmt
 empty_stmt|;
-block|}
-end_decl_stmt
+end_empty_stmt
 
 begin_comment
+unit|}
 comment|// end namespace llvm
 end_comment
 

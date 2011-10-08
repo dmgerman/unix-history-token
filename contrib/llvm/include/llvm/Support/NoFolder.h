@@ -94,6 +94,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Constants.h"
 end_include
 
@@ -107,9 +113,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|LLVMContext
-decl_stmt|;
 comment|/// NoFolder - Create "constants" (actually, instructions) with no folding.
 name|class
 name|NoFolder
@@ -118,10 +121,7 @@ name|public
 label|:
 name|explicit
 name|NoFolder
-parameter_list|(
-name|LLVMContext
-modifier|&
-parameter_list|)
+parameter_list|()
 block|{}
 comment|//===--------------------------------------------------------------------===//
 comment|// Binary Operators
@@ -1765,13 +1765,11 @@ name|Constant
 operator|*
 name|Agg
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|unsigned
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -1783,10 +1781,6 @@ argument_list|(
 name|Agg
 argument_list|,
 name|IdxList
-argument_list|,
-name|IdxList
-operator|+
-name|NumIdx
 argument_list|)
 return|;
 block|}
@@ -1802,13 +1796,11 @@ name|Constant
 operator|*
 name|Val
 argument_list|,
-specifier|const
+name|ArrayRef
+operator|<
 name|unsigned
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -1822,10 +1814,6 @@ argument_list|,
 name|Val
 argument_list|,
 name|IdxList
-argument_list|,
-name|IdxList
-operator|+
-name|NumIdx
 argument_list|)
 return|;
 block|}

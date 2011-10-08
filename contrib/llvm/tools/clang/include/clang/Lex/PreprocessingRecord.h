@@ -172,7 +172,7 @@ name|class
 name|FileEntry
 decl_stmt|;
 comment|/// \brief Base class that describes a preprocessed entity, which may be a
-comment|/// preprocessor directive or macro instantiation.
+comment|/// preprocessor directive or macro expansion.
 name|class
 name|PreprocessedEntity
 block|{
@@ -182,8 +182,8 @@ comment|/// \brief The kind of preprocessed entity an object describes.
 enum|enum
 name|EntityKind
 block|{
-comment|/// \brief A macro instantiation.
-name|MacroInstantiationKind
+comment|/// \brief A macro expansion.
+name|MacroExpansionKind
 block|,
 comment|/// \brief A preprocessing directive whose kind is not specified.
 comment|///
@@ -412,14 +412,14 @@ parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// \brief Records the location of a macro instantiation.
+comment|/// \brief Records the location of a macro expansion.
 name|class
-name|MacroInstantiation
+name|MacroExpansion
 range|:
 name|public
 name|PreprocessedEntity
 block|{
-comment|/// \brief The name of the macro being instantiation.
+comment|/// \brief The name of the macro being expanded.
 name|IdentifierInfo
 operator|*
 name|Name
@@ -431,7 +431,7 @@ name|Definition
 block|;
 name|public
 operator|:
-name|MacroInstantiation
+name|MacroExpansion
 argument_list|(
 argument|IdentifierInfo *Name
 argument_list|,
@@ -442,7 +442,7 @@ argument_list|)
 operator|:
 name|PreprocessedEntity
 argument_list|(
-name|MacroInstantiationKind
+name|MacroExpansionKind
 argument_list|,
 name|Range
 argument_list|)
@@ -457,7 +457,7 @@ argument_list|(
 argument|Definition
 argument_list|)
 block|{ }
-comment|/// \brief The name of the macro being instantiated.
+comment|/// \brief The name of the macro being expanded.
 name|IdentifierInfo
 operator|*
 name|getName
@@ -468,7 +468,7 @@ return|return
 name|Name
 return|;
 block|}
-comment|/// \brief The definition of the macro being instantiated.
+comment|/// \brief The definition of the macro being expanded.
 name|MacroDefinition
 operator|*
 name|getDefinition
@@ -493,14 +493,14 @@ operator|->
 name|getKind
 argument_list|()
 operator|==
-name|MacroInstantiationKind
+name|MacroExpansionKind
 return|;
 block|}
 specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const MacroInstantiation *
+argument|const MacroExpansion *
 argument_list|)
 block|{
 return|return
@@ -859,13 +859,18 @@ block|;   }
 block|;
 comment|/// \brief A record of the steps taken while preprocessing a source file,
 comment|/// including the various preprocessing directives processed, macros
-comment|/// instantiated, etc.
+comment|/// expanded, etc.
 name|class
 name|PreprocessingRecord
 operator|:
 name|public
 name|PPCallbacks
 block|{
+comment|/// \brief Whether we should include nested macro expansions in
+comment|/// the preprocessing record.
+name|bool
+name|IncludeNestedMacroExpansions
+block|;
 comment|/// \brief Allocator used to store preprocessing objects.
 name|llvm
 operator|::
@@ -919,8 +924,12 @@ specifier|const
 block|;
 name|public
 operator|:
+comment|/// \brief Construct
+name|explicit
 name|PreprocessingRecord
-argument_list|()
+argument_list|(
+argument|bool IncludeNestedMacroExpansions
+argument_list|)
 block|;
 comment|/// \brief Allocate memory in the preprocessing record.
 name|void
@@ -951,6 +960,18 @@ argument_list|(
 argument|void *Ptr
 argument_list|)
 block|{ }
+name|size_t
+name|getTotalMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BumpAlloc
+operator|.
+name|getTotalMemory
+argument_list|()
+return|;
+block|}
 comment|// Iteration over the preprocessed entities.
 typedef|typedef
 name|std
@@ -1162,6 +1183,10 @@ argument_list|,
 argument|const FileEntry *File
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|llvm::StringRef SearchPath
+argument_list|,
+argument|llvm::StringRef RelativePath
 argument_list|)
 block|;   }
 block|; }

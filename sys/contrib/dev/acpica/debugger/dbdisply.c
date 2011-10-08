@@ -111,6 +111,143 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * System handler information.  * Used for Handlers command, in AcpiDbDisplayHandlers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_PREDEFINED_PREFIX
+value|"%25s (%.2X) : "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HANDLER_NAME_STRING
+value|"%30s : "
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HANDLER_PRESENT_STRING
+value|"%-9s (%p)\n"
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HANDLER_NOT_PRESENT_STRING
+value|"%-9s\n"
+end_define
+
+begin_comment
+comment|/* All predefined Address Space IDs */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|ACPI_ADR_SPACE_TYPE
+name|AcpiGbl_SpaceIdList
+index|[]
+init|=
+block|{
+name|ACPI_ADR_SPACE_SYSTEM_MEMORY
+block|,
+name|ACPI_ADR_SPACE_SYSTEM_IO
+block|,
+name|ACPI_ADR_SPACE_PCI_CONFIG
+block|,
+name|ACPI_ADR_SPACE_EC
+block|,
+name|ACPI_ADR_SPACE_SMBUS
+block|,
+name|ACPI_ADR_SPACE_CMOS
+block|,
+name|ACPI_ADR_SPACE_PCI_BAR_TARGET
+block|,
+name|ACPI_ADR_SPACE_IPMI
+block|,
+name|ACPI_ADR_SPACE_DATA_TABLE
+block|,
+name|ACPI_ADR_SPACE_FIXED_HARDWARE
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Global handler information */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_handler_info
+block|{
+name|void
+modifier|*
+name|Handler
+decl_stmt|;
+name|char
+modifier|*
+name|Name
+decl_stmt|;
+block|}
+name|ACPI_HANDLER_INFO
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|static
+name|ACPI_HANDLER_INFO
+name|AcpiGbl_HandlerList
+index|[]
+init|=
+block|{
+block|{
+operator|&
+name|AcpiGbl_SystemNotify
+operator|.
+name|Handler
+block|,
+literal|"System Notifications"
+block|}
+block|,
+block|{
+operator|&
+name|AcpiGbl_DeviceNotify
+operator|.
+name|Handler
+block|,
+literal|"Device Notifications"
+block|}
+block|,
+block|{
+operator|&
+name|AcpiGbl_TableHandler
+block|,
+literal|"ACPI Table Events"
+block|}
+block|,
+block|{
+operator|&
+name|AcpiGbl_ExceptionHandler
+block|,
+literal|"Control Method Exceptions"
+block|}
+block|,
+block|{
+operator|&
+name|AcpiGbl_InterfaceHandler
+block|,
+literal|"OSI Invocations"
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbGetPointer  *  * PARAMETERS:  Target          - Pointer to string to be converted  *  * RETURN:      Converted pointer  *  * DESCRIPTION: Convert an ascii pointer value to a real value  *  ******************************************************************************/
 end_comment
 
@@ -2300,138 +2437,6 @@ begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiDbDisplayHandlers  *  * PARAMETERS:  None  *  * RETURN:      None  *  * DESCRIPTION: Display the currently installed global handlers  *  ******************************************************************************/
 end_comment
 
-begin_define
-define|#
-directive|define
-name|ACPI_PREDEFINED_PREFIX
-value|"%25s (%.2X) : "
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_HANDLER_NAME_STRING
-value|"%30s : "
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_HANDLER_PRESENT_STRING
-value|"%-9s (%p)\n"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_HANDLER_NOT_PRESENT_STRING
-value|"%-9s\n"
-end_define
-
-begin_comment
-comment|/* All predefined Space IDs */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|ACPI_ADR_SPACE_TYPE
-name|SpaceIdList
-index|[]
-init|=
-block|{
-name|ACPI_ADR_SPACE_SYSTEM_MEMORY
-block|,
-name|ACPI_ADR_SPACE_SYSTEM_IO
-block|,
-name|ACPI_ADR_SPACE_PCI_CONFIG
-block|,
-name|ACPI_ADR_SPACE_EC
-block|,
-name|ACPI_ADR_SPACE_SMBUS
-block|,
-name|ACPI_ADR_SPACE_CMOS
-block|,
-name|ACPI_ADR_SPACE_PCI_BAR_TARGET
-block|,
-name|ACPI_ADR_SPACE_IPMI
-block|,
-name|ACPI_ADR_SPACE_DATA_TABLE
-block|,
-name|ACPI_ADR_SPACE_FIXED_HARDWARE
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* Global handler information */
-end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|acpi_handler_info
-block|{
-name|void
-modifier|*
-name|Handler
-decl_stmt|;
-name|char
-modifier|*
-name|Name
-decl_stmt|;
-block|}
-name|ACPI_HANDLER_INFO
-typedef|;
-end_typedef
-
-begin_decl_stmt
-name|ACPI_HANDLER_INFO
-name|HandlerList
-index|[]
-init|=
-block|{
-block|{
-operator|&
-name|AcpiGbl_SystemNotify
-operator|.
-name|Handler
-block|,
-literal|"System Notifications"
-block|}
-block|,
-block|{
-operator|&
-name|AcpiGbl_DeviceNotify
-operator|.
-name|Handler
-block|,
-literal|"Device Notifications"
-block|}
-block|,
-block|{
-operator|&
-name|AcpiGbl_TableHandler
-block|,
-literal|"ACPI Table Events"
-block|}
-block|,
-block|{
-operator|&
-name|AcpiGbl_ExceptionHandler
-block|,
-literal|"Control Method Exceptions"
-block|}
-block|,
-block|{
-operator|&
-name|AcpiGbl_InterfaceHandler
-block|,
-literal|"OSI Invocations"
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 name|void
 name|AcpiDbDisplayHandlers
@@ -2481,7 +2486,7 @@ name|i
 operator|<
 name|ACPI_ARRAY_LENGTH
 argument_list|(
-name|SpaceIdList
+name|AcpiGbl_SpaceIdList
 argument_list|)
 condition|;
 name|i
@@ -2490,7 +2495,7 @@ control|)
 block|{
 name|SpaceId
 operator|=
-name|SpaceIdList
+name|AcpiGbl_SpaceIdList
 index|[
 name|i
 index|]
@@ -2667,7 +2672,7 @@ name|i
 operator|<
 name|ACPI_ARRAY_LENGTH
 argument_list|(
-name|HandlerList
+name|AcpiGbl_HandlerList
 argument_list|)
 condition|;
 name|i
@@ -2678,7 +2683,7 @@ name|AcpiOsPrintf
 argument_list|(
 name|ACPI_HANDLER_NAME_STRING
 argument_list|,
-name|HandlerList
+name|AcpiGbl_HandlerList
 index|[
 name|i
 index|]
@@ -2688,7 +2693,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|HandlerList
+name|AcpiGbl_HandlerList
 index|[
 name|i
 index|]
@@ -2702,7 +2707,7 @@ name|ACPI_HANDLER_PRESENT_STRING
 argument_list|,
 literal|"User"
 argument_list|,
-name|HandlerList
+name|AcpiGbl_HandlerList
 index|[
 name|i
 index|]

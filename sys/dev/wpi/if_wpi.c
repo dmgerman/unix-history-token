@@ -1773,6 +1773,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|wpi
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -12264,10 +12274,7 @@ name|mrr
 operator|.
 name|which
 operator|=
-name|htole32
-argument_list|(
 name|WPI_MRR_CTL
-argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -12311,10 +12318,7 @@ name|mrr
 operator|.
 name|which
 operator|=
-name|htole32
-argument_list|(
 name|WPI_MRR_DATA
-argument_list|)
 expr_stmt|;
 name|error
 operator|=

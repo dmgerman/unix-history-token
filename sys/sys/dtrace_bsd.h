@@ -74,17 +74,25 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_comment
-comment|/*  * These external variables are actually machine-dependent, so  * they might not actually exist.  *  * Defining them here avoids a proliferation of header files.  */
-end_comment
-
 begin_decl_stmt
 specifier|extern
 name|cyclic_clock_func_t
 name|cyclic_clock_func
-index|[]
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+name|void
+name|clocksource_cyc_set
+parameter_list|(
+specifier|const
+name|struct
+name|bintime
+modifier|*
+name|t
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*  * The dtrace module handles traps that occur during a DTrace probe.  * This type definition is used in the trap handler to provide a  * hook for the dtrace module to register it's handler with.  */
@@ -394,7 +402,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* dtnfsclient NFSv3 access cache provider hooks. */
+comment|/* dtnfsclient NFSv[34] access cache provider hooks. */
 end_comment
 
 begin_typedef
@@ -418,6 +426,13 @@ begin_decl_stmt
 specifier|extern
 name|dtrace_nfsclient_accesscache_flush_probe_func_t
 name|dtrace_nfsclient_accesscache_flush_done_probe
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_accesscache_flush_probe_func_t
+name|dtrace_nfscl_accesscache_flush_done_probe
 decl_stmt|;
 end_decl_stmt
 
@@ -451,6 +466,15 @@ name|dtrace_nfsclient_accesscache_get_miss_probe
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_accesscache_get_probe_func_t
+name|dtrace_nfscl_accesscache_get_hit_probe
+decl_stmt|,
+name|dtrace_nfscl_accesscache_get_miss_probe
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -481,8 +505,15 @@ name|dtrace_nfsclient_accesscache_load_done_probe
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_accesscache_load_probe_func_t
+name|dtrace_nfscl_accesscache_load_done_probe
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* dtnfsclient NFSv[23] attribute cache provider hooks. */
+comment|/* dtnfsclient NFSv[234] attribute cache provider hooks. */
 end_comment
 
 begin_typedef
@@ -506,6 +537,13 @@ begin_decl_stmt
 specifier|extern
 name|dtrace_nfsclient_attrcache_flush_probe_func_t
 name|dtrace_nfsclient_attrcache_flush_done_probe
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_attrcache_flush_probe_func_t
+name|dtrace_nfscl_attrcache_flush_done_probe
 decl_stmt|;
 end_decl_stmt
 
@@ -537,6 +575,13 @@ name|dtrace_nfsclient_attrcache_get_hit_probe
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_attrcache_get_hit_probe_func_t
+name|dtrace_nfscl_attrcache_get_hit_probe
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -558,6 +603,13 @@ begin_decl_stmt
 specifier|extern
 name|dtrace_nfsclient_attrcache_get_miss_probe_func_t
 name|dtrace_nfsclient_attrcache_get_miss_probe
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_attrcache_get_miss_probe_func_t
+name|dtrace_nfscl_attrcache_get_miss_probe
 decl_stmt|;
 end_decl_stmt
 
@@ -591,8 +643,15 @@ name|dtrace_nfsclient_attrcache_load_done_probe
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_attrcache_load_probe_func_t
+name|dtrace_nfscl_attrcache_load_done_probe
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|/* dtnfsclient NFSv[23] RPC provider hooks. */
+comment|/* dtnfsclient NFSv[234] RPC provider hooks. */
 end_comment
 
 begin_typedef
@@ -629,6 +688,13 @@ name|dtrace_nfsclient_nfs23_start_probe
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_nfs23_start_probe_func_t
+name|dtrace_nfscl_nfs234_start_probe
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -662,6 +728,13 @@ begin_decl_stmt
 specifier|extern
 name|dtrace_nfsclient_nfs23_done_probe_func_t
 name|dtrace_nfsclient_nfs23_done_probe
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|dtrace_nfsclient_nfs23_done_probe_func_t
+name|dtrace_nfscl_nfs234_done_probe
 decl_stmt|;
 end_decl_stmt
 

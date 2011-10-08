@@ -1459,7 +1459,11 @@ argument_list|,
 argument|file_status symlink_st = file_status()
 argument_list|)
 expr_stmt|;
-name|StringRef
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
 name|path
 argument_list|()
 specifier|const

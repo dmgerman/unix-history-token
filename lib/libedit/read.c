@@ -828,6 +828,7 @@ name|EditLine
 modifier|*
 name|el
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|str

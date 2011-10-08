@@ -138,7 +138,7 @@ block|}
 endif|#
 directive|endif
 name|int
-name|getcontext
+name|sys_getcontext
 argument_list|(
 expr|struct
 name|thread
@@ -241,7 +241,7 @@ operator|)
 return|;
 block|}
 name|int
-name|setcontext
+name|sys_setcontext
 argument_list|(
 expr|struct
 name|thread
@@ -346,7 +346,7 @@ operator|)
 return|;
 block|}
 name|int
-name|swapcontext
+name|sys_swapcontext
 argument_list|(
 expr|struct
 name|thread

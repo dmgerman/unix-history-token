@@ -188,6 +188,16 @@ operator|=
 name|soo_close
 block|,
 operator|.
+name|fo_chmod
+operator|=
+name|invfo_chmod
+block|,
+operator|.
+name|fo_chown
+operator|=
+name|invfo_chown
+block|,
+operator|.
 name|fo_flags
 operator|=
 name|DFLAG_PASSABLE

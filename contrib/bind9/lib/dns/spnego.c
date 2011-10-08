@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006-2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2006-2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: spnego.c,v 1.8.118.4 2009/07/21 07:27:13 marka Exp $ */
+comment|/* $Id: spnego.c,v 1.16.10.2 2011-04-04 11:10:57 marka Exp $ */
 end_comment
 
 begin_comment
@@ -191,6 +191,16 @@ begin_comment
 comment|/* Generated from ../../../lib/asn1/asn1_err.et */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ERROR_TABLE_BASE_asn1
+end_ifndef
+
+begin_comment
+comment|/* these may be brought in already via gssapi_krb5.h */
+end_comment
+
 begin_typedef
 typedef|typedef
 enum|enum
@@ -246,6 +256,11 @@ directive|define
 name|ERROR_TABLE_BASE_asn1
 value|1859794432
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1184,7 +1199,7 @@ name|token
 operator|->
 name|length
 operator|==
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -1231,7 +1246,7 @@ operator|&
 literal|0x7f
 operator|)
 operator|>
-literal|4
+literal|4U
 condition|)
 return|return
 operator|(
@@ -1341,6 +1356,8 @@ name|size_t
 name|buf_size
 decl_stmt|,
 name|buf_len
+init|=
+literal|0
 decl_stmt|;
 name|buf_size
 operator|=
@@ -1893,7 +1910,7 @@ name|mech_token
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 block|{
 name|resp
@@ -2552,7 +2569,7 @@ name|ot
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|gss_release_buffer
 argument_list|(
@@ -2615,7 +2632,7 @@ if|if
 condition|(
 name|total_len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -3049,7 +3066,7 @@ if|if
 condition|(
 name|len
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|val
@@ -3130,7 +3147,7 @@ if|if
 condition|(
 name|len
 operator|<=
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -3150,7 +3167,7 @@ if|if
 condition|(
 name|v
 operator|<
-literal|128
+literal|128U
 condition|)
 block|{
 operator|*
@@ -3183,7 +3200,7 @@ if|if
 condition|(
 name|v
 operator|==
-literal|0x80
+literal|0x80U
 condition|)
 block|{
 operator|*
@@ -3320,7 +3337,7 @@ name|data
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -3390,7 +3407,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -3424,7 +3441,7 @@ name|NULL
 operator|&&
 name|len
 operator|!=
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(
@@ -3473,7 +3490,7 @@ literal|2
 init|;
 name|len
 operator|>
-literal|0
+literal|0U
 condition|;
 operator|++
 name|n
@@ -3508,7 +3525,7 @@ do|while
 condition|(
 name|len
 operator|>
-literal|0
+literal|0U
 operator|&&
 name|p
 index|[
@@ -3609,7 +3626,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4558,7 +4575,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|128
+literal|128U
 condition|)
 return|return
 operator|(
@@ -4624,7 +4641,7 @@ while|while
 condition|(
 name|len
 operator|>
-literal|0
+literal|0U
 operator|&&
 name|val
 condition|)
@@ -4677,7 +4694,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4746,7 +4763,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4788,7 +4805,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4819,7 +4836,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4864,7 +4881,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4922,7 +4939,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -4933,7 +4950,7 @@ if|if
 condition|(
 name|val
 operator|<
-literal|128
+literal|128U
 condition|)
 block|{
 operator|*
@@ -5155,7 +5172,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -5188,7 +5205,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -5218,7 +5235,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -5291,7 +5308,7 @@ if|if
 condition|(
 name|len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -6126,7 +6143,7 @@ name|output_token
 operator|->
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|gss_release_buffer
 argument_list|(
@@ -6320,7 +6337,7 @@ if|if
 condition|(
 name|total_len
 operator|<
-literal|1
+literal|1U
 condition|)
 return|return
 operator|(
@@ -6629,7 +6646,7 @@ name|krb5_output_token
 operator|.
 name|length
 operator|>
-literal|0
+literal|0U
 condition|)
 block|{
 name|token_init
@@ -6916,7 +6933,7 @@ name|krb5_output_token
 operator|.
 name|length
 operator|!=
-literal|0
+literal|0U
 condition|)
 name|gss_release_buffer
 argument_list|(
@@ -7561,7 +7578,7 @@ name|input_token
 operator|->
 name|length
 operator|==
-literal|0
+literal|0U
 condition|)
 return|return
 operator|(

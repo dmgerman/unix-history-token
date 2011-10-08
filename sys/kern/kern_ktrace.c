@@ -3680,7 +3680,7 @@ end_comment
 
 begin_function
 name|int
-name|ktrace
+name|sys_ktrace
 parameter_list|(
 name|td
 parameter_list|,
@@ -4151,6 +4151,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|p
+operator|->
+name|p_state
+operator|==
+name|PRS_NEW
+operator|||
 name|p_cansee
 argument_list|(
 name|td
@@ -4408,7 +4414,7 @@ end_comment
 
 begin_function
 name|int
-name|utrace
+name|sys_utrace
 parameter_list|(
 name|td
 parameter_list|,

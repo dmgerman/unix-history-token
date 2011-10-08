@@ -770,6 +770,9 @@ operator|==
 operator|-
 literal|1
 condition|)
+operator|(
+name|void
+operator|)
 name|bfd_set_cacheable
 argument_list|(
 name|nbfd

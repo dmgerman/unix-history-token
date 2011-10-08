@@ -54,7 +54,7 @@ file|<ulog.h>
 end_include
 
 begin_comment
-comment|/*  * This setuid helper utility writes user login records to disk.  * Unprivileged processes are not capable of writing records to utmp,  * wtmp and lastlog, but we do want to allow this for pseudo-terminals.  * Because a file descriptor to a pseudo-terminal master device can only  * be obtained by processes using the pseudo-terminal, we expect such a  * descriptor on stdin.  *  * It uses the real user ID of the calling process to determine the  * username.  It does allow users to log arbitrary hostnames.  */
+comment|/*  * This setuid helper utility writes user login records to disk.  * Unprivileged processes are not capable of writing records to utmpx,  * but we do want to allow this for pseudo-terminals.  Because a file  * descriptor to a pseudo-terminal master device can only be obtained by  * processes using the pseudo-terminal, we expect such a descriptor on  * stdin.  *  * It uses the real user ID of the calling process to determine the  * username.  It does allow users to log arbitrary hostnames.  */
 end_comment
 
 begin_function
@@ -74,6 +74,12 @@ specifier|const
 name|char
 modifier|*
 name|line
+decl_stmt|,
+modifier|*
+name|user
+decl_stmt|,
+modifier|*
+name|host
 decl_stmt|;
 comment|/* Device line name. */
 if|if
@@ -119,30 +125,20 @@ operator|==
 literal|0
 condition|)
 block|{
-name|struct
-name|passwd
-modifier|*
-name|pwd
-decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|host
-init|=
-name|NULL
-decl_stmt|;
 comment|/* Username. */
-name|pwd
+name|user
 operator|=
-name|getpwuid
+name|user_from_uid
 argument_list|(
 name|getuid
 argument_list|()
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pwd
+name|user
 operator|==
 name|NULL
 condition|)
@@ -152,26 +148,24 @@ name|EX_OSERR
 operator|)
 return|;
 comment|/* Hostname. */
-if|if
-condition|(
+name|host
+operator|=
 name|argc
 operator|==
 literal|3
-condition|)
-name|host
-operator|=
+condition|?
 name|argv
 index|[
 literal|2
 index|]
+else|:
+name|NULL
 expr_stmt|;
 name|ulog_login
 argument_list|(
 name|line
 argument_list|,
-name|pwd
-operator|->
-name|pw_name
+name|user
 argument_list|,
 name|host
 argument_list|)

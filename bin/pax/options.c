@@ -2858,7 +2858,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-comment|/* 			 * if patterns were added, we are doing	chdir() 			 * on a file-by-file basis, else, just one 			 * global chdir (if any) after opening input. 			 */
+comment|/* 			 * if patterns were added, we are doing chdir() 			 * on a file-by-file basis, else, just one 			 * global chdir (if any) after opening input. 			 */
 if|if
 condition|(
 name|sawpat

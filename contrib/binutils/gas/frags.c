@@ -440,6 +440,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* This will align the obstack so the next struct we allocate on it      will begin at a correct boundary.  */
+operator|(
+name|void
+operator|)
 name|obstack_finish
 argument_list|(
 operator|&

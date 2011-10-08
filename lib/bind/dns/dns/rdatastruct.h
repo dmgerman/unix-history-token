@@ -20,7 +20,7 @@ comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: rdatastructpre.h,v 1.16 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: rdatastructpre.h,v 1.16 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -123,7 +123,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: a_1.h,v 1.28 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: a_1.h,v 1.28 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -157,7 +157,7 @@ comment|/*  * Copyright (C) 2005, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: a_1.h,v 1.5 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: a_1.h,v 1.5 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -244,7 +244,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: a_1.h,v 1.12 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: a_1.h,v 1.12 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -295,7 +295,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: ns_2.h,v 1.27 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: ns_2.h,v 1.27 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -349,7 +349,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: md_3.h,v 1.28 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: md_3.h,v 1.28 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -403,7 +403,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mf_4.h,v 1.26 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: mf_4.h,v 1.26 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -440,7 +440,7 @@ comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: cname_5.h,v 1.26 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: cname_5.h,v 1.26 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -507,7 +507,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: soa_6.h,v 1.32 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: soa_6.h,v 1.32 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -584,7 +584,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mb_7.h,v 1.27 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: mb_7.h,v 1.27 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -638,7 +638,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mg_8.h,v 1.26 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: mg_8.h,v 1.26 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -692,7 +692,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mr_9.h,v 1.26 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: mr_9.h,v 1.26 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -746,7 +746,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: null_10.h,v 1.25 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: null_10.h,v 1.25 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -801,7 +801,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: wks_11.h,v 1.22 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: wks_11.h,v 1.22 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -867,7 +867,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: ptr_12.h,v 1.27 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: ptr_12.h,v 1.27 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -917,7 +917,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: hinfo_13.h,v 1.25 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: hinfo_13.h,v 1.25 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -982,7 +982,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: minfo_14.h,v 1.27 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: minfo_14.h,v 1.27 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -1039,7 +1039,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: mx_15.h,v 1.29 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: mx_15.h,v 1.29 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -1096,7 +1096,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: txt_16.h,v 1.28 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: txt_16.h,v 1.28 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -1210,7 +1210,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: rp_17.h,v 1.21 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: rp_17.h,v 1.21 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1267,7 +1267,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: afsdb_18.h,v 1.20 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: afsdb_18.h,v 1.20 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1324,7 +1324,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: x25_19.h,v 1.18 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: x25_19.h,v 1.18 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1383,7 +1383,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: isdn_20.h,v 1.18 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: isdn_20.h,v 1.18 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1448,7 +1448,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: rt_21.h,v 1.21 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: rt_21.h,v 1.21 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1505,7 +1505,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsap_22.h,v 1.18 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: nsap_22.h,v 1.18 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1564,7 +1564,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsap-ptr_23.h,v 1.19 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: nsap-ptr_23.h,v 1.19 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1618,7 +1618,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: sig_24.h,v 1.26 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: sig_24.h,v 1.26 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1701,7 +1701,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: key_25.h,v 1.19 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: key_25.h,v 1.19 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1769,7 +1769,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: px_26.h,v 1.19 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: px_26.h,v 1.19 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1829,7 +1829,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: gpos_27.h,v 1.17 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: gpos_27.h,v 1.17 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1901,7 +1901,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: aaaa_28.h,v 1.21 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: aaaa_28.h,v 1.21 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1952,7 +1952,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: loc_29.h,v 1.19 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: loc_29.h,v 1.19 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2039,7 +2039,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nxt_30.h,v 1.25 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: nxt_30.h,v 1.25 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2101,7 +2101,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: srv_33.h,v 1.19 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: srv_33.h,v 1.19 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2168,7 +2168,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: naptr_35.h,v 1.23 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: naptr_35.h,v 1.23 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2249,7 +2249,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: kx_36.h,v 1.20 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: kx_36.h,v 1.20 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2293,7 +2293,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: cert_37.h,v 1.20 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: cert_37.h,v 1.20 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -2374,7 +2374,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: a6_38.h,v 1.24 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: a6_38.h,v 1.24 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2435,7 +2435,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: dname_39.h,v 1.21 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: dname_39.h,v 1.21 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2489,7 +2489,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: opt_41.h,v 1.18 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: opt_41.h,v 1.18 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2614,7 +2614,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: apl_42.h,v 1.6 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: apl_42.h,v 1.6 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -2725,7 +2725,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: ds_43.h,v 1.7 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: ds_43.h,v 1.7 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -2793,7 +2793,7 @@ comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sshfp_44.h,v 1.8 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: sshfp_44.h,v 1.8 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -2858,7 +2858,7 @@ comment|/*  * Copyright (C) 2005, 2007  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: ipseckey_45.h,v 1.4 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: ipseckey_45.h,v 1.4 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -2949,7 +2949,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: rrsig_46.h,v 1.7 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: rrsig_46.h,v 1.7 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3032,7 +3032,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsec_47.h,v 1.10 2008/07/15 23:47:21 tbox Exp $ */
+comment|/* $Id: nsec_47.h,v 1.10 2008-07-15 23:47:21 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3094,7 +3094,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: dnskey_48.h,v 1.7 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: dnskey_48.h,v 1.7 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3166,7 +3166,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: dhcid_49.h,v 1.5 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: dhcid_49.h,v 1.5 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -3222,7 +3222,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsec3_50.h,v 1.4 2008/09/25 04:02:39 tbox Exp $ */
+comment|/* $Id: nsec3_50.h,v 1.4 2008-09-25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3370,7 +3370,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: nsec3param_51.h,v 1.4 2008/09/25 04:02:39 tbox Exp $ */
+comment|/* $Id: nsec3param_51.h,v 1.4 2008-09-25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3430,6 +3430,121 @@ comment|/* GENERIC_NSEC3PARAM_51_H */
 end_comment
 
 begin_comment
+comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_comment
+comment|/* $Id: hip_55.h,v 1.2 2009-02-26 06:09:19 marka Exp $ */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GENERIC_HIP_5_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GENERIC_HIP_5_H
+value|1
+end_define
+
+begin_comment
+comment|/* RFC 5205 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dns_rdata_hip
+block|{
+name|dns_rdatacommon_t
+name|common
+decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|hit
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|key
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|servers
+decl_stmt|;
+name|isc_uint8_t
+name|algorithm
+decl_stmt|;
+name|isc_uint8_t
+name|hit_len
+decl_stmt|;
+name|isc_uint16_t
+name|key_len
+decl_stmt|;
+name|isc_uint16_t
+name|servers_len
+decl_stmt|;
+comment|/* Private */
+name|isc_uint16_t
+name|offset
+decl_stmt|;
+block|}
+name|dns_rdata_hip_t
+typedef|;
+end_typedef
+
+begin_function_decl
+name|isc_result_t
+name|dns_rdata_hip_first
+parameter_list|(
+name|dns_rdata_hip_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|isc_result_t
+name|dns_rdata_hip_next
+parameter_list|(
+name|dns_rdata_hip_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_rdata_hip_current
+parameter_list|(
+name|dns_rdata_hip_t
+modifier|*
+parameter_list|,
+name|dns_name_t
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GENERIC_HIP_5_H */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
@@ -3447,7 +3562,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: spf_99.h,v 1.4 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: spf_99.h,v 1.4 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -3565,7 +3680,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: unspec_103.h,v 1.17 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: unspec_103.h,v 1.17 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_typedef
@@ -3620,7 +3735,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: tkey_249.h,v 1.24 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: tkey_249.h,v 1.24 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3689,7 +3804,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: tsig_250.h,v 1.25 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: tsig_250.h,v 1.25 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -3771,7 +3886,7 @@ comment|/*  * Copyright (C) 2004, 2006, 2007  Internet Systems Consortium, Inc. 
 end_comment
 
 begin_comment
-comment|/* $Id: dlv_32769.h,v 1.5 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: dlv_32769.h,v 1.5 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -3835,11 +3950,88 @@ comment|/* GENERIC_DLV_32769_H */
 end_comment
 
 begin_comment
+comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GENERIC_KEYDATA_65533_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GENERIC_KEYDATA_65533_H
+value|1
+end_define
+
+begin_comment
+comment|/* $Id: keydata_65533.h,v 1.2 2009-06-30 02:52:32 each Exp $ */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|dns_rdata_keydata
+block|{
+name|dns_rdatacommon_t
+name|common
+decl_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+decl_stmt|;
+name|isc_uint32_t
+name|refresh
+decl_stmt|;
+comment|/* Timer for refreshing data */
+name|isc_uint32_t
+name|addhd
+decl_stmt|;
+comment|/* Hold-down timer for adding */
+name|isc_uint32_t
+name|removehd
+decl_stmt|;
+comment|/* Hold-down timer for removing */
+name|isc_uint16_t
+name|flags
+decl_stmt|;
+comment|/* Copy of DNSKEY_48 */
+name|isc_uint8_t
+name|protocol
+decl_stmt|;
+name|isc_uint8_t
+name|algorithm
+decl_stmt|;
+name|isc_uint16_t
+name|datalen
+decl_stmt|;
+name|unsigned
+name|char
+modifier|*
+name|data
+decl_stmt|;
+block|}
+name|dns_rdata_keydata_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* GENERIC_KEYDATA_65533_H */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (C) 2004, 2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rdatastructsuf.h,v 1.10 2007/06/19 23:47:17 tbox Exp $ */
+comment|/* $Id: rdatastructsuf.h,v 1.10 2007-06-19 23:47:17 tbox Exp $ */
 end_comment
 
 begin_macro

@@ -253,7 +253,25 @@ comment|//
 name|Pass
 modifier|*
 name|createLoopUnrollPass
-parameter_list|()
+parameter_list|(
+name|int
+name|Threshold
+init|=
+operator|-
+literal|1
+parameter_list|,
+name|int
+name|Count
+init|=
+operator|-
+literal|1
+parameter_list|,
+name|int
+name|AllowPartial
+init|=
+operator|-
+literal|1
+parameter_list|)
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
@@ -533,15 +551,6 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|/// createSimplifyHalfPowrLibCallsPass - This is an experimental pass that
-comment|/// optimizes specific half_pow functions.
-name|FunctionPass
-modifier|*
-name|createSimplifyHalfPowrLibCallsPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// CodeGenPrepare - This pass prepares a function for instruction selection.
 comment|//
 name|FunctionPass
@@ -608,6 +617,33 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
+comment|// ObjCARCExpand - ObjC ARC preliminary simplifications.
+comment|//
+name|Pass
+modifier|*
+name|createObjCARCExpandPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// ObjCARCContract - Late ObjC ARC cleanups.
+comment|//
+name|Pass
+modifier|*
+name|createObjCARCContractPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// ObjCARCOpt - ObjC ARC optimization.
+comment|//
+name|Pass
+modifier|*
+name|createObjCARCOptPass
+parameter_list|()
+function_decl|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
 comment|// InstructionSimplifier - Remove redundant instructions.
 comment|//
 name|FunctionPass
@@ -620,6 +656,15 @@ name|char
 modifier|&
 name|InstructionSimplifierID
 decl_stmt|;
+comment|//===----------------------------------------------------------------------===//
+comment|//
+comment|// LowerExpectIntriniscs - Removes llvm.expect intrinsics and creates
+comment|// "block_weights" metadata.
+name|FunctionPass
+modifier|*
+name|createLowerExpectIntrinsicPass
+parameter_list|()
+function_decl|;
 block|}
 end_decl_stmt
 

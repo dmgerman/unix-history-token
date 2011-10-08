@@ -101,132 +101,132 @@ begin_struct
 struct|struct
 name|ext2fs
 block|{
-name|u_int32_t
+name|uint32_t
 name|e2fs_icount
 decl_stmt|;
 comment|/* Inode count */
-name|u_int32_t
+name|uint32_t
 name|e2fs_bcount
 decl_stmt|;
 comment|/* blocks count */
-name|u_int32_t
+name|uint32_t
 name|e2fs_rbcount
 decl_stmt|;
 comment|/* reserved blocks count */
-name|u_int32_t
+name|uint32_t
 name|e2fs_fbcount
 decl_stmt|;
 comment|/* free blocks count */
-name|u_int32_t
+name|uint32_t
 name|e2fs_ficount
 decl_stmt|;
 comment|/* free inodes count */
-name|u_int32_t
+name|uint32_t
 name|e2fs_first_dblock
 decl_stmt|;
 comment|/* first data block */
-name|u_int32_t
+name|uint32_t
 name|e2fs_log_bsize
 decl_stmt|;
 comment|/* block size = 1024*(2^e2fs_log_bsize) */
-name|u_int32_t
+name|uint32_t
 name|e2fs_log_fsize
 decl_stmt|;
 comment|/* fragment size */
-name|u_int32_t
+name|uint32_t
 name|e2fs_bpg
 decl_stmt|;
 comment|/* blocks per group */
-name|u_int32_t
+name|uint32_t
 name|e2fs_fpg
 decl_stmt|;
 comment|/* frags per group */
-name|u_int32_t
+name|uint32_t
 name|e2fs_ipg
 decl_stmt|;
 comment|/* inodes per group */
-name|u_int32_t
+name|uint32_t
 name|e2fs_mtime
 decl_stmt|;
 comment|/* mount time */
-name|u_int32_t
+name|uint32_t
 name|e2fs_wtime
 decl_stmt|;
 comment|/* write time */
-name|u_int16_t
+name|uint16_t
 name|e2fs_mnt_count
 decl_stmt|;
 comment|/* mount count */
-name|u_int16_t
+name|uint16_t
 name|e2fs_max_mnt_count
 decl_stmt|;
 comment|/* max mount count */
-name|u_int16_t
+name|uint16_t
 name|e2fs_magic
 decl_stmt|;
 comment|/* magic number */
-name|u_int16_t
+name|uint16_t
 name|e2fs_state
 decl_stmt|;
 comment|/* file system state */
-name|u_int16_t
+name|uint16_t
 name|e2fs_beh
 decl_stmt|;
 comment|/* behavior on errors */
-name|u_int16_t
+name|uint16_t
 name|e2fs_minrev
 decl_stmt|;
 comment|/* minor revision level */
-name|u_int32_t
+name|uint32_t
 name|e2fs_lastfsck
 decl_stmt|;
 comment|/* time of last fsck */
-name|u_int32_t
+name|uint32_t
 name|e2fs_fsckintv
 decl_stmt|;
 comment|/* max time between fscks */
-name|u_int32_t
+name|uint32_t
 name|e2fs_creator
 decl_stmt|;
 comment|/* creator OS */
-name|u_int32_t
+name|uint32_t
 name|e2fs_rev
 decl_stmt|;
 comment|/* revision level */
-name|u_int16_t
+name|uint16_t
 name|e2fs_ruid
 decl_stmt|;
 comment|/* default uid for reserved blocks */
-name|u_int16_t
+name|uint16_t
 name|e2fs_rgid
 decl_stmt|;
 comment|/* default gid for reserved blocks */
 comment|/* EXT2_DYNAMIC_REV superblocks */
-name|u_int32_t
+name|uint32_t
 name|e2fs_first_ino
 decl_stmt|;
 comment|/* first non-reserved inode */
-name|u_int16_t
+name|uint16_t
 name|e2fs_inode_size
 decl_stmt|;
 comment|/* size of inode structure */
-name|u_int16_t
+name|uint16_t
 name|e2fs_block_group_nr
 decl_stmt|;
 comment|/* block grp number of this sblk*/
-name|u_int32_t
+name|uint32_t
 name|e2fs_features_compat
 decl_stmt|;
 comment|/*  compatible feature set */
-name|u_int32_t
+name|uint32_t
 name|e2fs_features_incompat
 decl_stmt|;
 comment|/* incompatible feature set */
-name|u_int32_t
+name|uint32_t
 name|e2fs_features_rocompat
 decl_stmt|;
 comment|/* RO-compatible feature set */
-name|u_int8_t
+name|uint8_t
 name|e2fs_uuid
 index|[
 literal|16
@@ -247,20 +247,69 @@ literal|64
 index|]
 decl_stmt|;
 comment|/* name mounted on */
-name|u_int32_t
+name|uint32_t
 name|e2fs_algo
 decl_stmt|;
-comment|/* For comcate for dir */
-name|u_int16_t
+comment|/* For compression */
+name|uint8_t
+name|e2fs_prealloc
+decl_stmt|;
+comment|/* # of blocks for old prealloc */
+name|uint8_t
+name|e2fs_dir_prealloc
+decl_stmt|;
+comment|/* # of blocks for old prealloc dirs */
+name|uint16_t
 name|e2fs_reserved_ngdb
 decl_stmt|;
 comment|/* # of reserved gd blocks for resize */
-name|u_int32_t
-name|reserved2
+name|char
+name|e3fs_journal_uuid
 index|[
-literal|204
+literal|16
 index|]
 decl_stmt|;
+comment|/* uuid of journal superblock */
+name|uint32_t
+name|e3fs_journal_inum
+decl_stmt|;
+comment|/* inode number of journal file */
+name|uint32_t
+name|e3fs_journal_dev
+decl_stmt|;
+comment|/* device number of journal file */
+name|uint32_t
+name|e3fs_last_orphan
+decl_stmt|;
+comment|/* start of list of inodes to delete */
+name|uint32_t
+name|e3fs_hash_seed
+index|[
+literal|4
+index|]
+decl_stmt|;
+comment|/* HTREE hash seed */
+name|char
+name|e3fs_def_hash_version
+decl_stmt|;
+comment|/* Default hash version to use */
+name|char
+name|e3fs_reserved_char_pad
+decl_stmt|;
+name|uint32_t
+name|e3fs_default_mount_opts
+decl_stmt|;
+name|uint32_t
+name|e3fs_first_meta_bg
+decl_stmt|;
+comment|/* First metablock block group */
+name|uint32_t
+name|reserved2
+index|[
+literal|190
+index|]
+decl_stmt|;
+comment|/* Padding to the end of the block */
 block|}
 struct|;
 end_struct
@@ -732,34 +781,34 @@ begin_struct
 struct|struct
 name|ext2_gd
 block|{
-name|u_int32_t
+name|uint32_t
 name|ext2bgd_b_bitmap
 decl_stmt|;
 comment|/* blocks bitmap block */
-name|u_int32_t
+name|uint32_t
 name|ext2bgd_i_bitmap
 decl_stmt|;
 comment|/* inodes bitmap block */
-name|u_int32_t
+name|uint32_t
 name|ext2bgd_i_tables
 decl_stmt|;
 comment|/* inodes table block  */
-name|u_int16_t
+name|uint16_t
 name|ext2bgd_nbfree
 decl_stmt|;
 comment|/* number of free blocks */
-name|u_int16_t
+name|uint16_t
 name|ext2bgd_nifree
 decl_stmt|;
 comment|/* number of free inodes */
-name|u_int16_t
+name|uint16_t
 name|ext2bgd_ndirs
 decl_stmt|;
 comment|/* number of directories */
-name|u_int16_t
+name|uint16_t
 name|reserved
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|reserved2
 index|[
 literal|3

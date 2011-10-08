@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: base64.c,v 1.32.332.2 2009/10/21 23:47:20 tbox Exp $ */
+comment|/* $Id: base64.c,v 1.34 2009-10-21 23:48:05 tbox Exp $ */
 end_comment
 
 begin_comment

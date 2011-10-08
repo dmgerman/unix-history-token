@@ -44,6 +44,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|LINUX_PR_GET_KEEPCAPS
+value|7
+end_define
+
+begin_comment
+comment|/* Get drop capabilities on setuid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_PR_SET_KEEPCAPS
+value|8
+end_define
+
+begin_comment
+comment|/* Set drop capabilities on setuid */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|LINUX_PR_SET_NAME
 value|15
 end_define

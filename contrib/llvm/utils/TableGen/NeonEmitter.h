@@ -111,8 +111,6 @@ name|OpSubw
 block|,
 name|OpMul
 block|,
-name|OpMull
-block|,
 name|OpMla
 block|,
 name|OpMlal
@@ -122,8 +120,6 @@ block|,
 name|OpMlsl
 block|,
 name|OpMulN
-block|,
-name|OpMullN
 block|,
 name|OpMlaN
 block|,
@@ -332,13 +328,6 @@ name|OpMul
 block|;
 name|OpMap
 index|[
-literal|"OP_MULL"
-index|]
-operator|=
-name|OpMull
-block|;
-name|OpMap
-index|[
 literal|"OP_MLA"
 index|]
 operator|=
@@ -371,13 +360,6 @@ literal|"OP_MUL_N"
 index|]
 operator|=
 name|OpMulN
-block|;
-name|OpMap
-index|[
-literal|"OP_MULL_N"
-index|]
-operator|=
-name|OpMullN
 block|;
 name|OpMap
 index|[

@@ -218,7 +218,7 @@ parameter_list|)
 block|{}
 comment|/// \brief If the consumer is interested in entities getting modified after
 comment|/// their initial creation, it should return a pointer to
-comment|/// a GetASTMutationListener here.
+comment|/// an ASTMutationListener here.
 name|virtual
 name|ASTMutationListener
 modifier|*

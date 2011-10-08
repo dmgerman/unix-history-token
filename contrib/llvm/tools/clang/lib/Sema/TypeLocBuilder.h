@@ -72,12 +72,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"clang/AST/ASTContext.h"
 end_include
 
@@ -305,6 +299,25 @@ name|Index
 operator|=
 name|Capacity
 expr_stmt|;
+block|}
+comment|/// \brief Tell the TypeLocBuilder that the type it is storing has been
+comment|/// modified in some safe way that doesn't affect type-location information.
+name|void
+name|TypeWasModifiedSafely
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|LastTy
+operator|=
+name|T
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 comment|/// Pushes space for a new TypeLoc of the given type.  Invalidates
 comment|/// any TypeLocs previously retrieved from this builder.
@@ -583,7 +596,7 @@ operator|-=
 name|LocalSize
 expr_stmt|;
 return|return
-name|getTypeLoc
+name|getTemporaryTypeLoc
 argument_list|(
 name|T
 argument_list|)
@@ -714,18 +727,22 @@ operator|-=
 name|Size
 expr_stmt|;
 return|return
-name|getTypeLoc
+name|getTemporaryTypeLoc
 argument_list|(
 name|T
 argument_list|)
 return|;
 block|}
-comment|// This is private because, when we kill off TypeSourceInfo in favor
-comment|// of TypeLoc, we'll want an interface that creates a TypeLoc given
-comment|// an ASTContext, and we don't want people to think they can just
-comment|// use this as an equivalent.
+name|public
+label|:
+comment|/// \brief Retrieve a temporary TypeLoc that refers into this \c TypeLocBuilder
+comment|/// object.
+comment|///
+comment|/// The resulting \c TypeLoc should only be used so long as the
+comment|/// \c TypeLocBuilder is active and has not had more type information
+comment|/// pushed into it.
 name|TypeLoc
-name|getTypeLoc
+name|getTemporaryTypeLoc
 parameter_list|(
 name|QualType
 name|T

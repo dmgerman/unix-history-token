@@ -1653,7 +1653,7 @@ comment|/* Completion status */
 name|uint16_t
 name|ResponseCode
 decl_stmt|;
-comment|/* TMF Reponse Code */
+comment|/* TMF Response Code */
 name|uint16_t
 name|serno
 decl_stmt|;
@@ -2709,7 +2709,7 @@ name|void
 modifier|*
 name|ih
 decl_stmt|;
-comment|/* Interupt handle */
+comment|/* Interrupt handle */
 name|struct
 name|mpt_pci_cfg
 name|pci_cfg
@@ -2722,10 +2722,6 @@ modifier|*
 name|pci_reg
 decl_stmt|;
 comment|/* Register map for chip */
-name|int
-name|pci_mem_rid
-decl_stmt|;
-comment|/* Resource ID */
 name|bus_space_tag_t
 name|pci_st
 decl_stmt|;
@@ -2735,9 +2731,6 @@ name|pci_sh
 decl_stmt|;
 comment|/* Bus handle for registers */
 comment|/* PIO versions of above. */
-name|int
-name|pci_pio_rid
-decl_stmt|;
 name|struct
 name|resource
 modifier|*
@@ -4276,7 +4269,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/************************** Scatter Gather Managment **************************/
+comment|/************************** Scatter Gather Management **************************/
 end_comment
 
 begin_comment
@@ -4357,55 +4350,6 @@ end_function_decl
 begin_comment
 comment|/****************************** Debugging ************************************/
 end_comment
-
-begin_typedef
-typedef|typedef
-struct|struct
-name|mpt_decode_entry
-block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|u_int
-name|value
-decl_stmt|;
-name|u_int
-name|mask
-decl_stmt|;
-block|}
-name|mpt_decode_entry_t
-typedef|;
-end_typedef
-
-begin_function_decl
-name|int
-name|mpt_decode_value
-parameter_list|(
-name|mpt_decode_entry_t
-modifier|*
-name|table
-parameter_list|,
-name|u_int
-name|num_entries
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|name
-parameter_list|,
-name|u_int
-name|value
-parameter_list|,
-name|u_int
-modifier|*
-name|cur_column
-parameter_list|,
-name|u_int
-name|wrap_point
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -4496,6 +4440,12 @@ define|\
 value|do {						\ 	if (level<= (mpt)->verbose)		\ 		mpt_prt(mpt, __VA_ARGS__);	\ } while (0)
 end_define
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
 begin_define
 define|#
 directive|define
@@ -4510,6 +4460,11 @@ parameter_list|)
 define|\
 value|do {						\ 	if (level<= (mpt)->verbose)		\ 		mpt_prtc(mpt, __VA_ARGS__);	\ } while (0)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -4544,33 +4499,17 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_function_decl
-name|void
-name|mpt_lprtc
-parameter_list|(
-name|struct
-name|mpt_softc
-modifier|*
-parameter_list|,
-name|int
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-parameter_list|,
-modifier|...
-parameter_list|)
-function_decl|__printflike
-parameter_list|(
-function_decl|3
-operator|,
-function_decl|4
-end_function_decl
+begin_if
+if|#
+directive|if
+literal|0
+end_if
 
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+begin_endif
+unit|void mpt_lprtc(struct mpt_softc *, int, const char *, ...) 	__printflike(3, 4);
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -5524,17 +5463,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|mpt_set_config_regs
-parameter_list|(
-name|struct
-name|mpt_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|mpt_issue_cfg_req
 parameter_list|(
@@ -5900,17 +5828,6 @@ parameter_list|(
 name|void
 modifier|*
 name|vmsg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|mpt_print_scsi_io_request
-parameter_list|(
-name|MSG_SCSI_IO_REQUEST
-modifier|*
-name|msg
 parameter_list|)
 function_decl|;
 end_function_decl

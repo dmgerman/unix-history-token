@@ -2742,6 +2742,10 @@ operator|=
 name|l
 operator|->
 name|delay
+operator|*
+literal|1000
+operator|/
+name|hz
 expr_stmt|;
 name|pipe7
 operator|->
@@ -3802,7 +3806,7 @@ name|free
 argument_list|(
 name|v
 argument_list|,
-name|M_DUMMYNET
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3849,7 +3853,7 @@ name|free
 argument_list|(
 name|v
 argument_list|,
-name|M_DUMMYNET
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 break|break;

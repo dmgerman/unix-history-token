@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/AddressSpaces.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/IdentifierTable.h"
 end_include
 
@@ -81,6 +87,12 @@ begin_include
 include|#
 directive|include
 file|"clang/Basic/PartialDiagnostic.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/VersionTuple.h"
 end_include
 
 begin_include
@@ -135,6 +147,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/FoldingSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
 begin_include
@@ -267,7 +285,7 @@ name|class
 name|TypeDecl
 decl_stmt|;
 name|class
-name|TypedefDecl
+name|TypedefNameDecl
 decl_stmt|;
 name|class
 name|UsingDecl
@@ -289,11 +307,19 @@ comment|/// ASTContext - This class holds long-lived AST nodes (such as types an
 comment|/// decls) that can be referred to throughout the semantic analysis of a file.
 name|class
 name|ASTContext
+range|:
+name|public
+name|llvm
+operator|::
+name|RefCountedBase
+operator|<
+name|ASTContext
+operator|>
 block|{
 name|ASTContext
-modifier|&
+operator|&
 name|this_
-parameter_list|()
+argument_list|()
 block|{
 return|return
 operator|*
@@ -309,7 +335,7 @@ name|Type
 operator|*
 operator|>
 name|Types
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -318,7 +344,7 @@ operator|<
 name|ExtQuals
 operator|>
 name|ExtQualNodes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -327,7 +353,7 @@ operator|<
 name|ComplexType
 operator|>
 name|ComplexTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -336,7 +362,7 @@ operator|<
 name|PointerType
 operator|>
 name|PointerTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -345,7 +371,7 @@ operator|<
 name|BlockPointerType
 operator|>
 name|BlockPointerTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -354,7 +380,7 @@ operator|<
 name|LValueReferenceType
 operator|>
 name|LValueReferenceTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -363,7 +389,7 @@ operator|<
 name|RValueReferenceType
 operator|>
 name|RValueReferenceTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -372,7 +398,7 @@ operator|<
 name|MemberPointerType
 operator|>
 name|MemberPointerTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -381,7 +407,7 @@ operator|<
 name|ConstantArrayType
 operator|>
 name|ConstantArrayTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -390,7 +416,7 @@ operator|<
 name|IncompleteArrayType
 operator|>
 name|IncompleteArrayTypes
-expr_stmt|;
+block|;
 name|mutable
 name|std
 operator|::
@@ -400,7 +426,7 @@ name|VariableArrayType
 operator|*
 operator|>
 name|VariableArrayTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -409,7 +435,7 @@ operator|<
 name|DependentSizedArrayType
 operator|>
 name|DependentSizedArrayTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -418,7 +444,7 @@ operator|<
 name|DependentSizedExtVectorType
 operator|>
 name|DependentSizedExtVectorTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -427,7 +453,7 @@ operator|<
 name|VectorType
 operator|>
 name|VectorTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -436,16 +462,19 @@ operator|<
 name|FunctionNoProtoType
 operator|>
 name|FunctionNoProtoTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
-name|FoldingSet
+name|ContextualFoldingSet
 operator|<
 name|FunctionProtoType
+block|,
+name|ASTContext
+operator|&
 operator|>
 name|FunctionProtoTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -454,7 +483,7 @@ operator|<
 name|DependentTypeOfExprType
 operator|>
 name|DependentTypeOfExprTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -463,7 +492,7 @@ operator|<
 name|DependentDecltypeType
 operator|>
 name|DependentDecltypeTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -472,7 +501,7 @@ operator|<
 name|TemplateTypeParmType
 operator|>
 name|TemplateTypeParmTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -481,7 +510,7 @@ operator|<
 name|SubstTemplateTypeParmType
 operator|>
 name|SubstTemplateTypeParmTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -490,19 +519,19 @@ operator|<
 name|SubstTemplateTypeParmPackType
 operator|>
 name|SubstTemplateTypeParmPackTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
 name|ContextualFoldingSet
 operator|<
 name|TemplateSpecializationType
-operator|,
+block|,
 name|ASTContext
 operator|&
 operator|>
 name|TemplateSpecializationTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -511,7 +540,7 @@ operator|<
 name|ParenType
 operator|>
 name|ParenTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -520,7 +549,7 @@ operator|<
 name|ElaboratedType
 operator|>
 name|ElaboratedTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -529,19 +558,19 @@ operator|<
 name|DependentNameType
 operator|>
 name|DependentNameTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
 name|ContextualFoldingSet
 operator|<
 name|DependentTemplateSpecializationType
-operator|,
+block|,
 name|ASTContext
 operator|&
 operator|>
 name|DependentTemplateSpecializationTypes
-expr_stmt|;
+block|;
 name|llvm
 operator|::
 name|FoldingSet
@@ -549,7 +578,7 @@ operator|<
 name|PackExpansionType
 operator|>
 name|PackExpansionTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -558,7 +587,7 @@ operator|<
 name|ObjCObjectTypeImpl
 operator|>
 name|ObjCObjectTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -567,7 +596,7 @@ operator|<
 name|ObjCObjectPointerType
 operator|>
 name|ObjCObjectPointerTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -576,7 +605,7 @@ operator|<
 name|AutoType
 operator|>
 name|AutoTypes
-expr_stmt|;
+block|;
 name|llvm
 operator|::
 name|FoldingSet
@@ -584,7 +613,7 @@ operator|<
 name|AttributedType
 operator|>
 name|AttributedTypes
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -593,7 +622,7 @@ operator|<
 name|QualifiedTemplateName
 operator|>
 name|QualifiedTemplateNames
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -602,16 +631,28 @@ operator|<
 name|DependentTemplateName
 operator|>
 name|DependentTemplateNames
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
 name|FoldingSet
 operator|<
+name|SubstTemplateTemplateParmStorage
+operator|>
+name|SubstTemplateTemplateParms
+block|;
+name|mutable
+name|llvm
+operator|::
+name|ContextualFoldingSet
+operator|<
 name|SubstTemplateTemplateParmPackStorage
+block|,
+name|ASTContext
+operator|&
 operator|>
 name|SubstTemplateTemplateParmPacks
-expr_stmt|;
+block|;
 comment|/// \brief The set of nested name specifiers.
 comment|///
 comment|/// This set is managed by the NestedNameSpecifier class.
@@ -623,16 +664,16 @@ operator|<
 name|NestedNameSpecifier
 operator|>
 name|NestedNameSpecifiers
-expr_stmt|;
+block|;
 name|mutable
 name|NestedNameSpecifier
-modifier|*
+operator|*
 name|GlobalNestedNameSpecifier
-decl_stmt|;
+block|;
 name|friend
 name|class
 name|NestedNameSpecifier
-decl_stmt|;
+block|;
 comment|/// ASTRecordLayouts - A cache mapping from RecordDecls to ASTRecordLayouts.
 comment|///  This is lazily created.  This is intentionally not serialized.
 name|mutable
@@ -643,13 +684,13 @@ operator|<
 specifier|const
 name|RecordDecl
 operator|*
-operator|,
+block|,
 specifier|const
 name|ASTRecordLayout
 operator|*
 operator|>
 name|ASTRecordLayouts
-expr_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -658,13 +699,13 @@ operator|<
 specifier|const
 name|ObjCContainerDecl
 operator|*
-operator|,
+block|,
 specifier|const
 name|ASTRecordLayout
 operator|*
 operator|>
 name|ObjCLayouts
-expr_stmt|;
+block|;
 comment|/// KeyFunctions - A cache mapping from CXXRecordDecls to key functions.
 name|llvm
 operator|::
@@ -673,13 +714,13 @@ operator|<
 specifier|const
 name|CXXRecordDecl
 operator|*
-operator|,
+block|,
 specifier|const
 name|CXXMethodDecl
 operator|*
 operator|>
 name|KeyFunctions
-expr_stmt|;
+block|;
 comment|/// \brief Mapping from ObjCContainers to their ObjCImplementations.
 name|llvm
 operator|::
@@ -687,12 +728,12 @@ name|DenseMap
 operator|<
 name|ObjCContainerDecl
 operator|*
-operator|,
+block|,
 name|ObjCImplDecl
 operator|*
 operator|>
 name|ObjCImpls
-expr_stmt|;
+block|;
 comment|/// \brief Mapping from __block VarDecls to their copy initialization expr.
 name|llvm
 operator|::
@@ -701,17 +742,17 @@ operator|<
 specifier|const
 name|VarDecl
 operator|*
-operator|,
+block|,
 name|Expr
 operator|*
 operator|>
 name|BlockVarCopyInits
-expr_stmt|;
+block|;
 comment|/// \brief Representation of a "canonical" template template parameter that
 comment|/// is used in canonical template names.
 name|class
 name|CanonicalTemplateTemplateParm
-range|:
+operator|:
 name|public
 name|llvm
 operator|::
@@ -773,7 +814,7 @@ operator|*
 name|Parm
 argument_list|)
 block|;   }
-decl_stmt|;
+block|;
 name|mutable
 name|llvm
 operator|::
@@ -782,101 +823,99 @@ operator|<
 name|CanonicalTemplateTemplateParm
 operator|>
 name|CanonTemplateTemplateParms
-expr_stmt|;
-name|TemplateTemplateParmDecl
-modifier|*
-name|getCanonicalTemplateTemplateParmDecl
-argument_list|(
+block|;
 name|TemplateTemplateParmDecl
 operator|*
-name|TTP
+name|getCanonicalTemplateTemplateParmDecl
+argument_list|(
+argument|TemplateTemplateParmDecl *TTP
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// \brief Whether __[u]int128_t identifier is installed.
 name|bool
 name|IsInt128Installed
-decl_stmt|;
+block|;
 comment|/// BuiltinVaListType - built-in va list type.
 comment|/// This is initially null and set by Sema::LazilyCreateBuiltin when
 comment|/// a builtin that takes a valist is encountered.
 name|QualType
 name|BuiltinVaListType
-decl_stmt|;
+block|;
 comment|/// ObjCIdType - a pseudo built-in typedef type (set by Sema).
 name|QualType
 name|ObjCIdTypedefType
-decl_stmt|;
+block|;
 comment|/// ObjCSelType - another pseudo built-in typedef type (set by Sema).
 name|QualType
 name|ObjCSelTypedefType
-decl_stmt|;
+block|;
 comment|/// ObjCProtoType - another pseudo built-in typedef type (set by Sema).
 name|QualType
 name|ObjCProtoType
-decl_stmt|;
+block|;
 specifier|const
 name|RecordType
-modifier|*
+operator|*
 name|ProtoStructType
-decl_stmt|;
+block|;
 comment|/// ObjCClassType - another pseudo built-in typedef type (set by Sema).
 name|QualType
 name|ObjCClassTypedefType
-decl_stmt|;
+block|;
 name|QualType
 name|ObjCConstantStringType
-decl_stmt|;
+block|;
 name|mutable
 name|RecordDecl
-modifier|*
+operator|*
 name|CFConstantStringTypeDecl
-decl_stmt|;
+block|;
 name|mutable
 name|RecordDecl
-modifier|*
+operator|*
 name|NSConstantStringTypeDecl
-decl_stmt|;
+block|;
 name|mutable
 name|RecordDecl
-modifier|*
+operator|*
 name|ObjCFastEnumerationStateTypeDecl
-decl_stmt|;
+block|;
 comment|/// \brief The type for the C FILE type.
 name|TypeDecl
-modifier|*
+operator|*
 name|FILEDecl
-decl_stmt|;
+block|;
 comment|/// \brief The type for the C jmp_buf type.
 name|TypeDecl
-modifier|*
+operator|*
 name|jmp_bufDecl
-decl_stmt|;
+block|;
 comment|/// \brief The type for the C sigjmp_buf type.
 name|TypeDecl
-modifier|*
+operator|*
 name|sigjmp_bufDecl
-decl_stmt|;
+block|;
 comment|/// \brief Type for the Block descriptor for Blocks CodeGen.
 name|mutable
 name|RecordDecl
-modifier|*
+operator|*
 name|BlockDescriptorType
-decl_stmt|;
+block|;
 comment|/// \brief Type for the Block descriptor for Blocks CodeGen.
 name|mutable
 name|RecordDecl
-modifier|*
+operator|*
 name|BlockDescriptorExtendedType
-decl_stmt|;
+block|;
 comment|/// \brief Declaration for the CUDA cudaConfigureCall function.
 name|FunctionDecl
-modifier|*
+operator|*
 name|cudaConfigureCallDecl
-decl_stmt|;
+block|;
 name|TypeSourceInfo
 name|NullTypeSourceInfo
-decl_stmt|;
+block|;
 comment|/// \brief Keeps track of all declaration attributes.
 comment|///
 comment|/// Since so few decls have attrs, we keep them in a hash map instead of
@@ -888,12 +927,12 @@ operator|<
 specifier|const
 name|Decl
 operator|*
-operator|,
+block|,
 name|AttrVec
 operator|*
 operator|>
 name|DeclAttrs
-expr_stmt|;
+block|;
 comment|/// \brief Keeps track of the static data member templates from which
 comment|/// static data members of class template specializations were instantiated.
 comment|///
@@ -926,12 +965,12 @@ operator|<
 specifier|const
 name|VarDecl
 operator|*
-operator|,
+block|,
 name|MemberSpecializationInfo
 operator|*
 operator|>
 name|InstantiatedFromStaticDataMember
-expr_stmt|;
+block|;
 comment|/// \brief Keeps track of the declaration from which a UsingDecl was
 comment|/// created during instantiation.  The source declaration is always
 comment|/// a UsingDecl, an UnresolvedUsingValueDecl, or an
@@ -960,36 +999,36 @@ name|DenseMap
 operator|<
 name|UsingDecl
 operator|*
-operator|,
+block|,
 name|NamedDecl
 operator|*
 operator|>
 name|InstantiatedFromUsingDecl
-expr_stmt|;
+block|;
 name|llvm
 operator|::
 name|DenseMap
 operator|<
 name|UsingShadowDecl
 operator|*
-operator|,
+block|,
 name|UsingShadowDecl
 operator|*
 operator|>
 name|InstantiatedFromUsingShadowDecl
-expr_stmt|;
+block|;
 name|llvm
 operator|::
 name|DenseMap
 operator|<
 name|FieldDecl
 operator|*
-operator|,
+block|,
 name|FieldDecl
 operator|*
 operator|>
 name|InstantiatedFromUnnamedFieldDecl
-expr_stmt|;
+block|;
 comment|/// \brief Mapping that stores the methods overridden by a given C++
 comment|/// member function.
 comment|///
@@ -1011,11 +1050,11 @@ operator|<
 specifier|const
 name|CXXMethodDecl
 operator|*
-operator|,
+block|,
 name|CXXMethodVector
 operator|>
 name|OverriddenMethods
-expr_stmt|;
+decl_stmt|;
 name|TranslationUnitDecl
 modifier|*
 name|TUDecl
@@ -1065,6 +1104,14 @@ modifier|&
 name|T
 parameter_list|)
 function_decl|;
+comment|/// \brief The logical -> physical address space map.
+specifier|const
+name|LangAS
+operator|::
+name|Map
+operator|&
+name|AddrSpaceMap
+expr_stmt|;
 name|friend
 name|class
 name|ASTDeclReader
@@ -1176,6 +1223,26 @@ name|Ptr
 argument_list|)
 decl|const
 block|{ }
+comment|/// Return the total amount of physical memory allocated for representing
+comment|/// AST nodes and type information.
+name|size_t
+name|getASTAllocatedMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BumpAlloc
+operator|.
+name|getTotalMemory
+argument_list|()
+return|;
+block|}
+comment|/// Return the total memory used for various side tables.
+name|size_t
+name|getSideTableAllocatedMemory
+argument_list|()
+specifier|const
+expr_stmt|;
 name|PartialDiagnostic
 operator|::
 name|StorageAllocator
@@ -1346,6 +1413,91 @@ modifier|*
 name|Tmpl
 parameter_list|)
 function_decl|;
+comment|/// ZeroBitfieldFollowsNonBitfield - return 'true" if 'FD' is a zero-length
+comment|/// bitfield which follows the non-bitfield 'LastFD'.
+name|bool
+name|ZeroBitfieldFollowsNonBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// ZeroBitfieldFollowsBitfield - return 'true" if 'FD' is a zero-length
+comment|/// bitfield which follows the bitfield 'LastFD'.
+name|bool
+name|ZeroBitfieldFollowsBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// BitfieldFollowsBitfield - return 'true" if 'FD' is a
+comment|/// bitfield which follows the bitfield 'LastFD'.
+name|bool
+name|BitfieldFollowsBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// NoneBitfieldFollowsBitfield - return 'true" if 'FD' is not a
+comment|/// bitfield which follows the bitfield 'LastFD'.
+name|bool
+name|NoneBitfieldFollowsBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// BitfieldFollowsNoneBitfield - return 'true" if 'FD' is a
+comment|/// bitfield which follows the none bitfield 'LastFD'.
+name|bool
+name|BitfieldFollowsNoneBitfield
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|FD
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|LastFD
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// Access to the set of methods overridden by the given C++ method.
 typedef|typedef
 name|CXXMethodVector
@@ -1478,10 +1630,13 @@ decl_stmt|,
 name|NullPtrTy
 decl_stmt|;
 name|CanQualType
-name|OverloadTy
-decl_stmt|;
-name|CanQualType
 name|DependentTy
+decl_stmt|,
+name|OverloadTy
+decl_stmt|,
+name|BoundMemberTy
+decl_stmt|,
+name|UnknownAnyTy
 decl_stmt|;
 name|CanQualType
 name|ObjCBuiltinIdTy
@@ -1490,6 +1645,17 @@ name|ObjCBuiltinClassTy
 decl_stmt|,
 name|ObjCBuiltinSelTy
 decl_stmt|;
+comment|// Types for deductions in C++0x [stmt.ranged]'s desugaring. Built on demand.
+name|mutable
+name|QualType
+name|AutoDeductTy
+decl_stmt|;
+comment|// Deduction against 'auto'.
+name|mutable
+name|QualType
+name|AutoRRefDeductTy
+decl_stmt|;
+comment|// Deduction against 'auto&&'.
 name|ASTContext
 argument_list|(
 argument|const LangOptions& LOpts
@@ -1891,6 +2057,9 @@ name|QualType
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_function
 name|void
 name|setcudaConfigureCallDecl
 parameter_list|(
@@ -1904,6 +2073,9 @@ operator|=
 name|FD
 expr_stmt|;
 block|}
+end_function
+
+begin_function
 name|FunctionDecl
 modifier|*
 name|getcudaConfigureCallDecl
@@ -1913,7 +2085,13 @@ return|return
 name|cudaConfigureCallDecl
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// This builds the struct used for __block variables.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|BuildByRefType
 argument_list|(
@@ -1927,7 +2105,13 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// Returns true iff we need copy/dispose helpers for the given type.
+end_comment
+
+begin_decl_stmt
 name|bool
 name|BlockRequiresCopying
 argument_list|(
@@ -1936,8 +2120,17 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getLValueReferenceType - Return the uniqued reference to the type for an
+end_comment
+
+begin_comment
 comment|/// lvalue reference to the specified type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getLValueReferenceType
 argument_list|(
@@ -1951,8 +2144,17 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getRValueReferenceType - Return the uniqued reference to the type for an
+end_comment
+
+begin_comment
 comment|/// rvalue reference to the specified type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getRValueReferenceType
 argument_list|(
@@ -1961,9 +2163,21 @@ name|T
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getMemberPointerType - Return the uniqued reference to the type for a
+end_comment
+
+begin_comment
 comment|/// member pointer to the specified type in the specified class. The class
+end_comment
+
+begin_comment
 comment|/// is a Type because it could be a dependent name.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getMemberPointerType
 argument_list|(
@@ -1977,8 +2191,17 @@ name|Cls
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getVariableArrayType - Returns a non-unique reference to the type for a
+end_comment
+
+begin_comment
 comment|/// variable array of the specified element type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getVariableArrayType
 argument_list|(
@@ -2002,10 +2225,25 @@ name|Brackets
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getDependentSizedArrayType - Returns a non-unique reference to
+end_comment
+
+begin_comment
 comment|/// the type for a dependently-sized array of the specified element
+end_comment
+
+begin_comment
 comment|/// type. FIXME: We will need these to be uniqued, or at least
+end_comment
+
+begin_comment
 comment|/// comparable, at some point.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getDependentSizedArrayType
 argument_list|(
@@ -2029,8 +2267,17 @@ name|Brackets
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getIncompleteArrayType - Returns a unique reference to the type for a
+end_comment
+
+begin_comment
 comment|/// incomplete array of the specified element type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getIncompleteArrayType
 argument_list|(
@@ -2047,8 +2294,17 @@ name|IndexTypeQuals
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getConstantArrayType - Return the unique reference to the type for a
+end_comment
+
+begin_comment
 comment|/// constant array of the specified element type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getConstantArrayType
 argument_list|(
@@ -2072,8 +2328,17 @@ name|IndexTypeQuals
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getVariableArrayDecayedType - Returns a vla type where known sizes
+end_comment
+
+begin_comment
 comment|/// are replaced with [*].
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getVariableArrayDecayedType
 argument_list|(
@@ -2082,8 +2347,17 @@ name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getVectorType - Return the unique reference to a vector type of
+end_comment
+
+begin_comment
 comment|/// the specified element type and size. VectorType must be a built-in type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getVectorType
 argument_list|(
@@ -2100,9 +2374,21 @@ name|VecKind
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getExtVectorType - Return the unique reference to an extended vector type
+end_comment
+
+begin_comment
 comment|/// of the specified element type and size.  VectorType must be a built-in
+end_comment
+
+begin_comment
 comment|/// type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getExtVectorType
 argument_list|(
@@ -2114,10 +2400,25 @@ name|NumElts
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getDependentSizedExtVectorType - Returns a non-unique reference to
+end_comment
+
+begin_comment
 comment|/// the type for a dependently-sized vector of the specified element
+end_comment
+
+begin_comment
 comment|/// type. FIXME: We will need these to be uniqued, or at least
+end_comment
+
+begin_comment
 comment|/// comparable, at some point.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getDependentSizedExtVectorType
 argument_list|(
@@ -2133,8 +2434,17 @@ name|AttrLoc
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getFunctionNoProtoType - Return a K&R style C function type like 'int()'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getFunctionNoProtoType
 argument_list|(
@@ -2150,6 +2460,9 @@ name|Info
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getFunctionNoProtoType
 argument_list|(
@@ -2170,8 +2483,17 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getFunctionType - Return a normal function type with a typed
+end_comment
+
+begin_comment
 comment|/// argument list.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getFunctionType
 argument_list|(
@@ -2195,8 +2517,17 @@ name|EPI
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getTypeDeclType - Return the unique reference to the type for
+end_comment
+
+begin_comment
 comment|/// the specified type declaration.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getTypeDeclType
 argument_list|(
@@ -2277,13 +2608,22 @@ name|Decl
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// getTypedefType - Return the unique reference to the type for the
-comment|/// specified typename decl.
+end_comment
+
+begin_comment
+comment|/// specified typedef-name decl.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getTypedefType
 argument_list|(
 specifier|const
-name|TypedefDecl
+name|TypedefNameDecl
 operator|*
 name|Decl
 argument_list|,
@@ -2295,6 +2635,9 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getRecordType
 argument_list|(
@@ -2305,6 +2648,9 @@ name|Decl
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getEnumType
 argument_list|(
@@ -2315,6 +2661,9 @@ name|Decl
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getInjectedClassNameType
 argument_list|(
@@ -2327,6 +2676,9 @@ name|TST
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getAttributedType
 argument_list|(
@@ -2342,6 +2694,9 @@ name|QualType
 name|equivalentType
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getSubstTemplateTypeParmType
 argument_list|(
@@ -2355,6 +2710,9 @@ name|Replacement
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_function_decl
 name|QualType
 name|getSubstTemplateTypeParmPackType
 parameter_list|(
@@ -2369,6 +2727,9 @@ modifier|&
 name|ArgPack
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_decl_stmt
 name|QualType
 name|getTemplateTypeParmType
 argument_list|(
@@ -2381,14 +2742,17 @@ argument_list|,
 name|bool
 name|ParameterPack
 argument_list|,
-name|IdentifierInfo
+name|TemplateTypeParmDecl
 operator|*
-name|Name
+name|ParmDecl
 operator|=
 literal|0
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getTemplateSpecializationType
 argument_list|(
@@ -2411,6 +2775,9 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getCanonicalTemplateSpecializationType
 argument_list|(
@@ -2427,6 +2794,9 @@ name|NumArgs
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getTemplateSpecializationType
 argument_list|(
@@ -2446,6 +2816,9 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|TypeSourceInfo
 modifier|*
 name|getTemplateSpecializationTypeInfo
@@ -2469,6 +2842,9 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getParenType
 argument_list|(
@@ -2477,6 +2853,9 @@ name|NamedType
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getElaboratedType
 argument_list|(
@@ -2492,6 +2871,9 @@ name|NamedType
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getDependentNameType
 argument_list|(
@@ -2515,6 +2897,9 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getDependentTemplateSpecializationType
 argument_list|(
@@ -2537,6 +2922,9 @@ name|Args
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getDependentTemplateSpecializationType
 argument_list|(
@@ -2562,6 +2950,9 @@ name|Args
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getPackExpansionType
 argument_list|(
@@ -2577,6 +2968,9 @@ operator|>
 name|NumExpansions
 argument_list|)
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getObjCInterfaceType
 argument_list|(
@@ -2587,6 +2981,9 @@ name|Decl
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getObjCObjectType
 argument_list|(
@@ -2604,8 +3001,17 @@ name|NumProtocols
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getObjCObjectPointerType - Return a ObjCObjectPointerType type
+end_comment
+
+begin_comment
 comment|/// for the given ObjCObjectType.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getObjCObjectPointerType
 argument_list|(
@@ -2614,7 +3020,13 @@ name|OIT
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getTypeOfType - GCC extension.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getTypeOfExprType
 argument_list|(
@@ -2624,6 +3036,9 @@ name|e
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|QualType
 name|getTypeOfType
 argument_list|(
@@ -2632,7 +3047,13 @@ name|t
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getDecltypeType - C++0x decltype.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getDecltypeType
 argument_list|(
@@ -2642,7 +3063,36 @@ name|e
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// getUnaryTransformType - unary type transforms
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getUnaryTransformType
+argument_list|(
+name|QualType
+name|BaseType
+argument_list|,
+name|QualType
+name|UnderlyingType
+argument_list|,
+name|UnaryTransformType
+operator|::
+name|UTTKind
+name|UKind
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getAutoType - C++0x deduced auto type.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getAutoType
 argument_list|(
@@ -2651,8 +3101,41 @@ name|DeducedType
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// getAutoDeductType - C++0x deduction pattern for 'auto' type.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getAutoDeductType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// getAutoRRefDeductType - C++0x deduction pattern for 'auto&&' type.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getAutoRRefDeductType
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getTagDeclType - Return the unique reference to the type for the
+end_comment
+
+begin_comment
 comment|/// specified TagDecl (struct/union/class/enum) decl.
+end_comment
+
+begin_decl_stmt
 name|QualType
 name|getTagDeclType
 argument_list|(
@@ -2663,16 +3146,37 @@ name|Decl
 argument_list|)
 decl|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// getSizeType - Return the unique type for "size_t" (C99 7.17), defined
+end_comment
+
+begin_comment
 comment|/// in<stddef.h>. The sizeof operator requires this (C99 6.5.3.4p4).
+end_comment
+
+begin_expr_stmt
 name|CanQualType
 name|getSizeType
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getWCharType - In C++, this returns the unique wchar_t type.  In C99, this
+end_comment
+
+begin_comment
 comment|/// returns a type compatible with the type defined in<stddef.h> as defined
+end_comment
+
+begin_comment
 comment|/// by the target.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getWCharType
 argument_list|()
@@ -2682,43 +3186,97 @@ return|return
 name|WCharTy
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// getSignedWCharType - Return the type of "signed wchar_t".
+end_comment
+
+begin_comment
 comment|/// Used when in C++, as a GCC extension.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getSignedWCharType
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getUnsignedWCharType - Return the type of "unsigned wchar_t".
+end_comment
+
+begin_comment
 comment|/// Used when in C++, as a GCC extension.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getUnsignedWCharType
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// getPointerDiffType - Return the unique type for "ptrdiff_t" (ref?)
+end_comment
+
+begin_comment
 comment|/// defined in<stddef.h>. Pointer - pointer requires this (C99 6.5.6p9).
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getPointerDiffType
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// getCFConstantStringType - Return the C structure type used to represent
+end_comment
+
+begin_comment
 comment|// constant CFStrings.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getCFConstantStringType
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// getNSConstantStringType - Return the C structure type used to represent
+end_comment
+
+begin_comment
 comment|// constant NSStrings.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getNSConstantStringType
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Get the structure type used to representation NSStrings, or NULL
+end_comment
+
+begin_comment
 comment|/// if it hasn't yet been built.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getRawNSConstantStringType
 argument_list|()
@@ -2734,22 +3292,26 @@ argument_list|(
 name|NSConstantStringTypeDecl
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|QualType
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_function_decl
-name|void
+begin_macro
+unit|}   void
 name|setNSConstantStringType
-parameter_list|(
-name|QualType
-name|T
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|(
+argument|QualType T
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
 comment|/// Get the structure type used to representation CFStrings, or NULL
@@ -3140,11 +3702,23 @@ comment|/// getObjCEncodingForFunctionDecl - Returns the encoded type for this
 end_comment
 
 begin_comment
-comment|//function.  This is in the same format as Objective-C method encodings.
+comment|/// function.  This is in the same format as Objective-C method encodings.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred (e.g., because one of the parameter
+end_comment
+
+begin_comment
+comment|/// types is incomplete), false otherwise.
 end_comment
 
 begin_decl_stmt
-name|void
+name|bool
 name|getObjCEncodingForFunctionDecl
 argument_list|(
 specifier|const
@@ -3169,8 +3743,20 @@ begin_comment
 comment|/// declaration.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns true if an error occurred (e.g., because one of the parameter
+end_comment
+
+begin_comment
+comment|/// types is incomplete), false otherwise.
+end_comment
+
 begin_decl_stmt
-name|void
+name|bool
 name|getObjCEncodingForMethodDecl
 argument_list|(
 specifier|const
@@ -3589,6 +4175,69 @@ return|;
 block|}
 end_decl_stmt
 
+begin_comment
+comment|/// getLifetimeQualifiedType - Returns a type with the given
+end_comment
+
+begin_comment
+comment|/// lifetime qualifier.
+end_comment
+
+begin_decl_stmt
+name|QualType
+name|getLifetimeQualifiedType
+argument_list|(
+name|QualType
+name|type
+argument_list|,
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+name|lifetime
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|type
+operator|.
+name|getObjCLifetime
+argument_list|()
+operator|==
+name|Qualifiers
+operator|::
+name|OCL_None
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+name|lifetime
+operator|!=
+name|Qualifiers
+operator|::
+name|OCL_None
+argument_list|)
+expr_stmt|;
+name|Qualifiers
+name|qs
+decl_stmt|;
+name|qs
+operator|.
+name|addObjCLifetime
+argument_list|(
+name|lifetime
+argument_list|)
+expr_stmt|;
+return|return
+name|getQualifiedType
+argument_list|(
+name|type
+argument_list|,
+name|qs
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|DeclarationNameInfo
 name|getNameForTemplate
@@ -3663,6 +4312,21 @@ name|NNS
 argument_list|,
 name|OverloadedOperatorKind
 name|Operator
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|TemplateName
+name|getSubstTemplateTemplateParm
+argument_list|(
+name|TemplateTemplateParmDecl
+operator|*
+name|param
+argument_list|,
+name|TemplateName
+name|replacement
 argument_list|)
 decl|const
 decl_stmt|;
@@ -3832,16 +4496,23 @@ begin_comment
 comment|/// its NSObject attribute set.
 end_comment
 
-begin_decl_stmt
+begin_function
+specifier|static
 name|bool
 name|isObjCNSObjectType
-argument_list|(
+parameter_list|(
 name|QualType
 name|Ty
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+block|{
+return|return
+name|Ty
+operator|->
+name|isObjCNSObjectType
+argument_list|()
+return|;
+block|}
+end_function
 
 begin_comment
 comment|//===--------------------------------------------------------------------===//
@@ -5255,6 +5926,58 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief Perform adjustment on the parameter type of a function.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This routine adjusts the given parameter type @p T to the actual
+end_comment
+
+begin_comment
+comment|/// parameter type used by semantic analysis (C99 6.7.5.3p[7,8],
+end_comment
+
+begin_comment
+comment|/// C++ [dcl.fct]p3). The adjusted parameter type is returned.
+end_comment
+
+begin_function_decl
+name|QualType
+name|getAdjustedParameterType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Retrieve the parameter type as adjusted for use in the signature
+end_comment
+
+begin_comment
+comment|/// of a function, decaying array and function types and removing top-level
+end_comment
+
+begin_comment
+comment|/// cv-qualifiers.
+end_comment
+
+begin_function_decl
+name|QualType
+name|getSignatureParameterType
+parameter_list|(
+name|QualType
+name|T
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// getArrayDecayedType - Return the properly qualified result of decaying the
 end_comment
 
@@ -5311,6 +6034,26 @@ argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Recurses in pointer/array types until it finds an objc retainable
+end_comment
+
+begin_comment
+comment|/// type and returns its ownership.
+end_comment
+
+begin_expr_stmt
+name|Qualifiers
+operator|::
+name|ObjCLifetime
+name|getInnerObjCOwnership
+argument_list|(
+argument|QualType T
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// \brief Whether this is a promotable bitfield reference according
@@ -5430,6 +6173,92 @@ decl|const
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|unsigned
+name|getTargetAddressSpace
+argument_list|(
+name|QualType
+name|T
+argument_list|)
+decl|const
+block|{
+return|return
+name|getTargetAddressSpace
+argument_list|(
+name|T
+operator|.
+name|getQualifiers
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|getTargetAddressSpace
+argument_list|(
+name|Qualifiers
+name|Q
+argument_list|)
+decl|const
+block|{
+return|return
+name|getTargetAddressSpace
+argument_list|(
+name|Q
+operator|.
+name|getAddressSpace
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|getTargetAddressSpace
+argument_list|(
+name|unsigned
+name|AS
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|AS
+operator|<
+name|LangAS
+operator|::
+name|Offset
+operator|||
+name|AS
+operator|>=
+name|LangAS
+operator|::
+name|Offset
+operator|+
+name|LangAS
+operator|::
+name|Count
+condition|)
+return|return
+name|AS
+return|;
+else|else
+return|return
+name|AddrSpaceMap
+index|[
+name|AS
+operator|-
+name|LangAS
+operator|::
+name|Offset
+index|]
+return|;
+block|}
+end_decl_stmt
+
 begin_label
 name|private
 label|:
@@ -5494,6 +6323,17 @@ end_function_decl
 begin_comment
 comment|// C99 6.2.7p1
 end_comment
+
+begin_function_decl
+name|bool
+name|propertyTypesAreCompatible
+parameter_list|(
+name|QualType
+parameter_list|,
+name|QualType
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|bool
@@ -5650,6 +6490,9 @@ specifier|const
 name|ObjCObjectPointerType
 modifier|*
 name|RHSOPT
+parameter_list|,
+name|bool
+name|BlockReturnType
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5716,6 +6559,11 @@ name|false
 parameter_list|,
 name|bool
 name|Unqualified
+init|=
+name|false
+parameter_list|,
+name|bool
+name|BlockReturnType
 init|=
 name|false
 parameter_list|)
@@ -6014,7 +6862,7 @@ argument_list|,
 operator|!
 name|Type
 operator|->
-name|isSignedIntegerType
+name|isSignedIntegerOrEnumerationType
 argument_list|()
 argument_list|)
 block|;
@@ -6435,6 +7283,32 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief The number of implicitly-declared move constructors.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveConstructors
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief The number of implicitly-declared move constructors for
+end_comment
+
+begin_comment
+comment|/// which declarations were built.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveConstructorsDeclared
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// \brief The number of implicitly-declared copy assignment operators.
 end_comment
 
@@ -6457,6 +7331,32 @@ begin_decl_stmt
 specifier|static
 name|unsigned
 name|NumImplicitCopyAssignmentOperatorsDeclared
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief The number of implicitly-declared move assignment operators.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveAssignmentOperators
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief The number of implicitly-declared move assignment operators for
+end_comment
+
+begin_comment
+comment|/// which declarations were built.
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|unsigned
+name|NumImplicitMoveAssignmentOperatorsDeclared
 decl_stmt|;
 end_decl_stmt
 
@@ -6581,6 +7481,43 @@ name|bool
 name|EncodingProperty
 operator|=
 name|false
+argument_list|,
+name|bool
+name|StructField
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// Adds the encoding of the structure's members.
+end_comment
+
+begin_decl_stmt
+name|void
+name|getObjCEncodingForStructureImpl
+argument_list|(
+name|RecordDecl
+operator|*
+name|RD
+argument_list|,
+name|std
+operator|::
+name|string
+operator|&
+name|S
+argument_list|,
+specifier|const
+name|FieldDecl
+operator|*
+name|Field
+argument_list|,
+name|bool
+name|includeVBases
+operator|=
+name|true
 argument_list|)
 decl|const
 decl_stmt|;
@@ -6711,21 +7648,21 @@ unit|};
 comment|/// @brief Utility function for constructing a nullary selector.
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 specifier|inline
 name|Selector
 name|GetNullarySelector
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|name
-parameter_list|,
+argument_list|,
 name|ASTContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|)
+argument_list|)
 block|{
 name|IdentifierInfo
 modifier|*
@@ -6755,27 +7692,27 @@ name|II
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 comment|/// @brief Utility function for constructing an unary selector.
 end_comment
 
-begin_function
+begin_decl_stmt
 specifier|static
 specifier|inline
 name|Selector
 name|GetUnarySelector
-parameter_list|(
-specifier|const
-name|char
-modifier|*
+argument_list|(
+name|llvm
+operator|::
+name|StringRef
 name|name
-parameter_list|,
+argument_list|,
 name|ASTContext
-modifier|&
+operator|&
 name|Ctx
-parameter_list|)
+argument_list|)
 block|{
 name|IdentifierInfo
 modifier|*
@@ -6805,7 +7742,7 @@ name|II
 argument_list|)
 return|;
 block|}
-end_function
+end_decl_stmt
 
 begin_comment
 unit|}

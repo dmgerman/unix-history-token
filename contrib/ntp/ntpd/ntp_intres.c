@@ -75,6 +75,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<resolv.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<signal.h>
 end_include
 
@@ -388,64 +394,71 @@ end_define
 begin_define
 define|#
 directive|define
-name|TOK_HMODE
+name|TOK_PEERAF
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOK_VERSION
+name|TOK_HMODE
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOK_MINPOLL
+name|TOK_VERSION
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOK_MAXPOLL
+name|TOK_MINPOLL
 value|4
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOK_FLAGS
+name|TOK_MAXPOLL
 value|5
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOK_TTL
+name|TOK_FLAGS
 value|6
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOK_KEYID
+name|TOK_TTL
 value|7
 end_define
 
 begin_define
 define|#
 directive|define
-name|TOK_KEYSTR
+name|TOK_KEYID
 value|8
 end_define
 
 begin_define
 define|#
 directive|define
-name|NUMTOK
+name|TOK_KEYSTR
 value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|NUMTOK
+value|10
 end_define
 
 begin_define
@@ -555,6 +568,8 @@ name|keyid_t
 operator|,
 name|char
 operator|*
+operator|,
+name|u_char
 operator|)
 argument_list|)
 decl_stmt|;
@@ -1417,6 +1432,9 @@ parameter_list|,
 name|char
 modifier|*
 name|keystr
+parameter_list|,
+name|u_char
+name|peeraf
 parameter_list|)
 block|{
 specifier|register
@@ -1447,9 +1465,11 @@ name|msyslog
 argument_list|(
 name|LOG_INFO
 argument_list|,
-literal|"intres:<%s> %d %d %d %d %x %d %x %s\n"
+literal|"intres:<%s> %u %d %d %d %d %x %d %x %s\n"
 argument_list|,
 name|name
+argument_list|,
+name|peeraf
 argument_list|,
 name|mode
 argument_list|,
@@ -1546,6 +1566,15 @@ operator|->
 name|peer_store
 argument_list|)
 expr_stmt|;
+name|ce
+operator|->
+name|peer_store
+operator|.
+name|ss_family
+operator|=
+name|peeraf
+expr_stmt|;
+comment|/* Save AF for getaddrinfo hints. */
 name|ce
 operator|->
 name|ce_hmode
@@ -1812,7 +1841,17 @@ name|hints
 operator|.
 name|ai_family
 operator|=
-name|AF_UNSPEC
+name|entry
+operator|->
+name|peer_store
+operator|.
+name|ss_family
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_DGRAM
 expr_stmt|;
 comment|/* 		 * If the IPv6 stack is not available look only for IPv4 addresses 		 */
 if|if
@@ -4138,6 +4177,51 @@ if|if
 condition|(
 name|intval
 index|[
+name|TOK_PEERAF
+index|]
+operator|!=
+name|AF_UNSPEC
+operator|&&
+name|intval
+index|[
+name|TOK_PEERAF
+index|]
+operator|!=
+name|AF_INET
+operator|&&
+name|intval
+index|[
+name|TOK_PEERAF
+index|]
+operator|!=
+name|AF_INET6
+condition|)
+block|{
+name|msyslog
+argument_list|(
+name|LOG_ERR
+argument_list|,
+literal|"invalid peer address family (%u) in "
+literal|"file %s"
+argument_list|,
+name|intval
+index|[
+name|TOK_PEERAF
+index|]
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|intval
+index|[
 name|TOK_HMODE
 index|]
 operator|!=
@@ -4477,6 +4561,14 @@ name|token
 index|[
 name|TOK_KEYSTR
 index|]
+argument_list|,
+operator|(
+name|u_char
+operator|)
+name|intval
+index|[
+name|TOK_PEERAF
+index|]
 argument_list|)
 expr_stmt|;
 block|}
@@ -4532,6 +4624,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|dores
+condition|)
+comment|/* Reload /etc/resolv.conf - bug 1226 */
+name|res_init
+argument_list|()
+expr_stmt|;
 name|ce
 operator|=
 name|confentries

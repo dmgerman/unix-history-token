@@ -31,6 +31,12 @@ directive|include
 file|"rtld.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"rtld_printf.h"
+end_include
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -89,25 +95,20 @@ argument_list|,
 name|format
 argument_list|)
 expr_stmt|;
-name|fflush
+name|rtld_vfdprintf
 argument_list|(
-name|stdout
-argument_list|)
-expr_stmt|;
-name|vfprintf
-argument_list|(
-name|stderr
+name|STDERR_FILENO
 argument_list|,
 name|format
 argument_list|,
 name|ap
 argument_list|)
 expr_stmt|;
-name|putc
+name|rtld_fdputchar
 argument_list|(
-literal|'\n'
+name|STDERR_FILENO
 argument_list|,
-name|stderr
+literal|'\n'
 argument_list|)
 expr_stmt|;
 name|va_end
@@ -167,7 +168,7 @@ modifier|*
 name|obj
 parameter_list|)
 block|{
-name|printf
+name|rtld_printf
 argument_list|(
 literal|"Object \"%s\", relocbase %p\n"
 argument_list|,
@@ -187,7 +188,7 @@ operator|->
 name|relsize
 condition|)
 block|{
-name|printf
+name|rtld_printf
 argument_list|(
 literal|"Non-PLT Relocations: %ld\n"
 argument_list|,
@@ -224,7 +225,7 @@ operator|->
 name|relasize
 condition|)
 block|{
-name|printf
+name|rtld_printf
 argument_list|(
 literal|"Non-PLT Relocations with Addend: %ld\n"
 argument_list|,
@@ -261,7 +262,7 @@ operator|->
 name|pltrelsize
 condition|)
 block|{
-name|printf
+name|rtld_printf
 argument_list|(
 literal|"PLT Relocations: %ld\n"
 argument_list|,
@@ -298,7 +299,7 @@ operator|->
 name|pltrelasize
 condition|)
 block|{
-name|printf
+name|rtld_printf
 argument_list|(
 literal|"PLT Relocations with Addend: %ld\n"
 argument_list|,
@@ -367,10 +368,8 @@ name|Elf_Addr
 modifier|*
 name|dstaddr
 decl_stmt|;
-name|printf
+name|rtld_putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|rel_header
 argument_list|)
 expr_stmt|;
@@ -435,7 +434,7 @@ operator|->
 name|r_info
 argument_list|)
 expr_stmt|;
-name|printf
+name|rtld_printf
 argument_list|(
 name|rel_format
 argument_list|,
@@ -525,10 +524,8 @@ name|Elf_Addr
 modifier|*
 name|dstaddr
 decl_stmt|;
-name|printf
+name|rtld_putstr
 argument_list|(
-literal|"%s"
-argument_list|,
 name|rel_header
 argument_list|)
 expr_stmt|;
@@ -593,7 +590,7 @@ operator|->
 name|r_info
 argument_list|)
 expr_stmt|;
-name|printf
+name|rtld_printf
 argument_list|(
 name|rel_format
 argument_list|,

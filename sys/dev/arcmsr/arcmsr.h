@@ -78,7 +78,7 @@ begin_define
 define|#
 directive|define
 name|ARCMSR_MAX_FREESRB_NUM
-value|320
+value|384
 end_define
 
 begin_define
@@ -2334,32 +2334,6 @@ name|arc_cdb_size
 decl_stmt|;
 comment|/* 508-511 */
 comment|/*  ======================512+32 bytes============================  */
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__x86_64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__powerpc__
-argument_list|)
 name|union
 name|ccb
 modifier|*
@@ -2381,50 +2355,14 @@ name|srb_flags
 decl_stmt|;
 comment|/* 536-537 */
 name|u_int16_t
-name|startdone
+name|srb_state
 decl_stmt|;
 comment|/* 538-539 */
-name|u_int32_t
-name|reserved2
-decl_stmt|;
-comment|/* 540-543 */
-else|#
-directive|else
-name|union
-name|ccb
-modifier|*
-name|pccb
-decl_stmt|;
-comment|/* 512-515 pointer of freebsd scsi command */
 name|struct
-name|AdapterControlBlock
-modifier|*
-name|acb
+name|callout
+name|ccb_callout
 decl_stmt|;
-comment|/* 516-519 */
-name|bus_dmamap_t
-name|dm_segs_dmamap
-decl_stmt|;
-comment|/* 520-523 */
-name|u_int16_t
-name|srb_flags
-decl_stmt|;
-comment|/* 524-525 */
-name|u_int16_t
-name|startdone
-decl_stmt|;
-comment|/* 526-527 */
-name|u_int32_t
-name|reserved2
-index|[
-literal|4
-index|]
-decl_stmt|;
-comment|/* 528-531 532-535 536-539 540-543 */
-endif|#
-directive|endif
 comment|/*  ==========================================================  */
-comment|/*	struct	callout				ccb_callout; */
 block|}
 struct|;
 end_struct
@@ -2496,8 +2434,15 @@ name|SRB_FLAG_PKTBIND
 value|0x0080
 end_define
 
+begin_define
+define|#
+directive|define
+name|SRB_FLAG_TIMER_START
+value|0x0080
+end_define
+
 begin_comment
-comment|/*	startdone */
+comment|/*	srb_state */
 end_comment
 
 begin_define
@@ -2875,6 +2820,17 @@ name|struct
 name|callout
 name|devmap_callout
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|ARCMSR_DEBUG1
+name|u_int32_t
+name|pktRequestCount
+decl_stmt|;
+name|u_int32_t
+name|pktReturnCount
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

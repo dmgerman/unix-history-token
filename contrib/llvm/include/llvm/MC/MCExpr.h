@@ -78,6 +78,9 @@ name|class
 name|MCContext
 decl_stmt|;
 name|class
+name|MCSection
+decl_stmt|;
+name|class
 name|MCSectionData
 decl_stmt|;
 name|class
@@ -332,6 +335,17 @@ name|Layout
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// FindAssociatedSection - Find the "associated section" for this expression,
+comment|/// which is currently defined as the absolute section for constants, or
+comment|/// otherwise the section associated with the first defined symbol in the
+comment|/// expression.
+specifier|const
+name|MCSection
+operator|*
+name|FindAssociatedSection
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 specifier|static
 name|bool
@@ -529,11 +543,17 @@ name|VK_ARM_GOTTPOFF
 block|,
 name|VK_PPC_TOC
 block|,
-name|VK_PPC_HA16
+name|VK_PPC_DARWIN_HA16
 block|,
 comment|// ha16(symbol)
-name|VK_PPC_LO16
+name|VK_PPC_DARWIN_LO16
+block|,
 comment|// lo16(symbol)
+name|VK_PPC_GAS_HA16
+block|,
+comment|// symbol@ha
+name|VK_PPC_GAS_LO16
+comment|// symbol@l
 block|}
 block|;
 name|private
@@ -1654,6 +1674,16 @@ name|AddValueSymbols
 argument_list|(
 argument|MCAssembler *
 argument_list|)
+specifier|const
+operator|=
+literal|0
+block|;
+name|virtual
+specifier|const
+name|MCSection
+operator|*
+name|FindAssociatedSection
+argument_list|()
 specifier|const
 operator|=
 literal|0

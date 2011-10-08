@@ -69,6 +69,12 @@ directive|ifndef
 name|LOCORE
 end_ifndef
 
+begin_include
+include|#
+directive|include
+file|<sys/_cpuset.h>
+end_include
+
 begin_function_decl
 name|void
 name|ipi_all_but_self
@@ -96,7 +102,7 @@ begin_function_decl
 name|void
 name|ipi_selected
 parameter_list|(
-name|cpumask_t
+name|cpuset_t
 name|cpus
 parameter_list|,
 name|int

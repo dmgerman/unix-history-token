@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rdata.h,v 1.70.120.3 2009/02/16 00:29:27 marka Exp $ */
+comment|/* $Id: rdata.h,v 1.77 2009-12-04 21:09:33 marka Exp $ */
 end_comment
 
 begin_ifndef
@@ -48,6 +48,12 @@ begin_include
 include|#
 directive|include
 file|<dns/name.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/message.h>
 end_include
 
 begin_macro
@@ -109,6 +115,76 @@ end_define
 begin_define
 define|#
 directive|define
+name|DNS_RDATA_CHECKINITIALIZED
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DNS_RDATA_CHECKINITIALIZED
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATA_INITIALIZED
+parameter_list|(
+name|rdata
+parameter_list|)
+define|\
+value|((rdata)->data == NULL&& (rdata)->length == 0&& \ 	 (rdata)->rdclass == 0&& (rdata)->type == 0&& (rdata)->flags == 0&& \ 	 !ISC_LINK_LINKED((rdata), link))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ISC_LIST_CHECKINIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATA_INITIALIZED
+parameter_list|(
+name|rdata
+parameter_list|)
+define|\
+value|(!ISC_LINK_LINKED((rdata), link))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATA_INITIALIZED
+parameter_list|(
+name|rdata
+parameter_list|)
+value|ISC_TRUE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
 name|DNS_RDATA_UPDATE
 value|0x0001
 end_define
@@ -127,6 +203,17 @@ end_define
 begin_comment
 comment|/*%< RRSIG has a offline key. */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|DNS_RDATA_VALIDFLAGS
+parameter_list|(
+name|rdata
+parameter_list|)
+define|\
+value|(((rdata)->flags& ~(DNS_RDATA_UPDATE|DNS_RDATA_OFFLINE)) == 0)
+end_define
 
 begin_comment
 comment|/*  * Flags affecting rdata formatting style.  Flags 0xFFFF0000  * are used by masterfile-level formatting and defined elsewhere.  * See additional comments at dns_rdata_tofmttext().  */
@@ -273,6 +360,27 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Determine the relative ordering under the DNSSEC order relation of  * 'rdata1' and 'rdata2'.  *  * Requires:  *  *\li	'rdata1' is a valid, non-empty rdata  *  *\li	'rdata2' is a valid, non-empty rdata  *  * Returns:  *\li< 0		'rdata1' is less than 'rdata2'  *\li	0		'rdata1' is equal to 'rdata2'  *\li> 0		'rdata1' is greater than 'rdata2'  */
+end_comment
+
+begin_function_decl
+name|int
+name|dns_rdata_casecompare
+parameter_list|(
+specifier|const
+name|dns_rdata_t
+modifier|*
+name|rdata1
+parameter_list|,
+specifier|const
+name|dns_rdata_t
+modifier|*
+name|rdata2
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * dns_rdata_casecompare() is similar to dns_rdata_compare() but also  * compares domain names case insensitively in known rdata types that  * are treated as opaque data by dns_rdata_compare().  *  * Requires:  *  *\li	'rdata1' is a valid, non-empty rdata  *  *\li	'rdata2' is a valid, non-empty rdata  *  * Returns:  *\li< 0		'rdata1' is less than 'rdata2'  *\li	0		'rdata1' is equal to 'rdata2'  *\li> 0		'rdata1' is greater than 'rdata2'  */
 end_comment
 
 begin_comment
@@ -911,6 +1019,75 @@ end_function_decl
 begin_comment
 comment|/*  * Returns whether 'rdata' contains valid domain names.  The checks are  * sensitive to the owner name.  *  * If 'bad' is non-NULL and a domain name fails the check the  * the offending name will be return in 'bad' by cloning from  * the 'rdata' contents.  *  * Requires:  *	'rdata' to be valid.  *	'owner' to be valid.  *	'bad'	to be NULL or valid.  */
 end_comment
+
+begin_function_decl
+name|void
+name|dns_rdata_exists
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|rdata
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_rdata_notexist
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|rdata
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_rdata_deleterrset
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|rdata
+parameter_list|,
+name|dns_rdatatype_t
+name|type
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|dns_rdata_makedelete
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|rdata
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|dns_rdata_updateop
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|rdata
+parameter_list|,
+name|dns_section_t
+name|section
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|ISC_LANG_ENDDECLS

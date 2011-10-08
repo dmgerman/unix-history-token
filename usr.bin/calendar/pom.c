@@ -773,6 +773,7 @@ name|yeardays
 operator|=
 literal|1
 operator|+
+operator|(
 name|isleap
 argument_list|(
 name|year
@@ -781,6 +782,7 @@ condition|?
 name|DAYSPERLEAPYEAR
 else|:
 name|DAYSPERYEAR
+operator|)
 expr_stmt|;
 comment|/* reuse */
 for|for

@@ -148,6 +148,8 @@ argument|const Target&T
 argument_list|,
 argument|const std::string&TT
 argument_list|,
+argument|const std::string&CPU
+argument_list|,
 argument|const std::string&FS
 argument_list|,
 argument|bool isLittle
@@ -265,6 +267,27 @@ argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|)
+block|;
+name|virtual
+name|bool
+name|addPreRegAlloc
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|CodeGenOpt::Level OptLevel
+argument_list|)
+block|;
+name|virtual
+name|bool
+name|addPostRegAlloc
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
 block|;   }
 decl_stmt|;
 comment|/// MipselTargetMachine - Mipsel target machine.
@@ -290,6 +313,13 @@ operator|::
 name|string
 operator|&
 name|TT
+argument_list|,
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|CPU
 argument_list|,
 specifier|const
 name|std

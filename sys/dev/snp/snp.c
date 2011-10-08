@@ -974,6 +974,7 @@ name|EBUSY
 operator|)
 return|;
 block|}
+comment|/* 		 * XXXRW / XXXJA: no capability check here. 		 */
 name|error
 operator|=
 name|ttyhook_register

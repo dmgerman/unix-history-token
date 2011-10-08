@@ -4243,6 +4243,9 @@ argument_list|()
 operator|&&
 name|isalpha
 argument_list|(
+operator|(
+name|uch
+operator|)
 name|PEEK
 argument_list|()
 argument_list|)

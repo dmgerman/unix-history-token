@@ -799,7 +799,18 @@ value|0x00400000
 end_define
 
 begin_comment
-comment|/* flowid is valid */
+comment|/* deprecated: flowid is valid */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPEBITS
+value|0x0F000000
+end_define
+
+begin_comment
+comment|/* mask of bits holding flowid hash type */
 end_comment
 
 begin_comment
@@ -841,6 +852,145 @@ value|(M_PROTO1|M_PROTO2|M_PROTO3|M_PROTO4|M_PROTO5|M_PROTO6|M_PROTO7|M_PROTO8)
 end_define
 
 begin_comment
+comment|/*  * Network interface cards are able to hash protocol fields (such as IPv4  * addresses and TCP port numbers) classify packets into flows.  These flows  * can then be used to maintain ordering while delivering packets to the OS  * via parallel input queues, as well as to provide a stateless affinity  * model.  NIC drivers can pass up the hash via m->m_pkthdr.flowid, and set  * m_flag fields to indicate how the hash should be interpreted by the  * network stack.  *  * Most NICs support RSS, which provides ordering and explicit affinity, and  * use the hash m_flag bits to indicate what header fields were covered by  * the hash.  M_HASHTYPE_OPAQUE can be set by non-RSS cards or configurations  * that provide an opaque flow identifier, allowing for ordering and  * distribution without explicit affinity.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_SHIFT
+value|24
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_NONE
+value|0x0
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_IPV4
+value|0x1
+end_define
+
+begin_comment
+comment|/* IPv4 2-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_TCP_IPV4
+value|0x2
+end_define
+
+begin_comment
+comment|/* TCPv4 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_IPV6
+value|0x3
+end_define
+
+begin_comment
+comment|/* IPv6 2-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_TCP_IPV6
+value|0x4
+end_define
+
+begin_comment
+comment|/* TCPv6 4-tuple */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_IPV6_EX
+value|0x5
+end_define
+
+begin_comment
+comment|/* IPv6 2-tuple + ext hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_RSS_TCP_IPV6_EX
+value|0x6
+end_define
+
+begin_comment
+comment|/* TCPv6 4-tiple + ext hdrs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_OPAQUE
+value|0xf
+end_define
+
+begin_comment
+comment|/* ordering, not affinity */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_CLEAR
+parameter_list|(
+name|m
+parameter_list|)
+value|(m)->m_flags&= ~(M_HASHTYPEBITS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_GET
+parameter_list|(
+name|m
+parameter_list|)
+value|(((m)->m_flags& M_HASHTYPEBITS)>> \ 				    M_HASHTYPE_SHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_SET
+parameter_list|(
+name|m
+parameter_list|,
+name|v
+parameter_list|)
+value|do {					\ 	(m)->m_flags&= ~M_HASHTYPEBITS;				\ 	(m)->m_flags |= ((v)<< M_HASHTYPE_SHIFT);			\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|M_HASHTYPE_TEST
+parameter_list|(
+name|m
+parameter_list|,
+name|v
+parameter_list|)
+value|(M_HASHTYPE_GET(m) == (v))
+end_define
+
+begin_comment
 comment|/*  * Flags preserved when copying m_pkthdr.  */
 end_comment
 
@@ -849,7 +999,7 @@ define|#
 directive|define
 name|M_COPYFLAGS
 define|\
-value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_FIB)
+value|(M_PKTHDR|M_EOR|M_RDONLY|M_PROTOFLAGS|M_SKIP_FIREWALL|M_BCAST|M_MCAST|\      M_FRAG|M_FIRSTFRAG|M_LASTFRAG|M_VLANTAG|M_PROMISC|M_FIB|M_HASHTYPEBITS)
 end_define
 
 begin_comment
@@ -2885,8 +3035,47 @@ operator|)
 return|;
 end_return
 
+begin_function_decl
+unit|}  extern
+name|void
+function_decl|(
+modifier|*
+name|m_addr_chg_pf_p
+function_decl|)
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|m_addr_changed
+parameter_list|(
+name|struct
+name|mbuf
+modifier|*
+name|m
+parameter_list|)
+block|{
+if|if
+condition|(
+name|m_addr_chg_pf_p
+condition|)
+name|m_addr_chg_pf_p
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
-unit|}
 comment|/*  * mbuf, cluster, and external object allocation macros (for compatibility  * purposes).  */
 end_comment
 
@@ -3155,7 +3344,7 @@ value|m_copym((m), (o), (l), M_DONTWAIT)
 end_define
 
 begin_decl_stmt
-unit|extern
+specifier|extern
 name|int
 name|max_datalen
 decl_stmt|;

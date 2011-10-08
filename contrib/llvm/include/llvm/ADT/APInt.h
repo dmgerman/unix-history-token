@@ -3589,6 +3589,23 @@ end_decl_stmt
 
 begin_decl_stmt
 name|APInt
+name|umul_ov
+argument_list|(
+specifier|const
+name|APInt
+operator|&
+name|RHS
+argument_list|,
+name|bool
+operator|&
+name|Overflow
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|APInt
 name|sshl_ov
 argument_list|(
 name|unsigned
@@ -5591,6 +5608,11 @@ name|Radix
 argument_list|,
 name|bool
 name|Signed
+argument_list|,
+name|bool
+name|formatAsCLiteral
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5627,6 +5649,8 @@ argument_list|(
 name|Str
 argument_list|,
 name|Radix
+argument_list|,
+name|false
 argument_list|,
 name|false
 argument_list|)
@@ -5667,6 +5691,8 @@ argument_list|,
 name|Radix
 argument_list|,
 name|true
+argument_list|,
+name|false
 argument_list|)
 expr_stmt|;
 block|}
@@ -6187,13 +6213,18 @@ name|mu
 struct_decl|;
 end_struct_decl
 
-begin_expr_stmt
+begin_decl_stmt
 name|mu
 name|magicu
-argument_list|()
-specifier|const
-expr_stmt|;
-end_expr_stmt
+argument_list|(
+name|unsigned
+name|LeadingZeros
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// @}

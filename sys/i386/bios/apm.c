@@ -2476,6 +2476,11 @@ name|suspend_countdown
 operator|=
 literal|0
 expr_stmt|;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_suspend
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Be sure to hold Giant across DEVICE_SUSPEND/RESUME since 	 * non-MPSAFE drivers need this. 	 */
 name|mtx_lock
 argument_list|(
@@ -2494,15 +2499,9 @@ if|if
 condition|(
 name|error
 condition|)
-block|{
-name|mtx_unlock
-argument_list|(
-operator|&
-name|Giant
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
+goto|goto
+name|backout
+goto|;
 name|apm_execute_hook
 argument_list|(
 name|hook
@@ -2530,9 +2529,14 @@ expr_stmt|;
 name|apm_processevent
 argument_list|()
 expr_stmt|;
+name|mtx_unlock
+argument_list|(
+operator|&
+name|Giant
+argument_list|)
+expr_stmt|;
+return|return;
 block|}
-else|else
-block|{
 comment|/* Failure, 'resume' the system again */
 name|apm_execute_hook
 argument_list|(
@@ -2547,14 +2551,19 @@ argument_list|(
 name|root_bus
 argument_list|)
 expr_stmt|;
-block|}
+name|backout
+label|:
 name|mtx_unlock
 argument_list|(
 operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-return|return;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_resume
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -2952,7 +2961,11 @@ operator|&
 name|Giant
 argument_list|)
 expr_stmt|;
-return|return;
+name|EVENTHANDLER_INVOKE
+argument_list|(
+name|power_resume
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

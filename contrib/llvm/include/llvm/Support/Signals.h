@@ -40,7 +40,7 @@ comment|// This file defines some helpful functions for dealing with the possibi
 end_comment
 
 begin_comment
-comment|// unix signals occuring while your program is running.
+comment|// unix signals occurring while your program is running.
 end_comment
 
 begin_comment

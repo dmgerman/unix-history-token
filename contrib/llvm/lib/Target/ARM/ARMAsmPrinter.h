@@ -87,6 +87,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MCOperand
+decl_stmt|;
 name|namespace
 name|ARM
 block|{
@@ -291,6 +294,20 @@ operator|&
 name|M
 argument_list|)
 block|;
+comment|// lowerOperand - Convert a MachineOperand into the equivalent MCOperand.
+name|bool
+name|lowerOperand
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
+argument_list|,
+name|MCOperand
+operator|&
+name|MCOp
+argument_list|)
+block|;
 name|private
 operator|:
 comment|// Helpers for EmitStartOfAsmFile() and EmitEndOfAsmFile()
@@ -312,6 +329,29 @@ argument_list|,
 argument|unsigned TargetOpc
 argument_list|)
 block|;
+name|void
+name|EmitUnwindingInstruction
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
+comment|// emitPseudoExpansionLowering - tblgen'erated.
+name|bool
+name|emitPseudoExpansionLowering
+argument_list|(
+name|MCStreamer
+operator|&
+name|OutStreamer
+argument_list|,
+specifier|const
+name|MachineInstr
+operator|*
+name|MI
+argument_list|)
+block|;
 name|public
 operator|:
 name|void
@@ -331,6 +371,15 @@ name|MachineLocation
 name|getDebugValueLocation
 argument_list|(
 argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+comment|/// EmitDwarfRegOp - Emit dwarf register operation.
+name|virtual
+name|void
+name|EmitDwarfRegOp
+argument_list|(
+argument|const MachineLocation&MLoc
 argument_list|)
 specifier|const
 block|;
@@ -370,6 +419,20 @@ operator|::
 name|DW_ISA_ARM_arm
 return|;
 block|}
+name|MCOperand
+name|GetSymbolRef
+parameter_list|(
+specifier|const
+name|MachineOperand
+modifier|&
+name|MO
+parameter_list|,
+specifier|const
+name|MCSymbol
+modifier|*
+name|Symbol
+parameter_list|)
+function_decl|;
 name|MCSymbol
 modifier|*
 name|GetARMSetPICJumpTableLabel2

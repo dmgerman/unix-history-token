@@ -110,10 +110,6 @@ modifier|*
 name|encap
 decl_stmt|;
 comment|/* encapsulation cookie */
-name|int
-name|called
-decl_stmt|;
-comment|/* infinite recursion preventer */
 name|uint32_t
 name|key
 decl_stmt|;

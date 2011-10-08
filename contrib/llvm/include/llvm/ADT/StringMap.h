@@ -77,12 +77,6 @@ directive|include
 file|<cstring>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<string>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -261,38 +255,6 @@ name|void
 name|RehashTable
 parameter_list|()
 function_decl|;
-comment|/// ShouldRehash - Return true if the table should be rehashed after a new
-comment|/// element was recently inserted.
-name|bool
-name|ShouldRehash
-argument_list|()
-specifier|const
-block|{
-comment|// If the hash table is now more than 3/4 full, or if fewer than 1/8 of
-comment|// the buckets are empty (meaning that many are filled with tombstones),
-comment|// grow the table.
-return|return
-name|NumItems
-operator|*
-literal|4
-operator|>
-name|NumBuckets
-operator|*
-literal|3
-operator|||
-name|NumBuckets
-operator|-
-operator|(
-name|NumItems
-operator|+
-name|NumTombstones
-operator|)
-operator|<
-name|NumBuckets
-operator|/
-literal|8
-return|;
-block|}
 comment|/// LookupBucketFor - Look up the bucket that the specified string should end
 comment|/// up in.  If it already exists as a key in the map, the Item pointer for the
 comment|/// specified bucket will be non-null.  Otherwise, it will be null.  In either
@@ -522,16 +484,20 @@ literal|1
 operator|)
 return|;
 block|}
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|first
 argument_list|()
 specifier|const
 block|{
 return|return
+name|StringRef
+argument_list|(
 name|getKeyData
 argument_list|()
+argument_list|,
+name|getKeyLength
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// Create - Create a StringMapEntry for the specified key and default
@@ -1429,11 +1395,15 @@ expr_stmt|;
 operator|++
 name|NumItems
 expr_stmt|;
-if|if
-condition|(
-name|ShouldRehash
-argument_list|()
-condition|)
+name|assert
+argument_list|(
+name|NumItems
+operator|+
+name|NumTombstones
+operator|<=
+name|NumBuckets
+argument_list|)
+expr_stmt|;
 name|RehashTable
 argument_list|()
 expr_stmt|;
@@ -1519,6 +1489,10 @@ name|NumItems
 operator|=
 literal|0
 expr_stmt|;
+name|NumTombstones
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/// GetOrCreateValue - Look up the specified key in the table.  If a value
 comment|/// exists, return it.  Otherwise, default construct a value, insert it, and
@@ -1528,10 +1502,7 @@ operator|<
 name|typename
 name|InitTy
 operator|>
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
+name|MapEntryTy
 operator|&
 name|GetOrCreateValue
 argument_list|(
@@ -1621,6 +1592,15 @@ expr_stmt|;
 operator|++
 name|NumItems
 expr_stmt|;
+name|assert
+argument_list|(
+name|NumItems
+operator|+
+name|NumTombstones
+operator|<=
+name|NumBuckets
+argument_list|)
+expr_stmt|;
 comment|// Fill in the bucket for the hash table.  The FullHashValue was already
 comment|// filled in by LookupBucketFor.
 name|Bucket
@@ -1629,11 +1609,6 @@ name|Item
 operator|=
 name|NewItem
 expr_stmt|;
-if|if
-condition|(
-name|ShouldRehash
-argument_list|()
-condition|)
 name|RehashTable
 argument_list|()
 expr_stmt|;
@@ -1644,16 +1619,14 @@ return|;
 block|}
 end_decl_stmt
 
-begin_expr_stmt
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
-operator|&
+begin_function
+name|MapEntryTy
+modifier|&
 name|GetOrCreateValue
-argument_list|(
-argument|StringRef Key
-argument_list|)
+parameter_list|(
+name|StringRef
+name|Key
+parameter_list|)
 block|{
 return|return
 name|GetOrCreateValue
@@ -1665,74 +1638,7 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|template
-operator|<
-name|typename
-name|InitTy
-operator|>
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
-operator|&
-name|GetOrCreateValue
-argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
-argument_list|,
-argument|InitTy Val
-argument_list|)
-block|{
-return|return
-name|GetOrCreateValue
-argument_list|(
-name|StringRef
-argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
-operator|-
-name|KeyStart
-argument_list|)
-argument_list|,
-name|Val
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|StringMapEntry
-operator|<
-name|ValueTy
-operator|>
-operator|&
-name|GetOrCreateValue
-argument_list|(
-argument|const char *KeyStart
-argument_list|,
-argument|const char *KeyEnd
-argument_list|)
-block|{
-return|return
-name|GetOrCreateValue
-argument_list|(
-name|StringRef
-argument_list|(
-name|KeyStart
-argument_list|,
-name|KeyEnd
-operator|-
-name|KeyStart
-argument_list|)
-argument_list|)
-return|;
-block|}
-end_expr_stmt
+end_function
 
 begin_comment
 comment|/// remove - Remove the specified key/value pair from the map, but do not

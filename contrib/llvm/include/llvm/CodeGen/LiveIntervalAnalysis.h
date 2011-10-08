@@ -681,14 +681,27 @@ comment|/// shrinkToUses - After removing some uses of a register, shrink its li
 comment|/// range to just the remaining uses. This method does not compute reaching
 comment|/// defs for new uses, and it doesn't remove dead defs.
 comment|/// Dead PHIDef values are marked as unused.
-name|void
+comment|/// New dead machine instructions are added to the dead vector.
+comment|/// Return true if the interval may have been separated into multiple
+comment|/// connected components.
+name|bool
 name|shrinkToUses
-parameter_list|(
+argument_list|(
 name|LiveInterval
-modifier|*
+operator|*
 name|li
-parameter_list|)
-function_decl|;
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|MachineInstr
+operator|*
+operator|>
+operator|*
+name|dead
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|// Interval removal
 name|void
 name|removeInterval
@@ -1181,7 +1194,7 @@ operator|<
 name|LiveInterval
 operator|*
 operator|>
-operator|&
+operator|*
 name|SpillIs
 argument_list|,
 specifier|const
@@ -1230,7 +1243,7 @@ operator|<
 name|LiveInterval
 operator|*
 operator|>
-operator|&
+operator|*
 name|SpillIs
 argument_list|,
 name|bool
@@ -1509,7 +1522,7 @@ operator|<
 name|LiveInterval
 operator|*
 operator|>
-operator|&
+operator|*
 name|SpillIs
 argument_list|,
 name|bool

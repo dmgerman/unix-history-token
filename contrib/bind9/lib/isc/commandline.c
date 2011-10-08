@@ -8,7 +8,7 @@ comment|/*  * Copyright (c) 1987, 1993, 1994  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: commandline.c,v 1.22 2008/09/25 04:02:39 tbox Exp $ */
+comment|/* $Id: commandline.c,v 1.22 2008-09-25 04:02:39 tbox Exp $ */
 end_comment
 
 begin_comment

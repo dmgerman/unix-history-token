@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/callout.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/mbuf.h>
 end_include
 
@@ -417,42 +411,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Enable sending IP redirects"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|ip_defttl
-argument_list|)
-operator|=
-name|IPDEFTTL
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_VNET_INT
-argument_list|(
-name|_net_inet_ip
-argument_list|,
-name|IPCTL_DEFTTL
-argument_list|,
-name|ttl
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|VNET_NAME
-argument_list|(
-name|ip_defttl
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum TTL on IP packets"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -997,13 +955,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-name|struct
-name|callout
-name|ipport_tick_callout
-decl_stmt|;
-end_decl_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1147,18 +1098,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|fw_one_pass
-argument_list|)
-operator|=
-literal|1
-expr_stmt|;
-end_expr_stmt
 
 begin_function_decl
 specifier|static
@@ -1775,38 +1714,6 @@ operator|-
 name|inetsw
 expr_stmt|;
 block|}
-comment|/* Start ipport_tick. */
-name|callout_init
-argument_list|(
-operator|&
-name|ipport_tick_callout
-argument_list|,
-name|CALLOUT_MPSAFE
-argument_list|)
-expr_stmt|;
-name|callout_reset
-argument_list|(
-operator|&
-name|ipport_tick_callout
-argument_list|,
-literal|1
-argument_list|,
-name|ipport_tick
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|EVENTHANDLER_REGISTER
-argument_list|(
-name|shutdown_pre_sync
-argument_list|,
-name|ip_fini
-argument_list|,
-name|NULL
-argument_list|,
-name|SHUTDOWN_PRI_DEFAULT
-argument_list|)
-expr_stmt|;
 name|EVENTHANDLER_REGISTER
 argument_list|(
 name|nmbclusters_change
@@ -1875,24 +1782,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function
-name|void
-name|ip_fini
-parameter_list|(
-name|void
-modifier|*
-name|xtp
-parameter_list|)
-block|{
-name|callout_stop
-argument_list|(
-operator|&
-name|ipport_tick_callout
-argument_list|)
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * Ip input routine.  Checksum and byte swap header.  If fragmented  * try to reassemble.  Process options.  Pass to next level.  */
@@ -2454,7 +2343,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|IPSEC
-comment|/* 	 * Bypass packet filtering for packets from a tunnel (gif). 	 */
+comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
 if|if
 condition|(
 name|ip_ipsec_filtertunnel

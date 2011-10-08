@@ -12,11 +12,11 @@ comment|/* config.h.in.  Generated from configure.in by autoheader.  */
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.51.334.2 2009/02/16 23:47:15 tbox Exp $ */
+comment|/* $Id: acconfig.h,v 1.53 2008-12-01 23:47:44 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -460,6 +460,14 @@ comment|/* #undef AC_APPLE_UNIVERSAL_BUILD */
 end_comment
 
 begin_comment
+comment|/* Define to enable the "filter-aaaa-on-v4" option. */
+end_comment
+
+begin_comment
+comment|/* #undef ALLOW_FILTER_AAAA_ON_V4 */
+end_comment
+
+begin_comment
 comment|/* Define if recvmsg() does not meet all of the BSD socket API specifications.    */
 end_comment
 
@@ -481,6 +489,22 @@ end_comment
 
 begin_comment
 comment|/* #undef DNS_RDATASET_FIXED */
+end_comment
+
+begin_comment
+comment|/* Define to enable rpz-nsdname rules. */
+end_comment
+
+begin_comment
+comment|/* #undef ENABLE_RPZ_NSDNAME */
+end_comment
+
+begin_comment
+comment|/* Define to enable rpz-nsip rules. */
+end_comment
+
+begin_comment
+comment|/* #undef ENABLE_RPZ_NSIP */
 end_comment
 
 begin_comment
@@ -525,6 +549,17 @@ comment|/* #undef HAVE_DEVPOLL_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the `dlclose' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLCLOSE
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the<dlfcn.h> header file. */
 end_comment
 
@@ -532,6 +567,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_DLFCN_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `dlopen' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLOPEN
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `dlsym' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_DLSYM
 value|1
 end_define
 
@@ -577,11 +634,27 @@ comment|/* #undef HAVE_GSSAPI_GSSAPI_H */
 end_comment
 
 begin_comment
+comment|/* Define to 1 if you have the<gssapi/gssapi_krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_GSSAPI_KRB5_H */
+end_comment
+
+begin_comment
 comment|/* Define to 1 if you have the<gssapi.h> header file. */
 end_comment
 
 begin_comment
 comment|/* #undef HAVE_GSSAPI_H */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<gssapi_krb5.h> header file. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_GSSAPI_KRB5_H */
 end_comment
 
 begin_comment
@@ -633,6 +706,14 @@ end_comment
 
 begin_comment
 comment|/* #undef HAVE_LIBCAP */
+end_comment
+
+begin_comment
+comment|/* if system have backtrace function */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_LIBCTRACE */
 end_comment
 
 begin_comment
@@ -741,6 +822,47 @@ comment|/* #undef HAVE_NET_IF6_H */
 end_comment
 
 begin_comment
+comment|/* Define if your OpenSSL version supports GOST. */
+end_comment
+
+begin_comment
+comment|/* #undef HAVE_OPENSSL_GOST */
+end_comment
+
+begin_comment
+comment|/* Define to 1 if you have the<regex.h> header file. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_REGEX_H
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setegid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETEGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `seteuid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETEUID
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `setlocale' function. */
 end_comment
 
@@ -748,6 +870,28 @@ begin_define
 define|#
 directive|define
 name|HAVE_SETLOCALE
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setresgid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETRESGID
+value|1
+end_define
+
+begin_comment
+comment|/* Define to 1 if you have the `setresuid' function. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_SETRESUID
 value|1
 end_define
 
@@ -931,6 +1075,50 @@ begin_define
 define|#
 directive|define
 name|HAVE_UNISTD_H
+value|1
+end_define
+
+begin_comment
+comment|/* return type of gai_strerror */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRS_GAISTRERROR_RETURN_T
+value|const char *
+end_define
+
+begin_comment
+comment|/* Define to the buffer length type used by getnameinfo(3). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRS_GETNAMEINFO_BUFLEN_T
+value|size_t
+end_define
+
+begin_comment
+comment|/* Define to the flags type used by getnameinfo(3). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IRS_GETNAMEINFO_FLAGS_T
+value|int
+end_define
+
+begin_comment
+comment|/* Define to allow building of objects for dlopen(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ISC_DLZ_DLOPEN
 value|1
 end_define
 
@@ -1140,14 +1328,8 @@ comment|/* #undef const */
 end_comment
 
 begin_comment
-comment|/* Define to `__inline__' or `__inline' if that's what the C compiler    calls it, or to nothing if 'inline' is not supported under any name.  */
+comment|/* Define to empty if your compiler does not support "static inline". */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__cplusplus
-end_ifndef
 
 begin_define
 define|#
@@ -1158,11 +1340,6 @@ end_define
 begin_comment
 comment|/**/
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* Define to `unsigned int' if<sys/types.h> does not define. */

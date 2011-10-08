@@ -2147,7 +2147,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%7Lo "
+literal|"%7llo "
 argument_list|,
 operator|(
 name|unsigned
@@ -2235,7 +2235,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%7Ld "
+literal|"%7lld "
 argument_list|,
 operator|(
 name|unsigned
@@ -2322,7 +2322,7 @@ argument_list|)
 condition|)
 name|printf
 argument_list|(
-literal|"%7Lx "
+literal|"%7llx "
 argument_list|,
 operator|(
 name|unsigned

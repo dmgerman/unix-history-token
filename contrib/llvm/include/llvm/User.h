@@ -486,7 +486,7 @@ name|i
 operator|<
 name|NumOperands
 operator|&&
-literal|"getOperand() out of range!"
+literal|"getOperandUse() out of range!"
 argument_list|)
 block|;
 return|return
@@ -509,7 +509,7 @@ name|i
 operator|<
 name|NumOperands
 operator|&&
-literal|"getOperand() out of range!"
+literal|"getOperandUse() out of range!"
 argument_list|)
 block|;
 return|return

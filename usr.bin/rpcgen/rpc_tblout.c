@@ -363,11 +363,11 @@ name|expected
 operator|=
 literal|1
 expr_stmt|;
-name|f_print
+name|fputs
 argument_list|(
-name|fout
-argument_list|,
 name|null_entry
+argument_list|,
+name|fout
 argument_list|)
 expr_stmt|;
 block|}
@@ -564,11 +564,11 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* print the table trailer */
-name|f_print
+name|fputs
 argument_list|(
-name|fout
-argument_list|,
 name|tbl_end
+argument_list|,
+name|fout
 argument_list|)
 expr_stmt|;
 name|f_print

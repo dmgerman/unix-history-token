@@ -338,6 +338,20 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x1282
+block|,
+literal|0x6585
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Davicom 56PDV PCI Modem"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x12b9
 block|,
 literal|0x1008
@@ -677,6 +691,20 @@ block|,
 literal|0x1000
 block|,
 literal|"NetMos NM9865 Serial Port"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x9710
+block|,
+literal|0x9900
+block|,
+literal|0xa000
+block|,
+literal|0x1000
+block|,
+literal|"MosChip MCS9900 PCIe to Peripheral Controller"
 block|,
 literal|0x10
 block|}

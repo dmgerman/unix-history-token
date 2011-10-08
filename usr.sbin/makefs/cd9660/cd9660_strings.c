@@ -109,7 +109,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|cd9660_is_a_char
+name|cd9660_is_d_char
 parameter_list|(
 name|char
 name|c
@@ -137,7 +137,7 @@ literal|'0'
 operator|&&
 name|c
 operator|<=
-literal|'?'
+literal|'9'
 operator|)
 operator|)
 return|;
@@ -148,7 +148,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|cd9660_is_d_char
+name|cd9660_is_a_char
 parameter_list|(
 name|char
 name|c
@@ -176,7 +176,7 @@ literal|'%'
 operator|&&
 name|c
 operator|<=
-literal|'9'
+literal|'?'
 operator|)
 operator|||
 operator|(

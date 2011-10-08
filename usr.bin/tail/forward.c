@@ -1648,6 +1648,15 @@ argument_list|(
 name|file
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|file
+operator|->
+name|fp
+operator|!=
+name|NULL
+condition|)
+block|{
 name|fclose
 argument_list|(
 name|file
@@ -1661,6 +1670,7 @@ name|fp
 operator|=
 name|NULL
 expr_stmt|;
+block|}
 name|ev_change
 operator|++
 expr_stmt|;

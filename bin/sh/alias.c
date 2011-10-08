@@ -96,6 +96,12 @@ begin_comment
 comment|/* XXX for argptr (should remove?) */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -1023,7 +1029,7 @@ condition|)
 block|{
 name|warning
 argument_list|(
-literal|"%s not found"
+literal|"%s: not found"
 argument_list|,
 name|n
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  *  $Id: trace.c,v 1.11 2010/01/17 15:36:26 tom Exp $  *  *  trace.c -- implements screen-dump and keystroke-logging  *  *  Copyright 2007-2008,2010	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  *  $Id: trace.c,v 1.14 2011/06/21 21:12:56 tom Exp $  *  *  trace.c -- implements screen-dump and keystroke-logging  *  *  Copyright 2007-2010,2011	Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -33,6 +33,47 @@ directive|define
 name|myFP
 value|dialog_state.trace_output
 end_define
+
+begin_function
+specifier|static
+name|void
+name|dlg_trace_time
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|tag
+parameter_list|)
+block|{
+name|time_t
+name|now
+init|=
+name|time
+argument_list|(
+operator|(
+name|time_t
+operator|*
+operator|)
+literal|0
+argument_list|)
+decl_stmt|;
+name|fprintf
+argument_list|(
+name|myFP
+argument_list|,
+literal|"%s %s"
+argument_list|,
+name|tag
+argument_list|,
+name|ctime
+argument_list|(
+operator|&
+name|now
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+end_function
 
 begin_function
 name|void
@@ -513,11 +554,29 @@ argument_list|)
 expr_stmt|;
 name|CASE
 argument_list|(
+name|DLGK_HELPFILE
+argument_list|)
+expr_stmt|;
+name|CASE
+argument_list|(
 name|DLGK_TRACE
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+elseif|else
+if|if
+condition|(
+name|ch
+operator|==
+name|ERR
+condition|)
+block|{
+name|fkey_name
+operator|=
+literal|"ERR"
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -604,29 +663,17 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|time_t
-name|now
-init|=
-name|time
+name|dlg_trace_time
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-literal|0
+literal|"** opened at"
 argument_list|)
-decl_stmt|;
-name|fprintf
+expr_stmt|;
+name|dlg_trace_msg
 argument_list|(
-name|myFP
+literal|"** dialog %s\n"
 argument_list|,
-literal|"** opened at %s"
-argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|now
-argument_list|)
+name|dialog_version
+argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
@@ -640,29 +687,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|time_t
-name|now
-init|=
-name|time
+name|dlg_trace_time
 argument_list|(
-operator|(
-name|time_t
-operator|*
-operator|)
-literal|0
-argument_list|)
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|myFP
-argument_list|,
-literal|"** closed at %s"
-argument_list|,
-name|ctime
-argument_list|(
-operator|&
-name|now
-argument_list|)
+literal|"** closed at"
 argument_list|)
 expr_stmt|;
 name|fclose

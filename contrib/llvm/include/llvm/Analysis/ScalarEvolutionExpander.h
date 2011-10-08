@@ -121,6 +121,12 @@ name|ScalarEvolution
 modifier|&
 name|SE
 decl_stmt|;
+comment|// New instructions receive a name to identifies them with the current pass.
+specifier|const
+name|char
+modifier|*
+name|IVName
+decl_stmt|;
 name|std
 operator|::
 name|map
@@ -239,6 +245,11 @@ argument_list|(
 name|ScalarEvolution
 operator|&
 name|se
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|name
 argument_list|)
 operator|:
 name|SE
@@ -246,7 +257,17 @@ argument_list|(
 name|se
 argument_list|)
 operator|,
+name|IVName
+argument_list|(
+name|name
+argument_list|)
+operator|,
 name|IVIncInsertLoop
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|IVIncInsertPos
 argument_list|(
 literal|0
 argument_list|)

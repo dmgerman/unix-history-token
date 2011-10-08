@@ -242,6 +242,10 @@ return|;
 endif|#
 directive|endif
 case|case
+name|SHT_MIPS_DWARF
+case|:
+comment|/* FALLTHROUGH */
+case|case
 name|SHT_AMD64_UNWIND
 case|:
 comment|/* == SHT_IA_64_UNWIND */

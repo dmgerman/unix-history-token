@@ -424,7 +424,8 @@ block|{
 name|char
 name|argtype
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|arg_val
 decl_stmt|;
 name|char
@@ -5031,13 +5032,13 @@ condition|)
 block|{
 if|if
 condition|(
-name|maxval
-operator|>
-literal|0
-operator|&&
 name|acc
 operator|<=
 name|maxval
+operator|||
+name|maxval
+operator|==
+literal|0
 condition|)
 name|acc
 operator|=
@@ -5287,7 +5288,7 @@ index|]
 operator|.
 name|arg_val
 operator|=
-name|strtol
+name|strtoul
 argument_list|(
 name|cp
 argument_list|,

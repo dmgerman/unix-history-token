@@ -231,7 +231,7 @@ end_function
 
 begin_function
 name|int
-name|db_putarea_size
+name|kdb_putarea_size
 parameter_list|(
 name|unsigned
 name|long

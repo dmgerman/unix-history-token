@@ -244,15 +244,6 @@ argument|const Type *Ty
 argument_list|)
 specifier|const
 block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 name|private
 operator|:
 specifier|const
@@ -481,11 +472,15 @@ block|;
 comment|// Inline asm support
 name|std
 operator|::
-name|vector
+name|pair
 operator|<
 name|unsigned
+block|,
+specifier|const
+name|TargetRegisterClass
+operator|*
 operator|>
-name|getRegClassForInlineAsmConstraint
+name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
@@ -614,6 +609,8 @@ name|bool
 name|CanLowerReturn
 argument_list|(
 argument|CallingConv::ID CallConv
+argument_list|,
+argument|MachineFunction&MF
 argument_list|,
 argument|bool isVarArg
 argument_list|,

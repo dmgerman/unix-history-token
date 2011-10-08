@@ -46,6 +46,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/interrupt.h>
 end_include
 
@@ -186,7 +192,7 @@ decl_stmt|;
 name|u_int
 name|cntindex
 decl_stmt|;
-name|cpumask_t
+name|cpuset_t
 name|cpu
 decl_stmt|;
 name|enum
@@ -756,11 +762,15 @@ name|all_cpus
 expr_stmt|;
 else|#
 directive|else
+name|CPU_SETOF
+argument_list|(
+literal|0
+argument_list|,
+operator|&
 name|i
 operator|->
 name|cpu
-operator|=
-literal|1
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -1207,13 +1217,15 @@ operator|=
 name|all_cpus
 expr_stmt|;
 else|else
+name|CPU_SETOF
+argument_list|(
+name|cpu
+argument_list|,
+operator|&
 name|i
 operator|->
 name|cpu
-operator|=
-literal|1
-operator|<<
-name|cpu
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1649,6 +1661,13 @@ ifdef|#
 directive|ifdef
 name|SMP
 comment|/* Install an IPI handler. */
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+condition|)
+block|{
 for|for
 control|(
 name|n
@@ -1687,7 +1706,7 @@ operator|!=
 literal|0
 argument_list|,
 operator|(
-literal|"%s"
+literal|"%s: SMP root PIC does not supply any IPIs"
 operator|,
 name|__func__
 operator|)
@@ -1745,6 +1764,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 block|}
 endif|#

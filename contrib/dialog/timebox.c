@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * $Id: timebox.c,v 1.41 2010/01/18 10:33:42 tom Exp $  *  *  timebox.c -- implements the timebox dialog  *  *  Copyright 2001-2009,2010   Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
+comment|/*  * $Id: timebox.c,v 1.45 2011/06/27 08:20:22 tom Exp $  *  *  timebox.c -- implements the timebox dialog  *  *  Copyright 2001-2010,2011   Thomas E. Dickey  *  *  This program is free software; you can redistribute it and/or modify  *  it under the terms of the GNU Lesser General Public License, version 2.1  *  as published by the Free Software Foundation.  *  *  This program is distributed in the hope that it will be useful, but  *  WITHOUT ANY WARRANTY; without even the implied warranty of  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU  *  Lesser General Public License for more details.  *  *  You should have received a copy of the GNU Lesser General Public  *  License along with this program; if not, write to  *	Free Software Foundation, Inc.  *	51 Franklin St., Fifth Floor  *	Boston, MA 02110, USA.  */
 end_comment
 
 begin_include
@@ -315,6 +315,11 @@ name|int
 name|code
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|code
+expr_stmt|;
 name|data
 operator|->
 name|parent
@@ -544,6 +549,8 @@ name|DLGK_DELETE_RIGHT
 argument_list|,
 name|KEY_DC
 argument_list|)
+block|,
+name|HELPKEY_BINDINGS
 block|,
 name|ENTERKEY_BINDINGS
 block|,
@@ -890,6 +897,35 @@ name|width
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|hour
+operator|>=
+literal|24
+operator|||
+name|minute
+operator|>=
+literal|60
+operator|||
+name|second
+operator|>=
+literal|60
+condition|)
+block|{
+return|return
+name|CleanupResult
+argument_list|(
+name|DLG_EXIT_ERROR
+argument_list|,
+name|dialog
+argument_list|,
+name|prompt
+argument_list|,
+operator|&
+name|save_vars
+argument_list|)
+return|;
+block|}
 name|dlg_register_window
 argument_list|(
 name|dialog
@@ -935,6 +971,13 @@ argument_list|(
 name|dialog
 argument_list|,
 name|title
+argument_list|)
+expr_stmt|;
+name|dlg_draw_helpline
+argument_list|(
+name|dialog
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 name|wattrset

@@ -101,6 +101,9 @@ name|class
 name|ValType
 operator|,
 name|class
+name|ValRefType
+operator|,
+name|class
 name|TypeClass
 operator|,
 name|class
@@ -148,6 +151,10 @@ name|class
 name|ConstantUniqueMap
 operator|<
 name|InlineAsmKeyType
+block|,
+specifier|const
+name|InlineAsmKeyType
+operator|&
 block|,
 name|PointerType
 block|,
@@ -251,7 +258,6 @@ return|;
 block|}
 comment|/// getType - InlineAsm's are always pointers.
 comment|///
-specifier|const
 name|PointerType
 operator|*
 name|getType
@@ -261,7 +267,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|PointerType
 operator|*
 operator|>
@@ -275,7 +280,6 @@ return|;
 block|}
 comment|/// getFunctionType - InlineAsm's are always pointers to functions.
 comment|///
-specifier|const
 name|FunctionType
 operator|*
 name|getFunctionType
@@ -564,6 +568,7 @@ comment|// These are helper methods for dealing with flags in the INLINEASM SDNo
 comment|// in the backend.
 enum|enum
 block|{
+comment|// Fixed operands on an INLINEASM SDNode.
 name|Op_InputChain
 init|=
 literal|0
@@ -585,6 +590,7 @@ name|Op_FirstOperand
 init|=
 literal|4
 block|,
+comment|// Fixed operands on an INLINEASM MachineInstr.
 name|MIOp_AsmString
 init|=
 literal|0
@@ -598,6 +604,7 @@ name|MIOp_FirstOperand
 init|=
 literal|2
 block|,
+comment|// Interpretation of the MIOp_ExtraInfo bit field.
 name|Extra_HasSideEffects
 init|=
 literal|1
@@ -606,26 +613,39 @@ name|Extra_IsAlignStack
 init|=
 literal|2
 block|,
+comment|// Inline asm operands map to multiple SDNode / MachineInstr operands.
+comment|// The first operand is an immediate describing the asm operand, the low
+comment|// bits is the kind:
 name|Kind_RegUse
 init|=
 literal|1
 block|,
+comment|// Input register, "r".
 name|Kind_RegDef
 init|=
 literal|2
 block|,
-name|Kind_Imm
+comment|// Output register, "=r".
+name|Kind_RegDefEarlyClobber
 init|=
 literal|3
 block|,
-name|Kind_Mem
+comment|// Early-clobber output register, "=&r".
+name|Kind_Clobber
 init|=
 literal|4
 block|,
-name|Kind_RegDefEarlyClobber
+comment|// Clobbered register, "~r".
+name|Kind_Imm
+init|=
+literal|5
+block|,
+comment|// Immediate.
+name|Kind_Mem
 init|=
 literal|6
 block|,
+comment|// Memory operand, "m".
 name|Flag_MatchingOperand
 init|=
 literal|0x80000000
@@ -776,6 +796,23 @@ name|Flag
 argument_list|)
 operator|==
 name|Kind_RegDefEarlyClobber
+return|;
+block|}
+specifier|static
+name|bool
+name|isClobberKind
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|)
+block|{
+return|return
+name|getKind
+argument_list|(
+name|Flag
+argument_list|)
+operator|==
+name|Kind_Clobber
 return|;
 block|}
 comment|/// getNumOperandRegisters - Extract the number of registers field from the

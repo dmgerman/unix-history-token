@@ -199,6 +199,17 @@ comment|// one's or all zero's.
 name|SETCC_CARRY
 block|,
 comment|// R = carry_bit ? ~0 : 0
+comment|/// X86 FP SETCC, implemented with CMP{cc}SS/CMP{cc}SD.
+comment|/// Operands are two FP values to compare; result is a mask of
+comment|/// 0s or 1s.  Generally DTRT for C/C++ with NaNs.
+name|FSETCCss
+block|,
+name|FSETCCsd
+block|,
+comment|/// X86 MOVMSK{pd|ps}, extracts sign bits of two or four FP values,
+comment|/// result in an integer GPR.  Needs masking for scalar result.
+name|FGETSIGNx86
+block|,
 comment|/// X86 conditional moves. Operand 0 and operand 1 are the two values
 comment|/// to select from. Operand 2 is the condition code, and operand 3 is the
 comment|/// flag operand produced by a CMP or TEST instruction. It also writes a
@@ -267,8 +278,8 @@ block|,
 comment|/// PSHUFB - Shuffle 16 8-bit values within a vector.
 name|PSHUFB
 block|,
-comment|/// PANDN - and with not'd value.
-name|PANDN
+comment|/// ANDNP - Bitwise Logical AND NOT of Packed FP values.
+name|ANDNP
 block|,
 comment|/// PSIGNB/W/D - Copy integer sign.
 name|PSIGNB
@@ -841,6 +852,26 @@ operator|=
 name|true
 argument_list|)
 decl_stmt|;
+comment|/// isCalleePop - Determines whether the callee is required to pop its
+comment|/// own arguments. Callee pop is necessary to support tail calls.
+name|bool
+name|isCalleePop
+argument_list|(
+name|CallingConv
+operator|::
+name|ID
+name|CallingConv
+argument_list|,
+name|bool
+name|is64Bit
+argument_list|,
+name|bool
+name|IsVarArg
+argument_list|,
+name|bool
+name|TailCallOpt
+argument_list|)
+decl_stmt|;
 block|}
 comment|//===--------------------------------------------------------------------===//
 comment|//  X86TargetLowering - X86 Implementation of the TargetLowering interface
@@ -1168,20 +1199,6 @@ argument|const char *constraint
 argument_list|)
 specifier|const
 block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
 name|virtual
 specifier|const
 name|char
@@ -1202,7 +1219,7 @@ name|LowerAsmOperandForConstraint
 argument_list|(
 argument|SDValue Op
 argument_list|,
-argument|char ConstraintLetter
+argument|std::string&Constraint
 argument_list|,
 argument|std::vector<SDValue>&Ops
 argument_list|,
@@ -1429,24 +1446,6 @@ argument|FunctionLoweringInfo&funcInfo
 argument_list|)
 specifier|const
 block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
-name|unsigned
-name|getRegPressureLimit
-argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|,
-argument|MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
 comment|/// getStackCookieLocation - Return true if the target stores stack
 comment|/// protector cookies at a fixed offset in some non-standard address
 comment|/// space, and populates the address space and offset as
@@ -1458,6 +1457,21 @@ argument_list|(
 argument|unsigned&AddressSpace
 argument_list|,
 argument|unsigned&Offset
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|BuildFILD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|EVT SrcVT
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue StackSlot
+argument_list|,
+argument|SelectionDAG&DAG
 argument_list|)
 specifier|const
 block|;
@@ -1841,24 +1855,9 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerShift
+name|LowerShiftParts
 argument_list|(
 argument|SDValue Op
-argument_list|,
-argument|SelectionDAG&DAG
-argument_list|)
-specifier|const
-block|;
-name|SDValue
-name|BuildFILD
-argument_list|(
-argument|SDValue Op
-argument_list|,
-argument|EVT SrcVT
-argument_list|,
-argument|SDValue Chain
-argument_list|,
-argument|SDValue StackSlot
 argument_list|,
 argument|SelectionDAG&DAG
 argument_list|)
@@ -1947,6 +1946,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerFCOPYSIGN
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerFGETSIGN
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2148,7 +2156,7 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerSHL
+name|LowerShift
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2194,6 +2202,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerMEMBARRIER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSIGN_EXTEND_INREG
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2289,9 +2306,31 @@ specifier|const
 block|;
 name|virtual
 name|bool
+name|mayBeEmittedAsTailCall
+argument_list|(
+argument|CallInst *CI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|EVT
+name|getTypeForExtArgOrReturn
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
+argument_list|,
+argument|ISD::NodeType ExtendKind
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
 name|CanLowerReturn
 argument_list|(
 argument|CallingConv::ID CallConv
+argument_list|,
+argument|MachineFunction&MF
 argument_list|,
 argument|bool isVarArg
 argument_list|,

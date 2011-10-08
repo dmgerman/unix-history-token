@@ -1177,6 +1177,37 @@ name|ValNo
 index|]
 return|;
 block|}
+comment|/// containsValue - Returns true if VNI belongs to this interval.
+name|bool
+name|containsValue
+argument_list|(
+specifier|const
+name|VNInfo
+operator|*
+name|VNI
+argument_list|)
+decl|const
+block|{
+return|return
+name|VNI
+operator|&&
+name|VNI
+operator|->
+name|id
+operator|<
+name|getNumValNums
+argument_list|()
+operator|&&
+name|VNI
+operator|==
+name|getValNumInfo
+argument_list|(
+name|VNI
+operator|->
+name|id
+argument_list|)
+return|;
+block|}
 comment|/// getNextValue - Create a new value number and return it.  MIIdx specifies
 comment|/// the instruction that defines the value number.
 name|VNInfo
@@ -1847,6 +1878,20 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
+comment|/// extendInBlock - If this interval is live before UseIdx in the basic
+comment|/// block that starts at StartIdx, extend it to be live at UseIdx and return
+comment|/// the value. If there is no live range before UseIdx, return NULL.
+name|VNInfo
+modifier|*
+name|extendInBlock
+parameter_list|(
+name|SlotIndex
+name|StartIdx
+parameter_list|,
+name|SlotIndex
+name|UseIdx
+parameter_list|)
+function_decl|;
 comment|/// join - Join two live intervals (this, and other) together.  This applies
 comment|/// mappings to the value numbers in the LHS/RHS intervals as specified.  If
 comment|/// the intervals are not joinable, this aborts.
@@ -1983,8 +2028,12 @@ comment|/// Returns true if the live interval is zero length, i.e. no live range
 comment|/// span instructions. It doesn't pay to spill such an interval.
 name|bool
 name|isZeroLength
-argument_list|()
-specifier|const
+argument_list|(
+name|SlotIndexes
+operator|*
+name|Indexes
+argument_list|)
+decl|const
 block|{
 for|for
 control|(
@@ -2008,16 +2057,24 @@ name|i
 control|)
 if|if
 condition|(
+name|Indexes
+operator|->
+name|getNextNonNullIndex
+argument_list|(
+name|i
+operator|->
+name|start
+argument_list|)
+operator|.
+name|getBaseIndex
+argument_list|()
+operator|<
 name|i
 operator|->
 name|end
 operator|.
-name|getPrevIndex
+name|getBaseIndex
 argument_list|()
-operator|>
-name|i
-operator|->
-name|start
 condition|)
 return|return
 name|false
@@ -2184,13 +2241,7 @@ operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_expr_stmt
 specifier|inline
 name|raw_ostream
 operator|&
@@ -2218,66 +2269,27 @@ return|return
 name|OS
 return|;
 block|}
-end_expr_stmt
-
-begin_comment
 comment|/// ConnectedVNInfoEqClasses - Helper class that can divide VNInfos in a
-end_comment
-
-begin_comment
 comment|/// LiveInterval into equivalence clases of connected components. A
-end_comment
-
-begin_comment
 comment|/// LiveInterval that has multiple connected components can be broken into
-end_comment
-
-begin_comment
 comment|/// multiple LiveIntervals.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Given a LiveInterval that may have multiple connected components, run:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|///   unsigned numComps = ConEQ.Classify(LI);
-end_comment
-
-begin_comment
 comment|///   if (numComps> 1) {
-end_comment
-
-begin_comment
 comment|///     // allocate numComps-1 new LiveIntervals into LIS[1..]
-end_comment
-
-begin_comment
 comment|///     ConEQ.Distribute(LIS);
-end_comment
-
-begin_comment
 comment|/// }
-end_comment
-
-begin_decl_stmt
 name|class
 name|ConnectedVNInfoEqClasses
 block|{
 name|LiveIntervals
 modifier|&
-name|lis_
+name|LIS
 decl_stmt|;
 name|IntEqClasses
-name|eqClass_
+name|EqClass
 decl_stmt|;
 comment|// Note that values a and b are connected.
 name|void
@@ -2304,7 +2316,7 @@ operator|&
 name|lis
 argument_list|)
 operator|:
-name|lis_
+name|LIS
 argument_list|(
 argument|lis
 argument_list|)
@@ -2333,7 +2345,7 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|eqClass_
+name|EqClass
 index|[
 name|VNI
 operator|->
@@ -2344,6 +2356,7 @@ block|}
 comment|/// Distribute - Distribute values in LIV[0] into a separate LiveInterval
 comment|/// for each connected component. LIV must have a LiveInterval for each
 comment|/// connected component. The LiveIntervals in Liv[1..] must be empty.
+comment|/// Instructions using LIV[0] are rewritten.
 name|void
 name|Distribute
 parameter_list|(
@@ -2351,17 +2364,18 @@ name|LiveInterval
 modifier|*
 name|LIV
 index|[]
+parameter_list|,
+name|MachineRegisterInfo
+modifier|&
+name|MRI
 parameter_list|)
 function_decl|;
 block|}
+empty_stmt|;
+block|}
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
 begin_endif
-unit|}
 endif|#
 directive|endif
 end_endif

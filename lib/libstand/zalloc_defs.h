@@ -42,7 +42,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<string.h>
+file|<sys/stdint.h>
 end_include
 
 begin_include
@@ -50,28 +50,6 @@ include|#
 directive|include
 file|"stand.h"
 end_include
-
-begin_typedef
-typedef|typedef
-name|uintptr_t
-name|iaddr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* unsigned int same size as pointer	*/
-end_comment
-
-begin_typedef
-typedef|typedef
-name|intptr_t
-name|saddr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* signed int same size as pointer	*/
-end_comment
 
 begin_include
 include|#
@@ -82,34 +60,9 @@ end_include
 begin_define
 define|#
 directive|define
-name|Prototype
-value|extern
-end_define
-
-begin_define
-define|#
-directive|define
 name|Library
 value|extern
 end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NULL
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NULL
-value|((void *)0)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*  * block extension for sbrk()  */
@@ -130,7 +83,7 @@ value|(BLKEXTEND - 1)
 end_define
 
 begin_comment
-comment|/*  * required malloc alignment.  Use sizeof(long double) for architecture  * independance.  *  * Note: if we implement a more sophisticated realloc, we should ensure that  * MALLOCALIGN is at least as large as MemNode.  */
+comment|/*  * required malloc alignment.  Just hardwire to 16.  *  * Note: if we implement a more sophisticated realloc, we should ensure that  * MALLOCALIGN is at least as large as MemNode.  */
 end_comment
 
 begin_typedef
@@ -153,15 +106,8 @@ end_typedef
 begin_define
 define|#
 directive|define
-name|MATYPE
-value|long double
-end_define
-
-begin_define
-define|#
-directive|define
 name|MALLOCALIGN
-value|((sizeof(MATYPE)> sizeof(Guard)) ? sizeof(MATYPE) : sizeof(Guard))
+value|16
 end_define
 
 begin_define

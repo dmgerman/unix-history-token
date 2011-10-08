@@ -182,11 +182,11 @@ comment|// It takes an input chain and a pointer to the jump buffer as inputs
 comment|// and returns an outchain.
 name|EH_SJLJ_LONGJMP
 block|,
-comment|// OUTCHAIN = EH_SJLJ_DISPATCHSETUP(INCHAIN, context)
+comment|// OUTCHAIN = EH_SJLJ_DISPATCHSETUP(INCHAIN, setjmpval)
 comment|// This corresponds to the eh.sjlj.dispatchsetup intrinsic. It takes an
-comment|// input chain and a pointer to the sjlj function context as inputs and
-comment|// returns an outchain. By default, this does nothing. Targets can lower
-comment|// this to unwind setup code if needed.
+comment|// input chain and the value returning from setjmp as inputs and returns an
+comment|// outchain. By default, this does nothing. Targets can lower this to unwind
+comment|// setup code if needed.
 name|EH_SJLJ_DISPATCHSETUP
 block|,
 comment|// TargetConstant* - Like Constant*, but the DAG does not do any folding,
@@ -321,7 +321,7 @@ block|,
 comment|// RESULT, BOOL = [SU]ADDO(LHS, RHS) - Overflow-aware nodes for addition.
 comment|// These nodes take two operands: the normal LHS and RHS to the add. They
 comment|// produce two results: the normal result of the add, and a boolean that
-comment|// indicates if an overflow occured (*not* a flag, because it may be stored
+comment|// indicates if an overflow occurred (*not* a flag, because it may be stored
 comment|// to memory, etc.).  If the type of the boolean is not i1 then the high
 comment|// bits conform to getBooleanContents.
 comment|// These nodes are generated from the llvm.[su]add.with.overflow intrinsics.
@@ -345,6 +345,8 @@ block|,
 name|FSUB
 block|,
 name|FMUL
+block|,
+name|FMA
 block|,
 name|FDIV
 block|,
@@ -759,7 +761,8 @@ name|TRAP
 block|,
 comment|// PREFETCH - This corresponds to a prefetch intrinsic. It takes chains are
 comment|// their first operand. The other operands are the address to prefetch,
-comment|// read / write specifier, and locality specifier.
+comment|// read / write specifier, locality specifier and instruction / data cache
+comment|// specifier.
 name|PREFETCH
 block|,
 comment|// OUTCHAIN = MEMBARRIER(INCHAIN, load-load, load-store, store-load,

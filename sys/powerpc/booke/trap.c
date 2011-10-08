@@ -637,10 +637,7 @@ argument_list|)
 expr_stmt|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 name|p
 operator|=
@@ -1790,6 +1787,12 @@ return|;
 block|}
 end_function
 
+begin_include
+include|#
+directive|include
+file|"../../kern/subr_syscall.c"
+end_include
+
 begin_function
 name|void
 name|syscall
@@ -1814,10 +1817,7 @@ name|error
 decl_stmt|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 name|td
 operator|->
@@ -2197,10 +2197,7 @@ comment|/* Get rid of any stale machine checks that have been waiting.  */
 asm|__asm __volatile ("sync; isync");
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 if|if
 condition|(

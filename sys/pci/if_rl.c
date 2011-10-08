@@ -4182,7 +4182,7 @@ name|rl_type
 operator|==
 name|RL_8139
 operator|&&
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -9254,7 +9254,7 @@ operator|)
 operator|!=
 literal|0
 operator|&&
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -9471,7 +9471,7 @@ condition|)
 return|return;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->

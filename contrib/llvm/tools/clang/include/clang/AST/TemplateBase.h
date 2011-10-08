@@ -860,9 +860,17 @@ name|Null
 return|;
 block|}
 comment|/// \brief Whether this template argument is dependent on a template
-comment|/// parameter.
+comment|/// parameter such that its result can change from one instantiation to
+comment|/// another.
 name|bool
 name|isDependent
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Whether this template argument is dependent on a template
+comment|/// parameter.
+name|bool
+name|isInstantiationDependent
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -1446,11 +1454,15 @@ name|Declarator
 decl_stmt|;
 struct|struct
 block|{
-name|unsigned
-name|QualifierRange
-index|[
-literal|2
-index|]
+comment|// FIXME: We'd like to just use the qualifier in the TemplateName,
+comment|// but template arguments get canonicalized too quickly.
+name|NestedNameSpecifier
+modifier|*
+name|Qualifier
+decl_stmt|;
+name|void
+modifier|*
+name|QualifierLocData
 decl_stmt|;
 name|unsigned
 name|TemplateNameLoc
@@ -1494,7 +1506,7 @@ argument_list|)
 block|{}
 name|TemplateArgumentLocInfo
 argument_list|(
-argument|SourceRange QualifierRange
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|SourceLocation TemplateNameLoc
 argument_list|,
@@ -1503,32 +1515,20 @@ argument_list|)
 block|{
 name|Template
 operator|.
-name|QualifierRange
-index|[
-literal|0
-index|]
+name|Qualifier
 operator|=
-name|QualifierRange
+name|QualifierLoc
 operator|.
-name|getBegin
-argument_list|()
-operator|.
-name|getRawEncoding
+name|getNestedNameSpecifier
 argument_list|()
 block|;
 name|Template
 operator|.
-name|QualifierRange
-index|[
-literal|1
-index|]
+name|QualifierLocData
 operator|=
-name|QualifierRange
+name|QualifierLoc
 operator|.
-name|getEnd
-argument_list|()
-operator|.
-name|getRawEncoding
+name|getOpaqueData
 argument_list|()
 block|;
 name|Template
@@ -1569,37 +1569,21 @@ return|return
 name|Expression
 return|;
 block|}
-name|SourceRange
-name|getTemplateQualifierRange
+name|NestedNameSpecifierLoc
+name|getTemplateQualifierLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SourceRange
-argument_list|(
-name|SourceLocation
-operator|::
-name|getFromRawEncoding
+name|NestedNameSpecifierLoc
 argument_list|(
 name|Template
 operator|.
-name|QualifierRange
-index|[
-literal|0
-index|]
-argument_list|)
+name|Qualifier
 argument_list|,
-name|SourceLocation
-operator|::
-name|getFromRawEncoding
-argument_list|(
 name|Template
 operator|.
-name|QualifierRange
-index|[
-literal|1
-index|]
-argument_list|)
+name|QualifierLocData
 argument_list|)
 return|;
 block|}
@@ -1751,7 +1735,7 @@ name|TemplateArgumentLoc
 argument_list|(
 argument|const TemplateArgument&Argument
 argument_list|,
-argument|SourceRange QualifierRange
+argument|NestedNameSpecifierLoc QualifierLoc
 argument_list|,
 argument|SourceLocation TemplateNameLoc
 argument_list|,
@@ -1765,7 +1749,7 @@ argument_list|)
 operator|,
 name|LocInfo
 argument_list|(
-argument|QualifierRange
+argument|QualifierLoc
 argument_list|,
 argument|TemplateNameLoc
 argument_list|,
@@ -1956,8 +1940,8 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|SourceRange
-name|getTemplateQualifierRange
+name|NestedNameSpecifierLoc
+name|getTemplateQualifierLoc
 argument_list|()
 specifier|const
 block|{
@@ -1985,7 +1969,7 @@ block|;
 return|return
 name|LocInfo
 operator|.
-name|getTemplateQualifierRange
+name|getTemplateQualifierLoc
 argument_list|()
 return|;
 block|}

@@ -366,8 +366,30 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FFS_MAXID
+name|FFS_SET_INODE
 value|15
+end_define
+
+begin_comment
+comment|/* update an on-disk inode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_SET_BUFOUTPUT
+value|16
+end_define
+
+begin_comment
+comment|/* set buffered writing on descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|FFS_MAXID
+value|16
 end_define
 
 begin_comment
@@ -2139,6 +2161,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|JOP_SYNC
+value|7
+end_define
+
+begin_comment
+comment|/* fsync() complete record. */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|JREC_SIZE
 value|32
 end_define
@@ -2313,7 +2346,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * Truncation record.  Records a partial truncation so that it may be  * completed later.  */
+comment|/*  * Truncation record.  Records a partial truncation so that it may be  * completed at check time.  Also used for sync records.  */
 end_comment
 
 begin_struct

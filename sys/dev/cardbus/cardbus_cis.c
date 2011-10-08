@@ -1880,7 +1880,7 @@ name|bar
 argument_list|)
 operator|)
 expr_stmt|;
-comment|/* 		 * The PC Card spec says we're only supposed to honor this 		 * hint when the cardbus bridge is a child of pci0 (the main 		 * bus).  The PC Card spec seems to indicate that this should 		 * only be done on x86 based machines, which suggests that on 		 * non-x86 machines the adddresses can be anywhere.  Since the 		 * hardware can do it on non-x86 machines, it should be able 		 * to do it on x86 machines too.  Therefore, we can and should 		 * ignore this hint.  Furthermore, the PC Card spec recommends 		 * always allocating memory above 1MB, contradicting the other 		 * part of the PC Card spec, it seems.  We make note of it, 		 * but otherwise don't use this information. 		 * 		 * Some Realtek cards have this set in their CIS, but fail 		 * to actually work when mapped this way, and experience 		 * has shown ignoring this big to be a wise choice. 		 * 		 * XXX We should cite chapter and verse for standard refs. 		 */
+comment|/* 		 * The PC Card spec says we're only supposed to honor this 		 * hint when the cardbus bridge is a child of pci0 (the main 		 * bus).  The PC Card spec seems to indicate that this should 		 * only be done on x86 based machines, which suggests that on 		 * non-x86 machines the addresses can be anywhere.  Since the 		 * hardware can do it on non-x86 machines, it should be able 		 * to do it on x86 machines too.  Therefore, we can and should 		 * ignore this hint.  Furthermore, the PC Card spec recommends 		 * always allocating memory above 1MB, contradicting the other 		 * part of the PC Card spec, it seems.  We make note of it, 		 * but otherwise don't use this information. 		 * 		 * Some Realtek cards have this set in their CIS, but fail 		 * to actually work when mapped this way, and experience 		 * has shown ignoring this big to be a wise choice. 		 * 		 * XXX We should cite chapter and verse for standard refs. 		 */
 if|if
 condition|(
 name|reg
@@ -2026,6 +2026,10 @@ begin_comment
 comment|/*  * Functions to read the a tuple from the card  */
 end_comment
 
+begin_comment
+comment|/*  * Read CIS bytes out of the config space.  We have to read it 4 bytes at a  * time and do the usual mask and shift to return the bytes.  The standard  * defines the byte order to be little endian.  pci_read_config converts it to  * host byte order.  This is why we have no endian conversion functions: the  * shifts wind up being endian neutral.  This is also why we avoid the obvious  * memcpy optimization.  */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -2082,32 +2086,22 @@ argument_list|(
 name|child
 argument_list|,
 name|loc
-operator|-
-name|loc
-operator|%
-literal|4
+operator|&
+operator|~
+literal|0x3
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|j
-operator|=
-name|loc
-operator|%
-literal|4
-init|;
-name|j
-operator|>
-literal|0
-condition|;
-name|j
-operator|--
-control|)
 name|e
 operator|>>=
 literal|8
+operator|*
+operator|(
+name|loc
+operator|&
+literal|0x3
+operator|)
 expr_stmt|;
 operator|*
 name|len
@@ -2139,9 +2133,11 @@ control|)
 block|{
 if|if
 condition|(
+operator|(
 name|i
-operator|%
-literal|4
+operator|&
+literal|0x3
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2215,6 +2211,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Read the CIS data out of memroy.  We indirect through the bus space  * routines to ensure proper byte ordering conversions when necessary.  */
+end_comment
 
 begin_function
 specifier|static
@@ -2591,20 +2591,13 @@ block|}
 comment|/* allocate the memory space to read CIS */
 name|res
 operator|=
-name|bus_alloc_resource
+name|bus_alloc_resource_any
 argument_list|(
 name|child
 argument_list|,
 name|SYS_RES_MEMORY
 argument_list|,
 name|rid
-argument_list|,
-literal|0
-argument_list|,
-operator|~
-literal|0
-argument_list|,
-literal|1
 argument_list|,
 name|rman_make_alignment_flags
 argument_list|(
@@ -3149,7 +3142,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}

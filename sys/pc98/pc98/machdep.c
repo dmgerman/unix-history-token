@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mp_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_npx.h"
 end_include
 
@@ -426,6 +432,12 @@ begin_include
 include|#
 directive|include
 file|<machine/md_var.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/mp_watchdog.h>
 end_include
 
 begin_include
@@ -5102,7 +5114,7 @@ end_comment
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|td
 parameter_list|,
@@ -5726,13 +5738,13 @@ modifier|*
 name|rate
 parameter_list|)
 block|{
-name|register_t
-name|reg
-decl_stmt|;
 name|uint64_t
 name|tsc1
 decl_stmt|,
 name|tsc2
+decl_stmt|;
+name|register_t
+name|reg
 decl_stmt|;
 if|if
 condition|(
@@ -5767,27 +5779,6 @@ operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* If we're booting, trust the rate calibrated moments ago. */
-if|if
-condition|(
-name|cold
-operator|&&
-name|tsc_freq
-operator|!=
-literal|0
-condition|)
-block|{
-operator|*
-name|rate
-operator|=
-name|tsc_freq
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 ifdef|#
 directive|ifdef
 name|SMP
@@ -5845,6 +5836,17 @@ argument_list|(
 name|reg
 argument_list|)
 expr_stmt|;
+operator|*
+name|rate
+operator|=
+operator|(
+name|tsc2
+operator|-
+name|tsc1
+operator|)
+operator|*
+literal|1000
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|SMP
@@ -5873,42 +5875,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|tsc2
-operator|-=
-name|tsc1
-expr_stmt|;
-if|if
-condition|(
-name|tsc_freq
-operator|!=
-literal|0
-condition|)
-block|{
-operator|*
-name|rate
-operator|=
-name|tsc2
-operator|*
-literal|1000
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 	 * Subtract 0.5% of the total.  Empirical testing has shown that 	 * overhead in DELAY() works out to approximately this value. 	 */
-operator|*
-name|rate
-operator|=
-name|tsc2
-operator|*
-literal|1000
-operator|-
-name|tsc2
-operator|*
-literal|5
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -5933,7 +5899,9 @@ control|(
 init|;
 condition|;
 control|)
-asm|__asm__ ("hlt");
+name|halt
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -6032,7 +6000,7 @@ name|state
 operator|=
 name|STATE_SLEEPING
 expr_stmt|;
-comment|/* 	 * We must absolutely guarentee that hlt is the next instruction 	 * after sti or we introduce a timing window. 	 */
+comment|/* 	 * Since we may be in a critical section from cpu_idle(), if 	 * an interrupt fires during that critical section we may have 	 * a pending preemption.  If the CPU halts, then that thread 	 * may not execute until a later interrupt awakens the CPU. 	 * To handle this race, check for a runnable thread after 	 * disabling interrupts and immediately return if one is 	 * found.  Also, we must absolutely guarentee that hlt is 	 * the next instruction after sti.  This ensures that any 	 * interrupt that fires after the call to disable_intr() will 	 * immediately awaken the CPU from hlt.  Finally, please note 	 * that on x86 this works fine because of interrupts enabled only 	 * after the instruction following sti takes place, while IF is set 	 * to 1 immediately, allowing hlt instruction to acknowledge the 	 * interrupt. 	 */
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -6122,13 +6090,26 @@ name|state
 operator|=
 name|STATE_MWAIT
 expr_stmt|;
+comment|/* See comments in cpu_idle_hlt(). */
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sched_runnable
 argument_list|()
 condition|)
 block|{
+name|enable_intr
+argument_list|()
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|STATE_RUNNING
+expr_stmt|;
+return|return;
+block|}
 name|cpu_monitor
 argument_list|(
 name|state
@@ -6145,14 +6126,11 @@ name|state
 operator|==
 name|STATE_MWAIT
 condition|)
-name|cpu_mwait
-argument_list|(
-literal|0
-argument_list|,
-name|MWAIT_C1
-argument_list|)
+asm|__asm __volatile("sti; mwait" : : "a" (MWAIT_C1), "c" (0));
+else|else
+name|enable_intr
+argument_list|()
 expr_stmt|;
-block|}
 operator|*
 name|state
 operator|=
@@ -6193,6 +6171,7 @@ name|state
 operator|=
 name|STATE_RUNNING
 expr_stmt|;
+comment|/* 	 * The sched_runnable() call is racy but as long as there is 	 * a loop missing it one time will have just a little impact if any  	 * (and it is much better than missing the check at all). 	 */
 for|for
 control|(
 name|i
@@ -6255,13 +6234,15 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
-if|if
-condition|(
-name|mp_grab_cpu_hlt
-argument_list|()
-condition|)
-return|return;
+name|MP_WATCHDOG
+name|ap_watchdog
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* If we are busy - try to use fast methods. */
@@ -6833,6 +6814,71 @@ literal|"currently selected idle function"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_function_decl
+name|uint64_t
+function_decl|(
+modifier|*
+name|atomic_load_acq_64
+function_decl|)
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+parameter_list|)
+init|=
+name|atomic_load_acq_64_i386
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|atomic_store_rel_64
+function_decl|)
+parameter_list|(
+specifier|volatile
+name|uint64_t
+modifier|*
+parameter_list|,
+name|uint64_t
+parameter_list|)
+init|=
+name|atomic_store_rel_64_i386
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|static
+name|void
+name|cpu_probe_cmpxchg8b
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|cpu_feature
+operator|&
+name|CPUID_CX8
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|atomic_load_acq_64
+operator|=
+name|atomic_load_acq_64_i586
+expr_stmt|;
+name|atomic_store_rel_64
+operator|=
+name|atomic_store_rel_64_i586
+expr_stmt|;
+block|}
+block|}
+end_function
 
 begin_comment
 comment|/*  * Reset registers to default values on exec.  */
@@ -9261,6 +9307,8 @@ name|da_indx
 decl_stmt|;
 name|u_long
 name|physmem_tunable
+decl_stmt|,
+name|memtest
 decl_stmt|;
 name|vm_paddr_t
 name|physmap
@@ -9457,6 +9505,19 @@ operator|=
 name|atop
 argument_list|(
 name|physmem_tunable
+argument_list|)
+expr_stmt|;
+comment|/* 	 * By default keep the memtest enabled.  Use a general name so that 	 * one could eventually do more with the code than just disable it. 	 */
+name|memtest
+operator|=
+literal|1
+expr_stmt|;
+name|TUNABLE_ULONG_FETCH
+argument_list|(
+literal|"hw.memtest.tests"
+argument_list|,
+operator|&
+name|memtest
 argument_list|)
 expr_stmt|;
 if|if
@@ -9798,6 +9859,15 @@ name|page_bad
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip_memtest
+goto|;
 comment|/* 			 * map page into kernel: valid, read/write,non-cacheable 			 */
 operator|*
 name|pte
@@ -9940,6 +10010,8 @@ name|ptr
 operator|=
 name|tmp
 expr_stmt|;
+name|skip_memtest
+label|:
 comment|/* 			 * Adjust array of valid/good pages. 			 */
 if|if
 condition|(
@@ -11770,6 +11842,9 @@ name|td_frame
 operator|=
 operator|&
 name|proc0_tf
+expr_stmt|;
+name|cpu_probe_cmpxchg8b
+argument_list|()
 expr_stmt|;
 block|}
 end_function

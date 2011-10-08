@@ -56,7 +56,7 @@ end_ifndef
 begin_define
 define|#
 directive|define
-name|LLVM_CLANG_GR_PATH_DIAGNOSTIC_CLiENTS_H
+name|LLVM_CLANG_GR_PATH_DIAGNOSTIC_CLIENTS_H
 end_define
 
 begin_include

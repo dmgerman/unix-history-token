@@ -208,6 +208,10 @@ comment|/// isCommutative - True if the intrinsic is commutative.
 name|bool
 name|isCommutative
 decl_stmt|;
+comment|/// canThrow - True if the intrinsic can throw.
+name|bool
+name|canThrow
+decl_stmt|;
 enum|enum
 name|ArgAttribute
 block|{

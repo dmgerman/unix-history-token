@@ -332,7 +332,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"  -T<Sig>       Create table template file for<Sig> (or \"ALL\")\n"
+literal|"  -T<Sig>|ALL|* Create table template file(s) for<Sig>\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -972,6 +972,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* same as yydebug */
+name|DtParserdebug
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -981,6 +985,10 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* same as yydebug */
+name|DtParserdebug
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'t'

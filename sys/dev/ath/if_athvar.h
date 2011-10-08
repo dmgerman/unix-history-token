@@ -56,6 +56,35 @@ name|ATH_TIMEOUT
 value|1000
 end_define
 
+begin_comment
+comment|/*  * 802.11n requires more TX and RX buffers to do AMPDU.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATH_ENABLE_11N
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ATH_TXBUF
+value|512
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RXBUF
+value|512
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -159,7 +188,7 @@ begin_define
 define|#
 directive|define
 name|ATH_BEACON_AIFS_DEFAULT
-value|0
+value|1
 end_define
 
 begin_comment
@@ -1022,8 +1051,23 @@ comment|/* set/clr CCA with TDMA */
 name|sc_resetcal
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* reset cal state next trip */
+name|sc_rxslink
+range|:
+literal|1
+decl_stmt|,
+comment|/* do self-linked final descriptor */
+name|sc_kickpcu
+range|:
+literal|1
+decl_stmt|,
+comment|/* kick PCU RX on next RX proc */
+name|sc_rxtsf32
+range|:
+literal|1
+decl_stmt|;
+comment|/* RX dec TSF is 32 bits */
 name|uint32_t
 name|sc_eerd
 decl_stmt|;
@@ -1452,6 +1496,21 @@ name|int
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
+comment|/* DFS related state */
+name|void
+modifier|*
+name|sc_dfs
+decl_stmt|;
+comment|/* Used by an optional DFS module */
+name|int
+name|sc_dodfs
+decl_stmt|;
+comment|/* Whether to enable DFS rx filter bits */
+name|struct
+name|task
+name|sc_dfstask
+decl_stmt|;
+comment|/* DFS processing task */
 block|}
 struct|;
 end_struct
@@ -2200,6 +2259,17 @@ name|_bs
 parameter_list|)
 define|\
 value|((*(_ah)->ah_setStationBeaconTimers)((_ah), (_bs)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getnexttbtt
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getNextTBTT)((_ah)))
 end_define
 
 begin_define
@@ -3192,7 +3262,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_PRESENT, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3203,7 +3273,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, 1, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3216,7 +3286,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, 1, _v, NULL)
+value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
 begin_define
@@ -3266,7 +3336,40 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAP_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_self_linked_final_rxdesc
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXDESC_SELFLINK, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_gtxto_supported
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_GTXTO, 0, NULL) == HAL_OK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_has_long_rxdesc_tsf
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(ath_hal_getcapability(_ah, HAL_CAP_LONG_RXDESC_TSF, 0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3557,6 +3660,66 @@ name|_dur
 parameter_list|)
 define|\
 value|((*(_ah)->ah_set11nBurstDuration)((_ah), (_ds), (_dur)))
+end_define
+
+begin_comment
+comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enabledfs
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_enableDfs)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdfsthresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_procradarevent
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rxs
+parameter_list|,
+name|_fulltsf
+parameter_list|,
+name|_buf
+parameter_list|,
+name|_event
+parameter_list|)
+define|\
+value|((*(_ah)->ah_procRadarEvent)((_ah), (_rxs), (_fulltsf), (_buf), (_event)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_is_fast_clock_enabled
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_isFastClockEnabled)((_ah)))
 end_define
 
 begin_define

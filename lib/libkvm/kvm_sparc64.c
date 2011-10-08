@@ -825,13 +825,6 @@ modifier|*
 name|pa
 parameter_list|)
 block|{
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SUN4V
-argument_list|)
 name|struct
 name|tte
 name|tte
@@ -842,8 +835,6 @@ decl_stmt|;
 name|u_long
 name|vpn
 decl_stmt|;
-endif|#
-directive|endif
 name|off_t
 name|pa_off
 decl_stmt|;
@@ -875,13 +866,6 @@ operator|&
 operator|~
 name|PAGE_MASK
 expr_stmt|;
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|SUN4V
-argument_list|)
 else|else
 block|{
 name|vpn
@@ -957,8 +941,6 @@ name|tte
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|rest
 operator|=
 name|PAGE_SIZE

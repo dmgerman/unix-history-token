@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: xfrin.c,v 1.166 2008/09/25 04:12:39 marka Exp $ */
+comment|/* $Id: xfrin.c,v 1.166.522.4 2011-03-11 06:47:06 marka Exp $ */
 end_comment
 
 begin_comment
@@ -225,9 +225,11 @@ name|XFRST_IXFR_ADDSOA
 block|,
 name|XFRST_IXFR_ADD
 block|,
+name|XFRST_IXFR_END
+block|,
 name|XFRST_AXFR
 block|,
-name|XFRST_END
+name|XFRST_AXFR_END
 block|}
 name|xfrin_state_t
 typedef|;
@@ -585,6 +587,18 @@ begin_function_decl
 specifier|static
 name|isc_result_t
 name|axfr_commit
+parameter_list|(
+name|dns_xfrin_ctx_t
+modifier|*
+name|xfr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|isc_result_t
+name|axfr_finalize
 parameter_list|(
 name|dns_xfrin_ctx_t
 modifier|*
@@ -1300,6 +1314,33 @@ name|add_private
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
+name|ISC_R_SUCCESS
+expr_stmt|;
+name|failure
+label|:
+return|return
+operator|(
+name|result
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|isc_result_t
+name|axfr_finalize
+parameter_list|(
+name|dns_xfrin_ctx_t
+modifier|*
+name|xfr
+parameter_list|)
+block|{
+name|isc_result_t
+name|result
+decl_stmt|;
 name|CHECK
 argument_list|(
 name|dns_zone_replacedb
@@ -2351,7 +2392,7 @@ name|xfr
 operator|->
 name|state
 operator|=
-name|XFRST_END
+name|XFRST_IXFR_END
 expr_stmt|;
 break|break;
 block|}
@@ -2511,13 +2552,16 @@ name|xfr
 operator|->
 name|state
 operator|=
-name|XFRST_END
+name|XFRST_AXFR_END
 expr_stmt|;
 break|break;
 block|}
 break|break;
 case|case
-name|XFRST_END
+name|XFRST_AXFR_END
+case|:
+case|case
+name|XFRST_IXFR_END
 case|:
 name|FAIL
 argument_list|(
@@ -6051,11 +6095,9 @@ name|reqtype
 operator|==
 name|dns_rdatatype_soa
 condition|)
-name|FAIL
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
+goto|goto
+name|failure
+goto|;
 name|xfrin_log
 argument_list|(
 name|xfr
@@ -6212,11 +6254,9 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|FAIL
-argument_list|(
-name|result
-argument_list|)
-expr_stmt|;
+goto|goto
+name|failure
+goto|;
 block|}
 for|for
 control|(
@@ -6439,7 +6479,13 @@ name|xfr
 operator|->
 name|state
 operator|==
-name|XFRST_END
+name|XFRST_AXFR_END
+operator|||
+name|xfr
+operator|->
+name|state
+operator|==
+name|XFRST_IXFR_END
 condition|)
 block|{
 name|result
@@ -6498,15 +6544,16 @@ operator|&
 name|msg
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|xfr
 operator|->
 name|state
-operator|==
-name|XFRST_GOTSOA
 condition|)
 block|{
+case|case
+name|XFRST_GOTSOA
+case|:
 name|xfr
 operator|->
 name|reqtype
@@ -6527,17 +6574,22 @@ name|xfr
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
+break|break;
+case|case
+name|XFRST_AXFR_END
+case|:
+name|CHECK
+argument_list|(
+name|axfr_finalize
+argument_list|(
 name|xfr
-operator|->
-name|state
-operator|==
-name|XFRST_END
-condition|)
-block|{
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
+name|XFRST_IXFR_END
+case|:
 comment|/* 		 * Close the journal. 		 */
 if|if
 condition|(
@@ -6601,9 +6653,8 @@ argument_list|(
 name|xfr
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
+break|break;
+default|default:
 comment|/* 		 * Read the next message. 		 */
 name|CHECK
 argument_list|(

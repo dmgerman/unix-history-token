@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrItineraries.h"
+file|"llvm/MC/MCInstrItineraries.h"
 end_include
 
 begin_include
@@ -121,7 +121,7 @@ argument_list|,
 argument|bool isBits
 argument_list|)
 block|;
-name|void
+name|unsigned
 name|FeatureKeyValues
 argument_list|(
 name|raw_ostream
@@ -129,7 +129,7 @@ operator|&
 name|OS
 argument_list|)
 block|;
-name|void
+name|unsigned
 name|CPUKeyValues
 argument_list|(
 name|raw_ostream
@@ -250,6 +250,16 @@ name|std
 operator|::
 name|vector
 operator|<
+name|Record
+operator|*
+operator|>
+operator|&
+name|ItinClassList
+argument_list|,
+name|std
+operator|::
+name|vector
+operator|<
 name|std
 operator|::
 name|vector
@@ -280,9 +290,11 @@ block|;
 name|void
 name|ParseFeaturesFunction
 argument_list|(
-name|raw_ostream
-operator|&
-name|OS
+argument|raw_ostream&OS
+argument_list|,
+argument|unsigned NumFeatures
+argument_list|,
+argument|unsigned NumProcs
 argument_list|)
 block|;
 name|public

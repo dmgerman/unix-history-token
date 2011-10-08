@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -50,7 +56,19 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -563,6 +581,8 @@ argument_list|,
 name|CTLTYPE_ULONG
 operator||
 name|CTLFLAG_RD
+operator||
+name|CTLFLAG_CAPRD
 argument_list|,
 name|NULL
 argument_list|,
@@ -961,7 +981,7 @@ end_endif
 
 begin_function
 name|int
-name|execve
+name|sys_execve
 parameter_list|(
 name|td
 parameter_list|,
@@ -1061,7 +1081,7 @@ block|}
 endif|#
 directive|endif
 name|int
-name|fexecve
+name|sys_fexecve
 argument_list|(
 expr|struct
 name|thread
@@ -1171,7 +1191,7 @@ end_endif
 
 begin_function
 name|int
-name|__mac_execve
+name|sys___mac_execve
 parameter_list|(
 name|td
 parameter_list|,
@@ -1907,6 +1927,28 @@ operator|!=
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+comment|/* 		 * While capability mode can't reach this point via direct 		 * path arguments to execve(), we also don't allow 		 * interpreters to be used in capability mode (for now). 		 * Catch indirect lookups and return a permissions error. 		 */
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+condition|)
+block|{
+name|error
+operator|=
+name|ECAPMODE
+expr_stmt|;
+goto|goto
+name|exec_fail
+goto|;
+block|}
+endif|#
+directive|endif
 name|error
 operator|=
 name|namei
@@ -1952,15 +1994,18 @@ operator|->
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Some might argue that CAP_READ and/or CAP_MMAP should also 		 * be required here; such arguments will be entertained. 		 */
 name|error
 operator|=
-name|fgetvp
+name|fgetvp_read
 argument_list|(
 name|td
 argument_list|,
 name|args
 operator|->
 name|fd
+argument_list|,
+name|CAP_FEXECVE
 argument_list|,
 operator|&
 name|binvp
@@ -2801,7 +2846,7 @@ name|p_pwait
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
+comment|/* 	 * Implement image setuid/setgid. 	 * 	 * Don't honor setuid/setgid if the filesystem prohibits it or if 	 * the process is being traced. 	 * 	 * We disable setuid/setgid/etc in compatibility mode on the basis 	 * that most setugid applications are not written with that 	 * environment in mind, and will therefore almost certainly operate 	 * incorrectly. In principle there's no reason that setugid 	 * applications might not be useful in capability mode, so we may want 	 * to reconsider this conservative design choice in the future. 	 * 	 * XXXMAC: For the time being, use NOSUID to also prohibit 	 * transitions on the file system. 	 */
 name|credential_changing
 operator|=
 literal|0
@@ -2870,6 +2915,23 @@ if|if
 condition|(
 name|credential_changing
 operator|&&
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+operator|(
+operator|(
+name|oldcred
+operator|->
+name|cr_flags
+operator|&
+name|CRED_FLAG_CAPMODE
+operator|)
+operator|==
+literal|0
+operator|)
+operator|&&
+endif|#
+directive|endif
 operator|(
 name|imgp
 operator|->
@@ -3191,22 +3253,6 @@ name|p_flag
 operator|&=
 operator|~
 name|P_INEXEC
-expr_stmt|;
-comment|/* 	 * If tracing the process, trap to the debugger so that 	 * breakpoints can be set before the program executes.  We 	 * have to use tdsignal() to deliver the signal to the current 	 * thread since any other threads in this process will exit if 	 * execve() succeeds. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-condition|)
-name|tdsignal
-argument_list|(
-name|td
-argument_list|,
-name|SIGTRAP
-argument_list|)
 expr_stmt|;
 comment|/* clear "fork but no exec" flag, as we _are_ execing */
 name|p

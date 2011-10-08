@@ -630,6 +630,17 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ApCheckRegMethod
+parameter_list|(
+name|ACPI_PARSE_OBJECT
+modifier|*
+name|Op
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * aslerror - error handling/reporting  */
 end_comment
@@ -1093,7 +1104,7 @@ comment|/*  * aslpredef - ACPI predefined names support  */
 end_comment
 
 begin_function_decl
-name|void
+name|BOOLEAN
 name|ApCheckForPredefinedMethod
 parameter_list|(
 name|ACPI_PARSE_OBJECT
@@ -1899,6 +1910,24 @@ parameter_list|(
 name|char
 modifier|*
 name|String
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|UtStrtoul64
+parameter_list|(
+name|char
+modifier|*
+name|String
+parameter_list|,
+name|UINT32
+name|Base
+parameter_list|,
+name|UINT64
+modifier|*
+name|RetInteger
 parameter_list|)
 function_decl|;
 end_function_decl

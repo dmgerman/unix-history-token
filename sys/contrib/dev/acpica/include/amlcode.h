@@ -2049,43 +2049,6 @@ value|0x0A
 end_define
 
 begin_comment
-comment|/* Predefined Operation Region SpaceIDs */
-end_comment
-
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|REGION_MEMORY
-init|=
-literal|0
-block|,
-name|REGION_IO
-block|,
-name|REGION_PCI_CONFIG
-block|,
-name|REGION_EC
-block|,
-name|REGION_SMBUS
-block|,
-name|REGION_CMOS
-block|,
-name|REGION_PCI_BAR
-block|,
-name|REGION_IPMI
-block|,
-name|REGION_DATA_TABLE
-block|,
-comment|/* Internal use only */
-name|REGION_FIXED_HW
-init|=
-literal|0x7F
-block|}
-name|AML_REGION_TYPES
-typedef|;
-end_typedef
-
-begin_comment
 comment|/* Comparison operation codes for MatchOp operator */
 end_comment
 

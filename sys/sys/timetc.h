@@ -84,7 +84,7 @@ name|u_int
 name|tc_counter_mask
 decl_stmt|;
 comment|/* This mask should mask off any unimplemented bits. */
-name|u_int64_t
+name|uint64_t
 name|tc_frequency
 decl_stmt|;
 comment|/* Frequency of the counter in Hz. */
@@ -97,6 +97,14 @@ name|int
 name|tc_quality
 decl_stmt|;
 comment|/* 		 * Used to determine if this timecounter is better than 		 * another timecounter higher means better.  Negative 		 * means "only use at explicit request". 		 */
+name|u_int
+name|tc_flags
+decl_stmt|;
+define|#
+directive|define
+name|TC_FLAGS_C3STOP
+value|1
+comment|/* Timer dies in C3. */
 name|void
 modifier|*
 name|tc_priv

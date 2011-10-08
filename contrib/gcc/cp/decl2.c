@@ -6848,6 +6848,13 @@ name|subvis
 operator|==
 name|VISIBILITY_ANON
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|in_main_input_context
+argument_list|()
+condition|)
 name|warning
 argument_list|(
 literal|0
@@ -6859,6 +6866,7 @@ argument_list|,
 name|t
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(
@@ -6930,6 +6938,13 @@ name|subvis
 operator|==
 name|VISIBILITY_ANON
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|in_main_input_context
+argument_list|()
+condition|)
 name|warning
 argument_list|(
 literal|0
@@ -6944,6 +6959,7 @@ name|t
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 elseif|else
 if|if
 condition|(

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2008, 2009  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2008-2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: nsec3.h,v 1.5.48.3 2009/10/06 21:20:18 each Exp $ */
+comment|/* $Id: nsec3.h,v 1.12 2010-05-18 02:38:10 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -325,8 +325,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_nsec3_addnsec3sx
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_ttl_t
+name|nsecttl
+parameter_list|,
+name|isc_boolean_t
+name|unsecure
+parameter_list|,
+name|dns_rdatatype_t
+name|private
+parameter_list|,
+name|dns_diff_t
+modifier|*
+name|diff
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Add NSEC3 records for 'name', recording the change in 'diff'.  * Adjust previous NSEC3 records, if any, to reflect the addition.  * The existing NSEC3 records are removed.  *  * dns_nsec3_addnsec3() will only add records to the chain identified by  * 'nsec3param'.  *  * 'unsecure' should be set to reflect if this is a potentially  * unsecure delegation (no DS record).  *  * dns_nsec3_addnsec3s() will examine the NSEC3PARAM RRset to determine which  * chains to be updated.  NSEC3PARAM records with the DNS_NSEC3FLAG_CREATE  * will be preferentially chosen over NSEC3PARAM records without  * DNS_NSEC3FLAG_CREATE set.  NSEC3PARAM records with DNS_NSEC3FLAG_REMOVE  * set will be ignored by dns_nsec3_addnsec3s().  If DNS_NSEC3FLAG_CREATE  * is set then the new NSEC3 will have OPTOUT set to match the that in the  * NSEC3PARAM record otherwise OPTOUT will be inherited from the previous  * record in the chain.  *  * Requires:  *	'db' to be valid.  *	'version' to be valid or NULL.  *	'name' to be valid.  *	'nsec3param' to be valid.  *	'diff' to be valid.  */
+comment|/*%<  * Add NSEC3 records for 'name', recording the change in 'diff'.  * Adjust previous NSEC3 records, if any, to reflect the addition.  * The existing NSEC3 records are removed.  *  * dns_nsec3_addnsec3() will only add records to the chain identified by  * 'nsec3param'.  *  * 'unsecure' should be set to reflect if this is a potentially  * unsecure delegation (no DS record).  *  * dns_nsec3_addnsec3s() will examine the NSEC3PARAM RRset to determine which  * chains to be updated.  NSEC3PARAM records with the DNS_NSEC3FLAG_CREATE  * will be preferentially chosen over NSEC3PARAM records without  * DNS_NSEC3FLAG_CREATE set.  NSEC3PARAM records with DNS_NSEC3FLAG_REMOVE  * set will be ignored by dns_nsec3_addnsec3s().  If DNS_NSEC3FLAG_CREATE  * is set then the new NSEC3 will have OPTOUT set to match the that in the  * NSEC3PARAM record otherwise OPTOUT will be inherited from the previous  * record in the chain.  *  * dns_nsec3_addnsec3sx() is similar to dns_nsec3_addnsec3s() but 'private'  * specifies the type of the private rdataset to be checked in addition to  * the nsec3param rdataset at the zone apex.  *  * Requires:  *	'db' to be valid.  *	'version' to be valid or NULL.  *	'name' to be valid.  *	'nsec3param' to be valid.  *	'diff' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -380,8 +412,34 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_nsec3_delnsec3sx
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|dns_name_t
+modifier|*
+name|name
+parameter_list|,
+name|dns_rdatatype_t
+name|private
+parameter_list|,
+name|dns_diff_t
+modifier|*
+name|diff
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Remove NSEC3 records for 'name', recording the change in 'diff'.  * Adjust previous NSEC3 records, if any, to reflect the removal.  *  * dns_nsec3_delnsec3() performs the above for the chain identified by  * 'nsec3param'.  *  * dns_nsec3_delnsec3s() examines the NSEC3PARAM RRset in a similar manner  * to dns_nsec3_addnsec3s().  Unlike dns_nsec3_addnsec3s() updated NSEC3  * records have the OPTOUT flag preserved.  *  * Requires:  *	'db' to be valid.  *	'version' to be valid or NULL.  *	'name' to be valid.  *	'nsec3param' to be valid.  *	'diff' to be valid.  */
+comment|/*%<  * Remove NSEC3 records for 'name', recording the change in 'diff'.  * Adjust previous NSEC3 records, if any, to reflect the removal.  *  * dns_nsec3_delnsec3() performs the above for the chain identified by  * 'nsec3param'.  *  * dns_nsec3_delnsec3s() examines the NSEC3PARAM RRset in a similar manner  * to dns_nsec3_addnsec3s().  Unlike dns_nsec3_addnsec3s() updated NSEC3  * records have the OPTOUT flag preserved.  *  * dns_nsec3_delnsec3sx() is similar to dns_nsec3_delnsec3s() but 'private'  * specifies the type of the private rdataset to be checked in addition to  * the nsec3param rdataset at the zone apex.  *  * Requires:  *	'db' to be valid.  *	'version' to be valid or NULL.  *	'name' to be valid.  *	'nsec3param' to be valid.  *	'diff' to be valid.  */
 end_comment
 
 begin_function_decl
@@ -406,8 +464,33 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|isc_result_t
+name|dns_nsec3_activex
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|version
+parameter_list|,
+name|isc_boolean_t
+name|complete
+parameter_list|,
+name|dns_rdatatype_t
+name|private
+parameter_list|,
+name|isc_boolean_t
+modifier|*
+name|answer
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
-comment|/*%<  * Check if there are any complete/to be built NSEC3 chains.  * If 'complete' is ISC_TRUE only complete chains will be recognized.  *  * Requires:  *	'db' to be valid.  *	'version' to be valid or NULL.  *	'answer' to be non NULL.  */
+comment|/*%<  * Check if there are any complete/to be built NSEC3 chains.  * If 'complete' is ISC_TRUE only complete chains will be recognized.  *  * dns_nsec3_activex() is similar to dns_nsec3_active() but 'private'  * specifies the type of the private rdataset to be checked in addition to  * the nsec3param rdataset at the zone apex.  *  * Requires:  *	'db' to be valid.  *	'version' to be valid or NULL.  *	'answer' to be non NULL.  */
 end_comment
 
 begin_function_decl
@@ -436,6 +519,90 @@ end_function_decl
 
 begin_comment
 comment|/*%<  * Find the maximum permissible number of iterations allowed based on  * the key strength.  *  * Requires:  *	'db' to be valid.  *	'version' to be valid or NULL.  *	'mctx' to be valid.  *	'iterationsp' to be non NULL.  */
+end_comment
+
+begin_function_decl
+name|isc_boolean_t
+name|dns_nsec3param_fromprivate
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|src
+parameter_list|,
+name|dns_rdata_t
+modifier|*
+name|target
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Convert a private rdata to a nsec3param rdata.  *  * Return ISC_TRUE if 'src' could be successfully converted.  *  * 'buf' should be at least DNS_NSEC3PARAM_BUFFERSIZE in size.  */
+end_comment
+
+begin_function_decl
+name|void
+name|dns_nsec3param_toprivate
+parameter_list|(
+name|dns_rdata_t
+modifier|*
+name|src
+parameter_list|,
+name|dns_rdata_t
+modifier|*
+name|target
+parameter_list|,
+name|dns_rdatatype_t
+name|privatetype
+parameter_list|,
+name|unsigned
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|size_t
+name|buflen
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Convert a nsec3param rdata to a private rdata.  *  * 'buf' should be at least src->length + 1 in size.  */
+end_comment
+
+begin_function_decl
+name|isc_result_t
+name|dns_nsec3param_deletechains
+parameter_list|(
+name|dns_db_t
+modifier|*
+name|db
+parameter_list|,
+name|dns_dbversion_t
+modifier|*
+name|ver
+parameter_list|,
+name|dns_zone_t
+modifier|*
+name|zone
+parameter_list|,
+name|dns_diff_t
+modifier|*
+name|diff
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*%<  * Mark NSEC3PARAM for deletion.  */
 end_comment
 
 begin_macro

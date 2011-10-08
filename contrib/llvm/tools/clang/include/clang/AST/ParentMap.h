@@ -127,6 +127,15 @@ operator|*
 argument_list|)
 decl|const
 decl_stmt|;
+name|Stmt
+modifier|*
+name|getOuterParenParent
+argument_list|(
+name|Stmt
+operator|*
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|const
 name|Stmt
 modifier|*

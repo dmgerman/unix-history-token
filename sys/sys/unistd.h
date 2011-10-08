@@ -846,6 +846,66 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RFTSIGZMB
+value|(1<<19)
+end_define
+
+begin_comment
+comment|/* select signal for exit parent notification */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFTSIGSHIFT
+value|20
+end_define
+
+begin_comment
+comment|/* selected signal number is in bits 20-27  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RFTSIGMASK
+value|0xFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|RFTSIGNUM
+parameter_list|(
+name|flags
+parameter_list|)
+value|(((flags)>> RFTSIGSHIFT)& RFTSIGMASK)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RFTSIGFLAGS
+parameter_list|(
+name|signum
+parameter_list|)
+value|((signum)<< RFTSIGSHIFT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RFPROCDESC
+value|(1<<28)
+end_define
+
+begin_comment
+comment|/* return a process descriptor */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|RFPPWAIT
 value|(1<<31)
 end_define
@@ -857,8 +917,15 @@ end_comment
 begin_define
 define|#
 directive|define
+name|RFFLAGS
+value|(RFFDG | RFPROC | RFMEM | RFNOWAIT | RFCFDG | \     RFTHREAD | RFSIGSHARE | RFLINUXTHPN | RFSTOPPED | RFHIGHPID | RFTSIGZMB | \     RFPROCDESC | RFPPWAIT)
+end_define
+
+begin_define
+define|#
+directive|define
 name|RFKERNELONLY
-value|(RFSTOPPED | RFHIGHPID | RFPPWAIT)
+value|(RFSTOPPED | RFHIGHPID | RFPPWAIT | RFPROCDESC)
 end_define
 
 begin_endif

@@ -30,13 +30,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|ROOTINO
-value|((ino_t)2)
-end_define
-
-begin_define
-define|#
-directive|define
 name|NDADDR
 value|12
 end_define
@@ -86,7 +79,7 @@ name|ext2mount
 modifier|*
 name|i_ump
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i_flag
 decl_stmt|;
 comment|/* flags, see below */
@@ -121,23 +114,23 @@ name|doff_t
 name|i_offset
 decl_stmt|;
 comment|/* Offset of free space in directory. */
-name|u_int32_t
+name|uint32_t
 name|i_block_group
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i_next_alloc_block
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i_next_alloc_goal
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i_prealloc_block
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|i_prealloc_count
 decl_stmt|;
 comment|/* Fields from struct dinode in UFS. */
-name|u_int16_t
+name|uint16_t
 name|i_mode
 decl_stmt|;
 comment|/* IFMT, permissions; see below. */
@@ -145,7 +138,7 @@ name|int16_t
 name|i_nlink
 decl_stmt|;
 comment|/* File link count. */
-name|u_int64_t
+name|uint64_t
 name|i_size
 decl_stmt|;
 comment|/* File byte count. */
@@ -187,7 +180,7 @@ name|NIADDR
 index|]
 decl_stmt|;
 comment|/* Indirect disk blocks. */
-name|u_int32_t
+name|uint32_t
 name|i_flags
 decl_stmt|;
 comment|/* Status flags (chflags). */
@@ -199,11 +192,11 @@ name|int32_t
 name|i_gen
 decl_stmt|;
 comment|/* Generation number. */
-name|u_int32_t
+name|uint32_t
 name|i_uid
 decl_stmt|;
 comment|/* File owner. */
-name|u_int32_t
+name|uint32_t
 name|i_gid
 decl_stmt|;
 comment|/* File group. */
@@ -574,6 +567,20 @@ value|((ip)->i_vnode)
 end_define
 
 begin_comment
+comment|/* Check whether the MNTK_ASYNC flag has been set for a mount point */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOINGASYNC
+parameter_list|(
+name|vp
+parameter_list|)
+value|((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC)
+end_define
+
+begin_comment
 comment|/* This overlays the fid structure (see mount.h). */
 end_comment
 
@@ -581,11 +588,11 @@ begin_struct
 struct|struct
 name|ufid
 block|{
-name|u_int16_t
+name|uint16_t
 name|ufid_len
 decl_stmt|;
 comment|/* Length of structure. */
-name|u_int16_t
+name|uint16_t
 name|ufid_pad
 decl_stmt|;
 comment|/* Force 32-bit alignment. */

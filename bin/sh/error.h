@@ -84,6 +84,17 @@ begin_comment
 comment|/* command execution failed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|EXEXIT
+value|3
+end_define
+
+begin_comment
+comment|/* call exitshell(exitstatus) */
+end_comment
+
 begin_comment
 comment|/*  * These macros allow the user to suspend the handling of interrupt signals  * over a period of time.  This is similar to SIGHOLD to or sigblock, but  * much more efficient and portable.  (But hacking the kernel is so much  * more fun than worrying about efficiency and portability. :-))  */
 end_comment

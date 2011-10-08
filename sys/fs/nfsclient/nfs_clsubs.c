@@ -17,6 +17,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_include
+include|#
+directive|include
+file|"opt_kdtrace.h"
+end_include
+
 begin_comment
 comment|/*  * These functions support the macros and help fiddle mbuf chains for  * the nfs op functions. They do things like create the rpc header and  * copy data between mbuf chains and uio lists.  */
 end_comment
@@ -120,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -168,6 +180,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fs/nfsclient/nfs_kdtrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/in.h>
 end_include
 
@@ -195,7 +213,7 @@ name|enum
 name|nfsiod_state
 name|ncl_iodwant
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -207,7 +225,7 @@ name|nfsmount
 modifier|*
 name|ncl_iodmount
 index|[
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -232,6 +250,13 @@ specifier|extern
 name|struct
 name|nfsstats
 name|newnfsstats
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|struct
+name|task
+name|ncl_nfsiodnew_task
 decl_stmt|;
 end_decl_stmt
 
@@ -397,7 +422,7 @@ argument_list|)
 expr_stmt|;
 name|old_lock
 operator|=
-name|VOP_ISLOCKED
+name|NFSVOPISLOCKED
 argument_list|(
 name|vp
 argument_list|)
@@ -423,7 +448,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Upgrade to exclusive lock, this might block */
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -475,7 +500,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Downgrade from exclusive lock. */
-name|vn_lock
+name|NFSVOPLOCK
 argument_list|(
 name|vp
 argument_list|,
@@ -516,7 +541,7 @@ argument_list|,
 name|fmt
 argument_list|)
 expr_stmt|;
-name|printf
+name|vprintf
 argument_list|(
 name|fmt
 argument_list|,
@@ -552,7 +577,7 @@ end_include
 begin_expr_stmt
 name|SYSCTL_DECL
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -567,7 +592,7 @@ end_decl_stmt
 begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
-name|_vfs_newnfs
+name|_vfs_nfs
 argument_list|,
 name|OID_AUTO
 argument_list|,
@@ -903,6 +928,11 @@ expr_stmt|;
 comment|/* ncl_printf() */
 endif|#
 directive|endif
+name|KDTRACE_NFS_ATTRCACHE_GET_MISS
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ENOENT
@@ -1085,6 +1115,13 @@ expr_stmt|;
 comment|/* ncl_printf() */
 endif|#
 directive|endif
+name|KDTRACE_NFS_ATTRCACHE_GET_HIT
+argument_list|(
+name|vp
+argument_list|,
+name|vap
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1693,7 +1730,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|NFS_MAXRAHEAD
+name|NFS_MAXASYNCDAEMON
 condition|;
 name|i
 operator|++
@@ -1714,6 +1751,18 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|TASK_INIT
+argument_list|(
+operator|&
+name|ncl_nfsiodnew_task
+argument_list|,
+literal|0
+argument_list|,
+name|ncl_nfsiodnew_tq
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|ncl_nhinit
 argument_list|()
 expr_stmt|;

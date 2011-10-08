@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 1984-2009  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
+comment|/*  * Copyright (C) 1984-2011  Mark Nudelman  *  * You may distribute under the terms of either the GNU General Public  * License or the Less License, as specified in the README file.  *  * For more information about less, or for information on how to   * contact the author, see the README file.  */
 end_comment
 
 begin_define
@@ -131,6 +131,17 @@ name|OTYPE
 value|(BOOL|TRIPLE|NUMBER|STRING|NOVAR)
 end_define
 
+begin_define
+define|#
+directive|define
+name|OLETTER_NONE
+value|'\1'
+end_define
+
+begin_comment
+comment|/* Invalid option letter */
+end_comment
+
 begin_comment
 comment|/*  * Argument to a handling function tells what type of activity:  */
 end_comment
@@ -236,6 +247,17 @@ comment|/* List of synonymous option names */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|OPTNAME_MAX
+value|32
+end_define
+
+begin_comment
+comment|/* Max length of long option name */
+end_comment
 
 begin_struct
 struct|struct

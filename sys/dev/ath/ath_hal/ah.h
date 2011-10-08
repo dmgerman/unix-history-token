@@ -26,6 +26,24 @@ file|"ah_osdep.h"
 end_include
 
 begin_comment
+comment|/*  * The maximum number of TX/RX chains supported.  * This is intended to be used by various statistics gathering operations  * (NF, RSSI, EVM).  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AH_MIMO_MAX_CHAINS
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|AH_MIMO_MAX_EVM_PILOTS
+value|6
+end_define
+
+begin_comment
 comment|/*  * __ahdecl is analogous to _cdecl; it defines the calling  * convention used within the HAL.  For most systems this  * can just default to be empty and the compiler will (should)  * use _cdecl.  For systems where _cdecl is not compatible this  * must be defined.  See linux/ah_osdep.h for an example.  */
 end_comment
 
@@ -298,66 +316,152 @@ init|=
 literal|28
 block|,
 comment|/* 11d beacon support for changing cc */
-name|HAL_CAP_INTMIT
-init|=
-literal|29
-block|,
-comment|/* interference mitigation */
-name|HAL_CAP_RXORN_FATAL
+name|HAL_CAP_HT
 init|=
 literal|30
 block|,
-comment|/* HAL_INT_RXORN treated as fatal */
-name|HAL_CAP_HT
+comment|/* hardware can support HT */
+name|HAL_CAP_GTXTO
 init|=
 literal|31
 block|,
-comment|/* hardware can support HT */
-name|HAL_CAP_TX_CHAINMASK
+comment|/* hardware supports global tx timeout */
+name|HAL_CAP_FAST_CC
 init|=
 literal|32
+block|,
+comment|/* hardware supports fast channel change */
+name|HAL_CAP_TX_CHAINMASK
+init|=
+literal|33
 block|,
 comment|/* mask of TX chains supported */
 name|HAL_CAP_RX_CHAINMASK
 init|=
-literal|33
-block|,
-comment|/* mask of RX chains supported */
-name|HAL_CAP_RXTSTAMP_PREC
-init|=
 literal|34
 block|,
+comment|/* mask of RX chains supported */
+name|HAL_CAP_NUM_GPIO_PINS
+init|=
+literal|36
+block|,
+comment|/* number of GPIO pins */
+name|HAL_CAP_CST
+init|=
+literal|38
+block|,
+comment|/* hardware supports carrier sense timeout */
+name|HAL_CAP_RTS_AGGR_LIMIT
+init|=
+literal|42
+block|,
+comment|/* aggregation limit with RTS */
+name|HAL_CAP_4ADDR_AGGR
+init|=
+literal|43
+block|,
+comment|/* hardware is capable of 4addr aggregation */
+name|HAL_CAP_DFS_DMN
+init|=
+literal|44
+block|,
+comment|/* current DFS domain */
+name|HAL_CAP_EXT_CHAN_DFS
+init|=
+literal|45
+block|,
+comment|/* DFS support for extension channel */
+name|HAL_CAP_COMBINED_RADAR_RSSI
+init|=
+literal|46
+block|,
+comment|/* Is combined RSSI for radar accurate */
+name|HAL_CAP_AUTO_SLEEP
+init|=
+literal|48
+block|,
+comment|/* hardware can go to network sleep 					   automatically after waking up to receive TIM */
+name|HAL_CAP_MBSSID_AGGR_SUPPORT
+init|=
+literal|49
+block|,
+comment|/* Support for mBSSID Aggregation */
+name|HAL_CAP_SPLIT_4KB_TRANS
+init|=
+literal|50
+block|,
+comment|/* hardware supports descriptors straddling a 4k page boundary */
+name|HAL_CAP_REG_FLAG
+init|=
+literal|51
+block|,
+comment|/* Regulatory domain flags */
+name|HAL_CAP_BT_COEX
+init|=
+literal|60
+block|,
+comment|/* hardware is capable of bluetooth coexistence */
+name|HAL_CAP_HT20_SGI
+init|=
+literal|96
+block|,
+comment|/* hardware supports HT20 short GI */
+name|HAL_CAP_RXTSTAMP_PREC
+init|=
+literal|100
+block|,
 comment|/* rx desc tstamp precision (bits) */
+name|HAL_CAP_ENHANCED_DFS_SUPPORT
+init|=
+literal|117
+block|,
+comment|/* hardware supports enhanced DFS */
+comment|/* The following are private to the FreeBSD HAL (224 onward) */
+name|HAL_CAP_INTMIT
+init|=
+literal|229
+block|,
+comment|/* interference mitigation */
+name|HAL_CAP_RXORN_FATAL
+init|=
+literal|230
+block|,
+comment|/* HAL_INT_RXORN treated as fatal */
 name|HAL_CAP_BB_HANG
 init|=
-literal|35
+literal|235
 block|,
 comment|/* can baseband hang */
 name|HAL_CAP_MAC_HANG
 init|=
-literal|36
+literal|236
 block|,
 comment|/* can MAC hang */
 name|HAL_CAP_INTRMASK
 init|=
-literal|37
+literal|237
 block|,
 comment|/* bitmask of supported interrupts */
 name|HAL_CAP_BSSIDMATCH
 init|=
-literal|38
+literal|238
 block|,
 comment|/* hardware has disable bssid match */
 name|HAL_CAP_STREAMS
 init|=
-literal|39
+literal|239
 block|,
 comment|/* how many 802.11n spatial streams are available */
-name|HAP_CAP_SPLIT_4KB_TRANS
+name|HAL_CAP_RXDESC_SELFLINK
 init|=
-literal|40
+literal|242
 block|,
-comment|/* hardware supports descriptors straddling a 4k page boundary */
+comment|/* support a self-linked tail RX descriptor */
+name|HAL_CAP_LONG_RXDESC_TSF
+init|=
+literal|243
+block|,
+comment|/* hardware supports 32bit TSF in RX descriptor */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -743,6 +847,7 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
+comment|/* 	 * These bits correspond to AR_RX_FILTER for all chips. 	 * Not all bits are supported by all chips. 	 */
 name|HAL_RX_FILTER_UCAST
 init|=
 literal|0x00000001
@@ -783,19 +888,35 @@ init|=
 literal|0x00000100
 block|,
 comment|/* Allow phy errors */
-name|HAL_RX_FILTER_PHYRADAR
-init|=
-literal|0x00000200
-block|,
-comment|/* Allow phy radar errors */
 name|HAL_RX_FILTER_COMPBAR
 init|=
 literal|0x00000400
 block|,
 comment|/* Allow compressed BAR */
-name|HAL_RX_FILTER_BSSID
+name|HAL_RX_FILTER_COMP_BA
 init|=
 literal|0x00000800
+block|,
+comment|/* Allow compressed blockack */
+name|HAL_RX_FILTER_PHYRADAR
+init|=
+literal|0x00002000
+block|,
+comment|/* Allow phy radar errors */
+name|HAL_RX_FILTER_PSPOLL
+init|=
+literal|0x00004000
+block|,
+comment|/* Allow PS-POLL frames */
+name|HAL_RX_FILTER_MCAST_BCAST_ALL
+init|=
+literal|0x00008000
+block|,
+comment|/* Allow all mcast/bcast frames */
+comment|/* 	 * Magic RX filter flags that aren't targetting hardware bits 	 * but instead the HAL sets individual bits - eg PHYERR will result 	 * in OFDM/CCK timing error frames being received. 	 */
+name|HAL_RX_FILTER_BSSID
+init|=
+literal|0x40000000
 block|,
 comment|/* Disable BSSID match */
 block|}
@@ -1862,6 +1983,337 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/*  * ANI commands.  *  * These are used both internally and externally via the diagnostic  * API.  *  * Note that this is NOT the ANI commands being used via the INTMIT  * capability - that has a different mapping for some reason.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_ANI_PRESENT
+init|=
+literal|0
+block|,
+comment|/* is ANI support present */
+name|HAL_ANI_NOISE_IMMUNITY_LEVEL
+init|=
+literal|1
+block|,
+comment|/* set level */
+name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
+init|=
+literal|2
+block|,
+comment|/* enable/disable */
+name|HAL_ANI_CCK_WEAK_SIGNAL_THR
+init|=
+literal|3
+block|,
+comment|/* enable/disable */
+name|HAL_ANI_FIRSTEP_LEVEL
+init|=
+literal|4
+block|,
+comment|/* set level */
+name|HAL_ANI_SPUR_IMMUNITY_LEVEL
+init|=
+literal|5
+block|,
+comment|/* set level */
+name|HAL_ANI_MODE
+init|=
+literal|6
+block|,
+comment|/* 0 => manual, 1 => auto (XXX do not change) */
+name|HAL_ANI_PHYERR_RESET
+init|=
+literal|7
+block|,
+comment|/* reset phy error stats */
+block|}
+name|HAL_ANI_CMD
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * This is the layout of the ANI INTMIT capability.  *  * Notice that the command values differ to HAL_ANI_CMD.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_CAP_INTMIT_PRESENT
+init|=
+literal|0
+block|,
+name|HAL_CAP_INTMIT_ENABLE
+init|=
+literal|1
+block|,
+name|HAL_CAP_INTMIT_NOISE_IMMUNITY_LEVEL
+init|=
+literal|2
+block|,
+name|HAL_CAP_INTMIT_OFDM_WEAK_SIGNAL_LEVEL
+init|=
+literal|3
+block|,
+name|HAL_CAP_INTMIT_CCK_WEAK_SIGNAL_THR
+init|=
+literal|4
+block|,
+name|HAL_CAP_INTMIT_FIRSTEP_LEVEL
+init|=
+literal|5
+block|,
+name|HAL_CAP_INTMIT_SPUR_IMMUNITY_LEVEL
+init|=
+literal|6
+block|}
+name|HAL_CAP_INTMIT_CMD
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int32_t
+name|pe_firpwr
+decl_stmt|;
+comment|/* FIR pwr out threshold */
+name|int32_t
+name|pe_rrssi
+decl_stmt|;
+comment|/* Radar rssi thresh */
+name|int32_t
+name|pe_height
+decl_stmt|;
+comment|/* Pulse height thresh */
+name|int32_t
+name|pe_prssi
+decl_stmt|;
+comment|/* Pulse rssi thresh */
+name|int32_t
+name|pe_inband
+decl_stmt|;
+comment|/* Inband thresh */
+comment|/* The following params are only for AR5413 and later */
+name|u_int32_t
+name|pe_relpwr
+decl_stmt|;
+comment|/* Relative power threshold in 0.5dB steps */
+name|u_int32_t
+name|pe_relstep
+decl_stmt|;
+comment|/* Pulse Relative step threshold in 0.5dB steps */
+name|u_int32_t
+name|pe_maxlen
+decl_stmt|;
+comment|/* Max length of radar sign in 0.8us units */
+name|int32_t
+name|pe_usefir128
+decl_stmt|;
+comment|/* Use the average in-band power measured over 128 cycles */
+name|int32_t
+name|pe_blockradar
+decl_stmt|;
+comment|/* 					 * Enable to block radar check if pkt detect is done via OFDM 					 * weak signal detect or pkt is detected immediately after tx 					 * to rx transition 					 */
+name|int32_t
+name|pe_enmaxrssi
+decl_stmt|;
+comment|/* 					 * Enable to use the max rssi instead of the last rssi during 					 * fine gain changes for radar detection 					 */
+name|int32_t
+name|pe_extchannel
+decl_stmt|;
+comment|/* Enable DFS on ext channel */
+name|int32_t
+name|pe_enabled
+decl_stmt|;
+comment|/* Whether radar detection is enabled */
+block|}
+name|HAL_PHYERR_PARAM
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_PHYERR_PARAM_NOVAL
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_PHYERR_PARAM_ENABLE
+value|0x8000
+end_define
+
+begin_comment
+comment|/* Enable/Disable if applicable */
+end_comment
+
+begin_comment
+comment|/*  * DFS operating mode flags.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_DFS_UNINIT_DOMAIN
+init|=
+literal|0
+block|,
+comment|/* Uninitialized dfs domain */
+name|HAL_DFS_FCC_DOMAIN
+init|=
+literal|1
+block|,
+comment|/* FCC3 dfs domain */
+name|HAL_DFS_ETSI_DOMAIN
+init|=
+literal|2
+block|,
+comment|/* ETSI dfs domain */
+name|HAL_DFS_MKK4_DOMAIN
+init|=
+literal|3
+block|,
+comment|/* Japan dfs domain */
+block|}
+name|HAL_DFS_DOMAIN
+typedef|;
+end_typedef
+
+begin_comment
+comment|/*  * Flag for setting QUIET period  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|HAL_QUIET_DISABLE
+init|=
+literal|0x0
+block|,
+name|HAL_QUIET_ENABLE
+init|=
+literal|0x1
+block|,
+name|HAL_QUIET_ADD_CURRENT_TSF
+init|=
+literal|0x2
+block|,
+comment|/* add current TSF to next_start offset */
+name|HAL_QUIET_ADD_SWBA_RESP_TIME
+init|=
+literal|0x4
+block|,
+comment|/* add beacon response time to next_start offset */
+block|}
+name|HAL_QUIET_FLAG
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_PRICH
+value|0x0000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_EXTCH
+value|0x0000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_EXTEARLY
+value|0x0000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAL_DFS_EVENT_ISDC
+value|0x0000008
+end_define
+
+begin_struct
+struct|struct
+name|hal_dfs_event
+block|{
+name|uint64_t
+name|re_full_ts
+decl_stmt|;
+comment|/* 64-bit full timestamp from interrupt time */
+name|uint32_t
+name|re_ts
+decl_stmt|;
+comment|/* Original 15 bit recv timestamp */
+name|uint8_t
+name|re_rssi
+decl_stmt|;
+comment|/* rssi of radar event */
+name|uint8_t
+name|re_dur
+decl_stmt|;
+comment|/* duration of radar pulse */
+name|uint32_t
+name|re_flags
+decl_stmt|;
+comment|/* Flags (see above) */
+block|}
+struct|;
+end_struct
+
+begin_typedef
+typedef|typedef
+name|struct
+name|hal_dfs_event
+name|HAL_DFS_EVENT
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+block|{
+name|int
+name|ah_debug
+decl_stmt|;
+comment|/* only used if AH_DEBUG is defined */
+name|int
+name|ah_ar5416_biasadj
+decl_stmt|;
+comment|/* enable AR2133 radio specific bias fiddling */
+comment|/* NB: these are deprecated; they exist for now for compatibility */
+name|int
+name|ah_dma_beacon_response_time
+decl_stmt|;
+comment|/* in TU's */
+name|int
+name|ah_sw_beacon_response_time
+decl_stmt|;
+comment|/* in TU's */
+name|int
+name|ah_additional_swba_backoff
+decl_stmt|;
+comment|/* in TU's */
+block|}
+name|HAL_OPS_CONFIG
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Hardware Access Layer (HAL) API.  *  * Clients of the HAL call ath_hal_attach to obtain a reference to an  * ath_hal structure for use with the device.  Hardware-related operations  * that follow must call back into the HAL through interface, supplying  * the reference as the first parameter.  Note that before using the  * reference returned by ath_hal_attach the caller should verify the  * ABI version number.  */
 end_comment
 
@@ -1921,6 +2373,9 @@ modifier|*
 name|ah_eepromdata
 decl_stmt|;
 comment|/* eeprom buffer, if needed */
+name|HAL_OPS_CONFIG
+name|ah_config
+decl_stmt|;
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -2788,6 +3243,27 @@ name|HAL_NODE_STATS
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_rxAntCombDiversity
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_rx_status
+modifier|*
+parameter_list|,
+name|unsigned
+name|long
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
 comment|/* Misc Functions */
 name|HAL_STATUS
 name|__ahdecl
@@ -3348,6 +3824,109 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+name|HAL_STATUS
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_setQuiet
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+name|period
+parameter_list|,
+name|uint32_t
+name|duration
+parameter_list|,
+name|uint32_t
+name|nextStart
+parameter_list|,
+name|HAL_QUIET_FLAG
+name|flag
+parameter_list|)
+function_decl|;
+comment|/* DFS functions */
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_enableDfs
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getDfsThresh
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|HAL_PHYERR_PARAM
+modifier|*
+name|pe
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_procRadarEvent
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|struct
+name|ath_rx_status
+modifier|*
+name|rxs
+parameter_list|,
+name|uint64_t
+name|fulltsf
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|buf
+parameter_list|,
+name|HAL_DFS_EVENT
+modifier|*
+name|event
+parameter_list|)
+function_decl|;
+name|HAL_BOOL
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_isFastClockEnabled
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
 comment|/* Key Cache Functions */
 name|uint32_t
 name|__ahdecl
@@ -3536,6 +4115,18 @@ name|__ahdecl
 function_decl|(
 modifier|*
 name|ah_resetStationBeaconTimers
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|)
+function_decl|;
+name|uint64_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_getNextTBTT
 function_decl|)
 parameter_list|(
 name|struct
@@ -4026,6 +4617,38 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Fetch the ctl/ext noise floor values reported by a MIMO  * radio. Returns 1 for valid results, 0 for invalid channel.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|__ahdecl
+name|ath_hal_get_mimo_chan_noise
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+specifier|const
+name|struct
+name|ieee80211_channel
+modifier|*
+name|chan
+parameter_list|,
+name|int16_t
+modifier|*
+name|nf_ctl
+parameter_list|,
+name|int16_t
+modifier|*
+name|nf_ext
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Calibrate noise floor data following a channel scan or similar.  * This must be called prior retrieving noise floor data.  */
 end_comment
 
@@ -4150,6 +4773,64 @@ name|rateix
 parameter_list|,
 name|HAL_BOOL
 name|shortPreamble
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Adjust the TSF.  */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|void
+name|__ahdecl
+name|ath_hal_adjusttsf
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|int32_t
+name|tsfdelta
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Enable or disable CCA.  */
+end_comment
+
+begin_function_decl
+name|void
+name|__ahdecl
+name|ath_hal_setcca
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|int
+name|ena
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Get CCA setting.  */
+end_comment
+
+begin_function_decl
+name|int
+name|__ahdecl
+name|ath_hal_getcca
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
 parameter_list|)
 function_decl|;
 end_function_decl

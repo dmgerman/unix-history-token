@@ -686,6 +686,28 @@ name|PKT_ALIAS_RESET_ON_ADDR_CHANGE
 value|0x20
 end_define
 
+begin_comment
+comment|/*  * If PKT_ALIAS_PROXY_ONLY is set, then NAT will be disabled and only  * transparent proxying is performed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_PROXY_ONLY
+value|0x40
+end_define
+
+begin_comment
+comment|/*  * If PKT_ALIAS_REVERSE is set, the actions of PacketAliasIn() and  * PacketAliasOut() are reversed.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PKT_ALIAS_REVERSE
+value|0x80
+end_define
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -709,25 +731,14 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * If PKT_ALIAS_PROXY_ONLY is set, then NAT will be disabled and only  * transparent proxying is performed.  */
+comment|/*  * If PKT_ALIAS_SKIP_GLOBAL is set, nat instance is not checked for matching  * states in 'ipfw nat global' rule.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|PKT_ALIAS_PROXY_ONLY
-value|0x40
-end_define
-
-begin_comment
-comment|/*  * If PKT_ALIAS_REVERSE is set, the actions of PacketAliasIn() and  * PacketAliasOut() are reversed.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PKT_ALIAS_REVERSE
-value|0x80
+name|PKT_ALIAS_SKIP_GLOBAL
+value|0x200
 end_define
 
 begin_comment

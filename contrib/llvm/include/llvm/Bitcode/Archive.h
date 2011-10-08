@@ -108,9 +108,6 @@ block|{
 name|class
 name|MemoryBuffer
 decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
 comment|// Forward declare classes
 name|class
 name|Module
@@ -1219,7 +1216,7 @@ comment|/// This method adds a new file to the archive. The \p filename is exami
 comment|/// to determine just enough information to create an ArchiveMember object
 comment|/// which is then inserted into the Archive object's ilist at the location
 comment|/// given by \p where.
-comment|/// @returns true if an error occured, false otherwise
+comment|/// @returns true if an error occurred, false otherwise
 comment|/// @brief Add a file to the archive.
 name|bool
 name|addFileBefore
@@ -1358,12 +1355,14 @@ decl_stmt|;
 comment|/// @brief Write the symbol table to an ofstream.
 name|void
 name|writeSymbolTable
-parameter_list|(
-name|raw_ostream
-modifier|&
+argument_list|(
+name|std
+operator|::
+name|ofstream
+operator|&
 name|ARFile
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// Writes one ArchiveMember to an ofstream. If an error occurs, returns
 comment|/// false, otherwise true. If an error occurs and error is non-null then
 comment|/// it will be set to an error message.
@@ -1378,7 +1377,9 @@ operator|&
 name|member
 argument_list|,
 comment|///< The member to be written
-name|raw_ostream
+name|std
+operator|::
+name|ofstream
 operator|&
 name|ARFile
 argument_list|,

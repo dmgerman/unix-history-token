@@ -552,6 +552,17 @@ value|1
 end_define
 
 begin_comment
+comment|/* Define HAVE_FLOAT if your compiler supports the "double" type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HAVE_FLOAT
+value|1
+end_define
+
+begin_comment
 comment|/* Define to 1 if you have the `fsync' function. */
 end_comment
 
@@ -1112,6 +1123,17 @@ define|#
 directive|define
 name|PACKAGE_TARNAME
 value|"less"
+end_define
+
+begin_comment
+comment|/* Define to the home page for this package. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PACKAGE_URL
+value|""
 end_define
 
 begin_comment

@@ -52,11 +52,11 @@ begin_define
 define|#
 directive|define
 name|CDCE_NCM_TX_MAXLEN
-value|(1UL<< 14)
+value|(16384 + 4)
 end_define
 
 begin_comment
-comment|/* bytes */
+comment|/* bytes, must be short terminated */
 end_comment
 
 begin_define

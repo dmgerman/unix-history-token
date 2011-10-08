@@ -222,7 +222,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__sparc64__
+name|__powerpc__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|E500
 argument_list|)
 end_if
 
@@ -262,7 +267,7 @@ begin_define
 define|#
 directive|define
 name|TDQ_LOADNAME_LEN
-value|(PCPU_NAME_LEN + sizeof(" load"))
+value|(sizeof("CPU ") + sizeof(__XSTRING(MAXCPU)) - 1 + sizeof(" load"))
 end_define
 
 begin_comment
@@ -2697,7 +2702,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|for ((cpu) = 0; (cpu)<= mp_maxid; (cpu)++)		\ 		if ((mask)& 1<< (cpu))
+value|for ((cpu) = 0; (cpu)<= mp_maxid; (cpu)++)		\ 		if (CPU_ISSET(cpu,&mask))
 end_define
 
 begin_function_decl
@@ -3916,6 +3921,9 @@ name|int
 name|move
 decl_stmt|;
 name|int
+name|cpu
+decl_stmt|;
+name|int
 name|diff
 decl_stmt|;
 name|int
@@ -4010,16 +4018,35 @@ argument_list|,
 name|low
 argument_list|)
 expr_stmt|;
-comment|/* 		 * IPI the target cpu to force it to reschedule with the new 		 * workload. 		 */
-name|ipi_cpu
-argument_list|(
+comment|/* 		 * In case the target isn't the current cpu IPI it to force a 		 * reschedule with the new workload. 		 */
+name|cpu
+operator|=
 name|TDQ_ID
 argument_list|(
 name|low
 argument_list|)
+expr_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|cpu
+operator|!=
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+condition|)
+name|ipi_cpu
+argument_list|(
+name|cpu
 argument_list|,
 name|IPI_PREEMPT
 argument_list|)
+expr_stmt|;
+name|sched_unpin
+argument_list|()
 expr_stmt|;
 block|}
 name|tdq_unlock_pair
@@ -7699,6 +7726,15 @@ name|td_oncpu
 operator|=
 name|NOCPU
 expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|flags
+operator|&
+name|SW_PREEMPT
+operator|)
+condition|)
 name|td
 operator|->
 name|td_flags
@@ -8676,7 +8712,7 @@ argument_list|)
 argument_list|,
 literal|"proc exit"
 argument_list|,
-literal|"prio:td"
+literal|"prio:%d"
 argument_list|,
 name|child
 operator|->
@@ -8739,7 +8775,7 @@ argument_list|)
 argument_list|,
 literal|"thread exit"
 argument_list|,
-literal|"prio:td"
+literal|"prio:%d"
 argument_list|,
 name|child
 operator|->
@@ -11129,6 +11165,12 @@ name|int
 name|indent
 parameter_list|)
 block|{
+name|char
+name|cpusetbuf
+index|[
+name|CPUSETBUFSIZ
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|,
@@ -11159,7 +11201,7 @@ name|sbuf_printf
 argument_list|(
 name|sb
 argument_list|,
-literal|"%*s<cpu count=\"%d\" mask=\"0x%x\">"
+literal|"%*s<cpu count=\"%d\" mask=\"%s\">"
 argument_list|,
 name|indent
 argument_list|,
@@ -11169,9 +11211,15 @@ name|cg
 operator|->
 name|cg_count
 argument_list|,
+name|cpusetobj_strprint
+argument_list|(
+name|cpusetbuf
+argument_list|,
+operator|&
 name|cg
 operator|->
 name|cg_mask
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|first
@@ -11194,19 +11242,15 @@ control|)
 block|{
 if|if
 condition|(
-operator|(
+name|CPU_ISSET
+argument_list|(
+name|i
+argument_list|,
+operator|&
 name|cg
 operator|->
 name|cg_mask
-operator|&
-operator|(
-literal|1
-operator|<<
-name|i
-operator|)
-operator|)
-operator|!=
-literal|0
+argument_list|)
 condition|)
 block|{
 if|if

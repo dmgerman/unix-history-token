@@ -333,6 +333,38 @@ literal|29
 decl_stmt|;
 comment|///< Function should have special
 comment|///'hotpatch' sequence in prologue
+specifier|const
+name|Attributes
+name|UWTable
+init|=
+literal|1
+operator|<<
+literal|30
+decl_stmt|;
+comment|///< Function must be in a unwind
+comment|///table
+specifier|const
+name|Attributes
+name|NonLazyBind
+init|=
+literal|1U
+operator|<<
+literal|31
+decl_stmt|;
+comment|///< Function is called early and/or
+comment|///  often, so lazy binding isn't
+comment|///  worthwhile.
+comment|/// Note that uwtable is about the ABI or the user mandating an entry in the
+comment|/// unwind table. The nounwind attribute is about an exception passing by the
+comment|/// function.
+comment|/// In a theoretical system that uses tables for profiling and sjlj for
+comment|/// exceptions, they would be fully independent. In a normal system that
+comment|/// uses tables for both, the semantics are:
+comment|/// nil                = Needs an entry because an exception might pass by.
+comment|/// nounwind           = No need for an entry
+comment|/// uwtable            = Needs an entry because the ABI says so and because
+comment|///                      an exception might pass by.
+comment|/// uwtable + nounwind = Needs an entry because the ABI says so.
 comment|/// @brief Attributes that only apply to function parameters.
 specifier|const
 name|Attributes
@@ -381,6 +413,10 @@ operator||
 name|StackAlignment
 operator||
 name|Hotpatch
+operator||
+name|UWTable
+operator||
+name|NonLazyBind
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
 specifier|const

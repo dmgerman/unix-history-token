@@ -1233,6 +1233,11 @@ block|ifp->if_mtu = sc->gif_ro6.ro_rt->rt_ifp->if_mtu 			- sizeof(struct ip6_hdr
 endif|#
 directive|endif
 block|}
+name|m_addr_changed
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IPV6_MINMTU

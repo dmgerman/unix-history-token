@@ -114,6 +114,9 @@ decl_stmt|;
 name|class
 name|TemplateTemplateParmDecl
 decl_stmt|;
+name|class
+name|TypeAliasTemplateDecl
+decl_stmt|;
 comment|/// \brief Stores a template parameter of any kind.
 typedef|typedef
 name|llvm
@@ -891,6 +894,17 @@ return|;
 block|}
 specifier|static
 name|bool
+name|classof
+argument_list|(
+argument|const TypeAliasTemplateDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -1148,6 +1162,18 @@ argument_list|()
 operator|+
 literal|1
 argument_list|)
+return|;
+block|}
+name|bool
+name|isExplicitSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getTemplateSpecializationKind
+argument_list|()
+operator|==
+name|TSK_ExplicitSpecialization
 return|;
 block|}
 comment|/// \brief Set the template specialization kind.
@@ -2358,6 +2384,17 @@ return|;
 block|}
 specifier|static
 name|bool
+name|classof
+argument_list|(
+argument|const TypeAliasTemplateDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
 name|classofKind
 argument_list|(
 argument|Kind K
@@ -2645,6 +2682,14 @@ name|Common
 operator|:
 name|CommonBase
 block|{
+name|Common
+argument_list|()
+operator|:
+name|InjectedArgs
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
 comment|/// \brief The function template specializations for this function
 comment|/// template, including explicit specializations and instantiations.
 name|llvm
@@ -2654,6 +2699,17 @@ operator|<
 name|FunctionTemplateSpecializationInfo
 operator|>
 name|Specializations
+block|;
+comment|/// \brief The set of "injected" template arguments used within this
+comment|/// function template.
+comment|///
+comment|/// This pointer refers to the template arguments (there are as
+comment|/// many template arguments as template parameaters) for the function
+comment|/// template, and is allocated lazily, since most function templates do not
+comment|/// require the use of this information.
+name|TemplateArgument
+operator|*
+name|InjectedArgs
 block|;   }
 block|;
 name|FunctionTemplateDecl
@@ -2735,6 +2791,22 @@ operator|->
 name|Specializations
 return|;
 block|}
+comment|/// \brief Add a specialization of this function template.
+comment|///
+comment|/// \param InsertPos Insert position in the FoldingSet, must have been
+comment|///        retrieved by an earlier call to findSpecialization().
+name|void
+name|addSpecialization
+argument_list|(
+name|FunctionTemplateSpecializationInfo
+operator|*
+name|Info
+argument_list|,
+name|void
+operator|*
+name|InsertPos
+argument_list|)
+block|;
 name|public
 operator|:
 comment|/// Get the underlying function declaration of the template.
@@ -2886,25 +2958,68 @@ name|true
 argument_list|)
 return|;
 block|}
-comment|/// Create a template function node.
+comment|/// \brief Retrieve the "injected" template arguments that correspond to the
+comment|/// template parameters of this function template.
+comment|///
+comment|/// Although the C++ standard has no notion of the "injected" template
+comment|/// arguments for a function template, the notion is convenient when
+comment|/// we need to perform substitutions inside the definition of a function
+comment|/// template.
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|TemplateArgument
+operator|*
+operator|,
+name|unsigned
+operator|>
+name|getInjectedTemplateArgs
+argument_list|()
+expr_stmt|;
+comment|/// \brief Create a function template node.
 specifier|static
 name|FunctionTemplateDecl
-operator|*
+modifier|*
 name|Create
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|DeclContext *DC
-argument_list|,
-argument|SourceLocation L
-argument_list|,
-argument|DeclarationName Name
-argument_list|,
-argument|TemplateParameterList *Params
-argument_list|,
-argument|NamedDecl *Decl
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|,
+name|TemplateParameterList
+modifier|*
+name|Params
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|Decl
+parameter_list|)
+function_decl|;
+comment|/// \brief Create an empty function template node.
+specifier|static
+name|FunctionTemplateDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|EmptyShell
+parameter_list|)
+function_decl|;
 comment|// Implement isa/cast/dyncast support
 specifier|static
 name|bool
@@ -3161,12 +3276,6 @@ name|InheritedDefault
 operator|:
 literal|1
 block|;
-comment|/// \brief Whether this is a parameter pack.
-name|bool
-name|ParameterPack
-operator|:
-literal|1
-block|;
 comment|/// \brief The default template argument, if any.
 name|TypeSourceInfo
 operator|*
@@ -3176,15 +3285,13 @@ name|TemplateTypeParmDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation KeyLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|bool Typename
-argument_list|,
-argument|QualType Type
-argument_list|,
-argument|bool ParameterPack
 argument_list|)
 operator|:
 name|TypeDecl
@@ -3193,9 +3300,11 @@ name|TemplateTypeParm
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdLoc
 argument_list|,
 name|Id
+argument_list|,
+name|KeyLoc
 argument_list|)
 block|,
 name|Typename
@@ -3208,21 +3317,9 @@ argument_list|(
 name|false
 argument_list|)
 block|,
-name|ParameterPack
-argument_list|(
-name|ParameterPack
-argument_list|)
-block|,
 name|DefaultArgument
 argument_list|()
-block|{
-name|TypeForDecl
-operator|=
-name|Type
-operator|.
-name|getTypePtrOrNull
-argument_list|()
-block|;   }
+block|{ }
 comment|/// Sema creates these on the stack during auto type deduction.
 name|friend
 name|class
@@ -3239,7 +3336,9 @@ argument|const ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation KeyLoc
+argument_list|,
+argument|SourceLocation NameLoc
 argument_list|,
 argument|unsigned D
 argument_list|,
@@ -3372,17 +3471,6 @@ name|Typename
 operator|=
 name|withTypename
 block|; }
-comment|/// \brief Set whether this is a parameter pack.
-name|void
-name|setParameterPack
-argument_list|(
-argument|bool isParamPack
-argument_list|)
-block|{
-name|ParameterPack
-operator|=
-name|isParamPack
-block|; }
 comment|/// \brief Retrieve the depth of the template parameter.
 name|unsigned
 name|getDepth
@@ -3400,11 +3488,12 @@ name|bool
 name|isParameterPack
 argument_list|()
 specifier|const
-block|{
-return|return
-name|ParameterPack
-return|;
-block|}
+block|;
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
 comment|// Implement isa/cast/dyncast/etc.
 specifier|static
 name|bool
@@ -3498,7 +3587,9 @@ name|NonTypeTemplateParmDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|unsigned D
 argument_list|,
@@ -3519,13 +3610,15 @@ name|NonTypeTemplateParm
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|IdLoc
 argument_list|,
 name|Id
 argument_list|,
 name|T
 argument_list|,
 name|TInfo
+argument_list|,
+name|StartLoc
 argument_list|)
 block|,
 name|TemplateParmPosition
@@ -3561,7 +3654,9 @@ name|NonTypeTemplateParmDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|unsigned D
 argument_list|,
@@ -3595,7 +3690,9 @@ argument|const ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|unsigned D
 argument_list|,
@@ -3619,7 +3716,9 @@ argument|const ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|unsigned D
 argument_list|,
@@ -3662,11 +3761,6 @@ name|using
 name|TemplateParmPosition
 operator|::
 name|getIndex
-block|;
-name|SourceLocation
-name|getInnerLocStart
-argument_list|()
-specifier|const
 block|;
 name|SourceRange
 name|getSourceRange
@@ -4416,7 +4510,9 @@ argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
@@ -4446,7 +4542,9 @@ argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|ClassTemplateDecl *SpecializedTemplate
 argument_list|,
@@ -4579,6 +4677,18 @@ operator|>
 operator|(
 name|SpecializationKind
 operator|)
+return|;
+block|}
+name|bool
+name|isExplicitSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSpecializationKind
+argument_list|()
+operator|==
+name|TSK_ExplicitSpecialization
 return|;
 block|}
 name|void
@@ -5155,16 +5265,11 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|SourceLocation
-name|getInnerLocStart
+name|SourceRange
+name|getSourceRange
 argument_list|()
 specifier|const
-block|{
-return|return
-name|getTemplateKeywordLoc
-argument_list|()
-return|;
-block|}
+expr_stmt|;
 end_expr_stmt
 
 begin_decl_stmt
@@ -5404,7 +5509,9 @@ argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
@@ -5422,55 +5529,7 @@ argument|ClassTemplatePartialSpecializationDecl *PrevDecl
 argument_list|,
 argument|unsigned SequenceNumber
 argument_list|)
-operator|:
-name|ClassTemplateSpecializationDecl
-argument_list|(
-name|Context
-argument_list|,
-name|ClassTemplatePartialSpecialization
-argument_list|,
-name|TK
-argument_list|,
-name|DC
-argument_list|,
-name|L
-argument_list|,
-name|SpecializedTemplate
-argument_list|,
-name|Args
-argument_list|,
-name|NumArgs
-argument_list|,
-name|PrevDecl
-argument_list|)
-block|,
-name|TemplateParams
-argument_list|(
-name|Params
-argument_list|)
-block|,
-name|ArgsAsWritten
-argument_list|(
-name|ArgInfos
-argument_list|)
-block|,
-name|NumArgsAsWritten
-argument_list|(
-name|NumArgInfos
-argument_list|)
-block|,
-name|SequenceNumber
-argument_list|(
-name|SequenceNumber
-argument_list|)
-block|,
-name|InstantiatedFromMember
-argument_list|(
-literal|0
-argument_list|,
-argument|false
-argument_list|)
-block|{ }
+block|;
 name|ClassTemplatePartialSpecializationDecl
 argument_list|()
 operator|:
@@ -5519,7 +5578,9 @@ argument|TagKind TK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|TemplateParameterList *Params
 argument_list|,
@@ -5988,6 +6049,26 @@ argument_list|,
 argument|Decl
 argument_list|)
 block|{ }
+name|ClassTemplateDecl
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+block|:
+name|RedeclarableTemplateDecl
+argument_list|(
+argument|ClassTemplate
+argument_list|,
+literal|0
+argument_list|,
+argument|SourceLocation()
+argument_list|,
+argument|DeclarationName()
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|{ }
 name|CommonBase
 modifier|*
 name|newCommon
@@ -6082,6 +6163,19 @@ parameter_list|,
 name|ClassTemplateDecl
 modifier|*
 name|PrevDecl
+parameter_list|)
+function_decl|;
+comment|/// Create an empty class template node.
+specifier|static
+name|ClassTemplateDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|EmptyShell
 parameter_list|)
 function_decl|;
 comment|/// \brief Return the specialization with the provided arguments if it exists,
@@ -6837,6 +6931,303 @@ end_decl_stmt
 
 begin_comment
 unit|};
+comment|/// Declaration of an alias template.  For example:
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// template<typename T> using V = std::map<T*, int, MyCompare<T>>;
+end_comment
+
+begin_decl_stmt
+name|class
+name|TypeAliasTemplateDecl
+range|:
+name|public
+name|RedeclarableTemplateDecl
+decl_stmt|,
+name|public
+name|RedeclarableTemplate
+decl|<
+name|TypeAliasTemplateDecl
+decl|>
+block|{
+specifier|static
+name|void
+name|DeallocateCommon
+parameter_list|(
+name|void
+modifier|*
+name|Ptr
+parameter_list|)
+function_decl|;
+name|protected
+label|:
+typedef|typedef
+name|RedeclarableTemplate
+operator|<
+name|TypeAliasTemplateDecl
+operator|>
+name|redeclarable_base
+expr_stmt|;
+typedef|typedef
+name|CommonBase
+name|Common
+typedef|;
+name|TypeAliasTemplateDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation L
+argument_list|,
+argument|DeclarationName Name
+argument_list|,
+argument|TemplateParameterList *Params
+argument_list|,
+argument|NamedDecl *Decl
+argument_list|)
+block|:
+name|RedeclarableTemplateDecl
+argument_list|(
+argument|TypeAliasTemplate
+argument_list|,
+argument|DC
+argument_list|,
+argument|L
+argument_list|,
+argument|Name
+argument_list|,
+argument|Params
+argument_list|,
+argument|Decl
+argument_list|)
+block|{ }
+name|CommonBase
+modifier|*
+name|newCommon
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|)
+function_decl|;
+name|Common
+modifier|*
+name|getCommonPtr
+parameter_list|()
+block|{
+return|return
+name|static_cast
+operator|<
+name|Common
+operator|*
+operator|>
+operator|(
+name|RedeclarableTemplateDecl
+operator|::
+name|getCommonPtr
+argument_list|()
+operator|)
+return|;
+block|}
+name|public
+label|:
+comment|/// Get the underlying function declaration of the template.
+name|TypeAliasDecl
+operator|*
+name|getTemplatedDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|TypeAliasDecl
+operator|*
+operator|>
+operator|(
+name|TemplatedDecl
+operator|)
+return|;
+block|}
+name|TypeAliasTemplateDecl
+modifier|*
+name|getCanonicalDecl
+parameter_list|()
+block|{
+return|return
+name|redeclarable_base
+operator|::
+name|getCanonicalDecl
+argument_list|()
+return|;
+block|}
+specifier|const
+name|TypeAliasTemplateDecl
+operator|*
+name|getCanonicalDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|redeclarable_base
+operator|::
+name|getCanonicalDecl
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the previous declaration of this function template, or
+comment|/// NULL if no such declaration exists.
+name|TypeAliasTemplateDecl
+modifier|*
+name|getPreviousDeclaration
+parameter_list|()
+block|{
+return|return
+name|redeclarable_base
+operator|::
+name|getPreviousDeclaration
+argument_list|()
+return|;
+block|}
+comment|/// \brief Retrieve the previous declaration of this function template, or
+comment|/// NULL if no such declaration exists.
+specifier|const
+name|TypeAliasTemplateDecl
+operator|*
+name|getPreviousDeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|redeclarable_base
+operator|::
+name|getPreviousDeclaration
+argument_list|()
+return|;
+block|}
+name|TypeAliasTemplateDecl
+modifier|*
+name|getInstantiatedFromMemberTemplate
+parameter_list|()
+block|{
+return|return
+name|redeclarable_base
+operator|::
+name|getInstantiatedFromMemberTemplate
+argument_list|()
+return|;
+block|}
+comment|/// \brief Create a function template node.
+specifier|static
+name|TypeAliasTemplateDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|DeclContext
+modifier|*
+name|DC
+parameter_list|,
+name|SourceLocation
+name|L
+parameter_list|,
+name|DeclarationName
+name|Name
+parameter_list|,
+name|TemplateParameterList
+modifier|*
+name|Params
+parameter_list|,
+name|NamedDecl
+modifier|*
+name|Decl
+parameter_list|)
+function_decl|;
+comment|/// \brief Create an empty alias template node.
+specifier|static
+name|TypeAliasTemplateDecl
+modifier|*
+name|Create
+parameter_list|(
+name|ASTContext
+modifier|&
+name|C
+parameter_list|,
+name|EmptyShell
+parameter_list|)
+function_decl|;
+comment|// Implement isa/cast/dyncast support
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+parameter_list|(
+specifier|const
+name|TypeAliasTemplateDecl
+modifier|*
+name|D
+parameter_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+parameter_list|(
+name|Kind
+name|K
+parameter_list|)
+block|{
+return|return
+name|K
+operator|==
+name|TypeAliasTemplate
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
 comment|/// Implementation of inline functions that require the template declarations
 end_comment
 

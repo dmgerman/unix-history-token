@@ -366,22 +366,6 @@ name|V_rtzone
 value|VNET(rtzone)
 end_define
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* default fib for tunnels to use */
-end_comment
-
-begin_endif
-unit|u_int tunnel_fib = 0; SYSCTL_INT(_net, OID_AUTO, tunnelfib, CTLFLAG_RD,&tunnel_fib, 0, "");
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * handler for net.my_fibnum  */
 end_comment
@@ -1052,7 +1036,7 @@ end_endif
 
 begin_function
 name|int
-name|setfib
+name|sys_setfib
 parameter_list|(
 name|struct
 name|thread
@@ -1611,7 +1595,7 @@ index|]
 operator|=
 name|dst
 expr_stmt|;
-name|rt_missmsg
+name|rt_missmsg_fib
 argument_list|(
 name|msgtype
 argument_list|,
@@ -1621,6 +1605,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|err
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -2504,7 +2490,7 @@ index|]
 operator|=
 name|src
 expr_stmt|;
-name|rt_missmsg
+name|rt_missmsg_fib
 argument_list|(
 name|RTM_REDIRECT
 argument_list|,
@@ -2514,6 +2500,8 @@ argument_list|,
 name|flags
 argument_list|,
 name|error
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -4890,7 +4878,7 @@ name|rt0
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* XXX 		 * "flow-table" only support IPv4 at the moment. 		 */
+comment|/* XXX 		 * "flow-table" only support IPv4 at the moment. 		 * XXX-BZ as of r205066 it would support IPv6. 		 */
 ifdef|#
 directive|ifdef
 name|INET
@@ -6113,9 +6101,14 @@ name|rti_flags
 operator|=
 name|flags
 operator||
+operator|(
 name|ifa
 operator|->
 name|ifa_flags
+operator|&
+operator|~
+name|IFA_RTSELF
+operator|)
 expr_stmt|;
 name|info
 operator|.
@@ -6313,7 +6306,7 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-name|rt_newaddrmsg
+name|rt_newaddrmsg_fib
 argument_list|(
 name|cmd
 argument_list|,
@@ -6322,6 +6315,8 @@ argument_list|,
 name|error
 argument_list|,
 name|rt
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 name|RT_LOCK

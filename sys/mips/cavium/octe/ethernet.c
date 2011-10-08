@@ -215,18 +215,6 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Exported from the kernel so we can determine board information. It is  * passed by the bootloader to the kernel.  */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|cvmx_bootinfo_t
-modifier|*
-name|octeon_bootinfo
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/**  * Periodic timer to check auto negotiation  */
 end_comment
 
@@ -1852,9 +1840,10 @@ name|cvmx_write_csr
 argument_list|(
 name|CVMX_POW_WQ_INT_PC
 argument_list|,
-name|octeon_bootinfo
-operator|->
-name|eclock_hz
+name|cvmx_clock_get_rate
+argument_list|(
+name|CVMX_CLOCK_CORE
+argument_list|)
 operator|/
 operator|(
 name|INTERRUPT_LIMIT

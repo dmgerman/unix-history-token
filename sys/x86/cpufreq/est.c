@@ -8244,7 +8244,11 @@ return|;
 comment|/* Figure out the bus clock. */
 name|freq
 operator|=
+name|atomic_load_acq_64
+argument_list|(
+operator|&
 name|tsc_freq
+argument_list|)
 operator|/
 literal|1000000
 expr_stmt|;

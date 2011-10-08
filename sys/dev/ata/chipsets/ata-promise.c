@@ -2016,7 +2016,7 @@ expr|struct
 name|ata_promise_sx4
 argument_list|)
 argument_list|,
-name|M_TEMP
+name|M_ATAPCI
 argument_list|,
 name|M_NOWAIT
 operator||

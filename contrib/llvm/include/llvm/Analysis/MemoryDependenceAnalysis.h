@@ -160,6 +160,11 @@ comment|/// pair holds the instruction that clobbers the memory.  For example,
 comment|/// this occurs when we see a may-aliased store to the memory location we
 comment|/// care about.
 comment|///
+comment|/// There are several cases that may be interesting here:
+comment|///   1. Loads are clobbered by may-alias stores.
+comment|///   2. Loads are considered clobbered by partially-aliased loads.  The
+comment|///      client may choose to analyze deeper into these cases.
+comment|///
 comment|/// A dependence query on the first instruction of the entry block will
 comment|/// return a clobber(self) result.
 name|Clobber
@@ -236,6 +241,13 @@ argument_list|(
 argument|Instruction *Inst
 argument_list|)
 block|{
+name|assert
+argument_list|(
+name|Inst
+operator|&&
+literal|"Def requires inst"
+argument_list|)
+block|;
 return|return
 name|MemDepResult
 argument_list|(
@@ -257,6 +269,13 @@ modifier|*
 name|Inst
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|Inst
+operator|&&
+literal|"Clobber requires inst"
+argument_list|)
+expr_stmt|;
 return|return
 name|MemDepResult
 argument_list|(
@@ -286,6 +305,23 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+specifier|static
+name|MemDepResult
+name|getUnknown
+parameter_list|()
+block|{
+return|return
+name|MemDepResult
+argument_list|(
+name|PairTy
+argument_list|(
+literal|0
+argument_list|,
+name|Clobber
+argument_list|)
+argument_list|)
+return|;
+block|}
 comment|/// isClobber - Return true if this MemDepResult represents a query that is
 comment|/// a instruction clobber dependency.
 name|bool
@@ -300,6 +336,29 @@ name|getInt
 argument_list|()
 operator|==
 name|Clobber
+operator|&&
+name|getInst
+argument_list|()
+return|;
+block|}
+comment|/// isUnknown - Return true if this MemDepResult represents a query which
+comment|/// cannot and/or will not be computed.
+name|bool
+name|isUnknown
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Value
+operator|.
+name|getInt
+argument_list|()
+operator|==
+name|Clobber
+operator|&&
+operator|!
+name|getInst
+argument_list|()
 return|;
 block|}
 comment|/// isDef - Return true if this MemDepResult represents a query that is
@@ -1074,6 +1133,39 @@ operator|*
 name|BB
 argument_list|)
 decl_stmt|;
+comment|/// getLoadLoadClobberFullWidthSize - This is a little bit of analysis that
+comment|/// looks at a memory location for a load (specified by MemLocBase, Offs,
+comment|/// and Size) and compares it against a load.  If the specified load could
+comment|/// be safely widened to a larger integer load that is 1) still efficient,
+comment|/// 2) safe for the target, and 3) would provide the specified memory
+comment|/// location value, then this function returns the size in bytes of the
+comment|/// load width to use.  If not, this returns zero.
+specifier|static
+name|unsigned
+name|getLoadLoadClobberFullWidthSize
+parameter_list|(
+specifier|const
+name|Value
+modifier|*
+name|MemLocBase
+parameter_list|,
+name|int64_t
+name|MemLocOffs
+parameter_list|,
+name|unsigned
+name|MemLocSize
+parameter_list|,
+specifier|const
+name|LoadInst
+modifier|*
+name|LI
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|&
+name|TD
+parameter_list|)
+function_decl|;
 name|private
 label|:
 name|MemDepResult

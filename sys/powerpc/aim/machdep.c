@@ -427,6 +427,13 @@ name|__powerpc64__
 end_ifdef
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|n_slbs
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|cacheline_size
 init|=
@@ -755,7 +762,7 @@ directive|ifdef
 name|__powerpc64__
 name|printf
 argument_list|(
-literal|"0x%16lx - 0x%16lx, %ld bytes (%ld pages)\n"
+literal|"0x%016lx - 0x%016lx, %ld bytes (%ld pages)\n"
 argument_list|,
 else|#
 directive|else
@@ -818,7 +825,7 @@ argument|*imisssize; extern void	*dlmisstrap
 argument_list|,
 argument|*dlmisssize; extern void	*dsmisstrap
 argument_list|,
-argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	vm_offset_t	end; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
+argument|*dsmisssize;  uintptr_t powerpc_init(vm_offset_t startkernel, vm_offset_t endkernel,     vm_offset_t basekernel, void *mdp) { 	struct		pcpu *pc; 	void		*generictrap; 	size_t		trap_offset; 	void		*kmdp;         char		*env; 	register_t	msr
 argument_list|,
 argument|scratch; 	uint8_t		*cache_check; 	int		cacheline_warn;
 ifndef|#
@@ -827,9 +834,7 @@ name|__powerpc64__
 argument|int		ppc64;
 endif|#
 directive|endif
-argument|end =
-literal|0
-argument|; 	kmdp = NULL; 	trap_offset =
+argument|kmdp = NULL; 	trap_offset =
 literal|0
 argument|; 	cacheline_warn =
 literal|0
@@ -837,7 +842,7 @@ argument|;
 comment|/* 	 * Parse metadata if present and fetch parameters.  Must be done 	 * before console is inited so cninit gets the right value of 	 * boothowto. 	 */
 argument|if (mdp != NULL) { 		preload_metadata = mdp; 		kmdp = preload_search_by_type(
 literal|"elf kernel"
-argument|); 		if (kmdp != NULL) { 			boothowto = MD_FETCH(kmdp, MODINFOMD_HOWTO, int); 			kern_envp = MD_FETCH(kmdp, MODINFOMD_ENVP, char *); 			end = MD_FETCH(kmdp, MODINFOMD_KERNEND, vm_offset_t);
+argument|); 		if (kmdp != NULL) { 			boothowto = MD_FETCH(kmdp, MODINFOMD_HOWTO, int); 			kern_envp = MD_FETCH(kmdp, MODINFOMD_ENVP, char *); 			endkernel = ulmax(endkernel, MD_FETCH(kmdp, 			    MODINFOMD_KERNEND, vm_offset_t));
 ifdef|#
 directive|ifdef
 name|DDB
@@ -852,7 +857,7 @@ argument|proc_linkup0(&proc0,&thread0); 	thread0.td_frame =&frame0;
 comment|/* 	 * Set up per-cpu data. 	 */
 argument|pc = __pcpu; 	pcpu_init(pc,
 literal|0
-argument|, sizeof(struct pcpu)); 	pc->pc_curthread =&thread0; 	pc->pc_cpuid =
+argument|, sizeof(struct pcpu)); 	curthread_reg = pc->pc_curthread =&thread0; 	pc->pc_cpuid =
 literal|0
 argument|;
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
@@ -868,13 +873,26 @@ literal|"powerpc_init: no loader metadata.\n"
 argument|); 	}
 comment|/* 	 * Init KDB 	 */
 argument|kdb_init();
-comment|/* 	 * PowerPC 970 CPUs have a misfeature requested by Apple that makes 	 * them pretend they have a 32-byte cacheline. Turn this off 	 * before we measure the cacheline size. 	 */
+comment|/* Various very early CPU fix ups */
 argument|switch (mfpvr()>>
 literal|16
-argument|) { 		case IBM970: 		case IBM970FX: 		case IBM970MP: 		case IBM970GX: 			scratch = mfspr(SPR_HID5); 			scratch&= ~HID5_970_DCBZ_SIZE_HI; 			mtspr(SPR_HID5, scratch); 			break; 	}
+argument|) {
+comment|/* 		 * PowerPC 970 CPUs have a misfeature requested by Apple that 		 * makes them pretend they have a 32-byte cacheline. Turn this 		 * off before we measure the cacheline size. 		 */
+argument|case IBM970: 		case IBM970FX: 		case IBM970MP: 		case IBM970GX: 			scratch = mfspr(SPR_HID5); 			scratch&= ~HID5_970_DCBZ_SIZE_HI; 			mtspr(SPR_HID5, scratch); 			break;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+argument|case IBMPOWER7:
+comment|/* XXX: get from ibm,slb-size in device tree */
+argument|n_slbs =
+literal|32
+argument|; 			break;
+endif|#
+directive|endif
+argument|}
 comment|/* 	 * Initialize the interrupt tables and figure out our cache line 	 * size and whether or not we need the 64-bit bridge code. 	 */
 comment|/* 	 * Disable translation in case the vector area hasn't been 	 * mapped (G5). Note that no OFW calls can be made until 	 * translation is re-enabled. 	 */
-argument|msr = mfmsr(); 	mtmsr((msr& ~(PSL_IR | PSL_DR)) | PSL_RI); 	isync();
+argument|msr = mfmsr(); 	mtmsr((msr& ~(PSL_IR | PSL_DR)) | PSL_RI);
 comment|/* 	 * Measure the cacheline size using dcbz 	 * 	 * Use EXC_PGM as a playground. We are about to overwrite it 	 * anyway, we know it exists, and we know it is cache-aligned. 	 */
 argument|cache_check = (void *)EXC_PGM;  	for (cacheline_size =
 literal|0
@@ -1617,9 +1635,6 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
-name|isync
-argument_list|()
-expr_stmt|;
 comment|/* Warn if cachline size was not determined */
 if|if
 condition|(
@@ -1669,20 +1684,11 @@ argument_list|)
 expr_stmt|;
 name|mtmsr
 argument_list|(
-name|mfmsr
-argument_list|()
-operator||
-name|PSL_IR
-operator||
-name|PSL_DR
-operator||
-name|PSL_ME
-operator||
-name|PSL_RI
+name|PSL_KERNSET
+operator|&
+operator|~
+name|PSL_EE
 argument_list|)
-expr_stmt|;
-name|isync
-argument_list|()
 expr_stmt|;
 comment|/* 	 * Initialize params/tunables that are derived from memsize 	 */
 name|init_param2
@@ -2434,10 +2440,7 @@ name|rv
 decl_stmt|;
 name|td
 operator|=
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 expr_stmt|;
 name|oldfault
 operator|=

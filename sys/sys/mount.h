@@ -535,14 +535,10 @@ name|int
 name|mnt_kern_flag
 decl_stmt|;
 comment|/* (i) kernel only flags */
-name|u_int
+name|uint64_t
 name|mnt_flag
 decl_stmt|;
 comment|/* (i) flags shared with user */
-name|u_int
-name|mnt_xflag
-decl_stmt|;
-comment|/* (i) more flags shared with user */
 name|u_int
 name|mnt_noasync
 decl_stmt|;
@@ -815,7 +811,7 @@ begin_define
 define|#
 directive|define
 name|MNT_RDONLY
-value|0x00000001
+value|0x0000000000000001ULL
 end_define
 
 begin_comment
@@ -826,18 +822,18 @@ begin_define
 define|#
 directive|define
 name|MNT_SYNCHRONOUS
-value|0x00000002
+value|0x0000000000000002ULL
 end_define
 
 begin_comment
-comment|/* filesystem written synchronously */
+comment|/* fs written synchronously */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_NOEXEC
-value|0x00000004
+value|0x0000000000000004ULL
 end_define
 
 begin_comment
@@ -848,62 +844,73 @@ begin_define
 define|#
 directive|define
 name|MNT_NOSUID
-value|0x00000008
+value|0x0000000000000008ULL
 end_define
 
 begin_comment
-comment|/* don't honor setuid bits on fs */
+comment|/* don't honor setuid fs bits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNT_NFS4ACLS
+value|0x0000000000000010ULL
+end_define
+
+begin_comment
+comment|/* enable NFS version 4 ACLs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_UNION
-value|0x00000020
+value|0x0000000000000020ULL
 end_define
 
 begin_comment
-comment|/* union with underlying filesystem */
+comment|/* union with underlying fs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_ASYNC
-value|0x00000040
+value|0x0000000000000040ULL
 end_define
 
 begin_comment
-comment|/* filesystem written asynchronously */
+comment|/* fs written asynchronously */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_SUIDDIR
-value|0x00100000
+value|0x0000000000100000ULL
 end_define
 
 begin_comment
-comment|/* special handling of SUID on dirs */
+comment|/* special SUID dir handling */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_SOFTDEP
-value|0x00200000
+value|0x0000000000200000ULL
 end_define
 
 begin_comment
-comment|/* soft updates being done */
+comment|/* using soft updates */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_NOSYMFOLLOW
-value|0x00400000
+value|0x0000000000400000ULL
 end_define
 
 begin_comment
@@ -914,7 +921,7 @@ begin_define
 define|#
 directive|define
 name|MNT_GJOURNAL
-value|0x02000000
+value|0x0000000002000000ULL
 end_define
 
 begin_comment
@@ -925,18 +932,18 @@ begin_define
 define|#
 directive|define
 name|MNT_MULTILABEL
-value|0x04000000
+value|0x0000000004000000ULL
 end_define
 
 begin_comment
-comment|/* MAC support for individual objects */
+comment|/* MAC support for objects */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_ACLS
-value|0x08000000
+value|0x0000000008000000ULL
 end_define
 
 begin_comment
@@ -947,18 +954,18 @@ begin_define
 define|#
 directive|define
 name|MNT_NOATIME
-value|0x10000000
+value|0x0000000010000000ULL
 end_define
 
 begin_comment
-comment|/* disable update of file access time */
+comment|/* dont update file access time */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_NOCLUSTERR
-value|0x40000000
+value|0x0000000040000000ULL
 end_define
 
 begin_comment
@@ -969,7 +976,7 @@ begin_define
 define|#
 directive|define
 name|MNT_NOCLUSTERW
-value|0x80000000
+value|0x0000000080000000ULL
 end_define
 
 begin_comment
@@ -979,9 +986,13 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MNT_NFS4ACLS
-value|0x00000010
+name|MNT_SUJ
+value|0x0000000100000000ULL
 end_define
+
+begin_comment
+comment|/* using journaled soft updates */
+end_comment
 
 begin_comment
 comment|/*  * NFS export related mount flags.  */
@@ -991,7 +1002,7 @@ begin_define
 define|#
 directive|define
 name|MNT_EXRDONLY
-value|0x00000080
+value|0x0000000000000080ULL
 end_define
 
 begin_comment
@@ -1002,7 +1013,7 @@ begin_define
 define|#
 directive|define
 name|MNT_EXPORTED
-value|0x00000100
+value|0x0000000000000100ULL
 end_define
 
 begin_comment
@@ -1013,7 +1024,7 @@ begin_define
 define|#
 directive|define
 name|MNT_DEFEXPORTED
-value|0x00000200
+value|0x0000000000000200ULL
 end_define
 
 begin_comment
@@ -1024,29 +1035,29 @@ begin_define
 define|#
 directive|define
 name|MNT_EXPORTANON
-value|0x00000400
+value|0x0000000000000400ULL
 end_define
 
 begin_comment
-comment|/* use anon uid mapping for everyone */
+comment|/* anon uid mapping for all */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_EXKERB
-value|0x00000800
+value|0x0000000000000800ULL
 end_define
 
 begin_comment
-comment|/* exported with Kerberos uid mapping */
+comment|/* exported with Kerberos */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_EXPUBLIC
-value|0x20000000
+value|0x0000000020000000ULL
 end_define
 
 begin_comment
@@ -1061,7 +1072,7 @@ begin_define
 define|#
 directive|define
 name|MNT_LOCAL
-value|0x00001000
+value|0x0000000000001000ULL
 end_define
 
 begin_comment
@@ -1072,29 +1083,29 @@ begin_define
 define|#
 directive|define
 name|MNT_QUOTA
-value|0x00002000
+value|0x0000000000002000ULL
 end_define
 
 begin_comment
-comment|/* quotas are enabled on filesystem */
+comment|/* quotas are enabled on fs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_ROOTFS
-value|0x00004000
+value|0x0000000000004000ULL
 end_define
 
 begin_comment
-comment|/* identifies the root filesystem */
+comment|/* identifies the root fs */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_USER
-value|0x00008000
+value|0x0000000000008000ULL
 end_define
 
 begin_comment
@@ -1105,7 +1116,7 @@ begin_define
 define|#
 directive|define
 name|MNT_IGNORE
-value|0x00800000
+value|0x0000000000800000ULL
 end_define
 
 begin_comment
@@ -1120,7 +1131,7 @@ begin_define
 define|#
 directive|define
 name|MNT_VISFLAGMASK
-value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS	| \ 			MNT_NFS4ACLS)
+value|(MNT_RDONLY	| MNT_SYNCHRONOUS | MNT_NOEXEC	| \ 			MNT_NOSUID	| MNT_UNION	| MNT_SUJ	| \ 			MNT_ASYNC	| MNT_EXRDONLY	| MNT_EXPORTED	| \ 			MNT_DEFEXPORTED	| MNT_EXPORTANON| MNT_EXKERB	| \ 			MNT_LOCAL	| MNT_USER	| MNT_QUOTA	| \ 			MNT_ROOTFS	| MNT_NOATIME	| MNT_NOCLUSTERR| \ 			MNT_NOCLUSTERW	| MNT_SUIDDIR	| MNT_SOFTDEP	| \ 			MNT_IGNORE	| MNT_EXPUBLIC	| MNT_NOSYMFOLLOW | \ 			MNT_GJOURNAL	| MNT_MULTILABEL | MNT_ACLS	| \ 			MNT_NFS4ACLS)
 end_define
 
 begin_comment
@@ -1142,18 +1153,18 @@ begin_define
 define|#
 directive|define
 name|MNT_UPDATE
-value|0x00010000
+value|0x0000000000010000ULL
 end_define
 
 begin_comment
-comment|/* not a real mount, just an update */
+comment|/* not real mount, just update */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_DELEXPORT
-value|0x00020000
+value|0x0000000000020000ULL
 end_define
 
 begin_comment
@@ -1164,7 +1175,7 @@ begin_define
 define|#
 directive|define
 name|MNT_RELOAD
-value|0x00040000
+value|0x0000000000040000ULL
 end_define
 
 begin_comment
@@ -1175,18 +1186,18 @@ begin_define
 define|#
 directive|define
 name|MNT_FORCE
-value|0x00080000
+value|0x0000000000080000ULL
 end_define
 
 begin_comment
-comment|/* force unmount or readonly change */
+comment|/* force unmount or readonly */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|MNT_SNAPSHOT
-value|0x01000000
+value|0x0000000001000000ULL
 end_define
 
 begin_comment
@@ -1197,7 +1208,7 @@ begin_define
 define|#
 directive|define
 name|MNT_BYFSID
-value|0x08000000
+value|0x0000000008000000ULL
 end_define
 
 begin_comment
@@ -1301,17 +1312,6 @@ end_define
 
 begin_comment
 comment|/* Allow shared locking for writes */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|MNTK_SUJ
-value|0x00000100
-end_define
-
-begin_comment
-comment|/* Softdep journaling enabled */
 end_comment
 
 begin_define
@@ -2525,6 +2525,9 @@ name|fid
 modifier|*
 name|fhp
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|vnode
 modifier|*
@@ -2849,10 +2852,12 @@ name|MP
 parameter_list|,
 name|FIDP
 parameter_list|,
+name|FLAGS
+parameter_list|,
 name|VPP
 parameter_list|)
 define|\
-value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, VPP)
+value|(*(MP)->mnt_op->vfs_fhtovp)(MP, FIDP, FLAGS, VPP)
 end_define
 
 begin_define
@@ -3328,11 +3333,11 @@ name|char
 modifier|*
 name|name
 parameter_list|,
-name|u_int
+name|uint64_t
 modifier|*
 name|w
 parameter_list|,
-name|u_int
+name|uint64_t
 name|val
 parameter_list|)
 function_decl|;

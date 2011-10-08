@@ -444,7 +444,9 @@ case|case
 literal|'?'
 case|:
 default|default:
-break|break;
+name|usage
+argument_list|()
+expr_stmt|;
 block|}
 name|argc
 operator|-=

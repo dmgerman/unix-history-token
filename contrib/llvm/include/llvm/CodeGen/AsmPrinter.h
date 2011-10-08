@@ -438,6 +438,32 @@ name|void
 name|EmitFunctionBody
 argument_list|()
 block|;
+name|void
+name|emitPrologLabel
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|MI
+argument_list|)
+block|;      enum
+name|CFIMoveType
+block|{
+name|CFI_M_None
+block|,
+name|CFI_M_EH
+block|,
+name|CFI_M_Debug
+block|}
+block|;
+name|CFIMoveType
+name|needsCFIMoves
+argument_list|()
+block|;
+name|bool
+name|needsSEHMoves
+argument_list|()
+block|;
 comment|/// EmitConstantPool - Print to the current output stream assembly
 comment|/// representations of the constants in the constant pool MCP. This is
 comment|/// used to print out constants which have been "spilled to memory" by
@@ -894,26 +920,24 @@ return|return
 literal|0
 return|;
 block|}
-comment|//===------------------------------------------------------------------===//
-comment|// Dwarf Lowering Routines
-comment|//===------------------------------------------------------------------===//
-comment|/// EmitFrameMoves - Emit frame instructions to describe the layout of the
-comment|/// frame.
+comment|/// EmitDwarfRegOp - Emit dwarf register operation.
+name|virtual
 name|void
-name|EmitFrameMoves
+name|EmitDwarfRegOp
 argument_list|(
-argument|const std::vector<MachineMove>&Moves
-argument_list|,
-argument|MCSymbol *BaseLabel
-argument_list|,
-argument|bool isEH
+argument|const MachineLocation&MLoc
 argument_list|)
 specifier|const
 block|;
+comment|//===------------------------------------------------------------------===//
+comment|// Dwarf Lowering Routines
+comment|//===------------------------------------------------------------------===//
+comment|/// EmitCFIFrameMove - Emit frame instruction to describe the layout of the
+comment|/// frame.
 name|void
-name|EmitCFIFrameMoves
+name|EmitCFIFrameMove
 argument_list|(
-argument|const std::vector<MachineMove>&Moves
+argument|const MachineMove&Move
 argument_list|)
 specifier|const
 block|;
@@ -1061,6 +1085,7 @@ block|;
 name|void
 name|EmitLLVMUsedList
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|List
@@ -1069,6 +1094,7 @@ block|;
 name|void
 name|EmitXXStructorList
 argument_list|(
+specifier|const
 name|Constant
 operator|*
 name|List

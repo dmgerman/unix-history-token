@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: sortlist.c,v 1.17 2007/09/14 01:46:05 marka Exp $ */
+comment|/* $Id: sortlist.c,v 1.17 2007-09-14 01:46:05 marka Exp $ */
 end_comment
 
 begin_comment

@@ -891,8 +891,7 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|uhso_devs
 index|[]
 init|=
@@ -908,6 +907,16 @@ parameter_list|,
 name|i
 parameter_list|)
 value|{ USB_VPI(USB_VENDOR_##v, USB_PRODUCT_##v##_##p, i) }
+comment|/* Option GlobeTrotter MAX 7.2 with upgraded firmware */
+name|UHSO_DEV
+argument_list|(
+name|OPTION
+argument_list|,
+name|GTMAX72
+argument_list|,
+name|UHSO_STATIC_IFACE
+argument_list|)
+block|,
 comment|/* Option GlobeSurfer iCON 7.2 */
 name|UHSO_DEV
 argument_list|(
@@ -8840,6 +8849,15 @@ operator|->
 name|sc_ifp
 argument_list|,
 name|m
+argument_list|)
+expr_stmt|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|ifp
+operator|->
+name|if_fib
 argument_list|)
 expr_stmt|;
 name|netisr_dispatch

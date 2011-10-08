@@ -729,6 +729,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_SE_EXCHANGED
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_SCONTROL
 value|15
 end_define
@@ -1356,7 +1363,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|AHCI_P_IX_DI
+name|AHCI_P_IX_MP
 value|0x00000080
 end_define
 
@@ -2114,6 +2121,38 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ahci_led
+block|{
+name|device_t
+name|dev
+decl_stmt|;
+comment|/* Device handle */
+name|struct
+name|cdev
+modifier|*
+name|led
+decl_stmt|;
+name|uint8_t
+name|num
+decl_stmt|;
+comment|/* Number of this led */
+name|uint8_t
+name|state
+decl_stmt|;
+comment|/* State of this led */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|AHCI_NUM_LEDS
+value|3
+end_define
+
 begin_comment
 comment|/* structure describing an ATA channel */
 end_comment
@@ -2161,6 +2200,13 @@ name|struct
 name|cam_path
 modifier|*
 name|path
+decl_stmt|;
+name|struct
+name|ahci_led
+name|leds
+index|[
+literal|3
+index|]
 decl_stmt|;
 name|uint32_t
 name|caps
@@ -2262,9 +2308,9 @@ comment|/* Number of tagged slots per dev */
 name|int
 name|numhslots
 decl_stmt|;
-comment|/* Number of holden slots */
+comment|/* Number of held slots */
 name|int
-name|readlog
+name|recoverycmd
 decl_stmt|;
 comment|/* Our READ LOG active */
 name|int
@@ -2279,6 +2325,22 @@ name|int
 name|taggedtarget
 decl_stmt|;
 comment|/* Last tagged target */
+name|int
+name|resetting
+decl_stmt|;
+comment|/* Hard-reset in progress. */
+name|int
+name|resetpolldiv
+decl_stmt|;
+comment|/* Hard-reset poll divider. */
+name|int
+name|listening
+decl_stmt|;
+comment|/* SUD bit is cleared. */
+name|int
+name|wrongccs
+decl_stmt|;
+comment|/* CCS field in CMD was wrong */
 name|union
 name|ccb
 modifier|*
@@ -2290,6 +2352,11 @@ name|callout
 name|pm_timer
 decl_stmt|;
 comment|/* Power management events */
+name|struct
+name|callout
+name|reset_timer
+decl_stmt|;
+comment|/* Hard-reset timeout */
 name|struct
 name|ahci_device
 name|user
@@ -2386,6 +2453,10 @@ name|uint32_t
 name|capsem
 decl_stmt|;
 comment|/* Controller capabilities */
+name|uint32_t
+name|emloc
+decl_stmt|;
+comment|/* EM buffer location */
 name|int
 name|quirks
 decl_stmt|;
@@ -2428,6 +2499,11 @@ index|[
 name|AHCI_MAX_PORTS
 index|]
 struct|;
+name|struct
+name|mtx
+name|em_mtx
+decl_stmt|;
+comment|/* EM access lock */
 block|}
 struct|;
 end_struct

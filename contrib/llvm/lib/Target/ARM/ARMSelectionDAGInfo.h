@@ -124,6 +124,31 @@ argument_list|,
 argument|MachinePointerInfo SrcPtrInfo
 argument_list|)
 specifier|const
+block|;
+comment|// Adjust parameters for memset, see RTABI section 4.3.4
+name|virtual
+name|SDValue
+name|EmitTargetCodeForMemset
+argument_list|(
+argument|SelectionDAG&DAG
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Op1
+argument_list|,
+argument|SDValue Op2
+argument_list|,
+argument|SDValue Op3
+argument_list|,
+argument|unsigned Align
+argument_list|,
+argument|bool isVolatile
+argument_list|,
+argument|MachinePointerInfo DstPtrInfo
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

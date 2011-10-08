@@ -130,11 +130,11 @@ name|int
 name|type
 decl_stmt|;
 comment|/* type of login (LTYPE_*) */
-name|int
+name|pid_t
 name|pid
 decl_stmt|;
 comment|/* PID of login process */
-name|int
+name|uid_t
 name|uid
 decl_stmt|;
 comment|/* UID of this user */
@@ -208,7 +208,7 @@ name|logininfo
 modifier|*
 name|login_alloc_entry
 parameter_list|(
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -258,7 +258,7 @@ name|logininfo
 modifier|*
 name|li
 parameter_list|,
-name|int
+name|pid_t
 name|pid
 parameter_list|,
 specifier|const
@@ -425,7 +425,7 @@ modifier|*
 name|li
 parameter_list|,
 specifier|const
-name|int
+name|uid_t
 name|uid
 parameter_list|)
 function_decl|;
@@ -441,7 +441,7 @@ name|int
 name|login_get_lastlog_time
 parameter_list|(
 specifier|const
-name|int
+name|uid_t
 name|uid
 parameter_list|)
 function_decl|;

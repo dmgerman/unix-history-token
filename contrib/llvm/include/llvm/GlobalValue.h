@@ -426,7 +426,6 @@ argument_list|()
 block|;
 comment|/// getType - Global values are always pointers.
 specifier|inline
-specifier|const
 name|PointerType
 operator|*
 name|getType
@@ -436,7 +435,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|PointerType
 operator|*
 operator|>
@@ -1066,18 +1064,6 @@ name|Dematerialize
 argument_list|()
 block|;
 comment|/// @}
-comment|/// Override from Constant class. No GlobalValue's are null values so this
-comment|/// always returns false.
-name|virtual
-name|bool
-name|isNullValue
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// Override from Constant class.
 name|virtual
 name|void
@@ -1085,14 +1071,11 @@ name|destroyConstant
 argument_list|()
 block|;
 comment|/// isDeclaration - Return true if the primary definition of this global
-comment|/// value is outside of the current translation unit...
-name|virtual
+comment|/// value is outside of the current translation unit.
 name|bool
 name|isDeclaration
 argument_list|()
 specifier|const
-operator|=
-literal|0
 block|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
 comment|/// but does not delete it.

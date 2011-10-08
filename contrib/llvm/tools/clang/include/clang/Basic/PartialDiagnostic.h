@@ -162,7 +162,7 @@ index|]
 decl_stmt|;
 comment|/// DiagArgumentsVal - The values for the various substitution positions.
 comment|/// This is used when the argument is not an std::string. The specific value
-comment|/// is mangled into an intptr_t and the intepretation depends on exactly
+comment|/// is mangled into an intptr_t and the interpretation depends on exactly
 comment|/// what sort of argument kind it is.
 name|intptr_t
 name|DiagArgumentsVal

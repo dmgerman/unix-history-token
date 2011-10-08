@@ -83,7 +83,7 @@ parameter_list|(
 name|SC
 parameter_list|)
 define|\
-value|int SC (struct thread *td, struct SC##_args *uap) \ { \ 	return syscall_not_present(td, #SC , (struct nosys_args *)uap); \ }
+value|int sys_ ## SC (struct thread *td, struct SC##_args *uap) \ { \ 	return syscall_not_present(td, #SC , (struct nosys_args *)uap); \ }
 end_define
 
 begin_expr_stmt

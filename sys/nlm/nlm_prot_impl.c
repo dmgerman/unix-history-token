@@ -7107,7 +7107,7 @@ end_function
 
 begin_function
 name|int
-name|nlm_syscall
+name|sys_nlm_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -7494,6 +7494,8 @@ operator|&
 name|fhp
 operator|->
 name|fh_fid
+argument_list|,
+name|LK_EXCLUSIVE
 argument_list|,
 operator|&
 name|vs

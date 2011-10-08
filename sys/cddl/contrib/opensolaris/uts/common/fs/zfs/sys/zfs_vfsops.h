@@ -145,6 +145,10 @@ name|z_log
 decl_stmt|;
 comment|/* intent log pointer */
 name|uint_t
+name|z_acl_mode
+decl_stmt|;
+comment|/* acl chmod/mode behavior */
+name|uint_t
 name|z_acl_inherit
 decl_stmt|;
 comment|/* acl inheritance behavior */

@@ -491,6 +491,9 @@ name|d
 operator|->
 name|d_mediasize
 operator|=
+operator|(
+name|off_t
+operator|)
 name|mmc_get_media_size
 argument_list|(
 name|dev

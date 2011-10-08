@@ -986,7 +986,7 @@ end_comment
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|struct
 name|thread

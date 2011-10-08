@@ -182,7 +182,7 @@ name|struct
 name|cpuhead
 name|cpuhead
 init|=
-name|SLIST_HEAD_INITIALIZER
+name|STAILQ_HEAD_INITIALIZER
 argument_list|(
 name|cpuhead
 argument_list|)
@@ -239,14 +239,6 @@ name|pc_cpuid
 operator|=
 name|cpuid
 expr_stmt|;
-name|pcpu
-operator|->
-name|pc_cpumask
-operator|=
-literal|1
-operator|<<
-name|cpuid
-expr_stmt|;
 name|cpuid_to_pcpu
 index|[
 name|cpuid
@@ -254,7 +246,7 @@ index|]
 operator|=
 name|pcpu
 expr_stmt|;
-name|SLIST_INSERT_HEAD
+name|STAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|cpuhead
@@ -295,29 +287,6 @@ name|pcpu
 operator|->
 name|pc_rm_queue
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KTR
-name|snprintf
-argument_list|(
-name|pcpu
-operator|->
-name|pc_name
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pcpu
-operator|->
-name|pc_name
-argument_list|)
-argument_list|,
-literal|"CPU %d"
-argument_list|,
-name|cpuid
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -986,7 +955,7 @@ modifier|*
 name|pcpu
 parameter_list|)
 block|{
-name|SLIST_REMOVE
+name|STAILQ_REMOVE
 argument_list|(
 operator|&
 name|cpuhead

@@ -498,27 +498,34 @@ block|}
 enum|;
 name|private
 label|:
-comment|/// Bitfields must be first fields in this class so they pack with those
-comment|/// declared in class Decl.
+comment|// The conventional meaning of this method; an ObjCMethodFamily.
+comment|// This is not serialized; instead, it is computed on demand and
+comment|// cached.
+name|mutable
+name|unsigned
+name|Family
+range|:
+name|ObjCMethodFamilyBitWidth
+decl_stmt|;
 comment|/// instance (true) or class (false) method.
-name|bool
+name|unsigned
 name|IsInstance
 range|:
 literal|1
 decl_stmt|;
-name|bool
+name|unsigned
 name|IsVariadic
 range|:
 literal|1
 decl_stmt|;
 comment|// Synthesized declaration method for a property setter/getter
-name|bool
+name|unsigned
 name|IsSynthesized
 range|:
 literal|1
 decl_stmt|;
 comment|// Method has a definition.
-name|bool
+name|unsigned
 name|IsDefined
 range|:
 literal|1
@@ -536,6 +543,12 @@ name|unsigned
 name|objcDeclQualifier
 range|:
 literal|6
+decl_stmt|;
+comment|/// \brief Indicates whether this method has a related result type.
+name|unsigned
+name|RelatedResultType
+range|:
+literal|1
 decl_stmt|;
 comment|// Number of args separated by ':' in a method declaration.
 name|unsigned
@@ -605,6 +618,8 @@ argument|bool isDefined = false
 argument_list|,
 argument|ImplementationControl impControl = None
 argument_list|,
+argument|bool HasRelatedResultType = false
+argument_list|,
 argument|unsigned numSelectorArgs =
 literal|0
 argument_list|)
@@ -623,6 +638,11 @@ operator|,
 name|DeclContext
 argument_list|(
 name|ObjCMethod
+argument_list|)
+operator|,
+name|Family
+argument_list|(
+name|InvalidObjCMethodFamily
 argument_list|)
 operator|,
 name|IsInstance
@@ -653,6 +673,11 @@ operator|,
 name|objcDeclQualifier
 argument_list|(
 name|OBJC_TQ_None
+argument_list|)
+operator|,
+name|RelatedResultType
+argument_list|(
+name|HasRelatedResultType
 argument_list|)
 operator|,
 name|NumSelectorArgs
@@ -755,6 +780,11 @@ name|impControl
 init|=
 name|None
 parameter_list|,
+name|bool
+name|HasRelatedResultType
+init|=
+name|false
+parameter_list|,
 name|unsigned
 name|numSelectorArgs
 init|=
@@ -810,6 +840,32 @@ block|{
 name|objcDeclQualifier
 operator|=
 name|QV
+expr_stmt|;
+block|}
+comment|/// \brief Determine whether this method has a result type that is related
+comment|/// to the message receiver's type.
+name|bool
+name|hasRelatedResultType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RelatedResultType
+return|;
+block|}
+comment|/// \brief Note whether this method has a related result type.
+name|void
+name|SetRelatedResultType
+parameter_list|(
+name|bool
+name|RRT
+init|=
+name|true
+parameter_list|)
+block|{
+name|RelatedResultType
+operator|=
+name|RRT
 expr_stmt|;
 block|}
 name|unsigned
@@ -1212,6 +1268,12 @@ operator|=
 name|CD
 expr_stmt|;
 block|}
+comment|/// Determines the family of this method.
+name|ObjCMethodFamily
+name|getMethodFamily
+argument_list|()
+specifier|const
+expr_stmt|;
 name|bool
 name|isInstanceMethod
 argument_list|()
@@ -2054,7 +2116,7 @@ comment|/// \brief List of categories and class extensions defined for this clas
 comment|///
 comment|/// Categories are stored as a linked list in the AST, since the categories
 comment|/// and class extensions come long after the initial interface declaration,
-comment|/// and we avoid dynamically-resized arrays in the AST whereever possible.
+comment|/// and we avoid dynamically-resized arrays in the AST wherever possible.
 name|ObjCCategoryDecl
 operator|*
 name|CategoryList
@@ -2810,22 +2872,78 @@ return|;
 block|}
 end_decl_stmt
 
-begin_function_decl
-name|ObjCIvarDecl
-modifier|*
-name|lookupInstanceVariable
-parameter_list|(
-name|IdentifierInfo
-modifier|*
-name|IVarName
-parameter_list|,
+begin_comment
+comment|/// isArcWeakrefUnavailable - Checks for a class or one of its super classes
+end_comment
+
+begin_comment
+comment|/// to be incompatible with __weak references. Returns true if it is.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isArcWeakrefUnavailable
+argument_list|()
+specifier|const
+block|{
+specifier|const
 name|ObjCInterfaceDecl
-modifier|*
-modifier|&
+operator|*
+name|Class
+operator|=
+name|this
+block|;
+while|while
+condition|(
+name|Class
+condition|)
+block|{
+if|if
+condition|(
+name|Class
+operator|->
+name|hasAttr
+operator|<
+name|ArcWeakrefUnavailableAttr
+operator|>
+operator|(
+operator|)
+condition|)
+return|return
+name|true
+return|;
+name|Class
+operator|=
+name|Class
+operator|->
+name|getSuperClass
+argument_list|()
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    ObjCIvarDecl
+operator|*
+name|lookupInstanceVariable
+argument_list|(
+name|IdentifierInfo
+operator|*
+name|IVarName
+argument_list|,
+name|ObjCInterfaceDecl
+operator|*
+operator|&
 name|ClassDeclared
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|ObjCIvarDecl
@@ -3323,7 +3441,9 @@ name|ObjCIvarDecl
 argument_list|(
 argument|ObjCContainerDecl *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3344,7 +3464,9 @@ name|ObjCIvar
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|StartLoc
+argument_list|,
+name|IdLoc
 argument_list|,
 name|Id
 argument_list|,
@@ -3355,6 +3477,9 @@ argument_list|,
 name|BW
 argument_list|,
 comment|/*Mutable=*/
+name|false
+argument_list|,
+comment|/*HasInit=*/
 name|false
 argument_list|)
 block|,
@@ -3384,7 +3509,9 @@ argument|ASTContext&C
 argument_list|,
 argument|ObjCContainerDecl *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3573,7 +3700,9 @@ name|ObjCAtDefsFieldDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3588,7 +3717,9 @@ argument|ObjCAtDefsField
 argument_list|,
 argument|DC
 argument_list|,
-argument|L
+argument|StartLoc
+argument_list|,
+argument|IdLoc
 argument_list|,
 argument|Id
 argument_list|,
@@ -3601,6 +3732,9 @@ comment|// FIXME: Do ObjCAtDefs have declarators ?
 argument|BW
 argument_list|,
 comment|/*Mutable=*/
+argument|false
+argument_list|,
+comment|/*HasInit=*/
 argument|false
 argument_list|)
 block|{}
@@ -3615,7 +3749,9 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
+argument|SourceLocation StartLoc
+argument_list|,
+argument|SourceLocation IdLoc
 argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
@@ -3670,7 +3806,7 @@ expr|}
 block|;
 comment|/// ObjCProtocolDecl - Represents a protocol declaration. ObjC protocols
 comment|/// declare a pure abstract type (i.e no instance variables are permitted).
-comment|/// Protocols orginally drew inspiration from C++ pure virtual functions (a C++
+comment|/// Protocols originally drew inspiration from C++ pure virtual functions (a C++
 comment|/// feature with nice semantics and lousy syntax:-). Here is an example:
 comment|///
 comment|/// @protocol NSDraggingInfo<refproto1, refproto2>
@@ -5709,6 +5845,12 @@ block|;
 name|unsigned
 name|NumIvarInitializers
 block|;
+comment|/// true if class has a .cxx_[construct,destruct] method.
+name|bool
+name|HasCXXStructors
+operator|:
+literal|1
+block|;
 comment|/// true of class extension has at least one bitfield ivar.
 name|bool
 name|HasSynthBitfield
@@ -5750,6 +5892,11 @@ block|,
 name|NumIvarInitializers
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|HasCXXStructors
+argument_list|(
+name|false
 argument_list|)
 block|,
 name|HasSynthBitfield
@@ -5863,6 +6010,33 @@ argument|unsigned numInitializers
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|bool
+name|hasCXXStructors
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCXXStructors
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setHasCXXStructors
+parameter_list|(
+name|bool
+name|val
+parameter_list|)
+block|{
+name|HasCXXStructors
+operator|=
+name|val
+expr_stmt|;
+block|}
+end_function
 
 begin_expr_stmt
 name|bool
@@ -6434,6 +6608,26 @@ block|,
 name|OBJC_PR_atomic
 operator|=
 literal|0x100
+block|,
+name|OBJC_PR_weak
+operator|=
+literal|0x200
+block|,
+name|OBJC_PR_strong
+operator|=
+literal|0x400
+block|,
+name|OBJC_PR_unsafe_unretained
+operator|=
+literal|0x800
+comment|// Adding a property should change NumPropertyAttrsBits
+block|}
+block|;    enum
+block|{
+comment|/// \brief Number of bits fitting all the property attributes.
+name|NumPropertyAttrsBits
+operator|=
+literal|12
 block|}
 block|;    enum
 name|SetterKind
@@ -6467,12 +6661,12 @@ block|;
 name|unsigned
 name|PropertyAttributes
 operator|:
-literal|9
+name|NumPropertyAttrsBits
 block|;
 name|unsigned
 name|PropertyAttributesAsWritten
 operator|:
-literal|9
+name|NumPropertyAttrsBits
 block|;
 comment|// @required/@optional
 name|unsigned
@@ -6686,6 +6880,29 @@ name|PropertyAttributesAsWritten
 argument_list|)
 return|;
 block|}
+name|bool
+name|hasWrittenStorageAttribute
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PropertyAttributesAsWritten
+operator|&
+operator|(
+name|OBJC_PR_assign
+operator||
+name|OBJC_PR_copy
+operator||
+name|OBJC_PR_unsafe_unretained
+operator||
+name|OBJC_PR_retain
+operator||
+name|OBJC_PR_strong
+operator||
+name|OBJC_PR_weak
+operator|)
+return|;
+block|}
 name|void
 name|setPropertyAttributesAsWritten
 argument_list|(
@@ -6738,7 +6955,11 @@ if|if
 condition|(
 name|PropertyAttributes
 operator|&
+operator|(
 name|OBJC_PR_retain
+operator||
+name|OBJC_PR_strong
+operator|)
 condition|)
 return|return
 name|Retain

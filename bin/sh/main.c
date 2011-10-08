@@ -232,6 +232,12 @@ directive|include
 file|"cd.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"builtins.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|rootpid
@@ -251,12 +257,19 @@ name|main_handler
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|localeisutf8
+decl_stmt|,
+name|initial_localeisutf8
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 specifier|static
 name|void
 name|read_profile
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -295,6 +308,8 @@ block|{
 name|struct
 name|stackmark
 name|smark
+decl_stmt|,
+name|smark2
 decl_stmt|;
 specifier|volatile
 name|int
@@ -313,6 +328,9 @@ name|LC_ALL
 argument_list|,
 literal|""
 argument_list|)
+expr_stmt|;
+name|initcharset
+argument_list|()
 expr_stmt|;
 name|state
 operator|=
@@ -364,6 +382,10 @@ literal|0
 operator|||
 operator|!
 name|rootshell
+operator|||
+name|exception
+operator|==
+name|EXEXIT
 condition|)
 name|exitshell
 argument_list|(
@@ -468,6 +490,12 @@ operator|&
 name|smark
 argument_list|)
 expr_stmt|;
+name|setstackmark
+argument_list|(
+operator|&
+name|smark2
+argument_list|)
+expr_stmt|;
 name|procargs
 argument_list|(
 name|argc
@@ -530,7 +558,7 @@ literal|0
 condition|)
 name|read_profile
 argument_list|(
-literal|".profile"
+literal|"${HOME-}/.profile"
 argument_list|)
 expr_stmt|;
 else|else
@@ -589,6 +617,12 @@ label|:
 name|state
 operator|=
 literal|4
+expr_stmt|;
+name|popstackmark
+argument_list|(
+operator|&
+name|smark2
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -861,7 +895,6 @@ specifier|static
 name|void
 name|read_profile
 parameter_list|(
-specifier|const
 name|char
 modifier|*
 name|name
@@ -870,6 +903,25 @@ block|{
 name|int
 name|fd
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|expandedname
+decl_stmt|;
+name|expandedname
+operator|=
+name|expandstr
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|expandedname
+operator|==
+name|NULL
+condition|)
+return|return;
 name|INTOFF
 expr_stmt|;
 if|if
@@ -879,7 +931,7 @@ name|fd
 operator|=
 name|open
 argument_list|(
-name|name
+name|expandedname
 argument_list|,
 name|O_RDONLY
 argument_list|)
@@ -958,7 +1010,7 @@ expr_stmt|;
 else|else
 name|error
 argument_list|(
-literal|"Can't open %s: %s"
+literal|"cannot open %s: %s"
 argument_list|,
 name|name
 argument_list|,
@@ -996,15 +1048,6 @@ modifier|*
 name|basename
 parameter_list|)
 block|{
-specifier|static
-name|char
-name|localname
-index|[
-name|FILENAME_MAX
-operator|+
-literal|1
-index|]
-decl_stmt|;
 name|char
 modifier|*
 name|fullname
@@ -1051,18 +1094,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|strcpy
-argument_list|(
-name|localname
-argument_list|,
-name|fullname
-argument_list|)
-expr_stmt|;
-name|stunalloc
-argument_list|(
-name|fullname
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1084,9 +1115,17 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
+block|{
+comment|/* 			 * Don't bother freeing here, since it will 			 * be freed by the caller. 			 */
 return|return
-name|localname
+name|fullname
 return|;
+block|}
+name|stunalloc
+argument_list|(
+name|fullname
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|basename

@@ -167,6 +167,10 @@ name|TOK_NAT
 block|,
 name|TOK_REASS
 block|,
+name|TOK_CALL
+block|,
+name|TOK_RETURN
+block|,
 name|TOK_ALTQ
 block|,
 name|TOK_LOG
@@ -315,6 +319,8 @@ block|,
 name|TOK_SAME_PORTS
 block|,
 name|TOK_UNREG_ONLY
+block|,
+name|TOK_SKIP_GLOBAL
 block|,
 name|TOK_RESET_ADDR
 block|,

@@ -12734,7 +12734,7 @@ argument_list|)
 operator|=
 name|gen_rtx_EXPR_LIST
 argument_list|(
-name|REG_NOTE_KIND
+name|GET_MODE
 argument_list|(
 name|note
 argument_list|)
@@ -12789,7 +12789,7 @@ argument_list|)
 operator|=
 name|gen_rtx_EXPR_LIST
 argument_list|(
-name|REG_NOTE_KIND
+name|GET_MODE
 argument_list|(
 name|note
 argument_list|)
@@ -17763,6 +17763,10 @@ argument_list|)
 operator|=
 name|gen_rtx_EXPR_LIST
 argument_list|(
+operator|(
+expr|enum
+name|machine_mode
+operator|)
 name|kind
 argument_list|,
 name|datum
@@ -20951,7 +20955,7 @@ name|copy_insn_1
 argument_list|(
 name|gen_rtx_EXPR_LIST
 argument_list|(
-name|REG_NOTE_KIND
+name|GET_MODE
 argument_list|(
 name|link
 argument_list|)
@@ -20980,7 +20984,7 @@ name|copy_insn_1
 argument_list|(
 name|gen_rtx_INSN_LIST
 argument_list|(
-name|REG_NOTE_KIND
+name|GET_MODE
 argument_list|(
 name|link
 argument_list|)

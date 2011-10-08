@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -134,6 +128,17 @@ literal|8
 operator|>
 name|ReplacementTokens
 expr_stmt|;
+comment|/// \brief Length in characters of the macro definition.
+name|mutable
+name|unsigned
+name|DefinitionLength
+decl_stmt|;
+name|mutable
+name|bool
+name|IsDefinitionLengthCached
+range|:
+literal|1
+decl_stmt|;
 comment|/// IsFunctionLike - True if this macro is a function-like macro, false if it
 comment|/// is an object-like macro.
 name|bool
@@ -301,6 +306,30 @@ specifier|const
 block|{
 return|return
 name|EndLocation
+return|;
+block|}
+comment|/// \brief Get length in characters of the macro definition.
+name|unsigned
+name|getDefinitionLength
+argument_list|(
+name|SourceManager
+operator|&
+name|SM
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|IsDefinitionLengthCached
+condition|)
+return|return
+name|DefinitionLength
+return|;
+return|return
+name|getDefinitionLengthSlow
+argument_list|(
+name|SM
+argument_list|)
 return|;
 block|}
 comment|/// isIdenticalTo - Return true if the specified macro definition is equal to
@@ -807,6 +836,14 @@ modifier|&
 name|Tok
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+operator|!
+name|IsDefinitionLengthCached
+operator|&&
+literal|"Changing replacement tokens after definition length got calculated"
+argument_list|)
+expr_stmt|;
 name|ReplacementTokens
 operator|.
 name|push_back
@@ -860,6 +897,17 @@ operator|=
 name|true
 expr_stmt|;
 block|}
+name|private
+label|:
+name|unsigned
+name|getDefinitionLengthSlow
+argument_list|(
+name|SourceManager
+operator|&
+name|SM
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

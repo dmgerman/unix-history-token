@@ -577,22 +577,11 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH
 argument_list|,
-name|M_NOWAIT
+name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|priv
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOMEM
-operator|)
-return|;
 comment|/* Allocate unit number */
 name|priv
 operator|->

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dst_internal.h,v 1.11.120.3 2010-12-09 01:12:55 marka Exp $ */
+comment|/* $Id: dst_internal.h,v 1.29 2011-01-11 23:47:13 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -83,6 +83,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<isc/stdtime.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<isc/hmacmd5.h>
 end_include
 
@@ -90,6 +96,12 @@ begin_include
 include|#
 directive|include
 file|<isc/hmacsha.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dns/time.h>
 end_include
 
 begin_include
@@ -372,11 +384,60 @@ block|}
 name|keydata
 union|;
 comment|/*%< pointer to key in crypto pkg fmt */
+name|isc_stdtime_t
+name|times
+index|[
+name|DST_MAX_TIMES
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/*%< timing metadata */
+name|isc_boolean_t
+name|timeset
+index|[
+name|DST_MAX_TIMES
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/*%< data set? */
+name|isc_stdtime_t
+name|nums
+index|[
+name|DST_MAX_NUMERIC
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/*%< numeric metadata */
+name|isc_boolean_t
+name|numset
+index|[
+name|DST_MAX_NUMERIC
+operator|+
+literal|1
+index|]
+decl_stmt|;
+comment|/*%< data set? */
+name|int
+name|fmt_major
+decl_stmt|;
+comment|/*%< private key format, major version */
+name|int
+name|fmt_minor
+decl_stmt|;
+comment|/*%< private key format, minor version */
 name|dst_func_t
 modifier|*
 name|func
 decl_stmt|;
 comment|/*%< crypto package specific functions */
+name|isc_buffer_t
+modifier|*
+name|key_tkeytoken
+decl_stmt|;
+comment|/*%< TKEY token data */
 block|}
 struct|;
 end_struct
@@ -609,6 +670,15 @@ name|key
 parameter_list|,
 name|int
 name|parms
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|callback
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|)
 parameter_list|)
 function_decl|;
 name|isc_boolean_t
@@ -696,6 +766,10 @@ parameter_list|,
 name|isc_lex_t
 modifier|*
 name|lexer
+parameter_list|,
+name|dst_key_t
+modifier|*
+name|pub
 parameter_list|)
 function_decl|;
 comment|/* cleanup */
@@ -734,6 +808,46 @@ modifier|*
 name|pin
 parameter_list|)
 function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|dump
+function_decl|)
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|buffer
+parameter_list|,
+name|int
+modifier|*
+name|length
+parameter_list|)
+function_decl|;
+name|isc_result_t
+function_decl|(
+modifier|*
+name|restore
+function_decl|)
+parameter_list|(
+name|dst_key_t
+modifier|*
+name|key
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|keystr
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -746,7 +860,10 @@ begin_function_decl
 name|isc_result_t
 name|dst__openssl_init
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|engine
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -884,6 +1001,30 @@ name|funcp
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_OPENSSL_GOST
+end_ifdef
+
+begin_function_decl
+name|isc_result_t
+name|dst__opensslgost_init
+parameter_list|(
+name|struct
+name|dst_func
+modifier|*
+modifier|*
+name|funcp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*%  * Destructors  */

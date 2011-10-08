@@ -853,7 +853,7 @@ name|AE_ERROR
 operator|)
 return|;
 block|}
-comment|/* Child indicates a return value */
+comment|/*          * A child indicates a possible return value. A simple Return or          * Return() is marked with NODE_IS_NULL_RETURN by the parser so          * that it is not counted as a "real" return-with-value, although          * the AML code that is actually emitted is Return(0). The AML          * definition of Return has a required parameter, so we are          * forced to convert a null return to Return(0).          */
 if|if
 condition|(
 operator|(
@@ -876,6 +876,23 @@ operator|.
 name|ParseOpcode
 operator|!=
 name|PARSEOP_DEFAULT_ARG
+operator|)
+operator|&&
+operator|(
+operator|!
+operator|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Child
+operator|->
+name|Asl
+operator|.
+name|CompileFlags
+operator|&
+name|NODE_IS_NULL_RETURN
+operator|)
 operator|)
 condition|)
 block|{
@@ -1429,20 +1446,30 @@ name|NODE_METHOD_NO_RETVAL
 expr_stmt|;
 block|}
 block|}
-comment|/*          * Check predefined method names for correct return behavior          * and correct number of arguments          */
+comment|/*          * Check predefined method names for correct return behavior          * and correct number of arguments. Also, some special checks          * For GPE and _REG methods.          */
+if|if
+condition|(
 name|ApCheckForPredefinedMethod
 argument_list|(
 name|Op
 argument_list|,
 name|MethodInfo
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
 comment|/* Special check for two names like _L01 and _E01 in same scope */
 name|ApCheckForGpeNameConflict
 argument_list|(
 name|Op
 argument_list|)
 expr_stmt|;
+comment|/*              * Special check for _REG: Must have an operation region definition              * within the same scope!              */
+name|ApCheckRegMethod
+argument_list|(
+name|Op
+argument_list|)
+expr_stmt|;
+block|}
 name|ACPI_FREE
 argument_list|(
 name|MethodInfo

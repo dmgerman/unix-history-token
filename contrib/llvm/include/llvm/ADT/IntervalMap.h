@@ -6969,6 +6969,26 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
+comment|/// setMap - Change the map iterated over. This call must be followed by a
+comment|/// call to goToBegin(), goToEnd(), or find()
+name|void
+name|setMap
+argument_list|(
+argument|const IntervalMap&m
+argument_list|)
+block|{
+name|map
+operator|=
+name|const_cast
+operator|<
+name|IntervalMap
+operator|*
+operator|>
+operator|(
+operator|&
+name|m
+operator|)
+block|; }
 comment|/// valid - Return true if the current position is valid, false for end().
 name|bool
 name|valid

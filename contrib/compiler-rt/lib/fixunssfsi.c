@@ -1,7 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* ===-- fixunssfsi.c - Implement __fixunssfsi -----------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is distributed under the University of Illinois Open Source  * License. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __fixunssfsi for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
+comment|/* ===-- fixunssfsi.c - Implement __fixunssfsi -----------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  *  * This file implements __fixunssfsi for the compiler_rt library.  *  * ===----------------------------------------------------------------------===  */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
 
 begin_include
 include|#
@@ -21,7 +27,18 @@ begin_comment
 comment|/* seee eeee emmm mmmm mmmm mmmm mmmm mmmm */
 end_comment
 
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|f2uiz
+argument_list|,
+name|fixunssfsi
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
+name|COMPILER_RT_ABI
 name|su_int
 name|__fixunssfsi
 parameter_list|(

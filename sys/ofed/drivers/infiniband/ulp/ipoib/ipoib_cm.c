@@ -2864,11 +2864,11 @@ expr_stmt|;
 operator|++
 name|dev
 operator|->
-name|if_opackets
+name|if_ipackets
 expr_stmt|;
 name|dev
 operator|->
-name|if_obytes
+name|if_ibytes
 operator|+=
 name|mb
 operator|->

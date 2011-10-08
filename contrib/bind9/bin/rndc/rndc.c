@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rndc.c,v 1.122.44.2 2009/01/18 23:47:35 tbox Exp $ */
+comment|/* $Id: rndc.c,v 1.131.20.2 2011-02-28 01:19:59 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -348,6 +348,15 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|isc_boolean_t
+name|c_flag
+init|=
+name|ISC_FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|isc_mem_t
 modifier|*
 name|mctx
@@ -424,6 +433,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|int
+name|status
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -437,7 +459,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\ Usage: %s [-c config] [-s server] [-p port]\n\ 	[-k key-file ] [-y key] [-V] command\n\ \n\ command is one of the following:\n\ \n\   reload	Reload configuration file and zones.\n\   reload zone [class [view]]\n\ 		Reload a single zone.\n\   refresh zone [class [view]]\n\ 		Schedule immediate maintenance for a zone.\n\   retransfer zone [class [view]]\n\ 		Retransfer a single zone without checking serial number.\n\   freeze	Suspend updates to all dynamic zones.\n\   freeze zone [class [view]]\n\ 		Suspend updates to a dynamic zone.\n\   thaw		Enable updates to all dynamic zones and reload them.\n\   thaw zone [class [view]]\n\ 		Enable updates to a frozen dynamic zone and reload it.\n\   notify zone [class [view]]\n\ 		Resend NOTIFY messages for the zone.\n\   reconfig	Reload configuration file and new zones only.\n\   stats		Write server statistics to the statistics file.\n\   querylog	Toggle query logging.\n\   dumpdb [-all|-cache|-zones] [view ...]\n\ 		Dump cache(s) to the dump file (named_dump.db).\n\   stop		Save pending updates to master files and stop the server.\n\   stop -p	Save pending updates to master files and stop the server\n\ 		reporting process id.\n\   halt		Stop the server without saving pending updates.\n\   halt -p	Stop the server without saving pending updates reporting\n\ 		process id.\n\   trace		Increment debugging level by one.\n\   trace level	Change the debugging level.\n\   notrace	Set debugging level to 0.\n\   flush 	Flushes all of the server's caches.\n\   flush [view]	Flushes the server's cache for a view.\n\   flushname name [view]\n\ 		Flush the given name from the server's cache(s)\n\   status	Display status of the server.\n\   recursing	Dump the queries that are currently recursing (named.recursing)\n\   validation newstate [view]\n\ 		Enable / disable DNSSEC validation.\n\   *restart	Restart the server.\n\ \n\ * == not yet implemented\n\ Version: %s\n"
+literal|"\ Usage: %s [-b address] [-c config] [-s server] [-p port]\n\ 	[-k key-file ] [-y key] [-V] command\n\ \n\ command is one of the following:\n\ \n\   reload	Reload configuration file and zones.\n\   reload zone [class [view]]\n\ 		Reload a single zone.\n\   refresh zone [class [view]]\n\ 		Schedule immediate maintenance for a zone.\n\   retransfer zone [class [view]]\n\ 		Retransfer a single zone without checking serial number.\n\   freeze	Suspend updates to all dynamic zones.\n\   freeze zone [class [view]]\n\ 		Suspend updates to a dynamic zone.\n\   thaw		Enable updates to all dynamic zones and reload them.\n\   thaw zone [class [view]]\n\ 		Enable updates to a frozen dynamic zone and reload it.\n\   notify zone [class [view]]\n\ 		Resend NOTIFY messages for the zone.\n\   reconfig	Reload configuration file and new zones only.\n\   sign zone [class [view]]\n\ 		Update zone keys, and sign as needed.\n\   loadkeys zone [class [view]]\n\ 		Update keys without signing immediately.\n\   stats		Write server statistics to the statistics file.\n\   querylog	Toggle query logging.\n\   dumpdb [-all|-cache|-zones] [view ...]\n\ 		Dump cache(s) to the dump file (named_dump.db).\n\   secroots [view ...]\n\ 		Write security roots to the secroots file.\n\   stop		Save pending updates to master files and stop the server.\n\   stop -p	Save pending updates to master files and stop the server\n\ 		reporting process id.\n\   halt		Stop the server without saving pending updates.\n\   halt -p	Stop the server without saving pending updates reporting\n\ 		process id.\n\   trace		Increment debugging level by one.\n\   trace level	Change the debugging level.\n\   notrace	Set debugging level to 0.\n\   flush 	Flushes all of the server's caches.\n\   flush [view]	Flushes the server's cache for a view.\n\   flushname name [view]\n\ 		Flush the given name from the server's cache(s)\n\   status	Display status of the server.\n\   recursing	Dump the queries that are currently recursing (named.recursing)\n\   validation newstate [view]\n\ 		Enable / disable DNSSEC validation.\n\   *restart	Restart the server.\n\   addzone [\"file\"] zone [class [view]] { zone-options }\n\ 		Add zone to given view. Requires new-zone-file option.\n\   delzone [\"file\"] zone [class [view]]\n\ 		Removes zone from given view. Requires new-zone-file option.\n\ \n\ * == not yet implemented\n\ Version: %s\n"
 argument_list|,
 name|progname
 argument_list|,
@@ -2178,6 +2200,31 @@ operator|=
 name|ISC_TRUE
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+operator|!
+name|c_flag
+operator|&&
+name|isc_file_exists
+argument_list|(
+name|admin_keyfile
+argument_list|)
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"WARNING: key file (%s) exists, but using "
+literal|"default configuration file (%s)\n"
+argument_list|,
+name|admin_keyfile
+argument_list|,
+name|admin_conffile
+argument_list|)
+expr_stmt|;
+block|}
 name|DO
 argument_list|(
 literal|"create parser"
@@ -3506,6 +3553,10 @@ case|:
 name|admin_conffile
 operator|=
 name|isc_commandline_argument
+expr_stmt|;
+name|c_flag
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 break|break;
 case|case

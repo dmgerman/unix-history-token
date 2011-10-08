@@ -275,6 +275,17 @@ parameter_list|)
 value|((x) * 0x20 + 0x114)
 end_define
 
+begin_define
+define|#
+directive|define
+name|HPET_MIN_CYCLES
+value|128
+end_define
+
+begin_comment
+comment|/* Period considered reliable. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif

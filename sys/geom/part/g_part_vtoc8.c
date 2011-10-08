@@ -1147,6 +1147,8 @@ name|basetable
 expr_stmt|;
 name|msize
 operator|=
+name|MIN
+argument_list|(
 name|pp
 operator|->
 name|mediasize
@@ -1154,16 +1156,9 @@ operator|/
 name|pp
 operator|->
 name|sectorsize
-expr_stmt|;
-if|if
-condition|(
-name|msize
-operator|>
-literal|0xffffffffu
-condition|)
-name|msize
-operator|=
-literal|0xffffffffu
+argument_list|,
+name|UINT32_MAX
+argument_list|)
 expr_stmt|;
 name|table
 operator|->
@@ -2273,6 +2268,8 @@ argument_list|)
 expr_stmt|;
 name|msize
 operator|=
+name|MIN
+argument_list|(
 name|pp
 operator|->
 name|mediasize
@@ -2280,6 +2277,9 @@ operator|/
 name|pp
 operator|->
 name|sectorsize
+argument_list|,
+name|UINT32_MAX
+argument_list|)
 expr_stmt|;
 name|sectors
 operator|=

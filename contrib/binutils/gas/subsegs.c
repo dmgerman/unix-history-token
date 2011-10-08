@@ -160,6 +160,9 @@ name|bfd_section
 operator|=
 name|seg
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|bfd_set_section_userdata
 argument_list|(
 name|stdoutput
@@ -575,6 +578,9 @@ name|bfd_section
 operator|=
 name|secptr
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|bfd_set_section_userdata
 argument_list|(
 name|stdoutput

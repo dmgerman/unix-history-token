@@ -4666,7 +4666,7 @@ end_comment
 
 begin_function
 name|int
-name|__getcwd
+name|sys___getcwd
 parameter_list|(
 name|td
 parameter_list|,

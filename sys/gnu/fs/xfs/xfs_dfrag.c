@@ -186,6 +186,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/file.h>
 end_include
 
@@ -335,6 +341,10 @@ name|sxp
 operator|->
 name|sx_fdtarget
 argument_list|,
+name|CAP_READ
+operator||
+name|CAP_WRITE
+argument_list|,
 operator|&
 name|bvp
 argument_list|)
@@ -397,6 +407,10 @@ operator|)
 name|sxp
 operator|->
 name|sx_fdtmp
+argument_list|,
+name|CAP_READ
+operator||
+name|CAP_WRITE
 argument_list|,
 operator|&
 name|btvp

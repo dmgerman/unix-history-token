@@ -41,6 +41,22 @@ directive|include
 file|"t4fw_interface.h"
 end_include
 
+begin_undef
+undef|#
+directive|undef
+name|msleep
+end_undef
+
+begin_define
+define|#
+directive|define
+name|msleep
+parameter_list|(
+name|x
+parameter_list|)
+value|DELAY((x) * 1000)
+end_define
+
 begin_comment
 comment|/**  *	t4_wait_op_done_val - wait until an operation is completed  *	@adapter: the adapter performing the operation  *	@reg: the register to check for completion  *	@mask: a single-bit field within @reg that indicates completion  *	@polarity: the value of the field when the operation is completed  *	@attempts: number of check iterations  *	@delay: delay in usecs between iterations  *	@valp: where to store the value of the register at completion time  *  *	Wait until an operation is completed by checking a bit in a register  *	up to @attempts times.  If @valp is not NULL the value of the register  *	at the time it indicated completion is stored there.  Returns 0 if the  *	operation completes and	-EAGAIN	otherwise.  */
 end_comment

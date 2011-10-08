@@ -16,11 +16,11 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file is distributed under the University of Illinois Open Source
+comment|// This file is dual licensed under the MIT and the University of Illinois Open
 end_comment
 
 begin_comment
-comment|// License. See LICENSE.TXT for details.
+comment|// Source Licenses. See LICENSE.TXT for details.
 end_comment
 
 begin_comment
@@ -67,6 +67,12 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
+begin_include
+include|#
+directive|include
+file|"abi.h"
+end_include
+
 begin_define
 define|#
 directive|define
@@ -78,6 +84,16 @@ include|#
 directive|include
 file|"fp_lib.h"
 end_include
+
+begin_expr_stmt
+name|ARM_EABI_FNALIAS
+argument_list|(
+name|fdiv
+argument_list|,
+name|divsf3
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_function
 name|fp_t

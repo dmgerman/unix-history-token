@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: request.h,v 1.27.332.2 2009/01/18 23:47:41 tbox Exp $ */
+comment|/* $Id: request.h,v 1.31 2010-03-04 23:50:34 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -51,6 +51,13 @@ define|#
 directive|define
 name|DNS_REQUESTOPT_TCP
 value|0x00000001U
+end_define
+
+begin_define
+define|#
+directive|define
+name|DNS_REQUESTOPT_CASE
+value|0x00000002U
 end_define
 
 begin_typedef
@@ -244,7 +251,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create and send a request.  *  * Notes:  *  *\li	'message' will be rendered and sent to 'address'.  If the  *	#DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  *  *\li	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *\li	'message' is a valid DNS message.  *  *\li	'address' is a valid sockaddr.  *  *\li	'timeout'> 0  *  *\li	'task' is a valid task.  *  *\li	requestp != NULL&& *requestp == NULL  */
+comment|/*%<  * Create and send a request.  *  * Notes:  *  *\li	'message' will be rendered and sent to 'address'.  If the  *	#DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  *  *\li	If the #DNS_REQUESTOPT_CASE option is set, use case sensitive  *	compression.  *  *\li	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *\li	'message' is a valid DNS message.  *  *\li	'address' is a valid sockaddr.  *  *\li	'timeout'> 0  *  *\li	'task' is a valid task.  *  *\li	requestp != NULL&& *requestp == NULL  */
 end_comment
 
 begin_comment
@@ -421,7 +428,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*%<  * Create and send a request.  *  * Notes:  *  *\li	'message' will be rendered and sent to 'address'.  If the  *	#DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  UDP requests will be resent  *	at 'udptimeout' intervals if non-zero or 'udpretries' is non-zero.  *  *\li	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *\li	'message' is a valid DNS message.  *  *\li	'dstaddr' is a valid sockaddr.  *  *\li	'srcaddr' is a valid sockaddr or NULL.  *  *\li	'srcaddr' and 'dstaddr' are the same protocol family.  *  *\li	'timeout'> 0  *  *\li	'task' is a valid task.  *  *\li	requestp != NULL&& *requestp == NULL  */
+comment|/*%<  * Create and send a request.  *  * Notes:  *  *\li	'message' will be rendered and sent to 'address'.  If the  *	#DNS_REQUESTOPT_TCP option is set, TCP will be used.  The request  *	will timeout after 'timeout' seconds.  UDP requests will be resent  *	at 'udptimeout' intervals if non-zero or 'udpretries' is non-zero.  *  *\li	If the #DNS_REQUESTOPT_CASE option is set, use case sensitive  *	compression.  *  *\li	When the request completes, successfully, due to a timeout, or  *	because it was canceled, a completion event will be sent to 'task'.  *  * Requires:  *  *\li	'message' is a valid DNS message.  *  *\li	'dstaddr' is a valid sockaddr.  *  *\li	'srcaddr' is a valid sockaddr or NULL.  *  *\li	'srcaddr' and 'dstaddr' are the same protocol family.  *  *\li	'timeout'> 0  *  *\li	'task' is a valid task.  *  *\li	requestp != NULL&& *requestp == NULL  */
 end_comment
 
 begin_comment

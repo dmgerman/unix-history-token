@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -2566,7 +2566,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|class
+name|cls
 parameter_list|,
 name|spa_t
 modifier|*
@@ -2839,6 +2839,25 @@ modifier|...
 parameter_list|)
 endif|#
 directive|endif
+specifier|extern
+name|boolean_t
+name|spa_debug_enabled
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+define|#
+directive|define
+name|spa_dbgmsg
+parameter_list|(
+name|spa
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|{						\ 	if (spa_debug_enabled(spa))		\ 		zfs_dbgmsg(__VA_ARGS__);	\ }
 specifier|extern
 name|int
 name|spa_mode_global

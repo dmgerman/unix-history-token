@@ -49,6 +49,12 @@ directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm-c/Disassembler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -61,6 +67,9 @@ name|MemoryObject
 decl_stmt|;
 name|class
 name|raw_ostream
+decl_stmt|;
+name|class
+name|MCContext
 decl_stmt|;
 struct_decl|struct
 name|EDInstInfo
@@ -75,6 +84,21 @@ label|:
 comment|/// Constructor     - Performs initial setup for the disassembler.
 name|MCDisassembler
 argument_list|()
+operator|:
+name|GetOpInfo
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|DisInfo
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Ctx
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|virtual
 operator|~
@@ -121,7 +145,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// getEDInfo - Returns the enhanced insturction information corresponding to
+comment|/// getEDInfo - Returns the enhanced instruction information corresponding to
 comment|///   the disassembler.
 comment|///
 comment|/// @return         - An array of instruction information, with one entry for
@@ -140,6 +164,85 @@ name|EDInstInfo
 operator|*
 operator|)
 literal|0
+return|;
+block|}
+name|private
+label|:
+comment|//
+comment|// Hooks for symbolic disassembly via the public 'C' interface.
+comment|//
+comment|// The function to get the symbolic information for operands.
+name|LLVMOpInfoCallback
+name|GetOpInfo
+decl_stmt|;
+comment|// The pointer to the block of symbolic information for above call back.
+name|void
+modifier|*
+name|DisInfo
+decl_stmt|;
+comment|// The assembly context for creating symbols and MCExprs in place of
+comment|// immediate operands when there is symbolic information.
+name|MCContext
+modifier|*
+name|Ctx
+decl_stmt|;
+name|public
+label|:
+name|void
+name|setupForSymbolicDisassembly
+parameter_list|(
+name|LLVMOpInfoCallback
+name|getOpInfo
+parameter_list|,
+name|void
+modifier|*
+name|disInfo
+parameter_list|,
+name|MCContext
+modifier|*
+name|ctx
+parameter_list|)
+block|{
+name|GetOpInfo
+operator|=
+name|getOpInfo
+expr_stmt|;
+name|DisInfo
+operator|=
+name|disInfo
+expr_stmt|;
+name|Ctx
+operator|=
+name|ctx
+expr_stmt|;
+block|}
+name|LLVMOpInfoCallback
+name|getLLVMOpInfoCallback
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GetOpInfo
+return|;
+block|}
+name|void
+operator|*
+name|getDisInfoBlock
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DisInfo
+return|;
+block|}
+name|MCContext
+operator|*
+name|getMCContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ctx
 return|;
 block|}
 block|}

@@ -90,18 +90,6 @@ name|MAX_CPU_WIN
 value|5
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -619,7 +607,7 @@ name|decode_win_idma_dump
 block|}
 block|,
 block|{
-literal|"mvrl,pcie"
+literal|"mrvl,pcie"
 block|,
 operator|&
 name|decode_win_pcie_setup

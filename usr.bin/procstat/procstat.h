@@ -21,6 +21,8 @@ name|int
 name|hflag
 decl_stmt|,
 name|nflag
+decl_stmt|,
+name|Cflag
 decl_stmt|;
 end_decl_stmt
 
@@ -49,9 +51,6 @@ begin_function_decl
 name|void
 name|procstat_args
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -64,9 +63,6 @@ begin_function_decl
 name|void
 name|procstat_basic
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -79,9 +75,6 @@ begin_function_decl
 name|void
 name|procstat_bin
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -94,9 +87,6 @@ begin_function_decl
 name|void
 name|procstat_cred
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -109,8 +99,10 @@ begin_function_decl
 name|void
 name|procstat_files
 parameter_list|(
-name|pid_t
-name|pid
+name|struct
+name|procstat
+modifier|*
+name|prstat
 parameter_list|,
 name|struct
 name|kinfo_proc
@@ -124,9 +116,6 @@ begin_function_decl
 name|void
 name|procstat_kstack
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -142,8 +131,10 @@ begin_function_decl
 name|void
 name|procstat_sigs
 parameter_list|(
-name|pid_t
-name|pid
+name|struct
+name|procstat
+modifier|*
+name|prstat
 parameter_list|,
 name|struct
 name|kinfo_proc
@@ -157,9 +148,6 @@ begin_function_decl
 name|void
 name|procstat_threads
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*
@@ -172,8 +160,10 @@ begin_function_decl
 name|void
 name|procstat_threads_sigs
 parameter_list|(
-name|pid_t
-name|pid
+name|struct
+name|procstat
+modifier|*
+name|prstat
 parameter_list|,
 name|struct
 name|kinfo_proc
@@ -187,9 +177,6 @@ begin_function_decl
 name|void
 name|procstat_vm
 parameter_list|(
-name|pid_t
-name|pid
-parameter_list|,
 name|struct
 name|kinfo_proc
 modifier|*

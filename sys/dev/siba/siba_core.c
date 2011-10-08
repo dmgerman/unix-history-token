@@ -2224,7 +2224,7 @@ operator|++
 expr_stmt|;
 name|error
 operator|=
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|siba
 operator|->

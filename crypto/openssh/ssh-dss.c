@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-dss.c,v 1.26 2010/04/16 01:47:26 djm Exp $ */
+comment|/* $OpenBSD: ssh-dss.c,v 1.27 2010/08/31 09:58:37 djm Exp $ */
 end_comment
 
 begin_comment
@@ -650,7 +650,7 @@ argument_list|)
 expr_stmt|;
 name|ktype
 operator|=
-name|buffer_get_string
+name|buffer_get_cstring
 argument_list|(
 operator|&
 name|b

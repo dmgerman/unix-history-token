@@ -357,53 +357,6 @@ value|0x1ffc000000000000
 end_define
 
 begin_comment
-comment|/*  * Page size of the identity mappings in region 7.  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOG2_ID_PAGE_SIZE
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LOG2_ID_PAGE_SIZE
-value|28
-end_define
-
-begin_comment
-comment|/* 256M */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|IA64_ID_PAGE_SHIFT
-value|(LOG2_ID_PAGE_SIZE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IA64_ID_PAGE_SIZE
-value|(1<<(LOG2_ID_PAGE_SIZE))
-end_define
-
-begin_define
-define|#
-directive|define
-name|IA64_ID_PAGE_MASK
-value|(IA64_ID_PAGE_SIZE-1)
-end_define
-
-begin_comment
 comment|/*  * Parameters for Pre-Boot Virtual Memory (PBVM).  * The kernel, its modules and metadata are loaded in the PBVM by the loader.  * The PBVM consists of pages for which the mapping is maintained in a page  * table. The page table is at least 1 EFI page large (i.e. 4KB), but can be  * larger to accommodate more PBVM. The maximum page table size is 1MB. With  * 8 bytes per page table entry, this means that the PBVM has at least 512  * pages and at most 128K pages.  * The GNU toolchain (in particular GNU ld) does not support an alignment  * larger than 64K. This means that we cannot guarantee page alignment for  * a page size that's larger than 64K. We do want to have text and data in  * different pages, which means that the maximum usable page size is 64KB.  * Consequently:  * The maximum total PBVM size is 8GB -- enough for a DVD image. A page table  * of a single EFI page (4KB) allows for 32MB of PBVM.  *  * The kernel is given the PA and size of the page table that provides the  * mapping of the PBVM. The page table itself is assumed to be mapped at a  * known virtual address and using a single translation wired into the CPU.  * As such, the page table is assumed to be a power of 2 and naturally aligned.  * The kernel also assumes that a good portion of the kernel text is mapped  * and wired into the CPU, but does not assume that the mapping covers the  * whole of PBVM.  */
 end_comment
 
@@ -495,7 +448,8 @@ begin_define
 define|#
 directive|define
 name|VM_MAX_KERNEL_ADDRESS
-value|(IA64_RR_BASE(IA64_VM_MINKERN_REGION + 2) - 1)
+define|\
+value|(VM_MIN_KERNEL_ADDRESS + IA64_REGION_GAP_START - 1)
 end_define
 
 begin_define
@@ -599,6 +553,17 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ZERO_REGION_SIZE
+value|(2 * 1024 * 1024)
+end_define
+
+begin_comment
+comment|/* 2MB */
+end_comment
 
 begin_endif
 endif|#

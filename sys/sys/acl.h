@@ -698,8 +698,36 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACL_NFS4_PERM_BITS
+name|ACL_FULL_SET
 value|(ACL_READ_DATA | ACL_WRITE_DATA | \     ACL_APPEND_DATA | ACL_READ_NAMED_ATTRS | ACL_WRITE_NAMED_ATTRS | \     ACL_EXECUTE | ACL_DELETE_CHILD | ACL_READ_ATTRIBUTES | \     ACL_WRITE_ATTRIBUTES | ACL_DELETE | ACL_READ_ACL | ACL_WRITE_ACL | \     ACL_WRITE_OWNER | ACL_SYNCHRONIZE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_MODIFY_SET
+value|(ACL_FULL_SET& \     ~(ACL_WRITE_ACL | ACL_WRITE_OWNER))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_READ_SET
+value|(ACL_READ_DATA | ACL_READ_NAMED_ATTRS | \     ACL_READ_ATTRIBUTES | ACL_READ_ACL)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_WRITE_SET
+value|(ACL_WRITE_DATA | ACL_APPEND_DATA | \     ACL_WRITE_NAMED_ATTRS | ACL_WRITE_ATTRIBUTES)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACL_NFS4_PERM_BITS
+value|ACL_FULL_SET
 end_define
 
 begin_comment

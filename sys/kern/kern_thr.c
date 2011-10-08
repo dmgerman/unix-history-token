@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -393,7 +399,7 @@ end_comment
 
 begin_function
 name|int
-name|thr_create
+name|sys_thr_create
 parameter_list|(
 name|struct
 name|thread
@@ -483,7 +489,7 @@ end_function
 
 begin_function
 name|int
-name|thr_new
+name|sys_thr_new
 parameter_list|(
 name|struct
 name|thread
@@ -864,6 +870,47 @@ operator|)
 return|;
 block|}
 block|}
+ifdef|#
+directive|ifdef
+name|RACCT
+name|PROC_LOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|racct_add
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NTHR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|EPROCLIM
+operator|)
+return|;
+endif|#
+directive|endif
 comment|/* Initialize our td */
 name|newtd
 operator|=
@@ -878,11 +925,15 @@ name|newtd
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ENOMEM
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
+block|}
 comment|/* 	 * Try the copyout as soon as we allocate the td so we don't 	 * have to tear things down in a failure case below. 	 * Here we copy out tid to two places, one for child and one 	 * for parent, because pthread can create a detached thread, 	 * if parent wants to safely access child tid, it has to provide  	 * its storage, because child thread may exit quickly and 	 * memory is freed before parent thread can access it. 	 */
 if|if
 condition|(
@@ -922,11 +973,13 @@ argument_list|(
 name|newtd
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+name|error
+operator|=
 name|EFAULT
-operator|)
-return|;
+expr_stmt|;
+goto|goto
+name|fail
+goto|;
 block|}
 name|bzero
 argument_list|(
@@ -1031,11 +1084,9 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 else|else
@@ -1095,11 +1146,9 @@ operator|->
 name|td_ucred
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|error
-operator|)
-return|;
+goto|goto
+name|fail
+goto|;
 block|}
 block|}
 name|PROC_LOCK
@@ -1264,12 +1313,43 @@ operator|(
 literal|0
 operator|)
 return|;
+name|fail
+label|:
+ifdef|#
+directive|ifdef
+name|RACCT
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|racct_sub
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NTHR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
 end_function
 
 begin_function
 name|int
-name|thr_self
+name|sys_thr_self
 parameter_list|(
 name|struct
 name|thread
@@ -1324,7 +1404,7 @@ end_function
 
 begin_function
 name|int
-name|thr_exit
+name|sys_thr_exit
 parameter_list|(
 name|struct
 name|thread
@@ -1397,6 +1477,15 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|racct_sub
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NTHR
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Shutting down last thread in the proc.  This will actually 	 * call exit() in the trampoline when it returns. 	 */
 if|if
 condition|(
@@ -1461,7 +1550,7 @@ end_function
 
 begin_function
 name|int
-name|thr_kill
+name|sys_thr_kill
 parameter_list|(
 name|struct
 name|thread
@@ -1714,7 +1803,7 @@ end_function
 
 begin_function
 name|int
-name|thr_kill2
+name|sys_thr_kill2
 parameter_list|(
 name|struct
 name|thread
@@ -2037,7 +2126,7 @@ end_function
 
 begin_function
 name|int
-name|thr_suspend
+name|sys_thr_suspend
 parameter_list|(
 name|struct
 name|thread
@@ -2379,7 +2468,7 @@ end_function
 
 begin_function
 name|int
-name|thr_wake
+name|sys_thr_wake
 parameter_list|(
 name|struct
 name|thread
@@ -2499,7 +2588,7 @@ end_function
 
 begin_function
 name|int
-name|thr_set_name
+name|sys_thr_set_name
 parameter_list|(
 name|struct
 name|thread

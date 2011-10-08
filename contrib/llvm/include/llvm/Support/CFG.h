@@ -146,7 +146,7 @@ name|void
 name|advancePastNonTerminators
 parameter_list|()
 block|{
-comment|// Loop to ignore non terminator uses (for example PHI nodes).
+comment|// Loop to ignore non terminator uses (for example BlockAddresses).
 while|while
 condition|(
 operator|!
@@ -178,6 +178,9 @@ operator|::
 name|pointer
 name|pointer
 expr_stmt|;
+name|PredIterator
+argument_list|()
+block|{}
 name|explicit
 specifier|inline
 name|PredIterator
@@ -359,6 +362,29 @@ name|this
 block|;
 return|return
 name|tmp
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// getOperandNo - Return the operand number in the predecessor's
+end_comment
+
+begin_comment
+comment|/// terminator of the successor.
+end_comment
+
+begin_expr_stmt
+name|unsigned
+name|getOperandNo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|It
+operator|.
+name|getOperandNo
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -618,13 +644,7 @@ literal|0
 argument_list|)
 block|{
 comment|// begin iterator
-name|assert
-argument_list|(
-name|T
-operator|&&
-literal|"getTerminator returned null!"
-argument_list|)
-block|;   }
+block|}
 specifier|inline
 name|SuccIterator
 argument_list|(
@@ -636,27 +656,40 @@ comment|// end iterator
 operator|:
 name|Term
 argument_list|(
-name|T
-argument_list|)
-operator|,
-name|idx
-argument_list|(
-argument|Term->getNumSuccessors()
+argument|T
 argument_list|)
 block|{
-name|assert
-argument_list|(
-name|T
-operator|&&
-literal|"getTerminator returned null!"
-argument_list|)
-block|;   }
+if|if
+condition|(
+name|Term
+condition|)
+name|idx
+operator|=
+name|Term
+operator|->
+name|getNumSuccessors
+argument_list|()
+expr_stmt|;
+else|else
+comment|// Term == NULL happens, if a basic block is not fully constructed and
+comment|// consequently getTerminator() returns NULL. In this case we construct a
+comment|// SuccIterator which describes a basic block that has zero successors.
+comment|// Defining SuccIterator for incomplete and malformed CFGs is especially
+comment|// useful for debugging.
+name|idx
+operator|=
+literal|0
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
 specifier|inline
 specifier|const
 name|Self
-operator|&
+modifier|&
 name|operator
-operator|=
+init|=
 operator|(
 specifier|const
 name|Self
@@ -686,7 +719,7 @@ operator|*
 name|this
 return|;
 block|}
-end_expr_stmt
+end_decl_stmt
 
 begin_comment
 comment|/// getSuccessorIndex - This is used to interface between code that wants to
@@ -1223,6 +1256,13 @@ modifier|*
 name|getSource
 parameter_list|()
 block|{
+name|assert
+argument_list|(
+name|Term
+operator|&&
+literal|"Source not available, if basic block was malformed"
+argument_list|)
+expr_stmt|;
 return|return
 name|Term
 operator|->

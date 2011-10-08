@@ -1021,6 +1021,12 @@ begin_comment
 comment|/*  * The lower numbers -> 21 are used by NFSv2 and v3. These define higher  * numbers used by NFSv4.  * NFS_V3NPROCS is one greater than the last V3 op and NFS_NPROCS is  * one greater than the last number.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_V3NPROCS
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -1171,6 +1177,15 @@ directive|define
 name|NFSV4_NPROCS
 value|41
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* NFS_V3NPROCS */
+end_comment
 
 begin_comment
 comment|/*  * Stats structure  */
@@ -1363,12 +1378,23 @@ begin_comment
 comment|/*  * Define NFS_NPROCS as NFSV4_NPROCS for the experimental kernel code.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NFS_NPROCS
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|NFS_NPROCS
 value|NFSV4_NPROCS
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1445,7 +1471,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/nfsclient/nfsargs.h>
+file|<nfsclient/nfsargs.h>
 end_include
 
 begin_include
@@ -3382,53 +3408,6 @@ parameter_list|)
 value|((n)->nm_state |= NFSSTA_HASSETFSID)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|NFS4_ACL_EXTATTR_NAME
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NFSHASNFS4ACL
-parameter_list|(
-name|m
-parameter_list|)
-value|nfs_supportsnfsv4acls(m)
-end_define
-
-begin_function_decl
-name|int
-name|nfs_supportsnfsv4acls
-parameter_list|(
-name|struct
-name|mount
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NFSHASNFS4ACL
-parameter_list|(
-name|m
-parameter_list|)
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Gets the stats field out of the mount structure.  */
 end_comment
@@ -3589,7 +3568,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Define these for vnode lock/unlock ops.  */
+comment|/*  * Define these for vnode lock/unlock ops.  *  * These are good abstractions to macro out, so that they can be added to  * later, for debugging or stats, etc.  */
 end_comment
 
 begin_define
@@ -3600,8 +3579,6 @@ parameter_list|(
 name|v
 parameter_list|,
 name|f
-parameter_list|,
-name|p
 parameter_list|)
 value|vn_lock((v), (f))
 end_define
@@ -3614,8 +3591,6 @@ parameter_list|(
 name|v
 parameter_list|,
 name|f
-parameter_list|,
-name|p
 parameter_list|)
 value|VOP_UNLOCK((v), (f))
 end_define
@@ -3626,8 +3601,6 @@ directive|define
 name|NFSVOPISLOCKED
 parameter_list|(
 name|v
-parameter_list|,
-name|p
 parameter_list|)
 value|VOP_ISLOCKED((v))
 end_define

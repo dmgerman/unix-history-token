@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Id: port-linux.c,v 1.8 2010/03/01 04:52:50 dtucker Exp $ */
+comment|/* $Id: port-linux.c,v 1.16 2011/08/29 06:09:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -97,6 +97,24 @@ directive|include
 file|<selinux/get_context_list.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SSH_SELINUX_UNCONFINED_TYPE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|SSH_SELINUX_UNCONFINED_TYPE
+value|":unconfined_t:"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Wrapper around is_selinux_enabled() to log its return value once only */
 end_comment
@@ -125,8 +143,12 @@ condition|)
 block|{
 name|enabled
 operator|=
+operator|(
 name|is_selinux_enabled
 argument_list|()
+operator|==
+literal|1
+operator|)
 expr_stmt|;
 name|debug
 argument_list|(
@@ -659,6 +681,22 @@ decl_stmt|,
 modifier|*
 name|cx
 decl_stmt|;
+name|void
+function_decl|(
+modifier|*
+name|switchlog
+function_decl|)
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+init|=
+name|logit
+function_decl|;
 if|if
 condition|(
 operator|!
@@ -737,6 +775,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Check whether we are attempting to switch away from an unconfined 	 * security context. 	 */
+if|if
+condition|(
+name|strncmp
+argument_list|(
+name|cx
+argument_list|,
+name|SSH_SELINUX_UNCONFINED_TYPE
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|SSH_SELINUX_UNCONFINED_TYPE
+argument_list|)
+operator|-
+literal|1
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|switchlog
+operator|=
+name|debug3
+expr_stmt|;
 name|newlen
 operator|=
 name|strlen
@@ -832,11 +893,15 @@ argument_list|)
 operator|<
 literal|0
 condition|)
-name|logit
+name|switchlog
 argument_list|(
-literal|"%s: setcon failed with %s"
+literal|"%s: setcon %s from %s failed with %s"
 argument_list|,
 name|__func__
+argument_list|,
+name|newctx
+argument_list|,
+name|oldctx
 argument_list|,
 name|strerror
 argument_list|(
@@ -857,6 +922,62 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|ssh_selinux_setfscreatecon
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{
+name|security_context_t
+name|context
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|ssh_selinux_enabled
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
+name|path
+operator|==
+name|NULL
+condition|)
+block|{
+name|setfscreatecon
+argument_list|(
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|matchpathcon
+argument_list|(
+name|path
+argument_list|,
+literal|0700
+argument_list|,
+operator|&
+name|context
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|setfscreatecon
+argument_list|(
+name|context
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
@@ -872,23 +993,9 @@ directive|ifdef
 name|LINUX_OOM_ADJUST
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|OOM_ADJ_PATH
-value|"/proc/self/oom_adj"
-end_define
-
 begin_comment
-comment|/*  * The magic "don't kill me", as documented in eg:  * http://lxr.linux.no/#linux+v2.6.32/Documentation/filesystems/proc.txt  */
+comment|/*  * The magic "don't kill me" values, old and new, as documented in eg:  * http://lxr.linux.no/#linux+v2.6.32/Documentation/filesystems/proc.txt  * http://lxr.linux.no/#linux+v2.6.36/Documentation/filesystems/proc.txt  */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|OOM_ADJ_NOKILL
-value|-17
-end_define
 
 begin_decl_stmt
 specifier|static
@@ -898,6 +1005,56 @@ init|=
 name|INT_MIN
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|oom_adj_path
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+block|{
+name|char
+modifier|*
+name|path
+decl_stmt|;
+name|int
+name|value
+decl_stmt|;
+block|}
+name|oom_adjust
+index|[]
+init|=
+block|{
+block|{
+literal|"/proc/self/oom_score_adj"
+block|,
+operator|-
+literal|1000
+block|}
+block|,
+comment|/* kernels>= 2.6.36 */
+block|{
+literal|"/proc/self/oom_adj"
+block|,
+operator|-
+literal|17
+block|}
+block|,
+comment|/* kernels<= 2.6.35 */
+block|{
+name|NULL
+block|,
+literal|0
+block|}
+block|, }
+struct|;
+end_struct
 
 begin_comment
 comment|/*  * Tell the kernel's out-of-memory killer to avoid sshd.  * Returns the previous oom_adj value or zero.  */
@@ -910,6 +1067,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|,
+name|value
+decl_stmt|;
 name|FILE
 modifier|*
 name|fp
@@ -921,6 +1083,43 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|oom_adjust
+index|[
+name|i
+index|]
+operator|.
+name|path
+operator|!=
+name|NULL
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|oom_adj_path
+operator|=
+name|oom_adjust
+index|[
+name|i
+index|]
+operator|.
+name|path
+expr_stmt|;
+name|value
+operator|=
+name|oom_adjust
+index|[
+name|i
+index|]
+operator|.
+name|value
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -928,7 +1127,7 @@ name|fp
 operator|=
 name|fopen
 argument_list|(
-name|OOM_ADJ_PATH
+name|oom_adj_path
 argument_list|,
 literal|"r+"
 argument_list|)
@@ -955,7 +1154,7 @@ name|verbose
 argument_list|(
 literal|"error reading %s: %s"
 argument_list|,
-name|OOM_ADJ_PATH
+name|oom_adj_path
 argument_list|,
 name|strerror
 argument_list|(
@@ -978,7 +1177,7 @@ name|fp
 argument_list|,
 literal|"%d\n"
 argument_list|,
-name|OOM_ADJ_NOKILL
+name|value
 argument_list|)
 operator|<=
 literal|0
@@ -987,7 +1186,7 @@ name|verbose
 argument_list|(
 literal|"error writing %s: %s"
 argument_list|,
-name|OOM_ADJ_PATH
+name|oom_adj_path
 argument_list|,
 name|strerror
 argument_list|(
@@ -1000,11 +1199,11 @@ name|verbose
 argument_list|(
 literal|"Set %s from %d to %d"
 argument_list|,
-name|OOM_ADJ_PATH
+name|oom_adj_path
 argument_list|,
 name|oom_adj_save
 argument_list|,
-name|OOM_ADJ_NOKILL
+name|value
 argument_list|)
 expr_stmt|;
 block|}
@@ -1013,7 +1212,13 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
+block|}
+name|oom_adj_path
+operator|=
+name|NULL
+expr_stmt|;
 block|}
 end_function
 
@@ -1045,12 +1250,16 @@ name|oom_adj_save
 operator|==
 name|INT_MIN
 operator|||
+name|oom_adj_path
+operator|==
+name|NULL
+operator|||
 operator|(
 name|fp
 operator|=
 name|fopen
 argument_list|(
-name|OOM_ADJ_PATH
+name|oom_adj_path
 argument_list|,
 literal|"w"
 argument_list|)
@@ -1076,7 +1285,7 @@ name|verbose
 argument_list|(
 literal|"error writing %s: %s"
 argument_list|,
-name|OOM_ADJ_PATH
+name|oom_adj_path
 argument_list|,
 name|strerror
 argument_list|(
@@ -1089,7 +1298,7 @@ name|verbose
 argument_list|(
 literal|"Set %s to %d"
 argument_list|,
-name|OOM_ADJ_PATH
+name|oom_adj_path
 argument_list|,
 name|oom_adj_save
 argument_list|)

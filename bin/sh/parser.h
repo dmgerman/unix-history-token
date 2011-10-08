@@ -11,28 +11,28 @@ begin_define
 define|#
 directive|define
 name|CTLESC
-value|'\201'
+value|'\300'
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTLVAR
-value|'\202'
+value|'\301'
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTLENDVAR
-value|'\203'
+value|'\371'
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTLBACKQ
-value|'\204'
+value|'\372'
 end_define
 
 begin_define
@@ -54,28 +54,28 @@ begin_define
 define|#
 directive|define
 name|CTLARI
-value|'\206'
+value|'\374'
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTLENDARI
-value|'\207'
+value|'\375'
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTLQUOTEMARK
-value|'\210'
+value|'\376'
 end_define
 
 begin_define
 define|#
 directive|define
 name|CTLQUOTEEND
-value|'\211'
+value|'\377'
 end_define
 
 begin_comment
@@ -335,11 +335,34 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|isassignment
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|getprompt
 parameter_list|(
 name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|expandstr
+parameter_list|(
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

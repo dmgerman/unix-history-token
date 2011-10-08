@@ -196,9 +196,6 @@ name|LanguageID
 name|builtin_lang
 decl_stmt|;
 name|bool
-name|Suppressed
-decl_stmt|;
-name|bool
 name|operator
 operator|==
 operator|(

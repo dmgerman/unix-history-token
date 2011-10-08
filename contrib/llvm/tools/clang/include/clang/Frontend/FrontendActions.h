@@ -128,25 +128,6 @@ argument_list|)
 block|; }
 block|;
 name|class
-name|ASTPrintXMLAction
-operator|:
-name|public
-name|ASTFrontendAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
-argument_list|)
-block|; }
-block|;
-name|class
 name|ASTDumpAction
 operator|:
 name|public
@@ -314,25 +295,6 @@ name|true
 return|;
 block|}
 expr|}
-block|;
-name|class
-name|BoostConAction
-operator|:
-name|public
-name|SyntaxOnlyAction
-block|{
-name|protected
-operator|:
-name|virtual
-name|ASTConsumer
-operator|*
-name|CreateASTConsumer
-argument_list|(
-argument|CompilerInstance&CI
-argument_list|,
-argument|llvm::StringRef InFile
-argument_list|)
-block|; }
 block|;
 comment|/**  * \brief Frontend action adaptor that merges ASTs together.  *  * This action takes an existing AST file and "merges" it into the AST  * context, producing a merged context. This action is an action  * adaptor, which forwards most of its calls to another action that  * will consume the merged context.  */
 name|class

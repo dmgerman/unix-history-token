@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -644,6 +650,8 @@ argument_list|,
 name|addsockarg
 operator|.
 name|sock
+argument_list|,
+name|CAP_SOCK_ALL
 argument_list|,
 operator|&
 name|fp
@@ -1752,9 +1760,6 @@ modifier|*
 name|args
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|KGSSAPI
 name|char
 name|principal
 index|[
@@ -1764,11 +1769,6 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KGSSAPI
 if|if
 condition|(
 name|args
@@ -1832,8 +1832,6 @@ literal|4
 argument_list|)
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 comment|/* 	 * Only the first nfsd actually does any work.  The RPC code 	 * adds threads to it as needed.  Any extra processes offered 	 * by nfsd just exit.  If nfsd is new enough, it will call us 	 * once with a structure that specifies how many threads to 	 * use. 	 */
 name|NFSD_LOCK
 argument_list|()
@@ -1851,10 +1849,7 @@ expr_stmt|;
 name|NFSD_UNLOCK
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KGSSAPI
-name|rpc_gss_set_svc_name
+name|rpc_gss_set_svc_name_call
 argument_list|(
 name|principal
 argument_list|,
@@ -1867,7 +1862,7 @@ argument_list|,
 name|NFS_VER2
 argument_list|)
 expr_stmt|;
-name|rpc_gss_set_svc_name
+name|rpc_gss_set_svc_name_call
 argument_list|(
 name|principal
 argument_list|,
@@ -1880,8 +1875,6 @@ argument_list|,
 name|NFS_VER3
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|args
@@ -1924,25 +1917,20 @@ argument_list|(
 name|nfsrv_pool
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KGSSAPI
-name|rpc_gss_clear_svc_name
+name|rpc_gss_clear_svc_name_call
 argument_list|(
 name|NFS_PROG
 argument_list|,
 name|NFS_VER2
 argument_list|)
 expr_stmt|;
-name|rpc_gss_clear_svc_name
+name|rpc_gss_clear_svc_name_call
 argument_list|(
 name|NFS_PROG
 argument_list|,
 name|NFS_VER3
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|NFSD_LOCK
 argument_list|()
 expr_stmt|;

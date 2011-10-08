@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/consio.h>
 end_include
 
@@ -2178,6 +2184,8 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_IOCTL
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -2928,7 +2936,7 @@ name|TIOCGWINSZ
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -2952,7 +2960,7 @@ name|TIOCSWINSZ
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3040,7 +3048,7 @@ name|data
 expr_stmt|;
 name|error
 operator|=
-name|setpgid
+name|sys_setpgid
 argument_list|(
 name|td
 argument_list|,
@@ -3193,7 +3201,7 @@ expr_stmt|;
 comment|/* printf("ioctl KDGKBMODE = %x\n", uap->cmd);*/
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3218,7 +3226,7 @@ name|KDSKBMODE
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3243,7 +3251,7 @@ name|KDMKTONE
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3268,7 +3276,7 @@ name|KDGETMODE
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3293,7 +3301,7 @@ name|KDSETMODE
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3318,7 +3326,7 @@ name|KDSBORDER
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3342,7 +3350,7 @@ name|KDGKBSTATE
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3366,7 +3374,7 @@ name|KDSETRAD
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3391,7 +3399,7 @@ name|KDENABIO
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3416,7 +3424,7 @@ name|KDDISABIO
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3441,7 +3449,7 @@ name|KIOCSOUND
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3466,7 +3474,7 @@ name|KDGKBTYPE
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3491,7 +3499,7 @@ name|KDGETLED
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3516,7 +3524,7 @@ name|KDSETLED
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3542,7 +3550,7 @@ name|GETFKEY
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3567,7 +3575,7 @@ name|SETFKEY
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3592,7 +3600,7 @@ name|GIO_SCRNMAP
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3617,7 +3625,7 @@ name|PIO_SCRNMAP
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3638,11 +3646,11 @@ name|uap
 operator|->
 name|cmd
 operator|=
-name|GIO_KEYMAP
+name|OGIO_KEYMAP
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3663,11 +3671,11 @@ name|uap
 operator|->
 name|cmd
 operator|=
-name|PIO_KEYMAP
+name|OPIO_KEYMAP
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,
@@ -3714,7 +3722,7 @@ name|FIONREAD
 expr_stmt|;
 name|error
 operator|=
-name|ioctl
+name|sys_ioctl
 argument_list|(
 name|td
 argument_list|,

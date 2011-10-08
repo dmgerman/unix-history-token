@@ -263,11 +263,15 @@ specifier|const
 block|;
 name|std
 operator|::
-name|vector
+name|pair
 operator|<
 name|unsigned
+block|,
+specifier|const
+name|TargetRegisterClass
+operator|*
 operator|>
-name|getRegClassForInlineAsmConstraint
+name|getRegForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,
@@ -290,15 +294,6 @@ name|bool
 name|isOffsetFoldingLegal
 argument_list|(
 argument|const GlobalAddressSDNode *GA
-argument_list|)
-specifier|const
-block|;
-comment|/// getFunctionAlignment - Return the Log2 alignment of this function.
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
 argument_list|)
 specifier|const
 block|;

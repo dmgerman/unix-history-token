@@ -64,12 +64,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<vector>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string>
 end_include
 

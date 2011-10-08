@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/racct.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/resourcevar.h>
 end_include
 
@@ -2341,6 +2347,15 @@ name|p_cpulimit
 operator|=
 name|RLIM_INFINITY
 expr_stmt|;
+comment|/* Initialize resource accounting structures. */
+name|racct_create
+argument_list|(
+operator|&
+name|p
+operator|->
+name|p_racct
+argument_list|)
+expr_stmt|;
 name|p
 operator|->
 name|p_stats
@@ -2442,6 +2457,25 @@ argument_list|,
 literal|1
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|racct_add_force
+argument_list|(
+name|p
+argument_list|,
+name|RACCT_NPROC
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|PROC_UNLOCK
+argument_list|(
+name|p
 argument_list|)
 expr_stmt|;
 block|}
@@ -3338,7 +3372,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|execve
+name|sys_execve
 argument_list|(
 name|td
 argument_list|,
@@ -3442,6 +3476,10 @@ literal|0
 argument_list|,
 operator|&
 name|initproc
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

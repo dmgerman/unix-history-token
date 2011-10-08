@@ -147,9 +147,15 @@ block|,
 name|TST_decltype
 block|,
 comment|// C++0x decltype
+name|TST_underlyingType
+block|,
+comment|// __underlying_type for C++0x
 name|TST_auto
 block|,
 comment|// C++0x auto
+name|TST_unknown_anytype
+block|,
+comment|// __unknown_anytype extension
 name|TST_error
 comment|// erroneous type
 block|}
@@ -205,7 +211,7 @@ comment|/// currently following the C++0x scheme.
 enum|enum
 name|ExprValueKind
 block|{
-comment|/// An r-value expression (a gr-value in the C++0x taxonomy)
+comment|/// An r-value expression (a pr-value in the C++0x taxonomy)
 comment|/// produces a temporary value.
 name|VK_RValue
 block|,

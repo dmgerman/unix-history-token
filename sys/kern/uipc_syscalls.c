@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_capsicum.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_inet.h"
 end_include
 
@@ -57,6 +63,12 @@ begin_include
 include|#
 directive|include
 file|<sys/systm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/capability.h>
 end_include
 
 begin_include
@@ -560,13 +572,13 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Convert a user file descriptor to a kernel file entry.  A reference on the  * file entry is held upon returning.  This is lighter weight than  * fgetsock(), which bumps the socket reference drops the file reference  * count instead, as this approach avoids several additional mutex operations  * associated with the additional reference count.  If requested, return the  * open file flags.  */
+comment|/*  * Convert a user file descriptor to a kernel file entry and check that, if  * it is a capability, the right rights are present. A reference on the file  * entry is held upon returning.  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|getsock
+name|getsock_cap
 parameter_list|(
 name|struct
 name|filedesc
@@ -575,6 +587,9 @@ name|fdp
 parameter_list|,
 name|int
 name|fd
+parameter_list|,
+name|cap_rights_t
+name|rights
 parameter_list|,
 name|struct
 name|file
@@ -592,19 +607,32 @@ name|file
 modifier|*
 name|fp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+name|struct
+name|file
+modifier|*
+name|fp_fromcap
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+endif|#
+directive|endif
 name|fp
 operator|=
 name|NULL
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|fdp
 operator|==
 name|NULL
+operator|)
 operator|||
+operator|(
 operator|(
 name|fp
 operator|=
@@ -617,14 +645,74 @@ argument_list|)
 operator|)
 operator|==
 name|NULL
+operator|)
 condition|)
-block|{
+return|return
+operator|(
+name|EBADF
+operator|)
+return|;
+ifdef|#
+directive|ifdef
+name|CAPABILITIES
+comment|/* 	 * If the file descriptor is for a capability, test rights and use 	 * the file descriptor referenced by the capability. 	 */
 name|error
 operator|=
-name|EBADF
+name|cap_funwrap
+argument_list|(
+name|fp
+argument_list|,
+name|rights
+argument_list|,
+operator|&
+name|fp_fromcap
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+block|{
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|fp
+operator|!=
+name|fp_fromcap
+condition|)
+block|{
+name|fhold
+argument_list|(
+name|fp_fromcap
+argument_list|)
+expr_stmt|;
+name|fdrop
+argument_list|(
+name|fp
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+name|fp
+operator|=
+name|fp_fromcap
 expr_stmt|;
 block|}
-elseif|else
+endif|#
+directive|endif
+comment|/* CAPABILITIES */
 if|if
 condition|(
 name|fp
@@ -641,17 +729,12 @@ argument_list|,
 name|curthread
 argument_list|)
 expr_stmt|;
-name|fp
-operator|=
-name|NULL
-expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|ENOTSOCK
-expr_stmt|;
+operator|)
+return|;
 block|}
-else|else
-block|{
 if|if
 condition|(
 name|fflagp
@@ -665,11 +748,6 @@ name|fp
 operator|->
 name|f_flag
 expr_stmt|;
-name|error
-operator|=
-literal|0
-expr_stmt|;
-block|}
 operator|*
 name|fpp
 operator|=
@@ -677,7 +755,7 @@ name|fp
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -709,7 +787,7 @@ end_endif
 
 begin_function
 name|int
-name|socket
+name|sys_socket
 parameter_list|(
 name|td
 parameter_list|,
@@ -816,6 +894,8 @@ name|fp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -920,7 +1000,7 @@ end_comment
 
 begin_function
 name|int
-name|bind
+name|sys_bind
 parameter_list|(
 name|td
 parameter_list|,
@@ -1045,7 +1125,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -1054,6 +1134,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_BIND
 argument_list|,
 operator|&
 name|fp
@@ -1151,7 +1233,7 @@ end_comment
 
 begin_function
 name|int
-name|listen
+name|sys_listen
 parameter_list|(
 name|td
 parameter_list|,
@@ -1191,7 +1273,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -1202,6 +1284,8 @@ argument_list|,
 name|uap
 operator|->
 name|s
+argument_list|,
+name|CAP_LISTEN
 argument_list|,
 operator|&
 name|fp
@@ -1654,11 +1738,13 @@ name|p_fd
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|fdp
 argument_list|,
 name|s
+argument_list|,
+name|CAP_ACCEPT
 argument_list|,
 operator|&
 name|headfp
@@ -1739,6 +1825,8 @@ name|nfp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2292,7 +2380,7 @@ end_function
 
 begin_function
 name|int
-name|accept
+name|sys_accept
 parameter_list|(
 name|td
 parameter_list|,
@@ -2379,7 +2467,7 @@ end_comment
 
 begin_function
 name|int
-name|connect
+name|sys_connect
 parameter_list|(
 name|td
 parameter_list|,
@@ -2507,7 +2595,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -2516,6 +2604,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_CONNECT
 argument_list|,
 operator|&
 name|fp
@@ -2939,6 +3029,8 @@ name|fp1
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2973,6 +3065,8 @@ name|fp2
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -3180,7 +3274,7 @@ end_function
 
 begin_function
 name|int
-name|socketpair
+name|sys_socketpair
 parameter_list|(
 name|struct
 name|thread
@@ -3332,6 +3426,31 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CAPABILITY_MODE
+if|if
+condition|(
+name|IN_CAPABILITY_MODE
+argument_list|(
+name|td
+argument_list|)
+operator|&&
+operator|(
+name|mp
+operator|->
+name|msg_name
+operator|!=
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|ECAPMODE
+operator|)
+return|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|mp
@@ -3627,6 +3746,9 @@ name|len
 decl_stmt|,
 name|error
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|KTRACE
@@ -3644,9 +3766,25 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|rights
+operator|=
+name|CAP_WRITE
+expr_stmt|;
+if|if
+condition|(
+name|mp
+operator|->
+name|msg_name
+operator|!=
+name|NULL
+condition|)
+name|rights
+operator||=
+name|CAP_CONNECT
+expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -3655,6 +3793,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|s
+argument_list|,
+name|rights
 argument_list|,
 operator|&
 name|fp
@@ -3682,6 +3822,33 @@ name|fp
 operator|->
 name|f_data
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTRACE
+if|if
+condition|(
+name|mp
+operator|->
+name|msg_name
+operator|!=
+name|NULL
+operator|&&
+name|KTRPOINT
+argument_list|(
+name|td
+argument_list|,
+name|KTR_STRUCT
+argument_list|)
+condition|)
+name|ktrsockaddr
+argument_list|(
+name|mp
+operator|->
+name|msg_name
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|MAC
@@ -4034,7 +4201,7 @@ end_function
 
 begin_function
 name|int
-name|sendto
+name|sys_sendto
 parameter_list|(
 name|td
 parameter_list|,
@@ -4405,7 +4572,7 @@ end_endif
 
 begin_function
 name|int
-name|sendmsg
+name|sys_sendmsg
 parameter_list|(
 name|td
 parameter_list|,
@@ -4654,7 +4821,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -4663,6 +4830,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|s
+argument_list|,
+name|CAP_READ
 argument_list|,
 operator|&
 name|fp
@@ -5495,7 +5664,7 @@ end_function
 
 begin_function
 name|int
-name|recvfrom
+name|sys_recvfrom
 parameter_list|(
 name|td
 parameter_list|,
@@ -5681,7 +5850,7 @@ name|MSG_COMPAT
 expr_stmt|;
 return|return
 operator|(
-name|recvfrom
+name|sys_recvfrom
 argument_list|(
 name|td
 argument_list|,
@@ -5994,7 +6163,7 @@ end_endif
 
 begin_function
 name|int
-name|recvmsg
+name|sys_recvmsg
 parameter_list|(
 name|td
 parameter_list|,
@@ -6180,7 +6349,7 @@ end_comment
 
 begin_function
 name|int
-name|shutdown
+name|sys_shutdown
 parameter_list|(
 name|td
 parameter_list|,
@@ -6220,7 +6389,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -6231,6 +6400,8 @@ argument_list|,
 name|uap
 operator|->
 name|s
+argument_list|,
+name|CAP_SHUTDOWN
 argument_list|,
 operator|&
 name|fp
@@ -6284,7 +6455,7 @@ end_comment
 
 begin_function
 name|int
-name|setsockopt
+name|sys_setsockopt
 parameter_list|(
 name|td
 parameter_list|,
@@ -6494,7 +6665,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -6503,6 +6674,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|s
+argument_list|,
+name|CAP_SETSOCKOPT
 argument_list|,
 operator|&
 name|fp
@@ -6555,7 +6728,7 @@ end_comment
 
 begin_function
 name|int
-name|getsockopt
+name|sys_getsockopt
 parameter_list|(
 name|td
 parameter_list|,
@@ -6838,7 +7011,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -6847,6 +7020,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|s
+argument_list|,
+name|CAP_GETSOCKOPT
 argument_list|,
 operator|&
 name|fp
@@ -7141,7 +7316,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -7150,6 +7325,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_GETSOCKNAME
 argument_list|,
 operator|&
 name|fp
@@ -7305,7 +7482,7 @@ end_function
 
 begin_function
 name|int
-name|getsockname
+name|sys_getsockname
 parameter_list|(
 name|td
 parameter_list|,
@@ -7627,7 +7804,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -7636,6 +7813,8 @@ operator|->
 name|p_fd
 argument_list|,
 name|fd
+argument_list|,
+name|CAP_GETPEERNAME
 argument_list|,
 operator|&
 name|fp
@@ -7818,7 +7997,7 @@ end_function
 
 begin_function
 name|int
-name|getpeername
+name|sys_getpeername
 parameter_list|(
 name|td
 parameter_list|,
@@ -8449,7 +8628,7 @@ end_comment
 
 begin_function
 name|int
-name|sendfile
+name|sys_sendfile
 parameter_list|(
 name|struct
 name|thread
@@ -8898,6 +9077,8 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_READ
+argument_list|,
 operator|&
 name|vp
 argument_list|)
@@ -9042,7 +9223,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -9053,6 +9234,8 @@ argument_list|,
 name|uap
 operator|->
 name|s
+argument_list|,
+name|CAP_WRITE
 argument_list|,
 operator|&
 name|sock_fp
@@ -10635,7 +10818,7 @@ end_comment
 
 begin_function
 name|int
-name|sctp_peeloff
+name|sys_sctp_peeloff
 parameter_list|(
 name|td
 parameter_list|,
@@ -10725,6 +10908,8 @@ name|uap
 operator|->
 name|sd
 argument_list|,
+name|CAP_PEELOFF
+argument_list|,
 operator|&
 name|head
 argument_list|,
@@ -10772,6 +10957,8 @@ name|nfp
 argument_list|,
 operator|&
 name|fd
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -11013,7 +11200,7 @@ end_function
 
 begin_function
 name|int
-name|sctp_generic_sendmsg
+name|sys_sctp_generic_sendmsg
 parameter_list|(
 name|td
 parameter_list|,
@@ -11107,6 +11294,9 @@ index|[
 literal|1
 index|]
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 if|if
 condition|(
 name|uap
@@ -11146,6 +11336,10 @@ operator|&
 name|sinfo
 expr_stmt|;
 block|}
+name|rights
+operator|=
+name|CAP_WRITE
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -11182,6 +11376,10 @@ goto|goto
 name|sctp_bad2
 goto|;
 block|}
+name|rights
+operator||=
+name|CAP_CONNECT
+expr_stmt|;
 block|}
 name|AUDIT_ARG_FD
 argument_list|(
@@ -11192,7 +11390,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -11203,6 +11401,8 @@ argument_list|,
 name|uap
 operator|->
 name|sd
+argument_list|,
+name|rights
 argument_list|,
 operator|&
 name|fp
@@ -11578,7 +11778,7 @@ end_function
 
 begin_function
 name|int
-name|sctp_generic_sendmsg_iov
+name|sys_sctp_generic_sendmsg_iov
 parameter_list|(
 name|td
 parameter_list|,
@@ -11675,6 +11875,9 @@ decl_stmt|,
 modifier|*
 name|tiov
 decl_stmt|;
+name|cap_rights_t
+name|rights
+decl_stmt|;
 if|if
 condition|(
 name|uap
@@ -11714,6 +11917,10 @@ operator|&
 name|sinfo
 expr_stmt|;
 block|}
+name|rights
+operator|=
+name|CAP_WRITE
+expr_stmt|;
 if|if
 condition|(
 name|uap
@@ -11750,6 +11957,10 @@ goto|goto
 name|sctp_bad2
 goto|;
 block|}
+name|rights
+operator||=
+name|CAP_CONNECT
+expr_stmt|;
 block|}
 name|AUDIT_ARG_FD
 argument_list|(
@@ -11760,7 +11971,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -11771,6 +11982,8 @@ argument_list|,
 name|uap
 operator|->
 name|sd
+argument_list|,
+name|rights
 argument_list|,
 operator|&
 name|fp
@@ -12239,7 +12452,7 @@ end_function
 
 begin_function
 name|int
-name|sctp_generic_recvmsg
+name|sys_sctp_generic_recvmsg
 parameter_list|(
 name|td
 parameter_list|,
@@ -12350,7 +12563,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|getsock
+name|getsock_cap
 argument_list|(
 name|td
 operator|->
@@ -12361,6 +12574,8 @@ argument_list|,
 name|uap
 operator|->
 name|sd
+argument_list|,
+name|CAP_READ
 argument_list|,
 operator|&
 name|fp

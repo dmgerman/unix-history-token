@@ -330,6 +330,35 @@ begin_comment
 comment|/* oid is being removed */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CTLFLAG_CAPRD
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* Can be read in capability mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLFLAG_CAPWR
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* Can be written in capability mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CTLFLAG_CAPRW
+value|(CTLFLAG_CAPRD|CTLFLAG_CAPWR)
+end_define
+
 begin_comment
 comment|/*  * Secure level.   Note that CTLFLAG_SECURE == CTLFLAG_SECURE1.    *  * Secure when the securelevel is raised to at least N.  */
 end_comment
@@ -1737,7 +1766,7 @@ parameter_list|,
 name|desc
 parameter_list|)
 define|\
-value|SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD, 0, 1, desc)
+value|SYSCTL_INT(_kern_features, OID_AUTO, name, CTLFLAG_RD | CTLFLAG_CAPRD, \ 	    0, 1, desc)
 end_define
 
 begin_endif

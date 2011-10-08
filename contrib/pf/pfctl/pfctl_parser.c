@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: pfctl_parser.c,v 1.234 2006/10/31 23:46:24 mcbride Exp $ */
+comment|/*	$OpenBSD: pfctl_parser.c,v 1.240 2008/06/10 20:55:02 mcbride Exp $ */
 end_comment
 
 begin_comment
@@ -126,12 +126,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netdb.h>
 end_include
 
@@ -207,6 +201,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -256,6 +252,8 @@ parameter_list|,
 name|u_int8_t
 parameter_list|,
 name|u_int8_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)
@@ -1954,6 +1952,9 @@ specifier|const
 name|char
 modifier|*
 name|proto
+parameter_list|,
+name|int
+name|numeric
 parameter_list|)
 block|{
 name|char
@@ -1972,6 +1973,11 @@ name|servent
 modifier|*
 name|s
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|numeric
+condition|)
 name|s
 operator|=
 name|getservbyport
@@ -1980,6 +1986,11 @@ name|p1
 argument_list|,
 name|proto
 argument_list|)
+expr_stmt|;
+else|else
+name|s
+operator|=
+name|NULL
 expr_stmt|;
 name|p1
 operator|=
@@ -2247,6 +2258,9 @@ name|proto
 parameter_list|,
 name|int
 name|verbose
+parameter_list|,
+name|int
+name|numeric
 parameter_list|)
 block|{
 name|char
@@ -2431,6 +2445,8 @@ condition|?
 literal|"tcp"
 else|:
 literal|"udp"
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 if|if
@@ -2517,6 +2533,8 @@ condition|?
 literal|"tcp"
 else|:
 literal|"udp"
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 block|}
@@ -3072,6 +3090,7 @@ name|since
 condition|)
 block|{
 name|unsigned
+name|int
 name|sec
 decl_stmt|,
 name|min
@@ -3725,8 +3744,10 @@ index|[
 name|i
 index|]
 argument_list|,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
 operator|(
-name|unsigned
 name|long
 name|long
 operator|)
@@ -3738,6 +3759,18 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|s
+operator|->
+name|scounters
+index|[
+name|i
+index|]
+block|)
+empty_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|runtime
@@ -3774,11 +3807,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+end_function
+
+begin_expr_stmt
 name|printf
 argument_list|(
 literal|"Counters\n"
 argument_list|)
 expr_stmt|;
+end_expr_stmt
+
+begin_for
 for|for
 control|(
 name|i
@@ -3850,6 +3889,9 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
+end_for
+
+begin_if
 if|if
 condition|(
 name|opts
@@ -3948,20 +3990,21 @@ literal|""
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-end_function
+end_if
 
-begin_macro
-unit|}  void
+begin_function
+unit|} }
+name|void
 name|print_src_node
-argument_list|(
-argument|struct pf_src_node *sn
-argument_list|,
-argument|int opts
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|pf_src_node
+modifier|*
+name|sn
+parameter_list|,
+name|int
+name|opts
+parameter_list|)
 block|{
 name|struct
 name|pf_addr_wrap
@@ -4404,7 +4447,7 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-end_block
+end_function
 
 begin_macro
 unit|}  void
@@ -4415,6 +4458,8 @@ argument_list|,
 argument|const char *anchor_call
 argument_list|,
 argument|int verbose
+argument_list|,
+argument|int numeric
 argument_list|)
 end_macro
 
@@ -5222,6 +5267,8 @@ operator|->
 name|proto
 argument_list|,
 name|verbose
+argument_list|,
+name|numeric
 argument_list|)
 expr_stmt|;
 if|if
@@ -6156,6 +6203,35 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|r
+operator|->
+name|rule_flag
+operator|&
+name|PFRULE_PFLOW
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|opts
+condition|)
+name|printf
+argument_list|(
+literal|", "
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"pflow"
+argument_list|)
+expr_stmt|;
+name|opts
+operator|=
+literal|0
+expr_stmt|;
+block|}
 for|for
 control|(
 name|i
@@ -6330,6 +6406,23 @@ argument_list|,
 name|r
 operator|->
 name|max_mss
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|->
+name|rule_flag
+operator|&
+name|PFRULE_SET_TOS
+condition|)
+name|printf
+argument_list|(
+literal|" set-tos 0x%2.2x"
+argument_list|,
+name|r
+operator|->
+name|set_tos
 argument_list|)
 expr_stmt|;
 if|if
@@ -6534,6 +6627,127 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|r
+operator|->
+name|divert
+operator|.
+name|port
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|printf
+argument_list|(
+literal|" divert-to %u"
+argument_list|,
+name|ntohs
+argument_list|(
+name|r
+operator|->
+name|divert
+operator|.
+name|port
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+if|if
+condition|(
+name|PF_AZERO
+argument_list|(
+operator|&
+name|r
+operator|->
+name|divert
+operator|.
+name|addr
+argument_list|,
+name|r
+operator|->
+name|af
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|" divert-reply"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* XXX cut&paste from print_addr */
+name|char
+name|buf
+index|[
+literal|48
+index|]
+decl_stmt|;
+name|printf
+argument_list|(
+literal|" divert-to "
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|inet_ntop
+argument_list|(
+name|r
+operator|->
+name|af
+argument_list|,
+operator|&
+name|r
+operator|->
+name|divert
+operator|.
+name|addr
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|printf
+argument_list|(
+literal|"?"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|buf
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" port %u"
+argument_list|,
+name|ntohs
+argument_list|(
+name|r
+operator|->
+name|divert
+operator|.
+name|port
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
+block|}
+if|if
+condition|(
 operator|!
 name|anchor_call
 index|[
@@ -6665,6 +6879,17 @@ condition|)
 name|printf
 argument_list|(
 literal|" persist"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|PFR_TFLAG_COUNTERS
+condition|)
+name|printf
+argument_list|(
+literal|" counters"
 argument_list|)
 expr_stmt|;
 name|SIMPLEQ_FOREACH

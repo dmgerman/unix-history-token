@@ -160,6 +160,40 @@ name|OS
 argument_list|)
 block|; }
 decl_stmt|;
+name|class
+name|ClangDiagsIndexNameEmitter
+range|:
+name|public
+name|TableGenBackend
+block|{
+name|RecordKeeper
+operator|&
+name|Records
+block|;
+name|public
+operator|:
+name|explicit
+name|ClangDiagsIndexNameEmitter
+argument_list|(
+name|RecordKeeper
+operator|&
+name|R
+argument_list|)
+operator|:
+name|Records
+argument_list|(
+argument|R
+argument_list|)
+block|{}
+name|void
+name|run
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

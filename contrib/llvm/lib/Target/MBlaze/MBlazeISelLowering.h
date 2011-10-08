@@ -327,14 +327,6 @@ argument|EVT VT
 argument_list|)
 specifier|const
 block|;
-name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|;
 name|private
 operator|:
 comment|// Subtarget Info
@@ -562,20 +554,6 @@ name|TargetRegisterClass
 operator|*
 operator|>
 name|getRegForInlineAsmConstraint
-argument_list|(
-argument|const std::string&Constraint
-argument_list|,
-argument|EVT VT
-argument_list|)
-specifier|const
-block|;
-name|std
-operator|::
-name|vector
-operator|<
-name|unsigned
-operator|>
-name|getRegClassForInlineAsmConstraint
 argument_list|(
 argument|const std::string&Constraint
 argument_list|,

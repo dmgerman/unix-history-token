@@ -1709,15 +1709,6 @@ operator|->
 name|age_miibus
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|->
-name|mii_instance
-operator|!=
-literal|0
-condition|)
-block|{
 name|LIST_FOREACH
 argument_list|(
 argument|miisc
@@ -1726,12 +1717,11 @@ argument|&mii->mii_phys
 argument_list|,
 argument|mii_list
 argument_list|)
-name|mii_phy_reset
+name|PHY_RESET
 argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
-block|}
 name|error
 operator|=
 name|mii_mediachg
@@ -1921,7 +1911,7 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -3064,7 +3054,7 @@ block|}
 comment|/* Get DMA parameters from PCIe device control register. */
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -3350,7 +3340,7 @@ name|CSUM_TSO
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -5813,7 +5803,7 @@ goto|goto
 name|again
 goto|;
 block|}
-comment|/* 	 * Create Tx/Rx buffer parent tag. 	 * L1 supports full 64bit DMA addressing in Tx/Rx buffers 	 * so it needs separate parent DMA tag. 	 */
+comment|/* 	 * Create Tx/Rx buffer parent tag. 	 * L1 supports full 64bit DMA addressing in Tx/Rx buffers 	 * so it needs separate parent DMA tag. 	 * XXX 	 * It seems enabling 64bit DMA causes data corruption. Limit 	 * DMA address space to 32bit. 	 */
 name|error
 operator|=
 name|bus_dma_tag_create
@@ -5831,7 +5821,7 @@ argument_list|,
 literal|0
 argument_list|,
 comment|/* alignment, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -7148,7 +7138,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|sc
 operator|->
@@ -12622,6 +12612,23 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|age_cdata
+operator|.
+name|age_rx_ring_tag
+argument_list|,
+name|sc
+operator|->
+name|age_cdata
+operator|.
+name|age_rx_ring_map
+argument_list|,
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|prog
@@ -12753,6 +12760,23 @@ operator|.
 name|age_rr_cons
 operator|=
 name|rr_cons
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|age_cdata
+operator|.
+name|age_rx_ring_tag
+argument_list|,
+name|sc
+operator|->
+name|age_cdata
+operator|.
+name|age_rx_ring_map
+argument_list|,
+name|BUS_DMASYNC_PREWRITE
+argument_list|)
 expr_stmt|;
 comment|/* Sync descriptors. */
 name|bus_dmamap_sync
@@ -15320,8 +15344,6 @@ name|age_cdata
 operator|.
 name|age_rx_ring_map
 argument_list|,
-name|BUS_DMASYNC_PREREAD
-operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;

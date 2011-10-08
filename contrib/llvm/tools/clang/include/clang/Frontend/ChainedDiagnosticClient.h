@@ -175,6 +175,16 @@ argument_list|,
 argument|const DiagnosticInfo&Info
 argument_list|)
 block|{
+comment|// Default implementation (Warnings/errors count).
+name|DiagnosticClient
+operator|::
+name|HandleDiagnostic
+argument_list|(
+name|DiagLevel
+argument_list|,
+name|Info
+argument_list|)
+block|;
 name|Primary
 operator|->
 name|HandleDiagnostic

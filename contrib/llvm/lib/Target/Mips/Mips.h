@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/MipsMCTargetDesc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Target/TargetMachine.h"
 end_include
 
@@ -103,44 +109,30 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
-specifier|extern
-name|Target
-name|TheMipsTarget
-decl_stmt|;
-specifier|extern
-name|Target
-name|TheMipselTarget
-decl_stmt|;
+name|FunctionPass
+modifier|*
+name|createMipsExpandPseudoPass
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
+name|FunctionPass
+modifier|*
+name|createMipsEmitGPRestorePass
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
 begin_comment
 comment|// end namespace llvm;
 end_comment
-
-begin_comment
-comment|// Defines symbolic names for Mips registers.  This defines a mapping from
-end_comment
-
-begin_comment
-comment|// register name to register number.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"MipsGenRegisterNames.inc"
-end_include
-
-begin_comment
-comment|// Defines symbolic names for the Mips instructions.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"MipsGenInstrNames.inc"
-end_include
 
 begin_endif
 endif|#

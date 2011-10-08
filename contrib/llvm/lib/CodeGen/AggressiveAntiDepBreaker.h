@@ -110,7 +110,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetSubtarget.h"
+file|"llvm/Target/TargetSubtargetInfo.h"
 end_include
 
 begin_include
@@ -141,6 +141,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|RegisterClassInfo
+decl_stmt|;
 comment|/// Class AggressiveAntiDepState
 comment|/// Contains all the state necessary for anti-dep breaking.
 name|class
@@ -385,12 +388,10 @@ name|TargetRegisterInfo
 operator|*
 name|TRI
 block|;
-comment|/// AllocatableSet - The set of allocatable registers.
-comment|/// We'll be ignoring anti-dependencies on non-allocatable registers,
-comment|/// because they may not be safe to break.
 specifier|const
-name|BitVector
-name|AllocatableSet
+name|RegisterClassInfo
+operator|&
+name|RegClassInfo
 block|;
 comment|/// CriticalPathSet - The set of registers that should only be
 comment|/// renamed if they are on the critical path.
@@ -411,7 +412,12 @@ name|MachineFunction
 operator|&
 name|MFi
 argument_list|,
-name|TargetSubtarget
+specifier|const
+name|RegisterClassInfo
+operator|&
+name|RCI
+argument_list|,
+name|TargetSubtargetInfo
 operator|::
 name|RegClassVector
 operator|&
@@ -445,6 +451,8 @@ argument_list|,
 argument|MachineBasicBlock::iterator End
 argument_list|,
 argument|unsigned InsertPosIndex
+argument_list|,
+argument|DbgValueVector&DbgValues
 argument_list|)
 block|;
 comment|/// Observe - Update liveness information to account for the current
@@ -467,6 +475,7 @@ argument_list|()
 block|;
 name|private
 operator|:
+comment|/// Keep track of a position in the allocation order for each regclass.
 typedef|typedef
 name|std
 operator|::
@@ -476,9 +485,7 @@ specifier|const
 name|TargetRegisterClass
 operator|*
 operator|,
-name|TargetRegisterClass
-operator|::
-name|const_iterator
+name|unsigned
 operator|>
 name|RenameOrderType
 expr_stmt|;

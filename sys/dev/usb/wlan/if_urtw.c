@@ -506,8 +506,7 @@ end_define
 begin_decl_stmt
 specifier|static
 specifier|const
-name|struct
-name|usb_device_id
+name|STRUCT_USB_HOST_ID
 name|urtw_devs
 index|[]
 init|=
@@ -599,7 +598,7 @@ block|,
 block|{
 name|USB_VPI
 argument_list|(
-literal|0x1b75
+argument|USB_VENDOR_OVISLINK
 argument_list|,
 literal|0x8187
 argument_list|,

@@ -375,18 +375,23 @@ comment|/* number of aggregate frames RX'ed */
 name|u_int32_t
 name|ast_rx_halfgi
 decl_stmt|;
+comment|/* RX half-GI */
 name|u_int32_t
 name|ast_rx_2040
 decl_stmt|;
+comment|/* RX 40mhz frame */
 name|u_int32_t
 name|ast_rx_pre_crc_err
 decl_stmt|;
+comment|/* RX pre-delimiter CRC error */
 name|u_int32_t
 name|ast_rx_post_crc_err
 decl_stmt|;
+comment|/* RX post-delimiter CRC error */
 name|u_int32_t
 name|ast_rx_decrypt_busy_err
 decl_stmt|;
+comment|/* RX decrypt engine busy error */
 name|u_int32_t
 name|ast_rx_hi_rx_chain
 decl_stmt|;
@@ -395,9 +400,33 @@ name|ast_tx_htprotect
 decl_stmt|;
 comment|/* HT tx frames with protection */
 name|u_int32_t
+name|ast_rx_hitqueueend
+decl_stmt|;
+comment|/* RX hit descr queue end */
+name|u_int32_t
+name|ast_tx_timeout
+decl_stmt|;
+comment|/* Global TX timeout */
+name|u_int32_t
+name|ast_tx_cst
+decl_stmt|;
+comment|/* Carrier sense timeout */
+name|u_int32_t
+name|ast_tx_xtxop
+decl_stmt|;
+comment|/* tx exceeded TXOP */
+name|u_int32_t
+name|ast_tx_timerexpired
+decl_stmt|;
+comment|/* tx exceeded TX_TIMER */
+name|u_int32_t
+name|ast_tx_desccfgerr
+decl_stmt|;
+comment|/* tx desc cfg error */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|3
+literal|13
 index|]
 decl_stmt|;
 block|}
@@ -473,6 +502,13 @@ define|#
 directive|define
 name|SIOCGATHDIAG
 value|_IOWR('i', 138, struct ath_diag)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCGATHPHYERR
+value|_IOWR('i', 140, struct ath_diag)
 end_define
 
 begin_comment
@@ -581,6 +617,155 @@ block|}
 name|__packed
 struct|;
 end_struct
+
+begin_comment
+comment|/*  * DFS ioctl commands  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DFS_SET_THRESH
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_GET_THRESH
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_RADARDETECTS
+value|6
+end_define
+
+begin_comment
+comment|/*  * DFS ioctl parameter types  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_FIRPWR
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_RRSSI
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_HEIGHT
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_PRSSI
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_INBAND
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_NOL
+value|6
+end_define
+
+begin_comment
+comment|/* XXX not used in FreeBSD */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_RELSTEP_EN
+value|7
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_RELSTEP
+value|8
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_RELPWR_EN
+value|9
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_RELPWR
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_MAXLEN
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_USEFIR128
+value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_BLOCKRADAR
+value|13
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_MAXRSSI_EN
+value|14
+end_define
+
+begin_comment
+comment|/* FreeBSD-specific start at 32 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_ENABLE
+value|32
+end_define
+
+begin_define
+define|#
+directive|define
+name|DFS_PARAM_EN_EXTCH
+value|33
+end_define
 
 begin_endif
 endif|#

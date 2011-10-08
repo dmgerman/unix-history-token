@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: cd9660_write.c,v 1.13 2010/10/22 00:49:15 christos Exp $	*/
+comment|/*	$NetBSD: cd9660_write.c,v 1.14 2011/01/04 09:48:21 wiz Exp $	*/
 end_comment
 
 begin_comment
@@ -1115,6 +1115,16 @@ name|flags
 operator||=
 name|FI_WRITTEN
 expr_stmt|;
+if|if
+condition|(
+name|writenode
+operator|->
+name|node
+operator|->
+name|contents
+operator|==
+name|NULL
+condition|)
 name|cd9660_compute_full_filename
 argument_list|(
 name|writenode
@@ -1134,6 +1144,22 @@ name|writenode
 operator|->
 name|fileDataSector
 argument_list|,
+operator|(
+name|writenode
+operator|->
+name|node
+operator|->
+name|contents
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|writenode
+operator|->
+name|node
+operator|->
+name|contents
+else|:
 name|temp_file_name
 argument_list|)
 expr_stmt|;
@@ -1769,6 +1795,14 @@ argument_list|(
 name|buf
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|rf
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1802,6 +1836,14 @@ expr_stmt|;
 name|free
 argument_list|(
 name|buf
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|fclose
+argument_list|(
+name|rf
 argument_list|)
 expr_stmt|;
 return|return

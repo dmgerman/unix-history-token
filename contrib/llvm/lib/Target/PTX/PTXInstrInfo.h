@@ -68,19 +68,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/SelectionDAG.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/SelectionDAGNodes.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Target/TargetInstrInfo.h"
+end_include
+
+begin_define
+define|#
+directive|define
+name|GET_INSTRINFO_HEADER
+end_define
+
+begin_include
+include|#
+directive|include
+file|"PTXGenInstrInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -91,10 +91,19 @@ name|class
 name|PTXTargetMachine
 decl_stmt|;
 name|class
+name|MachineSDNode
+decl_stmt|;
+name|class
+name|SDValue
+decl_stmt|;
+name|class
+name|SelectionDAG
+decl_stmt|;
+name|class
 name|PTXInstrInfo
 range|:
 name|public
-name|TargetInstrInfoImpl
+name|PTXGenInstrInfo
 block|{
 name|private
 operator|:
@@ -182,6 +191,156 @@ argument|unsigned&DstSubIdx
 argument_list|)
 specifier|const
 block|;
+comment|// predicate support
+name|virtual
+name|bool
+name|isPredicated
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|isUnpredicatedTerminator
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|PredicateInstruction
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Pred
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|SubsumesPredicate
+argument_list|(
+argument|const SmallVectorImpl<MachineOperand>&Pred1
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Pred2
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|DefinesPredicate
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|std::vector<MachineOperand>&Pred
+argument_list|)
+specifier|const
+block|;
+comment|// PTX is fully-predicable
+name|virtual
+name|bool
+name|isPredicable
+argument_list|(
+argument|MachineInstr *MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// branch support
+name|virtual
+name|bool
+name|AnalyzeBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *&TBB
+argument_list|,
+argument|MachineBasicBlock *&FBB
+argument_list|,
+argument|SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|bool AllowModify = false
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|RemoveBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|unsigned
+name|InsertBranch
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock *TBB
+argument_list|,
+argument|MachineBasicBlock *FBB
+argument_list|,
+argument|const SmallVectorImpl<MachineOperand>&Cond
+argument_list|,
+argument|DebugLoc DL
+argument_list|)
+specifier|const
+block|;
+comment|// Memory operand folding for spills
+comment|// TODO: Implement this eventually and get rid of storeRegToStackSlot and
+comment|//       loadRegFromStackSlot.  Doing so will get rid of the "stack" registers
+comment|//       we currently use to spill, though I doubt the overall effect on ptxas
+comment|//       output will be large.  I have yet to see a case where ptxas is unable
+comment|//       to see through the "stack" register usage and hence generates
+comment|//       efficient code anyway.
+comment|// virtual MachineInstr* foldMemoryOperandImpl(MachineFunction&MF,
+comment|//                                             MachineInstr* MI,
+comment|//                                       const SmallVectorImpl<unsigned>&Ops,
+comment|//                                             int FrameIndex) const;
+name|virtual
+name|void
+name|storeRegToStackSlot
+argument_list|(
+argument|MachineBasicBlock& MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MII
+argument_list|,
+argument|unsigned SrcReg
+argument_list|,
+argument|bool isKill
+argument_list|,
+argument|int FrameIndex
+argument_list|,
+argument|const TargetRegisterClass* RC
+argument_list|,
+argument|const TargetRegisterInfo* TRI
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|loadRegFromStackSlot
+argument_list|(
+argument|MachineBasicBlock&MBB
+argument_list|,
+argument|MachineBasicBlock::iterator MII
+argument_list|,
+argument|unsigned DestReg
+argument_list|,
+argument|int FrameIdx
+argument_list|,
+argument|const TargetRegisterClass *RC
+argument_list|,
+argument|const TargetRegisterInfo *TRI
+argument_list|)
+specifier|const
+block|;
 comment|// static helper routines
 specifier|static
 name|MachineSDNode
@@ -198,67 +357,7 @@ argument|EVT VT
 argument_list|,
 argument|SDValue Op1
 argument_list|)
-block|{
-name|SDValue
-name|pred_reg
-operator|=
-name|DAG
-operator|->
-name|getRegister
-argument_list|(
-literal|0
-argument_list|,
-name|MVT
-operator|::
-name|i1
-argument_list|)
 block|;
-name|SDValue
-name|pred_imm
-operator|=
-name|DAG
-operator|->
-name|getTargetConstant
-argument_list|(
-literal|0
-argument_list|,
-name|MVT
-operator|::
-name|i32
-argument_list|)
-block|;
-name|SDValue
-name|ops
-index|[]
-operator|=
-block|{
-name|Op1
-block|,
-name|pred_reg
-block|,
-name|pred_imm
-block|}
-block|;
-return|return
-name|DAG
-operator|->
-name|getMachineNode
-argument_list|(
-name|Opcode
-argument_list|,
-name|dl
-argument_list|,
-name|VT
-argument_list|,
-name|ops
-argument_list|,
-name|array_lengthof
-argument_list|(
-name|ops
-argument_list|)
-argument_list|)
-return|;
-block|}
 specifier|static
 name|MachineSDNode
 operator|*
@@ -276,71 +375,48 @@ argument|SDValue Op1
 argument_list|,
 argument|SDValue Op2
 argument_list|)
-block|{
-name|SDValue
-name|pred_reg
-operator|=
-name|DAG
-operator|->
-name|getRegister
+block|;
+specifier|static
+name|void
+name|AddDefaultPredicate
 argument_list|(
-literal|0
-argument_list|,
-name|MVT
-operator|::
-name|i1
+name|MachineInstr
+operator|*
+name|MI
 argument_list|)
 block|;
-name|SDValue
-name|pred_imm
-operator|=
-name|DAG
-operator|->
-name|getTargetConstant
+specifier|static
+name|bool
+name|IsAnyKindOfBranch
 argument_list|(
-literal|0
-argument_list|,
-name|MVT
-operator|::
-name|i32
+specifier|const
+name|MachineInstr
+operator|&
+name|inst
 argument_list|)
 block|;
-name|SDValue
-name|ops
-index|[]
-operator|=
-block|{
-name|Op1
-block|,
-name|Op2
-block|,
-name|pred_reg
-block|,
-name|pred_imm
-block|}
-block|;
-return|return
-name|DAG
-operator|->
-name|getMachineNode
+specifier|static
+name|bool
+name|IsAnySuccessorAlsoLayoutSuccessor
 argument_list|(
-name|Opcode
-argument_list|,
-name|dl
-argument_list|,
-name|VT
-argument_list|,
-name|ops
-argument_list|,
-name|array_lengthof
-argument_list|(
-name|ops
+specifier|const
+name|MachineBasicBlock
+operator|&
+name|MBB
 argument_list|)
-argument_list|)
-return|;
-block|}
-expr|}
 block|;
+specifier|static
+name|MachineBasicBlock
+operator|*
+name|GetBranchTarget
+argument_list|(
+specifier|const
+name|MachineInstr
+operator|&
+name|inst
+argument_list|)
+block|; }
+decl_stmt|;
 comment|// class PTXInstrInfo
 block|}
 end_decl_stmt

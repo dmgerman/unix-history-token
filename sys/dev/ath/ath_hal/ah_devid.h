@@ -421,6 +421,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR5416_AR9130_DEVID
+value|0x000b
+end_define
+
+begin_comment
+comment|/* AR9130 SoC WiMAC */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR9160_DEVID_PCI
 value|0x0027
 end_define
@@ -471,6 +482,28 @@ end_define
 
 begin_comment
 comment|/* AR2427 PCI-E w/ 802.11n bonded out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR9287_DEVID_PCI
+value|0x002d
+end_define
+
+begin_comment
+comment|/* AR9227 PCI Kiwi */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR9287_DEVID_PCIE
+value|0x002e
+end_define
+
+begin_comment
+comment|/* AR9287 PCI-E Kiwi */
 end_comment
 
 begin_define

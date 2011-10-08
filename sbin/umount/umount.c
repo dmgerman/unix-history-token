@@ -422,10 +422,6 @@ name|struct
 name|addrinfo
 name|hints
 decl_stmt|;
-comment|/* Start disks transferring immediately. */
-name|sync
-argument_list|()
-expr_stmt|;
 name|all
 operator|=
 name|errs
@@ -546,6 +542,20 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+comment|/* Start disks transferring immediately. */
+if|if
+condition|(
+operator|(
+name|fflag
+operator|&
+name|MNT_FORCE
+operator|)
+operator|==
+literal|0
+condition|)
+name|sync
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -702,6 +712,20 @@ name|f_fstypename
 argument_list|,
 name|typelist
 argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|sfs
+operator|->
+name|f_mntonname
+argument_list|,
+literal|"/dev"
+argument_list|)
+operator|==
+literal|0
 condition|)
 continue|continue;
 if|if
@@ -3045,7 +3069,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n"
 argument_list|,
-literal|"usage: umount [-fv] special | node | fsid"
+literal|"usage: umount [-fv] special ... | node ... | fsid ..."
 argument_list|,
 literal|"       umount -a | -A [-F fstab] [-fv] [-h host] [-t type]"
 argument_list|)

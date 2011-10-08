@@ -106,6 +106,9 @@ decl_stmt|;
 name|class
 name|IVUsers
 decl_stmt|;
+name|class
+name|TargetData
+decl_stmt|;
 comment|/// IVStrideUse - Keep track of one use of a strided induction variable.
 comment|/// The Expr member keeps track of the expression, User is the actual user
 comment|/// instruction of the operand, and 'OperandValToReplace' is the operand of
@@ -388,6 +391,10 @@ block|;
 name|ScalarEvolution
 operator|*
 name|SE
+block|;
+name|TargetData
+operator|*
+name|TD
 block|;
 name|SmallPtrSet
 operator|<

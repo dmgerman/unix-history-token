@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|900034
+value|1000000
 end_define
 
 begin_comment
@@ -72,6 +72,13 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_SIGWAIT
+value|700000
+end_define
 
 begin_define
 define|#
@@ -1252,6 +1259,22 @@ name|x
 parameter_list|)
 define|\
 value|((struct s *)(void *)((char *)(x) - offsetof(struct s, m)))
+end_define
+
+begin_comment
+comment|/*  * Access a variable length array that has been declared as a fixed  * length array.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PAST_END
+parameter_list|(
+name|array
+parameter_list|,
+name|offset
+parameter_list|)
+value|(((typeof(*(array)) *)(array))[offset])
 end_define
 
 begin_endif

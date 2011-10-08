@@ -109,6 +109,64 @@ parameter_list|)
 value|((inp->sctp_features& feature) == 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|sctp_stcb_feature_on
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features |= feature; \ 	} else { \ 		inp->sctp_features |= feature; \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_stcb_feature_off
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features&= ~feature; \ 	} else { \ 		inp->sctp_features&= ~feature; \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_stcb_is_feature_on
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+define|\
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == feature)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == feature)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_stcb_is_feature_off
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+define|\
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == 0)))
+end_define
+
 begin_comment
 comment|/* managing mobility_feature in inpcb (by micchie) */
 end_comment
@@ -241,8 +299,10 @@ parameter_list|(
 name|_stcb
 parameter_list|,
 name|_strmoq
+parameter_list|,
+name|_so_locked
 parameter_list|)
-value|{ \ 	if ((_strmoq)->holds_key_ref) { \ 		sctp_auth_key_release(stcb, sp->auth_keyid); \ 		(_strmoq)->holds_key_ref = 0; \ 	} \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_strmoq), (_strmoq)); \ 	SCTP_DECR_STRMOQ_COUNT(); \ }
+value|{ \ 	if ((_strmoq)->holds_key_ref) { \ 		sctp_auth_key_release(stcb, sp->auth_keyid, _so_locked); \ 		(_strmoq)->holds_key_ref = 0; \ 	} \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_strmoq), (_strmoq)); \ 	SCTP_DECR_STRMOQ_COUNT(); \ }
 end_define
 
 begin_define
@@ -265,8 +325,10 @@ parameter_list|(
 name|_stcb
 parameter_list|,
 name|_chk
+parameter_list|,
+name|_so_locked
 parameter_list|)
-value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if (_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
+value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid, _so_locked); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if (_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
 end_define
 
 begin_define
@@ -288,7 +350,7 @@ name|sctp_free_remote_addr
 parameter_list|(
 name|__net
 parameter_list|)
-value|{ \ 	if ((__net)) {  \ 		if (SCTP_DECREMENT_AND_CHECK_REFCOUNT(&(__net)->ref_count)) { \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->fr_timer.timer); \                         if ((__net)->ro.ro_rt) { \ 				RTFREE((__net)->ro.ro_rt); \ 				(__net)->ro.ro_rt = NULL; \                         } \ 			if ((__net)->src_addr_selected) { \ 				sctp_free_ifa((__net)->ro._s_addr); \ 				(__net)->ro._s_addr = NULL; \ 			} \                         (__net)->src_addr_selected = 0; \ 			(__net)->dest_state = SCTP_ADDR_NOT_REACHABLE; \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_net), (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
+value|{ \ 	if ((__net)) {  \ 		if (SCTP_DECREMENT_AND_CHECK_REFCOUNT(&(__net)->ref_count)) { \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->rxt_timer.timer); \ 			(void)SCTP_OS_TIMER_STOP(&(__net)->pmtu_timer.timer); \                         if ((__net)->ro.ro_rt) { \ 				RTFREE((__net)->ro.ro_rt); \ 				(__net)->ro.ro_rt = NULL; \                         } \ 			if ((__net)->src_addr_selected) { \ 				sctp_free_ifa((__net)->ro._s_addr); \ 				(__net)->ro._s_addr = NULL; \ 			} \                         (__net)->src_addr_selected = 0; \ 			(__net)->dest_state&= ~SCTP_ADDR_REACHABLE; \ 			SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_net), (__net)); \ 			SCTP_DECR_RADDR_COUNT(); \ 		} \ 	} \ }
 end_define
 
 begin_define
@@ -435,6 +497,26 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|SCTP_PF_ENABLED
+parameter_list|(
+name|_net
+parameter_list|)
+value|(_net->pf_threshold< _net->failure_threshold)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_NET_IS_PF
+parameter_list|(
+name|_net
+parameter_list|)
+value|(_net->pf_threshold< _net->error_count)
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|sctp_nets
@@ -520,6 +602,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|void
 name|sctp_input_with_port
@@ -538,6 +626,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|void
 name|sctp_input
@@ -553,6 +652,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void

@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/capability.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/dirent.h>
 end_include
 
@@ -988,7 +994,7 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
-name|unmount
+name|sys_unmount
 argument_list|(
 name|td
 argument_list|,
@@ -1572,6 +1578,10 @@ argument_list|,
 name|uap
 operator|->
 name|fd
+argument_list|,
+name|CAP_READ
+operator||
+name|CAP_SEEK
 argument_list|,
 operator|&
 name|fp
@@ -2363,6 +2373,10 @@ name|uap
 operator|->
 name|fd
 argument_list|,
+name|CAP_READ
+operator||
+name|CAP_SEEK
+argument_list|,
 operator|&
 name|fp
 argument_list|)
@@ -2378,7 +2392,7 @@ operator|==
 name|EINVAL
 condition|)
 return|return
-name|read
+name|sys_read
 argument_list|(
 name|td
 argument_list|,
@@ -2458,7 +2472,7 @@ name|td
 argument_list|)
 expr_stmt|;
 return|return
-name|read
+name|sys_read
 argument_list|(
 name|td
 argument_list|,
@@ -3639,7 +3653,7 @@ operator|->
 name|uid
 expr_stmt|;
 return|return
-name|setuid
+name|sys_setuid
 argument_list|(
 name|td
 argument_list|,
@@ -3685,7 +3699,7 @@ operator|->
 name|gid
 expr_stmt|;
 return|return
-name|setgid
+name|sys_setgid
 argument_list|(
 name|td
 argument_list|,
@@ -3875,7 +3889,7 @@ operator|++
 expr_stmt|;
 comment|/* iBCS2 _PC_* defines are offset by one */
 return|return
-name|fpathconf
+name|sys_fpathconf
 argument_list|(
 name|td
 argument_list|,
@@ -4771,7 +4785,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|setpriority
+name|sys_setpriority
 argument_list|(
 name|td
 argument_list|,
@@ -4894,7 +4908,7 @@ name|pgid
 operator|=
 literal|0
 expr_stmt|;
-name|setpgid
+name|sys_setpgid
 argument_list|(
 name|td
 argument_list|,
@@ -4955,7 +4969,7 @@ operator|->
 name|pgid
 expr_stmt|;
 return|return
-name|setpgid
+name|sys_setpgid
 argument_list|(
 name|td
 argument_list|,
@@ -4969,7 +4983,7 @@ literal|3
 case|:
 comment|/* setsid */
 return|return
-name|setsid
+name|sys_setsid
 argument_list|(
 name|td
 argument_list|,
@@ -5214,7 +5228,7 @@ name|RB_HALT
 expr_stmt|;
 return|return
 operator|(
-name|reboot
+name|sys_reboot
 argument_list|(
 name|td
 argument_list|,
@@ -5237,7 +5251,7 @@ name|RB_AUTOBOOT
 expr_stmt|;
 return|return
 operator|(
-name|reboot
+name|sys_reboot
 argument_list|(
 name|td
 argument_list|,

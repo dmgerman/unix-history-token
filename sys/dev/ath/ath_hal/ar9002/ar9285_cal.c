@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"ar9002/ar9285an.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"ar9002/ar9285_cal.h"
 end_include
 
@@ -169,15 +175,6 @@ literal|0
 block|}
 block|, 	}
 decl_stmt|;
-name|HALDEBUG
-argument_list|(
-name|ah
-argument_list|,
-name|HAL_DEBUG_PERCAL
-argument_list|,
-literal|"Running PA Calibration\n"
-argument_list|)
-expr_stmt|;
 comment|/* PA CAL is not needed for high power solution */
 if|if
 condition|(
@@ -193,6 +190,15 @@ operator|==
 name|AR5416_EEP_TXGAIN_HIGH_POWER
 condition|)
 return|return;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_PERCAL
+argument_list|,
+literal|"Running PA Calibration\n"
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -930,7 +936,7 @@ parameter_list|)
 block|{
 if|if
 condition|(
-name|AR_SREV_KITE_12_OR_LATER
+name|AR_SREV_KITE_11_OR_LATER
 argument_list|(
 name|ah
 argument_list|)
@@ -1553,6 +1559,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+name|AR_SREV_KITE
+argument_list|(
+name|ah
+argument_list|)
+operator|&&
+name|AR_SREV_KITE_10_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+operator|&&
+operator|(
 operator|!
 name|ar9285_hw_clc
 argument_list|(
@@ -1560,17 +1577,11 @@ name|ah
 argument_list|,
 name|chan
 argument_list|)
+operator|)
 condition|)
 return|return
 name|AH_FALSE
 return|;
-name|ar9285_hw_pa_cal
-argument_list|(
-name|ah
-argument_list|,
-name|AH_TRUE
-argument_list|)
-expr_stmt|;
 return|return
 name|AH_TRUE
 return|;

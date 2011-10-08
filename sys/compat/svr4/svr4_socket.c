@@ -1047,7 +1047,7 @@ name|EINVAL
 return|;
 block|}
 return|return
-name|socket
+name|sys_socket
 argument_list|(
 name|td
 argument_list|,

@@ -3154,6 +3154,13 @@ name|ast_tx_protect
 operator|++
 expr_stmt|;
 block|}
+if|#
+directive|if
+literal|0
+comment|/* 	 * If 11n protection is enabled and it's a HT frame, 	 * enable RTS. 	 * 	 * XXX ic_htprotmode or ic_curhtprotmode? 	 * XXX should it_htprotmode only matter if ic_curhtprotmode  	 * XXX indicates it's not a HT pure environment? 	 */
+block|if ((ic->ic_htprotmode == IEEE80211_PROT_RTSCTS)&& 	    rt->info[rix].phy == IEEE80211_T_HT&& 	    (flags& HAL_TXDESC_NOACK) == 0) { 		cix = rt->info[sc->sc_protrix].controlRate; 	    	flags |= HAL_TXDESC_RTSENA; 		sc->sc_stats.ast_tx_htprotect++; 	}
+endif|#
+directive|endif
 comment|/* 	 * Calculate duration.  This logically belongs in the 802.11 	 * layer but it lacks sufficient information to calculate it. 	 */
 if|if
 condition|(

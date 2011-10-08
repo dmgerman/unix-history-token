@@ -1118,7 +1118,7 @@ operator|++
 control|)
 name|MCOUNT_OVERHEAD
 argument_list|(
-name|profil
+name|sys_profil
 argument_list|)
 expr_stmt|;
 name|mcount_overhead
@@ -1131,7 +1131,7 @@ name|PC_TO_I
 argument_list|(
 name|p
 argument_list|,
-name|profil
+name|sys_profil
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1981,7 +1981,7 @@ end_comment
 
 begin_function
 name|int
-name|profil
+name|sys_profil
 parameter_list|(
 name|struct
 name|thread

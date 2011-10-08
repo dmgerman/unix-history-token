@@ -92,15 +92,9 @@ comment|///< Parse ASTs and dump them in XML.
 name|ASTPrint
 block|,
 comment|///< Parse ASTs and print them.
-name|ASTPrintXML
-block|,
-comment|///< Parse ASTs and print them in XML.
 name|ASTView
 block|,
 comment|///< Parse ASTs and view them in Graphviz.
-name|BoostCon
-block|,
-comment|///< BoostCon mode.
 name|CreateModule
 block|,
 comment|///< Create module definition
@@ -257,6 +251,23 @@ literal|1
 decl_stmt|;
 comment|///< Apply fixes even if there are
 comment|/// unfixable errors.
+enum|enum
+block|{
+name|ARCMT_None
+block|,
+name|ARCMT_Check
+block|,
+name|ARCMT_Modify
+block|,
+name|ARCMT_Migrate
+block|}
+name|ARCMTAction
+enum|;
+name|std
+operator|::
+name|string
+name|ARCMTMigrateDir
+expr_stmt|;
 comment|/// The input files and their types.
 name|std
 operator|::
@@ -440,6 +451,10 @@ expr_stmt|;
 name|ShowVersion
 operator|=
 literal|0
+expr_stmt|;
+name|ARCMTAction
+operator|=
+name|ARCMT_None
 expr_stmt|;
 block|}
 comment|/// getInputKindForExtension - Return the appropriate input kind for a file

@@ -226,6 +226,9 @@ decl_stmt|;
 name|class
 name|TargetInfo
 decl_stmt|;
+name|class
+name|ASTFrontendAction
+decl_stmt|;
 name|using
 name|namespace
 name|idx
@@ -282,7 +285,7 @@ name|Diagnostics
 expr_stmt|;
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|FileManager
 operator|>
@@ -290,7 +293,7 @@ name|FileMgr
 expr_stmt|;
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|SourceManager
 operator|>
@@ -306,7 +309,7 @@ name|HeaderInfo
 expr_stmt|;
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|TargetInfo
 operator|>
@@ -314,7 +317,7 @@ name|Target
 expr_stmt|;
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|Preprocessor
 operator|>
@@ -322,7 +325,7 @@ name|PP
 expr_stmt|;
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|ASTContext
 operator|>
@@ -355,7 +358,7 @@ comment|/// Optional owned invocation, just used to make the invocation used in
 comment|/// LoadFromCommandLine available.
 name|llvm
 operator|::
-name|OwningPtr
+name|IntrusiveRefCntPtr
 operator|<
 name|CompilerInvocation
 operator|>
@@ -397,6 +400,10 @@ decl_stmt|;
 comment|/// \brief Whether we should time each operation.
 name|bool
 name|WantTiming
+decl_stmt|;
+comment|/// \brief Whether the ASTUnit should delete the remapped buffers.
+name|bool
+name|OwnsRemappedFileBuffers
 decl_stmt|;
 comment|/// Track the top-level decls which appeared in an ASTUnit which was loaded
 comment|/// from a source file.
@@ -632,6 +639,11 @@ expr_stmt|;
 comment|/// \brief Whether we should be caching code-completion results.
 name|bool
 name|ShouldCacheCodeCompletionResults
+decl_stmt|;
+comment|/// \brief Whether we want to include nested macro expansions in the
+comment|/// detailed preprocessing record.
+name|bool
+name|NestedMacroExpansions
 decl_stmt|;
 specifier|static
 name|void
@@ -890,7 +902,7 @@ name|MemoryBuffer
 operator|*
 name|getMainBufferWithPrecompiledPreamble
 argument_list|(
-argument|CompilerInvocation PreambleInvocation
+argument|const CompilerInvocation&PreambleInvocationIn
 argument_list|,
 argument|bool AllowRebuild = true
 argument_list|,
@@ -1052,9 +1064,6 @@ block|{
 return|return
 operator|*
 name|PP
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|Preprocessor
@@ -1065,9 +1074,6 @@ block|{
 return|return
 operator|*
 name|PP
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -1080,9 +1086,6 @@ block|{
 return|return
 operator|*
 name|Ctx
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|ASTContext
@@ -1093,9 +1096,6 @@ block|{
 return|return
 operator|*
 name|Ctx
-operator|.
-name|get
-argument_list|()
 return|;
 block|}
 name|bool
@@ -1206,6 +1206,27 @@ block|{
 return|return
 name|OnlyLocalDecls
 return|;
+block|}
+name|bool
+name|getOwnsRemappedFileBuffers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwnsRemappedFileBuffers
+return|;
+block|}
+name|void
+name|setOwnsRemappedFileBuffers
+parameter_list|(
+name|bool
+name|val
+parameter_list|)
+block|{
+name|OwnsRemappedFileBuffers
+operator|=
+name|val
+expr_stmt|;
 block|}
 comment|/// \brief Retrieve the maximum PCH level of declarations that a
 comment|/// traversal of the translation unit should consider.
@@ -1595,6 +1616,23 @@ return|return
 name|CompleteTranslationUnit
 return|;
 block|}
+typedef|typedef
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+specifier|const
+name|char
+operator|*
+operator|,
+specifier|const
+name|llvm
+operator|::
+name|MemoryBuffer
+operator|*
+operator|>
+name|FilenameOrMemBuf
+expr_stmt|;
 comment|/// \brief A mapping from a file name to the memory buffer that stores the
 comment|/// remapped contents of that file.
 typedef|typedef
@@ -1606,14 +1644,29 @@ name|std
 operator|::
 name|string
 operator|,
-specifier|const
-name|llvm
-operator|::
-name|MemoryBuffer
-operator|*
+name|FilenameOrMemBuf
 operator|>
 name|RemappedFile
 expr_stmt|;
+comment|/// \brief Create a ASTUnit. Gets ownership of the passed CompilerInvocation.
+specifier|static
+name|ASTUnit
+modifier|*
+name|create
+argument_list|(
+name|CompilerInvocation
+operator|*
+name|CI
+argument_list|,
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|Diagnostic
+operator|>
+name|Diags
+argument_list|)
+decl_stmt|;
 comment|/// \brief Create a ASTUnit from an AST file.
 comment|///
 comment|/// \param Filename - The AST file to load.
@@ -1688,6 +1741,41 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+comment|/// \brief Create an ASTUnit from a source file, via a CompilerInvocation
+comment|/// object, by invoking the optionally provided ASTFrontendAction.
+comment|///
+comment|/// \param CI - The compiler invocation to use; it must have exactly one input
+comment|/// source file. The ASTUnit takes ownership of the CompilerInvocation object.
+comment|///
+comment|/// \param Diags - The diagnostics engine to use for reporting errors; its
+comment|/// lifetime is expected to extend past that of the returned ASTUnit.
+comment|///
+comment|/// \param Action - The ASTFrontendAction to invoke. Its ownership is not
+comment|/// transfered.
+specifier|static
+name|ASTUnit
+modifier|*
+name|LoadFromCompilerInvocationAction
+argument_list|(
+name|CompilerInvocation
+operator|*
+name|CI
+argument_list|,
+name|llvm
+operator|::
+name|IntrusiveRefCntPtr
+operator|<
+name|Diagnostic
+operator|>
+name|Diags
+argument_list|,
+name|ASTFrontendAction
+operator|*
+name|Action
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// LoadFromCompilerInvocation - Create an ASTUnit from a source file, via a
 comment|/// CompilerInvocation object.
 comment|///
@@ -1740,6 +1828,11 @@ name|bool
 name|CacheCodeCompletionResults
 operator|=
 name|false
+argument_list|,
+name|bool
+name|NestedMacroExpansions
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// LoadFromCommandLine - Create an ASTUnit from a vector of command line
@@ -1808,6 +1901,11 @@ operator|=
 literal|0
 argument_list|,
 name|bool
+name|RemappedFilesKeepOriginalName
+operator|=
+name|true
+argument_list|,
+name|bool
 name|PrecompilePreamble
 operator|=
 name|false
@@ -1831,6 +1929,11 @@ name|bool
 name|CXXChainedPCH
 operator|=
 name|false
+argument_list|,
+name|bool
+name|NestedMacroExpansions
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// \brief Reparse the source files using the same command-line options that
@@ -1942,14 +2045,27 @@ argument_list|)
 decl_stmt|;
 comment|/// \brief Save this translation unit to a file with the given name.
 comment|///
-comment|/// \returns True if an error occurred, false otherwise.
-name|bool
+comment|/// \returns An indication of whether the save was successful or not.
+name|CXSaveError
 name|Save
 argument_list|(
 name|llvm
 operator|::
 name|StringRef
 name|File
+argument_list|)
+decl_stmt|;
+comment|/// \brief Serialize this translation unit with the given output stream.
+comment|///
+comment|/// \returns True if an error occurred, false otherwise.
+name|bool
+name|serialize
+argument_list|(
+name|llvm
+operator|::
+name|raw_ostream
+operator|&
+name|OS
 argument_list|)
 decl_stmt|;
 block|}

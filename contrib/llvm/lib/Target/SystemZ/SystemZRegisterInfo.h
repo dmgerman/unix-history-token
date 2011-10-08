@@ -65,10 +65,16 @@ directive|include
 file|"llvm/Target/TargetRegisterInfo.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|GET_REGINFO_HEADER
+end_define
+
 begin_include
 include|#
 directive|include
-file|"SystemZGenRegisterInfo.h.inc"
+file|"SystemZGenRegisterInfo.inc"
 end_include
 
 begin_decl_stmt
@@ -129,6 +135,19 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getMatchingSuperRegClass
+argument_list|(
+argument|const TargetRegisterClass *A
+argument_list|,
+argument|const TargetRegisterClass *B
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
 name|void
 name|eliminateCallFramePseudoInstr
 argument_list|(
@@ -177,6 +196,15 @@ specifier|const
 block|;
 name|int
 name|getDwarfRegNum
+argument_list|(
+argument|unsigned RegNum
+argument_list|,
+argument|bool isEH
+argument_list|)
+specifier|const
+block|;
+name|int
+name|getLLVMRegNum
 argument_list|(
 argument|unsigned RegNum
 argument_list|,

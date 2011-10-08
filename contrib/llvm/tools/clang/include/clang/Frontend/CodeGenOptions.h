@@ -65,6 +65,12 @@ directive|include
 file|<string>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vector>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -111,6 +117,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// -dA, -fverbose-asm.
+name|unsigned
+name|ObjCAutoRefCountExceptions
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether ARC should be EH-safe.
 name|unsigned
 name|CXAAtExit
 range|:
@@ -173,6 +185,25 @@ comment|/// Decl* various IR entities came from.  Only
 comment|/// useful when running CodeGen as a
 comment|/// subroutine.
 name|unsigned
+name|EmitGcovArcs
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit coverage data files, aka. GCDA.
+name|unsigned
+name|EmitGcovNotes
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit coverage "notes" files, aka GCNO.
+name|unsigned
+name|ForbidGuardVariables
+range|:
+literal|1
+decl_stmt|;
+comment|/// Issue errors if C++ guard variables
+comment|/// are required
+name|unsigned
 name|FunctionSections
 range|:
 literal|1
@@ -225,6 +256,18 @@ literal|1
 decl_stmt|;
 comment|/// Set when -fno-common or C++ is enabled.
 name|unsigned
+name|NoDwarf2CFIAsm
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -fno-dwarf2-cfi-asm is enabled.
+name|unsigned
+name|NoExecStack
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -Wa,--noexecstack is enabled.
+name|unsigned
 name|NoImplicitFloat
 range|:
 literal|1
@@ -255,6 +298,18 @@ literal|2
 decl_stmt|;
 comment|/// Method of Objective-C dispatch to use.
 name|unsigned
+name|ObjCRuntimeHasARC
+range|:
+literal|1
+decl_stmt|;
+comment|/// The target runtime supports ARC natively
+name|unsigned
+name|ObjCRuntimeHasTerminate
+range|:
+literal|1
+decl_stmt|;
+comment|/// The ObjC runtime has objc_terminate
+name|unsigned
 name|OmitLeafFramePointer
 range|:
 literal|1
@@ -270,9 +325,9 @@ comment|/// The -O[0-4] option specified.
 name|unsigned
 name|OptimizeSize
 range|:
-literal|1
+literal|2
 decl_stmt|;
-comment|/// If -Os is specified.
+comment|/// If -Os (==1) or -Oz (==2) is specified.
 name|unsigned
 name|RelaxAll
 range|:
@@ -285,6 +340,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -fno-strict-aliasing is enabled.
+name|unsigned
+name|SaveTempLabels
+range|:
+literal|1
+decl_stmt|;
+comment|/// Save temporary labels.
 name|unsigned
 name|SimplifyLibCalls
 range|:
@@ -328,6 +389,13 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Emit unwind tables.
+comment|/// Attempt to use register sized accesses to bit-fields in structures, when
+comment|/// possible.
+name|unsigned
+name|UseRegisterSizedBitfieldAccess
+range|:
+literal|1
+decl_stmt|;
 name|unsigned
 name|VerifyModule
 range|:
@@ -340,6 +408,13 @@ name|std
 operator|::
 name|string
 name|CodeModel
+expr_stmt|;
+comment|/// The filename with path we use for coverage files. The extension will be
+comment|/// replaced.
+name|std
+operator|::
+name|string
+name|CoverageFile
 expr_stmt|;
 comment|/// Enable additional debugging information.
 name|std
@@ -383,6 +458,17 @@ name|std
 operator|::
 name|string
 name|RelocationModel
+expr_stmt|;
+comment|/// A list of command-line options to forward to the LLVM backend.
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|BackendOptions
 expr_stmt|;
 comment|/// The user specified number of registers to be used for integral arguments,
 comment|/// or 0 if unspecified.
@@ -434,6 +520,18 @@ name|EmitDeclMetadata
 operator|=
 literal|0
 expr_stmt|;
+name|EmitGcovArcs
+operator|=
+literal|0
+expr_stmt|;
+name|EmitGcovNotes
+operator|=
+literal|0
+expr_stmt|;
+name|ForbidGuardVariables
+operator|=
+literal|0
+expr_stmt|;
 name|FunctionSections
 operator|=
 literal|0
@@ -466,6 +564,10 @@ name|NoCommon
 operator|=
 literal|0
 expr_stmt|;
+name|NoDwarf2CFIAsm
+operator|=
+literal|0
+expr_stmt|;
 name|NoImplicitFloat
 operator|=
 literal|0
@@ -486,9 +588,21 @@ name|NumRegisterParameters
 operator|=
 literal|0
 expr_stmt|;
+name|ObjCAutoRefCountExceptions
+operator|=
+literal|0
+expr_stmt|;
 name|ObjCDispatchMethod
 operator|=
 name|Legacy
+expr_stmt|;
+name|ObjCRuntimeHasARC
+operator|=
+literal|0
+expr_stmt|;
+name|ObjCRuntimeHasTerminate
+operator|=
+literal|0
 expr_stmt|;
 name|OmitLeafFramePointer
 operator|=
@@ -507,6 +621,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|RelaxedAliasing
+operator|=
+literal|0
+expr_stmt|;
+name|SaveTempLabels
 operator|=
 literal|0
 expr_stmt|;
@@ -535,6 +653,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|UnwindTables
+operator|=
+literal|0
+expr_stmt|;
+name|UseRegisterSizedBitfieldAccess
 operator|=
 literal|0
 expr_stmt|;

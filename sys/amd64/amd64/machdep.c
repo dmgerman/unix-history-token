@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_mp_watchdog.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_perfmon.h"
 end_include
 
@@ -437,6 +443,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/mp_watchdog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/pc/bios.h>
 end_include
 
@@ -699,6 +711,18 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/*  * The file "conf/ldscript.amd64" defines the symbol "kernphys".  Its value is  * the physical address at which the kernel is loaded.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|kernphys
+index|[]
+decl_stmt|;
+end_decl_stmt
 
 begin_ifdef
 ifdef|#
@@ -2003,7 +2027,7 @@ end_comment
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|td
 parameter_list|,
@@ -2463,7 +2487,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
-name|sigreturn
+name|sys_sigreturn
 argument_list|(
 name|td
 argument_list|,
@@ -2533,13 +2557,20 @@ modifier|*
 name|rate
 parameter_list|)
 block|{
-name|register_t
-name|reg
-decl_stmt|;
 name|uint64_t
 name|tsc1
 decl_stmt|,
 name|tsc2
+decl_stmt|;
+name|uint64_t
+name|acnt
+decl_stmt|,
+name|mcnt
+decl_stmt|,
+name|perf
+decl_stmt|;
+name|register_t
+name|reg
 decl_stmt|;
 if|if
 condition|(
@@ -2559,41 +2590,19 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* If TSC is P-state invariant, DELAY(9) based logic fails. */
+comment|/* 	 * If TSC is P-state invariant and APERF/MPERF MSRs do not exist, 	 * DELAY(9) based logic fails. 	 */
 if|if
 condition|(
 name|tsc_is_invariant
 operator|&&
-name|tsc_freq
-operator|!=
-literal|0
+operator|!
+name|tsc_perf_stat
 condition|)
 return|return
 operator|(
 name|EOPNOTSUPP
 operator|)
 return|;
-comment|/* If we're booting, trust the rate calibrated moments ago. */
-if|if
-condition|(
-name|cold
-operator|&&
-name|tsc_freq
-operator|!=
-literal|0
-condition|)
-block|{
-operator|*
-name|rate
-operator|=
-name|tsc_freq
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2631,6 +2640,81 @@ operator|=
 name|intr_disable
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|tsc_is_invariant
+condition|)
+block|{
+name|wrmsr
+argument_list|(
+name|MSR_MPERF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|wrmsr
+argument_list|(
+name|MSR_APERF
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|tsc1
+operator|=
+name|rdtsc
+argument_list|()
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|1000
+argument_list|)
+expr_stmt|;
+name|mcnt
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_MPERF
+argument_list|)
+expr_stmt|;
+name|acnt
+operator|=
+name|rdmsr
+argument_list|(
+name|MSR_APERF
+argument_list|)
+expr_stmt|;
+name|tsc2
+operator|=
+name|rdtsc
+argument_list|()
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|reg
+argument_list|)
+expr_stmt|;
+name|perf
+operator|=
+literal|1000
+operator|*
+name|acnt
+operator|/
+name|mcnt
+expr_stmt|;
+operator|*
+name|rate
+operator|=
+operator|(
+name|tsc2
+operator|-
+name|tsc1
+operator|)
+operator|*
+name|perf
+expr_stmt|;
+block|}
+else|else
+block|{
 name|tsc1
 operator|=
 name|rdtsc
@@ -2651,6 +2735,18 @@ argument_list|(
 name|reg
 argument_list|)
 expr_stmt|;
+operator|*
+name|rate
+operator|=
+operator|(
+name|tsc2
+operator|-
+name|tsc1
+operator|)
+operator|*
+literal|1000
+expr_stmt|;
+block|}
 ifdef|#
 directive|ifdef
 name|SMP
@@ -2679,42 +2775,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|tsc2
-operator|-=
-name|tsc1
-expr_stmt|;
-if|if
-condition|(
-name|tsc_freq
-operator|!=
-literal|0
-condition|)
-block|{
-operator|*
-name|rate
-operator|=
-name|tsc2
-operator|*
-literal|1000
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-comment|/* 	 * Subtract 0.5% of the total.  Empirical testing has shown that 	 * overhead in DELAY() works out to approximately this value. 	 */
-operator|*
-name|rate
-operator|=
-name|tsc2
-operator|*
-literal|1000
-operator|-
-name|tsc2
-operator|*
-literal|5
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2739,7 +2799,9 @@ control|(
 init|;
 condition|;
 control|)
-asm|__asm__ ("hlt");
+name|halt
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2869,6 +2931,7 @@ name|state
 operator|=
 name|STATE_SLEEPING
 expr_stmt|;
+comment|/* See comments in cpu_idle_hlt(). */
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -2927,7 +2990,7 @@ name|state
 operator|=
 name|STATE_SLEEPING
 expr_stmt|;
-comment|/* 	 * We must absolutely guarentee that hlt is the next instruction 	 * after sti or we introduce a timing window. 	 */
+comment|/* 	 * Since we may be in a critical section from cpu_idle(), if 	 * an interrupt fires during that critical section we may have 	 * a pending preemption.  If the CPU halts, then that thread 	 * may not execute until a later interrupt awakens the CPU. 	 * To handle this race, check for a runnable thread after 	 * disabling interrupts and immediately return if one is 	 * found.  Also, we must absolutely guarentee that hlt is 	 * the next instruction after sti.  This ensures that any 	 * interrupt that fires after the call to disable_intr() will 	 * immediately awaken the CPU from hlt.  Finally, please note 	 * that on x86 this works fine because of interrupts enabled only 	 * after the instruction following sti takes place, while IF is set 	 * to 1 immediately, allowing hlt instruction to acknowledge the 	 * interrupt. 	 */
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -3017,13 +3080,26 @@ name|state
 operator|=
 name|STATE_MWAIT
 expr_stmt|;
+comment|/* See comments in cpu_idle_hlt(). */
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sched_runnable
 argument_list|()
 condition|)
 block|{
+name|enable_intr
+argument_list|()
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|STATE_RUNNING
+expr_stmt|;
+return|return;
+block|}
 name|cpu_monitor
 argument_list|(
 name|state
@@ -3040,14 +3116,11 @@ name|state
 operator|==
 name|STATE_MWAIT
 condition|)
-name|cpu_mwait
-argument_list|(
-literal|0
-argument_list|,
-name|MWAIT_C1
-argument_list|)
+asm|__asm __volatile("sti; mwait" : : "a" (MWAIT_C1), "c" (0));
+else|else
+name|enable_intr
+argument_list|()
 expr_stmt|;
-block|}
 operator|*
 name|state
 operator|=
@@ -3088,6 +3161,7 @@ name|state
 operator|=
 name|STATE_RUNNING
 expr_stmt|;
+comment|/* 	 * The sched_runnable() call is racy but as long as there is 	 * a loop missing it one time will have just a little impact if any 	 * (and it is much better than missing the check at all). 	 */
 for|for
 control|(
 name|i
@@ -3225,13 +3299,15 @@ argument_list|)
 expr_stmt|;
 ifdef|#
 directive|ifdef
-name|SMP
-if|if
-condition|(
-name|mp_grab_cpu_hlt
-argument_list|()
-condition|)
-return|return;
+name|MP_WATCHDOG
+name|ap_watchdog
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* If we are busy - try to use fast methods. */
@@ -5996,7 +6072,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * If we cannot accurately determine the physical memory map, then use  * value from the 0xE801 call, and failing that, the RTC.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
+comment|/*  * Populate the (physmap) array with base/bound pairs describing the  * available physical memory in the system, then test this memory and  * build the phys_avail array describing the actually-available memory.  *  * Total memory size may be set by the kernel environment variable  * hw.physmem or the compile-time define MAXMEM.  *  * XXX first should be vm_paddr_t.  */
 end_comment
 
 begin_function
@@ -6030,6 +6106,8 @@ index|]
 decl_stmt|;
 name|u_long
 name|physmem_tunable
+decl_stmt|,
+name|memtest
 decl_stmt|;
 name|pt_entry_t
 modifier|*
@@ -6273,6 +6351,19 @@ argument_list|(
 name|physmem_tunable
 argument_list|)
 expr_stmt|;
+comment|/* 	 * By default keep the memtest enabled.  Use a general name so that 	 * one could eventually do more with the code than just disable it. 	 */
+name|memtest
+operator|=
+literal|1
+expr_stmt|;
+name|TUNABLE_ULONG_FETCH
+argument_list|(
+literal|"hw.memtest.tests"
+argument_list|,
+operator|&
+name|memtest
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Don't allow MAXMEM or hw.physmem to extend the amount of memory 	 * in the system. 	 */
 if|if
 condition|(
@@ -6514,7 +6605,10 @@ if|if
 condition|(
 name|pa
 operator|>=
-literal|0x100000
+operator|(
+name|vm_paddr_t
+operator|)
+name|kernphys
 operator|&&
 name|pa
 operator|<
@@ -6550,6 +6644,15 @@ name|page_bad
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip_memtest
+goto|;
 comment|/* 			 * map page into kernel: valid, read/write,non-cacheable 			 */
 operator|*
 name|pte
@@ -6692,6 +6795,8 @@ name|ptr
 operator|=
 name|tmp
 expr_stmt|;
+name|skip_memtest
+label|:
 comment|/* 			 * Adjust array of valid/good pages. 			 */
 if|if
 condition|(

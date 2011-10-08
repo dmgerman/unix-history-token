@@ -606,7 +606,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-empty_stmt|;
 if|if
 condition|(
 name|err
@@ -1673,7 +1672,6 @@ break|break;
 block|}
 name|out
 label|:
-empty_stmt|;
 if|if
 condition|(
 name|err

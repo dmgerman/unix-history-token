@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Triple.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Compiler.h"
 end_include
 
@@ -116,6 +122,8 @@ argument_list|(
 argument|const ArgList&Args
 argument_list|,
 argument|ArgStringList&CmdArgs
+argument_list|,
+argument|bool KernelOrKext
 argument_list|)
 specifier|const
 block|;
@@ -1445,6 +1453,14 @@ operator|:
 name|public
 name|Tool
 block|{
+name|private
+operator|:
+specifier|const
+name|llvm
+operator|::
+name|Triple
+name|ToolTriple
+block|;
 name|public
 operator|:
 name|Assemble
@@ -1453,6 +1469,13 @@ specifier|const
 name|ToolChain
 operator|&
 name|TC
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|ToolTriple
 argument_list|)
 operator|:
 name|Tool
@@ -1461,7 +1484,12 @@ literal|"netbsd::Assemble"
 argument_list|,
 literal|"assembler"
 argument_list|,
-argument|TC
+name|TC
+argument_list|)
+block|,
+name|ToolTriple
+argument_list|(
+argument|ToolTriple
 argument_list|)
 block|{}
 name|virtual
@@ -1500,6 +1528,14 @@ operator|:
 name|public
 name|Tool
 block|{
+name|private
+operator|:
+specifier|const
+name|llvm
+operator|::
+name|Triple
+name|ToolTriple
+block|;
 name|public
 operator|:
 name|Link
@@ -1508,6 +1544,13 @@ specifier|const
 name|ToolChain
 operator|&
 name|TC
+argument_list|,
+specifier|const
+name|llvm
+operator|::
+name|Triple
+operator|&
+name|ToolTriple
 argument_list|)
 operator|:
 name|Tool
@@ -1516,7 +1559,12 @@ literal|"netbsd::Link"
 argument_list|,
 literal|"linker"
 argument_list|,
-argument|TC
+name|TC
+argument_list|)
+block|,
+name|ToolTriple
+argument_list|(
+argument|ToolTriple
 argument_list|)
 block|{}
 name|virtual

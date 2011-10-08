@@ -91,11 +91,15 @@ name|ISD
 operator|::
 name|BUILTIN_OP_END
 block|,
-name|READ_PARAM
+name|LOAD_PARAM
+block|,
+name|STORE_PARAM
 block|,
 name|EXIT
 block|,
 name|RET
+block|,
+name|COPY_ADDRESS
 block|}
 enum|;
 block|}
@@ -127,20 +131,18 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|unsigned
-name|getFunctionAlignment
-argument_list|(
-argument|const Function *F
-argument_list|)
-specifier|const
-block|{
-return|return
-literal|2
-return|;
-block|}
-name|virtual
 name|SDValue
 name|LowerOperation
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|SDValue
+name|LowerSETCC
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -185,6 +187,16 @@ argument_list|,
 argument|DebugLoc dl
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|MVT
+operator|::
+name|SimpleValueType
+name|getSetCCResultType
+argument_list|(
+argument|EVT VT
 argument_list|)
 specifier|const
 block|;

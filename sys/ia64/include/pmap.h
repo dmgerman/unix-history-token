@@ -57,28 +57,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NKPT
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|NKPT
-value|30
-end_define
-
-begin_comment
-comment|/* initial number of kernel page tables */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -129,6 +107,9 @@ argument|pv_entry
 argument_list|)
 name|pv_list
 expr_stmt|;
+name|vm_memattr_t
+name|memattr
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -367,7 +348,7 @@ name|pmap_page_get_memattr
 parameter_list|(
 name|m
 parameter_list|)
-value|VM_MEMATTR_DEFAULT
+value|((m)->md.memattr)
 end_define
 
 begin_define
@@ -378,18 +359,6 @@ parameter_list|(
 name|m
 parameter_list|)
 value|(!TAILQ_EMPTY(&(m)->md.pv_list))
-end_define
-
-begin_define
-define|#
-directive|define
-name|pmap_page_set_memattr
-parameter_list|(
-name|m
-parameter_list|,
-name|ma
-parameter_list|)
-value|(void)0
 end_define
 
 begin_define
@@ -415,15 +384,6 @@ name|sz
 parameter_list|)
 value|pmap_unmapdev(va, sz)
 end_define
-
-begin_function_decl
-name|vm_offset_t
-name|pmap_steal_memory
-parameter_list|(
-name|vm_size_t
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|vm_offset_t
@@ -477,30 +437,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_setdevram
-parameter_list|(
-name|unsigned
-name|long
-name|long
-name|basea
-parameter_list|,
-name|vm_offset_t
-name|sizea
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pmap_uses_prom_console
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 modifier|*
 name|pmap_mapdev
 parameter_list|(
@@ -513,43 +449,29 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|pmap_unmapdev
+name|pmap_page_set_memattr
 parameter_list|(
-name|vm_offset_t
+name|vm_page_t
 parameter_list|,
-name|vm_size_t
+name|vm_memattr_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|unsigned
-modifier|*
-name|pmap_pte
-argument_list|(
-name|pmap_t
-argument_list|,
+begin_function_decl
 name|vm_offset_t
-argument_list|)
-name|__pure2
-decl_stmt|;
-end_decl_stmt
-
-begin_function_decl
-name|void
-name|pmap_set_opt
+name|pmap_page_to_va
 parameter_list|(
-name|unsigned
-modifier|*
+name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|pmap_set_opt_bsp
+name|vm_offset_t
+name|pmap_steal_memory
 parameter_list|(
-name|void
+name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -564,6 +486,17 @@ name|struct
 name|pmap
 modifier|*
 name|pmap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmap_unmapdev
+parameter_list|(
+name|vm_offset_t
+parameter_list|,
+name|vm_size_t
 parameter_list|)
 function_decl|;
 end_function_decl

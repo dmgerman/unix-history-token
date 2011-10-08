@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -16,7 +16,13 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"opt_device_polling.h"
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
 end_include
 
 begin_endif
@@ -51,7 +57,7 @@ name|char
 name|ixgbe_driver_version
 index|[]
 init|=
-literal|"2.3.8"
+literal|"2.3.11"
 decl_stmt|;
 end_decl_stmt
 
@@ -1686,7 +1692,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Number of Queues, can be set to 0,  * it then autoconfigures based on the  * number of cpus. Each queue is a pair  * of RX and TX rings with a msix vector  */
+comment|/*  * Number of Queues, can be set to 0,  * it then autoconfigures based on the  * number of cpus with a max of 8. This  * can be overriden manually here.  */
 end_comment
 
 begin_decl_stmt
@@ -1806,7 +1812,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*********************************************************************  *  Device identification routine  *  *  ixgbe_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return 0 on success, positive on failure  *********************************************************************/
+comment|/*********************************************************************  *  Device identification routine  *  *  ixgbe_probe determines if the driver should be loaded on  *  adapter based on PCI vendor/device id of the adapter.  *  *  return BUS_PROBE_DEFAULT on success, positive on failure  *********************************************************************/
 end_comment
 
 begin_function
@@ -1988,7 +1994,7 @@ name|ixgbe_total_ports
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}
@@ -2043,6 +2049,32 @@ argument_list|(
 literal|"ixgbe_attach: begin"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"ixgbe"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Disabled by device hint\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 comment|/* Allocate, clear, and link in our adapter structure */
 name|adapter
 operator|=
@@ -3799,20 +3831,6 @@ name|err
 operator|)
 return|;
 block|}
-comment|/* Call cleanup if number of TX descriptors low */
-if|if
-condition|(
-name|txr
-operator|->
-name|tx_avail
-operator|<=
-name|IXGBE_TX_CLEANUP_THRESHOLD
-condition|)
-name|ixgbe_txeof
-argument_list|(
-name|txr
-argument_list|)
-expr_stmt|;
 name|enqueued
 operator|=
 literal|0
@@ -3980,7 +3998,20 @@ condition|(
 name|txr
 operator|->
 name|tx_avail
-operator|<=
+operator|<
+name|IXGBE_TX_OP_THRESHOLD
+condition|)
+name|ixgbe_txeof
+argument_list|(
+name|txr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|txr
+operator|->
+name|tx_avail
+operator|<
 name|IXGBE_TX_OP_THRESHOLD
 condition|)
 block|{
@@ -4181,6 +4212,36 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+name|struct
+name|ifaddr
+modifier|*
+name|ifa
+init|=
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
+name|data
+decl_stmt|;
+name|bool
+name|avoid_reset
+init|=
+name|FALSE
+decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|error
 init|=
@@ -4191,6 +4252,120 @@ condition|(
 name|command
 condition|)
 block|{
+case|case
+name|SIOCSIFADDR
+case|:
+ifdef|#
+directive|ifdef
+name|INET
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET
+condition|)
+name|avoid_reset
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+name|avoid_reset
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+comment|/* 		** Calling init results in link renegotiation, 		** so we avoid doing it when possible. 		*/
+if|if
+condition|(
+name|avoid_reset
+condition|)
+block|{
+name|ifp
+operator|->
+name|if_flags
+operator||=
+name|IFF_UP
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_drv_flags
+operator|&
+name|IFF_DRV_RUNNING
+operator|)
+condition|)
+name|ixgbe_init
+argument_list|(
+name|adapter
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+operator|)
+condition|)
+name|arp_ifinit
+argument_list|(
+name|ifp
+argument_list|,
+name|ifa
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|error
+operator|=
+name|ether_ioctl
+argument_list|(
+name|ifp
+argument_list|,
+name|command
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+break|break;
+endif|#
+directive|endif
 case|case
 name|SIOCSIFMTU
 case|:
@@ -4505,6 +4680,18 @@ name|IFCAP_VLAN_HWFILTER
 expr_stmt|;
 if|if
 condition|(
+name|mask
+operator|&
+name|IFCAP_VLAN_HWTSO
+condition|)
+name|ifp
+operator|->
+name|if_capenable
+operator|^=
+name|IFCAP_VLAN_HWTSO
+expr_stmt|;
+if|if
+condition|(
 name|ifp
 operator|->
 name|if_drv_flags
@@ -4779,8 +4966,8 @@ operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 name|ifp
 operator|->
@@ -4923,6 +5110,12 @@ argument_list|,
 name|IXGBE_GPIE
 argument_list|)
 expr_stmt|;
+comment|/* Enable Fan Failure Interrupt */
+name|gpie
+operator||=
+name|IXGBE_SDP1_GPIEN
+expr_stmt|;
+comment|/* Add for Thermal detection */
 if|if
 condition|(
 name|hw
@@ -4933,28 +5126,9 @@ name|type
 operator|==
 name|ixgbe_mac_82599EB
 condition|)
-block|{
-name|gpie
-operator||=
-name|IXGBE_SDP1_GPIEN
-expr_stmt|;
 name|gpie
 operator||=
 name|IXGBE_SDP2_GPIEN
-expr_stmt|;
-block|}
-comment|/* Enable Fan Failure Interrupt */
-if|if
-condition|(
-name|hw
-operator|->
-name|device_id
-operator|==
-name|IXGBE_DEV_ID_82598AT
-condition|)
-name|gpie
-operator||=
-name|IXGBE_SDP1_GPIEN
 expr_stmt|;
 if|if
 condition|(
@@ -5369,8 +5543,8 @@ operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 name|ixgbe_init_fdir_signature_82599
 argument_list|(
@@ -6244,7 +6418,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*********************************************************************  *  *  MSI Queue Interrupt Service routine  *  **********************************************************************/
+comment|/*********************************************************************  *  *  MSIX Queue Interrupt Service routine  *  **********************************************************************/
 end_comment
 
 begin_function
@@ -6328,20 +6502,50 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
+comment|/* 	** Make certain that if the stack  	** has anything queued the task gets 	** scheduled to handle it. 	*/
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|800000
+if|if
+condition|(
+operator|!
+name|IFQ_DRV_IS_EMPTY
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|ifp
+operator|->
+name|if_snd
+argument_list|)
+condition|)
+else|#
+directive|else
+if|if
+condition|(
+operator|!
+name|drbr_empty
+argument_list|(
+name|adapter
+operator|->
+name|ifp
+argument_list|,
+name|txr
+operator|->
+name|br
+argument_list|)
+condition|)
+endif|#
+directive|endif
+name|more_tx
+operator|=
+literal|1
+expr_stmt|;
 name|IXGBE_TX_UNLOCK
 argument_list|(
 name|txr
-argument_list|)
-expr_stmt|;
-name|more_rx
-operator|=
-name|ixgbe_rxeof
-argument_list|(
-name|que
-argument_list|,
-name|adapter
-operator|->
-name|rx_process_limit
 argument_list|)
 expr_stmt|;
 comment|/* Do AIM now? */
@@ -6683,8 +6887,8 @@ operator|.
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 block|{
 ifdef|#
@@ -7197,9 +7401,6 @@ name|struct
 name|ixgbe_tx_buf
 modifier|*
 name|txbuf
-decl_stmt|,
-modifier|*
-name|txbuf_mapped
 decl_stmt|;
 name|union
 name|ixgbe_adv_tx_desc
@@ -7252,10 +7453,6 @@ name|tx_buffers
 index|[
 name|first
 index|]
-expr_stmt|;
-name|txbuf_mapped
-operator|=
-name|txbuf
 expr_stmt|;
 name|map
 operator|=
@@ -7821,6 +8018,20 @@ operator|->
 name|m_head
 operator|=
 name|m_head
+expr_stmt|;
+comment|/* Swap the dma map between the first and last descriptor */
+name|txr
+operator|->
+name|tx_buffers
+index|[
+name|first
+index|]
+operator|.
+name|map
+operator|=
+name|txbuf
+operator|->
+name|map
 expr_stmt|;
 name|txbuf
 operator|->
@@ -10363,7 +10574,17 @@ name|adapter
 operator|->
 name|dev
 argument_list|,
-literal|"Using MSI interrupt\n"
+literal|"Using an MSI interrupt\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|device_printf
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|,
+literal|"Using a Legacy interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -11034,15 +11255,17 @@ name|ifp
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_VLAN_HWTAGGING
-operator||
-name|IFCAP_VLAN_MTU
+name|IFCAP_JUMBO_MTU
 expr_stmt|;
 name|ifp
 operator|->
 name|if_capabilities
 operator||=
-name|IFCAP_JUMBO_MTU
+name|IFCAP_VLAN_HWTAGGING
+operator||
+name|IFCAP_VLAN_HWTSO
+operator||
+name|IFCAP_VLAN_MTU
 expr_stmt|;
 name|ifp
 operator|->
@@ -11059,7 +11282,7 @@ name|if_capabilities
 operator||=
 name|IFCAP_LRO
 expr_stmt|;
-comment|/* 	** Dont turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the em driver you can 	** enable this and get full hardware tag filtering. 	*/
+comment|/* 	** Don't turn this on by default, if vlans are 	** created on another pseudo device (eg. lagg) 	** then vlan events are not passed thru, breaking 	** operation, but with HW FILTER off it works. If 	** using vlans directly on the ixgbe driver you can 	** enable this and get full hardware tag filtering. 	*/
 name|ifp
 operator|->
 name|if_capabilities
@@ -12990,8 +13213,8 @@ operator|.
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 name|txr
 operator|->
@@ -13350,8 +13573,8 @@ operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 block|{
 name|u32
@@ -15660,27 +15883,42 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
+name|j
+decl_stmt|,
 name|nsegs
 decl_stmt|,
 name|error
-decl_stmt|,
-name|cleaned
+decl_stmt|;
+name|bool
+name|refreshed
+init|=
+name|FALSE
 decl_stmt|;
 name|i
+operator|=
+name|j
 operator|=
 name|rxr
 operator|->
 name|next_to_refresh
 expr_stmt|;
-name|cleaned
+comment|/* Control the loop with one beyond */
+if|if
+condition|(
+operator|++
+name|j
+operator|==
+name|adapter
+operator|->
+name|num_rx_desc
+condition|)
+name|j
 operator|=
-operator|-
-literal|1
+literal|0
 expr_stmt|;
-comment|/* Signify no completions */
 while|while
 condition|(
-name|i
+name|j
 operator|!=
 name|limit
 condition|)
@@ -16008,42 +16246,42 @@ operator|.
 name|ds_addr
 argument_list|)
 expr_stmt|;
-name|cleaned
+name|refreshed
 operator|=
-name|i
+name|TRUE
 expr_stmt|;
-comment|/* Calculate next index */
-if|if
-condition|(
-operator|++
-name|i
-operator|==
-name|adapter
-operator|->
-name|num_rx_desc
-condition|)
+comment|/* Next is precalculated */
 name|i
 operator|=
-literal|0
+name|j
 expr_stmt|;
-comment|/* This is the work marker for refresh */
 name|rxr
 operator|->
 name|next_to_refresh
 operator|=
 name|i
 expr_stmt|;
+if|if
+condition|(
+operator|++
+name|j
+operator|==
+name|adapter
+operator|->
+name|num_rx_desc
+condition|)
+name|j
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|update
 label|:
 if|if
 condition|(
-name|cleaned
-operator|!=
-operator|-
-literal|1
+name|refreshed
 condition|)
-comment|/* If we refreshed some, bump tail */
+comment|/* Update hardware tail index */
 name|IXGBE_WRITE_REG
 argument_list|(
 operator|&
@@ -16058,7 +16296,9 @@ operator|->
 name|me
 argument_list|)
 argument_list|,
-name|cleaned
+name|rxr
+operator|->
+name|next_to_refresh
 argument_list|)
 expr_stmt|;
 return|return;
@@ -17287,6 +17527,12 @@ name|rx_bytes
 operator|=
 literal|0
 expr_stmt|;
+name|rxr
+operator|->
+name|discard
+operator|=
+name|FALSE
+expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
 name|rxr
@@ -17317,8 +17563,8 @@ operator|.
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 operator|)
 operator|&&
 operator|(
@@ -17539,6 +17785,13 @@ name|IXGBE_SRRCTL_BSIZEHDRSIZE_SHIFT
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|BSIZEPKT_ROUNDUP
+value|((1<<IXGBE_SRRCTL_BSIZEPKT_SHIFT)-1)
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -17695,9 +17948,13 @@ argument_list|)
 expr_stmt|;
 name|bufsz
 operator|=
+operator|(
 name|adapter
 operator|->
 name|rx_mbuf_sz
+operator|+
+name|BSIZEPKT_ROUNDUP
+operator|)
 operator|>>
 name|IXGBE_SRRCTL_BSIZEPKT_SHIFT
 expr_stmt|;
@@ -17887,11 +18144,10 @@ operator|.
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 block|{
-comment|/* PSRTYPE must be initialized in 82599 */
 name|u32
 name|psrtype
 init|=
@@ -19495,7 +19751,15 @@ name|sendmp
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* secondary frag */
+name|mp
+operator|->
+name|m_flags
+operator|&=
+operator|~
+name|M_PKTHDR
+expr_stmt|;
 name|sendmp
 operator|->
 name|m_pkthdr
@@ -19506,6 +19770,7 @@ name|mp
 operator|->
 name|m_len
 expr_stmt|;
+block|}
 else|else
 block|{
 comment|/* first desc of a non-ps chain */
@@ -19764,11 +20029,11 @@ block|}
 comment|/* Refresh any remaining buf structs */
 if|if
 condition|(
-name|processed
-operator|!=
-literal|0
+name|ixgbe_rx_unrefreshed
+argument_list|(
+name|rxr
+argument_list|)
 condition|)
-block|{
 name|ixgbe_refresh_mbufs
 argument_list|(
 name|rxr
@@ -19776,11 +20041,6 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
-name|processed
-operator|=
-literal|0
-expr_stmt|;
-block|}
 name|rxr
 operator|->
 name|next_to_check
@@ -20429,8 +20689,8 @@ operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 for|for
 control|(
@@ -20534,19 +20794,7 @@ name|mask
 operator||=
 name|IXGBE_EIMS_GPI_SDP1
 expr_stmt|;
-comment|/* 82599 specific interrupts */
-if|if
-condition|(
-name|adapter
-operator|->
-name|hw
-operator|.
-name|mac
-operator|.
-name|type
-operator|==
-name|ixgbe_mac_82599EB
-condition|)
+else|else
 block|{
 name|mask
 operator||=
@@ -22299,8 +22547,8 @@ operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 block|{
 name|adapter
@@ -22962,8 +23210,8 @@ operator|->
 name|mac
 operator|.
 name|type
-operator|==
-name|ixgbe_mac_82599EB
+operator|!=
+name|ixgbe_mac_82598EB
 condition|)
 block|{
 name|adapter
@@ -25478,6 +25726,8 @@ parameter_list|)
 block|{
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|adapter

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998-2008 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
+comment|/*  * Copyright (c) 1998-2010 Sendmail, Inc. and its suppliers.  *	All rights reserved.  * Copyright (c) 1983, 1995-1997 Eric P. Allman.  All rights reserved.  * Copyright (c) 1988, 1993  *	The Regents of the University of California.  All rights reserved.  *  * By using this file, you agree to the terms and conditions set  * forth in the LICENSE file which can be found at the top level of  * the sendmail distribution.  *  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_macro
 name|SM_RCSID
 argument_list|(
-literal|"@(#)$Id: deliver.c,v 8.1020 2009/12/18 17:08:01 ca Exp $"
+literal|"@(#)$Id: deliver.c,v 8.1024 2011/01/12 23:52:59 ca Exp $"
 argument_list|)
 end_macro
 
@@ -7131,7 +7131,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	**  Call the mailer. 	**	The argument vector gets built, pipes 	**	are created as necessary, and we fork& exec as 	**	appropriate. 	**	If we are running SMTP, we just need to clean up. 	*/
-comment|/* XXX this seems a bit wierd */
+comment|/* XXX this seems a bit weird */
 if|if
 condition|(
 name|ctladdr
@@ -8380,6 +8380,11 @@ name|mci_exitstat
 operator|=
 name|i
 expr_stmt|;
+name|mci_clr_extensions
+argument_list|(
+name|mci
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|NAMED_BIND
@@ -9595,6 +9600,26 @@ name|LOGIN_SETRESOURCES
 operator||
 name|LOGIN_SETPRIORITY
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|LOGIN_SETCPUMASK
+name|sucflags
+operator||=
+name|LOGIN_SETCPUMASK
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOGIN_SETCPUMASK */
+ifdef|#
+directive|ifdef
+name|LOGIN_SETLOGINCLASS
+name|sucflags
+operator||=
+name|LOGIN_SETLOGINCLASS
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* LOGIN_SETLOGINCLASS */
 ifdef|#
 directive|ifdef
 name|LOGIN_SETMAC
@@ -12431,12 +12456,10 @@ operator|->
 name|mci_flags
 argument_list|)
 expr_stmt|;
+name|mci_clr_extensions
+argument_list|(
 name|mci
-operator|->
-name|mci_flags
-operator|&=
-operator|~
-name|MCIF_EXTENS
+argument_list|)
 expr_stmt|;
 goto|goto
 name|reconnect
@@ -12636,12 +12659,10 @@ operator|==
 literal|0
 condition|)
 block|{
+name|mci_clr_extensions
+argument_list|(
 name|mci
-operator|->
-name|mci_flags
-operator|&=
-operator|~
-name|MCIF_EXTENS
+argument_list|)
 expr_stmt|;
 name|mci
 operator|->
@@ -24841,6 +24862,9 @@ name|USE_OPENSSL_ENGINE
 if|if
 condition|(
 operator|!
+name|SSLEngineInitialized
+operator|&&
+operator|!
 name|SSL_set_engine
 argument_list|(
 name|NULL
@@ -24860,6 +24884,10 @@ return|return
 name|EX_TEMPFAIL
 return|;
 block|}
+name|SSLEngineInitialized
+operator|=
+name|true
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* USE_OPENSSL_ENGINE */

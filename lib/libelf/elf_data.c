@@ -1157,9 +1157,15 @@ name|d
 operator|->
 name|d_buf
 operator|=
+operator|(
 name|sh_type
 operator|==
 name|SHT_NOBITS
+operator|||
+name|sh_size
+operator|==
+literal|0
+operator|)
 condition|?
 name|NULL
 else|:

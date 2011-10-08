@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<net/if.h>
 end_include
 
@@ -1216,6 +1222,16 @@ argument_list|(
 name|node
 argument_list|)
 decl_stmt|;
+name|taskqueue_drain
+argument_list|(
+name|taskqueue_swi
+argument_list|,
+operator|&
+name|ifp
+operator|->
+name|if_linktask
+argument_list|)
+expr_stmt|;
 name|NG_NODE_REALLY_DIE
 argument_list|(
 name|node
@@ -2425,17 +2441,6 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|RESTARTABLE_PANICS
-comment|/* so we don't get an error msg in LINT */
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -2926,13 +2931,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|priv
-operator|->
-name|autoSrcAddr
-operator|=
-literal|1
-expr_stmt|;
-comment|/* reset auto-src-addr flag */
 name|NG_NODE_REVIVE
 argument_list|(
 name|node

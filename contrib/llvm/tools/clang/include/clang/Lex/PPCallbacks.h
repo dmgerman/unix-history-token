@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/DiagnosticIDs.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -190,6 +196,18 @@ comment|/// directive.
 comment|///
 comment|/// \param EndLoc The location of the last token within the inclusion
 comment|/// directive.
+comment|///
+comment|/// \param SearchPath Contains the search path which was used to find the file
+comment|/// in the file system. If the file was found via an absolute include path,
+comment|/// SearchPath will be empty. For framework includes, the SearchPath and
+comment|/// RelativePath will be split up. For example, if an include of "Some/Some.h"
+comment|/// is found via the framework path
+comment|/// "path/to/Frameworks/Some.framework/Headers/Some.h", SearchPath will be
+comment|/// "path/to/Frameworks/Some.framework/Headers" and RelativePath will be
+comment|/// "Some.h".
+comment|///
+comment|/// \param RelativePath The path relative to SearchPath, at which the include
+comment|/// file was found. This is equal to FileName except for framework includes.
 name|virtual
 name|void
 name|InclusionDirective
@@ -217,6 +235,16 @@ name|File
 argument_list|,
 name|SourceLocation
 name|EndLoc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|SearchPath
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|RelativePath
 argument_list|)
 block|{   }
 comment|/// EndOfMainFile - This callback is invoked when the end of the main file is
@@ -279,6 +307,61 @@ name|PragmaMessage
 argument_list|(
 name|SourceLocation
 name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Str
+argument_list|)
+block|{   }
+comment|/// PragmaDiagnosticPush - This callback is invoked when a
+comment|/// #pragma gcc dianostic push directive is read.
+name|virtual
+name|void
+name|PragmaDiagnosticPush
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Namespace
+argument_list|)
+block|{   }
+comment|/// PragmaDiagnosticPop - This callback is invoked when a
+comment|/// #pragma gcc dianostic pop directive is read.
+name|virtual
+name|void
+name|PragmaDiagnosticPop
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Namespace
+argument_list|)
+block|{   }
+comment|/// PragmaDiagnostic - This callback is invoked when a
+comment|/// #pragma gcc dianostic directive is read.
+name|virtual
+name|void
+name|PragmaDiagnostic
+argument_list|(
+name|SourceLocation
+name|Loc
+argument_list|,
+name|llvm
+operator|::
+name|StringRef
+name|Namespace
+argument_list|,
+name|diag
+operator|::
+name|Mapping
+name|mapping
 argument_list|,
 name|llvm
 operator|::
@@ -527,6 +610,10 @@ argument_list|,
 argument|const FileEntry *File
 argument_list|,
 argument|SourceLocation EndLoc
+argument_list|,
+argument|llvm::StringRef SearchPath
+argument_list|,
+argument|llvm::StringRef RelativePath
 argument_list|)
 block|{
 name|First
@@ -544,6 +631,10 @@ argument_list|,
 name|File
 argument_list|,
 name|EndLoc
+argument_list|,
+name|SearchPath
+argument_list|,
+name|RelativePath
 argument_list|)
 block|;
 name|Second
@@ -561,6 +652,10 @@ argument_list|,
 name|File
 argument_list|,
 name|EndLoc
+argument_list|,
+name|SearchPath
+argument_list|,
+name|RelativePath
 argument_list|)
 block|;   }
 name|virtual
@@ -661,6 +756,99 @@ operator|->
 name|PragmaMessage
 argument_list|(
 name|Loc
+argument_list|,
+name|Str
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaDiagnosticPush
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::StringRef Namespace
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaDiagnosticPush
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaDiagnosticPush
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaDiagnosticPop
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::StringRef Namespace
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaDiagnosticPop
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaDiagnosticPop
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|PragmaDiagnostic
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|llvm::StringRef Namespace
+argument_list|,
+argument|diag::Mapping mapping
+argument_list|,
+argument|llvm::StringRef Str
+argument_list|)
+block|{
+name|First
+operator|->
+name|PragmaDiagnostic
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|,
+name|mapping
+argument_list|,
+name|Str
+argument_list|)
+block|;
+name|Second
+operator|->
+name|PragmaDiagnostic
+argument_list|(
+name|Loc
+argument_list|,
+name|Namespace
+argument_list|,
+name|mapping
 argument_list|,
 name|Str
 argument_list|)

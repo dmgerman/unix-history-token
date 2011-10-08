@@ -384,7 +384,7 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
-comment|/*  				 * Distinguish errors from valid values so we 				 * don't overwrite good data by accident. 				 */
+comment|/* 				 * Distinguish errors from valid values so we 				 * don't overwrite good data by accident. 				 */
 if|if
 condition|(
 name|partial

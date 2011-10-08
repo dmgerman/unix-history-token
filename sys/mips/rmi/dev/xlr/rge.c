@@ -259,18 +259,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/rmi/rmi_mips_exts.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<machine/cpuregs.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/param.h>
 end_include
 

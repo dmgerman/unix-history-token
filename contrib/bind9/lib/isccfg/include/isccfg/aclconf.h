@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2007  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2007, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: aclconf.h,v 1.10 2007/10/12 04:17:18 each Exp $ */
+comment|/* $Id: aclconf.h,v 1.12.72.2 2011-06-17 23:47:12 tbox Exp $ */
 end_comment
 
 begin_ifndef
@@ -49,12 +49,13 @@ argument|dns_acl_t
 argument_list|)
 name|named_acl_cache
 expr_stmt|;
-name|ISC_LIST
-argument_list|(
-argument|dns_iptable_t
-argument_list|)
-name|named_iptable_cache
-expr_stmt|;
+name|isc_mem_t
+modifier|*
+name|mctx
+decl_stmt|;
+name|isc_refcount_t
+name|references
+decl_stmt|;
 block|}
 name|cfg_aclconfctx_t
 typedef|;
@@ -66,33 +67,59 @@ end_comment
 
 begin_function_decl
 name|ISC_LANG_BEGINDECLS
-name|void
-name|cfg_aclconfctx_init
+name|isc_result_t
+name|cfg_aclconfctx_create
 parameter_list|(
+name|isc_mem_t
+modifier|*
+name|mctx
+parameter_list|,
 name|cfg_aclconfctx_t
 modifier|*
-name|ctx
+modifier|*
+name|ret
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Initialize an ACL configuration context.  */
+comment|/*  * Creates and initializes an ACL configuration context.  */
 end_comment
 
 begin_function_decl
 name|void
-name|cfg_aclconfctx_destroy
+name|cfg_aclconfctx_detach
 parameter_list|(
 name|cfg_aclconfctx_t
 modifier|*
-name|ctx
+modifier|*
+name|actxp
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Destroy an ACL configuration context.  */
+comment|/*  * Removes a reference to an ACL configuration context; when references  * reaches zero, clears the contents and deallocate the structure.  */
+end_comment
+
+begin_function_decl
+name|void
+name|cfg_aclconfctx_attach
+parameter_list|(
+name|cfg_aclconfctx_t
+modifier|*
+name|src
+parameter_list|,
+name|cfg_aclconfctx_t
+modifier|*
+modifier|*
+name|dest
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Attaches a pointer to an existing ACL configuration context.  */
 end_comment
 
 begin_function_decl

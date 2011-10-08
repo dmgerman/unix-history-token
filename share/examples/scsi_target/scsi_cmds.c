@@ -1169,7 +1169,7 @@ modifier|*
 name|istate
 decl_stmt|;
 name|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 modifier|*
 name|sense
 decl_stmt|;
@@ -1197,6 +1197,11 @@ expr_stmt|;
 comment|/* XXX set instead of or? */
 name|sense
 operator|=
+operator|(
+expr|struct
+name|scsi_sense_data_fixed
+operator|*
+operator|)
 operator|&
 name|istate
 operator|->
@@ -1244,7 +1249,7 @@ operator|=
 name|offsetof
 argument_list|(
 expr|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 argument_list|,
 name|sense_key_spec
 index|[
@@ -1255,7 +1260,7 @@ operator|-
 name|offsetof
 argument_list|(
 expr|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 argument_list|,
 name|extra_len
 argument_list|)
@@ -1447,7 +1452,7 @@ modifier|*
 name|istate
 decl_stmt|;
 name|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 modifier|*
 name|sense
 decl_stmt|;
@@ -1504,6 +1509,11 @@ argument_list|)
 expr_stmt|;
 name|sense
 operator|=
+operator|(
+expr|struct
+name|scsi_sense_data_fixed
+operator|*
+operator|)
 operator|&
 name|istate
 operator|->
@@ -1884,7 +1894,7 @@ modifier|*
 name|rsense
 decl_stmt|;
 name|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 modifier|*
 name|sense
 decl_stmt|;
@@ -1936,6 +1946,11 @@ argument_list|)
 expr_stmt|;
 name|sense
 operator|=
+operator|(
+expr|struct
+name|scsi_sense_data_fixed
+operator|*
+operator|)
 operator|&
 name|istate
 operator|->
@@ -2031,7 +2046,7 @@ operator|=
 name|offsetof
 argument_list|(
 expr|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 argument_list|,
 name|extra_len
 argument_list|)
@@ -2498,7 +2513,7 @@ operator|&
 name|CAM_DIR_MASK
 operator|)
 operator|==
-name|CAM_DIR_RESV
+name|CAM_DIR_BOTH
 condition|)
 block|{
 if|if

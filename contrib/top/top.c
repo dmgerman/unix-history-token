@@ -873,7 +873,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCajo"
+literal|"\f qh?en#sdkriIutHmSCajzPo"
 decl_stmt|;
 else|#
 directive|else
@@ -882,7 +882,7 @@ name|char
 name|command_chars
 index|[]
 init|=
-literal|"\f qh?en#sdkriIutHmSCaj"
+literal|"\f qh?en#sdkriIutHmSCajzP"
 decl_stmt|;
 endif|#
 directive|endif
@@ -981,13 +981,21 @@ define|#
 directive|define
 name|CMD_jidtog
 value|21
+define|#
+directive|define
+name|CMD_kidletog
+value|22
+define|#
+directive|define
+name|CMD_pcputog
+value|23
 ifdef|#
 directive|ifdef
 name|ORDER
 define|#
 directive|define
 name|CMD_order
-value|22
+value|24
 endif|#
 directive|endif
 comment|/* set the buffer for stdout */
@@ -1119,6 +1127,12 @@ name|No
 expr_stmt|;
 name|ps
 operator|.
+name|kidle
+operator|=
+name|Yes
+expr_stmt|;
+name|ps
+operator|.
 name|command
 operator|=
 name|NULL
@@ -1199,7 +1213,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"CSIHPabijnquvs:d:U:m:o:t"
+literal|"CSIHPabijnquvzs:d:U:m:o:t"
 argument_list|)
 operator|)
 operator|!=
@@ -1619,7 +1633,21 @@ literal|'P'
 case|:
 name|pcpu_stats
 operator|=
-name|Yes
+operator|!
+name|pcpu_stats
+expr_stmt|;
+break|break;
+case|case
+literal|'z'
+case|:
+name|ps
+operator|.
+name|kidle
+operator|=
+operator|!
+name|ps
+operator|.
+name|kidle
 expr_stmt|;
 break|break;
 default|default:
@@ -1628,7 +1656,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Top version %s\n"
-literal|"Usage: %s [-abCHIijnPqStuv] [-d count] [-m io | cpu] [-o field] [-s time]\n"
+literal|"Usage: %s [-abCHIijnPqStuvz] [-d count] [-m io | cpu] [-o field] [-s time]\n"
 literal|"       [-U username] [number]\n"
 argument_list|,
 name|version_string
@@ -3669,7 +3697,7 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|"Displaying threads %s"
+literal|" Displaying threads %s"
 argument_list|,
 name|ps
 operator|.
@@ -3714,15 +3742,15 @@ name|MT_standout
 operator||
 name|MT_delayed
 argument_list|,
-literal|"Displaying %sCPU"
+literal|" Displaying %s CPU"
 argument_list|,
 name|ps
 operator|.
 name|wcpu
 condition|?
-literal|"W"
+literal|"weighted"
 else|:
-literal|""
+literal|"raw"
 argument_list|)
 expr_stmt|;
 name|header_text
@@ -3915,6 +3943,84 @@ operator|=
 name|format_header
 argument_list|(
 name|uname_field
+argument_list|)
+expr_stmt|;
+name|reset_display
+argument_list|()
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_kidletog
+case|:
+name|ps
+operator|.
+name|kidle
+operator|=
+operator|!
+name|ps
+operator|.
+name|kidle
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" %sisplaying system idle process."
+argument_list|,
+name|ps
+operator|.
+name|kidle
+condition|?
+literal|"D"
+else|:
+literal|"Not d"
+argument_list|)
+expr_stmt|;
+name|putchar
+argument_list|(
+literal|'\r'
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_pcputog
+case|:
+name|pcpu_stats
+operator|=
+operator|!
+name|pcpu_stats
+expr_stmt|;
+name|new_message
+argument_list|(
+name|MT_standout
+operator||
+name|MT_delayed
+argument_list|,
+literal|" Displaying %sCPU statistics."
+argument_list|,
+name|pcpu_stats
+condition|?
+literal|"per-"
+else|:
+literal|"global "
+argument_list|)
+expr_stmt|;
+name|toggle_pcpustats
+argument_list|()
+expr_stmt|;
+name|max_topn
+operator|=
+name|display_updatecpus
+argument_list|(
+operator|&
+name|statics
 argument_list|)
 expr_stmt|;
 name|reset_display

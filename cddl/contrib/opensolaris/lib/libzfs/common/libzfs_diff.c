@@ -575,6 +575,7 @@ operator|++
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -582,13 +583,18 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
-literal|"\\%03o"
+literal|"\\%03hho"
 argument_list|,
+operator|(
+name|unsigned
+name|char
+operator|)
 operator|*
 name|string
 operator|++
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 end_function
