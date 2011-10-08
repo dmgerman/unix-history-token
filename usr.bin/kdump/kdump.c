@@ -608,7 +608,8 @@ name|n
 parameter_list|,
 name|c
 parameter_list|)
-value|do {		\ 	if (decimal)				\ 		printf("%c%ld", c, (long)*i);	\ 	else					\ 		printf("%c%#lx", c, (long)*i);	\ 	i++;					\ 	n--;					\ 	c = ',';				\ 	} while (0);
+define|\
+value|do {							\ 		if (decimal)					\ 			printf("%c%jd", c, (intmax_t)*i);	\ 		else						\ 			printf("%c%#jx", c, (intmax_t)*i);	\ 		i++;						\ 		n--;						\ 		c = ',';					\ 	} while (0)
 end_define
 
 begin_if
@@ -2706,10 +2707,10 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|",%ld"
+literal|",%jd"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -2721,10 +2722,10 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|",%#lx "
+literal|",%#jx "
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -2757,7 +2758,7 @@ expr_stmt|;
 name|ptraceopname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -2800,7 +2801,7 @@ expr_stmt|;
 name|accessmodename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -2835,11 +2836,17 @@ argument_list|)
 expr_stmt|;
 name|flagsandmodename
 argument_list|(
+operator|(
+name|int
+operator|)
 name|ip
 index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ip
 index|[
 literal|1
@@ -2889,7 +2896,7 @@ expr_stmt|;
 name|wait4optname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -2931,7 +2938,7 @@ expr_stmt|;
 name|modename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -2967,7 +2974,7 @@ expr_stmt|;
 name|modename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3012,7 +3019,7 @@ expr_stmt|;
 name|getfsstatflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3057,7 +3064,7 @@ expr_stmt|;
 name|mountflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3093,7 +3100,7 @@ expr_stmt|;
 name|mountflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3240,7 +3247,7 @@ expr_stmt|;
 name|modename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3303,7 +3310,7 @@ expr_stmt|;
 name|rebootoptname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3330,7 +3337,7 @@ expr_stmt|;
 name|modename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3375,7 +3382,7 @@ expr_stmt|;
 name|msyncflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3423,7 +3430,7 @@ expr_stmt|;
 name|mmapprotname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3446,7 +3453,7 @@ expr_stmt|;
 name|mmapflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3493,7 +3500,7 @@ expr_stmt|;
 name|mmapprotname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3516,7 +3523,7 @@ expr_stmt|;
 name|mmapflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3561,7 +3568,7 @@ expr_stmt|;
 name|mmapprotname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3606,7 +3613,7 @@ expr_stmt|;
 name|madvisebehavname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3651,7 +3658,7 @@ expr_stmt|;
 name|prioname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3686,11 +3693,17 @@ argument_list|)
 expr_stmt|;
 name|fcntlcmdname
 argument_list|(
+operator|(
+name|int
+operator|)
 name|ip
 index|[
 literal|0
 index|]
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ip
 index|[
 literal|1
@@ -3726,7 +3739,7 @@ expr_stmt|;
 name|sockdomain
 operator|=
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3753,7 +3766,7 @@ expr_stmt|;
 name|socktypename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3787,7 +3800,7 @@ expr_stmt|;
 name|sockipprotoname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3842,9 +3855,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 operator|*
 name|ip
 operator|==
@@ -3868,7 +3878,7 @@ expr_stmt|;
 name|sockoptname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3927,7 +3937,7 @@ expr_stmt|;
 name|whencename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -3975,7 +3985,7 @@ expr_stmt|;
 name|whencename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4011,7 +4021,7 @@ expr_stmt|;
 name|flockname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4050,7 +4060,7 @@ expr_stmt|;
 name|modename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4086,7 +4096,7 @@ expr_stmt|;
 name|shutdownhowname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4113,7 +4123,7 @@ expr_stmt|;
 name|sockdomainname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4136,7 +4146,7 @@ expr_stmt|;
 name|socktypename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4170,7 +4180,7 @@ expr_stmt|;
 name|rlimitname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4210,7 +4220,7 @@ expr_stmt|;
 name|quotactlname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4241,7 +4251,7 @@ expr_stmt|;
 name|nfssvcname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4447,7 +4457,7 @@ expr_stmt|;
 name|shmatname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4528,7 +4538,7 @@ expr_stmt|;
 name|minheritname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4555,7 +4565,7 @@ expr_stmt|;
 name|rforkname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4586,7 +4596,7 @@ expr_stmt|;
 name|lio_listioname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4617,7 +4627,7 @@ expr_stmt|;
 name|mlockallname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4653,7 +4663,7 @@ expr_stmt|;
 name|schedpolicyname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4683,7 +4693,7 @@ expr_stmt|;
 name|schedpolicyname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4764,7 +4774,7 @@ expr_stmt|;
 name|sendfileflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4800,7 +4810,7 @@ expr_stmt|;
 name|kldsymcmdname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4827,7 +4837,7 @@ expr_stmt|;
 name|sigprocmaskhowname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4900,7 +4910,7 @@ expr_stmt|;
 name|acltypename
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -4967,7 +4977,7 @@ expr_stmt|;
 name|extattrctlname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -5012,7 +5022,7 @@ expr_stmt|;
 name|mountflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -5057,7 +5067,7 @@ expr_stmt|;
 name|thrcreateflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
@@ -5129,7 +5139,7 @@ expr_stmt|;
 name|kldunloadfflagsname
 argument_list|(
 operator|(
-name|int
+name|intmax_t
 operator|)
 operator|*
 name|ip
