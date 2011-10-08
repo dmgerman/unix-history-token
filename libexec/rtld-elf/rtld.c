@@ -3104,10 +3104,10 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* setup TLS for main thread */
+comment|/*      * Processing tls relocations requires having the tls offsets      * initialized.  Prepare offsets before starting initial      * relocation processing.      */
 name|dbg
 argument_list|(
-literal|"initializing initial thread local storage"
+literal|"initializing initial thread local storage offsets"
 argument_list|)
 expr_stmt|;
 name|STAILQ_FOREACH
@@ -3128,11 +3128,6 @@ name|obj
 argument_list|)
 expr_stmt|;
 block|}
-name|allocate_initial_tls
-argument_list|(
-name|obj_list
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|relocate_objects
@@ -3200,6 +3195,17 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*      * Setup TLS for main thread.  This must be done after the      * relocations are processed, since tls initialization section      * might be the subject for relocations.      */
+name|dbg
+argument_list|(
+literal|"initializing initial thread local storage"
+argument_list|)
+expr_stmt|;
+name|allocate_initial_tls
+argument_list|(
+name|obj_list
+argument_list|)
+expr_stmt|;
 name|dbg
 argument_list|(
 literal|"initializing key program variables"
