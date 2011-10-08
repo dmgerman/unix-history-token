@@ -1110,7 +1110,11 @@ name|max_free
 else|:
 name|kmem_map
 operator|->
-name|size
+name|max_offset
+operator|-
+name|kmem_map
+operator|->
+name|min_offset
 expr_stmt|;
 name|vm_map_unlock_read
 argument_list|(
