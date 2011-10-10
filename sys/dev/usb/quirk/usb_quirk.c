@@ -3589,6 +3589,21 @@ name|UQ_MSC_NO_SYNC_CACHE
 argument_list|,
 name|UQ_MATCH_VENDOR_ONLY
 argument_list|)
+block|,
+name|USB_QUIRK
+argument_list|(
+name|INITIO
+argument_list|,
+name|DUMMY
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_MSC_NO_SYNC_CACHE
+argument_list|,
+name|UQ_MATCH_VENDOR_ONLY
+argument_list|)
 block|, }
 decl_stmt|;
 end_decl_stmt
