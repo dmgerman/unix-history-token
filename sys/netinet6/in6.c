@@ -7875,12 +7875,13 @@ name|ia
 operator|->
 name|ia_flags
 operator|&
-name|IFA_ROUTE
+name|IFA_RTSELF
 operator|)
 operator|&&
 operator|(
 name|V_nd6_useloopback
-operator|||
+operator|&&
+operator|!
 operator|(
 name|ifp
 operator|->
