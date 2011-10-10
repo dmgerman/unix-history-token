@@ -2233,10 +2233,6 @@ name|struct
 name|gif_softc
 modifier|*
 name|sc
-init|=
-name|ifp
-operator|->
-name|if_softc
 decl_stmt|;
 name|struct
 name|etherip_header
@@ -2268,6 +2264,12 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|sc
+operator|=
+name|ifp
+operator|->
+name|if_softc
+expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr
