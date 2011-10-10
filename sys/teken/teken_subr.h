@@ -1610,7 +1610,11 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
-name|row
+name|t
+operator|->
+name|t_cursor
+operator|.
+name|tp_row
 operator|>=
 name|t
 operator|->
