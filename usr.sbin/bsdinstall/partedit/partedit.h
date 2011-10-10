@@ -164,9 +164,6 @@ name|struct
 name|ggeom
 modifier|*
 name|lg_geom
-parameter_list|,
-name|int
-name|force
 parameter_list|)
 function_decl|;
 end_function_decl
