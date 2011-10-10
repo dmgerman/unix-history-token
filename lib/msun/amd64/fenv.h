@@ -27,6 +27,24 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__fenv_static
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__fenv_static
+value|static
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -290,8 +308,8 @@ value|__asm __volatile("stmxcsr %0" : "=m" (*(__csr)))
 end_define
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|feclearexcept
 parameter_list|(
@@ -371,8 +389,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fegetexceptflag
 parameter_list|(
@@ -447,8 +465,8 @@ function_decl|;
 end_function_decl
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fetestexcept
 parameter_list|(
@@ -489,8 +507,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fegetround
 parameter_list|(
@@ -518,8 +536,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fesetround
 parameter_list|(
@@ -623,8 +641,8 @@ function_decl|;
 end_function_decl
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fesetenv
 parameter_list|(
@@ -695,9 +713,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/* We currently provide no external definition of fegetexcept(). */
+end_comment
+
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|fegetexcept
 parameter_list|(
