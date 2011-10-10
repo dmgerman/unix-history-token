@@ -251,6 +251,8 @@ parameter_list|(
 name|struct
 name|in_ifaddr
 modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2613,6 +2615,8 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ia
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ia
@@ -2677,6 +2681,8 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ia
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ia
@@ -2840,6 +2846,8 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ia
+argument_list|,
+name|LLE_STATIC
 argument_list|)
 expr_stmt|;
 comment|/* 		 * in_ifadown gets rid of all the rest of 		 * the routes.  This is not quite the right 		 * thing to do, but at least if we are running 		 * a routing process they will come back. 		 */
@@ -3975,11 +3983,16 @@ name|struct
 name|in_ifaddr
 modifier|*
 name|ia
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 block|{
 name|in_scrubprefix
 argument_list|(
 name|ia
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -4233,6 +4246,8 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ia
+argument_list|,
+name|LLE_STATIC
 argument_list|)
 expr_stmt|;
 name|ia
@@ -5232,6 +5247,9 @@ name|struct
 name|in_ifaddr
 modifier|*
 name|target
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -5413,7 +5431,14 @@ block|}
 if|if
 condition|(
 name|freeit
+operator|&&
+operator|(
+name|flags
+operator|&
+name|LLE_STATIC
+operator|)
 condition|)
+block|{
 name|error
 operator|=
 name|ifa_del_loopback_route
@@ -5449,6 +5474,13 @@ operator|&=
 operator|~
 name|IFA_RTSELF
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|flags
+operator|&
+name|LLE_STATIC
+condition|)
 comment|/* remove arp cache */
 name|arp_ifscrub
 argument_list|(
@@ -5805,6 +5837,8 @@ operator|*
 operator|)
 operator|&
 name|mask0
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 comment|/* 	 * As no-one seem to have this prefix, we can remove the route. 	 */
@@ -6401,6 +6435,9 @@ name|struct
 name|sockaddr
 modifier|*
 name|mask
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 block|{
 specifier|const
@@ -6471,6 +6508,7 @@ argument_list|,
 argument|next
 argument_list|)
 block|{
+comment|/*  			 * (flags& LLE_STATIC) means deleting all entries 			 * including static ARP entries 			 */
 if|if
 condition|(
 name|IN_ARE_MASKED_ADDR_EQUAL
@@ -6489,6 +6527,23 @@ name|pfx
 argument_list|,
 name|msk
 argument_list|)
+operator|&&
+operator|(
+operator|(
+name|flags
+operator|&
+name|LLE_STATIC
+operator|)
+operator|||
+operator|!
+operator|(
+name|lle
+operator|->
+name|la_flags
+operator|&
+name|LLE_STATIC
+operator|)
+operator|)
 condition|)
 block|{
 name|int

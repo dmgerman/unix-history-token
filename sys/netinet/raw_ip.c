@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/if_ether.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/ip.h>
 end_include
 
@@ -3085,6 +3091,8 @@ operator|->
 name|ia_ifp
 argument_list|,
 name|ia
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 				 * in_ifadown gets rid of all the rest of the 				 * routes.  This is not quite the right thing 				 * to do, but at least if we are running a 				 * routing process they will come back. 				 */
@@ -3211,6 +3219,33 @@ condition|)
 name|flags
 operator||=
 name|RTF_HOST
+expr_stmt|;
+name|err
+operator|=
+name|ifa_del_loopback_route
+argument_list|(
+operator|(
+expr|struct
+name|ifaddr
+operator|*
+operator|)
+name|ia
+argument_list|,
+name|sa
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+operator|==
+literal|0
+condition|)
+name|ia
+operator|->
+name|ia_flags
+operator|&=
+operator|~
+name|IFA_RTSELF
 expr_stmt|;
 name|err
 operator|=
