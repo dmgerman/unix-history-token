@@ -573,6 +573,13 @@ name|void
 modifier|*
 name|ro_lle
 decl_stmt|;
+name|void
+modifier|*
+name|ro_ia
+decl_stmt|;
+name|int
+name|ro_flags
+decl_stmt|;
 name|union
 name|sctp_sockstore
 name|_l_addr
