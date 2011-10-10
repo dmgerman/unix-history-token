@@ -1153,6 +1153,7 @@ name|etype
 operator|=
 name|ETYPE_DES3_CBC_SHA1
 expr_stmt|;
+break|break;
 default|default:
 name|etype
 operator|=
