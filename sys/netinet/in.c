@@ -2616,7 +2616,7 @@ name|ifp
 argument_list|,
 name|ia
 argument_list|,
-literal|0
+name|LLE_STATIC
 argument_list|)
 expr_stmt|;
 name|ia
@@ -2682,7 +2682,7 @@ name|ifp
 argument_list|,
 name|ia
 argument_list|,
-literal|0
+name|LLE_STATIC
 argument_list|)
 expr_stmt|;
 name|ia
@@ -5666,6 +5666,8 @@ expr_stmt|;
 name|IN_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
+name|error
+operator|=
 name|rtinit
 argument_list|(
 operator|&
@@ -5686,12 +5688,28 @@ name|target
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|target
 operator|->
 name|ia_flags
 operator|&=
 operator|~
 name|IFA_ROUTE
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"in_scrubprefix: err=%d, old prefix delete failed\n"
+argument_list|,
+name|error
+argument_list|)
 expr_stmt|;
 name|error
 operator|=
@@ -5726,6 +5744,16 @@ operator|->
 name|ia_flags
 operator||=
 name|IFA_ROUTE
+expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"in_scrubprefix: err=%d, new prefix add failed\n"
+argument_list|,
+name|error
+argument_list|)
 expr_stmt|;
 name|ifa_free
 argument_list|(
@@ -5842,6 +5870,8 @@ name|flags
 argument_list|)
 expr_stmt|;
 comment|/* 	 * As no-one seem to have this prefix, we can remove the route. 	 */
+name|error
+operator|=
 name|rtinit
 argument_list|(
 operator|&
@@ -5862,6 +5892,12 @@ name|target
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|target
 operator|->
 name|ia_flags
@@ -5869,9 +5905,19 @@ operator|&=
 operator|~
 name|IFA_ROUTE
 expr_stmt|;
+else|else
+name|log
+argument_list|(
+name|LOG_INFO
+argument_list|,
+literal|"in_scrubprefix: err=%d, prefix delete failed\n"
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|error
 operator|)
 return|;
 block|}
