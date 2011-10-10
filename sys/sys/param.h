@@ -76,6 +76,13 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|P_OSREL_SIGWAIT
+value|700000
+end_define
+
+begin_define
+define|#
+directive|define
 name|P_OSREL_SIGSEGV
 value|700004
 end_define
