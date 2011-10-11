@@ -508,6 +508,13 @@ if|if
 condition|(
 name|error
 condition|)
+name|free
+argument_list|(
+name|linux_gidset
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
