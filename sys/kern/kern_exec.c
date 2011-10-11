@@ -3174,26 +3174,6 @@ operator|&=
 operator|~
 name|P_INEXEC
 expr_stmt|;
-comment|/* 	 * If tracing the process, trap to debugger so breakpoints 	 * can be set before the program executes. 	 * Use tdsignal to deliver signal to current thread, use 	 * psignal may cause the signal to be delivered to wrong thread 	 * because that thread will exit, remember we are going to enter 	 * single thread mode. 	 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_flag
-operator|&
-name|P_TRACED
-condition|)
-name|tdsignal
-argument_list|(
-name|p
-argument_list|,
-name|td
-argument_list|,
-name|SIGTRAP
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 comment|/* clear "fork but no exec" flag, as we _are_ execing */
 name|p
 operator|->
