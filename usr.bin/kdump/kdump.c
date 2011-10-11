@@ -609,7 +609,7 @@ name|n
 parameter_list|,
 name|c
 parameter_list|)
-value|do {				\ 	if (decimal)						\ 		printf("%c%jd", c, (intmax_t)*i);		\ 	else							\ 		printf("%c%#jx", c, (intmax_t)*i);		\ 	i++;							\ 	n--;							\ 	c = ',';						\ } while (0)
+value|do {				\ 	if (decimal)						\ 		printf("%c%jd", c, (intmax_t)*i);		\ 	else							\ 		printf("%c%#jx", c, (uintmax_t)*i);		\ 	i++;							\ 	n--;							\ 	c = ',';						\ } while (0)
 end_define
 
 begin_if
