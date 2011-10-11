@@ -508,6 +508,7 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
 name|free
 argument_list|(
 name|linux_gidset
@@ -520,6 +521,7 @@ operator|(
 name|error
 operator|)
 return|;
+block|}
 name|newcred
 operator|=
 name|crget
