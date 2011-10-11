@@ -446,6 +446,31 @@ value|11
 end_define
 
 begin_comment
+comment|/*  * KTR_CAPFAIL - trace capability check failures  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KTR_CAPFAIL
+value|12
+end_define
+
+begin_struct
+struct|struct
+name|ktr_cap_fail
+block|{
+name|cap_rights_t
+name|cap_needed
+decl_stmt|;
+name|cap_rights_t
+name|cap_held
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/*  * KTR_DROP - If this bit is set in ktr_type, then at least one event  * between the previous record and this record was dropped.  */
 end_comment
 
@@ -542,6 +567,13 @@ define|#
 directive|define
 name|KTRFAC_PROCDTOR
 value|(1<<KTR_PROCDTOR)
+end_define
+
+begin_define
+define|#
+directive|define
+name|KTRFAC_CAPFAIL
+value|(1<<KTR_CAPFAIL)
 end_define
 
 begin_comment
@@ -766,6 +798,17 @@ name|void
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ktrcapfail
+parameter_list|(
+name|cap_rights_t
+parameter_list|,
+name|cap_rights_t
 parameter_list|)
 function_decl|;
 end_function_decl
