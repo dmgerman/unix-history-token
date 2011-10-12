@@ -1031,7 +1031,7 @@ condition|(
 name|mflag
 operator|&&
 name|mcount
-operator|<
+operator|<=
 literal|0
 condition|)
 break|break;
