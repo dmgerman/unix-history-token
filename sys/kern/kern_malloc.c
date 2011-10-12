@@ -1920,7 +1920,7 @@ directive|ifdef
 name|DEBUG_MEMGUARD
 if|if
 condition|(
-name|memguard_cmp
+name|memguard_cmp_mtp
 argument_list|(
 name|mtp
 argument_list|,
