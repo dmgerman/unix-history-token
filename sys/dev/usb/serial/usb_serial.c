@@ -1267,6 +1267,16 @@ block|{
 name|uint32_t
 name|subunit
 decl_stmt|;
+if|if
+condition|(
+name|ssc
+operator|->
+name|sc_subunits
+operator|==
+literal|0
+condition|)
+return|return;
+comment|/* not initialized */
 name|usb_proc_drain
 argument_list|(
 operator|&
