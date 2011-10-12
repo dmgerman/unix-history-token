@@ -366,6 +366,14 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x0896
+block|,
+literal|"Intel(R) Centrino(R) Wireless-N 130"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x4229
 block|,
 literal|"Intel(R) Wireless WiFi Link 4965"
