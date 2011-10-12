@@ -286,7 +286,7 @@ index|]
 init|=
 block|{
 block|{
-literal|"GPIO0"
+literal|"PLD0"
 block|,
 literal|0
 block|,
@@ -294,7 +294,7 @@ name|GPIO_PIN_OUTPUT
 block|}
 block|,
 block|{
-literal|"GPIO1"
+literal|"PLD1"
 block|,
 literal|1
 block|,
@@ -302,7 +302,7 @@ name|GPIO_PIN_OUTPUT
 block|}
 block|,
 block|{
-literal|"GPIO2"
+literal|"PLD2"
 block|,
 literal|2
 block|,
@@ -310,7 +310,7 @@ name|GPIO_PIN_OUTPUT
 block|}
 block|,
 block|{
-literal|"GPIO3"
+literal|"PLD3"
 block|,
 literal|3
 block|,
@@ -318,7 +318,7 @@ name|GPIO_PIN_OUTPUT
 block|}
 block|,
 block|{
-literal|"GPIO4"
+literal|"PLD4"
 block|,
 literal|4
 block|,
