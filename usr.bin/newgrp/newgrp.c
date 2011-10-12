@@ -487,7 +487,7 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"setgroups"
+literal|"setgid"
 argument_list|)
 expr_stmt|;
 block|}
@@ -946,7 +946,9 @@ block|{
 if|if
 condition|(
 name|ngrps
-operator|==
+operator|+
+literal|1
+operator|>=
 name|ngrps_max
 condition|)
 name|warnx
