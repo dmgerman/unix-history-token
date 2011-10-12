@@ -26,7 +26,7 @@ file|<vm/pmap.h>
 end_include
 
 begin_comment
-comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	In general, operations on this structure's mutable fields are  *	synchronized using either one of or a combination of the lock on the  *	object that the page belongs to (O), the pool lock for the page (P),  *	or the lock for either the free or paging queues (Q).  If a field is  *	annotated below with two of these locks, then holding either lock is  *	sufficient for read access, but both locks are required for write   *	access.  *  *	In contrast, the synchronization of accesses to the page's dirty field  *	is machine dependent (M).  In the machine-independent layer, the lock  *	on the object that the page belongs to must be held in order to  *	operate on the field.  However, the pmap layer is permitted to set  *	all bits within the field without holding that lock.  Therefore, if  *	the underlying architecture does not support atomic read-modify-write  *	operations on the field's type, then the machine-independent layer  *	must also hold the page queues lock when performing read-modify-write  *	operations and the pmap layer must hold the page queues lock when  *	setting the field.  In the machine-independent layer, the  *	implementation of read-modify-write operations on the field is  *	encapsulated in vm_page_clear_dirty_mask().  */
+comment|/*  *	Management of resident (logical) pages.  *  *	A small structure is kept for each resident  *	page, indexed by page number.  Each structure  *	is an element of several lists:  *  *		A hash table bucket used to quickly  *		perform object/offset lookups  *  *		A list of all pages for a given object,  *		so they can be quickly deactivated at  *		time of deallocation.  *  *		An ordered list of pages due for pageout.  *  *	In addition, the structure contains the object  *	and offset to which this page belongs (for pageout),  *	and sundry status bits.  *  *	In general, operations on this structure's mutable fields are  *	synchronized using either one of or a combination of the lock on the  *	object that the page belongs to (O), the pool lock for the page (P),  *	or the lock for either the free or paging queues (Q).  If a field is  *	annotated below with two of these locks, then holding either lock is  *	sufficient for read access, but both locks are required for write  *	access.  *  *	In contrast, the synchronization of accesses to the page's  *	dirty field is machine dependent (M).  In the  *	machine-independent layer, the lock on the object that the  *	page belongs to must be held in order to operate on the field.  *	However, the pmap layer is permitted to set all bits within  *	the field without holding that lock.  If the underlying  *	architecture does not support atomic read-modify-write  *	operations on the field's type, then the machine-independent  *	layer uses a 32-bit atomic on the aligned 32-bit word that  *	contains the dirty field.  In the machine-independent layer,  *	the implementation of read-modify-write operations on the  *	field is encapsulated in vm_page_clear_dirty_mask().  */
 end_comment
 
 begin_expr_stmt
@@ -140,11 +140,11 @@ directive|if
 name|PAGE_SIZE
 operator|==
 literal|4096
-name|u_char
+name|uint8_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_char
+name|uint8_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
@@ -153,11 +153,11 @@ directive|elif
 name|PAGE_SIZE
 operator|==
 literal|8192
-name|u_short
+name|uint16_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_short
+name|uint16_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
@@ -166,11 +166,11 @@ directive|elif
 name|PAGE_SIZE
 operator|==
 literal|16384
-name|u_int
+name|uint32_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_int
+name|uint32_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
@@ -179,11 +179,11 @@ directive|elif
 name|PAGE_SIZE
 operator|==
 literal|32768
-name|u_long
+name|uint64_t
 name|valid
 decl_stmt|;
 comment|/* map of valid DEV_BSIZE chunks (O) */
-name|u_long
+name|uint64_t
 name|dirty
 decl_stmt|;
 comment|/* map of dirty DEV_BSIZE chunks (M) */
