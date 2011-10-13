@@ -5490,9 +5490,22 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
 name|flags
 operator|&
 name|LLE_STATIC
+operator|)
+operator|&&
+operator|!
+operator|(
+name|target
+operator|->
+name|ia_ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+operator|)
 condition|)
 comment|/* remove arp cache */
 name|arp_ifscrub
