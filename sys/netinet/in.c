@@ -4042,11 +4042,6 @@ name|sockaddr_in
 name|oldaddr
 decl_stmt|;
 name|int
-name|s
-init|=
-name|splimp
-argument_list|()
-decl_stmt|,
 name|flags
 init|=
 name|RTF_UP
@@ -4153,11 +4148,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 comment|/* LIST_REMOVE(ia, ia_hash) is done in in_control */
 name|ia
 operator|->
@@ -4215,11 +4205,6 @@ operator|)
 return|;
 block|}
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|scrub
