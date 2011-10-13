@@ -16984,7 +16984,7 @@ name|ic_flags
 operator|&
 name|IEEE80211_F_SCAN
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
