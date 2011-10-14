@@ -603,11 +603,11 @@ name|csc_next
 control|)
 if|if
 condition|(
-operator|(
 name|csc
 operator|->
 name|csc_invert
 operator|^
+operator|(
 name|iswctype
 argument_list|(
 name|ch
@@ -616,9 +616,9 @@ name|csc
 operator|->
 name|csc_type
 argument_list|)
-operator|)
 operator|!=
 literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -653,11 +653,11 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|(
 name|cs
 operator|->
 name|cs_invert
 operator|^
+operator|(
 name|cset_rangecmp
 argument_list|(
 name|cs
@@ -666,9 +666,9 @@ name|cs_root
 argument_list|,
 name|ch
 argument_list|)
-operator|)
 operator|==
 literal|0
+operator|)
 operator|)
 return|;
 block|}
