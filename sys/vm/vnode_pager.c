@@ -4811,7 +4811,7 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
-comment|/* 	 * pageouts are already clustered, use IO_ASYNC t o force a bawrite() 	 * rather then a bdwrite() to prevent paging I/O from saturating  	 * the buffer cache.  Dummy-up the sequential heuristic to cause 	 * large ranges to cluster.  If neither IO_SYNC or IO_ASYNC is set, 	 * the system decides how to cluster. 	 */
+comment|/* 	 * pageouts are already clustered, use IO_ASYNC to force a bawrite() 	 * rather then a bdwrite() to prevent paging I/O from saturating  	 * the buffer cache.  Dummy-up the sequential heuristic to cause 	 * large ranges to cluster.  If neither IO_SYNC or IO_ASYNC is set, 	 * the system decides how to cluster. 	 */
 name|ioflags
 operator|=
 name|IO_VMIO
