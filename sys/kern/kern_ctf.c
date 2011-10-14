@@ -644,9 +644,41 @@ name|sh_type
 operator|!=
 name|SHT_STRTAB
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s(%d): module %s e_shstrndx is %d, sh_type is %d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|lf
+operator|->
+name|pathname
+argument_list|,
+name|hdr
+operator|->
+name|e_shstrndx
+argument_list|,
+name|shdr
+index|[
+name|hdr
+operator|->
+name|e_shstrndx
+index|]
+operator|.
+name|sh_type
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EFTYPE
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* Allocate memory to buffer the section header strings. */
 if|if
 condition|(
@@ -781,9 +813,28 @@ name|hdr
 operator|->
 name|e_shnum
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s(%d): module %s has no .SUNW_ctf section\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|lf
+operator|->
+name|pathname
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EFTYPE
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* Read the CTF header. */
 if|if
 condition|(
@@ -851,9 +902,28 @@ index|]
 operator|!=
 literal|0xcf
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s(%d): module %s has invalid format\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|lf
+operator|->
+name|pathname
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EFTYPE
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* Check if version 2. */
 if|if
 condition|(
@@ -864,9 +934,34 @@ index|]
 operator|!=
 literal|2
 condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s(%d): module %s CTF format version is %d "
+literal|"(2 expected)\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|__LINE__
+argument_list|,
+name|lf
+operator|->
+name|pathname
+argument_list|,
+name|ctf_hdr
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+name|error
+operator|=
+name|EFTYPE
+expr_stmt|;
 goto|goto
 name|out
 goto|;
+block|}
 comment|/* Check if the data is compressed. */
 if|if
 condition|(
