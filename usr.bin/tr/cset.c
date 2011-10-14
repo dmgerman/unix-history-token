@@ -603,6 +603,7 @@ name|csc_next
 control|)
 if|if
 condition|(
+operator|(
 name|csc
 operator|->
 name|csc_invert
@@ -615,6 +616,7 @@ name|csc
 operator|->
 name|csc_type
 argument_list|)
+operator|)
 operator|!=
 literal|0
 condition|)
@@ -651,6 +653,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+operator|(
 name|cs
 operator|->
 name|cs_invert
@@ -663,6 +666,7 @@ name|cs_root
 argument_list|,
 name|ch
 argument_list|)
+operator|)
 operator|==
 literal|0
 operator|)
