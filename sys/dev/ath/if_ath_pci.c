@@ -184,6 +184,30 @@ end_define
 
 begin_function
 specifier|static
+name|void
+name|ath_pci_setup
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+block|{
+comment|/* 	 * Disable retry timeout to keep PCI Tx retries from 	 * interfering with C3 CPU state. 	 */
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_RETRY_TIMEOUT
+argument_list|,
+literal|0
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|ath_pci_probe
 parameter_list|(
@@ -284,16 +308,10 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable retry timeout to keep PCI Tx retries from 	 * interfering with C3 CPU state. 	 */
-name|pci_write_config
+comment|/* 	 * Setup other PCI bus configuration parameters. 	 */
+name|ath_pci_setup
 argument_list|(
 name|dev
-argument_list|,
-name|PCIR_RETRY_TIMEOUT
-argument_list|,
-literal|0
-argument_list|,
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/*  	 * Setup memory-mapping of PCI registers. 	 */
@@ -812,6 +830,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Suspend/resume resets the PCI configuration space. 	 */
+name|ath_pci_setup
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|ath_resume
 argument_list|(
 operator|&
