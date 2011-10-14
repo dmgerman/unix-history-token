@@ -559,6 +559,9 @@ name|sb
 operator|.
 name|st_size
 operator|>
+operator|(
+name|off_t
+operator|)
 name|SIZE_T_MAX
 condition|)
 name|errx
