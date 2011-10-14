@@ -16566,7 +16566,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|offsetlo
+name|offset1
 expr_stmt|;
 comment|/* uint32_t */
 name|uarg
@@ -16576,7 +16576,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|offsethi
+name|offset2
 expr_stmt|;
 comment|/* uint32_t */
 name|uarg
@@ -16586,7 +16586,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|lenlo
+name|len1
 expr_stmt|;
 comment|/* uint32_t */
 name|uarg
@@ -16596,7 +16596,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|lenhi
+name|len2
 expr_stmt|;
 comment|/* uint32_t */
 operator|*
