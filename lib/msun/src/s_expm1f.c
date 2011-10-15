@@ -137,23 +137,6 @@ operator|&
 literal|0x80000000
 expr_stmt|;
 comment|/* sign bit of x */
-if|if
-condition|(
-name|xsb
-operator|==
-literal|0
-condition|)
-name|y
-operator|=
-name|x
-expr_stmt|;
-else|else
-name|y
-operator|=
-operator|-
-name|x
-expr_stmt|;
-comment|/* y = |x| */
 name|hx
 operator|&=
 literal|0x7fffffff
