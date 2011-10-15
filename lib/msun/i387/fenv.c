@@ -805,5 +805,25 @@ return|;
 block|}
 end_function
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__feenableexcept
+argument_list|,
+name|feenableexcept
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__fedisableexcept
+argument_list|,
+name|fedisableexcept
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 
