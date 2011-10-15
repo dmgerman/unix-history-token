@@ -24044,13 +24044,6 @@ argument_list|(
 name|mac
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|fail1
-goto|;
 name|bwn_wme_init
 argument_list|(
 name|mac
@@ -24109,13 +24102,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|fail1
-label|:
-name|bwn_chip_exit
-argument_list|(
-name|mac
-argument_list|)
-expr_stmt|;
 name|fail0
 label|:
 name|siba_powerdown
