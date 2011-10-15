@@ -508,6 +508,8 @@ name|__ia64__
 argument_list|)
 if|if
 condition|(
+name|i386_read_exec
+operator|&&
 name|SV_PROC_FLAG
 argument_list|(
 name|td
