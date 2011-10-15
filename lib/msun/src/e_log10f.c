@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Return the base 10 logarithm of x. See k_log.c for details on the algorithm.  */
+comment|/*  * Float version of e_log10.c.  See the latter for most comments.  */
 end_comment
 
 begin_include
