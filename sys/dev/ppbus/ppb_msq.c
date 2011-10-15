@@ -868,6 +868,11 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|va_end
+argument_list|(
+name|p_list
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
