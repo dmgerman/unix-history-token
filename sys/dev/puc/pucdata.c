@@ -2315,6 +2315,30 @@ literal|0x1415
 block|,
 literal|0x9501
 block|,
+literal|0x10fc
+block|,
+literal|0xc070
+block|,
+literal|"I-O DATA RSA-PCI2/R"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9501
+block|,
 literal|0x131f
 block|,
 literal|0x2050
