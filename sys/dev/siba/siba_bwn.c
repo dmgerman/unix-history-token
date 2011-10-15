@@ -908,7 +908,7 @@ name|j
 operator|<
 name|i
 condition|;
-name|i
+name|j
 operator|++
 control|)
 name|DEVICE_RESUME
