@@ -1616,7 +1616,16 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|free
+argument_list|(
+name|usrbufs
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 comment|/* Alloc kernel buffers for userland data, copyin write data */
 for|for
 control|(
