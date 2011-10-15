@@ -125,6 +125,14 @@ decl_stmt|;
 block|}
 name|parts
 struct|;
+struct|struct
+block|{
+name|u_int64_t
+name|w
+decl_stmt|;
+block|}
+name|xparts
+struct|;
 block|}
 name|ieee_double_shape_type
 typedef|;
@@ -161,6 +169,14 @@ decl_stmt|;
 block|}
 name|parts
 struct|;
+struct|struct
+block|{
+name|u_int64_t
+name|w
+decl_stmt|;
+block|}
+name|xparts
+struct|;
 block|}
 name|ieee_double_shape_type
 typedef|;
@@ -188,6 +204,23 @@ name|d
 parameter_list|)
 define|\
 value|do {								\   ieee_double_shape_type ew_u;					\   ew_u.value = (d);						\   (ix0) = ew_u.parts.msw;					\   (ix1) = ew_u.parts.lsw;					\ } while (0)
+end_define
+
+begin_comment
+comment|/* Get a 64-bit int from a double. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTRACT_WORD64
+parameter_list|(
+name|ix
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|do {								\   ieee_double_shape_type ew_u;					\   ew_u.value = (d);						\   (ix) = ew_u.xparts.w;						\ } while (0)
 end_define
 
 begin_comment
@@ -241,6 +274,23 @@ name|ix1
 parameter_list|)
 define|\
 value|do {								\   ieee_double_shape_type iw_u;					\   iw_u.parts.msw = (ix0);					\   iw_u.parts.lsw = (ix1);					\   (d) = iw_u.value;						\ } while (0)
+end_define
+
+begin_comment
+comment|/* Set a double from a 64-bit int. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSERT_WORD64
+parameter_list|(
+name|d
+parameter_list|,
+name|ix
+parameter_list|)
+define|\
+value|do {								\   ieee_double_shape_type iw_u;					\   iw_u.xparts.w = (ix);						\   (d) = iw_u.value;						\ } while (0)
 end_define
 
 begin_comment
