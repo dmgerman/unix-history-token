@@ -4277,6 +4277,25 @@ operator|&
 name|IFF_BROADCAST
 condition|)
 block|{
+if|if
+condition|(
+name|ia
+operator|->
+name|ia_subnetmask
+operator|==
+name|IN_RFC3021_MASK
+condition|)
+name|ia
+operator|->
+name|ia_broadaddr
+operator|.
+name|sin_addr
+operator|.
+name|s_addr
+operator|=
+name|INADDR_BROADCAST
+expr_stmt|;
+else|else
 name|ia
 operator|->
 name|ia_broadaddr
@@ -5931,12 +5950,20 @@ name|sin_addr
 operator|.
 name|s_addr
 operator|||
-comment|/* 		      * Check for old-style (host 0) broadcast. 		      */
+comment|/* 		      * Check for old-style (host 0) broadcast, but 		      * taking into account that RFC 3021 obsoletes it. 		      */
+operator|(
+name|ia
+operator|->
+name|ia_subnetmask
+operator|!=
+name|IN_RFC3021_MASK
+operator|&&
 name|t
 operator|==
 name|ia
 operator|->
 name|ia_subnet
+operator|)
 operator|)
 operator|&&
 comment|/* 		      * Check for an all one subnetmask. These 		      * only exist when an interface gets a secondary 		      * address. 		      */
