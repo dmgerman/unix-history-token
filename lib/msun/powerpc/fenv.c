@@ -12,7 +12,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<fenv.h>
+file|"fenv.h"
 end_include
 
 begin_ifdef
