@@ -70,8 +70,6 @@ name|size_t
 parameter_list|,
 name|size_t
 parameter_list|)
-function_decl|throw
-parameter_list|()
 function_decl|;
 end_extern
 
