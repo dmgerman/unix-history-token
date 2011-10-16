@@ -1690,7 +1690,9 @@ specifier|const
 name|char
 modifier|*
 name|ei_abis
-index|[]
+index|[
+literal|256
+index|]
 init|=
 block|{
 literal|"ELFOSABI_SYSV"
@@ -1707,7 +1709,7 @@ literal|"ELFOSABI_86OPEN"
 block|,
 literal|"ELFOSABI_SOLARIS"
 block|,
-literal|"ELFOSABI_MONTEREY"
+literal|"ELFOSABI_AIX"
 block|,
 literal|"ELFOSABI_IRIX"
 block|,
@@ -1718,6 +1720,12 @@ block|,
 literal|"ELFOSABI_MODESTO"
 block|,
 literal|"ELFOSABI_OPENBSD"
+block|,
+index|[
+literal|255
+index|]
+operator|=
+literal|"ELFOSABI_STANDALONE"
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5828,7 +5836,7 @@ name|val
 operator|=
 operator|(
 operator|(
-name|char
+name|uint8_t
 operator|*
 operator|)
 name|base
@@ -5848,7 +5856,7 @@ name|val
 operator|=
 operator|(
 operator|(
-name|char
+name|uint8_t
 operator|*
 operator|)
 name|base
