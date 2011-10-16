@@ -13876,7 +13876,7 @@ name|so_snd
 operator|.
 name|sb_hiwat
 operator|==
-name|tcp_sendspace
+name|V_tcp_sendspace
 operator|)
 operator|&&
 name|metrics
@@ -13988,7 +13988,7 @@ name|so_rcv
 operator|.
 name|sb_hiwat
 operator|==
-name|tcp_recvspace
+name|V_tcp_recvspace
 operator|)
 operator|&&
 name|metrics
