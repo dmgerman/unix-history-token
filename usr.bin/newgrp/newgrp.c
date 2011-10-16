@@ -946,9 +946,7 @@ block|{
 if|if
 condition|(
 name|ngrps
-operator|+
-literal|1
-operator|>=
+operator|==
 name|ngrps_max
 condition|)
 name|warnx
