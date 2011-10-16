@@ -382,6 +382,40 @@ define|\
 value|do {								\   ieee_float_shape_type sf_u;					\   sf_u.word = (i);						\   (d) = sf_u.value;						\ } while (0)
 end_define
 
+begin_comment
+comment|/* Get expsign as a 16 bit int from a long double.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_LDBL_EXPSIGN
+parameter_list|(
+name|i
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|do {								\   union IEEEl2bits ge_u;					\   ge_u.e = (d);							\   (i) = ge_u.xbits.expsign;					\ } while (0)
+end_define
+
+begin_comment
+comment|/* Set expsign of a long double from a 16 bit int.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_LDBL_EXPSIGN
+parameter_list|(
+name|d
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|do {								\   union IEEEl2bits se_u;					\   se_u.e = (d);							\   se_u.xbits.expsign = (v);					\   (d) = se_u.e;							\ } while (0)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
