@@ -1138,7 +1138,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"keymap=%s\n"
+literal|"keymap=\"%s\"\n"
 argument_list|,
 name|km
 operator|->
