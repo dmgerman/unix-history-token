@@ -1451,7 +1451,7 @@ name|b
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(b) = *t_cp; \ 	(cp) ++; \ }
+value|{ \ 	const uint8_t *t_cp = (const uint8_t *)(cp); \ 	(b) = *t_cp; \ 	(cp) ++; \ }
 end_define
 
 begin_define
@@ -1463,7 +1463,7 @@ name|s
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(s) = ((uint16_t)t_cp[0]<< 8) \ 	    | ((uint16_t)t_cp[1]) \ 	    ; \ 	(cp) += 2; \ }
+value|{ \ 	const uint8_t *t_cp = (const uint8_t *)(cp); \ 	(s) = ((uint16_t)t_cp[0]<< 8) \ 	    | ((uint16_t)t_cp[1]) \ 	    ; \ 	(cp) += 2; \ }
 end_define
 
 begin_define
@@ -1475,7 +1475,7 @@ name|l
 parameter_list|,
 name|cp
 parameter_list|)
-value|{ \ 	register uint8_t *t_cp = (uint8_t *)(cp); \ 	(l) = ((uint32_t)t_cp[0]<< 24) \ 	    | ((uint32_t)t_cp[1]<< 16) \ 	    | ((uint32_t)t_cp[2]<< 8) \ 	    | ((uint32_t)t_cp[3]) \ 	    ; \ 	(cp) += 4; \ }
+value|{ \ 	const uint8_t *t_cp = (const uint8_t *)(cp); \ 	(l) = ((uint32_t)t_cp[0]<< 24) \ 	    | ((uint32_t)t_cp[1]<< 16) \ 	    | ((uint32_t)t_cp[2]<< 8) \ 	    | ((uint32_t)t_cp[3]) \ 	    ; \ 	(cp) += 4; \ }
 end_define
 
 begin_define
