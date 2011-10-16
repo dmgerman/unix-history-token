@@ -555,12 +555,15 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uintmax_t
+operator|)
 name|sb
 operator|.
 name|st_size
 operator|>
 operator|(
-name|off_t
+name|uintmax_t
 operator|)
 name|SIZE_T_MAX
 condition|)
