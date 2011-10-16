@@ -104,8 +104,6 @@ decl_stmt|,
 name|r
 decl_stmt|,
 name|y
-decl_stmt|,
-name|y2
 decl_stmt|;
 name|int32_t
 name|i
