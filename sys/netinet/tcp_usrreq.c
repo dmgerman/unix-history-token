@@ -6616,7 +6616,7 @@ name|INP_WLOCK_RECHECK
 end_undef
 
 begin_comment
-comment|/*  * tcp_sendspace and tcp_recvspace are the default send and receive window  * sizes, respectively.  These are obsolescent (this information should  * be set by the route).  */
+comment|/*  * Set the initial send and receive socket buffer sizes for  * newly created TCP sockets.  */
 end_comment
 
 begin_decl_stmt
@@ -6645,7 +6645,7 @@ name|tcp_sendspace
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum outgoing TCP datagram size"
+literal|"Initial send socket buffer size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6676,7 +6676,7 @@ name|tcp_recvspace
 argument_list|,
 literal|0
 argument_list|,
-literal|"Maximum incoming TCP datagram size"
+literal|"Initial receive socket buffer size"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
