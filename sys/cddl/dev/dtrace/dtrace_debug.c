@@ -9,176 +9,18 @@ directive|ifdef
 name|DEBUG
 end_ifdef
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-end_if
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
 
-begin_function
-specifier|static
-name|__inline
-name|int
+begin_define
+define|#
+directive|define
 name|dtrace_cmpset_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-name|dst
-parameter_list|,
-name|u_long
-name|exp
-parameter_list|,
-name|u_long
-name|src
-parameter_list|)
-block|{
-name|u_char
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"	 lock ; 		"
-literal|"	cmpxchgq %2,%1 ;	"
-literal|"       sete	%0 ;		"
-literal|"1:				"
-literal|"# dtrace_cmpset_long"
-operator|:
-literal|"=a"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"=m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 1 */
-operator|:
-literal|"r"
-operator|(
-name|src
-operator|)
-operator|,
-comment|/* 2 */
-literal|"a"
-operator|(
-name|exp
-operator|)
-operator|,
-comment|/* 3 */
-literal|"m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 4 */
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
-begin_elif
-unit|}
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__i386__
-argument_list|)
-end_elif
-
-begin_function
-unit|static
-name|__inline
-name|int
-name|dtrace_cmpset_long
-parameter_list|(
-specifier|volatile
-name|u_long
-modifier|*
-name|dst
-parameter_list|,
-name|u_long
-name|exp
-parameter_list|,
-name|u_long
-name|src
-parameter_list|)
-block|{
-name|u_char
-name|res
-decl_stmt|;
-asm|__asm __volatile(
-literal|"        lock ;            	"
-literal|"       cmpxchgl %2,%1 ;        "
-literal|"       sete    %0 ;            "
-literal|"1:                             "
-literal|"# dtrace_cmpset_long"
-operator|:
-literal|"=a"
-operator|(
-name|res
-operator|)
-operator|,
-comment|/* 0 */
-literal|"=m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 1 */
-operator|:
-literal|"r"
-operator|(
-name|src
-operator|)
-operator|,
-comment|/* 2 */
-literal|"a"
-operator|(
-name|exp
-operator|)
-operator|,
-comment|/* 3 */
-literal|"m"
-operator|(
-operator|*
-name|dst
-operator|)
-comment|/* 4 */
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_return
-return|return
-operator|(
-name|res
-operator|)
-return|;
-end_return
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
+value|atomic_cmpset_long
+end_define
 
 begin_define
 define|#
@@ -187,12 +29,9 @@ name|DTRACE_DEBUG_BUFR_SIZE
 value|(32 * 1024)
 end_define
 
-begin_macro
-unit|struct
+begin_struct
+struct|struct
 name|dtrace_debug_data
-end_macro
-
-begin_block
 block|{
 name|char
 name|bufr
@@ -213,15 +52,12 @@ modifier|*
 name|next
 decl_stmt|;
 block|}
-end_block
-
-begin_expr_stmt
 name|dtrace_debug_data
 index|[
 name|MAXCPU
 index|]
-expr_stmt|;
-end_expr_stmt
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
