@@ -2915,6 +2915,11 @@ operator|->
 name|sc_miibus
 argument_list|)
 decl_stmt|;
+name|ET_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|mii_pollstat
 argument_list|(
 name|mii
@@ -2935,6 +2940,11 @@ operator|=
 name|mii
 operator|->
 name|mii_media_status
+expr_stmt|;
+name|ET_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
