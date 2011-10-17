@@ -8386,6 +8386,10 @@ argument_list|,
 operator|&
 name|req
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
 operator|+
 name|offset
@@ -8419,6 +8423,11 @@ operator|)
 return|;
 block|}
 block|}
+return|return
+operator|(
+name|USB_ERR_NORMAL_COMPLETION
+operator|)
+return|;
 block|}
 end_function
 
