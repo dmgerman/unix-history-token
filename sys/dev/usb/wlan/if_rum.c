@@ -8310,6 +8310,9 @@ decl_stmt|;
 name|usb_error_t
 name|error
 decl_stmt|;
+name|int
+name|offset
+decl_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -8331,6 +8334,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* write at most 64 bytes at a time */
+for|for
+control|(
+name|offset
+operator|=
+literal|0
+init|;
+name|offset
+operator|<
+name|len
+condition|;
+name|offset
+operator|+=
+literal|64
+control|)
+block|{
 name|USETW
 argument_list|(
 name|req
@@ -8338,6 +8357,8 @@ operator|.
 name|wIndex
 argument_list|,
 name|reg
+operator|+
+name|offset
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -8346,7 +8367,14 @@ name|req
 operator|.
 name|wLength
 argument_list|,
+name|MIN
+argument_list|(
 name|len
+operator|-
+name|offset
+argument_list|,
+literal|64
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -8359,6 +8387,8 @@ operator|&
 name|req
 argument_list|,
 name|buf
+operator|+
+name|offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -8382,12 +8412,13 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
+block|}
 block|}
 end_function
 
