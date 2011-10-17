@@ -9034,18 +9034,6 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_CONTROL
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_dodfs
-condition|)
-block|{
-name|rfilt
-operator||=
-name|HAL_RX_FILTER_PHYRADAR
-expr_stmt|;
-block|}
 comment|/* 	 * Enable RX of compressed BAR frames only when doing 	 * 802.11n. Required for A-MPDU. 	 */
 if|if
 condition|(
