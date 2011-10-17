@@ -2817,14 +2817,12 @@ argument_list|(
 name|miisc
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
 name|mii_mediachg
 argument_list|(
 name|mii
 argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
 operator|)
 return|;
 block|}
