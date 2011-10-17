@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* __kernel_logf(x)  * Return log(x) - (x-1) for x in ~[sqrt(2)/2, sqrt(2)].  */
+comment|/*  * float version of __kernel_log(x). See k_log.c for details.  */
 end_comment
 
 begin_decl_stmt
@@ -133,10 +133,10 @@ if|if
 condition|(
 name|f
 operator|==
-literal|0.0
+literal|0.0f
 condition|)
 return|return
-literal|0.0
+literal|0.0f
 return|;
 return|return
 name|f
