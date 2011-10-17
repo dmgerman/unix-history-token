@@ -7,29 +7,22 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunSoft, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice   * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/*  * Return the base 10 logarithm of x.  See e_log.c and k_log.h for most  * comments.  *  *    log10(x) = (f - 0.5*f*f + k_log1p(f)) / ln10 + k * log10(2)  * in not-quite-routine extra precision.  */
+comment|/*  * Return the base 2 logarithm of x.  See e_log.c and k_log.h for most  * comments.  *  * This reduces x to {k, 1+f} exactly as in e_log.c, then calls the kernel,  * then does the combining and scaling steps  *    log2(x) = (f - 0.5*f*f + k_log1p(f)) / ln2 + k  * in not-quite-routine extra precision.  */
 end_comment
 
 begin_include
@@ -59,29 +52,19 @@ init|=
 literal|1.80143985094819840000e+16
 decl_stmt|,
 comment|/* 0x43500000, 0x00000000 */
-name|ivln10hi
+name|ivln2hi
 init|=
-literal|4.34294481878168880939e-01
+literal|1.44269504072144627571e+00
 decl_stmt|,
-comment|/* 0x3fdbcb7b, 0x15200000 */
-name|ivln10lo
+comment|/* 0x3ff71547, 0x65200000 */
+name|ivln2lo
 init|=
-literal|2.50829467116452752298e-11
-decl_stmt|,
-comment|/* 0x3dbb9438, 0xca9aadd5 */
-name|log10_2hi
-init|=
-literal|3.01029995663611771306e-01
-decl_stmt|,
-comment|/* 0x3FD34413, 0x509F6000 */
-name|log10_2lo
-init|=
-literal|3.69423907715893078616e-13
+literal|1.67517131648865118353e-10
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0x3D59FEF3, 0x11F12B36 */
+comment|/* 0x3de705fc, 0x2eefa200 */
 end_comment
 
 begin_decl_stmt
@@ -96,7 +79,7 @@ end_decl_stmt
 
 begin_function
 name|double
-name|__ieee754_log10
+name|__ieee754_log2
 parameter_list|(
 name|double
 name|x
@@ -120,8 +103,6 @@ decl_stmt|,
 name|w
 decl_stmt|,
 name|y
-decl_stmt|,
-name|y2
 decl_stmt|;
 name|int32_t
 name|i
@@ -307,7 +288,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-comment|/* See e_log2.c for most details. */
+comment|/* 	 * f-hfsq must (for args near 1) be evaluated in extra precision 	 * to avoid a large cancellation when x is near sqrt(2) or 1/sqrt(2). 	 * This is fairly efficient since f-hfsq only depends on f, so can 	 * be evaluated in parallel with R.  Not combining hfsq with R also 	 * keeps R small (though not as small as a true `lo' term would be), 	 * so that extra precision is not needed for terms involving R. 	 * 	 * Compiler bugs involving extra precision used to break Dekker's 	 * theorem for spitting f-hfsq as hi+lo, unless double_t was used 	 * or the multi-precision calculations were avoided when double_t 	 * has extra precision.  These problems are now automatically 	 * avoided as a side effect of the optimization of combining the 	 * Dekker splitting step with the clear-low-bits step. 	 * 	 * y must (for args near sqrt(2) and 1/sqrt(2)) be added in extra 	 * precision to avoid a very large cancellation when x is very near 	 * these values.  Unlike the above cancellations, this problem is 	 * specific to base 2.  It is strange that adding +-1 is so much 	 * harder than adding +-ln2 or +-log10_2. 	 * 	 * This uses Dekker's theorem to normalize y+val_hi, so the 	 * compiler bugs are back in some configurations, sigh.  And I 	 * don't want to used double_t to avoid them, since that gives a 	 * pessimization and the support for avoiding the pessimization 	 * is not yet available. 	 * 	 * The multi-precision calculations for the multiplications are 	 * routine. 	 */
 name|hi
 operator|=
 name|f
@@ -337,43 +318,33 @@ name|val_hi
 operator|=
 name|hi
 operator|*
-name|ivln10hi
-expr_stmt|;
-name|y2
-operator|=
-name|y
-operator|*
-name|log10_2hi
+name|ivln2hi
 expr_stmt|;
 name|val_lo
 operator|=
-name|y
-operator|*
-name|log10_2lo
-operator|+
 operator|(
 name|lo
 operator|+
 name|hi
 operator|)
 operator|*
-name|ivln10lo
+name|ivln2lo
 operator|+
 name|lo
 operator|*
-name|ivln10hi
+name|ivln2hi
 expr_stmt|;
-comment|/* 	 * Extra precision in for adding y*log10_2hi is not strictly needed 	 * since there is no very large cancellation near x = sqrt(2) or 	 * x = 1/sqrt(2), but we do it anyway since it costs little on CPUs 	 * with some parallelism and it reduces the error for many args. 	 */
+comment|/* spadd(val_hi, val_lo, y), except for not using double_t: */
 name|w
 operator|=
-name|y2
+name|y
 operator|+
 name|val_hi
 expr_stmt|;
 name|val_lo
 operator|+=
 operator|(
-name|y2
+name|y
 operator|-
 name|w
 operator|)

@@ -3,29 +3,22 @@ begin_comment
 comment|/*  * ====================================================  * Copyright (C) 1993 by Sun Microsystems, Inc. All rights reserved.  *  * Developed at SunPro, a Sun Microsystems, Inc. business.  * Permission to use, copy, modify, and distribute this  * software is freely granted, provided that this notice  * is preserved.  * ====================================================  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
 
-begin_decl_stmt
-specifier|static
-name|char
-name|rcsid
-index|[]
-init|=
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
 literal|"$FreeBSD$"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
-comment|/*  * Float version of e_log10.c.  See the latter for most comments.  */
+comment|/*  * Float version of e_log2.c.  See the latter for most comments.  */
 end_comment
 
 begin_include
@@ -55,30 +48,20 @@ init|=
 literal|3.3554432000e+07
 decl_stmt|,
 comment|/* 0x4c000000 */
-name|ivln10hi
+name|ivln2hi
 init|=
-literal|4.3432617188e-01
+literal|1.4428710938e+00
 decl_stmt|,
-comment|/* 0x3ede6000 */
-name|ivln10lo
+comment|/* 0x3fb8b000 */
+name|ivln2lo
 init|=
 operator|-
-literal|3.1689971365e-05
-decl_stmt|,
-comment|/* 0xb804ead9 */
-name|log10_2hi
-init|=
-literal|3.0102920532e-01
-decl_stmt|,
-comment|/* 0x3e9a2080 */
-name|log10_2lo
-init|=
-literal|7.9034151668e-07
+literal|1.7605285393e-04
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* 0x355427db */
+comment|/* 0xb9389ad4 */
 end_comment
 
 begin_decl_stmt
@@ -93,7 +76,7 @@ end_decl_stmt
 
 begin_function
 name|float
-name|__ieee754_log10f
+name|__ieee754_log2f
 parameter_list|(
 name|float
 name|x
@@ -111,8 +94,6 @@ decl_stmt|,
 name|r
 decl_stmt|,
 name|y
-decl_stmt|,
-name|y2
 decl_stmt|;
 name|int32_t
 name|i
@@ -293,7 +274,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-comment|/* See e_log2f.c and e_log2.c for details. */
+comment|/* 	 * We no longer need to avoid falling into the multi-precision 	 * calculations due to compiler bugs breaking Dekker's theorem. 	 * Keep avoiding this as an optimization.  See e_log2.c for more 	 * details (some details are here only because the optimization 	 * is not yet available in double precision). 	 * 	 * Another compiler bug turned up.  With gcc on i386, 	 * (ivln2lo + ivln2hi) would be evaluated in float precision 	 * despite runtime evaluations using double precision.  So we 	 * must cast one of its terms to float_t.  This makes the whole 	 * expression have type float_t, so return is forced to waste 	 * time clobbering its extra precision. 	 */
 if|if
 condition|(
 sizeof|sizeof
@@ -319,21 +300,12 @@ operator|(
 operator|(
 name|float_t
 operator|)
-name|ivln10lo
+name|ivln2lo
 operator|+
-name|ivln10hi
+name|ivln2hi
 operator|)
 operator|+
 name|y
-operator|*
-operator|(
-operator|(
-name|float_t
-operator|)
-name|log10_2lo
-operator|+
-name|log10_2hi
-operator|)
 return|;
 name|hi
 operator|=
@@ -370,29 +342,23 @@ operator|+
 name|r
 expr_stmt|;
 return|return
-name|y
-operator|*
-name|log10_2lo
-operator|+
 operator|(
 name|lo
 operator|+
 name|hi
 operator|)
 operator|*
-name|ivln10lo
+name|ivln2lo
 operator|+
 name|lo
 operator|*
-name|ivln10hi
+name|ivln2hi
 operator|+
 name|hi
 operator|*
-name|ivln10hi
+name|ivln2hi
 operator|+
 name|y
-operator|*
-name|log10_2hi
 return|;
 block|}
 end_function
