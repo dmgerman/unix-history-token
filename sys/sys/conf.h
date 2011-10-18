@@ -696,17 +696,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|D_PSEUDO
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* make_dev() can return NULL */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|D_NEEDGIANT
 value|0x00400000
 end_define
