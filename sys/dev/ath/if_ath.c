@@ -33,6 +33,16 @@ directive|include
 file|"opt_ath.h"
 end_include
 
+begin_comment
+comment|/*  * This is needed for register operations which are performed  * by the driver - eg, calls to ath_hal_gettsf32().  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_ah.h"
+end_include
+
 begin_include
 include|#
 directive|include
