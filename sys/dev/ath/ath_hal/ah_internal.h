@@ -1960,6 +1960,21 @@ define|\
 value|OS_REG_WRITE(_a, _r, OS_REG_READ(_a, _r)&~ (_f))
 end_define
 
+begin_define
+define|#
+directive|define
+name|OS_REG_IS_BIT_SET
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_f
+parameter_list|)
+define|\
+value|((OS_REG_READ(_a, _r)& (_f)) != 0)
+end_define
+
 begin_comment
 comment|/* Analog register writes may require a delay between each one (eg Merlin?) */
 end_comment
