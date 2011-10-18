@@ -8031,9 +8031,20 @@ modifier|*
 name|ktr
 parameter_list|)
 block|{
+switch|switch
+condition|(
+name|ktr
+operator|->
+name|cap_type
+condition|)
+block|{
+case|case
+name|CAPFAIL_NOTCAPABLE
+case|:
+comment|/* operation on fd with insufficient capabilities */
 name|printf
 argument_list|(
-literal|"needed "
+literal|"operation requires "
 argument_list|)
 expr_stmt|;
 name|capname
@@ -8048,7 +8059,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" held "
+literal|", process holds "
 argument_list|)
 expr_stmt|;
 name|capname
@@ -8061,6 +8072,95 @@ operator|->
 name|cap_held
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|CAPFAIL_INCREASE
+case|:
+comment|/* requested more capabilities than fd already has */
+name|printf
+argument_list|(
+literal|"attempt to increase capabilities from "
+argument_list|)
+expr_stmt|;
+name|capname
+argument_list|(
+operator|(
+name|intmax_t
+operator|)
+name|ktr
+operator|->
+name|cap_needed
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" to "
+argument_list|)
+expr_stmt|;
+name|capname
+argument_list|(
+operator|(
+name|intmax_t
+operator|)
+name|ktr
+operator|->
+name|cap_held
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CAPFAIL_SYSCALL
+case|:
+comment|/* called restricted syscall */
+name|printf
+argument_list|(
+literal|"disallowed system call"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CAPFAIL_LOOKUP
+case|:
+comment|/* used ".." in strict-relative mode */
+name|printf
+argument_list|(
+literal|"restricted VFS lookup"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"unknown capability failure: "
+argument_list|)
+expr_stmt|;
+name|capname
+argument_list|(
+operator|(
+name|intmax_t
+operator|)
+name|ktr
+operator|->
+name|cap_needed
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|" "
+argument_list|)
+expr_stmt|;
+name|capname
+argument_list|(
+operator|(
+name|intmax_t
+operator|)
+name|ktr
+operator|->
+name|cap_held
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 block|}
 end_function
 
