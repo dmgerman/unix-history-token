@@ -7865,6 +7865,21 @@ name|ia_flags
 operator||=
 name|IFA_ROUTE
 expr_stmt|;
+comment|/* 		 * Handle the case for ::1 . 		 */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_LOOPBACK
+condition|)
+name|ia
+operator|->
+name|ia_flags
+operator||=
+name|IFA_RTSELF
+expr_stmt|;
 block|}
 comment|/* 	 * add a loopback route to self 	 */
 if|if
@@ -7878,18 +7893,7 @@ operator|&
 name|IFA_RTSELF
 operator|)
 operator|&&
-operator|(
 name|V_nd6_useloopback
-operator|&&
-operator|!
-operator|(
-name|ifp
-operator|->
-name|if_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-operator|)
 condition|)
 block|{
 name|error
