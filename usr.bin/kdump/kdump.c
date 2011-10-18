@@ -8089,7 +8089,7 @@ name|intmax_t
 operator|)
 name|ktr
 operator|->
-name|cap_needed
+name|cap_held
 argument_list|)
 expr_stmt|;
 name|printf
@@ -8104,7 +8104,7 @@ name|intmax_t
 operator|)
 name|ktr
 operator|->
-name|cap_held
+name|cap_needed
 argument_list|)
 expr_stmt|;
 break|break;
