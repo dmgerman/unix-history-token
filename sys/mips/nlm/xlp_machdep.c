@@ -1252,6 +1252,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|arg
 expr_stmt|;
 while|while
