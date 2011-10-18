@@ -150,8 +150,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PATH_CONFIG
+name|PATH_DOTCONFIG
 value|"/boot.config"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_CONFIG
+value|"/boot/config"
 end_define
 
 begin_define
@@ -2454,6 +2461,18 @@ argument_list|(
 name|spa
 argument_list|,
 name|PATH_CONFIG
+argument_list|,
+operator|&
+name|dn
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|zfs_lookup
+argument_list|(
+name|spa
+argument_list|,
+name|PATH_DOTCONFIG
 argument_list|,
 operator|&
 name|dn
