@@ -1378,6 +1378,13 @@ name|hal4AddrAggrSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* BB Read WAR */
+name|pCap
+operator|->
+name|halHasBBReadWar
+operator|=
+name|AH_TRUE
+expr_stmt|;
 return|return
 name|AH_TRUE
 return|;

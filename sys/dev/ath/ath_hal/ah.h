@@ -462,6 +462,11 @@ init|=
 literal|243
 block|,
 comment|/* hardware supports 32bit TSF in RX descriptor */
+name|HAL_CAP_BB_READ_WAR
+init|=
+literal|244
+block|,
+comment|/* baseband read WAR */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;

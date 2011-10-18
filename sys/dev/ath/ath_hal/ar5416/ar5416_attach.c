@@ -4982,6 +4982,20 @@ name|halHasLongRxDescTsf
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* 	 * BB Read WAR: this is only for AR5008/AR9001 NICs 	 * It is also set individually in the AR91xx attach functions. 	 */
+if|if
+condition|(
+name|AR_SREV_OWL
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+name|pCap
+operator|->
+name|halHasBBReadWar
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|if
 condition|(
 name|ath_hal_eepromGetFlag
