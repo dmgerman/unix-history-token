@@ -73,7 +73,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -3730,7 +3730,12 @@ literal|0
 argument_list|,
 literal|"%lu"
 argument_list|,
+name|howmany
+argument_list|(
 name|maxblock
+argument_list|,
+name|blocksize
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|d
