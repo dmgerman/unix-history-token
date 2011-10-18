@@ -89,12 +89,43 @@ begin_comment
 comment|/*  * Bus space tag. XXX endianess info needs to be derived from the blob.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_RMI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|fdtbus_bs_tag
+value|rmi_uart_bus_space
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|fdtbus_bs_tag
 value|NULL
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

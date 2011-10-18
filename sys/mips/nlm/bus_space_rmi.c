@@ -2360,5 +2360,262 @@ parameter_list|)
 block|{ }
 end_function
 
+begin_comment
+comment|/*  * need a special bus space for this, because the Netlogic SoC  * UART allows only 32 bit access to its registers  */
+end_comment
+
+begin_function
+specifier|static
+name|u_int8_t
+name|rmi_uart_bus_space_read_1
+parameter_list|(
+name|void
+modifier|*
+name|tag
+parameter_list|,
+name|bus_space_handle_t
+name|handle
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|)
+block|{
+return|return
+call|(
+name|u_int8_t
+call|)
+argument_list|(
+operator|*
+operator|(
+specifier|volatile
+name|u_int32_t
+operator|*
+operator|)
+operator|(
+name|handle
+operator|+
+name|offset
+operator|)
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|rmi_uart_bus_space_write_1
+parameter_list|(
+name|void
+modifier|*
+name|tag
+parameter_list|,
+name|bus_space_handle_t
+name|handle
+parameter_list|,
+name|bus_size_t
+name|offset
+parameter_list|,
+name|u_int8_t
+name|value
+parameter_list|)
+block|{
+operator|*
+operator|(
+specifier|volatile
+name|u_int32_t
+operator|*
+operator|)
+operator|(
+name|handle
+operator|+
+name|offset
+operator|)
+operator|=
+name|value
+expr_stmt|;
+block|}
+end_function
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|bus_space
+name|local_rmi_uart_bus_space
+init|=
+block|{
+comment|/* cookie */
+operator|(
+name|void
+operator|*
+operator|)
+literal|0
+block|,
+comment|/* mapping/unmapping */
+name|rmi_bus_space_map
+block|,
+name|rmi_bus_space_unmap
+block|,
+name|rmi_bus_space_subregion
+block|,
+comment|/* allocation/deallocation */
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* barrier */
+name|rmi_bus_space_barrier
+block|,
+comment|/* read (single) */
+name|rmi_uart_bus_space_read_1
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* read multiple */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* read region */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* write (single) */
+name|rmi_uart_bus_space_write_1
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* write multiple */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* write region */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* set multiple */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* set region */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* copy */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* read (single) stream */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* read multiple stream */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* read region stream */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* write (single) stream */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* write multiple stream */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+comment|/* write region stream */
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* generic bus_space tag */
+end_comment
+
+begin_decl_stmt
+name|bus_space_tag_t
+name|rmi_uart_bus_space
+init|=
+operator|&
+name|local_rmi_uart_bus_space
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 
