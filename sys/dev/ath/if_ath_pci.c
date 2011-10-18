@@ -672,6 +672,19 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Do a config read to clear pre-existing pci error status. 	 */
+operator|(
+name|void
+operator|)
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_COMMAND
+argument_list|,
+literal|4
+argument_list|)
+expr_stmt|;
 name|ath_detach
 argument_list|(
 name|sc
