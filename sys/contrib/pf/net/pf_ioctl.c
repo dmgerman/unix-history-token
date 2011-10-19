@@ -22495,10 +22495,8 @@ name|pfh_inet6
 decl_stmt|;
 endif|#
 directive|endif
-name|PF_ASSERT
-argument_list|(
-name|MA_NOTOWNED
-argument_list|)
+name|PF_UNLOCK_ASSERT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -22683,10 +22681,8 @@ name|pfh_inet6
 decl_stmt|;
 endif|#
 directive|endif
-name|PF_ASSERT
-argument_list|(
-name|MA_NOTOWNED
-argument_list|)
+name|PF_UNLOCK_ASSERT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

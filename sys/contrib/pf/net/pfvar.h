@@ -1179,11 +1179,17 @@ end_define
 begin_define
 define|#
 directive|define
-name|PF_ASSERT
-parameter_list|(
-name|h
-parameter_list|)
-value|mtx_assert(&V_pf_task_mtx, (h))
+name|PF_LOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&V_pf_task_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_UNLOCK_ASSERT
+parameter_list|()
+value|mtx_assert(&V_pf_task_mtx, MA_NOTOWNED)
 end_define
 
 begin_define
@@ -1191,7 +1197,7 @@ define|#
 directive|define
 name|PF_LOCK
 parameter_list|()
-value|do {				\ 	PF_ASSERT(MA_NOTOWNED);				\ 	mtx_lock(&V_pf_task_mtx);			\ } while(0)
+value|do {				\ 	PF_UNLOCK_ASSERT();				\ 	mtx_lock(&V_pf_task_mtx);			\ } while(0)
 end_define
 
 begin_define
@@ -1199,7 +1205,7 @@ define|#
 directive|define
 name|PF_UNLOCK
 parameter_list|()
-value|do {				\ 	PF_ASSERT(MA_OWNED);				\ 	mtx_unlock(&V_pf_task_mtx);			\ } while(0)
+value|do {				\ 	PF_LOCK_ASSERT();				\ 	mtx_unlock(&V_pf_task_mtx);			\ } while(0)
 end_define
 
 begin_else
@@ -1210,10 +1216,15 @@ end_else
 begin_define
 define|#
 directive|define
-name|PF_ASSERT
-parameter_list|(
-name|h
-parameter_list|)
+name|PF_LOCK_ASSERT
+parameter_list|()
+end_define
+
+begin_define
+define|#
+directive|define
+name|PF_UNLOCK_ASSERT
+parameter_list|()
 end_define
 
 begin_define
