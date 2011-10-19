@@ -8605,7 +8605,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-name|PF_LOCK
+name|PF_UNLOCK
 argument_list|()
 expr_stmt|;
 endif|#
