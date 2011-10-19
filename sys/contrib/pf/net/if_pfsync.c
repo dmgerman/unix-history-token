@@ -16513,7 +16513,7 @@ comment|/* Define startup order. */
 define|#
 directive|define
 name|PFSYNC_SYSINIT_ORDER
-value|SI_SUB_PROTO_BEGIN
+value|SI_SUB_PROTO_IF
 define|#
 directive|define
 name|PFSYNC_MODEVENT_ORDER
@@ -16639,7 +16639,7 @@ name|pfsync
 argument_list|,
 name|pfsync_mod
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)
