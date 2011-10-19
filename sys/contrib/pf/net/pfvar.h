@@ -1207,14 +1207,6 @@ else|#
 directive|else
 end_else
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|mtx
-name|pf_task_mtx
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -1222,7 +1214,6 @@ name|PF_ASSERT
 parameter_list|(
 name|h
 parameter_list|)
-value|mtx_assert(&pf_task_mtx, (h))
 end_define
 
 begin_define
@@ -1230,7 +1221,6 @@ define|#
 directive|define
 name|PF_LOCK
 parameter_list|()
-value|do {				\ 	PF_ASSERT(MA_NOTOWNED);				\ 	mtx_lock(&pf_task_mtx);				\ } while(0)
 end_define
 
 begin_define
@@ -1238,13 +1228,16 @@ define|#
 directive|define
 name|PF_UNLOCK
 parameter_list|()
-value|do {				\ 	PF_ASSERT(MA_OWNED);				\ 	mtx_unlock(&pf_task_mtx);			\ } while(0)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_define
 define|#
