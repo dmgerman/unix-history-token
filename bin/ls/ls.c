@@ -1702,9 +1702,11 @@ name|FTS_WHITEOUT
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* If -l or -s, figure out block size. */
+comment|/* If -i, -l or -s, figure out block size. */
 if|if
 condition|(
+name|f_inode
+operator|||
 name|f_longform
 operator|||
 name|f_size
