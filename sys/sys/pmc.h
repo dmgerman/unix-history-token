@@ -2999,6 +2999,17 @@ begin_comment
 comment|/* sample */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PMC_DEBUG_MIN_CLO
+value|12
+end_define
+
+begin_comment
+comment|/* close */
+end_comment
+
 begin_else
 else|#
 directive|else
