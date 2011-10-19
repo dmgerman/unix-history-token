@@ -2527,13 +2527,6 @@ name|v_state
 operator|=
 name|VDEV_STATE_CANT_OPEN
 expr_stmt|;
-else|else
-name|vdev
-operator|->
-name|v_state
-operator|=
-name|VDEV_STATE_HEALTHY
-expr_stmt|;
 block|}
 name|rc
 operator|=
@@ -4070,6 +4063,12 @@ operator|->
 name|v_read_priv
 operator|=
 name|read_priv
+expr_stmt|;
+name|vdev
+operator|->
+name|v_state
+operator|=
+name|VDEV_STATE_HEALTHY
 expr_stmt|;
 block|}
 else|else
