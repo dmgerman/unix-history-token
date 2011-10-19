@@ -700,6 +700,15 @@ operator|(
 name|NULL
 operator|)
 return|;
+name|fcntl
+argument_list|(
+name|sd
+argument_list|,
+name|F_SETFD
+argument_list|,
+name|FD_CLOEXEC
+argument_list|)
+expr_stmt|;
 name|conn
 operator|->
 name|sd
