@@ -1522,13 +1522,15 @@ if|if
 condition|(
 name|bp
 operator|&&
-name|zio_checksum_error
+name|zio_checksum_verify
 argument_list|(
 name|bp
 argument_list|,
 name|buf
 argument_list|,
 name|offset
+argument_list|,
+name|psize
 argument_list|)
 condition|)
 return|return
