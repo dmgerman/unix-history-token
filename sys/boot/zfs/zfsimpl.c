@@ -4471,7 +4471,7 @@ name|v_read
 argument_list|(
 name|vdev
 argument_list|,
-name|NULL
+name|bp
 argument_list|,
 operator|&
 name|zio_gb
