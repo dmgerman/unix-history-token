@@ -1158,30 +1158,20 @@ directive|ifdef
 name|__FreeBSD__
 end_ifdef
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-expr|struct
+begin_decl_stmt
+specifier|extern
+name|struct
 name|mtx
-argument_list|,
 name|pf_task_mtx
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_define
-define|#
-directive|define
-name|V_pf_task_mtx
-value|VNET(pf_task_mtx)
-end_define
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|PF_LOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&V_pf_task_mtx, MA_OWNED)
+value|mtx_assert(&pf_task_mtx, MA_OWNED)
 end_define
 
 begin_define
@@ -1189,7 +1179,7 @@ define|#
 directive|define
 name|PF_UNLOCK_ASSERT
 parameter_list|()
-value|mtx_assert(&V_pf_task_mtx, MA_NOTOWNED)
+value|mtx_assert(&pf_task_mtx, MA_NOTOWNED)
 end_define
 
 begin_define
@@ -1197,7 +1187,7 @@ define|#
 directive|define
 name|PF_LOCK
 parameter_list|()
-value|do {				\ 	PF_UNLOCK_ASSERT();				\ 	mtx_lock(&V_pf_task_mtx);			\ } while(0)
+value|do {				\ 	PF_UNLOCK_ASSERT();				\ 	mtx_lock(&pf_task_mtx);				\ } while(0)
 end_define
 
 begin_define
@@ -1205,7 +1195,7 @@ define|#
 directive|define
 name|PF_UNLOCK
 parameter_list|()
-value|do {				\ 	PF_LOCK_ASSERT();				\ 	mtx_unlock(&V_pf_task_mtx);			\ } while(0)
+value|do {				\ 	PF_LOCK_ASSERT();				\ 	mtx_unlock(&pf_task_mtx);			\ } while(0)
 end_define
 
 begin_else
@@ -1281,26 +1271,6 @@ name|r
 parameter_list|)
 value|do {	\ 	PF_UNLOCK();					\ 	r = copyout((kaddr), (uaddr), (len));		\ 	PF_LOCK();					\ } while(0)
 end_define
-
-begin_function_decl
-specifier|extern
-name|void
-name|init_pf_mutex
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|extern
-name|void
-name|destroy_pf_mutex
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_define
 define|#
