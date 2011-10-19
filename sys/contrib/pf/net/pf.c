@@ -7797,15 +7797,15 @@ argument|* hz);
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|sx_slock(&V_pf_consistency_lock); 	PF_LOCK(); 	locked =
+argument|sx_slock(&V_pf_consistency_lock); 		PF_LOCK(); 		locked =
 literal|0
-argument|;  	if (V_pf_end_threads) { 		PF_UNLOCK(); 		sx_sunlock(&V_pf_consistency_lock); 		sx_xlock(&V_pf_consistency_lock); 		PF_LOCK();  		pf_purge_expired_states(V_pf_status.states,
+argument|;  		if (V_pf_end_threads) { 			PF_UNLOCK(); 			sx_sunlock(&V_pf_consistency_lock); 			sx_xlock(&V_pf_consistency_lock); 			PF_LOCK();  			pf_purge_expired_states(V_pf_status.states,
 literal|1
-argument|); 		pf_purge_expired_fragments(); 		pf_purge_expired_src_nodes(
+argument|); 			pf_purge_expired_fragments(); 			pf_purge_expired_src_nodes(
 literal|1
-argument|); 		V_pf_end_threads++;  		sx_xunlock(&V_pf_consistency_lock); 		PF_UNLOCK(); 		wakeup(pf_purge_thread); 		kproc_exit(
+argument|); 			V_pf_end_threads++;  			sx_xunlock(&V_pf_consistency_lock); 			PF_UNLOCK(); 			wakeup(pf_purge_thread); 			kproc_exit(
 literal|0
-argument|); 	}
+argument|); 		}
 endif|#
 directive|endif
 argument|s = splsoftnet();
@@ -7815,15 +7815,15 @@ directive|ifdef
 name|__FreeBSD__
 argument|if (!pf_purge_expired_states(
 literal|1
-argument|+ (V_pf_status.states / 	    V_pf_default_rule.timeout[PFTM_INTERVAL]),
-literal|0
-argument|)) { 		PF_UNLOCK(); 		sx_sunlock(&V_pf_consistency_lock); 		sx_xlock(&V_pf_consistency_lock); 		PF_LOCK(); 		locked =
-literal|1
-argument|;  		pf_purge_expired_states(
-literal|1
 argument|+ (V_pf_status.states / 		    V_pf_default_rule.timeout[PFTM_INTERVAL]),
+literal|0
+argument|)) { 			PF_UNLOCK(); 			sx_sunlock(&V_pf_consistency_lock); 			sx_xlock(&V_pf_consistency_lock); 			PF_LOCK(); 			locked =
 literal|1
-argument|); 	}
+argument|;  			pf_purge_expired_states(
+literal|1
+argument|+ (V_pf_status.states / 			    V_pf_default_rule.timeout[PFTM_INTERVAL]),
+literal|1
+argument|); 		}
 else|#
 directive|else
 argument|pf_purge_expired_states(
