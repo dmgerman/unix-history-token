@@ -8087,7 +8087,7 @@ literal|0
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (pfsync_state_in_use_ptr != NULL) 		pfsync_state_in_use_ptr(cur);
+argument|if (pfsync_state_in_use_ptr != NULL&& 		pfsync_state_in_use_ptr(cur))
 else|#
 directive|else
 argument|if (pfsync_state_in_use(cur))
