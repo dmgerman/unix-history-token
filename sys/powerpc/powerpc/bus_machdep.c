@@ -1150,6 +1150,7 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
+asm|__asm __volatile("eieio; sync");
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -1202,6 +1203,7 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
+asm|__asm __volatile("eieio; sync");
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -1254,6 +1256,7 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
+asm|__asm __volatile("eieio; sync");
 name|CTR4
 argument_list|(
 name|KTR_BE_IO
@@ -1306,6 +1309,7 @@ name|addr
 operator|=
 name|val
 expr_stmt|;
+asm|__asm __volatile("eieio; sync");
 block|}
 end_function
 
@@ -2047,6 +2051,7 @@ operator|=
 operator|*
 name|addr
 expr_stmt|;
+asm|__asm __volatile("eieio; sync");
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2100,6 +2105,7 @@ name|ofs
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("lhbrx %0, 0, %1" : "=r"(res) : "r"(addr));
+asm|__asm __volatile("eieio; sync");
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
@@ -2153,6 +2159,7 @@ name|ofs
 argument_list|)
 expr_stmt|;
 asm|__asm __volatile("lwbrx %0, 0, %1" : "=r"(res) : "r"(addr));
+asm|__asm __volatile("eieio; sync");
 name|CTR4
 argument_list|(
 name|KTR_LE_IO
