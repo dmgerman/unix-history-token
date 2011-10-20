@@ -349,6 +349,17 @@ operator|->
 name|bo
 argument_list|)
 expr_stmt|;
+name|bp
+operator|+=
+name|MIN
+argument_list|(
+name|bo
+argument_list|,
+name|edtl
+operator|-
+name|ddtl
+argument_list|)
+expr_stmt|;
 name|bleft
 operator|=
 name|ddtl
