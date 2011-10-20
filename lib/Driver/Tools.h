@@ -795,6 +795,13 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|RemoveCC1UnsupportedArgs
+argument_list|(
+argument|ArgStringList&CmdArgs
+argument_list|)
+specifier|const
+block|;
+name|void
 name|AddCC1OptionsArgs
 argument_list|(
 argument|const ArgList&Args
@@ -1211,7 +1218,62 @@ argument|const char *LinkingOutput
 argument_list|)
 specifier|const
 block|;   }
-block|; }
+block|;
+name|class
+name|LLVM_LIBRARY_VISIBILITY
+name|VerifyDebug
+operator|:
+name|public
+name|DarwinTool
+block|{
+name|public
+operator|:
+name|VerifyDebug
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|)
+operator|:
+name|DarwinTool
+argument_list|(
+literal|"darwin::VerifyDebug"
+argument_list|,
+literal|"dwarfdump"
+argument_list|,
+argument|TC
+argument_list|)
+block|{}
+name|virtual
+name|bool
+name|hasIntegratedCPP
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|virtual
+name|void
+name|ConstructJob
+argument_list|(
+argument|Compilation&C
+argument_list|,
+argument|const JobAction&JA
+argument_list|,
+argument|const InputInfo&Output
+argument_list|,
+argument|const InputInfoList&Inputs
+argument_list|,
+argument|const ArgList&TCArgs
+argument_list|,
+argument|const char *LinkingOutput
+argument_list|)
+specifier|const
+block|;   }
+block|;  }
 comment|/// openbsd -- Directly call GNU Binutils assembler and linker
 name|namespace
 name|openbsd

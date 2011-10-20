@@ -152,11 +152,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// CHECK: declare i32 @f0() readnone
+comment|// CHECK: declare i32 @f0() nounwind readnone
 end_comment
 
 begin_comment
-comment|// CHECK: declare i32 @f1() readonly
+comment|// CHECK: declare i32 @f1() nounwind readonly
 end_comment
 
 begin_comment

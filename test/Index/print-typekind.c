@@ -51,6 +51,16 @@ name|OtherType
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|int
+name|ArrayType
+index|[
+literal|5
+index|]
+typedef|;
+end_typedef
+
 begin_comment
 comment|// RUN: c-index-test -test-print-typekind %s | FileCheck %s
 end_comment
@@ -84,11 +94,11 @@ comment|// CHECK: TypeRef=FooType:1:13 typekind=Typedef [canonical=Int] [isPOD=1
 end_comment
 
 begin_comment
-comment|// CHECK: UnexposedStmt= typekind=Invalid [isPOD=0]
+comment|// CHECK: CompoundStmt= typekind=Invalid [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: UnexposedStmt= typekind=Invalid [isPOD=0]
+comment|// CHECK: DeclStmt= typekind=Invalid [isPOD=0]
 end_comment
 
 begin_comment
@@ -104,11 +114,11 @@ comment|// CHECK: DeclRefExpr=z:3:33 typekind=Typedef [canonical=Int] [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: UnexposedStmt= typekind=Invalid [isPOD=0]
+comment|// CHECK: ReturnStmt= typekind=Invalid [isPOD=0]
 end_comment
 
 begin_comment
-comment|// CHECK: UnexposedExpr= typekind=Pointer [isPOD=1]
+comment|// CHECK: BinaryOperator= typekind=Pointer [isPOD=1]
 end_comment
 
 begin_comment
@@ -121,6 +131,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: TypedefDecl=OtherType:7:16 (Definition) typekind=Typedef [canonical=Double] [isPOD=1]
+end_comment
+
+begin_comment
+comment|// CHECK: TypedefDecl=ArrayType:8:13 (Definition) typekind=Typedef [canonical=ConstantArray] [isPOD=1]
 end_comment
 
 end_unit

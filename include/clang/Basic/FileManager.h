@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -538,8 +544,6 @@ block|;
 comment|/// \brief The virtual directories that we have allocated.  For each
 comment|/// virtual file (e.g. foo/bar/baz.cpp), we add all of its parent
 comment|/// directories (foo/ and foo/bar/) here.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|DirectoryEntry
@@ -550,8 +554,6 @@ operator|>
 name|VirtualDirectoryEntries
 block|;
 comment|/// \brief The virtual files that we have allocated.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|FileEntry
@@ -642,7 +644,7 @@ comment|/// or a directory) as virtual directories.
 name|void
 name|addAncestorsAsVirtualDirs
 argument_list|(
-argument|llvm::StringRef Path
+argument|StringRef Path
 argument_list|)
 block|;
 name|public
@@ -690,28 +692,48 @@ block|;
 comment|/// getDirectory - Lookup, cache, and verify the specified directory
 comment|/// (real or virtual).  This returns NULL if the directory doesn't exist.
 comment|///
+comment|/// \param CacheFailure If true and the file does not exist, we'll cache
+comment|/// the failure to find this file.
 specifier|const
 name|DirectoryEntry
 operator|*
 name|getDirectory
 argument_list|(
-argument|llvm::StringRef DirName
+argument|StringRef DirName
+argument_list|,
+argument|bool CacheFailure = true
 argument_list|)
 block|;
 comment|/// \brief Lookup, cache, and verify the specified file (real or
 comment|/// virtual).  This returns NULL if the file doesn't exist.
 comment|///
-comment|/// \param openFile if true and the file exists, it will be opened.
+comment|/// \param OpenFile if true and the file exists, it will be opened.
+comment|///
+comment|/// \param CacheFailure If true and the file does not exist, we'll cache
+comment|/// the failure to find this file.
 specifier|const
 name|FileEntry
 operator|*
 name|getFile
 argument_list|(
-argument|llvm::StringRef Filename
+argument|StringRef Filename
 argument_list|,
-argument|bool openFile = false
+argument|bool OpenFile = false
+argument_list|,
+argument|bool CacheFailure = true
 argument_list|)
 block|;
+comment|/// \brief Returns the current file system options
+specifier|const
+name|FileSystemOptions
+operator|&
+name|getFileSystemOptions
+argument_list|()
+block|{
+return|return
+name|FileSystemOpts
+return|;
+block|}
 comment|/// \brief Retrieve a file entry for a "virtual" file that acts as
 comment|/// if there were a file with the given name on disk. The file
 comment|/// itself is not accessed.
@@ -720,7 +742,7 @@ name|FileEntry
 operator|*
 name|getVirtualFile
 argument_list|(
-argument|llvm::StringRef Filename
+argument|StringRef Filename
 argument_list|,
 argument|off_t Size
 argument_list|,
@@ -755,7 +777,7 @@ name|MemoryBuffer
 operator|*
 name|getBufferForFile
 argument_list|(
-argument|llvm::StringRef Filename
+argument|StringRef Filename
 argument_list|,
 argument|std::string *ErrorStr =
 literal|0
@@ -767,7 +789,7 @@ comment|// FileManager's FileSystemOptions.
 name|bool
 name|getNoncachedStatValue
 argument_list|(
-argument|llvm::StringRef Path
+argument|StringRef Path
 argument_list|,
 argument|struct stat&StatBuf
 argument_list|)
@@ -778,7 +800,7 @@ comment|/// working directory.
 name|void
 name|FixupRelativePath
 argument_list|(
-argument|llvm::SmallVectorImpl<char>&path
+argument|SmallVectorImpl<char>&path
 argument_list|)
 specifier|const
 block|;
@@ -787,7 +809,7 @@ comment|/// file to the corresponding FileEntry pointer.
 name|void
 name|GetUniqueIDMapping
 argument_list|(
-argument|llvm::SmallVectorImpl<const FileEntry *>&UIDToFiles
+argument|SmallVectorImpl<const FileEntry *>&UIDToFiles
 argument_list|)
 specifier|const
 block|;

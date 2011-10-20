@@ -76,10 +76,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// FIXME: TYPE_FIXED_WIDTH_INT
-end_comment
-
-begin_comment
 comment|// TYPE_COMPLEX
 end_comment
 
@@ -97,6 +93,29 @@ name|Cfloat_ptr
 init|=
 operator|&
 name|Cfloat_val
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// TYPE_ATOMIC
+end_comment
+
+begin_decl_stmt
+atomic|_Atomic
+argument_list|(
+name|int
+argument_list|)
+name|AtomicInt_val
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|AtomicInt
+modifier|*
+name|AtomicInt_ptr
+init|=
+operator|&
+name|AtomicInt_val
 decl_stmt|;
 end_decl_stmt
 

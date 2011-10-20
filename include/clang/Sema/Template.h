@@ -130,8 +130,6 @@ name|private
 label|:
 comment|/// \brief The template argument lists, stored from the innermost template
 comment|/// argument list (first) to the outermost template argument list (last).
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ArgList
@@ -590,8 +588,6 @@ name|public
 operator|:
 comment|/// \brief A set of declarations.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Decl
@@ -653,8 +649,6 @@ name|LocalDeclsMap
 name|LocalDecls
 decl_stmt|;
 comment|/// \brief The set of argument packs we've allocated.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|DeclArgumentPack
@@ -979,8 +973,6 @@ decl_stmt|;
 comment|/// \brief A list of out-of-line class template partial
 comment|/// specializations that will need to be instantiated after the
 comment|/// enclosing class's instantiation is complete.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -1214,6 +1206,11 @@ modifier|*
 name|TemplateParams
 init|=
 literal|0
+parameter_list|,
+name|bool
+name|IsClassScopeSpecialization
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|Decl
@@ -1351,6 +1348,15 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|Decl
+modifier|*
+name|VisitClassScopeFunctionSpecializationDecl
+parameter_list|(
+name|ClassScopeFunctionSpecializationDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
 comment|// Base case. FIXME: Remove once we can instantiate everything.
 name|Decl
 modifier|*
@@ -1371,7 +1377,7 @@ argument_list|()
 operator|.
 name|getCustomDiagID
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Error
 argument_list|,
@@ -1400,8 +1406,6 @@ literal|0
 return|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|std
@@ -1458,8 +1462,6 @@ name|FunctionDecl
 operator|*
 name|D
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|ParmVarDecl

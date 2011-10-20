@@ -213,6 +213,9 @@ decl_stmt|;
 name|class
 name|PreprocessingRecord
 decl_stmt|;
+name|class
+name|ModuleLoader
+decl_stmt|;
 comment|/// Preprocessor - This object engages in a tight little dance with the lexer to
 comment|/// efficiently preprocess tokens.  Lexers know only about tokens within a
 comment|/// single source file, and don't know anything about preprocessor-level issues
@@ -229,16 +232,17 @@ operator|<
 name|Preprocessor
 operator|>
 block|{
-name|Diagnostic
+name|DiagnosticsEngine
 operator|*
 name|Diags
 block|;
 name|LangOptions
+operator|&
 name|Features
 block|;
 specifier|const
 name|TargetInfo
-operator|&
+operator|*
 name|Target
 block|;
 name|FileManager
@@ -256,6 +260,10 @@ block|;
 name|HeaderSearch
 operator|&
 name|HeaderInfo
+block|;
+name|ModuleLoader
+operator|&
+name|TheModuleLoader
 block|;
 comment|/// \brief External source of macros.
 name|ExternalPreprocessorSource
@@ -359,6 +367,11 @@ operator|*
 name|Ident__has_include_next
 block|;
 comment|// __has_include_next
+name|IdentifierInfo
+operator|*
+name|Ident__has_warning
+block|;
+comment|// __has_warning
 name|SourceLocation
 name|DATELoc
 block|,
@@ -384,6 +397,16 @@ literal|1
 block|;
 name|bool
 name|KeepMacroComments
+operator|:
+literal|1
+block|;
+name|bool
+name|SuppressIncludeNotFoundError
+operator|:
+literal|1
+block|;
+name|bool
+name|AutoModuleImport
 operator|:
 literal|1
 block|;
@@ -463,6 +486,35 @@ name|FileEntry
 operator|*
 name|CodeCompletionFile
 block|;
+comment|/// \brief The offset in file for the code-completion point.
+name|unsigned
+name|CodeCompletionOffset
+block|;
+comment|/// \brief The location for the code-completion point. This gets instantiated
+comment|/// when the CodeCompletionFile gets #include'ed for preprocessing.
+name|SourceLocation
+name|CodeCompletionLoc
+block|;
+comment|/// \brief The start location for the file of the code-completion point.
+comment|/// This gets instantiated when the CodeCompletionFile gets #include'ed
+comment|/// for preprocessing.
+name|SourceLocation
+name|CodeCompletionFileLoc
+block|;
+comment|/// \brief The source location of the __import_module__ keyword we just
+comment|/// lexed, if any.
+name|SourceLocation
+name|ModuleImportLoc
+block|;
+comment|/// \brief The source location of the currently-active
+comment|/// #pragma clang arc_cf_code_audited begin.
+name|SourceLocation
+name|PragmaARCCFCodeAuditedLoc
+block|;
+comment|/// \brief True if we hit the code-completion point.
+name|bool
+name|CodeCompletionReached
+block|;
 comment|/// \brief The number of bytes that we will initially skip when entering the
 comment|/// main file, which is used when loading a precompiled preamble, along
 comment|/// with a flag that indicates whether skipping this number of bytes will
@@ -524,12 +576,31 @@ name|TokenLexer
 operator|>
 name|CurTokenLexer
 block|;
+comment|/// \brief The kind of lexer we're currently working with.
+block|enum
+name|CurLexerKind
+block|{
+name|CLK_Lexer
+block|,
+name|CLK_PTHLexer
+block|,
+name|CLK_TokenLexer
+block|,
+name|CLK_CachingLexer
+block|,
+name|CLK_LexAfterModuleImport
+block|}
+name|CurLexerKind
+block|;
 comment|/// IncludeMacroStack - This keeps track of the stack of files currently
 comment|/// #included, and macros currently being expanded from, not counting
 comment|/// CurLexer/CurTokenLexer.
 block|struct
 name|IncludeStackInfo
-block|{
+block|{     enum
+name|CurLexerKind
+name|CurLexerKind
+block|;
 name|Lexer
 operator|*
 name|TheLexer
@@ -553,28 +624,24 @@ name|TheDirLookup
 block|;
 name|IncludeStackInfo
 argument_list|(
-name|Lexer
-operator|*
-name|L
+argument|enum CurLexerKind K
 argument_list|,
-name|PTHLexer
-operator|*
-name|P
+argument|Lexer *L
 argument_list|,
-name|PreprocessorLexer
-operator|*
-name|PPL
+argument|PTHLexer* P
 argument_list|,
-name|TokenLexer
-operator|*
-name|TL
+argument|PreprocessorLexer* PPL
 argument_list|,
-specifier|const
-name|DirectoryLookup
-operator|*
-name|D
+argument|TokenLexer* TL
+argument_list|,
+argument|const DirectoryLookup *D
 argument_list|)
 operator|:
+name|CurLexerKind
+argument_list|(
+name|K
+argument_list|)
+block|,
 name|TheLexer
 argument_list|(
 name|L
@@ -681,11 +748,6 @@ operator|>
 expr|>
 name|PragmaPushMacroInfo
 expr_stmt|;
-comment|/// \brief Expansion source location for the last macro that expanded
-comment|/// to no tokens.
-name|SourceLocation
-name|LastEmptyMacroExpansionLoc
-decl_stmt|;
 comment|// Various statistics we track for performance analysis.
 name|unsigned
 name|NumDirectives
@@ -757,8 +819,6 @@ comment|//
 comment|/// Works like a stack; a TokenLexer adds the macro expanded tokens that is
 comment|/// going to lex in the cache and when it finishes the tokens are removed
 comment|/// from the end of the cache.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Token
@@ -796,8 +856,6 @@ name|private
 label|:
 comment|// Cached tokens state.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Token
@@ -875,27 +933,44 @@ name|public
 label|:
 name|Preprocessor
 argument_list|(
-argument|Diagnostic&diags
+argument|DiagnosticsEngine&diags
 argument_list|,
-argument|const LangOptions&opts
+argument|LangOptions&opts
 argument_list|,
-argument|const TargetInfo&target
+argument|const TargetInfo *target
 argument_list|,
 argument|SourceManager&SM
 argument_list|,
 argument|HeaderSearch&Headers
 argument_list|,
+argument|ModuleLoader&TheModuleLoader
+argument_list|,
 argument|IdentifierInfoLookup *IILookup =
 literal|0
 argument_list|,
 argument|bool OwnsHeaderSearch = false
+argument_list|,
+argument|bool DelayInitialization = false
 argument_list|)
 empty_stmt|;
 operator|~
 name|Preprocessor
 argument_list|()
 expr_stmt|;
-name|Diagnostic
+comment|/// \brief Initialize the preprocessor, if the constructor did not already
+comment|/// perform the initialization.
+comment|///
+comment|/// \param Target Information about the target.
+name|void
+name|Initialize
+parameter_list|(
+specifier|const
+name|TargetInfo
+modifier|&
+name|Target
+parameter_list|)
+function_decl|;
+name|DiagnosticsEngine
 operator|&
 name|getDiagnostics
 argument_list|()
@@ -909,7 +984,7 @@ block|}
 name|void
 name|setDiagnostics
 parameter_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|D
 parameter_list|)
@@ -939,6 +1014,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|Target
 return|;
 block|}
@@ -1055,6 +1131,17 @@ return|return
 name|ExternalSource
 return|;
 block|}
+comment|/// \brief Retrieve the module loader associated with this preprocessor.
+name|ModuleLoader
+operator|&
+name|getModuleLoader
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheModuleLoader
+return|;
+block|}
 comment|/// SetCommentRetentionState - Control whether or not the preprocessor retains
 comment|/// comments in output.
 name|void
@@ -1090,6 +1177,43 @@ block|{
 return|return
 name|KeepComments
 return|;
+block|}
+name|void
+name|SetSuppressIncludeNotFoundError
+parameter_list|(
+name|bool
+name|Suppress
+parameter_list|)
+block|{
+name|SuppressIncludeNotFoundError
+operator|=
+name|Suppress
+expr_stmt|;
+block|}
+name|bool
+name|GetSuppressIncludeNotFoundError
+parameter_list|()
+block|{
+return|return
+name|SuppressIncludeNotFoundError
+return|;
+block|}
+comment|/// \brief Specify whether automatic module imports are enabled.
+name|void
+name|setAutoModuleImport
+parameter_list|(
+name|bool
+name|AutoModuleImport
+init|=
+name|true
+parameter_list|)
+block|{
+name|this
+operator|->
+name|AutoModuleImport
+operator|=
+name|AutoModuleImport
+expr_stmt|;
 block|}
 comment|/// isCurrentLexer - Return true if we are lexing directly from the specified
 comment|/// lexer.
@@ -1252,17 +1376,6 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Expansion source location for the last macro that expanded
-comment|/// to no tokens.
-name|SourceLocation
-name|getLastEmptyMacroExpansionLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LastEmptyMacroExpansionLoc
-return|;
-block|}
 specifier|const
 name|std
 operator|::
@@ -1317,8 +1430,6 @@ name|IdentifierInfo
 modifier|*
 name|getIdentifierInfo
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Name
 argument_list|)
@@ -1339,17 +1450,15 @@ comment|/// If 'Namespace' is non-null, then it is a token required to exist on 
 comment|/// pragma line before the pragma string starts, e.g. "STDC" or "GCC".
 name|void
 name|AddPragmaHandler
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Namespace
-argument_list|,
+parameter_list|,
 name|PragmaHandler
-operator|*
+modifier|*
 name|Handler
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|AddPragmaHandler
 parameter_list|(
@@ -1360,8 +1469,6 @@ parameter_list|)
 block|{
 name|AddPragmaHandler
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 argument_list|()
 argument_list|,
@@ -1375,17 +1482,15 @@ comment|/// be the namespace that \arg Handler was added to. It is an error
 comment|/// to remove a handler that has not been registered.
 name|void
 name|RemovePragmaHandler
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Namespace
-argument_list|,
+parameter_list|,
 name|PragmaHandler
-operator|*
+modifier|*
 name|Handler
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|void
 name|RemovePragmaHandler
 parameter_list|(
@@ -1396,8 +1501,6 @@ parameter_list|)
 block|{
 name|RemovePragmaHandler
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 argument_list|()
 argument_list|,
@@ -1629,22 +1732,25 @@ modifier|&
 name|Result
 parameter_list|)
 block|{
-if|if
+switch|switch
 condition|(
+name|CurLexerKind
+condition|)
+block|{
+case|case
+name|CLK_Lexer
+case|:
 name|CurLexer
-condition|)
-name|CurLexer
 operator|->
 name|Lex
 argument_list|(
 name|Result
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|CurPTHLexer
-condition|)
+break|break;
+case|case
+name|CLK_PTHLexer
+case|:
 name|CurPTHLexer
 operator|->
 name|Lex
@@ -1652,11 +1758,10 @@ argument_list|(
 name|Result
 argument_list|)
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|CurTokenLexer
-condition|)
+break|break;
+case|case
+name|CLK_TokenLexer
+case|:
 name|CurTokenLexer
 operator|->
 name|Lex
@@ -1664,13 +1769,35 @@ argument_list|(
 name|Result
 argument_list|)
 expr_stmt|;
-else|else
+break|break;
+case|case
+name|CLK_CachingLexer
+case|:
 name|CachingLex
 argument_list|(
 name|Result
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|CLK_LexAfterModuleImport
+case|:
+name|LexAfterModuleImport
+argument_list|(
+name|Result
+argument_list|)
+expr_stmt|;
+break|break;
 block|}
+block|}
+name|void
+name|LexAfterModuleImport
+parameter_list|(
+name|Token
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
 comment|/// LexNonComment - Lex a token.  If it's a comment, keep lexing until we get
 comment|/// something not a comment.  This is useful in -E -C mode where comments
 comment|/// would foul up preprocessor directive handling.
@@ -1732,6 +1859,35 @@ name|DisableMacroExpansion
 operator|=
 name|OldVal
 expr_stmt|;
+block|}
+comment|/// LexUnexpandedNonComment - Like LexNonComment, but this disables macro
+comment|/// expansion of identifier tokens.
+name|void
+name|LexUnexpandedNonComment
+parameter_list|(
+name|Token
+modifier|&
+name|Result
+parameter_list|)
+block|{
+do|do
+name|LexUnexpandedToken
+argument_list|(
+name|Result
+argument_list|)
+expr_stmt|;
+do|while
+condition|(
+name|Result
+operator|.
+name|getKind
+argument_list|()
+operator|==
+name|tok
+operator|::
+name|comment
+condition|)
+do|;
 block|}
 comment|/// LookAhead - This peeks ahead N tokens and returns that token without
 comment|/// consuming any tokens.  LookAhead(0) returns the next token that would be
@@ -1987,16 +2143,6 @@ name|unsigned
 name|Column
 parameter_list|)
 function_decl|;
-comment|/// \brief Determine if this source location refers into the file
-comment|/// for which we are performing code completion.
-name|bool
-name|isCodeCompletionFile
-argument_list|(
-name|SourceLocation
-name|FileLoc
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// \brief Determine if we are performing code completion.
 name|bool
 name|isCodeCompletionEnabled
@@ -2008,6 +2154,94 @@ name|CodeCompletionFile
 operator|!=
 literal|0
 return|;
+block|}
+comment|/// \brief Returns the location of the code-completion point.
+comment|/// Returns an invalid location if code-completion is not enabled or the file
+comment|/// containing the code-completion point has not been lexed yet.
+name|SourceLocation
+name|getCodeCompletionLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeCompletionLoc
+return|;
+block|}
+comment|/// \brief Returns the start location of the file of code-completion point.
+comment|/// Returns an invalid location if code-completion is not enabled or the file
+comment|/// containing the code-completion point has not been lexed yet.
+name|SourceLocation
+name|getCodeCompletionFileLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeCompletionFileLoc
+return|;
+block|}
+comment|/// \brief Returns true if code-completion is enabled and we have hit the
+comment|/// code-completion point.
+name|bool
+name|isCodeCompletionReached
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeCompletionReached
+return|;
+block|}
+comment|/// \brief Note that we hit the code-completion point.
+name|void
+name|setCodeCompletionReached
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|isCodeCompletionEnabled
+argument_list|()
+operator|&&
+literal|"Code-completion not enabled!"
+argument_list|)
+expr_stmt|;
+name|CodeCompletionReached
+operator|=
+name|true
+expr_stmt|;
+comment|// Silence any diagnostics that occur after we hit the code-completion.
+name|getDiagnostics
+argument_list|()
+operator|.
+name|setSuppressAllDiagnostics
+argument_list|(
+name|true
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief The location of the currently-active #pragma clang
+comment|/// arc_cf_code_audited begin.  Returns an invalid location if there
+comment|/// is no such pragma active.
+name|SourceLocation
+name|getPragmaARCCFCodeAuditedLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PragmaARCCFCodeAuditedLoc
+return|;
+block|}
+comment|/// \brief Set the location of the currently-active #pragma clang
+comment|/// arc_cf_code_audited begin.  An invalid location ends the pragma.
+name|void
+name|setPragmaARCCFCodeAuditedLoc
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+name|PragmaARCCFCodeAuditedLoc
+operator|=
+name|Loc
+expr_stmt|;
 block|}
 comment|/// \brief Instruct the preprocessor to skip part of the main
 comment|/// the main source file.
@@ -2044,13 +2278,14 @@ comment|/// the specified Token's location, translating the token's start
 comment|/// position in the current buffer into a SourcePosition object for rendering.
 name|DiagnosticBuilder
 name|Diag
-parameter_list|(
+argument_list|(
 name|SourceLocation
 name|Loc
-parameter_list|,
+argument_list|,
 name|unsigned
 name|DiagID
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|Diags
@@ -2065,15 +2300,16 @@ return|;
 block|}
 name|DiagnosticBuilder
 name|Diag
-parameter_list|(
+argument_list|(
 specifier|const
 name|Token
-modifier|&
+operator|&
 name|Tok
-parameter_list|,
+argument_list|,
 name|unsigned
 name|DiagID
-parameter_list|)
+argument_list|)
+decl|const
 block|{
 return|return
 name|Diags
@@ -2096,19 +2332,26 @@ comment|///
 comment|/// \param buffer A buffer which will be used only if the token requires
 comment|///   "cleaning", e.g. if it contains trigraphs or escaped newlines
 comment|/// \param invalid If non-null, will be set \c true if an error occurs.
-name|llvm
-operator|::
 name|StringRef
 name|getSpelling
 argument_list|(
-argument|SourceLocation loc
+name|SourceLocation
+name|loc
 argument_list|,
-argument|llvm::SmallVectorImpl<char>&buffer
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|buffer
 argument_list|,
-argument|bool *invalid =
+name|bool
+operator|*
+name|invalid
+operator|=
 literal|0
 argument_list|)
-specifier|const
+decl|const
 block|{
 return|return
 name|Lexer
@@ -2213,20 +2456,29 @@ block|}
 comment|/// getSpelling - This method is used to get the spelling of a token into a
 comment|/// SmallVector. Note that the returned StringRef may not point to the
 comment|/// supplied buffer if a copy can be avoided.
-name|llvm
-operator|::
 name|StringRef
 name|getSpelling
 argument_list|(
-argument|const Token&Tok
+specifier|const
+name|Token
+operator|&
+name|Tok
 argument_list|,
-argument|llvm::SmallVectorImpl<char>&Buffer
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|Buffer
 argument_list|,
-argument|bool *Invalid =
+name|bool
+operator|*
+name|Invalid
+operator|=
 literal|0
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// getSpellingOfSingleCharacterNumericConstant - Tok is a numeric constant
 comment|/// with length 1, return the character.
 name|char
@@ -2330,7 +2582,13 @@ modifier|&
 name|Tok
 parameter_list|,
 name|SourceLocation
-name|SourceLoc
+name|ExpansionLocStart
+init|=
+name|SourceLocation
+argument_list|()
+parameter_list|,
+name|SourceLocation
+name|ExpansionLocEnd
 init|=
 name|SourceLocation
 argument_list|()
@@ -2814,17 +3072,15 @@ comment|/// spelling of the filename, but is also expected to handle the case wh
 comment|/// this method decides to use a different buffer.
 name|bool
 name|GetIncludeFilenameSpelling
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
-operator|&
+modifier|&
 name|Filename
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// LookupFile - Given a "foo" or<foo> reference, look up the indicated file,
 comment|/// return null on failure.  isAngled indicates whether the file reference is
 comment|/// for system #include's or not (i.e. using<> instead of "").
@@ -2833,8 +3089,6 @@ name|FileEntry
 modifier|*
 name|LookupFile
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Filename
 argument_list|,
@@ -2852,8 +3106,6 @@ operator|*
 operator|&
 name|CurDir
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -2861,14 +3113,16 @@ operator|>
 operator|*
 name|SearchPath
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|StringRef
+operator|*
+name|SuggestedModule
 argument_list|)
 decl_stmt|;
 comment|/// GetCurLookup - The DirectoryLookup structure used to find the current
@@ -2942,6 +3196,8 @@ name|push_back
 argument_list|(
 name|IncludeStackInfo
 argument_list|(
+name|CurLexerKind
+argument_list|,
 name|CurLexer
 operator|.
 name|take
@@ -3026,6 +3282,15 @@ argument_list|()
 operator|.
 name|TheDirLookup
 expr_stmt|;
+name|CurLexerKind
+operator|=
+name|IncludeMacroStack
+operator|.
+name|back
+argument_list|()
+operator|.
+name|CurLexerKind
+expr_stmt|;
 name|IncludeMacroStack
 operator|.
 name|pop_back
@@ -3095,6 +3360,12 @@ name|FoundNonSkipPortion
 parameter_list|,
 name|bool
 name|FoundElse
+parameter_list|,
+name|SourceLocation
+name|ElseLoc
+init|=
+name|SourceLocation
+argument_list|()
 parameter_list|)
 function_decl|;
 comment|/// PTHSkipExcludedConditionalBlock - A fast PTH version of
@@ -3155,8 +3426,6 @@ name|TokenLexer
 operator|*
 name|tokLexer
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|Token
@@ -3439,6 +3708,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|HandleIdentSCCSDirective
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+name|void
+name|HandleMacroExportDirective
 parameter_list|(
 name|Token
 modifier|&

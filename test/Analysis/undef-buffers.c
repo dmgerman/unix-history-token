@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.experimental,core.uninitialized -analyzer-store=region -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.unix,core.uninitialized -analyzer-store=region -verify %s
 end_comment
 
 begin_typedef
@@ -86,6 +86,63 @@ literal|0
 index|]
 return|;
 comment|// expected-warning{{Undefined}}
+block|}
+end_function
+
+begin_comment
+comment|// Exercise the conditional visitor. Radar://10105448
+end_comment
+
+begin_function
+name|char
+name|stackBased3
+parameter_list|(
+name|int
+modifier|*
+name|x
+parameter_list|)
+block|{
+name|char
+name|buf
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|int
+modifier|*
+name|y
+decl_stmt|;
+name|buf
+index|[
+literal|0
+index|]
+operator|=
+literal|'a'
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|y
+operator|=
+name|x
+operator|)
+condition|)
+block|{
+return|return
+name|buf
+index|[
+literal|1
+index|]
+return|;
+comment|// expected-warning{{Undefined}}
+block|}
+return|return
+name|buf
+index|[
+literal|0
+index|]
+return|;
 block|}
 end_function
 

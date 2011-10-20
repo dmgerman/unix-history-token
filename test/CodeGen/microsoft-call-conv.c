@@ -253,7 +253,7 @@ argument_list|(
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call x86_stdcallcc void (...)* bitcast
+comment|// CHECK: call x86_stdcallcc void @f7(i32 0)
 block|}
 end_function
 

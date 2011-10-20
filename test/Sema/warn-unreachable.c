@@ -245,8 +245,8 @@ case|case
 literal|8
 case|:
 name|i
-operator|+=
 comment|// expected-warning {{will never be executed}}
+operator|+=
 name|halt
 argument_list|()
 expr_stmt|;
@@ -290,9 +290,9 @@ name|a
 index|[
 name|halt
 argument_list|()
+comment|// expected-warning {{will never be executed}}
 index|]
 expr_stmt|;
-comment|// expected-warning {{will never be executed}}
 block|}
 block|}
 block|}
@@ -353,6 +353,66 @@ name|i
 return|;
 block|}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|// Handle unreachable code triggered by macro expansions.
+end_comment
+
+begin_function_decl
+name|void
+name|__myassert_rtn
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(__noreturn__
+end_function_decl
+
+begin_empty_stmt
+unit|))
+empty_stmt|;
+end_empty_stmt
+
+begin_define
+define|#
+directive|define
+name|myassert
+parameter_list|(
+name|e
+parameter_list|)
+define|\
+value|(__builtin_expect(!(e), 0) ? __myassert_rtn(__func__, __FILE__, __LINE__, #e) : (void)0)
+end_define
+
+begin_function
+name|void
+name|test_assert
+parameter_list|()
+block|{
+name|myassert
+argument_list|(
+literal|0
+operator|&&
+literal|"unreachable"
+argument_list|)
+expr_stmt|;
+return|return;
+comment|// no-warning
 block|}
 end_function
 

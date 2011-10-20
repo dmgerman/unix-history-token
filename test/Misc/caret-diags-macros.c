@@ -421,12 +421,9 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// FIXME: It'd be really nice to retain the start location of the first token
-comment|// involved in the token paste instead of falling back on the full macro
-comment|// location in the first two locations here.
-comment|// CHECK: {{.*}}:115:3: warning: expression result unused
-comment|// CHECK: {{.*}}:106:44: note: expanded from:
-comment|// CHECK: {{.*}}:104:72: note: expanded from:
+comment|// CHECK: {{.*}}:115:30: warning: expression result unused
+comment|// CHECK: {{.*}}:106:71: note: expanded from:
+comment|// CHECK: {{.*}}:104:70: note: expanded from:
 comment|// CHECK: {{.*}}:102:41: note: expanded from:
 block|}
 end_function

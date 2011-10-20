@@ -214,7 +214,7 @@ comment|// CHECK: Punctuation: "=" [4:12 - 4:13] VarDecl=t_ptr:4:6 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [4:14 - 4:15] UnexposedExpr=ptr:3:14
+comment|// CHECK: Punctuation: "(" [4:14 - 4:15] CStyleCastExpr=
 end_comment
 
 begin_comment
@@ -222,31 +222,23 @@ comment|// CHECK: Identifier: "T" [4:15 - 4:16] TypeRef=T:1:13
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "*" [4:17 - 4:18] UnexposedExpr=ptr:3:14
-end_comment
-
-begin_comment
-comment|// CHECK: Punctuation: ")" [4:18 - 4:19] UnexposedExpr=ptr:3:14
-end_comment
-
-begin_comment
 comment|// CHECK: Identifier: "ptr" [4:19 - 4:22] DeclRefExpr=ptr:3:14
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [4:22 - 4:23] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [4:22 - 4:23] DeclStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [5:3 - 5:4] UnexposedExpr=
+comment|// CHECK: Punctuation: "(" [5:3 - 5:4] CStyleCastExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "void" [5:4 - 5:8] UnexposedExpr=
+comment|// CHECK: Keyword: "void" [5:4 - 5:8] CStyleCastExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [5:8 - 5:9] UnexposedExpr=
+comment|// CHECK: Punctuation: ")" [5:8 - 5:9] CStyleCastExpr=
 end_comment
 
 begin_comment
@@ -266,11 +258,7 @@ comment|// CHECK: Punctuation: ")" [5:17 - 5:18] UnexposedExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [5:18 - 5:19] UnexposedStmt=
-end_comment
-
-begin_comment
-comment|// CHECK: Comment: "/* A comment */" [6:3 - 6:18] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [5:18 - 5:19] CompoundStmt=
 end_comment
 
 begin_comment
@@ -290,11 +278,11 @@ comment|// CHECK: Punctuation: "=" [7:14 - 7:15] VarDecl=x:7:12 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [7:16 - 7:17] UnexposedExpr=
+comment|// CHECK: Punctuation: "(" [7:16 - 7:17] CompoundLiteralExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "struct" [7:17 - 7:23] UnexposedExpr=
+comment|// CHECK: Keyword: "struct" [7:17 - 7:23] CompoundLiteralExpr=
 end_comment
 
 begin_comment
@@ -302,31 +290,31 @@ comment|// CHECK: Identifier: "X" [7:24 - 7:25] TypeRef=struct X:2:8
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [7:25 - 7:26] UnexposedExpr=
+comment|// CHECK: Punctuation: ")" [7:25 - 7:26] CompoundLiteralExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "{" [7:26 - 7:27] UnexposedExpr=
+comment|// CHECK: Punctuation: "{" [7:26 - 7:27] InitListExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: "1" [7:27 - 7:28] UnexposedExpr=
+comment|// CHECK: Literal: "1" [7:27 - 7:28] IntegerLiteral=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "," [7:28 - 7:29] UnexposedExpr=
+comment|// CHECK: Punctuation: "," [7:28 - 7:29] InitListExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: "2" [7:30 - 7:31] UnexposedExpr=
+comment|// CHECK: Literal: "2" [7:30 - 7:31] IntegerLiteral=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "}" [7:31 - 7:32] UnexposedExpr=
+comment|// CHECK: Punctuation: "}" [7:31 - 7:32] InitListExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [7:32 - 7:33] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [7:32 - 7:33] DeclStmt=
 end_comment
 
 begin_comment
@@ -358,7 +346,7 @@ comment|// CHECK: Punctuation: ":" [8:20 - 8:21] UnexposedExpr=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "&" [8:22 - 8:23] UnexposedExpr=
+comment|// CHECK: Punctuation: "&" [8:22 - 8:23] UnaryOperator=
 end_comment
 
 begin_comment
@@ -366,11 +354,11 @@ comment|// CHECK: Identifier: "x" [8:23 - 8:24] DeclRefExpr=x:7:12
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [8:24 - 8:25] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [8:24 - 8:25] DeclStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "const" [9:3 - 9:8] UnexposedStmt=
+comment|// CHECK: Keyword: "const" [9:3 - 9:8] DeclStmt=
 end_comment
 
 begin_comment
@@ -390,15 +378,15 @@ comment|// CHECK: Punctuation: "=" [9:22 - 9:23] VarDecl=hello:9:16 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: ""Hello"" [9:24 - 9:31] UnexposedExpr=
+comment|// CHECK: Literal: ""Hello"" [9:24 - 9:31] StringLiteral=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [9:31 - 9:32] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [9:31 - 9:32] DeclStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "}" [10:1 - 10:2] UnexposedStmt=
+comment|// CHECK: Punctuation: "}" [10:1 - 10:2] CompoundStmt=
 end_comment
 
 begin_comment
@@ -438,7 +426,7 @@ comment|// CHECK: Identifier: "x" [18:12 - 18:13] VarDecl=x:18:12 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "do" [19:3 - 19:5] UnexposedStmt=
+comment|// CHECK: Keyword: "do" [19:3 - 19:5] DoStmt=
 end_comment
 
 begin_comment
@@ -454,23 +442,23 @@ comment|// CHECK: Identifier: "a" [20:7 - 20:8] MemberRefExpr=a:2:16
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "++" [20:8 - 20:10] UnexposedExpr=
+comment|// CHECK: Punctuation: "++" [20:8 - 20:10] UnaryOperator=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [20:10 - 20:11] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [20:10 - 20:11] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "}" [21:3 - 21:4] UnexposedStmt=
+comment|// CHECK: Punctuation: "}" [21:3 - 21:4] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "while" [21:5 - 21:10] UnexposedStmt=
+comment|// CHECK: Keyword: "while" [21:5 - 21:10] DoStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [21:11 - 21:12] UnexposedStmt=
+comment|// CHECK: Punctuation: "(" [21:11 - 21:12] DoStmt=
 end_comment
 
 begin_comment
@@ -498,15 +486,15 @@ comment|// CHECK: Identifier: "c" [23:14 - 23:15] VarDecl=c:23:14 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [23:15 - 23:16] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [23:15 - 23:16] DeclStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "switch" [24:3 - 24:9] UnexposedStmt=
+comment|// CHECK: Keyword: "switch" [24:3 - 24:9] SwitchStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [24:10 - 24:11] UnexposedStmt=
+comment|// CHECK: Punctuation: "(" [24:10 - 24:11] SwitchStmt=
 end_comment
 
 begin_comment
@@ -514,15 +502,15 @@ comment|// CHECK: Identifier: "c" [24:11 - 24:12] DeclRefExpr=c:23:14
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [24:12 - 24:13] UnexposedStmt=
+comment|// CHECK: Punctuation: ")" [24:12 - 24:13] SwitchStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "{" [24:14 - 24:15] UnexposedStmt=
+comment|// CHECK: Punctuation: "{" [24:14 - 24:15] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "case" [25:3 - 25:7] UnexposedStmt=
+comment|// CHECK: Keyword: "case" [25:3 - 25:7] CaseStmt=
 end_comment
 
 begin_comment
@@ -530,11 +518,11 @@ comment|// CHECK: Identifier: "Red" [25:8 - 25:11] DeclRefExpr=Red:11:14
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ":" [25:11 - 25:12] UnexposedStmt=
+comment|// CHECK: Punctuation: ":" [25:11 - 25:12] CaseStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "return" [26:5 - 26:11] UnexposedStmt=
+comment|// CHECK: Keyword: "return" [26:5 - 26:11] ReturnStmt=
 end_comment
 
 begin_comment
@@ -542,11 +530,11 @@ comment|// CHECK: Identifier: "Green" [26:12 - 26:17] DeclRefExpr=Green:11:19
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [26:17 - 26:18] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [26:17 - 26:18] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "case" [28:3 - 28:7] UnexposedStmt=
+comment|// CHECK: Keyword: "case" [28:3 - 28:7] CaseStmt=
 end_comment
 
 begin_comment
@@ -554,11 +542,11 @@ comment|// CHECK: Identifier: "Green" [28:8 - 28:13] DeclRefExpr=Green:11:19
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ":" [28:13 - 28:14] UnexposedStmt=
+comment|// CHECK: Punctuation: ":" [28:13 - 28:14] CaseStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "return" [29:5 - 29:11] UnexposedStmt=
+comment|// CHECK: Keyword: "return" [29:5 - 29:11] ReturnStmt=
 end_comment
 
 begin_comment
@@ -566,11 +554,11 @@ comment|// CHECK: Identifier: "Blue" [29:12 - 29:16] DeclRefExpr=Blue:11:26
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [29:16 - 29:17] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [29:16 - 29:17] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "case" [31:3 - 31:7] UnexposedStmt=
+comment|// CHECK: Keyword: "case" [31:3 - 31:7] CaseStmt=
 end_comment
 
 begin_comment
@@ -578,11 +566,11 @@ comment|// CHECK: Identifier: "Blue" [31:8 - 31:12] DeclRefExpr=Blue:11:26
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ":" [31:12 - 31:13] UnexposedStmt=
+comment|// CHECK: Punctuation: ":" [31:12 - 31:13] CaseStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "return" [32:5 - 32:11] UnexposedStmt=
+comment|// CHECK: Keyword: "return" [32:5 - 32:11] ReturnStmt=
 end_comment
 
 begin_comment
@@ -590,7 +578,7 @@ comment|// CHECK: Identifier: "Red" [32:12 - 32:15] DeclRefExpr=Red:11:14
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [32:15 - 32:16] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [32:15 - 32:16] CompoundStmt=
 end_comment
 
 begin_comment

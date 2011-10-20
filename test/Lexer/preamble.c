@@ -4,7 +4,7 @@ comment|// Preamble detection test: see below for comments and test commands.
 end_comment
 
 begin_comment
-comment|//
+comment|//* A BCPL comment that includes '/*'
 end_comment
 
 begin_include
@@ -114,7 +114,7 @@ comment|// CHECK: // Preamble detection test: see below for comments and test co
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: //
+comment|// CHECK-NEXT: //* A BCPL comment that includes '/*'
 end_comment
 
 begin_comment

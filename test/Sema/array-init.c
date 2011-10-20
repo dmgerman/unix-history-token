@@ -355,7 +355,7 @@ literal|2
 block|,
 literal|3
 block|}
-comment|// expected-warning{{braces around scalar initializer}} expected-warning{{excess elements in scalar initializer}}
+comment|// expected-warning{{excess elements in scalar initializer}}
 block|}
 decl_stmt|;
 name|int

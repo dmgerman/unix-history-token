@@ -420,7 +420,11 @@ comment|// expected-warning {{expression result unused}} \
 end_comment
 
 begin_comment
-comment|// expected-warning {{use of logical || with constant operand}}
+comment|// expected-warning {{use of logical '||' with constant operand}} \
+end_comment
+
+begin_comment
+comment|// expected-note {{use '|' for a bitwise operation}}
 end_comment
 
 begin_decl_stmt

@@ -306,7 +306,7 @@ block|{}
 block|}
 comment|// Small vectors and 1 x {i64,double} are returned in registers
 comment|// CHECK: i32 @f11()
-comment|// CHECK: void @f12(<2 x i32>* sret %agg.result)
+comment|// CHECK: void @f12(<2 x i32>* noalias sret %agg.result)
 comment|// CHECK: i64 @f13()
 comment|// CHECK: i64 @f14()
 comment|// CHECK:<2 x i64> @f15()
@@ -481,23 +481,23 @@ comment|// CHECK: i32 @f17()
 end_comment
 
 begin_comment
-comment|// CHECK: void @f18(%{{.*}}* sret %agg.result)
+comment|// CHECK: void @f18(%{{.*}}* noalias sret %agg.result)
 end_comment
 
 begin_comment
-comment|// CHECK: void @f19(%{{.*}}* sret %agg.result)
+comment|// CHECK: void @f19(%{{.*}}* noalias sret %agg.result)
 end_comment
 
 begin_comment
-comment|// CHECK: void @f20(%{{.*}}* sret %agg.result)
+comment|// CHECK: void @f20(%{{.*}}* noalias sret %agg.result)
 end_comment
 
 begin_comment
-comment|// CHECK: void @f21(%{{.*}}* sret %agg.result)
+comment|// CHECK: void @f21(%{{.*}}* noalias sret %agg.result)
 end_comment
 
 begin_comment
-comment|// CHECK: void @f22(%{{.*}}* sret %agg.result)
+comment|// CHECK: void @f22(%{{.*}}* noalias sret %agg.result)
 end_comment
 
 begin_struct
@@ -675,7 +675,7 @@ block|{}
 block|}
 comment|// Small structures are handled recursively
 comment|// CHECK: i32 @f26()
-comment|// CHECK: void @f27(%struct.s27* sret %agg.result)
+comment|// CHECK: void @f27(%struct.s27* noalias sret %agg.result)
 decl|struct
 name|s26
 block|{
@@ -746,7 +746,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: void @f28(%struct.s28* sret %agg.result)
+comment|// CHECK: void @f28(%struct.s28* noalias sret %agg.result)
 decl|struct
 name|s28
 block|{
@@ -1017,7 +1017,7 @@ literal|1
 condition|)
 block|{}
 block|}
-comment|// CHECK: define void @f38(%struct.s38* sret %agg.result)
+comment|// CHECK: define void @f38(%struct.s38* noalias sret %agg.result)
 decl|struct
 name|s38
 block|{

@@ -25,7 +25,7 @@ name|int
 name|arg
 parameter_list|)
 block|{
-comment|// CHECK: call x86_stdcallcc i32 (...)* @bar(i32
+comment|// CHECK: call x86_stdcallcc i32 bitcast (i32 (...)* @bar to i32 (i32)*)(
 name|bar
 argument_list|(
 name|arg

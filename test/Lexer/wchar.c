@@ -27,14 +27,14 @@ operator|)
 literal|L'
 expr|ab'
 expr_stmt|;
-comment|// expected-warning {{extraneous characters in wide character constant ignored}}
+comment|// expected-warning {{extraneous characters in character constant ignored}}
 operator|(
 name|void
 operator|)
 literal|L'
 expr|a\u1000'
 expr_stmt|;
-comment|// expected-warning {{extraneous characters in wide character constant ignored}}
+comment|// expected-warning {{extraneous characters in character constant ignored}}
 block|}
 end_function
 

@@ -172,6 +172,13 @@ decl_stmt|;
 comment|/// Whether we should maintain a detailed
 comment|/// record of all macro definitions and
 comment|/// expansions.
+comment|/// \brief Whether we should automatically translate #include or #import
+comment|/// operations into module imports when possible.
+name|unsigned
+name|AutoModuleImport
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief Whether the detailed preprocessing record includes nested macro
 comment|/// expansions.
 name|unsigned
@@ -317,6 +324,22 @@ comment|/// with support for lifetime-qualified pointers.
 name|ObjCXXARCStandardLibraryKind
 name|ObjCXXARCStandardLibrary
 decl_stmt|;
+comment|/// \brief The path of modules being build, which is used to detect
+comment|/// cycles in the module dependency graph as modules are being built.
+comment|///
+comment|/// There is no way to set this value from the command line. If we ever need
+comment|/// to do so (e.g., if on-demand module construction moves out-of-process),
+comment|/// we can add a cc1-level option to do so.
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|string
+operator|,
+literal|2
+operator|>
+name|ModuleBuildPath
+expr_stmt|;
 typedef|typedef
 name|std
 operator|::
@@ -516,6 +539,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|AutoModuleImport
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|DetailedRecordIncludesNestedMacroExpansions
 argument_list|(
 name|true
@@ -561,7 +589,7 @@ block|{ }
 name|void
 name|addMacroDef
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 block|{
 name|Macros
@@ -581,7 +609,7 @@ block|;   }
 name|void
 name|addMacroUndef
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 block|{
 name|Macros
@@ -601,9 +629,9 @@ block|;   }
 name|void
 name|addRemappedFile
 argument_list|(
-argument|llvm::StringRef From
+argument|StringRef From
 argument_list|,
-argument|llvm::StringRef To
+argument|StringRef To
 argument_list|)
 block|{
 name|RemappedFiles
@@ -638,8 +666,6 @@ block|}
 name|void
 name|addRemappedFile
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|From
 argument_list|,
@@ -695,6 +721,63 @@ name|RemappedFileBuffers
 operator|.
 name|clear
 argument_list|()
+expr_stmt|;
+block|}
+comment|/// \brief Reset any options that are not considered when building a
+comment|/// module.
+name|void
+name|resetNonModularOptions
+parameter_list|()
+block|{
+name|Includes
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|MacroIncludes
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|ChainedIncludes
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|DumpDeserializedPCHDecls
+operator|=
+name|false
+expr_stmt|;
+name|ImplicitPCHInclude
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|ImplicitPTHInclude
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|TokenCache
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+name|RetainRemappedFileBuffers
+operator|=
+name|true
+expr_stmt|;
+name|PrecompiledPreambleBytes
+operator|.
+name|first
+operator|=
+literal|0
+expr_stmt|;
+name|PrecompiledPreambleBytes
+operator|.
+name|second
+operator|=
+literal|0
 expr_stmt|;
 block|}
 block|}

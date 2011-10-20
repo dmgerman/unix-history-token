@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
@@ -234,17 +240,15 @@ comment|/// \brief Get an Entity associated with a name in the global namespace.
 specifier|static
 name|Entity
 name|get
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|,
+parameter_list|,
 name|Program
-operator|&
+modifier|&
 name|Prog
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief true if the Entity is not visible outside the trasnlation unit.
 name|bool
 name|isInternalToTU

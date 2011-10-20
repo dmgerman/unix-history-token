@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-mingw32 -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -triple x86_64-mingw32 -fsyntax-only -verify %s
+end_comment
+
 begin_decl_stmt
 specifier|inline
 name|void

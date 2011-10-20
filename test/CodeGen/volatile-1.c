@@ -121,11 +121,11 @@ name|void
 name|test
 parameter_list|()
 block|{
-comment|// CHECK: volatile load [[INT]]* @i
+comment|// CHECK: load volatile [[INT]]* @i
 name|i
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 comment|// CHECK-NEXT: sitofp [[INT]]
 call|(
 name|float
@@ -134,8 +134,8 @@ argument_list|(
 name|ci
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 operator|(
 name|void
 operator|)
@@ -148,10 +148,10 @@ name|void
 operator|)
 name|a
 expr_stmt|;
-comment|// CHECK-NEXT: [[R:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: volatile store [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: volatile store [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: [[I:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 call|(
 name|void
 call|)
@@ -161,8 +161,8 @@ operator|=
 name|ci
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[T:%.*]] = volatile load [[INT]]* @j
-comment|// CHECK-NEXT: volatile store [[INT]] [[T]], [[INT]]* @i
+comment|// CHECK-NEXT: [[T:%.*]] = load volatile [[INT]]* @j
+comment|// CHECK-NEXT: store volatile [[INT]] [[T]], [[INT]]* @i
 call|(
 name|void
 call|)
@@ -172,29 +172,29 @@ operator|=
 name|j
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: [[R1:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I1:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: [[R2:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I2:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: [[I1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 comment|// Not sure why they're ordered this way.
 comment|// CHECK-NEXT: [[R:%.*]] = add [[INT]] [[R2]], [[R1]]
 comment|// CHECK-NEXT: [[I:%.*]] = add [[INT]] [[I2]], [[I1]]
-comment|// CHECK-NEXT: volatile store [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: volatile store [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 name|ci
 operator|+=
 name|ci
 expr_stmt|;
-comment|// CHECK-NEXT: [[R1:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I1:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: [[R2:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I2:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: [[I1:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 comment|// CHECK-NEXT: [[R:%.*]] = add [[INT]] [[R2]], [[R1]]
 comment|// CHECK-NEXT: [[I:%.*]] = add [[INT]] [[I2]], [[I1]]
-comment|// CHECK-NEXT: volatile store [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: volatile store [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: [[R2:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
-comment|// CHECK-NEXT: [[I2:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: store volatile [[INT]] [[R]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: store volatile [[INT]] [[I]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[R2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 0)
+comment|// CHECK-NEXT: [[I2:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 comment|// These additions can be elided
 comment|// CHECK-NEXT: add [[INT]] [[R]], [[R2]]
 comment|// CHECK-NEXT: add [[INT]] [[I]], [[I2]]
@@ -208,11 +208,11 @@ name|ci
 expr_stmt|;
 comment|// CHECK-NEXT: call void asm
 asm|asm("nop");
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: add nsw [[INT]]
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: add nsw [[INT]]
 operator|(
 name|i
@@ -224,10 +224,10 @@ name|k
 expr_stmt|;
 comment|// CHECK-NEXT: call void asm
 asm|asm("nop");
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: add nsw [[INT]]
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: add nsw [[INT]]
 operator|(
 name|i
@@ -239,29 +239,29 @@ literal|1
 expr_stmt|;
 comment|// CHECK-NEXT: call void asm
 asm|asm("nop");
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: add [[INT]]
 comment|// CHECK-NEXT: add [[INT]]
 name|ci
 operator|+
 name|ci
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
 name|__real
 name|i
 decl_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 operator|+
 name|ci
 expr_stmt|;
 comment|// CHECK-NEXT: call void asm
 asm|asm("nop");
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 call|(
 name|void
 call|)
@@ -271,8 +271,8 @@ operator|=
 name|i
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: sitofp
 call|(
 name|float
@@ -283,21 +283,21 @@ operator|=
 name|i
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
 operator|(
 name|void
 operator|)
 name|i
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 name|i
 operator|=
 name|i
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
 name|i
 operator|=
 name|i
@@ -307,8 +307,8 @@ expr_stmt|;
 ifndef|#
 directive|ifndef
 name|__cplusplus
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 operator|(
 name|void
 operator|)
@@ -327,14 +327,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: icmp
 comment|// CHECK-NEXT: br i1
-comment|// CHECK: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK: load volatile
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: br label
-comment|// CHECK: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK: load volatile
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: br label
 name|k
 condition|?
@@ -351,9 +351,9 @@ name|j
 operator|)
 expr_stmt|;
 comment|// CHECK: phi
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 call|(
 name|void
 call|)
@@ -367,19 +367,19 @@ name|i
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: load volatile
 name|i
 operator|=
 name|i
 operator|,
 name|i
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 operator|(
 name|i
 operator|=
@@ -390,9 +390,9 @@ operator|=
 name|j
 operator|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: load volatile
 operator|(
 name|i
 operator|=
@@ -401,49 +401,49 @@ operator|,
 name|k
 operator|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 operator|(
 name|i
 operator|,
 name|j
 operator|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: trunc
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: sext
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: store volatile
 name|i
 operator|=
 name|c
 operator|=
 name|k
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: add nsw [[INT]]
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: store volatile
 name|i
 operator|+=
 name|k
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 name|ci
 expr_stmt|;
 ifndef|#
 directive|ifndef
 name|__cplusplus
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 operator|(
 name|int
 operator|)
 name|ci
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: icmp ne
 comment|// CHECK-NEXT: icmp ne
 comment|// CHECK-NEXT: or i1
@@ -454,29 +454,29 @@ name|ci
 expr_stmt|;
 endif|#
 directive|endif
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
 name|ci
 operator|=
 name|ci
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
 name|ci
 operator|=
 name|ci
 operator|=
 name|ci
 expr_stmt|;
-comment|// CHECK-NEXT: [[T:%.*]] = volatile load [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: volatile store [[INT]] [[T]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
-comment|// CHECK-NEXT: volatile store [[INT]] [[T]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: [[T:%.*]] = load volatile [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: store volatile [[INT]] [[T]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
+comment|// CHECK-NEXT: store volatile [[INT]] [[T]], [[INT]]* getelementptr inbounds ([[CINT]]* @ci, i32 0, i32 1)
 name|__imag
 name|ci
 init|=
@@ -486,8 +486,8 @@ operator|=
 name|__imag
 name|ci
 decl_stmt|;
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 name|__real
 argument_list|(
 name|i
@@ -495,7 +495,7 @@ operator|=
 name|j
 argument_list|)
 expr_stmt|;
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
 name|__imag
 name|i
 decl_stmt|;
@@ -525,8 +525,8 @@ comment|// Not a use.  gcc gets this wrong, it doesn't emit the copy!
 comment|// (void)(a=a);
 comment|// Not a use.  gcc got this wrong in 4.2 and omitted the side effects
 comment|// entirely, but it is fixed in 4.4.0.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 name|__imag
 argument_list|(
 name|i
@@ -538,10 +538,10 @@ ifndef|#
 directive|ifndef
 name|__cplusplus
 comment|// A use of the real part
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: sitofp
 call|(
 name|float
@@ -554,10 +554,10 @@ argument_list|)
 expr_stmt|;
 comment|// Not a use, bug?  gcc treats this as not a use, that's probably a bug due to
 comment|// tree folding ignoring volatile.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
 call|(
 name|int
 call|)
@@ -570,8 +570,8 @@ expr_stmt|;
 endif|#
 directive|endif
 comment|// A use.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: sitofp
 call|(
 name|float
@@ -584,8 +584,8 @@ argument_list|)
 expr_stmt|;
 comment|// A use.  gcc treats this as not a use, that's probably a bug due to tree
 comment|// folding ignoring volatile.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 call|(
 name|int
 call|)
@@ -596,8 +596,8 @@ name|i
 argument_list|)
 expr_stmt|;
 comment|// A use.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: sub
 operator|-
 operator|(
@@ -608,8 +608,8 @@ operator|)
 expr_stmt|;
 comment|// A use.  gcc treats this a not a use, that's probably a bug due to tree
 comment|// folding ignoring volatile.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 operator|+
 operator|(
 name|i
@@ -619,10 +619,10 @@ operator|)
 expr_stmt|;
 comment|// A use. gcc treats this a not a use, that's probably a bug due to tree
 comment|// folding ignoring volatile.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: store volatile
 name|__real
 argument_list|(
 name|ci
@@ -631,16 +631,16 @@ name|ci
 argument_list|)
 expr_stmt|;
 comment|// A use.
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: add
 name|i
 operator|+
 literal|0
 expr_stmt|;
 comment|// A use.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
-comment|// CHECK-NEXT: volatile load
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
+comment|// CHECK-NEXT: load volatile
 comment|// CHECK-NEXT: add
 operator|(
 name|i
@@ -652,8 +652,8 @@ name|i
 expr_stmt|;
 comment|// A use.  gcc treats this as not a use, that's probably a bug due to tree
 comment|// folding ignoring volatile.
-comment|// CHECK-NEXT: volatile load
-comment|// CHECK-NEXT: volatile store
+comment|// CHECK-NEXT: load volatile
+comment|// CHECK-NEXT: store volatile
 comment|// CHECK-NEXT: add
 operator|(
 name|i

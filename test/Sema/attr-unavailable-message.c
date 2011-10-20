@@ -203,5 +203,94 @@ function_decl|;
 block|}
 end_function
 
+begin_comment
+comment|// rdar://10201690
+end_comment
+
+begin_enum
+enum|enum
+name|foo
+block|{
+name|a
+init|=
+literal|1
+block|,
+name|b
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+argument_list|()
+operator|)
+argument_list|)
+init|=
+literal|2
+block|,
+name|c
+init|=
+literal|3
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+argument_list|()
+operator|)
+argument_list|)
+enum|;
+end_enum
+
+begin_enum
+enum|enum
+name|fee
+block|{
+comment|// expected-note 2 {{declaration has been explicitly marked unavailable here}}
+name|r
+init|=
+literal|1
+block|,
+name|s
+init|=
+literal|2
+block|,
+name|t
+init|=
+literal|3
+block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|unavailable
+argument_list|()
+operator|)
+argument_list|)
+enum|;
+end_enum
+
+begin_function
+name|enum
+name|fee
+name|f
+parameter_list|()
+block|{
+comment|// expected-error {{error: 'fee' is unavailable}}
+name|int
+name|i
+init|=
+name|a
+decl_stmt|;
+comment|// expected-warning {{'foo' is deprecated }}
+name|i
+operator|=
+name|b
+expr_stmt|;
+comment|// expected-warning {{'b' is deprecated}}
+return|return
+name|r
+return|;
+comment|// expected-error {{'fee' is unavailable}}
+block|}
+end_function
+
 end_unit
 

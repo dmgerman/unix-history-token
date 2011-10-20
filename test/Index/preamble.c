@@ -47,7 +47,7 @@ comment|// CHECK: preamble.h:1:12: FunctionDecl=bar:1:12 (Definition) Extent=[1:
 end_comment
 
 begin_comment
-comment|// CHECK: preamble.h:4:3: UnexposedExpr= Extent=[4:3 - 4:13]
+comment|// CHECK: preamble.h:4:3: BinaryOperator= Extent=[4:3 - 4:13]
 end_comment
 
 begin_comment
@@ -63,7 +63,7 @@ comment|// CHECK: preamble.h:4:9: DeclRefExpr=ptr1:3:10 Extent=[4:9 - 4:13]
 end_comment
 
 begin_comment
-comment|// CHECK: preamble.h:5:10: UnexposedExpr= Extent=[5:10 - 5:11]
+comment|// CHECK: preamble.h:5:10: IntegerLiteral= Extent=[5:10 - 5:11]
 end_comment
 
 begin_comment

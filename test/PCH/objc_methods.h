@@ -15,9 +15,9 @@ end_expr_stmt
 begin_expr_stmt
 operator|-
 operator|(
-name|id
+name|instancetype
 operator|)
-name|init
+name|instMethod
 expr_stmt|;
 end_expr_stmt
 

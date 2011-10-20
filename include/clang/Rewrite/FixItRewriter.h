@@ -87,16 +87,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -143,10 +133,10 @@ name|class
 name|FixItRewriter
 range|:
 name|public
-name|DiagnosticClient
+name|DiagnosticConsumer
 block|{
 comment|/// \brief The diagnostics machinery.
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 block|;
@@ -157,7 +147,7 @@ name|Rewrite
 block|;
 comment|/// \brief The diagnostic client that performs the actual formatting
 comment|/// of error messages.
-name|DiagnosticClient
+name|DiagnosticConsumer
 operator|*
 name|Client
 block|;
@@ -182,7 +172,7 @@ expr_stmt|;
 comment|/// \brief Initialize a new fix-it rewriter.
 name|FixItRewriter
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|,
@@ -253,17 +243,15 @@ comment|///
 comment|/// \returns true if there was an error, false otherwise.
 name|bool
 name|WriteFixedFile
-argument_list|(
+parameter_list|(
 name|FileID
 name|ID
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Write the modified source files.
 comment|///
 comment|/// \returns true if there was an error, false otherwise.
@@ -273,8 +261,8 @@ parameter_list|()
 function_decl|;
 comment|/// IncludeInDiagnosticCounts - This method (whose default implementation
 comment|/// returns true) indicates whether the diagnostics handled by this
-comment|/// DiagnosticClient should be included in the number of diagnostics
-comment|/// reported by Diagnostic.
+comment|/// DiagnosticConsumer should be included in the number of diagnostics
+comment|/// reported by DiagnosticsEngine.
 name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
@@ -287,13 +275,13 @@ name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Level
 name|DiagLevel
 argument_list|,
 specifier|const
-name|DiagnosticInfo
+name|Diagnostic
 operator|&
 name|Info
 argument_list|)
@@ -309,6 +297,16 @@ name|unsigned
 name|DiagID
 parameter_list|)
 function_decl|;
+name|DiagnosticConsumer
+modifier|*
+name|clone
+argument_list|(
+name|DiagnosticsEngine
+operator|&
+name|Diags
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 end_decl_stmt
 

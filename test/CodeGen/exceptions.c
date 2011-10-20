@@ -54,8 +54,10 @@ expr_stmt|;
 block|}
 argument_list|)
 expr_stmt|;
-comment|// CHECK:     call {{.*}} @llvm.eh.selector({{.*}}, i8* bitcast (i32 (...)* @__gcc_personality_v0 to i8*)
-comment|// CHECK-ARM: call {{.*}} @llvm.eh.selector({{.*}}, i8* bitcast (i32 (...)* @__gcc_personality_sj0 to i8*)
+comment|// CHECK:          landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__gcc_personality_v0 to i8*)
+comment|// CHECK-NEXT:       cleanup
+comment|// CHECK-ARM:      landingpad { i8*, i32 } personality i8* bitcast (i32 (...)* @__gcc_personality_sj0 to i8*)
+comment|// CHECK-ARM-NEXT:   cleanup
 block|}
 end_function
 

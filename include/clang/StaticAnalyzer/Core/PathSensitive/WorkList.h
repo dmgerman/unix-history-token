@@ -114,11 +114,11 @@ name|public
 label|:
 name|WorkListUnit
 argument_list|(
-argument|ExplodedNode* N
+argument|ExplodedNode *N
 argument_list|,
 argument|BlockCounter C
 argument_list|,
-argument|const CFGBlock* B
+argument|const CFGBlock *B
 argument_list|,
 argument|unsigned idx
 argument_list|)
@@ -146,7 +146,7 @@ block|{}
 name|explicit
 name|WorkListUnit
 argument_list|(
-argument|ExplodedNode* N
+argument|ExplodedNode *N
 argument_list|,
 argument|BlockCounter C
 argument_list|)

@@ -316,6 +316,23 @@ call|(
 name|void
 call|)
 argument_list|(
+operator|(
+name|x
+operator|+
+name|someConditionFunc
+argument_list|()
+operator|)
+condition|?
+literal|1
+else|:
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// no warning
+call|(
+name|void
+call|)
+argument_list|(
 name|x
 operator|-
 name|b

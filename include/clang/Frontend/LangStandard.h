@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -363,13 +369,11 @@ specifier|const
 name|LangStandard
 modifier|*
 name|getLangStandardForName
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 block|}

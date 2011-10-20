@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-unknown-unknown %s -emit-llvm -o %t -fblocks
+comment|// RUN: %clang_cc1 -triple i386-unknown-unknown %s -emit-llvm -o - -fblocks | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -74,7 +74,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|// RUN: grep 'internal void @__f2_block_invoke_0(.struct.s0\* sret .*, .*, .* byval .*)' %t
+comment|// CHECK: define internal void @__f2_block_invoke_0(%struct.s0* noalias sret {{%.*}}, i8* {{%.*}}, %struct.s0* byval align 4 {{.*}})
 end_comment
 
 begin_function

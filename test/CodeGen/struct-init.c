@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - | FileCheck %s
+comment|// RUN: %clang_cc1 -S -triple armv7-apple-darwin %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_typedef
@@ -134,13 +134,21 @@ end_comment
 
 begin_typedef
 typedef|typedef
-struct|struct
-name|__simd64_uint32_t
-block|{
-name|__neon_uint32x2_t
-name|val
-decl_stmt|;
-block|}
+name|unsigned
+name|int
+name|uint32_t
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|__attribute__
+argument_list|(
+argument|(neon_vector_type(
+literal|2
+argument|))
+argument_list|)
+name|uint32_t
 name|uint32x2_t
 typedef|;
 end_typedef
@@ -165,7 +173,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: %struct.fp_struct_foo = type { void (i32)* }
+comment|// CHECK: %struct.fp_struct_foo = type { void ([1 x i32])* }
 end_comment
 
 begin_struct

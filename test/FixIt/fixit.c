@@ -4,7 +4,7 @@ comment|// RUN: cp %s %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -fixit -x c %t || true
+comment|// RUN: not %clang_cc1 -pedantic -Wunused-label -fixit -x c %t
 end_comment
 
 begin_comment
@@ -12,7 +12,7 @@ comment|// RUN: grep -v CHECK %t> %t2
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -pedantic -Werror -x c %t
+comment|// RUN: %clang_cc1 -pedantic -Wunused-label -Werror -x c %t
 end_comment
 
 begin_comment
@@ -237,6 +237,53 @@ comment|// expected-error {{must use 'struct' tag to refer to type 'test_struct'
 block|}
 struct|;
 end_struct
+
+begin_function
+name|void
+name|removeUnusedLabels
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+block|{
+name|L0
+comment|/*removed comment*/
+label|:
+name|c
+operator|++
+expr_stmt|;
+name|removeUnusedLabels
+argument_list|(
+name|c
+argument_list|)
+expr_stmt|;
+name|L1
+label|:
+name|c
+operator|++
+expr_stmt|;
+comment|/*preserved comment*/
+name|L2
+label|:
+name|c
+operator|++
+expr_stmt|;
+name|LL
+label|:
+name|c
+operator|++
+expr_stmt|;
+name|c
+operator|=
+name|c
+operator|+
+literal|3
+expr_stmt|;
+name|L4
+label|:
+return|return;
+block|}
+end_function
 
 end_unit
 

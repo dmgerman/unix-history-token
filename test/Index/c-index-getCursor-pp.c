@@ -80,6 +80,16 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|fname
+init|=
+name|__FILE__
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|// RUN: c-index-test -cursor-at=%s:1:11 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-1 %s
 end_comment
@@ -134,6 +144,14 @@ end_comment
 
 begin_comment
 comment|// CHECK-7: macro expansion=B:12:9
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -cursor-at=%s:16:25 -I%S/Inputs %s | FileCheck -check-prefix=CHECK-8 %s
+end_comment
+
+begin_comment
+comment|// CHECK-8: macro expansion=__FILE__
 end_comment
 
 begin_comment

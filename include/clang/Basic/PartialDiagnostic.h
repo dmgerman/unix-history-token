@@ -131,7 +131,9 @@ comment|/// A single diagnostic with more than that almost certainly has to
 comment|/// be simplified anyway.
 name|MaxArguments
 operator|=
-literal|10
+name|DiagnosticsEngine
+operator|::
+name|MaxArguments
 block|}
 expr_stmt|;
 comment|/// NumDiagArgs - This contains the number of entries in Arguments.
@@ -192,7 +194,9 @@ enum|enum
 block|{
 name|MaxFixItHints
 init|=
-literal|3
+name|DiagnosticsEngine
+operator|::
+name|MaxFixItHints
 block|}
 enum|;
 comment|/// FixItHints - If valid, provides a hint with some code
@@ -543,6 +547,18 @@ operator|&&
 literal|"Too many code modification hints!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|DiagStorage
+operator|->
+name|NumFixItHints
+operator|>=
+name|Storage
+operator|::
+name|MaxFixItHints
+condition|)
+return|return;
+comment|// Don't crash in release builds
 name|DiagStorage
 operator|->
 name|FixItHints
@@ -678,7 +694,7 @@ block|}
 name|PartialDiagnostic
 argument_list|(
 specifier|const
-name|DiagnosticInfo
+name|Diagnostic
 operator|&
 name|Other
 argument_list|,
@@ -737,7 +753,7 @@ argument_list|(
 name|I
 argument_list|)
 operator|==
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_std_string
 condition|)
@@ -920,7 +936,7 @@ argument_list|(
 name|intptr_t
 name|V
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentKind
 name|Kind
@@ -980,8 +996,6 @@ begin_decl_stmt
 name|void
 name|AddString
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|V
 argument_list|)
@@ -1019,7 +1033,7 @@ operator|->
 name|NumDiagArgs
 index|]
 operator|=
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_std_string
 expr_stmt|;
@@ -1080,7 +1094,7 @@ block|{
 if|if
 condition|(
 operator|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentKind
 operator|)
@@ -1091,7 +1105,7 @@ index|[
 name|i
 index|]
 operator|==
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_std_string
 condition|)
@@ -1120,7 +1134,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentKind
 operator|)
@@ -1269,7 +1283,7 @@ name|AddTaggedVal
 argument_list|(
 name|I
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_uint
 argument_list|)
@@ -1303,7 +1317,7 @@ name|AddTaggedVal
 argument_list|(
 name|I
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_sint
 argument_list|)
@@ -1346,7 +1360,7 @@ operator|(
 name|S
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_c_string
 argument_list|)
@@ -1371,8 +1385,6 @@ name|PartialDiagnostic
 operator|&
 name|PD
 operator|,
-name|llvm
-operator|::
 name|StringRef
 name|S
 operator|)

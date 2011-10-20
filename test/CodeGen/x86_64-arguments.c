@@ -177,7 +177,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f8_1(%union.u8* sret %agg.result)
+comment|// CHECK: define void @f8_1(%union.u8* noalias sret %agg.result)
 end_comment
 
 begin_comment
@@ -284,7 +284,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f11(%union.anon* sret %agg.result)
+comment|// CHECK: define void @f11(%union.anon* noalias sret %agg.result)
 end_comment
 
 begin_union
@@ -364,7 +364,7 @@ comment|// registers.
 end_comment
 
 begin_comment
-comment|// CHECK: define void @f13(%struct.s13_0* sret %agg.result, i32 %a, i32 %b, i32 %c, i32 %d, {{.*}}* byval align 8 %e, i32 %f)
+comment|// CHECK: define void @f13(%struct.s13_0* noalias sret %agg.result, i32 %a, i32 %b, i32 %c, i32 %d, {{.*}}* byval align 8 %e, i32 %f)
 end_comment
 
 begin_struct

@@ -80,15 +80,15 @@ comment|// CHECK-YES: declare x86_fp80 @sqrtl(x86_fp80)
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare float @sqrtf(float) readnone
+comment|// CHECK-NO: declare float @sqrtf(float) nounwind readnone
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare double @sqrt(double) readnone
+comment|// CHECK-NO: declare double @sqrt(double) nounwind readnone
 end_comment
 
 begin_comment
-comment|// CHECK-NO: declare x86_fp80 @sqrtl(x86_fp80) readnone
+comment|// CHECK-NO: declare x86_fp80 @sqrtl(x86_fp80) nounwind readnone
 end_comment
 
 begin_comment

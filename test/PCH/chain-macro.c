@@ -4,7 +4,7 @@ comment|// RUN: %clang_cc1 -emit-pch -o %t1 -detailed-preprocessing-record %S/In
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-pch -o %t2 -detailed-preprocessing-record %S/Inputs/chain-macro2.h -include-pch %t1 -chained-pch
+comment|// RUN: %clang_cc1 -emit-pch -o %t2 -detailed-preprocessing-record %S/Inputs/chain-macro2.h -include-pch %t1
 end_comment
 
 begin_comment

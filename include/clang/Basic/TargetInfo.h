@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IntrusiveRefCntPtr.h"
 end_include
 
@@ -140,7 +146,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|LangOptions
@@ -231,6 +237,12 @@ name|IntAlign
 block|;
 name|unsigned
 name|char
+name|HalfWidth
+block|,
+name|HalfAlign
+block|;
+name|unsigned
+name|char
 name|FloatWidth
 block|,
 name|FloatAlign
@@ -265,6 +277,12 @@ name|LongLongWidth
 block|,
 name|LongLongAlign
 block|;
+name|unsigned
+name|char
+name|MaxAtomicPromoteWidth
+block|,
+name|MaxAtomicInlineWidth
+block|;
 specifier|const
 name|char
 operator|*
@@ -284,6 +302,9 @@ specifier|const
 name|llvm
 operator|::
 name|fltSemantics
+operator|*
+name|HalfFormat
+block|,
 operator|*
 name|FloatFormat
 block|,
@@ -310,8 +331,6 @@ operator|*
 name|AddrSpaceMap
 block|;
 name|mutable
-name|llvm
-operator|::
 name|StringRef
 name|PlatformName
 block|;
@@ -352,7 +371,7 @@ name|TargetInfo
 operator|*
 name|CreateTargetInfo
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|,
@@ -436,6 +455,20 @@ name|unsigned
 name|UseBitFieldTypeAlignment
 operator|:
 literal|1
+block|;
+comment|/// Control whether zero length bitfields (e.g., int : 0;) force alignment of
+comment|/// the next bitfield.  If the alignment of the zero length bitfield is
+comment|/// greater than the member that follows it, `bar', `bar' will be aligned as
+comment|/// the type of the zero-length bitfield.
+name|unsigned
+name|UseZeroLengthBitfieldAlignment
+operator|:
+literal|1
+block|;
+comment|/// If non-zero, specifies a fixed alignment value for bitfields that follow
+comment|/// zero length bitfield, regardless of the zero length bitfield type.
+name|unsigned
+name|ZeroLengthBitfieldBoundary
 block|;
 name|public
 operator|:
@@ -818,6 +851,39 @@ name|Char32Type
 argument_list|)
 return|;
 block|}
+comment|/// getHalfWidth/Align/Format - Return the size/align/format of 'half'.
+name|unsigned
+name|getHalfWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HalfWidth
+return|;
+block|}
+name|unsigned
+name|getHalfAlign
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HalfAlign
+return|;
+block|}
+specifier|const
+name|llvm
+operator|::
+name|fltSemantics
+operator|&
+name|getHalfFormat
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|*
+name|HalfFormat
+return|;
+block|}
 comment|/// getFloatWidth/Align/Format - Return the size/align/format of 'float'.
 name|unsigned
 name|getFloatWidth
@@ -938,6 +1004,29 @@ return|return
 name|LargeArrayAlign
 return|;
 block|}
+comment|/// getMaxAtomicPromoteWidth - Return the maximum width lock-free atomic
+comment|/// operation which will ever be supported for the given target
+name|unsigned
+name|getMaxAtomicPromoteWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxAtomicPromoteWidth
+return|;
+block|}
+comment|/// getMaxAtomicInlineWidth - Return the maximum width lock-free atomic
+comment|/// operation which can be inlined given the supported features of the
+comment|/// given target.
+name|unsigned
+name|getMaxAtomicInlineWidth
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MaxAtomicInlineWidth
+return|;
+block|}
 comment|/// getIntMaxTWidth - Return the size of intmax_t and uintmax_t for this
 comment|/// target, in bits.
 name|unsigned
@@ -992,6 +1081,8 @@ return|return
 name|MCountName
 return|;
 block|}
+comment|/// useBitFieldTypeAlignment() - Check whether the alignment of bit-field
+comment|/// types is respected when laying out structures.
 name|bool
 name|useBitFieldTypeAlignment
 argument_list|()
@@ -999,6 +1090,28 @@ specifier|const
 block|{
 return|return
 name|UseBitFieldTypeAlignment
+return|;
+block|}
+comment|/// useZeroLengthBitfieldAlignment() - Check whether zero length bitfields
+comment|/// should force alignment of the next member.
+name|bool
+name|useZeroLengthBitfieldAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UseZeroLengthBitfieldAlignment
+return|;
+block|}
+comment|/// getZeroLengthBitfieldBoundary() - Get the fixed alignment value in bits
+comment|/// for a member that follows a zero length bitfield.
+name|unsigned
+name|getZeroLengthBitfieldBoundary
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ZeroLengthBitfieldBoundary
 return|;
 block|}
 comment|/// hasAlignMac68kSupport - Check whether this target support '#pragma options
@@ -1101,7 +1214,7 @@ comment|/// Sema.
 name|bool
 name|isValidClobber
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|;
@@ -1111,18 +1224,16 @@ comment|/// inline asm statements.
 name|bool
 name|isValidGCCRegisterName
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|;
 comment|// getNormalizedGCCRegisterName - Returns the "normalized" GCC register name.
 comment|// For example, on x86 it will return "ax" when "eax" is passed in.
-name|llvm
-operator|::
 name|StringRef
 name|getNormalizedGCCRegisterName
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 specifier|const
 block|;    struct
@@ -1174,9 +1285,9 @@ name|public
 operator|:
 name|ConstraintInfo
 argument_list|(
-argument|llvm::StringRef ConstraintStr
+argument|StringRef ConstraintStr
 argument_list|,
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 operator|:
 name|Flags
@@ -1602,7 +1713,7 @@ operator|::
 name|string
 name|isValidSectionSpecifier
 argument_list|(
-argument|llvm::StringRef SR
+argument|StringRef SR
 argument_list|)
 specifier|const
 block|{
@@ -1622,15 +1733,12 @@ operator|&
 name|Opts
 argument_list|)
 block|;
-comment|/// getDefaultFeatures - Get the default set of target features for
-comment|/// the \args CPU; this should include all legal feature strings on
-comment|/// the target.
+comment|/// getDefaultFeatures - Get the default set of target features for the CPU;
+comment|/// this should include all legal feature strings on the target.
 name|virtual
 name|void
 name|getDefaultFeatures
 argument_list|(
-argument|const std::string&CPU
-argument_list|,
 argument|llvm::StringMap<bool>&Features
 argument_list|)
 specifier|const
@@ -1662,8 +1770,6 @@ block|}
 comment|/// setCPU - Target the specific CPU.
 comment|///
 comment|/// \return - False on error (invalid CPU name).
-comment|//
-comment|// FIXME: Remove this.
 name|virtual
 name|bool
 name|setCPU
@@ -1672,7 +1778,7 @@ argument|const std::string&Name
 argument_list|)
 block|{
 return|return
-name|true
+name|false
 return|;
 block|}
 comment|/// setABI - Use the specific ABI.
@@ -1930,8 +2036,6 @@ return|;
 block|}
 comment|/// \brief Retrieve the name of the platform as it is used in the
 comment|/// availability attribute.
-name|llvm
-operator|::
 name|StringRef
 name|getPlatformName
 argument_list|()

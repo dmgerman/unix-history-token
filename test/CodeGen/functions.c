@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -emit-llvm -o - -verify | FileCheck %s
+comment|// RUN: %clang_cc1 %s -triple i386-unknown-unknown -emit-llvm -o - -verify | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -117,7 +117,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-comment|// CHECK: call void @f1()
+comment|// CHECK: call void bitcast (void ()* @f1 to void (i32, i32, i32)*)(i32 1, i32 2, i32 3)
 name|f1
 argument_list|(
 literal|1

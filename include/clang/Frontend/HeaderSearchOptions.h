@@ -77,12 +77,25 @@ comment|///< '#include ""' paths, added by'gcc -iquote'.
 name|Angled
 block|,
 comment|///< Paths for '#include<>' added by '-I'.
+name|IndexHeaderMap
+block|,
+comment|///< Like Angled, but marks header maps used when
+comment|///  building frameworks.
 name|System
 block|,
 comment|///< Like Angled, but marks system directories.
+name|CSystem
+block|,
+comment|///< Like System, but only used for C.
 name|CXXSystem
 block|,
 comment|///< Like System, but only used for C++.
+name|ObjCSystem
+block|,
+comment|///< Like System, but only used for ObjC.
+name|ObjCXXSystem
+block|,
+comment|///< Like System, but only used for ObjC++.
 name|After
 comment|///< Like System, but searched after the system directories.
 block|}
@@ -128,7 +141,7 @@ literal|1
 decl_stmt|;
 name|Entry
 argument_list|(
-argument|llvm::StringRef path
+argument|StringRef path
 argument_list|,
 argument|frontend::IncludeDirGroup group
 argument_list|,
@@ -182,36 +195,6 @@ name|Entry
 operator|>
 name|UserEntries
 expr_stmt|;
-comment|/// A (system-path) delimited list of include paths to be added from the
-comment|/// environment following the user specified includes (but prior to builtin
-comment|/// and standard includes). This is parsed in the same manner as the CPATH
-comment|/// environment variable for gcc.
-name|std
-operator|::
-name|string
-name|EnvIncPath
-expr_stmt|;
-comment|/// Per-language environmental include paths, see \see EnvIncPath.
-name|std
-operator|::
-name|string
-name|CEnvIncPath
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|ObjCEnvIncPath
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|CXXEnvIncPath
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|ObjCXXEnvIncPath
-expr_stmt|;
 comment|/// The directory which holds the compiler resource files (builtin includes,
 comment|/// etc.).
 name|std
@@ -219,6 +202,21 @@ operator|::
 name|string
 name|ResourceDir
 expr_stmt|;
+comment|/// \brief The directory used for the module cache.
+name|std
+operator|::
+name|string
+name|ModuleCachePath
+expr_stmt|;
+comment|/// \brief Whether we should disable the use of the hash string within the
+comment|/// module cache.
+comment|///
+comment|/// Note: Only used for testing!
+name|unsigned
+name|DisableModuleHash
+range|:
+literal|1
+decl_stmt|;
 comment|/// Include the compiler builtin includes.
 name|unsigned
 name|UseBuiltinIncludes
@@ -227,7 +225,7 @@ literal|1
 decl_stmt|;
 comment|/// Include the system standard include search directories.
 name|unsigned
-name|UseStandardIncludes
+name|UseStandardSystemIncludes
 range|:
 literal|1
 decl_stmt|;
@@ -253,7 +251,7 @@ name|public
 label|:
 name|HeaderSearchOptions
 argument_list|(
-argument|llvm::StringRef _Sysroot =
+argument|StringRef _Sysroot =
 literal|"/"
 argument_list|)
 block|:
@@ -262,12 +260,17 @@ argument_list|(
 name|_Sysroot
 argument_list|)
 operator|,
+name|DisableModuleHash
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|UseBuiltinIncludes
 argument_list|(
 name|true
 argument_list|)
 operator|,
-name|UseStandardIncludes
+name|UseStandardSystemIncludes
 argument_list|(
 name|true
 argument_list|)
@@ -291,7 +294,7 @@ comment|/// AddPath - Add the \arg Path path to the specified \arg Group list.
 name|void
 name|AddPath
 argument_list|(
-argument|llvm::StringRef Path
+argument|StringRef Path
 argument_list|,
 argument|frontend::IncludeDirGroup Group
 argument_list|,

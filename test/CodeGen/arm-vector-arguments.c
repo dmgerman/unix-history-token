@@ -34,7 +34,7 @@ file|<arm_neon.h>
 end_include
 
 begin_comment
-comment|// CHECK: define void @f0(%struct.int8x16x2_t* sret %agg.result,<16 x i8> %{{.*}},<16 x i8> %{{.*}})
+comment|// CHECK: define void @f0(%struct.int8x16x2_t* noalias sret %agg.result,<16 x i8> %{{.*}},<16 x i8> %{{.*}})
 end_comment
 
 begin_function
@@ -140,7 +140,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f1_2(<8 x float>* sret %{{.*}},<8 x float> %{{.*}})
+comment|// CHECK: define void @f1_2(<8 x float>* noalias sret %{{.*}},<8 x float> %{{.*}})
 end_comment
 
 begin_function
@@ -158,7 +158,7 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: define void @f1_3(<16 x float>* sret %{{.*}},<16 x float> %{{.*}})
+comment|// CHECK: define void @f1_3(<16 x float>* noalias sret %{{.*}},<16 x float> %{{.*}})
 end_comment
 
 begin_function

@@ -186,8 +186,22 @@ directive|include
 file|"guarded.h"
 end_include
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|fname
+init|=
+name|__FILE__
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
-comment|// RUN: c-index-test -test-annotate-tokens=%s:2:1:30:1 -I%S/Inputs %s | FileCheck %s
+comment|// RUN: c-index-test -test-annotate-tokens=%s:2:1:32:1 -I%S/Inputs %s | FileCheck %s
+end_comment
+
+begin_comment
+comment|// RUN: env CINDEXTEST_EDITING=1 c-index-test -test-annotate-tokens=%s:2:1:32:1 -I%S/Inputs %s | FileCheck %s
 end_comment
 
 begin_comment
@@ -479,7 +493,7 @@ comment|// CHECK: Punctuation: ")" [13:22 - 13:23] FunctionDecl=test_macro_args:
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "{" [13:24 - 13:25] UnexposedStmt=
+comment|// CHECK: Punctuation: "{" [13:24 - 13:25] CompoundStmt=
 end_comment
 
 begin_comment
@@ -495,11 +509,11 @@ comment|// CHECK: Punctuation: "=" [14:9 - 14:10] VarDecl=z:14:7 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: "1" [14:11 - 14:12] UnexposedExpr=
+comment|// CHECK: Literal: "1" [14:11 - 14:12] IntegerLiteral=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [14:12 - 14:13] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [14:12 - 14:13] DeclStmt=
 end_comment
 
 begin_comment
@@ -515,11 +529,11 @@ comment|// CHECK: Punctuation: "=" [15:9 - 15:10] VarDecl=t:15:7 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: "2" [15:11 - 15:12] UnexposedExpr=
+comment|// CHECK: Literal: "2" [15:11 - 15:12] IntegerLiteral=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [15:12 - 15:13] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [15:12 - 15:13] DeclStmt=
 end_comment
 
 begin_comment
@@ -539,7 +553,7 @@ comment|// CHECK: Identifier: "REVERSE_MACRO" [16:11 - 16:24] macro expansion=RE
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [16:24 - 16:25] UnexposedStmt=
+comment|// CHECK: Punctuation: "(" [16:24 - 16:25]
 end_comment
 
 begin_comment
@@ -547,7 +561,7 @@ comment|// CHECK: Identifier: "t" [16:25 - 16:26] DeclRefExpr=t:15:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "," [16:26 - 16:27] UnexposedStmt=
+comment|// CHECK: Punctuation: "," [16:26 - 16:27]
 end_comment
 
 begin_comment
@@ -555,11 +569,15 @@ comment|// CHECK: Identifier: "z" [16:27 - 16:28] DeclRefExpr=z:14:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [16:28 - 16:29] UnexposedStmt=
+comment|// FIXME: The token below should really be annotated as "macro expansion=REVERSE_MACRO:10:9"
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [16:29 - 16:30] UnexposedStmt=
+comment|// CHECK: Punctuation: ")" [16:28 - 16:29] VarDecl=k:16:7 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [16:29 - 16:30] DeclStmt=
 end_comment
 
 begin_comment
@@ -579,7 +597,7 @@ comment|// CHECK: Identifier: "TWICE_MACRO" [17:11 - 17:22] macro expansion=TWIC
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [17:22 - 17:23] UnexposedStmt=
+comment|// CHECK: Punctuation: "(" [17:22 - 17:23]
 end_comment
 
 begin_comment
@@ -587,7 +605,7 @@ comment|// CHECK: Identifier: "k" [17:23 - 17:24] DeclRefExpr=k:16:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "+" [17:25 - 17:26] UnexposedStmt=
+comment|// CHECK: Punctuation: "+" [17:25 - 17:26] BinaryOperator=
 end_comment
 
 begin_comment
@@ -595,11 +613,15 @@ comment|// CHECK: Identifier: "k" [17:27 - 17:28] DeclRefExpr=k:16:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [17:28 - 17:29] UnexposedStmt=
+comment|// FIXME: The token below should really be annotated as "macro expansion=TWICE_MACRO:11:9"
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [17:29 - 17:30] UnexposedStmt=
+comment|// CHECK: Punctuation: ")" [17:28 - 17:29] VarDecl=j:17:7 (Definition)
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ";" [17:29 - 17:30] DeclStmt=
 end_comment
 
 begin_comment
@@ -619,7 +641,7 @@ comment|// CHECK: Identifier: "j" [18:11 - 18:12] DeclRefExpr=j:17:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "+" [18:13 - 18:14] UnexposedExpr=
+comment|// CHECK: Punctuation: "+" [18:13 - 18:14] BinaryOperator=
 end_comment
 
 begin_comment
@@ -627,11 +649,11 @@ comment|// CHECK: Identifier: "j" [18:15 - 18:16] DeclRefExpr=j:17:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [18:16 - 18:17] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [18:16 - 18:17] DeclStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "}" [19:1 - 19:2] UnexposedStmt=
+comment|// CHECK: Punctuation: "}" [19:1 - 19:2] CompoundStmt=
 end_comment
 
 begin_comment
@@ -731,7 +753,7 @@ comment|// CHECK: Punctuation: ")" [23:11 - 23:12] FunctionDecl=test:23:6 (Defin
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "{" [23:13 - 23:14] UnexposedStmt=
+comment|// CHECK: Punctuation: "{" [23:13 - 23:14] CompoundStmt=
 end_comment
 
 begin_comment
@@ -747,11 +769,11 @@ comment|// CHECK: Punctuation: "=" [24:9 - 24:10] VarDecl=x:24:7 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Literal: "10" [24:11 - 24:13] UnexposedExpr=
+comment|// CHECK: Literal: "10" [24:11 - 24:13] IntegerLiteral=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [24:13 - 24:14] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [24:13 - 24:14] DeclStmt=
 end_comment
 
 begin_comment
@@ -759,7 +781,7 @@ comment|// CHECK: Identifier: "fun_with_macro_bodies" [25:3 - 25:24] macro expan
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "(" [25:24 - 25:25] UnexposedStmt=
+comment|// CHECK: Punctuation: "(" [25:24 - 25:25] CompoundStmt=
 end_comment
 
 begin_comment
@@ -767,15 +789,15 @@ comment|// CHECK: Identifier: "x" [25:25 - 25:26] DeclRefExpr=x:24:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "," [25:26 - 25:27] UnexposedStmt=
+comment|// CHECK: Punctuation: "," [25:26 - 25:27]
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "{" [25:28 - 25:29] UnexposedStmt=
+comment|// CHECK: Punctuation: "{" [25:28 - 25:29] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Keyword: "int" [25:30 - 25:33] UnexposedStmt=
+comment|// CHECK: Keyword: "int" [25:30 - 25:33] DeclStmt=
 end_comment
 
 begin_comment
@@ -783,7 +805,7 @@ comment|// CHECK: Identifier: "z" [25:34 - 25:35] VarDecl=z:25:34 (Definition)
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "=" [25:36 - 25:37] UnexposedStmt=
+comment|// CHECK: Punctuation: "=" [25:36 - 25:37] VarDecl=z:25:34 (Definition)
 end_comment
 
 begin_comment
@@ -791,11 +813,11 @@ comment|// CHECK: Identifier: "x" [25:38 - 25:39] DeclRefExpr=x:24:7
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [25:39 - 25:40] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [25:39 - 25:40] DeclStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "++" [25:41 - 25:43] UnexposedExpr=
+comment|// CHECK: Punctuation: "++" [25:41 - 25:43] UnaryOperator=
 end_comment
 
 begin_comment
@@ -803,23 +825,23 @@ comment|// CHECK: Identifier: "z" [25:43 - 25:44] DeclRefExpr=z:25:3
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [25:44 - 25:45] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [25:44 - 25:45] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "}" [25:46 - 25:47] UnexposedStmt=
+comment|// CHECK: Punctuation: "}" [25:46 - 25:47] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [25:47 - 25:48] UnexposedStmt=
+comment|// CHECK: Punctuation: ")" [25:47 - 25:48] DoStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ";" [25:48 - 25:49] UnexposedStmt=
+comment|// CHECK: Punctuation: ";" [25:48 - 25:49] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: "}" [26:1 - 26:2] UnexposedStmt=
+comment|// CHECK: Punctuation: "}" [26:1 - 26:2] CompoundStmt=
 end_comment
 
 begin_comment
@@ -828,6 +850,10 @@ end_comment
 
 begin_comment
 comment|// CHECK: {{29:1.*inclusion directive=guarded.h.*multi-include guarded}}
+end_comment
+
+begin_comment
+comment|// CHECK: Identifier: "__FILE__" [31:21 - 31:29] macro expansion=__FILE__
 end_comment
 
 end_unit

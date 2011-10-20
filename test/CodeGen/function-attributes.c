@@ -487,5 +487,133 @@ argument_list|)
 block|{ }
 end_decl_stmt
 
+begin_comment
+comment|// PR11038
+end_comment
+
+begin_comment
+comment|// CHECK: define void @f18()
+end_comment
+
+begin_comment
+comment|// CHECK: returns_twice
+end_comment
+
+begin_comment
+comment|// CHECK: {
+end_comment
+
+begin_comment
+comment|// CHECK: call void @f17()
+end_comment
+
+begin_comment
+comment|// CHECK: returns_twice
+end_comment
+
+begin_comment
+comment|// CHECK: ret void
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(returns_twice)
+argument_list|)
+end_macro
+
+begin_function_decl
+name|void
+name|f17
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(returns_twice)
+argument_list|)
+end_macro
+
+begin_function
+name|void
+name|f18
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|f17
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define void @f19()
+end_comment
+
+begin_comment
+comment|// CHECK: {
+end_comment
+
+begin_comment
+comment|// CHECK: call i32 @setjmp(i32* null)
+end_comment
+
+begin_comment
+comment|// CHECK: returns_twice
+end_comment
+
+begin_comment
+comment|// CHECK: ret void
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|jmp_buf
+index|[
+operator|(
+operator|(
+literal|9
+operator|*
+literal|2
+operator|)
+operator|+
+literal|3
+operator|+
+literal|16
+operator|)
+index|]
+typedef|;
+end_typedef
+
+begin_function_decl
+name|int
+name|setjmp
+parameter_list|(
+name|jmp_buf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f19
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|setjmp
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

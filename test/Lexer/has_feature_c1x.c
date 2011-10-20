@@ -89,5 +89,46 @@ begin_comment
 comment|// CHECK-NO-1X: no_generic_selections
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|c_alignas
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_alignas
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|no_alignas
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK-1X: has_alignas
+end_comment
+
+begin_comment
+comment|// CHECK-NO-1X: no_alignas
+end_comment
+
 end_unit
 

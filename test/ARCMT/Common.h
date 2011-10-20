@@ -31,6 +31,20 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|CF_CONSUMED
+value|__attribute__((cf_consumed))
+end_define
+
+begin_define
+define|#
+directive|define
+name|nil
+value|((void*) 0)
+end_define
+
 begin_typedef
 typedef|typedef
 name|int
@@ -75,6 +89,33 @@ name|UChar
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+name|struct
+name|_NSZone
+name|NSZone
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|void
+modifier|*
+name|CFTypeRef
+typedef|;
+end_typedef
+
+begin_function_decl
+name|CFTypeRef
+name|CFRetain
+parameter_list|(
+name|CFTypeRef
+name|cf
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_expr_stmt
 unit|@
 name|protocol
@@ -89,6 +130,17 @@ operator|(
 name|id
 operator|)
 name|object
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+operator|-
+operator|(
+name|NSZone
+operator|*
+operator|)
+name|zone
+name|NS_AUTOMATED_REFCOUNT_UNAVAILABLE
 expr_stmt|;
 end_expr_stmt
 

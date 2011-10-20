@@ -712,9 +712,22 @@ argument_list|(
 name|buf
 argument_list|,
 literal|""
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|// expected-warning {{format string is empty}}
+comment|// Don't warn about empty format strings when there are no data arguments.
+comment|// This can arise from macro expansions and non-standard format string
+comment|// functions.
+name|sprintf
+argument_list|(
+name|buf
+argument_list|,
+literal|""
+argument_list|)
+expr_stmt|;
+comment|// no-warning
 block|}
 end_function
 
@@ -2580,6 +2593,42 @@ name|y
 argument_list|)
 expr_stmt|;
 comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// Test suppression of individual warnings.
+end_comment
+
+begin_function
+name|void
+name|test_suppress_invalid_specifier
+parameter_list|()
+block|{
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|push
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|ignored
+literal|"-Wformat-invalid-specifier"
+name|printf
+argument_list|(
+literal|"%@"
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+pragma|#
+directive|pragma
+name|clang
+name|diagnostic
+name|pop
 block|}
 end_function
 

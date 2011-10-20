@@ -19,6 +19,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -include-pch %t -fsyntax-only -verify %s
 end_comment
 
+begin_comment
+comment|// expected-note{{'f1' declared here}}
+end_comment
+
 begin_function
 name|int
 name|f0

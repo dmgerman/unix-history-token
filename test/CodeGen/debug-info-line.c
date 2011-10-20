@@ -1,10 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -emit-llvm -S -g %s -o %t
-end_comment
-
-begin_comment
-comment|// RUN: grep DW_TAG_lexical_block %t | count 3
+comment|// RUN: %clang -emit-llvm -S -g %s -o - | FileCheck %s
 end_comment
 
 begin_comment
@@ -12,7 +8,15 @@ comment|// Radar 8396182
 end_comment
 
 begin_comment
-comment|// There are three lexical blocks in this test case.
+comment|// There is only one lexical block, but we need a DILexicalBlock and two
+end_comment
+
+begin_comment
+comment|// DILexicalBlockFile to correctly represent file info. This means we have
+end_comment
+
+begin_comment
+comment|// two lexical blocks shown as the latter is also tagged as a lexical block.
 end_comment
 
 begin_function
@@ -41,6 +45,30 @@ name|j
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
+end_comment
+
+begin_comment
+comment|// CHECK: !"m.h"
+end_comment
+
+begin_comment
+comment|// CHECK: DW_TAG_lexical_block
+end_comment
+
+begin_comment
+comment|// CHECK: !"m.c"
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: DW_TAG_lexical_block
+end_comment
 
 end_unit
 

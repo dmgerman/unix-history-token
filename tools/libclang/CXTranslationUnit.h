@@ -79,6 +79,33 @@ struct|;
 block|}
 end_extern
 
+begin_decl_stmt
+name|namespace
+name|clang
+block|{
+name|class
+name|ASTUnit
+decl_stmt|;
+name|namespace
+name|cxtu
+block|{
+name|CXTranslationUnitImpl
+modifier|*
+name|MakeCXTranslationUnit
+parameter_list|(
+name|ASTUnit
+modifier|*
+name|TU
+parameter_list|)
+function_decl|;
+block|}
+block|}
+end_decl_stmt
+
+begin_comment
+comment|// end namespace clang::cxtu
+end_comment
+
 begin_endif
 endif|#
 directive|endif

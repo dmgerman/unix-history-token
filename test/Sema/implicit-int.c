@@ -101,6 +101,7 @@ name|x
 range|:
 literal|4
 decl_stmt|;
+comment|// expected-warning {{type specifier missing, defaults to 'int'}}
 block|}
 struct|;
 end_struct

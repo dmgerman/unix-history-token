@@ -20,7 +20,7 @@ comment|// CHECK: remap-load.c:2:10: UnexposedExpr= Extent=[2:10 - 2:23]
 end_comment
 
 begin_comment
-comment|// CHECK: remap-load.c:2:10: UnexposedExpr= Extent=[2:10 - 2:23]
+comment|// CHECK: remap-load.c:2:10: BinaryOperator= Extent=[2:10 - 2:23]
 end_comment
 
 begin_comment

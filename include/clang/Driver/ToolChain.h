@@ -120,8 +120,6 @@ block|{
 name|public
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -224,8 +222,6 @@ name|getArch
 argument_list|()
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getArchName
 argument_list|()
@@ -238,8 +234,6 @@ name|getArchName
 argument_list|()
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getPlatform
 argument_list|()
@@ -252,8 +246,6 @@ name|getVendorName
 argument_list|()
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getOS
 argument_list|()
@@ -504,8 +496,11 @@ comment|/// this tool chain (0=off, 1=on, 2=all).
 name|virtual
 name|unsigned
 name|GetDefaultStackProtectorLevel
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|KernelOrKext
+argument_list|)
+decl|const
 block|{
 return|return
 literal|0
@@ -600,6 +595,8 @@ name|string
 name|ComputeLLVMTriple
 argument_list|(
 argument|const ArgList&Args
+argument_list|,
+argument|types::ID InputType = types::TY_INVALID
 argument_list|)
 specifier|const
 expr_stmt|;
@@ -615,13 +612,15 @@ name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
 argument|const ArgList&Args
+argument_list|,
+argument|types::ID InputType = types::TY_INVALID
 argument_list|)
 specifier|const
 expr_stmt|;
 comment|/// configureObjCRuntime - Configure the known properties of the
 comment|/// Objective-C runtime for this platform.
 comment|///
-comment|/// FIXME: this doesn't really belong here.
+comment|/// FIXME: this really belongs on some sort of DeploymentTarget abstraction
 name|virtual
 name|void
 name|configureObjCRuntime
@@ -632,6 +631,21 @@ name|runtime
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// hasBlocksRuntime - Given that the user is compiling with
+comment|/// -fblocks, does this tool chain guarantee the existence of a
+comment|/// blocks runtime?
+comment|///
+comment|/// FIXME: this really belongs on some sort of DeploymentTarget abstraction
+name|virtual
+name|bool
+name|hasBlocksRuntime
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|// GetCXXStdlibType - Determine the C++ standard library type to use with the
 comment|// given compilation arguments.
 name|virtual

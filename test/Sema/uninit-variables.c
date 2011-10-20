@@ -3,6 +3,26 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -Wuninitialized -Wconditional-uninitialized -fsyntax-only -fblocks %s -verify
 end_comment
 
+begin_typedef
+typedef|typedef
+name|__typeof
+argument_list|(
+argument|sizeof(int)
+argument_list|)
+name|size_t
+expr_stmt|;
+end_typedef
+
+begin_function_decl
+name|void
+modifier|*
+name|malloc
+parameter_list|(
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|test1
@@ -11,7 +31,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 return|return
 name|x
 return|;
@@ -63,7 +83,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 operator|++
 name|x
 expr_stmt|;
@@ -84,7 +104,7 @@ name|x
 decl_stmt|,
 name|y
 decl_stmt|;
-comment|// expected-note{{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'y' to silence this warning}}
 name|x
 operator|=
 name|y
@@ -104,7 +124,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 name|x
 operator|+=
 literal|2
@@ -127,7 +147,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 if|if
 condition|(
 name|y
@@ -184,7 +204,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 for|for
 control|(
 name|unsigned
@@ -232,7 +252,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 for|for
 control|(
 name|unsigned
@@ -271,7 +291,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 for|for
 control|(
 name|unsigned
@@ -318,7 +338,7 @@ operator|++
 name|i
 control|)
 empty_stmt|;
-comment|// expected-warning{{variable 'i' may be uninitialized when used here}} expected-note{{variable 'i' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-warning{{variable 'i' is uninitialized when used here}} expected-note{{initialize the variable 'i' to silence this warning}}
 block|}
 end_function
 
@@ -364,7 +384,7 @@ block|}
 end_function
 
 begin_function
-name|int
+name|void
 name|test15
 parameter_list|()
 block|{
@@ -373,12 +393,26 @@ name|x
 init|=
 name|x
 decl_stmt|;
-comment|// no-warning: signals intended lack of initialization. \
-comment|// expected-note{{variable 'x' is declared here}}
+comment|// no-warning: signals intended lack of initialization.
+block|}
+end_function
+
+begin_function
+name|int
+name|test15b
+parameter_list|()
+block|{
+comment|// Warn here with the self-init, since it does result in a use of
+comment|// an unintialized variable and this is the root cause.
+name|int
+name|x
+init|=
+name|x
+decl_stmt|;
+comment|// expected-warning {{variable 'x' is uninitialized when used within its own initialization}}
 return|return
 name|x
 return|;
-comment|// expected-warning{{variable 'x' is uninitialized when used here}}
 block|}
 end_function
 
@@ -442,7 +476,7 @@ name|int
 modifier|*
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 operator|*
 name|x
 operator|=
@@ -564,7 +598,7 @@ block|{
 name|int
 name|z
 decl_stmt|;
-comment|// expected-note{{variable 'z' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'z' to silence this warning}}
 if|if
 condition|(
 operator|(
@@ -608,7 +642,7 @@ block|{
 name|int
 name|z
 decl_stmt|;
-comment|// expected-note{{variable 'z' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'z' to silence this warning}}
 if|if
 condition|(
 operator|(
@@ -735,7 +769,7 @@ block|{
 name|unsigned
 name|val
 decl_stmt|;
-comment|// expected-note{{variable 'val' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'val' to silence this warning}}
 if|if
 condition|(
 name|flag
@@ -768,7 +802,7 @@ block|{
 name|float
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 return|return
 name|x
 return|;
@@ -791,7 +825,7 @@ block|{
 name|MyInt
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 return|return
 name|x
 return|;
@@ -838,7 +872,7 @@ block|{
 name|int
 name|len
 decl_stmt|;
-comment|// expected-note{{variable 'len' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'len' to silence this warning}}
 return|return
 sizeof|sizeof
 argument_list|(
@@ -860,7 +894,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 operator|(
 name|void
 operator|)
@@ -979,7 +1013,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note{{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 operator|(
 name|void
 operator|)
@@ -1040,7 +1074,7 @@ modifier|*
 modifier|*
 name|pc
 decl_stmt|;
-comment|// expected-note{{variable 'pc' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'pc' to silence this warning}}
 name|void
 modifier|*
 name|dummy
@@ -1059,7 +1093,7 @@ label|:
 goto|goto *
 name|pc
 goto|;
-comment|// expected-warning{{variable 'pc' may be uninitialized when used here}}
+comment|// expected-warning{{variable 'pc' is uninitialized when used here}}
 name|L2
 label|:
 goto|goto *
@@ -1188,7 +1222,7 @@ block|{
 name|int
 name|y
 decl_stmt|;
-comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'y' to silence this warning}}
 name|int
 name|z
 init|=
@@ -1214,7 +1248,7 @@ block|{
 name|int
 name|y
 decl_stmt|;
-comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'y' to silence this warning}}
 return|return
 name|x
 condition|?
@@ -1237,7 +1271,7 @@ block|{
 name|int
 name|y
 decl_stmt|;
-comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'y' to silence this warning}}
 if|if
 condition|(
 name|x
@@ -1291,7 +1325,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note {{variable 'x' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'x' to silence this warning}}
 for|for
 control|(
 name|i
@@ -1311,7 +1345,7 @@ name|x
 operator|++
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{variable 'x' may be uninitialized when used here}}
+comment|// expected-warning {{variable 'x' is uninitialized when used here}}
 block|}
 end_function
 
@@ -1331,7 +1365,7 @@ decl_stmt|;
 name|int
 name|y
 decl_stmt|;
-comment|// expected-note {{variable 'y' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'y' to silence this warning}}
 for|for
 control|(
 name|i
@@ -1357,7 +1391,7 @@ name|x
 operator|+=
 name|y
 expr_stmt|;
-comment|// expected-warning {{variable 'y' may be uninitialized when used here}}
+comment|// expected-warning {{variable 'y' is uninitialized when used here}}
 block|}
 block|}
 end_function
@@ -1403,7 +1437,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|// expected-note {{variable 'i' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'i' to silence this warning}}
 name|int
 name|j
 init|=
@@ -1526,7 +1560,7 @@ block|{
 name|int
 name|x
 decl_stmt|;
-comment|// expected-note {{variable 'x' is declared here}} expected-note {{add initialization to silence this warning}}
+comment|// expected-note {{initialize the variable 'x' to silence this warning}}
 switch|switch
 condition|(
 name|a
@@ -1559,6 +1593,26 @@ comment|// expected-warning {{variable 'x' may be uninitialized when used here}}
 block|}
 end_function
 
+begin_function
+name|void
+name|test53
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|;
+comment|// expected-note {{initialize the variable 'x' to silence this warning}}
+name|int
+name|y
+init|=
+operator|(
+name|x
+operator|)
+decl_stmt|;
+comment|// expected-warning {{variable 'x' is uninitialized when used here}}
+block|}
+end_function
+
 begin_comment
 comment|// This CFG caused the uninitialized values warning to inf-loop.
 end_comment
@@ -1583,7 +1637,7 @@ block|{
 name|int
 name|new_len
 decl_stmt|;
-comment|// expected-note {{variable 'new_len' is declared here}} expected-note{{add initialization to silence this warning}}
+comment|// expected-note{{initialize the variable 'new_len' to silence this warning}}
 for|for
 control|(
 name|int
@@ -1646,6 +1700,174 @@ name|new_len
 expr_stmt|;
 comment|// expected-warning {{variable 'new_len' may be uninitialized when used here}}
 block|}
+block|}
+end_function
+
+begin_comment
+comment|// Test that sizeof(VLA) doesn't trigger a warning.
+end_comment
+
+begin_function
+name|void
+name|test_vla_sizeof
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+name|double
+argument_list|(
+operator|*
+name|memory
+argument_list|)
+index|[
+literal|2
+index|]
+index|[
+name|x
+index|]
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|memory
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// Test absurd case of deadcode + use of blocks.  This previously was a false positive
+end_comment
+
+begin_comment
+comment|// due to an analysis bug.
+end_comment
+
+begin_function
+name|int
+name|test_block_and_dead_code
+parameter_list|()
+block|{
+specifier|__block
+name|int
+name|x
+decl_stmt|;
+lambda|^
+block|{
+name|x
+operator|=
+literal|1
+expr_stmt|;
+block|}
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+literal|0
+condition|)
+return|return
+name|x
+return|;
+return|return
+name|x
+return|;
+comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// This previously triggered an infinite loop in the analysis.
+end_comment
+
+begin_function
+name|void
+name|PR11069
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+block|{
+name|unsigned
+name|long
+name|flags
+decl_stmt|;
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+if|if
+condition|(
+name|a
+operator|&&
+operator|!
+name|b
+condition|)
+break|break;
+block|}
+for|for
+control|(
+init|;
+condition|;
+control|)
+block|{
+comment|// This does not trigger a warning because it isn't a real use.
+call|(
+name|void
+call|)
+argument_list|(
+name|flags
+argument_list|)
+expr_stmt|;
+comment|// no-warning
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// Test uninitialized value used in loop condition.
+end_comment
+
+begin_function
+name|void
+name|rdar9432305
+parameter_list|(
+name|float
+modifier|*
+name|P
+parameter_list|)
+block|{
+name|int
+name|i
+decl_stmt|;
+comment|// expected-note {{initialize the variable 'i' to silence this warning}}
+for|for
+control|(
+init|;
+name|i
+operator|<
+literal|10000
+condition|;
+operator|++
+name|i
+control|)
+comment|// expected-warning {{variable 'i' is uninitialized when used here}}
+name|P
+index|[
+name|i
+index|]
+operator|=
+literal|0.0f
+expr_stmt|;
 block|}
 end_function
 

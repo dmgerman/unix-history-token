@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-store=basic -fblocks -verify %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core -analyzer-store=region -fblocks -verify %s
 end_comment
 
@@ -328,7 +324,7 @@ decl_stmt|;
 return|return
 name|b
 return|;
-comment|// expected-warning{{Address of stack-allocated block declared on line 61 returned to caller}}
+comment|// expected-warning{{Address of stack-allocated block declared on line 60 returned to caller}}
 block|}
 end_function
 

@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/IntrusiveRefCntPtr.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -131,6 +137,9 @@ name|class
 name|LiveVariables
 decl_stmt|;
 name|class
+name|ManagedAnalysis
+decl_stmt|;
+name|class
 name|ParentMap
 decl_stmt|;
 name|class
@@ -152,6 +161,35 @@ name|class
 name|TranslationUnit
 decl_stmt|;
 block|}
+comment|/// The base class of a hierarchy of objects representing analyses tied
+comment|/// to AnalysisContext.
+name|class
+name|ManagedAnalysis
+block|{
+name|protected
+label|:
+name|ManagedAnalysis
+argument_list|()
+block|{}
+name|public
+label|:
+name|virtual
+operator|~
+name|ManagedAnalysis
+argument_list|()
+expr_stmt|;
+comment|// Subclasses need to implement:
+comment|//
+comment|//  static const void *getTag();
+comment|//
+comment|// Which returns a fixed pointer address to distinguish classes of
+comment|// analysis objects.  They also need to implement:
+comment|//
+comment|//  static [Derived*] create(AnalysisContext&Ctx);
+comment|//
+comment|// which creates the analysis object given an AnalysisContext.
+block|}
+empty_stmt|;
 comment|/// AnalysisContext contains the context data for the function or method under
 comment|/// analysis.
 name|class
@@ -204,10 +242,6 @@ name|bool
 name|builtCFG
 decl_stmt|,
 name|builtCompleteCFG
-decl_stmt|;
-specifier|const
-name|bool
-name|useUnoptimizedCFG
 decl_stmt|;
 name|llvm
 operator|::
@@ -269,23 +303,47 @@ operator|>
 operator|*
 name|ReferencedBlockVars
 expr_stmt|;
+name|void
+modifier|*
+name|ManagedAnalyses
+decl_stmt|;
 name|public
 label|:
 name|AnalysisContext
 argument_list|(
-argument|const Decl *d
+specifier|const
+name|Decl
+operator|*
+name|d
 argument_list|,
-argument|idx::TranslationUnit *tu
-argument_list|,
-argument|bool useUnoptimizedCFG = false
-argument_list|,
-argument|bool addehedges = false
-argument_list|,
-argument|bool addImplicitDtors = false
-argument_list|,
-argument|bool addInitializers = false
+name|idx
+operator|::
+name|TranslationUnit
+operator|*
+name|tu
 argument_list|)
-empty_stmt|;
+expr_stmt|;
+name|AnalysisContext
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|d
+argument_list|,
+name|idx
+operator|::
+name|TranslationUnit
+operator|*
+name|tu
+argument_list|,
+specifier|const
+name|CFG
+operator|::
+name|BuildOptions
+operator|&
+name|buildOptions
+argument_list|)
+expr_stmt|;
 operator|~
 name|AnalysisContext
 argument_list|()
@@ -325,6 +383,31 @@ return|return
 name|TU
 return|;
 block|}
+comment|/// Return the build options used to construct the CFG.
+name|CFG
+operator|::
+name|BuildOptions
+operator|&
+name|getCFGBuildOptions
+argument_list|()
+block|{
+return|return
+name|cfgBuildOptions
+return|;
+block|}
+specifier|const
+name|CFG
+operator|::
+name|BuildOptions
+operator|&
+name|getCFGBuildOptions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cfgBuildOptions
+return|;
+block|}
 comment|/// getAddEHEdges - Return true iff we are adding exceptional edges from
 comment|/// callExprs.  If this is false, then try/catch statements and blocks
 comment|/// reachable from them can appear to be dead in the CFG, analysis passes must
@@ -346,6 +429,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|!
 name|cfgBuildOptions
 operator|.
 name|PruneTriviallyFalseEdges
@@ -394,10 +478,11 @@ name|stmt
 parameter_list|)
 function_decl|;
 name|Stmt
-modifier|*
+operator|*
 name|getBody
-parameter_list|()
-function_decl|;
+argument_list|()
+specifier|const
+expr_stmt|;
 name|CFG
 modifier|*
 name|getCFG
@@ -445,16 +530,6 @@ modifier|*
 name|getPseudoConstantAnalysis
 parameter_list|()
 function_decl|;
-name|LiveVariables
-modifier|*
-name|getLiveVariables
-parameter_list|()
-function_decl|;
-name|LiveVariables
-modifier|*
-name|getRelaxedLiveVariables
-parameter_list|()
-function_decl|;
 typedef|typedef
 specifier|const
 name|VarDecl
@@ -488,6 +563,79 @@ name|getSelfDecl
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Return the specified analysis object, lazily running the analysis if
+comment|/// necessary.  Return NULL if the analysis could not run.
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
+operator|*
+name|getAnalysis
+argument_list|()
+block|{
+specifier|const
+name|void
+operator|*
+name|tag
+operator|=
+name|T
+operator|::
+name|getTag
+argument_list|()
+block|;
+name|ManagedAnalysis
+operator|*
+operator|&
+name|data
+operator|=
+name|getAnalysisImpl
+argument_list|(
+name|tag
+argument_list|)
+block|;
+if|if
+condition|(
+operator|!
+name|data
+condition|)
+block|{
+name|data
+operator|=
+name|T
+operator|::
+name|create
+argument_list|(
+operator|*
+name|this
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|static_cast
+operator|<
+name|T
+operator|*
+operator|>
+operator|(
+name|data
+operator|)
+return|;
+block|}
+name|private
+label|:
+name|ManagedAnalysis
+modifier|*
+modifier|&
+name|getAnalysisImpl
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|tag
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 name|class
@@ -510,15 +658,11 @@ expr_stmt|;
 name|ContextMap
 name|Contexts
 decl_stmt|;
-name|bool
-name|UseUnoptimizedCFG
-decl_stmt|;
-name|bool
-name|AddImplicitDtors
-decl_stmt|;
-name|bool
-name|AddInitializers
-decl_stmt|;
+name|CFG
+operator|::
+name|BuildOptions
+name|cfgBuildOptions
+expr_stmt|;
 name|public
 label|:
 name|AnalysisContextManager
@@ -529,22 +673,7 @@ argument|bool addImplicitDtors = false
 argument_list|,
 argument|bool addInitializers = false
 argument_list|)
-block|:
-name|UseUnoptimizedCFG
-argument_list|(
-name|useUnoptimizedCFG
-argument_list|)
-operator|,
-name|AddImplicitDtors
-argument_list|(
-name|addImplicitDtors
-argument_list|)
-operator|,
-name|AddInitializers
-argument_list|(
-argument|addInitializers
-argument_list|)
-block|{}
+empty_stmt|;
 operator|~
 name|AnalysisContextManager
 argument_list|()
@@ -573,28 +702,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|UseUnoptimizedCFG
+operator|!
+name|cfgBuildOptions
+operator|.
+name|PruneTriviallyFalseEdges
 return|;
 block|}
-name|bool
-name|getAddImplicitDtors
+name|CFG
+operator|::
+name|BuildOptions
+operator|&
+name|getCFGBuildOptions
 argument_list|()
-specifier|const
 block|{
 return|return
-name|AddImplicitDtors
+name|cfgBuildOptions
 return|;
 block|}
-name|bool
-name|getAddInitializers
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AddInitializers
-return|;
-block|}
-comment|// Discard all previously created AnalysisContexts.
+comment|/// Discard all previously created AnalysisContexts.
 name|void
 name|clear
 parameter_list|()
@@ -750,9 +875,14 @@ name|getCFG
 argument_list|()
 return|;
 block|}
-name|LiveVariables
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
 operator|*
-name|getLiveVariables
+name|getAnalysis
 argument_list|()
 specifier|const
 block|{
@@ -760,8 +890,12 @@ return|return
 name|getAnalysisContext
 argument_list|()
 operator|->
-name|getLiveVariables
-argument_list|()
+name|getAnalysis
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 name|ParentMap
@@ -846,7 +980,7 @@ argument|AnalysisContext *ctx
 argument_list|,
 argument|const LocationContext *parent
 argument_list|,
-argument|const void* data
+argument|const void *data
 argument_list|)
 block|; }
 decl_stmt|;
@@ -1008,7 +1142,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const LocationContext* Ctx
+argument|const LocationContext *Ctx
 argument_list|)
 block|{
 return|return
@@ -1114,7 +1248,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const LocationContext* Ctx
+argument|const LocationContext *Ctx
 argument_list|)
 block|{
 return|return
@@ -1233,7 +1367,7 @@ specifier|static
 name|bool
 name|classof
 argument_list|(
-argument|const LocationContext* Ctx
+argument|const LocationContext *Ctx
 argument_list|)
 block|{
 return|return

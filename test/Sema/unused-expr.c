@@ -57,7 +57,7 @@ name|VC
 parameter_list|)
 block|{
 name|VP
-operator|==
+operator|<
 name|P
 expr_stmt|;
 comment|// expected-warning {{expression result unused}}
@@ -78,7 +78,7 @@ argument_list|)
 expr_stmt|;
 comment|// no warning.
 name|A
-operator|==
+operator|<
 name|foo
 argument_list|(
 literal|1
@@ -283,13 +283,13 @@ condition|(
 name|a
 condition|)
 name|b
-operator|==
+operator|<
 literal|1
 expr_stmt|;
 comment|// expected-warning{{expression result unused}}
 else|else
 name|b
-operator|==
+operator|<
 literal|2
 expr_stmt|;
 comment|// expected-warning{{expression result unused}}
@@ -298,13 +298,13 @@ condition|(
 literal|1
 condition|)
 name|b
-operator|==
+operator|<
 literal|3
 expr_stmt|;
 comment|// expected-warning{{expression result unused}}
 do|do
 name|b
-operator|==
+operator|<
 literal|4
 expr_stmt|;
 comment|// expected-warning{{expression result unused}}
@@ -319,14 +319,14 @@ init|;
 condition|;
 control|)
 name|b
-operator|==
+operator|<
 literal|5
 expr_stmt|;
 comment|// expected-warning{{expression result unused}}
 for|for
 control|(
 name|b
-operator|==
+operator|<
 literal|1
 init|;
 condition|;
@@ -337,7 +337,7 @@ for|for
 control|(
 init|;
 name|b
-operator|==
+operator|<
 literal|1
 condition|;
 control|)
@@ -347,7 +347,7 @@ control|(
 init|;
 condition|;
 name|b
-operator|==
+operator|<
 literal|1
 control|)
 block|{}

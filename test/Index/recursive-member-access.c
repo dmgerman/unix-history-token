@@ -312,483 +312,483 @@ comment|// CHECK: 6:29: TypeRef=struct rdar8650865:1:8 Extent=[6:29 - 6:40]
 end_comment
 
 begin_comment
-comment|// CHECK: 6:45: UnexposedStmt= Extent=[6:45 - 124:2]
+comment|// CHECK: 6:45: CompoundStmt= Extent=[6:45 - 124:2]
 end_comment
 
 begin_comment
-comment|// CHECK: 7:3: UnexposedStmt= Extent=[7:3 - 123:8]
+comment|// CHECK: 7:3: ReturnStmt= Extent=[7:3 - 123:8]
 end_comment
 
 begin_comment
-comment|// CHECK: 123:7: MemberRefExpr=x:3:7 Extent=[7:10 - 123:8]
+comment|// CHECK: 123:7: MemberRefExpr=x:3:7 SingleRefName=[123:7 - 123:8] RefName=[123:7 - 123:8] Extent=[7:10 - 123:8]
 end_comment
 
 begin_comment
-comment|// CHECK: 122:7: MemberRefExpr=first:2:23 Extent=[7:10 - 122:12]
+comment|// CHECK: 122:7: MemberRefExpr=first:2:23 SingleRefName=[122:7 - 122:12] RefName=[122:7 - 122:12] Extent=[7:10 - 122:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 121:7: MemberRefExpr=first:2:23 Extent=[7:10 - 121:12]
+comment|// CHECK: 121:7: MemberRefExpr=first:2:23 SingleRefName=[121:7 - 121:12] RefName=[121:7 - 121:12] Extent=[7:10 - 121:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 120:7: MemberRefExpr=first:2:23 Extent=[7:10 - 120:12]
+comment|// CHECK: 120:7: MemberRefExpr=first:2:23 SingleRefName=[120:7 - 120:12] RefName=[120:7 - 120:12] Extent=[7:10 - 120:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 119:7: MemberRefExpr=first:2:23 Extent=[7:10 - 119:12]
+comment|// CHECK: 119:7: MemberRefExpr=first:2:23 SingleRefName=[119:7 - 119:12] RefName=[119:7 - 119:12] Extent=[7:10 - 119:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 118:7: MemberRefExpr=first:2:23 Extent=[7:10 - 118:12]
+comment|// CHECK: 118:7: MemberRefExpr=first:2:23 SingleRefName=[118:7 - 118:12] RefName=[118:7 - 118:12] Extent=[7:10 - 118:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 117:7: MemberRefExpr=first:2:23 Extent=[7:10 - 117:12]
+comment|// CHECK: 117:7: MemberRefExpr=first:2:23 SingleRefName=[117:7 - 117:12] RefName=[117:7 - 117:12] Extent=[7:10 - 117:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 116:7: MemberRefExpr=first:2:23 Extent=[7:10 - 116:12]
+comment|// CHECK: 116:7: MemberRefExpr=first:2:23 SingleRefName=[116:7 - 116:12] RefName=[116:7 - 116:12] Extent=[7:10 - 116:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 115:7: MemberRefExpr=first:2:23 Extent=[7:10 - 115:12]
+comment|// CHECK: 115:7: MemberRefExpr=first:2:23 SingleRefName=[115:7 - 115:12] RefName=[115:7 - 115:12] Extent=[7:10 - 115:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 114:7: MemberRefExpr=first:2:23 Extent=[7:10 - 114:12]
+comment|// CHECK: 114:7: MemberRefExpr=first:2:23 SingleRefName=[114:7 - 114:12] RefName=[114:7 - 114:12] Extent=[7:10 - 114:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 113:7: MemberRefExpr=first:2:23 Extent=[7:10 - 113:12]
+comment|// CHECK: 113:7: MemberRefExpr=first:2:23 SingleRefName=[113:7 - 113:12] RefName=[113:7 - 113:12] Extent=[7:10 - 113:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 112:7: MemberRefExpr=first:2:23 Extent=[7:10 - 112:12]
+comment|// CHECK: 112:7: MemberRefExpr=first:2:23 SingleRefName=[112:7 - 112:12] RefName=[112:7 - 112:12] Extent=[7:10 - 112:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 111:7: MemberRefExpr=first:2:23 Extent=[7:10 - 111:12]
+comment|// CHECK: 111:7: MemberRefExpr=first:2:23 SingleRefName=[111:7 - 111:12] RefName=[111:7 - 111:12] Extent=[7:10 - 111:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 110:7: MemberRefExpr=first:2:23 Extent=[7:10 - 110:12]
+comment|// CHECK: 110:7: MemberRefExpr=first:2:23 SingleRefName=[110:7 - 110:12] RefName=[110:7 - 110:12] Extent=[7:10 - 110:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 109:7: MemberRefExpr=first:2:23 Extent=[7:10 - 109:12]
+comment|// CHECK: 109:7: MemberRefExpr=first:2:23 SingleRefName=[109:7 - 109:12] RefName=[109:7 - 109:12] Extent=[7:10 - 109:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 108:7: MemberRefExpr=first:2:23 Extent=[7:10 - 108:12]
+comment|// CHECK: 108:7: MemberRefExpr=first:2:23 SingleRefName=[108:7 - 108:12] RefName=[108:7 - 108:12] Extent=[7:10 - 108:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 107:7: MemberRefExpr=first:2:23 Extent=[7:10 - 107:12]
+comment|// CHECK: 107:7: MemberRefExpr=first:2:23 SingleRefName=[107:7 - 107:12] RefName=[107:7 - 107:12] Extent=[7:10 - 107:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 106:7: MemberRefExpr=first:2:23 Extent=[7:10 - 106:12]
+comment|// CHECK: 106:7: MemberRefExpr=first:2:23 SingleRefName=[106:7 - 106:12] RefName=[106:7 - 106:12] Extent=[7:10 - 106:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 105:7: MemberRefExpr=first:2:23 Extent=[7:10 - 105:12]
+comment|// CHECK: 105:7: MemberRefExpr=first:2:23 SingleRefName=[105:7 - 105:12] RefName=[105:7 - 105:12] Extent=[7:10 - 105:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 104:7: MemberRefExpr=first:2:23 Extent=[7:10 - 104:12]
+comment|// CHECK: 104:7: MemberRefExpr=first:2:23 SingleRefName=[104:7 - 104:12] RefName=[104:7 - 104:12] Extent=[7:10 - 104:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 103:7: MemberRefExpr=first:2:23 Extent=[7:10 - 103:12]
+comment|// CHECK: 103:7: MemberRefExpr=first:2:23 SingleRefName=[103:7 - 103:12] RefName=[103:7 - 103:12] Extent=[7:10 - 103:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 102:7: MemberRefExpr=first:2:23 Extent=[7:10 - 102:12]
+comment|// CHECK: 102:7: MemberRefExpr=first:2:23 SingleRefName=[102:7 - 102:12] RefName=[102:7 - 102:12] Extent=[7:10 - 102:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 101:7: MemberRefExpr=first:2:23 Extent=[7:10 - 101:12]
+comment|// CHECK: 101:7: MemberRefExpr=first:2:23 SingleRefName=[101:7 - 101:12] RefName=[101:7 - 101:12] Extent=[7:10 - 101:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 100:7: MemberRefExpr=first:2:23 Extent=[7:10 - 100:12]
+comment|// CHECK: 100:7: MemberRefExpr=first:2:23 SingleRefName=[100:7 - 100:12] RefName=[100:7 - 100:12] Extent=[7:10 - 100:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 99:7: MemberRefExpr=first:2:23 Extent=[7:10 - 99:12]
+comment|// CHECK: 99:7: MemberRefExpr=first:2:23 SingleRefName=[99:7 - 99:12] RefName=[99:7 - 99:12] Extent=[7:10 - 99:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 98:7: MemberRefExpr=first:2:23 Extent=[7:10 - 98:12]
+comment|// CHECK: 98:7: MemberRefExpr=first:2:23 SingleRefName=[98:7 - 98:12] RefName=[98:7 - 98:12] Extent=[7:10 - 98:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 97:7: MemberRefExpr=first:2:23 Extent=[7:10 - 97:12]
+comment|// CHECK: 97:7: MemberRefExpr=first:2:23 SingleRefName=[97:7 - 97:12] RefName=[97:7 - 97:12] Extent=[7:10 - 97:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 96:7: MemberRefExpr=first:2:23 Extent=[7:10 - 96:12]
+comment|// CHECK: 96:7: MemberRefExpr=first:2:23 SingleRefName=[96:7 - 96:12] RefName=[96:7 - 96:12] Extent=[7:10 - 96:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 95:7: MemberRefExpr=first:2:23 Extent=[7:10 - 95:12]
+comment|// CHECK: 95:7: MemberRefExpr=first:2:23 SingleRefName=[95:7 - 95:12] RefName=[95:7 - 95:12] Extent=[7:10 - 95:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 94:7: MemberRefExpr=first:2:23 Extent=[7:10 - 94:12]
+comment|// CHECK: 94:7: MemberRefExpr=first:2:23 SingleRefName=[94:7 - 94:12] RefName=[94:7 - 94:12] Extent=[7:10 - 94:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 93:7: MemberRefExpr=first:2:23 Extent=[7:10 - 93:12]
+comment|// CHECK: 93:7: MemberRefExpr=first:2:23 SingleRefName=[93:7 - 93:12] RefName=[93:7 - 93:12] Extent=[7:10 - 93:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 92:7: MemberRefExpr=first:2:23 Extent=[7:10 - 92:12]
+comment|// CHECK: 92:7: MemberRefExpr=first:2:23 SingleRefName=[92:7 - 92:12] RefName=[92:7 - 92:12] Extent=[7:10 - 92:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 91:7: MemberRefExpr=first:2:23 Extent=[7:10 - 91:12]
+comment|// CHECK: 91:7: MemberRefExpr=first:2:23 SingleRefName=[91:7 - 91:12] RefName=[91:7 - 91:12] Extent=[7:10 - 91:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 90:7: MemberRefExpr=first:2:23 Extent=[7:10 - 90:12]
+comment|// CHECK: 90:7: MemberRefExpr=first:2:23 SingleRefName=[90:7 - 90:12] RefName=[90:7 - 90:12] Extent=[7:10 - 90:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 89:7: MemberRefExpr=first:2:23 Extent=[7:10 - 89:12]
+comment|// CHECK: 89:7: MemberRefExpr=first:2:23 SingleRefName=[89:7 - 89:12] RefName=[89:7 - 89:12] Extent=[7:10 - 89:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 88:7: MemberRefExpr=first:2:23 Extent=[7:10 - 88:12]
+comment|// CHECK: 88:7: MemberRefExpr=first:2:23 SingleRefName=[88:7 - 88:12] RefName=[88:7 - 88:12] Extent=[7:10 - 88:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 87:7: MemberRefExpr=first:2:23 Extent=[7:10 - 87:12]
+comment|// CHECK: 87:7: MemberRefExpr=first:2:23 SingleRefName=[87:7 - 87:12] RefName=[87:7 - 87:12] Extent=[7:10 - 87:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 86:7: MemberRefExpr=first:2:23 Extent=[7:10 - 86:12]
+comment|// CHECK: 86:7: MemberRefExpr=first:2:23 SingleRefName=[86:7 - 86:12] RefName=[86:7 - 86:12] Extent=[7:10 - 86:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 85:7: MemberRefExpr=first:2:23 Extent=[7:10 - 85:12]
+comment|// CHECK: 85:7: MemberRefExpr=first:2:23 SingleRefName=[85:7 - 85:12] RefName=[85:7 - 85:12] Extent=[7:10 - 85:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 84:7: MemberRefExpr=first:2:23 Extent=[7:10 - 84:12]
+comment|// CHECK: 84:7: MemberRefExpr=first:2:23 SingleRefName=[84:7 - 84:12] RefName=[84:7 - 84:12] Extent=[7:10 - 84:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 83:7: MemberRefExpr=first:2:23 Extent=[7:10 - 83:12]
+comment|// CHECK: 83:7: MemberRefExpr=first:2:23 SingleRefName=[83:7 - 83:12] RefName=[83:7 - 83:12] Extent=[7:10 - 83:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 82:7: MemberRefExpr=first:2:23 Extent=[7:10 - 82:12]
+comment|// CHECK: 82:7: MemberRefExpr=first:2:23 SingleRefName=[82:7 - 82:12] RefName=[82:7 - 82:12] Extent=[7:10 - 82:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 81:7: MemberRefExpr=first:2:23 Extent=[7:10 - 81:12]
+comment|// CHECK: 81:7: MemberRefExpr=first:2:23 SingleRefName=[81:7 - 81:12] RefName=[81:7 - 81:12] Extent=[7:10 - 81:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 80:7: MemberRefExpr=first:2:23 Extent=[7:10 - 80:12]
+comment|// CHECK: 80:7: MemberRefExpr=first:2:23 SingleRefName=[80:7 - 80:12] RefName=[80:7 - 80:12] Extent=[7:10 - 80:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 79:7: MemberRefExpr=first:2:23 Extent=[7:10 - 79:12]
+comment|// CHECK: 79:7: MemberRefExpr=first:2:23 SingleRefName=[79:7 - 79:12] RefName=[79:7 - 79:12] Extent=[7:10 - 79:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 78:7: MemberRefExpr=first:2:23 Extent=[7:10 - 78:12]
+comment|// CHECK: 78:7: MemberRefExpr=first:2:23 SingleRefName=[78:7 - 78:12] RefName=[78:7 - 78:12] Extent=[7:10 - 78:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 77:7: MemberRefExpr=first:2:23 Extent=[7:10 - 77:12]
+comment|// CHECK: 77:7: MemberRefExpr=first:2:23 SingleRefName=[77:7 - 77:12] RefName=[77:7 - 77:12] Extent=[7:10 - 77:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 76:7: MemberRefExpr=first:2:23 Extent=[7:10 - 76:12]
+comment|// CHECK: 76:7: MemberRefExpr=first:2:23 SingleRefName=[76:7 - 76:12] RefName=[76:7 - 76:12] Extent=[7:10 - 76:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 75:7: MemberRefExpr=first:2:23 Extent=[7:10 - 75:12]
+comment|// CHECK: 75:7: MemberRefExpr=first:2:23 SingleRefName=[75:7 - 75:12] RefName=[75:7 - 75:12] Extent=[7:10 - 75:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 74:7: MemberRefExpr=first:2:23 Extent=[7:10 - 74:12]
+comment|// CHECK: 74:7: MemberRefExpr=first:2:23 SingleRefName=[74:7 - 74:12] RefName=[74:7 - 74:12] Extent=[7:10 - 74:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 73:7: MemberRefExpr=first:2:23 Extent=[7:10 - 73:12]
+comment|// CHECK: 73:7: MemberRefExpr=first:2:23 SingleRefName=[73:7 - 73:12] RefName=[73:7 - 73:12] Extent=[7:10 - 73:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 72:7: MemberRefExpr=first:2:23 Extent=[7:10 - 72:12]
+comment|// CHECK: 72:7: MemberRefExpr=first:2:23 SingleRefName=[72:7 - 72:12] RefName=[72:7 - 72:12] Extent=[7:10 - 72:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 71:7: MemberRefExpr=first:2:23 Extent=[7:10 - 71:12]
+comment|// CHECK: 71:7: MemberRefExpr=first:2:23 SingleRefName=[71:7 - 71:12] RefName=[71:7 - 71:12] Extent=[7:10 - 71:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 70:7: MemberRefExpr=first:2:23 Extent=[7:10 - 70:12]
+comment|// CHECK: 70:7: MemberRefExpr=first:2:23 SingleRefName=[70:7 - 70:12] RefName=[70:7 - 70:12] Extent=[7:10 - 70:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 69:7: MemberRefExpr=first:2:23 Extent=[7:10 - 69:12]
+comment|// CHECK: 69:7: MemberRefExpr=first:2:23 SingleRefName=[69:7 - 69:12] RefName=[69:7 - 69:12] Extent=[7:10 - 69:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 68:7: MemberRefExpr=first:2:23 Extent=[7:10 - 68:12]
+comment|// CHECK: 68:7: MemberRefExpr=first:2:23 SingleRefName=[68:7 - 68:12] RefName=[68:7 - 68:12] Extent=[7:10 - 68:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 67:7: MemberRefExpr=first:2:23 Extent=[7:10 - 67:12]
+comment|// CHECK: 67:7: MemberRefExpr=first:2:23 SingleRefName=[67:7 - 67:12] RefName=[67:7 - 67:12] Extent=[7:10 - 67:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 66:7: MemberRefExpr=first:2:23 Extent=[7:10 - 66:12]
+comment|// CHECK: 66:7: MemberRefExpr=first:2:23 SingleRefName=[66:7 - 66:12] RefName=[66:7 - 66:12] Extent=[7:10 - 66:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 65:7: MemberRefExpr=first:2:23 Extent=[7:10 - 65:12]
+comment|// CHECK: 65:7: MemberRefExpr=first:2:23 SingleRefName=[65:7 - 65:12] RefName=[65:7 - 65:12] Extent=[7:10 - 65:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 64:7: MemberRefExpr=first:2:23 Extent=[7:10 - 64:12]
+comment|// CHECK: 64:7: MemberRefExpr=first:2:23 SingleRefName=[64:7 - 64:12] RefName=[64:7 - 64:12] Extent=[7:10 - 64:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 63:7: MemberRefExpr=first:2:23 Extent=[7:10 - 63:12]
+comment|// CHECK: 63:7: MemberRefExpr=first:2:23 SingleRefName=[63:7 - 63:12] RefName=[63:7 - 63:12] Extent=[7:10 - 63:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 62:7: MemberRefExpr=first:2:23 Extent=[7:10 - 62:12]
+comment|// CHECK: 62:7: MemberRefExpr=first:2:23 SingleRefName=[62:7 - 62:12] RefName=[62:7 - 62:12] Extent=[7:10 - 62:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 61:7: MemberRefExpr=first:2:23 Extent=[7:10 - 61:12]
+comment|// CHECK: 61:7: MemberRefExpr=first:2:23 SingleRefName=[61:7 - 61:12] RefName=[61:7 - 61:12] Extent=[7:10 - 61:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 60:7: MemberRefExpr=first:2:23 Extent=[7:10 - 60:12]
+comment|// CHECK: 60:7: MemberRefExpr=first:2:23 SingleRefName=[60:7 - 60:12] RefName=[60:7 - 60:12] Extent=[7:10 - 60:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 59:7: MemberRefExpr=first:2:23 Extent=[7:10 - 59:12]
+comment|// CHECK: 59:7: MemberRefExpr=first:2:23 SingleRefName=[59:7 - 59:12] RefName=[59:7 - 59:12] Extent=[7:10 - 59:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 58:7: MemberRefExpr=first:2:23 Extent=[7:10 - 58:12]
+comment|// CHECK: 58:7: MemberRefExpr=first:2:23 SingleRefName=[58:7 - 58:12] RefName=[58:7 - 58:12] Extent=[7:10 - 58:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 57:7: MemberRefExpr=first:2:23 Extent=[7:10 - 57:12]
+comment|// CHECK: 57:7: MemberRefExpr=first:2:23 SingleRefName=[57:7 - 57:12] RefName=[57:7 - 57:12] Extent=[7:10 - 57:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 56:7: MemberRefExpr=first:2:23 Extent=[7:10 - 56:12]
+comment|// CHECK: 56:7: MemberRefExpr=first:2:23 SingleRefName=[56:7 - 56:12] RefName=[56:7 - 56:12] Extent=[7:10 - 56:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 55:7: MemberRefExpr=first:2:23 Extent=[7:10 - 55:12]
+comment|// CHECK: 55:7: MemberRefExpr=first:2:23 SingleRefName=[55:7 - 55:12] RefName=[55:7 - 55:12] Extent=[7:10 - 55:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 54:7: MemberRefExpr=first:2:23 Extent=[7:10 - 54:12]
+comment|// CHECK: 54:7: MemberRefExpr=first:2:23 SingleRefName=[54:7 - 54:12] RefName=[54:7 - 54:12] Extent=[7:10 - 54:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 53:7: MemberRefExpr=first:2:23 Extent=[7:10 - 53:12]
+comment|// CHECK: 53:7: MemberRefExpr=first:2:23 SingleRefName=[53:7 - 53:12] RefName=[53:7 - 53:12] Extent=[7:10 - 53:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 52:7: MemberRefExpr=first:2:23 Extent=[7:10 - 52:12]
+comment|// CHECK: 52:7: MemberRefExpr=first:2:23 SingleRefName=[52:7 - 52:12] RefName=[52:7 - 52:12] Extent=[7:10 - 52:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 51:7: MemberRefExpr=first:2:23 Extent=[7:10 - 51:12]
+comment|// CHECK: 51:7: MemberRefExpr=first:2:23 SingleRefName=[51:7 - 51:12] RefName=[51:7 - 51:12] Extent=[7:10 - 51:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 50:7: MemberRefExpr=first:2:23 Extent=[7:10 - 50:12]
+comment|// CHECK: 50:7: MemberRefExpr=first:2:23 SingleRefName=[50:7 - 50:12] RefName=[50:7 - 50:12] Extent=[7:10 - 50:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 49:7: MemberRefExpr=first:2:23 Extent=[7:10 - 49:12]
+comment|// CHECK: 49:7: MemberRefExpr=first:2:23 SingleRefName=[49:7 - 49:12] RefName=[49:7 - 49:12] Extent=[7:10 - 49:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 48:7: MemberRefExpr=first:2:23 Extent=[7:10 - 48:12]
+comment|// CHECK: 48:7: MemberRefExpr=first:2:23 SingleRefName=[48:7 - 48:12] RefName=[48:7 - 48:12] Extent=[7:10 - 48:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 47:7: MemberRefExpr=first:2:23 Extent=[7:10 - 47:12]
+comment|// CHECK: 47:7: MemberRefExpr=first:2:23 SingleRefName=[47:7 - 47:12] RefName=[47:7 - 47:12] Extent=[7:10 - 47:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 46:7: MemberRefExpr=first:2:23 Extent=[7:10 - 46:12]
+comment|// CHECK: 46:7: MemberRefExpr=first:2:23 SingleRefName=[46:7 - 46:12] RefName=[46:7 - 46:12] Extent=[7:10 - 46:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 45:7: MemberRefExpr=first:2:23 Extent=[7:10 - 45:12]
+comment|// CHECK: 45:7: MemberRefExpr=first:2:23 SingleRefName=[45:7 - 45:12] RefName=[45:7 - 45:12] Extent=[7:10 - 45:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 44:7: MemberRefExpr=first:2:23 Extent=[7:10 - 44:12]
+comment|// CHECK: 44:7: MemberRefExpr=first:2:23 SingleRefName=[44:7 - 44:12] RefName=[44:7 - 44:12] Extent=[7:10 - 44:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 43:7: MemberRefExpr=first:2:23 Extent=[7:10 - 43:12]
+comment|// CHECK: 43:7: MemberRefExpr=first:2:23 SingleRefName=[43:7 - 43:12] RefName=[43:7 - 43:12] Extent=[7:10 - 43:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 42:7: MemberRefExpr=first:2:23 Extent=[7:10 - 42:12]
+comment|// CHECK: 42:7: MemberRefExpr=first:2:23 SingleRefName=[42:7 - 42:12] RefName=[42:7 - 42:12] Extent=[7:10 - 42:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 41:7: MemberRefExpr=first:2:23 Extent=[7:10 - 41:12]
+comment|// CHECK: 41:7: MemberRefExpr=first:2:23 SingleRefName=[41:7 - 41:12] RefName=[41:7 - 41:12] Extent=[7:10 - 41:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 40:7: MemberRefExpr=first:2:23 Extent=[7:10 - 40:12]
+comment|// CHECK: 40:7: MemberRefExpr=first:2:23 SingleRefName=[40:7 - 40:12] RefName=[40:7 - 40:12] Extent=[7:10 - 40:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 39:7: MemberRefExpr=first:2:23 Extent=[7:10 - 39:12]
+comment|// CHECK: 39:7: MemberRefExpr=first:2:23 SingleRefName=[39:7 - 39:12] RefName=[39:7 - 39:12] Extent=[7:10 - 39:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 38:7: MemberRefExpr=first:2:23 Extent=[7:10 - 38:12]
+comment|// CHECK: 38:7: MemberRefExpr=first:2:23 SingleRefName=[38:7 - 38:12] RefName=[38:7 - 38:12] Extent=[7:10 - 38:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 37:7: MemberRefExpr=first:2:23 Extent=[7:10 - 37:12]
+comment|// CHECK: 37:7: MemberRefExpr=first:2:23 SingleRefName=[37:7 - 37:12] RefName=[37:7 - 37:12] Extent=[7:10 - 37:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 36:7: MemberRefExpr=first:2:23 Extent=[7:10 - 36:12]
+comment|// CHECK: 36:7: MemberRefExpr=first:2:23 SingleRefName=[36:7 - 36:12] RefName=[36:7 - 36:12] Extent=[7:10 - 36:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 35:7: MemberRefExpr=first:2:23 Extent=[7:10 - 35:12]
+comment|// CHECK: 35:7: MemberRefExpr=first:2:23 SingleRefName=[35:7 - 35:12] RefName=[35:7 - 35:12] Extent=[7:10 - 35:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 34:7: MemberRefExpr=first:2:23 Extent=[7:10 - 34:12]
+comment|// CHECK: 34:7: MemberRefExpr=first:2:23 SingleRefName=[34:7 - 34:12] RefName=[34:7 - 34:12] Extent=[7:10 - 34:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 33:7: MemberRefExpr=first:2:23 Extent=[7:10 - 33:12]
+comment|// CHECK: 33:7: MemberRefExpr=first:2:23 SingleRefName=[33:7 - 33:12] RefName=[33:7 - 33:12] Extent=[7:10 - 33:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 32:7: MemberRefExpr=first:2:23 Extent=[7:10 - 32:12]
+comment|// CHECK: 32:7: MemberRefExpr=first:2:23 SingleRefName=[32:7 - 32:12] RefName=[32:7 - 32:12] Extent=[7:10 - 32:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 31:7: MemberRefExpr=first:2:23 Extent=[7:10 - 31:12]
+comment|// CHECK: 31:7: MemberRefExpr=first:2:23 SingleRefName=[31:7 - 31:12] RefName=[31:7 - 31:12] Extent=[7:10 - 31:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 30:7: MemberRefExpr=first:2:23 Extent=[7:10 - 30:12]
+comment|// CHECK: 30:7: MemberRefExpr=first:2:23 SingleRefName=[30:7 - 30:12] RefName=[30:7 - 30:12] Extent=[7:10 - 30:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 29:7: MemberRefExpr=first:2:23 Extent=[7:10 - 29:12]
+comment|// CHECK: 29:7: MemberRefExpr=first:2:23 SingleRefName=[29:7 - 29:12] RefName=[29:7 - 29:12] Extent=[7:10 - 29:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 28:7: MemberRefExpr=first:2:23 Extent=[7:10 - 28:12]
+comment|// CHECK: 28:7: MemberRefExpr=first:2:23 SingleRefName=[28:7 - 28:12] RefName=[28:7 - 28:12] Extent=[7:10 - 28:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 27:7: MemberRefExpr=first:2:23 Extent=[7:10 - 27:12]
+comment|// CHECK: 27:7: MemberRefExpr=first:2:23 SingleRefName=[27:7 - 27:12] RefName=[27:7 - 27:12] Extent=[7:10 - 27:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 26:7: MemberRefExpr=first:2:23 Extent=[7:10 - 26:12]
+comment|// CHECK: 26:7: MemberRefExpr=first:2:23 SingleRefName=[26:7 - 26:12] RefName=[26:7 - 26:12] Extent=[7:10 - 26:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 25:7: MemberRefExpr=first:2:23 Extent=[7:10 - 25:12]
+comment|// CHECK: 25:7: MemberRefExpr=first:2:23 SingleRefName=[25:7 - 25:12] RefName=[25:7 - 25:12] Extent=[7:10 - 25:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 24:7: MemberRefExpr=first:2:23 Extent=[7:10 - 24:12]
+comment|// CHECK: 24:7: MemberRefExpr=first:2:23 SingleRefName=[24:7 - 24:12] RefName=[24:7 - 24:12] Extent=[7:10 - 24:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 23:7: MemberRefExpr=first:2:23 Extent=[7:10 - 23:12]
+comment|// CHECK: 23:7: MemberRefExpr=first:2:23 SingleRefName=[23:7 - 23:12] RefName=[23:7 - 23:12] Extent=[7:10 - 23:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 22:7: MemberRefExpr=first:2:23 Extent=[7:10 - 22:12]
+comment|// CHECK: 22:7: MemberRefExpr=first:2:23 SingleRefName=[22:7 - 22:12] RefName=[22:7 - 22:12] Extent=[7:10 - 22:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 21:7: MemberRefExpr=first:2:23 Extent=[7:10 - 21:12]
+comment|// CHECK: 21:7: MemberRefExpr=first:2:23 SingleRefName=[21:7 - 21:12] RefName=[21:7 - 21:12] Extent=[7:10 - 21:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 20:7: MemberRefExpr=first:2:23 Extent=[7:10 - 20:12]
+comment|// CHECK: 20:7: MemberRefExpr=first:2:23 SingleRefName=[20:7 - 20:12] RefName=[20:7 - 20:12] Extent=[7:10 - 20:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 19:7: MemberRefExpr=first:2:23 Extent=[7:10 - 19:12]
+comment|// CHECK: 19:7: MemberRefExpr=first:2:23 SingleRefName=[19:7 - 19:12] RefName=[19:7 - 19:12] Extent=[7:10 - 19:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 18:7: MemberRefExpr=first:2:23 Extent=[7:10 - 18:12]
+comment|// CHECK: 18:7: MemberRefExpr=first:2:23 SingleRefName=[18:7 - 18:12] RefName=[18:7 - 18:12] Extent=[7:10 - 18:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 17:7: MemberRefExpr=first:2:23 Extent=[7:10 - 17:12]
+comment|// CHECK: 17:7: MemberRefExpr=first:2:23 SingleRefName=[17:7 - 17:12] RefName=[17:7 - 17:12] Extent=[7:10 - 17:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 16:7: MemberRefExpr=first:2:23 Extent=[7:10 - 16:12]
+comment|// CHECK: 16:7: MemberRefExpr=first:2:23 SingleRefName=[16:7 - 16:12] RefName=[16:7 - 16:12] Extent=[7:10 - 16:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 15:7: MemberRefExpr=first:2:23 Extent=[7:10 - 15:12]
+comment|// CHECK: 15:7: MemberRefExpr=first:2:23 SingleRefName=[15:7 - 15:12] RefName=[15:7 - 15:12] Extent=[7:10 - 15:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 14:7: MemberRefExpr=first:2:23 Extent=[7:10 - 14:12]
+comment|// CHECK: 14:7: MemberRefExpr=first:2:23 SingleRefName=[14:7 - 14:12] RefName=[14:7 - 14:12] Extent=[7:10 - 14:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 13:7: MemberRefExpr=first:2:23 Extent=[7:10 - 13:12]
+comment|// CHECK: 13:7: MemberRefExpr=first:2:23 SingleRefName=[13:7 - 13:12] RefName=[13:7 - 13:12] Extent=[7:10 - 13:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 12:7: MemberRefExpr=first:2:23 Extent=[7:10 - 12:12]
+comment|// CHECK: 12:7: MemberRefExpr=first:2:23 SingleRefName=[12:7 - 12:12] RefName=[12:7 - 12:12] Extent=[7:10 - 12:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 11:7: MemberRefExpr=first:2:23 Extent=[7:11 - 11:12]
+comment|// CHECK: 11:7: MemberRefExpr=first:2:23 SingleRefName=[11:7 - 11:12] RefName=[11:7 - 11:12] Extent=[7:11 - 11:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 10:7: MemberRefExpr=first:2:23 Extent=[7:12 - 10:12]
+comment|// CHECK: 10:7: MemberRefExpr=first:2:23 SingleRefName=[10:7 - 10:12] RefName=[10:7 - 10:12] Extent=[7:12 - 10:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 9:7: MemberRefExpr=first:2:23 Extent=[7:13 - 9:12]
+comment|// CHECK: 9:7: MemberRefExpr=first:2:23 SingleRefName=[9:7 - 9:12] RefName=[9:7 - 9:12] Extent=[7:13 - 9:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 8:7: MemberRefExpr=first:2:23 Extent=[7:14 - 8:12]
+comment|// CHECK: 8:7: MemberRefExpr=first:2:23 SingleRefName=[8:7 - 8:12] RefName=[8:7 - 8:12] Extent=[7:14 - 8:12]
 end_comment
 
 begin_comment
-comment|// CHECK: 7:27: MemberRefExpr=first:2:23 Extent=[7:15 - 7:32]
+comment|// CHECK: 7:27: MemberRefExpr=first:2:23 SingleRefName=[7:27 - 7:32] RefName=[7:27 - 7:32] Extent=[7:15 - 7:32]
 end_comment
 
 begin_comment
-comment|// CHECK: 7:19: MemberRefExpr=first:2:23 Extent=[7:16 - 7:24]
+comment|// CHECK: 7:19: MemberRefExpr=first:2:23 SingleRefName=[7:19 - 7:24] RefName=[7:19 - 7:24] Extent=[7:16 - 7:24]
 end_comment
 
 begin_comment
@@ -884,35 +884,35 @@ comment|// CHECK-tokens: Punctuation: ")" [6:43 - 6:44] FunctionDecl=test_rdar86
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "{" [6:45 - 6:46] UnexposedStmt=
+comment|// CHECK-tokens: Punctuation: "{" [6:45 - 6:46] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Keyword: "return" [7:3 - 7:9] UnexposedStmt=
+comment|// CHECK-tokens: Keyword: "return" [7:3 - 7:9] ReturnStmt=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "(" [7:10 - 7:11] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: "(" [7:10 - 7:11] ParenExpr=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "(" [7:11 - 7:12] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: "(" [7:11 - 7:12] ParenExpr=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "(" [7:12 - 7:13] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: "(" [7:12 - 7:13] ParenExpr=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "(" [7:13 - 7:14] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: "(" [7:13 - 7:14] ParenExpr=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "(" [7:14 - 7:15] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: "(" [7:14 - 7:15] ParenExpr=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "(" [7:15 - 7:16] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: "(" [7:15 - 7:16] ParenExpr=
 end_comment
 
 begin_comment
@@ -928,7 +928,7 @@ comment|// CHECK-tokens: Identifier: "first" [7:19 - 7:24] MemberRefExpr=first:2
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: ")" [7:24 - 7:25] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: ")" [7:24 - 7:25] ParenExpr=
 end_comment
 
 begin_comment
@@ -940,7 +940,7 @@ comment|// CHECK-tokens: Identifier: "first" [7:27 - 7:32] MemberRefExpr=first:2
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: ")" [7:32 - 7:33] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: ")" [7:32 - 7:33] ParenExpr=
 end_comment
 
 begin_comment
@@ -952,7 +952,7 @@ comment|// CHECK-tokens: Identifier: "first" [8:7 - 8:12] MemberRefExpr=first:2:
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: ")" [8:12 - 8:13] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: ")" [8:12 - 8:13] ParenExpr=
 end_comment
 
 begin_comment
@@ -964,7 +964,7 @@ comment|// CHECK-tokens: Identifier: "first" [9:7 - 9:12] MemberRefExpr=first:2:
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: ")" [9:12 - 9:13] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: ")" [9:12 - 9:13] ParenExpr=
 end_comment
 
 begin_comment
@@ -976,7 +976,7 @@ comment|// CHECK-tokens: Identifier: "first" [10:7 - 10:12] MemberRefExpr=first:
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: ")" [10:12 - 10:13] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: ")" [10:12 - 10:13] ParenExpr=
 end_comment
 
 begin_comment
@@ -988,7 +988,7 @@ comment|// CHECK-tokens: Identifier: "first" [11:7 - 11:12] MemberRefExpr=first:
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: ")" [11:12 - 11:13] UnexposedExpr=
+comment|// CHECK-tokens: Punctuation: ")" [11:12 - 11:13] ParenExpr=
 end_comment
 
 begin_comment
@@ -1888,11 +1888,11 @@ comment|// CHECK-tokens: Identifier: "x" [123:7 - 123:8] MemberRefExpr=x:3:7
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: ";" [123:8 - 123:9] UnexposedStmt=
+comment|// CHECK-tokens: Punctuation: ";" [123:8 - 123:9] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK-tokens: Punctuation: "}" [124:1 - 124:2] UnexposedStmt=
+comment|// CHECK-tokens: Punctuation: "}" [124:1 - 124:2] CompoundStmt=
 end_comment
 
 end_unit

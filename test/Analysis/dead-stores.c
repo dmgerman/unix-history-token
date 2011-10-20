@@ -4,14 +4,6 @@ comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,dea
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,deadcode.IdempotentOperations -analyzer-store=basic -analyzer-constraints=basic -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,deadcode.IdempotentOperations -analyzer-store=basic -analyzer-constraints=range -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,deadcode.IdempotentOperations -analyzer-store=region -analyzer-constraints=basic -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 

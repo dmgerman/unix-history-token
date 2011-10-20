@@ -78,9 +78,7 @@ literal|3
 block|}
 block|}
 decl_stmt|;
-comment|// \
-comment|// expected-warning{{flexible array initialization is a GNU extension}} \
-comment|// expected-error {{non-static initialization of a variable with flexible array member}}
+comment|// expected-error{{initialization of flexible array member is not allowed}}
 name|struct
 name|one
 name|x3a
@@ -127,7 +125,7 @@ name|int
 name|y
 index|[]
 decl_stmt|;
-comment|// expected-note 6 {{initialized flexible array member 'y' is here}}
+comment|// expected-note 8 {{initialized flexible array member 'y' is here}}
 block|}
 struct|;
 end_struct
@@ -193,7 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{non-empty initialization of flexible array member inside subobject}}
+comment|// expected-error{{initialization of flexible array member is not allowed}}
 end_comment
 
 begin_decl_stmt
@@ -252,7 +250,7 @@ comment|// expected-warning{{'struct foo' may not be used as an array element du
 end_comment
 
 begin_comment
-comment|// expected-error{{non-empty initialization of flexible array member inside subobject}}
+comment|// expected-error{{initialization of flexible array member is not allowed}}
 end_comment
 
 begin_decl_stmt
@@ -275,6 +273,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning{{flexible array initialization is a GNU extension}}
+end_comment
+
 begin_decl_stmt
 name|struct
 name|bar
@@ -296,7 +298,11 @@ comment|// expected-warning{{use of GNU empty initializer extension}} \
 end_comment
 
 begin_comment
-comment|// expected-warning{{zero size arrays are an extension}}
+comment|// expected-warning{{zero size arrays are an extension}} \
+end_comment
+
+begin_comment
+comment|// expected-warning{{flexible array initialization is a GNU extension}}
 end_comment
 
 begin_decl_stmt
@@ -322,7 +328,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error{{non-empty initialization of flexible array member inside subobject}}
+comment|// expected-error{{initialization of flexible array member is not allowed}}
 end_comment
 
 begin_decl_stmt
@@ -468,6 +474,7 @@ name|char
 name|v
 index|[]
 decl_stmt|;
+comment|// expected-note 2 {{initialized flexible array member 'v' is here}}
 block|}
 struct|;
 end_struct
@@ -493,7 +500,7 @@ operator|=
 literal|"foo"
 block|}
 decl_stmt|;
-comment|// expected-error {{non-static initialization of a variable with flexible array member}}
+comment|// expected-error {{initialization of flexible array member is not allowed}}
 name|struct
 name|PR8217a
 name|foo2
@@ -529,11 +536,102 @@ literal|'\0'
 block|}
 block|}
 decl_stmt|;
-comment|// expected-error {{non-static initialization of a variable with flexible array member}}
+comment|// expected-error {{initialization of flexible array member is not allowed}}
 name|struct
 name|PR8217a
 name|bar
 decl_stmt|;
+block|}
+end_function
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|PR10648
+block|{
+name|unsigned
+name|long
+name|n
+decl_stmt|;
+name|int
+name|v
+index|[]
+decl_stmt|;
+comment|// expected-note {{initialized flexible array member 'v' is here}}
+block|}
+name|PR10648
+typedef|;
+end_typedef
+
+begin_function
+name|int
+name|f10648
+parameter_list|()
+block|{
+return|return
+operator|(
+name|PR10648
+operator|)
+block|{
+literal|2
+block|,
+block|{
+literal|3
+block|,
+literal|4
+block|}
+block|}
+operator|.
+name|v
+index|[
+literal|1
+index|]
+return|;
+comment|// expected-error {{initialization of flexible array member is not allowed}}
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|FlexWithUnnamedBitfield
+block|{
+name|int
+label|:
+literal|10
+expr_stmt|;
+name|int
+name|x
+decl_stmt|;
+name|int
+name|y
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|// expected-note {{initialized flexible array member 'y' is here}}
+end_comment
+
+begin_function
+name|void
+name|TestFlexWithUnnamedBitfield
+parameter_list|()
+block|{
+name|struct
+name|FlexWithUnnamedBitfield
+name|x
+init|=
+block|{
+literal|10
+block|,
+block|{
+literal|3
+block|}
+block|}
+decl_stmt|;
+comment|// expected-error {{initialization of flexible array member is not allowed}}
 block|}
 end_function
 

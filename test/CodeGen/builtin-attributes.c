@@ -70,5 +70,208 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// frexp is NOT readnone. It writes to its pointer argument.
+end_comment
+
+begin_comment
+comment|//<rdar://problem/10070234>
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK: f3
+end_comment
+
+begin_comment
+comment|// CHECK: call double @frexp(double %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: call float @frexpf(float %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: call double @frexpl(double %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Same thing for modf and friends.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK: call double @modf(double %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: call float @modff(float %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: call double @modfl(double %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// CHECK: call double @remquo(double %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: call float @remquof(float %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: call double @remquol(double %
+end_comment
+
+begin_comment
+comment|// CHECK-NOT: readnone
+end_comment
+
+begin_comment
+comment|// CHECK: ret
+end_comment
+
+begin_function
+name|int
+name|f3
+parameter_list|(
+name|double
+name|x
+parameter_list|)
+block|{
+name|int
+name|e
+decl_stmt|;
+name|__builtin_frexp
+argument_list|(
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_frexpf
+argument_list|(
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_frexpl
+argument_list|(
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_modf
+argument_list|(
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_modff
+argument_list|(
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_modfl
+argument_list|(
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_remquo
+argument_list|(
+name|x
+argument_list|,
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_remquof
+argument_list|(
+name|x
+argument_list|,
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+name|__builtin_remquol
+argument_list|(
+name|x
+argument_list|,
+name|x
+argument_list|,
+operator|&
+name|e
+argument_list|)
+expr_stmt|;
+return|return
+name|e
+return|;
+block|}
+end_function
+
 end_unit
 

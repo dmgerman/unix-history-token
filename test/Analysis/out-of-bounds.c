@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-checker=core,security.experimental.ArrayBoundV2 -verify %s
+comment|// RUN: %clang_cc1 -Wno-array-bounds -analyze -analyzer-checker=core,experimental.security.ArrayBoundV2 -verify %s
 end_comment
 
 begin_comment
@@ -474,10 +474,6 @@ block|}
 end_function
 
 begin_comment
-comment|// ** FIXME ** Doesn't work yet because we don't support pointer arithmetic.
-end_comment
-
-begin_comment
 comment|// Tests doing an out-of-bounds access before the start of an array using:
 end_comment
 
@@ -523,7 +519,7 @@ index|]
 operator|=
 literal|1
 expr_stmt|;
-comment|// no-warning
+comment|// expected-warning {{Out of bound memory access (accessed memory precedes memory block)}}
 block|}
 end_function
 

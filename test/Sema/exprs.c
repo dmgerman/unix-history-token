@@ -854,7 +854,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-note {{'test18_a' declared here}}
+comment|// expected-note 2 {{'test18_a' declared here}}
 end_comment
 
 begin_function
@@ -967,7 +967,9 @@ name|x
 operator|&&
 literal|4
 return|;
-comment|// expected-warning {{use of logical&& with constant operand; switch to bitwise& or remove constant}}
+comment|// expected-warning {{use of logical '&&' with constant operand}} \
+comment|// expected-note {{use '&' for a bitwise operation}} \
+comment|// expected-note {{remove constant to silence this warning}}
 return|return
 name|x
 operator|&&
@@ -1005,13 +1007,15 @@ operator|||
 operator|-
 literal|1
 return|;
-comment|// expected-warning {{use of logical || with constant operand; switch to bitwise | or remove constant}}
+comment|// expected-warning {{use of logical '||' with constant operand}} \
+comment|// expected-note {{use '|' for a bitwise operation}}
 return|return
 name|x
 operator|||
 literal|5
 return|;
-comment|// expected-warning {{use of logical || with constant operand; switch to bitwise | or remove constant}}
+comment|// expected-warning {{use of logical '||' with constant operand}} \
+comment|// expected-note {{use '|' for a bitwise operation}}
 return|return
 name|x
 operator|&&
@@ -1028,13 +1032,17 @@ operator|&&
 operator|-
 literal|1
 return|;
-comment|// expected-warning {{use of logical&& with constant operand; switch to bitwise& or remove constant}}
+comment|// expected-warning {{use of logical '&&' with constant operand}} \
+comment|// expected-note {{use '&' for a bitwise operation}} \
+comment|// expected-note {{remove constant to silence this warning}}
 return|return
 name|x
 operator|&&
 literal|5
 return|;
-comment|// expected-warning {{use of logical&& with constant operand; switch to bitwise& or remove constant}}
+comment|// expected-warning {{use of logical '&&' with constant operand}} \
+comment|// expected-note {{use '&' for a bitwise operation}} \
+comment|// expected-note {{remove constant to silence this warning}}
 return|return
 name|x
 operator|||
@@ -1057,7 +1065,8 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|// expected-warning {{use of logical || with constant operand; switch to bitwise | or remove constant}}
+comment|// expected-warning {{use of logical '||' with constant operand}} \
+comment|// expected-note {{use '|' for a bitwise operation}}
 return|return
 name|x
 operator|||
@@ -1065,7 +1074,8 @@ operator|(
 literal|5
 operator|)
 return|;
-comment|// expected-warning {{use of logical || with constant operand; switch to bitwise | or remove constant}}
+comment|// expected-warning {{use of logical '||' with constant operand}} \
+comment|// expected-note {{use '|' for a bitwise operation}}
 return|return
 name|x
 operator|&&
@@ -1088,7 +1098,9 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|// expected-warning {{use of logical&& with constant operand; switch to bitwise& or remove constant}}
+comment|// expected-warning {{use of logical '&&' with constant operand}} \
+comment|// expected-note {{use '&' for a bitwise operation}} \
+comment|// expected-note {{remove constant to silence this warning}}
 return|return
 name|x
 operator|&&
@@ -1096,7 +1108,9 @@ operator|(
 literal|5
 operator|)
 return|;
-comment|// expected-warning {{use of logical&& with constant operand; switch to bitwise& or remove constant}}
+comment|// expected-warning {{use of logical '&&' with constant operand}} \
+comment|// expected-note {{use '&' for a bitwise operation}} \
+comment|// expected-note {{remove constant to silence this warning}}
 block|}
 end_function
 

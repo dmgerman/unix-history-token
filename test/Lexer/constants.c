@@ -271,5 +271,17 @@ begin_comment
 comment|// expected-warning {{too large}}
 end_comment
 
+begin_decl_stmt
+name|char
+name|h
+init|=
+literal|'\u1234'
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{character unicode escape sequence too long for its type}}
+end_comment
+
 end_unit
 

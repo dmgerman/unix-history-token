@@ -201,5 +201,79 @@ begin_comment
 comment|// expected-error {{invalid vector element type}}
 end_comment
 
+begin_function
+name|void
+name|test
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|char
+name|c
+init|=
+operator|(
+name|char
+name|__attribute__
+argument_list|(
+operator|(
+name|align
+argument_list|(
+literal|8
+argument_list|)
+operator|)
+argument_list|)
+operator|)
+name|i
+decl_stmt|;
+comment|// expected-error {{'align' attribute ignored when parsing type}}
+block|}
+end_function
+
+begin_comment
+comment|// http://llvm.org/PR11082
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// FIXME: This may or may not be the correct approach (no warning or error),
+end_comment
+
+begin_comment
+comment|// but large amounts of Linux and FreeBSD code need this attribute to not be
+end_comment
+
+begin_comment
+comment|// a hard error in order to work correctly.
+end_comment
+
+begin_function
+name|void
+name|test2
+parameter_list|(
+name|int
+name|i
+parameter_list|)
+block|{
+name|char
+name|c
+init|=
+operator|(
+name|char
+name|__attribute__
+argument_list|(
+operator|(
+name|may_alias
+operator|)
+argument_list|)
+operator|)
+name|i
+decl_stmt|;
+block|}
+end_function
+
 end_unit
 

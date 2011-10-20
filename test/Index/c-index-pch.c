@@ -12,10 +12,6 @@ comment|// RUN: c-index-test -test-load-tu %t.ast all | FileCheck -check-prefix=
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-tu %t.ast local | FileCheck -check-prefix=LOCAL %s
-end_comment
-
-begin_comment
 comment|// ALL: FunctionDecl=foo
 end_comment
 
@@ -29,22 +25,6 @@ end_comment
 
 begin_comment
 comment|// ALL: FunctionDecl=wonka
-end_comment
-
-begin_comment
-comment|// LOCAL-NOT: FunctionDecl=foo
-end_comment
-
-begin_comment
-comment|// LOCAL-NOT: VarDecl=bar
-end_comment
-
-begin_comment
-comment|// LOCAL: FunctionDecl=wibble
-end_comment
-
-begin_comment
-comment|// LOCAL: FunctionDecl=wonka
 end_comment
 
 begin_function_decl

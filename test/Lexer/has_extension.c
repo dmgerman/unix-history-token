@@ -144,5 +144,46 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// CHECK-PED-NONE: has_c_alignas
+end_comment
+
+begin_comment
+comment|// CHECK-PED-ERR: no_c_alignas
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_extension
+argument_list|(
+name|c_alignas
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_c_alignas
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|no_c_alignas
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

@@ -83,24 +83,20 @@ comment|/// The exceptions personality for a function.  When
 name|class
 name|EHPersonality
 block|{
-name|llvm
-operator|::
 name|StringRef
 name|PersonalityFn
-expr_stmt|;
+decl_stmt|;
 comment|// If this is non-null, this personality requires a non-standard
 comment|// function for rethrowing an exception after a catchall cleanup.
 comment|// This function must have prototype void(void*).
-name|llvm
-operator|::
 name|StringRef
 name|CatchallRethrowFn
-expr_stmt|;
+decl_stmt|;
 name|EHPersonality
 argument_list|(
-argument|llvm::StringRef PersonalityFn
+argument|StringRef PersonalityFn
 argument_list|,
-argument|llvm::StringRef CatchallRethrowFn = llvm::StringRef()
+argument|StringRef CatchallRethrowFn = StringRef()
 argument_list|)
 block|:
 name|PersonalityFn
@@ -162,8 +158,6 @@ specifier|const
 name|EHPersonality
 name|GNU_CPlusPlus_SJLJ
 decl_stmt|;
-name|llvm
-operator|::
 name|StringRef
 name|getPersonalityFnName
 argument_list|()
@@ -173,8 +167,6 @@ return|return
 name|PersonalityFn
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getCatchallRethrowFnName
 argument_list|()

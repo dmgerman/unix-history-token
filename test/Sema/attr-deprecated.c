@@ -657,6 +657,7 @@ name|f
 operator|=
 name|test20_b
 expr_stmt|;
+comment|// expected-warning {{'Test20' is deprecated}}
 block|}
 end_function
 

@@ -576,16 +576,12 @@ return|return
 name|Position
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getCharacters
 argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|StringRef
 argument_list|(
 name|getStart
@@ -1076,8 +1072,6 @@ decl_stmt|;
 name|void
 name|toString
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|os
@@ -1822,7 +1816,7 @@ block|;
 name|void
 name|toString
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;

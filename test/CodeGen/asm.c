@@ -3,6 +3,34 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple i386-unknown-unknown -emit-llvm %s -o - | FileCheck %s
 end_comment
 
+begin_comment
+comment|// PR10415
+end_comment
+
+begin_asm
+asm|__asm__ ("foo1");
+end_asm
+
+begin_asm
+asm|__asm__ ("foo2");
+end_asm
+
+begin_asm
+asm|__asm__ ("foo3");
+end_asm
+
+begin_comment
+comment|// CHECK: module asm "foo1"
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: module asm "foo2"
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: module asm "foo3"
+end_comment
+
 begin_function
 name|void
 name|t1
@@ -550,6 +578,29 @@ decl_stmt|;
 asm|__asm__ ("0:\n1:\n" : [res] "=la"(res) : [la] "0"(la), [lb] "c"(lb) :                         "edx", "cc");
 return|return
 name|res
+return|;
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|t24
+parameter_list|(
+name|char
+name|c
+parameter_list|)
+block|{
+name|void
+modifier|*
+name|addr
+decl_stmt|;
+comment|// CHECK: @t24
+comment|// CHECK: zext i8 {{.*}} to i32
+comment|// CHECK-NEXT: call i8* asm "foobar"
+asm|__asm__ ("foobar" : "=a" (addr) : "0" (c));
+return|return
+name|addr
 return|;
 block|}
 end_function

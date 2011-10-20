@@ -274,5 +274,38 @@ comment|// expected-error {{changes address space of pointer}}
 block|}
 end_function
 
+begin_typedef
+typedef|typedef
+name|void
+name|ft
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_decl_stmt
+name|_AS1
+name|ft
+name|qf
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{function type may not be qualified with an address space}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|_AS1
+name|ft
+name|qft
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error {{function type may not be qualified with an address space}}
+end_comment
+
 end_unit
 

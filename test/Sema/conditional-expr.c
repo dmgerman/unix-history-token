@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic -Wsign-compare %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic -Wsign-conversion %s
 end_comment
 
 begin_function
@@ -343,7 +343,7 @@ name|test0
 else|:
 name|test0
 expr_stmt|;
-comment|// expected-warning {{operands of ? are integers of different signs}}
+comment|// expected-warning {{operand of ? changes signedness: 'long' to 'unsigned long'}}
 name|test0
 operator|=
 name|test0
@@ -355,7 +355,7 @@ name|test0
 else|:
 name|test0
 expr_stmt|;
-comment|// expected-warning {{operands of ? are integers of different signs}}
+comment|// expected-warning {{operand of ? changes signedness: 'int' to 'unsigned long'}}
 name|test0
 operator|=
 name|test0
@@ -367,7 +367,7 @@ name|test0
 else|:
 name|test0
 expr_stmt|;
-comment|// expected-warning {{operands of ? are integers of different signs}}
+comment|// expected-warning {{operand of ? changes signedness: 'short' to 'unsigned long'}}
 name|test0
 operator|=
 name|test0
@@ -379,7 +379,7 @@ name|long
 operator|)
 name|test0
 expr_stmt|;
-comment|// expected-warning {{operands of ? are integers of different signs}}
+comment|// expected-warning {{operand of ? changes signedness: 'long' to 'unsigned long'}}
 name|test0
 operator|=
 name|test0
@@ -391,7 +391,7 @@ name|int
 operator|)
 name|test0
 expr_stmt|;
-comment|// expected-warning {{operands of ? are integers of different signs}}
+comment|// expected-warning {{operand of ? changes signedness: 'int' to 'unsigned long'}}
 name|test0
 operator|=
 name|test0
@@ -403,7 +403,7 @@ name|short
 operator|)
 name|test0
 expr_stmt|;
-comment|// expected-warning {{operands of ? are integers of different signs}}
+comment|// expected-warning {{operand of ? changes signedness: 'short' to 'unsigned long'}}
 name|test0
 operator|=
 name|test0
@@ -470,6 +470,9 @@ literal|10
 else|:
 name|test0
 expr_stmt|;
+name|int
+name|test1
+decl_stmt|;
 enum|enum
 name|Enum
 block|{
@@ -484,7 +487,7 @@ name|EVal
 else|:
 name|test0
 expr_stmt|;
-name|test0
+name|test1
 operator|=
 name|test0
 condition|?
@@ -495,12 +498,10 @@ name|int
 operator|)
 name|test0
 expr_stmt|;
-comment|// okay: EVal is an int
 name|test0
 operator|=
 name|test0
 condition|?
-comment|// expected-warning {{operands of ? are integers of different signs}}
 operator|(
 name|unsigned
 operator|)
@@ -511,6 +512,25 @@ name|int
 operator|)
 name|test0
 expr_stmt|;
+comment|// expected-warning {{operand of ? changes signedness: 'int' to 'unsigned long'}}
+name|test0
+operator|=
+name|test0
+condition|?
+name|EVal
+else|:
+name|test1
+expr_stmt|;
+comment|// expected-warning {{operand of ? changes signedness: 'int' to 'unsigned long'}}
+name|test0
+operator|=
+name|test0
+condition|?
+name|test1
+else|:
+name|EVal
+expr_stmt|;
+comment|// expected-warning {{operand of ? changes signedness: 'int' to 'unsigned long'}}
 block|}
 end_function
 

@@ -4,11 +4,11 @@ comment|// Check that using the preamble option actually skips the preamble.
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-pch -o %t %S/Inputs/preamble.h
+comment|// RUN: %clang_cc1 -emit-pch -o %t %S/Inputs/preamble.h -DFOO=f
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -include-pch %t -preamble-bytes=278,1 -DFOO=f -verify %s
+comment|// RUN: %clang_cc1 -include-pch %t -preamble-bytes=317,1 -DFOO=f -verify %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_function_decl
@@ -40,6 +40,10 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: call {{.*}} @f(
+end_comment
 
 end_unit
 

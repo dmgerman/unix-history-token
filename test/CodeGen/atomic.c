@@ -50,9 +50,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.add.i32.p0i32(i32* %val, i32 1)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw add i32* %val, i32 1 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_sub
@@ -63,9 +61,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i8 @llvm.atomic.load.sub.i8.p0i8(i8* %valc, i8 2)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw sub i8* %valc, i8 2 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_min
@@ -76,9 +72,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.min.i32.p0i32(i32* %val, i32 3)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw min i32* %val, i32 3 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_max
@@ -89,9 +83,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.max.i32.p0i32(i32* %val, i32 4)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw max i32* %val, i32 4 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_umin
@@ -102,9 +94,7 @@ argument_list|,
 literal|5u
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.umin.i32.p0i32(i32* %uval, i32 5)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw umin i32* %uval, i32 5 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_umax
@@ -115,9 +105,7 @@ argument_list|,
 literal|6u
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.umax.i32.p0i32(i32* %uval, i32 6)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw umax i32* %uval, i32 6 seq_cst
 name|old
 operator|=
 name|__sync_lock_test_and_set
@@ -128,9 +116,7 @@ argument_list|,
 literal|7
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.swap.i32.p0i32(i32* %val, i32 7)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw xchg i32* %val, i32 7 seq_cst
 name|old
 operator|=
 name|__sync_swap
@@ -141,9 +127,7 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.swap.i32.p0i32(i32* %val, i32 8)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw xchg i32* %val, i32 8 seq_cst
 name|old
 operator|=
 name|__sync_val_compare_and_swap
@@ -156,9 +140,7 @@ argument_list|,
 literal|1976
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.cmp.swap.i32.p0i32(i32* %val, i32 4, i32 1976)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: cmpxchg i32* %val, i32 4, i32 1976 seq_cst
 name|old
 operator|=
 name|__sync_bool_compare_and_swap
@@ -171,9 +153,7 @@ argument_list|,
 literal|1976
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.cmp.swap.i32.p0i32(i32* %val, i32 4, i32 1976)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: cmpxchg i32* %val, i32 4, i32 1976 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_and
@@ -184,9 +164,7 @@ argument_list|,
 literal|0x9
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.and.i32.p0i32(i32* %val, i32 9)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw and i32* %val, i32 9 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_or
@@ -197,9 +175,7 @@ argument_list|,
 literal|0xa
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.or.i32.p0i32(i32* %val, i32 10)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw or i32* %val, i32 10 seq_cst
 name|old
 operator|=
 name|__sync_fetch_and_xor
@@ -210,9 +186,7 @@ argument_list|,
 literal|0xb
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.xor.i32.p0i32(i32* %val, i32 11)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw xor i32* %val, i32 11 seq_cst
 name|old
 operator|=
 name|__sync_add_and_fetch
@@ -223,9 +197,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.add.i32.p0i32(i32* %val, i32 1)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw add i32* %val, i32 1 seq_cst
 name|old
 operator|=
 name|__sync_sub_and_fetch
@@ -236,9 +208,7 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.sub.i32.p0i32(i32* %val, i32 2)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw sub i32* %val, i32 2 seq_cst
 name|old
 operator|=
 name|__sync_and_and_fetch
@@ -249,9 +219,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i8 @llvm.atomic.load.and.i8.p0i8(i8* %valc, i8 3)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw and i8* %valc, i8 3 seq_cst
 name|old
 operator|=
 name|__sync_or_and_fetch
@@ -262,9 +230,7 @@ argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i8 @llvm.atomic.load.or.i8.p0i8(i8* %valc, i8 4)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw or i8* %valc, i8 4 seq_cst
 name|old
 operator|=
 name|__sync_xor_and_fetch
@@ -275,9 +241,7 @@ argument_list|,
 literal|5
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i8 @llvm.atomic.load.xor.i8.p0i8(i8* %valc, i8 5)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw xor i8* %valc, i8 5 seq_cst
 name|__sync_val_compare_and_swap
 argument_list|(
 operator|(
@@ -300,9 +264,7 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.cmp.swap.i32.p0i32(i32* null, i32 0, i32 0)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: cmpxchg i32* null, i32 0, i32 0 seq_cst
 if|if
 condition|(
 name|__sync_val_compare_and_swap
@@ -316,9 +278,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i8 @llvm.atomic.cmp.swap.i8.p0i8(i8* %valb, i8 0, i8 1)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: cmpxchg i8* %valb, i8 0, i8 1 seq_cst
 name|old
 operator|=
 literal|42
@@ -346,20 +306,18 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.cmp.swap.i32.p0i32(i32* null, i32 0, i32 0)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: cmpxchg i32* null, i32 0, i32 0 seq_cst
 name|__sync_lock_release
 argument_list|(
 operator|&
 name|val
 argument_list|)
 expr_stmt|;
-comment|// CHECK: volatile store i32 0, i32*
+comment|// CHECK: store atomic {{.*}} release, align 4
 name|__sync_synchronize
 argument_list|()
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 false)
+comment|// CHECK: fence seq_cst
 return|return
 name|old
 return|;
@@ -386,7 +344,7 @@ argument_list|(
 name|lock
 argument_list|)
 return|;
-comment|// CHECK: volatile store i32 0, i32*
+comment|// CHECK: store atomic {{.*}} release, align 4
 block|}
 end_function
 
@@ -425,9 +383,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.cmp.swap.i32.p256i32(i32 addrspace(256)*{{.*}}, i32 0, i32 1)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: cmpxchg i32 addrspace(256)*{{.*}}, i32 0, i32 1 seq_cst
 name|__sync_val_compare_and_swap
 argument_list|(
 name|P
@@ -437,9 +393,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.cmp.swap.i32.p256i32(i32 addrspace(256)*{{.*}}, i32 0, i32 1)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: cmpxchg i32 addrspace(256)*{{.*}}, i32 0, i32 1 seq_cst
 name|__sync_xor_and_fetch
 argument_list|(
 name|P
@@ -447,9 +401,7 @@ argument_list|,
 literal|123
 argument_list|)
 expr_stmt|;
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
-comment|// CHECK: call i32 @llvm.atomic.load.xor.i32.p256i32(i32 addrspace(256)* {{.*}}, i32 123)
-comment|// CHECK: call void @llvm.memory.barrier(i1 true, i1 true, i1 true, i1 true, i1 true)
+comment|// CHECK: atomicrmw xor i32 addrspace(256)*{{.*}}, i32 123 seq_cst
 block|}
 end_decl_stmt
 

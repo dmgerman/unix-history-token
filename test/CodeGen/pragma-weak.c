@@ -719,7 +719,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__a1()
+comment|// CHECK: define void @__a1() {{.*}} noinline
 end_comment
 
 begin_comment
@@ -783,7 +783,7 @@ block|{}
 end_function
 
 begin_comment
-comment|// CHECK: define void @__a3()
+comment|// CHECK: define void @__a3() {{.*}} noinline
 end_comment
 
 begin_pragma
@@ -812,11 +812,52 @@ block|{ }
 end_function
 
 begin_comment
-comment|// CHECK: void @__xxx()
+comment|// CHECK: void @__xxx() {{.*}} noinline
 end_comment
 
 begin_comment
-comment|/// TODO: stuff that still doesn't work
+comment|///////////// PR10878: Make sure we can call a weak alias
+end_comment
+
+begin_function
+name|void
+name|SHA512Pad
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|)
+block|{}
+end_function
+
+begin_pragma
+pragma|#
+directive|pragma
+name|weak
+name|SHA384Pad
+name|=
+name|SHA512Pad
+end_pragma
+
+begin_function
+name|void
+name|PR10878
+parameter_list|()
+block|{
+name|SHA384Pad
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call void @SHA384Pad(i8* null)
+end_comment
+
+begin_comment
+comment|///////////// TODO: stuff that still doesn't work
 end_comment
 
 begin_comment

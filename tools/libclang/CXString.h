@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -128,18 +134,16 @@ function_decl|;
 comment|/// \brief Create a CXString object from a StringRef.
 name|CXString
 name|createCXString
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|String
-argument_list|,
+parameter_list|,
 name|bool
 name|DupString
-operator|=
+init|=
 name|true
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Create a CXString object that is backed by a string buffer.
 name|CXString
 name|createCXString
@@ -178,6 +182,14 @@ parameter_list|(
 name|CXStringBuf
 modifier|*
 name|buf
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns true if the CXString data is managed by a pool.
+name|bool
+name|isManagedByPool
+parameter_list|(
+name|CXString
+name|str
 parameter_list|)
 function_decl|;
 block|}

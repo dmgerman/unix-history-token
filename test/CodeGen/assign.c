@@ -89,15 +89,15 @@ comment|// CHECK-NEXT: [[y_1:%.*]] = alloca i32, align 4
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: volatile store i32 1, i32* [[x_1]]
+comment|// CHECK-NEXT: store volatile i32 1, i32* [[x_1]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: volatile store i32 1, i32* [[x_1]]
+comment|// CHECK-NEXT: store volatile i32 1, i32* [[x_1]]
 end_comment
 
 begin_comment
-comment|// CHECK-NEXT: volatile store i32 1, i32* [[y_1]]
+comment|// CHECK-NEXT: store volatile i32 1, i32* [[y_1]]
 end_comment
 
 begin_comment

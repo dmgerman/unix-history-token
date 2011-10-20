@@ -876,5 +876,41 @@ unit|))
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|//<rdar://problem/10185490> (derived from SPEC vortex benchmark)
+end_comment
+
+begin_typedef
+typedef|typedef
+name|char
+name|strty
+index|[
+literal|10
+index|]
+typedef|;
+end_typedef
+
+begin_struct
+struct|struct
+name|vortexstruct
+block|{
+name|strty
+name|s
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_decl_stmt
+name|struct
+name|vortexstruct
+name|vortexvar
+init|=
+block|{
+literal|"asdf"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- CheckerRegistration.h - Checker Registration Function-------*- C++ -*-===//
+comment|//===-- CheckerRegistration.h - Checker Registration Function ---*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -43,6 +43,18 @@ directive|define
 name|LLVM_CLANG_SA_FRONTEND_CHECKERREGISTRATION_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -54,7 +66,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|namespace
 name|ento
@@ -64,23 +76,31 @@ name|CheckerManager
 decl_stmt|;
 name|CheckerManager
 modifier|*
-name|registerCheckers
-parameter_list|(
+name|createCheckerManager
+argument_list|(
 specifier|const
 name|AnalyzerOptions
-modifier|&
+operator|&
 name|opts
-parameter_list|,
+argument_list|,
 specifier|const
 name|LangOptions
-modifier|&
+operator|&
 name|langOpts
-parameter_list|,
-name|Diagnostic
-modifier|&
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|plugins
+argument_list|,
+name|DiagnosticsEngine
+operator|&
 name|diags
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 comment|// end ento namespace
 block|}

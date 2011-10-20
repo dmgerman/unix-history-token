@@ -13,7 +13,7 @@ name|main
 parameter_list|()
 block|{
 comment|// This should convert to utf8.
-comment|// CHECK: internal unnamed_addr constant [10 x i8] c"\E1\84\A0\C8\A0\F4\82\80\B0\00", align 1
+comment|// CHECK: private unnamed_addr constant [10 x i8] c"\E1\84\A0\C8\A0\F4\82\80\B0\00", align 1
 name|char
 name|b
 index|[

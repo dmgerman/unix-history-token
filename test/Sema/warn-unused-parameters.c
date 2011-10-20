@@ -105,5 +105,29 @@ begin_comment
 comment|// CHECK-unused: 1 warning generated
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fblocks -fsyntax-only -Weverything %s 2>&1 | FileCheck -check-prefix=CHECK-everything %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fblocks -fsyntax-only -Weverything -Werror %s 2>&1 | FileCheck -check-prefix=CHECK-everything-error %s
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fblocks -fsyntax-only -Weverything -Wno-unused %s 2>&1 | FileCheck -check-prefix=CHECK-everything-no-unused %s
+end_comment
+
+begin_comment
+comment|// CHECK-everything: 6 warnings generated
+end_comment
+
+begin_comment
+comment|// CHECK-everything-error: 5 errors generated
+end_comment
+
+begin_comment
+comment|// CHECK-everything-no-unused: 5 warnings generated
+end_comment
+
 end_unit
 

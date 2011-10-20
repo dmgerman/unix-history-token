@@ -220,7 +220,7 @@ end_comment
 begin_macro
 name|__attribute__
 argument_list|(
-argument|(align(
+argument|(aligned(
 literal|16
 argument|))
 argument_list|)

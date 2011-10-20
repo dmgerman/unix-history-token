@@ -220,21 +220,19 @@ parameter_list|()
 block|{
 name|proto
 argument_list|(
-literal|42.0
+literal|42.1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}} \
-comment|// expected-note {{this can be rewritten as an integer literal with the exact same value}}
+comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}}
 call|(
 modifier|&
 name|proto
 call|)
 argument_list|(
-literal|42.0
+literal|42.1
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}} \
-comment|// expected-note {{this can be rewritten as an integer literal with the exact same value}}
+comment|// expected-warning{{implicit conversion turns literal floating-point number into integer}}
 block|}
 end_function
 

@@ -71,7 +71,7 @@ comment|// CHECK:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK:<string>unknown warning option '-Wfoobar'</string>
+comment|// CHECK:<string>unknown warning option&apos;-Wfoobar&apos;</string>
 end_comment
 
 begin_comment

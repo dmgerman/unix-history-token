@@ -16,7 +16,7 @@ comment|// RUN: %clang_cc1 -emit-pch -o %t1 %S/Inputs/chain-macro-override1.h -d
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-pch -o %t2 %S/Inputs/chain-macro-override2.h -include-pch %t1 -chained-pch -detailed-preprocessing-record
+comment|// RUN: %clang_cc1 -emit-pch -o %t2 %S/Inputs/chain-macro-override2.h -include-pch %t1 -detailed-preprocessing-record
 end_comment
 
 begin_comment

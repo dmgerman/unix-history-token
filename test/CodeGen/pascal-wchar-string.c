@@ -148,7 +148,7 @@ comment|// CHECK: @test2
 end_comment
 
 begin_comment
-comment|// CHECK: volatile store i32 1, i32* %isUnsigned
+comment|// CHECK: store volatile i32 1, i32* %isUnsigned
 end_comment
 
 begin_function

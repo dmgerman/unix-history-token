@@ -21,10 +21,6 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// FIXME: TYPE_FIXED_WIDTH_INT
-end_comment
-
-begin_comment
 comment|// TYPE_COMPLEX
 end_comment
 
@@ -33,6 +29,20 @@ typedef|typedef
 specifier|_Complex
 name|float
 name|Cfloat
+typedef|;
+end_typedef
+
+begin_comment
+comment|// TYPE_ATOMIC
+end_comment
+
+begin_typedef
+typedef|typedef
+atomic|_Atomic
+argument_list|(
+name|int
+argument_list|)
+name|AtomicInt
 typedef|;
 end_typedef
 

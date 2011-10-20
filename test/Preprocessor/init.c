@@ -44,7 +44,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -std=c++0x -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
+comment|// RUN: %clang_cc1 -x c++ -std=c++11 -E -dM< /dev/null | FileCheck -check-prefix CXX0X %s
 end_comment
 
 begin_comment
@@ -312,7 +312,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fms-extensions -triple i686-pc-win32 -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
+comment|// RUN: %clang_cc1 -fms-extensions -triple i686-pc-win32 -fobjc-fragile-abi -E -dM< /dev/null | FileCheck -check-prefix MSEXT %s
 end_comment
 
 begin_comment
@@ -384,7 +384,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x objective-c -fobjc-nonfragile-abi -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s
+comment|// RUN: %clang_cc1 -x objective-c -fobjc-exceptions -E -dM< /dev/null | FileCheck -check-prefix NONFRAGILE %s
 end_comment
 
 begin_comment
@@ -1648,18 +1648,6 @@ comment|// I386:#define __i386__ 1
 end_comment
 
 begin_comment
-comment|// I386:#define __nocona 1
-end_comment
-
-begin_comment
-comment|// I386:#define __nocona__ 1
-end_comment
-
-begin_comment
-comment|// I386:#define __tune_nocona__ 1
-end_comment
-
-begin_comment
 comment|// I386:#define i386 1
 end_comment
 
@@ -2037,18 +2025,6 @@ end_comment
 
 begin_comment
 comment|// I386-LINUX:#define __i386__ 1
-end_comment
-
-begin_comment
-comment|// I386-LINUX:#define __nocona 1
-end_comment
-
-begin_comment
-comment|// I386-LINUX:#define __nocona__ 1
-end_comment
-
-begin_comment
-comment|// I386-LINUX:#define __tune_nocona__ 1
 end_comment
 
 begin_comment
@@ -4740,18 +4716,6 @@ comment|// X86_64:#define __amd64__ 1
 end_comment
 
 begin_comment
-comment|// X86_64:#define __nocona 1
-end_comment
-
-begin_comment
-comment|// X86_64:#define __nocona__ 1
-end_comment
-
-begin_comment
-comment|// X86_64:#define __tune_nocona__ 1
-end_comment
-
-begin_comment
 comment|// X86_64:#define __x86_64 1
 end_comment
 
@@ -5164,18 +5128,6 @@ comment|// X86_64-LINUX:#define __amd64__ 1
 end_comment
 
 begin_comment
-comment|// X86_64-LINUX:#define __nocona 1
-end_comment
-
-begin_comment
-comment|// X86_64-LINUX:#define __nocona__ 1
-end_comment
-
-begin_comment
-comment|// X86_64-LINUX:#define __tune_nocona__ 1
-end_comment
-
-begin_comment
 comment|// X86_64-LINUX:#define __x86_64 1
 end_comment
 
@@ -5188,7 +5140,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -triple i686-pc-linux-gnu -E -dM< /dev/null | FileCheck -check-prefix GNUSOURCE %s
+comment|// RUN: %clang_cc1 -x c++ -triple i686-pc-linux-gnu -fobjc-fragile-abi -E -dM< /dev/null | FileCheck -check-prefix GNUSOURCE %s
 end_comment
 
 begin_comment

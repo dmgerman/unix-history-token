@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- LiveVariables.h - Live Variable Analysis for Source CFGs -*- C++ --*-===//
+comment|//===- LiveVariables.h - Live Variable Analysis for Source CFGs -*- C++ --*-//
 end_comment
 
 begin_comment
@@ -62,25 +62,37 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/AnalysisContext.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/Decl.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/Support/BlkExprDeclBitVector.h"
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/Analysis/FlowSensitive/DataflowValues.h"
+file|"llvm/ADT/ImmutableSet.h"
 end_include
 
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|CFG
+decl_stmt|;
+name|class
+name|CFGBlock
+decl_stmt|;
 name|class
 name|Stmt
 decl_stmt|;
@@ -91,133 +103,162 @@ name|class
 name|SourceManager
 decl_stmt|;
 name|class
-name|AnalysisContext
-decl_stmt|;
-struct|struct
-name|LiveVariables_ValueTypes
-block|{
-struct_decl|struct
-name|ObserverTy
-struct_decl|;
-comment|// We keep dataflow state for declarations and block-level expressions;
-typedef|typedef
-name|StmtDeclBitVector_Types
-operator|::
-name|ValTy
-name|ValTy
-expr_stmt|;
-comment|// We need to keep track of both declarations and CFGBlock-level expressions,
-comment|// (so that we don't explore such expressions twice).  We also want
-comment|// to compute liveness information for block-level expressions, since these
-comment|// act as "temporary" values.
-name|struct
-name|AnalysisDataTy
+name|LiveVariables
 range|:
 name|public
-name|StmtDeclBitVector_Types
-operator|::
-name|AnalysisDataTy
+name|ManagedAnalysis
 block|{
-name|ObserverTy
+name|public
+operator|:
+name|class
+name|LivenessValues
+block|{
+name|public
+operator|:
+name|llvm
+operator|::
+name|ImmutableSet
+operator|<
+specifier|const
+name|Stmt
 operator|*
-name|Observer
+operator|>
+name|liveStmts
 block|;
-name|ValTy
-name|AlwaysLive
-block|;
-name|AnalysisContext
+name|llvm
+operator|::
+name|ImmutableSet
+operator|<
+specifier|const
+name|VarDecl
 operator|*
-name|AC
+operator|>
+name|liveDecls
 block|;
 name|bool
-name|killAtAssign
+name|equals
+argument_list|(
+argument|const LivenessValues&V
+argument_list|)
+specifier|const
 block|;
-name|AnalysisDataTy
+name|LivenessValues
 argument_list|()
 operator|:
-name|Observer
+name|liveStmts
 argument_list|(
-name|NULL
+literal|0
 argument_list|)
 block|,
-name|AC
+name|liveDecls
 argument_list|(
-name|NULL
-argument_list|)
-block|,
-name|killAtAssign
-argument_list|(
-argument|true
+literal|0
 argument_list|)
 block|{}
-block|}
-decl_stmt|;
-comment|//===-----------------------------------------------------===//
-comment|// ObserverTy - Observer for uninitialized values queries.
-comment|//===-----------------------------------------------------===//
-struct|struct
-name|ObserverTy
+name|LivenessValues
+argument_list|(
+name|llvm
+operator|::
+name|ImmutableSet
+operator|<
+specifier|const
+name|Stmt
+operator|*
+operator|>
+name|LiveStmts
+argument_list|,
+name|llvm
+operator|::
+name|ImmutableSet
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|>
+name|LiveDecls
+argument_list|)
+operator|:
+name|liveStmts
+argument_list|(
+name|LiveStmts
+argument_list|)
+block|,
+name|liveDecls
+argument_list|(
+argument|LiveDecls
+argument_list|)
+block|{}
+operator|~
+name|LivenessValues
+argument_list|()
+block|{}
+name|bool
+name|isLive
+argument_list|(
+argument|const Stmt *S
+argument_list|)
+specifier|const
+block|;
+name|bool
+name|isLive
+argument_list|(
+argument|const VarDecl *D
+argument_list|)
+specifier|const
+block|;
+name|friend
+name|class
+name|LiveVariables
+block|;       }
+block|;      struct
+name|Observer
 block|{
 name|virtual
 operator|~
-name|ObserverTy
+name|Observer
 argument_list|()
 block|{}
-comment|/// ObserveStmt - A callback invoked right before invoking the
+comment|/// A callback invoked right before invoking the
 comment|///  liveness transfer function on the given statement.
 name|virtual
 name|void
-name|ObserveStmt
+name|observeStmt
 argument_list|(
-argument|Stmt* S
+argument|const Stmt *S
 argument_list|,
 argument|const CFGBlock *currentBlock
 argument_list|,
-argument|const AnalysisDataTy& AD
-argument_list|,
-argument|const ValTy& V
+argument|const LivenessValues& V
 argument_list|)
 block|{}
+comment|/// Called when the live variables analysis registers
+comment|/// that a variable is killed.
 name|virtual
 name|void
-name|ObserverKill
+name|observerKill
 argument_list|(
-argument|DeclRefExpr* DR
+argument|const DeclRefExpr *DR
 argument_list|)
 block|{}
 block|}
-struct|;
-block|}
-struct|;
-name|class
+block|;
+name|virtual
+operator|~
 name|LiveVariables
-range|:
-name|public
-name|DataflowValues
-operator|<
-name|LiveVariables_ValueTypes
-decl_stmt|,
-name|dataflow
-decl|::
-name|backward_analysis_tag
-decl|>
-block|{
-name|public
-label|:
-typedef|typedef
-name|LiveVariables_ValueTypes
-operator|::
-name|ObserverTy
-name|ObserverTy
-expr_stmt|;
+argument_list|()
+block|;
+comment|/// Compute the liveness information for a given CFG.
+specifier|static
 name|LiveVariables
+operator|*
+name|computeLiveness
 argument_list|(
-argument|AnalysisContext&AC
+argument|AnalysisContext&analysisContext
 argument_list|,
-argument|bool killAtAssign = true
+argument|bool killAtAssign
 argument_list|)
-empty_stmt|;
-comment|/// IsLive - Return true if a variable is live at the end of a
+block|;
+comment|/// Return true if a variable is live at the end of a
 comment|/// specified block.
 name|bool
 name|isLive
@@ -232,9 +273,8 @@ name|VarDecl
 operator|*
 name|D
 argument_list|)
-decl|const
-decl_stmt|;
-comment|/// IsLive - Returns true if a variable is live at the beginning of the
+block|;
+comment|/// Returns true if a variable is live at the beginning of the
 comment|///  the statement.  This query only works if liveness information
 comment|///  has been recorded at the statement level (see runOnAllBlocks), and
 comment|///  only returns liveness information for block-level expressions.
@@ -251,9 +291,8 @@ name|VarDecl
 operator|*
 name|D
 argument_list|)
-decl|const
-decl_stmt|;
-comment|/// IsLive - Returns true the block-level expression "value" is live
+block|;
+comment|/// Returns true the block-level expression "value" is live
 comment|///  before the given block-level expression (see runOnAllBlocks).
 name|bool
 name|isLive
@@ -268,44 +307,9 @@ name|Stmt
 operator|*
 name|StmtVal
 argument_list|)
-decl|const
-decl_stmt|;
-comment|/// IsLive - Return true if a variable is live according to the
-comment|///  provided livness bitvector.
-name|bool
-name|isLive
-argument_list|(
-specifier|const
-name|ValTy
-operator|&
-name|V
-argument_list|,
-specifier|const
-name|VarDecl
-operator|*
-name|D
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// dumpLiveness - Print to stderr the liveness information encoded
-comment|///  by a specified bitvector.
-name|void
-name|dumpLiveness
-argument_list|(
-specifier|const
-name|ValTy
-operator|&
-name|V
-argument_list|,
-specifier|const
-name|SourceManager
-operator|&
-name|M
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// dumpBlockLiveness - Print to stderr the liveness information
-comment|///  associated with each basic block.
+block|;
+comment|/// Print to stderr the liveness information associated with
+comment|/// each basic block.
 name|void
 name|dumpBlockLiveness
 argument_list|(
@@ -314,68 +318,86 @@ name|SourceManager
 operator|&
 name|M
 argument_list|)
-decl|const
-decl_stmt|;
-comment|/// getNumDecls - Return the number of variables (declarations) that
-comment|///  whose liveness status is being tracked by the dataflow
-comment|///  analysis.
-name|unsigned
-name|getNumDecls
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getAnalysisData
-argument_list|()
-operator|.
-name|getNumDecls
-argument_list|()
-return|;
-block|}
-comment|/// IntializeValues - This routine can perform extra initialization, but
-comment|///  for LiveVariables this does nothing since all that logic is in
-comment|///  the constructor.
-name|void
-name|InitializeValues
-parameter_list|(
-specifier|const
-name|CFG
-modifier|&
-name|cfg
-parameter_list|)
-block|{}
-name|void
-name|runOnCFG
-parameter_list|(
-name|CFG
-modifier|&
-name|cfg
-parameter_list|)
-function_decl|;
-comment|/// runOnAllBlocks - Propagate the dataflow values once for each block,
-comment|///  starting from the current dataflow values.  'recordStmtValues' indicates
-comment|///  whether the method should store dataflow values per each individual
-comment|///  block-level expression.
+block|;
 name|void
 name|runOnAllBlocks
-parameter_list|(
-specifier|const
-name|CFG
-modifier|&
-name|cfg
-parameter_list|,
-name|ObserverTy
-modifier|*
-name|Obs
-parameter_list|,
-name|bool
-name|recordStmtValues
-init|=
-name|false
-parameter_list|)
-function_decl|;
+argument_list|(
+name|Observer
+operator|&
+name|obs
+argument_list|)
+block|;
+specifier|static
+name|LiveVariables
+operator|*
+name|create
+argument_list|(
+argument|AnalysisContext&analysisContext
+argument_list|)
+block|{
+return|return
+name|computeLiveness
+argument_list|(
+name|analysisContext
+argument_list|,
+name|true
+argument_list|)
+return|;
 block|}
-empty_stmt|;
+specifier|static
+specifier|const
+name|void
+operator|*
+name|getTag
+argument_list|()
+block|;
+name|private
+operator|:
+name|LiveVariables
+argument_list|(
+name|void
+operator|*
+name|impl
+argument_list|)
+block|;
+name|void
+operator|*
+name|impl
+block|; }
+decl_stmt|;
+name|class
+name|RelaxedLiveVariables
+range|:
+name|public
+name|LiveVariables
+block|{
+name|public
+operator|:
+specifier|static
+name|LiveVariables
+operator|*
+name|create
+argument_list|(
+argument|AnalysisContext&analysisContext
+argument_list|)
+block|{
+return|return
+name|computeLiveness
+argument_list|(
+name|analysisContext
+argument_list|,
+name|false
+argument_list|)
+return|;
+block|}
+specifier|static
+specifier|const
+name|void
+operator|*
+name|getTag
+argument_list|()
+block|; }
+decl_stmt|;
 block|}
 end_decl_stmt
 

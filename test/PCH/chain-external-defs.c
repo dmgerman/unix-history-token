@@ -8,7 +8,7 @@ comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -emit-pch -o %t1.pch %S/
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -emit-pch -o %t2.pch %S/Inputs/chain-external-defs2.h -include-pch %t1.pch -chained-pch
+comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin9 -emit-pch -o %t2.pch %S/Inputs/chain-external-defs2.h -include-pch %t1.pch
 end_comment
 
 begin_comment

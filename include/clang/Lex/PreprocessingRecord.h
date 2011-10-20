@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/IdentifierTable.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -182,15 +188,14 @@ comment|/// \brief The kind of preprocessed entity an object describes.
 enum|enum
 name|EntityKind
 block|{
+comment|/// \brief Indicates a problem trying to load the preprocessed entity.
+name|InvalidKind
+block|,
 comment|/// \brief A macro expansion.
 name|MacroExpansionKind
 block|,
-comment|/// \brief A preprocessing directive whose kind is not specified.
-comment|///
-comment|/// This kind will be used for any preprocessing directive that does not
-comment|/// have a more specific kind within the \c DirectiveKind enumeration.
-name|PreprocessingDirectiveKind
-block|,
+comment|/// \defgroup Preprocessing directives
+comment|/// @{
 comment|/// \brief A macro definition.
 name|MacroDefinitionKind
 block|,
@@ -198,9 +203,10 @@ comment|/// \brief An inclusion directive, such as \c #include, \c
 comment|/// #import, or \c #include_next.
 name|InclusionDirectiveKind
 block|,
+comment|/// @}
 name|FirstPreprocessingDirective
 init|=
-name|PreprocessingDirectiveKind
+name|MacroDefinitionKind
 block|,
 name|LastPreprocessingDirective
 init|=
@@ -236,8 +242,12 @@ argument_list|(
 argument|Range
 argument_list|)
 block|{ }
+name|friend
+name|class
+name|PreprocessingRecord
+expr_stmt|;
 name|public
-operator|:
+label|:
 comment|/// \brief Retrieve the kind of preprocessed entity stored in this object.
 name|EntityKind
 name|getKind
@@ -257,6 +267,19 @@ specifier|const
 block|{
 return|return
 name|Range
+return|;
+block|}
+comment|/// \brief Returns true if there was a problem loading the preprocessed
+comment|/// entity.
+name|bool
+name|isInvalid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|InvalidKind
 return|;
 block|}
 comment|// Implement isa/cast/dyncast/etc.
@@ -412,107 +435,10 @@ parameter_list|()
 function_decl|;
 block|}
 empty_stmt|;
-comment|/// \brief Records the location of a macro expansion.
-name|class
-name|MacroExpansion
-range|:
-name|public
-name|PreprocessedEntity
-block|{
-comment|/// \brief The name of the macro being expanded.
-name|IdentifierInfo
-operator|*
-name|Name
-block|;
-comment|/// \brief The definition of this macro.
-name|MacroDefinition
-operator|*
-name|Definition
-block|;
-name|public
-operator|:
-name|MacroExpansion
-argument_list|(
-argument|IdentifierInfo *Name
-argument_list|,
-argument|SourceRange Range
-argument_list|,
-argument|MacroDefinition *Definition
-argument_list|)
-operator|:
-name|PreprocessedEntity
-argument_list|(
-name|MacroExpansionKind
-argument_list|,
-name|Range
-argument_list|)
-block|,
-name|Name
-argument_list|(
-name|Name
-argument_list|)
-block|,
-name|Definition
-argument_list|(
-argument|Definition
-argument_list|)
-block|{ }
-comment|/// \brief The name of the macro being expanded.
-name|IdentifierInfo
-operator|*
-name|getName
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Name
-return|;
-block|}
-comment|/// \brief The definition of the macro being expanded.
-name|MacroDefinition
-operator|*
-name|getDefinition
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Definition
-return|;
-block|}
-comment|// Implement isa/cast/dyncast/etc.
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const PreprocessedEntity *PE
-argument_list|)
-block|{
-return|return
-name|PE
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|MacroExpansionKind
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const MacroExpansion *
-argument_list|)
-block|{
-return|return
-name|true
-return|;
-block|}
-expr|}
-block|;
 comment|/// \brief Records the presence of a preprocessor directive.
 name|class
 name|PreprocessingDirective
-operator|:
+range|:
 name|public
 name|PreprocessedEntity
 block|{
@@ -582,18 +508,12 @@ name|IdentifierInfo
 operator|*
 name|Name
 block|;
-comment|/// \brief The location of the macro name in the macro definition.
-name|SourceLocation
-name|Location
-block|;
 name|public
 operator|:
 name|explicit
 name|MacroDefinition
 argument_list|(
 argument|const IdentifierInfo *Name
-argument_list|,
-argument|SourceLocation Location
 argument_list|,
 argument|SourceRange Range
 argument_list|)
@@ -607,12 +527,7 @@ argument_list|)
 block|,
 name|Name
 argument_list|(
-name|Name
-argument_list|)
-block|,
-name|Location
-argument_list|(
-argument|Location
+argument|Name
 argument_list|)
 block|{ }
 comment|/// \brief Retrieve the name of the macro being defined.
@@ -634,7 +549,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Location
+name|getSourceRange
+argument_list|()
+operator|.
+name|getBegin
+argument_list|()
 return|;
 block|}
 comment|// Implement isa/cast/dyncast/etc.
@@ -659,6 +578,170 @@ name|bool
 name|classof
 argument_list|(
 argument|const MacroDefinition *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief Records the location of a macro expansion.
+name|class
+name|MacroExpansion
+operator|:
+name|public
+name|PreprocessedEntity
+block|{
+comment|/// \brief The definition of this macro or the name of the macro if it is
+comment|/// a builtin macro.
+name|llvm
+operator|::
+name|PointerUnion
+operator|<
+name|IdentifierInfo
+operator|*
+block|,
+name|MacroDefinition
+operator|*
+operator|>
+name|NameOrDef
+block|;
+name|public
+operator|:
+name|MacroExpansion
+argument_list|(
+argument|IdentifierInfo *BuiltinName
+argument_list|,
+argument|SourceRange Range
+argument_list|)
+operator|:
+name|PreprocessedEntity
+argument_list|(
+name|MacroExpansionKind
+argument_list|,
+name|Range
+argument_list|)
+block|,
+name|NameOrDef
+argument_list|(
+argument|BuiltinName
+argument_list|)
+block|{ }
+name|MacroExpansion
+argument_list|(
+argument|MacroDefinition *Definition
+argument_list|,
+argument|SourceRange Range
+argument_list|)
+operator|:
+name|PreprocessedEntity
+argument_list|(
+name|MacroExpansionKind
+argument_list|,
+name|Range
+argument_list|)
+block|,
+name|NameOrDef
+argument_list|(
+argument|Definition
+argument_list|)
+block|{ }
+comment|/// \brief True if it is a builtin macro.
+name|bool
+name|isBuiltinMacro
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameOrDef
+operator|.
+name|is
+operator|<
+name|IdentifierInfo
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// \brief The name of the macro being expanded.
+specifier|const
+name|IdentifierInfo
+operator|*
+name|getName
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|MacroDefinition
+modifier|*
+name|Def
+init|=
+name|getDefinition
+argument_list|()
+condition|)
+return|return
+name|Def
+operator|->
+name|getName
+argument_list|()
+return|;
+return|return
+name|NameOrDef
+operator|.
+name|get
+operator|<
+name|IdentifierInfo
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|/// \brief The definition of the macro being expanded. May return null if
+comment|/// this is a builtin macro.
+name|MacroDefinition
+operator|*
+name|getDefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NameOrDef
+operator|.
+name|dyn_cast
+operator|<
+name|MacroDefinition
+operator|*
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const PreprocessedEntity *PE
+argument_list|)
+block|{
+return|return
+name|PE
+operator|->
+name|getKind
+argument_list|()
+operator|==
+name|MacroExpansionKind
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MacroExpansion *
 argument_list|)
 block|{
 return|return
@@ -699,8 +782,6 @@ name|private
 operator|:
 comment|/// \brief The name of the file that was included, as written in
 comment|/// the source.
-name|llvm
-operator|::
 name|StringRef
 name|FileName
 block|;
@@ -733,7 +814,7 @@ argument|PreprocessingRecord&PPRec
 argument_list|,
 argument|InclusionKind Kind
 argument_list|,
-argument|llvm::StringRef FileName
+argument|StringRef FileName
 argument_list|,
 argument|bool InQuotes
 argument_list|,
@@ -759,8 +840,6 @@ operator|)
 return|;
 block|}
 comment|/// \brief Retrieve the included file name as it was written in the source.
-name|llvm
-operator|::
 name|StringRef
 name|getFileName
 argument_list|()
@@ -836,22 +915,34 @@ operator|~
 name|ExternalPreprocessingRecordSource
 argument_list|()
 block|;
-comment|/// \brief Read any preallocated preprocessed entities from the external
-comment|/// source.
-name|virtual
-name|void
-name|ReadPreprocessedEntities
-argument_list|()
-operator|=
-literal|0
-block|;
-comment|/// \brief Read the preprocessed entity at the given offset.
+comment|/// \brief Read a preallocated preprocessed entity from the external source.
+comment|///
+comment|/// \returns null if an error occurred that prevented the preprocessed
+comment|/// entity from being loaded.
 name|virtual
 name|PreprocessedEntity
 operator|*
-name|ReadPreprocessedEntityAtOffset
+name|ReadPreprocessedEntity
 argument_list|(
-argument|uint64_t Offset
+argument|unsigned Index
+argument_list|)
+operator|=
+literal|0
+block|;
+comment|/// \brief Returns a pair of [Begin, End) indices of preallocated
+comment|/// preprocessed entities that \arg Range encompasses.
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|findPreprocessedEntitiesInRange
+argument_list|(
+argument|SourceRange Range
 argument_list|)
 operator|=
 literal|0
@@ -866,6 +957,10 @@ operator|:
 name|public
 name|PPCallbacks
 block|{
+name|SourceManager
+operator|&
+name|SourceMgr
+block|;
 comment|/// \brief Whether we should include nested macro expansions in
 comment|/// the preprocessing record.
 name|bool
@@ -888,6 +983,56 @@ operator|*
 operator|>
 name|PreprocessedEntities
 block|;
+comment|/// \brief The set of preprocessed entities in this record that have been
+comment|/// loaded from external sources.
+comment|///
+comment|/// The entries in this vector are loaded lazily from the external source,
+comment|/// and are referenced by the iterator using negative indices.
+name|std
+operator|::
+name|vector
+operator|<
+name|PreprocessedEntity
+operator|*
+operator|>
+name|LoadedPreprocessedEntities
+block|;
+comment|/// \brief Global (loaded or local) ID for a preprocessed entity.
+comment|/// Negative values are used to indicate preprocessed entities
+comment|/// loaded from the external source while non-negative values are used to
+comment|/// indicate preprocessed entities introduced by the current preprocessor.
+comment|/// If M is the number of loaded preprocessed entities, value -M
+comment|/// corresponds to element 0 in the loaded entities vector, position -M+1
+comment|/// corresponds to element 1 in the loaded entities vector, etc.
+typedef|typedef
+name|int
+name|PPEntityID
+typedef|;
+name|PPEntityID
+name|getPPEntityID
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|bool isLoaded
+argument_list|)
+specifier|const
+block|{
+return|return
+name|isLoaded
+operator|?
+name|PPEntityID
+argument_list|(
+name|Index
+argument_list|)
+operator|-
+name|LoadedPreprocessedEntities
+operator|.
+name|size
+argument_list|()
+operator|:
+name|Index
+return|;
+block|}
 comment|/// \brief Mapping from MacroInfo structures to their definitions.
 name|llvm
 operator|::
@@ -897,8 +1042,7 @@ specifier|const
 name|MacroInfo
 operator|*
 block|,
-name|MacroDefinition
-operator|*
+name|PPEntityID
 operator|>
 name|MacroDefinitions
 block|;
@@ -907,27 +1051,92 @@ name|ExternalPreprocessingRecordSource
 operator|*
 name|ExternalSource
 block|;
-comment|/// \brief The number of preallocated entities (that are known to the
-comment|/// external source).
+comment|/// \brief Retrieve the preprocessed entity at the given ID.
+name|PreprocessedEntity
+operator|*
+name|getPreprocessedEntity
+argument_list|(
+argument|PPEntityID PPID
+argument_list|)
+block|;
+comment|/// \brief Retrieve the loaded preprocessed entity at the given index.
+name|PreprocessedEntity
+operator|*
+name|getLoadedPreprocessedEntity
+argument_list|(
+argument|unsigned Index
+argument_list|)
+block|;
+comment|/// \brief Determine the number of preprocessed entities that were
+comment|/// loaded (or can be loaded) from an external source.
 name|unsigned
-name|NumPreallocatedEntities
-block|;
-comment|/// \brief Whether we have already loaded all of the preallocated entities.
-name|mutable
-name|bool
-name|LoadedPreallocatedEntities
-block|;
-name|void
-name|MaybeLoadPreallocatedEntities
+name|getNumLoadedPreprocessedEntities
 argument_list|()
 specifier|const
+block|{
+return|return
+name|LoadedPreprocessedEntities
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns a pair of [Begin, End) indices of local preprocessed
+comment|/// entities that \arg Range encompasses.
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|findLocalPreprocessedEntitiesInRange
+argument_list|(
+argument|SourceRange Range
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|findBeginLocalPreprocessedEntity
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+specifier|const
+block|;
+name|unsigned
+name|findEndLocalPreprocessedEntity
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Allocate space for a new set of loaded preprocessed entities.
+comment|///
+comment|/// \returns The index into the set of loaded preprocessed entities, which
+comment|/// corresponds to the first newly-allocated entity.
+name|unsigned
+name|allocateLoadedEntities
+argument_list|(
+argument|unsigned NumEntities
+argument_list|)
+block|;
+comment|/// \brief Register a new macro definition.
+name|void
+name|RegisterMacroDefinition
+argument_list|(
+argument|MacroInfo *Macro
+argument_list|,
+argument|PPEntityID PPID
+argument_list|)
 block|;
 name|public
 operator|:
-comment|/// \brief Construct
-name|explicit
+comment|/// \brief Construct a new preprocessing record.
 name|PreprocessingRecord
 argument_list|(
+argument|SourceManager&SM
+argument_list|,
 argument|bool IncludeNestedMacroExpansions
 argument_list|)
 block|;
@@ -964,84 +1173,665 @@ name|size_t
 name|getTotalMemory
 argument_list|()
 specifier|const
+block|;
+name|SourceManager
+operator|&
+name|getSourceManager
+argument_list|()
+specifier|const
 block|{
 return|return
-name|BumpAlloc
-operator|.
-name|getTotalMemory
-argument_list|()
+name|SourceMgr
 return|;
 block|}
 comment|// Iteration over the preprocessed entities.
+name|class
+name|iterator
+block|{
+name|PreprocessingRecord
+operator|*
+name|Self
+block|;
+comment|/// \brief Position within the preprocessed entity sequence.
+comment|///
+comment|/// In a complete iteration, the Position field walks the range [-M, N),
+comment|/// where negative values are used to indicate preprocessed entities
+comment|/// loaded from the external source while non-negative values are used to
+comment|/// indicate preprocessed entities introduced by the current preprocessor.
+comment|/// However, to provide iteration in source order (for, e.g., chained
+comment|/// precompiled headers), dereferencing the iterator flips the negative
+comment|/// values (corresponding to loaded entities), so that position -M
+comment|/// corresponds to element 0 in the loaded entities vector, position -M+1
+comment|/// corresponds to element 1 in the loaded entities vector, etc. This
+comment|/// gives us a reasonably efficient, source-order walk.
+name|PPEntityID
+name|Position
+block|;
+name|public
+operator|:
+typedef|typedef
+name|PreprocessedEntity
+modifier|*
+name|value_type
+typedef|;
+typedef|typedef
+name|value_type
+modifier|&
+name|reference
+typedef|;
+typedef|typedef
+name|value_type
+modifier|*
+name|pointer
+typedef|;
 typedef|typedef
 name|std
 operator|::
-name|vector
-operator|<
-name|PreprocessedEntity
-operator|*
-operator|>
-operator|::
-name|iterator
-name|iterator
+name|random_access_iterator_tag
+name|iterator_category
 expr_stmt|;
 typedef|typedef
+name|int
+name|difference_type
+typedef|;
+name|iterator
+argument_list|()
+operator|:
+name|Self
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|Position
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|iterator
+argument_list|(
+argument|PreprocessingRecord *Self
+argument_list|,
+argument|int Position
+argument_list|)
+operator|:
+name|Self
+argument_list|(
+name|Self
+argument_list|)
+operator|,
+name|Position
+argument_list|(
+argument|Position
+argument_list|)
+block|{ }
+name|value_type
+name|operator
+operator|*
+operator|(
+operator|)
+specifier|const
+block|{
+return|return
+name|Self
+operator|->
+name|getPreprocessedEntity
+argument_list|(
+name|Position
+argument_list|)
+return|;
+block|}
+name|value_type
+name|operator
+function|[]
+parameter_list|(
+name|difference_type
+name|D
+parameter_list|)
+block|{
+return|return
+operator|*
+operator|(
+operator|*
+name|this
+operator|+
+name|D
+operator|)
+return|;
+block|}
+name|iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|{
+operator|++
+name|Position
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|iterator
+name|operator
+operator|++
+operator|(
+name|int
+operator|)
+block|{
+name|iterator
+name|Prev
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+operator|++
+name|Position
+block|;
+return|return
+name|Prev
+return|;
+block|}
+name|iterator
+operator|&
+name|operator
+operator|--
+operator|(
+operator|)
+block|{
+operator|--
+name|Position
+block|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|iterator
+name|operator
+operator|--
+operator|(
+name|int
+operator|)
+block|{
+name|iterator
+name|Prev
+argument_list|(
+operator|*
+name|this
+argument_list|)
+block|;
+operator|--
+name|Position
+block|;
+return|return
+name|Prev
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|,
+specifier|const
+name|iterator
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Position
+operator|==
+name|Y
+operator|.
+name|Position
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|,
+specifier|const
+name|iterator
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Position
+operator|!=
+name|Y
+operator|.
+name|Position
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|,
+specifier|const
+name|iterator
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Position
+operator|<
+name|Y
+operator|.
+name|Position
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|>
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|,
+specifier|const
+name|iterator
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Position
+operator|>
+name|Y
+operator|.
+name|Position
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|<=
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|,
+specifier|const
+name|iterator
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Position
+operator|<
+name|Y
+operator|.
+name|Position
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|>=
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|,
+specifier|const
+name|iterator
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Position
+operator|>
+name|Y
+operator|.
+name|Position
+return|;
+block|}
+name|friend
+name|iterator
+operator|&
+name|operator
+operator|+=
+operator|(
+name|iterator
+operator|&
+name|X
+operator|,
+name|difference_type
+name|D
+operator|)
+block|{
+name|X
+operator|.
+name|Position
+operator|+=
+name|D
+block|;
+return|return
+name|X
+return|;
+block|}
+name|friend
+name|iterator
+operator|&
+name|operator
+operator|-=
+operator|(
+name|iterator
+operator|&
+name|X
+operator|,
+name|difference_type
+name|D
+operator|)
+block|{
+name|X
+operator|.
+name|Position
+operator|-=
+name|D
+block|;
+return|return
+name|X
+return|;
+block|}
+name|friend
+name|iterator
+name|operator
+operator|+
+operator|(
+name|iterator
+name|X
+operator|,
+name|difference_type
+name|D
+operator|)
+block|{
+name|X
+operator|.
+name|Position
+operator|+=
+name|D
+block|;
+return|return
+name|X
+return|;
+block|}
+name|friend
+name|iterator
+name|operator
+operator|+
+operator|(
+name|difference_type
+name|D
+operator|,
+name|iterator
+name|X
+operator|)
+block|{
+name|X
+operator|.
+name|Position
+operator|+=
+name|D
+block|;
+return|return
+name|X
+return|;
+block|}
+name|friend
+name|difference_type
+name|operator
+operator|-
+operator|(
+specifier|const
+name|iterator
+operator|&
+name|X
+operator|,
+specifier|const
+name|iterator
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|Position
+operator|-
+name|Y
+operator|.
+name|Position
+return|;
+block|}
+name|friend
+name|iterator
+name|operator
+operator|-
+operator|(
+name|iterator
+name|X
+operator|,
+name|difference_type
+name|D
+operator|)
+block|{
+name|X
+operator|.
+name|Position
+operator|-=
+name|D
+block|;
+return|return
+name|X
+return|;
+block|}
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|iterator
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Begin iterator for all preprocessed entities.
+end_comment
+
+begin_function
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|iterator
+argument_list|(
+name|this
+argument_list|,
+operator|-
+operator|(
+name|int
+operator|)
+name|LoadedPreprocessedEntities
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief End iterator for all preprocessed entities.
+end_comment
+
+begin_function
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|iterator
+argument_list|(
+name|this
+argument_list|,
+name|PreprocessedEntities
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Begin iterator for local, non-loaded, preprocessed entities.
+end_comment
+
+begin_function
+name|iterator
+name|local_begin
+parameter_list|()
+block|{
+return|return
+name|iterator
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief End iterator for local, non-loaded, preprocessed entities.
+end_comment
+
+begin_function
+name|iterator
+name|local_end
+parameter_list|()
+block|{
+return|return
+name|iterator
+argument_list|(
+name|this
+argument_list|,
+name|PreprocessedEntities
+operator|.
+name|size
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Returns a pair of [Begin, End) iterators of preprocessed entities
+end_comment
+
+begin_comment
+comment|/// that source range \arg R encompasses.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
-name|vector
+name|pair
 operator|<
-name|PreprocessedEntity
-operator|*
+name|iterator
+operator|,
+name|iterator
 operator|>
-operator|::
-name|const_iterator
-name|const_iterator
+name|getPreprocessedEntitiesInRange
+argument_list|(
+argument|SourceRange R
+argument_list|)
 expr_stmt|;
-name|iterator
-name|begin
-argument_list|(
-argument|bool OnlyLocalEntities = false
-argument_list|)
-block|;
-name|iterator
-name|end
-argument_list|(
-argument|bool OnlyLocalEntities = false
-argument_list|)
-block|;
-name|const_iterator
-name|begin
-argument_list|(
-argument|bool OnlyLocalEntities = false
-argument_list|)
-specifier|const
-block|;
-name|const_iterator
-name|end
-argument_list|(
-argument|bool OnlyLocalEntities = false
-argument_list|)
-specifier|const
-block|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Add a new preprocessed entity to this record.
+end_comment
+
+begin_function_decl
 name|void
 name|addPreprocessedEntity
-argument_list|(
+parameter_list|(
 name|PreprocessedEntity
-operator|*
+modifier|*
 name|Entity
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Set the external source for preprocessed entities.
+end_comment
+
+begin_function_decl
 name|void
 name|SetExternalSource
-argument_list|(
-argument|ExternalPreprocessingRecordSource&Source
-argument_list|,
-argument|unsigned NumPreallocatedEntities
-argument_list|)
-block|;
+parameter_list|(
+name|ExternalPreprocessingRecordSource
+modifier|&
+name|Source
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Retrieve the external source for preprocessed entities.
+end_comment
+
+begin_expr_stmt
 name|ExternalPreprocessingRecordSource
 operator|*
 name|getExternalSource
@@ -1052,156 +1842,159 @@ return|return
 name|ExternalSource
 return|;
 block|}
-name|unsigned
-name|getNumPreallocatedEntities
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumPreallocatedEntities
-return|;
-block|}
-comment|/// \brief Set the preallocated entry at the given index to the given
-comment|/// preprocessed entity.
-name|void
-name|SetPreallocatedEntity
-argument_list|(
-argument|unsigned Index
-argument_list|,
-argument|PreprocessedEntity *Entity
-argument_list|)
-block|;
-comment|/// \brief Register a new macro definition.
-name|void
-name|RegisterMacroDefinition
-argument_list|(
-name|MacroInfo
-operator|*
-name|Macro
-argument_list|,
-name|MacroDefinition
-operator|*
-name|MD
-argument_list|)
-block|;
-comment|/// \brief Retrieve the preprocessed entity at the given index.
-name|PreprocessedEntity
-operator|*
-name|getPreprocessedEntity
-argument_list|(
-argument|unsigned Index
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Index
-operator|<
-name|PreprocessedEntities
-operator|.
-name|size
-argument_list|()
-operator|&&
-literal|"Out-of-bounds preprocessed entity"
-argument_list|)
-block|;
-return|return
-name|PreprocessedEntities
-index|[
-name|Index
-index|]
-return|;
-block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the macro definition that corresponds to the given
+end_comment
+
+begin_comment
 comment|/// \c MacroInfo.
+end_comment
+
+begin_function_decl
 name|MacroDefinition
-operator|*
+modifier|*
 name|findMacroDefinition
-argument_list|(
+parameter_list|(
 specifier|const
 name|MacroInfo
-operator|*
+modifier|*
 name|MI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|void
 name|MacroExpands
-argument_list|(
+parameter_list|(
 specifier|const
 name|Token
-operator|&
+modifier|&
 name|Id
-argument_list|,
+parameter_list|,
 specifier|const
 name|MacroInfo
-operator|*
+modifier|*
 name|MI
-argument_list|)
-block|;
+parameter_list|,
+name|SourceRange
+name|Range
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|void
 name|MacroDefined
-argument_list|(
+parameter_list|(
 specifier|const
 name|Token
-operator|&
+modifier|&
 name|Id
-argument_list|,
+parameter_list|,
 specifier|const
 name|MacroInfo
-operator|*
+modifier|*
 name|MI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|void
 name|MacroUndefined
-argument_list|(
+parameter_list|(
 specifier|const
 name|Token
-operator|&
+modifier|&
 name|Id
-argument_list|,
+parameter_list|,
 specifier|const
 name|MacroInfo
-operator|*
+modifier|*
 name|MI
-argument_list|)
-block|;
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|void
 name|InclusionDirective
-argument_list|(
-argument|SourceLocation HashLoc
-argument_list|,
-argument|const Token&IncludeTok
-argument_list|,
-argument|llvm::StringRef FileName
-argument_list|,
-argument|bool IsAngled
-argument_list|,
-argument|const FileEntry *File
-argument_list|,
-argument|SourceLocation EndLoc
-argument_list|,
-argument|llvm::StringRef SearchPath
-argument_list|,
-argument|llvm::StringRef RelativePath
-argument_list|)
-block|;   }
-block|; }
+parameter_list|(
+name|SourceLocation
+name|HashLoc
+parameter_list|,
+specifier|const
+name|Token
+modifier|&
+name|IncludeTok
+parameter_list|,
+name|StringRef
+name|FileName
+parameter_list|,
+name|bool
+name|IsAngled
+parameter_list|,
+specifier|const
+name|FileEntry
+modifier|*
+name|File
+parameter_list|,
+name|SourceLocation
+name|EndLoc
+parameter_list|,
+name|StringRef
+name|SearchPath
+parameter_list|,
+name|StringRef
+name|RelativePath
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTWriter
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+unit|}; }
 comment|// end namespace clang
-specifier|inline
+end_comment
+
+begin_decl_stmt
+unit|inline
 name|void
-operator|*
+modifier|*
 name|operator
 name|new
 argument_list|(
-argument|size_t bytes
+name|size_t
+name|bytes
 argument_list|,
-argument|clang::PreprocessingRecord& PR
+name|clang
+operator|::
+name|PreprocessingRecord
+operator|&
+name|PR
 argument_list|,
-argument|unsigned alignment
+name|unsigned
+name|alignment
 argument_list|)
 name|throw
 argument_list|()
@@ -1217,16 +2010,25 @@ name|alignment
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_decl_stmt
 specifier|inline
 name|void
 name|operator
 name|delete
 argument_list|(
-argument|void* ptr
+name|void
+operator|*
+name|ptr
 argument_list|,
-argument|clang::PreprocessingRecord& PR
+name|clang
+operator|::
+name|PreprocessingRecord
+operator|&
+name|PR
 argument_list|,
-argument|unsigned
+name|unsigned
 argument_list|)
 name|throw
 argument_list|()
@@ -1237,7 +2039,8 @@ name|Deallocate
 argument_list|(
 name|ptr
 argument_list|)
-block|; }
+expr_stmt|;
+block|}
 end_decl_stmt
 
 begin_endif

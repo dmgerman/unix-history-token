@@ -3,10 +3,6 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-checker=unix.API,osx.API %s -analyzer-store=region -fblocks -verify
 end_comment
 
-begin_comment
-comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin10 -analyze -analyzer-checker=unix.API,osx.API %s -analyzer-store=basic -fblocks -verify
-end_comment
-
 begin_struct
 struct|struct
 name|_opaque_pthread_once_t

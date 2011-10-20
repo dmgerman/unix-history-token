@@ -55,6 +55,8 @@ name|y
 decl_stmt|,
 name|z
 decl_stmt|;
+name|__host__
+name|__device__
 name|dim3
 argument_list|(
 argument|unsigned x

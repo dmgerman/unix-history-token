@@ -14,7 +14,7 @@ name|void
 name|test1
 parameter_list|()
 block|{
-comment|// expected-warning {{function could be attribute 'noreturn'}}
+comment|// expected-warning {{function 'test1' could be declared with attribute 'noreturn'}}
 lambda|^
 parameter_list|(
 name|void
@@ -28,7 +28,7 @@ block|{ }
 block|}
 argument_list|()
 expr_stmt|;
-comment|// expected-warning {{block could be attribute 'noreturn'}}
+comment|// expected-warning {{block could be declared with attribute 'noreturn'}}
 lambda|^
 parameter_list|(
 name|void

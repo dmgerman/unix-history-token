@@ -16,7 +16,7 @@ comment|// RUN: %clang_cc1 -emit-pch -o %t1 %S/Inputs/chain-decls1.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-pch -o %t2 %S/Inputs/chain-decls2.h -include-pch %t1 -chained-pch
+comment|// RUN: %clang_cc1 -emit-pch -o %t2 %S/Inputs/chain-decls2.h -include-pch %t1
 end_comment
 
 begin_comment

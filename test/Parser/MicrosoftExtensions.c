@@ -177,6 +177,40 @@ operator|)
 name|p
 operator|)
 return|;
+comment|// expected-warning {{unknown attribute '__ptr64' ignored}}
+block|}
+end_function
+
+begin_function
+name|void
+modifier|*
+name|__ptr32
+name|PtrToPtr32
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+operator|(
+operator|(
+name|void
+operator|*
+name|__ptr32
+operator|)
+operator|(
+name|unsigned
+name|__int32
+operator|)
+operator|(
+name|ULONG_PTR
+operator|)
+name|p
+operator|)
+return|;
+comment|// expected-warning {{unknown attribute '__ptr32' ignored}}
 block|}
 end_function
 

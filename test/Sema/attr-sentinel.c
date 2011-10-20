@@ -31,7 +31,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note 2 {{function has been explicitly marked sentinel here}}
+comment|// expected-note 3 {{function has been explicitly marked sentinel here}}
 end_comment
 
 begin_function_decl
@@ -148,6 +148,16 @@ end_decl_stmt
 begin_comment
 comment|// expected-note {{function has been explicitly marked sentinel here}}
 end_comment
+
+begin_define
+define|#
+directive|define
+name|FOOMACRO
+parameter_list|(
+modifier|...
+parameter_list|)
+value|foo1(__VA_ARGS__)
+end_define
 
 begin_function
 name|void
@@ -309,6 +319,15 @@ operator|)
 literal|0
 argument_list|)
 expr_stmt|;
+comment|// PR11002
+name|FOOMACRO
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+comment|// expected-warning {{missing sentinel in function call}}
 block|}
 end_function
 

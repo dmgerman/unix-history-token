@@ -52,6 +52,46 @@ name|int
 name|z
 decl_stmt|;
 comment|// expected-error {{attribute takes one argument}}
+name|int
+name|u
+init|=
+name|__builtin_annotation
+argument_list|(
+name|z
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+argument_list|)
+decl_stmt|;
+comment|// expected-error {{__builtin_annotation requires a non wide string constant}}
+name|int
+name|v
+init|=
+name|__builtin_annotation
+argument_list|(
+name|z
+argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
+literal|L"bar"
+argument_list|)
+decl_stmt|;
+comment|// expected-error {{__builtin_annotation requires a non wide string constant}}
+name|int
+name|w
+init|=
+name|__builtin_annotation
+argument_list|(
+name|z
+argument_list|,
+literal|"foo"
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 
