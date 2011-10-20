@@ -492,6 +492,8 @@ name|Zeros
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
 name|write
 argument_list|(
 name|OutFile
@@ -504,7 +506,9 @@ argument_list|(
 name|int
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+operator|||
 name|write
 argument_list|(
 name|OutFile
@@ -517,7 +521,9 @@ argument_list|(
 name|unsigned
 argument_list|)
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+operator|||
 name|write
 argument_list|(
 name|OutFile
@@ -526,7 +532,23 @@ name|SavedArgs
 argument_list|,
 name|SavedArgsLength
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"error: unable to write to output file."
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Pad out to a multiple of four bytes */
 if|if
 condition|(
@@ -534,6 +556,9 @@ name|SavedArgsLength
 operator|&
 literal|3
 condition|)
+block|{
+if|if
+condition|(
 name|write
 argument_list|(
 name|OutFile
@@ -549,7 +574,24 @@ operator|&
 literal|3
 operator|)
 argument_list|)
+operator|<
+literal|0
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"error: unable to write to output file."
+argument_list|)
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 block|}
 return|return

@@ -154,7 +154,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-internal.h>
+file|"gtest/internal/gtest-internal.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<stdio.h>
 end_include
 
 begin_decl_stmt
@@ -313,11 +319,13 @@ block|,
 name|EXECUTE_TEST
 block|}
 enum|;
-comment|// An enumeration of the two reasons that a test might be aborted.
+comment|// An enumeration of the three reasons that a test might be aborted.
 enum|enum
 name|AbortReason
 block|{
 name|TEST_ENCOUNTERED_RETURN_STATEMENT
+block|,
+name|TEST_THREW_EXCEPTION
 block|,
 name|TEST_DID_NOT_DIE
 block|}
@@ -464,6 +472,35 @@ name|int
 name|exit_status
 parameter_list|)
 function_decl|;
+comment|// Traps C++ exceptions escaping statement and reports them as test
+comment|// failures. Note that trapping SEH exceptions is not implemented here.
+if|#
+directive|if
+name|GTEST_HAS_EXCEPTIONS
+define|#
+directive|define
+name|GTEST_EXECUTE_DEATH_TEST_STATEMENT_
+parameter_list|(
+name|statement
+parameter_list|,
+name|death_test
+parameter_list|)
+define|\
+value|try { \     GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement); \   } catch (const ::std::exception& gtest_exception) { \     fprintf(\         stderr, \         "\n%s: Caught std::exception-derived exception escaping the " \         "death test statement. Exception message: %s\n", \         ::testing::internal::FormatFileLocation(__FILE__, __LINE__).c_str(), \         gtest_exception.what()); \     fflush(stderr); \     death_test->Abort(::testing::internal::DeathTest::TEST_THREW_EXCEPTION); \   } catch (...) { \     death_test->Abort(::testing::internal::DeathTest::TEST_THREW_EXCEPTION); \   }
+else|#
+directive|else
+define|#
+directive|define
+name|GTEST_EXECUTE_DEATH_TEST_STATEMENT_
+parameter_list|(
+name|statement
+parameter_list|,
+name|death_test
+parameter_list|)
+define|\
+value|GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement)
+endif|#
+directive|endif
 comment|// This macro is for implementing ASSERT_DEATH*, EXPECT_DEATH*,
 comment|// ASSERT_EXIT*, and EXPECT_EXIT*.
 define|#
@@ -479,7 +516,7 @@ parameter_list|,
 name|fail
 parameter_list|)
 define|\
-value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (::testing::internal::AlwaysTrue()) { \     const ::testing::internal::RE& gtest_regex = (regex); \     ::testing::internal::DeathTest* gtest_dt; \     if (!::testing::internal::DeathTest::Create(#statement,&gtest_regex, \         __FILE__, __LINE__,&gtest_dt)) { \       goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__); \     } \     if (gtest_dt != NULL) { \       ::testing::internal::scoped_ptr< ::testing::internal::DeathTest> \           gtest_dt_ptr(gtest_dt); \       switch (gtest_dt->AssumeRole()) { \         case ::testing::internal::DeathTest::OVERSEE_TEST: \           if (!gtest_dt->Passed(predicate(gtest_dt->Wait()))) { \             goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__); \           } \           break; \         case ::testing::internal::DeathTest::EXECUTE_TEST: { \           ::testing::internal::DeathTest::ReturnSentinel \               gtest_sentinel(gtest_dt); \           GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement); \           gtest_dt->Abort(::testing::internal::DeathTest::TEST_DID_NOT_DIE); \           break; \         } \       } \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__): \       fail(::testing::internal::DeathTest::LastMessage())
+value|GTEST_AMBIGUOUS_ELSE_BLOCKER_ \   if (::testing::internal::AlwaysTrue()) { \     const ::testing::internal::RE& gtest_regex = (regex); \     ::testing::internal::DeathTest* gtest_dt; \     if (!::testing::internal::DeathTest::Create(#statement,&gtest_regex, \         __FILE__, __LINE__,&gtest_dt)) { \       goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__); \     } \     if (gtest_dt != NULL) { \       ::testing::internal::scoped_ptr< ::testing::internal::DeathTest> \           gtest_dt_ptr(gtest_dt); \       switch (gtest_dt->AssumeRole()) { \         case ::testing::internal::DeathTest::OVERSEE_TEST: \           if (!gtest_dt->Passed(predicate(gtest_dt->Wait()))) { \             goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__); \           } \           break; \         case ::testing::internal::DeathTest::EXECUTE_TEST: { \           ::testing::internal::DeathTest::ReturnSentinel \               gtest_sentinel(gtest_dt); \           GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, gtest_dt); \           gtest_dt->Abort(::testing::internal::DeathTest::TEST_DID_NOT_DIE); \           break; \         } \         default: \           break; \       } \     } \   } else \     GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__): \       fail(::testing::internal::DeathTest::LastMessage())
 comment|// The symbol "fail" here expands to something into which a message
 comment|// can be streamed.
 comment|// A class representing the parsed contents of the

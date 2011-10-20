@@ -144,7 +144,6 @@ argument_list|)
 expr_stmt|;
 comment|/// Intrinsic::getType(ID) - Return the function type for an intrinsic.
 comment|///
-specifier|const
 name|FunctionType
 modifier|*
 name|getType

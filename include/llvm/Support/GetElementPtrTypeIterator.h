@@ -100,7 +100,6 @@ name|std
 operator|::
 name|forward_iterator_tag
 operator|,
-specifier|const
 name|Type
 operator|*
 operator|,
@@ -116,7 +115,6 @@ name|std
 operator|::
 name|forward_iterator_tag
 operator|,
-specifier|const
 name|Type
 operator|*
 operator|,
@@ -127,7 +125,6 @@ expr_stmt|;
 name|ItTy
 name|OpIt
 expr_stmt|;
-specifier|const
 name|Type
 modifier|*
 name|CurTy
@@ -141,7 +138,6 @@ specifier|static
 name|generic_gep_type_iterator
 name|begin
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -235,7 +231,6 @@ name|x
 operator|)
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|operator
@@ -248,14 +243,12 @@ return|return
 name|CurTy
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getIndexedType
 argument_list|()
 specifier|const
 block|{
-specifier|const
 name|CompositeType
 operator|*
 name|CT
@@ -280,7 +273,6 @@ return|;
 block|}
 comment|// This is a non-standard operator->.  It allows you to call methods on the
 comment|// current type directly.
-specifier|const
 name|Type
 operator|*
 name|operator
@@ -323,7 +315,6 @@ block|{
 comment|// Preincrement
 if|if
 condition|(
-specifier|const
 name|CompositeType
 modifier|*
 name|CT
@@ -536,33 +527,38 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|ItTy
+name|T
 operator|>
 specifier|inline
 name|generic_gep_type_iterator
 operator|<
-name|ItTy
+specifier|const
+name|T
+operator|*
 operator|>
 name|gep_type_begin
 argument_list|(
-argument|const Type *Op0
+argument|Type *Op0
 argument_list|,
-argument|ItTy I
-argument_list|,
-argument|ItTy E
+argument|ArrayRef<T> A
 argument_list|)
 block|{
 return|return
 name|generic_gep_type_iterator
 operator|<
-name|ItTy
+specifier|const
+name|T
+operator|*
 operator|>
 operator|::
 name|begin
 argument_list|(
 name|Op0
 argument_list|,
-name|I
+name|A
+operator|.
+name|begin
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -572,31 +568,36 @@ begin_expr_stmt
 name|template
 operator|<
 name|typename
-name|ItTy
+name|T
 operator|>
 specifier|inline
 name|generic_gep_type_iterator
 operator|<
-name|ItTy
+specifier|const
+name|T
+operator|*
 operator|>
 name|gep_type_end
 argument_list|(
-argument|const Type *Op0
+argument|Type *Op0
 argument_list|,
-argument|ItTy I
-argument_list|,
-argument|ItTy E
+argument|ArrayRef<T> A
 argument_list|)
 block|{
 return|return
 name|generic_gep_type_iterator
 operator|<
-name|ItTy
+specifier|const
+name|T
+operator|*
 operator|>
 operator|::
 name|end
 argument_list|(
-name|E
+name|A
+operator|.
+name|end
+argument_list|()
 argument_list|)
 return|;
 block|}

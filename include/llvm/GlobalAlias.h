@@ -94,9 +94,6 @@ block|{
 name|class
 name|Module
 decl_stmt|;
-name|class
-name|Constant
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -183,7 +180,7 @@ comment|/// GlobalAlias ctor - If a parent module is specified, the alias is
 comment|/// automatically inserted into the end of the specified module's alias list.
 name|GlobalAlias
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
@@ -200,7 +197,7 @@ empty_stmt|;
 comment|/// Provide fast operand accessors
 name|DECLARE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
-name|Value
+name|Constant
 argument_list|)
 expr_stmt|;
 comment|/// removeFromParent - This method unlinks 'this' from the containing module,
@@ -236,16 +233,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|cast_or_null
-operator|<
-name|Constant
-operator|>
-operator|(
 name|getOperand
 argument_list|(
 literal|0
 argument_list|)
-operator|)
 return|;
 block|}
 name|Constant
@@ -254,16 +245,10 @@ name|getAliasee
 parameter_list|()
 block|{
 return|return
-name|cast_or_null
-operator|<
-name|Constant
-operator|>
-operator|(
 name|getOperand
 argument_list|(
 literal|0
 argument_list|)
-operator|)
 return|;
 block|}
 comment|/// getAliasedGlobal() - Aliasee can be either global or bitcast of
@@ -353,7 +338,7 @@ name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|GlobalAlias
 argument_list|,
-argument|Value
+argument|Constant
 argument_list|)
 block|}
 end_decl_stmt

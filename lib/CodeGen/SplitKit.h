@@ -66,25 +66,19 @@ end_define
 begin_include
 include|#
 directive|include
+file|"LiveRangeCalc.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/ArrayRef.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/BitVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/DenseMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/IndexedMap.h"
 end_include
 
 begin_include
@@ -97,12 +91,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/CodeGen/SlotIndexes.h"
 end_include
 
 begin_decl_stmt
@@ -145,25 +133,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|/// At some point we should just include MachineDominators.h:
-name|class
-name|MachineDominatorTree
-decl_stmt|;
-name|template
-operator|<
-name|class
-name|NodeT
-operator|>
-name|class
-name|DomTreeNodeBase
-expr_stmt|;
-typedef|typedef
-name|DomTreeNodeBase
-operator|<
-name|MachineBasicBlock
-operator|>
-name|MachineDomTreeNode
-expr_stmt|;
 comment|/// SplitAnalysis - Analyze a LiveInterval, looking for live range splitting
 comment|/// opportunities.
 name|class
@@ -230,17 +199,17 @@ modifier|*
 name|MBB
 decl_stmt|;
 name|SlotIndex
-name|FirstUse
+name|FirstInstr
 decl_stmt|;
-comment|///< First instr using current reg.
+comment|///< First instr accessing current reg.
 name|SlotIndex
-name|LastUse
+name|LastInstr
 decl_stmt|;
-comment|///< Last instr using current reg.
-name|bool
-name|LiveThrough
+comment|///< Last instr accessing current reg.
+name|SlotIndex
+name|FirstDef
 decl_stmt|;
-comment|///< Live in whole block (Templ 5. above).
+comment|///< First non-phi valno->def, or SlotIndex().
 name|bool
 name|LiveIn
 decl_stmt|;
@@ -261,9 +230,9 @@ name|SlotIndex
 operator|::
 name|isSameInstr
 argument_list|(
-name|FirstUse
+name|FirstInstr
 argument_list|,
-name|LastUse
+name|LastInstr
 argument_list|)
 return|;
 block|}
@@ -559,17 +528,27 @@ literal|16
 operator|>
 name|BlockPtrSet
 expr_stmt|;
-comment|/// getMultiUseBlocks - Add basic blocks to Blocks that may benefit from
-comment|/// having CurLI split to a new live interval. Return true if Blocks can be
-comment|/// passed to SplitEditor::splitSingleBlocks.
+comment|/// shouldSplitSingleBlock - Returns true if it would help to create a local
+comment|/// live range for the instructions in BI. There is normally no benefit to
+comment|/// creating a live range for a single instruction, but it does enable
+comment|/// register class inflation if the instruction has a restricted register
+comment|/// class.
+comment|///
+comment|/// @param BI           The block to be isolated.
+comment|/// @param SingleInstrs True when single instructions should be isolated.
 name|bool
-name|getMultiUseBlocks
-parameter_list|(
-name|BlockPtrSet
-modifier|&
-name|Blocks
-parameter_list|)
-function_decl|;
+name|shouldSplitSingleBlock
+argument_list|(
+specifier|const
+name|BlockInfo
+operator|&
+name|BI
+argument_list|,
+name|bool
+name|SingleInstrs
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 comment|/// SplitEditor - Edit machine code and LiveIntervals for live range
@@ -616,6 +595,38 @@ name|TargetRegisterInfo
 modifier|&
 name|TRI
 decl_stmt|;
+name|public
+label|:
+comment|/// ComplementSpillMode - Select how the complement live range should be
+comment|/// created.  SplitEditor automatically creates interval 0 to contain
+comment|/// anything that isn't added to another interval.  This complement interval
+comment|/// can get quite complicated, and it can sometimes be an advantage to allow
+comment|/// it to overlap the other intervals.  If it is going to spill anyway, no
+comment|/// registers are wasted by keeping a value in two places at the same time.
+enum|enum
+name|ComplementSpillMode
+block|{
+comment|/// SM_Partition(Default) - Try to create the complement interval so it
+comment|/// doesn't overlap any other intervals, and the original interval is
+comment|/// partitioned.  This may require a large number of back copies and extra
+comment|/// PHI-defs.  Only segments marked with overlapIntv will be overlapping.
+name|SM_Partition
+block|,
+comment|/// SM_Size - Overlap intervals to minimize the number of inserted COPY
+comment|/// instructions.  Copies to the complement interval are hoisted to their
+comment|/// common dominator, so only one COPY is required per value in the
+comment|/// complement interval.  This also means that no extra PHI-defs need to be
+comment|/// inserted in the complement interval.
+name|SM_Size
+block|,
+comment|/// SM_Speed - Overlap intervals to minimize the expected execution
+comment|/// frequency of the inserted copies.  This is very similar to SM_Size, but
+comment|/// the complement interval may get some extra PHI-defs.
+name|SM_Speed
+block|}
+enum|;
+name|private
+label|:
 comment|/// Edit - The current parent register and new intervals created.
 name|LiveRangeEdit
 modifier|*
@@ -626,6 +637,10 @@ comment|/// The index 0 is used for the complement, so the first interval starte
 comment|/// openIntv will be 1.
 name|unsigned
 name|OpenIdx
+decl_stmt|;
+comment|/// The current spill mode, selected by reset().
+name|ComplementSpillMode
+name|SpillMode
 decl_stmt|;
 typedef|typedef
 name|IntervalMap
@@ -650,6 +665,16 @@ name|RegAssignMap
 name|RegAssign
 decl_stmt|;
 typedef|typedef
+name|PointerIntPair
+operator|<
+name|VNInfo
+operator|*
+operator|,
+literal|1
+operator|>
+name|ValueForcePair
+expr_stmt|;
+typedef|typedef
 name|DenseMap
 operator|<
 name|std
@@ -661,8 +686,7 @@ operator|,
 name|unsigned
 operator|>
 operator|,
-name|VNInfo
-operator|*
+name|ValueForcePair
 operator|>
 name|ValueMap
 expr_stmt|;
@@ -670,111 +694,50 @@ comment|/// Values - keep track of the mapping from parent values to values in t
 comment|/// intervals. Given a pair (RegIdx, ParentVNI->id), Values contains:
 comment|///
 comment|/// 1. No entry - the value is not mapped to Edit.get(RegIdx).
-comment|/// 2. Null - the value is mapped to multiple values in Edit.get(RegIdx).
-comment|///    Each value is represented by a minimal live range at its def.
-comment|/// 3. A non-null VNInfo - the value is mapped to a single new value.
+comment|/// 2. (Null, false) - the value is mapped to multiple values in
+comment|///    Edit.get(RegIdx).  Each value is represented by a minimal live range at
+comment|///    its def.  The full live range can be inferred exactly from the range
+comment|///    of RegIdx in RegAssign.
+comment|/// 3. (Null, true).  As above, but the ranges in RegAssign are too large, and
+comment|///    the live range must be recomputed using LiveRangeCalc::extend().
+comment|/// 4. (VNI, false) The value is mapped to a single new value.
 comment|///    The new value has no live ranges anywhere.
 name|ValueMap
 name|Values
 decl_stmt|;
-typedef|typedef
-name|std
-operator|::
-name|pair
-operator|<
-name|VNInfo
-operator|*
-operator|,
-name|MachineDomTreeNode
-operator|*
-operator|>
-name|LiveOutPair
-expr_stmt|;
-typedef|typedef
-name|IndexedMap
-operator|<
-name|LiveOutPair
-operator|,
-name|MBB2NumberFunctor
-operator|>
-name|LiveOutMap
-expr_stmt|;
-comment|// LiveOutCache - Map each basic block where a new register is live out to the
-comment|// live-out value and its defining block.
-comment|// One of these conditions shall be true:
-comment|//
-comment|//  1. !LiveOutCache.count(MBB)
-comment|//  2. LiveOutCache[MBB].second.getNode() == MBB
-comment|//  3. forall P in preds(MBB): LiveOutCache[P] == LiveOutCache[MBB]
-comment|//
-comment|// This is only a cache, the values can be computed as:
-comment|//
-comment|//  VNI = Edit.get(RegIdx)->getVNInfoAt(LIS.getMBBEndIdx(MBB))
-comment|//  Node = mbt_[LIS.getMBBFromIndex(VNI->def)]
-comment|//
-comment|// The cache is also used as a visited set by extendRange(). It can be shared
-comment|// by all the new registers because at most one is live out of each block.
-name|LiveOutMap
-name|LiveOutCache
+comment|/// LRCalc - Cache for computing live ranges and SSA update.  Each instance
+comment|/// can only handle non-overlapping live ranges, so use a separate
+comment|/// LiveRangeCalc instance for the complement interval when in spill mode.
+name|LiveRangeCalc
+name|LRCalc
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|// LiveOutSeen - Indexed by MBB->getNumber(), a bit is set for each valid
-comment|// entry in LiveOutCache.
-name|BitVector
-name|LiveOutSeen
-decl_stmt|;
-comment|/// LiveInBlock - Info for updateSSA() about a block where a register is
-comment|/// live-in.
-comment|/// The updateSSA caller provides DomNode and Kill inside MBB, updateSSA()
-comment|/// adds the computed live-in value.
-struct|struct
-name|LiveInBlock
+comment|/// getLRCalc - Return the LRCalc to use for RegIdx.  In spill mode, the
+comment|/// complement interval can overlap the other intervals, so it gets its own
+comment|/// LRCalc instance.  When not in spill mode, all intervals can share one.
+name|LiveRangeCalc
+modifier|&
+name|getLRCalc
+parameter_list|(
+name|unsigned
+name|RegIdx
+parameter_list|)
 block|{
-comment|// Dominator tree node for the block.
-comment|// Cleared by updateSSA when the final value has been determined.
-name|MachineDomTreeNode
-modifier|*
-name|DomNode
-decl_stmt|;
-comment|// Live-in value filled in by updateSSA once it is known.
-name|VNInfo
-modifier|*
-name|Value
-decl_stmt|;
-comment|// Position in block where the live-in range ends, or SlotIndex() if the
-comment|// range passes through the block.
-name|SlotIndex
-name|Kill
-decl_stmt|;
-name|LiveInBlock
-argument_list|(
-name|MachineDomTreeNode
-operator|*
-name|node
-argument_list|)
-operator|:
-name|DomNode
-argument_list|(
-name|node
-argument_list|)
-operator|,
-name|Value
-argument_list|(
+return|return
+name|LRCalc
+index|[
+name|SpillMode
+operator|!=
+name|SM_Partition
+operator|&&
+name|RegIdx
+operator|!=
 literal|0
-argument_list|)
-block|{}
+index|]
+return|;
 block|}
-struct|;
-comment|/// LiveInBlocks - List of live-in blocks used by findReachingDefs() and
-comment|/// updateSSA(). This list is usually empty, it exists here to avoid frequent
-comment|/// reallocations.
-name|SmallVector
-operator|<
-name|LiveInBlock
-operator|,
-literal|16
-operator|>
-name|LiveInBlocks
-expr_stmt|;
 comment|/// defValue - define a value in RegIdx from ParentVNI at Idx.
 comment|/// Idx does not have to be ParentVNI->def, but it must be contained within
 comment|/// ParentVNI's live range in ParentLI. The new value is added to the value
@@ -796,10 +759,12 @@ name|SlotIndex
 name|Idx
 parameter_list|)
 function_decl|;
-comment|/// markComplexMapped - Mark ParentVNI as complex mapped in RegIdx regardless
-comment|/// of the number of defs.
+comment|/// forceRecompute - Force the live range of ParentVNI in RegIdx to be
+comment|/// recomputed by LiveRangeCalc::extend regardless of the number of defs.
+comment|/// This is used for values whose live range doesn't match RegAssign exactly.
+comment|/// They could have rematerialized, or back-copies may have been moved.
 name|void
-name|markComplexMapped
+name|forceRecompute
 parameter_list|(
 name|unsigned
 name|RegIdx
@@ -836,44 +801,39 @@ name|iterator
 name|I
 argument_list|)
 decl_stmt|;
-comment|/// extendRange - Extend the live range of Edit.get(RegIdx) so it reaches Idx.
-comment|/// Insert PHIDefs as needed to preserve SSA form.
+comment|/// removeBackCopies - Remove the copy instructions that defines the values
+comment|/// in the vector in the complement interval.
 name|void
-name|extendRange
-parameter_list|(
-name|unsigned
-name|RegIdx
-parameter_list|,
-name|SlotIndex
-name|Idx
-parameter_list|)
-function_decl|;
-comment|/// findReachingDefs - Starting from MBB, add blocks to LiveInBlocks until all
-comment|/// reaching defs for LI are found.
-comment|/// @param LI   Live interval whose value is needed.
-comment|/// @param MBB  Block where LI should be live-in.
-comment|/// @param Kill Kill point in MBB.
-comment|/// @return Unique value seen, or NULL.
+name|removeBackCopies
+argument_list|(
+name|SmallVectorImpl
+operator|<
 name|VNInfo
+operator|*
+operator|>
+operator|&
+name|Copies
+argument_list|)
+decl_stmt|;
+comment|/// getShallowDominator - Returns the least busy dominator of MBB that is
+comment|/// also dominated by DefMBB.  Busy is measured by loop depth.
+name|MachineBasicBlock
 modifier|*
-name|findReachingDefs
+name|findShallowDominator
 parameter_list|(
-name|LiveInterval
-modifier|*
-name|LI
-parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|MBB
 parameter_list|,
-name|SlotIndex
-name|Kill
+name|MachineBasicBlock
+modifier|*
+name|DefMBB
 parameter_list|)
 function_decl|;
-comment|/// updateSSA - Compute and insert PHIDefs such that all blocks in
-comment|// LiveInBlocks get a known live-in value. Add live ranges to the blocks.
+comment|/// hoistCopiesForSize - Hoist back-copies to the complement interval in a
+comment|/// way that minimizes code size. This implements the SM_Size spill mode.
 name|void
-name|updateSSA
+name|hoistCopiesForSize
 parameter_list|()
 function_decl|;
 comment|/// transferValues - Transfer values to the new ranges.
@@ -927,6 +887,10 @@ name|reset
 parameter_list|(
 name|LiveRangeEdit
 modifier|&
+parameter_list|,
+name|ComplementSpillMode
+init|=
+name|SM_Partition
 parameter_list|)
 function_decl|;
 comment|/// Create a new virtual register and live interval.
@@ -1091,19 +1055,6 @@ operator|::
 name|BlockInfo
 operator|&
 name|BI
-argument_list|)
-decl_stmt|;
-comment|/// splitSingleBlocks - Split CurLI into a separate live interval inside each
-comment|/// basic block in Blocks.
-name|void
-name|splitSingleBlocks
-argument_list|(
-specifier|const
-name|SplitAnalysis
-operator|::
-name|BlockPtrSet
-operator|&
-name|Blocks
 argument_list|)
 decl_stmt|;
 comment|/// splitLiveThroughBlock - Split CurLI in the given block such that it

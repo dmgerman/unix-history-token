@@ -938,10 +938,8 @@ name|public
 label|:
 name|explicit
 name|PMDataManager
-argument_list|(
-argument|int Depth
-argument_list|)
-block|:
+argument_list|()
+operator|:
 name|TPM
 argument_list|(
 name|NULL
@@ -949,7 +947,7 @@ argument_list|)
 operator|,
 name|Depth
 argument_list|(
-argument|Depth
+literal|0
 argument_list|)
 block|{
 name|initializeAnalysisInfo
@@ -1197,6 +1195,18 @@ block|{
 return|return
 name|Depth
 return|;
+block|}
+name|void
+name|setDepth
+parameter_list|(
+name|unsigned
+name|newDepth
+parameter_list|)
+block|{
+name|Depth
+operator|=
+name|newDepth
+expr_stmt|;
 block|}
 comment|// Print routines used by debug-pass
 name|void
@@ -1480,19 +1490,15 @@ name|ID
 decl_stmt|;
 name|explicit
 name|FPPassManager
-argument_list|(
-argument|int Depth
-argument_list|)
-block|:
+argument_list|()
+operator|:
 name|ModulePass
 argument_list|(
 name|ID
 argument_list|)
 operator|,
 name|PMDataManager
-argument_list|(
-argument|Depth
-argument_list|)
+argument_list|()
 block|{ }
 comment|/// run - Execute all of the passes scheduled for execution.  Keep track of
 comment|/// whether any of the passes modifies the module, and if so, return true.

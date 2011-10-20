@@ -81,26 +81,81 @@ comment|/// defined symbols. This is typically used to provide "plug-in" support
 comment|/// It also allows for symbols to be defined which don't live in any library,
 comment|/// but rather the main program itself, useful on Windows where the main
 comment|/// executable cannot be searched.
+comment|///
+comment|/// Note: there is currently no interface for temporarily loading a library,
+comment|/// or for unloading libraries when the LLVM library is unloaded.
 name|class
 name|DynamicLibrary
 block|{
-name|DynamicLibrary
-argument_list|()
-expr_stmt|;
-comment|// DO NOT IMPLEMENT
-name|public
-label|:
-comment|/// This function allows a library to be loaded without instantiating a
-comment|/// DynamicLibrary object. Consequently, it is marked as being permanent
-comment|/// and will only be unloaded when the program terminates.  This returns
-comment|/// false on success or returns true and fills in *ErrMsg on failure.
-comment|/// @brief Open a dynamic library permanently.
-comment|///
-comment|/// NOTE: This function is not thread safe.
-comment|///
+comment|// Placeholder whose address represents an invalid library.
+comment|// We use this instead of NULL or a pointer-int pair because the OS library
+comment|// might define 0 or 1 to be "special" handles, such as "search all".
 specifier|static
+name|char
+name|Invalid
+decl_stmt|;
+comment|// Opaque data used to interface with OS-specific dynamic library handling.
+name|void
+modifier|*
+name|Data
+decl_stmt|;
+name|explicit
+name|DynamicLibrary
+argument_list|(
+name|void
+operator|*
+name|data
+operator|=
+operator|&
+name|Invalid
+argument_list|)
+operator|:
+name|Data
+argument_list|(
+argument|data
+argument_list|)
+block|{}
+name|public
+operator|:
+comment|/// Returns true if the object refers to a valid library.
 name|bool
-name|LoadLibraryPermanently
+name|isValid
+argument_list|()
+block|{
+return|return
+name|Data
+operator|!=
+operator|&
+name|Invalid
+return|;
+block|}
+comment|/// Searches through the library for the symbol \p symbolName. If it is
+comment|/// found, the address of that symbol is returned. If not, NULL is returned.
+comment|/// Note that NULL will also be returned if the library failed to load.
+comment|/// Use isValid() to distinguish these cases if it is important.
+comment|/// Note that this will \e not search symbols explicitly registered by
+comment|/// AddSymbol().
+name|void
+modifier|*
+name|getAddressOfSymbol
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|symbolName
+parameter_list|)
+function_decl|;
+comment|/// This function permanently loads the dynamic library at the given path.
+comment|/// The library will only be unloaded when the program terminates.
+comment|/// This returns a valid DynamicLibrary instance on success and an invalid
+comment|/// instance on failure (see isValid()). \p *errMsg will only be modified
+comment|/// if the library fails to load.
+comment|///
+comment|/// It is safe to call this function multiple times for the same library.
+comment|/// @brief Open a dynamic library permanently.
+specifier|static
+name|DynamicLibrary
+name|getPermanentLibrary
 argument_list|(
 specifier|const
 name|char
@@ -111,21 +166,54 @@ name|std
 operator|::
 name|string
 operator|*
-name|ErrMsg
+name|errMsg
 operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// This function permanently loads the dynamic library at the given path.
+comment|/// Use this instead of getPermanentLibrary() when you won't need to get
+comment|/// symbols from the library itself.
+comment|///
+comment|/// It is safe to call this function multiple times for the same library.
+specifier|static
+name|bool
+name|LoadLibraryPermanently
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|Filename
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ErrMsg
+operator|=
+literal|0
+argument_list|)
+block|{
+return|return
+operator|!
+name|getPermanentLibrary
+argument_list|(
+name|Filename
+argument_list|,
+name|ErrMsg
+argument_list|)
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
 comment|/// This function will search through all previously loaded dynamic
-comment|/// libraries for the symbol \p symbolName. If it is found, the addressof
+comment|/// libraries for the symbol \p symbolName. If it is found, the address of
 comment|/// that symbol is returned. If not, null is returned. Note that this will
-comment|/// search permanently loaded libraries (LoadLibraryPermanently) as well
-comment|/// as ephemerally loaded libraries (constructors).
+comment|/// search permanently loaded libraries (getPermanentLibrary()) as well
+comment|/// as explicitly registered symbols (AddSymbol()).
 comment|/// @throws std::string on error.
 comment|/// @brief Search through libraries for address of a symbol
-comment|///
-comment|/// NOTE: This function is not thread safe.
-comment|///
 specifier|static
 name|void
 modifier|*
@@ -138,9 +226,6 @@ name|symbolName
 parameter_list|)
 function_decl|;
 comment|/// @brief Convenience function for C++ophiles.
-comment|///
-comment|/// NOTE: This function is not thread safe.
-comment|///
 specifier|static
 name|void
 modifier|*
@@ -168,16 +253,11 @@ comment|/// This functions permanently adds the symbol \p symbolName with the
 comment|/// value \p symbolValue.  These symbols are searched before any
 comment|/// libraries.
 comment|/// @brief Add searchable symbol/value pair.
-comment|///
-comment|/// NOTE: This function is not thread safe.
-comment|///
 specifier|static
 name|void
 name|AddSymbol
 parameter_list|(
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|symbolName
 parameter_list|,
 name|void
@@ -185,37 +265,6 @@ modifier|*
 name|symbolValue
 parameter_list|)
 function_decl|;
-comment|/// @brief Convenience function for C++ophiles.
-comment|///
-comment|/// NOTE: This function is not thread safe.
-comment|///
-specifier|static
-name|void
-name|AddSymbol
-argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|symbolName
-argument_list|,
-name|void
-operator|*
-name|symbolValue
-argument_list|)
-block|{
-name|AddSymbol
-argument_list|(
-name|symbolName
-operator|.
-name|c_str
-argument_list|()
-argument_list|,
-name|symbolValue
-argument_list|)
-expr_stmt|;
-block|}
 block|}
 empty_stmt|;
 block|}

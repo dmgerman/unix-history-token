@@ -188,9 +188,18 @@ comment|/// InThumbMode - True if compiling for Thumb, false for ARM.
 name|bool
 name|InThumbMode
 block|;
+comment|/// InNaClMode - True if targeting Native Client
+name|bool
+name|InNaClMode
+block|;
 comment|/// HasThumb2 - True if Thumb2 instructions are supported.
 name|bool
 name|HasThumb2
+block|;
+comment|/// IsMClass - True if the subtarget belongs to the 'M' profile of CPUs -
+comment|/// v6m, v7m for example.
+name|bool
+name|IsMClass
 block|;
 comment|/// NoARM - True if subtarget does not support ARM mode execution.
 name|bool
@@ -208,6 +217,12 @@ comment|/// UseMovt - True if MOVT / MOVW pairs are used for materialization of 
 comment|/// imms (including global addresses).
 name|bool
 name|UseMovt
+block|;
+comment|/// SupportsTailCall - True if the OS supports tail call. The dynamic linker
+comment|/// must be able to synthesize call stubs for interworking between ARM and
+comment|/// Thumb.
+name|bool
+name|SupportsTailCall
 block|;
 comment|/// HasFP16 - True if subtarget supports half-precision FP (We support VFP+HF
 comment|/// only so far)
@@ -628,6 +643,22 @@ argument_list|()
 return|;
 block|}
 name|bool
+name|isTargetNaCl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|NativeClient
+return|;
+block|}
+name|bool
 name|isTargetELF
 argument_list|()
 specifier|const
@@ -702,6 +733,25 @@ name|HasThumb2
 return|;
 block|}
 name|bool
+name|isMClass
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsMClass
+return|;
+block|}
+name|bool
+name|isARClass
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|IsMClass
+return|;
+block|}
+name|bool
 name|isR9Reserved
 argument_list|()
 specifier|const
@@ -720,6 +770,15 @@ name|UseMovt
 operator|&&
 name|hasV6T2Ops
 argument_list|()
+return|;
+block|}
+name|bool
+name|supportsTailCall
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsTailCall
 return|;
 block|}
 name|bool

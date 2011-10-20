@@ -42,7 +42,7 @@ end_include
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_MSC_VER
+name|_WIN32
 end_ifdef
 
 begin_include
@@ -462,6 +462,22 @@ literal|"wb"
 argument_list|)
 expr_stmt|;
 comment|/* gcda file, version 404*, stamp LLVM. */
+ifdef|#
+directive|ifdef
+name|__APPLE__
+name|fwrite
+argument_list|(
+literal|"adcg*204MVLL"
+argument_list|,
+literal|12
+argument_list|,
+literal|1
+argument_list|,
+name|output_file
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|fwrite
 argument_list|(
 literal|"adcg*404MVLL"
@@ -473,6 +489,8 @@ argument_list|,
 name|output_file
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|DEBUG_GCDAPROFILING

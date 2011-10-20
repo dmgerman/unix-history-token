@@ -204,6 +204,14 @@ comment|//                              ::wstring, which is different to std::ws
 end_comment
 
 begin_comment
+comment|//   GTEST_HAS_POSIX_RE       - Define it to 1/0 to indicate that POSIX regular
+end_comment
+
+begin_comment
+comment|//                              expressions are/aren't available.
+end_comment
+
+begin_comment
 comment|//   GTEST_HAS_PTHREAD        - Define it to 1/0 to indicate that<pthread.h>
 end_comment
 
@@ -249,6 +257,22 @@ end_comment
 
 begin_comment
 comment|//                              Exception Handling".
+end_comment
+
+begin_comment
+comment|//   GTEST_HAS_STREAM_REDIRECTION
+end_comment
+
+begin_comment
+comment|//                            - Define it to 1/0 to indicate whether the
+end_comment
+
+begin_comment
+comment|//                              platform supports I/O stream redirection using
+end_comment
+
+begin_comment
+comment|//                              dup() and dup2().
 end_comment
 
 begin_comment
@@ -324,11 +348,23 @@ comment|//   GTEST_OS_HAIKU    - Haiku
 end_comment
 
 begin_comment
+comment|//   GTEST_OS_HPUX     - HP-UX
+end_comment
+
+begin_comment
 comment|//   GTEST_OS_LINUX    - Linux
 end_comment
 
 begin_comment
+comment|//     GTEST_OS_LINUX_ANDROID - Google Android
+end_comment
+
+begin_comment
 comment|//   GTEST_OS_MAC      - Mac OS X
+end_comment
+
+begin_comment
+comment|//   GTEST_OS_NACL     - Google Native Client (NaCl)
 end_comment
 
 begin_comment
@@ -432,7 +468,15 @@ comment|//   GTEST_HAS_TYPED_TEST_P - type-parameterized tests
 end_comment
 
 begin_comment
-comment|//   GTEST_USES_POSIX_RE    - enhanced POSIX regex is used.
+comment|//   GTEST_USES_POSIX_RE    - enhanced POSIX regex is used. Do not confuse with
+end_comment
+
+begin_comment
+comment|//                            GTEST_HAS_POSIX_RE (see above) which users can
+end_comment
+
+begin_comment
+comment|//                            define themselves.
 end_comment
 
 begin_comment
@@ -520,6 +564,14 @@ comment|//   is_pointer     - as in TR1; needed on Symbian and IBM XL C/C++ only
 end_comment
 
 begin_comment
+comment|//   IteratorTraits - partial implementation of std::iterator_traits, which
+end_comment
+
+begin_comment
+comment|//                    is not available in libCstd when compiled with Sun C++.
+end_comment
+
+begin_comment
 comment|//
 end_comment
 
@@ -544,11 +596,15 @@ comment|//   RE             - a simple regular expression class using the POSIX
 end_comment
 
 begin_comment
-comment|//                    Extended Regular Expression syntax.  Not available on
+comment|//                    Extended Regular Expression syntax on UNIX-like
 end_comment
 
 begin_comment
-comment|//                    Windows.
+comment|//                    platforms, or a reduced regular exception syntax on
+end_comment
+
+begin_comment
+comment|//                    other platforms, including Windows.
 end_comment
 
 begin_comment
@@ -678,11 +734,21 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<ctype.h>
+end_include
+
+begin_comment
+comment|// for isspace, etc
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
 begin_comment
-comment|// For ptrdiff_t
+comment|// for ptrdiff_t
 end_comment
 
 begin_include
@@ -708,6 +774,12 @@ ifndef|#
 directive|ifndef
 name|_WIN32_WCE
 end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<sys/types.h>
+end_include
 
 begin_include
 include|#
@@ -955,6 +1027,28 @@ name|GTEST_OS_LINUX
 value|1
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ANDROID
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|GTEST_OS_LINUX_ANDROID
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// ANDROID
+end_comment
+
 begin_elif
 elif|#
 directive|elif
@@ -1011,6 +1105,36 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|__hpux
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_OS_HPUX
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+name|__native_client__
+end_elif
+
+begin_define
+define|#
+directive|define
+name|GTEST_OS_NACL
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__HAIKU__
 argument_list|)
 end_elif
@@ -1031,23 +1155,127 @@ begin_comment
 comment|// __CYGWIN__
 end_comment
 
+begin_comment
+comment|// Brings in definitions for functions used in the testing::internal::posix
+end_comment
+
+begin_comment
+comment|// namespace (read, write, close, chdir, isatty, stat). We do not currently
+end_comment
+
+begin_comment
+comment|// use them on Windows Mobile.
+end_comment
+
 begin_if
 if|#
 directive|if
-name|GTEST_OS_CYGWIN
-operator|||
-name|GTEST_OS_HAIKU
-operator|||
-name|GTEST_OS_LINUX
-operator|||
-name|GTEST_OS_MAC
-operator|||
-expr|\
-name|GTEST_OS_SYMBIAN
-operator|||
-name|GTEST_OS_SOLARIS
-operator|||
-name|GTEST_OS_AIX
+operator|!
+name|GTEST_OS_WINDOWS
+end_if
+
+begin_comment
+comment|// This assumes that non-Windows OSes provide unistd.h. For OSes where this
+end_comment
+
+begin_comment
+comment|// is not the case, we need to include headers that provide the functions
+end_comment
+
+begin_comment
+comment|// mentioned above.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
+end_include
+
+begin_if
+if|#
+directive|if
+operator|!
+name|GTEST_OS_NACL
+end_if
+
+begin_comment
+comment|// TODO(vladl@google.com): Remove this condition when Native Client SDK adds
+end_comment
+
+begin_comment
+comment|// strings.h (tracked in
+end_comment
+
+begin_comment
+comment|// http://code.google.com/p/nativeclient/issues/detail?id=1175).
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_comment
+comment|// Native Client doesn't provide strings.h.
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|GTEST_OS_WINDOWS_MOBILE
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<direct.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<io.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// Defines this to true iff Google Test can use POSIX regular expressions.
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GTEST_HAS_POSIX_RE
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_POSIX_RE
+value|(!GTEST_OS_WINDOWS)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_POSIX_RE
 end_if
 
 begin_comment
@@ -1076,46 +1304,6 @@ begin_comment
 comment|// NOLINT
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<strings.h>
-end_include
-
-begin_comment
-comment|// NOLINT
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<sys/types.h>
-end_include
-
-begin_comment
-comment|// NOLINT
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<time.h>
-end_include
-
-begin_comment
-comment|// NOLINT
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<unistd.h>
-end_include
-
-begin_comment
-comment|// NOLINT
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1128,38 +1316,6 @@ elif|#
 directive|elif
 name|GTEST_OS_WINDOWS
 end_elif
-
-begin_if
-if|#
-directive|if
-operator|!
-name|GTEST_OS_WINDOWS_MOBILE
-end_if
-
-begin_include
-include|#
-directive|include
-file|<direct.h>
-end_include
-
-begin_comment
-comment|// NOLINT
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<io.h>
-end_include
-
-begin_comment
-comment|// NOLINT
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|//<regex.h> is not available on Windows.  Use our own simple regex
@@ -1202,11 +1358,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// GTEST_OS_CYGWIN || GTEST_OS_LINUX || GTEST_OS_MAC ||
-end_comment
-
-begin_comment
-comment|// GTEST_OS_SYMBIAN || GTEST_OS_SOLARIS || GTEST_OS_AIX
+comment|// GTEST_HAS_POSIX_RE
 end_comment
 
 begin_ifndef
@@ -1341,6 +1493,30 @@ end_elif
 
 begin_comment
 comment|// xlC defines __EXCEPTIONS to 1 iff exceptions are enabled.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_EXCEPTIONS
+value|1
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__HP_aCC
+argument_list|)
+end_elif
+
+begin_comment
+comment|// Exception handling is in effect by default in HP aCC compiler. It has to
+end_comment
+
+begin_comment
+comment|// be turned of by +noeh compiler option if desired.
 end_comment
 
 begin_define
@@ -1492,15 +1668,15 @@ comment|//   is available.
 end_comment
 
 begin_comment
-comment|// Cygwin 1.5 and below doesn't support ::std::wstring.
+comment|// Cygwin 1.7 and below doesn't support ::std::wstring.
 end_comment
 
 begin_comment
-comment|// Cygwin 1.7 might add wstring support; this should be updated when clear.
+comment|// Solaris' libc++ doesn't support it either.  Android has
 end_comment
 
 begin_comment
-comment|// Solaris' libc++ doesn't support it either.
+comment|// no support for it at least as recent as Froyo (2.2).
 end_comment
 
 begin_comment
@@ -1511,7 +1687,8 @@ begin_define
 define|#
 directive|define
 name|GTEST_HAS_STD_WSTRING
-value|(!(GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || GTEST_OS_HAIKU || defined(_MINIX)))
+define|\
+value|(!(GTEST_OS_LINUX_ANDROID || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || GTEST_OS_HAIKU || defined(_MINIX)))
 end_define
 
 begin_endif
@@ -1811,7 +1988,7 @@ begin_define
 define|#
 directive|define
 name|GTEST_HAS_PTHREAD
-value|(GTEST_OS_LINUX || GTEST_OS_MAC)
+value|(GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_HPUX)
 end_define
 
 begin_endif
@@ -1822,6 +1999,49 @@ end_endif
 begin_comment
 comment|// GTEST_HAS_PTHREAD
 end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_HAS_PTHREAD
+end_if
+
+begin_comment
+comment|// gtest-port.h guarantees to #include<pthread.h> when GTEST_HAS_PTHREAD is
+end_comment
+
+begin_comment
+comment|// true.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<pthread.h>
+end_include
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_comment
+comment|// For timespec and nanosleep, used below.
+end_comment
+
+begin_include
+include|#
+directive|include
+file|<time.h>
+end_include
+
+begin_comment
+comment|// NOLINT
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|// Determines whether Google Test can use tr1/tuple.  You can define
@@ -2003,7 +2223,7 @@ end_if
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-tuple.h>
+file|"gtest/internal/gtest-tuple.h"
 end_include
 
 begin_elif
@@ -2302,20 +2522,44 @@ begin_comment
 comment|// output correctness and to implement death tests.
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|GTEST_HAS_STREAM_REDIRECTION
+end_ifndef
+
+begin_comment
+comment|// By default, we assume that stream redirection is supported on all
+end_comment
+
+begin_comment
+comment|// platforms except known mobile ones.
+end_comment
+
 begin_if
 if|#
 directive|if
-operator|!
 name|GTEST_OS_WINDOWS_MOBILE
-operator|&&
-operator|!
+operator|||
 name|GTEST_OS_SYMBIAN
 end_if
 
 begin_define
 define|#
 directive|define
-name|GTEST_HAS_STREAM_REDIRECTION_
+name|GTEST_HAS_STREAM_REDIRECTION
+value|0
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_HAS_STREAM_REDIRECTION
 value|1
 end_define
 
@@ -2326,6 +2570,15 @@ end_endif
 
 begin_comment
 comment|// !GTEST_OS_WINDOWS_MOBILE&& !GTEST_OS_SYMBIAN
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_STREAM_REDIRECTION
 end_comment
 
 begin_comment
@@ -2369,6 +2622,8 @@ expr|\
 name|GTEST_OS_WINDOWS_MINGW
 operator|||
 name|GTEST_OS_AIX
+operator|||
+name|GTEST_OS_HPUX
 operator|)
 end_if
 
@@ -2422,7 +2677,7 @@ comment|// Typed tests need<typeinfo> and variadic macros, which GCC, VC++ 8.0,
 end_comment
 
 begin_comment
-comment|// Sun Pro CC, and IBM Visual Age support.
+comment|// Sun Pro CC, IBM Visual Age, and HP aCC support.
 end_comment
 
 begin_if
@@ -2448,6 +2703,11 @@ expr|\
 name|defined
 argument_list|(
 name|__IBMCPP__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__HP_aCC
 argument_list|)
 end_if
 
@@ -2525,6 +2785,28 @@ value|(GTEST_OS_WINDOWS || GTEST_OS_CYGWIN || GTEST_OS_SYMBIAN || GTEST_OS_AIX)
 end_define
 
 begin_comment
+comment|// Determines whether test results can be streamed to a socket.
+end_comment
+
+begin_if
+if|#
+directive|if
+name|GTEST_OS_LINUX
+end_if
+
+begin_define
+define|#
+directive|define
+name|GTEST_CAN_STREAM_RESULTS_
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|// Defines some utility macros.
 end_comment
 
@@ -2581,7 +2863,7 @@ begin_define
 define|#
 directive|define
 name|GTEST_AMBIGUOUS_ELSE_BLOCKER_
-value|switch (0) case 0:
+value|switch (0) case 0: default:
 end_define
 
 begin_comment
@@ -2921,6 +3203,39 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_comment
+comment|// Ask the compiler to never inline a given function.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GTEST_NO_INLINE_
+value|__attribute__((noinline))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|GTEST_NO_INLINE_
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|namespace
 name|testing
@@ -2934,13 +3249,147 @@ block|{
 name|class
 name|String
 decl_stmt|;
+comment|// The GTEST_COMPILE_ASSERT_ macro can be used to verify that a compile time
+comment|// expression is true. For example, you could use it to verify the
+comment|// size of a static array:
+comment|//
+comment|//   GTEST_COMPILE_ASSERT_(ARRAYSIZE(content_type_names) == CONTENT_NUM_TYPES,
+comment|//                         content_type_names_incorrect_size);
+comment|//
+comment|// or to make sure a struct is smaller than a certain size:
+comment|//
+comment|//   GTEST_COMPILE_ASSERT_(sizeof(foo)< 128, foo_too_large);
+comment|//
+comment|// The second argument to the macro is the name of the variable. If
+comment|// the expression is false, most compilers will issue a warning/error
+comment|// containing the name of the variable.
+name|template
+operator|<
+name|bool
+operator|>
+expr|struct
+name|CompileAssert
+block|{ }
+expr_stmt|;
+define|#
+directive|define
+name|GTEST_COMPILE_ASSERT_
+parameter_list|(
+name|expr
+parameter_list|,
+name|msg
+parameter_list|)
+define|\
+value|typedef ::testing::internal::CompileAssert<(bool(expr))> \       msg[bool(expr) ? 1 : -1]
+comment|// Implementation details of GTEST_COMPILE_ASSERT_:
+comment|//
+comment|// - GTEST_COMPILE_ASSERT_ works by defining an array type that has -1
+comment|//   elements (and thus is invalid) when the expression is false.
+comment|//
+comment|// - The simpler definition
+comment|//
+comment|//    #define GTEST_COMPILE_ASSERT_(expr, msg) typedef char msg[(expr) ? 1 : -1]
+comment|//
+comment|//   does not work, as gcc supports variable-length arrays whose sizes
+comment|//   are determined at run-time (this is gcc's extension and not part
+comment|//   of the C++ standard).  As a result, gcc fails to reject the
+comment|//   following code with the simple definition:
+comment|//
+comment|//     int foo;
+comment|//     GTEST_COMPILE_ASSERT_(foo, msg); // not supposed to compile as foo is
+comment|//                                      // not a compile-time constant.
+comment|//
+comment|// - By using the type CompileAssert<(bool(expr))>, we ensures that
+comment|//   expr is a compile-time constant.  (Template arguments must be
+comment|//   determined at compile-time.)
+comment|//
+comment|// - The outter parentheses in CompileAssert<(bool(expr))> are necessary
+comment|//   to work around a bug in gcc 3.4.4 and 4.0.1.  If we had written
+comment|//
+comment|//     CompileAssert<bool(expr)>
+comment|//
+comment|//   instead, these compilers will refuse to compile
+comment|//
+comment|//     GTEST_COMPILE_ASSERT_(5> 0, some_message);
+comment|//
+comment|//   (They seem to think the ">" in "5> 0" marks the end of the
+comment|//   template argument list.)
+comment|//
+comment|// - The array size is (bool(expr) ? 1 : -1), instead of simply
+comment|//
+comment|//     ((expr) ? 1 : -1).
+comment|//
+comment|//   This is to avoid running into a bug in MS VC 7.1, which
+comment|//   causes ((0.0) ? 1 : -1) to incorrectly evaluate to 1.
+comment|// StaticAssertTypeEqHelper is used by StaticAssertTypeEq defined in gtest.h.
+comment|//
+comment|// This template is declared, but intentionally undefined.
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|>
+expr|struct
+name|StaticAssertTypeEqHelper
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|StaticAssertTypeEqHelper
+operator|<
+name|T
+operator|,
+name|T
+operator|>
+block|{}
+expr_stmt|;
+if|#
+directive|if
+name|GTEST_HAS_GLOBAL_STRING
+typedef|typedef
+operator|::
+name|string
+name|string
+expr_stmt|;
+else|#
+directive|else
 typedef|typedef
 operator|::
 name|std
 operator|::
-name|stringstream
-name|StrStream
+name|string
+name|string
 expr_stmt|;
+endif|#
+directive|endif
+comment|// GTEST_HAS_GLOBAL_STRING
+if|#
+directive|if
+name|GTEST_HAS_GLOBAL_WSTRING
+typedef|typedef
+operator|::
+name|wstring
+name|wstring
+expr_stmt|;
+elif|#
+directive|elif
+name|GTEST_HAS_STD_WSTRING
+typedef|typedef
+operator|::
+name|std
+operator|::
+name|wstring
+name|wstring
+expr_stmt|;
+endif|#
+directive|endif
+comment|// GTEST_HAS_GLOBAL_WSTRING
 comment|// A helper for suppressing warnings on constant condition.  It just
 comment|// returns 'condition'.
 name|GTEST_API_
@@ -3421,6 +3870,56 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|// Formats a source file path and a line number as they would appear
+end_comment
+
+begin_comment
+comment|// in an error message from the compiler used to compile this code.
+end_comment
+
+begin_expr_stmt
+name|GTEST_API_
+operator|::
+name|std
+operator|::
+name|string
+name|FormatFileLocation
+argument_list|(
+argument|const char* file
+argument_list|,
+argument|int line
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// Formats a file location for compiler-independent XML output.
+end_comment
+
+begin_comment
+comment|// Although this function is not platform dependent, we put it next to
+end_comment
+
+begin_comment
+comment|// FormatFileLocation in order to contrast the two functions.
+end_comment
+
+begin_expr_stmt
+name|GTEST_API_
+operator|::
+name|std
+operator|::
+name|string
+name|FormatCompilerIndependentFileLocation
+argument_list|(
+argument|const char* file
+argument_list|,
+argument|int line
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|// Defines logging utilities:
 end_comment
 
@@ -3661,6 +4160,270 @@ comment|//
 end_comment
 
 begin_comment
+comment|// Use ImplicitCast_ as a safe version of static_cast for upcasting in
+end_comment
+
+begin_comment
+comment|// the type hierarchy (e.g. casting a Foo* to a SuperclassOfFoo* or a
+end_comment
+
+begin_comment
+comment|// const Foo*).  When you use ImplicitCast_, the compiler checks that
+end_comment
+
+begin_comment
+comment|// the cast is safe.  Such explicit ImplicitCast_s are necessary in
+end_comment
+
+begin_comment
+comment|// surprisingly many situations where C++ demands an exact type match
+end_comment
+
+begin_comment
+comment|// instead of an argument type convertable to a target type.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// The syntax for using ImplicitCast_ is the same as for static_cast:
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|//   ImplicitCast_<ToType>(expr)
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// ImplicitCast_ would have been part of the C++ standard library,
+end_comment
+
+begin_comment
+comment|// but the proposal was submitted too late.  It will probably make
+end_comment
+
+begin_comment
+comment|// its way into the language in the future.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This relatively ugly name is intentional. It prevents clashes with
+end_comment
+
+begin_comment
+comment|// similar functions users may have (e.g., implicit_cast). The internal
+end_comment
+
+begin_comment
+comment|// namespace alone is not enough because the function can be found by ADL.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|To
+operator|>
+specifier|inline
+name|To
+name|ImplicitCast_
+argument_list|(
+argument|To x
+argument_list|)
+block|{
+return|return
+name|x
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// When you upcast (that is, cast a pointer from type Foo to type
+end_comment
+
+begin_comment
+comment|// SuperclassOfFoo), it's fine to use ImplicitCast_<>, since upcasts
+end_comment
+
+begin_comment
+comment|// always succeed.  When you downcast (that is, cast a pointer from
+end_comment
+
+begin_comment
+comment|// type Foo to type SubclassOfFoo), static_cast<> isn't safe, because
+end_comment
+
+begin_comment
+comment|// how do you know the pointer is really of type SubclassOfFoo?  It
+end_comment
+
+begin_comment
+comment|// could be a bare Foo, or of type DifferentSubclassOfFoo.  Thus,
+end_comment
+
+begin_comment
+comment|// when you downcast, you should use this macro.  In debug mode, we
+end_comment
+
+begin_comment
+comment|// use dynamic_cast<> to double-check the downcast is legal (we die
+end_comment
+
+begin_comment
+comment|// if it's not).  In normal mode, we do the efficient static_cast<>
+end_comment
+
+begin_comment
+comment|// instead.  Thus, it's important to test in debug mode to make sure
+end_comment
+
+begin_comment
+comment|// the cast is legal!
+end_comment
+
+begin_comment
+comment|//    This is the only place in the code we should use dynamic_cast<>.
+end_comment
+
+begin_comment
+comment|// In particular, you SHOULDN'T be using dynamic_cast<> in order to
+end_comment
+
+begin_comment
+comment|// do RTTI (eg code like this:
+end_comment
+
+begin_comment
+comment|//    if (dynamic_cast<Subclass1>(foo)) HandleASubclass1Object(foo);
+end_comment
+
+begin_comment
+comment|//    if (dynamic_cast<Subclass2>(foo)) HandleASubclass2Object(foo);
+end_comment
+
+begin_comment
+comment|// You should design the code some other way not to need this.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// This relatively ugly name is intentional. It prevents clashes with
+end_comment
+
+begin_comment
+comment|// similar functions users may have (e.g., down_cast). The internal
+end_comment
+
+begin_comment
+comment|// namespace alone is not enough because the function can be found by ADL.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|To
+operator|,
+name|typename
+name|From
+operator|>
+comment|// use like this: DownCast_<T*>(foo);
+specifier|inline
+name|To
+name|DownCast_
+argument_list|(
+argument|From* f
+argument_list|)
+block|{
+comment|// so we only accept pointers
+comment|// Ensures that To is a sub-type of From *.  This test is here only
+comment|// for compile-time type checking, and has no overhead in an
+comment|// optimized build at run-time, as it will be optimized away
+comment|// completely.
+if|if
+condition|(
+name|false
+condition|)
+block|{
+specifier|const
+name|To
+name|to
+init|=
+name|NULL
+decl_stmt|;
+operator|::
+name|testing
+operator|::
+name|internal
+operator|::
+name|ImplicitCast_
+operator|<
+name|From
+operator|*
+operator|>
+operator|(
+name|to
+operator|)
+expr_stmt|;
+block|}
+if|#
+directive|if
+name|GTEST_HAS_RTTI
+comment|// RTTI: debug mode only!
+name|GTEST_CHECK_
+argument_list|(
+name|f
+operator|==
+name|NULL
+operator|||
+name|dynamic_cast
+operator|<
+name|To
+operator|>
+operator|(
+name|f
+operator|)
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_return
+return|return
+name|static_cast
+operator|<
+name|To
+operator|>
+operator|(
+name|f
+operator|)
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|// Downcasts the pointer of type Base to Derived.
 end_comment
 
@@ -3681,7 +4444,7 @@ comment|// check to enforce this.
 end_comment
 
 begin_expr_stmt
-name|template
+unit|template
 operator|<
 name|class
 name|Derived
@@ -3760,7 +4523,7 @@ begin_if
 unit|}
 if|#
 directive|if
-name|GTEST_HAS_STREAM_REDIRECTION_
+name|GTEST_HAS_STREAM_REDIRECTION
 end_if
 
 begin_comment
@@ -3825,7 +4588,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// GTEST_HAS_STREAM_REDIRECTION_
+comment|// GTEST_HAS_STREAM_REDIRECTION
 end_comment
 
 begin_if
@@ -4372,20 +5135,6 @@ end_expr_stmt
 
 begin_comment
 unit|};
-comment|// gtest-port.h guarantees to #include<pthread.h> when GTEST_HAS_PTHREAD is
-end_comment
-
-begin_comment
-comment|// true.
-end_comment
-
-begin_include
-include|#
-directive|include
-file|<pthread.h>
-end_include
-
-begin_comment
 comment|// MutexBase and Mutex implement mutex on pthreads-based platforms. They
 end_comment
 
@@ -5680,6 +6429,78 @@ block|{}
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|Iterator
+operator|>
+expr|struct
+name|IteratorTraits
+block|{
+typedef|typedef
+name|typename
+name|Iterator
+operator|::
+name|value_type
+name|value_type
+expr_stmt|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|IteratorTraits
+operator|<
+name|T
+operator|*
+operator|>
+block|{
+typedef|typedef
+name|T
+name|value_type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|IteratorTraits
+operator|<
+specifier|const
+name|T
+operator|*
+operator|>
+block|{
+typedef|typedef
+name|T
+name|value_type
+typedef|;
+block|}
+end_expr_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_if
 if|#
 directive|if
@@ -5750,6 +6571,214 @@ end_endif
 begin_comment
 comment|// GTEST_OS_WINDOWS
 end_comment
+
+begin_comment
+comment|// Utilities for char.
+end_comment
+
+begin_comment
+comment|// isspace(int ch) and friends accept an unsigned char or EOF.  char
+end_comment
+
+begin_comment
+comment|// may be signed, depending on the compiler (or compiler flags).
+end_comment
+
+begin_comment
+comment|// Therefore we need to cast a char to unsigned char before calling
+end_comment
+
+begin_comment
+comment|// isspace(), etc.
+end_comment
+
+begin_function
+specifier|inline
+name|bool
+name|IsAlpha
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|isalpha
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|bool
+name|IsAlNum
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|isalnum
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|bool
+name|IsDigit
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|isdigit
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|bool
+name|IsLower
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|islower
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|bool
+name|IsSpace
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|isspace
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|bool
+name|IsUpper
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|isupper
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|bool
+name|IsXDigit
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|isxdigit
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|char
+name|ToLower
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|char
+operator|>
+operator|(
+name|tolower
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|inline
+name|char
+name|ToUpper
+parameter_list|(
+name|char
+name|ch
+parameter_list|)
+block|{
+return|return
+name|static_cast
+operator|<
+name|char
+operator|>
+operator|(
+name|toupper
+argument_list|(
+argument|static_cast<unsigned char>(ch)
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|// The testing::internal::posix namespace holds wrappers for common

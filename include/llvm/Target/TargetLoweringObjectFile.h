@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCObjectFileInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
@@ -114,181 +120,34 @@ name|TargetMachine
 decl_stmt|;
 name|class
 name|TargetLoweringObjectFile
+range|:
+name|public
+name|MCObjectFileInfo
 block|{
 name|MCContext
-modifier|*
+operator|*
 name|Ctx
-decl_stmt|;
+block|;
 name|TargetLoweringObjectFile
 argument_list|(
 specifier|const
 name|TargetLoweringObjectFile
 operator|&
 argument_list|)
-expr_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
 name|void
 name|operator
-init|=
+operator|=
 operator|(
 specifier|const
 name|TargetLoweringObjectFile
 operator|&
 operator|)
-decl_stmt|;
+block|;
 comment|// DO NOT IMPLEMENT
-name|protected
-label|:
-name|TargetLoweringObjectFile
-argument_list|()
-expr_stmt|;
-comment|/// TextSection - Section directive for standard text.
-comment|///
-specifier|const
-name|MCSection
-modifier|*
-name|TextSection
-decl_stmt|;
-comment|/// DataSection - Section directive for standard data.
-comment|///
-specifier|const
-name|MCSection
-modifier|*
-name|DataSection
-decl_stmt|;
-comment|/// BSSSection - Section that is default initialized to zero.
-specifier|const
-name|MCSection
-modifier|*
-name|BSSSection
-decl_stmt|;
-comment|/// ReadOnlySection - Section that is readonly and can contain arbitrary
-comment|/// initialized data.  Targets are not required to have a readonly section.
-comment|/// If they don't, various bits of code will fall back to using the data
-comment|/// section for constants.
-specifier|const
-name|MCSection
-modifier|*
-name|ReadOnlySection
-decl_stmt|;
-comment|/// StaticCtorSection - This section contains the static constructor pointer
-comment|/// list.
-specifier|const
-name|MCSection
-modifier|*
-name|StaticCtorSection
-decl_stmt|;
-comment|/// StaticDtorSection - This section contains the static destructor pointer
-comment|/// list.
-specifier|const
-name|MCSection
-modifier|*
-name|StaticDtorSection
-decl_stmt|;
-comment|/// LSDASection - If exception handling is supported by the target, this is
-comment|/// the section the Language Specific Data Area information is emitted to.
-specifier|const
-name|MCSection
-modifier|*
-name|LSDASection
-decl_stmt|;
-comment|/// CompactUnwindSection - If exception handling is supported by the target
-comment|/// and the target can support a compact representation of the CIE and FDE,
-comment|/// this is the section to emit them into.
-specifier|const
-name|MCSection
-modifier|*
-name|CompactUnwindSection
-decl_stmt|;
-comment|// Dwarf sections for debug info.  If a target supports debug info, these must
-comment|// be set.
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfAbbrevSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfInfoSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfLineSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfFrameSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfPubNamesSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfPubTypesSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfDebugInlineSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfStrSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfLocSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfARangesSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfRangesSection
-decl_stmt|;
-specifier|const
-name|MCSection
-modifier|*
-name|DwarfMacroInfoSection
-decl_stmt|;
-comment|// Extra TLS Variable Data section.  If the target needs to put additional
-comment|// information for a TLS variable, it'll go here.
-specifier|const
-name|MCSection
-modifier|*
-name|TLSExtraDataSection
-decl_stmt|;
-comment|/// CommDirectiveSupportsAlignment - True if .comm supports alignment.  This
-comment|/// is a hack for as long as we support 10.4 Tiger, whose assembler doesn't
-comment|/// support alignment on comm.
-name|bool
-name|CommDirectiveSupportsAlignment
-decl_stmt|;
-comment|/// SupportsWeakEmptyEHFrame - True if target object file supports a
-comment|/// weak_definition of constant 0 for an omitted EH frame.
-name|bool
-name|SupportsWeakOmittedEHFrame
-decl_stmt|;
-comment|/// IsFunctionEHFrameSymbolPrivate - This flag is set to true if the
-comment|/// "EH_frame" symbol for EH information should be an assembler temporary (aka
-comment|/// private linkage, aka an L or .L label) or false if it should be a normal
-comment|/// non-.globl label.  This defaults to true.
-name|bool
-name|IsFunctionEHFrameSymbolPrivate
-decl_stmt|;
 name|public
-label|:
+operator|:
 name|MCContext
 operator|&
 name|getContext
@@ -300,337 +159,51 @@ operator|*
 name|Ctx
 return|;
 block|}
+name|TargetLoweringObjectFile
+argument_list|()
+operator|:
+name|MCObjectFileInfo
+argument_list|()
+block|,
+name|Ctx
+argument_list|(
+literal|0
+argument_list|)
+block|{}
 name|virtual
 operator|~
 name|TargetLoweringObjectFile
 argument_list|()
-expr_stmt|;
+block|;
 comment|/// Initialize - this method must be called before any actual lowering is
 comment|/// done.  This specifies the current context for codegen, and gives the
 comment|/// lowering implementations a chance to set up their default sections.
 name|virtual
 name|void
 name|Initialize
-parameter_list|(
+argument_list|(
 name|MCContext
-modifier|&
-name|ctx
-parameter_list|,
-specifier|const
-name|TargetMachine
-modifier|&
-name|TM
-parameter_list|)
-block|{
-name|Ctx
-operator|=
 operator|&
 name|ctx
-expr_stmt|;
-block|}
-name|bool
-name|isFunctionEHFrameSymbolPrivate
-argument_list|()
+argument_list|,
 specifier|const
-block|{
-return|return
-name|IsFunctionEHFrameSymbolPrivate
-return|;
-block|}
-name|bool
-name|getSupportsWeakOmittedEHFrame
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SupportsWeakOmittedEHFrame
-return|;
-block|}
-name|bool
-name|getCommDirectiveSupportsAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CommDirectiveSupportsAlignment
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getTextSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TextSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDataSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DataSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getBSSSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|BSSSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getStaticCtorSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StaticCtorSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getStaticDtorSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StaticDtorSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getLSDASection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LSDASection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getCompactUnwindSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CompactUnwindSection
-return|;
-block|}
-name|virtual
-specifier|const
-name|MCSection
-operator|*
-name|getEHFrameSection
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
+name|TargetMachine
+operator|&
+name|TM
+argument_list|)
+block|;
 name|virtual
 name|void
 name|emitPersonalityValue
 argument_list|(
-name|MCStreamer
-operator|&
-name|Streamer
+argument|MCStreamer&Streamer
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|,
-specifier|const
-name|MCSymbol
-operator|*
-name|Sym
+argument|const MCSymbol *Sym
 argument_list|)
-decl|const
-decl_stmt|;
 specifier|const
-name|MCSection
-operator|*
-name|getDwarfAbbrevSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfAbbrevSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfInfoSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfInfoSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfLineSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfLineSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfFrameSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfFrameSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfPubNamesSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfPubNamesSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfPubTypesSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfPubTypesSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfDebugInlineSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfDebugInlineSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfStrSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfStrSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfLocSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfLocSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfARangesSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfARangesSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfRangesSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfRangesSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getDwarfMacroInfoSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|DwarfMacroInfoSection
-return|;
-block|}
-specifier|const
-name|MCSection
-operator|*
-name|getTLSExtraDataSection
-argument_list|()
-specifier|const
-block|{
-return|return
-name|TLSExtraDataSection
-return|;
-block|}
-name|virtual
-specifier|const
-name|MCSection
-modifier|*
-name|getWin64EHFuncTableSection
-argument_list|(
-name|StringRef
-name|suffix
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-name|virtual
-specifier|const
-name|MCSection
-modifier|*
-name|getWin64EHTableSection
-argument_list|(
-name|StringRef
-name|suffix
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
+block|;
 comment|/// shouldEmitUsedDirectiveFor - This hook allows targets to selectively
 comment|/// decide not to emit the UsedDirective for some symbols in llvm.used.
 comment|/// FIXME: REMOVE this (rdar://7071300)
@@ -638,15 +211,11 @@ name|virtual
 name|bool
 name|shouldEmitUsedDirectiveFor
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|Mangler
-operator|*
+argument|Mangler *
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 name|GV
@@ -659,81 +228,63 @@ comment|/// section that it should be placed in.
 name|virtual
 specifier|const
 name|MCSection
-modifier|*
+operator|*
 name|getSectionForConstant
 argument_list|(
-name|SectionKind
-name|Kind
+argument|SectionKind Kind
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|/// getKindForGlobal - Classify the specified global variable into a set of
 comment|/// target independent categories embodied in SectionKind.
 specifier|static
 name|SectionKind
 name|getKindForGlobal
-parameter_list|(
-specifier|const
-name|GlobalValue
-modifier|*
-name|GV
-parameter_list|,
-specifier|const
-name|TargetMachine
-modifier|&
-name|TM
-parameter_list|)
-function_decl|;
-comment|/// SectionForGlobal - This method computes the appropriate section to emit
-comment|/// the specified global variable or function definition.  This should not
-comment|/// be passed external (or available externally) globals.
-specifier|const
-name|MCSection
-modifier|*
-name|SectionForGlobal
 argument_list|(
 specifier|const
 name|GlobalValue
 operator|*
 name|GV
 argument_list|,
-name|SectionKind
-name|Kind
-argument_list|,
-name|Mangler
-operator|*
-name|Mang
-argument_list|,
 specifier|const
 name|TargetMachine
 operator|&
 name|TM
 argument_list|)
-decl|const
-decl_stmt|;
+block|;
 comment|/// SectionForGlobal - This method computes the appropriate section to emit
 comment|/// the specified global variable or function definition.  This should not
 comment|/// be passed external (or available externally) globals.
 specifier|const
 name|MCSection
-modifier|*
+operator|*
 name|SectionForGlobal
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|Mangler
-operator|*
-name|Mang
+argument|SectionKind Kind
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|Mangler *Mang
+argument_list|,
+argument|const TargetMachine&TM
 argument_list|)
-decl|const
+specifier|const
+block|;
+comment|/// SectionForGlobal - This method computes the appropriate section to emit
+comment|/// the specified global variable or function definition.  This should not
+comment|/// be passed external (or available externally) globals.
+specifier|const
+name|MCSection
+operator|*
+name|SectionForGlobal
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|Mangler *Mang
+argument_list|,
+argument|const TargetMachine&TM
+argument_list|)
+specifier|const
 block|{
 return|return
 name|SectionForGlobal
@@ -759,51 +310,36 @@ comment|/// implementation of this method can assume that GV->hasSection() is tr
 name|virtual
 specifier|const
 name|MCSection
-modifier|*
+operator|*
 name|getExplicitSectionGlobal
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|SectionKind
-name|Kind
+argument|SectionKind Kind
 argument_list|,
-name|Mangler
-operator|*
-name|Mang
+argument|Mangler *Mang
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
-decl|const
-init|=
+specifier|const
+operator|=
 literal|0
-decl_stmt|;
+block|;
 comment|/// getSpecialCasedSectionGlobals - Allow the target to completely override
 comment|/// section assignment of a global.
 name|virtual
 specifier|const
 name|MCSection
-modifier|*
+operator|*
 name|getSpecialCasedSectionGlobals
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|Mangler
-operator|*
-name|Mang
+argument|Mangler *Mang
 argument_list|,
-name|SectionKind
-name|Kind
+argument|SectionKind Kind
 argument_list|)
-decl|const
+specifier|const
 block|{
 return|return
 literal|0
@@ -815,128 +351,68 @@ comment|///
 name|virtual
 specifier|const
 name|MCExpr
-modifier|*
+operator|*
 name|getExprForDwarfGlobalReference
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|Mangler
-operator|*
-name|Mang
+argument|Mangler *Mang
 argument_list|,
-name|MachineModuleInfo
-operator|*
-name|MMI
+argument|MachineModuleInfo *MMI
 argument_list|,
-name|unsigned
-name|Encoding
+argument|unsigned Encoding
 argument_list|,
-name|MCStreamer
-operator|&
-name|Streamer
+argument|MCStreamer&Streamer
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|// getCFIPersonalitySymbol - The symbol that gets passed to .cfi_personality.
 name|virtual
 name|MCSymbol
-modifier|*
+operator|*
 name|getCFIPersonalitySymbol
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|Mangler
-operator|*
-name|Mang
+argument|Mangler *Mang
 argument_list|,
-name|MachineModuleInfo
-operator|*
-name|MMI
+argument|MachineModuleInfo *MMI
 argument_list|)
-decl|const
-decl_stmt|;
+specifier|const
+block|;
 comment|///
 specifier|const
 name|MCExpr
-modifier|*
+operator|*
 name|getExprForDwarfReference
 argument_list|(
-specifier|const
-name|MCSymbol
-operator|*
-name|Sym
+argument|const MCSymbol *Sym
 argument_list|,
-name|unsigned
-name|Encoding
+argument|unsigned Encoding
 argument_list|,
-name|MCStreamer
-operator|&
-name|Streamer
+argument|MCStreamer&Streamer
 argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-name|unsigned
-name|getPersonalityEncoding
-argument_list|()
 specifier|const
-expr_stmt|;
-name|virtual
-name|unsigned
-name|getLSDAEncoding
-argument_list|()
-specifier|const
-expr_stmt|;
-name|virtual
-name|unsigned
-name|getFDEEncoding
-argument_list|(
-name|bool
-name|CFI
-argument_list|)
-decl|const
-decl_stmt|;
-name|virtual
-name|unsigned
-name|getTTypeEncoding
-argument_list|()
-specifier|const
-expr_stmt|;
+block|;
 name|protected
-label|:
+operator|:
 name|virtual
 specifier|const
 name|MCSection
-modifier|*
+operator|*
 name|SelectSectionForGlobal
 argument_list|(
-specifier|const
-name|GlobalValue
-operator|*
-name|GV
+argument|const GlobalValue *GV
 argument_list|,
-name|SectionKind
-name|Kind
+argument|SectionKind Kind
 argument_list|,
-name|Mangler
-operator|*
-name|Mang
+argument|Mangler *Mang
 argument_list|,
-specifier|const
-name|TargetMachine
-operator|&
-name|TM
+argument|const TargetMachine&TM
 argument_list|)
-decl|const
+specifier|const
+block|; }
 decl_stmt|;
-block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 

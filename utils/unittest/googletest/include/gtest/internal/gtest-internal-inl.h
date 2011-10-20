@@ -255,7 +255,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-port.h>
+file|"gtest/internal/gtest-port.h"
 end_include
 
 begin_if
@@ -271,7 +271,7 @@ file|<windows.h>
 end_include
 
 begin_comment
-comment|// For DWORD.
+comment|// NOLINT
 end_comment
 
 begin_endif
@@ -286,7 +286,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<gtest/gtest.h>
+file|"gtest/gtest.h"
 end_include
 
 begin_comment
@@ -296,7 +296,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<gtest/gtest-spi.h>
+file|"gtest/gtest-spi.h"
 end_include
 
 begin_decl_stmt
@@ -408,6 +408,13 @@ name|kStackTraceDepthFlag
 index|[]
 init|=
 literal|"stack_trace_depth"
+decl_stmt|;
+specifier|const
+name|char
+name|kStreamResultToFlag
+index|[]
+init|=
+literal|"stream_result_to"
 decl_stmt|;
 specifier|const
 name|char
@@ -719,6 +726,13 @@ argument_list|(
 name|stack_trace_depth
 argument_list|)
 expr_stmt|;
+name|stream_result_to_
+operator|=
+name|GTEST_FLAG
+argument_list|(
+name|stream_result_to
+argument_list|)
+expr_stmt|;
 name|throw_on_failure_
 operator|=
 name|GTEST_FLAG
@@ -839,6 +853,13 @@ name|stack_trace_depth_
 block|;
 name|GTEST_FLAG
 argument_list|(
+name|stream_result_to
+argument_list|)
+operator|=
+name|stream_result_to_
+block|;
+name|GTEST_FLAG
+argument_list|(
 name|throw_on_failure
 argument_list|)
 operator|=
@@ -901,6 +922,9 @@ operator|::
 name|Int32
 name|stack_trace_depth_
 expr_stmt|;
+name|String
+name|stream_result_to_
+decl_stmt|;
 name|bool
 name|throw_on_failure_
 decl_stmt|;
@@ -1040,29 +1064,51 @@ argument_list|,
 argument|Predicate predicate
 argument_list|)
 block|{
-return|return
-name|static_cast
-operator|<
+comment|// Implemented as an explicit loop since std::count_if() in libCstd on
+comment|// Solaris has a non-standard signature.
 name|int
-operator|>
-operator|(
-name|std
+name|count
+operator|=
+literal|0
+block|;
+for|for
+control|(
+name|typename
+name|Container
 operator|::
-name|count_if
-argument_list|(
+name|const_iterator
+name|it
+operator|=
 name|c
 operator|.
 name|begin
 argument_list|()
-argument_list|,
+init|;
+name|it
+operator|!=
 name|c
 operator|.
 name|end
 argument_list|()
-argument_list|,
+condition|;
+operator|++
+name|it
+control|)
+block|{
+if|if
+condition|(
 name|predicate
+argument_list|(
+operator|*
+name|it
 argument_list|)
-operator|)
+condition|)
+operator|++
+name|count
+expr_stmt|;
+block|}
+return|return
+name|count
 return|;
 block|}
 comment|// Applies a function/functor to each element in the container.
@@ -1404,298 +1450,6 @@ name|String
 name|key_
 block|; }
 expr_stmt|;
-name|class
-name|TestInfoImpl
-block|{
-name|public
-label|:
-name|TestInfoImpl
-argument_list|(
-argument|TestInfo* parent
-argument_list|,
-argument|const char* test_case_name
-argument_list|,
-argument|const char* name
-argument_list|,
-argument|const char* test_case_comment
-argument_list|,
-argument|const char* comment
-argument_list|,
-argument|TypeId fixture_class_id
-argument_list|,
-argument|internal::TestFactoryBase* factory
-argument_list|)
-empty_stmt|;
-operator|~
-name|TestInfoImpl
-argument_list|()
-expr_stmt|;
-comment|// Returns true if this test should run.
-name|bool
-name|should_run
-argument_list|()
-specifier|const
-block|{
-return|return
-name|should_run_
-return|;
-block|}
-comment|// Sets the should_run member.
-name|void
-name|set_should_run
-parameter_list|(
-name|bool
-name|should
-parameter_list|)
-block|{
-name|should_run_
-operator|=
-name|should
-expr_stmt|;
-block|}
-comment|// Returns true if this test is disabled. Disabled tests are not run.
-name|bool
-name|is_disabled
-argument_list|()
-specifier|const
-block|{
-return|return
-name|is_disabled_
-return|;
-block|}
-comment|// Sets the is_disabled member.
-name|void
-name|set_is_disabled
-parameter_list|(
-name|bool
-name|is
-parameter_list|)
-block|{
-name|is_disabled_
-operator|=
-name|is
-expr_stmt|;
-block|}
-comment|// Returns true if this test matches the filter specified by the user.
-name|bool
-name|matches_filter
-argument_list|()
-specifier|const
-block|{
-return|return
-name|matches_filter_
-return|;
-block|}
-comment|// Sets the matches_filter member.
-name|void
-name|set_matches_filter
-parameter_list|(
-name|bool
-name|matches
-parameter_list|)
-block|{
-name|matches_filter_
-operator|=
-name|matches
-expr_stmt|;
-block|}
-comment|// Returns the test case name.
-specifier|const
-name|char
-operator|*
-name|test_case_name
-argument_list|()
-specifier|const
-block|{
-return|return
-name|test_case_name_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-comment|// Returns the test name.
-specifier|const
-name|char
-operator|*
-name|name
-argument_list|()
-specifier|const
-block|{
-return|return
-name|name_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-comment|// Returns the test case comment.
-specifier|const
-name|char
-operator|*
-name|test_case_comment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|test_case_comment_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-comment|// Returns the test comment.
-specifier|const
-name|char
-operator|*
-name|comment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|comment_
-operator|.
-name|c_str
-argument_list|()
-return|;
-block|}
-comment|// Returns the ID of the test fixture class.
-name|TypeId
-name|fixture_class_id
-argument_list|()
-specifier|const
-block|{
-return|return
-name|fixture_class_id_
-return|;
-block|}
-comment|// Returns the test result.
-name|TestResult
-modifier|*
-name|result
-parameter_list|()
-block|{
-return|return
-operator|&
-name|result_
-return|;
-block|}
-specifier|const
-name|TestResult
-operator|*
-name|result
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|&
-name|result_
-return|;
-block|}
-comment|// Creates the test object, runs it, records its result, and then
-comment|// deletes it.
-name|void
-name|Run
-parameter_list|()
-function_decl|;
-comment|// Clears the test result.
-name|void
-name|ClearResult
-parameter_list|()
-block|{
-name|result_
-operator|.
-name|Clear
-argument_list|()
-expr_stmt|;
-block|}
-comment|// Clears the test result in the given TestInfo object.
-specifier|static
-name|void
-name|ClearTestResult
-parameter_list|(
-name|TestInfo
-modifier|*
-name|test_info
-parameter_list|)
-block|{
-name|test_info
-operator|->
-name|impl
-argument_list|()
-operator|->
-name|ClearResult
-argument_list|()
-expr_stmt|;
-block|}
-name|private
-label|:
-comment|// These fields are immutable properties of the test.
-name|TestInfo
-modifier|*
-specifier|const
-name|parent_
-decl_stmt|;
-comment|// The owner of this object
-specifier|const
-name|String
-name|test_case_name_
-decl_stmt|;
-comment|// Test case name
-specifier|const
-name|String
-name|name_
-decl_stmt|;
-comment|// Test name
-specifier|const
-name|String
-name|test_case_comment_
-decl_stmt|;
-comment|// Test case comment
-specifier|const
-name|String
-name|comment_
-decl_stmt|;
-comment|// Test comment
-specifier|const
-name|TypeId
-name|fixture_class_id_
-decl_stmt|;
-comment|// ID of the test fixture class
-name|bool
-name|should_run_
-decl_stmt|;
-comment|// True iff this test should run
-name|bool
-name|is_disabled_
-decl_stmt|;
-comment|// True iff this test is disabled
-name|bool
-name|matches_filter_
-decl_stmt|;
-comment|// True if this test matches the
-comment|// user-specified filter.
-name|internal
-operator|::
-name|TestFactoryBase
-operator|*
-specifier|const
-name|factory_
-expr_stmt|;
-comment|// The factory that creates
-comment|// the test object
-comment|// This field is mutable and needs to be reset before running the
-comment|// test for the second time.
-name|TestResult
-name|result_
-decl_stmt|;
-name|GTEST_DISALLOW_COPY_AND_ASSIGN_
-argument_list|(
-name|TestInfoImpl
-argument_list|)
-expr_stmt|;
-block|}
-empty_stmt|;
 comment|// Class UnitTestOptions.
 comment|//
 comment|// This class contains functions for processing options the user
@@ -2329,6 +2083,8 @@ comment|//
 comment|// Arguments:
 comment|//
 comment|//   test_case_name: name of the test case
+comment|//   type_param:     the name of the test's type parameter, or NULL if
+comment|//                   this is not a typed or a type-parameterized test.
 comment|//   set_up_tc:      pointer to the function that sets up the test case
 comment|//   tear_down_tc:   pointer to the function that tears down the test case
 name|TestCase
@@ -2343,7 +2099,7 @@ argument_list|,
 specifier|const
 name|char
 operator|*
-name|comment
+name|type_param
 argument_list|,
 name|Test
 operator|::
@@ -2427,7 +2183,7 @@ argument_list|()
 argument_list|,
 name|test_info
 operator|->
-name|test_case_comment
+name|type_param
 argument_list|()
 argument_list|,
 name|set_up_tc
@@ -2491,28 +2247,26 @@ name|a_current_test_info
 expr_stmt|;
 block|}
 comment|// Registers all parameterized tests defined using TEST_P and
-comment|// INSTANTIATE_TEST_P, creating regular tests for each test/parameter
-comment|// combination. This method can be called more then once; it has
-comment|// guards protecting from registering the tests more then once.
-comment|// If value-parameterized tests are disabled, RegisterParameterizedTests
-comment|// is present but does nothing.
+comment|// INSTANTIATE_TEST_CASE_P, creating regular tests for each test/parameter
+comment|// combination. This method can be called more then once; it has guards
+comment|// protecting from registering the tests more then once.  If
+comment|// value-parameterized tests are disabled, RegisterParameterizedTests is
+comment|// present but does nothing.
 name|void
 name|RegisterParameterizedTests
 parameter_list|()
 function_decl|;
 comment|// Runs all tests in this UnitTest object, prints the result, and
-comment|// returns 0 if all tests are successful, or 1 otherwise.  If any
-comment|// exception is thrown during a test on Windows, this test is
-comment|// considered to be failed, but the rest of the tests will still be
-comment|// run.  (We disable exceptions on Linux and Mac OS X, so the issue
-comment|// doesn't apply there.)
-name|int
+comment|// returns true if all tests are successful.  If any exception is
+comment|// thrown during a test, this test is considered to be failed, but
+comment|// the rest of the tests will still be run.
+name|bool
 name|RunAllTests
 parameter_list|()
 function_decl|;
-comment|// Clears the results of all tests, including the ad hoc test.
+comment|// Clears the results of all tests, except the ad hoc tests.
 name|void
-name|ClearResult
+name|ClearNonAdHocTestResult
 parameter_list|()
 block|{
 name|ForEach
@@ -2524,6 +2278,12 @@ operator|::
 name|ClearTestCaseResult
 argument_list|)
 expr_stmt|;
+block|}
+comment|// Clears the results of ad-hoc test assertions.
+name|void
+name|ClearAdHocTestResult
+parameter_list|()
+block|{
 name|ad_hoc_test_result_
 operator|.
 name|Clear
@@ -2710,6 +2470,17 @@ name|void
 name|ConfigureXmlOutput
 parameter_list|()
 function_decl|;
+if|#
+directive|if
+name|GTEST_CAN_STREAM_RESULTS_
+comment|// Initializes the event listener for streaming test results to a socket.
+comment|// Must not be called before InitGoogleTest.
+name|void
+name|ConfigureStreamingOutput
+parameter_list|()
+function_decl|;
+endif|#
+directive|endif
 comment|// Performs initialization dependent upon flag values obtained in
 comment|// ParseGoogleTestFlagsOnly.  Is called from InitGoogleTest after the call to
 comment|// ParseGoogleTestFlagsOnly.  In case a user neglects to call InitGoogleTest
@@ -2753,6 +2524,17 @@ name|void
 name|UnshuffleTests
 parameter_list|()
 function_decl|;
+comment|// Returns the value of GTEST_FLAG(catch_exceptions) at the moment
+comment|// UnitTest::Run() starts.
+name|bool
+name|catch_exceptions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|catch_exceptions_
+return|;
+block|}
 name|private
 label|:
 name|friend
@@ -2762,6 +2544,20 @@ name|testing
 operator|::
 name|UnitTest
 expr_stmt|;
+comment|// Used by UnitTest::Run() to capture the state of
+comment|// GTEST_FLAG(catch_exceptions) at the moment it starts.
+name|void
+name|set_catch_exceptions
+parameter_list|(
+name|bool
+name|value
+parameter_list|)
+block|{
+name|catch_exceptions_
+operator|=
+name|value
+expr_stmt|;
+block|}
 comment|// The UnitTest object that owns this implementation object.
 name|UnitTest
 modifier|*
@@ -2956,6 +2752,11 @@ operator|>
 expr|>
 name|gtest_trace_stack_
 expr_stmt|;
+comment|// The value of GTEST_FLAG(catch_exceptions) at the moment RunAllTests()
+comment|// starts.
+name|bool
+name|catch_exceptions_
+decl_stmt|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_
 argument_list|(
 name|UnitTestImpl
@@ -2982,6 +2783,9 @@ name|impl
 argument_list|()
 return|;
 block|}
+if|#
+directive|if
+name|GTEST_USES_SIMPLE_RE
 comment|// Internal helper functions for implementing the simple regular
 comment|// expression matcher.
 name|GTEST_API_
@@ -2999,7 +2803,7 @@ parameter_list|)
 function_decl|;
 name|GTEST_API_
 name|bool
-name|IsDigit
+name|IsAsciiDigit
 parameter_list|(
 name|char
 name|ch
@@ -3007,7 +2811,7 @@ parameter_list|)
 function_decl|;
 name|GTEST_API_
 name|bool
-name|IsPunct
+name|IsAsciiPunct
 parameter_list|(
 name|char
 name|ch
@@ -3023,7 +2827,7 @@ parameter_list|)
 function_decl|;
 name|GTEST_API_
 name|bool
-name|IsWhiteSpace
+name|IsAsciiWhiteSpace
 parameter_list|(
 name|char
 name|ch
@@ -3031,7 +2835,7 @@ parameter_list|)
 function_decl|;
 name|GTEST_API_
 name|bool
-name|IsWordChar
+name|IsAsciiWordChar
 parameter_list|(
 name|char
 name|ch
@@ -3123,6 +2927,9 @@ modifier|*
 name|str
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
+comment|// GTEST_USES_SIMPLE_RE
 comment|// Parses the command line for Google Test flags, without initializing
 comment|// other parts of Google Test.
 name|GTEST_API_
@@ -3158,6 +2965,7 @@ directive|if
 name|GTEST_HAS_DEATH_TEST
 comment|// Returns the message describing the last system error, regardless of the
 comment|// platform.
+name|GTEST_API_
 name|String
 name|GetLastErrnoDescription
 parameter_list|()
@@ -3291,7 +3099,7 @@ name|empty
 argument_list|()
 operator|||
 operator|!
-name|isdigit
+name|IsDigit
 argument_list|(
 name|str
 index|[

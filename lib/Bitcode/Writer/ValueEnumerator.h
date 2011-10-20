@@ -130,7 +130,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -160,7 +159,6 @@ label|:
 typedef|typedef
 name|DenseMap
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|,
@@ -327,7 +325,6 @@ decl_stmt|;
 name|unsigned
 name|getTypeID
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|T
@@ -637,7 +634,6 @@ function_decl|;
 name|void
 name|EnumerateType
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|T

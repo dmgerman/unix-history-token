@@ -72,7 +72,7 @@ name|class
 name|MCDataFragment
 decl_stmt|;
 name|class
-name|TargetAsmBackend
+name|MCAsmBackend
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -118,7 +118,7 @@ name|MCContext
 operator|&
 name|Context
 argument_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 operator|&
 name|TAB
 argument_list|,
@@ -137,7 +137,7 @@ name|MCContext
 operator|&
 name|Context
 argument_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 operator|&
 name|TAB
 argument_list|,

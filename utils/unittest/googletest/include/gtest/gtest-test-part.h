@@ -150,13 +150,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-internal.h>
+file|"gtest/internal/gtest-internal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-string.h>
+file|"gtest/internal/gtest-string.h"
 end_include
 
 begin_decl_stmt

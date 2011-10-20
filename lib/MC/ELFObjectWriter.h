@@ -1985,6 +1985,23 @@ literal|0
 function_decl|;
 end_function_decl
 
+begin_function
+name|virtual
+name|void
+name|adjustFixupOffset
+parameter_list|(
+specifier|const
+name|MCFixup
+modifier|&
+name|Fixup
+parameter_list|,
+name|uint64_t
+modifier|&
+name|RelocOffset
+parameter_list|)
+block|{ }
+end_function
+
 begin_comment
 unit|};
 comment|//===- X86ELFObjectWriter -------------------------------------------===//
@@ -2125,6 +2142,67 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|//===- PPCELFObjectWriter -------------------------------------------===//
+end_comment
+
+begin_decl_stmt
+name|class
+name|PPCELFObjectWriter
+range|:
+name|public
+name|ELFObjectWriter
+block|{
+name|public
+operator|:
+name|PPCELFObjectWriter
+argument_list|(
+argument|MCELFObjectTargetWriter *MOTW
+argument_list|,
+argument|raw_ostream&_OS
+argument_list|,
+argument|bool IsLittleEndian
+argument_list|)
+block|;
+name|virtual
+operator|~
+name|PPCELFObjectWriter
+argument_list|()
+block|;
+name|protected
+operator|:
+name|virtual
+name|unsigned
+name|GetRelocType
+argument_list|(
+argument|const MCValue&Target
+argument_list|,
+argument|const MCFixup&Fixup
+argument_list|,
+argument|bool IsPCRel
+argument_list|,
+argument|bool IsRelocWithSymbol
+argument_list|,
+argument|int64_t Addend
+argument_list|)
+block|;
+name|virtual
+name|void
+name|adjustFixupOffset
+argument_list|(
+specifier|const
+name|MCFixup
+operator|&
+name|Fixup
+argument_list|,
+name|uint64_t
+operator|&
+name|RelocOffset
+argument_list|)
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|//===- MBlazeELFObjectWriter -------------------------------------------===//
 end_comment
 
@@ -2149,6 +2227,53 @@ block|;
 name|virtual
 operator|~
 name|MBlazeELFObjectWriter
+argument_list|()
+block|;
+name|protected
+operator|:
+name|virtual
+name|unsigned
+name|GetRelocType
+argument_list|(
+argument|const MCValue&Target
+argument_list|,
+argument|const MCFixup&Fixup
+argument_list|,
+argument|bool IsPCRel
+argument_list|,
+argument|bool IsRelocWithSymbol
+argument_list|,
+argument|int64_t Addend
+argument_list|)
+block|;   }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//===- MipsELFObjectWriter -------------------------------------------===//
+end_comment
+
+begin_decl_stmt
+name|class
+name|MipsELFObjectWriter
+range|:
+name|public
+name|ELFObjectWriter
+block|{
+name|public
+operator|:
+name|MipsELFObjectWriter
+argument_list|(
+argument|MCELFObjectTargetWriter *MOTW
+argument_list|,
+argument|raw_ostream&_OS
+argument_list|,
+argument|bool IsLittleEndian
+argument_list|)
+block|;
+name|virtual
+operator|~
+name|MipsELFObjectWriter
 argument_list|()
 block|;
 name|protected

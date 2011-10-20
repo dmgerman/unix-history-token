@@ -404,13 +404,13 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-port.h>
+file|"gtest/internal/gtest-port.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-type-util.h>
+file|"gtest/internal/gtest-type-util.h"
 end_include
 
 begin_comment
@@ -484,7 +484,7 @@ parameter_list|,
 name|TestName
 parameter_list|)
 define|\
-value|template<typename gtest_TypeParam_> \   class GTEST_TEST_CLASS_NAME_(CaseName, TestName) \       : public CaseName<gtest_TypeParam_> { \    private: \     typedef CaseName<gtest_TypeParam_> TestFixture; \     typedef gtest_TypeParam_ TypeParam; \     virtual void TestBody(); \   }; \   bool gtest_##CaseName##_##TestName##_registered_ = \       ::testing::internal::TypeParameterizedTest< \           CaseName, \           ::testing::internal::TemplateSel< \               GTEST_TEST_CLASS_NAME_(CaseName, TestName)>, \           GTEST_TYPE_PARAMS_(CaseName)>::Register(\               "", #CaseName, #TestName, 0); \   template<typename gtest_TypeParam_> \   void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
+value|template<typename gtest_TypeParam_> \   class GTEST_TEST_CLASS_NAME_(CaseName, TestName) \       : public CaseName<gtest_TypeParam_> { \    private: \     typedef CaseName<gtest_TypeParam_> TestFixture; \     typedef gtest_TypeParam_ TypeParam; \     virtual void TestBody(); \   }; \   bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = \       ::testing::internal::TypeParameterizedTest< \           CaseName, \           ::testing::internal::TemplateSel< \               GTEST_TEST_CLASS_NAME_(CaseName, TestName)>, \           GTEST_TYPE_PARAMS_(CaseName)>::Register(\               "", #CaseName, #TestName, 0); \   template<typename gtest_TypeParam_> \   void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
 end_define
 
 begin_endif
@@ -624,7 +624,7 @@ parameter_list|,
 name|TestName
 parameter_list|)
 define|\
-value|namespace GTEST_CASE_NAMESPACE_(CaseName) { \   template<typename gtest_TypeParam_> \   class TestName : public CaseName<gtest_TypeParam_> { \    private: \     typedef CaseName<gtest_TypeParam_> TestFixture; \     typedef gtest_TypeParam_ TypeParam; \     virtual void TestBody(); \   }; \   static bool gtest_##TestName##_defined_ = \       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\           __FILE__, __LINE__, #CaseName, #TestName); \   } \   template<typename gtest_TypeParam_> \   void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()
+value|namespace GTEST_CASE_NAMESPACE_(CaseName) { \   template<typename gtest_TypeParam_> \   class TestName : public CaseName<gtest_TypeParam_> { \    private: \     typedef CaseName<gtest_TypeParam_> TestFixture; \     typedef gtest_TypeParam_ TypeParam; \     virtual void TestBody(); \   }; \   static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ = \       GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(\           __FILE__, __LINE__, #CaseName, #TestName); \   } \   template<typename gtest_TypeParam_> \   void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()
 end_define
 
 begin_define
@@ -664,7 +664,7 @@ parameter_list|,
 name|Types
 parameter_list|)
 define|\
-value|bool gtest_##Prefix##_##CaseName = \       ::testing::internal::TypeParameterizedTestCase<CaseName, \           GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_, \           ::testing::internal::TypeList< Types>::type>::Register(\               #Prefix, #CaseName, GTEST_REGISTERED_TEST_NAMES_(CaseName))
+value|bool gtest_##Prefix##_##CaseName GTEST_ATTRIBUTE_UNUSED_ = \       ::testing::internal::TypeParameterizedTestCase<CaseName, \           GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_, \           ::testing::internal::TypeList< Types>::type>::Register(\               #Prefix, #CaseName, GTEST_REGISTERED_TEST_NAMES_(CaseName))
 end_define
 
 begin_endif

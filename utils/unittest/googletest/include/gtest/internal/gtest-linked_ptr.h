@@ -290,7 +290,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-port.h>
+file|"gtest/internal/gtest-port.h"
 end_include
 
 begin_decl_stmt
@@ -645,45 +645,6 @@ block|{
 return|return
 operator|*
 name|value_
-return|;
-block|}
-comment|// Release ownership of the pointed object and returns it.
-comment|// Sole ownership by this linked_ptr object is required.
-name|T
-modifier|*
-name|release
-parameter_list|()
-block|{
-name|bool
-name|last
-init|=
-name|link_
-operator|.
-name|depart
-argument_list|()
-decl_stmt|;
-operator|(
-name|void
-operator|)
-name|last
-expr_stmt|;
-name|assert
-argument_list|(
-name|last
-argument_list|)
-expr_stmt|;
-name|T
-modifier|*
-name|v
-init|=
-name|value_
-decl_stmt|;
-name|value_
-operator|=
-name|NULL
-expr_stmt|;
-return|return
-name|v
 return|;
 block|}
 name|bool

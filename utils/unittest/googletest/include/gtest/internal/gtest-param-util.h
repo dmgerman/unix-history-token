@@ -168,19 +168,25 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-internal.h>
+file|"gtest/internal/gtest-internal.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-linked_ptr.h>
+file|"gtest/internal/gtest-linked_ptr.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-port.h>
+file|"gtest/internal/gtest-port.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"gtest/gtest-printers.h"
 end_include
 
 begin_if
@@ -789,11 +795,6 @@ label|:
 end_label
 
 begin_expr_stmt
-operator|::
-name|testing
-operator|::
-name|internal
-operator|::
 name|linked_ptr
 operator|<
 specifier|const
@@ -1988,7 +1989,7 @@ block|{}
 comment|// Base part of test case name for display purposes.
 name|virtual
 specifier|const
-name|String
+name|string
 operator|&
 name|GetTestCaseName
 argument_list|()
@@ -2127,7 +2128,7 @@ block|{}
 comment|// Test case base name for display purposes.
 name|virtual
 specifier|const
-name|String
+name|string
 operator|&
 name|GetTestCaseName
 argument_list|()
@@ -2244,8 +2245,8 @@ name|int
 name|AddTestCaseInstantiation
 parameter_list|(
 specifier|const
-name|char
-modifier|*
+name|string
+modifier|&
 name|instantiation_name
 parameter_list|,
 name|GeneratorCreationFunc
@@ -2367,7 +2368,7 @@ name|gen_it
 control|)
 block|{
 specifier|const
-name|String
+name|string
 modifier|&
 name|instantiation_name
 init|=
@@ -2404,9 +2405,6 @@ condition|)
 name|test_case_name_stream
 operator|<<
 name|instantiation_name
-operator|.
-name|c_str
-argument_list|()
 operator|<<
 literal|"/"
 expr_stmt|;
@@ -2415,9 +2413,6 @@ operator|<<
 name|test_info
 operator|->
 name|test_case_base_name
-operator|.
-name|c_str
-argument_list|()
 expr_stmt|;
 name|int
 name|i
@@ -2462,19 +2457,11 @@ operator|<<
 name|test_info
 operator|->
 name|test_base_name
-operator|.
-name|c_str
-argument_list|()
 operator|<<
 literal|"/"
 operator|<<
 name|i
 expr_stmt|;
-operator|::
-name|testing
-operator|::
-name|internal
-operator|::
 name|MakeAndRegisterTestInfo
 argument_list|(
 name|test_case_name_stream
@@ -2493,13 +2480,18 @@ operator|.
 name|c_str
 argument_list|()
 argument_list|,
-literal|""
+name|NULL
 argument_list|,
-comment|// test_case_comment
-literal|""
+comment|// No type parameter.
+name|PrintToString
+argument_list|(
+operator|*
+name|param_it
+argument_list|)
+operator|.
+name|c_str
+argument_list|()
 argument_list|,
-comment|// comment; TODO(vladl@google.com): provide parameter value
-comment|//                                  representation.
 name|GetTestCaseTypeId
 argument_list|()
 argument_list|,
@@ -2588,11 +2580,11 @@ argument|a_test_meta_factory
 argument_list|)
 block|{}
 specifier|const
-name|String
+name|string
 name|test_case_base_name
 expr_stmt|;
 specifier|const
-name|String
+name|string
 name|test_base_name
 decl_stmt|;
 specifier|const
@@ -2644,7 +2636,7 @@ name|std
 operator|::
 name|pair
 operator|<
-name|String
+name|string
 operator|,
 name|GeneratorCreationFunc
 operator|*
@@ -2656,7 +2648,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|const
-name|String
+name|string
 name|test_case_name_
 decl_stmt|;
 end_decl_stmt
@@ -2848,7 +2840,9 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-name|abort
+name|posix
+operator|::
+name|Abort
 argument_list|()
 expr_stmt|;
 block|}

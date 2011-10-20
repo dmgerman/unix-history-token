@@ -196,13 +196,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-string.h>
+file|"gtest/internal/gtest-string.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-internal.h>
+file|"gtest/internal/gtest-internal.h"
 end_include
 
 begin_decl_stmt
@@ -214,7 +214,7 @@ comment|//
 comment|// Typical usage:
 comment|//
 comment|//   1. You stream a bunch of values to a Message object.
-comment|//      It will remember the text in a StrStream.
+comment|//      It will remember the text in a stringstream.
 comment|//   2. Then you stream the Message object to an ostream.
 comment|//      This causes the text in the Message to be streamed
 comment|//      to the ostream.
@@ -230,7 +230,7 @@ comment|//
 comment|// Message is not intended to be inherited from.  In particular, its
 comment|// destructor is not virtual.
 comment|//
-comment|// Note that StrStream behaves differently in gcc and in MSVC.  You
+comment|// Note that stringstream behaves differently in gcc and in MSVC.  You
 comment|// can stream a NULL char pointer to it in the former, but not in the
 comment|// latter (it causes an access violation if you do).  The Message
 comment|// class hides this difference by treating a NULL char pointer as
@@ -262,7 +262,7 @@ expr_stmt|;
 name|public
 label|:
 comment|// Constructs an empty Message.
-comment|// We allocate the StrStream separately because it otherwise each use of
+comment|// We allocate the stringstream separately because otherwise each use of
 comment|// ASSERT/EXPECT in a procedure adds over 200 bytes to the procedure's
 comment|// stack frame leading to huge stack frames in some cases; gcc does not reuse
 comment|// the stack space.
@@ -271,7 +271,7 @@ argument_list|()
 operator|:
 name|ss_
 argument_list|(
-argument|new internal::StrStream
+argument|new ::std::stringstream
 argument_list|)
 block|{
 comment|// By default, we want there to be enough precision when printing
@@ -306,7 +306,7 @@ argument_list|)
 operator|:
 name|ss_
 argument_list|(
-argument|new internal::StrStream
+argument|new ::std::stringstream
 argument_list|)
 block|{
 comment|// NOLINT
@@ -330,7 +330,7 @@ argument_list|)
 operator|:
 name|ss_
 argument_list|(
-argument|new internal::StrStream
+argument|new ::std::stringstream
 argument_list|)
 block|{
 operator|*
@@ -338,13 +338,6 @@ name|ss_
 operator|<<
 name|str
 block|;   }
-operator|~
-name|Message
-argument_list|()
-block|{
-name|delete
-name|ss_
-block|; }
 if|#
 directive|if
 name|GTEST_OS_SYMBIAN
@@ -402,6 +395,9 @@ operator|::
 name|GTestStreamToHelper
 argument_list|(
 name|ss_
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|val
 argument_list|)
@@ -462,6 +458,9 @@ operator|::
 name|GTestStreamToHelper
 argument_list|(
 name|ss_
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|pointer
 argument_list|)
@@ -630,9 +629,12 @@ block|{
 return|return
 name|internal
 operator|::
-name|StrStreamToString
+name|StringStreamToString
 argument_list|(
 name|ss_
+operator|.
+name|get
+argument_list|()
 argument_list|)
 return|;
 block|}
@@ -679,6 +681,9 @@ operator|::
 name|GTestStreamToHelper
 argument_list|(
 name|ss_
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|pointer
 argument_list|)
@@ -704,6 +709,9 @@ operator|::
 name|GTestStreamToHelper
 argument_list|(
 name|ss_
+operator|.
+name|get
+argument_list|()
 argument_list|,
 name|value
 argument_list|)
@@ -712,11 +720,16 @@ endif|#
 directive|endif
 comment|// GTEST_OS_SYMBIAN
 comment|// We'll hold the text streamed to this object here.
+specifier|const
 name|internal
 operator|::
-name|StrStream
-operator|*
-specifier|const
+name|scoped_ptr
+operator|<
+operator|::
+name|std
+operator|::
+name|stringstream
+operator|>
 name|ss_
 expr_stmt|;
 comment|// We declare (but don't implement) this to prevent the compiler

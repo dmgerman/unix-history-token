@@ -83,10 +83,10 @@ name|class
 name|MachineMove
 decl_stmt|;
 name|class
-name|TargetData
+name|MCAsmInfo
 decl_stmt|;
 name|class
-name|TargetFrameLowering
+name|TargetData
 decl_stmt|;
 name|class
 name|TargetMachine
@@ -112,9 +112,9 @@ modifier|*
 name|RI
 decl_stmt|;
 specifier|const
-name|TargetFrameLowering
+name|MCAsmInfo
 modifier|*
-name|TFI
+name|MAI
 decl_stmt|;
 name|MachineModuleInfo
 modifier|*

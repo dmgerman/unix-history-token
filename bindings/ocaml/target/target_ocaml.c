@@ -111,35 +111,6 @@ block|}
 end_function
 
 begin_comment
-comment|/* TargetData.t -> Llvm.lltype -> unit */
-end_comment
-
-begin_function
-name|CAMLprim
-name|value
-name|llvm_targetdata_invalidate_struct_layout
-parameter_list|(
-name|LLVMTargetDataRef
-name|TD
-parameter_list|,
-name|LLVMTypeRef
-name|Ty
-parameter_list|)
-block|{
-name|LLVMInvalidateStructLayout
-argument_list|(
-name|TD
-argument_list|,
-name|Ty
-argument_list|)
-expr_stmt|;
-return|return
-name|Val_unit
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/* TargetData.t -> unit */
 end_comment
 

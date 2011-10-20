@@ -107,6 +107,11 @@ range|:
 name|public
 name|MachineFunctionPass
 block|{
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+block|;
 comment|/// Special pool allocator for VNInfo's (LiveInterval val#).
 comment|///
 name|VNInfo

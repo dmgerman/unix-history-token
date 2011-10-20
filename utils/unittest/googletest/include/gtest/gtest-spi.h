@@ -146,7 +146,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<gtest/gtest.h>
+file|"gtest/gtest.h"
 end_include
 
 begin_decl_stmt
@@ -269,7 +269,7 @@ argument|const TestPartResultArray* results
 argument_list|,
 argument|TestPartResult::Type type
 argument_list|,
-argument|const char* substr
+argument|const string& substr
 argument_list|)
 empty_stmt|;
 operator|~
@@ -291,7 +291,7 @@ name|Type
 name|type_
 expr_stmt|;
 specifier|const
-name|String
+name|string
 name|substr_
 decl_stmt|;
 name|GTEST_DISALLOW_COPY_AND_ASSIGN_

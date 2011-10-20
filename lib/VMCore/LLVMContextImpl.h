@@ -181,7 +181,6 @@ block|{
 name|APInt
 name|val
 decl_stmt|;
-specifier|const
 name|Type
 modifier|*
 name|type
@@ -193,7 +192,6 @@ name|APInt
 operator|&
 name|V
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty

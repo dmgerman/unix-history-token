@@ -249,6 +249,26 @@ name|Characteristics
 expr_stmt|;
 block|}
 struct|;
+struct|struct
+name|coff_relocation
+block|{
+name|support
+operator|::
+name|ulittle32_t
+name|VirtualAddress
+expr_stmt|;
+name|support
+operator|::
+name|ulittle32_t
+name|SymbolTableIndex
+expr_stmt|;
+name|support
+operator|::
+name|ulittle16_t
+name|Type
+expr_stmt|;
+block|}
+struct|;
 name|class
 name|COFFObjectFile
 range|:
@@ -298,6 +318,15 @@ argument|StringRef&Res
 argument_list|)
 specifier|const
 block|;
+name|error_code
+name|getSymbol
+argument_list|(
+argument|uint32_t index
+argument_list|,
+argument|const coff_symbol *&Res
+argument_list|)
+specifier|const
+block|;
 specifier|const
 name|coff_symbol
 operator|*
@@ -313,6 +342,15 @@ operator|*
 name|toSec
 argument_list|(
 argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|coff_relocation
+operator|*
+name|toRel
+argument_list|(
+argument|DataRefImpl Rel
 argument_list|)
 specifier|const
 block|;
@@ -335,6 +373,16 @@ argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
 argument|StringRef&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getSymbolOffset
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|uint64_t&Res
 argument_list|)
 specifier|const
 block|;
@@ -375,6 +423,26 @@ argument_list|(
 argument|DataRefImpl Symb
 argument_list|,
 argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSymbolGlobal
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getSymbolType
+argument_list|(
+argument|DataRefImpl Symb
+argument_list|,
+argument|SymbolRef::SymbolType&Res
 argument_list|)
 specifier|const
 block|;
@@ -430,7 +498,37 @@ specifier|const
 block|;
 name|virtual
 name|error_code
+name|getSectionAlignment
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|uint64_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
 name|isSectionText
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionData
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|,
+argument|bool&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|isSectionBSS
 argument_list|(
 argument|DataRefImpl Sec
 argument_list|,
@@ -447,6 +545,92 @@ argument_list|,
 argument|DataRefImpl Symb
 argument_list|,
 argument|bool&Result
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|relocation_iterator
+name|getSectionRelBegin
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|relocation_iterator
+name|getSectionRelEnd
+argument_list|(
+argument|DataRefImpl Sec
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationNext
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|RelocationRef&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationAddress
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|uint64_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationSymbol
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|SymbolRef&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationType
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|uint32_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationTypeName
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|SmallVectorImpl<char>&Result
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationAdditionalInfo
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|int64_t&Res
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|error_code
+name|getRelocationValueString
+argument_list|(
+argument|DataRefImpl Rel
+argument_list|,
+argument|SmallVectorImpl<char>&Result
 argument_list|)
 specifier|const
 block|;

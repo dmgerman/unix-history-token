@@ -197,7 +197,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-port.h>
+file|"gtest/internal/gtest-port.h"
 end_include
 
 begin_include
@@ -897,7 +897,7 @@ block|}
 name|private
 label|:
 comment|// Constructs a non-NULL String from the given content.  This
-comment|// function can only be called when data_ has not been allocated.
+comment|// function can only be called when c_str_ has not been allocated.
 comment|// ConstructNonNull(NULL, 0) results in an empty string ("").
 comment|// ConstructNonNull(NULL, non_zero) is undefined behavior.
 name|void
@@ -1062,17 +1062,20 @@ return|return
 name|os
 return|;
 block|}
-comment|// Gets the content of the StrStream's buffer as a String.  Each '\0'
+comment|// Gets the content of the stringstream's buffer as a String.  Each '\0'
 comment|// character in the buffer is replaced with "\\0".
 name|GTEST_API_
 name|String
-name|StrStreamToString
-parameter_list|(
-name|StrStream
-modifier|*
+name|StringStreamToString
+argument_list|(
+operator|::
+name|std
+operator|::
+name|stringstream
+operator|*
 name|stream
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|// Converts a streamable value to a String.  A NULL pointer is
 comment|// converted to "(null)".  When the input value is a ::string,
 comment|// ::std::string, ::wstring, or ::std::wstring object, each NUL

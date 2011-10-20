@@ -158,7 +158,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-death-test-internal.h>
+file|"gtest/internal/gtest-death-test-internal.h"
 end_include
 
 begin_decl_stmt

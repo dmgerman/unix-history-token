@@ -152,12 +152,6 @@ comment|// Frame index of dynamically allocated stack area.
 name|unsigned
 name|MaxCallFrameSize
 block|;
-comment|/// AtomicFrameIndex - To implement atomic.swap and atomic.cmp.swap
-comment|/// intrinsics, it is necessary to use a temporary stack location.
-comment|/// This field holds the frame index of this location.
-name|int
-name|AtomicFrameIndex
-block|;
 name|public
 operator|:
 name|MipsFunctionInfo
@@ -226,12 +220,6 @@ block|,
 name|MaxCallFrameSize
 argument_list|(
 literal|0
-argument_list|)
-block|,
-name|AtomicFrameIndex
-argument_list|(
-argument|-
-literal|1
 argument_list|)
 block|{}
 name|bool
@@ -520,33 +508,6 @@ block|{
 name|MaxCallFrameSize
 operator|=
 name|S
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|int
-name|getAtomicFrameIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtomicFrameIndex
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setAtomicFrameIndex
-parameter_list|(
-name|int
-name|Index
-parameter_list|)
-block|{
-name|AtomicFrameIndex
-operator|=
-name|Index
 expr_stmt|;
 block|}
 end_function

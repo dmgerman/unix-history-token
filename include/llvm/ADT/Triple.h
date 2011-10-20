@@ -46,13 +46,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string>
+file|"llvm/ADT/Twine.h"
 end_include
 
 begin_comment
@@ -79,12 +73,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|StringRef
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
 comment|/// Triple - Helper class for working with target triples.
 comment|///
 comment|/// Target triples are strings in the canonical form:
@@ -132,6 +120,12 @@ comment|// MIPS: mips, mipsallegrex
 name|mipsel
 block|,
 comment|// MIPSEL: mipsel, mipsallegrexel, psp
+name|mips64
+block|,
+comment|// MIPS64: mips64
+name|mips64el
+block|,
+comment|// MIPS64EL: mips64el
 name|msp430
 block|,
 comment|// MSP430: msp430
@@ -174,6 +168,12 @@ comment|// PTX: ptx (32-bit)
 name|ptx64
 block|,
 comment|// PTX: ptx (64-bit)
+name|le32
+block|,
+comment|// le32: generic little-endian 32-bit CPU (PNaCl / Emscripten)
+name|amdil
+block|,
+comment|// amdil: amd IL
 name|InvalidArch
 block|}
 enum|;
@@ -206,6 +206,8 @@ name|FreeBSD
 block|,
 name|IOS
 block|,
+name|KFreeBSD
+block|,
 name|Linux
 block|,
 name|Lv2
@@ -231,6 +233,8 @@ block|,
 name|Minix
 block|,
 name|RTEMS
+block|,
+name|NativeClient
 block|}
 enum|;
 enum|enum
@@ -340,12 +344,18 @@ block|{}
 name|explicit
 name|Triple
 argument_list|(
-argument|StringRef Str
+specifier|const
+name|Twine
+operator|&
+name|Str
 argument_list|)
 operator|:
 name|Data
 argument_list|(
 name|Str
+operator|.
+name|str
+argument_list|()
 argument_list|)
 operator|,
 name|Arch
@@ -353,88 +363,112 @@ argument_list|(
 argument|InvalidArch
 argument_list|)
 block|{}
-name|explicit
 name|Triple
 argument_list|(
-argument|StringRef ArchStr
+specifier|const
+name|Twine
+operator|&
+name|ArchStr
 argument_list|,
-argument|StringRef VendorStr
+specifier|const
+name|Twine
+operator|&
+name|VendorStr
 argument_list|,
-argument|StringRef OSStr
+specifier|const
+name|Twine
+operator|&
+name|OSStr
 argument_list|)
 operator|:
 name|Data
 argument_list|(
+operator|(
 name|ArchStr
+operator|+
+name|Twine
+argument_list|(
+literal|'-'
+argument_list|)
+operator|+
+name|VendorStr
+operator|+
+name|Twine
+argument_list|(
+literal|'-'
+argument_list|)
+operator|+
+name|OSStr
+operator|)
+operator|.
+name|str
+argument_list|()
 argument_list|)
 operator|,
 name|Arch
 argument_list|(
 argument|InvalidArch
 argument_list|)
-block|{
-name|Data
-operator|+=
-literal|'-'
-block|;
-name|Data
-operator|+=
-name|VendorStr
-block|;
-name|Data
-operator|+=
-literal|'-'
-block|;
-name|Data
-operator|+=
-name|OSStr
-block|;   }
-name|explicit
+block|{   }
 name|Triple
 argument_list|(
-argument|StringRef ArchStr
-argument_list|,
-argument|StringRef VendorStr
-argument_list|,
-argument|StringRef OSStr
-argument_list|,
-argument|StringRef EnvironmentStr
-argument_list|)
-operator|:
-name|Data
-argument_list|(
+specifier|const
+name|Twine
+operator|&
 name|ArchStr
-argument_list|)
-operator|,
-name|Arch
-argument_list|(
-argument|InvalidArch
-argument_list|)
-block|{
-name|Data
-operator|+=
-literal|'-'
-block|;
-name|Data
-operator|+=
+argument_list|,
+specifier|const
+name|Twine
+operator|&
 name|VendorStr
-block|;
-name|Data
-operator|+=
-literal|'-'
-block|;
-name|Data
-operator|+=
+argument_list|,
+specifier|const
+name|Twine
+operator|&
 name|OSStr
-block|;
-name|Data
-operator|+=
-literal|'-'
-block|;
-name|Data
-operator|+=
+argument_list|,
+specifier|const
+name|Twine
+operator|&
 name|EnvironmentStr
-block|;   }
+argument_list|)
+operator|:
+name|Data
+argument_list|(
+operator|(
+name|ArchStr
+operator|+
+name|Twine
+argument_list|(
+literal|'-'
+argument_list|)
+operator|+
+name|VendorStr
+operator|+
+name|Twine
+argument_list|(
+literal|'-'
+argument_list|)
+operator|+
+name|OSStr
+operator|+
+name|Twine
+argument_list|(
+literal|'-'
+argument_list|)
+operator|+
+name|EnvironmentStr
+operator|)
+operator|.
+name|str
+argument_list|()
+argument_list|)
+operator|,
+name|Arch
+argument_list|(
+argument|InvalidArch
+argument_list|)
+block|{   }
 comment|/// @}
 comment|/// @name Normalization
 comment|/// @{

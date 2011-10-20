@@ -123,6 +123,9 @@ name|class
 name|AsmLexer
 decl_stmt|;
 name|class
+name|AsmParser
+decl_stmt|;
+name|class
 name|AsmToken
 decl_stmt|;
 name|class
@@ -133,15 +136,6 @@ name|MCAsmInfo
 decl_stmt|;
 name|class
 name|MCAsmLexer
-decl_stmt|;
-name|class
-name|AsmParser
-decl_stmt|;
-name|class
-name|TargetAsmLexer
-decl_stmt|;
-name|class
-name|TargetAsmParser
 decl_stmt|;
 name|class
 name|MCDisassembler
@@ -156,10 +150,19 @@ name|class
 name|MCParsedAsmOperand
 decl_stmt|;
 name|class
+name|MCRegisterInfo
+decl_stmt|;
+name|class
 name|MCStreamer
 decl_stmt|;
 name|class
 name|MCSubtargetInfo
+decl_stmt|;
+name|class
+name|MCTargetAsmLexer
+decl_stmt|;
+name|class
+name|MCTargetAsmParser
 decl_stmt|;
 name|template
 operator|<
@@ -174,12 +177,6 @@ name|SourceMgr
 decl_stmt|;
 name|class
 name|Target
-decl_stmt|;
-name|class
-name|TargetMachine
-decl_stmt|;
-name|class
-name|TargetRegisterInfo
 decl_stmt|;
 struct_decl|struct
 name|EDInstInfo
@@ -427,17 +424,6 @@ name|Target
 operator|*
 name|Tgt
 expr_stmt|;
-comment|/// The target machine instance.
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|llvm
-operator|::
-name|TargetMachine
-operator|>
-name|TargetMachine
-expr_stmt|;
 comment|/// The assembly information for the target architecture
 name|llvm
 operator|::
@@ -449,6 +435,30 @@ operator|::
 name|MCAsmInfo
 operator|>
 name|AsmInfo
+expr_stmt|;
+comment|/// The subtarget information for the target architecture
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MCSubtargetInfo
+operator|>
+name|STI
+expr_stmt|;
+comment|// The register information for the target architecture.
+name|llvm
+operator|::
+name|OwningPtr
+operator|<
+specifier|const
+name|llvm
+operator|::
+name|MCRegisterInfo
+operator|>
+name|MRI
 expr_stmt|;
 comment|/// The disassembler for the target architecture
 name|llvm
@@ -534,7 +544,7 @@ name|OwningPtr
 operator|<
 name|llvm
 operator|::
-name|TargetAsmLexer
+name|MCTargetAsmLexer
 operator|>
 name|SpecificAsmLexer
 expr_stmt|;
@@ -669,7 +679,7 @@ argument_list|(
 specifier|const
 name|llvm
 operator|::
-name|TargetRegisterInfo
+name|MCRegisterInfo
 operator|&
 name|registerInfo
 argument_list|)

@@ -174,22 +174,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-port.h>
+file|"gtest/internal/gtest-port.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|<gtest/internal/gtest-string.h>
+file|"gtest/internal/gtest-string.h"
 end_include
-
-begin_if
-if|#
-directive|if
-name|GTEST_HAS_TYPED_TEST
-operator|||
-name|GTEST_HAS_TYPED_TEST_P
-end_if
 
 begin_comment
 comment|// #ifdef __GNUC__ is too general here.  It is possible to use gcc without using
@@ -211,6 +203,21 @@ directive|include
 file|<cxxabi.h>
 end_include
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__HP_aCC
+argument_list|)
+end_elif
+
+begin_include
+include|#
+directive|include
+file|<acxx_demangle.h>
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -227,40 +234,9 @@ block|{
 name|namespace
 name|internal
 block|{
-comment|// AssertyTypeEq<T1, T2>::type is defined iff T1 and T2 are the same
-comment|// type.  This can be used as a compile-time assertion to ensure that
-comment|// two types are equal.
-name|template
-operator|<
-name|typename
-name|T1
-operator|,
-name|typename
-name|T2
-operator|>
-expr|struct
-name|AssertTypeEq
-expr_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-expr|struct
-name|AssertTypeEq
-operator|<
-name|T
-operator|,
-name|T
-operator|>
-block|{
-typedef|typedef
-name|bool
-name|type
-typedef|;
-block|}
-empty_stmt|;
 comment|// GetTypeName<T>() returns a human-readable name of type T.
+comment|// NB: This function is also used in Google Mock, so don't move it inside of
+comment|// the typed-test-only section below.
 name|template
 operator|<
 name|typename
@@ -287,9 +263,17 @@ operator|.
 name|name
 argument_list|()
 block|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|__GLIBCXX__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__HP_aCC
+argument_list|)
 name|int
 name|status
 operator|=
@@ -297,13 +281,22 @@ literal|0
 block|;
 comment|// gcc's implementation of typeid(T).name() mangles the type name,
 comment|// so we have to demangle it.
+ifdef|#
+directive|ifdef
+name|__GLIBCXX__
+name|using
+name|abi
+operator|::
+name|__cxa_demangle
+block|;
+endif|#
+directive|endif
+comment|// __GLIBCXX__
 name|char
 operator|*
 specifier|const
 name|readable_name
 operator|=
-name|abi
-operator|::
 name|__cxa_demangle
 argument_list|(
 name|name
@@ -344,7 +337,7 @@ name|name
 return|;
 endif|#
 directive|endif
-comment|// __GLIBCXX__
+comment|// __GLIBCXX__ || __HP_aCC
 else|#
 directive|else
 return|return
@@ -354,6 +347,44 @@ endif|#
 directive|endif
 comment|// GTEST_HAS_RTTI
 block|}
+if|#
+directive|if
+name|GTEST_HAS_TYPED_TEST
+operator|||
+name|GTEST_HAS_TYPED_TEST_P
+comment|// AssertyTypeEq<T1, T2>::type is defined iff T1 and T2 are the same
+comment|// type.  This can be used as a compile-time assertion to ensure that
+comment|// two types are equal.
+name|template
+operator|<
+name|typename
+name|T1
+operator|,
+name|typename
+name|T2
+operator|>
+expr|struct
+name|AssertTypeEq
+expr_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+expr|struct
+name|AssertTypeEq
+operator|<
+name|T
+operator|,
+name|T
+operator|>
+block|{
+typedef|typedef
+name|bool
+name|type
+typedef|;
+block|}
+empty_stmt|;
 comment|// A unique type used as the default value for the arguments of class
 comment|// template Types.  This allows us to simulate variadic templates
 comment|// (e.g. Types<int>, Type<int, double>, and etc), which C++ doesn't
@@ -43405,6 +43436,15 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
+end_comment
+
 begin_comment
 unit|}
 comment|// namespace internal
@@ -43413,15 +43453,6 @@ end_comment
 begin_comment
 unit|}
 comment|// namespace testing
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|// GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 end_comment
 
 begin_endif

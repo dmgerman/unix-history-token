@@ -74,21 +74,21 @@ name|_WIN32_WINNT
 end_undef
 
 begin_comment
-comment|// Require at least Windows 2000 API.
+comment|// Require at least Windows XP(5.1) API.
 end_comment
 
 begin_define
 define|#
 directive|define
 name|_WIN32_WINNT
-value|0x0500
+value|0x0501
 end_define
 
 begin_define
 define|#
 directive|define
 name|_WIN32_IE
-value|0x0500
+value|0x0600
 end_define
 
 begin_comment
