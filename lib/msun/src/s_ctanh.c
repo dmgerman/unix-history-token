@@ -181,6 +181,29 @@ argument_list|)
 operator|)
 return|;
 block|}
+comment|/* 	 * ctanh(x + i NAN) = NaN + i NaN 	 * ctanh(x +- i Inf) = NaN + i NaN 	 */
+if|if
+condition|(
+operator|!
+name|isfinite
+argument_list|(
+name|y
+argument_list|)
+condition|)
+return|return
+operator|(
+name|cpack
+argument_list|(
+name|y
+operator|-
+name|y
+argument_list|,
+name|y
+operator|-
+name|y
+argument_list|)
+operator|)
+return|;
 comment|/* 	 * ctanh(+-huge + i +-y) ~= +-1 +- i 2sin(2y)/exp(2x), using the 	 * approximation sinh^2(huge) ~= exp(2*huge) / 4. 	 * We use a modified formula to avoid spurious overflow. 	 */
 if|if
 condition|(
