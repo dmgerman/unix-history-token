@@ -10423,6 +10423,17 @@ operator|=
 name|IPTOS_LOWDELAY
 expr_stmt|;
 comment|/* len and id are set later */
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|ip
+operator|->
+name|ip_off
+operator|=
+name|IP_DF
+expr_stmt|;
+else|#
+directive|else
 name|ip
 operator|->
 name|ip_off
@@ -10432,6 +10443,8 @@ argument_list|(
 name|IP_DF
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|ip_ttl
@@ -11616,6 +11629,21 @@ operator|*
 name|ip
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|ip
+operator|->
+name|ip_len
+operator|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+expr_stmt|;
+else|#
+directive|else
 name|ip
 operator|->
 name|ip_len
@@ -11629,6 +11657,8 @@ operator|.
 name|len
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ip
 operator|->
 name|ip_id
