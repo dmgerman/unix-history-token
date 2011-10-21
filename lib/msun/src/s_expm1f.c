@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -337,11 +343,16 @@ operator|*
 name|ln2_lo
 expr_stmt|;
 block|}
+name|STRICT_ASSIGN
+argument_list|(
+name|float
+argument_list|,
 name|x
-operator|=
+argument_list|,
 name|hi
 operator|-
 name|lo
+argument_list|)
 expr_stmt|;
 name|c
 operator|=
