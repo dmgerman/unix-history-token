@@ -12433,6 +12433,12 @@ name|len
 expr_stmt|;
 endif|#
 directive|endif
+name|sc
+operator|->
+name|sc_len
+operator|=
+name|PFSYNC_MINPKT
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -12504,13 +12510,6 @@ name|__FreeBSD__
 block|}
 endif|#
 directive|endif
-comment|/* start again */
-name|sc
-operator|->
-name|sc_len
-operator|=
-name|PFSYNC_MINPKT
-expr_stmt|;
 block|}
 name|void
 name|pfsync_insert_state
