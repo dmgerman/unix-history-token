@@ -308,6 +308,16 @@ condition|)
 return|return
 name|one
 return|;
+comment|/* x==1: 1**y = 1, even if y is NaN */
+if|if
+condition|(
+name|hx
+operator|==
+literal|0x3f800000
+condition|)
+return|return
+name|one
+return|;
 comment|/* y!=zero: result is NaN if either arg is NaN */
 if|if
 condition|(
@@ -426,11 +436,9 @@ operator|==
 literal|0x3f800000
 condition|)
 return|return
-name|y
-operator|-
-name|y
+name|one
 return|;
-comment|/* inf**+-1 is NaN */
+comment|/* (-1)**+-inf is NaN */
 elseif|else
 if|if
 condition|(
