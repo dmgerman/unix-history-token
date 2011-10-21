@@ -665,6 +665,7 @@ literal|0
 expr_stmt|;
 name|omask
 operator|=
+operator|~
 operator|(
 name|control
 operator||
@@ -708,7 +709,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-operator|~
 name|omask
 operator|)
 return|;
@@ -759,6 +759,7 @@ literal|0
 expr_stmt|;
 name|omask
 operator|=
+operator|~
 operator|(
 name|control
 operator||
@@ -798,7 +799,6 @@ expr_stmt|;
 block|}
 return|return
 operator|(
-operator|~
 name|omask
 operator|)
 return|;
