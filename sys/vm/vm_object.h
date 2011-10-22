@@ -37,6 +37,12 @@ directive|include
 file|<sys/_mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vm_radix.h>
+end_include
+
 begin_comment
 comment|/*  *	Types defined:  *  *	vm_object_t		Virtual memory object.  *  * List of locks  *	(c)	const until freed  *  */
 end_comment
@@ -79,6 +85,11 @@ argument_list|)
 name|memq
 expr_stmt|;
 comment|/* list of resident pages */
+name|struct
+name|vm_radix
+name|rtree
+decl_stmt|;
+comment|/* root of the resident page radix index tree */
 name|vm_page_t
 name|root
 decl_stmt|;
