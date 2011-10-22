@@ -165,14 +165,6 @@ argument|RegScavenger *RS = NULL
 argument_list|)
 specifier|const
 block|;
-comment|//! Perform target-specific stack frame setup.
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
-argument_list|)
-specifier|const
-block|;
 comment|//! Return a function's saved spill slots
 comment|/*!       For CellSPU, a function's saved spill slots is just the link register.      */
 specifier|const
@@ -269,17 +261,6 @@ name|frame_index
 operator|*
 name|stackSlotSize
 argument_list|()
-return|;
-block|}
-comment|//! Number of instructions required to overcome hint-for-branch latency
-comment|/*!       HBR (hint-for-branch) instructions can be inserted when, for example,       we know that a given function is going to be called, such as printf(),       in the control flow graph. HBRs are only inserted if a sufficient number       of instructions occurs between the HBR and the target. Currently, HBRs       take 6 cycles, ergo, the magic number 6.      */
-specifier|static
-name|int
-name|branchHintPenalty
-argument_list|()
-block|{
-return|return
-literal|6
 return|;
 block|}
 expr|}

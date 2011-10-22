@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/AnalyzerOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/BugReporter/BugReporter.h"
 end_include
 
@@ -117,7 +123,7 @@ name|ASTContext
 operator|&
 name|Ctx
 block|;
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 block|;
@@ -130,7 +136,7 @@ name|llvm
 operator|::
 name|OwningPtr
 operator|<
-name|PathDiagnosticClient
+name|PathDiagnosticConsumer
 operator|>
 name|PD
 block|;
@@ -176,7 +182,7 @@ block|;
 name|bool
 name|VisualizeEGUbi
 block|;
-name|bool
+name|AnalysisPurgeMode
 name|PurgeDead
 block|;
 comment|/// EargerlyAssume - A flag indicating how the engine should handle
@@ -204,11 +210,11 @@ name|AnalysisManager
 argument_list|(
 argument|ASTContext&ctx
 argument_list|,
-argument|Diagnostic&diags
+argument|DiagnosticsEngine&diags
 argument_list|,
 argument|const LangOptions&lang
 argument_list|,
-argument|PathDiagnosticClient *pd
+argument|PathDiagnosticConsumer *pd
 argument_list|,
 argument|StoreManagerCreator storemgr
 argument_list|,
@@ -226,7 +232,7 @@ argument|bool vizdot
 argument_list|,
 argument|bool vizubi
 argument_list|,
-argument|bool purge
+argument|AnalysisPurgeMode purge
 argument_list|,
 argument|bool eager
 argument_list|,
@@ -242,106 +248,24 @@ argument|bool addInitializers
 argument_list|,
 argument|bool eagerlyTrimEGraph
 argument_list|)
-operator|:
-name|AnaCtxMgr
+block|;
+comment|/// Construct a clone of the given AnalysisManager with the given ASTContext
+comment|/// and DiagnosticsEngine.
+name|AnalysisManager
 argument_list|(
-name|useUnoptimizedCFG
-argument_list|,
-name|addImplicitDtors
-argument_list|,
-name|addInitializers
-argument_list|)
-block|,
-name|Ctx
-argument_list|(
+name|ASTContext
+operator|&
 name|ctx
-argument_list|)
-block|,
-name|Diags
-argument_list|(
+argument_list|,
+name|DiagnosticsEngine
+operator|&
 name|diags
+argument_list|,
+name|AnalysisManager
+operator|&
+name|ParentAM
 argument_list|)
-block|,
-name|LangInfo
-argument_list|(
-name|lang
-argument_list|)
-block|,
-name|PD
-argument_list|(
-name|pd
-argument_list|)
-block|,
-name|CreateStoreMgr
-argument_list|(
-name|storemgr
-argument_list|)
-block|,
-name|CreateConstraintMgr
-argument_list|(
-name|constraintmgr
-argument_list|)
-block|,
-name|CheckerMgr
-argument_list|(
-name|checkerMgr
-argument_list|)
-block|,
-name|Idxer
-argument_list|(
-name|idxer
-argument_list|)
-block|,
-name|AScope
-argument_list|(
-name|ScopeDecl
-argument_list|)
-block|,
-name|MaxNodes
-argument_list|(
-name|maxnodes
-argument_list|)
-block|,
-name|MaxVisit
-argument_list|(
-name|maxvisit
-argument_list|)
-block|,
-name|VisualizeEGDot
-argument_list|(
-name|vizdot
-argument_list|)
-block|,
-name|VisualizeEGUbi
-argument_list|(
-name|vizubi
-argument_list|)
-block|,
-name|PurgeDead
-argument_list|(
-name|purge
-argument_list|)
-block|,
-name|EagerlyAssume
-argument_list|(
-name|eager
-argument_list|)
-block|,
-name|TrimGraph
-argument_list|(
-name|trim
-argument_list|)
-block|,
-name|InlineCall
-argument_list|(
-name|inlinecall
-argument_list|)
-block|,
-name|EagerlyTrimEGraph
-argument_list|(
-argument|eagerlyTrimEGraph
-argument_list|)
-block|{}
+block|;
 operator|~
 name|AnalysisManager
 argument_list|()
@@ -435,7 +359,7 @@ argument_list|()
 return|;
 block|}
 name|virtual
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|getDiagnostic
 argument_list|()
@@ -456,9 +380,9 @@ name|LangInfo
 return|;
 block|}
 name|virtual
-name|PathDiagnosticClient
+name|PathDiagnosticConsumer
 operator|*
-name|getPathDiagnosticClient
+name|getPathDiagnosticConsumer
 argument_list|()
 block|{
 return|return
@@ -550,8 +474,8 @@ return|return
 name|TrimGraph
 return|;
 block|}
-name|bool
-name|shouldPurgeDead
+name|AnalysisPurgeMode
+name|getPurgeMode
 argument_list|()
 specifier|const
 block|{
@@ -617,9 +541,14 @@ name|getCFG
 argument_list|()
 return|;
 block|}
-name|LiveVariables
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
 operator|*
-name|getLiveVariables
+name|getAnalysis
 argument_list|(
 argument|Decl const *D
 argument_list|)
@@ -632,8 +561,12 @@ argument_list|(
 name|D
 argument_list|)
 operator|->
-name|getLiveVariables
-argument_list|()
+name|getAnalysis
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 name|ParentMap

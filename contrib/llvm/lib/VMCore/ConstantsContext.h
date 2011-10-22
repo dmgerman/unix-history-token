@@ -165,7 +165,7 @@ argument|unsigned Opcode
 argument_list|,
 argument|Constant *C
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 operator|:
 name|ConstantExpr
@@ -756,7 +756,6 @@ operator|>
 operator|&
 name|IdxList
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -875,7 +874,6 @@ operator|>
 operator|&
 name|IdxList
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -965,7 +963,6 @@ operator|>
 operator|&
 name|IdxList
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -982,7 +979,7 @@ argument|Constant *C
 argument_list|,
 argument|const std::vector<Constant*>&IdxList
 argument_list|,
-argument|const Type *DestTy
+argument|Type *DestTy
 argument_list|,
 argument|unsigned Flags
 argument_list|)
@@ -1069,7 +1066,7 @@ name|predicate
 block|;
 name|CompareConstantExpr
 argument_list|(
-argument|const Type *ty
+argument|Type *ty
 argument_list|,
 argument|Instruction::OtherOps opc
 argument_list|,
@@ -1962,7 +1959,7 @@ name|ConstantClass
 operator|*
 name|create
 argument_list|(
-argument|const TypeClass *Ty
+argument|TypeClass *Ty
 argument_list|,
 argument|const ValType&V
 argument_list|)
@@ -2030,7 +2027,7 @@ name|ConstantExpr
 operator|*
 name|create
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|const ExprMapKeyType&V
 argument_list|,
@@ -2670,7 +2667,7 @@ name|ConstantAggregateZero
 operator|*
 name|create
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|const ValType&V
 argument_list|)
@@ -3031,7 +3028,7 @@ name|ConstantPointerNull
 operator|*
 name|create
 argument_list|(
-argument|const PointerType *Ty
+argument|PointerType *Ty
 argument_list|,
 argument|const ValType&V
 argument_list|)
@@ -3104,7 +3101,7 @@ name|UndefValue
 operator|*
 name|create
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|const ValType&V
 argument_list|)
@@ -3171,7 +3168,7 @@ name|InlineAsm
 operator|*
 name|create
 argument_list|(
-argument|const PointerType *Ty
+argument|PointerType *Ty
 argument_list|,
 argument|const InlineAsmKeyType&Key
 argument_list|)
@@ -3287,7 +3284,6 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
 name|TypeClass
 operator|*
 operator|,
@@ -3608,7 +3604,6 @@ name|MapKey
 argument_list|(
 name|static_cast
 operator|<
-specifier|const
 name|TypeClass
 operator|*
 operator|>
@@ -3693,7 +3688,7 @@ unit|}    ConstantClass
 operator|*
 name|Create
 argument_list|(
-argument|const TypeClass *Ty
+argument|TypeClass *Ty
 argument_list|,
 argument|ValRefType V
 argument_list|,
@@ -3796,7 +3791,6 @@ name|ConstantClass
 modifier|*
 name|getOrCreate
 parameter_list|(
-specifier|const
 name|TypeClass
 modifier|*
 name|Ty

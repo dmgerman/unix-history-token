@@ -89,10 +89,8 @@ name|class
 name|TextDiagnosticPrinter
 range|:
 name|public
-name|DiagnosticClient
+name|DiagnosticConsumer
 block|{
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -133,7 +131,7 @@ name|public
 operator|:
 name|TextDiagnosticPrinter
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|,
 argument|const DiagnosticOptions&diags
 argument_list|,
@@ -182,64 +180,44 @@ block|;   }
 name|void
 name|PrintIncludeStack
 argument_list|(
-argument|Diagnostic::Level Level
+argument|DiagnosticsEngine::Level Level
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
 argument|const SourceManager&SM
-argument_list|)
-block|;
-name|void
-name|HighlightRange
-argument_list|(
-argument|const CharSourceRange&R
-argument_list|,
-argument|const SourceManager&SrcMgr
-argument_list|,
-argument|unsigned LineNo
-argument_list|,
-argument|FileID FID
-argument_list|,
-argument|std::string&CaretLine
-argument_list|,
-argument|const std::string&SourceLine
 argument_list|)
 block|;
 name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
-argument|Diagnostic::Level Level
+argument|DiagnosticsEngine::Level Level
 argument_list|,
-argument|const DiagnosticInfo&Info
+argument|const Diagnostic&Info
 argument_list|)
+block|;
+name|DiagnosticConsumer
+operator|*
+name|clone
+argument_list|(
+argument|DiagnosticsEngine&Diags
+argument_list|)
+specifier|const
 block|;
 name|private
 operator|:
 name|void
-name|EmitCaretDiagnostic
+name|EmitDiagnosticLoc
 argument_list|(
-argument|SourceLocation Loc
+argument|DiagnosticsEngine::Level Level
 argument_list|,
-argument|CharSourceRange *Ranges
-argument_list|,
-argument|unsigned NumRanges
+argument|const Diagnostic&Info
 argument_list|,
 argument|const SourceManager&SM
 argument_list|,
-argument|const FixItHint *Hints
-argument_list|,
-argument|unsigned NumHints
-argument_list|,
-argument|unsigned Columns
-argument_list|,
-argument|unsigned OnMacroInst
-argument_list|,
-argument|unsigned MacroSkipStart
-argument_list|,
-argument|unsigned MacroSkipEnd
+argument|PresumedLoc PLoc
 argument_list|)
-block|;    }
+block|; }
 decl_stmt|;
 block|}
 end_decl_stmt

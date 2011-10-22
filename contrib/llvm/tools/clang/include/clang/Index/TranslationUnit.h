@@ -67,7 +67,7 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|Preprocessor
@@ -109,7 +109,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|getDiagnostic
 parameter_list|()

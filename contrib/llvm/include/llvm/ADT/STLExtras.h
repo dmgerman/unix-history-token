@@ -974,12 +974,7 @@ begin_comment
 comment|//   // do other stuff
 end_comment
 
-begin_macro
-name|namespace
-end_macro
-
-begin_block
-block|{
+begin_expr_stmt
 name|template
 operator|<
 name|typename
@@ -996,24 +991,39 @@ name|T1
 modifier|&
 name|first_type
 typedef|;
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
 name|T2
 modifier|&
 name|second_type
 typedef|;
+end_typedef
+
+begin_decl_stmt
 name|first_type
 name|first
 decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|second_type
 name|second
 decl_stmt|;
+end_decl_stmt
+
+begin_macro
 name|tier
 argument_list|(
 argument|first_type f
 argument_list|,
 argument|second_type s
 argument_list|)
-block|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|first
 argument_list|(
 name|f
@@ -1059,15 +1069,11 @@ operator|*
 name|this
 return|;
 block|}
-block|}
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+end_expr_stmt
 
 begin_expr_stmt
-unit|}  template
+unit|};
+name|template
 operator|<
 name|typename
 name|T1

@@ -172,11 +172,6 @@ specifier|const
 block|;
 comment|// Debug information queries.
 name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
@@ -192,24 +187,6 @@ block|;
 name|unsigned
 name|getEHHandlerRegister
 argument_list|()
-specifier|const
-block|;
-name|int
-name|getDwarfRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
-name|int
-name|getLLVMRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
 specifier|const
 block|; }
 decl_stmt|;

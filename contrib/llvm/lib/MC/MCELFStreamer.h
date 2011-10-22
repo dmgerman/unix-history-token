@@ -113,7 +113,7 @@ name|MCContext
 operator|&
 name|Context
 argument_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 operator|&
 name|TAB
 argument_list|,
@@ -143,7 +143,7 @@ name|MCContext
 operator|&
 name|Context
 argument_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 operator|&
 name|TAB
 argument_list|,
@@ -373,6 +373,8 @@ argument_list|(
 argument|MCSymbol *Symbol
 argument_list|,
 argument|uint64_t Size
+argument_list|,
+argument|unsigned ByteAlignment
 argument_list|)
 block|;
 name|virtual

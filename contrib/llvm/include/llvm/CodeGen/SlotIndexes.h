@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file implements SlotIndex and related classes. The purpuse of SlotIndex
+comment|// This file implements SlotIndex and related classes. The purpose of SlotIndex
 end_comment
 
 begin_comment

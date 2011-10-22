@@ -190,6 +190,8 @@ argument_list|)
 block|{
 name|assert
 argument_list|(
+literal|0
+operator|&&
 literal|"emitLabel not implemented"
 argument_list|)
 block|;     }
@@ -205,6 +207,8 @@ specifier|const
 block|{
 name|assert
 argument_list|(
+literal|0
+operator|&&
 literal|"getLabelAddress not implemented"
 argument_list|)
 block|;

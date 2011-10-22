@@ -59,14 +59,16 @@ directive|define
 name|LLVM_CLANG_GR_CONSTRAINT_MANAGER_H
 end_define
 
-begin_comment
-comment|// FIXME: Typedef LiveSymbolsTy/DeadSymbolsTy at a more appropriate place.
-end_comment
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
+end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/Store.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_decl_stmt
@@ -87,16 +89,13 @@ name|namespace
 name|ento
 block|{
 name|class
-name|GRState
+name|ProgramState
 decl_stmt|;
 name|class
-name|GRStateManager
+name|ProgramStateManager
 decl_stmt|;
 name|class
 name|SubEngine
-decl_stmt|;
-name|class
-name|SVal
 decl_stmt|;
 name|class
 name|ConstraintManager
@@ -110,12 +109,12 @@ argument_list|()
 expr_stmt|;
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|assume
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|,
@@ -133,16 +132,16 @@ operator|::
 name|pair
 operator|<
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 operator|,
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 operator|>
 name|assumeDual
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|DefinedSVal Cond
 argument_list|)
@@ -180,7 +179,7 @@ name|APSInt
 operator|*
 name|getSymVal
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|)
@@ -193,7 +192,7 @@ name|bool
 name|isEqual
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -213,12 +212,12 @@ literal|0
 decl_stmt|;
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|removeDeadBindings
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|,
@@ -232,37 +231,35 @@ function_decl|;
 name|virtual
 name|void
 name|print
-argument_list|(
+parameter_list|(
 specifier|const
-name|GRState
-operator|*
+name|ProgramState
+modifier|*
 name|state
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|Out
-argument_list|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|nl
-argument_list|,
+parameter_list|,
 specifier|const
 name|char
-operator|*
+modifier|*
 name|sep
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 name|virtual
 name|void
 name|EndPath
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|)
@@ -289,7 +286,7 @@ name|ConstraintManager
 modifier|*
 name|CreateBasicConstraintManager
 parameter_list|(
-name|GRStateManager
+name|ProgramStateManager
 modifier|&
 name|statemgr
 parameter_list|,
@@ -302,7 +299,7 @@ name|ConstraintManager
 modifier|*
 name|CreateRangeConstraintManager
 parameter_list|(
-name|GRStateManager
+name|ProgramStateManager
 modifier|&
 name|statemgr
 parameter_list|,

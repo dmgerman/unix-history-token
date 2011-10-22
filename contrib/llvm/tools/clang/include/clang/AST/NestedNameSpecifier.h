@@ -83,16 +83,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -573,8 +563,6 @@ begin_decl_stmt
 name|void
 name|print
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -1348,7 +1336,7 @@ operator|(
 name|NNS
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_nestednamespec
 argument_list|)

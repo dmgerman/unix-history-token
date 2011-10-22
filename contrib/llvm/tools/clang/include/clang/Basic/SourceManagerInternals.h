@@ -291,7 +291,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|unsigned
+name|int
 operator|,
 name|std
 operator|::
@@ -334,7 +334,7 @@ block|{}
 name|unsigned
 name|getLineTableFilenameID
 argument_list|(
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -384,7 +384,7 @@ block|}
 name|void
 name|AddLineNote
 parameter_list|(
-name|unsigned
+name|int
 name|FID
 parameter_list|,
 name|unsigned
@@ -400,7 +400,7 @@ function_decl|;
 name|void
 name|AddLineNote
 argument_list|(
-name|unsigned
+name|int
 name|FID
 argument_list|,
 name|unsigned
@@ -428,7 +428,7 @@ name|LineEntry
 modifier|*
 name|FindNearestLineEntry
 parameter_list|(
-name|unsigned
+name|int
 name|FID
 parameter_list|,
 name|unsigned
@@ -441,7 +441,7 @@ name|std
 operator|::
 name|map
 operator|<
-name|unsigned
+name|int
 operator|,
 name|std
 operator|::
@@ -481,7 +481,7 @@ comment|/// the internal representation of the line table.
 name|void
 name|AddEntry
 argument_list|(
-name|unsigned
+name|int
 name|FID
 argument_list|,
 specifier|const

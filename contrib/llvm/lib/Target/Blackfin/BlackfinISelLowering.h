@@ -131,9 +131,7 @@ name|i16
 return|;
 block|}
 name|virtual
-name|MVT
-operator|::
-name|SimpleValueType
+name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT

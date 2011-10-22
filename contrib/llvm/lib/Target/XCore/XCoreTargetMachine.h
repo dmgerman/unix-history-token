@@ -135,31 +135,17 @@ name|public
 operator|:
 name|XCoreTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|;
 name|virtual

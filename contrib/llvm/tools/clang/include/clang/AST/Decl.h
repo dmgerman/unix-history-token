@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/Optional.h"
 end_include
 
@@ -132,6 +138,9 @@ decl_stmt|;
 name|class
 name|TemplateArgumentList
 decl_stmt|;
+struct_decl|struct
+name|ASTTemplateArgumentListInfo
+struct_decl|;
 name|class
 name|MemberSpecializationInfo
 decl_stmt|;
@@ -472,8 +481,6 @@ block|}
 comment|/// getName - Get the name of identifier for this declaration as a StringRef.
 comment|/// This requires that the declaration have a name and that it be a simple
 comment|/// identifier.
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|()
@@ -529,7 +536,7 @@ block|}
 name|void
 name|printName
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|{
@@ -645,6 +652,29 @@ name|hasLinkage
 argument_list|()
 specifier|const
 block|;
+comment|/// \brief Whether this declaration was marked as being private to the
+comment|/// module in which it was defined.
+name|bool
+name|isModulePrivate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModulePrivate
+return|;
+block|}
+comment|/// \brief Specify whether this declaration was marked as being private
+comment|/// to the module in which it was defined.
+name|void
+name|setModulePrivate
+argument_list|(
+argument|bool MP = true
+argument_list|)
+block|{
+name|ModulePrivate
+operator|=
+name|MP
+block|;   }
 comment|/// \brief Determine whether this declaration is a C++ class member.
 name|bool
 name|isCXXClassMember
@@ -1210,29 +1240,22 @@ end_empty_stmt
 
 begin_expr_stmt
 specifier|inline
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
 operator|,
 specifier|const
 name|NamedDecl
-operator|*
+operator|&
 name|ND
 operator|)
 block|{
 name|ND
-operator|->
-name|getDeclName
-argument_list|()
 operator|.
 name|printName
 argument_list|(
@@ -2767,6 +2790,12 @@ name|ARCPseudoStrong
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this variable is (C++0x) constexpr.
+name|unsigned
+name|IsConstexpr
+range|:
+literal|1
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -2783,10 +2812,6 @@ literal|13
 block|}
 enum|;
 end_enum
-
-begin_comment
-comment|// one reserved bit
-end_comment
 
 begin_decl_stmt
 name|friend
@@ -2806,6 +2831,16 @@ begin_label
 name|protected
 label|:
 end_label
+
+begin_enum
+enum|enum
+block|{
+name|NumParameterIndexBits
+init|=
+literal|8
+block|}
+enum|;
+end_enum
 
 begin_decl_stmt
 name|class
@@ -2856,7 +2891,7 @@ comment|/// function parameter scope in which it was declared.
 name|unsigned
 name|ParameterIndex
 range|:
-literal|8
+name|NumParameterIndexBits
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -3224,7 +3259,7 @@ comment|// Return true for:  Auto, Register.
 end_comment
 
 begin_comment
-comment|// Return false for: Extern, Static, PrivateExtern.
+comment|// Return false for: Extern, Static, PrivateExtern, OpenCLWorkGroupLocal.
 end_comment
 
 begin_return
@@ -4831,6 +4866,41 @@ block|}
 end_function
 
 begin_comment
+comment|/// Whether this variable is (C++0x) constexpr.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isConstexpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|VarDeclBits
+operator|.
+name|IsConstexpr
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setConstexpr
+parameter_list|(
+name|bool
+name|IC
+parameter_list|)
+block|{
+name|VarDeclBits
+operator|.
+name|IsConstexpr
+operator|=
+name|IC
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// \brief If this variable is an instantiated static data member of a
 end_comment
 
@@ -5211,6 +5281,12 @@ argument_list|,
 argument|Expr *DefArg
 argument_list|)
 block|;
+name|virtual
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|;
 name|void
 name|setObjCMethodScopeInfo
 argument_list|(
@@ -5223,21 +5299,9 @@ name|IsObjCMethodParam
 operator|=
 name|true
 block|;
-name|ParmVarDeclBits
-operator|.
-name|ParameterIndex
-operator|=
-name|parameterIndex
-block|;
-name|assert
+name|setParameterIndex
 argument_list|(
-name|ParmVarDeclBits
-operator|.
-name|ParameterIndex
-operator|==
 name|parameterIndex
-operator|&&
-literal|"truncation!"
 argument_list|)
 block|;   }
 name|void
@@ -5273,21 +5337,9 @@ operator|&&
 literal|"truncation!"
 argument_list|)
 block|;
-name|ParmVarDeclBits
-operator|.
-name|ParameterIndex
-operator|=
-name|parameterIndex
-block|;
-name|assert
+name|setParameterIndex
 argument_list|(
-name|ParmVarDeclBits
-operator|.
-name|ParameterIndex
-operator|==
 name|parameterIndex
-operator|&&
-literal|"truncation!"
 argument_list|)
 block|;   }
 name|bool
@@ -5328,9 +5380,8 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ParmVarDeclBits
-operator|.
-name|ParameterIndex
+name|getParameterIndex
+argument_list|()
 return|;
 block|}
 name|ObjCDeclQualifier
@@ -5956,6 +6007,113 @@ return|;
 block|}
 end_function
 
+begin_label
+name|private
+label|:
+end_label
+
+begin_enum
+enum|enum
+block|{
+name|ParameterIndexSentinel
+init|=
+operator|(
+literal|1
+operator|<<
+name|NumParameterIndexBits
+operator|)
+operator|-
+literal|1
+block|}
+enum|;
+end_enum
+
+begin_function
+name|void
+name|setParameterIndex
+parameter_list|(
+name|unsigned
+name|parameterIndex
+parameter_list|)
+block|{
+if|if
+condition|(
+name|parameterIndex
+operator|>=
+name|ParameterIndexSentinel
+condition|)
+block|{
+name|setParameterIndexLarge
+argument_list|(
+name|parameterIndex
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+operator|=
+name|parameterIndex
+expr_stmt|;
+name|assert
+argument_list|(
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+operator|==
+name|parameterIndex
+operator|&&
+literal|"truncation!"
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|unsigned
+name|getParameterIndex
+argument_list|()
+specifier|const
+block|{
+name|unsigned
+name|d
+operator|=
+name|ParmVarDeclBits
+operator|.
+name|ParameterIndex
+block|;
+return|return
+name|d
+operator|==
+name|ParameterIndexSentinel
+condition|?
+name|getParameterIndexLarge
+argument_list|()
+else|:
+name|d
+return|;
+block|}
+end_expr_stmt
+
+begin_function_decl
+name|void
+name|setParameterIndexLarge
+parameter_list|(
+name|unsigned
+name|parameterIndex
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_expr_stmt
+name|unsigned
+name|getParameterIndexLarge
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};
 comment|/// FunctionDecl - An instance of this class is created to represent a
@@ -6128,6 +6286,11 @@ name|IsLateTemplateParsed
 range|:
 literal|1
 decl_stmt|;
+name|bool
+name|IsConstexpr
+range|:
+literal|1
+decl_stmt|;
 comment|/// \brief End part of this FunctionDecl's source range.
 comment|///
 comment|/// We could compute the full range in getSourceRange(). However, when we're
@@ -6245,20 +6408,21 @@ parameter_list|)
 function_decl|;
 name|void
 name|setParams
-parameter_list|(
+argument_list|(
 name|ASTContext
-modifier|&
+operator|&
 name|C
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|ParmVarDecl
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|NewParamInfo
-parameter_list|,
-name|unsigned
-name|NumParams
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 name|protected
 label|:
 name|FunctionDecl
@@ -6280,6 +6444,8 @@ argument_list|,
 argument|StorageClass SCAsWritten
 argument_list|,
 argument|bool isInlineSpecified
+argument_list|,
+argument|bool isConstexprSpecified
 argument_list|)
 block|:
 name|DeclaratorDecl
@@ -6386,6 +6552,11 @@ operator|,
 name|IsLateTemplateParsed
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|IsConstexpr
+argument_list|(
+name|isConstexprSpecified
 argument_list|)
 operator|,
 name|EndRangeLoc
@@ -6504,6 +6675,11 @@ name|bool
 name|hasWrittenPrototype
 init|=
 name|true
+parameter_list|,
+name|bool
+name|isConstexprSpecified
+init|=
+name|false
 parameter_list|)
 block|{
 name|DeclarationNameInfo
@@ -6538,6 +6714,8 @@ argument_list|,
 name|isInlineSpecified
 argument_list|,
 name|hasWrittenPrototype
+argument_list|,
+name|isConstexprSpecified
 argument_list|)
 return|;
 block|}
@@ -6588,6 +6766,11 @@ name|bool
 name|hasWrittenPrototype
 init|=
 name|true
+parameter_list|,
+name|bool
+name|isConstexprSpecified
+init|=
+name|false
 parameter_list|)
 function_decl|;
 name|DeclarationNameInfo
@@ -6858,17 +7041,6 @@ init|=
 name|true
 parameter_list|)
 function_decl|;
-comment|/// Whether this is a constexpr function or constexpr constructor.
-comment|// FIXME: C++0x: Implement tracking of the constexpr specifier.
-name|bool
-name|isConstExpr
-argument_list|()
-specifier|const
-block|{
-return|return
-name|false
-return|;
-block|}
 comment|/// Whether this templated function will be late parsed.
 name|bool
 name|isLateTemplateParsed
@@ -7039,6 +7211,28 @@ block|{
 name|HasInheritedPrototype
 operator|=
 name|P
+expr_stmt|;
+block|}
+comment|/// Whether this is a (C++0x) constexpr function or constexpr constructor.
+name|bool
+name|isConstexpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsConstexpr
+return|;
+block|}
+name|void
+name|setConstexpr
+parameter_list|(
+name|bool
+name|IC
+parameter_list|)
+block|{
+name|IsConstexpr
+operator|=
+name|IC
 expr_stmt|;
 block|}
 comment|/// \brief Whether this function has been deleted.
@@ -7289,15 +7483,16 @@ return|;
 block|}
 name|void
 name|setParams
-parameter_list|(
+argument_list|(
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|ParmVarDecl
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|NewParamInfo
-parameter_list|,
-name|unsigned
-name|NumParams
-parameter_list|)
+argument_list|)
 block|{
 name|setParams
 argument_list|(
@@ -7305,8 +7500,6 @@ name|getASTContext
 argument_list|()
 argument_list|,
 name|NewParamInfo
-argument_list|,
-name|NumParams
 argument_list|)
 expr_stmt|;
 block|}
@@ -7433,8 +7626,8 @@ name|true
 expr_stmt|;
 block|}
 comment|/// \brief Determine whether this function should be inlined, because it is
-comment|/// either marked "inline" or is a member function of a C++ class that
-comment|/// was defined in the class body.
+comment|/// either marked "inline" or "constexpr" or is a member function of a class
+comment|/// that was defined in the class body.
 name|bool
 name|isInlined
 argument_list|()
@@ -7442,6 +7635,11 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isInlineDefinitionExternallyVisible
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|doesDeclarationForceExternallyVisibleDefinition
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -7594,6 +7792,14 @@ operator|!=
 literal|0
 return|;
 block|}
+comment|/// \brief Retrieve the class scope template pattern that this function
+comment|///  template specialization is instantiated from.
+name|FunctionDecl
+operator|*
+name|getClassScopeSpecializationPattern
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// \brief If this function is actually a function template specialization,
 comment|/// retrieve information about this function template specialization.
 comment|/// Otherwise, returns NULL.
@@ -7663,7 +7869,7 @@ comment|/// or if it had no explicit template argument list, returns NULL.
 comment|/// Note that it an explicit template argument list may be written empty,
 comment|/// e.g., template<> void foo<>(char* s);
 specifier|const
-name|TemplateArgumentListInfo
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getTemplateSpecializationArgsAsWritten
 argument_list|()
@@ -7806,7 +8012,7 @@ comment|/// \brief Retrieve the (first) point of instantiation of a function tem
 comment|/// specialization or a member of a class template specialization.
 comment|///
 comment|/// \returns the first point of instantiation, if this function was
-comment|/// instantiated from a template; otherwie, returns an invalid source
+comment|/// instantiated from a template; otherwise, returns an invalid source
 comment|/// location.
 name|SourceLocation
 name|getPointOfInstantiation
@@ -8183,6 +8389,13 @@ operator|:
 literal|0
 return|;
 block|}
+name|unsigned
+name|getBitWidthValue
+argument_list|(
+argument|const ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
 name|void
 name|setBitWidth
 argument_list|(
@@ -9495,10 +9708,11 @@ name|TagDeclKind
 operator|:
 literal|2
 block|;
-comment|/// IsDefinition - True if this is a definition ("struct foo {};"), false if
-comment|/// it is a declaration ("struct foo;").
+comment|/// IsCompleteDefinition - True if this is a definition ("struct foo
+comment|/// {};"), false if it is a declaration ("struct foo;").  It is not
+comment|/// a definition until the definition has been fully processed.
 name|bool
-name|IsDefinition
+name|IsCompleteDefinition
 operator|:
 literal|1
 block|;
@@ -9513,6 +9727,12 @@ comment|/// "embedded" (i.e., defined or declared for the very first time)
 comment|/// in the syntax of a declarator.
 name|bool
 name|IsEmbeddedInDeclarator
+operator|:
+literal|1
+block|;
+comment|/// /brief True if this tag is free standing, e.g. "struct foo;".
+name|bool
+name|IsFreeStanding
 operator|:
 literal|1
 block|;
@@ -9695,7 +9915,7 @@ name|TagDeclKind
 operator|=
 name|TK
 block|;
-name|IsDefinition
+name|IsCompleteDefinition
 operator|=
 name|false
 block|;
@@ -9704,6 +9924,10 @@ operator|=
 name|false
 block|;
 name|IsEmbeddedInDeclarator
+operator|=
+name|false
+block|;
+name|IsFreeStanding
 operator|=
 name|false
 block|;
@@ -9896,7 +10120,7 @@ comment|/// isThisDeclarationADefinition() - Return true if this declaration
 end_comment
 
 begin_comment
-comment|/// defines the type.  Provided for consistency.
+comment|/// is a completion definintion of the type.  Provided for consistency.
 end_comment
 
 begin_expr_stmt
@@ -9906,24 +10130,28 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|isDefinition
+name|isCompleteDefinition
 argument_list|()
 return|;
 block|}
 end_expr_stmt
 
 begin_comment
-comment|/// isDefinition - Return true if this decl has its body specified.
+comment|/// isCompleteDefinition - Return true if this decl has its body
+end_comment
+
+begin_comment
+comment|/// fully specified.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|isDefinition
+name|isCompleteDefinition
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsDefinition
+name|IsCompleteDefinition
 return|;
 block|}
 end_expr_stmt
@@ -9967,6 +10195,35 @@ block|{
 name|IsEmbeddedInDeclarator
 operator|=
 name|isInDeclarator
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|isFreeStanding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsFreeStanding
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setFreeStanding
+parameter_list|(
+name|bool
+name|isFreeStanding
+init|=
+name|true
+parameter_list|)
+block|{
+name|IsFreeStanding
+operator|=
+name|isFreeStanding
 expr_stmt|;
 block|}
 end_function
@@ -10032,23 +10289,27 @@ comment|///  struct/union/class/enum.  When determining whether or not a
 end_comment
 
 begin_comment
-comment|///  struct/union/class/enum is completely defined, one should use this method
+comment|///  struct/union/class/enum has a definition, one should use this
 end_comment
 
 begin_comment
-comment|///  as opposed to 'isDefinition'.  'isDefinition' indicates whether or not a
+comment|///  method as opposed to 'isDefinition'.  'isDefinition' indicates
 end_comment
 
 begin_comment
-comment|///  specific TagDecl is defining declaration, not whether or not the
+comment|///  whether or not a specific TagDecl is defining declaration, not
 end_comment
 
 begin_comment
-comment|///  struct/union/class/enum type is defined.  This method returns NULL if
+comment|///  whether or not the struct/union/class/enum type is defined.
 end_comment
 
 begin_comment
-comment|///  there is no TagDecl that defines the struct/union/class/enum.
+comment|///  This method returns NULL if there is no TagDecl that defines
+end_comment
+
+begin_comment
+comment|///  the struct/union/class/enum.
 end_comment
 
 begin_expr_stmt
@@ -10062,13 +10323,13 @@ end_expr_stmt
 
 begin_function
 name|void
-name|setDefinition
+name|setCompleteDefinition
 parameter_list|(
 name|bool
 name|V
 parameter_list|)
 block|{
-name|IsDefinition
+name|IsCompleteDefinition
 operator|=
 name|V
 expr_stmt|;
@@ -11247,7 +11508,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|isDefinition
+name|isCompleteDefinition
 argument_list|()
 operator|||
 name|isFixed
@@ -11603,13 +11864,14 @@ name|isInjectedClassName
 argument_list|()
 specifier|const
 block|;
-comment|/// getDefinition - Returns the RecordDecl that actually defines this
-comment|///  struct/union/class.  When determining whether or not a struct/union/class
-comment|///  is completely defined, one should use this method as opposed to
-comment|///  'isDefinition'.  'isDefinition' indicates whether or not a specific
-comment|///  RecordDecl is defining declaration, not whether or not the record
-comment|///  type is defined.  This method returns NULL if there is no RecordDecl
-comment|///  that defines the struct/union/tag.
+comment|/// getDefinition - Returns the RecordDecl that actually defines
+comment|///  this struct/union/class.  When determining whether or not a
+comment|///  struct/union/class is completely defined, one should use this
+comment|///  method as opposed to 'isCompleteDefinition'.
+comment|///  'isCompleteDefinition' indicates whether or not a specific
+comment|///  RecordDecl is a completed definition, not whether or not the
+comment|///  record type is defined.  This method returns NULL if there is
+comment|///  no RecordDecl that defines the struct/union/tag.
 name|RecordDecl
 operator|*
 name|getDefinition
@@ -12472,9 +12734,14 @@ block|}
 name|void
 name|setParams
 argument_list|(
-argument|ParmVarDecl **NewParamInfo
-argument_list|,
-argument|unsigned NumParams
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|NewParamInfo
 argument_list|)
 block|;
 comment|/// hasCaptures - True if this block (or its nested blocks) captures
@@ -12775,6 +13042,7 @@ name|DiagnosticBuilder
 operator|&
 name|DB
 operator|,
+specifier|const
 name|NamedDecl
 operator|*
 name|ND
@@ -12792,7 +13060,7 @@ operator|(
 name|ND
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_nameddecl
 argument_list|)

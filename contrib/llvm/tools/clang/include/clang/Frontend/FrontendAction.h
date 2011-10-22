@@ -46,6 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LangOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -66,16 +78,6 @@ include|#
 directive|include
 file|<vector>
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -163,17 +165,15 @@ label|:
 name|ASTConsumer
 modifier|*
 name|CreateWrappedASTConsumer
-argument_list|(
+parameter_list|(
 name|CompilerInstance
-operator|&
+modifier|&
 name|CI
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|InFile
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|protected
 label|:
 comment|/// @name Implementation Action Interface
@@ -196,19 +196,17 @@ name|virtual
 name|ASTConsumer
 modifier|*
 name|CreateASTConsumer
-argument_list|(
+parameter_list|(
 name|CompilerInstance
-operator|&
+modifier|&
 name|CI
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|InFile
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 comment|/// \brief Callback before starting processing a single input, giving the
 comment|/// opportunity to modify the CompilerInvocation or do some other action
 comment|/// before BeginSourceFileAction is called.
@@ -236,16 +234,14 @@ comment|/// EndSourceFileAction() will not be called.
 name|virtual
 name|bool
 name|BeginSourceFileAction
-argument_list|(
+parameter_list|(
 name|CompilerInstance
-operator|&
+modifier|&
 name|CI
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Filename
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|true
@@ -416,22 +412,20 @@ return|;
 block|}
 name|void
 name|setCurrentFile
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Value
-argument_list|,
+parameter_list|,
 name|InputKind
 name|Kind
-argument_list|,
+parameter_list|,
 name|ASTUnit
-operator|*
+modifier|*
 name|AST
-operator|=
+init|=
 literal|0
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// @name Supported Modes
 comment|/// @{
@@ -446,15 +440,14 @@ specifier|const
 operator|=
 literal|0
 expr_stmt|;
-comment|/// usesCompleteTranslationUnit - For AST based actions, should the
-comment|/// translation unit be completed?
+comment|/// \brief For AST-based actions, the kind of translation unit we're handling.
 name|virtual
-name|bool
-name|usesCompleteTranslationUnit
+name|TranslationUnitKind
+name|getTranslationUnitKind
 parameter_list|()
 block|{
 return|return
-name|true
+name|TU_Complete
 return|;
 block|}
 comment|/// hasPCHSupport - Does this action support use with PCH?
@@ -532,20 +525,18 @@ comment|/// \return True on success; the compilation of this file should be abor
 comment|/// and neither Execute nor EndSourceFile should be called.
 name|bool
 name|BeginSourceFile
-argument_list|(
+parameter_list|(
 name|CompilerInstance
-operator|&
+modifier|&
 name|CI
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Filename
-argument_list|,
+parameter_list|,
 name|InputKind
 name|Kind
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Execute - Set the source managers main input file, and run the action.
 name|void
 name|Execute
@@ -609,7 +600,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 operator|=
 literal|0
@@ -666,7 +657,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|;
 name|public
@@ -711,7 +702,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|;
 name|virtual
@@ -729,7 +720,7 @@ name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef Filename
+argument|StringRef Filename
 argument_list|)
 block|;
 name|virtual
@@ -760,8 +751,8 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
-name|bool
-name|usesCompleteTranslationUnit
+name|TranslationUnitKind
+name|getTranslationUnitKind
 argument_list|()
 block|;
 name|virtual

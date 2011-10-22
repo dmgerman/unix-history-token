@@ -16,7 +16,7 @@ name|__FLOAT_H
 end_define
 
 begin_comment
-comment|/* If we're on MinGW, fall baack to the system's float.h, which might have  * additional definitions provided for Windows.  * For more details see http://msdn.microsoft.com/en-us/library/y0ybw9fy.aspx  */
+comment|/* If we're on MinGW, fall back to the system's float.h, which might have  * additional definitions provided for Windows.  * For more details see http://msdn.microsoft.com/en-us/library/y0ybw9fy.aspx  */
 end_comment
 
 begin_if

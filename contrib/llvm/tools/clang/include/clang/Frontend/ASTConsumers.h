@@ -59,13 +59,16 @@ directive|define
 name|DRIVER_ASTCONSUMERS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|raw_ostream
-decl_stmt|;
 name|namespace
 name|sys
 block|{
@@ -87,7 +90,7 @@ name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|FileManager
@@ -108,14 +111,12 @@ comment|// implementation is still incomplete.
 name|ASTConsumer
 modifier|*
 name|CreateASTPrinter
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|raw_ostream
-operator|*
+modifier|*
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// AST dumper: dumps the raw AST in human-readable form to stderr; this is
 comment|// intended for debugging.
 name|ASTConsumer
@@ -128,14 +129,12 @@ comment|// format; this is intended for particularly intense debugging.
 name|ASTConsumer
 modifier|*
 name|CreateASTDumperXML
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|// Graphical AST viewer: for each function definition, creates a graph of
 comment|// the AST and displays it with the graph viewer "dotty".  Also outputs
 comment|// function declarations to stderr.

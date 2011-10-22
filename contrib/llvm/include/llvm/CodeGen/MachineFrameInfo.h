@@ -377,6 +377,11 @@ comment|/// StackProtectorIdx - The frame index for the stack protector.
 name|int
 name|StackProtectorIdx
 decl_stmt|;
+comment|/// FunctionContextIdx - The frame index for the function context. Used for
+comment|/// SjLj exceptions.
+name|int
+name|FunctionContextIdx
+decl_stmt|;
 comment|/// MaxCallFrameSize - This contains the size of the largest call frame if the
 comment|/// target uses frame setup/destroy pseudo instructions (as defined in the
 comment|/// TargetFrameInfo class).  This information is important for frame pointer
@@ -492,6 +497,11 @@ operator|=
 operator|-
 literal|1
 block|;
+name|FunctionContextIdx
+operator|=
+operator|-
+literal|1
+block|;
 name|MaxCallFrameSize
 operator|=
 literal|0
@@ -561,6 +571,29 @@ name|I
 parameter_list|)
 block|{
 name|StackProtectorIdx
+operator|=
+name|I
+expr_stmt|;
+block|}
+comment|/// getFunctionContextIndex/setFunctionContextIndex - Return the index for the
+comment|/// function context object. This object is used for SjLj exceptions.
+name|int
+name|getFunctionContextIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionContextIdx
+return|;
+block|}
+name|void
+name|setFunctionContextIndex
+parameter_list|(
+name|int
+name|I
+parameter_list|)
+block|{
+name|FunctionContextIdx
 operator|=
 name|I
 expr_stmt|;

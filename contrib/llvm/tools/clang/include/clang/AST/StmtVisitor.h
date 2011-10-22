@@ -195,10 +195,8 @@ argument_list|()
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown binary operator!"
 argument_list|)
 expr_stmt|;
@@ -551,10 +549,8 @@ argument_list|()
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown unary operator!"
 argument_list|)
 expr_stmt|;
@@ -700,10 +696,8 @@ argument_list|()
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown stmt kind!"
 argument_list|)
 expr_stmt|;

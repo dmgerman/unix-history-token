@@ -150,6 +150,10 @@ comment|/// any empty subobjects.
 name|CharUnits
 name|SizeOfLargestEmptySubobject
 decl_stmt|;
+comment|/// VBPtrOffset - Virtual base table offset.
+name|CharUnits
+name|VBPtrOffset
+decl_stmt|;
 comment|/// PrimaryBase - The primary base info for this record.
 name|llvm
 operator|::
@@ -228,6 +232,8 @@ argument_list|,
 argument|CharUnits size
 argument_list|,
 argument|CharUnits alignment
+argument_list|,
+argument|CharUnits vbptroffset
 argument_list|,
 argument|CharUnits datasize
 argument_list|,
@@ -636,6 +642,17 @@ return|return
 name|CXXInfo
 operator|->
 name|SizeOfLargestEmptySubobject
+return|;
+block|}
+name|CharUnits
+name|getVBPtrOffset
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CXXInfo
+operator|->
+name|VBPtrOffset
 return|;
 block|}
 block|}

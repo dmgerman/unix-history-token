@@ -445,6 +445,9 @@ name|MachineBasicBlock
 modifier|*
 name|BB
 decl_stmt|;
+name|uint32_t
+name|ExtraWeight
+decl_stmt|;
 name|Case
 argument_list|()
 operator|:
@@ -462,20 +465,21 @@ name|BB
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|ExtraWeight
+argument_list|(
+literal|0
+argument_list|)
 block|{ }
 name|Case
 argument_list|(
-name|Constant
-operator|*
-name|low
+argument|Constant* low
 argument_list|,
-name|Constant
-operator|*
-name|high
+argument|Constant* high
 argument_list|,
-name|MachineBasicBlock
-operator|*
-name|bb
+argument|MachineBasicBlock* bb
+argument_list|,
+argument|uint32_t extraweight
 argument_list|)
 operator|:
 name|Low
@@ -490,7 +494,12 @@ argument_list|)
 operator|,
 name|BB
 argument_list|(
-argument|bb
+name|bb
+argument_list|)
+operator|,
+name|ExtraWeight
+argument_list|(
+argument|extraweight
 argument_list|)
 block|{ }
 name|APInt
@@ -841,6 +850,12 @@ argument_list|,
 argument|MachineBasicBlock *falsebb
 argument_list|,
 argument|MachineBasicBlock *me
+argument_list|,
+argument|uint32_t trueweight =
+literal|0
+argument_list|,
+argument|uint32_t falseweight =
+literal|0
 argument_list|)
 block|:
 name|CC
@@ -875,9 +890,19 @@ argument_list|)
 operator|,
 name|ThisBB
 argument_list|(
-argument|me
+name|me
 argument_list|)
-block|{}
+operator|,
+name|TrueWeight
+argument_list|(
+name|trueweight
+argument_list|)
+operator|,
+name|FalseWeight
+argument_list|(
+argument|falseweight
+argument_list|)
+block|{ }
 comment|// CC - the condition code to use for the case block's setcc node
 name|ISD
 operator|::
@@ -910,6 +935,12 @@ comment|// ThisBB - the block into which to emit the code for the setcc and bran
 name|MachineBasicBlock
 modifier|*
 name|ThisBB
+decl_stmt|;
+comment|// TrueWeight/FalseWeight - branch weights.
+name|uint32_t
+name|TrueWeight
+decl_stmt|,
+name|FalseWeight
 decl_stmt|;
 block|}
 struct|;
@@ -1280,6 +1311,21 @@ name|GCFunctionInfo
 modifier|*
 name|GFI
 decl_stmt|;
+comment|/// LPadToCallSiteMap - Map a landing pad to the call site indexes.
+name|DenseMap
+operator|<
+name|MachineBasicBlock
+operator|*
+operator|,
+name|SmallVector
+operator|<
+name|unsigned
+operator|,
+literal|4
+operator|>
+expr|>
+name|LPadToCallSiteMap
+expr_stmt|;
 comment|/// HasTailCall - This is set to true if a call in the current
 comment|/// block has been translated as a tail call. In this case,
 comment|/// no subsequent DAG nodes should be created.
@@ -1880,6 +1926,11 @@ parameter_list|,
 name|MachineBasicBlock
 modifier|*
 name|Dst
+parameter_list|,
+name|uint32_t
+name|Weight
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 name|public
@@ -1963,6 +2014,15 @@ name|visitInvoke
 parameter_list|(
 specifier|const
 name|InvokeInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitResume
+parameter_list|(
+specifier|const
+name|ResumeInst
 modifier|&
 name|I
 parameter_list|)
@@ -2495,6 +2555,15 @@ name|I
 parameter_list|)
 function_decl|;
 name|void
+name|visitLandingPad
+parameter_list|(
+specifier|const
+name|LandingPadInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
 name|visitGetElementPtr
 parameter_list|(
 specifier|const
@@ -2540,6 +2609,33 @@ name|I
 parameter_list|)
 function_decl|;
 name|void
+name|visitAtomicCmpXchg
+parameter_list|(
+specifier|const
+name|AtomicCmpXchgInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitAtomicRMW
+parameter_list|(
+specifier|const
+name|AtomicRMWInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitFence
+parameter_list|(
+specifier|const
+name|FenceInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
 name|visitPHI
 parameter_list|(
 specifier|const
@@ -2562,6 +2658,24 @@ name|visitMemCmpCall
 parameter_list|(
 specifier|const
 name|CallInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitAtomicLoad
+parameter_list|(
+specifier|const
+name|LoadInst
+modifier|&
+name|I
+parameter_list|)
+function_decl|;
+name|void
+name|visitAtomicStore
+parameter_list|(
+specifier|const
+name|StoreInst
 modifier|&
 name|I
 parameter_list|)
@@ -2719,22 +2833,6 @@ literal|"UserOp2 should not exist at instruction selection time!"
 argument_list|)
 expr_stmt|;
 block|}
-specifier|const
-name|char
-modifier|*
-name|implVisitBinaryAtomic
-argument_list|(
-specifier|const
-name|CallInst
-operator|&
-name|I
-argument_list|,
-name|ISD
-operator|::
-name|NodeType
-name|Op
-argument_list|)
-decl_stmt|;
 specifier|const
 name|char
 modifier|*

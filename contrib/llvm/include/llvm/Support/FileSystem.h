@@ -570,60 +570,6 @@ name|uint64_t
 name|size
 parameter_list|)
 function_decl|;
-comment|/// @brief Make file readable.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param value If true, make readable, else, make unreadable.
-comment|/// @results errc::success if readability has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|set_read
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-name|value
-parameter_list|)
-function_decl|;
-comment|/// @brief Make file writeable.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param value If true, make writeable, else, make unwriteable.
-comment|/// @results errc::success if writeability has been successfully set, otherwise
-comment|///          a platform specific error_code.
-name|error_code
-name|set_write
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-name|value
-parameter_list|)
-function_decl|;
-comment|/// @brief Make file executable.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param value If true, make executable, else, make unexecutable.
-comment|/// @results errc::success if executability has been successfully set, otherwise
-comment|///          a platform specific error_code.
-name|error_code
-name|set_execute
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-name|value
-parameter_list|)
-function_decl|;
 comment|/// @}
 comment|/// @name Physical Observers
 comment|/// @{
@@ -659,6 +605,33 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
+comment|/// @brief Simpler version of exists for clients that don't need to
+comment|///        differentiate between an error and false.
+specifier|inline
+name|bool
+name|exists
+parameter_list|(
+specifier|const
+name|Twine
+modifier|&
+name|path
+parameter_list|)
+block|{
+name|bool
+name|result
+decl_stmt|;
+return|return
+operator|!
+name|exists
+argument_list|(
+name|path
+argument_list|,
+name|result
+argument_list|)
+operator|&&
+name|result
+return|;
+block|}
 comment|/// @brief Do file_status's represent the same thing?
 comment|///
 comment|/// @param A Input file_status.
@@ -743,26 +716,6 @@ comment|/// @results errc::success if result has been successfully set, otherwis
 comment|///          platform specific error_code.
 name|error_code
 name|is_directory
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Is path an empty file?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is a an empty file, false if it is not.
-comment|///               Undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|is_empty
 parameter_list|(
 specifier|const
 name|Twine
@@ -870,90 +823,6 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
-comment|/// @brief Get last write time without changing it.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to the last write time (UNIX time) of \a path if it
-comment|///               exists.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|last_write_time
-argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|path
-argument_list|,
-name|std
-operator|::
-name|time_t
-operator|&
-name|result
-argument_list|)
-decl_stmt|;
-comment|/// @brief Set last write time.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param value Time to set (UNIX time) \a path's last write time to.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|set_last_write_time
-argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|path
-argument_list|,
-name|std
-operator|::
-name|time_t
-name|value
-argument_list|)
-decl_stmt|;
-comment|/// @brief Read a symlink's value.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to the value of the symbolic link \a path.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|read_symlink
-argument_list|(
-specifier|const
-name|Twine
-operator|&
-name|path
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|char
-operator|>
-operator|&
-name|result
-argument_list|)
-decl_stmt|;
-comment|/// @brief Get disk space usage information.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to the capacity, free, and available space on the device
-comment|///               \a path is on.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|disk_space
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|space_info
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
 comment|/// @brief Get file status as if by POSIX stat().
 comment|///
 comment|/// @param path Input path.
@@ -1003,27 +872,6 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
-comment|/// @brief Get file status as if by POSIX lstat().
-comment|///
-comment|/// Does not resolve symlinks.
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to the file status.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|symlink_status
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|file_status
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
 comment|/// @brief Generate a unique path and open it as a file.
 comment|///
 comment|/// Generates a unique path suitable for a temporary file and then opens it as a
@@ -1039,6 +887,8 @@ comment|///
 comment|/// @param model Name to base unique path off of.
 comment|/// @param result_fs Set to the opened file's file descriptor.
 comment|/// @param result_path Set to the opened file's absolute path.
+comment|/// @param makeAbsolute If true and @model is not an absolute path, a temp
+comment|///        directory will be prepended.
 comment|/// @results errc::success if result_{fd,path} have been successfully set,
 comment|///          otherwise a platform specific error_code.
 name|error_code
@@ -1059,6 +909,11 @@ name|char
 operator|>
 operator|&
 name|result_path
+argument_list|,
+name|bool
+name|makeAbsolute
+operator|=
+name|true
 argument_list|)
 decl_stmt|;
 comment|/// @brief Canonicalize path.
@@ -1158,126 +1013,6 @@ modifier|&
 name|result
 parameter_list|)
 function_decl|;
-comment|/// @brief Is file bitcode?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is a bitcode file, false if it is not,
-comment|///               undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|is_bitcode
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Is file a dynamic library?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is a dynamic library, false if it is
-comment|///               not, undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|is_dynamic_library
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Is an object file?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is an object file, false if it is not,
-comment|///               undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|is_object_file
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Can file be read?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is readable, false it it is not,
-comment|///               undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|can_read
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Can file be written?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is writeable, false it it is not,
-comment|///               undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|can_write
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
-comment|/// @brief Can file be executed?
-comment|///
-comment|/// @param path Input path.
-comment|/// @param result Set to true if \a path is executable, false it it is not,
-comment|///               undefined otherwise.
-comment|/// @results errc::success if result has been successfully set, otherwise a
-comment|///          platform specific error_code.
-name|error_code
-name|can_execute
-parameter_list|(
-specifier|const
-name|Twine
-modifier|&
-name|path
-parameter_list|,
-name|bool
-modifier|&
-name|result
-parameter_list|)
-function_decl|;
 comment|/// @brief Get library paths the system linker uses.
 comment|///
 comment|/// @param result Set to the list of system library paths.
@@ -1373,8 +1108,8 @@ comment|/// @}
 comment|/// @name Iterators
 comment|/// @{
 comment|/// directory_entry - A single entry in a directory. Caches the status either
-comment|/// from the result of the iteration syscall, or the first time status or
-comment|/// symlink_status is called.
+comment|/// from the result of the iteration syscall, or the first time status is
+comment|/// called.
 name|class
 name|directory_entry
 block|{
@@ -1387,10 +1122,6 @@ name|mutable
 name|file_status
 name|Status
 decl_stmt|;
-name|mutable
-name|file_status
-name|SymlinkStatus
-decl_stmt|;
 name|public
 label|:
 name|explicit
@@ -1399,8 +1130,6 @@ argument_list|(
 argument|const Twine&path
 argument_list|,
 argument|file_status st = file_status()
-argument_list|,
-argument|file_status symlink_st = file_status()
 argument_list|)
 block|:
 name|Path
@@ -1413,12 +1142,7 @@ argument_list|)
 operator|,
 name|Status
 argument_list|(
-name|st
-argument_list|)
-operator|,
-name|SymlinkStatus
-argument_list|(
-argument|symlink_st
+argument|st
 argument_list|)
 block|{}
 name|directory_entry
@@ -1430,8 +1154,6 @@ argument_list|(
 argument|const Twine&path
 argument_list|,
 argument|file_status st = file_status()
-argument_list|,
-argument|file_status symlink_st = file_status()
 argument_list|)
 block|{
 name|Path
@@ -1444,10 +1166,6 @@ block|;
 name|Status
 operator|=
 name|st
-block|;
-name|SymlinkStatus
-operator|=
-name|symlink_st
 block|;   }
 name|void
 name|replace_filename
@@ -1455,8 +1173,6 @@ argument_list|(
 argument|const Twine&filename
 argument_list|,
 argument|file_status st = file_status()
-argument_list|,
-argument|file_status symlink_st = file_status()
 argument_list|)
 expr_stmt|;
 specifier|const
@@ -1474,15 +1190,6 @@ return|;
 block|}
 name|error_code
 name|status
-argument_list|(
-name|file_status
-operator|&
-name|result
-argument_list|)
-decl|const
-decl_stmt|;
-name|error_code
-name|symlink_status
 argument_list|(
 name|file_status
 operator|&

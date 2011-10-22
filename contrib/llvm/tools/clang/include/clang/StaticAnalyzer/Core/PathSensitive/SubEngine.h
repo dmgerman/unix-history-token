@@ -114,10 +114,10 @@ name|class
 name|ExplodedNode
 decl_stmt|;
 name|class
-name|GRState
+name|ProgramState
 decl_stmt|;
 name|class
-name|GRStateManager
+name|ProgramStateManager
 decl_stmt|;
 name|class
 name|BlockCounter
@@ -158,7 +158,7 @@ argument_list|()
 block|{}
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getInitialState
 argument_list|(
@@ -179,7 +179,7 @@ init|=
 literal|0
 function_decl|;
 name|virtual
-name|GRStateManager
+name|ProgramStateManager
 modifier|&
 name|getStateManager
 parameter_list|()
@@ -314,12 +314,12 @@ comment|/// Called by ConstraintManager. Used to call checker-specific
 comment|/// logic for handling assumptions on symbolic values.
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|processAssume
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|,
@@ -332,30 +332,30 @@ parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// wantsRegionChangeUpdate - Called by GRStateManager to determine if a
+comment|/// wantsRegionChangeUpdate - Called by ProgramStateManager to determine if a
 comment|///  region change should trigger a processRegionChanges update.
 name|virtual
 name|bool
 name|wantsRegionChangeUpdate
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|/// processRegionChanges - Called by GRStateManager whenever a change is made
+comment|/// processRegionChanges - Called by ProgramStateManager whenever a change is made
 comment|///  to the store. Used to update checkers that track region values.
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|processRegionChanges
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -366,31 +366,33 @@ name|InvalidatedSymbols
 operator|*
 name|invalidated
 argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
 name|MemRegion
 operator|*
-specifier|const
-operator|*
-name|Begin
+operator|>
+name|ExplicitRegions
 argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
 name|MemRegion
 operator|*
-specifier|const
-operator|*
-name|End
+operator|>
+name|Regions
 argument_list|)
 init|=
 literal|0
 decl_stmt|;
 specifier|inline
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|processRegionChange
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|,
@@ -407,16 +409,39 @@ name|state
 argument_list|,
 literal|0
 argument_list|,
-operator|&
 name|MR
 argument_list|,
-operator|&
 name|MR
-operator|+
-literal|1
 argument_list|)
 return|;
 block|}
+comment|/// printState - Called by ProgramStateManager to print checker-specific data.
+name|virtual
+name|void
+name|printState
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|Out
+parameter_list|,
+specifier|const
+name|ProgramState
+modifier|*
+name|State
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|NL
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Sep
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 comment|/// Called by CoreEngine when the analysis worklist is either empty or the
 comment|//  maximum number of analysis steps have been reached.
 name|virtual

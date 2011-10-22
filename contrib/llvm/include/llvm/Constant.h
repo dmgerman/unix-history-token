@@ -125,7 +125,7 @@ name|protected
 operator|:
 name|Constant
 argument_list|(
-argument|const Type *ty
+argument|Type *ty
 argument_list|,
 argument|ValueTy vty
 argument_list|,
@@ -155,6 +155,13 @@ comment|/// isNullValue - Return true if this is the value that would be returne
 comment|/// getNullValue.
 name|bool
 name|isNullValue
+argument_list|()
+specifier|const
+block|;
+comment|/// isAllOnesValue - Return true if this is the value that would be returned by
+comment|/// getAllOnesValue.
+name|bool
+name|isAllOnesValue
 argument_list|()
 specifier|const
 block|;
@@ -339,7 +346,6 @@ name|Constant
 operator|*
 name|getNullValue
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -353,7 +359,6 @@ name|Constant
 operator|*
 name|getAllOnesValue
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -366,7 +371,6 @@ name|Constant
 operator|*
 name|getIntegerValue
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty

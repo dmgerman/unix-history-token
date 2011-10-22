@@ -203,9 +203,6 @@ name|Allocator
 name|Allocator
 expr_stmt|;
 name|class
-name|InterferenceResult
-decl_stmt|;
-name|class
 name|Query
 decl_stmt|;
 name|private
@@ -411,202 +408,6 @@ parameter_list|)
 function_decl|;
 endif|#
 directive|endif
-comment|/// Cache a single interference test result in the form of two intersecting
-comment|/// segments. This allows efficiently iterating over the interferences. The
-comment|/// iteration logic is handled by LiveIntervalUnion::Query which may
-comment|/// filter interferences depending on the type of query.
-name|class
-name|InterferenceResult
-block|{
-name|friend
-name|class
-name|Query
-decl_stmt|;
-name|LiveInterval
-operator|::
-name|iterator
-name|VirtRegI
-expr_stmt|;
-comment|// current position in VirtReg
-name|SegmentIter
-name|LiveUnionI
-decl_stmt|;
-comment|// current position in LiveUnion
-comment|// Internal ctor.
-name|InterferenceResult
-argument_list|(
-argument|LiveInterval::iterator VRegI
-argument_list|,
-argument|SegmentIter UnionI
-argument_list|)
-block|:
-name|VirtRegI
-argument_list|(
-name|VRegI
-argument_list|)
-operator|,
-name|LiveUnionI
-argument_list|(
-argument|UnionI
-argument_list|)
-block|{}
-name|public
-operator|:
-comment|// Public default ctor.
-name|InterferenceResult
-argument_list|()
-operator|:
-name|VirtRegI
-argument_list|()
-operator|,
-name|LiveUnionI
-argument_list|()
-block|{}
-comment|/// start - Return the start of the current overlap.
-name|SlotIndex
-name|start
-argument_list|()
-specifier|const
-block|{
-return|return
-name|std
-operator|::
-name|max
-argument_list|(
-name|VirtRegI
-operator|->
-name|start
-argument_list|,
-name|LiveUnionI
-operator|.
-name|start
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// stop - Return the end of the current overlap.
-name|SlotIndex
-name|stop
-argument_list|()
-specifier|const
-block|{
-return|return
-name|std
-operator|::
-name|min
-argument_list|(
-name|VirtRegI
-operator|->
-name|end
-argument_list|,
-name|LiveUnionI
-operator|.
-name|stop
-argument_list|()
-argument_list|)
-return|;
-block|}
-comment|/// interference - Return the register that is interfering here.
-name|LiveInterval
-operator|*
-name|interference
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LiveUnionI
-operator|.
-name|value
-argument_list|()
-return|;
-block|}
-comment|// Note: this interface provides raw access to the iterators because the
-comment|// result has no way to tell if it's valid to dereference them.
-comment|// Access the VirtReg segment.
-name|LiveInterval
-operator|::
-name|iterator
-name|virtRegPos
-argument_list|()
-specifier|const
-block|{
-return|return
-name|VirtRegI
-return|;
-block|}
-comment|// Access the LiveUnion segment.
-specifier|const
-name|SegmentIter
-operator|&
-name|liveUnionPos
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LiveUnionI
-return|;
-block|}
-name|bool
-name|operator
-operator|==
-operator|(
-specifier|const
-name|InterferenceResult
-operator|&
-name|IR
-operator|)
-specifier|const
-block|{
-return|return
-name|VirtRegI
-operator|==
-name|IR
-operator|.
-name|VirtRegI
-operator|&&
-name|LiveUnionI
-operator|==
-name|IR
-operator|.
-name|LiveUnionI
-return|;
-block|}
-name|bool
-name|operator
-operator|!=
-operator|(
-specifier|const
-name|InterferenceResult
-operator|&
-name|IR
-operator|)
-specifier|const
-block|{
-return|return
-operator|!
-name|operator
-operator|==
-operator|(
-name|IR
-operator|)
-return|;
-block|}
-name|void
-name|print
-argument_list|(
-name|raw_ostream
-operator|&
-name|OS
-argument_list|,
-specifier|const
-name|TargetRegisterInfo
-operator|*
-name|TRI
-argument_list|)
-decl|const
-decl_stmt|;
-block|}
-empty_stmt|;
 comment|/// Query interferences between a single live virtual register and a live
 comment|/// interval union.
 name|class
@@ -620,9 +421,16 @@ name|LiveInterval
 modifier|*
 name|VirtReg
 decl_stmt|;
-name|InterferenceResult
-name|FirstInterference
+name|LiveInterval
+operator|::
+name|iterator
+name|VirtRegI
+expr_stmt|;
+comment|// current position in VirtReg
+name|SegmentIter
+name|LiveUnionI
 decl_stmt|;
+comment|// current position in LiveUnion
 name|SmallVector
 operator|<
 name|LiveInterval
@@ -826,86 +634,18 @@ operator|*
 name|VirtReg
 return|;
 block|}
-name|bool
-name|isInterference
-argument_list|(
-specifier|const
-name|InterferenceResult
-operator|&
-name|IR
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|IR
-operator|.
-name|VirtRegI
-operator|!=
-name|VirtReg
-operator|->
-name|end
-argument_list|()
-condition|)
-block|{
-name|assert
-argument_list|(
-name|overlap
-argument_list|(
-operator|*
-name|IR
-operator|.
-name|VirtRegI
-argument_list|,
-name|IR
-operator|.
-name|LiveUnionI
-argument_list|)
-operator|&&
-literal|"invalid segment iterators"
-argument_list|)
-expr_stmt|;
-return|return
-name|true
-return|;
-block|}
-return|return
-name|false
-return|;
-block|}
 comment|// Does this live virtual register interfere with the union?
 name|bool
 name|checkInterference
 parameter_list|()
 block|{
 return|return
-name|isInterference
+name|collectInterferingVRegs
 argument_list|(
-name|firstInterference
-argument_list|()
+literal|1
 argument_list|)
 return|;
 block|}
-comment|// Get the first pair of interfering segments, or a noninterfering result.
-comment|// This initializes the firstInterference_ cache.
-specifier|const
-name|InterferenceResult
-modifier|&
-name|firstInterference
-parameter_list|()
-function_decl|;
-comment|// Treat the result as an iterator and advance to the next interfering pair
-comment|// of segments. Visiting each unique interfering pairs means that the same
-comment|// VirtReg or LiveUnion segment may be visited multiple times.
-name|bool
-name|nextInterference
-argument_list|(
-name|InterferenceResult
-operator|&
-name|IR
-argument_list|)
-decl|const
-decl_stmt|;
 comment|// Count the virtual registers in this union that interfere with this
 comment|// query's live virtual register, up to maxInterferingRegs.
 name|unsigned
@@ -972,19 +712,6 @@ name|MachineLoopRange
 modifier|*
 parameter_list|)
 function_decl|;
-name|void
-name|print
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-specifier|const
-name|TargetRegisterInfo
-modifier|*
-name|TRI
-parameter_list|)
-function_decl|;
 name|private
 label|:
 name|Query
@@ -1005,16 +732,6 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
-comment|// Private interface for queries
-name|void
-name|findIntersection
-argument_list|(
-name|InterferenceResult
-operator|&
-name|IR
-argument_list|)
-decl|const
-decl_stmt|;
 block|}
 empty_stmt|;
 block|}

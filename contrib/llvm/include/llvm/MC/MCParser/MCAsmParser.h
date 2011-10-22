@@ -75,6 +75,9 @@ name|class
 name|MCStreamer
 decl_stmt|;
 name|class
+name|MCTargetAsmParser
+decl_stmt|;
+name|class
 name|SMLoc
 decl_stmt|;
 name|class
@@ -82,12 +85,6 @@ name|SourceMgr
 decl_stmt|;
 name|class
 name|StringRef
-decl_stmt|;
-name|class
-name|Target
-decl_stmt|;
-name|class
-name|TargetAsmParser
 decl_stmt|;
 name|class
 name|Twine
@@ -134,7 +131,7 @@ operator|&
 operator|)
 decl_stmt|;
 comment|// DO NOT IMPLEMENT
-name|TargetAsmParser
+name|MCTargetAsmParser
 modifier|*
 name|TargetParser
 decl_stmt|;
@@ -206,7 +203,7 @@ parameter_list|()
 init|=
 literal|0
 function_decl|;
-name|TargetAsmParser
+name|MCTargetAsmParser
 operator|&
 name|getTargetParser
 argument_list|()
@@ -220,7 +217,7 @@ block|}
 name|void
 name|setTargetParser
 parameter_list|(
-name|TargetAsmParser
+name|MCTargetAsmParser
 modifier|&
 name|P
 parameter_list|)
@@ -440,10 +437,6 @@ name|MCAsmParser
 modifier|*
 name|createMCAsmParser
 parameter_list|(
-specifier|const
-name|Target
-modifier|&
-parameter_list|,
 name|SourceMgr
 modifier|&
 parameter_list|,

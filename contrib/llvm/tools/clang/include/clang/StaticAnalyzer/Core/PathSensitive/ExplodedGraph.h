@@ -154,7 +154,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/GRState.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState.h"
 end_include
 
 begin_decl_stmt
@@ -398,7 +398,7 @@ name|Location
 block|;
 comment|/// State - The state associated with this node.
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|State
 block|;
@@ -421,7 +421,7 @@ operator|&
 name|loc
 argument_list|,
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|)
@@ -438,7 +438,7 @@ argument_list|)
 block|{
 name|const_cast
 operator|<
-name|GRState
+name|ProgramState
 operator|*
 operator|>
 operator|(
@@ -454,7 +454,7 @@ argument_list|()
 block|{
 name|const_cast
 operator|<
-name|GRState
+name|ProgramState
 operator|*
 operator|>
 operator|(
@@ -534,9 +534,14 @@ name|getParentMap
 argument_list|()
 return|;
 block|}
-name|LiveVariables
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|T
 operator|&
-name|getLiveVariables
+name|getAnalysis
 argument_list|()
 specifier|const
 block|{
@@ -545,12 +550,16 @@ operator|*
 name|getLocationContext
 argument_list|()
 operator|->
-name|getLiveVariables
-argument_list|()
+name|getAnalysis
+operator|<
+name|T
+operator|>
+operator|(
+operator|)
 return|;
 block|}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -591,9 +600,9 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|,
-argument|const ProgramPoint& Loc
+argument|const ProgramPoint&Loc
 argument_list|,
-argument|const GRState* state
+argument|const ProgramState *state
 argument_list|)
 block|{
 name|ID
@@ -1028,8 +1037,6 @@ name|CoreEngine
 decl_stmt|;
 comment|// Type definitions.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ExplodedNode
@@ -1040,8 +1047,6 @@ operator|>
 name|RootsTy
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ExplodedNode
@@ -1111,7 +1116,7 @@ modifier|&
 name|L
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|State
 parameter_list|,
@@ -1577,7 +1582,7 @@ name|public
 label|:
 name|ExplodedNodeSet
 argument_list|(
-argument|ExplodedNode* N
+argument|ExplodedNode *N
 argument_list|)
 block|{
 name|assert

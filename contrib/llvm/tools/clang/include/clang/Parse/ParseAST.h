@@ -59,6 +59,12 @@ directive|define
 name|LLVM_CLANG_PARSE_PARSEAST_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LangOptions.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -84,9 +90,7 @@ comment|///
 comment|/// This operation inserts the parsed decls into the translation
 comment|/// unit held by Ctx.
 comment|///
-comment|/// \param CompleteTranslationUnit When true, the parsed file is
-comment|/// considered to be a complete translation unit, and any
-comment|/// end-of-translation-unit wrapup will be performed.
+comment|/// \param TUKind The kind of translation unit being parsed.
 comment|///
 comment|/// \param CompletionConsumer If given, an object to consume code completion
 comment|/// results.
@@ -110,10 +114,10 @@ name|PrintStats
 init|=
 name|false
 parameter_list|,
-name|bool
-name|CompleteTranslationUnit
+name|TranslationUnitKind
+name|TUKind
 init|=
-name|true
+name|TU_Complete
 parameter_list|,
 name|CodeCompleteConsumer
 modifier|*

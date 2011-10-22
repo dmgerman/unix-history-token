@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"MCTargetDesc/X86BaseInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"MCTargetDesc/X86MCTargetDesc.h"
 end_include
 
@@ -95,34 +101,10 @@ name|class
 name|MachineCodeEmitter
 decl_stmt|;
 name|class
-name|MCCodeEmitter
-decl_stmt|;
-name|class
-name|MCContext
-decl_stmt|;
-name|class
-name|MCInstrInfo
-decl_stmt|;
-name|class
-name|MCObjectWriter
-decl_stmt|;
-name|class
-name|MCSubtargetInfo
-decl_stmt|;
-name|class
 name|Target
 decl_stmt|;
 name|class
-name|TargetAsmBackend
-decl_stmt|;
-name|class
 name|X86TargetMachine
-decl_stmt|;
-name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 comment|/// createX86ISelDag - This pass converts a legalized DAG into a
 comment|/// X86-specific DAG, ready for instruction scheduling.
@@ -157,11 +139,12 @@ modifier|*
 name|createX86FloatingPointStackifierPass
 parameter_list|()
 function_decl|;
-comment|/// createSSEDomainFixPass - This pass twiddles SSE opcodes to prevent domain
-comment|/// crossings.
+comment|/// createX86IssueVZeroUpperPass - This pass inserts AVX vzeroupper instructions
+comment|/// before each call to avoid transition penalty between functions encoded with
+comment|/// AVX and SSE.
 name|FunctionPass
 modifier|*
-name|createSSEDomainFixPass
+name|createX86IssueVZeroUpperPass
 parameter_list|()
 function_decl|;
 comment|/// createX86CodeEmitterPass - Return a pass that emits the collected X86 code
@@ -179,55 +162,6 @@ modifier|&
 name|JCE
 parameter_list|)
 function_decl|;
-name|MCCodeEmitter
-modifier|*
-name|createX86MCCodeEmitter
-parameter_list|(
-specifier|const
-name|MCInstrInfo
-modifier|&
-name|MCII
-parameter_list|,
-specifier|const
-name|MCSubtargetInfo
-modifier|&
-name|STI
-parameter_list|,
-name|MCContext
-modifier|&
-name|Ctx
-parameter_list|)
-function_decl|;
-name|TargetAsmBackend
-modifier|*
-name|createX86_32AsmBackend
-argument_list|(
-specifier|const
-name|Target
-operator|&
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-argument_list|)
-decl_stmt|;
-name|TargetAsmBackend
-modifier|*
-name|createX86_64AsmBackend
-argument_list|(
-specifier|const
-name|Target
-operator|&
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-argument_list|)
-decl_stmt|;
 comment|/// createX86EmitCodeToMemory - Returns a pass that converts a register
 comment|/// allocated function into raw machine code in a dynamically
 comment|/// allocated chunk of memory.
@@ -245,25 +179,6 @@ name|FunctionPass
 modifier|*
 name|createX86MaxStackAlignmentHeuristicPass
 parameter_list|()
-function_decl|;
-comment|/// createX86MachObjectWriter - Construct an X86 Mach-O object writer.
-name|MCObjectWriter
-modifier|*
-name|createX86MachObjectWriter
-parameter_list|(
-name|raw_ostream
-modifier|&
-name|OS
-parameter_list|,
-name|bool
-name|Is64Bit
-parameter_list|,
-name|uint32_t
-name|CPUType
-parameter_list|,
-name|uint32_t
-name|CPUSubtype
-parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

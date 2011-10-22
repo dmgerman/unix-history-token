@@ -70,6 +70,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MachineLocation.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/MC/MCDirectives.h"
 end_include
 
@@ -77,6 +83,12 @@ begin_include
 include|#
 directive|include
 file|<cassert>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -113,6 +125,34 @@ block|,
 name|ARM
 block|,
 name|Win64
+block|}
+enum|;
+block|}
+name|namespace
+name|LCOMM
+block|{
+enum|enum
+name|LCOMMType
+block|{
+name|None
+block|,
+name|NoAlignment
+block|,
+name|ByteAlignment
+block|}
+enum|;
+block|}
+name|namespace
+name|Structors
+block|{
+enum|enum
+name|OutputOrder
+block|{
+name|None
+block|,
+name|PriorityOrder
+block|,
+name|ReversePriorityOrder
 block|}
 enum|;
 block|}
@@ -159,6 +199,15 @@ name|bool
 name|HasMachoTBSSDirective
 decl_stmt|;
 comment|// Default is false.
+comment|/// StructorOutputOrder - Whether the static ctor/dtor list should be output
+comment|/// in no particular order, in order of increasing priority or the reverse:
+comment|/// in order of decreasing priority (the default).
+name|Structors
+operator|::
+name|OutputOrder
+name|StructorOutputOrder
+expr_stmt|;
+comment|// Default is reverse order.
 comment|/// HasStaticCtorDtorReferenceInStaticMode - True if the compiler should
 comment|/// emit a ".reference .constructors_used" or ".reference .destructors_used"
 comment|/// directive after the a static ctor/dtor list.  This directive is only
@@ -257,6 +306,27 @@ modifier|*
 name|InlineAsmEnd
 decl_stmt|;
 comment|// Defaults to "#NO_APP\n"
+comment|/// Code16Directive, Code32Directive, Code64Directive - These are assembly
+comment|/// directives that tells the assembler to interpret the following
+comment|/// instructions differently.
+specifier|const
+name|char
+modifier|*
+name|Code16Directive
+decl_stmt|;
+comment|// Defaults to ".code16"
+specifier|const
+name|char
+modifier|*
+name|Code32Directive
+decl_stmt|;
+comment|// Defaults to ".code32"
+specifier|const
+name|char
+modifier|*
+name|Code64Directive
+decl_stmt|;
+comment|// Defaults to ".code64"
 comment|/// AssemblerDialect - Which dialect of an assembler variant to use.
 name|unsigned
 name|AssemblerDialect
@@ -332,6 +402,44 @@ modifier|*
 name|Data64bitsDirective
 decl_stmt|;
 comment|// Defaults to "\t.quad\t"
+comment|/// [Data|Code]Begin - These magic labels are used to marked a region as
+comment|/// data or code, and are used to provide additional information for
+comment|/// correct disassembly on targets that like to mix data and code within
+comment|/// a segment.  These labels will be implicitly suffixed by the streamer
+comment|/// to give them unique names.
+specifier|const
+name|char
+modifier|*
+name|DataBegin
+decl_stmt|;
+comment|// Defaults to "$d."
+specifier|const
+name|char
+modifier|*
+name|CodeBegin
+decl_stmt|;
+comment|// Defaults to "$a."
+specifier|const
+name|char
+modifier|*
+name|JT8Begin
+decl_stmt|;
+comment|// Defaults to "$a."
+specifier|const
+name|char
+modifier|*
+name|JT16Begin
+decl_stmt|;
+comment|// Defaults to "$a."
+specifier|const
+name|char
+modifier|*
+name|JT32Begin
+decl_stmt|;
+comment|// Defaults to "$a."
+name|bool
+name|SupportsDataRegions
+decl_stmt|;
 comment|/// GPRel32Directive - if non-null, a directive that is used to emit a word
 comment|/// which should be relocated as a 32-bit GP-relative offset, e.g. .gpword
 comment|/// on Mips or .gprel32 on Alpha.
@@ -447,12 +555,14 @@ name|bool
 name|HasAggressiveSymbolFolding
 decl_stmt|;
 comment|// Defaults to true.
-comment|/// HasLCOMMDirective - This is true if the target supports the .lcomm
-comment|/// directive.
-name|bool
-name|HasLCOMMDirective
-decl_stmt|;
-comment|// Defaults to false.
+comment|/// LCOMMDirectiveType - Describes if the target supports the .lcomm
+comment|/// directive and whether it has an alignment parameter.
+name|LCOMM
+operator|::
+name|LCOMMType
+name|LCOMMDirectiveType
+expr_stmt|;
+comment|// Defaults to LCOMM::None.
 comment|/// COMMDirectiveAlignmentIsInBytes - True is COMMDirective's optional
 comment|/// alignment is to be specified in bytes instead of log2(n).
 name|bool
@@ -583,6 +693,15 @@ modifier|*
 name|AsmTransCBE
 decl_stmt|;
 comment|// Defaults to empty
+comment|//===--- Prologue State ----------------------------------------------===//
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineMove
+operator|>
+name|InitialFrameState
+expr_stmt|;
 name|public
 label|:
 name|explicit
@@ -771,6 +890,71 @@ return|return
 name|GPRel32Directive
 return|;
 block|}
+comment|/// [Code|Data]Begin label name accessors.
+specifier|const
+name|char
+operator|*
+name|getCodeBeginLabelName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CodeBegin
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getDataBeginLabelName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DataBegin
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getJumpTable8BeginLabelName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|JT8Begin
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getJumpTable16BeginLabelName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|JT16Begin
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getJumpTable32BeginLabelName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|JT32Begin
+return|;
+block|}
+name|bool
+name|getSupportsDataRegions
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SupportsDataRegions
+return|;
+block|}
 comment|/// getNonexecutableStackSection - Targets can implement this method to
 comment|/// specify a section to switch to if the translation unit doesn't have any
 comment|/// trampolines that require an executable stack.
@@ -874,6 +1058,17 @@ specifier|const
 block|{
 return|return
 name|HasMachoTBSSDirective
+return|;
+block|}
+name|Structors
+operator|::
+name|OutputOrder
+name|getStructorOutputOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StructorOutputOrder
 return|;
 block|}
 name|bool
@@ -1009,6 +1204,39 @@ specifier|const
 block|{
 return|return
 name|InlineAsmEnd
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getCode16Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Code16Directive
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getCode32Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Code32Directive
+return|;
+block|}
+specifier|const
+name|char
+operator|*
+name|getCode64Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Code64Directive
 return|;
 block|}
 name|unsigned
@@ -1149,13 +1377,15 @@ return|return
 name|HasAggressiveSymbolFolding
 return|;
 block|}
-name|bool
-name|hasLCOMMDirective
+name|LCOMM
+operator|::
+name|LCOMMType
+name|getLCOMMDirectiveType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|HasLCOMMDirective
+name|LCOMMDirectiveType
 return|;
 block|}
 name|bool
@@ -1390,6 +1620,55 @@ specifier|const
 block|{
 return|return
 name|AsmTransCBE
+return|;
+block|}
+name|void
+name|addInitialFrameState
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|label
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|D
+parameter_list|,
+specifier|const
+name|MachineLocation
+modifier|&
+name|S
+parameter_list|)
+block|{
+name|InitialFrameState
+operator|.
+name|push_back
+argument_list|(
+name|MachineMove
+argument_list|(
+name|label
+argument_list|,
+name|D
+argument_list|,
+name|S
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+specifier|const
+name|std
+operator|::
+name|vector
+operator|<
+name|MachineMove
+operator|>
+operator|&
+name|getInitialFrameState
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitialFrameState
 return|;
 block|}
 block|}

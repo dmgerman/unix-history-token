@@ -83,6 +83,16 @@ block|,
 name|VK_Mips_TPREL_HI
 block|,
 name|VK_Mips_TPREL_LO
+block|,
+name|VK_Mips_GPOFF_HI
+block|,
+name|VK_Mips_GPOFF_LO
+block|,
+name|VK_Mips_GOT_DISP
+block|,
+name|VK_Mips_GOT_PAGE
+block|,
+name|VK_Mips_GOT_OFST
 block|}
 block|;
 name|private

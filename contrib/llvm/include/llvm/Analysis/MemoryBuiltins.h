@@ -165,7 +165,6 @@ comment|/// The PointerType depends on the number of bitcast uses of the malloc 
 comment|///   0: PointerType is the malloc calls' return type.
 comment|///   1: PointerType is the bitcast's result type.
 comment|///>1: Unique PointerType cannot be determined, return NULL.
-specifier|const
 name|PointerType
 modifier|*
 name|getMallocType
@@ -181,7 +180,6 @@ comment|/// The Type depends on the number of bitcast uses of the malloc call:
 comment|///   0: PointerType is the malloc calls' return type.
 comment|///   1: PointerType is the bitcast's result type.
 comment|///>1: Unique PointerType cannot be determined, return NULL.
-specifier|const
 name|Type
 modifier|*
 name|getMallocAllocatedType

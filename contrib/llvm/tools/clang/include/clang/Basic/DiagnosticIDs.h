@@ -71,16 +71,42 @@ directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|unsigned
+operator|>
+name|class
+name|SmallVector
+expr_stmt|;
+block|}
+end_decl_stmt
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|SourceLocation
 decl_stmt|;
+struct_decl|struct
+name|WarningOption
+struct_decl|;
 comment|// Import the diagnostic enums themselves.
 name|namespace
 name|diag
@@ -166,6 +192,10 @@ name|ACCESS
 parameter_list|,
 name|CATEGORY
 parameter_list|,
+name|NOWERROR
+parameter_list|,
+name|SHOWINSYSHEADER
+parameter_list|,
 name|BRIEF
 parameter_list|,
 name|FULL
@@ -207,28 +237,217 @@ comment|//< Map this diagnostic to an error.
 name|MAP_FATAL
 init|=
 literal|4
-block|,
 comment|//< Map this diagnostic to a fatal error.
-comment|/// Map this diagnostic to "warning", but make it immune to -Werror.  This
-comment|/// happens when you specify -Wno-error=foo.
-name|MAP_WARNING_NO_WERROR
-init|=
-literal|5
-block|,
-comment|/// Map this diagnostic to "warning", but make it immune to
-comment|/// -Wno-system-headers.
-name|MAP_WARNING_SHOW_IN_SYSTEM_HEADER
-init|=
-literal|6
-block|,
-comment|/// Map this diagnostic to "error", but make it immune to -Wfatal-errors.
-comment|/// This happens for -Wno-fatal-errors=foo.
-name|MAP_ERROR_NO_WFATAL
-init|=
-literal|7
 block|}
 enum|;
 block|}
+name|class
+name|DiagnosticMappingInfo
+block|{
+name|unsigned
+name|Mapping
+range|:
+literal|3
+decl_stmt|;
+name|unsigned
+name|IsUser
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|IsPragma
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|HasShowInSystemHeader
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|HasNoWarningAsError
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|HasNoErrorAsFatal
+range|:
+literal|1
+decl_stmt|;
+name|public
+label|:
+specifier|static
+name|DiagnosticMappingInfo
+name|Make
+argument_list|(
+name|diag
+operator|::
+name|Mapping
+name|Mapping
+argument_list|,
+name|bool
+name|IsUser
+argument_list|,
+name|bool
+name|IsPragma
+argument_list|)
+block|{
+name|DiagnosticMappingInfo
+name|Result
+decl_stmt|;
+name|Result
+operator|.
+name|Mapping
+operator|=
+name|Mapping
+expr_stmt|;
+name|Result
+operator|.
+name|IsUser
+operator|=
+name|IsUser
+expr_stmt|;
+name|Result
+operator|.
+name|IsPragma
+operator|=
+name|IsPragma
+expr_stmt|;
+name|Result
+operator|.
+name|HasShowInSystemHeader
+operator|=
+literal|0
+expr_stmt|;
+name|Result
+operator|.
+name|HasNoWarningAsError
+operator|=
+literal|0
+expr_stmt|;
+name|Result
+operator|.
+name|HasNoErrorAsFatal
+operator|=
+literal|0
+expr_stmt|;
+return|return
+name|Result
+return|;
+block|}
+name|diag
+operator|::
+name|Mapping
+name|getMapping
+argument_list|()
+specifier|const
+block|{
+return|return
+name|diag
+operator|::
+name|Mapping
+argument_list|(
+name|Mapping
+argument_list|)
+return|;
+block|}
+name|void
+name|setMapping
+argument_list|(
+name|diag
+operator|::
+name|Mapping
+name|Value
+argument_list|)
+block|{
+name|Mapping
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
+name|isUser
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsUser
+return|;
+block|}
+name|bool
+name|isPragma
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsPragma
+return|;
+block|}
+name|bool
+name|hasShowInSystemHeader
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasShowInSystemHeader
+return|;
+block|}
+name|void
+name|setShowInSystemHeader
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|HasShowInSystemHeader
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
+name|hasNoWarningAsError
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasNoWarningAsError
+return|;
+block|}
+name|void
+name|setNoWarningAsError
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|HasNoWarningAsError
+operator|=
+name|Value
+expr_stmt|;
+block|}
+name|bool
+name|hasNoErrorAsFatal
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasNoErrorAsFatal
+return|;
+block|}
+name|void
+name|setNoErrorAsFatal
+parameter_list|(
+name|bool
+name|Value
+parameter_list|)
+block|{
+name|HasNoErrorAsFatal
+operator|=
+name|Value
+expr_stmt|;
+block|}
+block|}
+empty_stmt|;
 comment|/// \brief Used for handling and querying diagnostic IDs. Can be used and shared
 comment|/// by multiple Diagnostics for multiple translation units.
 name|class
@@ -285,7 +504,7 @@ name|getCustomDiagID
 argument_list|(
 argument|Level L
 argument_list|,
-argument|llvm::StringRef Message
+argument|StringRef Message
 argument_list|)
 block|;
 comment|//===--------------------------------------------------------------------===//
@@ -293,8 +512,6 @@ comment|// Diagnostic classification and reporting interfaces.
 comment|//
 comment|/// getDescription - Given a diagnostic ID, return a description of the
 comment|/// issue.
-name|llvm
-operator|::
 name|StringRef
 name|getDescription
 argument_list|(
@@ -302,13 +519,22 @@ argument|unsigned DiagID
 argument_list|)
 specifier|const
 block|;
-comment|/// isBuiltinWarningOrExtension - Return true if the unmapped diagnostic
-comment|/// level of the specified diagnostic ID is a Warning or Extension.
-comment|/// This only works on builtin diagnostics, not custom ones, and is not legal to
-comment|/// call on NOTEs.
+comment|/// isBuiltinWarningOrExtension - Return true if the unmapped diagnostic level
+comment|/// of the specified diagnostic ID is a Warning or Extension.  This only works
+comment|/// on builtin diagnostics, not custom ones, and is not legal to call on
+comment|/// NOTEs.
 specifier|static
 name|bool
 name|isBuiltinWarningOrExtension
+argument_list|(
+argument|unsigned DiagID
+argument_list|)
+block|;
+comment|/// \brief Return true if the specified diagnostic is mapped to errors by
+comment|/// default.
+specifier|static
+name|bool
+name|isDefaultMappingAsError
 argument_list|(
 argument|unsigned DiagID
 argument_list|)
@@ -362,8 +588,6 @@ comment|/// getWarningOptionForDiag - Return the lowest-level warning option tha
 comment|/// enables the specified diagnostic.  If there is no -Wfoo flag that controls
 comment|/// the diagnostic, this returns null.
 specifier|static
-name|llvm
-operator|::
 name|StringRef
 name|getWarningOptionForDiag
 argument_list|(
@@ -388,8 +612,6 @@ block|;
 comment|/// getCategoryNameFromID - Given a category ID, return the name of the
 comment|/// category.
 specifier|static
-name|llvm
-operator|::
 name|StringRef
 name|getCategoryNameFromID
 argument_list|(
@@ -441,8 +663,6 @@ argument_list|)
 block|;
 comment|/// getName - Given a diagnostic ID, return its name
 specifier|static
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|(
@@ -454,14 +674,12 @@ specifier|static
 name|unsigned
 name|getIdFromName
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 block|;
 comment|/// getBriefExplanation - Given a diagnostic ID, return a brief explanation
 comment|/// of the issue
 specifier|static
-name|llvm
-operator|::
 name|StringRef
 name|getBriefExplanation
 argument_list|(
@@ -471,33 +689,137 @@ block|;
 comment|/// getFullExplanation - Given a diagnostic ID, return a full explanation
 comment|/// of the issue
 specifier|static
-name|llvm
-operator|::
 name|StringRef
 name|getFullExplanation
 argument_list|(
 argument|unsigned DiagID
 argument_list|)
 block|;
-name|private
-operator|:
-comment|/// setDiagnosticGroupMapping - Change an entire diagnostic group (e.g.
-comment|/// "unknown-pragmas" to have the specified mapping.  This returns true and
-comment|/// ignores the request if "Group" was unknown, false otherwise.
-name|bool
-name|setDiagnosticGroupMapping
+comment|/// Iterator class used for traversing all statically declared
+comment|/// diagnostics.
+name|class
+name|diag_iterator
+block|{
+specifier|const
+name|void
+operator|*
+name|impl
+block|;
+name|friend
+name|class
+name|DiagnosticIDs
+block|;
+name|diag_iterator
 argument_list|(
-argument|llvm::StringRef Group
+specifier|const
+name|void
+operator|*
+name|im
+argument_list|)
+operator|:
+name|impl
+argument_list|(
+argument|im
+argument_list|)
+block|{}
+name|public
+operator|:
+name|diag_iterator
+operator|&
+name|operator
+operator|++
+operator|(
+operator|)
+block|;
+name|bool
+name|operator
+operator|==
+operator|(
+specifier|const
+name|diag_iterator
+operator|&
+name|x
+operator|)
+specifier|const
+block|{
+return|return
+name|impl
+operator|==
+name|x
+operator|.
+name|impl
+return|;
+block|}
+name|bool
+name|operator
+operator|!=
+operator|(
+specifier|const
+name|diag_iterator
+operator|&
+name|x
+operator|)
+specifier|const
+block|{
+return|return
+name|impl
+operator|!=
+name|x
+operator|.
+name|impl
+return|;
+block|}
+name|llvm
+operator|::
+name|StringRef
+name|getDiagName
+argument_list|()
+specifier|const
+block|;
+name|unsigned
+name|getDiagID
+argument_list|()
+specifier|const
+block|;       }
+block|;
+specifier|static
+name|diag_iterator
+name|diags_begin
+argument_list|()
+block|;
+specifier|static
+name|diag_iterator
+name|diags_end
+argument_list|()
+block|;
+comment|/// \brief Get the set of all diagnostic IDs in the group with the given name.
+comment|///
+comment|/// \param Diags [out] - On return, the diagnostics in the group.
+comment|/// \returns True if the given group is unknown, false otherwise.
+name|bool
+name|getDiagnosticsInGroup
+argument_list|(
+argument|StringRef Group
 argument_list|,
-argument|diag::Mapping Map
-argument_list|,
-argument|SourceLocation Loc
-argument_list|,
-argument|Diagnostic&Diag
+argument|llvm::SmallVectorImpl<diag::kind>&Diags
 argument_list|)
 specifier|const
 block|;
-comment|/// \brief Based on the way the client configured the Diagnostic
+name|private
+operator|:
+comment|/// \brief Get the set of all diagnostic IDs in the given group.
+comment|///
+comment|/// \param Diags [out] - On return, the diagnostics in the group.
+name|void
+name|getDiagnosticsInGroup
+argument_list|(
+argument|const WarningOption *Group
+argument_list|,
+argument|llvm::SmallVectorImpl<diag::kind>&Diags
+argument_list|)
+specifier|const
+block|;
+comment|/// \brief Based on the way the client configured the DiagnosticsEngine
 comment|/// object, classify the specified diagnostic ID into a Level, consumable by
 comment|/// the DiagnosticClient.
 comment|///
@@ -512,10 +834,7 @@ argument|unsigned DiagID
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|const Diagnostic&Diag
-argument_list|,
-argument|diag::Mapping *mapping =
-literal|0
+argument|const DiagnosticsEngine&Diag
 argument_list|)
 specifier|const
 block|;
@@ -532,10 +851,7 @@ argument|unsigned DiagClass
 argument_list|,
 argument|SourceLocation Loc
 argument_list|,
-argument|const Diagnostic&Diag
-argument_list|,
-argument|diag::Mapping *mapping =
-literal|0
+argument|const DiagnosticsEngine&Diag
 argument_list|)
 specifier|const
 block|;
@@ -547,7 +863,7 @@ comment|/// suppressed.
 name|bool
 name|ProcessDiag
 argument_list|(
-argument|Diagnostic&Diag
+argument|DiagnosticsEngine&Diag
 argument_list|)
 specifier|const
 block|;
@@ -562,7 +878,7 @@ specifier|const
 block|;
 name|friend
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 block|; }
 decl_stmt|;
 block|}
