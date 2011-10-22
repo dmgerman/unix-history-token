@@ -1013,8 +1013,6 @@ condition|(
 name|bsdtar
 operator|->
 name|gname
-operator|>=
-literal|0
 condition|)
 name|archive_entry_set_gname
 argument_list|(
