@@ -196,6 +196,20 @@ operator|*
 operator|>
 name|DIEBlocks
 expr_stmt|;
+comment|/// ContainingTypeMap - This map is used to keep track of subprogram DIEs that
+comment|/// need DW_AT_containing_type attribute. This attribute points to a DIE that
+comment|/// corresponds to the MDNode mapped with the subprogram DIE.
+name|DenseMap
+operator|<
+name|DIE
+operator|*
+operator|,
+specifier|const
+name|MDNode
+operator|*
+operator|>
+name|ContainingTypeMap
+expr_stmt|;
 name|public
 label|:
 name|CompileUnit
@@ -915,14 +929,25 @@ name|DINameSpace
 name|NS
 parameter_list|)
 function_decl|;
+comment|/// getOrCreateSubprogramDIE - Create new DIE using SP.
+name|DIE
+modifier|*
+name|getOrCreateSubprogramDIE
+parameter_list|(
+name|DISubprogram
+name|SP
+parameter_list|)
+function_decl|;
 comment|/// getOrCreateTypeDIE - Find existing DIE or create new DIE for the
 comment|/// given DIType.
 name|DIE
 modifier|*
 name|getOrCreateTypeDIE
 parameter_list|(
-name|DIType
-name|Ty
+specifier|const
+name|MDNode
+modifier|*
+name|N
 parameter_list|)
 function_decl|;
 comment|/// getOrCreateTemplateTypeParameterDIE - Find existing DIE or create new DIE
@@ -954,6 +979,16 @@ parameter_list|(
 name|DIE
 modifier|*
 name|Entry
+parameter_list|)
+function_decl|;
+comment|/// createGlobalVariableDIE - create global variable DIE.
+name|void
+name|createGlobalVariableDIE
+parameter_list|(
+specifier|const
+name|MDNode
+modifier|*
+name|N
 parameter_list|)
 function_decl|;
 name|void
@@ -1035,6 +1070,25 @@ name|constructEnumTypeDIE
 parameter_list|(
 name|DIEnumerator
 name|ETy
+parameter_list|)
+function_decl|;
+comment|/// constructContainingTypeDIEs - Construct DIEs for types that contain
+comment|/// vtables.
+name|void
+name|constructContainingTypeDIEs
+parameter_list|()
+function_decl|;
+comment|/// constructVariableDIE - Construct a DIE for the given DbgVariable.
+name|DIE
+modifier|*
+name|constructVariableDIE
+parameter_list|(
+name|DbgVariable
+modifier|*
+name|DV
+parameter_list|,
+name|bool
+name|isScopeAbstract
 parameter_list|)
 function_decl|;
 comment|/// createMemberDIE - Create new member DIE.

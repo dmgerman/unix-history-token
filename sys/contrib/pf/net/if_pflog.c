@@ -2006,7 +2006,7 @@ name|pflog
 argument_list|,
 name|pflog_mod
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_ANY
 argument_list|)

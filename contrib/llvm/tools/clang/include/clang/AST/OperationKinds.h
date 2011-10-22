@@ -83,9 +83,12 @@ comment|/// CK_BitCast - A conversion which causes a bit pattern of one type
 comment|/// to be reinterpreted as a bit pattern of another type.  Generally
 comment|/// the operands must have equivalent size and unrelated types.
 comment|///
-comment|/// The pointer conversion char* -> int* is a bitcast.  Many other
-comment|/// pointer conversions which are "physically" bitcasts are given
-comment|/// special cast kinds.
+comment|/// The pointer conversion char* -> int* is a bitcast.  A conversion
+comment|/// from any pointer type to a C pointer type is a bitcast unless
+comment|/// it's actually BaseToDerived or DerivedToBase.  A conversion to a
+comment|/// block pointer or ObjC pointer type is a bitcast only if the
+comment|/// operand has the same type kind; otherwise, it's one of the
+comment|/// specialized casts below.
 comment|///
 comment|/// Vector coercions are bitcasts.
 name|CK_BitCast
@@ -238,12 +241,16 @@ comment|///    (double) f
 comment|///    (float) ld
 name|CK_FloatingCast
 block|,
-comment|/// CK_AnyPointerToObjCPointerCast - Casting any other pointer kind
-comment|/// to an Objective-C pointer.
-name|CK_AnyPointerToObjCPointerCast
+comment|/// CK_CPointerToObjCPointerCast - Casting a C pointer kind to an
+comment|/// Objective-C pointer.
+name|CK_CPointerToObjCPointerCast
 block|,
-comment|/// CK_AnyPointerToBlockPointerCast - Casting any other pointer kind
-comment|/// to a block pointer.
+comment|/// CK_BlockPointerToObjCPointerCast - Casting a block pointer to an
+comment|/// ObjC pointer.
+name|CK_BlockPointerToObjCPointerCast
+block|,
+comment|/// CK_AnyPointerToBlockPointerCast - Casting any non-block pointer
+comment|/// to a block pointer.  Block-to-block casts are bitcasts.
 name|CK_AnyPointerToBlockPointerCast
 block|,
 comment|/// \brief Converting between two Objective-C object types, which
@@ -299,20 +306,27 @@ comment|/// \brief Converts from an integral complex to a floating complex.
 comment|///   _Complex unsigned -> _Complex float
 name|CK_IntegralComplexToFloatingComplex
 block|,
-comment|/// \brief Produces a retainable object pointer so that it may be
-comment|/// consumed, e.g. by being passed to a consuming parameter.  Calls
-comment|/// objc_retain.
-name|CK_ObjCProduceObject
+comment|/// \brief [ARC] Produces a retainable object pointer so that it may
+comment|/// be consumed, e.g. by being passed to a consuming parameter.
+comment|/// Calls objc_retain.
+name|CK_ARCProduceObject
 block|,
-comment|/// \brief Consumes a retainable object pointer that has just been
-comment|/// produced, e.g. as the return value of a retaining call.  Enters
-comment|/// a cleanup to call objc_release at some indefinite time.
-name|CK_ObjCConsumeObject
+comment|/// \brief [ARC] Consumes a retainable object pointer that has just
+comment|/// been produced, e.g. as the return value of a retaining call.
+comment|/// Enters a cleanup to call objc_release at some indefinite time.
+name|CK_ARCConsumeObject
 block|,
-comment|/// \brief Reclaim a retainable object pointer object that may have
-comment|/// been produced and autoreleased as part of a function return
+comment|/// \brief [ARC] Reclaim a retainable object pointer object that may
+comment|/// have been produced and autoreleased as part of a function return
 comment|/// sequence.
-name|CK_ObjCReclaimReturnedObject
+name|CK_ARCReclaimReturnedObject
+block|,
+comment|/// \brief [ARC] Causes a value of block type to be copied to the
+comment|/// heap, if it is not already there.  A number of other operations
+comment|/// in ARC cause blocks to be copied; this is for cases where that
+comment|/// would not otherwise be guaranteed, such as when casting to a
+comment|/// non-block pointer type.
+name|CK_ARCExtendBlockObject
 block|}
 enum|;
 define|#

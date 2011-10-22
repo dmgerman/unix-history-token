@@ -446,7 +446,7 @@ define|#
 directive|define
 name|UMA_ZONE_INHERIT
 define|\
-value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_HASH |		\     UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB)
+value|(UMA_ZONE_OFFPAGE | UMA_ZONE_MALLOC | UMA_ZONE_NOFREE |		\     UMA_ZONE_HASH | UMA_ZONE_REFCNT | UMA_ZONE_VTOSLAB)
 end_define
 
 begin_comment

@@ -127,6 +127,19 @@ modifier|&
 name|TM
 parameter_list|)
 function_decl|;
+name|FunctionPass
+modifier|*
+name|createMipsJITCodeEmitterPass
+parameter_list|(
+name|MipsTargetMachine
+modifier|&
+name|TM
+parameter_list|,
+name|JITCodeEmitter
+modifier|&
+name|JCE
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

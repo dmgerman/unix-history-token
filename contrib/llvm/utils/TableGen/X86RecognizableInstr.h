@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Record.h"
+file|"llvm/TableGen/Record.h"
 end_include
 
 begin_include
@@ -168,6 +168,10 @@ comment|/// Inferred from the operands; indicates whether the L bit in the VEX p
 name|bool
 name|HasVEX_LPrefix
 decl_stmt|;
+comment|// The ignoreVEX_L field from the record
+name|bool
+name|IgnoresVEX_L
+decl_stmt|;
 comment|/// The hasLockPrefix field from the record
 name|bool
 name|HasLockPrefix
@@ -176,9 +180,13 @@ comment|/// The isCodeGenOnly filed from the record
 name|bool
 name|IsCodeGenOnly
 decl_stmt|;
-comment|// Whether the instruction has the predicate "Mode64Bit"
+comment|// Whether the instruction has the predicate "In64BitMode"
 name|bool
 name|Is64Bit
+decl_stmt|;
+comment|// Whether the instruction has the predicate "In32BitMode"
+name|bool
+name|Is32Bit
 decl_stmt|;
 comment|/// The instruction name as listed in the tables
 name|std

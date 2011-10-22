@@ -182,6 +182,13 @@ argument_list|)
 specifier|const
 block|;
 name|void
+name|adjustForSegmentedStacks
+argument_list|(
+argument|MachineFunction&MF
+argument_list|)
+specifier|const
+block|;
+name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF
@@ -230,13 +237,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
-argument_list|)
-specifier|const
-block|;
 name|int
 name|getFrameIndexOffset
 argument_list|(
@@ -249,11 +249,7 @@ block|;
 name|uint32_t
 name|getCompactUnwindEncoding
 argument_list|(
-argument|ArrayRef<MCCFIInstruction> Instrs
-argument_list|,
-argument|int DataAlignmentFactor
-argument_list|,
-argument|bool IsEH
+argument|MachineFunction&MF
 argument_list|)
 specifier|const
 block|; }

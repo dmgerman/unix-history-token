@@ -33,6 +33,16 @@ directive|include
 file|"opt_ath.h"
 end_include
 
+begin_comment
+comment|/*  * This is needed for register operations which are performed  * by the driver - eg, calls to ath_hal_gettsf32().  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_ah.h"
+end_include
+
 begin_include
 include|#
 directive|include
@@ -9034,18 +9044,6 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_CONTROL
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_dodfs
-condition|)
-block|{
-name|rfilt
-operator||=
-name|HAL_RX_FILTER_PHYRADAR
-expr_stmt|;
-block|}
 comment|/* 	 * Enable RX of compressed BAR frames only when doing 	 * 802.11n. Required for A-MPDU. 	 */
 if|if
 condition|(

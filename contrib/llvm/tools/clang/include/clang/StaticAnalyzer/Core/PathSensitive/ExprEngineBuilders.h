@@ -102,7 +102,7 @@ modifier|*
 name|Pred
 decl_stmt|;
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 decl_stmt|;
@@ -156,11 +156,11 @@ argument|StmtNodeBuilder&builder
 argument_list|,
 argument|ExprEngine& eng
 argument_list|,
-argument|ExplodedNode* pred
+argument|ExplodedNode *pred
 argument_list|,
-argument|const GRState *st
+argument|const ProgramState *st
 argument_list|,
-argument|const Stmt* s
+argument|const Stmt *s
 argument_list|,
 argument|bool auto_create_node
 argument_list|)
@@ -283,7 +283,7 @@ expr_stmt|;
 block|}
 block|}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -292,7 +292,7 @@ return|return
 name|state
 return|;
 block|}
-name|GRStateManager
+name|ProgramStateManager
 modifier|&
 name|getStateManager
 parameter_list|()
@@ -309,7 +309,7 @@ modifier|*
 name|MakeNode
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|)

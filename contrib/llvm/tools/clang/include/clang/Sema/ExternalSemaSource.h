@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/Weak.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<utility>
 end_include
 
@@ -75,18 +81,53 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
-struct_decl|struct
-name|ObjCMethodList
-struct_decl|;
 name|class
-name|Sema
+name|CXXConstructorDecl
 decl_stmt|;
 name|class
-name|Scope
+name|CXXRecordDecl
+decl_stmt|;
+name|class
+name|DeclaratorDecl
 decl_stmt|;
 name|class
 name|LookupResult
 decl_stmt|;
+struct_decl|struct
+name|ObjCMethodList
+struct_decl|;
+name|class
+name|Scope
+decl_stmt|;
+name|class
+name|Sema
+decl_stmt|;
+name|class
+name|TypedefNameDecl
+decl_stmt|;
+name|class
+name|ValueDecl
+decl_stmt|;
+name|class
+name|VarDecl
+decl_stmt|;
+comment|/// \brief A simple structure that captures a vtable use for the purposes of
+comment|/// the \c ExternalSemaSource.
+struct|struct
+name|ExternalVTableUse
+block|{
+name|CXXRecordDecl
+modifier|*
+name|Record
+decl_stmt|;
+name|SourceLocation
+name|Location
+decl_stmt|;
+name|bool
+name|DefinitionRequired
+decl_stmt|;
+block|}
+struct|;
 comment|/// \brief An abstract interface that should be implemented by
 comment|/// external AST sources that also provide information for semantic
 comment|/// analysis.
@@ -152,8 +193,6 @@ name|virtual
 name|void
 name|ReadKnownNamespaces
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|NamespaceDecl
@@ -184,6 +223,149 @@ return|return
 name|false
 return|;
 block|}
+comment|/// \brief Read the set of tentative definitions known to the external Sema
+comment|/// source.
+comment|///
+comment|/// The external source should append its own tentative definitions to the
+comment|/// given vector of tentative definitions. Note that this routine may be
+comment|/// invoked multiple times; the external source should take care not to
+comment|/// introduce the same declarations repeatedly.
+name|virtual
+name|void
+name|ReadTentativeDefinitions
+argument_list|(
+argument|SmallVectorImpl<VarDecl *>&TentativeDefs
+argument_list|)
+block|{}
+comment|/// \brief Read the set of unused file-scope declarations known to the
+comment|/// external Sema source.
+comment|///
+comment|/// The external source should append its own unused, filed-scope to the
+comment|/// given vector of declarations. Note that this routine may be
+comment|/// invoked multiple times; the external source should take care not to
+comment|/// introduce the same declarations repeatedly.
+name|virtual
+name|void
+name|ReadUnusedFileScopedDecls
+argument_list|(
+argument|SmallVectorImpl<const DeclaratorDecl *>&Decls
+argument_list|)
+block|{}
+comment|/// \brief Read the set of delegating constructors known to the
+comment|/// external Sema source.
+comment|///
+comment|/// The external source should append its own delegating constructors to the
+comment|/// given vector of declarations. Note that this routine may be
+comment|/// invoked multiple times; the external source should take care not to
+comment|/// introduce the same declarations repeatedly.
+name|virtual
+name|void
+name|ReadDelegatingConstructors
+argument_list|(
+argument|SmallVectorImpl<CXXConstructorDecl *>&Decls
+argument_list|)
+block|{}
+comment|/// \brief Read the set of ext_vector type declarations known to the
+comment|/// external Sema source.
+comment|///
+comment|/// The external source should append its own ext_vector type declarations to
+comment|/// the given vector of declarations. Note that this routine may be
+comment|/// invoked multiple times; the external source should take care not to
+comment|/// introduce the same declarations repeatedly.
+name|virtual
+name|void
+name|ReadExtVectorDecls
+argument_list|(
+argument|SmallVectorImpl<TypedefNameDecl *>&Decls
+argument_list|)
+block|{}
+comment|/// \brief Read the set of dynamic classes known to the external Sema source.
+comment|///
+comment|/// The external source should append its own dynamic classes to
+comment|/// the given vector of declarations. Note that this routine may be
+comment|/// invoked multiple times; the external source should take care not to
+comment|/// introduce the same declarations repeatedly.
+name|virtual
+name|void
+name|ReadDynamicClasses
+argument_list|(
+argument|SmallVectorImpl<CXXRecordDecl *>&Decls
+argument_list|)
+block|{}
+comment|/// \brief Read the set of locally-scoped external declarations known to the
+comment|/// external Sema source.
+comment|///
+comment|/// The external source should append its own locally-scoped external
+comment|/// declarations to the given vector of declarations. Note that this routine
+comment|/// may be invoked multiple times; the external source should take care not
+comment|/// to introduce the same declarations repeatedly.
+name|virtual
+name|void
+name|ReadLocallyScopedExternalDecls
+argument_list|(
+argument|SmallVectorImpl<NamedDecl *>&Decls
+argument_list|)
+block|{}
+comment|/// \brief Read the set of referenced selectors known to the
+comment|/// external Sema source.
+comment|///
+comment|/// The external source should append its own referenced selectors to the
+comment|/// given vector of selectors. Note that this routine
+comment|/// may be invoked multiple times; the external source should take care not
+comment|/// to introduce the same selectors repeatedly.
+name|virtual
+name|void
+name|ReadReferencedSelectors
+argument_list|(
+argument|SmallVectorImpl<std::pair<Selector
+argument_list|,
+argument|SourceLocation>>&Sels
+argument_list|)
+block|{}
+comment|/// \brief Read the set of weak, undeclared identifiers known to the
+comment|/// external Sema source.
+comment|///
+comment|/// The external source should append its own weak, undeclared identifiers to
+comment|/// the given vector. Note that this routine may be invoked multiple times;
+comment|/// the external source should take care not to introduce the same identifiers
+comment|/// repeatedly.
+name|virtual
+name|void
+name|ReadWeakUndeclaredIdentifiers
+argument_list|(
+argument|SmallVectorImpl<std::pair<IdentifierInfo *
+argument_list|,
+argument|WeakInfo>>&WI
+argument_list|)
+block|{}
+comment|/// \brief Read the set of used vtables known to the external Sema source.
+comment|///
+comment|/// The external source should append its own used vtables to the given
+comment|/// vector. Note that this routine may be invoked multiple times; the external
+comment|/// source should take care not to introduce the same vtables repeatedly.
+name|virtual
+name|void
+name|ReadUsedVTables
+argument_list|(
+argument|SmallVectorImpl<ExternalVTableUse>&VTables
+argument_list|)
+block|{}
+comment|/// \brief Read the set of pending instantiations known to the external
+comment|/// Sema source.
+comment|///
+comment|/// The external source should append its own pending instantiations to the
+comment|/// given vector. Note that this routine may be invoked multiple times; the
+comment|/// external source should take care not to introduce the same instantiations
+comment|/// repeatedly.
+name|virtual
+name|void
+name|ReadPendingInstantiations
+argument_list|(
+argument|SmallVectorImpl<std::pair<ValueDecl *
+argument_list|,
+argument|SourceLocation>>&Pending
+argument_list|)
+block|{}
 comment|// isa/cast/dyn_cast support
 specifier|static
 name|bool
@@ -210,7 +392,7 @@ name|true
 return|;
 block|}
 expr|}
-block|;  }
+block|;   }
 end_decl_stmt
 
 begin_comment

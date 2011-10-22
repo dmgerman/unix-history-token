@@ -286,8 +286,6 @@ modifier|*
 name|Entity
 decl_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|UsingDirectiveDecl
@@ -312,7 +310,7 @@ argument|Scope *Parent
 argument_list|,
 argument|unsigned ScopeFlags
 argument_list|,
-argument|Diagnostic&Diag
+argument|DiagnosticsEngine&Diag
 argument_list|)
 block|:
 name|ErrorTrap

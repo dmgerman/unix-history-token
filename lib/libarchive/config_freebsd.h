@@ -1014,28 +1014,28 @@ end_else
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_MD5_LIBC
+name|ARCHIVE_HASH_MD5_LIBMD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA1_LIBC
+name|ARCHIVE_HASH_SHA1_LIBMD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA256_LIBC
+name|ARCHIVE_HASH_SHA256_LIBMD
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|ARCHIVE_HASH_SHA512_LIBC
+name|ARCHIVE_HASH_SHA512_LIBMD
 value|1
 end_define
 

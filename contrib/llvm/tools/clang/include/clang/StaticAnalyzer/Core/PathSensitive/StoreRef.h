@@ -185,6 +185,17 @@ return|return
 name|store
 return|;
 block|}
+specifier|const
+name|StoreManager
+operator|&
+name|getStoreManager
+argument_list|()
+specifier|const
+block|{
+return|return
+name|mgr
+return|;
+block|}
 block|}
 empty_stmt|;
 block|}

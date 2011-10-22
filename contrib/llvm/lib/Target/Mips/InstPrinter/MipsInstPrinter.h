@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsInstPrinter.h - Convert Mips MCInst to assembly syntax ----------===//
+comment|//===-- MipsInstPrinter.h - Convert Mips MCInst to assembly syntax --------===//
 end_comment
 
 begin_comment
@@ -254,14 +254,11 @@ name|virtual
 name|void
 name|printInst
 argument_list|(
-specifier|const
-name|MCInst
-operator|*
-name|MI
+argument|const MCInst *MI
 argument_list|,
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
+argument_list|,
+argument|StringRef Annot
 argument_list|)
 block|;
 name|private

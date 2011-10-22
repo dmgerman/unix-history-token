@@ -107,6 +107,12 @@ directive|include
 file|"llvm/Target/TargetFrameLowering.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"MipsJITInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -140,17 +146,24 @@ block|;
 name|MipsSelectionDAGInfo
 name|TSInfo
 block|;
+name|MipsJITInfo
+name|JITInfo
+block|;
 name|public
 operator|:
 name|MipsTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|const std::string&TT
+argument|StringRef TT
 argument_list|,
-argument|const std::string&CPU
+argument|StringRef CPU
 argument_list|,
-argument|const std::string&FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|,
 argument|bool isLittle
 argument_list|)
@@ -205,6 +218,17 @@ block|{
 return|return
 operator|&
 name|DataLayout
+return|;
+block|}
+name|virtual
+name|MipsJITInfo
+operator|*
+name|getJITInfo
+argument_list|()
+block|{
+return|return
+operator|&
+name|JITInfo
 return|;
 block|}
 name|virtual
@@ -288,9 +312,46 @@ name|CodeGenOpt
 operator|::
 name|Level
 argument_list|)
-block|;   }
+block|;
+name|virtual
+name|bool
+name|addCodeEmitter
+argument_list|(
+argument|PassManagerBase&PM
+argument_list|,
+argument|CodeGenOpt::Level OptLevel
+argument_list|,
+argument|JITCodeEmitter&JCE
+argument_list|)
+block|;    }
 decl_stmt|;
-comment|/// MipselTargetMachine - Mipsel target machine.
+comment|/// MipsebTargetMachine - Mips32 big endian target machine.
+comment|///
+name|class
+name|MipsebTargetMachine
+range|:
+name|public
+name|MipsTargetMachine
+block|{
+name|public
+operator|:
+name|MipsebTargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// MipselTargetMachine - Mips32 little endian target machine.
 comment|///
 name|class
 name|MipselTargetMachine
@@ -302,31 +363,69 @@ name|public
 operator|:
 name|MipselTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// Mips64ebTargetMachine - Mips64 big endian target machine.
+comment|///
+name|class
+name|Mips64ebTargetMachine
+range|:
+name|public
+name|MipsTargetMachine
+block|{
+name|public
+operator|:
+name|Mips64ebTargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
+argument_list|)
+block|; }
+decl_stmt|;
+comment|/// Mips64elTargetMachine - Mips64 little endian target machine.
+comment|///
+name|class
+name|Mips64elTargetMachine
+range|:
+name|public
+name|MipsTargetMachine
+block|{
+name|public
+operator|:
+name|Mips64elTargetMachine
+argument_list|(
+argument|const Target&T
+argument_list|,
+argument|StringRef TT
+argument_list|,
+argument|StringRef CPU
+argument_list|,
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|; }
 decl_stmt|;

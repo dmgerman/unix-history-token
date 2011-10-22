@@ -151,6 +151,14 @@ name|pass
 parameter_list|)
 function_decl|;
 name|void
+name|checkAPIUses
+parameter_list|(
+name|MigrationPass
+modifier|&
+name|pass
+parameter_list|)
+function_decl|;
+name|void
 name|removeEmptyStatementsAndDealloc
 parameter_list|(
 name|MigrationPass
@@ -188,6 +196,21 @@ modifier|&
 name|Ctx
 parameter_list|)
 function_decl|;
+comment|/// \brief \arg Loc is the end of a statement range. This returns the location
+comment|/// of the semicolon following the statement.
+comment|/// If no semicolon is found or the location is inside a macro, the returned
+comment|/// source location will be invalid.
+name|SourceLocation
+name|findSemiAfterLocation
+parameter_list|(
+name|SourceLocation
+name|loc
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
 name|bool
 name|hasSideEffects
 parameter_list|(
@@ -206,6 +229,15 @@ parameter_list|(
 name|Expr
 modifier|*
 name|E
+parameter_list|)
+function_decl|;
+comment|/// \brief Returns "nil" or "0" if 'nil' macro is not actually defined.
+name|StringRef
+name|getNilString
+parameter_list|(
+name|ASTContext
+modifier|&
+name|Ctx
 parameter_list|)
 function_decl|;
 name|template
@@ -249,6 +281,10 @@ argument_list|(
 argument|Stmt *rootS
 argument_list|)
 block|{
+if|if
+condition|(
+name|rootS
+condition|)
 name|BODY_TRANS
 argument_list|(
 name|Pass
@@ -258,13 +294,13 @@ name|transformBody
 argument_list|(
 name|rootS
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|true
 return|;
 block|}
-expr|}
-block|;
+block|}
+empty_stmt|;
 typedef|typedef
 name|llvm
 operator|::
@@ -277,16 +313,16 @@ name|ExprSet
 expr_stmt|;
 name|void
 name|clearRefsIn
-argument_list|(
+parameter_list|(
 name|Stmt
-operator|*
+modifier|*
 name|S
-argument_list|,
+parameter_list|,
 name|ExprSet
-operator|&
+modifier|&
 name|refs
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 name|template
 operator|<
 name|typename
@@ -352,11 +388,14 @@ function_decl|;
 block|}
 comment|// end namespace trans
 block|}
-comment|// end namespace arcmt
-block|}
 end_decl_stmt
 
 begin_comment
+comment|// end namespace arcmt
+end_comment
+
+begin_comment
+unit|}
 comment|// end namespace clang
 end_comment
 

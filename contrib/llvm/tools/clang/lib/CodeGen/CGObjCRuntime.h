@@ -671,17 +671,11 @@ argument_list|(
 argument|CGBuilderTy&Builder
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"autoreleasepool unsupported in this ABI"
 argument_list|)
-block|;
-return|return
-literal|0
-return|;
-block|}
+block|;   }
 comment|/// EnumerationMutationFunction - Return the function that's called by the
 comment|/// compiler when a mutation is detected during foreach iteration.
 name|virtual

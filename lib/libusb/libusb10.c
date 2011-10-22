@@ -3104,16 +3104,28 @@ operator|(
 name|LIBUSB_ERROR_INVALID_PARAM
 operator|)
 return|;
-return|return
-operator|(
+if|if
+condition|(
 name|libusb20_dev_kernel_driver_active
 argument_list|(
 name|pdev
 argument_list|,
 name|interface
 argument_list|)
+condition|)
+return|return
+operator|(
+literal|0
 operator|)
 return|;
+comment|/* no kernel driver is active */
+else|else
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* kernel driver is active */
 block|}
 end_function
 

@@ -270,7 +270,7 @@ name|s3
 name|__unused
 parameter_list|)
 block|{
-comment|/* 	 * Make sure that the userland devstat version matches the kernel 	 * devstat version.  If not, exit and print a message informing  	 * the user of his mistake. 	 */
+comment|/* 	 * Make sure that the userland devstat version matches the kernel 	 * devstat version.  If not, exit and print a message informing 	 * the user of his mistake. 	 */
 if|if
 condition|(
 name|devstat_checkversion

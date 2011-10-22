@@ -488,6 +488,8 @@ comment|///                       or extended opcodes).
 comment|/// @param filter       - The ModRMFilter that decides which ModR/M byte values
 comment|///                       correspond to the desired instruction.
 comment|/// @param uid          - The unique ID of the instruction.
+comment|/// @param is32bit      - Instructon is only 32-bit
+comment|/// @param ignoresVEX_L - Instruction ignores VEX.L
 name|void
 name|setTableFields
 parameter_list|(
@@ -507,6 +509,12 @@ name|filter
 parameter_list|,
 name|InstrUID
 name|uid
+parameter_list|,
+name|bool
+name|is32bit
+parameter_list|,
+name|bool
+name|ignoresVEX_L
 parameter_list|)
 function_decl|;
 comment|/// specForUID - Returns the instruction specifier for a given unique

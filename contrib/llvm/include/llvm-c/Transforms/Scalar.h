@@ -252,6 +252,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createLowerExpectIntrinsicPass function */
+name|void
+name|LLVMAddLowerExpectIntrinsicPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createTypeBasedAliasAnalysisPass function */
 name|void
 name|LLVMAddTypeBasedAliasAnalysisPass

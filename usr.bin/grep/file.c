@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<bzlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -125,6 +119,23 @@ directive|include
 file|<zlib.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_BZIP2
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<bzlib.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -154,20 +165,31 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|BZFILE
-modifier|*
-name|bzbufdesc
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
 name|lzma_stream
 name|lstrm
 init|=
 name|LZMA_STREAM_INIT
 decl_stmt|;
 end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WITHOUT_BZIP2
+end_ifndef
+
+begin_decl_stmt
+specifier|static
+name|BZFILE
+modifier|*
+name|bzbufdesc
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -232,9 +254,6 @@ block|{
 name|ssize_t
 name|nr
 decl_stmt|;
-name|int
-name|bzerr
-decl_stmt|;
 if|if
 condition|(
 name|filebehave
@@ -260,6 +279,7 @@ name|filebehave
 operator|==
 name|FILE_GZIP
 condition|)
+block|{
 name|nr
 operator|=
 name|gzread
@@ -271,6 +291,10 @@ argument_list|,
 name|MAXBUFSIZ
 argument_list|)
 expr_stmt|;
+ifndef|#
+directive|ifndef
+name|WITHOUT_BZIP2
+block|}
 elseif|else
 if|if
 condition|(
@@ -283,6 +307,9 @@ operator|!=
 name|NULL
 condition|)
 block|{
+name|int
+name|bzerr
+decl_stmt|;
 name|nr
 operator|=
 name|BZ2_bzRead
@@ -370,6 +397,8 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
@@ -1153,6 +1182,9 @@ condition|)
 goto|goto
 name|error2
 goto|;
+ifndef|#
+directive|ifndef
+name|WITHOUT_BZIP2
 if|if
 condition|(
 name|filebehave
@@ -1177,6 +1209,8 @@ condition|)
 goto|goto
 name|error2
 goto|;
+endif|#
+directive|endif
 comment|/* Fill read buffer, also catches errors early */
 if|if
 condition|(

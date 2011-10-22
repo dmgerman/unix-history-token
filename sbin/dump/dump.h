@@ -1091,8 +1091,19 @@ end_define
 begin_define
 define|#
 directive|define
+name|DUMPFMTLEN
+value|53
+end_define
+
+begin_comment
+comment|/* max device pathname length */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DUMPOUTFMT
-value|"%-32s %d %s"
+value|"%-*s %d %s"
 end_define
 
 begin_comment
@@ -1107,7 +1118,7 @@ begin_define
 define|#
 directive|define
 name|DUMPINFMT
-value|"%32s %d %[^\n]\n"
+value|"%s %d %[^\n]\n"
 end_define
 
 begin_comment

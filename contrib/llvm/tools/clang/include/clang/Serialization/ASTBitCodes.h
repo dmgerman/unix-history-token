@@ -137,11 +137,20 @@ name|VERSION_MINOR
 init|=
 literal|0
 decl_stmt|;
+comment|/// \brief An ID number that refers to an identifier in an AST file.
+comment|///
+comment|/// The ID numbers of identifiers are consecutive (in order of discovery)
+comment|/// and start at 1. 0 is reserved for NULL.
+typedef|typedef
+name|uint32_t
+name|IdentifierID
+typedef|;
 comment|/// \brief An ID number that refers to a declaration in an AST file.
 comment|///
 comment|/// The ID numbers of declarations are consecutive (in order of
-comment|/// discovery) and start at 2. 0 is reserved for NULL, and 1 is
-comment|/// reserved for the translation unit declaration.
+comment|/// discovery), with values below NUM_PREDEF_DECL_IDS being reserved.
+comment|/// At the start of a chain of precompiled headers, declaration ID 1 is
+comment|/// used for the translation unit declaration.
 typedef|typedef
 name|uint32_t
 name|DeclID
@@ -158,6 +167,16 @@ name|DeclID
 operator|>
 name|KindDeclIDPair
 expr_stmt|;
+comment|// FIXME: Turn these into classes so we can have some type safety when
+comment|// we go from local ID to global and vice-versa.
+typedef|typedef
+name|DeclID
+name|LocalDeclID
+typedef|;
+typedef|typedef
+name|DeclID
+name|GlobalDeclID
+typedef|;
 comment|/// \brief An ID number that refers to a type in an AST file.
 comment|///
 comment|/// The ID of a type is partitioned into two parts: the lower
@@ -217,6 +236,23 @@ name|FastQuals
 argument_list|)
 decl|const
 block|{
+if|if
+condition|(
+name|Idx
+operator|==
+name|uint32_t
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+condition|)
+return|return
+name|TypeID
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+return|;
 return|return
 operator|(
 name|Idx
@@ -237,6 +273,23 @@ name|TypeID
 name|ID
 parameter_list|)
 block|{
+if|if
+condition|(
+name|ID
+operator|==
+name|TypeID
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+condition|)
+return|return
+name|TypeIdx
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+return|;
 return|return
 name|TypeIdx
 argument_list|(
@@ -367,49 +420,104 @@ return|;
 block|}
 block|}
 struct|;
-comment|/// \brief Map that provides the ID numbers of each type within the
-comment|/// output stream, plus those deserialized from a chained PCH.
-comment|///
-comment|/// The ID numbers of types are consecutive (in order of discovery)
-comment|/// and start at 1. 0 is reserved for NULL. When types are actually
-comment|/// stored in the stream, the ID number is shifted by 2 bits to
-comment|/// allow for the const/volatile qualifiers.
-comment|///
-comment|/// Keys in the map never have const/volatile qualifiers.
-typedef|typedef
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-name|QualType
-operator|,
-name|TypeIdx
-operator|,
-name|UnsafeQualTypeDenseMapInfo
-operator|>
-name|TypeIdxMap
-expr_stmt|;
 comment|/// \brief An ID number that refers to an identifier in an AST file.
 typedef|typedef
 name|uint32_t
 name|IdentID
 typedef|;
-comment|/// \brief An ID number that refers to a macro in an AST file.
-typedef|typedef
-name|uint32_t
-name|MacroID
-typedef|;
+comment|/// \brief The number of predefined identifier IDs.
+specifier|const
+name|unsigned
+name|int
+name|NUM_PREDEF_IDENT_IDS
+init|=
+literal|1
+decl_stmt|;
 comment|/// \brief An ID number that refers to an ObjC selctor in an AST file.
 typedef|typedef
 name|uint32_t
 name|SelectorID
 typedef|;
+comment|/// \brief The number of predefined selector IDs.
+specifier|const
+name|unsigned
+name|int
+name|NUM_PREDEF_SELECTOR_IDS
+init|=
+literal|1
+decl_stmt|;
 comment|/// \brief An ID number that refers to a set of CXXBaseSpecifiers in an
 comment|/// AST file.
 typedef|typedef
 name|uint32_t
 name|CXXBaseSpecifiersID
 typedef|;
+comment|/// \brief An ID number that refers to an entity in the detailed
+comment|/// preprocessing record.
+typedef|typedef
+name|uint32_t
+name|PreprocessedEntityID
+typedef|;
+comment|/// \brief Source range/offset of a preprocessed entity.
+struct|struct
+name|PPEntityOffset
+block|{
+comment|/// \brief Raw source location of beginning of range.
+name|unsigned
+name|Begin
+decl_stmt|;
+comment|/// \brief Raw source location of end of range.
+name|unsigned
+name|End
+decl_stmt|;
+comment|/// \brief Offset in the AST file.
+name|uint32_t
+name|BitOffset
+decl_stmt|;
+name|PPEntityOffset
+argument_list|(
+argument|SourceRange R
+argument_list|,
+argument|uint32_t BitOffset
+argument_list|)
+block|:
+name|Begin
+argument_list|(
+name|R
+operator|.
+name|getBegin
+argument_list|()
+operator|.
+name|getRawEncoding
+argument_list|()
+argument_list|)
+operator|,
+name|End
+argument_list|(
+name|R
+operator|.
+name|getEnd
+argument_list|()
+operator|.
+name|getRawEncoding
+argument_list|()
+argument_list|)
+operator|,
+name|BitOffset
+argument_list|(
+argument|BitOffset
+argument_list|)
+block|{ }
+block|}
+struct|;
+comment|/// \brief The number of predefined preprocessed entity IDs.
+specifier|const
+name|unsigned
+name|int
+name|NUM_PREDEF_PP_ENTITY_IDS
+init|=
+literal|1
+decl_stmt|;
 comment|/// \brief Describes the various kinds of blocks that occur within
 comment|/// an AST file.
 enum|enum
@@ -626,9 +734,9 @@ name|UNUSED_FILESCOPED_DECLS
 init|=
 literal|22
 block|,
-comment|/// \brief Record code for the table of offsets to macro definition
-comment|/// entries in the preprocessing record.
-name|MACRO_DEFINITION_OFFSETS
+comment|/// \brief Record code for the table of offsets to entries in the
+comment|/// preprocessing record.
+name|PPD_ENTITIES_OFFSETS
 init|=
 literal|23
 block|,
@@ -642,9 +750,9 @@ name|DYNAMIC_CLASSES
 init|=
 literal|25
 block|,
-comment|/// \brief Record code for the chained AST metadata, including the
-comment|/// AST file version and the name of the PCH this depends on.
-name|CHAINED_METADATA
+comment|/// \brief Record code for the list of other AST files imported by
+comment|/// this AST file.
+name|IMPORTS
 init|=
 literal|26
 block|,
@@ -760,6 +868,24 @@ comment|/// for typo correction.
 name|KNOWN_NAMESPACES
 init|=
 literal|46
+block|,
+comment|/// \brief Record code for the remapping information used to relate
+comment|/// loaded modules to the various offsets and IDs(e.g., source location
+comment|/// offests, declaration and type IDs) that are used in that module to
+comment|/// refer to other modules.
+name|MODULE_OFFSET_MAP
+init|=
+literal|47
+block|,
+comment|/// \brief Record code for the source manager line table information,
+comment|/// which stores information about #line directives.
+name|SOURCE_MANAGER_LINE_TABLE
+init|=
+literal|48
+block|,
+comment|/// \brief Record code for ObjC categories in a module that are chained to
+comment|/// an interface.
+name|OBJC_CHAINED_CATEGORIES
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -790,12 +916,6 @@ comment|/// macro expansion.
 name|SM_SLOC_EXPANSION_ENTRY
 init|=
 literal|4
-block|,
-comment|/// \brief Describes the SourceManager's line table, with
-comment|/// information about #line directives.
-name|SM_LINE_TABLE
-init|=
-literal|5
 block|}
 enum|;
 comment|/// \brief Record types used within a preprocessor block.
@@ -1015,6 +1135,21 @@ comment|/// \brief The placeholder type for bound member functions.
 name|PREDEF_TYPE_BOUND_MEMBER
 init|=
 literal|30
+block|,
+comment|/// \brief The "auto" deduction type.
+name|PREDEF_TYPE_AUTO_DEDUCT
+init|=
+literal|31
+block|,
+comment|/// \brief The "auto&&" deduction type.
+name|PREDEF_TYPE_AUTO_RREF_DEDUCT
+init|=
+literal|32
+block|,
+comment|/// \brief The OpenCL 'half' / ARM NEON __fp16 type.
+name|PREDEF_TYPE_HALF_ID
+init|=
+literal|33
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1233,6 +1368,11 @@ comment|/// \brief A UnaryTransformType record.
 name|TYPE_UNARY_TRANSFORM
 init|=
 literal|39
+block|,
+comment|/// \brief An AtomicType record.
+name|TYPE_ATOMIC
+init|=
+literal|40
 block|}
 enum|;
 comment|/// \brief The type IDs for special types constructed by semantic
@@ -1248,97 +1388,115 @@ name|SPECIAL_TYPE_BUILTIN_VA_LIST
 init|=
 literal|0
 block|,
-comment|/// \brief Objective-C "id" type
-name|SPECIAL_TYPE_OBJC_ID
-init|=
-literal|1
-block|,
-comment|/// \brief Objective-C selector type
-name|SPECIAL_TYPE_OBJC_SELECTOR
-init|=
-literal|2
-block|,
 comment|/// \brief Objective-C Protocol type
 name|SPECIAL_TYPE_OBJC_PROTOCOL
 init|=
-literal|3
-block|,
-comment|/// \brief Objective-C Class type
-name|SPECIAL_TYPE_OBJC_CLASS
-init|=
-literal|4
+literal|1
 block|,
 comment|/// \brief CFConstantString type
 name|SPECIAL_TYPE_CF_CONSTANT_STRING
 init|=
-literal|5
-block|,
-comment|/// \brief Objective-C fast enumeration state type
-name|SPECIAL_TYPE_OBJC_FAST_ENUMERATION_STATE
-init|=
-literal|6
+literal|2
 block|,
 comment|/// \brief C FILE typedef type
 name|SPECIAL_TYPE_FILE
 init|=
-literal|7
+literal|3
 block|,
 comment|/// \brief C jmp_buf typedef type
 name|SPECIAL_TYPE_jmp_buf
 init|=
-literal|8
+literal|4
 block|,
 comment|/// \brief C sigjmp_buf typedef type
 name|SPECIAL_TYPE_sigjmp_buf
 init|=
-literal|9
+literal|5
 block|,
 comment|/// \brief Objective-C "id" redefinition type
 name|SPECIAL_TYPE_OBJC_ID_REDEFINITION
 init|=
-literal|10
+literal|6
 block|,
 comment|/// \brief Objective-C "Class" redefinition type
 name|SPECIAL_TYPE_OBJC_CLASS_REDEFINITION
 init|=
-literal|11
-block|,
-comment|/// \brief Block descriptor type for Blocks CodeGen
-name|SPECIAL_TYPE_BLOCK_DESCRIPTOR
-init|=
-literal|12
-block|,
-comment|/// \brief Block extedned descriptor type for Blocks CodeGen
-name|SPECIAL_TYPE_BLOCK_EXTENDED_DESCRIPTOR
-init|=
-literal|13
+literal|7
 block|,
 comment|/// \brief Objective-C "SEL" redefinition type
 name|SPECIAL_TYPE_OBJC_SEL_REDEFINITION
 init|=
-literal|14
-block|,
-comment|/// \brief NSConstantString type
-name|SPECIAL_TYPE_NS_CONSTANT_STRING
-init|=
-literal|15
-block|,
-comment|/// \brief Whether __[u]int128_t identifier is installed.
-name|SPECIAL_TYPE_INT128_INSTALLED
-init|=
-literal|16
-block|,
-comment|/// \brief Cached "auto" deduction type.
-name|SPECIAL_TYPE_AUTO_DEDUCT
-init|=
-literal|17
-block|,
-comment|/// \brief Cached "auto&&" deduction type.
-name|SPECIAL_TYPE_AUTO_RREF_DEDUCT
-init|=
-literal|18
+literal|8
 block|}
 enum|;
+comment|/// \brief The number of special type IDs.
+specifier|const
+name|unsigned
+name|NumSpecialTypeIDs
+init|=
+literal|0
+decl_stmt|;
+comment|/// \brief Predefined declaration IDs.
+comment|///
+comment|/// These declaration IDs correspond to predefined declarations in the AST
+comment|/// context, such as the NULL declaration ID. Such declarations are never
+comment|/// actually serialized, since they will be built by the AST context when
+comment|/// it is created.
+enum|enum
+name|PredefinedDeclIDs
+block|{
+comment|/// \brief The NULL declaration.
+name|PREDEF_DECL_NULL_ID
+init|=
+literal|0
+block|,
+comment|/// \brief The translation unit.
+name|PREDEF_DECL_TRANSLATION_UNIT_ID
+init|=
+literal|1
+block|,
+comment|/// \brief The Objective-C 'id' type.
+name|PREDEF_DECL_OBJC_ID_ID
+init|=
+literal|2
+block|,
+comment|/// \brief The Objective-C 'SEL' type.
+name|PREDEF_DECL_OBJC_SEL_ID
+init|=
+literal|3
+block|,
+comment|/// \brief The Objective-C 'Class' type.
+name|PREDEF_DECL_OBJC_CLASS_ID
+init|=
+literal|4
+block|,
+comment|/// \brief The signed 128-bit integer type.
+name|PREDEF_DECL_INT_128_ID
+init|=
+literal|5
+block|,
+comment|/// \brief The unsigned 128-bit integer type.
+name|PREDEF_DECL_UNSIGNED_INT_128_ID
+init|=
+literal|6
+block|,
+comment|/// \brief The internal 'instancetype' typedef.
+name|PREDEF_DECL_OBJC_INSTANCETYPE_ID
+init|=
+literal|7
+block|}
+enum|;
+comment|/// \brief The number of declaration IDs that are predefined.
+comment|///
+comment|/// For more information about predefined declarations, see the
+comment|/// \c PredefinedDeclIDs type and the PREDEF_DECL_*_ID constants.
+specifier|const
+name|unsigned
+name|int
+name|NUM_PREDEF_DECL_IDS
+init|=
+literal|8
+decl_stmt|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
 comment|/// These constants describe the declaration records that can occur within
@@ -1348,13 +1506,10 @@ comment|/// in the AST.
 enum|enum
 name|DeclCode
 block|{
-comment|/// \brief A TranslationUnitDecl record.
-name|DECL_TRANSLATION_UNIT
-init|=
-literal|50
-block|,
 comment|/// \brief A TypedefDecl record.
 name|DECL_TYPEDEF
+init|=
+literal|51
 block|,
 comment|/// \brief A TypeAliasDecl record.
 name|DECL_TYPEALIAS
@@ -1534,6 +1689,10 @@ block|,
 comment|/// \brief A NonTypeTemplateParmDecl record that stores an expanded
 comment|/// non-type template parameter pack.
 name|DECL_EXPANDED_NON_TYPE_TEMPLATE_PARM_PACK
+block|,
+comment|/// \brief A ClassScopeFunctionSpecializationDecl record a class scope
+comment|/// function specialization. (Microsoft extension).
+name|DECL_CLASS_SCOPE_FUNCTION_SPECIALIZATION
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
@@ -1707,6 +1866,9 @@ name|EXPR_BLOCK_DECL_REF
 block|,
 comment|/// \brief A GenericSelectionExpr record.
 name|EXPR_GENERIC_SELECTION
+block|,
+comment|/// \brief An AtomicExpr record.
+name|EXPR_ATOMIC
 block|,
 comment|// Objective-C
 comment|/// \brief An ObjCStringLiteral record.

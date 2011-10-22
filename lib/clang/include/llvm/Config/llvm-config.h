@@ -98,6 +98,17 @@ comment|/* #undef LLVM_ETCDIR */
 end_comment
 
 begin_comment
+comment|/* Has gcc/MSVC atomic intrinsics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_ATOMICS
+value|1
+end_define
+
+begin_comment
 comment|/* Host triple we were built on */
 end_comment
 
@@ -138,14 +149,6 @@ comment|/* #undef LLVM_MANDIR */
 end_comment
 
 begin_comment
-comment|/* Build multithreading support into LLVM */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_MULTITHREADED */
-end_comment
-
-begin_comment
 comment|/* LLVM architecture name for the native architecture, if available */
 end_comment
 
@@ -154,6 +157,28 @@ define|#
 directive|define
 name|LLVM_NATIVE_ARCH
 value|X86
+end_define
+
+begin_comment
+comment|/* LLVM name for the native AsmParser init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_ASMPARSER
+value|LLVMInitializeX86AsmParser
+end_define
+
+begin_comment
+comment|/* LLVM name for the native AsmPrinter init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_ASMPRINTER
+value|LLVMInitializeX86AsmPrinter
 end_define
 
 begin_comment
@@ -179,36 +204,14 @@ value|LLVMInitializeX86TargetInfo
 end_define
 
 begin_comment
-comment|/* LLVM name for the native MCAsmInfo init function, if available */
+comment|/* LLVM name for the native target MC init function, if available */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|LLVM_NATIVE_MCASMINFO
-value|LLVMInitializeX86MCAsmInfo
-end_define
-
-begin_comment
-comment|/* LLVM name for the native AsmPrinter init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ASMPRINTER
-value|LLVMInitializeX86AsmPrinter
-end_define
-
-begin_comment
-comment|/* LLVM name for the native AsmPrinter init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_ASMPARSER
-value|LLVMInitializeX86AsmParser
+name|LLVM_NATIVE_TARGETMC
+value|LLVMInitializeX86TargetMC
 end_define
 
 begin_comment
@@ -292,6 +295,14 @@ end_comment
 
 begin_comment
 comment|/* #undef LLVM_PATH_TWOPI */
+end_comment
+
+begin_comment
+comment|/* Define to path to xdot.py program if found or 'echo xdot.py' otherwise */
+end_comment
+
+begin_comment
+comment|/* #undef LLVM_PATH_XDOT_PY */
 end_comment
 
 begin_comment

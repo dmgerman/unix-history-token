@@ -355,6 +355,7 @@ parameter_list|,
 name|u_int16_t
 name|object_type
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|search_string

@@ -513,6 +513,17 @@ name|TerminatorInst
 argument_list|)
 block|;}
 name|RetTy
+name|visitResumeInst
+argument_list|(
+argument|ResumeInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|TerminatorInst
+argument_list|)
+block|;}
+name|RetTy
 name|visitUnreachableInst
 argument_list|(
 argument|UnreachableInst&I
@@ -571,6 +582,39 @@ name|RetTy
 name|visitStoreInst
 argument_list|(
 argument|StoreInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|Instruction
+argument_list|)
+block|; }
+name|RetTy
+name|visitAtomicCmpXchgInst
+argument_list|(
+argument|AtomicCmpXchgInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|Instruction
+argument_list|)
+block|; }
+name|RetTy
+name|visitAtomicRMWInst
+argument_list|(
+argument|AtomicRMWInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|Instruction
+argument_list|)
+block|; }
+name|RetTy
+name|visitFenceInst
+argument_list|(
+argument|FenceInst&I
 argument_list|)
 block|{
 name|DELEGATE
@@ -813,6 +857,17 @@ name|RetTy
 name|visitInsertValueInst
 argument_list|(
 argument|InsertValueInst&I
+argument_list|)
+block|{
+name|DELEGATE
+argument_list|(
+name|Instruction
+argument_list|)
+block|; }
+name|RetTy
+name|visitLandingPadInst
+argument_list|(
+argument|LandingPadInst&I
 argument_list|)
 block|{
 name|DELEGATE

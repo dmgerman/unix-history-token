@@ -160,6 +160,65 @@ comment|// the thread pointer (Local Exec TLS).
 name|MO_TPREL_HI
 block|,
 name|MO_TPREL_LO
+block|,
+comment|// N32/64 Flags.
+name|MO_GPOFF_HI
+block|,
+name|MO_GPOFF_LO
+block|,
+name|MO_GOT_DISP
+block|,
+name|MO_GOT_PAGE
+block|,
+name|MO_GOT_OFST
+block|}
+enum|;
+enum|enum
+block|{
+comment|//===------------------------------------------------------------------===//
+comment|// Instruction encodings.  These are the standard/most common forms for
+comment|// Mips instructions.
+comment|//
+comment|// Pseudo - This represents an instruction that is a pseudo instruction
+comment|// or one that has not been implemented yet.  It is illegal to code generate
+comment|// it, but tolerated for intermediate implementation stages.
+name|Pseudo
+init|=
+literal|0
+block|,
+comment|/// FrmR - This form is for instructions of the format R.
+name|FrmR
+init|=
+literal|1
+block|,
+comment|/// FrmI - This form is for instructions of the format I.
+name|FrmI
+init|=
+literal|2
+block|,
+comment|/// FrmJ - This form is for instructions of the format J.
+name|FrmJ
+init|=
+literal|3
+block|,
+comment|/// FrmFR - This form is for instructions of the format FR.
+name|FrmFR
+init|=
+literal|4
+block|,
+comment|/// FrmFI - This form is for instructions of the format FI.
+name|FrmFI
+init|=
+literal|5
+block|,
+comment|/// FrmOther - This form is for instructions that have no specific format.
+name|FrmOther
+init|=
+literal|6
+block|,
+name|FormMask
+init|=
+literal|15
 block|}
 enum|;
 block|}
@@ -172,6 +231,9 @@ block|{
 name|MipsTargetMachine
 operator|&
 name|TM
+block|;
+name|bool
+name|IsN64
 block|;
 specifier|const
 name|MipsRegisterInfo

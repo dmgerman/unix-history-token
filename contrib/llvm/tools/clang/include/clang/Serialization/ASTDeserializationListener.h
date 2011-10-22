@@ -175,7 +175,7 @@ name|MacroDefinitionRead
 argument_list|(
 name|serialization
 operator|::
-name|MacroID
+name|PreprocessedEntityID
 argument_list|,
 name|MacroDefinition
 operator|*

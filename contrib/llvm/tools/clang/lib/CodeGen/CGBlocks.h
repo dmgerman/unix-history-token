@@ -785,7 +785,6 @@ name|UsesStret
 range|:
 literal|1
 decl_stmt|;
-specifier|const
 name|llvm
 operator|::
 name|StructType

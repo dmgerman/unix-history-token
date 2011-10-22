@@ -15,6 +15,12 @@ directive|define
 name|_MACHINE_INTR_MACHDEP_H_
 end_define
 
+begin_include
+include|#
+directive|include
+file|<machine/atomic.h>
+end_include
+
 begin_if
 if|#
 directive|if

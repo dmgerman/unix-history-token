@@ -1830,6 +1830,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|struct
+name|resource
+modifier|*
+name|acpi_alloc_sysres
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+modifier|*
+name|rid
+parameter_list|,
+name|u_long
+name|start
+parameter_list|,
+name|u_long
+name|end
+parameter_list|,
+name|u_long
+name|count
+parameter_list|,
+name|u_int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* ACPI event handling */
 end_comment

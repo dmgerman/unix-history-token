@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Analysis/ProgramPoint.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/StaticAnalyzer/Core/CheckerManager.h"
 end_include
 
@@ -730,6 +736,8 @@ argument|const SVal&location
 argument_list|,
 argument|bool isLoad
 argument_list|,
+argument|const Stmt *S
+argument_list|,
 argument|CheckerContext&C
 argument_list|)
 block|{
@@ -747,6 +755,8 @@ argument_list|(
 name|location
 argument_list|,
 name|isLoad
+argument_list|,
+name|S
 argument_list|,
 name|C
 argument_list|)
@@ -804,6 +814,8 @@ argument|const SVal&location
 argument_list|,
 argument|const SVal&val
 argument_list|,
+argument|const Stmt *S
+argument_list|,
 argument|CheckerContext&C
 argument_list|)
 block|{
@@ -821,6 +833,8 @@ argument_list|(
 name|location
 argument_list|,
 name|val
+argument_list|,
+name|S
 argument_list|,
 name|C
 argument_list|)
@@ -1092,7 +1106,7 @@ name|_checkLiveSymbols
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolReaper&SR
 argument_list|)
@@ -1228,19 +1242,19 @@ name|CHECKER
 operator|>
 specifier|static
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|_checkRegionChanges
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|const StoreManager::InvalidatedSymbols *invalidated
 argument_list|,
-argument|const MemRegion * const *Begin
+argument|ArrayRef<const MemRegion *> Explicits
 argument_list|,
-argument|const MemRegion * const *End
+argument|ArrayRef<const MemRegion *> Regions
 argument_list|)
 block|{
 return|return
@@ -1259,9 +1273,9 @@ name|state
 argument_list|,
 name|invalidated
 argument_list|,
-name|Begin
+name|Explicits
 argument_list|,
-name|End
+name|Regions
 argument_list|)
 return|;
 block|}
@@ -1276,7 +1290,7 @@ name|_wantsRegionChangeUpdate
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|)
 block|{
 return|return
@@ -1436,13 +1450,13 @@ name|CHECKER
 operator|>
 specifier|static
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|_evalAssume
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|const SVal&cond
 argument_list|,
@@ -1575,8 +1589,118 @@ argument_list|)
 argument_list|)
 block|;   }
 expr|}
+block|;
+name|class
+name|InlineCall
+block|{
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|bool
+name|_inlineCall
+argument_list|(
+argument|void *checker
+argument_list|,
+argument|const CallExpr *CE
+argument_list|,
+argument|ExprEngine&Eng
+argument_list|,
+argument|ExplodedNode *Pred
+argument_list|,
+argument|ExplodedNodeSet&Dst
+argument_list|)
+block|{
+return|return
+operator|(
+operator|(
+specifier|const
+name|CHECKER
+operator|*
+operator|)
+name|checker
+operator|)
+operator|->
+name|inlineCall
+argument_list|(
+name|CE
+argument_list|,
+name|Eng
+argument_list|,
+name|Pred
+argument_list|,
+name|Dst
+argument_list|)
+return|;
+block|}
+name|public
+operator|:
+name|template
+operator|<
+name|typename
+name|CHECKER
+operator|>
+specifier|static
+name|void
+name|_register
+argument_list|(
+argument|CHECKER *checker
+argument_list|,
+argument|CheckerManager&mgr
+argument_list|)
+block|{
+name|mgr
+operator|.
+name|_registerForInlineCall
+argument_list|(
+name|CheckerManager
+operator|::
+name|InlineCallFunc
+argument_list|(
+name|checker
+argument_list|,
+name|_inlineCall
+operator|<
+name|CHECKER
+operator|>
+argument_list|)
+argument_list|)
+block|;   }
+expr|}
 block|;  }
 comment|// end eval namespace
+name|class
+name|CheckerBase
+operator|:
+name|public
+name|ProgramPointTag
+block|{
+name|public
+operator|:
+name|StringRef
+name|getTagDescription
+argument_list|()
+specifier|const
+block|;
+comment|/// See CheckerManager::runCheckersForPrintState.
+name|virtual
+name|void
+name|printState
+argument_list|(
+argument|raw_ostream&Out
+argument_list|,
+argument|const ProgramState *State
+argument_list|,
+argument|const char *NL
+argument_list|,
+argument|const char *Sep
+argument_list|)
+specifier|const
+block|{ }
+block|}
+block|;
 name|template
 operator|<
 name|typename
@@ -1658,6 +1782,34 @@ operator|=
 name|check
 operator|::
 name|_VoidCheck
+block|,
+name|typename
+name|CHECK13
+operator|=
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|typename
+name|CHECK14
+operator|=
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|typename
+name|CHECK15
+operator|=
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|typename
+name|CHECK16
+operator|=
+name|check
+operator|::
+name|_VoidCheck
 operator|>
 name|class
 name|Checker
@@ -1715,7 +1867,26 @@ block|,
 name|check
 operator|::
 name|_VoidCheck
+block|,
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|check
+operator|::
+name|_VoidCheck
 operator|>
+operator|:
+name|public
+name|CheckerBase
 block|{
 name|public
 operator|:
@@ -1767,6 +1938,18 @@ name|CHECK11
 block|,
 name|typename
 name|CHECK12
+block|,
+name|typename
+name|CHECK13
+block|,
+name|typename
+name|CHECK14
+block|,
+name|typename
+name|CHECK15
+block|,
+name|typename
+name|CHECK16
 operator|>
 name|class
 name|Checker
@@ -1798,6 +1981,14 @@ block|,
 name|CHECK11
 block|,
 name|CHECK12
+block|,
+name|CHECK13
+block|,
+name|CHECK14
+block|,
+name|CHECK15
+block|,
+name|CHECK16
 operator|>
 block|{
 name|public
@@ -1848,6 +2039,14 @@ block|,
 name|CHECK11
 block|,
 name|CHECK12
+block|,
+name|CHECK13
+block|,
+name|CHECK14
+block|,
+name|CHECK15
+block|,
+name|CHECK16
 operator|>
 operator|::
 name|_register

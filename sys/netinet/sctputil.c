@@ -9101,9 +9101,7 @@ name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_HEARTBEAT
 argument_list|,
-name|stcb
-operator|->
-name|sctp_ep
+name|inp
 argument_list|,
 name|stcb
 argument_list|,

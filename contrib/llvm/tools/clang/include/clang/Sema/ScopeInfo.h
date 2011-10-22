@@ -187,8 +187,6 @@ name|ErrorTrap
 decl_stmt|;
 comment|/// SwitchStack - This is the current set of active switch statements in the
 comment|/// block.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|SwitchStmt
@@ -201,8 +199,6 @@ expr_stmt|;
 comment|/// \brief The list of return statements that occur within the function or
 comment|/// block, if there is any chance of applying the named return value
 comment|/// optimization.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ReturnStmt
@@ -215,8 +211,6 @@ expr_stmt|;
 comment|/// \brief A list of PartialDiagnostics created but delayed within the
 comment|/// current function scope.  These diagnostics are vetted for reachability
 comment|/// prior to being emitted.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|PossiblyUnreachableDiag
@@ -269,7 +263,7 @@ return|;
 block|}
 name|FunctionScopeInfo
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diag
 argument_list|)
@@ -368,8 +362,6 @@ operator|>
 name|CaptureMap
 block|;
 comment|/// Captures - The captured variables.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|BlockDecl
@@ -386,7 +378,7 @@ name|CapturesCXXThis
 block|;
 name|BlockScopeInfo
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diag
 argument_list|,

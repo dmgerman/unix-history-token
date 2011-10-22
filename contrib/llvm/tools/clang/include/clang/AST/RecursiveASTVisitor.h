@@ -2357,6 +2357,12 @@ argument|ObjCObjectPointerType
 argument_list|,
 argument|{     TRY_TO(TraverseType(T->getPointeeType()));   }
 argument_list|)
+name|DEF_TRAVERSE_TYPE
+argument_list|(
+argument|AtomicType
+argument_list|,
+argument|{     TRY_TO(TraverseType(T->getValueType()));   }
+argument_list|)
 undef|#
 directive|undef
 name|DEF_TRAVERSE_TYPE
@@ -2864,6 +2870,15 @@ argument|{     TRY_TO(TraverseTypeLoc(TL.getPointeeLoc()));   }
 argument_list|)
 end_macro
 
+begin_macro
+name|DEF_TRAVERSE_TYPELOC
+argument_list|(
+argument|AtomicType
+argument_list|,
+argument|{     TRY_TO(TraverseTypeLoc(TL.getValueLoc()));   }
+argument_list|)
+end_macro
+
 begin_undef
 undef|#
 directive|undef
@@ -3036,6 +3051,12 @@ argument_list|,
 argument|{     if (D->getFriendType())       TRY_TO(TraverseTypeLoc(D->getFriendType()->getTypeLoc()));     else       TRY_TO(TraverseDecl(D->getFriendDecl()));     for (unsigned I =
 literal|0
 argument|, E = D->getNumTemplateParameters(); I< E; ++I) {       TemplateParameterList *TPL = D->getTemplateParameterList(I);       for (TemplateParameterList::iterator ITPL = TPL->begin(),                                            ETPL = TPL->end();            ITPL != ETPL; ++ITPL) {         TRY_TO(TraverseDecl(*ITPL));       }     }   }
+argument_list|)
+name|DEF_TRAVERSE_DECL
+argument_list|(
+argument|ClassScopeFunctionSpecializationDecl
+argument_list|,
+argument|{   TRY_TO(TraverseDecl(D->getSpecialization()));  }
 argument_list|)
 name|DEF_TRAVERSE_DECL
 argument_list|(
@@ -3429,7 +3450,7 @@ name|ShouldVisit
 condition|)
 name|TRY_TO
 argument_list|(
-name|TraverseClassTemplateSpecializationDecl
+name|TraverseDecl
 argument_list|(
 name|SD
 argument_list|)
@@ -3533,7 +3554,7 @@ argument_list|)
 argument_list|)
 block|;
 comment|// By default, we do not traverse the instantiations of
-comment|// class templates since they do not apprear in the user code. The
+comment|// class templates since they do not appear in the user code. The
 comment|// following code optionally traverses them.
 if|if
 condition|(
@@ -3680,10 +3701,8 @@ name|TSK_ExplicitSpecialization
 case|:
 break|break;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Unknown specialization kind."
 argument_list|)
 expr_stmt|;
@@ -4446,7 +4465,7 @@ comment|// a templated return type and concrete arguments.
 if|if
 condition|(
 specifier|const
-name|TemplateArgumentListInfo
+name|ASTTemplateArgumentListInfo
 modifier|*
 name|TALI
 init|=
@@ -4461,13 +4480,12 @@ name|TraverseTemplateArgumentLocsHelper
 argument_list|(
 name|TALI
 operator|->
-name|getArgumentArray
+name|getTemplateArgs
 argument_list|()
 argument_list|,
 name|TALI
 operator|->
-name|size
-argument_list|()
+name|NumTemplateArgs
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5841,6 +5859,12 @@ argument_list|)
 name|DEF_TRAVERSE_STMT
 argument_list|(
 argument|MaterializeTemporaryExpr
+argument_list|,
+argument|{ }
+argument_list|)
+name|DEF_TRAVERSE_STMT
+argument_list|(
+argument|AtomicExpr
 argument_list|,
 argument|{ }
 argument_list|)

@@ -226,7 +226,7 @@ comment|/// GlobalVariable ctor - If a parent module is specified, the global is
 comment|/// automatically inserted into the end of the specified modules global list.
 name|GlobalVariable
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|bool isConstant
 argument_list|,
@@ -250,7 +250,7 @@ name|GlobalVariable
 argument_list|(
 argument|Module&M
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|bool isConstant
 argument_list|,

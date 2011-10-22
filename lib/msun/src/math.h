@@ -296,23 +296,18 @@ name|math_errhandling
 value|MATH_ERREXCEPT
 end_define
 
-begin_comment
-comment|/* XXX We need a<machine/math.h>. */
-end_comment
+begin_define
+define|#
+directive|define
+name|FP_FAST_FMAF
+value|1
+end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -320,17 +315,6 @@ directive|define
 name|FP_FAST_FMA
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
 
 begin_define
 define|#
@@ -343,13 +327,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|FP_FAST_FMAF
-value|1
-end_define
 
 begin_comment
 comment|/* Symbolic constants to classify floating point numbers. */

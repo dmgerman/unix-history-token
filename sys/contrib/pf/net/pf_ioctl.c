@@ -1557,16 +1557,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
-expr|struct
+begin_decl_stmt
+name|struct
 name|mtx
-argument_list|,
 name|pf_task_mtx
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/* pfsync */
@@ -1705,6 +1701,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|init_pf_mutex
 parameter_list|(
@@ -1714,7 +1711,7 @@ block|{
 name|mtx_init
 argument_list|(
 operator|&
-name|V_pf_task_mtx
+name|pf_task_mtx
 argument_list|,
 literal|"pf task mtx"
 argument_list|,
@@ -1727,6 +1724,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|destroy_pf_mutex
 parameter_list|(
@@ -1736,7 +1734,7 @@ block|{
 name|mtx_destroy
 argument_list|(
 operator|&
-name|V_pf_task_mtx
+name|pf_task_mtx
 argument_list|)
 expr_stmt|;
 block|}
@@ -22495,10 +22493,8 @@ name|pfh_inet6
 decl_stmt|;
 endif|#
 directive|endif
-name|PF_ASSERT
-argument_list|(
-name|MA_NOTOWNED
-argument_list|)
+name|PF_UNLOCK_ASSERT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -22683,10 +22679,8 @@ name|pfh_inet6
 decl_stmt|;
 endif|#
 directive|endif
-name|PF_ASSERT
-argument_list|(
-name|MA_NOTOWNED
-argument_list|)
+name|PF_UNLOCK_ASSERT
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -22937,9 +22931,6 @@ argument_list|,
 literal|"pf_statetbl_lock"
 argument_list|)
 expr_stmt|;
-name|init_pf_mutex
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|pfattach
@@ -22947,16 +22938,11 @@ argument_list|()
 operator|<
 literal|0
 condition|)
-block|{
-name|destroy_pf_mutex
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 return|return
 operator|(
 literal|0
@@ -23036,7 +23022,7 @@ argument_list|(
 name|pf_purge_thread
 argument_list|,
 operator|&
-name|V_pf_task_mtx
+name|pf_task_mtx
 argument_list|,
 literal|0
 argument_list|,
@@ -23059,9 +23045,6 @@ name|cleanup_pf_zone
 argument_list|()
 expr_stmt|;
 name|PF_UNLOCK
-argument_list|()
-expr_stmt|;
-name|destroy_pf_mutex
 argument_list|()
 expr_stmt|;
 name|sx_destroy
@@ -23102,6 +23085,9 @@ block|{
 case|case
 name|MOD_LOAD
 case|:
+name|init_pf_mutex
+argument_list|()
+expr_stmt|;
 name|pf_dev
 operator|=
 name|make_dev
@@ -23128,6 +23114,9 @@ name|destroy_dev
 argument_list|(
 name|pf_dev
 argument_list|)
+expr_stmt|;
+name|destroy_pf_mutex
+argument_list|()
 expr_stmt|;
 break|break;
 default|default:
@@ -23159,7 +23148,7 @@ name|pf
 argument_list|,
 name|pf_mod
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_PSEUDO
 argument_list|,
 name|SI_ORDER_FIRST
 argument_list|)

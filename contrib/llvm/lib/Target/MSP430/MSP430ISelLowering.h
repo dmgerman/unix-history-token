@@ -334,9 +334,9 @@ name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
-argument|const Type *Ty1
+argument|Type *Ty1
 argument_list|,
-argument|const Type *Ty2
+argument|Type *Ty2
 argument_list|)
 specifier|const
 block|;
@@ -362,9 +362,9 @@ name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
-argument|const Type *Ty1
+argument|Type *Ty1
 argument_list|,
-argument|const Type *Ty2
+argument|Type *Ty2
 argument_list|)
 specifier|const
 block|;

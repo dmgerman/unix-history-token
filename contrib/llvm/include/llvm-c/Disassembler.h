@@ -86,6 +86,7 @@ name|uint64_t
 name|Present
 decl_stmt|;
 comment|/* 1 if this symbol is present */
+specifier|const
 name|char
 modifier|*
 name|Name
@@ -163,7 +164,7 @@ comment|/* :lower16: */
 end_comment
 
 begin_comment
-comment|/**  * The type for the symbol lookup function.  This may be called by the  * disassembler for things like adding a comment for a PC plus a constant  * offset load instruction to use a symbol name instead of a load address value.  * It is passed the block information is saved when the disassembler context is  * created and a value of a symbol to look up.  If no symbol is found NULL is  * returned.  */
+comment|/**  * The type for the symbol lookup function.  This may be called by the  * disassembler for things like adding a comment for a PC plus a constant  * offset load instruction to use a symbol name instead of a load address value.  * It is passed the block information is saved when the disassembler context is  * created and the ReferenceValue to look up as a symbol.  If no symbol is found  * for the ReferenceValue NULL is returned.  The ReferenceType of the  * instruction is passed indirectly as is the PC of the instruction in  * ReferencePC.  If the output reference can be determined its type is returned  * indirectly in ReferenceType along with ReferenceName if any, or that is set  * to NULL.  */
 end_comment
 
 begin_typedef
@@ -181,10 +182,93 @@ modifier|*
 name|DisInfo
 parameter_list|,
 name|uint64_t
-name|SymbolValue
+name|ReferenceValue
+parameter_list|,
+name|uint64_t
+modifier|*
+name|ReferenceType
+parameter_list|,
+name|uint64_t
+name|ReferencePC
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|ReferenceName
 parameter_list|)
 function_decl|;
 end_typedef
+
+begin_comment
+comment|/**  * The reference types on input and output.  */
+end_comment
+
+begin_comment
+comment|/* No input reference type or no output reference type. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_InOut_None
+value|0
+end_define
+
+begin_comment
+comment|/* The input reference is from a branch instruction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_In_Branch
+value|1
+end_define
+
+begin_comment
+comment|/* The input reference is from a PC relative load instruction. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_In_PCrel_Load
+value|2
+end_define
+
+begin_comment
+comment|/* The output reference is to as symbol stub. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_Out_SymbolStub
+value|1
+end_define
+
+begin_comment
+comment|/* The output reference is to a symbol address in a literal pool. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_Out_LitPool_SymAddr
+value|2
+end_define
+
+begin_comment
+comment|/* The output reference is to a cstring address in a literal pool. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVMDisassembler_ReferenceType_Out_LitPool_CstrAddr
+value|3
+end_define
 
 begin_ifdef
 ifdef|#

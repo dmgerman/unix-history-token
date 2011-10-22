@@ -92,6 +92,26 @@ name|int
 name|strip_components
 decl_stmt|;
 comment|/* Remove this many leading dirs */
+name|int
+name|gid
+decl_stmt|;
+comment|/* --gid */
+specifier|const
+name|char
+modifier|*
+name|gname
+decl_stmt|;
+comment|/* --gname */
+name|int
+name|uid
+decl_stmt|;
+comment|/* --uid */
+specifier|const
+name|char
+modifier|*
+name|uname
+decl_stmt|;
+comment|/* --uname */
 name|char
 name|mode
 decl_stmt|;
@@ -151,10 +171,6 @@ name|char
 name|option_null
 decl_stmt|;
 comment|/* --null */
-name|char
-name|option_numeric_owner
-decl_stmt|;
-comment|/* --numeric-owner */
 name|char
 name|option_stdout
 decl_stmt|;
@@ -298,7 +314,9 @@ name|OPTION_EXCLUDE
 block|,
 name|OPTION_FORMAT
 block|,
-name|OPTION_OPTIONS
+name|OPTION_GID
+block|,
+name|OPTION_GNAME
 block|,
 name|OPTION_HELP
 block|,
@@ -328,6 +346,8 @@ name|OPTION_NUMERIC_OWNER
 block|,
 name|OPTION_ONE_FILE_SYSTEM
 block|,
+name|OPTION_OPTIONS
+block|,
 name|OPTION_POSIX
 block|,
 name|OPTION_SAME_OWNER
@@ -335,6 +355,10 @@ block|,
 name|OPTION_STRIP_COMPONENTS
 block|,
 name|OPTION_TOTALS
+block|,
+name|OPTION_UID
+block|,
+name|OPTION_UNAME
 block|,
 name|OPTION_USE_COMPRESS_PROGRAM
 block|,

@@ -112,7 +112,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*  *      expression evaluator: performs a standard recursive  *      descent parse to evaluate any expression permissible  *      within the following grammar:  *  *      expr    :       query EOS  *      query   :       lor  *              |       lor "?" query ":" query  *      lor     :       land { "||" land }  *      land    :       bor { "&&" bor }  *      bor     :       xor { "|" xor }  *      xor     :       band { "^" eqrel }  *      band    :       eqrel { "&" eqrel }  *      eqrel   :       nerel { ("==" | "!=") nerel }  *      nerel   :       shift { ("<" | ">" | "<=" | ">=") shift }  *      shift   :       primary { ("<<" | ">>") primary }  *      primary :       term { ("+" | "-") term }  *      term    :       exp { ("*" | "/" | "%") exp }  *      exp     :       unary { "**" unary }  *      unary   :       factor  *              |       ("+" | "-" | "~" | "!") unary  *      factor  :       constant  *              |       "(" query ")"  *      constant:       num  *              |       "'" CHAR "'"  *      num     :       DIGIT  *              |       DIGIT num  *  *  *      This expression evaluator is lifted from a public-domain  *      C Pre-Processor included with the DECUS C Compiler distribution.  *      It is hacked somewhat to be suitable for m4.  *  *      Originally by:  Mike Lutz  *                      Bob Harper  */
+comment|/*  *      expression evaluator: performs a standard recursive  *      descent parse to evaluate any expression permissible  *      within the following grammar:  *  *      expr    :       query EOS  *      query   :       lor  *              |       lor "?" query ":" query  *      lor     :       land { "||" land }  *      land    :       bor { "&&" bor }  *      bor     :       xor { "|" xor }  *      xor     :       band { "^" eqrel }  *      band    :       eqrel { "&" eqrel }  *      eqrel   :       nerel { ("==" | "!=") nerel }  *      nerel   :       shift { ("<" | ">" | "<=" | ">=") shift }  *      shift   :       primary { ("<<" | ">>") primary }  *      primary :       term { ("+" | "-") term }  *      term    :       exponent { ("*" | "/" | "%") exponent }  *      exponent:       unary { "**" unary }  *      unary   :       factor  *              |       ("+" | "-" | "~" | "!") unary  *      factor  :       constant  *              |       "(" query ")"  *      constant:       num  *              |       "'" CHAR "'"  *      num     :       DIGIT  *              |       DIGIT num  *  *  *      This expression evaluator is lifted from a public-domain  *      C Pre-Processor included with the DECUS C Compiler distribution.  *      It is hacked somewhat to be suitable for m4.  *  *      Originally by:  Mike Lutz  *                      Bob Harper  */
 end_comment
 
 begin_define
@@ -324,7 +324,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|exp
+name|exponent
 parameter_list|(
 name|int
 name|mayeval
@@ -369,17 +369,6 @@ begin_function_decl
 specifier|static
 name|int
 name|num
-parameter_list|(
-name|int
-name|mayeval
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|geteqrel
 parameter_list|(
 name|int
 name|mayeval
@@ -1390,7 +1379,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * term : exp { ("*" | "/" | "%") exp }  */
+comment|/*  * term : exponent { ("*" | "/" | "%") exponent }  */
 end_comment
 
 begin_function
@@ -1411,7 +1400,7 @@ name|vr
 decl_stmt|;
 name|vl
 operator|=
-name|exp
+name|exponent
 argument_list|(
 name|mayeval
 argument_list|)
@@ -1438,7 +1427,7 @@ condition|)
 block|{
 name|vr
 operator|=
-name|exp
+name|exponent
 argument_list|(
 name|mayeval
 argument_list|)
@@ -1528,13 +1517,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * exp : unary { "**" exp }  */
+comment|/*  * exponent : unary { "**" exponent }  */
 end_comment
 
 begin_function
 specifier|static
 name|int
-name|exp
+name|exponent
 parameter_list|(
 name|int
 name|mayeval
@@ -2014,6 +2003,7 @@ name|num
 parameter_list|(
 name|int
 name|mayeval
+name|__unused
 parameter_list|)
 block|{
 name|int

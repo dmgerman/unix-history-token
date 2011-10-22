@@ -469,7 +469,7 @@ name|r
 parameter_list|,
 name|d
 parameter_list|)
-value|do {					\  	CLEAR_COLUMN((r), (c));						\  	mvprintw((r), (c), "%12.3f %s  ",				\  		 convert(d##_##c, SC_AUTO),				\ 		 get_string(d##_##c, SC_AUTO));				\ } while (0)
+value|do {					\ 	CLEAR_COLUMN((r), (c));						\ 	mvprintw((r), (c), "%12.3f %s  ",				\ 		 convert(d##_##c, SC_AUTO),				\ 		 get_string(d##_##c, SC_AUTO));				\ } while (0)
 end_define
 
 begin_define

@@ -94,12 +94,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/DenseSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<cassert>
 end_include
 
@@ -166,21 +160,19 @@ name|sc_iterator
 typedef|;
 name|private
 label|:
-name|unsigned
-name|ID
-decl_stmt|;
 specifier|const
-name|char
+name|MCRegisterClass
 modifier|*
-name|Name
+name|MC
 decl_stmt|;
 specifier|const
 name|vt_iterator
 name|VTs
 decl_stmt|;
 specifier|const
-name|sc_iterator
-name|SubClasses
+name|unsigned
+modifier|*
+name|SubClassMask
 decl_stmt|;
 specifier|const
 name|sc_iterator
@@ -188,78 +180,45 @@ name|SuperClasses
 decl_stmt|;
 specifier|const
 name|sc_iterator
-name|SubRegClasses
-decl_stmt|;
-specifier|const
-name|sc_iterator
 name|SuperRegClasses
 decl_stmt|;
-specifier|const
-name|unsigned
-name|RegSize
-decl_stmt|,
-name|Alignment
-decl_stmt|;
-comment|// Size& Alignment of register in bytes
-specifier|const
-name|int
-name|CopyCost
-decl_stmt|;
-specifier|const
-name|bool
-name|Allocatable
-decl_stmt|;
-specifier|const
-name|iterator
-name|RegsBegin
-decl_stmt|,
-name|RegsEnd
-decl_stmt|;
-name|DenseSet
-operator|<
-name|unsigned
-operator|>
-name|RegSet
-expr_stmt|;
 name|public
 label|:
 name|TargetRegisterClass
 argument_list|(
-argument|unsigned id
+specifier|const
+name|MCRegisterClass
+operator|*
+name|MC
 argument_list|,
-argument|const char *name
+specifier|const
+name|EVT
+operator|*
+name|vts
 argument_list|,
-argument|const EVT *vts
+specifier|const
+name|unsigned
+operator|*
+name|subcm
 argument_list|,
-argument|const TargetRegisterClass * const *subcs
+specifier|const
+name|TargetRegisterClass
+operator|*
+specifier|const
+operator|*
+name|supcs
 argument_list|,
-argument|const TargetRegisterClass * const *supcs
-argument_list|,
-argument|const TargetRegisterClass * const *subregcs
-argument_list|,
-argument|const TargetRegisterClass * const *superregcs
-argument_list|,
-argument|unsigned RS
-argument_list|,
-argument|unsigned Al
-argument_list|,
-argument|int CC
-argument_list|,
-argument|bool Allocable
-argument_list|,
-argument|iterator RB
-argument_list|,
-argument|iterator RE
+specifier|const
+name|TargetRegisterClass
+operator|*
+specifier|const
+operator|*
+name|superregcs
 argument_list|)
-block|:
-name|ID
+operator|:
+name|MC
 argument_list|(
-name|id
-argument_list|)
-operator|,
-name|Name
-argument_list|(
-name|name
+name|MC
 argument_list|)
 operator|,
 name|VTs
@@ -267,9 +226,9 @@ argument_list|(
 name|vts
 argument_list|)
 operator|,
-name|SubClasses
+name|SubClassMask
 argument_list|(
-name|subcs
+name|subcm
 argument_list|)
 operator|,
 name|SuperClasses
@@ -277,73 +236,11 @@ argument_list|(
 name|supcs
 argument_list|)
 operator|,
-name|SubRegClasses
-argument_list|(
-name|subregcs
-argument_list|)
-operator|,
 name|SuperRegClasses
 argument_list|(
-name|superregcs
+argument|superregcs
 argument_list|)
-operator|,
-name|RegSize
-argument_list|(
-name|RS
-argument_list|)
-operator|,
-name|Alignment
-argument_list|(
-name|Al
-argument_list|)
-operator|,
-name|CopyCost
-argument_list|(
-name|CC
-argument_list|)
-operator|,
-name|Allocatable
-argument_list|(
-name|Allocable
-argument_list|)
-operator|,
-name|RegsBegin
-argument_list|(
-name|RB
-argument_list|)
-operator|,
-name|RegsEnd
-argument_list|(
-argument|RE
-argument_list|)
-block|{
-for|for
-control|(
-name|iterator
-name|I
-init|=
-name|RegsBegin
-init|,
-name|E
-init|=
-name|RegsEnd
-init|;
-name|I
-operator|!=
-name|E
-condition|;
-operator|++
-name|I
-control|)
-name|RegSet
-operator|.
-name|insert
-argument_list|(
-operator|*
-name|I
-argument_list|)
-expr_stmt|;
-block|}
+block|{}
 name|virtual
 operator|~
 name|TargetRegisterClass
@@ -358,7 +255,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ID
+name|MC
+operator|->
+name|getID
+argument_list|()
 return|;
 block|}
 comment|/// getName() - Return the register class name for debugging.
@@ -371,7 +271,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Name
+name|MC
+operator|->
+name|getName
+argument_list|()
 return|;
 block|}
 comment|/// begin/end - Return all of the registers in this class.
@@ -382,7 +285,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|RegsBegin
+name|MC
+operator|->
+name|begin
+argument_list|()
 return|;
 block|}
 name|iterator
@@ -391,7 +297,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|RegsEnd
+name|MC
+operator|->
+name|end
+argument_list|()
 return|;
 block|}
 comment|/// getNumRegs - Return the number of registers in this class.
@@ -402,14 +311,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-call|(
-name|unsigned
-call|)
-argument_list|(
-name|RegsEnd
-operator|-
-name|RegsBegin
-argument_list|)
+name|MC
+operator|->
+name|getNumRegs
+argument_list|()
 return|;
 block|}
 comment|/// getRegister - Return the specified register in the class.
@@ -422,21 +327,13 @@ name|i
 argument_list|)
 decl|const
 block|{
-name|assert
+return|return
+name|MC
+operator|->
+name|getRegister
 argument_list|(
 name|i
-operator|<
-name|getNumRegs
-argument_list|()
-operator|&&
-literal|"Register number out of range!"
 argument_list|)
-expr_stmt|;
-return|return
-name|RegsBegin
-index|[
-name|i
-index|]
 return|;
 block|}
 comment|/// contains - Return true if the specified register is included in this
@@ -450,9 +347,9 @@ argument_list|)
 decl|const
 block|{
 return|return
-name|RegSet
-operator|.
-name|count
+name|MC
+operator|->
+name|contains
 argument_list|(
 name|Reg
 argument_list|)
@@ -471,15 +368,71 @@ argument_list|)
 decl|const
 block|{
 return|return
+name|MC
+operator|->
 name|contains
 argument_list|(
 name|Reg1
-argument_list|)
-operator|&&
-name|contains
-argument_list|(
+argument_list|,
 name|Reg2
 argument_list|)
+return|;
+block|}
+comment|/// getSize - Return the size of the register in bytes, which is also the size
+comment|/// of a stack slot allocated to hold a spilled copy of this register.
+name|unsigned
+name|getSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MC
+operator|->
+name|getSize
+argument_list|()
+return|;
+block|}
+comment|/// getAlignment - Return the minimum required alignment for a register of
+comment|/// this class.
+name|unsigned
+name|getAlignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MC
+operator|->
+name|getAlignment
+argument_list|()
+return|;
+block|}
+comment|/// getCopyCost - Return the cost of copying a value between two registers in
+comment|/// this class. A negative number means the register class is very expensive
+comment|/// to copy e.g. status flag register classes.
+name|int
+name|getCopyCost
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MC
+operator|->
+name|getCopyCost
+argument_list|()
+return|;
+block|}
+comment|/// isAllocatable - Return true if this register class may be used to create
+comment|/// virtual registers.
+name|bool
+name|isAllocatable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MC
+operator|->
+name|isAllocatable
+argument_list|()
 return|;
 block|}
 comment|/// hasType - return true if this TargetRegisterClass has the ValueType vt.
@@ -564,91 +517,8 @@ return|return
 name|I
 return|;
 block|}
-comment|/// subregclasses_begin / subregclasses_end - Loop over all of
-comment|/// the subreg register classes of this register class.
-name|sc_iterator
-name|subregclasses_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SubRegClasses
-return|;
-block|}
-name|sc_iterator
-name|subregclasses_end
-argument_list|()
-specifier|const
-block|{
-name|sc_iterator
-name|I
-operator|=
-name|SubRegClasses
-block|;
-while|while
-condition|(
-operator|*
-name|I
-operator|!=
-name|NULL
-condition|)
-operator|++
-name|I
-expr_stmt|;
-return|return
-name|I
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
-comment|/// getSubRegisterRegClass - Return the register class of subregisters with
-end_comment
-
-begin_comment
-comment|/// index SubIdx, or NULL if no such class exists.
-end_comment
-
-begin_decl_stmt
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|getSubRegisterRegClass
-argument_list|(
-name|unsigned
-name|SubIdx
-argument_list|)
-decl|const
-block|{
-name|assert
-argument_list|(
-name|SubIdx
-operator|>
-literal|0
-operator|&&
-literal|"Invalid subregister index"
-argument_list|)
-expr_stmt|;
-return|return
-name|SubRegClasses
-index|[
-name|SubIdx
-operator|-
-literal|1
-index|]
-return|;
-block|}
-end_decl_stmt
-
-begin_comment
 comment|/// superregclasses_begin / superregclasses_end - Loop over all of
-end_comment
-
-begin_comment
 comment|/// the superreg register classes of this register class.
-end_comment
-
-begin_expr_stmt
 name|sc_iterator
 name|superregclasses_begin
 argument_list|()
@@ -658,9 +528,6 @@ return|return
 name|SuperRegClasses
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|sc_iterator
 name|superregclasses_end
 argument_list|()
@@ -681,294 +548,203 @@ condition|)
 operator|++
 name|I
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 name|I
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// hasSubClass - return true if the specified TargetRegisterClass
 end_comment
 
 begin_comment
-comment|/// is a proper subset of this TargetRegisterClass.
+comment|/// is a proper sub-class of this TargetRegisterClass.
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|hasSubClass
 argument_list|(
-argument|const TargetRegisterClass *cs
-argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
 block|{
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|SubClasses
-index|[
-name|i
-index|]
+return|return
+name|RC
 operator|!=
-name|NULL
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|SubClasses
-index|[
-name|i
-index|]
-operator|==
-name|cs
-condition|)
-return|return
-name|true
+name|this
+operator|&&
+name|hasSubClassEq
+argument_list|(
+name|RC
+argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|false
-return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
-comment|/// hasSubClassEq - Returns true if RC is a subclass of or equal to this
+comment|/// hasSubClassEq - Returns true if RC is a sub-class of or equal to this
 end_comment
 
 begin_comment
 comment|/// class.
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|hasSubClassEq
 argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
-block|{
-return|return
-name|RC
-operator|==
-name|this
-operator|||
-name|hasSubClass
-argument_list|(
-name|RC
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// subclasses_begin / subclasses_end - Loop over all of the classes
-end_comment
-
-begin_comment
-comment|/// that are proper subsets of this register class.
-end_comment
-
-begin_expr_stmt
-name|sc_iterator
-name|subclasses_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SubClasses
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|sc_iterator
-name|subclasses_end
-argument_list|()
-specifier|const
-block|{
-name|sc_iterator
-name|I
-operator|=
-name|SubClasses
-block|;
-while|while
-condition|(
+name|TargetRegisterClass
 operator|*
-name|I
-operator|!=
-name|NULL
-condition|)
-operator|++
-name|I
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+name|RC
+argument_list|)
+decl|const
+block|{
+name|unsigned
+name|ID
+init|=
+name|RC
+operator|->
+name|getID
+argument_list|()
+decl_stmt|;
 return|return
-name|I
+operator|(
+name|SubClassMask
+index|[
+name|ID
+operator|/
+literal|32
+index|]
+operator|>>
+operator|(
+name|ID
+operator|%
+literal|32
+operator|)
+operator|)
+operator|&
+literal|1
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
 comment|/// hasSuperClass - return true if the specified TargetRegisterClass is a
 end_comment
 
 begin_comment
-comment|/// proper superset of this TargetRegisterClass.
+comment|/// proper super-class of this TargetRegisterClass.
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|hasSuperClass
 argument_list|(
-argument|const TargetRegisterClass *cs
-argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
 block|{
-for|for
-control|(
-name|int
-name|i
-init|=
-literal|0
-init|;
-name|SuperClasses
-index|[
-name|i
-index|]
-operator|!=
-name|NULL
-condition|;
-operator|++
-name|i
-control|)
-if|if
-condition|(
-name|SuperClasses
-index|[
-name|i
-index|]
-operator|==
-name|cs
-condition|)
 return|return
-name|true
+name|RC
+operator|->
+name|hasSubClass
+argument_list|(
+name|this
+argument_list|)
 return|;
-end_expr_stmt
-
-begin_return
-return|return
-name|false
-return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
-comment|/// hasSuperClassEq - Returns true if RC is a superclass of or equal to this
+comment|/// hasSuperClassEq - Returns true if RC is a super-class of or equal to this
 end_comment
 
 begin_comment
 comment|/// class.
 end_comment
 
-begin_macro
-unit|bool
+begin_decl_stmt
+name|bool
 name|hasSuperClassEq
 argument_list|(
-argument|const TargetRegisterClass *RC
-argument_list|)
-end_macro
-
-begin_expr_stmt
 specifier|const
-block|{
-return|return
-name|RC
-operator|==
-name|this
-operator|||
-name|hasSuperClass
-argument_list|(
-name|RC
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// superclasses_begin / superclasses_end - Loop over all of the classes
-end_comment
-
-begin_comment
-comment|/// that are proper supersets of this register class.
-end_comment
-
-begin_expr_stmt
-name|sc_iterator
-name|superclasses_begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SuperClasses
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-name|sc_iterator
-name|superclasses_end
-argument_list|()
-specifier|const
-block|{
-name|sc_iterator
-name|I
-operator|=
-name|SuperClasses
-block|;
-while|while
-condition|(
+name|TargetRegisterClass
 operator|*
-name|I
-operator|!=
-name|NULL
-condition|)
-operator|++
-name|I
-expr_stmt|;
-end_expr_stmt
-
-begin_return
+name|RC
+argument_list|)
+decl|const
+block|{
 return|return
-name|I
+name|RC
+operator|->
+name|hasSubClassEq
+argument_list|(
+name|this
+argument_list|)
 return|;
-end_return
+block|}
+end_decl_stmt
 
 begin_comment
-unit|}
+comment|/// getSubClassMask - Returns a bit vector of subclasses, including this one.
+end_comment
+
+begin_comment
+comment|/// The vector is indexed by class IDs, see hasSubClassEq() above for how to
+end_comment
+
+begin_comment
+comment|/// use it.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|unsigned
+operator|*
+name|getSubClassMask
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubClassMask
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// getSuperClasses - Returns a NULL terminated list of super-classes.  The
+end_comment
+
+begin_comment
+comment|/// classes are ordered by ID which is also a topological ordering from large
+end_comment
+
+begin_comment
+comment|/// to small classes.  The list does NOT include the current class.
+end_comment
+
+begin_expr_stmt
+name|sc_iterator
+name|getSuperClasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuperClasses
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// isASubClass - return true if this TargetRegisterClass is a subset
 end_comment
 
@@ -976,13 +752,10 @@ begin_comment
 comment|/// class of at least one other TargetRegisterClass.
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|isASubClass
 argument_list|()
-end_macro
-
-begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -1065,101 +838,14 @@ argument_list|)
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|begin
 argument_list|()
-operator|,
+argument_list|,
 name|getNumRegs
 argument_list|()
-operator|)
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// getSize - Return the size of the register in bytes, which is also the size
-end_comment
-
-begin_comment
-comment|/// of a stack slot allocated to hold a spilled copy of this register.
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getSize
-argument_list|()
-specifier|const
-block|{
-return|return
-name|RegSize
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// getAlignment - Return the minimum required alignment for a register of
-end_comment
-
-begin_comment
-comment|/// this class.
-end_comment
-
-begin_expr_stmt
-name|unsigned
-name|getAlignment
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Alignment
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// getCopyCost - Return the cost of copying a value between two registers in
-end_comment
-
-begin_comment
-comment|/// this class. A negative number means the register class is very expensive
-end_comment
-
-begin_comment
-comment|/// to copy e.g. status flag register classes.
-end_comment
-
-begin_expr_stmt
-name|int
-name|getCopyCost
-argument_list|()
-specifier|const
-block|{
-return|return
-name|CopyCost
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// isAllocatable - Return true if this register class may be used to create
-end_comment
-
-begin_comment
-comment|/// virtual registers.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|isAllocatable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Allocatable
+argument_list|)
 return|;
 block|}
 end_expr_stmt
@@ -2246,6 +1932,71 @@ block|}
 end_decl_stmt
 
 begin_comment
+comment|/// getSubClassWithSubReg - Returns the largest legal sub-class of RC that
+end_comment
+
+begin_comment
+comment|/// supports the sub-register index Idx.
+end_comment
+
+begin_comment
+comment|/// If no such sub-class exists, return NULL.
+end_comment
+
+begin_comment
+comment|/// If all registers in RC already have an Idx sub-register, return RC.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// TableGen generates a version of this function that is good enough in most
+end_comment
+
+begin_comment
+comment|/// cases.  Targets can override if they have constraints that TableGen
+end_comment
+
+begin_comment
+comment|/// doesn't understand.  For example, the x86 sub_8bit sub-register index is
+end_comment
+
+begin_comment
+comment|/// supported by the full GR32 register class in 64-bit mode, but only by the
+end_comment
+
+begin_comment
+comment|/// GR32_ABCD regiister class in 32-bit mode.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_decl_stmt
+name|virtual
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getSubClassWithSubReg
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|,
+name|unsigned
+name|Idx
+argument_list|)
+decl|const
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// composeSubRegIndices - Return the subregister index you get from composing
 end_comment
 
@@ -2414,6 +2165,34 @@ name|i
 index|]
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// getCommonSubClass - find the largest common subclass of A and B. Return
+end_comment
+
+begin_comment
+comment|/// NULL if there is no common subclass.
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getCommonSubClass
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|A
+argument_list|,
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|B
+argument_list|)
+decl|const
+decl_stmt|;
 end_decl_stmt
 
 begin_comment
@@ -3291,56 +3070,6 @@ comment|/// Debug information queries.
 end_comment
 
 begin_comment
-comment|/// getDwarfRegNum - Map a target register to an equivalent dwarf register
-end_comment
-
-begin_comment
-comment|/// number.  Returns -1 if there is no equivalent value.  The second
-end_comment
-
-begin_comment
-comment|/// parameter allows targets to use different numberings for EH info and
-end_comment
-
-begin_comment
-comment|/// debugging info.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|int
-name|getDwarfRegNum
-argument_list|(
-name|unsigned
-name|RegNum
-argument_list|,
-name|bool
-name|isEH
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|virtual
-name|int
-name|getLLVMRegNum
-argument_list|(
-name|unsigned
-name|RegNum
-argument_list|,
-name|bool
-name|isEH
-argument_list|)
-decl|const
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// getFrameRegister - This method should return the register used as a base
 end_comment
 
@@ -3362,49 +3091,6 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// getRARegister - This method should return the register where the return
-end_comment
-
-begin_comment
-comment|/// address can be found.
-end_comment
-
-begin_expr_stmt
-name|virtual
-name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
-operator|=
-literal|0
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/// getSEHRegNum - Map a target register to an equivalent SEH register
-end_comment
-
-begin_comment
-comment|/// number.  Returns -1 if there is no equivalent value.
-end_comment
-
-begin_decl_stmt
-name|virtual
-name|int
-name|getSEHRegNum
-argument_list|(
-name|unsigned
-name|i
-argument_list|)
-decl|const
-block|{
-return|return
-name|i
-return|;
-block|}
 end_decl_stmt
 
 begin_comment
@@ -3476,33 +3162,6 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
-
-begin_comment
-comment|/// getCommonSubClass - find the largest common subclass of A and B. Return NULL
-end_comment
-
-begin_comment
-comment|/// if there is no common subclass.
-end_comment
-
-begin_function_decl
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|getCommonSubClass
-parameter_list|(
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|A
-parameter_list|,
-specifier|const
-name|TargetRegisterClass
-modifier|*
-name|B
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/// PrintReg - Helper class for printing registers on a raw_ostream.

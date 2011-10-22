@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$FreeBSD$	*/
+comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
@@ -608,7 +608,6 @@ name|whasdot
 init|=
 literal|0
 decl_stmt|;
-empty_stmt|;
 name|ssize_t
 name|firstdot
 init|=
@@ -1192,7 +1191,10 @@ name|fg
 operator|->
 name|hasdot
 operator|=
-name|whasdot
+name|wfirstdot
+operator|>
+operator|-
+literal|1
 expr_stmt|;
 comment|/*    * The pattern has been processed and copied to tmp as a literal string    * with escapes, anchors (^$) and the word boundary match character    * classes stripped out.    */
 ifdef|#

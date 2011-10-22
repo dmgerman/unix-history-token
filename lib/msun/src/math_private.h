@@ -125,6 +125,14 @@ decl_stmt|;
 block|}
 name|parts
 struct|;
+struct|struct
+block|{
+name|u_int64_t
+name|w
+decl_stmt|;
+block|}
+name|xparts
+struct|;
 block|}
 name|ieee_double_shape_type
 typedef|;
@@ -161,6 +169,14 @@ decl_stmt|;
 block|}
 name|parts
 struct|;
+struct|struct
+block|{
+name|u_int64_t
+name|w
+decl_stmt|;
+block|}
+name|xparts
+struct|;
 block|}
 name|ieee_double_shape_type
 typedef|;
@@ -188,6 +204,23 @@ name|d
 parameter_list|)
 define|\
 value|do {								\   ieee_double_shape_type ew_u;					\   ew_u.value = (d);						\   (ix0) = ew_u.parts.msw;					\   (ix1) = ew_u.parts.lsw;					\ } while (0)
+end_define
+
+begin_comment
+comment|/* Get a 64-bit int from a double. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXTRACT_WORD64
+parameter_list|(
+name|ix
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|do {								\   ieee_double_shape_type ew_u;					\   ew_u.value = (d);						\   (ix) = ew_u.xparts.w;						\ } while (0)
 end_define
 
 begin_comment
@@ -241,6 +274,23 @@ name|ix1
 parameter_list|)
 define|\
 value|do {								\   ieee_double_shape_type iw_u;					\   iw_u.parts.msw = (ix0);					\   iw_u.parts.lsw = (ix1);					\   (d) = iw_u.value;						\ } while (0)
+end_define
+
+begin_comment
+comment|/* Set a double from a 64-bit int. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|INSERT_WORD64
+parameter_list|(
+name|d
+parameter_list|,
+name|ix
+parameter_list|)
+define|\
+value|do {								\   ieee_double_shape_type iw_u;					\   iw_u.xparts.w = (ix);						\   (d) = iw_u.value;						\ } while (0)
 end_define
 
 begin_comment
@@ -330,6 +380,40 @@ name|i
 parameter_list|)
 define|\
 value|do {								\   ieee_float_shape_type sf_u;					\   sf_u.word = (i);						\   (d) = sf_u.value;						\ } while (0)
+end_define
+
+begin_comment
+comment|/* Get expsign as a 16 bit int from a long double.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GET_LDBL_EXPSIGN
+parameter_list|(
+name|i
+parameter_list|,
+name|d
+parameter_list|)
+define|\
+value|do {								\   union IEEEl2bits ge_u;					\   ge_u.e = (d);							\   (i) = ge_u.xbits.expsign;					\ } while (0)
+end_define
+
+begin_comment
+comment|/* Set expsign of a long double from a 16 bit int.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SET_LDBL_EXPSIGN
+parameter_list|(
+name|d
+parameter_list|,
+name|v
+parameter_list|)
+define|\
+value|do {								\   union IEEEl2bits se_u;					\   se_u.e = (d);							\   se_u.xbits.expsign = (v);					\   (d) = se_u.e;							\ } while (0)
 end_define
 
 begin_ifdef
@@ -1212,6 +1296,41 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|double
+name|__ldexp_exp
+parameter_list|(
+name|double
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_COMPLEX_H
+end_ifdef
+
+begin_function_decl
+name|double
+name|complex
+name|__ldexp_cexp
+parameter_list|(
+name|double
+name|complex
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* float precision kernel functions */
 end_comment
@@ -1292,6 +1411,41 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|float
+name|__ldexp_expf
+parameter_list|(
+name|float
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_COMPLEX_H
+end_ifdef
+
+begin_function_decl
+name|float
+name|complex
+name|__ldexp_cexpf
+parameter_list|(
+name|float
+name|complex
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* long double precision kernel functions */

@@ -124,7 +124,6 @@ comment|///
 name|unsigned
 name|ComputeLinearIndex
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -149,7 +148,6 @@ specifier|inline
 name|unsigned
 name|ComputeLinearIndex
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -200,7 +198,6 @@ name|TargetLowering
 operator|&
 name|TLI
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty

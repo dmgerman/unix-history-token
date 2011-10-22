@@ -32,6 +32,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -641,6 +653,7 @@ name|struct
 name|ncp_bindery_object
 name|obj
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pattern
@@ -1027,6 +1040,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show_queuelist
 parameter_list|(
@@ -1335,6 +1349,7 @@ block|{
 name|u_long
 name|type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1385,6 +1400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|list_bindery
 parameter_list|(

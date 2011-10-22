@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"TableGenBackend.h"
+file|"CodeGenDAGPatterns.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"CodeGenDAGPatterns.h"
+file|"llvm/TableGen/TableGenBackend.h"
 end_include
 
 begin_include

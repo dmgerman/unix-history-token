@@ -464,9 +464,7 @@ return|;
 block|}
 comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
 name|virtual
-name|MVT
-operator|::
-name|SimpleValueType
+name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT
@@ -692,7 +690,7 @@ comment|/// alignment, not its logarithm.
 name|unsigned
 name|getByValTypeAlignment
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -720,7 +718,7 @@ name|isLegalAddressingMode
 argument_list|(
 argument|const AddrMode&AM
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -733,7 +731,7 @@ name|isLegalAddressImmediate
 argument_list|(
 argument|int64_t V
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -899,7 +897,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerTRAMPOLINE
+name|LowerINIT_TRAMPOLINE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerADJUST_TRAMPOLINE
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -1163,6 +1170,22 @@ argument_list|,
 argument|SelectionDAG&DAG
 argument_list|,
 argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|CanLowerReturn
+argument_list|(
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|MachineFunction&MF
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|LLVMContext&Context
 argument_list|)
 specifier|const
 block|;

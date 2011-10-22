@@ -14616,7 +14616,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|" scan: "
+literal|"  scan: "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15073,7 +15073,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    %s scanned out of %s at %s/s"
+literal|"        %s scanned out of %s at %s/s"
 argument_list|)
 argument_list|,
 name|examined_buf
@@ -15150,7 +15150,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    %s resilvered, %.2f%% done\n"
+literal|"        %s resilvered, %.2f%% done\n"
 argument_list|)
 argument_list|,
 name|processed_buf
@@ -15178,7 +15178,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    %s repaired, %.2f%% done\n"
+literal|"        %s repaired, %.2f%% done\n"
 argument_list|)
 argument_list|,
 name|processed_buf

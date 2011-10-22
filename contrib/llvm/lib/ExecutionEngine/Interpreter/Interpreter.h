@@ -845,6 +845,8 @@ name|errs
 argument_list|()
 operator|<<
 name|I
+operator|<<
+literal|"\n"
 expr_stmt|;
 name|llvm_unreachable
 argument_list|(
@@ -1023,7 +1025,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1040,7 +1041,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1057,7 +1057,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1074,7 +1073,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1091,7 +1089,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1108,7 +1105,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1125,7 +1121,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1142,7 +1137,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1159,7 +1153,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1176,7 +1169,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1193,7 +1185,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1210,7 +1201,6 @@ name|Value
 modifier|*
 name|SrcVal
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|DstTy
@@ -1232,7 +1222,6 @@ name|Value
 operator|*
 name|SrcVal
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1245,7 +1234,6 @@ decl_stmt|;
 name|void
 name|popStackAndReturnValueToCaller
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|RetTy

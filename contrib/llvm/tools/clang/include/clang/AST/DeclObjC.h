@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/SelectorLocationsKind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/STLExtras.h"
 end_include
 
@@ -530,6 +536,19 @@ name|IsDefined
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Method redeclaration in the same interface.
+name|unsigned
+name|IsRedeclaration
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Is redeclared in the same interface.
+name|mutable
+name|unsigned
+name|HasRedeclaration
+range|:
+literal|1
+decl_stmt|;
 comment|// NOTE: VC++ treats enums as signed, avoid using ImplementationControl enum
 comment|/// @required/@optional
 name|unsigned
@@ -550,9 +569,12 @@ name|RelatedResultType
 range|:
 literal|1
 decl_stmt|;
-comment|// Number of args separated by ':' in a method declaration.
+comment|/// \brief Whether the locations of the selector identifiers are in a
+comment|/// "standard" position, a enum SelectorLocationsKind.
 name|unsigned
-name|NumSelectorArgs
+name|SelLocsKind
+range|:
+literal|2
 decl_stmt|;
 comment|// Result type of this method.
 name|QualType
@@ -563,14 +585,15 @@ name|TypeSourceInfo
 modifier|*
 name|ResultTInfo
 decl_stmt|;
-comment|/// ParamInfo - List of pointers to VarDecls for the formal parameters of this
-comment|/// Method.
-name|ObjCList
-operator|<
-name|ParmVarDecl
-operator|>
-name|ParamInfo
-expr_stmt|;
+comment|/// \brief Array of ParmVarDecls for the formal parameters of this method
+comment|/// and optionally followed by selector locations.
+name|void
+modifier|*
+name|ParamsAndSelLocs
+decl_stmt|;
+name|unsigned
+name|NumParams
+decl_stmt|;
 comment|/// List of attributes for this method declaration.
 name|SourceLocation
 name|EndLoc
@@ -594,6 +617,163 @@ name|ImplicitParamDecl
 modifier|*
 name|CmdDecl
 decl_stmt|;
+name|SelectorLocationsKind
+name|getSelLocsKind
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SelectorLocationsKind
+operator|)
+name|SelLocsKind
+return|;
+block|}
+name|bool
+name|hasStandardSelLocs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSelLocsKind
+argument_list|()
+operator|!=
+name|SelLoc_NonStandard
+return|;
+block|}
+comment|/// \brief Get a pointer to the stored selector identifiers locations array.
+comment|/// No locations will be stored if HasStandardSelLocs is true.
+name|SourceLocation
+modifier|*
+name|getStoredSelLocs
+parameter_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|SourceLocation
+operator|*
+operator|>
+operator|(
+name|getParams
+argument_list|()
+operator|+
+name|NumParams
+operator|)
+return|;
+block|}
+specifier|const
+name|SourceLocation
+operator|*
+name|getStoredSelLocs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|SourceLocation
+operator|*
+operator|>
+operator|(
+name|getParams
+argument_list|()
+operator|+
+name|NumParams
+operator|)
+return|;
+block|}
+comment|/// \brief Get a pointer to the stored selector identifiers locations array.
+comment|/// No locations will be stored if HasStandardSelLocs is true.
+name|ParmVarDecl
+modifier|*
+modifier|*
+name|getParams
+parameter_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|ParmVarDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|ParamsAndSelLocs
+operator|)
+return|;
+block|}
+specifier|const
+name|ParmVarDecl
+operator|*
+specifier|const
+operator|*
+name|getParams
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|ParmVarDecl
+operator|*
+specifier|const
+operator|*
+operator|>
+operator|(
+name|ParamsAndSelLocs
+operator|)
+return|;
+block|}
+comment|/// \brief Get the number of stored selector identifiers locations.
+comment|/// No locations will be stored if HasStandardSelLocs is true.
+name|unsigned
+name|getNumStoredSelLocs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|hasStandardSelLocs
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|getNumSelectorLocs
+argument_list|()
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|setParamsAndSelLocs
+argument_list|(
+name|ASTContext
+operator|&
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|Params
+argument_list|,
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+name|SelLocs
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
 name|ObjCMethodDecl
 argument_list|(
 argument|SourceLocation beginLoc
@@ -614,16 +794,18 @@ argument|bool isVariadic = false
 argument_list|,
 argument|bool isSynthesized = false
 argument_list|,
+argument|bool isImplicitlyDeclared = false
+argument_list|,
 argument|bool isDefined = false
 argument_list|,
 argument|ImplementationControl impControl = None
 argument_list|,
 argument|bool HasRelatedResultType = false
-argument_list|,
-argument|unsigned numSelectorArgs =
-literal|0
 argument_list|)
-block|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|NamedDecl
 argument_list|(
 name|ObjCMethod
@@ -665,6 +847,16 @@ argument_list|(
 name|isDefined
 argument_list|)
 operator|,
+name|IsRedeclaration
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|HasRedeclaration
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|DeclImplementation
 argument_list|(
 name|impControl
@@ -680,9 +872,9 @@ argument_list|(
 name|HasRelatedResultType
 argument_list|)
 operator|,
-name|NumSelectorArgs
+name|SelLocsKind
 argument_list|(
-name|numSelectorArgs
+name|SelLoc_StandardNoSpace
 argument_list|)
 operator|,
 name|MethodDeclType
@@ -693,6 +885,16 @@ operator|,
 name|ResultTInfo
 argument_list|(
 name|ResultTInfo
+argument_list|)
+operator|,
+name|ParamsAndSelLocs
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|NumParams
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|EndLoc
@@ -714,7 +916,12 @@ name|CmdDecl
 argument_list|(
 literal|0
 argument_list|)
-block|{}
+block|{
+name|setImplicit
+argument_list|(
+name|isImplicitlyDeclared
+argument_list|)
+block|;   }
 comment|/// \brief A definition will return its interface declaration.
 comment|/// An interface declaration will return its definition.
 comment|/// Otherwise it will return itself.
@@ -724,8 +931,14 @@ operator|*
 name|getNextRedeclaration
 argument_list|()
 expr_stmt|;
+end_expr_stmt
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_function_decl
 specifier|static
 name|ObjCMethodDecl
 modifier|*
@@ -771,6 +984,11 @@ init|=
 name|false
 parameter_list|,
 name|bool
+name|isImplicitlyDeclared
+init|=
+name|false
+parameter_list|,
+name|bool
 name|isDefined
 init|=
 name|false
@@ -784,19 +1002,20 @@ name|bool
 name|HasRelatedResultType
 init|=
 name|false
-parameter_list|,
-name|unsigned
-name|numSelectorArgs
-init|=
-literal|0
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|virtual
 name|ObjCMethodDecl
 modifier|*
 name|getCanonicalDecl
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 specifier|const
 name|ObjCMethodDecl
 operator|*
@@ -818,6 +1037,9 @@ name|getCanonicalDecl
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|ObjCDeclQualifier
 name|getObjCDeclQualifier
 argument_list|()
@@ -830,6 +1052,9 @@ name|objcDeclQualifier
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setObjCDeclQualifier
 parameter_list|(
@@ -842,8 +1067,17 @@ operator|=
 name|QV
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Determine whether this method has a result type that is related
+end_comment
+
+begin_comment
 comment|/// to the message receiver's type.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|hasRelatedResultType
 argument_list|()
@@ -853,7 +1087,13 @@ return|return
 name|RelatedResultType
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Note whether this method has a related result type.
+end_comment
+
+begin_function
 name|void
 name|SetRelatedResultType
 parameter_list|(
@@ -868,28 +1108,41 @@ operator|=
 name|RRT
 expr_stmt|;
 block|}
-name|unsigned
-name|getNumSelectorArgs
+end_function
+
+begin_comment
+comment|/// \brief True if this is a method redeclaration in the same interface.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isRedeclaration
 argument_list|()
 specifier|const
 block|{
 return|return
-name|NumSelectorArgs
+name|IsRedeclaration
 return|;
 block|}
+end_expr_stmt
+
+begin_function_decl
 name|void
-name|setNumSelectorArgs
+name|setAsRedeclaration
 parameter_list|(
-name|unsigned
-name|numSelectorArgs
+specifier|const
+name|ObjCMethodDecl
+modifier|*
+name|PrevMethod
 parameter_list|)
-block|{
-name|NumSelectorArgs
-operator|=
-name|numSelectorArgs
-expr_stmt|;
-block|}
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|// Location information, modeled after the Stmt API.
+end_comment
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocStart
 argument_list|()
@@ -900,6 +1153,9 @@ name|getLocation
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|SourceLocation
 name|getLocEnd
 argument_list|()
@@ -909,6 +1165,9 @@ return|return
 name|EndLoc
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setEndLoc
 parameter_list|(
@@ -921,6 +1180,9 @@ operator|=
 name|Loc
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|virtual
 name|SourceRange
 name|getSourceRange
@@ -937,11 +1199,159 @@ name|EndLoc
 argument_list|)
 return|;
 block|}
-name|ObjCInterfaceDecl
-modifier|*
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getSelectorStartLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSelectorLoc
+argument_list|(
+literal|0
+argument_list|)
+return|;
+block|}
+end_expr_stmt
+
+begin_decl_stmt
+name|SourceLocation
+name|getSelectorLoc
+argument_list|(
+name|unsigned
+name|Index
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|getNumSelectorLocs
+argument_list|()
+operator|&&
+literal|"Index out of range!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hasStandardSelLocs
+argument_list|()
+condition|)
+return|return
+name|getStandardSelectorLoc
+argument_list|(
+name|Index
+argument_list|,
+name|getSelector
+argument_list|()
+argument_list|,
+name|getSelLocsKind
+argument_list|()
+operator|==
+name|SelLoc_StandardWithSpace
+argument_list|,
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|const_cast
+operator|<
+name|ParmVarDecl
+operator|*
+operator|*
+operator|>
+operator|(
+name|getParams
+argument_list|()
+operator|)
+argument_list|,
+name|NumParams
+argument_list|)
+argument_list|,
+name|EndLoc
+argument_list|)
+return|;
+return|return
+name|getStoredSelLocs
+argument_list|()
+index|[
+name|Index
+index|]
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|getSelectorLocs
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|SelLocs
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getNumSelectorLocs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isImplicit
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+name|Selector
+name|Sel
+operator|=
+name|getSelector
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_if
+if|if
+condition|(
+name|Sel
+operator|.
+name|isUnarySelector
+argument_list|()
+condition|)
+return|return
+literal|1
+return|;
+end_if
+
+begin_return
+return|return
+name|Sel
+operator|.
+name|getNumArgs
+argument_list|()
+return|;
+end_return
+
+begin_expr_stmt
+unit|}    ObjCInterfaceDecl
+operator|*
 name|getClassInterface
-parameter_list|()
-function_decl|;
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|ObjCInterfaceDecl
 operator|*
@@ -963,6 +1373,9 @@ name|getClassInterface
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|Selector
 name|getSelector
 argument_list|()
@@ -976,6 +1389,9 @@ name|getObjCSelector
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|QualType
 name|getResultType
 argument_list|()
@@ -985,6 +1401,9 @@ return|return
 name|MethodDeclType
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setResultType
 parameter_list|(
@@ -997,8 +1416,17 @@ operator|=
 name|T
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Determine the type of an expression that sends a message to this
+end_comment
+
+begin_comment
 comment|/// function.
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getSendResultType
 argument_list|()
@@ -1015,6 +1443,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|TypeSourceInfo
 operator|*
 name|getResultTypeSourceInfo
@@ -1025,6 +1456,9 @@ return|return
 name|ResultTInfo
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setResultTypeSourceInfo
 parameter_list|(
@@ -1038,105 +1472,174 @@ operator|=
 name|TInfo
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Iterator access to formal parameters.
+end_comment
+
+begin_expr_stmt
 name|unsigned
 name|param_size
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ParamInfo
-operator|.
-name|size
-argument_list|()
+name|NumParams
 return|;
 block|}
+end_expr_stmt
+
+begin_typedef
 typedef|typedef
-name|ObjCList
-operator|<
+specifier|const
 name|ParmVarDecl
-operator|>
-operator|::
-name|iterator
+modifier|*
+specifier|const
+modifier|*
+name|param_const_iterator
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|ParmVarDecl
+modifier|*
+specifier|const
+modifier|*
 name|param_iterator
-expr_stmt|;
-name|param_iterator
+typedef|;
+end_typedef
+
+begin_expr_stmt
+name|param_const_iterator
 name|param_begin
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ParamInfo
-operator|.
-name|begin
+name|getParams
 argument_list|()
 return|;
 block|}
-name|param_iterator
+end_expr_stmt
+
+begin_expr_stmt
+name|param_const_iterator
 name|param_end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ParamInfo
-operator|.
-name|end
+name|getParams
+argument_list|()
+operator|+
+name|NumParams
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|param_iterator
+name|param_begin
+parameter_list|()
+block|{
+return|return
+name|getParams
 argument_list|()
 return|;
 block|}
-comment|// This method returns and of the parameters which are part of the selector
-comment|// name mangling requirements.
+end_function
+
+begin_function
 name|param_iterator
+name|param_end
+parameter_list|()
+block|{
+return|return
+name|getParams
+argument_list|()
+operator|+
+name|NumParams
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// This method returns and of the parameters which are part of the selector
+end_comment
+
+begin_comment
+comment|// name mangling requirements.
+end_comment
+
+begin_expr_stmt
+name|param_const_iterator
 name|sel_param_end
 argument_list|()
 specifier|const
 block|{
 return|return
-name|ParamInfo
-operator|.
-name|begin
+name|param_begin
 argument_list|()
 operator|+
-name|NumSelectorArgs
+name|getSelector
+argument_list|()
+operator|.
+name|getNumArgs
+argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Sets the method's parameters and selector source locations.
+end_comment
+
+begin_comment
+comment|/// If the method is implicit (not coming from source) \arg SelLocs is
+end_comment
+
+begin_comment
+comment|/// ignored.
+end_comment
+
+begin_decl_stmt
 name|void
 name|setMethodParams
-parameter_list|(
-name|ASTContext
-modifier|&
-name|C
-parameter_list|,
-name|ParmVarDecl
-modifier|*
-specifier|const
-modifier|*
-name|List
-parameter_list|,
-name|unsigned
-name|Num
-parameter_list|,
-name|unsigned
-name|numSelectorArgs
-parameter_list|)
-block|{
-name|ParamInfo
-operator|.
-name|set
 argument_list|(
-name|List
-argument_list|,
-name|Num
-argument_list|,
+name|ASTContext
+operator|&
 name|C
-argument_list|)
-expr_stmt|;
-name|NumSelectorArgs
+argument_list|,
+name|ArrayRef
+operator|<
+name|ParmVarDecl
+operator|*
+operator|>
+name|Params
+argument_list|,
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+name|SelLocs
 operator|=
-name|numSelectorArgs
-expr_stmt|;
-block|}
+name|ArrayRef
+operator|<
+name|SourceLocation
+operator|>
+operator|(
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|// Iterator access to parameter types.
+end_comment
+
+begin_typedef
 typedef|typedef
 name|std
 operator|::
@@ -1148,17 +1651,23 @@ name|ParmVarDecl
 operator|>
 name|deref_fun
 expr_stmt|;
+end_typedef
+
+begin_typedef
 typedef|typedef
 name|llvm
 operator|::
 name|mapped_iterator
 operator|<
-name|param_iterator
+name|param_const_iterator
 operator|,
 name|deref_fun
 operator|>
 name|arg_type_iterator
 expr_stmt|;
+end_typedef
+
+begin_expr_stmt
 name|arg_type_iterator
 name|arg_type_begin
 argument_list|()
@@ -1182,6 +1691,9 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|arg_type_iterator
 name|arg_type_end
 argument_list|()
@@ -1205,10 +1717,25 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// createImplicitParams - Used to lazily create the self and cmd
+end_comment
+
+begin_comment
 comment|/// implict parameters. This must be called prior to using getSelfDecl()
+end_comment
+
+begin_comment
 comment|/// or getCmdDecl(). The call is ignored if the implicit paramters
+end_comment
+
+begin_comment
 comment|/// have already been created.
+end_comment
+
+begin_function_decl
 name|void
 name|createImplicitParams
 parameter_list|(
@@ -1222,6 +1749,9 @@ modifier|*
 name|ID
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|ImplicitParamDecl
 operator|*
 name|getSelfDecl
@@ -1232,6 +1762,9 @@ return|return
 name|SelfDecl
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setSelfDecl
 parameter_list|(
@@ -1245,6 +1778,9 @@ operator|=
 name|SD
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|ImplicitParamDecl
 operator|*
 name|getCmdDecl
@@ -1255,6 +1791,9 @@ return|return
 name|CmdDecl
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setCmdDecl
 parameter_list|(
@@ -1268,12 +1807,21 @@ operator|=
 name|CD
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// Determines the family of this method.
+end_comment
+
+begin_expr_stmt
 name|ObjCMethodFamily
 name|getMethodFamily
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isInstanceMethod
 argument_list|()
@@ -1283,6 +1831,9 @@ return|return
 name|IsInstance
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setInstanceMethod
 parameter_list|(
@@ -1295,6 +1846,9 @@ operator|=
 name|isInst
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isVariadic
 argument_list|()
@@ -1304,6 +1858,9 @@ return|return
 name|IsVariadic
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setVariadic
 parameter_list|(
@@ -1316,6 +1873,9 @@ operator|=
 name|isVar
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isClassMethod
 argument_list|()
@@ -1326,6 +1886,9 @@ operator|!
 name|IsInstance
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isSynthesized
 argument_list|()
@@ -1335,6 +1898,9 @@ return|return
 name|IsSynthesized
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setSynthesized
 parameter_list|(
@@ -1347,6 +1913,9 @@ operator|=
 name|isSynth
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|bool
 name|isDefined
 argument_list|()
@@ -1356,6 +1925,9 @@ return|return
 name|IsDefined
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|void
 name|setDefined
 parameter_list|(
@@ -1368,7 +1940,13 @@ operator|=
 name|isDefined
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|// Related to protocols declared in  @protocol
+end_comment
+
+begin_function
 name|void
 name|setDeclImplementation
 parameter_list|(
@@ -1381,6 +1959,9 @@ operator|=
 name|ic
 expr_stmt|;
 block|}
+end_function
+
+begin_expr_stmt
 name|ImplementationControl
 name|getImplementationControl
 argument_list|()
@@ -1393,6 +1974,9 @@ name|DeclImplementation
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|Stmt
 operator|*
@@ -1408,6 +1992,9 @@ operator|)
 name|Body
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 name|CompoundStmt
 modifier|*
 name|getCompoundBody
@@ -1421,6 +2008,9 @@ operator|)
 name|Body
 return|;
 block|}
+end_function
+
+begin_function
 name|void
 name|setBody
 parameter_list|(
@@ -1434,7 +2024,13 @@ operator|=
 name|B
 expr_stmt|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Returns whether this specific method is a definition.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isThisDeclarationADefinition
 argument_list|()
@@ -1444,7 +2040,13 @@ return|return
 name|Body
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|// Implement isa/cast/dyncast/etc.
+end_comment
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1465,6 +2067,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classof
@@ -1479,6 +2084,9 @@ return|return
 name|true
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|bool
 name|classofKind
@@ -1493,6 +2101,9 @@ operator|==
 name|ObjCMethod
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|DeclContext
 modifier|*
@@ -1522,6 +2133,9 @@ operator|)
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
 specifier|static
 name|ObjCMethodDecl
 modifier|*
@@ -1551,14 +2165,24 @@ operator|)
 operator|)
 return|;
 block|}
-block|}
+end_function
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
 end_decl_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
+unit|};
 comment|/// ObjCContainerDecl - Represents a container for method declarations.
 end_comment
 
@@ -1584,6 +2208,9 @@ decl_stmt|,
 name|public
 name|DeclContext
 block|{
+name|SourceLocation
+name|AtStart
+decl_stmt|;
 comment|// These two locations in the range mark the end of the method container.
 comment|// The first points to the '@' token, and the second to the 'end' token.
 name|SourceRange
@@ -1597,9 +2224,11 @@ argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|IdentifierInfo *Id
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 block|:
 name|NamedDecl
@@ -1608,14 +2237,19 @@ name|DK
 argument_list|,
 name|DC
 argument_list|,
-name|L
+name|nameLoc
 argument_list|,
 name|Id
 argument_list|)
 operator|,
 name|DeclContext
 argument_list|(
-argument|DK
+name|DK
+argument_list|)
+operator|,
+name|AtStart
+argument_list|(
+argument|atStartLoc
 argument_list|)
 block|{}
 comment|// Iterator access to properties.
@@ -1833,6 +2467,27 @@ name|PropertyId
 argument_list|)
 decl|const
 decl_stmt|;
+name|SourceLocation
+name|getAtStartLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtStart
+return|;
+block|}
+name|void
+name|setAtStartLoc
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+name|AtStart
+operator|=
+name|Loc
+expr_stmt|;
+block|}
 comment|// Marks the end of the container.
 name|SourceRange
 name|getAtEndRange
@@ -1864,8 +2519,7 @@ block|{
 return|return
 name|SourceRange
 argument_list|(
-name|getLocation
-argument_list|()
+name|AtStart
 argument_list|,
 name|getAtEndRange
 argument_list|()
@@ -2147,10 +2801,6 @@ name|ExternallyCompleted
 operator|:
 literal|1
 block|;
-name|SourceLocation
-name|ClassLoc
-block|;
-comment|// location of the class identifier.
 name|SourceLocation
 name|SuperClassLoc
 block|;
@@ -2603,6 +3253,32 @@ name|all_declared_ivar_begin
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+specifier|const
+name|ObjCIvarDecl
+operator|*
+name|all_declared_ivar_begin
+argument_list|()
+specifier|const
+block|{
+comment|// Even though this modifies IvarList, it's conceptually const:
+comment|// the ivar chain is essentially a cached property of ObjCInterfaceDecl.
+return|return
+name|const_cast
+operator|<
+name|ObjCInterfaceDecl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|all_declared_ivar_begin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
 
 begin_function
 name|void
@@ -3083,7 +3759,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocation
+name|getAtStartLoc
 argument_list|()
 return|;
 block|}
@@ -3119,33 +3795,6 @@ name|LE
 expr_stmt|;
 block|}
 end_function
-
-begin_function
-name|void
-name|setClassLoc
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|)
-block|{
-name|ClassLoc
-operator|=
-name|Loc
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|SourceLocation
-name|getClassLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ClassLoc
-return|;
-block|}
-end_expr_stmt
 
 begin_function
 name|void
@@ -3546,6 +4195,17 @@ return|return
 name|NextIvar
 return|;
 block|}
+specifier|const
+name|ObjCIvarDecl
+operator|*
+name|getNextIvar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextIvar
+return|;
+block|}
 name|void
 name|setNextIvar
 argument_list|(
@@ -3850,9 +4510,11 @@ name|ObjCProtocolDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|IdentifierInfo *Id
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 operator|:
 name|ObjCContainerDecl
@@ -3861,9 +4523,11 @@ name|ObjCProtocol
 argument_list|,
 name|DC
 argument_list|,
-name|L
-argument_list|,
 name|Id
+argument_list|,
+name|nameLoc
+argument_list|,
+name|atStartLoc
 argument_list|)
 block|,
 name|isForwardProtoDecl
@@ -3882,9 +4546,11 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|IdentifierInfo *Id
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 block|;
 specifier|const
@@ -4113,7 +4779,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|getLocation
+name|getAtStartLoc
 argument_list|()
 return|;
 block|}
@@ -4287,10 +4953,7 @@ name|private
 operator|:
 name|ObjCClassRef
 operator|*
-name|ForwardDecls
-block|;
-name|unsigned
-name|NumDecls
+name|ForwardDecl
 block|;
 name|ObjCClassDecl
 argument_list|(
@@ -4298,11 +4961,9 @@ argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
 argument_list|,
-argument|ObjCInterfaceDecl *const *Elts
+argument|ObjCInterfaceDecl *const Elt
 argument_list|,
-argument|const SourceLocation *Locs
-argument_list|,
-argument|unsigned nElts
+argument|const SourceLocation Loc
 argument_list|,
 argument|ASTContext&C
 argument_list|)
@@ -4320,14 +4981,41 @@ argument|DeclContext *DC
 argument_list|,
 argument|SourceLocation L
 argument_list|,
-argument|ObjCInterfaceDecl *const *Elts =
+argument|ObjCInterfaceDecl *const Elt =
 literal|0
 argument_list|,
-argument|const SourceLocation *Locs =
-literal|0
+argument|const SourceLocation Locs = SourceLocation()
+argument_list|)
+block|;
+name|ObjCInterfaceDecl
+operator|*
+name|getForwardInterfaceDecl
+argument_list|()
+block|{
+return|return
+name|ForwardDecl
+operator|->
+name|getInterface
+argument_list|()
+return|;
+block|}
+name|ObjCClassRef
+operator|*
+name|getForwardDecl
+argument_list|()
+block|{
+return|return
+name|ForwardDecl
+return|;
+block|}
+name|void
+name|setClass
+argument_list|(
+argument|ASTContext&C
 argument_list|,
-argument|unsigned nElts =
-literal|0
+argument|ObjCInterfaceDecl*const Cls
+argument_list|,
+argument|const SourceLocation Locs
 argument_list|)
 block|;
 name|virtual
@@ -4335,54 +5023,6 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
-block|;
-typedef|typedef
-specifier|const
-name|ObjCClassRef
-modifier|*
-name|iterator
-typedef|;
-name|iterator
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ForwardDecls
-return|;
-block|}
-name|iterator
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ForwardDecls
-operator|+
-name|NumDecls
-return|;
-block|}
-name|unsigned
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|NumDecls
-return|;
-block|}
-comment|/// setClassList - Set the list of forward classes.
-name|void
-name|setClassList
-argument_list|(
-argument|ASTContext&C
-argument_list|,
-argument|ObjCInterfaceDecl*const*List
-argument_list|,
-argument|const SourceLocation *Locs
-argument_list|,
-argument|unsigned Num
-argument_list|)
 block|;
 specifier|static
 name|bool
@@ -4620,33 +5260,23 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-end_decl_stmt
-
-begin_function
 specifier|static
 name|bool
 name|classof
-parameter_list|(
-specifier|const
-name|ObjCForwardProtocolDecl
-modifier|*
-name|D
-parameter_list|)
+argument_list|(
+argument|const ObjCForwardProtocolDecl *D
+argument_list|)
 block|{
 return|return
 name|true
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|bool
 name|classofKind
-parameter_list|(
-name|Kind
-name|K
-parameter_list|)
+argument_list|(
+argument|Kind K
+argument_list|)
 block|{
 return|return
 name|K
@@ -4654,81 +5284,28 @@ operator|==
 name|ObjCForwardProtocol
 return|;
 block|}
-end_function
-
-begin_comment
-unit|};
+expr|}
+block|;
 comment|/// ObjCCategoryDecl - Represents a category declaration. A category allows
-end_comment
-
-begin_comment
 comment|/// you to add methods to an existing class (without subclassing or modifying
-end_comment
-
-begin_comment
 comment|/// the original class interface or implementation:-). Categories don't allow
-end_comment
-
-begin_comment
 comment|/// you to add instance data. The following example adds "myMethod" to all
-end_comment
-
-begin_comment
 comment|/// NSView's within a process:
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// @interface NSView (MyViewMethods)
-end_comment
-
-begin_comment
 comment|/// - myMethod;
-end_comment
-
-begin_comment
 comment|/// @end
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Categories also allow you to split the implementation of a class across
-end_comment
-
-begin_comment
 comment|/// several files (a feature more naturally supported in C++).
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_comment
 comment|/// Categories were originally inspired by dynamic languages such as Common
-end_comment
-
-begin_comment
 comment|/// Lisp and Smalltalk.  More traditional class-based languages (C++, Java)
-end_comment
-
-begin_comment
 comment|/// don't support this level of dynamism, which is both powerful and dangerous.
-end_comment
-
-begin_comment
 comment|///
-end_comment
-
-begin_decl_stmt
 name|class
 name|ObjCCategoryDecl
-range|:
+operator|:
 name|public
 name|ObjCContainerDecl
 block|{
@@ -4753,10 +5330,6 @@ name|HasSynthBitfield
 operator|:
 literal|1
 block|;
-comment|/// \brief The location of the '@' in '@interface'
-name|SourceLocation
-name|AtLoc
-block|;
 comment|/// \brief The location of the category name in this declaration.
 name|SourceLocation
 name|CategoryNameLoc
@@ -4772,6 +5345,8 @@ argument_list|,
 argument|SourceLocation CategoryNameLoc
 argument_list|,
 argument|IdentifierInfo *Id
+argument_list|,
+argument|ObjCInterfaceDecl *IDecl
 argument_list|)
 operator|:
 name|ObjCContainerDecl
@@ -4780,14 +5355,16 @@ name|ObjCCategory
 argument_list|,
 name|DC
 argument_list|,
+name|Id
+argument_list|,
 name|ClassNameLoc
 argument_list|,
-name|Id
+name|AtLoc
 argument_list|)
 block|,
 name|ClassInterface
 argument_list|(
-literal|0
+name|IDecl
 argument_list|)
 block|,
 name|NextClassCategory
@@ -4798,11 +5375,6 @@ block|,
 name|HasSynthBitfield
 argument_list|(
 name|false
-argument_list|)
-block|,
-name|AtLoc
-argument_list|(
-name|AtLoc
 argument_list|)
 block|,
 name|CategoryNameLoc
@@ -4828,6 +5400,18 @@ argument_list|,
 argument|SourceLocation CategoryNameLoc
 argument_list|,
 argument|IdentifierInfo *Id
+argument_list|,
+argument|ObjCInterfaceDecl *IDecl
+argument_list|)
+block|;
+specifier|static
+name|ObjCCategoryDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|EmptyShell Empty
 argument_list|)
 block|;
 name|ObjCInterfaceDecl
@@ -4850,16 +5434,6 @@ return|return
 name|ClassInterface
 return|;
 block|}
-name|void
-name|setClassInterface
-argument_list|(
-argument|ObjCInterfaceDecl *IDecl
-argument_list|)
-block|{
-name|ClassInterface
-operator|=
-name|IDecl
-block|; }
 name|ObjCCategoryImplDecl
 operator|*
 name|getImplementation
@@ -4954,18 +5528,12 @@ name|size
 argument_list|()
 return|;
 block|}
-end_decl_stmt
-
-begin_typedef
 typedef|typedef
 name|ObjCProtocolList
 operator|::
 name|loc_iterator
 name|protocol_loc_iterator
 expr_stmt|;
-end_typedef
-
-begin_expr_stmt
 name|protocol_loc_iterator
 name|protocol_loc_begin
 argument_list|()
@@ -4978,9 +5546,6 @@ name|loc_begin
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|protocol_loc_iterator
 name|protocol_loc_end
 argument_list|()
@@ -4993,9 +5558,6 @@ name|loc_end
 argument_list|()
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 name|ObjCCategoryDecl
 operator|*
 name|getNextClassCategory
@@ -5006,54 +5568,6 @@ return|return
 name|NextClassCategory
 return|;
 block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setNextClassCategory
-parameter_list|(
-name|ObjCCategoryDecl
-modifier|*
-name|Cat
-parameter_list|)
-block|{
-name|NextClassCategory
-operator|=
-name|Cat
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|insertNextClassCategory
-parameter_list|()
-block|{
-name|NextClassCategory
-operator|=
-name|ClassInterface
-operator|->
-name|getCategoryList
-argument_list|()
-expr_stmt|;
-name|ClassInterface
-operator|->
-name|setCategoryList
-argument_list|(
-name|this
-argument_list|)
-expr_stmt|;
-name|ClassInterface
-operator|->
-name|setChangedSinceDeserialization
-argument_list|(
-name|true
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
 name|bool
 name|IsClassExtension
 argument_list|()
@@ -5066,17 +5580,14 @@ operator|==
 literal|0
 return|;
 block|}
-end_expr_stmt
-
-begin_expr_stmt
 specifier|const
 name|ObjCCategoryDecl
 operator|*
 name|getNextClassExtension
 argument_list|()
 specifier|const
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 name|bool
@@ -5186,33 +5697,6 @@ end_expr_stmt
 
 begin_expr_stmt
 name|SourceLocation
-name|getAtLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|AtLoc
-return|;
-block|}
-end_expr_stmt
-
-begin_function
-name|void
-name|setAtLoc
-parameter_list|(
-name|SourceLocation
-name|At
-parameter_list|)
-block|{
-name|AtLoc
-operator|=
-name|At
-expr_stmt|;
-block|}
-end_function
-
-begin_expr_stmt
-name|SourceLocation
 name|getCategoryNameLoc
 argument_list|()
 specifier|const
@@ -5237,28 +5721,6 @@ name|Loc
 expr_stmt|;
 block|}
 end_function
-
-begin_expr_stmt
-name|virtual
-name|SourceRange
-name|getSourceRange
-argument_list|()
-specifier|const
-block|{
-return|return
-name|SourceRange
-argument_list|(
-name|AtLoc
-argument_list|,
-name|getAtEndRange
-argument_list|()
-operator|.
-name|getEnd
-argument_list|()
-argument_list|)
-return|;
-block|}
-end_expr_stmt
 
 begin_function
 specifier|static
@@ -5318,6 +5780,20 @@ block|}
 end_function
 
 begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclReader
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 unit|};
 name|class
 name|ObjCImplDecl
@@ -5338,9 +5814,11 @@ argument|Kind DK
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|ObjCInterfaceDecl *classInterface
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 operator|:
 name|ObjCContainerDecl
@@ -5348,8 +5826,6 @@ argument_list|(
 name|DK
 argument_list|,
 name|DC
-argument_list|,
-name|L
 argument_list|,
 name|classInterface
 condition|?
@@ -5359,6 +5835,10 @@ name|getIdentifier
 argument_list|()
 else|:
 literal|0
+argument_list|,
+name|nameLoc
+argument_list|,
+name|atStartLoc
 argument_list|)
 block|,
 name|ClassInterface
@@ -5612,11 +6092,13 @@ name|ObjCCategoryImplDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|ObjCInterfaceDecl *classInterface
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 operator|:
 name|ObjCImplDecl
@@ -5625,9 +6107,11 @@ name|ObjCCategoryImpl
 argument_list|,
 name|DC
 argument_list|,
-name|L
-argument_list|,
 name|classInterface
+argument_list|,
+name|nameLoc
+argument_list|,
+name|atStartLoc
 argument_list|)
 block|,
 name|Id
@@ -5646,11 +6130,13 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|IdentifierInfo *Id
 argument_list|,
 argument|ObjCInterfaceDecl *classInterface
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 block|;
 comment|/// getIdentifier - Get the identifier that names the category
@@ -5692,8 +6178,6 @@ comment|/// with this implementation as a StringRef.
 comment|//
 comment|// FIXME: This is a bad API, we are overriding the NamedDecl::getName, to mean
 comment|// something different.
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|()
@@ -5791,15 +6275,11 @@ return|;
 block|}
 expr|}
 block|;
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -5861,11 +6341,13 @@ name|ObjCImplementationDecl
 argument_list|(
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|ObjCInterfaceDecl *classInterface
 argument_list|,
 argument|ObjCInterfaceDecl *superDecl
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 operator|:
 name|ObjCImplDecl
@@ -5874,9 +6356,11 @@ name|ObjCImplementation
 argument_list|,
 name|DC
 argument_list|,
-name|L
-argument_list|,
 name|classInterface
+argument_list|,
+name|nameLoc
+argument_list|,
+name|atStartLoc
 argument_list|)
 block|,
 name|SuperClass
@@ -5915,11 +6399,13 @@ argument|ASTContext&C
 argument_list|,
 argument|DeclContext *DC
 argument_list|,
-argument|SourceLocation L
-argument_list|,
 argument|ObjCInterfaceDecl *classInterface
 argument_list|,
 argument|ObjCInterfaceDecl *superDecl
+argument_list|,
+argument|SourceLocation nameLoc
+argument_list|,
+argument|SourceLocation atStartLoc
 argument_list|)
 block|;
 comment|/// init_iterator - Iterates through the ivar initializer list.
@@ -6111,8 +6597,6 @@ comment|// something different.
 end_comment
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|()
@@ -6395,15 +6879,11 @@ end_decl_stmt
 
 begin_expr_stmt
 unit|};
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -6637,6 +7117,8 @@ block|,
 name|Retain
 block|,
 name|Copy
+block|,
+name|Weak
 block|}
 block|;   enum
 name|PropertyControl
@@ -6943,6 +7425,40 @@ name|OBJC_PR_readonly
 operator|)
 return|;
 block|}
+comment|/// isAtomic - Return true if the property is atomic.
+name|bool
+name|isAtomic
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|PropertyAttributes
+operator|&
+name|OBJC_PR_atomic
+operator|)
+return|;
+block|}
+comment|/// isRetaining - Return true if the property retains its value.
+name|bool
+name|isRetaining
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|PropertyAttributes
+operator|&
+operator|(
+name|OBJC_PR_retain
+operator||
+name|OBJC_PR_strong
+operator||
+name|OBJC_PR_copy
+operator|)
+operator|)
+return|;
+block|}
 comment|/// getSetterKind - Return the method used for doing assignment in
 comment|/// the property setter. This is only valid if the property has been
 comment|/// defined to have a setter.
@@ -6955,11 +7471,24 @@ if|if
 condition|(
 name|PropertyAttributes
 operator|&
-operator|(
-name|OBJC_PR_retain
-operator||
 name|OBJC_PR_strong
-operator|)
+condition|)
+return|return
+name|getType
+argument_list|()
+operator|->
+name|isBlockPointerType
+argument_list|()
+operator|?
+name|Copy
+operator|:
+name|Retain
+return|;
+if|if
+condition|(
+name|PropertyAttributes
+operator|&
+name|OBJC_PR_retain
 condition|)
 return|return
 name|Retain
@@ -6973,16 +7502,33 @@ condition|)
 return|return
 name|Copy
 return|;
+end_decl_stmt
+
+begin_if
+if|if
+condition|(
+name|PropertyAttributes
+operator|&
+name|OBJC_PR_weak
+condition|)
+return|return
+name|Weak
+return|;
+end_if
+
+begin_return
 return|return
 name|Assign
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_expr_stmt
-name|Selector
+begin_macro
+unit|}    Selector
 name|getGetterName
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return

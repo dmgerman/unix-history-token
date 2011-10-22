@@ -4885,13 +4885,6 @@ name|td
 operator|=
 name|curthread
 expr_stmt|;
-name|file
-operator|=
-name|fixup_filename
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|class
@@ -4925,7 +4918,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -5036,7 +5032,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -5045,9 +5044,12 @@ name|printf
 argument_list|(
 literal|"while exclusively locked from %s:%d\n"
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|lock1
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|lock1
 operator|->
@@ -5093,7 +5095,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -5102,9 +5107,12 @@ name|printf
 argument_list|(
 literal|"while share locked from %s:%d\n"
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|lock1
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|lock1
 operator|->
@@ -5320,9 +5328,12 @@ name|li_lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|plock
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|plock
 operator|->
@@ -5337,7 +5348,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -5870,9 +5884,12 @@ name|w1
 operator|->
 name|w_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|lock1
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|lock1
 operator|->
@@ -5893,7 +5910,10 @@ name|w
 operator|->
 name|w_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -5923,9 +5943,12 @@ name|lo_witness
 operator|->
 name|w_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|lock2
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|lock2
 operator|->
@@ -5950,9 +5973,12 @@ name|w1
 operator|->
 name|w_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|lock1
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|lock1
 operator|->
@@ -5973,7 +5999,10 @@ name|w
 operator|->
 name|w_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6135,13 +6164,6 @@ expr_stmt|;
 name|td
 operator|=
 name|curthread
-expr_stmt|;
-name|file
-operator|=
-name|fixup_filename
-argument_list|(
-name|file
-argument_list|)
 expr_stmt|;
 comment|/* Determine lock list for this lock. */
 if|if
@@ -6457,13 +6479,6 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|file
-operator|=
-name|fixup_filename
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|witness_watch
@@ -6493,7 +6508,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6522,7 +6540,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6557,7 +6578,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6591,7 +6615,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6626,7 +6653,10 @@ name|li_flags
 operator|&
 name|LI_RECURSEMASK
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6710,13 +6740,6 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|file
-operator|=
-name|fixup_filename
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|witness_watch
@@ -6746,7 +6769,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6775,7 +6801,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6810,7 +6839,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6844,7 +6876,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -6974,13 +7009,6 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|file
-operator|=
-name|fixup_filename
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
 comment|/* Find lock instance associated with this lock. */
 if|if
 condition|(
@@ -7091,7 +7119,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -7138,7 +7169,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -7147,9 +7181,12 @@ name|printf
 argument_list|(
 literal|"while exclusively locked from %s:%d\n"
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|instance
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|instance
 operator|->
@@ -7199,7 +7236,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -7208,9 +7248,12 @@ name|printf
 argument_list|(
 literal|"while share locked from %s:%d\n"
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|instance
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|instance
 operator|->
@@ -7299,7 +7342,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -9848,9 +9894,12 @@ name|LI_RECURSEMASK
 argument_list|,
 name|lock
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|instance
 operator|->
 name|li_file
+argument_list|)
 argument_list|,
 name|instance
 operator|->
@@ -10578,13 +10627,6 @@ name|lo_name
 argument_list|)
 expr_stmt|;
 block|}
-name|file
-operator|=
-name|fixup_filename
-argument_list|(
-name|file
-argument_list|)
-expr_stmt|;
 switch|switch
 condition|(
 name|flags
@@ -10611,7 +10653,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -10675,7 +10720,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -10714,7 +10762,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -10751,7 +10802,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -10788,7 +10842,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -10825,7 +10882,10 @@ name|lock
 operator|->
 name|lo_name
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)
@@ -10836,7 +10896,10 @@ name|panic
 argument_list|(
 literal|"Invalid lock assertion at %s:%d."
 argument_list|,
+name|fixup_filename
+argument_list|(
 name|file
+argument_list|)
 argument_list|,
 name|line
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- SPUMCTargetDesc.h - Alpha Target Descriptions ---------*- C++ -*-===//
+comment|//===-- SPUMCTargetDesc.h - CellSPU Target Descriptions ---------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file provides Alpha specific target descriptions.
+comment|// This file provides CellSPU specific target descriptions.
 end_comment
 
 begin_comment

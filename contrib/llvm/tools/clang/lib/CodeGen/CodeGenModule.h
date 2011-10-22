@@ -245,7 +245,7 @@ name|class
 name|CodeGenOptions
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|AnnotateAttr
@@ -276,6 +276,12 @@ name|CGDebugInfo
 decl_stmt|;
 name|class
 name|CGObjCRuntime
+decl_stmt|;
+name|class
+name|CGOpenCLRuntime
+decl_stmt|;
+name|class
+name|CGCUDARuntime
 decl_stmt|;
 name|class
 name|BlockFieldFlags
@@ -466,11 +472,20 @@ name|unsigned
 name|char
 name|PointerWidthInBits
 decl_stmt|;
-comment|/// The alignment of a pointer into the generic address space.
+comment|/// The size and alignment of a pointer into the generic address
+comment|/// space.
+union|union
+block|{
 name|unsigned
 name|char
 name|PointerAlignInBytes
 decl_stmt|;
+name|unsigned
+name|char
+name|PointerSizeInBytes
+decl_stmt|;
+block|}
+union|;
 block|}
 struct|;
 struct|struct
@@ -729,7 +744,7 @@ name|TargetCodeGenInfo
 modifier|*
 name|TheTargetCodeGenInfo
 decl_stmt|;
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|Diags
 decl_stmt|;
@@ -754,7 +769,15 @@ name|CodeGenVTables
 decl_stmt|;
 name|CGObjCRuntime
 modifier|*
-name|Runtime
+name|ObjCRuntime
+decl_stmt|;
+name|CGOpenCLRuntime
+modifier|*
+name|OpenCLRuntime
+decl_stmt|;
+name|CGCUDARuntime
+modifier|*
+name|CUDARuntime
 decl_stmt|;
 name|CGDebugInfo
 modifier|*
@@ -838,8 +861,6 @@ name|DenseMap
 operator|<
 name|GlobalDecl
 operator|,
-name|llvm
-operator|::
 name|StringRef
 operator|>
 name|MangledDeclNames
@@ -849,6 +870,7 @@ operator|::
 name|BumpPtrAllocator
 name|MangledNamesAllocator
 expr_stmt|;
+comment|/// Global annotations.
 name|std
 operator|::
 name|vector
@@ -859,6 +881,18 @@ name|Constant
 operator|*
 operator|>
 name|Annotations
+expr_stmt|;
+comment|/// Map used to get unique annotation strings.
+name|llvm
+operator|::
+name|StringMap
+operator|<
+name|llvm
+operator|::
+name|Constant
+operator|*
+operator|>
+name|AnnotationStrings
 expr_stmt|;
 name|llvm
 operator|::
@@ -877,7 +911,7 @@ name|StringMap
 operator|<
 name|llvm
 operator|::
-name|Constant
+name|GlobalVariable
 operator|*
 operator|>
 name|ConstantStringMap
@@ -928,8 +962,6 @@ name|DelayedCXXInitPosition
 expr_stmt|;
 comment|/// - Global variables with initializers whose order of initialization
 comment|/// is set by init_priority attribute.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -970,6 +1002,8 @@ operator|>
 expr|>
 name|CXXGlobalDtors
 expr_stmt|;
+comment|/// @name Cache for Objective-C runtime types
+comment|/// @{
 comment|/// CFConstantStringClassRef - Cached reference to the class for constant
 comment|/// strings. This value has type int * but is actually an Obj-C class pointer.
 name|llvm
@@ -986,9 +1020,30 @@ name|Constant
 operator|*
 name|ConstantStringClassRef
 expr_stmt|;
+comment|/// \brief The LLVM type corresponding to NSConstantString.
+name|llvm
+operator|::
+name|StructType
+operator|*
+name|NSConstantStringType
+expr_stmt|;
+comment|/// \brief The type used to describe the state of a fast enumeration in
+comment|/// Objective-C's for..in loop.
+name|QualType
+name|ObjCFastEnumerationStateType
+decl_stmt|;
+comment|/// @}
 comment|/// Lazily create the Objective-C runtime
 name|void
 name|createObjCRuntime
+parameter_list|()
+function_decl|;
+name|void
+name|createOpenCLRuntime
+parameter_list|()
+function_decl|;
+name|void
+name|createCUDARuntime
 parameter_list|()
 function_decl|;
 name|llvm
@@ -999,16 +1054,6 @@ name|VMContext
 expr_stmt|;
 comment|/// @name Cache for Blocks Runtime Globals
 comment|/// @{
-specifier|const
-name|VarDecl
-modifier|*
-name|NSConcreteGlobalBlockDecl
-decl_stmt|;
-specifier|const
-name|VarDecl
-modifier|*
-name|NSConcreteStackBlockDecl
-decl_stmt|;
 name|llvm
 operator|::
 name|Constant
@@ -1021,16 +1066,6 @@ name|Constant
 operator|*
 name|NSConcreteStackBlock
 expr_stmt|;
-specifier|const
-name|FunctionDecl
-modifier|*
-name|BlockObjectAssignDecl
-decl_stmt|;
-specifier|const
-name|FunctionDecl
-modifier|*
-name|BlockObjectDisposeDecl
-decl_stmt|;
 name|llvm
 operator|::
 name|Constant
@@ -1090,7 +1125,7 @@ name|TargetData
 operator|&
 name|TD
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|)
@@ -1114,14 +1149,14 @@ block|{
 if|if
 condition|(
 operator|!
-name|Runtime
+name|ObjCRuntime
 condition|)
 name|createObjCRuntime
 argument_list|()
 expr_stmt|;
 return|return
 operator|*
-name|Runtime
+name|ObjCRuntime
 return|;
 block|}
 comment|/// hasObjCRuntime() - Return true iff an Objective-C runtime has
@@ -1133,7 +1168,43 @@ block|{
 return|return
 operator|!
 operator|!
-name|Runtime
+name|ObjCRuntime
+return|;
+block|}
+comment|/// getOpenCLRuntime() - Return a reference to the configured OpenCL runtime.
+name|CGOpenCLRuntime
+modifier|&
+name|getOpenCLRuntime
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|OpenCLRuntime
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|OpenCLRuntime
+return|;
+block|}
+comment|/// getCUDARuntime() - Return a reference to the configured CUDA runtime.
+name|CGCUDARuntime
+modifier|&
+name|getCUDARuntime
+parameter_list|()
+block|{
+name|assert
+argument_list|(
+name|CUDARuntime
+operator|!=
+literal|0
+argument_list|)
+expr_stmt|;
+return|return
+operator|*
+name|CUDARuntime
 return|;
 block|}
 comment|/// getCXXABI() - Return a reference to the configured C++ ABI.
@@ -1297,7 +1368,19 @@ return|return
 name|VTables
 return|;
 block|}
-name|Diagnostic
+name|VTableContext
+modifier|&
+name|getVTableContext
+parameter_list|()
+block|{
+return|return
+name|VTables
+operator|.
+name|getVTableContext
+argument_list|()
+return|;
+block|}
+name|DiagnosticsEngine
 operator|&
 name|getDiags
 argument_list|()
@@ -1330,7 +1413,8 @@ block|{
 return|return
 name|Context
 operator|.
-name|Target
+name|getTargetInfo
+argument_list|()
 return|;
 block|}
 name|llvm
@@ -1640,9 +1724,9 @@ name|GlobalVariable
 operator|*
 name|CreateOrReplaceCXXRuntimeVariable
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|,
-argument|const llvm::Type *Ty
+argument|llvm::Type *Ty
 argument_list|,
 argument|llvm::GlobalValue::LinkageTypes Linkage
 argument_list|)
@@ -1662,7 +1746,6 @@ name|VarDecl
 operator|*
 name|D
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -1683,7 +1766,7 @@ name|GetAddrOfFunction
 argument_list|(
 argument|GlobalDecl GD
 argument_list|,
-argument|const llvm::Type *Ty =
+argument|llvm::Type *Ty =
 literal|0
 argument_list|,
 argument|bool ForVTable = false
@@ -2020,10 +2103,13 @@ name|Constant
 operator|*
 name|GetAddrOfConstantString
 argument_list|(
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|,
 argument|const char *GlobalName=
 literal|0
+argument_list|,
+argument|unsigned Alignment=
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/// GetAddrOfConstantCString - Returns a pointer to a character array
@@ -2038,21 +2124,21 @@ name|Constant
 operator|*
 name|GetAddrOfConstantCString
 argument_list|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|str
+argument|const std::string&str
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|GlobalName
-operator|=
+argument|const char *GlobalName=
 literal|0
+argument_list|,
+argument|unsigned Alignment=
+literal|1
 argument_list|)
 expr_stmt|;
+comment|/// \brief Retrieve the record type that describes the state of an
+comment|/// Objective-C fast enumeration loop (for..in).
+name|QualType
+name|getObjCFastEnumerationStateType
+parameter_list|()
+function_decl|;
 comment|/// GetAddrOfCXXConstructor - Return the address of the constructor of the
 comment|/// given type.
 name|llvm
@@ -2106,7 +2192,7 @@ name|getIntrinsic
 argument_list|(
 argument|unsigned IID
 argument_list|,
-argument|llvm::ArrayRef<llvm::Type*> Tys =                                                  llvm::ArrayRef<llvm::Type*>()
+argument|ArrayRef<llvm::Type*> Tys =                                                  ArrayRef<llvm::Type*>()
 argument_list|)
 expr_stmt|;
 comment|/// EmitTopLevelDecl - Emit code for a single top level declaration.
@@ -2131,24 +2217,6 @@ operator|*
 name|GV
 argument_list|)
 decl_stmt|;
-name|void
-name|AddAnnotation
-argument_list|(
-name|llvm
-operator|::
-name|Constant
-operator|*
-name|C
-argument_list|)
-block|{
-name|Annotations
-operator|.
-name|push_back
-argument_list|(
-name|C
-argument_list|)
-expr_stmt|;
-block|}
 comment|/// AddCXXDtorEntry - Add a destructor and object to add to the C++ global
 comment|/// destructor function.
 name|void
@@ -2190,9 +2258,9 @@ name|Constant
 operator|*
 name|CreateRuntimeFunction
 argument_list|(
-argument|const llvm::FunctionType *Ty
+argument|llvm::FunctionType *Ty
 argument_list|,
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|,
 argument|llvm::Attributes ExtraAttrs =                                           llvm::Attribute::None
 argument_list|)
@@ -2205,9 +2273,9 @@ name|Constant
 operator|*
 name|CreateRuntimeVariable
 argument_list|(
-argument|const llvm::Type *Ty
+argument|llvm::Type *Ty
 argument_list|,
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 expr_stmt|;
 comment|///@name Custom Blocks Runtime Interfaces
@@ -2292,32 +2360,32 @@ argument_list|(
 argument|QualType T
 argument_list|)
 expr_stmt|;
+comment|/// EmitNullConstantForBase - Return a null constant appropriate for
+comment|/// zero-initializing a base class with the given type.  This is usually,
+comment|/// but not always, an LLVM null constant.
 name|llvm
 operator|::
 name|Constant
 operator|*
-name|EmitAnnotateAttr
+name|EmitNullConstantForBase
 argument_list|(
-argument|llvm::GlobalValue *GV
-argument_list|,
-argument|const AnnotateAttr *AA
-argument_list|,
-argument|unsigned LineNo
+specifier|const
+name|CXXRecordDecl
+operator|*
+name|Record
 argument_list|)
 expr_stmt|;
 comment|/// Error - Emit a general error that something can't be done.
 name|void
 name|Error
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|error
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// ErrorUnsupported - Print out an error that codegen doesn't support the
 comment|/// specified stmt yet.
 comment|/// \param OmitOnError - If true, then this error should only be emitted if no
@@ -2478,14 +2546,13 @@ modifier|&
 name|CallingConv
 parameter_list|)
 function_decl|;
-name|llvm
-operator|::
 name|StringRef
 name|getMangledName
-argument_list|(
-argument|GlobalDecl GD
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|GlobalDecl
+name|GD
+parameter_list|)
+function_decl|;
 name|void
 name|getBlockMangledName
 parameter_list|(
@@ -2581,7 +2648,6 @@ comment|/// the given LLVM type.
 name|CharUnits
 name|GetTargetTypeStoreSize
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -2621,6 +2687,78 @@ operator|*
 operator|>
 name|DeferredVTables
 expr_stmt|;
+comment|/// Emit all the global annotations.
+name|void
+name|EmitGlobalAnnotations
+parameter_list|()
+function_decl|;
+comment|/// Emit an annotation string.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitAnnotationString
+argument_list|(
+argument|llvm::StringRef Str
+argument_list|)
+expr_stmt|;
+comment|/// Emit the annotation's translation unit.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitAnnotationUnit
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+expr_stmt|;
+comment|/// Emit the annotation line number.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitAnnotationLineNo
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+expr_stmt|;
+comment|/// EmitAnnotateAttr - Generate the llvm::ConstantStruct which contains the
+comment|/// annotation information for a given GlobalValue. The annotation struct is
+comment|/// {i8 *, i8 *, i8 *, i32}. The first field is a constant expression, the
+comment|/// GlobalValue being annotated. The second field is the constant string
+comment|/// created from the AnnotateAttr's annotation. The third field is a constant
+comment|/// string containing the name of the translation unit. The fourth field is
+comment|/// the line number in the file of the annotated value declaration.
+name|llvm
+operator|::
+name|Constant
+operator|*
+name|EmitAnnotateAttr
+argument_list|(
+argument|llvm::GlobalValue *GV
+argument_list|,
+argument|const AnnotateAttr *AA
+argument_list|,
+argument|SourceLocation L
+argument_list|)
+expr_stmt|;
+comment|/// Add global annotations that are set on D, for the global GV. Those
+comment|/// annotations are emitted during finalization of the LLVM code.
+name|void
+name|AddGlobalAnnotations
+argument_list|(
+specifier|const
+name|ValueDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|GlobalValue
+operator|*
+name|GV
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 name|llvm
@@ -2629,7 +2767,7 @@ name|GlobalValue
 operator|*
 name|GetGlobalValue
 argument_list|(
-argument|llvm::StringRef Ref
+argument|StringRef Ref
 argument_list|)
 expr_stmt|;
 name|llvm
@@ -2638,9 +2776,9 @@ name|Constant
 operator|*
 name|GetOrCreateLLVMFunction
 argument_list|(
-argument|llvm::StringRef MangledName
+argument|StringRef MangledName
 argument_list|,
-argument|const llvm::Type *Ty
+argument|llvm::Type *Ty
 argument_list|,
 argument|GlobalDecl D
 argument_list|,
@@ -2655,9 +2793,9 @@ name|Constant
 operator|*
 name|GetOrCreateLLVMGlobal
 argument_list|(
-argument|llvm::StringRef MangledName
+argument|StringRef MangledName
 argument_list|,
-argument|const llvm::PointerType *PTy
+argument|llvm::PointerType *PTy
 argument_list|,
 argument|const VarDecl *D
 argument_list|,
@@ -2933,12 +3071,6 @@ specifier|const
 name|char
 modifier|*
 name|GlobalName
-parameter_list|)
-function_decl|;
-name|void
-name|EmitAnnotations
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 comment|/// EmitFundamentalRTTIDescriptor - Emit the RTTI descriptors for the

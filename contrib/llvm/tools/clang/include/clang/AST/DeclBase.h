@@ -639,15 +639,22 @@ name|friend
 name|class
 name|CXXClassMemberWrapper
 decl_stmt|;
-comment|/// PCHLevel - the "level" of AST file from which this declaration was built.
+comment|/// \brief Whether this declaration was loaded from an AST file.
 name|unsigned
-name|PCHLevel
+name|FromASTFile
 range|:
-literal|2
+literal|1
 decl_stmt|;
 comment|/// ChangedAfterLoad - if this declaration has changed since being loaded
 name|unsigned
 name|ChangedAfterLoad
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this declaration is private to the module in which it was
+comment|/// defined.
+name|unsigned
+name|ModulePrivate
 range|:
 literal|1
 decl_stmt|;
@@ -674,6 +681,14 @@ name|unsigned
 name|CachedLinkage
 range|:
 literal|2
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclWriter
+decl_stmt|;
+name|friend
+name|class
+name|ASTDeclReader
 decl_stmt|;
 name|private
 label|:
@@ -743,7 +758,7 @@ argument_list|(
 name|AS_none
 argument_list|)
 operator|,
-name|PCHLevel
+name|FromASTFile
 argument_list|(
 literal|0
 argument_list|)
@@ -751,6 +766,11 @@ operator|,
 name|ChangedAfterLoad
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|ModulePrivate
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|IdentifierNamespace
@@ -826,7 +846,7 @@ argument_list|(
 name|AS_none
 argument_list|)
 operator|,
-name|PCHLevel
+name|FromASTFile
 argument_list|(
 literal|0
 argument_list|)
@@ -834,6 +854,11 @@ operator|,
 name|ChangedAfterLoad
 argument_list|(
 name|false
+argument_list|)
+operator|,
+name|ModulePrivate
+argument_list|(
+literal|0
 argument_list|)
 operator|,
 name|IdentifierNamespace
@@ -1678,52 +1703,16 @@ name|IsDefinition
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// \brief Retrieve the level of precompiled header from which this
-comment|/// declaration was generated.
-comment|///
-comment|/// The PCH level of a declaration describes where the declaration originated
-comment|/// from. A PCH level of 0 indicates that the declaration was parsed from
-comment|/// source. A PCH level of 1 indicates that the declaration was loaded from
-comment|/// a top-level AST file. A PCH level 2 indicates that the declaration was
-comment|/// loaded from a PCH file the AST file depends on, and so on.
-name|unsigned
-name|getPCHLevel
+comment|/// \brief Determine whether this declaration came from an AST file (such as
+comment|/// a precompiled header or module) rather than having been parsed.
+name|bool
+name|isFromASTFile
 argument_list|()
 specifier|const
 block|{
 return|return
-name|PCHLevel
+name|FromASTFile
 return|;
-block|}
-comment|/// \brief The maximum PCH level that any declaration may have.
-specifier|static
-specifier|const
-name|unsigned
-name|MaxPCHLevel
-init|=
-literal|3
-decl_stmt|;
-comment|/// \brief Set the PCH level of this declaration.
-name|void
-name|setPCHLevel
-parameter_list|(
-name|unsigned
-name|Level
-parameter_list|)
-block|{
-name|assert
-argument_list|(
-name|Level
-operator|<=
-name|MaxPCHLevel
-operator|&&
-literal|"PCH level exceeds the maximum"
-argument_list|)
-expr_stmt|;
-name|PCHLevel
-operator|=
-name|Level
-expr_stmt|;
 block|}
 comment|/// \brief Query whether this declaration was changed in a significant way
 comment|/// since being loaded from an AST file.
@@ -1914,7 +1903,50 @@ name|bool
 name|isDefinedOutsideFunctionOrMethod
 argument_list|()
 specifier|const
+block|{
+return|return
+name|getParentFunctionOrMethod
+argument_list|()
+operator|==
+literal|0
+return|;
+block|}
+comment|/// \brief If this decl is defined inside a function/method/block it returns
+comment|/// the corresponding DeclContext, otherwise it returns null.
+specifier|const
+name|DeclContext
+operator|*
+name|getParentFunctionOrMethod
+argument_list|()
+specifier|const
 expr_stmt|;
+name|DeclContext
+modifier|*
+name|getParentFunctionOrMethod
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+specifier|const
+name|Decl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getParentFunctionOrMethod
+argument_list|()
+operator|)
+return|;
+block|}
 comment|/// \brief Retrieves the "canonical" declaration of the given declaration.
 name|virtual
 name|Decl
@@ -2381,6 +2413,18 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief returns true if this declaration is a template
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isTemplateDecl
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this declaration is a function or function template.
 end_comment
 
@@ -2720,8 +2764,6 @@ begin_decl_stmt
 name|void
 name|print
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Out
@@ -2730,6 +2772,11 @@ name|unsigned
 name|Indentation
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|PrintInstantiation
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
@@ -2739,8 +2786,6 @@ begin_decl_stmt
 name|void
 name|print
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Out
@@ -2754,42 +2799,45 @@ name|unsigned
 name|Indentation
 operator|=
 literal|0
+argument_list|,
+name|bool
+name|PrintInstantiation
+operator|=
+name|false
 argument_list|)
 decl|const
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 specifier|static
 name|void
 name|printGroup
-argument_list|(
+parameter_list|(
 name|Decl
-operator|*
-operator|*
+modifier|*
+modifier|*
 name|Begin
-argument_list|,
+parameter_list|,
 name|unsigned
 name|NumDecls
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|Out
-argument_list|,
+parameter_list|,
 specifier|const
 name|PrintingPolicy
-operator|&
+modifier|&
 name|Policy
-argument_list|,
+parameter_list|,
 name|unsigned
 name|Indentation
-operator|=
+init|=
 literal|0
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|void
@@ -2811,8 +2859,6 @@ begin_decl_stmt
 name|void
 name|dumpXML
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -2922,7 +2968,7 @@ name|virtual
 name|void
 name|print
 argument_list|(
-argument|llvm::raw_ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|; }
@@ -3286,16 +3332,9 @@ operator|*
 operator|>
 name|BuildDeclChain
 argument_list|(
-specifier|const
-name|llvm
-operator|::
-name|SmallVectorImpl
-operator|<
-name|Decl
-operator|*
-operator|>
-operator|&
-name|Decls
+argument|const SmallVectorImpl<Decl*>&Decls
+argument_list|,
+argument|bool FieldsAlreadyLoaded
 argument_list|)
 expr_stmt|;
 name|DeclContext
@@ -3509,6 +3548,49 @@ operator|==
 name|Decl
 operator|::
 name|Block
+return|;
+block|}
+name|bool
+name|isObjCContainer
+argument_list|()
+specifier|const
+block|{
+switch|switch
+condition|(
+name|DeclKind
+condition|)
+block|{
+case|case
+name|Decl
+operator|::
+name|ObjCCategory
+case|:
+case|case
+name|Decl
+operator|::
+name|ObjCCategoryImpl
+case|:
+case|case
+name|Decl
+operator|::
+name|ObjCImplementation
+case|:
+case|case
+name|Decl
+operator|::
+name|ObjCInterface
+case|:
+case|case
+name|Decl
+operator|::
+name|ObjCProtocol
+case|:
+return|return
+name|true
+return|;
+block|}
+return|return
+name|false
 return|;
 block|}
 name|bool
@@ -4890,6 +4972,50 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/// \brief A simplistic name lookup mechanism that performs name lookup
+end_comment
+
+begin_comment
+comment|/// into this declaration context without consulting the external source.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This function should almost never be used, because it subverts the
+end_comment
+
+begin_comment
+comment|/// usual relationship between a DeclContext and the external source.
+end_comment
+
+begin_comment
+comment|/// See the ASTImporter for the (few, but important) use cases.
+end_comment
+
+begin_decl_stmt
+name|void
+name|localUncachedLookup
+argument_list|(
+name|DeclarationName
+name|Name
+argument_list|,
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
+name|NamedDecl
+operator|*
+operator|>
+operator|&
+name|Results
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @brief Makes a declaration visible within this context.
 end_comment
 
@@ -4974,37 +5100,6 @@ name|Recoverable
 init|=
 name|true
 parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// \brief Deserialize all the visible declarations from external storage.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// Name lookup deserializes visible declarations lazily, thus a DeclContext
-end_comment
-
-begin_comment
-comment|/// may not have a complete name lookup table. This function deserializes
-end_comment
-
-begin_comment
-comment|/// the rest of visible declarations from the external storage and completes
-end_comment
-
-begin_comment
-comment|/// the name lookup table.
-end_comment
-
-begin_function_decl
-name|void
-name|MaterializeVisibleDeclsFromExternalStorage
-parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -5216,6 +5311,45 @@ name|ES
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// \brief Determine whether the given declaration is stored in the list of
+end_comment
+
+begin_comment
+comment|/// declarations lexically within this context.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|isDeclInLexicalTraversal
+argument_list|(
+specifier|const
+name|Decl
+operator|*
+name|D
+argument_list|)
+decl|const
+block|{
+return|return
+name|D
+operator|&&
+operator|(
+name|D
+operator|->
+name|NextDeclInContext
+operator|||
+name|D
+operator|==
+name|FirstDecl
+operator|||
+name|D
+operator|==
+name|LastDecl
+operator|)
+return|;
+block|}
+end_decl_stmt
 
 begin_function_decl
 specifier|static

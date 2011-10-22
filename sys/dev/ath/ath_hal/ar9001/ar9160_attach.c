@@ -1704,6 +1704,13 @@ name|hal4AddrAggrSupport
 operator|=
 name|AH_TRUE
 expr_stmt|;
+comment|/* BB Read WAR */
+name|pCap
+operator|->
+name|halHasBBReadWar
+operator|=
+name|AH_TRUE
+expr_stmt|;
 comment|/* AR9160 is a 2x2 stream device */
 name|pCap
 operator|->

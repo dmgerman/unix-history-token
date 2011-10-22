@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -170,9 +176,7 @@ name|create
 argument_list|(
 argument|const MacroInfo *MI
 argument_list|,
-argument|const Token *UnexpArgTokens
-argument_list|,
-argument|unsigned NumArgTokens
+argument|llvm::ArrayRef<Token> UnexpArgTokens
 argument_list|,
 argument|bool VarargsElided
 argument_list|,
@@ -265,7 +269,10 @@ modifier|&
 name|PP
 parameter_list|,
 name|SourceLocation
-name|hashInstLoc
+name|ExpansionLocStart
+parameter_list|,
+name|SourceLocation
+name|ExpansionLocEnd
 parameter_list|)
 function_decl|;
 comment|/// getNumArguments - Return the number of arguments passed into this macro
@@ -315,7 +322,10 @@ name|bool
 name|Charify
 parameter_list|,
 name|SourceLocation
-name|hashInstLoc
+name|ExpansionLocStart
+parameter_list|,
+name|SourceLocation
+name|ExpansionLocEnd
 parameter_list|)
 function_decl|;
 comment|/// deallocate - This should only be called by the Preprocessor when managing

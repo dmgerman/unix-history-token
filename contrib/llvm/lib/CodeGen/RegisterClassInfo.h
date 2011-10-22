@@ -111,6 +111,9 @@ decl_stmt|;
 name|unsigned
 name|NumRegs
 decl_stmt|;
+name|bool
+name|ProperSubClass
+decl_stmt|;
 name|OwningArrayPtr
 operator|<
 name|unsigned
@@ -129,6 +132,11 @@ name|NumRegs
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|ProperSubClass
+argument_list|(
+argument|false
+argument_list|)
 block|{}
 name|operator
 name|ArrayRef
@@ -140,18 +148,15 @@ operator|)
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|unsigned
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|Order
 operator|.
 name|get
 argument_list|()
-operator|,
+argument_list|,
 name|NumRegs
-operator|)
+argument_list|)
 return|;
 block|}
 block|}
@@ -307,6 +312,31 @@ name|get
 argument_list|(
 name|RC
 argument_list|)
+return|;
+block|}
+comment|/// isProperSubClass - Returns true if RC has a legal super-class with more
+comment|/// allocatable registers.
+comment|///
+comment|/// Register classes like GR32_NOSP are not proper sub-classes because %esp
+comment|/// is not allocatable.  Similarly, tGPR is not a proper sub-class in Thumb
+comment|/// mode because the GPR super-class is not legal.
+name|bool
+name|isProperSubClass
+argument_list|(
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|RC
+argument_list|)
+decl|const
+block|{
+return|return
+name|get
+argument_list|(
+name|RC
+argument_list|)
+operator|.
+name|ProperSubClass
 return|;
 block|}
 comment|/// getLastCalleeSavedAlias - Returns the last callee saved register that

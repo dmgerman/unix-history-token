@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CodeGenFunction.h"
 end_include
 
@@ -82,14 +88,6 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-name|template
-operator|<
-name|class
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
 block|}
 end_decl_stmt
 
@@ -525,8 +523,6 @@ name|CanQualType
 operator|&
 name|ResTy
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|CanQualType
@@ -557,8 +553,6 @@ name|CanQualType
 operator|&
 name|ResTy
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|CanQualType
