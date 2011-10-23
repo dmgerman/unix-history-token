@@ -1092,7 +1092,7 @@ begin_define
 define|#
 directive|define
 name|PR_WAITOK
-value|M_WAIT
+value|M_WAITOK
 end_define
 
 begin_define
