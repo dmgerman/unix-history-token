@@ -4341,6 +4341,8 @@ expr_stmt|;
 else|else
 name|pool_flags
 operator|=
+name|PR_NOWAIT
+operator||
 name|PR_ZERO
 expr_stmt|;
 if|if
