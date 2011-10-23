@@ -164,21 +164,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|vm_reserv_level_iffullpop
-parameter_list|(
-name|m
-parameter_list|)
-value|-1
-end_define
-
 begin_endif
 endif|#
 directive|endif
