@@ -2682,14 +2682,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|callout_init
+name|callout_init_mtx
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_bulk_tmo
 argument_list|,
-name|CALLOUT_MPSAFE
+operator|&
+name|pf_task_mtx
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2979,6 +2982,7 @@ operator|->
 name|sc_bulk_tmo
 argument_list|)
 expr_stmt|;
+comment|/* XXX: need PF_LOCK() before */
 name|timeout_del
 argument_list|(
 operator|&
@@ -15327,7 +15331,7 @@ name|sc_bulk_tmo
 argument_list|,
 literal|1
 argument_list|,
-name|pfsync_bulk_fail
+name|pfsync_bulk_update
 argument_list|,
 name|sc
 argument_list|)
