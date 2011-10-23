@@ -919,6 +919,13 @@ name|j
 index|]
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|devlistp
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
