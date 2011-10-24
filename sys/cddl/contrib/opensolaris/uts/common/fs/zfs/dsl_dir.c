@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_include
@@ -6344,7 +6344,7 @@ modifier|*
 name|mynewname
 decl_stmt|;
 name|boolean_t
-name|islegacy
+name|allowmounted
 decl_stmt|;
 block|}
 struct|;
@@ -6403,13 +6403,13 @@ decl_stmt|;
 name|uint64_t
 name|val
 decl_stmt|;
-comment|/* 	 * There should only be one reference, from dmu_objset_rename(). 	 * Fleeting holds are also possible (eg, from "zfs list" getting 	 * stats), but any that are present in open context will likely 	 * be gone by syncing context, so only fail from syncing 	 * context. 	 * Don't check if we are renaming dataset with mountpoint set to 	 * "legacy" or "none". 	 */
+comment|/* 	 * There should only be one reference, from dmu_objset_rename(). 	 * Fleeting holds are also possible (eg, from "zfs list" getting 	 * stats), but any that are present in open context will likely 	 * be gone by syncing context, so only fail from syncing 	 * context. 	 * Don't check if we allow renaming of busy (mounted) dataset. 	 */
 if|if
 condition|(
 operator|!
 name|ra
 operator|->
-name|islegacy
+name|allowmounted
 operator|&&
 name|dmu_tx_is_syncing
 argument_list|(
@@ -6626,7 +6626,7 @@ name|ASSERT
 argument_list|(
 name|ra
 operator|->
-name|islegacy
+name|allowmounted
 operator|||
 name|dmu_buf_refcount
 argument_list|(
@@ -7071,14 +7071,14 @@ goto|;
 block|}
 name|ra
 operator|.
-name|islegacy
+name|allowmounted
 operator|=
 operator|!
 operator|!
 operator|(
 name|flags
 operator|&
-name|ZFS_RENAME_IS_LEGACY
+name|ZFS_RENAME_ALLOW_MOUNTED
 operator|)
 expr_stmt|;
 name|err
