@@ -2284,6 +2284,25 @@ parameter_list|,
 name|boolean_t
 parameter_list|)
 function_decl|;
+typedef|typedef
+struct|struct
+name|renameflags
+block|{
+comment|/* recursive rename */
+name|int
+name|recurse
+range|:
+literal|1
+decl_stmt|;
+comment|/* don't unmount file systems */
+name|int
+name|nounmount
+range|:
+literal|1
+decl_stmt|;
+block|}
+name|renameflags_t
+typedef|;
 specifier|extern
 name|int
 name|zfs_rename
@@ -2295,7 +2314,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|boolean_t
+name|renameflags_t
+name|flags
 parameter_list|)
 function_decl|;
 typedef|typedef
