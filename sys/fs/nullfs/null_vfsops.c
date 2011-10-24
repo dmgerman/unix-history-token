@@ -819,23 +819,13 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NULLFS_DEBUG
-if|if
-condition|(
-name|VOP_ISLOCKED
+name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|vp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"root vnode is locked.\n"
+argument_list|,
+literal|"root vnode is locked"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vn_lock
 argument_list|(
 name|vp
