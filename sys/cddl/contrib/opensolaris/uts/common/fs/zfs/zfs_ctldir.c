@@ -3391,7 +3391,7 @@ name|from
 argument_list|,
 name|to
 argument_list|,
-name|B_FALSE
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

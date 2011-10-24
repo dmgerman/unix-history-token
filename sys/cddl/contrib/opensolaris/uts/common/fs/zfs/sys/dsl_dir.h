@@ -549,6 +549,9 @@ specifier|const
 name|char
 modifier|*
 name|newname
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 name|int

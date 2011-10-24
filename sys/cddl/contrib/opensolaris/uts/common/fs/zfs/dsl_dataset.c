@@ -12923,8 +12923,8 @@ name|char
 modifier|*
 name|newname
 parameter_list|,
-name|boolean_t
-name|recursive
+name|int
+name|flags
 parameter_list|)
 block|{
 name|dsl_dir_t
@@ -13023,6 +13023,8 @@ argument_list|(
 name|dd
 argument_list|,
 name|newname
+argument_list|,
+name|flags
 argument_list|)
 expr_stmt|;
 name|dsl_dir_close
@@ -13115,7 +13117,9 @@ operator|)
 return|;
 if|if
 condition|(
-name|recursive
+name|flags
+operator|&
+name|ZFS_RENAME_RECURSIVE
 condition|)
 block|{
 name|err

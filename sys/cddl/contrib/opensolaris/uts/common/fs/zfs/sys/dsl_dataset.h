@@ -379,6 +379,15 @@ index|]
 decl_stmt|;
 block|}
 struct|;
+comment|/*  * Flags for dsl_dataset_rename().  */
+define|#
+directive|define
+name|ZFS_RENAME_RECURSIVE
+value|0x01
+define|#
+directive|define
+name|ZFS_RENAME_IS_LEGACY
+value|0x02
 define|#
 directive|define
 name|dsl_dataset_is_snapshot
@@ -671,8 +680,8 @@ name|char
 modifier|*
 name|newname
 parameter_list|,
-name|boolean_t
-name|recursive
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 name|int

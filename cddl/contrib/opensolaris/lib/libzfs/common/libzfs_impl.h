@@ -579,7 +579,12 @@ comment|/*  * Use this changelist_gather() flag to force attempting mounts  * on
 define|#
 directive|define
 name|CL_GATHER_MOUNT_ALWAYS
-value|1
+value|0x01
+comment|/*  * Use this changelist_gather() flag to prevent unmounting of legacy  * file systems. Useful when renaming legacy file systems, where there is  * no need to unmount them.  */
+define|#
+directive|define
+name|CL_GATHER_KEEP_LEGACY
+value|0x02
 typedef|typedef
 name|struct
 name|prop_changelist
