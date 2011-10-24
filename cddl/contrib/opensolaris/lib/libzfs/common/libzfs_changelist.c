@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  *  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_include

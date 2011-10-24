@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_ifndef
