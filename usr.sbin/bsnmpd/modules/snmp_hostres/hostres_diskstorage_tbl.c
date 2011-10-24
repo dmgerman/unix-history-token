@@ -2440,7 +2440,7 @@ name|SNMP_ERR_NOERROR
 operator|)
 return|;
 case|case
-name|LEAF_hrDiskStorageRemoveble
+name|LEAF_hrDiskStorageRemovable
 case|:
 name|value
 operator|->
