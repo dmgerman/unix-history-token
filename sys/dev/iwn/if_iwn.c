@@ -33053,6 +33053,15 @@ name|txa_private
 operator|=
 name|NULL
 expr_stmt|;
+name|sc
+operator|->
+name|sc_addba_stop
+argument_list|(
+name|ni
+argument_list|,
+name|tap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
