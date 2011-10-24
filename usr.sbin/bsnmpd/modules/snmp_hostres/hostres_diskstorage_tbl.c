@@ -1693,7 +1693,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: device '%s' not in "
+literal|"%s: adding device '%s' to "
 literal|"device list"
 argument_list|,
 name|__func__
