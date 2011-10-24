@@ -14419,7 +14419,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|sc
 operator|->
-name|dc_rx_ltag
+name|dc_tx_ltag
 argument_list|,
 name|sc
 operator|->
