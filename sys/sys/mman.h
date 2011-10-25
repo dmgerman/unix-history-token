@@ -298,6 +298,17 @@ begin_comment
 comment|/* dont include these pages in a coredump */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|MAP_PREFAULT_READ
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* prefault mapping for reading */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
