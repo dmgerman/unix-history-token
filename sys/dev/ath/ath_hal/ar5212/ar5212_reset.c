@@ -1793,7 +1793,7 @@ argument_list|,
 name|saveDefAntenna
 argument_list|)
 expr_stmt|;
-comment|/* then our BSSID */
+comment|/* then our BSSID and associate id */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -1822,6 +1822,16 @@ name|ah_bssid
 operator|+
 literal|4
 argument_list|)
+operator||
+operator|(
+name|ahp
+operator|->
+name|ah_assocId
+operator|&
+literal|0x3fff
+operator|)
+operator|<<
+name|AR_BSS_ID1_AID_S
 argument_list|)
 expr_stmt|;
 comment|/* Restore bmiss rssi& count thresholds */
