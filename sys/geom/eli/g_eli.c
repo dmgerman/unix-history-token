@@ -3428,7 +3428,7 @@ name|md
 operator|->
 name|md_version
 operator|<
-literal|4
+name|G_ELI_VERSION_04
 condition|)
 name|sc
 operator|->
@@ -3442,7 +3442,7 @@ name|md
 operator|->
 name|md_version
 operator|<
-literal|5
+name|G_ELI_VERSION_05
 condition|)
 name|sc
 operator|->
@@ -3456,7 +3456,7 @@ name|md
 operator|->
 name|md_version
 operator|<
-literal|6
+name|G_ELI_VERSION_06
 operator|&&
 operator|(
 name|sc
@@ -3468,12 +3468,14 @@ operator|)
 operator|!=
 literal|0
 condition|)
+block|{
 name|sc
 operator|->
 name|sc_flags
 operator||=
 name|G_ELI_FLAG_FIRST_KEY
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|sc_ealgo
