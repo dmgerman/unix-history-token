@@ -241,6 +241,11 @@ name|qflag
 init|=
 literal|0
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|etc_fstab
+decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -301,6 +306,10 @@ name|doall
 operator|=
 literal|0
 expr_stmt|;
+name|etc_fstab
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -312,7 +321,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AadghklmqsU"
+literal|"AadghklmqsUF:"
 argument_list|)
 operator|)
 operator|!=
@@ -485,6 +494,14 @@ expr_stmt|;
 block|}
 break|break;
 case|case
+literal|'F'
+case|:
+name|etc_fstab
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -500,6 +517,17 @@ expr_stmt|;
 name|stat
 operator|=
 literal|0
+expr_stmt|;
+if|if
+condition|(
+name|etc_fstab
+operator|!=
+name|NULL
+condition|)
+name|setfstab
+argument_list|(
+name|etc_fstab
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -841,7 +869,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-aq | file ...\n"
+literal|"[-F fstab] -aq | file ...\n"
 argument_list|)
 expr_stmt|;
 break|break;
