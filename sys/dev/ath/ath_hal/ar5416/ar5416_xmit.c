@@ -1441,12 +1441,6 @@ comment|/* !firstSeg&& lastSeg */
 comment|/* 		 * Last descriptor in a multi-descriptor frame, 		 * copy the multi-rate transmit parameters from 		 * the first frame for processing on completion.  		 */
 name|ads
 operator|->
-name|ds_ctl0
-operator|=
-literal|0
-expr_stmt|;
-name|ads
-operator|->
 name|ds_ctl1
 operator|=
 name|segLen
@@ -1454,6 +1448,22 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|AH_NEED_DESC_SWAP
+name|ads
+operator|->
+name|ds_ctl0
+operator|=
+name|__bswap32
+argument_list|(
+name|AR5416DESC_CONST
+argument_list|(
+name|ds0
+argument_list|)
+operator|->
+name|ds_ctl0
+argument_list|)
+operator|&
+name|AR_TxIntrReq
+expr_stmt|;
 name|ads
 operator|->
 name|ds_ctl2
@@ -1486,6 +1496,19 @@ else|#
 directive|else
 name|ads
 operator|->
+name|ds_ctl0
+operator|=
+name|AR5416DESC_CONST
+argument_list|(
+name|ds0
+argument_list|)
+operator|->
+name|ds_ctl0
+operator|&
+name|AR_TxIntrReq
+expr_stmt|;
+name|ads
+operator|->
 name|ds_ctl2
 operator|=
 name|AR5416DESC_CONST
@@ -1513,12 +1536,42 @@ else|else
 block|{
 comment|/* !firstSeg&& !lastSeg */
 comment|/* 		 * Intermediate descriptor in a multi-descriptor frame. 		 */
+ifdef|#
+directive|ifdef
+name|AH_NEED_DESC_SWAP
 name|ads
 operator|->
 name|ds_ctl0
 operator|=
-literal|0
+name|__bswap32
+argument_list|(
+name|AR5416DESC_CONST
+argument_list|(
+name|ds0
+argument_list|)
+operator|->
+name|ds_ctl0
+argument_list|)
+operator|&
+name|AR_TxIntrReq
 expr_stmt|;
+else|#
+directive|else
+name|ads
+operator|->
+name|ds_ctl0
+operator|=
+name|AR5416DESC_CONST
+argument_list|(
+name|ds0
+argument_list|)
+operator|->
+name|ds_ctl0
+operator|&
+name|AR_TxIntrReq
+expr_stmt|;
+endif|#
+directive|endif
 name|ads
 operator|->
 name|ds_ctl1
@@ -1568,6 +1621,10 @@ name|AH_TRUE
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * NB: cipher is no longer used, it's calculated.  */
+end_comment
 
 begin_function
 name|HAL_BOOL
@@ -1693,12 +1750,7 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|!
-name|firstSeg
-condition|)
-block|{
+comment|/* 	 * Since this function is called before any of the other 	 * descriptor setup functions (at least in this particular 	 * 802.11n aggregation implementation), always bzero() the 	 * descriptor. Previously this would be done for all but 	 * the first segment. 	 * XXX TODO: figure out why; perhaps I'm using this slightly 	 * XXX incorrectly. 	 */
 name|OS_MEMZERO
 argument_list|(
 name|ds
@@ -1708,7 +1760,7 @@ argument_list|,
 name|AR5416_DESC_TX_CTL_SZ
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* 	 * Note: VEOL should only be for the last descriptor in the chain. 	 */
 name|ads
 operator|->
 name|ds_ctl0
@@ -1782,14 +1834,14 @@ block|}
 name|ads
 operator|->
 name|ds_ctl6
-operator|=
+operator||=
 name|SM
 argument_list|(
 name|ahp
 operator|->
 name|ah_keytype
 index|[
-name|cipher
+name|keyIx
 index|]
 argument_list|,
 name|AR_EncrType
