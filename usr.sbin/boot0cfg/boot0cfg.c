@@ -1932,7 +1932,7 @@ name|gctl_ro_param
 argument_list|(
 name|grq
 argument_list|,
-literal|"geom"
+literal|"arg0"
 argument_list|,
 operator|-
 literal|1
