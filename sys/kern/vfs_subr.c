@@ -4486,7 +4486,7 @@ name|vp
 operator|->
 name|v_data
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
