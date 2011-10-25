@@ -14811,7 +14811,7 @@ operator||=
 name|BGE_FLAG_TSO
 expr_stmt|;
 block|}
-comment|/* 	 * Check if this is a PCI-X or PCI Express device.   	 */
+comment|/* 	 * Check if this is a PCI-X or PCI Express device. 	 */
 if|if
 condition|(
 name|pci_find_cap
