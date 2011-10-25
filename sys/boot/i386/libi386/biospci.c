@@ -981,13 +981,12 @@ expr_stmt|;
 comment|/* Check for OK response */
 if|if
 condition|(
-operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|1
-operator|)
+argument_list|)
 operator|||
 operator|(
 operator|(
@@ -1379,13 +1378,12 @@ expr_stmt|;
 comment|/* error */
 if|if
 condition|(
-operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|1
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|v86
@@ -1481,13 +1479,12 @@ expr_stmt|;
 comment|/* error */
 if|if
 condition|(
-operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|1
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|v86
@@ -1567,13 +1564,12 @@ expr_stmt|;
 comment|/* error */
 if|if
 condition|(
-operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|1
-operator|)
+argument_list|)
 operator|||
 operator|(
 name|v86

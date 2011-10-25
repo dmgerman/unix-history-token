@@ -1168,11 +1168,12 @@ if|if
 condition|(
 operator|!
 operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|0x1
+argument_list|)
 operator|)
 operator|&&
 comment|/* carry clear */
@@ -1273,11 +1274,12 @@ if|if
 condition|(
 operator|!
 operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|0x1
+argument_list|)
 operator|)
 operator|&&
 comment|/* carry clear */
@@ -2960,7 +2962,7 @@ name|ENOMEM
 operator|)
 return|;
 block|}
-comment|/* Look up BIOS unit number, intialise open_disk structure */
+comment|/* Look up BIOS unit number, initalise open_disk structure */
 name|od
 operator|->
 name|od_dkunit
@@ -6007,11 +6009,12 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|0x1
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6210,11 +6213,12 @@ argument_list|()
 expr_stmt|;
 return|return
 operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|0x1
+argument_list|)
 operator|)
 return|;
 block|}
@@ -6828,11 +6832,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|0x1
+argument_list|)
 operator|)
 operator|||
 comment|/* carry set */
@@ -6995,11 +7000,12 @@ argument_list|()
 expr_stmt|;
 if|if
 condition|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-literal|0x1
+argument_list|)
 condition|)
 return|return
 literal|0x4f010f
