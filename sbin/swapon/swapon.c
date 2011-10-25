@@ -217,7 +217,7 @@ modifier|*
 name|ptr
 decl_stmt|;
 name|int
-name|stat
+name|ret
 decl_stmt|;
 name|int
 name|ch
@@ -514,7 +514,7 @@ name|argv
 operator|+=
 name|optind
 expr_stmt|;
-name|stat
+name|ret
 operator|=
 literal|0
 expr_stmt|;
@@ -593,7 +593,7 @@ literal|1
 argument_list|)
 condition|)
 block|{
-name|stat
+name|ret
 operator|=
 literal|1
 expr_stmt|;
@@ -661,7 +661,7 @@ literal|0
 argument_list|)
 condition|)
 block|{
-name|stat
+name|ret
 operator|=
 literal|1
 expr_stmt|;
@@ -720,7 +720,7 @@ expr_stmt|;
 block|}
 name|exit
 argument_list|(
-name|stat
+name|ret
 argument_list|)
 expr_stmt|;
 block|}
