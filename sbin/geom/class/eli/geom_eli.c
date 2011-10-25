@@ -20,7 +20,13 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/mman.h>
 end_include
 
 begin_include
@@ -32,55 +38,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdbool.h>
+file|<sys/resource.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdio.h>
+file|<opencrypto/cryptodev.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<assert.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<stdlib.h>
+file|<err.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<unistd.h>
+file|<errno.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<fcntl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<readpassphrase.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<string.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<strings.h>
 end_include
 
 begin_include
@@ -98,37 +86,49 @@ end_include
 begin_include
 include|#
 directive|include
-file|<errno.h>
+file|<readpassphrase.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<assert.h>
+file|<stdbool.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<stdint.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/mman.h>
+file|<stdio.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/resource.h>
+file|<stdlib.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<opencrypto/cryptodev.h>
+file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<strings.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<unistd.h>
 end_include
 
 begin_include
