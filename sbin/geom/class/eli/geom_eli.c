@@ -1690,7 +1690,7 @@ end_function
 
 begin_function
 specifier|static
-name|int
+name|bool
 name|eli_is_attached
 parameter_list|(
 specifier|const
@@ -1704,9 +1704,6 @@ name|name
 index|[
 name|MAXPATHLEN
 index|]
-decl_stmt|;
-name|unsigned
-name|secsize
 decl_stmt|;
 comment|/* 	 * Not the best way to do it, but the easiest. 	 * We try to open provider and check if it is a GEOM provider 	 * by asking about its sectorsize. 	 */
 name|snprintf
@@ -1725,26 +1722,13 @@ argument_list|,
 name|G_ELI_SUFFIX
 argument_list|)
 expr_stmt|;
-name|secsize
-operator|=
+return|return
+operator|(
 name|g_get_sectorsize
 argument_list|(
 name|name
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|secsize
 operator|>
-literal|0
-condition|)
-return|return
-operator|(
-literal|1
-operator|)
-return|;
-return|return
-operator|(
 literal|0
 operator|)
 return|;
