@@ -7353,12 +7353,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x1
+name|BGE_FW_DRV_STATE_START
 argument_list|)
 expr_stmt|;
-comment|/* START */
 break|break;
 case|case
 name|BGE_RESET_STOP
@@ -7367,12 +7366,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x2
+name|BGE_FW_DRV_STATE_UNLOAD
 argument_list|)
 expr_stmt|;
-comment|/* UNLOAD */
 break|break;
 block|}
 block|}
@@ -7414,9 +7412,9 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x80000001
+name|BGE_FW_DRV_STATE_START_DONE
 argument_list|)
 expr_stmt|;
 comment|/* START DONE */
@@ -7428,9 +7426,9 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x80000002
+name|BGE_FW_DRV_STATE_UNLOAD_DONE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7472,12 +7470,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x1
+name|BGE_FW_DRV_STATE_START
 argument_list|)
 expr_stmt|;
-comment|/* START */
 break|break;
 case|case
 name|BGE_RESET_STOP
@@ -7486,12 +7483,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x2
+name|BGE_FW_DRV_STATE_UNLOAD
 argument_list|)
 expr_stmt|;
-comment|/* UNLOAD */
 break|break;
 block|}
 block|}
