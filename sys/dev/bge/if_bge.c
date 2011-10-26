@@ -14569,6 +14569,21 @@ name|bge_flags
 operator||=
 name|BGE_FLAG_SHORT_DMA_BUG
 expr_stmt|;
+comment|/* 	 * BCM5719 cannot handle DMA requests for DMA segments that 	 * have larger than 4KB in size.  However the maximum DMA 	 * segment size created in DMA tag is 4KB for TSO, so we 	 * wouldn't encounter the issue here. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5719
+condition|)
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_4K_RDMA_BUG
+expr_stmt|;
 name|misccfg
 operator|=
 name|CSR_READ_4
