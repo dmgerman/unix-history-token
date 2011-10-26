@@ -2315,6 +2315,9 @@ case|:
 case|case
 name|UPS_PORT_LS_U1
 case|:
+case|case
+name|UPS_PORT_LS_RESUME
+case|:
 name|is_suspend
 operator|=
 literal|0
