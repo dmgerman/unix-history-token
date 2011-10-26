@@ -14562,16 +14562,7 @@ name|bge_mi_mode
 operator||=
 name|BGE_MIMODE_AUTOPOLL
 expr_stmt|;
-comment|/* 	 * All controllers that are not 5755 or higher have 4GB 	 * boundary DMA bug. 	 * Whenever an address crosses a multiple of the 4GB boundary 	 * (including 4GB, 8Gb, 12Gb, etc.) and makes the transition 	 * from 0xX_FFFF_FFFF to 0x(X+1)_0000_0000 an internal DMA 	 * state machine will lockup and cause the device to hang. 	 */
-if|if
-condition|(
-name|BGE_IS_5755_PLUS
-argument_list|(
-name|sc
-argument_list|)
-operator|==
-literal|0
-condition|)
+comment|/* 	 * All Broadcom controllers have 4GB boundary DMA bug. 	 * Whenever an address crosses a multiple of the 4GB boundary 	 * (including 4GB, 8Gb, 12Gb, etc.) and makes the transition 	 * from 0xX_FFFF_FFFF to 0x(X+1)_0000_0000 an internal DMA 	 * state machine will lockup and cause the device to hang. 	 */
 name|sc
 operator|->
 name|bge_flags
