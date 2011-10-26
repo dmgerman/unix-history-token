@@ -7327,9 +7327,9 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 argument_list|,
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 argument_list|)
 expr_stmt|;
 if|if
@@ -7523,7 +7523,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_FW
+name|BGE_SRAM_FW_CMD_MB
 argument_list|,
 name|BGE_FW_PAUSE
 argument_list|)
@@ -15199,10 +15199,10 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_SIG
+name|BGE_SRAM_DATA_SIG
 argument_list|)
 operator|==
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_DATA_SIG_MAGIC
 operator|)
 condition|)
 block|{
@@ -15212,7 +15212,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_NICCFG
+name|BGE_SRAM_DATA_CFG
 argument_list|)
 operator|&
 name|BGE_HWCFG_ASF
@@ -15705,10 +15705,10 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_SIG
+name|BGE_SRAM_DATA_SIG
 argument_list|)
 operator|==
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_DATA_SIG_MAGIC
 condition|)
 name|hwcfg
 operator|=
@@ -15716,7 +15716,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_NICCFG
+name|BGE_SRAM_DATA_CFG
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -16810,14 +16810,14 @@ literal|0x0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Write the magic number to SRAM at offset 0xB50. 	 * When firmware finishes its initialization it will 	 * write ~BGE_MAGIC_NUMBER to the same location. 	 */
+comment|/* 	 * Write the magic number to SRAM at offset 0xB50. 	 * When firmware finishes its initialization it will 	 * write ~BGE_SRAM_FW_MB_MAGIC to the same location. 	 */
 name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 argument_list|,
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 argument_list|)
 expr_stmt|;
 name|reset
@@ -17432,7 +17432,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 argument_list|)
 expr_stmt|;
 if|if
@@ -17440,7 +17440,7 @@ condition|(
 name|val
 operator|==
 operator|~
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 condition|)
 break|break;
 block|}
@@ -19951,7 +19951,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_FW
+name|BGE_SRAM_FW_CMD_MB
 argument_list|,
 name|BGE_FW_DRV_ALIVE
 argument_list|)
@@ -19960,7 +19960,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENNCOMM_FW_LEN
+name|BGE_SRAM_FW_CMD_LEN_MB
 argument_list|,
 literal|4
 argument_list|)
@@ -19969,7 +19969,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENNCOMM_FW_DATA
+name|BGE_SRAM_FW_CMD_DATA_MB
 argument_list|,
 literal|3
 argument_list|)

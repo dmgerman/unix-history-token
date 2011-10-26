@@ -80,42 +80,42 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 value|0x00000B50
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM_SIG
+name|BGE_SRAM_DATA_SIG
 value|0x00000B54
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM_NICCFG
+name|BGE_SRAM_DATA_CFG
 value|0x00000B58
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM_FW
+name|BGE_SRAM_FW_CMD_MB
 value|0x00000B78
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENNCOMM_FW_LEN
+name|BGE_SRAM_FW_CMD_LEN_MB
 value|0x00000B7C
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENNCOMM_FW_DATA
+name|BGE_SRAM_FW_CMD_DATA_MB
 value|0x00000B80
 end_define
 
@@ -177,6 +177,17 @@ end_define
 
 begin_comment
 comment|/* Firmware interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_SRAM_DATA_SIG_MAGIC
+value|0x4B657654
+end_define
+
+begin_comment
+comment|/* 'KevT' */
 end_comment
 
 begin_define
@@ -11845,13 +11856,13 @@ value|do {								\ 		pci_write_config(sc->bge_dev, BGE_PCI_MEMWIN_BASEADDR,	\ 	
 end_define
 
 begin_comment
-comment|/*  * This magic number is written to the firmware mailbox at 0xb50  * before a software reset is issued.  After the internal firmware  * has completed its initialization it will write the opposite of  * this value, ~BGE_MAGIC_NUMBER, to the same location, allowing the  * driver to synchronize with the firmware.  */
+comment|/*  * This magic number is written to the firmware mailbox at 0xb50  * before a software reset is issued.  After the internal firmware  * has completed its initialization it will write the opposite of  * this value, ~BGE_SRAM_FW_MB_MAGIC, to the same location,  * allowing the driver to synchronize with the firmware.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 value|0x4B657654
 end_define
 
