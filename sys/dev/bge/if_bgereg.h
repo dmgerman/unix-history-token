@@ -10913,8 +10913,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_CPU_EVENT
+name|BGE_RX_CPU_EVENT
 value|0x6810
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TX_CPU_EVENT
+value|0x6820
 end_define
 
 begin_define
