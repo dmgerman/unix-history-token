@@ -16887,6 +16887,16 @@ name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|bge_flags
+operator|&
+name|BGE_FLAG_CPMU_PRESENT
+operator|)
+operator|==
+literal|0
 condition|)
 name|reset
 operator||=
