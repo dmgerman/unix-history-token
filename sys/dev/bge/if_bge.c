@@ -28819,7 +28819,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x0c14
+name|BGE_SRAM_MAC_ADDR_HIGH_MB
 argument_list|)
 expr_stmt|;
 if|if
@@ -28863,7 +28863,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x0c18
+name|BGE_SRAM_MAC_ADDR_LOW_MB
 argument_list|)
 expr_stmt|;
 name|ether_addr
