@@ -263,6 +263,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_FW_HB_TIMEOUT_SEC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_FW_DRV_STATE_START
 value|0x00000001
 end_define

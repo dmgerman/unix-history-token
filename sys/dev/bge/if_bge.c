@@ -19959,7 +19959,7 @@ name|sc
 argument_list|,
 name|BGE_SRAM_FW_CMD_DATA_MB
 argument_list|,
-literal|3
+name|BGE_FW_HB_TIMEOUT_SEC
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
