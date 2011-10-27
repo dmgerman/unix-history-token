@@ -11050,6 +11050,13 @@ name|BGE_FASTBOOT_PC
 value|0x6894
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_RX_CPU_DRV_EVENT
+value|0x00004000
+end_define
+
 begin_comment
 comment|/*  * NVRAM Control registers  */
 end_comment
