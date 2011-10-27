@@ -6040,6 +6040,7 @@ break|break;
 block|}
 if|if
 condition|(
+operator|!
 name|refcount_release
 argument_list|(
 operator|&
@@ -6048,7 +6049,7 @@ operator|->
 name|hio_countdown
 argument_list|)
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 name|ISSYNCREQ
@@ -6099,7 +6100,6 @@ argument_list|,
 name|done
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* NOTREACHED */
@@ -7625,6 +7625,7 @@ name|done_queue
 label|:
 if|if
 condition|(
+operator|!
 name|refcount_release
 argument_list|(
 operator|&
@@ -7633,7 +7634,7 @@ operator|->
 name|hio_countdown
 argument_list|)
 condition|)
-block|{
+continue|continue;
 if|if
 condition|(
 name|ISSYNCREQ
@@ -7684,7 +7685,6 @@ argument_list|,
 name|done
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 comment|/* NOTREACHED */
