@@ -7521,7 +7521,7 @@ name|sc
 argument_list|,
 name|BGE_SRAM_FW_CMD_MB
 argument_list|,
-name|BGE_FW_PAUSE
+name|BGE_FW_CMD_PAUSE
 argument_list|)
 expr_stmt|;
 name|CSR_WRITE_4
@@ -19949,7 +19949,7 @@ name|sc
 argument_list|,
 name|BGE_SRAM_FW_CMD_MB
 argument_list|,
-name|BGE_FW_DRV_ALIVE
+name|BGE_FW_CMD_DRV_ALIVE
 argument_list|)
 expr_stmt|;
 name|bge_writemem_ind
