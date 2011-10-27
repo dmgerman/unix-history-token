@@ -9067,7 +9067,7 @@ name|pjdlog_debug
 argument_list|(
 literal|2
 argument_list|,
-literal|"sync: (%p) Moving request to the send queues."
+literal|"sync: (%p) Moving request to the send queue."
 argument_list|,
 name|hio
 argument_list|)
