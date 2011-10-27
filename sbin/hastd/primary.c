@@ -4760,7 +4760,7 @@ name|ncomp
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * A race is possible between dropping rlock and acquiring wlock - 	 * another thread can close connection in-between. 	 */
+comment|/* 	 * Check for a race between dropping rlock and acquiring wlock - 	 * another thread can close connection in-between. 	 */
 if|if
 condition|(
 operator|!
