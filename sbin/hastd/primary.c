@@ -6664,15 +6664,6 @@ goto|goto
 name|done_queue
 goto|;
 block|}
-name|pjdlog_debug
-argument_list|(
-literal|2
-argument_list|,
-literal|"remote_send: (%p) Moving request to the recv queue."
-argument_list|,
-name|hio
-argument_list|)
-expr_stmt|;
 comment|/* 		 * Protect connection from disappearing. 		 */
 name|rw_rlock
 argument_list|(
@@ -6717,6 +6708,15 @@ name|done_queue
 goto|;
 block|}
 comment|/* 		 * Move the request to recv queue before sending it, because 		 * in different order we can get reply before we move request 		 * to recv queue. 		 */
+name|pjdlog_debug
+argument_list|(
+literal|2
+argument_list|,
+literal|"remote_send: (%p) Moving request to the recv queue."
+argument_list|,
+name|hio
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -7409,6 +7409,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+name|ggio
+operator|=
+operator|&
+name|hio
+operator|->
+name|hio_ggio
+expr_stmt|;
 name|error
 operator|=
 name|nv_get_int16
@@ -7441,10 +7448,7 @@ name|LOG_WARNING
 argument_list|,
 literal|0
 argument_list|,
-operator|&
-name|hio
-operator|->
-name|hio_ggio
+name|ggio
 argument_list|,
 literal|"Remote request failed (%s): "
 argument_list|,
@@ -7463,13 +7467,6 @@ goto|goto
 name|done_queue
 goto|;
 block|}
-name|ggio
-operator|=
-operator|&
-name|hio
-operator|->
-name|hio_ggio
-expr_stmt|;
 switch|switch
 condition|(
 name|ggio
