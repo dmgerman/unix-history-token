@@ -5259,22 +5259,20 @@ operator|->
 name|hr_resuid
 operator|==
 literal|0
+operator|&&
+name|res
+operator|->
+name|hr_primary_localcnt
+operator|==
+literal|0
 condition|)
 block|{
-comment|/* 				 * This is first write, initialize localcnt and 				 * resuid. 				 */
+comment|/* This is first write. */
 name|res
 operator|->
 name|hr_primary_localcnt
 operator|=
 literal|1
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|init_resuid
-argument_list|(
-name|res
-argument_list|)
 expr_stmt|;
 block|}
 for|for
