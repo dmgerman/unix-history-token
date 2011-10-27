@@ -84,6 +84,12 @@ directive|include
 file|"opt_netgraph.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_kdb.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -1098,7 +1104,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Accessing freed hook "
+literal|"Accessing freed "
 argument_list|)
 expr_stmt|;
 name|dumphook
@@ -2842,7 +2848,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Accessing freed node "
+literal|"Accessing freed "
 argument_list|)
 expr_stmt|;
 name|dumpnode
