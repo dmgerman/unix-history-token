@@ -3353,7 +3353,7 @@ end_endif
 
 begin_function
 name|int
-name|cpuset
+name|sys_cpuset
 parameter_list|(
 name|struct
 name|thread
@@ -3509,7 +3509,7 @@ end_endif
 
 begin_function
 name|int
-name|cpuset_setid
+name|sys_cpuset_setid
 parameter_list|(
 name|struct
 name|thread
@@ -3618,7 +3618,7 @@ decl_stmt|;
 endif|#
 directive|endif
 name|int
-name|cpuset_getid
+name|sys_cpuset_getid
 parameter_list|(
 name|struct
 name|thread
@@ -3864,7 +3864,7 @@ struct|;
 endif|#
 directive|endif
 name|int
-name|cpuset_getaffinity
+name|sys_cpuset_getaffinity
 parameter_list|(
 name|struct
 name|thread
@@ -4273,7 +4273,7 @@ struct|;
 endif|#
 directive|endif
 name|int
-name|cpuset_setaffinity
+name|sys_cpuset_setaffinity
 parameter_list|(
 name|struct
 name|thread

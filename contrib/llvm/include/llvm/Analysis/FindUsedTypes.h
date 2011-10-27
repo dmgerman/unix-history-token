@@ -89,7 +89,6 @@ name|ModulePass
 block|{
 name|SetVector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -125,7 +124,6 @@ comment|///
 specifier|const
 name|SetVector
 operator|<
-specifier|const
 name|Type
 operator|*
 operator|>
@@ -159,7 +157,6 @@ comment|///
 name|void
 name|IncorporateType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty

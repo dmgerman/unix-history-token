@@ -1368,10 +1368,6 @@ name|int
 operator|)
 name|x
 expr_stmt|;
-name|t
-operator|=
-name|zero
-expr_stmt|;
 name|y
 operator|=
 name|x

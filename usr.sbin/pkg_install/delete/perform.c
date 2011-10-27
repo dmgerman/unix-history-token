@@ -1603,8 +1603,10 @@ name|FAIL
 condition|)
 name|warnx
 argument_list|(
-literal|"couldn't entirely delete package (perhaps the packing list is\n"
-literal|"incorrectly specified?)"
+literal|"couldn't entirely delete package `%s'\n"
+literal|"(perhaps the packing list is incorrectly specified?)"
+argument_list|,
+name|pkg
 argument_list|)
 expr_stmt|;
 if|if

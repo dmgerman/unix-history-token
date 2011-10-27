@@ -449,6 +449,16 @@ comment|// Pass ID, replacement for typeid
 name|IVUsers
 argument_list|()
 block|;
+name|Loop
+operator|*
+name|getLoop
+argument_list|()
+specifier|const
+block|{
+return|return
+name|L
+return|;
+block|}
 comment|/// AddUsersIfInteresting - Inspect the specified Instruction.  If it is a
 comment|/// reducible SCEV, recursively add its users to the IVUsesByStride set and
 comment|/// return true.  Otherwise, return false.

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- AlphaMCTargetDesc.h - Alpha Target Descriptions ---------*- C++ -*-===//
+comment|//===-- MipsMCTargetDesc.h - Mips Target Descriptions -----------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// This file provides Alpha specific target descriptions.
+comment|// This file provides Mips specific target descriptions.
 end_comment
 
 begin_comment
@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALPHAMCTARGETDESC_H
+name|MIPSMCTARGETDESC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ALPHAMCTARGETDESC_H
+name|MIPSMCTARGETDESC_H
 end_define
 
 begin_decl_stmt
@@ -64,13 +64,25 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|MCAsmBackend
+decl_stmt|;
+name|class
+name|MCInstrInfo
+decl_stmt|;
+name|class
+name|MCCodeEmitter
+decl_stmt|;
+name|class
+name|MCContext
+decl_stmt|;
+name|class
 name|MCSubtargetInfo
 decl_stmt|;
 name|class
-name|Target
+name|StringRef
 decl_stmt|;
 name|class
-name|StringRef
+name|Target
 decl_stmt|;
 specifier|extern
 name|Target
@@ -80,6 +92,46 @@ specifier|extern
 name|Target
 name|TheMipselTarget
 decl_stmt|;
+specifier|extern
+name|Target
+name|TheMips64Target
+decl_stmt|;
+specifier|extern
+name|Target
+name|TheMips64elTarget
+decl_stmt|;
+name|MCCodeEmitter
+modifier|*
+name|createMipsMCCodeEmitter
+parameter_list|(
+specifier|const
+name|MCInstrInfo
+modifier|&
+name|MCII
+parameter_list|,
+specifier|const
+name|MCSubtargetInfo
+modifier|&
+name|STI
+parameter_list|,
+name|MCContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+name|MCAsmBackend
+modifier|*
+name|createMipsAsmBackend
+parameter_list|(
+specifier|const
+name|Target
+modifier|&
+name|T
+parameter_list|,
+name|StringRef
+name|TT
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

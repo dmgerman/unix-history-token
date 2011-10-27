@@ -1399,6 +1399,13 @@ name|vap
 operator|->
 name|iv_tdma
 decl_stmt|;
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|vap
+operator|->
+name|iv_ic
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(

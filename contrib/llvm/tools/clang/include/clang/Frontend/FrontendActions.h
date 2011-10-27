@@ -86,7 +86,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|;
 name|public
@@ -123,7 +123,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|; }
 block|;
@@ -142,7 +142,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|; }
 block|;
@@ -161,7 +161,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|; }
 block|;
@@ -180,7 +180,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|; }
 block|;
@@ -199,7 +199,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|; }
 block|;
@@ -209,6 +209,9 @@ operator|:
 name|public
 name|ASTFrontendAction
 block|{
+name|bool
+name|MakeModule
+block|;
 name|protected
 operator|:
 name|virtual
@@ -218,16 +221,20 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|;
 name|virtual
-name|bool
-name|usesCompleteTranslationUnit
+name|TranslationUnitKind
+name|getTranslationUnitKind
 argument_list|()
 block|{
 return|return
-name|false
+name|MakeModule
+operator|?
+name|TU_Module
+operator|:
+name|TU_Prefix
 return|;
 block|}
 name|virtual
@@ -242,6 +249,18 @@ return|;
 block|}
 name|public
 operator|:
+comment|/// \brief Create a new action
+name|explicit
+name|GeneratePCHAction
+argument_list|(
+argument|bool MakeModule
+argument_list|)
+operator|:
+name|MakeModule
+argument_list|(
+argument|MakeModule
+argument_list|)
+block|{ }
 comment|/// \brief Compute the AST consumer arguments that will be used to
 comment|/// create the PCHGenerator instance returned by CreateASTConsumer.
 comment|///
@@ -252,15 +271,13 @@ name|ComputeASTConsumerArguments
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|,
 argument|std::string&Sysroot
 argument_list|,
 argument|std::string&OutputFile
 argument_list|,
-argument|llvm::raw_ostream *&OS
-argument_list|,
-argument|bool&Chaining
+argument|raw_ostream *&OS
 argument_list|)
 block|; }
 block|;
@@ -279,7 +296,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|;
 name|public
@@ -328,7 +345,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|;
 name|virtual
@@ -337,7 +354,7 @@ name|BeginSourceFileAction
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef Filename
+argument|StringRef Filename
 argument_list|)
 block|;
 name|virtual
@@ -373,8 +390,8 @@ argument_list|()
 specifier|const
 block|;
 name|virtual
-name|bool
-name|usesCompleteTranslationUnit
+name|TranslationUnitKind
+name|getTranslationUnitKind
 argument_list|()
 block|;
 name|virtual
@@ -415,7 +432,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&
 argument_list|,
-argument|llvm::StringRef
+argument|StringRef
 argument_list|)
 block|{
 return|return

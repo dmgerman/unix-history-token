@@ -468,6 +468,10 @@ name|BlockInterference
 modifier|*
 name|Current
 decl_stmt|;
+specifier|static
+name|BlockInterference
+name|NoInterference
+decl_stmt|;
 name|void
 name|setEntry
 parameter_list|(
@@ -629,11 +633,16 @@ block|{
 name|Current
 operator|=
 name|CacheEntry
+condition|?
+name|CacheEntry
 operator|->
 name|get
 argument_list|(
 name|MBBNum
 argument_list|)
+else|:
+operator|&
+name|NoInterference
 expr_stmt|;
 block|}
 comment|/// hasInterference - Return true if the current block has any interference.

@@ -16,7 +16,7 @@ name|_MACHINE_IEEEFP_H_
 end_define
 
 begin_comment
-comment|/*  * IEEE floating point type, constant and function definitions.  * XXX: {FP,SSE}*FLD and {FP,SSE}*OFF are undocumented pollution.  */
+comment|/*  * Deprecated historical FPU control interface  *  * IEEE floating point type, constant and function definitions.  * XXX: {FP,SSE}*FLD and {FP,SSE}*OFF are undocumented pollution.  */
 end_comment
 
 begin_ifndef
@@ -1118,17 +1118,6 @@ parameter_list|)
 value|__fpsetround(m)
 end_define
 
-begin_comment
-comment|/* Suppress prototypes in the MI header. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_IEEEFP_INLINED_
-value|1
-end_define
-
 begin_else
 else|#
 directive|else
@@ -1144,6 +1133,66 @@ end_comment
 
 begin_function_decl
 name|__BEGIN_DECLS
+specifier|extern
+name|fp_rnd_t
+name|fpgetround
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|fp_rnd_t
+name|fpsetround
+parameter_list|(
+name|fp_rnd_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|fp_except_t
+name|fpgetmask
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|fp_except_t
+name|fpsetmask
+parameter_list|(
+name|fp_except_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|fp_except_t
+name|fpgetsticky
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|fp_except_t
+name|fpsetsticky
+parameter_list|(
+name|fp_except_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|fp_prec_t
 name|fpgetprec
 parameter_list|(

@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/OptSpecifier.h"
 end_include
 
@@ -87,20 +93,10 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|Twine
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|namespace
 name|driver
@@ -119,8 +115,6 @@ name|class
 name|arg_iterator
 block|{
 comment|/// The current argument.
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|Arg
@@ -192,7 +186,7 @@ name|difference_type
 expr_stmt|;
 name|arg_iterator
 argument_list|(
-argument|llvm::SmallVectorImpl<Arg*>::const_iterator it
+argument|SmallVectorImpl<Arg*>::const_iterator it
 argument_list|,
 argument|const ArgList&_Args
 argument_list|,
@@ -388,8 +382,6 @@ comment|// DO NOT IMPLEMENT
 name|public
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Arg
@@ -637,6 +629,17 @@ argument_list|)
 return|;
 block|}
 comment|/// @}
+comment|/// @name Arg Removal
+comment|/// @{
+comment|/// eraseArg - Remove any option matching \arg Id.
+name|void
+name|eraseArg
+parameter_list|(
+name|OptSpecifier
+name|Id
+parameter_list|)
+function_decl|;
+comment|/// @}
 comment|/// @name Arg Access
 comment|/// @{
 comment|/// hasArg - Does the arg list contain any option matching \arg Id.
@@ -820,18 +823,19 @@ comment|/// @}
 comment|/// @name Argument Lookup Utilities
 comment|/// @{
 comment|/// getLastArgValue - Return the value of the last argument, or a default.
-name|llvm
-operator|::
 name|StringRef
 name|getLastArgValue
 argument_list|(
-argument|OptSpecifier Id
+name|OptSpecifier
+name|Id
 argument_list|,
-argument|llvm::StringRef Default =
+name|StringRef
+name|Default
+operator|=
 literal|""
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// getLastArgValue - Return the value of the last argument as an integer,
 comment|/// or a default. Emits an error if the argument is given, but non-integral.
 name|int
@@ -843,7 +847,7 @@ argument_list|,
 name|int
 name|Default
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|)
@@ -988,6 +992,13 @@ name|Id0
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// ClaimAllArgs - Claim all arguments.
+comment|///
+name|void
+name|ClaimAllArgs
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// @}
 comment|/// @name Arg Synthesis
 comment|/// @{
@@ -999,8 +1010,6 @@ name|char
 modifier|*
 name|MakeArgString
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Str
 argument_list|)
@@ -1023,8 +1032,6 @@ block|{
 return|return
 name|MakeArgString
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 argument_list|(
 name|Str
@@ -1047,8 +1054,6 @@ block|{
 return|return
 name|MakeArgString
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 argument_list|(
 name|Str
@@ -1062,8 +1067,6 @@ modifier|*
 name|MakeArgString
 argument_list|(
 specifier|const
-name|llvm
-operator|::
 name|Twine
 operator|&
 name|Str
@@ -1080,13 +1083,9 @@ argument_list|(
 name|unsigned
 name|Index
 argument_list|,
-name|llvm
-operator|::
 name|StringRef
 name|LHS
 argument_list|,
-name|llvm
-operator|::
 name|StringRef
 name|RHS
 argument_list|)
@@ -1190,16 +1189,16 @@ comment|/// MakeIndex - Get an index for the given string(s).
 name|unsigned
 name|MakeIndex
 argument_list|(
-argument|llvm::StringRef String0
+argument|StringRef String0
 argument_list|)
 specifier|const
 block|;
 name|unsigned
 name|MakeIndex
 argument_list|(
-argument|llvm::StringRef String0
+argument|StringRef String0
 argument_list|,
-argument|llvm::StringRef String1
+argument|StringRef String1
 argument_list|)
 specifier|const
 block|;
@@ -1209,7 +1208,7 @@ name|char
 operator|*
 name|MakeArgString
 argument_list|(
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|)
 specifier|const
 block|;
@@ -1315,7 +1314,7 @@ name|char
 operator|*
 name|MakeArgString
 argument_list|(
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|)
 specifier|const
 block|;
@@ -1349,7 +1348,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|llvm::StringRef Value
+argument|StringRef Value
 argument_list|)
 block|{
 name|append
@@ -1374,7 +1373,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|llvm::StringRef Value
+argument|StringRef Value
 argument_list|)
 block|{
 name|append
@@ -1398,7 +1397,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|llvm::StringRef Value
+argument|StringRef Value
 argument_list|)
 block|{
 name|append
@@ -1435,7 +1434,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|llvm::StringRef Value
+argument|StringRef Value
 argument_list|)
 specifier|const
 block|;
@@ -1449,7 +1448,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|llvm::StringRef Value
+argument|StringRef Value
 argument_list|)
 specifier|const
 block|;
@@ -1463,7 +1462,7 @@ argument|const Arg *BaseArg
 argument_list|,
 argument|const Option *Opt
 argument_list|,
-argument|llvm::StringRef Value
+argument|StringRef Value
 argument_list|)
 specifier|const
 block|;

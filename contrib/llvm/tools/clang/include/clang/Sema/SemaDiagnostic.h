@@ -76,6 +76,10 @@ name|SFINAE
 parameter_list|,
 name|ACCESS
 parameter_list|,
+name|NOWERROR
+parameter_list|,
+name|SHOWINSYSHEADER
+parameter_list|,
 name|CATEGORY
 parameter_list|,
 name|BRIEF

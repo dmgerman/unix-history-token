@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ktrace.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/cdefs.h>
 end_include
 
@@ -102,6 +108,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/uio.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/ktrace.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<security/audit/audit.h>
 end_include
 
@@ -139,7 +157,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_enter
+name|sys_cap_enter
 parameter_list|(
 name|struct
 name|thread
@@ -242,7 +260,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_getmode
+name|sys_cap_getmode
 parameter_list|(
 name|struct
 name|thread
@@ -303,7 +321,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_enter
+name|sys_cap_enter
 parameter_list|(
 name|struct
 name|thread
@@ -326,7 +344,7 @@ end_function
 
 begin_function
 name|int
-name|cap_getmode
+name|sys_cap_getmode
 parameter_list|(
 name|struct
 name|thread
@@ -709,11 +727,38 @@ name|c
 operator|->
 name|cap_rights
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|KTRACE
+if|if
+condition|(
+name|KTRPOINT
+argument_list|(
+name|curthread
+argument_list|,
+name|KTR_CAPFAIL
+argument_list|)
+condition|)
+name|ktrcapfail
+argument_list|(
+name|CAPFAIL_NOTCAPABLE
+argument_list|,
+name|rights
+argument_list|,
+name|c
+operator|->
+name|cap_rights
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOTCAPABLE
 operator|)
 return|;
+block|}
 return|return
 operator|(
 literal|0
@@ -776,7 +821,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_new
+name|sys_cap_new
 parameter_list|(
 name|struct
 name|thread
@@ -909,7 +954,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_getrights
+name|sys_cap_getrights
 parameter_list|(
 name|struct
 name|thread
@@ -1098,11 +1143,38 @@ name|cp_old
 operator|->
 name|cap_rights
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|KTRACE
+if|if
+condition|(
+name|KTRPOINT
+argument_list|(
+name|curthread
+argument_list|,
+name|KTR_CAPFAIL
+argument_list|)
+condition|)
+name|ktrcapfail
+argument_list|(
+name|CAPFAIL_INCREASE
+argument_list|,
+name|rights
+argument_list|,
+name|cp_old
+operator|->
+name|cap_rights
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOTCAPABLE
 operator|)
 return|;
+block|}
 block|}
 comment|/* 	 * Allocate a new file descriptor to hang the capability off of. 	 */
 name|error
@@ -1893,7 +1965,7 @@ end_comment
 
 begin_function
 name|int
-name|cap_new
+name|sys_cap_new
 parameter_list|(
 name|struct
 name|thread
@@ -1916,7 +1988,7 @@ end_function
 
 begin_function
 name|int
-name|cap_getrights
+name|sys_cap_getrights
 parameter_list|(
 name|struct
 name|thread

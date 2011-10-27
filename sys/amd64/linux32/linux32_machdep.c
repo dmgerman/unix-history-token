@@ -3169,7 +3169,7 @@ endif|#
 directive|endif
 name|error
 operator|=
-name|mmap
+name|sys_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -3283,7 +3283,7 @@ name|PROT_EXEC
 expr_stmt|;
 return|return
 operator|(
-name|mprotect
+name|sys_mprotect
 argument_list|(
 name|td
 argument_list|,
@@ -4331,7 +4331,7 @@ operator|->
 name|length
 expr_stmt|;
 return|return
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,

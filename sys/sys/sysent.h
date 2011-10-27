@@ -687,6 +687,32 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|i386_read_exec
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -750,6 +776,17 @@ begin_define
 define|#
 directive|define
 name|MAKE_SYSENT
+parameter_list|(
+name|syscallname
+parameter_list|)
+define|\
+value|static struct sysent syscallname##_sysent = {			\ 	(sizeof(struct syscallname ## _args )			\ 	    / sizeof(register_t)),				\ 	(sy_call_t *)& sys_##syscallname,	       		\ 	SYS_AUE_##syscallname					\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAKE_SYSENT_COMPAT
 parameter_list|(
 name|syscallname
 parameter_list|)
@@ -831,7 +868,17 @@ name|SYSCALL_INIT_HELPER
 parameter_list|(
 name|syscallname
 parameter_list|)
-value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\ 	.sy_auevent = SYS_AUE_##syscallname			\     },								\     .syscall_no = SYS_##syscallname				\ }
+value|{			\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& sys_ ## syscallname,		\ 	.sy_auevent = SYS_AUE_##syscallname			\     },								\     .syscall_no = SYS_##syscallname				\ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCALL_INIT_HELPER_COMPAT
+parameter_list|(
+name|syscallname
+parameter_list|)
+value|{		\     .new_sysent = {						\ 	.sy_narg = (sizeof(struct syscallname ## _args )	\ 	    / sizeof(register_t)),				\ 	.sy_call = (sy_call_t *)& syscallname,			\ 	.sy_auevent = SYS_AUE_##syscallname			\     },								\     .syscall_no = SYS_##syscallname				\ }
 end_define
 
 begin_define

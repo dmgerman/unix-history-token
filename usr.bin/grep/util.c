@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"fastmatch.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"grep.h"
 end_include
 
@@ -1020,24 +1026,15 @@ name|c
 operator|+=
 name|t
 expr_stmt|;
-comment|/* Count the matches if we have a match limit */
 if|if
 condition|(
 name|mflag
-condition|)
-block|{
-name|mcount
-operator|-=
-name|t
-expr_stmt|;
-if|if
-condition|(
+operator|&&
 name|mcount
 operator|<=
 literal|0
 condition|)
 break|break;
-block|}
 block|}
 if|if
 condition|(
@@ -1229,12 +1226,6 @@ name|r
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-operator|!
-name|matchall
-condition|)
-block|{
 comment|/* Loop to process the whole line */
 while|while
 condition|(
@@ -1274,7 +1265,6 @@ name|i
 operator|++
 control|)
 block|{
-comment|/*  * XXX: grep_search() is a workaround for speed up and should be  * removed in the future.  See fastgrep.c.  */
 if|if
 condition|(
 name|fg_pattern
@@ -1286,7 +1276,7 @@ name|pattern
 condition|)
 name|r
 operator|=
-name|grep_search
+name|fastexec
 argument_list|(
 operator|&
 name|fg_pattern
@@ -1294,21 +1284,16 @@ index|[
 name|i
 index|]
 argument_list|,
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
 name|l
 operator|->
 name|dat
 argument_list|,
-name|l
-operator|->
-name|len
+literal|1
 argument_list|,
 operator|&
 name|pmatch
+argument_list|,
+name|eflags
 argument_list|)
 expr_stmt|;
 else|else
@@ -1620,12 +1605,14 @@ condition|)
 break|break;
 comment|/* No matches */
 block|}
-block|}
-else|else
+comment|/* Count the matches if we have a match limit */
+if|if
+condition|(
+name|mflag
+condition|)
+name|mcount
+operator|-=
 name|c
-operator|=
-operator|!
-name|vflag
 expr_stmt|;
 if|if
 condition|(

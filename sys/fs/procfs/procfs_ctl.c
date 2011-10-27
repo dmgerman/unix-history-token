@@ -579,7 +579,7 @@ name|td_proc
 argument_list|)
 expr_stmt|;
 block|}
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -1325,7 +1325,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,

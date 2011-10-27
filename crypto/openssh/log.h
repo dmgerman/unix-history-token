@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: log.h,v 1.17 2008/06/13 00:12:02 dtucker Exp $ */
+comment|/* $OpenBSD: log.h,v 1.18 2011/06/17 21:44:30 djm Exp $ */
 end_comment
 
 begin_comment
@@ -92,6 +92,25 @@ literal|1
 block|}
 name|LogLevel
 typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+name|log_handler_fn
+function_decl|)
+parameter_list|(
+name|LogLevel
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
 end_typedef
 
 begin_function_decl
@@ -367,6 +386,47 @@ parameter_list|,
 function_decl|1
 operator|,
 function_decl|2
+end_function_decl
+
+begin_empty_stmt
+unit|)))
+empty_stmt|;
+end_empty_stmt
+
+begin_function_decl
+name|void
+name|set_log_handler
+parameter_list|(
+name|log_handler_fn
+modifier|*
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|do_log2
+parameter_list|(
+name|LogLevel
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|__attribute__
+parameter_list|(
+function_decl|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
 
 begin_empty_stmt

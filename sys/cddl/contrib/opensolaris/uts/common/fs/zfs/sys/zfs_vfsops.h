@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -508,6 +508,26 @@ name|int
 name|flags
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+specifier|extern
+name|void
+name|zfsvfs_update_fromname
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|oldname
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|newname
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

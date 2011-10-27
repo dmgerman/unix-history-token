@@ -1507,7 +1507,7 @@ parameter_list|(
 name|ccb
 parameter_list|)
 define|\
-value|imin((sizeof((ccb)->sense_data)), ccb->sense_len)
+value|imin((sizeof((ccb)->sense_data)), ccb->sense_len - ccb->sense_resid)
 end_define
 
 begin_define
@@ -1517,7 +1517,9 @@ name|XS_SNSKEY
 parameter_list|(
 name|ccb
 parameter_list|)
-value|((ccb)->sense_data.flags& 0xf)
+value|(scsi_get_sense_key(&(ccb)->sense_data, \ 				 ccb->sense_len - ccb->sense_resid, 	\
+comment|/*show_errors*/
+value|1))
 end_define
 
 begin_define
@@ -1527,7 +1529,9 @@ name|XS_SNSASC
 parameter_list|(
 name|ccb
 parameter_list|)
-value|((ccb)->sense_data.add_sense_code)
+value|(scsi_get_asc(&(ccb)->sense_data,	\ 				 ccb->sense_len - ccb->sense_resid, 	\
+comment|/*show_errors*/
+value|1))
 end_define
 
 begin_define
@@ -1537,7 +1541,9 @@ name|XS_SNSASCQ
 parameter_list|(
 name|ccb
 parameter_list|)
-value|((ccb)->sense_data.add_sense_code_qual)
+value|(scsi_get_ascq(&(ccb)->sense_data,	\ 				 ccb->sense_len - ccb->sense_resid, 	\
+comment|/*show_errors*/
+value|1))
 end_define
 
 begin_define
@@ -1678,10 +1684,9 @@ name|xs
 parameter_list|,
 name|sense_ptr
 parameter_list|,
-name|sense_len
+name|slen
 parameter_list|)
-define|\
-value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;	\ 	memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs), sense_len))
+value|do {			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;		\ 		memset(&(xs)->sense_data, 0, sizeof(&(xs)->sense_data));\ 		memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs),\ 		       slen)); 						\ 		if (slen< (xs)->sense_len) 				\ 			(xs)->sense_resid = (xs)->sense_len - slen;	\ 	} while (0);
 end_define
 
 begin_define

@@ -1377,7 +1377,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|psignal
+name|kern_psignal
 parameter_list|(
 name|struct
 name|proc

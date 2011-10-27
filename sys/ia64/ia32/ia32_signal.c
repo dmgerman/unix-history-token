@@ -459,7 +459,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|sigreturn
+name|sys_sigreturn
 argument_list|(
 name|td
 argument_list|,
@@ -497,7 +497,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|sigreturn
+name|sys_sigreturn
 argument_list|(
 name|td
 argument_list|,

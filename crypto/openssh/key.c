@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: key.c,v 1.96 2011/02/04 00:44:21 djm Exp $ */
+comment|/* $OpenBSD: key.c,v 1.97 2011/05/17 07:13:31 djm Exp $ */
 end_comment
 
 begin_comment
@@ -9411,6 +9411,17 @@ return|;
 case|case
 name|KEY_ECDSA
 case|:
+if|if
+condition|(
+name|legacy
+condition|)
+name|fatal
+argument_list|(
+literal|"%s: legacy ECDSA certificates are not supported"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|k
 operator|->
 name|cert

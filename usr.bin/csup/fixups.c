@@ -530,6 +530,12 @@ condition|(
 name|f
 operator|->
 name|closed
+operator|&&
+name|f
+operator|->
+name|size
+operator|==
+literal|0
 condition|)
 block|{
 name|fixups_unlock

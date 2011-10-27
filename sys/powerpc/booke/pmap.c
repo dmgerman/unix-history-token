@@ -8458,9 +8458,6 @@ operator|&
 name|VM_PROT_WRITE
 condition|)
 return|return;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -8578,9 +8575,6 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function

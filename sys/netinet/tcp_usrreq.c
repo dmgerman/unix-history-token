@@ -6616,72 +6616,6 @@ name|INP_WLOCK_RECHECK
 end_undef
 
 begin_comment
-comment|/*  * tcp_sendspace and tcp_recvspace are the default send and receive window  * sizes, respectively.  These are obsolescent (this information should  * be set by the route).  */
-end_comment
-
-begin_decl_stmt
-name|u_long
-name|tcp_sendspace
-init|=
-literal|1024
-operator|*
-literal|32
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_net_inet_tcp
-argument_list|,
-name|TCPCTL_SENDSPACE
-argument_list|,
-name|sendspace
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|tcp_sendspace
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum outgoing TCP datagram size"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_decl_stmt
-name|u_long
-name|tcp_recvspace
-init|=
-literal|1024
-operator|*
-literal|64
-decl_stmt|;
-end_decl_stmt
-
-begin_expr_stmt
-name|SYSCTL_ULONG
-argument_list|(
-name|_net_inet_tcp
-argument_list|,
-name|TCPCTL_RECVSPACE
-argument_list|,
-name|recvspace
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-operator|&
-name|tcp_recvspace
-argument_list|,
-literal|0
-argument_list|,
-literal|"Maximum incoming TCP datagram size"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/*  * Attach TCP protocol to socket, allocating  * internet protocol control block, tcp control block,  * bufer space, and entering LISTEN state if to accept connections.  */
 end_comment
 
@@ -6734,9 +6668,9 @@ name|soreserve
 argument_list|(
 name|so
 argument_list|,
-name|tcp_sendspace
+name|V_tcp_sendspace
 argument_list|,
-name|tcp_recvspace
+name|V_tcp_recvspace
 argument_list|)
 expr_stmt|;
 if|if

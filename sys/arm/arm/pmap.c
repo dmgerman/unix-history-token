@@ -309,6 +309,13 @@ name|systempage
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|last_fault_code
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Internal function prototypes  */
 end_comment
@@ -7271,16 +7278,15 @@ operator|==
 literal|1
 condition|)
 block|{
-specifier|extern
-name|int
-name|last_fault_code
-decl_stmt|;
 name|printf
 argument_list|(
 literal|"fixup: pm %p, va 0x%lx, ftype %d - nothing to do!\n"
 argument_list|,
 name|pm
 argument_list|,
+operator|(
+name|u_long
+operator|)
 name|va
 argument_list|,
 name|ftype
@@ -15102,36 +15108,6 @@ name|dstpg
 decl_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|struct
-name|vm_page
-modifier|*
-name|pg
-init|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|phys
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|pg
-operator|->
-name|md
-operator|.
-name|pvh_list
-operator|!=
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"pmap_zero_page: page has mappings"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|_arm_bzero
@@ -15902,36 +15878,6 @@ literal|0
 block|struct vm_page *src_pg = PHYS_TO_VM_PAGE(src);
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|struct
-name|vm_page
-modifier|*
-name|dst_pg
-init|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|dst
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|dst_pg
-operator|->
-name|md
-operator|.
-name|pvh_list
-operator|!=
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"pmap_copy_page: dst page has mappings"
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * Clean the source page.  Hold the source page's lock for 	 * the duration of the copy so that no other mappings can 	 * be created while we have a potentially aliased mapping. 	 */
 if|#
 directive|if
@@ -16079,36 +16025,6 @@ directive|if
 literal|0
 comment|/* XXX: Only needed for pmap_clean_page(), which is commented out. */
 block|struct vm_page *src_pg = PHYS_TO_VM_PAGE(src);
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|DEBUG
-name|struct
-name|vm_page
-modifier|*
-name|dst_pg
-init|=
-name|PHYS_TO_VM_PAGE
-argument_list|(
-name|dst
-argument_list|)
-decl_stmt|;
-if|if
-condition|(
-name|dst_pg
-operator|->
-name|md
-operator|.
-name|pvh_list
-operator|!=
-name|NULL
-condition|)
-name|panic
-argument_list|(
-literal|"pmap_copy_page: dst page has mappings"
-argument_list|)
-expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Clean the source page.  Hold the source page's lock for 	 * the duration of the copy so that no other mappings can 	 * be created while we have a potentially aliased mapping. 	 */

@@ -5650,7 +5650,7 @@ return|;
 name|err
 label|:
 comment|/* 	 * If the copy in failed, the process will be in a irrecoverable 	 * state, and we have no choice but to kill it. 	 */
-name|psignal
+name|kern_psignal
 argument_list|(
 name|ttoproc
 argument_list|(
@@ -6250,7 +6250,7 @@ return|return;
 name|err
 label|:
 comment|/* 	 * If we couldn't record this register's value, the process is in an 	 * irrecoverable state and we have no choice but to euthanize it. 	 */
-name|psignal
+name|kern_psignal
 argument_list|(
 name|ttoproc
 argument_list|(

@@ -143,6 +143,9 @@ name|int
 name|cm_len
 decl_stmt|;
 name|int
+name|cm_stp_len
+decl_stmt|;
+name|int
 name|cm_total_frame_size
 decl_stmt|;
 name|int

@@ -112,6 +112,13 @@ name|TargetFrameLowering
 argument_list|(
 name|StackGrowsDown
 argument_list|,
+name|sti
+operator|.
+name|hasMips64
+argument_list|()
+condition|?
+literal|16
+else|:
 literal|8
 argument_list|,
 literal|0
@@ -149,13 +156,6 @@ name|bool
 name|hasFP
 argument_list|(
 argument|const MachineFunction&MF
-argument_list|)
-specifier|const
-block|;
-name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
 argument_list|)
 specifier|const
 block|;

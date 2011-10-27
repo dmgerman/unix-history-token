@@ -2432,12 +2432,6 @@ argument_list|,
 name|PSTATE_KERNEL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Finish pmap initialization now that we're ready for mutexes. 	 */
-name|PMAP_LOCK_INIT
-argument_list|(
-name|kernel_pmap
-argument_list|)
-expr_stmt|;
 name|OF_getprop
 argument_list|(
 name|root
@@ -3132,7 +3126,7 @@ end_comment
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|struct
 name|thread
@@ -4648,6 +4642,7 @@ name|imgp
 operator|->
 name|entry_addr
 expr_stmt|;
+comment|/* 	 * While we could adhere to the memory model indicated in the ELF 	 * header, it turns out that just always using TSO performs best. 	 */
 name|tf
 operator|->
 name|tf_tstate

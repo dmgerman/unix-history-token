@@ -90,6 +90,12 @@ parameter_list|,
 name|unsigned
 name|Count
 parameter_list|,
+name|unsigned
+name|TripCount
+parameter_list|,
+name|unsigned
+name|TripMultiple
+parameter_list|,
 name|LoopInfo
 modifier|*
 name|LI

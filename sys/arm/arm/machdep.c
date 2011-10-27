@@ -1336,6 +1336,24 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|ARM_RAS_START
+operator|=
+literal|0
+expr_stmt|;
+operator|*
+operator|(
+name|uint32_t
+operator|*
+operator|)
+name|ARM_RAS_END
+operator|=
+literal|0xffffffff
+expr_stmt|;
 block|}
 end_function
 
@@ -2836,7 +2854,7 @@ end_comment
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|td
 parameter_list|,

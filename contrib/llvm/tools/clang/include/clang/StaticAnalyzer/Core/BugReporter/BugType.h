@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/BugReporter/BugReporter.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -84,6 +78,9 @@ block|{
 name|namespace
 name|ento
 block|{
+name|class
+name|BugReporter
+decl_stmt|;
 name|class
 name|ExplodedNode
 decl_stmt|;
@@ -114,9 +111,9 @@ name|public
 label|:
 name|BugType
 argument_list|(
-argument|llvm::StringRef name
+argument|StringRef name
 argument_list|,
-argument|llvm::StringRef cat
+argument|StringRef cat
 argument_list|)
 block|:
 name|Name
@@ -140,8 +137,6 @@ name|BugType
 argument_list|()
 expr_stmt|;
 comment|// FIXME: Should these be made strings as well?
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|()
@@ -151,8 +146,6 @@ return|return
 name|Name
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getCategory
 argument_list|()
@@ -256,8 +249,6 @@ argument_list|(
 argument|name
 argument_list|)
 block|{}
-name|llvm
-operator|::
 name|StringRef
 name|getDescription
 argument_list|()

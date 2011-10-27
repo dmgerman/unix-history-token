@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ncr53c9xreg.h,v 1.14 2005/02/27 00:27:02 perry Exp $	*/
+comment|/*	$NetBSD: ncr53c9xreg.h,v 1.16 2009/09/07 13:31:44 tsutsui Exp $	*/
 end_comment
 
 begin_comment
@@ -313,7 +313,7 @@ value|0x29
 end_define
 
 begin_comment
-comment|/*	Receive Command 	*/
+comment|/*	Receive Command		*/
 end_comment
 
 begin_define
@@ -368,7 +368,7 @@ value|0x11
 end_define
 
 begin_comment
-comment|/*	Initiator Cmd Comp Seq 	*/
+comment|/*	Initiator Cmd Comp Seq	*/
 end_comment
 
 begin_define
@@ -896,7 +896,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* 	Features Enable		*/
+comment|/*	Features Enable		*/
 end_comment
 
 begin_define
@@ -907,7 +907,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* 	DREQ High Impedance	*/
+comment|/*	DREQ High Impedance	*/
 end_comment
 
 begin_define
@@ -918,7 +918,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* 	SCSI-2 Enable		*/
+comment|/*	SCSI-2 Enable		*/
 end_comment
 
 begin_define
@@ -929,7 +929,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* 	Target Bad Parity Abort	*/
+comment|/*	Target Bad Parity Abort	*/
 end_comment
 
 begin_define
@@ -940,7 +940,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* 	Register Parity Error	*/
+comment|/*	Register Parity Error	*/
 end_comment
 
 begin_define
@@ -951,7 +951,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* 	DMA Parity Error	*/
+comment|/*	DMA Parity Error	*/
 end_comment
 
 begin_define
@@ -1290,7 +1290,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* 	Enable Wide-SCSI     */
+comment|/*	Enable Wide-SCSI     */
 end_comment
 
 begin_define
@@ -1301,7 +1301,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* 	Bit 3 of HME SCSI-ID */
+comment|/*	Bit 3 of HME SCSI-ID */
 end_comment
 
 begin_define
@@ -1312,7 +1312,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* 	ID message checking */
+comment|/*	ID message checking */
 end_comment
 
 begin_define
@@ -1323,7 +1323,7 @@ value|0x08
 end_define
 
 begin_comment
-comment|/* 	3-byte msg support */
+comment|/*	3-byte msg support */
 end_comment
 
 begin_define
@@ -1334,7 +1334,7 @@ value|0x04
 end_define
 
 begin_comment
-comment|/* 	group 2 scsi-2 support */
+comment|/*	group 2 scsi-2 support */
 end_comment
 
 begin_define
@@ -1345,7 +1345,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* 	10 MB/S fast scsi mode */
+comment|/*	10 MB/S fast scsi mode */
 end_comment
 
 begin_define
@@ -1356,7 +1356,7 @@ value|0x01
 end_define
 
 begin_comment
-comment|/* 	fast clock mode */
+comment|/*	fast clock mode */
 end_comment
 
 begin_comment

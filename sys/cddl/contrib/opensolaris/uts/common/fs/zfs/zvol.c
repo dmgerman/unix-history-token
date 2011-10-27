@@ -12,6 +12,10 @@ comment|/* Portions Copyright 2010 Robert Milkowski */
 end_comment
 
 begin_comment
+comment|/* Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org> */
+end_comment
+
+begin_comment
 comment|/*  * ZFS volume emulation driver.  *  * Makes a DMU object look like a volume of arbitrary size, up to 2^64 bytes.  * Volumes are accessed through the symbolic links named:  *  * /dev/zvol/dsk/<pool_name>/<dataset_name>  * /dev/zvol/rdsk/<pool_name>/<dataset_name>  *  * These links are created by the /dev filesystem (sdev_zvolops.c).  * Volumes are persistent through reboot.  No user command needs to be  * run before opening and using a device.  *  * FreeBSD notes.  * On FreeBSD ZVOLs are simply GEOM providers like any other storage device  * in the system.  */
 end_comment
 

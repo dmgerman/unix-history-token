@@ -319,6 +319,18 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
+comment|/// Adjust the prologue to have the function use segmented stacks. This works
+comment|/// by adding a check even before the "normal" function prologue.
+name|virtual
+name|void
+name|adjustForSegmentedStacks
+argument_list|(
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+block|{ }
 comment|/// spillCalleeSavedRegisters - Issues instruction(s) to spill all callee
 comment|/// saved registers and returns true if it isn't possible / profitable to do
 comment|/// so by issuing a series of store instructions via
@@ -465,24 +477,6 @@ name|MF
 argument_list|)
 return|;
 block|}
-comment|/// getInitialFrameState - Returns a list of machine moves that are assumed
-comment|/// on entry to all functions.  Note that LabelID is ignored (assumed to be
-comment|/// the beginning of the function.)
-name|virtual
-name|void
-name|getInitialFrameState
-argument_list|(
-name|std
-operator|::
-name|vector
-operator|<
-name|MachineMove
-operator|>
-operator|&
-name|Moves
-argument_list|)
-decl|const
-decl_stmt|;
 comment|/// getFrameIndexOffset - Returns the displacement from the frame register to
 comment|/// the stack frame of the specified index.
 name|virtual
@@ -554,30 +548,6 @@ name|MF
 argument_list|)
 decl|const
 block|{   }
-comment|/// getCompactUnwindEncoding - Get the compact unwind encoding for the
-comment|/// function. Return 0 if the compact unwind isn't available.
-name|virtual
-name|uint32_t
-name|getCompactUnwindEncoding
-argument_list|(
-name|ArrayRef
-operator|<
-name|MCCFIInstruction
-operator|>
-name|Instrs
-argument_list|,
-name|int
-name|DataAlignmentFactor
-argument_list|,
-name|bool
-name|IsEH
-argument_list|)
-decl|const
-block|{
-return|return
-literal|0
-return|;
-block|}
 block|}
 empty_stmt|;
 block|}

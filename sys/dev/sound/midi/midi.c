@@ -2118,7 +2118,7 @@ operator|->
 name|async
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|m
 operator|->
@@ -2346,7 +2346,7 @@ operator|->
 name|async
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|m
 operator|->

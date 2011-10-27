@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: clientloop.h,v 1.25 2010/06/25 23:15:36 djm Exp $ */
+comment|/* $OpenBSD: clientloop.h,v 1.28 2011/06/22 22:08:42 djm Exp $ */
 end_comment
 
 begin_comment
@@ -118,6 +118,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|client_stop_mux
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/* Escape filter for protocol 2 sessions */
 end_comment
@@ -193,6 +202,41 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Channel request confirmation callbacks */
+end_comment
+
+begin_enum
+enum|enum
+name|confirm_action
+block|{
+name|CONFIRM_WARN
+init|=
+literal|0
+block|,
+name|CONFIRM_CLOSE
+block|,
+name|CONFIRM_TTY
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+name|void
+name|client_expect_confirm
+parameter_list|(
+name|int
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|enum
+name|confirm_action
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Multiplexing protocol version */
 end_comment
 
@@ -262,6 +306,17 @@ begin_comment
 comment|/* Forward only, no command */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SSHMUX_COMMAND_STOP
+value|6
+end_define
+
+begin_comment
+comment|/* Disable mux but not conn */
+end_comment
+
 begin_function_decl
 name|void
 name|muxserver_listen
@@ -290,6 +345,16 @@ name|Channel
 modifier|*
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|mux_tty_alloc_failed
+parameter_list|(
+name|Channel
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl

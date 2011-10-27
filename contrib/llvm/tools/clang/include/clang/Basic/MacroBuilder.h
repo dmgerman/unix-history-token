@@ -78,18 +78,14 @@ block|{
 name|class
 name|MacroBuilder
 block|{
-name|llvm
-operator|::
 name|raw_ostream
-operator|&
+modifier|&
 name|Out
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|MacroBuilder
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|Output
@@ -104,9 +100,9 @@ comment|/// Append a #define line for macro of the form "#define Name Value\n".
 name|void
 name|defineMacro
 argument_list|(
-argument|const llvm::Twine&Name
+argument|const Twine&Name
 argument_list|,
-argument|const llvm::Twine&Value =
+argument|const Twine&Value =
 literal|"1"
 argument_list|)
 block|{
@@ -127,7 +123,7 @@ comment|/// and we emit "#undef XXX".
 name|void
 name|undefineMacro
 argument_list|(
-argument|const llvm::Twine&Name
+argument|const Twine&Name
 argument_list|)
 block|{
 name|Out
@@ -142,7 +138,7 @@ comment|/// Directly append Str and a newline to the underlying buffer.
 name|void
 name|append
 argument_list|(
-argument|const llvm::Twine&Str
+argument|const Twine&Str
 argument_list|)
 block|{
 name|Out

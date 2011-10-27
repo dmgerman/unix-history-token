@@ -2315,6 +2315,30 @@ literal|0x1415
 block|,
 literal|0x9501
 block|,
+literal|0x10fc
+block|,
+literal|0xc070
+block|,
+literal|"I-O DATA RSA-PCI2/R"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_2S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x1415
+block|,
+literal|0x9501
+block|,
 literal|0x131f
 block|,
 literal|0x2050
@@ -2568,6 +2592,36 @@ literal|8
 block|, 	}
 block|,
 comment|/* 	 * Oxford Semiconductor PCI Express Expresso family 	 * 	 * Found in many 'native' PCI Express serial boards such as: 	 * 	 * eMegatech MP954ER4 (4 port) and MP958ER8 (8 port) 	 *<URL:http://www.emegatech.com.tw/pdrs232pcie.html> 	 * 	 * Lindy 51189 (4 port) 	 *<URL:http://www.lindy.com><URL:http://tinyurl.com/lindy-51189> 	 *  	 * StarTech.com PEX4S952 (4 port) and PEX8S952 (8 port) 	 *<URL:http://www.startech.com> 	 */
+block|{
+literal|0x1415
+block|,
+literal|0xc138
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Oxford Semiconductor OXPCIe952 UARTs"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|0x22
+block|,
+name|PUC_PORT_NONSTANDARD
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+operator|-
+literal|1
+block|,
+operator|.
+name|config_function
+operator|=
+name|puc_config_oxford_pcie
+block|}
+block|,
 block|{
 literal|0x1415
 block|,

@@ -1547,7 +1547,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Mark a mount point as busy. Used to synchronize access and to delay  * unmounting. Eventually, mountlist_mtx is not released on failure.  */
+comment|/*  * Mark a mount point as busy. Used to synchronize access and to delay  * unmounting. Eventually, mountlist_mtx is not released on failure.  *  * vfs_busy() is a custom lock, it can block the caller.  * vfs_busy() only sleeps if the unmount is active on the mount point.  * For a mountpoint mp, vfs_busy-enforced lock is before lock of any  * vnode belonging to mp.  *  * Lookup uses vfs_busy() to traverse mount points.  * root fs			var fs  * / vnode lock		A	/ vnode lock (/var)		D  * /var vnode lock	B	/log vnode lock(/var/log)	E  * vfs_busy lock	C	vfs_busy lock			F  *  * Within each file system, the lock order is C->A->B and F->D->E.  *  * When traversing across mounts, the system follows that lock order:  *  *        C->A->B  *              |  *              +->F->D->E  *  * The lookup() process for namei("/var") illustrates the process:  *  VOP_LOOKUP() obtains B while A is held  *  vfs_busy() obtains a shared lock on F while A and B are held  *  vput() releases lock on B  *  vput() releases lock on A  *  VFS_ROOT() obtains lock on D while shared lock on F is held  *  vfs_unbusy() releases shared lock on F  *  vn_lock() obtains lock on deadfs vnode vp_crossmp instead of A.  *    Attempt to lock A (instead of vp_crossmp) while D is held would  *    violate the global order, causing deadlocks.  *  * dounmount() locks B while F is drained.  */
 end_comment
 
 begin_function
@@ -4486,7 +4486,7 @@ name|vp
 operator|->
 name|v_data
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -13839,9 +13839,11 @@ name|struct
 name|xvfsconf
 name|xvfsp
 decl_stmt|;
-name|printf
+name|log
 argument_list|(
-literal|"WARNING: userland calling deprecated sysctl, "
+name|LOG_WARNING
+argument_list|,
+literal|"userland calling deprecated sysctl, "
 literal|"please rebuild world\n"
 argument_list|)
 expr_stmt|;

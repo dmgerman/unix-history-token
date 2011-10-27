@@ -151,7 +151,7 @@ name|ScanReachableFromBlock
 argument_list|(
 specifier|const
 name|CFGBlock
-operator|&
+operator|*
 name|Start
 argument_list|,
 name|llvm

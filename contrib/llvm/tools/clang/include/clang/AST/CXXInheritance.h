@@ -188,8 +188,6 @@ name|class
 name|CXXBasePath
 range|:
 name|public
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CXXBasePathElement
@@ -222,8 +220,6 @@ name|void
 name|clear
 parameter_list|()
 block|{
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|CXXBasePathElement
@@ -800,8 +796,6 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|UniqueVirtualMethod
@@ -821,8 +815,6 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|UniqueVirtualMethod
@@ -841,8 +833,6 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|UniqueVirtualMethod
@@ -915,8 +905,6 @@ block|}
 comment|// Iterate over the set of overriding virtual methods in a given
 comment|// subobject.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|UniqueVirtualMethod
@@ -928,8 +916,6 @@ name|iterator
 name|overriding_iterator
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|UniqueVirtualMethod

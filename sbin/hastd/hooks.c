@@ -38,12 +38,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -467,7 +461,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 operator|!
 name|hooks_initialized
@@ -504,7 +498,7 @@ name|hookproc
 modifier|*
 name|hp
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hooks_initialized
 argument_list|)
@@ -530,7 +524,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -539,7 +533,7 @@ operator|==
 name|HOOKPROC_MAGIC_ONLIST
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -790,7 +784,7 @@ name|pid_t
 name|pid
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -799,7 +793,7 @@ operator|==
 name|HOOKPROC_MAGIC_ALLOCATED
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -856,7 +850,7 @@ modifier|*
 name|hp
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -865,7 +859,7 @@ operator|==
 name|HOOKPROC_MAGIC_ONLIST
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -874,7 +868,7 @@ operator|>
 literal|0
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|mtx_owned
 argument_list|(
@@ -913,7 +907,7 @@ modifier|*
 name|hp
 parameter_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -922,7 +916,7 @@ operator|==
 name|HOOKPROC_MAGIC_ALLOCATED
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -961,7 +955,7 @@ name|hookproc
 modifier|*
 name|hp
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|mtx_owned
 argument_list|(
@@ -979,7 +973,7 @@ argument_list|,
 argument|hp_next
 argument_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -988,7 +982,7 @@ operator|==
 name|HOOKPROC_MAGIC_ONLIST
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -1187,7 +1181,7 @@ decl_stmt|;
 name|time_t
 name|now
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hooks_initialized
 argument_list|)
@@ -1224,7 +1218,7 @@ argument_list|,
 argument|hp2
 argument_list|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -1233,7 +1227,7 @@ operator|==
 name|HOOKPROC_MAGIC_ONLIST
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hp
 operator|->
@@ -1412,7 +1406,7 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|hooks_initialized
 argument_list|)
@@ -1502,7 +1496,7 @@ name|NULL
 condition|)
 break|break;
 block|}
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|ii
 operator|<

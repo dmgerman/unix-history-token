@@ -3064,7 +3064,7 @@ end_function
 
 begin_function
 name|int
-name|kqueue
+name|sys_kqueue
 parameter_list|(
 name|struct
 name|thread
@@ -3313,7 +3313,7 @@ end_endif
 
 begin_function
 name|int
-name|kevent
+name|sys_kevent
 parameter_list|(
 name|struct
 name|thread

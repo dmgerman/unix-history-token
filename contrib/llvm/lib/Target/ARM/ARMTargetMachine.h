@@ -166,41 +166,21 @@ block|;
 name|InstrItineraryData
 name|InstrItins
 block|;
-name|Reloc
-operator|::
-name|Model
-name|DefRelocModel
-block|;
-comment|// Reloc model before it's overridden.
 name|public
 operator|:
 name|ARMBaseTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|;
 name|virtual
@@ -330,31 +310,17 @@ name|public
 operator|:
 name|ARMTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|;
 name|virtual
@@ -502,31 +468,17 @@ name|public
 operator|:
 name|ThumbTargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|;
 comment|/// returns either Thumb1RegisterInfo or Thumb2RegisterInfo

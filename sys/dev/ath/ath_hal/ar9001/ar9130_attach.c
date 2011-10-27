@@ -301,7 +301,7 @@ decl_stmt|;
 name|HAL_BOOL
 name|rfStatus
 decl_stmt|;
-name|HALDEBUG_G
+name|HALDEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,
@@ -345,7 +345,7 @@ operator|==
 name|AH_NULL
 condition|)
 block|{
-name|HALDEBUG_G
+name|HALDEBUG
 argument_list|(
 name|AH_NULL
 argument_list|,
@@ -1375,6 +1375,13 @@ expr_stmt|;
 name|pCap
 operator|->
 name|hal4AddrAggrSupport
+operator|=
+name|AH_TRUE
+expr_stmt|;
+comment|/* BB Read WAR */
+name|pCap
+operator|->
+name|halHasBBReadWar
 operator|=
 name|AH_TRUE
 expr_stmt|;

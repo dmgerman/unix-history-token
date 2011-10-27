@@ -17,20 +17,6 @@ name|HUMANVALSTR_LEN
 value|5
 end_define
 
-begin_define
-define|#
-directive|define
-name|DEVSTR_LEN
-value|8
-end_define
-
-begin_define
-define|#
-directive|define
-name|DEVSTR_HEX_LEN
-value|15
-end_define
-
 begin_decl_stmt
 specifier|extern
 name|long

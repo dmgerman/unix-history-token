@@ -88,13 +88,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SVals.h"
 end_include
 
 begin_include
@@ -121,9 +121,6 @@ name|llvm
 block|{
 name|class
 name|BumpPtrAllocator
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -286,6 +283,8 @@ name|SymbolicRegionKind
 block|,
 name|AllocaRegionKind
 block|,
+name|BlockDataRegionKind
+block|,
 comment|// Typed regions.
 name|BEG_TYPED_REGIONS
 block|,
@@ -295,9 +294,11 @@ name|BEG_TYPED_REGIONS
 block|,
 name|BlockTextRegionKind
 block|,
-name|BlockDataRegionKind
+name|BEG_TYPED_VALUE_REGIONS
 block|,
 name|CompoundLiteralRegionKind
+operator|=
+name|BEG_TYPED_VALUE_REGIONS
 block|,
 name|CXXThisRegionKind
 block|,
@@ -322,6 +323,10 @@ name|ObjCIvarRegionKind
 block|,
 name|CXXTempObjectRegionKind
 block|,
+name|CXXBaseObjectRegionKind
+block|,
+name|END_TYPED_VALUE_REGIONS
+operator|=
 name|CXXBaseObjectRegionKind
 block|,
 name|END_TYPED_REGIONS
@@ -437,7 +442,7 @@ name|virtual
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -690,7 +695,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -752,7 +757,7 @@ operator|:
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -1178,7 +1183,7 @@ name|Ex
 block|;
 name|AllocaRegion
 argument_list|(
-argument|const Expr* ex
+argument|const Expr *ex
 argument_list|,
 argument|unsigned cnt
 argument_list|,
@@ -1244,7 +1249,7 @@ name|ProfileRegion
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|,
-argument|const Expr* Ex
+argument|const Expr *Ex
 argument_list|,
 argument|unsigned Cnt
 argument_list|,
@@ -1254,7 +1259,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -1293,6 +1298,92 @@ argument|Kind k
 argument_list|)
 operator|:
 name|SubRegion
+argument_list|(
+argument|sReg
+argument_list|,
+argument|k
+argument_list|)
+block|{}
+name|public
+operator|:
+name|virtual
+name|QualType
+name|getLocationType
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|QualType
+name|getDesugaredLocationType
+argument_list|(
+argument|ASTContext&Context
+argument_list|)
+specifier|const
+block|{
+return|return
+name|getLocationType
+argument_list|()
+operator|.
+name|getDesugaredType
+argument_list|(
+name|Context
+argument_list|)
+return|;
+block|}
+name|bool
+name|isBoundable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const MemRegion* R
+argument_list|)
+block|{
+name|unsigned
+name|k
+operator|=
+name|R
+operator|->
+name|getKind
+argument_list|()
+block|;
+return|return
+name|k
+operator|>=
+name|BEG_TYPED_REGIONS
+operator|&&
+name|k
+operator|<=
+name|END_TYPED_REGIONS
+return|;
+block|}
+expr|}
+block|;
+comment|/// TypedValueRegion - An abstract class representing regions having a typed value.
+name|class
+name|TypedValueRegion
+operator|:
+name|public
+name|TypedRegion
+block|{
+name|protected
+operator|:
+name|TypedValueRegion
+argument_list|(
+argument|const MemRegion* sReg
+argument_list|,
+argument|Kind k
+argument_list|)
+operator|:
+name|TypedRegion
 argument_list|(
 argument|sReg
 argument_list|,
@@ -1387,32 +1478,6 @@ else|:
 name|T
 return|;
 block|}
-name|QualType
-name|getDesugaredLocationType
-argument_list|(
-argument|ASTContext&Context
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getLocationType
-argument_list|()
-operator|.
-name|getDesugaredType
-argument_list|(
-name|Context
-argument_list|)
-return|;
-block|}
-name|bool
-name|isBoundable
-argument_list|()
-specifier|const
-block|{
-return|return
-name|true
-return|;
-block|}
 specifier|static
 name|bool
 name|classof
@@ -1431,11 +1496,11 @@ block|;
 return|return
 name|k
 operator|>=
-name|BEG_TYPED_REGIONS
+name|BEG_TYPED_VALUE_REGIONS
 operator|&&
 name|k
 operator|<=
-name|END_TYPED_REGIONS
+name|END_TYPED_VALUE_REGIONS
 return|;
 block|}
 expr|}
@@ -1464,23 +1529,6 @@ argument_list|)
 block|{}
 name|public
 operator|:
-name|QualType
-name|getValueType
-argument_list|()
-specifier|const
-block|{
-name|assert
-argument_list|(
-literal|0
-operator|&&
-literal|"Do not get the object type of a CodeTextRegion."
-argument_list|)
-block|;
-return|return
-name|QualType
-argument_list|()
-return|;
-block|}
 name|bool
 name|isBoundable
 argument_list|()
@@ -1589,7 +1637,7 @@ name|virtual
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -1735,7 +1783,7 @@ name|virtual
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2019,7 +2067,7 @@ name|virtual
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2159,7 +2207,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2186,7 +2234,7 @@ name|class
 name|StringRegion
 operator|:
 name|public
-name|TypedRegion
+name|TypedValueRegion
 block|{
 name|friend
 name|class
@@ -2212,7 +2260,7 @@ operator|*
 name|sreg
 argument_list|)
 operator|:
-name|TypedRegion
+name|TypedValueRegion
 argument_list|(
 name|sreg
 argument_list|,
@@ -2305,7 +2353,7 @@ block|;   }
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2334,7 +2382,7 @@ name|class
 name|CompoundLiteralRegion
 operator|:
 name|public
-name|TypedRegion
+name|TypedValueRegion
 block|{
 name|private
 operator|:
@@ -2360,7 +2408,7 @@ operator|*
 name|sReg
 argument_list|)
 operator|:
-name|TypedRegion
+name|TypedValueRegion
 argument_list|(
 name|sReg
 argument_list|,
@@ -2430,7 +2478,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2467,7 +2515,7 @@ name|class
 name|DeclRegion
 operator|:
 name|public
-name|TypedRegion
+name|TypedValueRegion
 block|{
 name|protected
 operator|:
@@ -2478,14 +2526,14 @@ name|D
 block|;
 name|DeclRegion
 argument_list|(
-argument|const Decl* d
+argument|const Decl *d
 argument_list|,
 argument|const MemRegion* sReg
 argument_list|,
 argument|Kind k
 argument_list|)
 operator|:
-name|TypedRegion
+name|TypedValueRegion
 argument_list|(
 name|sReg
 argument_list|,
@@ -2503,7 +2551,7 @@ name|ProfileRegion
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|,
-argument|const Decl* D
+argument|const Decl *D
 argument_list|,
 argument|const MemRegion* superRegion
 argument_list|,
@@ -2603,7 +2651,7 @@ name|ProfileRegion
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|,
-argument|const VarDecl* VD
+argument|const VarDecl *VD
 argument_list|,
 argument|const MemRegion *superRegion
 argument_list|)
@@ -2671,7 +2719,7 @@ block|}
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2700,7 +2748,7 @@ name|class
 name|CXXThisRegion
 operator|:
 name|public
-name|TypedRegion
+name|TypedValueRegion
 block|{
 name|friend
 name|class
@@ -2719,7 +2767,7 @@ operator|*
 name|sReg
 argument_list|)
 operator|:
-name|TypedRegion
+name|TypedValueRegion
 argument_list|(
 name|sReg
 argument_list|,
@@ -2778,7 +2826,7 @@ block|}
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2843,7 +2891,7 @@ operator|:
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -2891,7 +2939,7 @@ name|ProfileRegion
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|,
-argument|const FieldDecl* FD
+argument|const FieldDecl *FD
 argument_list|,
 argument|const MemRegion* superRegion
 argument_list|)
@@ -2965,7 +3013,7 @@ name|ProfileRegion
 argument_list|(
 argument|llvm::FoldingSetNodeID& ID
 argument_list|,
-argument|const ObjCIvarDecl* ivd
+argument|const ObjCIvarDecl *ivd
 argument_list|,
 argument|const MemRegion* superRegion
 argument_list|)
@@ -3018,7 +3066,7 @@ block|}
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -3106,7 +3154,7 @@ block|}
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -3120,7 +3168,7 @@ name|class
 name|ElementRegion
 operator|:
 name|public
-name|TypedRegion
+name|TypedValueRegion
 block|{
 name|friend
 name|class
@@ -3141,7 +3189,7 @@ argument_list|,
 argument|const MemRegion* sReg
 argument_list|)
 operator|:
-name|TypedRegion
+name|TypedValueRegion
 argument_list|(
 name|sReg
 argument_list|,
@@ -3245,7 +3293,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -3279,7 +3327,7 @@ name|class
 name|CXXTempObjectRegion
 operator|:
 name|public
-name|TypedRegion
+name|TypedValueRegion
 block|{
 name|friend
 name|class
@@ -3303,7 +3351,7 @@ operator|*
 name|sReg
 argument_list|)
 operator|:
-name|TypedRegion
+name|TypedValueRegion
 argument_list|(
 name|sReg
 argument_list|,
@@ -3338,6 +3386,17 @@ argument_list|)
 block|;
 name|public
 operator|:
+specifier|const
+name|Expr
+operator|*
+name|getExpr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Ex
+return|;
+block|}
 name|QualType
 name|getValueType
 argument_list|()
@@ -3353,7 +3412,7 @@ block|}
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -3388,7 +3447,7 @@ name|class
 name|CXXBaseObjectRegion
 operator|:
 name|public
-name|TypedRegion
+name|TypedValueRegion
 block|{
 name|friend
 name|class
@@ -3412,7 +3471,7 @@ operator|*
 name|sReg
 argument_list|)
 operator|:
-name|TypedRegion
+name|TypedValueRegion
 argument_list|(
 name|sReg
 argument_list|,
@@ -3466,7 +3525,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -3748,7 +3807,7 @@ name|AllocaRegion
 operator|*
 name|getAllocaRegion
 argument_list|(
-argument|const Expr* Ex
+argument|const Expr *Ex
 argument_list|,
 argument|unsigned Cnt
 argument_list|,

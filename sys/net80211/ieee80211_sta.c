@@ -417,6 +417,11 @@ name|vap
 operator|->
 name|iv_ic
 decl_stmt|;
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 operator|(

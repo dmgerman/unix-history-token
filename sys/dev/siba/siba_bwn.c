@@ -908,7 +908,7 @@ name|j
 operator|<
 name|i
 condition|;
-name|i
+name|j
 operator|++
 control|)
 name|DEVICE_RESUME
@@ -917,6 +917,13 @@ name|devlistp
 index|[
 name|j
 index|]
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|devlistp
+argument_list|,
+name|M_TEMP
 argument_list|)
 expr_stmt|;
 return|return

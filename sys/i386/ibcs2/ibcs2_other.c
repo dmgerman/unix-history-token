@@ -222,7 +222,7 @@ name|whence
 expr_stmt|;
 name|error
 operator|=
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -307,7 +307,7 @@ literal|0
 expr_stmt|;
 name|error
 operator|=
-name|socket
+name|sys_socket
 argument_list|(
 name|td
 argument_list|,

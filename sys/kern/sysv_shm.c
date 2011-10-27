@@ -1377,7 +1377,7 @@ end_endif
 
 begin_function
 name|int
-name|shmdt
+name|sys_shmdt
 parameter_list|(
 name|td
 parameter_list|,
@@ -2208,7 +2208,7 @@ end_function
 
 begin_function
 name|int
-name|shmat
+name|sys_shmat
 parameter_list|(
 name|td
 parameter_list|,
@@ -2840,7 +2840,7 @@ end_endif
 
 begin_function
 name|int
-name|shmctl
+name|sys_shmctl
 parameter_list|(
 name|td
 parameter_list|,
@@ -3901,7 +3901,7 @@ end_endif
 
 begin_function
 name|int
-name|shmget
+name|sys_shmget
 parameter_list|(
 name|td
 parameter_list|,
@@ -4507,7 +4507,7 @@ name|defined
 argument_list|(
 name|COMPAT_FREEBSD7
 argument_list|)
-name|SYSCALL_INIT_HELPER
+name|SYSCALL_INIT_HELPER_COMPAT
 argument_list|(
 name|freebsd7_shmctl
 argument_list|)
@@ -4594,17 +4594,17 @@ name|shm32_syscalls
 index|[]
 init|=
 block|{
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|shmat
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|shmdt
 argument_list|)
 block|,
-name|SYSCALL32_INIT_HELPER
+name|SYSCALL32_INIT_HELPER_COMPAT
 argument_list|(
 name|shmget
 argument_list|)
@@ -5477,7 +5477,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmat
+name|sys_shmat
 block|,
 operator|(
 name|sy_call_t
@@ -5489,13 +5489,13 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmdt
+name|sys_shmdt
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|shmget
+name|sys_shmget
 block|,
 operator|(
 name|sy_call_t
@@ -5508,7 +5508,7 @@ end_decl_stmt
 
 begin_function
 name|int
-name|shmsys
+name|sys_shmsys
 parameter_list|(
 name|td
 parameter_list|,

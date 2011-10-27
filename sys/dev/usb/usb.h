@@ -3350,6 +3350,10 @@ name|UPS_PORT_LS_LOOPBACK
 value|0x0B
 define|#
 directive|define
+name|UPS_PORT_LS_RESUME
+value|0x0F
+define|#
+directive|define
 name|UPS_PORT_POWER
 value|0x0100
 define|#

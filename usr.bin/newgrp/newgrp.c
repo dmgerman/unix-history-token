@@ -487,7 +487,7 @@ literal|0
 condition|)
 name|warn
 argument_list|(
-literal|"setgroups"
+literal|"setgid"
 argument_list|)
 expr_stmt|;
 block|}

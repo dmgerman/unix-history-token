@@ -33,6 +33,16 @@ directive|include
 file|"opt_ath.h"
 end_include
 
+begin_comment
+comment|/*  * This is needed for register operations which are performed  * by the driver - eg, calls to ath_hal_gettsf32().  */
+end_comment
+
+begin_include
+include|#
+directive|include
+file|"opt_ah.h"
+end_include
+
 begin_include
 include|#
 directive|include
@@ -9034,18 +9044,6 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_CONTROL
 expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_dodfs
-condition|)
-block|{
-name|rfilt
-operator||=
-name|HAL_RX_FILTER_PHYRADAR
-expr_stmt|;
-block|}
 comment|/* 	 * Enable RX of compressed BAR frames only when doing 	 * 802.11n. Required for A-MPDU. 	 */
 if|if
 condition|(
@@ -11703,6 +11701,19 @@ name|nmcastq
 expr_stmt|;
 block|}
 comment|/* NB: gated by beacon so safe to start here */
+if|if
+condition|(
+operator|!
+name|STAILQ_EMPTY
+argument_list|(
+operator|&
+operator|(
+name|cabq
+operator|->
+name|axq_q
+operator|)
+argument_list|)
+condition|)
 name|ath_hal_txstart
 argument_list|(
 name|ah
@@ -11714,15 +11725,15 @@ argument_list|)
 expr_stmt|;
 name|ATH_TXQ_UNLOCK
 argument_list|(
-name|cabq
-argument_list|)
-expr_stmt|;
-name|ATH_TXQ_UNLOCK
-argument_list|(
 operator|&
 name|avp
 operator|->
 name|av_mcastq
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_UNLOCK
+argument_list|(
+name|cabq
 argument_list|)
 expr_stmt|;
 block|}

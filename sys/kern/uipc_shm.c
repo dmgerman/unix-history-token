@@ -2189,7 +2189,7 @@ end_comment
 
 begin_function
 name|int
-name|shm_open
+name|sys_shm_open
 parameter_list|(
 name|struct
 name|thread
@@ -2879,7 +2879,7 @@ end_function
 
 begin_function
 name|int
-name|shm_unlink
+name|sys_shm_unlink
 parameter_list|(
 name|struct
 name|thread

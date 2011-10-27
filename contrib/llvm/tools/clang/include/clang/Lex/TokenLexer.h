@@ -151,17 +151,14 @@ comment|/// "source location address space".
 name|unsigned
 name|MacroStartSLocOffset
 decl_stmt|;
-comment|/// \brief FileID/offset of the start of the macro definition.
-name|std
-operator|::
-name|pair
-operator|<
-name|FileID
-operator|,
+comment|/// \brief Location of the macro definition.
+name|SourceLocation
+name|MacroDefStart
+decl_stmt|;
+comment|/// \brief Length of the macro definition.
 name|unsigned
-operator|>
-name|MacroDefStartInfo
-expr_stmt|;
+name|MacroDefLength
+decl_stmt|;
 comment|/// Lexical information about the expansion point of the macro: the identifier
 comment|/// that the macro expanded from had these properties.
 name|bool
@@ -418,13 +415,33 @@ comment|/// \brief If \arg loc is a FileID and points inside the current macro
 comment|/// definition, returns the appropriate source location pointing at the
 comment|/// macro expansion source location entry.
 name|SourceLocation
-name|getMacroExpansionLocation
+name|getExpansionLocForMacroDefLoc
 argument_list|(
 name|SourceLocation
 name|loc
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Creates SLocEntries and updates the locations of macro argument
+comment|/// tokens to their new expanded locations.
+comment|///
+comment|/// \param ArgIdSpellLoc the location of the macro argument id inside the
+comment|/// macro definition.
+name|void
+name|updateLocForMacroArgTokens
+parameter_list|(
+name|SourceLocation
+name|ArgIdSpellLoc
+parameter_list|,
+name|Token
+modifier|*
+name|begin_tokens
+parameter_list|,
+name|Token
+modifier|*
+name|end_tokens
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

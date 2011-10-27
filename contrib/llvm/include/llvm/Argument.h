@@ -144,7 +144,6 @@ comment|///
 name|explicit
 name|Argument
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty

@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/signal.h>
 end_include
 
@@ -2391,6 +2397,26 @@ argument_list|,
 name|LOG_PID
 argument_list|,
 name|LOG_DAEMON
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|madvise
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|MADV_PROTECT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|syslog
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"madvise(): %m"
 argument_list|)
 expr_stmt|;
 comment|/* Kick off the default domain */

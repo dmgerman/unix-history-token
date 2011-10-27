@@ -819,7 +819,7 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-comment|/* XXX save bssid for possible re-use on reset */
+comment|/* save bssid for possible re-use on reset */
 name|OS_MEMCPY
 argument_list|(
 name|ahp
@@ -830,6 +830,12 @@ name|bssid
 argument_list|,
 name|IEEE80211_ADDR_LEN
 argument_list|)
+expr_stmt|;
+name|ahp
+operator|->
+name|ah_assocId
+operator|=
+name|assocId
 expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(

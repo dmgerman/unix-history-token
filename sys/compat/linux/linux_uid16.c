@@ -508,11 +508,20 @@ if|if
 condition|(
 name|error
 condition|)
+block|{
+name|free
+argument_list|(
+name|linux_gidset
+argument_list|,
+name|M_TEMP
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|newcred
 operator|=
 name|crget
@@ -983,7 +992,7 @@ name|bsd
 decl_stmt|;
 return|return
 operator|(
-name|getegid
+name|sys_getegid
 argument_list|(
 name|td
 argument_list|,
@@ -1016,7 +1025,7 @@ name|bsd
 decl_stmt|;
 return|return
 operator|(
-name|geteuid
+name|sys_geteuid
 argument_list|(
 name|td
 argument_list|,
@@ -1057,7 +1066,7 @@ name|gid
 expr_stmt|;
 return|return
 operator|(
-name|setgid
+name|sys_setgid
 argument_list|(
 name|td
 argument_list|,
@@ -1098,7 +1107,7 @@ name|uid
 expr_stmt|;
 return|return
 operator|(
-name|setuid
+name|sys_setuid
 argument_list|(
 name|td
 argument_list|,
@@ -1153,7 +1162,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|setregid
+name|sys_setregid
 argument_list|(
 name|td
 argument_list|,
@@ -1208,7 +1217,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|setreuid
+name|sys_setreuid
 argument_list|(
 name|td
 argument_list|,
@@ -1274,7 +1283,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|setresgid
+name|sys_setresgid
 argument_list|(
 name|td
 argument_list|,
@@ -1340,7 +1349,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|setresuid
+name|sys_setresuid
 argument_list|(
 name|td
 argument_list|,

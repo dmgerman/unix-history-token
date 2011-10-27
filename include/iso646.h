@@ -15,6 +15,12 @@ directive|define
 name|_ISO646_H_
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -91,6 +97,15 @@ directive|define
 name|xor_eq
 value|^=
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__cplusplus */
+end_comment
 
 begin_endif
 endif|#

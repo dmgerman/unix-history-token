@@ -24705,7 +24705,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sys_exit
+name|sys_sys_exit
 parameter_list|(
 name|struct
 name|thread
@@ -24720,7 +24720,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fork
+name|sys_fork
 parameter_list|(
 name|struct
 name|thread
@@ -24735,7 +24735,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|read
+name|sys_read
 parameter_list|(
 name|struct
 name|thread
@@ -24750,7 +24750,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|write
+name|sys_write
 parameter_list|(
 name|struct
 name|thread
@@ -24765,7 +24765,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|open
+name|sys_open
 parameter_list|(
 name|struct
 name|thread
@@ -24780,7 +24780,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|close
+name|sys_close
 parameter_list|(
 name|struct
 name|thread
@@ -24795,7 +24795,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|wait4
+name|sys_wait4
 parameter_list|(
 name|struct
 name|thread
@@ -24810,7 +24810,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|link
+name|sys_link
 parameter_list|(
 name|struct
 name|thread
@@ -24825,7 +24825,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|unlink
+name|sys_unlink
 parameter_list|(
 name|struct
 name|thread
@@ -24840,7 +24840,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|chdir
+name|sys_chdir
 parameter_list|(
 name|struct
 name|thread
@@ -24855,7 +24855,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fchdir
+name|sys_fchdir
 parameter_list|(
 name|struct
 name|thread
@@ -24870,7 +24870,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mknod
+name|sys_mknod
 parameter_list|(
 name|struct
 name|thread
@@ -24885,7 +24885,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|chmod
+name|sys_chmod
 parameter_list|(
 name|struct
 name|thread
@@ -24900,7 +24900,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|chown
+name|sys_chown
 parameter_list|(
 name|struct
 name|thread
@@ -24915,7 +24915,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|obreak
+name|sys_obreak
 parameter_list|(
 name|struct
 name|thread
@@ -24930,7 +24930,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getpid
+name|sys_getpid
 parameter_list|(
 name|struct
 name|thread
@@ -24945,7 +24945,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mount
+name|sys_mount
 parameter_list|(
 name|struct
 name|thread
@@ -24960,7 +24960,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|unmount
+name|sys_unmount
 parameter_list|(
 name|struct
 name|thread
@@ -24975,7 +24975,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setuid
+name|sys_setuid
 parameter_list|(
 name|struct
 name|thread
@@ -24990,7 +24990,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getuid
+name|sys_getuid
 parameter_list|(
 name|struct
 name|thread
@@ -25005,7 +25005,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|geteuid
+name|sys_geteuid
 parameter_list|(
 name|struct
 name|thread
@@ -25020,7 +25020,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ptrace
+name|sys_ptrace
 parameter_list|(
 name|struct
 name|thread
@@ -25035,7 +25035,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|recvmsg
+name|sys_recvmsg
 parameter_list|(
 name|struct
 name|thread
@@ -25050,7 +25050,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sendmsg
+name|sys_sendmsg
 parameter_list|(
 name|struct
 name|thread
@@ -25065,7 +25065,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|recvfrom
+name|sys_recvfrom
 parameter_list|(
 name|struct
 name|thread
@@ -25080,7 +25080,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|accept
+name|sys_accept
 parameter_list|(
 name|struct
 name|thread
@@ -25095,7 +25095,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getpeername
+name|sys_getpeername
 parameter_list|(
 name|struct
 name|thread
@@ -25110,7 +25110,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getsockname
+name|sys_getsockname
 parameter_list|(
 name|struct
 name|thread
@@ -25125,7 +25125,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|access
+name|sys_access
 parameter_list|(
 name|struct
 name|thread
@@ -25140,7 +25140,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|chflags
+name|sys_chflags
 parameter_list|(
 name|struct
 name|thread
@@ -25155,7 +25155,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fchflags
+name|sys_fchflags
 parameter_list|(
 name|struct
 name|thread
@@ -25170,7 +25170,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sync
+name|sys_sync
 parameter_list|(
 name|struct
 name|thread
@@ -25185,7 +25185,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kill
+name|sys_kill
 parameter_list|(
 name|struct
 name|thread
@@ -25200,7 +25200,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getppid
+name|sys_getppid
 parameter_list|(
 name|struct
 name|thread
@@ -25215,7 +25215,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|dup
+name|sys_dup
 parameter_list|(
 name|struct
 name|thread
@@ -25230,7 +25230,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pipe
+name|sys_pipe
 parameter_list|(
 name|struct
 name|thread
@@ -25245,7 +25245,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getegid
+name|sys_getegid
 parameter_list|(
 name|struct
 name|thread
@@ -25260,7 +25260,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|profil
+name|sys_profil
 parameter_list|(
 name|struct
 name|thread
@@ -25275,7 +25275,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ktrace
+name|sys_ktrace
 parameter_list|(
 name|struct
 name|thread
@@ -25290,7 +25290,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getgid
+name|sys_getgid
 parameter_list|(
 name|struct
 name|thread
@@ -25305,7 +25305,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getlogin
+name|sys_getlogin
 parameter_list|(
 name|struct
 name|thread
@@ -25320,7 +25320,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setlogin
+name|sys_setlogin
 parameter_list|(
 name|struct
 name|thread
@@ -25335,7 +25335,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|acct
+name|sys_acct
 parameter_list|(
 name|struct
 name|thread
@@ -25350,7 +25350,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigaltstack
+name|sys_sigaltstack
 parameter_list|(
 name|struct
 name|thread
@@ -25365,7 +25365,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ioctl
+name|sys_ioctl
 parameter_list|(
 name|struct
 name|thread
@@ -25380,7 +25380,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|reboot
+name|sys_reboot
 parameter_list|(
 name|struct
 name|thread
@@ -25395,7 +25395,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|revoke
+name|sys_revoke
 parameter_list|(
 name|struct
 name|thread
@@ -25410,7 +25410,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|symlink
+name|sys_symlink
 parameter_list|(
 name|struct
 name|thread
@@ -25425,7 +25425,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|readlink
+name|sys_readlink
 parameter_list|(
 name|struct
 name|thread
@@ -25440,7 +25440,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|execve
+name|sys_execve
 parameter_list|(
 name|struct
 name|thread
@@ -25455,7 +25455,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|umask
+name|sys_umask
 parameter_list|(
 name|struct
 name|thread
@@ -25470,7 +25470,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|chroot
+name|sys_chroot
 parameter_list|(
 name|struct
 name|thread
@@ -25485,7 +25485,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msync
+name|sys_msync
 parameter_list|(
 name|struct
 name|thread
@@ -25500,7 +25500,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|vfork
+name|sys_vfork
 parameter_list|(
 name|struct
 name|thread
@@ -25515,7 +25515,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sbrk
+name|sys_sbrk
 parameter_list|(
 name|struct
 name|thread
@@ -25530,7 +25530,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sstk
+name|sys_sstk
 parameter_list|(
 name|struct
 name|thread
@@ -25545,7 +25545,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ovadvise
+name|sys_ovadvise
 parameter_list|(
 name|struct
 name|thread
@@ -25560,7 +25560,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|munmap
+name|sys_munmap
 parameter_list|(
 name|struct
 name|thread
@@ -25575,7 +25575,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mprotect
+name|sys_mprotect
 parameter_list|(
 name|struct
 name|thread
@@ -25590,7 +25590,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|madvise
+name|sys_madvise
 parameter_list|(
 name|struct
 name|thread
@@ -25605,7 +25605,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mincore
+name|sys_mincore
 parameter_list|(
 name|struct
 name|thread
@@ -25620,7 +25620,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getgroups
+name|sys_getgroups
 parameter_list|(
 name|struct
 name|thread
@@ -25635,7 +25635,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setgroups
+name|sys_setgroups
 parameter_list|(
 name|struct
 name|thread
@@ -25650,7 +25650,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getpgrp
+name|sys_getpgrp
 parameter_list|(
 name|struct
 name|thread
@@ -25665,7 +25665,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setpgid
+name|sys_setpgid
 parameter_list|(
 name|struct
 name|thread
@@ -25680,7 +25680,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setitimer
+name|sys_setitimer
 parameter_list|(
 name|struct
 name|thread
@@ -25695,7 +25695,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|swapon
+name|sys_swapon
 parameter_list|(
 name|struct
 name|thread
@@ -25710,7 +25710,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getitimer
+name|sys_getitimer
 parameter_list|(
 name|struct
 name|thread
@@ -25725,7 +25725,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getdtablesize
+name|sys_getdtablesize
 parameter_list|(
 name|struct
 name|thread
@@ -25740,7 +25740,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|dup2
+name|sys_dup2
 parameter_list|(
 name|struct
 name|thread
@@ -25755,7 +25755,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fcntl
+name|sys_fcntl
 parameter_list|(
 name|struct
 name|thread
@@ -25770,7 +25770,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|select
+name|sys_select
 parameter_list|(
 name|struct
 name|thread
@@ -25785,7 +25785,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fsync
+name|sys_fsync
 parameter_list|(
 name|struct
 name|thread
@@ -25800,7 +25800,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setpriority
+name|sys_setpriority
 parameter_list|(
 name|struct
 name|thread
@@ -25815,7 +25815,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|socket
+name|sys_socket
 parameter_list|(
 name|struct
 name|thread
@@ -25830,7 +25830,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|connect
+name|sys_connect
 parameter_list|(
 name|struct
 name|thread
@@ -25845,7 +25845,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getpriority
+name|sys_getpriority
 parameter_list|(
 name|struct
 name|thread
@@ -25860,7 +25860,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|bind
+name|sys_bind
 parameter_list|(
 name|struct
 name|thread
@@ -25875,7 +25875,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setsockopt
+name|sys_setsockopt
 parameter_list|(
 name|struct
 name|thread
@@ -25890,7 +25890,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|listen
+name|sys_listen
 parameter_list|(
 name|struct
 name|thread
@@ -25905,7 +25905,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|gettimeofday
+name|sys_gettimeofday
 parameter_list|(
 name|struct
 name|thread
@@ -25920,7 +25920,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getrusage
+name|sys_getrusage
 parameter_list|(
 name|struct
 name|thread
@@ -25935,7 +25935,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getsockopt
+name|sys_getsockopt
 parameter_list|(
 name|struct
 name|thread
@@ -25950,7 +25950,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|readv
+name|sys_readv
 parameter_list|(
 name|struct
 name|thread
@@ -25965,7 +25965,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|writev
+name|sys_writev
 parameter_list|(
 name|struct
 name|thread
@@ -25980,7 +25980,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|settimeofday
+name|sys_settimeofday
 parameter_list|(
 name|struct
 name|thread
@@ -25995,7 +25995,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fchown
+name|sys_fchown
 parameter_list|(
 name|struct
 name|thread
@@ -26010,7 +26010,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fchmod
+name|sys_fchmod
 parameter_list|(
 name|struct
 name|thread
@@ -26025,7 +26025,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setreuid
+name|sys_setreuid
 parameter_list|(
 name|struct
 name|thread
@@ -26040,7 +26040,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setregid
+name|sys_setregid
 parameter_list|(
 name|struct
 name|thread
@@ -26055,7 +26055,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rename
+name|sys_rename
 parameter_list|(
 name|struct
 name|thread
@@ -26070,7 +26070,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|flock
+name|sys_flock
 parameter_list|(
 name|struct
 name|thread
@@ -26085,7 +26085,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mkfifo
+name|sys_mkfifo
 parameter_list|(
 name|struct
 name|thread
@@ -26100,7 +26100,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sendto
+name|sys_sendto
 parameter_list|(
 name|struct
 name|thread
@@ -26115,7 +26115,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shutdown
+name|sys_shutdown
 parameter_list|(
 name|struct
 name|thread
@@ -26130,7 +26130,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|socketpair
+name|sys_socketpair
 parameter_list|(
 name|struct
 name|thread
@@ -26145,7 +26145,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mkdir
+name|sys_mkdir
 parameter_list|(
 name|struct
 name|thread
@@ -26160,7 +26160,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rmdir
+name|sys_rmdir
 parameter_list|(
 name|struct
 name|thread
@@ -26175,7 +26175,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|utimes
+name|sys_utimes
 parameter_list|(
 name|struct
 name|thread
@@ -26190,7 +26190,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|adjtime
+name|sys_adjtime
 parameter_list|(
 name|struct
 name|thread
@@ -26205,7 +26205,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setsid
+name|sys_setsid
 parameter_list|(
 name|struct
 name|thread
@@ -26220,7 +26220,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|quotactl
+name|sys_quotactl
 parameter_list|(
 name|struct
 name|thread
@@ -26235,7 +26235,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nlm_syscall
+name|sys_nlm_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -26250,7 +26250,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nfssvc
+name|sys_nfssvc
 parameter_list|(
 name|struct
 name|thread
@@ -26265,7 +26265,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lgetfh
+name|sys_lgetfh
 parameter_list|(
 name|struct
 name|thread
@@ -26280,7 +26280,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getfh
+name|sys_getfh
 parameter_list|(
 name|struct
 name|thread
@@ -26310,7 +26310,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rtprio
+name|sys_rtprio
 parameter_list|(
 name|struct
 name|thread
@@ -26325,7 +26325,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|semsys
+name|sys_semsys
 parameter_list|(
 name|struct
 name|thread
@@ -26340,7 +26340,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msgsys
+name|sys_msgsys
 parameter_list|(
 name|struct
 name|thread
@@ -26355,7 +26355,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shmsys
+name|sys_shmsys
 parameter_list|(
 name|struct
 name|thread
@@ -26400,7 +26400,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setfib
+name|sys_setfib
 parameter_list|(
 name|struct
 name|thread
@@ -26415,7 +26415,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ntp_adjtime
+name|sys_ntp_adjtime
 parameter_list|(
 name|struct
 name|thread
@@ -26430,7 +26430,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setgid
+name|sys_setgid
 parameter_list|(
 name|struct
 name|thread
@@ -26445,7 +26445,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setegid
+name|sys_setegid
 parameter_list|(
 name|struct
 name|thread
@@ -26460,7 +26460,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|seteuid
+name|sys_seteuid
 parameter_list|(
 name|struct
 name|thread
@@ -26475,7 +26475,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|stat
+name|sys_stat
 parameter_list|(
 name|struct
 name|thread
@@ -26490,7 +26490,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fstat
+name|sys_fstat
 parameter_list|(
 name|struct
 name|thread
@@ -26505,7 +26505,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lstat
+name|sys_lstat
 parameter_list|(
 name|struct
 name|thread
@@ -26520,7 +26520,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pathconf
+name|sys_pathconf
 parameter_list|(
 name|struct
 name|thread
@@ -26535,7 +26535,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fpathconf
+name|sys_fpathconf
 parameter_list|(
 name|struct
 name|thread
@@ -26550,7 +26550,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getrlimit
+name|sys_getrlimit
 parameter_list|(
 name|struct
 name|thread
@@ -26565,7 +26565,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setrlimit
+name|sys_setrlimit
 parameter_list|(
 name|struct
 name|thread
@@ -26580,7 +26580,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getdirentries
+name|sys_getdirentries
 parameter_list|(
 name|struct
 name|thread
@@ -26655,7 +26655,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__sysctl
+name|sys___sysctl
 parameter_list|(
 name|struct
 name|thread
@@ -26670,7 +26670,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mlock
+name|sys_mlock
 parameter_list|(
 name|struct
 name|thread
@@ -26685,7 +26685,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|munlock
+name|sys_munlock
 parameter_list|(
 name|struct
 name|thread
@@ -26700,7 +26700,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|undelete
+name|sys_undelete
 parameter_list|(
 name|struct
 name|thread
@@ -26715,7 +26715,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|futimes
+name|sys_futimes
 parameter_list|(
 name|struct
 name|thread
@@ -26730,7 +26730,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getpgid
+name|sys_getpgid
 parameter_list|(
 name|struct
 name|thread
@@ -26745,7 +26745,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|poll
+name|sys_poll
 parameter_list|(
 name|struct
 name|thread
@@ -26760,7 +26760,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|semget
+name|sys_semget
 parameter_list|(
 name|struct
 name|thread
@@ -26775,7 +26775,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|semop
+name|sys_semop
 parameter_list|(
 name|struct
 name|thread
@@ -26790,7 +26790,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msgget
+name|sys_msgget
 parameter_list|(
 name|struct
 name|thread
@@ -26805,7 +26805,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msgsnd
+name|sys_msgsnd
 parameter_list|(
 name|struct
 name|thread
@@ -26820,7 +26820,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msgrcv
+name|sys_msgrcv
 parameter_list|(
 name|struct
 name|thread
@@ -26835,7 +26835,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shmat
+name|sys_shmat
 parameter_list|(
 name|struct
 name|thread
@@ -26850,7 +26850,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shmdt
+name|sys_shmdt
 parameter_list|(
 name|struct
 name|thread
@@ -26865,7 +26865,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shmget
+name|sys_shmget
 parameter_list|(
 name|struct
 name|thread
@@ -26880,7 +26880,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|clock_gettime
+name|sys_clock_gettime
 parameter_list|(
 name|struct
 name|thread
@@ -26895,7 +26895,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|clock_settime
+name|sys_clock_settime
 parameter_list|(
 name|struct
 name|thread
@@ -26910,7 +26910,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|clock_getres
+name|sys_clock_getres
 parameter_list|(
 name|struct
 name|thread
@@ -26925,7 +26925,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ktimer_create
+name|sys_ktimer_create
 parameter_list|(
 name|struct
 name|thread
@@ -26940,7 +26940,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ktimer_delete
+name|sys_ktimer_delete
 parameter_list|(
 name|struct
 name|thread
@@ -26955,7 +26955,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ktimer_settime
+name|sys_ktimer_settime
 parameter_list|(
 name|struct
 name|thread
@@ -26970,7 +26970,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ktimer_gettime
+name|sys_ktimer_gettime
 parameter_list|(
 name|struct
 name|thread
@@ -26985,7 +26985,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ktimer_getoverrun
+name|sys_ktimer_getoverrun
 parameter_list|(
 name|struct
 name|thread
@@ -27000,7 +27000,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nanosleep
+name|sys_nanosleep
 parameter_list|(
 name|struct
 name|thread
@@ -27015,7 +27015,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ntp_gettime
+name|sys_ntp_gettime
 parameter_list|(
 name|struct
 name|thread
@@ -27030,7 +27030,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|minherit
+name|sys_minherit
 parameter_list|(
 name|struct
 name|thread
@@ -27045,7 +27045,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rfork
+name|sys_rfork
 parameter_list|(
 name|struct
 name|thread
@@ -27060,7 +27060,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|openbsd_poll
+name|sys_openbsd_poll
 parameter_list|(
 name|struct
 name|thread
@@ -27075,7 +27075,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|issetugid
+name|sys_issetugid
 parameter_list|(
 name|struct
 name|thread
@@ -27090,7 +27090,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lchown
+name|sys_lchown
 parameter_list|(
 name|struct
 name|thread
@@ -27105,7 +27105,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_read
+name|sys_aio_read
 parameter_list|(
 name|struct
 name|thread
@@ -27120,7 +27120,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_write
+name|sys_aio_write
 parameter_list|(
 name|struct
 name|thread
@@ -27135,7 +27135,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lio_listio
+name|sys_lio_listio
 parameter_list|(
 name|struct
 name|thread
@@ -27150,7 +27150,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getdents
+name|sys_getdents
 parameter_list|(
 name|struct
 name|thread
@@ -27165,7 +27165,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lchmod
+name|sys_lchmod
 parameter_list|(
 name|struct
 name|thread
@@ -27180,7 +27180,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lutimes
+name|sys_lutimes
 parameter_list|(
 name|struct
 name|thread
@@ -27195,7 +27195,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nstat
+name|sys_nstat
 parameter_list|(
 name|struct
 name|thread
@@ -27210,7 +27210,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nfstat
+name|sys_nfstat
 parameter_list|(
 name|struct
 name|thread
@@ -27225,7 +27225,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nlstat
+name|sys_nlstat
 parameter_list|(
 name|struct
 name|thread
@@ -27240,7 +27240,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|preadv
+name|sys_preadv
 parameter_list|(
 name|struct
 name|thread
@@ -27255,7 +27255,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pwritev
+name|sys_pwritev
 parameter_list|(
 name|struct
 name|thread
@@ -27270,7 +27270,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fhopen
+name|sys_fhopen
 parameter_list|(
 name|struct
 name|thread
@@ -27285,7 +27285,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fhstat
+name|sys_fhstat
 parameter_list|(
 name|struct
 name|thread
@@ -27300,7 +27300,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|modnext
+name|sys_modnext
 parameter_list|(
 name|struct
 name|thread
@@ -27315,7 +27315,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|modstat
+name|sys_modstat
 parameter_list|(
 name|struct
 name|thread
@@ -27330,7 +27330,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|modfnext
+name|sys_modfnext
 parameter_list|(
 name|struct
 name|thread
@@ -27345,7 +27345,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|modfind
+name|sys_modfind
 parameter_list|(
 name|struct
 name|thread
@@ -27360,7 +27360,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldload
+name|sys_kldload
 parameter_list|(
 name|struct
 name|thread
@@ -27375,7 +27375,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldunload
+name|sys_kldunload
 parameter_list|(
 name|struct
 name|thread
@@ -27390,7 +27390,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldfind
+name|sys_kldfind
 parameter_list|(
 name|struct
 name|thread
@@ -27405,7 +27405,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldnext
+name|sys_kldnext
 parameter_list|(
 name|struct
 name|thread
@@ -27420,7 +27420,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldstat
+name|sys_kldstat
 parameter_list|(
 name|struct
 name|thread
@@ -27435,7 +27435,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldfirstmod
+name|sys_kldfirstmod
 parameter_list|(
 name|struct
 name|thread
@@ -27450,7 +27450,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getsid
+name|sys_getsid
 parameter_list|(
 name|struct
 name|thread
@@ -27465,7 +27465,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setresuid
+name|sys_setresuid
 parameter_list|(
 name|struct
 name|thread
@@ -27480,7 +27480,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setresgid
+name|sys_setresgid
 parameter_list|(
 name|struct
 name|thread
@@ -27495,7 +27495,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_return
+name|sys_aio_return
 parameter_list|(
 name|struct
 name|thread
@@ -27510,7 +27510,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_suspend
+name|sys_aio_suspend
 parameter_list|(
 name|struct
 name|thread
@@ -27525,7 +27525,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_cancel
+name|sys_aio_cancel
 parameter_list|(
 name|struct
 name|thread
@@ -27540,7 +27540,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_error
+name|sys_aio_error
 parameter_list|(
 name|struct
 name|thread
@@ -27555,7 +27555,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|oaio_read
+name|sys_oaio_read
 parameter_list|(
 name|struct
 name|thread
@@ -27570,7 +27570,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|oaio_write
+name|sys_oaio_write
 parameter_list|(
 name|struct
 name|thread
@@ -27585,7 +27585,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|olio_listio
+name|sys_olio_listio
 parameter_list|(
 name|struct
 name|thread
@@ -27600,7 +27600,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|yield
+name|sys_yield
 parameter_list|(
 name|struct
 name|thread
@@ -27615,7 +27615,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mlockall
+name|sys_mlockall
 parameter_list|(
 name|struct
 name|thread
@@ -27630,7 +27630,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|munlockall
+name|sys_munlockall
 parameter_list|(
 name|struct
 name|thread
@@ -27645,7 +27645,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__getcwd
+name|sys___getcwd
 parameter_list|(
 name|struct
 name|thread
@@ -27660,7 +27660,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_setparam
+name|sys_sched_setparam
 parameter_list|(
 name|struct
 name|thread
@@ -27675,7 +27675,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_getparam
+name|sys_sched_getparam
 parameter_list|(
 name|struct
 name|thread
@@ -27690,7 +27690,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_setscheduler
+name|sys_sched_setscheduler
 parameter_list|(
 name|struct
 name|thread
@@ -27705,7 +27705,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_getscheduler
+name|sys_sched_getscheduler
 parameter_list|(
 name|struct
 name|thread
@@ -27720,7 +27720,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_yield
+name|sys_sched_yield
 parameter_list|(
 name|struct
 name|thread
@@ -27735,7 +27735,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_get_priority_max
+name|sys_sched_get_priority_max
 parameter_list|(
 name|struct
 name|thread
@@ -27750,7 +27750,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_get_priority_min
+name|sys_sched_get_priority_min
 parameter_list|(
 name|struct
 name|thread
@@ -27765,7 +27765,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sched_rr_get_interval
+name|sys_sched_rr_get_interval
 parameter_list|(
 name|struct
 name|thread
@@ -27780,7 +27780,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|utrace
+name|sys_utrace
 parameter_list|(
 name|struct
 name|thread
@@ -27795,7 +27795,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldsym
+name|sys_kldsym
 parameter_list|(
 name|struct
 name|thread
@@ -27810,7 +27810,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|jail
+name|sys_jail
 parameter_list|(
 name|struct
 name|thread
@@ -27825,7 +27825,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nnpfs_syscall
+name|sys_nnpfs_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -27840,7 +27840,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigprocmask
+name|sys_sigprocmask
 parameter_list|(
 name|struct
 name|thread
@@ -27855,7 +27855,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigsuspend
+name|sys_sigsuspend
 parameter_list|(
 name|struct
 name|thread
@@ -27870,7 +27870,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigpending
+name|sys_sigpending
 parameter_list|(
 name|struct
 name|thread
@@ -27885,7 +27885,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigtimedwait
+name|sys_sigtimedwait
 parameter_list|(
 name|struct
 name|thread
@@ -27900,7 +27900,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigwaitinfo
+name|sys_sigwaitinfo
 parameter_list|(
 name|struct
 name|thread
@@ -27915,7 +27915,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_get_file
+name|sys___acl_get_file
 parameter_list|(
 name|struct
 name|thread
@@ -27930,7 +27930,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_set_file
+name|sys___acl_set_file
 parameter_list|(
 name|struct
 name|thread
@@ -27945,7 +27945,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_get_fd
+name|sys___acl_get_fd
 parameter_list|(
 name|struct
 name|thread
@@ -27960,7 +27960,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_set_fd
+name|sys___acl_set_fd
 parameter_list|(
 name|struct
 name|thread
@@ -27975,7 +27975,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_delete_file
+name|sys___acl_delete_file
 parameter_list|(
 name|struct
 name|thread
@@ -27990,7 +27990,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_delete_fd
+name|sys___acl_delete_fd
 parameter_list|(
 name|struct
 name|thread
@@ -28005,7 +28005,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_aclcheck_file
+name|sys___acl_aclcheck_file
 parameter_list|(
 name|struct
 name|thread
@@ -28020,7 +28020,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_aclcheck_fd
+name|sys___acl_aclcheck_fd
 parameter_list|(
 name|struct
 name|thread
@@ -28035,7 +28035,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattrctl
+name|sys_extattrctl
 parameter_list|(
 name|struct
 name|thread
@@ -28050,7 +28050,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_set_file
+name|sys_extattr_set_file
 parameter_list|(
 name|struct
 name|thread
@@ -28065,7 +28065,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_get_file
+name|sys_extattr_get_file
 parameter_list|(
 name|struct
 name|thread
@@ -28080,7 +28080,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_delete_file
+name|sys_extattr_delete_file
 parameter_list|(
 name|struct
 name|thread
@@ -28095,7 +28095,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_waitcomplete
+name|sys_aio_waitcomplete
 parameter_list|(
 name|struct
 name|thread
@@ -28110,7 +28110,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getresuid
+name|sys_getresuid
 parameter_list|(
 name|struct
 name|thread
@@ -28125,7 +28125,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getresgid
+name|sys_getresgid
 parameter_list|(
 name|struct
 name|thread
@@ -28140,7 +28140,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kqueue
+name|sys_kqueue
 parameter_list|(
 name|struct
 name|thread
@@ -28155,7 +28155,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kevent
+name|sys_kevent
 parameter_list|(
 name|struct
 name|thread
@@ -28170,7 +28170,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_set_fd
+name|sys_extattr_set_fd
 parameter_list|(
 name|struct
 name|thread
@@ -28185,7 +28185,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_get_fd
+name|sys_extattr_get_fd
 parameter_list|(
 name|struct
 name|thread
@@ -28200,7 +28200,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_delete_fd
+name|sys_extattr_delete_fd
 parameter_list|(
 name|struct
 name|thread
@@ -28215,7 +28215,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__setugid
+name|sys___setugid
 parameter_list|(
 name|struct
 name|thread
@@ -28230,7 +28230,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|eaccess
+name|sys_eaccess
 parameter_list|(
 name|struct
 name|thread
@@ -28245,7 +28245,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|afs3_syscall
+name|sys_afs3_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -28260,7 +28260,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|nmount
+name|sys_nmount
 parameter_list|(
 name|struct
 name|thread
@@ -28275,7 +28275,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_get_proc
+name|sys___mac_get_proc
 parameter_list|(
 name|struct
 name|thread
@@ -28290,7 +28290,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_set_proc
+name|sys___mac_set_proc
 parameter_list|(
 name|struct
 name|thread
@@ -28305,7 +28305,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_get_fd
+name|sys___mac_get_fd
 parameter_list|(
 name|struct
 name|thread
@@ -28320,7 +28320,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_get_file
+name|sys___mac_get_file
 parameter_list|(
 name|struct
 name|thread
@@ -28335,7 +28335,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_set_fd
+name|sys___mac_set_fd
 parameter_list|(
 name|struct
 name|thread
@@ -28350,7 +28350,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_set_file
+name|sys___mac_set_file
 parameter_list|(
 name|struct
 name|thread
@@ -28365,7 +28365,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kenv
+name|sys_kenv
 parameter_list|(
 name|struct
 name|thread
@@ -28380,7 +28380,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lchflags
+name|sys_lchflags
 parameter_list|(
 name|struct
 name|thread
@@ -28395,7 +28395,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|uuidgen
+name|sys_uuidgen
 parameter_list|(
 name|struct
 name|thread
@@ -28410,7 +28410,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sendfile
+name|sys_sendfile
 parameter_list|(
 name|struct
 name|thread
@@ -28425,7 +28425,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mac_syscall
+name|sys_mac_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -28440,7 +28440,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getfsstat
+name|sys_getfsstat
 parameter_list|(
 name|struct
 name|thread
@@ -28455,7 +28455,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|statfs
+name|sys_statfs
 parameter_list|(
 name|struct
 name|thread
@@ -28470,7 +28470,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fstatfs
+name|sys_fstatfs
 parameter_list|(
 name|struct
 name|thread
@@ -28485,7 +28485,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fhstatfs
+name|sys_fhstatfs
 parameter_list|(
 name|struct
 name|thread
@@ -28500,7 +28500,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_close
+name|sys_ksem_close
 parameter_list|(
 name|struct
 name|thread
@@ -28515,7 +28515,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_post
+name|sys_ksem_post
 parameter_list|(
 name|struct
 name|thread
@@ -28530,7 +28530,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_wait
+name|sys_ksem_wait
 parameter_list|(
 name|struct
 name|thread
@@ -28545,7 +28545,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_trywait
+name|sys_ksem_trywait
 parameter_list|(
 name|struct
 name|thread
@@ -28560,7 +28560,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_init
+name|sys_ksem_init
 parameter_list|(
 name|struct
 name|thread
@@ -28575,7 +28575,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_open
+name|sys_ksem_open
 parameter_list|(
 name|struct
 name|thread
@@ -28590,7 +28590,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_unlink
+name|sys_ksem_unlink
 parameter_list|(
 name|struct
 name|thread
@@ -28605,7 +28605,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_getvalue
+name|sys_ksem_getvalue
 parameter_list|(
 name|struct
 name|thread
@@ -28620,7 +28620,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_destroy
+name|sys_ksem_destroy
 parameter_list|(
 name|struct
 name|thread
@@ -28635,7 +28635,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_get_pid
+name|sys___mac_get_pid
 parameter_list|(
 name|struct
 name|thread
@@ -28650,7 +28650,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_get_link
+name|sys___mac_get_link
 parameter_list|(
 name|struct
 name|thread
@@ -28665,7 +28665,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_set_link
+name|sys___mac_set_link
 parameter_list|(
 name|struct
 name|thread
@@ -28680,7 +28680,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_set_link
+name|sys_extattr_set_link
 parameter_list|(
 name|struct
 name|thread
@@ -28695,7 +28695,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_get_link
+name|sys_extattr_get_link
 parameter_list|(
 name|struct
 name|thread
@@ -28710,7 +28710,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_delete_link
+name|sys_extattr_delete_link
 parameter_list|(
 name|struct
 name|thread
@@ -28725,7 +28725,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__mac_execve
+name|sys___mac_execve
 parameter_list|(
 name|struct
 name|thread
@@ -28740,7 +28740,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigaction
+name|sys_sigaction
 parameter_list|(
 name|struct
 name|thread
@@ -28755,7 +28755,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|struct
 name|thread
@@ -28770,7 +28770,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getcontext
+name|sys_getcontext
 parameter_list|(
 name|struct
 name|thread
@@ -28785,7 +28785,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setcontext
+name|sys_setcontext
 parameter_list|(
 name|struct
 name|thread
@@ -28800,7 +28800,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|swapcontext
+name|sys_swapcontext
 parameter_list|(
 name|struct
 name|thread
@@ -28815,7 +28815,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|swapoff
+name|sys_swapoff
 parameter_list|(
 name|struct
 name|thread
@@ -28830,7 +28830,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_get_link
+name|sys___acl_get_link
 parameter_list|(
 name|struct
 name|thread
@@ -28845,7 +28845,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_set_link
+name|sys___acl_set_link
 parameter_list|(
 name|struct
 name|thread
@@ -28860,7 +28860,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_delete_link
+name|sys___acl_delete_link
 parameter_list|(
 name|struct
 name|thread
@@ -28875,7 +28875,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__acl_aclcheck_link
+name|sys___acl_aclcheck_link
 parameter_list|(
 name|struct
 name|thread
@@ -28890,7 +28890,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigwait
+name|sys_sigwait
 parameter_list|(
 name|struct
 name|thread
@@ -28905,7 +28905,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_create
+name|sys_thr_create
 parameter_list|(
 name|struct
 name|thread
@@ -28920,7 +28920,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_exit
+name|sys_thr_exit
 parameter_list|(
 name|struct
 name|thread
@@ -28935,7 +28935,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_self
+name|sys_thr_self
 parameter_list|(
 name|struct
 name|thread
@@ -28950,7 +28950,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_kill
+name|sys_thr_kill
 parameter_list|(
 name|struct
 name|thread
@@ -28965,7 +28965,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_umtx_lock
+name|sys__umtx_lock
 parameter_list|(
 name|struct
 name|thread
@@ -28980,7 +28980,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_umtx_unlock
+name|sys__umtx_unlock
 parameter_list|(
 name|struct
 name|thread
@@ -28995,7 +28995,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|jail_attach
+name|sys_jail_attach
 parameter_list|(
 name|struct
 name|thread
@@ -29010,7 +29010,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_list_fd
+name|sys_extattr_list_fd
 parameter_list|(
 name|struct
 name|thread
@@ -29025,7 +29025,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_list_file
+name|sys_extattr_list_file
 parameter_list|(
 name|struct
 name|thread
@@ -29040,7 +29040,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|extattr_list_link
+name|sys_extattr_list_link
 parameter_list|(
 name|struct
 name|thread
@@ -29055,7 +29055,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ksem_timedwait
+name|sys_ksem_timedwait
 parameter_list|(
 name|struct
 name|thread
@@ -29070,7 +29070,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_suspend
+name|sys_thr_suspend
 parameter_list|(
 name|struct
 name|thread
@@ -29085,7 +29085,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_wake
+name|sys_thr_wake
 parameter_list|(
 name|struct
 name|thread
@@ -29100,7 +29100,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kldunloadf
+name|sys_kldunloadf
 parameter_list|(
 name|struct
 name|thread
@@ -29115,7 +29115,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|audit
+name|sys_audit
 parameter_list|(
 name|struct
 name|thread
@@ -29130,7 +29130,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|auditon
+name|sys_auditon
 parameter_list|(
 name|struct
 name|thread
@@ -29145,7 +29145,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getauid
+name|sys_getauid
 parameter_list|(
 name|struct
 name|thread
@@ -29160,7 +29160,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setauid
+name|sys_setauid
 parameter_list|(
 name|struct
 name|thread
@@ -29175,7 +29175,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getaudit
+name|sys_getaudit
 parameter_list|(
 name|struct
 name|thread
@@ -29190,7 +29190,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setaudit
+name|sys_setaudit
 parameter_list|(
 name|struct
 name|thread
@@ -29205,7 +29205,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getaudit_addr
+name|sys_getaudit_addr
 parameter_list|(
 name|struct
 name|thread
@@ -29220,7 +29220,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setaudit_addr
+name|sys_setaudit_addr
 parameter_list|(
 name|struct
 name|thread
@@ -29235,7 +29235,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|auditctl
+name|sys_auditctl
 parameter_list|(
 name|struct
 name|thread
@@ -29250,7 +29250,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|_umtx_op
+name|sys__umtx_op
 parameter_list|(
 name|struct
 name|thread
@@ -29265,7 +29265,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_new
+name|sys_thr_new
 parameter_list|(
 name|struct
 name|thread
@@ -29280,7 +29280,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sigqueue
+name|sys_sigqueue
 parameter_list|(
 name|struct
 name|thread
@@ -29295,7 +29295,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kmq_open
+name|sys_kmq_open
 parameter_list|(
 name|struct
 name|thread
@@ -29310,7 +29310,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kmq_setattr
+name|sys_kmq_setattr
 parameter_list|(
 name|struct
 name|thread
@@ -29325,7 +29325,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kmq_timedreceive
+name|sys_kmq_timedreceive
 parameter_list|(
 name|struct
 name|thread
@@ -29340,7 +29340,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kmq_timedsend
+name|sys_kmq_timedsend
 parameter_list|(
 name|struct
 name|thread
@@ -29355,7 +29355,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kmq_notify
+name|sys_kmq_notify
 parameter_list|(
 name|struct
 name|thread
@@ -29370,7 +29370,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|kmq_unlink
+name|sys_kmq_unlink
 parameter_list|(
 name|struct
 name|thread
@@ -29385,7 +29385,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|abort2
+name|sys_abort2
 parameter_list|(
 name|struct
 name|thread
@@ -29400,7 +29400,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_set_name
+name|sys_thr_set_name
 parameter_list|(
 name|struct
 name|thread
@@ -29415,7 +29415,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|aio_fsync
+name|sys_aio_fsync
 parameter_list|(
 name|struct
 name|thread
@@ -29430,7 +29430,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rtprio_thread
+name|sys_rtprio_thread
 parameter_list|(
 name|struct
 name|thread
@@ -29445,7 +29445,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sctp_peeloff
+name|sys_sctp_peeloff
 parameter_list|(
 name|struct
 name|thread
@@ -29460,7 +29460,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sctp_generic_sendmsg
+name|sys_sctp_generic_sendmsg
 parameter_list|(
 name|struct
 name|thread
@@ -29475,7 +29475,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sctp_generic_sendmsg_iov
+name|sys_sctp_generic_sendmsg_iov
 parameter_list|(
 name|struct
 name|thread
@@ -29490,7 +29490,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|sctp_generic_recvmsg
+name|sys_sctp_generic_recvmsg
 parameter_list|(
 name|struct
 name|thread
@@ -29505,7 +29505,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pread
+name|sys_pread
 parameter_list|(
 name|struct
 name|thread
@@ -29520,7 +29520,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pwrite
+name|sys_pwrite
 parameter_list|(
 name|struct
 name|thread
@@ -29535,7 +29535,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mmap
+name|sys_mmap
 parameter_list|(
 name|struct
 name|thread
@@ -29550,7 +29550,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lseek
+name|sys_lseek
 parameter_list|(
 name|struct
 name|thread
@@ -29565,7 +29565,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|truncate
+name|sys_truncate
 parameter_list|(
 name|struct
 name|thread
@@ -29580,7 +29580,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ftruncate
+name|sys_ftruncate
 parameter_list|(
 name|struct
 name|thread
@@ -29595,7 +29595,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|thr_kill2
+name|sys_thr_kill2
 parameter_list|(
 name|struct
 name|thread
@@ -29610,7 +29610,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shm_open
+name|sys_shm_open
 parameter_list|(
 name|struct
 name|thread
@@ -29625,7 +29625,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shm_unlink
+name|sys_shm_unlink
 parameter_list|(
 name|struct
 name|thread
@@ -29640,7 +29640,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cpuset
+name|sys_cpuset
 parameter_list|(
 name|struct
 name|thread
@@ -29655,7 +29655,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cpuset_setid
+name|sys_cpuset_setid
 parameter_list|(
 name|struct
 name|thread
@@ -29670,7 +29670,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cpuset_getid
+name|sys_cpuset_getid
 parameter_list|(
 name|struct
 name|thread
@@ -29685,7 +29685,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cpuset_getaffinity
+name|sys_cpuset_getaffinity
 parameter_list|(
 name|struct
 name|thread
@@ -29700,7 +29700,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cpuset_setaffinity
+name|sys_cpuset_setaffinity
 parameter_list|(
 name|struct
 name|thread
@@ -29715,7 +29715,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|faccessat
+name|sys_faccessat
 parameter_list|(
 name|struct
 name|thread
@@ -29730,7 +29730,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fchmodat
+name|sys_fchmodat
 parameter_list|(
 name|struct
 name|thread
@@ -29745,7 +29745,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fchownat
+name|sys_fchownat
 parameter_list|(
 name|struct
 name|thread
@@ -29760,7 +29760,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fexecve
+name|sys_fexecve
 parameter_list|(
 name|struct
 name|thread
@@ -29775,7 +29775,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|fstatat
+name|sys_fstatat
 parameter_list|(
 name|struct
 name|thread
@@ -29790,7 +29790,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|futimesat
+name|sys_futimesat
 parameter_list|(
 name|struct
 name|thread
@@ -29805,7 +29805,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|linkat
+name|sys_linkat
 parameter_list|(
 name|struct
 name|thread
@@ -29820,7 +29820,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mkdirat
+name|sys_mkdirat
 parameter_list|(
 name|struct
 name|thread
@@ -29835,7 +29835,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mkfifoat
+name|sys_mkfifoat
 parameter_list|(
 name|struct
 name|thread
@@ -29850,7 +29850,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|mknodat
+name|sys_mknodat
 parameter_list|(
 name|struct
 name|thread
@@ -29865,7 +29865,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|openat
+name|sys_openat
 parameter_list|(
 name|struct
 name|thread
@@ -29880,7 +29880,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|readlinkat
+name|sys_readlinkat
 parameter_list|(
 name|struct
 name|thread
@@ -29895,7 +29895,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|renameat
+name|sys_renameat
 parameter_list|(
 name|struct
 name|thread
@@ -29910,7 +29910,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|symlinkat
+name|sys_symlinkat
 parameter_list|(
 name|struct
 name|thread
@@ -29925,7 +29925,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|unlinkat
+name|sys_unlinkat
 parameter_list|(
 name|struct
 name|thread
@@ -29940,7 +29940,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|posix_openpt
+name|sys_posix_openpt
 parameter_list|(
 name|struct
 name|thread
@@ -29955,7 +29955,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|gssd_syscall
+name|sys_gssd_syscall
 parameter_list|(
 name|struct
 name|thread
@@ -29970,7 +29970,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|jail_get
+name|sys_jail_get
 parameter_list|(
 name|struct
 name|thread
@@ -29985,7 +29985,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|jail_set
+name|sys_jail_set
 parameter_list|(
 name|struct
 name|thread
@@ -30000,7 +30000,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|jail_remove
+name|sys_jail_remove
 parameter_list|(
 name|struct
 name|thread
@@ -30015,7 +30015,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|closefrom
+name|sys_closefrom
 parameter_list|(
 name|struct
 name|thread
@@ -30030,7 +30030,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|__semctl
+name|sys___semctl
 parameter_list|(
 name|struct
 name|thread
@@ -30045,7 +30045,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|msgctl
+name|sys_msgctl
 parameter_list|(
 name|struct
 name|thread
@@ -30060,7 +30060,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|shmctl
+name|sys_shmctl
 parameter_list|(
 name|struct
 name|thread
@@ -30075,7 +30075,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|lpathconf
+name|sys_lpathconf
 parameter_list|(
 name|struct
 name|thread
@@ -30090,7 +30090,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cap_new
+name|sys_cap_new
 parameter_list|(
 name|struct
 name|thread
@@ -30105,7 +30105,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cap_getrights
+name|sys_cap_getrights
 parameter_list|(
 name|struct
 name|thread
@@ -30120,7 +30120,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cap_enter
+name|sys_cap_enter
 parameter_list|(
 name|struct
 name|thread
@@ -30135,7 +30135,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|cap_getmode
+name|sys_cap_getmode
 parameter_list|(
 name|struct
 name|thread
@@ -30150,7 +30150,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pdfork
+name|sys_pdfork
 parameter_list|(
 name|struct
 name|thread
@@ -30165,7 +30165,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pdkill
+name|sys_pdkill
 parameter_list|(
 name|struct
 name|thread
@@ -30180,7 +30180,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pdgetpid
+name|sys_pdgetpid
 parameter_list|(
 name|struct
 name|thread
@@ -30195,7 +30195,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|pselect
+name|sys_pselect
 parameter_list|(
 name|struct
 name|thread
@@ -30210,7 +30210,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|getloginclass
+name|sys_getloginclass
 parameter_list|(
 name|struct
 name|thread
@@ -30225,7 +30225,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|setloginclass
+name|sys_setloginclass
 parameter_list|(
 name|struct
 name|thread
@@ -30240,7 +30240,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rctl_get_racct
+name|sys_rctl_get_racct
 parameter_list|(
 name|struct
 name|thread
@@ -30255,7 +30255,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rctl_get_rules
+name|sys_rctl_get_rules
 parameter_list|(
 name|struct
 name|thread
@@ -30270,7 +30270,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rctl_get_limits
+name|sys_rctl_get_limits
 parameter_list|(
 name|struct
 name|thread
@@ -30285,7 +30285,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rctl_add_rule
+name|sys_rctl_add_rule
 parameter_list|(
 name|struct
 name|thread
@@ -30300,7 +30300,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|rctl_remove_rule
+name|sys_rctl_remove_rule
 parameter_list|(
 name|struct
 name|thread
@@ -30315,7 +30315,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|posix_fallocate
+name|sys_posix_fallocate
 parameter_list|(
 name|struct
 name|thread

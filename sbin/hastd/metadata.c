@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -324,7 +318,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|buf
 operator|!=
@@ -926,7 +920,7 @@ block|}
 else|else
 comment|/* if (res->hr_role == HAST_ROLE_SECONDARY) */
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|res
 operator|->
@@ -1006,7 +1000,7 @@ argument_list|(
 name|nv
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -1023,14 +1017,14 @@ operator|&
 name|size
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|ptr
 operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|<

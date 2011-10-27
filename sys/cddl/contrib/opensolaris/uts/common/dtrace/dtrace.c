@@ -23366,7 +23366,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -23439,7 +23439,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,

@@ -1054,7 +1054,7 @@ name|whence
 expr_stmt|;
 name|error
 operator|=
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -1179,7 +1179,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|lseek
+name|sys_lseek
 argument_list|(
 name|td
 argument_list|,
@@ -4763,7 +4763,7 @@ name|length
 expr_stmt|;
 return|return
 operator|(
-name|ftruncate
+name|sys_ftruncate
 argument_list|(
 name|td
 argument_list|,
@@ -5143,7 +5143,7 @@ operator|->
 name|fd
 expr_stmt|;
 return|return
-name|fsync
+name|sys_fsync
 argument_list|(
 name|td
 argument_list|,
@@ -5219,7 +5219,7 @@ name|offset
 expr_stmt|;
 name|error
 operator|=
-name|pread
+name|sys_pread
 argument_list|(
 name|td
 argument_list|,
@@ -5352,7 +5352,7 @@ operator|->
 name|offset
 expr_stmt|;
 return|return
-name|pwrite
+name|sys_pwrite
 argument_list|(
 name|td
 argument_list|,
@@ -5862,7 +5862,7 @@ expr_stmt|;
 comment|/* XXX correct? */
 return|return
 operator|(
-name|unmount
+name|sys_unmount
 argument_list|(
 name|td
 argument_list|,

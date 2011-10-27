@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/APSInt.h"
 end_include
 
@@ -77,6 +83,9 @@ name|clang
 block|{
 name|class
 name|CharUnits
+decl_stmt|;
+name|class
+name|DiagnosticBuilder
 decl_stmt|;
 name|class
 name|Expr
@@ -526,8 +535,6 @@ block|}
 name|void
 name|print
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -1410,15 +1417,11 @@ function_decl|;
 block|}
 empty_stmt|;
 specifier|inline
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -1440,6 +1443,24 @@ return|return
 name|OS
 return|;
 block|}
+comment|// Writes a concise representation of V to DB, in a single<< operation.
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|operator
+operator|<<
+operator|(
+specifier|const
+name|DiagnosticBuilder
+operator|&
+name|DB
+operator|,
+specifier|const
+name|APValue
+operator|&
+name|V
+operator|)
+expr_stmt|;
 block|}
 end_decl_stmt
 

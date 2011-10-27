@@ -785,7 +785,7 @@ end_comment
 
 begin_function
 name|int
-name|reboot
+name|sys_reboot
 parameter_list|(
 name|struct
 name|thread
@@ -911,7 +911,7 @@ argument_list|(
 name|initproc
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|initproc
 argument_list|,
@@ -1394,7 +1394,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sync
+name|sys_sync
 argument_list|(
 name|curthread
 argument_list|,
@@ -1512,7 +1512,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|sync
+name|sys_sync
 argument_list|(
 name|curthread
 argument_list|,

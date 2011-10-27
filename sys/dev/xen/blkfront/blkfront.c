@@ -294,18 +294,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void blkif_recover(struct xb_softc *);
-endif|#
-directive|endif
-end_endif
-
 begin_function_decl
 specifier|static
 name|int
@@ -326,8 +314,6 @@ parameter_list|(
 name|struct
 name|xb_softc
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2243,30 +2229,6 @@ name|connected
 operator|=
 name|BLKIF_STATE_DISCONNECTED
 expr_stmt|;
-comment|/* Front end dir is a number, which is used as the id. */
-name|sc
-operator|->
-name|handle
-operator|=
-name|strtoul
-argument_list|(
-name|strrchr
-argument_list|(
-name|xenbus_get_node
-argument_list|(
-name|dev
-argument_list|)
-argument_list|,
-literal|'/'
-argument_list|)
-operator|+
-literal|1
-argument_list|,
-name|NULL
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 comment|/* Wait for backend device to publish its protocol capabilities. */
 name|xenbus_set_state
 argument_list|(
@@ -2302,6 +2264,12 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|int
+name|retval
+decl_stmt|;
+name|int
+name|saved_state
+decl_stmt|;
 comment|/* Prevent new requests being issued until we fix things up. */
 name|mtx_lock
 argument_list|(
@@ -2311,12 +2279,69 @@ operator|->
 name|xb_io_lock
 argument_list|)
 expr_stmt|;
+name|saved_state
+operator|=
+name|sc
+operator|->
+name|connected
+expr_stmt|;
 name|sc
 operator|->
 name|connected
 operator|=
 name|BLKIF_STATE_SUSPENDED
 expr_stmt|;
+comment|/* Wait for outstanding I/O to drain. */
+name|retval
+operator|=
+literal|0
+expr_stmt|;
+while|while
+condition|(
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cm_busy
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
+name|msleep
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cm_busy
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|xb_io_lock
+argument_list|,
+name|PRIBIO
+argument_list|,
+literal|"blkf_susp"
+argument_list|,
+literal|30
+operator|*
+name|hz
+argument_list|)
+operator|==
+name|EWOULDBLOCK
+condition|)
+block|{
+name|retval
+operator|=
+name|EBUSY
+expr_stmt|;
+break|break;
+block|}
+block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -2325,9 +2350,21 @@ operator|->
 name|xb_io_lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|retval
+operator|!=
+literal|0
+condition|)
+name|sc
+operator|->
+name|connected
+operator|=
+name|saved_state
+expr_stmt|;
 return|return
 operator|(
-literal|0
+name|retval
 operator|)
 return|;
 block|}
@@ -2342,14 +2379,36 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-if|#
-directive|if
-literal|0
-block|struct xb_softc *sc = device_get_softc(dev);  	DPRINTK("blkfront_resume: %s\n", xenbus_get_node(dev));
-comment|/* XXX This can't work!!! */
-block|blkif_free(sc, 1); 	blkfront_initialize(sc); 	if (sc->connected == BLKIF_STATE_SUSPENDED) 		blkif_recover(sc);
-endif|#
-directive|endif
+name|struct
+name|xb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
+name|DPRINTK
+argument_list|(
+literal|"blkfront_resume: %s\n"
+argument_list|,
+name|xenbus_get_node
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|blkif_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|blkfront_initialize
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2396,7 +2455,10 @@ argument_list|)
 operator|!=
 name|XenbusStateInitialising
 condition|)
+block|{
+comment|/* Initialization has already been performed. */
 return|return;
+block|}
 comment|/* 	 * Protocol defaults valid even if negotiation for a 	 * setting fails. 	 */
 name|sc
 operator|->
@@ -2800,6 +2862,13 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|xb_io_dmat
+argument_list|)
+expr_stmt|;
 name|xenbus_dev_fatal
 argument_list|(
 name|sc
@@ -2811,6 +2880,7 @@ argument_list|,
 literal|"Cannot allocate request structures\n"
 argument_list|)
 expr_stmt|;
+return|return;
 block|}
 for|for
 control|(
@@ -3583,15 +3653,15 @@ break|break;
 case|case
 name|XenbusStateInitWait
 case|:
+case|case
+name|XenbusStateInitialised
+case|:
 name|blkfront_initialize
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 break|break;
-case|case
-name|XenbusStateInitialised
-case|:
 case|case
 name|XenbusStateConnected
 case|:
@@ -3639,7 +3709,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  ** Invoked when the backend is finally 'ready' (and has told produced  ** the details about the physical device - #sectors, size, etc).  */
+comment|/*  ** Invoked when the backend is finally 'ready' (and has published ** the details about the physical device - #sectors, size, etc).  */
 end_comment
 
 begin_function
@@ -3794,6 +3864,15 @@ name|xb_flags
 operator||=
 name|XB_BARRIER
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|xb_disk
+operator|==
+name|NULL
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -3847,6 +3926,7 @@ argument_list|,
 name|sector_size
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 name|void
 operator|)
@@ -3999,8 +4079,6 @@ expr_stmt|;
 name|blkif_free
 argument_list|(
 name|sc
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|mtx_destroy
@@ -5166,6 +5244,15 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|connected
+operator|!=
+name|BLKIF_STATE_CONNECTED
+condition|)
+return|return;
 while|while
 condition|(
 name|RING_FREE_REQUESTS
@@ -5309,8 +5396,8 @@ argument_list|(
 name|sc
 operator|->
 name|connected
-operator|!=
-name|BLKIF_STATE_CONNECTED
+operator|==
+name|BLKIF_STATE_DISCONNECTED
 argument_list|)
 condition|)
 block|{
@@ -5559,6 +5646,25 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|unlikely
+argument_list|(
+name|sc
+operator|->
+name|connected
+operator|==
+name|BLKIF_STATE_SUSPENDED
+argument_list|)
+condition|)
+name|wakeup
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|cm_busy
+argument_list|)
+expr_stmt|;
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -5579,9 +5685,6 @@ name|struct
 name|xb_softc
 modifier|*
 name|sc
-parameter_list|,
-name|int
-name|suspend
 parameter_list|)
 block|{
 name|uint8_t
@@ -5604,10 +5707,6 @@ name|sc
 operator|->
 name|connected
 operator|=
-name|suspend
-condition|?
-name|BLKIF_STATE_SUSPENDED
-else|:
 name|BLKIF_STATE_DISCONNECTED
 expr_stmt|;
 name|mtx_unlock
@@ -5805,6 +5904,28 @@ name|shadow
 operator|=
 name|NULL
 expr_stmt|;
+name|bus_dma_tag_destroy
+argument_list|(
+name|sc
+operator|->
+name|xb_io_dmat
+argument_list|)
+expr_stmt|;
+name|xb_initq_free
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|xb_initq_ready
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|xb_initq_complete
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -5865,23 +5986,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-unit|static void  blkif_recover(struct xb_softc *sc) {
-comment|/* 	 * XXX The whole concept of not quiescing and completing all i/o 	 * during suspend, and then hoping to recover and replay the 	 * resulting abandoned I/O during resume, is laughable.  At best, 	 * it invalidates the i/o ordering rules required by just about 	 * every filesystem, and at worst it'll corrupt data.  The code 	 * has been removed until further notice. 	 */
-end_comment
-
-begin_endif
-unit|}
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/* ** Driver registration ** */

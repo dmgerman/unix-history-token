@@ -43,23 +43,11 @@ directive|define
 name|CLANG_DRIVER_UTIL_H_
 end_define
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|unsigned
-name|N
-operator|>
-name|class
-name|SmallVector
-expr_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -73,8 +61,6 @@ name|Action
 decl_stmt|;
 comment|/// ArgStringList - Type used for constructing argv lists for subprocesses.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const
@@ -87,8 +73,6 @@ name|ArgStringList
 expr_stmt|;
 comment|/// ActionList - Type used for lists of actions.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Action

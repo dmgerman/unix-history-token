@@ -362,7 +362,7 @@ name|KindType
 name|Kind
 decl_stmt|;
 comment|/// \brief The actual template argument representation, which may be
-comment|/// an \c ActionBase::TypeTy* (for a type), an ActionBase::ExprTy* (for an
+comment|/// an \c ActionBase::TypeTy* (for a type), an Expr* (for an
 comment|/// expression), or an ActionBase::TemplateTy (for a template).
 name|void
 modifier|*

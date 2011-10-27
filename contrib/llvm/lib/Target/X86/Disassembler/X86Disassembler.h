@@ -353,6 +353,9 @@ name|class
 name|MCInst
 decl_stmt|;
 name|class
+name|MCSubtargetInfo
+decl_stmt|;
+name|class
 name|MemoryObject
 decl_stmt|;
 name|class
@@ -380,6 +383,8 @@ comment|///
 comment|/// @param mode     - The X86 architecture mode to decode for.
 name|X86GenericDisassembler
 argument_list|(
+argument|const MCSubtargetInfo&STI
+argument_list|,
 argument|DisassemblerMode mode
 argument_list|)
 block|;
@@ -390,7 +395,7 @@ name|X86GenericDisassembler
 argument_list|()
 block|;
 comment|/// getInstruction - See MCDisassembler.
-name|bool
+name|DecodeStatus
 name|getInstruction
 argument_list|(
 argument|MCInst&instr
@@ -402,6 +407,8 @@ argument_list|,
 argument|uint64_t address
 argument_list|,
 argument|raw_ostream&vStream
+argument_list|,
+argument|raw_ostream&cStream
 argument_list|)
 specifier|const
 block|;
@@ -428,10 +435,17 @@ block|{
 name|public
 operator|:
 name|X86_16Disassembler
-argument_list|()
+argument_list|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
 operator|:
 name|X86GenericDisassembler
 argument_list|(
+argument|STI
+argument_list|,
 argument|MODE_16BIT
 argument_list|)
 block|{   }
@@ -447,10 +461,17 @@ block|{
 name|public
 operator|:
 name|X86_32Disassembler
-argument_list|()
+argument_list|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
 operator|:
 name|X86GenericDisassembler
 argument_list|(
+argument|STI
+argument_list|,
 argument|MODE_32BIT
 argument_list|)
 block|{   }
@@ -466,10 +487,17 @@ block|{
 name|public
 operator|:
 name|X86_64Disassembler
-argument_list|()
+argument_list|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
 operator|:
 name|X86GenericDisassembler
 argument_list|(
+argument|STI
+argument_list|,
 argument|MODE_64BIT
 argument_list|)
 block|{   }

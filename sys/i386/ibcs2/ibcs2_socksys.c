@@ -269,7 +269,7 @@ case|case
 name|SOCKSYS_ACCEPT
 case|:
 return|return
-name|accept
+name|sys_accept
 argument_list|(
 name|td
 argument_list|,
@@ -280,7 +280,7 @@ case|case
 name|SOCKSYS_BIND
 case|:
 return|return
-name|bind
+name|sys_bind
 argument_list|(
 name|td
 argument_list|,
@@ -291,7 +291,7 @@ case|case
 name|SOCKSYS_CONNECT
 case|:
 return|return
-name|connect
+name|sys_connect
 argument_list|(
 name|td
 argument_list|,
@@ -302,7 +302,7 @@ case|case
 name|SOCKSYS_GETPEERNAME
 case|:
 return|return
-name|getpeername
+name|sys_getpeername
 argument_list|(
 name|td
 argument_list|,
@@ -313,7 +313,7 @@ case|case
 name|SOCKSYS_GETSOCKNAME
 case|:
 return|return
-name|getsockname
+name|sys_getsockname
 argument_list|(
 name|td
 argument_list|,
@@ -324,7 +324,7 @@ case|case
 name|SOCKSYS_GETSOCKOPT
 case|:
 return|return
-name|getsockopt
+name|sys_getsockopt
 argument_list|(
 name|td
 argument_list|,
@@ -335,7 +335,7 @@ case|case
 name|SOCKSYS_LISTEN
 case|:
 return|return
-name|listen
+name|sys_listen
 argument_list|(
 name|td
 argument_list|,
@@ -362,7 +362,7 @@ case|case
 name|SOCKSYS_RECVFROM
 case|:
 return|return
-name|recvfrom
+name|sys_recvfrom
 argument_list|(
 name|td
 argument_list|,
@@ -389,7 +389,7 @@ case|case
 name|SOCKSYS_SENDTO
 case|:
 return|return
-name|sendto
+name|sys_sendto
 argument_list|(
 name|td
 argument_list|,
@@ -400,7 +400,7 @@ case|case
 name|SOCKSYS_SETSOCKOPT
 case|:
 return|return
-name|setsockopt
+name|sys_setsockopt
 argument_list|(
 name|td
 argument_list|,
@@ -411,7 +411,7 @@ case|case
 name|SOCKSYS_SHUTDOWN
 case|:
 return|return
-name|shutdown
+name|sys_shutdown
 argument_list|(
 name|td
 argument_list|,
@@ -422,7 +422,7 @@ case|case
 name|SOCKSYS_SOCKET
 case|:
 return|return
-name|socket
+name|sys_socket
 argument_list|(
 name|td
 argument_list|,
@@ -433,7 +433,7 @@ case|case
 name|SOCKSYS_SELECT
 case|:
 return|return
-name|select
+name|sys_select
 argument_list|(
 name|td
 argument_list|,
@@ -466,7 +466,7 @@ case|case
 name|SOCKSYS_ADJTIME
 case|:
 return|return
-name|adjtime
+name|sys_adjtime
 argument_list|(
 name|td
 argument_list|,
@@ -477,7 +477,7 @@ case|case
 name|SOCKSYS_SETREUID
 case|:
 return|return
-name|setreuid
+name|sys_setreuid
 argument_list|(
 name|td
 argument_list|,
@@ -488,7 +488,7 @@ case|case
 name|SOCKSYS_SETREGID
 case|:
 return|return
-name|setregid
+name|sys_setregid
 argument_list|(
 name|td
 argument_list|,
@@ -499,7 +499,7 @@ case|case
 name|SOCKSYS_GETTIME
 case|:
 return|return
-name|gettimeofday
+name|sys_gettimeofday
 argument_list|(
 name|td
 argument_list|,
@@ -510,7 +510,7 @@ case|case
 name|SOCKSYS_SETTIME
 case|:
 return|return
-name|settimeofday
+name|sys_settimeofday
 argument_list|(
 name|td
 argument_list|,
@@ -521,7 +521,7 @@ case|case
 name|SOCKSYS_GETITIMER
 case|:
 return|return
-name|getitimer
+name|sys_getitimer
 argument_list|(
 name|td
 argument_list|,
@@ -532,7 +532,7 @@ case|case
 name|SOCKSYS_SETITIMER
 case|:
 return|return
-name|setitimer
+name|sys_setitimer
 argument_list|(
 name|td
 argument_list|,

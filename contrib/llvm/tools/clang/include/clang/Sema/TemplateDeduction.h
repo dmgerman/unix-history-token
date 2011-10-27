@@ -114,8 +114,6 @@ name|Loc
 decl_stmt|;
 comment|/// \brief Warnings (and follow-on notes) that were suppressed due to
 comment|/// SFINAE while performing template argument deduction.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|PartialDiagnosticAt
@@ -249,8 +247,6 @@ expr_stmt|;
 block|}
 comment|/// \brief Iterator over the set of suppressed diagnostics.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|PartialDiagnosticAt

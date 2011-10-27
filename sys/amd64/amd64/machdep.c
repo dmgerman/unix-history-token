@@ -2027,7 +2027,7 @@ end_comment
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|td
 parameter_list|,
@@ -2487,7 +2487,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
-name|sigreturn
+name|sys_sigreturn
 argument_list|(
 name|td
 argument_list|,
@@ -2799,7 +2799,9 @@ control|(
 init|;
 condition|;
 control|)
-asm|__asm__ ("hlt");
+name|halt
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 
@@ -2929,6 +2931,7 @@ name|state
 operator|=
 name|STATE_SLEEPING
 expr_stmt|;
+comment|/* See comments in cpu_idle_hlt(). */
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -2987,7 +2990,7 @@ name|state
 operator|=
 name|STATE_SLEEPING
 expr_stmt|;
-comment|/* 	 * We must absolutely guarentee that hlt is the next instruction 	 * after sti or we introduce a timing window. 	 */
+comment|/* 	 * Since we may be in a critical section from cpu_idle(), if 	 * an interrupt fires during that critical section we may have 	 * a pending preemption.  If the CPU halts, then that thread 	 * may not execute until a later interrupt awakens the CPU. 	 * To handle this race, check for a runnable thread after 	 * disabling interrupts and immediately return if one is 	 * found.  Also, we must absolutely guarentee that hlt is 	 * the next instruction after sti.  This ensures that any 	 * interrupt that fires after the call to disable_intr() will 	 * immediately awaken the CPU from hlt.  Finally, please note 	 * that on x86 this works fine because of interrupts enabled only 	 * after the instruction following sti takes place, while IF is set 	 * to 1 immediately, allowing hlt instruction to acknowledge the 	 * interrupt. 	 */
 name|disable_intr
 argument_list|()
 expr_stmt|;
@@ -3077,13 +3080,26 @@ name|state
 operator|=
 name|STATE_MWAIT
 expr_stmt|;
+comment|/* See comments in cpu_idle_hlt(). */
+name|disable_intr
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
-operator|!
 name|sched_runnable
 argument_list|()
 condition|)
 block|{
+name|enable_intr
+argument_list|()
+expr_stmt|;
+operator|*
+name|state
+operator|=
+name|STATE_RUNNING
+expr_stmt|;
+return|return;
+block|}
 name|cpu_monitor
 argument_list|(
 name|state
@@ -3100,14 +3116,11 @@ name|state
 operator|==
 name|STATE_MWAIT
 condition|)
-name|cpu_mwait
-argument_list|(
-literal|0
-argument_list|,
-name|MWAIT_C1
-argument_list|)
+asm|__asm __volatile("sti; mwait" : : "a" (MWAIT_C1), "c" (0));
+else|else
+name|enable_intr
+argument_list|()
 expr_stmt|;
-block|}
 operator|*
 name|state
 operator|=
@@ -3148,6 +3161,7 @@ name|state
 operator|=
 name|STATE_RUNNING
 expr_stmt|;
+comment|/* 	 * The sched_runnable() call is racy but as long as there is 	 * a loop missing it one time will have just a little impact if any 	 * (and it is much better than missing the check at all). 	 */
 for|for
 control|(
 name|i

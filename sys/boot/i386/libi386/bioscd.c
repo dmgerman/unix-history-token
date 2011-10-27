@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -61,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<btxv86.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<edd.h>
 end_include
 
 begin_include
@@ -1301,7 +1301,11 @@ name|packet
 operator|.
 name|len
 operator|=
-literal|0x10
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|edd_packet
+argument_list|)
 expr_stmt|;
 name|packet
 operator|.
@@ -1311,7 +1315,7 @@ name|x
 expr_stmt|;
 name|packet
 operator|.
-name|offset
+name|off
 operator|=
 name|VTOPOFF
 argument_list|(
@@ -1382,13 +1386,12 @@ argument_list|()
 expr_stmt|;
 name|result
 operator|=
-operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-name|PSL_C
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

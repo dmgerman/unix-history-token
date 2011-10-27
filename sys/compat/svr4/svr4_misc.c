@@ -2709,7 +2709,7 @@ operator|->
 name|pos
 expr_stmt|;
 return|return
-name|mmap
+name|sys_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -2892,7 +2892,7 @@ operator|=
 name|rp
 expr_stmt|;
 return|return
-name|mmap
+name|sys_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -3855,7 +3855,7 @@ name|nsize
 expr_stmt|;
 return|return
 operator|(
-name|obreak
+name|sys_obreak
 argument_list|(
 name|td
 argument_list|,
@@ -4508,7 +4508,7 @@ literal|1
 case|:
 comment|/* setpgrp() */
 comment|/* 		 * SVR4 setpgrp() (which takes no arguments) has the 		 * semantics that the session ID is also created anew, so 		 * in almost every sense, setpgrp() is identical to 		 * setsid() for SVR4.  (Under BSD, the difference is that 		 * a setpgid(0,0) will not create a new session.) 		 */
-name|setsid
+name|sys_setsid
 argument_list|(
 name|td
 argument_list|,
@@ -4604,7 +4604,7 @@ literal|3
 case|:
 comment|/* setsid() */
 return|return
-name|setsid
+name|sys_setsid
 argument_list|(
 name|td
 argument_list|,
@@ -4693,7 +4693,7 @@ operator|->
 name|pgid
 expr_stmt|;
 return|return
-name|setpgid
+name|sys_setpgid
 argument_list|(
 name|td
 argument_list|,
@@ -7454,7 +7454,7 @@ operator|->
 name|arg
 expr_stmt|;
 return|return
-name|msync
+name|sys_msync
 argument_list|(
 name|td
 argument_list|,
@@ -7499,7 +7499,7 @@ operator|->
 name|arg
 expr_stmt|;
 return|return
-name|madvise
+name|sys_madvise
 argument_list|(
 name|td
 argument_list|,
@@ -7582,7 +7582,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|setpriority
+name|sys_setpriority
 argument_list|(
 name|td
 argument_list|,
@@ -7602,7 +7602,7 @@ condition|(
 operator|(
 name|error
 operator|=
-name|getpriority
+name|sys_getpriority
 argument_list|(
 name|td
 argument_list|,

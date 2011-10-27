@@ -399,7 +399,7 @@ end_comment
 
 begin_function
 name|int
-name|thr_create
+name|sys_thr_create
 parameter_list|(
 name|struct
 name|thread
@@ -489,7 +489,7 @@ end_function
 
 begin_function
 name|int
-name|thr_new
+name|sys_thr_new
 parameter_list|(
 name|struct
 name|thread
@@ -1349,7 +1349,7 @@ end_function
 
 begin_function
 name|int
-name|thr_self
+name|sys_thr_self
 parameter_list|(
 name|struct
 name|thread
@@ -1404,7 +1404,7 @@ end_function
 
 begin_function
 name|int
-name|thr_exit
+name|sys_thr_exit
 parameter_list|(
 name|struct
 name|thread
@@ -1550,7 +1550,7 @@ end_function
 
 begin_function
 name|int
-name|thr_kill
+name|sys_thr_kill
 parameter_list|(
 name|struct
 name|thread
@@ -1803,7 +1803,7 @@ end_function
 
 begin_function
 name|int
-name|thr_kill2
+name|sys_thr_kill2
 parameter_list|(
 name|struct
 name|thread
@@ -2126,7 +2126,7 @@ end_function
 
 begin_function
 name|int
-name|thr_suspend
+name|sys_thr_suspend
 parameter_list|(
 name|struct
 name|thread
@@ -2468,7 +2468,7 @@ end_function
 
 begin_function
 name|int
-name|thr_wake
+name|sys_thr_wake
 parameter_list|(
 name|struct
 name|thread
@@ -2588,7 +2588,7 @@ end_function
 
 begin_function
 name|int
-name|thr_set_name
+name|sys_thr_set_name
 parameter_list|(
 name|struct
 name|thread

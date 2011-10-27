@@ -726,8 +726,6 @@ begin_decl_stmt
 name|void
 name|printName
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -2015,8 +2013,6 @@ comment|/// printName - Print the human-readable name to a stream.
 name|void
 name|printName
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -2094,7 +2090,7 @@ operator|.
 name|getAsOpaqueInteger
 argument_list|()
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_declarationname
 argument_list|)
@@ -2139,7 +2135,7 @@ operator|.
 name|getAsOpaqueInteger
 argument_list|()
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_declarationname
 argument_list|)
@@ -2152,15 +2148,11 @@ end_expr_stmt
 
 begin_expr_stmt
 specifier|inline
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS

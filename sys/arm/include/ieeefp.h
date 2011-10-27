@@ -24,6 +24,10 @@ name|_MACHINE_IEEEFP_H_
 end_define
 
 begin_comment
+comment|/* Deprecated historical FPU control interface */
+end_comment
+
+begin_comment
 comment|/* FP exception codes */
 end_comment
 

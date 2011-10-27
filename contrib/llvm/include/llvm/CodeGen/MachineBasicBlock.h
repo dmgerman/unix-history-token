@@ -1113,11 +1113,16 @@ comment|/// setIsLandingPad - Indicates the block is a landing pad.  That is
 comment|/// this basic block is entered via an exception handler.
 name|void
 name|setIsLandingPad
-parameter_list|()
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
 block|{
 name|IsLandingPad
 operator|=
-name|true
+name|V
 expr_stmt|;
 block|}
 comment|/// getLandingPadSuccessor - If this block has a successor that is a landing

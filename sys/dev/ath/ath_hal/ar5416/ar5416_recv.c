@@ -372,18 +372,6 @@ argument_list|(
 name|ds
 argument_list|)
 decl_stmt|;
-name|HAL_CAPABILITIES
-modifier|*
-name|pCap
-init|=
-operator|&
-name|AH_PRIVATE
-argument_list|(
-name|ah
-argument_list|)
-operator|->
-name|ah_caps
-decl_stmt|;
 name|HALASSERT
 argument_list|(
 operator|(
@@ -425,13 +413,6 @@ operator|~
 name|AR_RxDone
 expr_stmt|;
 comment|/* clear the rest of the status fields */
-if|if
-condition|(
-operator|!
-name|pCap
-operator|->
-name|halAutoSleepSupport
-condition|)
 name|OS_MEMZERO
 argument_list|(
 operator|&

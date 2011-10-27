@@ -317,7 +317,7 @@ block|;
 comment|// Do not implement
 name|FunctionType
 argument_list|(
-argument|const Type *Result
+argument|Type *Result
 argument_list|,
 argument|ArrayRef<Type*> Params
 argument_list|,
@@ -334,7 +334,7 @@ name|FunctionType
 operator|*
 name|get
 argument_list|(
-argument|const Type *Result
+argument|Type *Result
 argument_list|,
 argument|ArrayRef<Type*> Params
 argument_list|,
@@ -348,7 +348,7 @@ name|FunctionType
 operator|*
 name|get
 argument_list|(
-argument|const Type *Result
+argument|Type *Result
 argument_list|,
 argument|bool isVarArg
 argument_list|)
@@ -359,7 +359,6 @@ specifier|static
 name|bool
 name|isValidReturnType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|RetTy
@@ -371,7 +370,6 @@ specifier|static
 name|bool
 name|isValidArgumentType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ArgTy
@@ -528,9 +526,11 @@ name|Type
 operator|*
 name|getTypeAtIndex
 argument_list|(
-argument|const Value *V
-argument_list|)
 specifier|const
+name|Value
+operator|*
+name|V
+argument_list|)
 block|;
 name|Type
 operator|*
@@ -538,7 +538,6 @@ name|getTypeAtIndex
 argument_list|(
 argument|unsigned Idx
 argument_list|)
-specifier|const
 block|;
 name|bool
 name|indexValid
@@ -607,10 +606,25 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// StructType - Class to represent struct types, both normal and packed.
-comment|/// Besides being optionally packed, structs can be either "anonymous" or may
-comment|/// have an identity.  Anonymous structs are uniqued by structural equivalence,
-comment|/// but types are each unique when created, and optionally have a name.
+comment|/// StructType - Class to represent struct types.  There are two different kinds
+comment|/// of struct types: Literal structs and Identified structs.
+comment|///
+comment|/// Literal struct types (e.g. { i32, i32 }) are uniqued structurally, and must
+comment|/// always have a body when created.  You can get one of these by using one of
+comment|/// the StructType::get() forms.
+comment|///
+comment|/// Identified structs (e.g. %foo or %42) may optionally have a name and are not
+comment|/// uniqued.  The names for identified structs are managed at the LLVMContext
+comment|/// level, so there can only be a single identified struct with a given name in
+comment|/// a particular LLVMContext.  Identified structs may also optionally be opaque
+comment|/// (have no body specified).  You get one of these by using one of the
+comment|/// StructType::create() forms.
+comment|///
+comment|/// Independent of what kind of struct you have, the body of a struct type are
+comment|/// laid out in memory consequtively with the elements directly one after the
+comment|/// other (if the struct is packed) or (if not packed) with padding between the
+comment|/// elements as defined by TargetData (which is required to match what the code
+comment|/// generator for a target expects).
 comment|///
 name|class
 name|StructType
@@ -668,15 +682,15 @@ name|SCDB_Packed
 operator|=
 literal|2
 block|,
-name|SCDB_IsAnonymous
+name|SCDB_IsLiteral
 operator|=
 literal|4
 block|}
 block|;
 comment|/// SymbolTableEntry - For a named struct that actually has a name, this is a
 comment|/// pointer to the symbol table entry (maintained by LLVMContext) for the
-comment|/// struct.  This is null if the type is an anonymous struct or if it is
-comment|/// a named type that has an empty name.
+comment|/// struct.  This is null if the type is an literal struct or if it is
+comment|/// a identified type that has an empty name.
 comment|///
 name|void
 operator|*
@@ -694,13 +708,11 @@ name|ContainedTys
 block|;
 comment|// Delete the body.
 block|}
-comment|/// StructType::createNamed - This creates a named struct with no body
-comment|/// specified.  If the name is empty, it creates an unnamed struct, which has
-comment|/// a unique identity but no actual name.
+comment|/// StructType::create - This creates an identified struct.
 specifier|static
 name|StructType
 operator|*
-name|createNamed
+name|create
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
@@ -710,11 +722,21 @@ block|;
 specifier|static
 name|StructType
 operator|*
-name|createNamed
+name|create
 argument_list|(
-argument|StringRef Name
-argument_list|,
+name|LLVMContext
+operator|&
+name|Context
+argument_list|)
+block|;
+specifier|static
+name|StructType
+operator|*
+name|create
+argument_list|(
 argument|ArrayRef<Type*> Elements
+argument_list|,
+argument|StringRef Name
 argument_list|,
 argument|bool isPacked = false
 argument_list|)
@@ -722,13 +744,26 @@ block|;
 specifier|static
 name|StructType
 operator|*
-name|createNamed
+name|create
+argument_list|(
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|Elements
+argument_list|)
+block|;
+specifier|static
+name|StructType
+operator|*
+name|create
 argument_list|(
 argument|LLVMContext&Context
 argument_list|,
-argument|StringRef Name
-argument_list|,
 argument|ArrayRef<Type*> Elements
+argument_list|,
+argument|StringRef Name
 argument_list|,
 argument|bool isPacked = false
 argument_list|)
@@ -736,7 +771,24 @@ block|;
 specifier|static
 name|StructType
 operator|*
-name|createNamed
+name|create
+argument_list|(
+name|LLVMContext
+operator|&
+name|Context
+argument_list|,
+name|ArrayRef
+operator|<
+name|Type
+operator|*
+operator|>
+name|Elements
+argument_list|)
+block|;
+specifier|static
+name|StructType
+operator|*
+name|create
 argument_list|(
 argument|StringRef Name
 argument_list|,
@@ -747,7 +799,7 @@ argument_list|)
 name|END_WITH_NULL
 block|;
 comment|/// StructType::get - This static method is the primary way to create a
-comment|/// StructType.
+comment|/// literal StructType.
 specifier|static
 name|StructType
 operator|*
@@ -803,10 +855,10 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isAnonymous - Return true if this type is uniqued by structural
-comment|/// equivalence, false if it has an identity.
+comment|/// isLiteral - Return true if this type is uniqued by structural
+comment|/// equivalence, false if it is a struct definition.
 name|bool
-name|isAnonymous
+name|isLiteral
 argument_list|()
 specifier|const
 block|{
@@ -815,7 +867,7 @@ operator|(
 name|getSubclassData
 argument_list|()
 operator|&
-name|SCDB_IsAnonymous
+name|SCDB_IsLiteral
 operator|)
 operator|!=
 literal|0
@@ -853,14 +905,14 @@ return|;
 block|}
 comment|/// getName - Return the name for this struct type if it has an identity.
 comment|/// This may return an empty string for an unnamed struct type.  Do not call
-comment|/// this on an anonymous type.
+comment|/// this on an literal type.
 name|StringRef
 name|getName
 argument_list|()
 specifier|const
 block|;
 comment|/// setName - Change the name of this type to the specified name, or to a name
-comment|/// with a suffix if there is a collision.  Do not call this on an anonymous
+comment|/// with a suffix if there is a collision.  Do not call this on an literal
 comment|/// type.
 name|void
 name|setName
@@ -868,7 +920,7 @@ argument_list|(
 argument|StringRef Name
 argument_list|)
 block|;
-comment|/// setBody - Specify a body for an opaque type.
+comment|/// setBody - Specify a body for an opaque identified type.
 name|void
 name|setBody
 argument_list|(
@@ -892,7 +944,6 @@ specifier|static
 name|bool
 name|isValidElementType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ElemTy
@@ -932,7 +983,7 @@ comment|/// specified struct.
 name|bool
 name|isLayoutIdentical
 argument_list|(
-argument|const StructType *Other
+argument|StructType *Other
 argument_list|)
 specifier|const
 block|;
@@ -1183,7 +1234,7 @@ name|ArrayType
 operator|*
 name|get
 argument_list|(
-argument|const Type *ElementType
+argument|Type *ElementType
 argument_list|,
 argument|uint64_t NumElements
 argument_list|)
@@ -1194,7 +1245,6 @@ specifier|static
 name|bool
 name|isValidElementType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ElemTy
@@ -1289,7 +1339,7 @@ name|VectorType
 operator|*
 name|get
 argument_list|(
-argument|const Type *ElementType
+argument|Type *ElementType
 argument_list|,
 argument|unsigned NumElements
 argument_list|)
@@ -1303,7 +1353,7 @@ name|VectorType
 operator|*
 name|getInteger
 argument_list|(
-argument|const VectorType *VTy
+argument|VectorType *VTy
 argument_list|)
 block|{
 name|unsigned
@@ -1356,7 +1406,7 @@ name|VectorType
 operator|*
 name|getExtendedElementVectorType
 argument_list|(
-argument|const VectorType *VTy
+argument|VectorType *VTy
 argument_list|)
 block|{
 name|unsigned
@@ -1411,7 +1461,7 @@ name|VectorType
 operator|*
 name|getTruncatedElementVectorType
 argument_list|(
-argument|const VectorType *VTy
+argument|VectorType *VTy
 argument_list|)
 block|{
 name|unsigned
@@ -1476,7 +1526,6 @@ specifier|static
 name|bool
 name|isValidElementType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ElemTy
@@ -1585,7 +1634,7 @@ name|PointerType
 operator|*
 name|get
 argument_list|(
-argument|const Type *ElementType
+argument|Type *ElementType
 argument_list|,
 argument|unsigned AddressSpace
 argument_list|)
@@ -1597,7 +1646,7 @@ name|PointerType
 operator|*
 name|getUnqual
 argument_list|(
-argument|const Type *ElementType
+argument|Type *ElementType
 argument_list|)
 block|{
 return|return
@@ -1617,7 +1666,6 @@ specifier|static
 name|bool
 name|isValidElementType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ElemTy

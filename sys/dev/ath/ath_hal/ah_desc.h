@@ -104,6 +104,10 @@ name|uint32_t
 name|ts_ba_high
 decl_stmt|;
 comment|/* blockack bitmap high */
+name|uint8_t
+name|ts_tid
+decl_stmt|;
+comment|/* TID */
 name|uint32_t
 name|ts_evm0
 decl_stmt|;

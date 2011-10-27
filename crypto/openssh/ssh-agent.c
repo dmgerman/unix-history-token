@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-agent.c,v 1.171 2010/11/21 01:01:13 djm Exp $ */
+comment|/* $OpenBSD: ssh-agent.c,v 1.172 2011/06/03 01:37:40 dtucker Exp $ */
 end_comment
 
 begin_comment
@@ -490,6 +490,19 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Client connection count; incremented in new_socket() and decremented in  * close_socket().  When it reaches 0, ssh-agent will exit.  Since it is  * normally initialized to 1, it will never reach 0.  However, if the -x  * option is specified, it is initialized to 0 in main(); in that case,  * ssh-agent will exit as soon as it has had at least one client but no  * longer has any.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|xcount
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -500,6 +513,43 @@ modifier|*
 name|e
 parameter_list|)
 block|{
+name|int
+name|last
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|e
+operator|->
+name|type
+operator|==
+name|AUTH_CONNECTION
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"xcount %d -> %d"
+argument_list|,
+name|xcount
+argument_list|,
+name|xcount
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|--
+name|xcount
+operator|==
+literal|0
+condition|)
+name|last
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|e
@@ -542,6 +592,15 @@ operator|&
 name|e
 operator|->
 name|request
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|last
+condition|)
+name|cleanup_exit
+argument_list|(
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -4863,6 +4922,28 @@ name|old_alloc
 decl_stmt|,
 name|new_alloc
 decl_stmt|;
+if|if
+condition|(
+name|type
+operator|==
+name|AUTH_CONNECTION
+condition|)
+block|{
+name|debug
+argument_list|(
+literal|"xcount %d -> %d"
+argument_list|,
+name|xcount
+argument_list|,
+name|xcount
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
+operator|++
+name|xcount
+expr_stmt|;
+block|}
 name|set_nonblock
 argument_list|(
 name|fd
@@ -5991,6 +6072,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * If our parent has exited then getppid() will return (pid_t)1, 	 * so testing for that should be safe. 	 */
 if|if
 condition|(
 name|parent_pid
@@ -5998,14 +6080,10 @@ operator|!=
 operator|-
 literal|1
 operator|&&
-name|kill
-argument_list|(
+name|getppid
+argument_list|()
+operator|!=
 name|parent_pid
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
 condition|)
 block|{
 comment|/* printf("Parent has died - Authentication agent exiting.\n"); */
@@ -6085,6 +6163,13 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"  -t life     Default identity lifetime (seconds).\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"  -x          Exit when the last client disconnects.\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -6271,9 +6356,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|init_rng
-argument_list|()
-expr_stmt|;
 name|seed_rng
 argument_list|()
 expr_stmt|;
@@ -6288,7 +6370,7 @@ name|ac
 argument_list|,
 name|av
 argument_list|,
-literal|"cdksa:t:"
+literal|"cdksa:t:x"
 argument_list|)
 operator|)
 operator|!=
@@ -6387,6 +6469,14 @@ name|usage
 argument_list|()
 expr_stmt|;
 block|}
+break|break;
+case|case
+literal|'x'
+case|:
+name|xcount
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 default|default:
 name|usage
@@ -7257,15 +7347,14 @@ expr_stmt|;
 name|idtab_init
 argument_list|()
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|d_flag
-condition|)
 name|signal
 argument_list|(
 name|SIGINT
 argument_list|,
+name|d_flag
+condition|?
+name|cleanup_handler
+else|:
 name|SIG_IGN
 argument_list|)
 expr_stmt|;

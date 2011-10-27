@@ -6257,7 +6257,7 @@ name|RLIMIT_FSIZE
 argument_list|)
 condition|)
 block|{
-name|psignal
+name|kern_psignal
 argument_list|(
 name|td
 operator|->

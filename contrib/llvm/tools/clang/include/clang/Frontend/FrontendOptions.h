@@ -95,9 +95,6 @@ comment|///< Parse ASTs and print them.
 name|ASTView
 block|,
 comment|///< Parse ASTs and view them in Graphviz.
-name|CreateModule
-block|,
-comment|///< Create module definition
 name|DumpRawTokens
 block|,
 comment|///< Dump out raw tokens.
@@ -128,6 +125,9 @@ comment|///< Emit a .o file.
 name|FixIt
 block|,
 comment|///< Parse and apply any fixits to the source.
+name|GenerateModule
+block|,
+comment|///< Generate pre-compiled module.
 name|GeneratePCH
 block|,
 comment|///< Generate pre-compiled header.
@@ -190,14 +190,6 @@ comment|///< When generating PCH files,
 comment|/// instruct the AST writer to create
 comment|/// relocatable PCH files.
 name|unsigned
-name|ChainedPCH
-range|:
-literal|1
-decl_stmt|;
-comment|///< When generating PCH files,
-comment|/// instruct the AST writer to create
-comment|/// chained PCH files.
-name|unsigned
 name|ShowHelp
 range|:
 literal|1
@@ -251,6 +243,13 @@ literal|1
 decl_stmt|;
 comment|///< Apply fixes even if there are
 comment|/// unfixable errors.
+name|unsigned
+name|ARCMTMigrateEmitARCErrors
+range|:
+literal|1
+decl_stmt|;
+comment|/// Emit ARC errors even if the
+comment|/// migrator can fix them
 enum|enum
 block|{
 name|ARCMT_None
@@ -267,6 +266,11 @@ name|std
 operator|::
 name|string
 name|ARCMTMigrateDir
+expr_stmt|;
+name|std
+operator|::
+name|string
+name|ARCMTMigrateReportOut
 expr_stmt|;
 comment|/// The input files and their types.
 name|std
@@ -374,17 +378,6 @@ name|string
 operator|>
 name|ASTMergeFiles
 expr_stmt|;
-comment|/// \brief The list of modules to import.
-name|std
-operator|::
-name|vector
-operator|<
-name|std
-operator|::
-name|string
-operator|>
-name|Modules
-expr_stmt|;
 comment|/// \brief A list of arguments to forward to LLVM's option processing; this
 comment|/// should only be used for debugging and experimental features.
 name|std
@@ -420,10 +413,6 @@ name|RelocatablePCH
 operator|=
 literal|0
 expr_stmt|;
-name|ChainedPCH
-operator|=
-literal|0
-expr_stmt|;
 name|ShowHelp
 operator|=
 literal|0
@@ -456,6 +445,10 @@ name|ARCMTAction
 operator|=
 name|ARCMT_None
 expr_stmt|;
+name|ARCMTMigrateEmitARCErrors
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/// getInputKindForExtension - Return the appropriate input kind for a file
 comment|/// extension. For example, "c" would return IK_C.
@@ -465,13 +458,11 @@ comment|/// not recognized.
 specifier|static
 name|InputKind
 name|getInputKindForExtension
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Extension
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 block|}

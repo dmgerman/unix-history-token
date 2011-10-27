@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -336,8 +330,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PATH_CONFIG
+name|PATH_DOTCONFIG
 value|"/boot.config"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_CONFIG
+value|"/boot/config"
 end_define
 
 begin_define
@@ -387,26 +388,6 @@ define|#
 directive|define
 name|MEM_EXT
 value|0x15
-end_define
-
-begin_define
-define|#
-directive|define
-name|V86_CY
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_C)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V86_ZR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_Z)
 end_define
 
 begin_define
@@ -1270,6 +1251,15 @@ operator|=
 name|lookup
 argument_list|(
 name|PATH_CONFIG
+argument_list|)
+operator|)
+operator|||
+operator|(
+name|ino
+operator|=
+name|lookup
+argument_list|(
+name|PATH_DOTCONFIG
 argument_list|)
 operator|)
 condition|)

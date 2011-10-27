@@ -30,6 +30,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
 end_include
 
@@ -2327,6 +2333,29 @@ name|unregister
 argument_list|()
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|madvise
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|MADV_PROTECT
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|_msgout
+argument_list|(
+literal|"madvise(): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Create RPC service for each transport. 	 */
 name|ntrans
 operator|=

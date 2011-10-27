@@ -102,28 +102,15 @@ define|#
 directive|define
 name|ia_flags
 value|ia_ifa.ifa_flags
-comment|/* ia_{,sub}net{,mask} in host order */
-name|u_long
-name|ia_net
-decl_stmt|;
-comment|/* network number of interface */
-name|u_long
-name|ia_netmask
-decl_stmt|;
-comment|/* mask of net part */
+comment|/* ia_subnet{,mask} in host order */
 name|u_long
 name|ia_subnet
 decl_stmt|;
-comment|/* subnet number, including net */
+comment|/* subnet address */
 name|u_long
 name|ia_subnetmask
 decl_stmt|;
-comment|/* mask of subnet part */
-name|struct
-name|in_addr
-name|ia_netbroadcast
-decl_stmt|;
-comment|/* to recognize net broadcasts */
+comment|/* mask of subnet */
 name|LIST_ENTRY
 argument_list|(
 argument|in_ifaddr

@@ -7327,9 +7327,9 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 argument_list|,
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 argument_list|)
 expr_stmt|;
 if|if
@@ -7353,12 +7353,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x1
+name|BGE_FW_DRV_STATE_START
 argument_list|)
 expr_stmt|;
-comment|/* START */
 break|break;
 case|case
 name|BGE_RESET_STOP
@@ -7367,12 +7366,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x2
+name|BGE_FW_DRV_STATE_UNLOAD
 argument_list|)
 expr_stmt|;
-comment|/* UNLOAD */
 break|break;
 block|}
 block|}
@@ -7414,9 +7412,9 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x80000001
+name|BGE_FW_DRV_STATE_START_DONE
 argument_list|)
 expr_stmt|;
 comment|/* START DONE */
@@ -7428,9 +7426,9 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x80000002
+name|BGE_FW_DRV_STATE_UNLOAD_DONE
 argument_list|)
 expr_stmt|;
 break|break;
@@ -7472,12 +7470,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x1
+name|BGE_FW_DRV_STATE_START
 argument_list|)
 expr_stmt|;
-comment|/* START */
 break|break;
 case|case
 name|BGE_RESET_STOP
@@ -7486,12 +7483,11 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SDI_STATUS
+name|BGE_SRAM_FW_DRV_STATE_MB
 argument_list|,
-literal|0x2
+name|BGE_FW_DRV_STATE_UNLOAD
 argument_list|)
 expr_stmt|;
-comment|/* UNLOAD */
 break|break;
 block|}
 block|}
@@ -7523,7 +7519,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_FW
+name|BGE_SRAM_FW_CMD_MB
 argument_list|,
 name|BGE_FW_PAUSE
 argument_list|)
@@ -7532,13 +7528,13 @@ name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_CPU_EVENT
+name|BGE_RX_CPU_EVENT
 argument_list|,
 name|CSR_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_CPU_EVENT
+name|BGE_RX_CPU_EVENT
 argument_list|)
 operator||
 operator|(
@@ -7570,7 +7566,7 @@ name|CSR_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_CPU_EVENT
+name|BGE_RX_CPU_EVENT
 argument_list|)
 operator|&
 operator|(
@@ -14131,12 +14127,6 @@ case|:
 case|case
 name|BGE_ASICREV_BCM5719
 case|:
-name|sc
-operator|->
-name|bge_flags
-operator||=
-name|BGE_FLAG_SHORT_DMA_BUG
-expr_stmt|;
 case|case
 name|BGE_ASICREV_BCM57765
 case|:
@@ -14263,20 +14253,6 @@ operator|->
 name|bge_flags
 operator||=
 name|BGE_FLAG_575X_PLUS
-expr_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|bge_asicrev
-operator|==
-name|BGE_ASICREV_BCM5906
-condition|)
-name|sc
-operator|->
-name|bge_flags
-operator||=
-name|BGE_FLAG_SHORT_DMA_BUG
 expr_stmt|;
 comment|/* FALLTHROUGH */
 case|case
@@ -14562,21 +14538,47 @@ name|bge_mi_mode
 operator||=
 name|BGE_MIMODE_AUTOPOLL
 expr_stmt|;
-comment|/* 	 * All controllers that are not 5755 or higher have 4GB 	 * boundary DMA bug. 	 * Whenever an address crosses a multiple of the 4GB boundary 	 * (including 4GB, 8Gb, 12Gb, etc.) and makes the transition 	 * from 0xX_FFFF_FFFF to 0x(X+1)_0000_0000 an internal DMA 	 * state machine will lockup and cause the device to hang. 	 */
+comment|/* 	 * All Broadcom controllers have 4GB boundary DMA bug. 	 * Whenever an address crosses a multiple of the 4GB boundary 	 * (including 4GB, 8Gb, 12Gb, etc.) and makes the transition 	 * from 0xX_FFFF_FFFF to 0x(X+1)_0000_0000 an internal DMA 	 * state machine will lockup and cause the device to hang. 	 */
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_4G_BNDRY_BUG
+expr_stmt|;
+comment|/* BCM5755 or higher and BCM5906 have short DMA bug. */
 if|if
 condition|(
 name|BGE_IS_5755_PLUS
 argument_list|(
 name|sc
 argument_list|)
+operator|||
+name|sc
+operator|->
+name|bge_asicrev
 operator|==
-literal|0
+name|BGE_ASICREV_BCM5906
 condition|)
 name|sc
 operator|->
 name|bge_flags
 operator||=
-name|BGE_FLAG_4G_BNDRY_BUG
+name|BGE_FLAG_SHORT_DMA_BUG
+expr_stmt|;
+comment|/* 	 * BCM5719 cannot handle DMA requests for DMA segments that 	 * have larger than 4KB in size.  However the maximum DMA 	 * segment size created in DMA tag is 4KB for TSO, so we 	 * wouldn't encounter the issue here. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5719
+condition|)
+name|sc
+operator|->
+name|bge_flags
+operator||=
+name|BGE_FLAG_4K_RDMA_BUG
 expr_stmt|;
 name|misccfg
 operator|=
@@ -14811,7 +14813,7 @@ operator||=
 name|BGE_FLAG_TSO
 expr_stmt|;
 block|}
-comment|/* 	 * Check if this is a PCI-X or PCI Express device.   	 */
+comment|/* 	 * Check if this is a PCI-X or PCI Express device. 	 */
 if|if
 condition|(
 name|pci_find_cap
@@ -15193,10 +15195,10 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_SIG
+name|BGE_SRAM_DATA_SIG
 argument_list|)
 operator|==
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_DATA_SIG_MAGIC
 operator|)
 condition|)
 block|{
@@ -15206,7 +15208,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_NICCFG
+name|BGE_SRAM_DATA_CFG
 argument_list|)
 operator|&
 name|BGE_HWCFG_ASF
@@ -15699,10 +15701,10 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_SIG
+name|BGE_SRAM_DATA_SIG
 argument_list|)
 operator|==
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_DATA_SIG_MAGIC
 condition|)
 name|hwcfg
 operator|=
@@ -15710,7 +15712,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_NICCFG
+name|BGE_SRAM_DATA_CFG
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -16804,14 +16806,14 @@ literal|0x0
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Write the magic number to SRAM at offset 0xB50. 	 * When firmware finishes its initialization it will 	 * write ~BGE_MAGIC_NUMBER to the same location. 	 */
+comment|/* 	 * Write the magic number to SRAM at offset 0xB50. 	 * When firmware finishes its initialization it will 	 * write ~BGE_SRAM_FW_MB_MAGIC to the same location. 	 */
 name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 argument_list|,
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 argument_list|)
 expr_stmt|;
 name|reset
@@ -16887,6 +16889,16 @@ name|BGE_IS_5705_PLUS
 argument_list|(
 name|sc
 argument_list|)
+operator|&&
+operator|(
+name|sc
+operator|->
+name|bge_flags
+operator|&
+name|BGE_FLAG_CPMU_PRESENT
+operator|)
+operator|==
+literal|0
 condition|)
 name|reset
 operator||=
@@ -17416,7 +17428,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 argument_list|)
 expr_stmt|;
 if|if
@@ -17424,7 +17436,7 @@ condition|(
 name|val
 operator|==
 operator|~
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 condition|)
 break|break;
 block|}
@@ -19935,7 +19947,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENCOMM_FW
+name|BGE_SRAM_FW_CMD_MB
 argument_list|,
 name|BGE_FW_DRV_ALIVE
 argument_list|)
@@ -19944,7 +19956,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENNCOMM_FW_LEN
+name|BGE_SRAM_FW_CMD_LEN_MB
 argument_list|,
 literal|4
 argument_list|)
@@ -19953,7 +19965,7 @@ name|bge_writemem_ind
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_SOFTWARE_GENNCOMM_FW_DATA
+name|BGE_SRAM_FW_CMD_DATA_MB
 argument_list|,
 literal|3
 argument_list|)
@@ -19962,13 +19974,13 @@ name|CSR_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_CPU_EVENT
+name|BGE_RX_CPU_EVENT
 argument_list|,
 name|CSR_READ_4
 argument_list|(
 name|sc
 argument_list|,
-name|BGE_CPU_EVENT
+name|BGE_RX_CPU_EVENT
 argument_list|)
 operator||
 operator|(
@@ -28120,9 +28132,10 @@ name|sbdata
 decl_stmt|;
 name|int
 name|error
-decl_stmt|;
-name|int
+decl_stmt|,
 name|result
+decl_stmt|,
+name|sbsz
 decl_stmt|;
 name|int
 name|i
@@ -28181,6 +28194,29 @@ operator|*
 operator|)
 name|arg1
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|bge_asicrev
+operator|==
+name|BGE_ASICREV_BCM5700
+operator|&&
+name|sc
+operator|->
+name|bge_chipid
+operator|!=
+name|BGE_CHIPID_BCM5700_C0
+condition|)
+name|sbsz
+operator|=
+name|BGE_STATUS_BLK_SZ
+expr_stmt|;
+else|else
+name|sbsz
+operator|=
+literal|32
+expr_stmt|;
 name|sbdata
 operator|=
 operator|(
@@ -28198,6 +28234,30 @@ argument_list|(
 literal|"Status Block:\n"
 argument_list|)
 expr_stmt|;
+name|BGE_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_status_tag
+argument_list|,
+name|sc
+operator|->
+name|bge_cdata
+operator|.
+name|bge_status_map
+argument_list|,
+name|BUS_DMASYNC_POSTREAD
+operator||
+name|BUS_DMASYNC_POSTWRITE
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -28206,11 +28266,12 @@ literal|0x0
 init|;
 name|i
 operator|<
-operator|(
-name|BGE_STATUS_BLK_SZ
+name|sbsz
 operator|/
-literal|4
-operator|)
+sizeof|sizeof
+argument_list|(
+name|uint16_t
+argument_list|)
 condition|;
 control|)
 block|{
@@ -28234,7 +28295,6 @@ condition|;
 name|j
 operator|++
 control|)
-block|{
 name|printf
 argument_list|(
 literal|" %04x"
@@ -28242,14 +28302,10 @@ argument_list|,
 name|sbdata
 index|[
 name|i
+operator|++
 index|]
 argument_list|)
 expr_stmt|;
-name|i
-operator|+=
-literal|4
-expr_stmt|;
-block|}
 name|printf
 argument_list|(
 literal|"\n"
@@ -28317,9 +28373,26 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
+name|BGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Hardware Flags:\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|BGE_IS_5717_PLUS
+argument_list|(
+name|sc
+argument_list|)
+condition|)
+name|printf
+argument_list|(
+literal|" - 5717 Plus\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -28742,7 +28815,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x0c14
+name|BGE_SRAM_MAC_ADDR_HIGH_MB
 argument_list|)
 expr_stmt|;
 if|if
@@ -28786,7 +28859,7 @@ name|bge_readmem_ind
 argument_list|(
 name|sc
 argument_list|,
-literal|0x0c18
+name|BGE_SRAM_MAC_ADDR_LOW_MB
 argument_list|)
 expr_stmt|;
 name|ether_addr

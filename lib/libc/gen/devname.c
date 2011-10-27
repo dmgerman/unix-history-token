@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string.h>
 end_include
 
@@ -198,7 +204,7 @@ name|buf
 argument_list|,
 name|len
 argument_list|,
-literal|"#%c:%d:0x%x"
+literal|"#%c:%#jx"
 argument_list|,
 name|S_ISCHR
 argument_list|(
@@ -209,15 +215,10 @@ literal|'C'
 else|:
 literal|'B'
 argument_list|,
-name|major
-argument_list|(
+operator|(
+name|uintmax_t
+operator|)
 name|dev
-argument_list|)
-argument_list|,
-name|minor
-argument_list|(
-name|dev
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -2304,6 +2304,7 @@ name|AR_PHY_AGC_CONTROL_NF
 argument_list|)
 expr_stmt|;
 comment|/* Wait for load to complete, should be fast, a few 10s of us. */
+comment|/* 	 * XXX For now, don't be so aggressive in waiting for the NF 	 * XXX load to complete. A very busy 11n RX load will cause this 	 * XXX to always fail; so just leave it. 	 * XXX Later on we may wish to split longcal into two parts - one to do 	 * XXX the initial longcal, and one to load in an updated NF value 	 * XXX once it's finished - say, by checking it every 500ms. 	 */
 if|if
 condition|(
 operator|!
@@ -2311,7 +2312,7 @@ name|ar5212WaitNFCalComplete
 argument_list|(
 name|ah
 argument_list|,
-literal|1000
+literal|5
 argument_list|)
 condition|)
 block|{

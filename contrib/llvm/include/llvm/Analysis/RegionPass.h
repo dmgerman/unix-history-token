@@ -275,9 +275,7 @@ name|ID
 block|;
 name|explicit
 name|RGPassManager
-argument_list|(
-argument|int Depth
-argument_list|)
+argument_list|()
 block|;
 comment|/// @brief Execute all of the passes scheduled for execution.
 comment|///

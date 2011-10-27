@@ -93,7 +93,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sys_exit
+name|sys_sys_exit
 block|,
 name|AUE_EXIT
 block|,
@@ -116,7 +116,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fork
+name|sys_fork
 block|,
 name|AUE_FORK
 block|,
@@ -168,7 +168,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|write
+name|sys_write
 block|,
 name|AUE_NULL
 block|,
@@ -220,7 +220,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|close
+name|sys_close
 block|,
 name|AUE_CLOSE
 block|,
@@ -298,7 +298,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|link
+name|sys_link
 block|,
 name|AUE_LINK
 block|,
@@ -506,7 +506,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|obreak
+name|sys_obreak
 block|,
 name|AUE_NULL
 block|,
@@ -581,7 +581,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getpid
+name|sys_getpid
 block|,
 name|AUE_NULL
 block|,
@@ -682,7 +682,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getuid
+name|sys_getuid
 block|,
 name|AUE_GETUID
 block|,
@@ -734,7 +734,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|ptrace
+name|sys_ptrace
 block|,
 name|AUE_PTRACE
 block|,
@@ -982,7 +982,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sync
+name|sys_sync
 block|,
 name|AUE_NULL
 block|,
@@ -1112,7 +1112,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|dup
+name|sys_dup
 block|,
 name|AUE_NULL
 block|,
@@ -1135,7 +1135,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|pipe
+name|sys_pipe
 block|,
 name|AUE_PIPE
 block|,
@@ -1187,7 +1187,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|profil
+name|sys_profil
 block|,
 name|AUE_PROFILE
 block|,
@@ -1262,7 +1262,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|getgid
+name|sys_getgid
 block|,
 name|AUE_GETGID
 block|,
@@ -1542,7 +1542,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|fsync
+name|sys_fsync
 block|,
 name|AUE_FSYNC
 block|,
@@ -1594,7 +1594,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|umask
+name|sys_umask
 block|,
 name|AUE_UMASK
 block|,
@@ -1620,7 +1620,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|chroot
+name|sys_chroot
 block|,
 name|AUE_CHROOT
 block|,
@@ -2245,7 +2245,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|poll
+name|sys_poll
 block|,
 name|AUE_POLL
 block|,
@@ -2628,7 +2628,7 @@ operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|sigreturn
+name|sys_sigreturn
 block|,
 name|AUE_NULL
 block|,

@@ -2440,7 +2440,7 @@ name|signum
 argument_list|)
 expr_stmt|;
 return|return
-name|kill
+name|sys_kill
 argument_list|(
 name|td
 argument_list|,

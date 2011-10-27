@@ -1429,7 +1429,7 @@ end_comment
 
 begin_function
 name|int
-name|getdtablesize
+name|sys_getdtablesize
 parameter_list|(
 name|struct
 name|thread
@@ -1560,7 +1560,7 @@ end_comment
 
 begin_function
 name|int
-name|dup2
+name|sys_dup2
 parameter_list|(
 name|struct
 name|thread
@@ -1636,7 +1636,7 @@ end_comment
 
 begin_function
 name|int
-name|dup
+name|sys_dup
 parameter_list|(
 name|struct
 name|thread
@@ -1713,7 +1713,7 @@ end_comment
 
 begin_function
 name|int
-name|fcntl
+name|sys_fcntl
 parameter_list|(
 name|struct
 name|thread
@@ -5461,7 +5461,7 @@ end_comment
 
 begin_function
 name|int
-name|close
+name|sys_close
 parameter_list|(
 name|td
 parameter_list|,
@@ -5784,7 +5784,7 @@ end_comment
 
 begin_function
 name|int
-name|closefrom
+name|sys_closefrom
 parameter_list|(
 name|struct
 name|thread
@@ -6077,7 +6077,7 @@ end_comment
 
 begin_function
 name|int
-name|fstat
+name|sys_fstat
 parameter_list|(
 name|struct
 name|thread
@@ -6297,7 +6297,7 @@ end_comment
 
 begin_function
 name|int
-name|nfstat
+name|sys_nfstat
 parameter_list|(
 name|struct
 name|thread
@@ -6412,7 +6412,7 @@ end_comment
 
 begin_function
 name|int
-name|fpathconf
+name|sys_fpathconf
 parameter_list|(
 name|struct
 name|thread
@@ -11984,7 +11984,7 @@ end_comment
 
 begin_function
 name|int
-name|flock
+name|sys_flock
 parameter_list|(
 name|struct
 name|thread
@@ -14847,6 +14847,12 @@ parameter_list|,
 name|int64_t
 name|offset
 parameter_list|,
+name|int
+name|fd_is_cap
+parameter_list|,
+name|cap_rights_t
+name|fd_cap_rights
+parameter_list|,
 name|struct
 name|kinfo_file
 modifier|*
@@ -15166,6 +15172,26 @@ index|]
 operator|.
 name|kf_fflag
 expr_stmt|;
+if|if
+condition|(
+name|fd_is_cap
+condition|)
+name|kif
+operator|->
+name|kf_flags
+operator||=
+name|KF_FLAG_CAPABILITY
+expr_stmt|;
+if|if
+condition|(
+name|fd_is_cap
+condition|)
+name|kif
+operator|->
+name|kf_cap_rights
+operator|=
+name|fd_cap_rights
+expr_stmt|;
 name|kif
 operator|->
 name|kf_fd
@@ -15311,11 +15337,16 @@ modifier|*
 name|name
 decl_stmt|;
 name|int
+name|fd_is_cap
+decl_stmt|,
 name|type
 decl_stmt|,
 name|refcnt
 decl_stmt|,
 name|fflags
+decl_stmt|;
+name|cap_rights_t
+name|fd_cap_rights
 decl_stmt|;
 name|name
 operator|=
@@ -15505,6 +15536,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
 name|kif
 argument_list|,
 name|req
@@ -15531,6 +15566,10 @@ literal|1
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 name|kif
 argument_list|,
@@ -15560,6 +15599,10 @@ literal|1
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 name|kif
 argument_list|,
@@ -15624,6 +15667,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
 name|kif
 argument_list|,
 name|req
@@ -15678,6 +15725,10 @@ literal|1
 argument_list|,
 operator|-
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 name|kif
 argument_list|,
@@ -15734,6 +15785,10 @@ argument_list|,
 operator|-
 literal|1
 argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
 name|kif
 argument_list|,
 name|req
@@ -15781,6 +15836,14 @@ name|data
 operator|=
 name|NULL
 expr_stmt|;
+name|fd_is_cap
+operator|=
+literal|0
+expr_stmt|;
+name|fd_cap_rights
+operator|=
+literal|0
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|CAPABILITIES
@@ -15794,15 +15857,11 @@ operator|==
 name|DTYPE_CAPABILITY
 condition|)
 block|{
-name|kif
-operator|->
-name|kf_flags
-operator||=
-name|KF_FLAG_CAPABILITY
+name|fd_is_cap
+operator|=
+literal|1
 expr_stmt|;
-name|kif
-operator|->
-name|kf_cap_rights
+name|fd_cap_rights
 operator|=
 name|cap_rights
 argument_list|(
@@ -16053,6 +16112,10 @@ argument_list|,
 name|refcnt
 argument_list|,
 name|offset
+argument_list|,
+name|fd_is_cap
+argument_list|,
+name|fd_cap_rights
 argument_list|,
 name|kif
 argument_list|,

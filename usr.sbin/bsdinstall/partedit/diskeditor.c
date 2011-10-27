@@ -123,7 +123,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|8
+literal|10
 argument_list|,
 operator|&
 name|attr
@@ -135,7 +135,7 @@ name|partitions
 argument_list|,
 name|y
 argument_list|,
-literal|15
+literal|17
 argument_list|)
 expr_stmt|;
 name|wattrset

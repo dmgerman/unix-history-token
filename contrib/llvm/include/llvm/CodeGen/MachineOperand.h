@@ -211,8 +211,23 @@ name|IsDead
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsUndef - True if this is a register def / use of "undef", i.e. register
-comment|/// defined by an IMPLICIT_DEF. This is only valid on registers.
+comment|/// IsUndef - True if this register operand reads an "undef" value, i.e. the
+comment|/// read value doesn't matter.  This flag can be set on both use and def
+comment|/// operands.  On a sub-register def operand, it refers to the part of the
+comment|/// register that isn't written.  On a full-register def operand, it is a
+comment|/// noop.  See readsReg().
+comment|///
+comment|/// This is only valid on registers.
+comment|///
+comment|/// Note that an instruction may have multiple<undef> operands referring to
+comment|/// the same register.  In that case, the instruction may depend on those
+comment|/// operands reading the same dont-care value.  For example:
+comment|///
+comment|///   %vreg1<def> = XOR %vreg2<undef>, %vreg2<undef>
+comment|///
+comment|/// Any register can be used for %vreg2, and its value doesn't matter, but
+comment|/// the two operands must be the same register.
+comment|///
 name|bool
 name|IsUndef
 range|:
@@ -813,6 +828,37 @@ argument_list|)
 block|;
 return|return
 name|IsDebug
+return|;
+block|}
+comment|/// readsReg - Returns true if this operand reads the previous value of its
+comment|/// register.  A use operand with the<undef> flag set doesn't read its
+comment|/// register.  A sub-register def implicitly reads the other parts of the
+comment|/// register being redefined unless the<undef> flag is set.
+name|bool
+name|readsReg
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isReg
+argument_list|()
+operator|&&
+literal|"Wrong MachineOperand accessor"
+argument_list|)
+block|;
+return|return
+operator|!
+name|isUndef
+argument_list|()
+operator|&&
+operator|(
+name|isUse
+argument_list|()
+operator|||
+name|getSubReg
+argument_list|()
+operator|)
 return|;
 block|}
 comment|/// getNextOperandForReg - Return the next MachineOperand in the function that

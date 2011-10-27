@@ -443,13 +443,22 @@ name|isNull
 argument_list|()
 specifier|const
 block|{
+comment|// Convert from the void* to one of the pointer types, to make sure that
+comment|// we recursively strip off low bits if we have a nested PointerUnion.
 return|return
+operator|!
+name|PointerLikeTypeTraits
+operator|<
+name|PT1
+operator|>
+operator|::
+name|getFromVoidPointer
+argument_list|(
 name|Val
 operator|.
 name|getPointer
 argument_list|()
-operator|==
-literal|0
+argument_list|)
 return|;
 block|}
 name|operator

@@ -366,6 +366,14 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x0896
+block|,
+literal|"Intel(R) Centrino(R) Wireless-N 130"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x4229
 block|,
 literal|"Intel(R) Wireless WiFi Link 4965"
@@ -16976,7 +16984,7 @@ name|ic_flags
 operator|&
 name|IEEE80211_F_SCAN
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
 block|{
@@ -33045,6 +33053,15 @@ name|txa_private
 operator|=
 name|NULL
 expr_stmt|;
+name|sc
+operator|->
+name|sc_addba_stop
+argument_list|(
+name|ni
+argument_list|,
+name|tap
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -39595,6 +39612,9 @@ name|ifp
 operator|->
 name|if_softc
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|IWN_LOCK
 argument_list|(
 name|sc
@@ -39652,6 +39672,43 @@ operator|->
 name|ic_flags
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Only need to set the channel in Monitor mode. AP scanning and auth 	 * are already taken care of by their respective firmware commands. 	 */
+if|if
+condition|(
+name|ic
+operator|->
+name|ic_opmode
+operator|==
+name|IEEE80211_M_MONITOR
+condition|)
+block|{
+name|error
+operator|=
+name|iwn_config
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: error %d settting channel\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
+argument_list|)
+expr_stmt|;
+block|}
 name|IWN_UNLOCK
 argument_list|(
 name|sc

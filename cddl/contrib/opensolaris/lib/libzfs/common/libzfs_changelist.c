@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  */
+comment|/*  * Copyright 2010 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  *  * Portions Copyright 2007 Ramprakash Jelari  *  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_include
@@ -266,6 +266,15 @@ name|ZFS_PROP_MOUNTPOINT
 case|:
 if|if
 condition|(
+name|clp
+operator|->
+name|cl_gflags
+operator|&
+name|CL_GATHER_DONT_UNMOUNT
+condition|)
+break|break;
+if|if
+condition|(
 name|zfs_unmount
 argument_list|(
 name|cn
@@ -397,7 +406,17 @@ operator|->
 name|cl_prop
 operator|==
 name|ZFS_PROP_MOUNTPOINT
+operator|&&
+operator|!
+operator|(
+name|clp
+operator|->
+name|cl_gflags
+operator|&
+name|CL_GATHER_DONT_UNMOUNT
+operator|)
 condition|)
+block|{
 name|remove_mountpoint
 argument_list|(
 name|cn
@@ -405,6 +424,7 @@ operator|->
 name|cn_handle
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * It is possible that the changelist_prefix() used libshare 	 * to unshare some entries. Since libshare caches data, an 	 * attempt to reshare during postfix can fail unless libshare 	 * is uninitialized here so that it will reinitialize later. 	 */
 if|if
 condition|(
@@ -607,6 +627,14 @@ operator|)
 expr_stmt|;
 name|mounted
 operator|=
+operator|(
+name|clp
+operator|->
+name|cl_gflags
+operator|&
+name|CL_GATHER_DONT_UNMOUNT
+operator|)
+operator|||
 name|zfs_is_mounted
 argument_list|(
 name|cn
@@ -1647,14 +1675,6 @@ block|}
 else|else
 block|{
 comment|/* 			 * Add this child to beginning of the list. Children 			 * below this one in the hierarchy will get added above 			 * this one in the list. This produces a list in 			 * reverse dataset name order. 			 * This is necessary when the original mountpoint 			 * is legacy or none. 			 */
-name|ASSERT
-argument_list|(
-operator|!
-name|clp
-operator|->
-name|cl_alldependents
-argument_list|)
-expr_stmt|;
 name|verify
 argument_list|(
 name|uu_list_insert_before

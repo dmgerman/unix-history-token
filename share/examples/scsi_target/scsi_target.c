@@ -2996,7 +2996,7 @@ literal|0
 condition|)
 block|{
 name|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 modifier|*
 name|sense
 decl_stmt|;
@@ -3817,12 +3817,17 @@ literal|0
 condition|)
 block|{
 name|struct
-name|scsi_sense_data
+name|scsi_sense_data_fixed
 modifier|*
 name|sense
 decl_stmt|;
 name|sense
 operator|=
+operator|(
+expr|struct
+name|scsi_sense_data_fixed
+operator|*
+operator|)
 operator|&
 name|inot
 operator|->

@@ -634,8 +634,6 @@ block|,
 operator|.
 name|d_flags
 operator|=
-name|D_PSEUDO
-operator||
 name|D_NEEDGIANT
 operator||
 name|D_NEEDMINOR

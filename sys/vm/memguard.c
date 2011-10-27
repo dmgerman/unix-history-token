@@ -126,6 +126,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<vm/uma_int.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/memguard.h>
 end_include
 
@@ -590,15 +596,22 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|MG_GUARD
+name|MG_GUARD_AROUND
 value|0x001
 end_define
 
 begin_define
 define|#
 directive|define
-name|MG_ALLLARGE
+name|MG_GUARD_ALLLARGE
 value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
+name|MG_GUARD_NOFREE
+value|0x004
 end_define
 
 begin_decl_stmt
@@ -606,7 +619,7 @@ specifier|static
 name|int
 name|memguard_options
 init|=
-name|MG_GUARD
+name|MG_GUARD_AROUND
 decl_stmt|;
 end_decl_stmt
 
@@ -639,7 +652,8 @@ literal|0
 argument_list|,
 literal|"MemGuard options:\n"
 literal|"\t0x001 - add guard pages around each allocation\n"
-literal|"\t0x002 - always use MemGuard for allocations over a page"
+literal|"\t0x002 - always use MemGuard for allocations over a page\n"
+literal|"\t0x004 - guard uma(9) zones with UMA_ZONE_NOFREE flag"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1267,7 +1281,7 @@ operator|=
 operator|(
 name|memguard_options
 operator|&
-name|MG_GUARD
+name|MG_GUARD_AROUND
 operator|)
 operator|!=
 literal|0
@@ -1756,14 +1770,10 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|memguard_cmp
 parameter_list|(
-name|struct
-name|malloc_type
-modifier|*
-name|mtp
-parameter_list|,
 name|unsigned
 name|long
 name|size
@@ -1790,7 +1800,7 @@ condition|(
 operator|(
 name|memguard_options
 operator|&
-name|MG_ALLLARGE
+name|MG_GUARD_ALLLARGE
 operator|)
 operator|!=
 literal|0
@@ -1829,6 +1839,40 @@ literal|1
 operator|)
 return|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|memguard_cmp_mtp
+parameter_list|(
+name|struct
+name|malloc_type
+modifier|*
+name|mtp
+parameter_list|,
+name|unsigned
+name|long
+name|size
+parameter_list|)
+block|{
+if|if
+condition|(
+name|memguard_cmp
+argument_list|(
+name|size
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|#
 directive|if
 literal|1
@@ -1894,6 +1938,67 @@ operator|)
 return|;
 endif|#
 directive|endif
+block|}
+end_function
+
+begin_function
+name|int
+name|memguard_cmp_zone
+parameter_list|(
+name|uma_zone_t
+name|zone
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|memguard_options
+operator|&
+name|MG_GUARD_NOFREE
+operator|)
+operator|==
+literal|0
+operator|&&
+name|zone
+operator|->
+name|uz_flags
+operator|&
+name|UMA_ZONE_NOFREE
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+if|if
+condition|(
+name|memguard_cmp
+argument_list|(
+name|zone
+operator|->
+name|uz_size
+argument_list|)
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+comment|/* 	 * The safest way of comparsion is to always compare zone name, 	 * but it is also the slowest way. 	 */
+return|return
+operator|(
+name|strcmp
+argument_list|(
+name|zone
+operator|->
+name|uz_name
+argument_list|,
+name|vm_memguard_desc
+argument_list|)
+operator|==
+literal|0
+operator|)
+return|;
 block|}
 end_function
 

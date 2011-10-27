@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$NetBSD: ncr53c9xvar.h,v 1.46 2005/02/04 02:10:36 perry Exp $	*/
+comment|/*	$NetBSD: ncr53c9xvar.h,v 1.55 2011/07/31 18:39:00 jakllsch Exp $	*/
 end_comment
 
 begin_comment
@@ -268,7 +268,7 @@ name|ch
 decl_stmt|;
 struct|struct
 block|{
-name|u_char
+name|uint8_t
 name|msg
 index|[
 literal|3
@@ -283,7 +283,7 @@ comment|/* SCSI command block */
 block|}
 name|cmd
 struct|;
-name|char
+name|uint8_t
 modifier|*
 name|daddr
 decl_stmt|;
@@ -296,18 +296,18 @@ name|int
 name|dleft
 decl_stmt|;
 comment|/* Residue */
-name|u_char
+name|uint8_t
 name|stat
 decl_stmt|;
 comment|/* SCSI status byte */
-name|u_char
+name|uint8_t
 name|tag
 index|[
 literal|2
 index|]
 decl_stmt|;
 comment|/* TAG bytes */
-name|u_char
+name|uint8_t
 name|pad
 index|[
 literal|1
@@ -361,7 +361,9 @@ name|a
 parameter_list|,
 name|b
 parameter_list|)
-value|do { \ 	const char *f = "[" msg "]"; \ 	int n = strlen((ecb)->trace); \ 	if (n< (sizeof((ecb)->trace)-100)) \ 		sprintf((ecb)->trace + n, f, a, b); \ } while(0)
+value|do {					\ 	const char *f = "[" msg "]";					\ 	int n = strlen((ecb)->trace);					\ 	if (n< (sizeof((ecb)->trace)-100))				\ 		sprintf((ecb)->trace + n, f, a, b);			\ } while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_else
@@ -409,15 +411,15 @@ expr_stmt|;
 name|time_t
 name|last_used
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|used
 decl_stmt|;
 comment|/* # slots in use */
-name|u_char
+name|uint8_t
 name|avail
 decl_stmt|;
 comment|/* where to start scanning */
-name|u_char
+name|uint8_t
 name|busy
 decl_stmt|;
 name|struct
@@ -441,13 +443,13 @@ begin_struct
 struct|struct
 name|ncr53c9x_xinfo
 block|{
-name|u_char
+name|uint8_t
 name|period
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|offset
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|width
 decl_stmt|;
 block|}
@@ -478,7 +480,7 @@ name|int
 name|senses
 decl_stmt|;
 comment|/* # of request sense commands sent */
-name|u_char
+name|uint8_t
 name|flags
 decl_stmt|;
 define|#
@@ -548,11 +550,11 @@ name|t
 parameter_list|,
 name|l
 parameter_list|)
-value|(					\ 	(((l)< NCR_NLUN)&& (((t)->lun[(l)]) != NULL))		\ 		? ((t)->lun[(l)])				\ 		: ncr53c9x_lunsearch((t), (int64_t)(l))		\ )
+value|(						\ 	(((l)< NCR_NLUN)&& (((t)->lun[(l)]) != NULL))			\ 		? ((t)->lun[(l)])					\ 		: ncr53c9x_lunsearch((t), (int64_t)(l))			\ )
 end_define
 
 begin_comment
-comment|/* Register a linenumber (for debugging) */
+comment|/* Register a linenumber (for debugging). */
 end_comment
 
 begin_define
@@ -655,7 +657,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWECBS) printf str;} while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWECBS) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -666,7 +670,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWMISC) printf str;} while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWMISC) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -677,7 +683,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWINTS) printf str;} while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWINTS) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -688,7 +696,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWTRAC) printf str;} while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWTRAC) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -699,7 +709,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWCMDS) printf str;} while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWCMDS) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -710,7 +722,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWSTART) printf str;}while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWSTART) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -721,7 +735,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWPHASE) printf str;}while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWPHASE) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -732,7 +748,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWDMA) printf str;}while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWDMA) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -743,7 +761,9 @@ parameter_list|(
 name|str
 parameter_list|)
 define|\
-value|do {if (ncr53c9x_debug& NCR_SHOWMSGS) printf str;}while (0)
+value|do {								\ 		if ((ncr53c9x_debug& NCR_SHOWMSGS) != 0)		\ 			printf str;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_else
@@ -859,7 +879,7 @@ struct|struct
 name|ncr53c9x_glue
 block|{
 comment|/* Mandatory entry points. */
-name|u_char
+name|uint8_t
 function_decl|(
 modifier|*
 name|gl_read_reg
@@ -884,7 +904,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_char
+name|uint8_t
 parameter_list|)
 function_decl|;
 name|int
@@ -930,7 +950,8 @@ name|struct
 name|ncr53c9x_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 parameter_list|,
 name|size_t
@@ -1028,51 +1049,51 @@ name|sc_cfflags
 decl_stmt|;
 comment|/* Copy of config flags */
 comment|/* register defaults */
-name|u_char
+name|uint8_t
 name|sc_cfg1
 decl_stmt|;
 comment|/* Config 1 */
-name|u_char
+name|uint8_t
 name|sc_cfg2
 decl_stmt|;
 comment|/* Config 2, not ESP100 */
-name|u_char
+name|uint8_t
 name|sc_cfg3
 decl_stmt|;
 comment|/* Config 3, ESP200,FAS */
-name|u_char
+name|uint8_t
 name|sc_cfg3_fscsi
 decl_stmt|;
 comment|/* Chip-specific FSCSI bit */
-name|u_char
+name|uint8_t
 name|sc_cfg4
 decl_stmt|;
 comment|/* Config 4, only ESP200 */
-name|u_char
+name|uint8_t
 name|sc_cfg5
 decl_stmt|;
 comment|/* Config 5, only ESP200 */
-name|u_char
+name|uint8_t
 name|sc_ccf
 decl_stmt|;
 comment|/* Clock Conversion */
-name|u_char
+name|uint8_t
 name|sc_timeout
 decl_stmt|;
 comment|/* register copies, see espreadregs() */
-name|u_char
+name|uint8_t
 name|sc_espintr
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|sc_espstat
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|sc_espstep
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|sc_espstat2
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|sc_espfflags
 decl_stmt|;
 comment|/* Lists of command blocks */
@@ -1099,7 +1120,8 @@ modifier|*
 name|sc_tinfo
 decl_stmt|;
 comment|/* Data about the current nexus (updated for every cmd switch) */
-name|caddr_t
+name|void
+modifier|*
 name|sc_dp
 decl_stmt|;
 comment|/* Current data pointer */
@@ -1116,38 +1138,38 @@ name|int
 name|sc_prevphase
 decl_stmt|;
 comment|/* Copy of what bus phase we were in */
-name|u_char
+name|uint8_t
 name|sc_state
 decl_stmt|;
 comment|/* State applicable to the adapter */
-name|u_char
+name|uint8_t
 name|sc_flags
 decl_stmt|;
 comment|/* See below */
-name|u_char
+name|uint8_t
 name|sc_selid
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|sc_lastcmd
 decl_stmt|;
 comment|/* Message stuff */
-name|u_short
+name|uint16_t
 name|sc_msgify
 decl_stmt|;
 comment|/* IDENTIFY message associated with nexus */
-name|u_short
+name|uint16_t
 name|sc_msgout
 decl_stmt|;
 comment|/* What message is on its way out? */
-name|u_short
+name|uint16_t
 name|sc_msgpriq
 decl_stmt|;
 comment|/* One or more messages to send (encoded) */
-name|u_short
+name|uint16_t
 name|sc_msgoutq
 decl_stmt|;
 comment|/* What messages have been sent so far? */
-name|u_char
+name|uint8_t
 modifier|*
 name|sc_omess
 decl_stmt|;
@@ -1156,14 +1178,15 @@ name|int
 name|sc_omess_self
 decl_stmt|;
 comment|/* MSGOUT buffer is self-allocated */
-name|caddr_t
+name|void
+modifier|*
 name|sc_omp
 decl_stmt|;
 comment|/* Message pointer (for multibyte messages) */
 name|size_t
 name|sc_omlen
 decl_stmt|;
-name|u_char
+name|uint8_t
 modifier|*
 name|sc_imess
 decl_stmt|;
@@ -1172,14 +1195,16 @@ name|int
 name|sc_imess_self
 decl_stmt|;
 comment|/* MSGIN buffer is self-allocated */
-name|caddr_t
+name|void
+modifier|*
 name|sc_imp
 decl_stmt|;
 comment|/* Message pointer (for multibyte messages) */
 name|size_t
 name|sc_imlen
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 name|sc_cmdp
 decl_stmt|;
 comment|/* Command pointer (for DMAed commands) */
@@ -1706,7 +1731,9 @@ name|sc
 parameter_list|,
 name|cmd
 parameter_list|)
-value|do {						\ 	if ((ncr53c9x_debug& NCR_SHOWCCMDS) != 0)			\ 		printf("<CMD:0x%x %d>", (unsigned)cmd, __LINE__);	\ 	sc->sc_lastcmd = cmd;						\ 	NCR_WRITE_REG(sc, NCR_CMD, cmd);				\ } while (0)
+value|do {						\ 	if ((ncr53c9x_debug& NCR_SHOWCCMDS) != 0)			\ 		printf("<CMD:0x%x %d>", (unsigned int)cmd, __LINE__);	\ 	sc->sc_lastcmd = cmd;						\ 	NCR_WRITE_REG(sc, NCR_CMD, cmd);				\ } while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_else

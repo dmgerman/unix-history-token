@@ -171,9 +171,6 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
-name|ASTSerializationListener
-decl_stmt|;
-name|class
 name|NestedNameSpecifier
 decl_stmt|;
 name|class
@@ -245,8 +242,6 @@ block|{
 name|public
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|uint64_t
@@ -256,8 +251,6 @@ operator|>
 name|RecordData
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|uint64_t
@@ -270,6 +263,32 @@ name|ASTDeclWriter
 decl_stmt|;
 name|private
 label|:
+comment|/// \brief Map that provides the ID numbers of each type within the
+comment|/// output stream, plus those deserialized from a chained PCH.
+comment|///
+comment|/// The ID numbers of types are consecutive (in order of discovery)
+comment|/// and start at 1. 0 is reserved for NULL. When types are actually
+comment|/// stored in the stream, the ID number is shifted by 2 bits to
+comment|/// allow for the const/volatile qualifiers.
+comment|///
+comment|/// Keys in the map never have const/volatile qualifiers.
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|QualType
+operator|,
+name|serialization
+operator|::
+name|TypeIdx
+operator|,
+name|serialization
+operator|::
+name|UnsafeQualTypeDenseMapInfo
+operator|>
+name|TypeIdxMap
+expr_stmt|;
 comment|/// \brief The bitstream writer used to emit this precompiled header.
 name|llvm
 operator|::
@@ -277,16 +296,20 @@ name|BitstreamWriter
 operator|&
 name|Stream
 expr_stmt|;
+comment|/// \brief The ASTContext we're writing.
+name|ASTContext
+modifier|*
+name|Context
+decl_stmt|;
 comment|/// \brief The reader of existing AST files, if we're chaining.
 name|ASTReader
 modifier|*
 name|Chain
 decl_stmt|;
-comment|/// \brief A listener object that receives notifications when certain
-comment|/// entities are serialized.
-name|ASTSerializationListener
-modifier|*
-name|SerializationListener
+comment|/// \brief Indicates when the AST writing is actively performing
+comment|/// serialization, rather than just queueing updates.
+name|bool
+name|WritingAST
 decl_stmt|;
 comment|/// \brief Stores a declaration or a type to be written to the AST file.
 name|class
@@ -478,11 +501,9 @@ comment|/// stored in the stream, the ID number is shifted by 2 bits to
 comment|/// allow for the const/volatile qualifiers.
 comment|///
 comment|/// Keys in the map never have const/volatile qualifiers.
-name|serialization
-operator|::
 name|TypeIdxMap
 name|TypeIdxs
-expr_stmt|;
+decl_stmt|;
 comment|/// \brief Offset of each type in the bitstream, indexed by
 comment|/// the type's ID.
 name|std
@@ -599,18 +620,6 @@ operator|*
 operator|>
 name|DeserializedMacroNames
 expr_stmt|;
-comment|/// \brief The first ID number we can use for our own macro definitions.
-name|serialization
-operator|::
-name|MacroID
-name|FirstMacroID
-expr_stmt|;
-comment|/// \brief The decl ID that will be assigned to the next new macro definition.
-name|serialization
-operator|::
-name|MacroID
-name|NextMacroID
-expr_stmt|;
 comment|/// \brief Mapping from macro definitions (as they occur in the preprocessing
 comment|/// record) to the macro IDs.
 name|llvm
@@ -623,23 +632,11 @@ operator|*
 operator|,
 name|serialization
 operator|::
-name|MacroID
+name|PreprocessedEntityID
 operator|>
 name|MacroDefinitions
 expr_stmt|;
-comment|/// \brief Mapping from the macro definition indices in \c MacroDefinitions
-comment|/// to the corresponding offsets within the preprocessor block.
-name|std
-operator|::
-name|vector
-operator|<
-name|uint32_t
-operator|>
-name|MacroDefinitionOffsets
-expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|uint64_t
@@ -696,8 +693,6 @@ comment|/// e.g., tentative variable definitions that occur within
 comment|/// headers. The declarations themselves are stored as declaration
 comment|/// IDs, since they will be written out to an EXTERNAL_DEFINITIONS
 comment|/// record.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|uint64_t
@@ -741,14 +736,52 @@ comment|/// \brief Decls that will be replaced in the current dependent AST file
 name|DeclsToRewriteTy
 name|DeclsToRewrite
 decl_stmt|;
+struct|struct
+name|ChainedObjCCategoriesData
+block|{
+comment|/// \brief The interface in the imported module.
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|Interface
+decl_stmt|;
+comment|/// \brief The local tail category ID that got chained to the imported
+comment|/// interface.
+specifier|const
+name|ObjCCategoryDecl
+modifier|*
+name|TailCategory
+decl_stmt|;
+comment|/// \brief ID corresponding to \c Interface.
+name|serialization
+operator|::
+name|DeclID
+name|InterfaceID
+expr_stmt|;
+comment|/// \brief ID corresponding to TailCategoryID.
+name|serialization
+operator|::
+name|DeclID
+name|TailCategoryID
+expr_stmt|;
+block|}
+struct|;
+comment|/// \brief ObjC categories that got chained to an interface imported from
+comment|/// another module.
+name|SmallVector
+operator|<
+name|ChainedObjCCategoriesData
+operator|,
+literal|16
+operator|>
+name|LocalChainedObjCCategories
+expr_stmt|;
 comment|/// \brief Decls that have been replaced in the current dependent AST file.
 comment|///
 comment|/// When a decl changes fundamentally after being deserialized (this shouldn't
 comment|/// happen, but the ObjC AST nodes are designed this way), it will be
 comment|/// serialized again. In this case, it is registered here, so that the reader
 comment|/// knows to read the updated version.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -768,8 +801,6 @@ name|ReplacedDecls
 expr_stmt|;
 comment|/// \brief Statements that we've encountered while serializing a
 comment|/// declaration or type.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Stmt
@@ -781,8 +812,6 @@ name|StmtsToEmit
 expr_stmt|;
 comment|/// \brief Statements collection to use for ASTWriter::AddStmt().
 comment|/// It will point to StmtsToEmit unless it is overriden.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Stmt
@@ -836,8 +865,6 @@ name|unsigned
 name|NumVisibleDeclContexts
 decl_stmt|;
 comment|/// \brief The offset of each CXXBaseSpecifier set within the AST.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|uint32_t
@@ -919,8 +946,6 @@ block|}
 struct|;
 comment|/// \brief Queue of C++ base specifiers to be written to the AST file,
 comment|/// in the order they should be written.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|QueuedCXXBaseSpecifiers
@@ -949,9 +974,7 @@ name|ASTContext
 operator|&
 name|Context
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|isysroot
 argument_list|,
 specifier|const
@@ -991,9 +1014,7 @@ name|Preprocessor
 modifier|&
 name|PP
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|isysroot
 parameter_list|)
 function_decl|;
@@ -1004,6 +1025,9 @@ specifier|const
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+name|bool
+name|IsModule
 parameter_list|)
 function_decl|;
 name|void
@@ -1013,9 +1037,7 @@ name|HeaderSearch
 modifier|&
 name|HS
 parameter_list|,
-specifier|const
-name|char
-modifier|*
+name|StringRef
 name|isysroot
 parameter_list|)
 function_decl|;
@@ -1031,7 +1053,7 @@ name|void
 name|WritePragmaDiagnosticMappings
 parameter_list|(
 specifier|const
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|Diag
 parameter_list|)
@@ -1097,6 +1119,9 @@ parameter_list|(
 name|Preprocessor
 modifier|&
 name|PP
+parameter_list|,
+name|bool
+name|IsModule
 parameter_list|)
 function_decl|;
 name|void
@@ -1113,11 +1138,23 @@ name|Record
 parameter_list|)
 function_decl|;
 name|void
+name|ResolveDeclUpdatesBlocks
+parameter_list|()
+function_decl|;
+name|void
 name|WriteDeclUpdatesBlocks
 parameter_list|()
 function_decl|;
 name|void
 name|WriteDeclReplacementsBlock
+parameter_list|()
+function_decl|;
+name|void
+name|ResolveChainedObjCCategories
+parameter_list|()
+function_decl|;
+name|void
+name|WriteChainedObjCCategories
 parameter_list|()
 function_decl|;
 name|void
@@ -1212,9 +1249,7 @@ name|MemorizeStatCalls
 operator|*
 name|StatCalls
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|StringRef
 name|isysroot
 argument_list|,
 specifier|const
@@ -1223,25 +1258,11 @@ operator|::
 name|string
 operator|&
 name|OutputFile
+argument_list|,
+name|bool
+name|IsModule
 argument_list|)
 decl_stmt|;
-name|void
-name|WriteASTChain
-parameter_list|(
-name|Sema
-modifier|&
-name|SemaRef
-parameter_list|,
-name|MemorizeStatCalls
-modifier|*
-name|StatCalls
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|isysroot
-parameter_list|)
-function_decl|;
 name|public
 label|:
 comment|/// \brief Create a new precompiled header writer that outputs to
@@ -1255,21 +1276,6 @@ operator|&
 name|Stream
 argument_list|)
 expr_stmt|;
-comment|/// \brief Set the listener that will receive notification of serialization
-comment|/// events.
-name|void
-name|SetSerializationListener
-parameter_list|(
-name|ASTSerializationListener
-modifier|*
-name|Listener
-parameter_list|)
-block|{
-name|SerializationListener
-operator|=
-name|Listener
-expr_stmt|;
-block|}
 comment|/// \brief Write a precompiled header for the given semantic analysis.
 comment|///
 comment|/// \param SemaRef a reference to the semantic analysis object that processed
@@ -1278,11 +1284,11 @@ comment|///
 comment|/// \param StatCalls the object that cached all of the stat() calls made while
 comment|/// searching for source files and headers.
 comment|///
-comment|/// \param isysroot if non-NULL, write a relocatable PCH file whose headers
-comment|/// are relative to the given system root.
+comment|/// \param IsModule Whether we're writing a module (otherwise, we're writing a
+comment|/// precompiled header).
 comment|///
-comment|/// \param PPRec Record of the preprocessing actions that occurred while
-comment|/// preprocessing this file, e.g., macro expansions
+comment|/// \param isysroot if non-empty, write a relocatable file whose headers
+comment|/// are relative to the given system root.
 name|void
 name|WriteAST
 argument_list|(
@@ -1301,9 +1307,10 @@ name|string
 operator|&
 name|OutputFile
 argument_list|,
-specifier|const
-name|char
-operator|*
+name|bool
+name|IsModule
+argument_list|,
+name|StringRef
 name|isysroot
 argument_list|)
 decl_stmt|;
@@ -1495,18 +1502,6 @@ name|II
 index|]
 return|;
 block|}
-comment|/// \brief Retrieve the ID number corresponding to the given macro
-comment|/// definition.
-name|serialization
-operator|::
-name|MacroID
-name|getMacroDefinitionID
-argument_list|(
-name|MacroDefinition
-operator|*
-name|MD
-argument_list|)
-expr_stmt|;
 comment|/// \brief Emit a reference to a type.
 name|void
 name|AddTypeRef
@@ -1850,17 +1845,15 @@ function_decl|;
 comment|/// \brief Add a string to the given record.
 name|void
 name|AddString
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Str
-argument_list|,
+parameter_list|,
 name|RecordDataImpl
-operator|&
+modifier|&
 name|Record
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Add a version tuple to the given record
 name|void
 name|AddVersionTuple
@@ -2182,7 +2175,7 @@ name|MacroDefinitionRead
 argument_list|(
 name|serialization
 operator|::
-name|MacroID
+name|PreprocessedEntityID
 name|ID
 argument_list|,
 name|MacroDefinition
@@ -2281,6 +2274,21 @@ modifier|*
 name|D
 parameter_list|)
 function_decl|;
+name|virtual
+name|void
+name|AddedObjCCategoryToInterface
+parameter_list|(
+specifier|const
+name|ObjCCategoryDecl
+modifier|*
+name|CatD
+parameter_list|,
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|IFD
+parameter_list|)
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// \brief AST and semantic-analysis consumer that generates a
@@ -2301,13 +2309,14 @@ operator|::
 name|string
 name|OutputFile
 block|;
-specifier|const
-name|char
-operator|*
+name|bool
+name|IsModule
+block|;
+name|std
+operator|::
+name|string
 name|isysroot
 block|;
-name|llvm
-operator|::
 name|raw_ostream
 operator|*
 name|Out
@@ -2338,9 +2347,6 @@ block|;
 name|ASTWriter
 name|Writer
 block|;
-name|bool
-name|Chaining
-block|;
 name|protected
 operator|:
 name|ASTWriter
@@ -2369,14 +2375,18 @@ name|PCHGenerator
 argument_list|(
 argument|const Preprocessor&PP
 argument_list|,
-argument|const std::string&OutputFile
+argument|StringRef OutputFile
 argument_list|,
-argument|bool Chaining
+argument|bool IsModule
 argument_list|,
-argument|const char *isysroot
+argument|StringRef isysroot
 argument_list|,
-argument|llvm::raw_ostream *Out
+argument|raw_ostream *Out
 argument_list|)
+block|;
+operator|~
+name|PCHGenerator
+argument_list|()
 block|;
 name|virtual
 name|void
@@ -2403,12 +2413,6 @@ name|virtual
 name|ASTMutationListener
 operator|*
 name|GetASTMutationListener
-argument_list|()
-block|;
-name|virtual
-name|ASTSerializationListener
-operator|*
-name|GetASTSerializationListener
 argument_list|()
 block|;
 name|virtual

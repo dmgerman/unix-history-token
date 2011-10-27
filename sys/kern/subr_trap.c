@@ -287,6 +287,23 @@ operator|->
 name|td_name
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|p
+operator|->
+name|p_flag
+operator|&
+name|P_WEXIT
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"Exiting process returns to usermode"
+operator|)
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 literal|0
@@ -644,7 +661,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -669,7 +686,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,

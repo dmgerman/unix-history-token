@@ -111,7 +111,7 @@ name|namespace
 name|ento
 block|{
 name|class
-name|GRState
+name|ProgramState
 decl_stmt|;
 name|class
 name|CompoundValData
@@ -231,7 +231,7 @@ name|StoreRef
 name|store
 block|;
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|region
 block|;
@@ -245,7 +245,7 @@ operator|&
 name|st
 argument_list|,
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|r
 argument_list|)
@@ -275,7 +275,7 @@ argument_list|()
 return|;
 block|}
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|getRegion
 argument_list|()
@@ -301,7 +301,7 @@ operator|&
 name|store
 argument_list|,
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|region
 argument_list|)
@@ -1103,7 +1103,7 @@ modifier|&
 name|store
 parameter_list|,
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 modifier|*
 name|region
 parameter_list|)

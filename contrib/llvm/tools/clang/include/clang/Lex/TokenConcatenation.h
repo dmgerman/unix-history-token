@@ -162,21 +162,10 @@ decl|const
 decl_stmt|;
 name|private
 label|:
-comment|/// StartsWithL - Return true if the spelling of this token starts with 'L'.
+comment|/// IsIdentifierStringPrefix - Return true if the spelling of the token
+comment|/// is literally 'L', 'u', 'U', or 'u8'.
 name|bool
-name|StartsWithL
-argument_list|(
-specifier|const
-name|Token
-operator|&
-name|Tok
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// IsIdentifierL - Return true if the spelling of this token is literally
-comment|/// 'L'.
-name|bool
-name|IsIdentifierL
+name|IsIdentifierStringPrefix
 argument_list|(
 specifier|const
 name|Token

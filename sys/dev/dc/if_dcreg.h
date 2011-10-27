@@ -325,6 +325,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DC_TYPE_ULI_M5261
+value|0xD
+end_define
+
+begin_comment
+comment|/* ALi/ULi M5261 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_TYPE_ULI_M5263
+value|0xE
+end_define
+
+begin_comment
+comment|/* ALi/ULi M5263 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DC_IS_MACRONIX
 parameter_list|(
 name|x
@@ -342,6 +364,17 @@ name|x
 parameter_list|)
 define|\
 value|(x->dc_type == DC_TYPE_AL981 ||		\ 	 x->dc_type == DC_TYPE_AN983)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_IS_ULI
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|(x->dc_type == DC_TYPE_ULI_M5261 ||	\ 	 x->dc_type == DC_TYPE_ULI_M5263)
 end_define
 
 begin_define
@@ -3847,6 +3880,84 @@ begin_comment
 comment|/* End of CONEXANT specific registers */
 end_comment
 
+begin_comment
+comment|/*  * ULi M5263 specific registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_FILTER_NPERF
+value|14
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_DATA_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_REG_MASK
+value|0x001F0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_ADDR_MASK
+value|0x03E00000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_OP_WRITE
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_OP_READ
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_OP_DONE
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_DATA_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_REG_SHIFT
+value|16
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_ULI_PHY_ADDR_SHIFT
+value|21
+end_define
+
+begin_comment
+comment|/* End of ULi M5263 specific registers */
+end_comment
+
 begin_struct
 struct|struct
 name|dc_softc
@@ -4791,6 +4902,35 @@ define|#
 directive|define
 name|DC_DEVICEID_PCMPC200_AB09
 value|0xab09
+end_define
+
+begin_comment
+comment|/*  * ULi vendor ID.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_VENDORID_ULI
+value|0x10b9
+end_define
+
+begin_comment
+comment|/*  * ULi device IDs.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_M5261
+value|0x5261
+end_define
+
+begin_define
+define|#
+directive|define
+name|DC_DEVICEID_M5263
+value|0x5263
 end_define
 
 begin_define

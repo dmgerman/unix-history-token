@@ -375,7 +375,7 @@ end_comment
 
 begin_function
 name|int
-name|sbrk
+name|sys_sbrk
 parameter_list|(
 name|td
 parameter_list|,
@@ -433,7 +433,7 @@ end_comment
 
 begin_function
 name|int
-name|sstk
+name|sys_sstk
 parameter_list|(
 name|td
 parameter_list|,
@@ -591,7 +591,7 @@ end_comment
 
 begin_function
 name|int
-name|mmap
+name|sys_mmap
 parameter_list|(
 name|td
 parameter_list|,
@@ -1562,7 +1562,7 @@ name|pos
 expr_stmt|;
 return|return
 operator|(
-name|mmap
+name|sys_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -1808,7 +1808,7 @@ name|pos
 expr_stmt|;
 return|return
 operator|(
-name|mmap
+name|sys_mmap
 argument_list|(
 name|td
 argument_list|,
@@ -1864,7 +1864,7 @@ end_comment
 
 begin_function
 name|int
-name|msync
+name|sys_msync
 parameter_list|(
 name|td
 parameter_list|,
@@ -2094,7 +2094,7 @@ end_comment
 
 begin_function
 name|int
-name|munmap
+name|sys_munmap
 parameter_list|(
 name|td
 parameter_list|,
@@ -2438,7 +2438,7 @@ end_comment
 
 begin_function
 name|int
-name|mprotect
+name|sys_mprotect
 parameter_list|(
 name|td
 parameter_list|,
@@ -2621,7 +2621,7 @@ end_comment
 
 begin_function
 name|int
-name|minherit
+name|sys_minherit
 parameter_list|(
 name|td
 parameter_list|,
@@ -2796,7 +2796,7 @@ end_comment
 
 begin_function
 name|int
-name|madvise
+name|sys_madvise
 parameter_list|(
 name|td
 parameter_list|,
@@ -3076,7 +3076,7 @@ end_comment
 
 begin_function
 name|int
-name|mincore
+name|sys_mincore
 parameter_list|(
 name|td
 parameter_list|,
@@ -3955,7 +3955,7 @@ end_comment
 
 begin_function
 name|int
-name|mlock
+name|sys_mlock
 parameter_list|(
 name|td
 parameter_list|,
@@ -4305,7 +4305,7 @@ end_comment
 
 begin_function
 name|int
-name|mlockall
+name|sys_mlockall
 parameter_list|(
 name|td
 parameter_list|,
@@ -4614,7 +4614,7 @@ end_comment
 
 begin_function
 name|int
-name|munlockall
+name|sys_munlockall
 parameter_list|(
 name|td
 parameter_list|,
@@ -4787,7 +4787,7 @@ end_comment
 
 begin_function
 name|int
-name|munlock
+name|sys_munlock
 parameter_list|(
 name|td
 parameter_list|,

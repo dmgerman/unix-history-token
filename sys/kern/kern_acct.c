@@ -592,7 +592,7 @@ end_comment
 
 begin_function
 name|int
-name|acct
+name|sys_acct
 parameter_list|(
 name|struct
 name|thread

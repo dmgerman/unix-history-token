@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: ssh-keyscan.c,v 1.84 2011/01/04 20:44:13 otto Exp $ */
+comment|/* $OpenBSD: ssh-keyscan.c,v 1.85 2011/03/15 10:36:02 okan Exp $ */
 end_comment
 
 begin_comment
@@ -2921,15 +2921,11 @@ expr_stmt|;
 block|}
 block|}
 else|else
+name|timerclear
+argument_list|(
+operator|&
 name|seltime
-operator|.
-name|tv_sec
-operator|=
-name|seltime
-operator|.
-name|tv_usec
-operator|=
-literal|0
+argument_list|)
 expr_stmt|;
 name|r
 operator|=
@@ -3390,9 +3386,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|init_rng
-argument_list|()
 expr_stmt|;
 name|seed_rng
 argument_list|()

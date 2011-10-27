@@ -123,8 +123,6 @@ name|char
 operator|>
 name|BlockSet
 expr_stmt|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const
@@ -848,7 +846,7 @@ comment|///  with and Observer object.
 name|void
 name|runOnBlock
 argument_list|(
-argument|const CFGBlock* B
+argument|const CFGBlock *B
 argument_list|,
 argument|bool recordStmtValues
 argument_list|)
@@ -914,7 +912,7 @@ begin_macro
 unit|}    void
 name|runOnBlock
 argument_list|(
-argument|const CFGBlock& B
+argument|const CFGBlock&B
 argument_list|,
 argument|bool recordStmtValues
 argument_list|)

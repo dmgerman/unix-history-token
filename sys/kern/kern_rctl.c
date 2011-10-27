@@ -1356,6 +1356,16 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+comment|/* 			 * If the process state is not fully initialized yet, 			 * we can't access most of the required fields, e.g. 			 * p->p_comm.  This happens when called from fork1(). 			 * Ignore this rule for now; it will be processed just 			 * after fork, when called from racct_proc_fork_done(). 			 */
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -1488,6 +1498,15 @@ operator|->
 name|rrl_exceeded
 operator|!=
 literal|0
+condition|)
+continue|continue;
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
 condition|)
 continue|continue;
 name|buf
@@ -1624,6 +1643,15 @@ operator|!=
 literal|0
 condition|)
 continue|continue;
+if|if
+condition|(
+name|p
+operator|->
+name|p_state
+operator|!=
+name|PRS_NORMAL
+condition|)
+continue|continue;
 name|KASSERT
 argument_list|(
 name|rule
@@ -1647,24 +1675,8 @@ name|rr_action
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 			 * We're supposed to send a signal, but the process 			 * is not fully initialized yet, probably because we 			 * got called from fork1().  For now just deny the 			 * allocation instead. 			 */
-if|if
-condition|(
-name|p
-operator|->
-name|p_state
-operator|!=
-name|PRS_NORMAL
-condition|)
-block|{
-name|should_deny
-operator|=
-literal|1
-expr_stmt|;
-continue|continue;
-block|}
 comment|/* 			 * We're using the fact that RCTL_ACTION_SIG* values 			 * are equal to their counterparts from sys/signal.h. 			 */
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -5522,7 +5534,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_racct
+name|sys_rctl_get_racct
 parameter_list|(
 name|struct
 name|thread
@@ -5996,7 +6008,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_rules
+name|sys_rctl_get_rules
 parameter_list|(
 name|struct
 name|thread
@@ -6369,7 +6381,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_limits
+name|sys_rctl_get_limits
 parameter_list|(
 name|struct
 name|thread
@@ -6751,7 +6763,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_add_rule
+name|sys_rctl_add_rule
 parameter_list|(
 name|struct
 name|thread
@@ -6935,7 +6947,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_remove_rule
+name|sys_rctl_remove_rule
 parameter_list|(
 name|struct
 name|thread
@@ -8084,7 +8096,7 @@ end_comment
 
 begin_function
 name|int
-name|rctl_get_racct
+name|sys_rctl_get_racct
 parameter_list|(
 name|struct
 name|thread
@@ -8107,7 +8119,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_rules
+name|sys_rctl_get_rules
 parameter_list|(
 name|struct
 name|thread
@@ -8130,7 +8142,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_get_limits
+name|sys_rctl_get_limits
 parameter_list|(
 name|struct
 name|thread
@@ -8153,7 +8165,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_add_rule
+name|sys_rctl_add_rule
 parameter_list|(
 name|struct
 name|thread
@@ -8176,7 +8188,7 @@ end_function
 
 begin_function
 name|int
-name|rctl_remove_rule
+name|sys_rctl_remove_rule
 parameter_list|(
 name|struct
 name|thread

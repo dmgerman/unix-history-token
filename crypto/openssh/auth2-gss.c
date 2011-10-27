@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: auth2-gss.c,v 1.16 2007/10/29 00:52:45 dtucker Exp $ */
+comment|/* $OpenBSD: auth2-gss.c,v 1.17 2011/03/10 02:52:57 djm Exp $ */
 end_comment
 
 begin_comment
@@ -395,6 +395,12 @@ argument_list|(
 name|doid
 argument_list|)
 expr_stmt|;
+name|authctxt
+operator|->
+name|server_caused_failure
+operator|=
+literal|1
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -435,6 +441,12 @@ name|xfree
 argument_list|(
 name|doid
 argument_list|)
+expr_stmt|;
+name|authctxt
+operator|->
+name|server_caused_failure
+operator|=
+literal|1
 expr_stmt|;
 return|return
 operator|(

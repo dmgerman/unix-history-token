@@ -25,6 +25,17 @@ end_define
 begin_define
 define|#
 directive|define
+name|MIPS24K_PMC_INTERRUPT_ENABLE
+value|0x10
+end_define
+
+begin_comment
+comment|/* Enable interrupts */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|MIPS24K_PMC_USER_ENABLE
 value|0x08
 end_define
@@ -62,6 +73,10 @@ name|MIPS24K_PMC_ENABLE
 value|(MIPS24K_PMC_USER_ENABLE |	   \ 			    MIPS24K_PMC_SUPER_ENABLE |	   \ 			    MIPS24K_PMC_KERNEL_ENABLE)
 end_define
 
+begin_comment
+comment|/*  * Interrupts are posted when bit 31 of the relevant  * counter is set.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -69,7 +84,7 @@ name|MIPS24K_RELOAD_COUNT_TO_PERFCTR_VALUE
 parameter_list|(
 name|R
 parameter_list|)
-value|(-(R))
+value|(0x80000000 - (R))
 end_define
 
 begin_define
@@ -79,7 +94,7 @@ name|MIPS24K_PERFCTR_VALUE_TO_RELOAD_COUNT
 parameter_list|(
 name|P
 parameter_list|)
-value|(-(P))
+value|((P) - 0x80000000)
 end_define
 
 begin_define

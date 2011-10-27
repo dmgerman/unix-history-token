@@ -1038,7 +1038,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|psignal
+name|kern_psignal
 argument_list|(
 name|q
 argument_list|,
@@ -1584,7 +1584,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|sp
 argument_list|,

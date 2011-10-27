@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -555,10 +561,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uintmax_t
+operator|)
 name|sb
 operator|.
 name|st_size
 operator|>
+operator|(
+name|uintmax_t
+operator|)
 name|SIZE_T_MAX
 condition|)
 name|errx

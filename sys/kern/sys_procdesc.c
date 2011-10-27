@@ -662,7 +662,7 @@ end_comment
 
 begin_function
 name|int
-name|pdgetpid
+name|sys_pdgetpid
 parameter_list|(
 name|struct
 name|thread
@@ -1323,7 +1323,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|psignal
+name|kern_psignal
 argument_list|(
 name|p
 argument_list|,
@@ -1904,7 +1904,7 @@ end_comment
 
 begin_function
 name|int
-name|pdgetpid
+name|sys_pdgetpid
 parameter_list|(
 name|struct
 name|thread

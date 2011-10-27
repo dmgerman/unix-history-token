@@ -73,6 +73,14 @@ name|LLVMPassManagerRef
 name|PM
 parameter_list|)
 function_decl|;
+comment|/** See llvm::createAlwaysInlinerPass function. */
+name|void
+name|LLVMAddAlwaysInlinerPass
+parameter_list|(
+name|LLVMPassManagerRef
+name|PM
+parameter_list|)
+function_decl|;
 comment|/** See llvm::createGlobalDCEPass function. */
 name|void
 name|LLVMAddGlobalDCEPass
@@ -92,14 +100,6 @@ function_decl|;
 comment|/** See llvm::createIPConstantPropagationPass function. */
 name|void
 name|LLVMAddIPConstantPropagationPass
-parameter_list|(
-name|LLVMPassManagerRef
-name|PM
-parameter_list|)
-function_decl|;
-comment|/** See llvm::createLowerSetJmpPass function. */
-name|void
-name|LLVMAddLowerSetJmpPass
 parameter_list|(
 name|LLVMPassManagerRef
 name|PM
@@ -129,14 +129,6 @@ name|LLVMPassManagerRef
 parameter_list|,
 name|unsigned
 name|AllButMain
-parameter_list|)
-function_decl|;
-comment|// FIXME: Remove in LLVM 3.0.
-name|void
-name|LLVMAddRaiseAllocationsPass
-parameter_list|(
-name|LLVMPassManagerRef
-name|PM
 parameter_list|)
 function_decl|;
 comment|/** See llvm::createStripDeadPrototypesPass function. */

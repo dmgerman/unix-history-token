@@ -645,6 +645,9 @@ name|int
 name|mode
 parameter_list|)
 block|{
+name|int
+name|saved_errno
+decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
@@ -666,6 +669,10 @@ name|mode
 operator|==
 name|PJDLOG_MODE_SYSLOG
 argument_list|)
+expr_stmt|;
+name|saved_errno
+operator|=
+name|errno
 expr_stmt|;
 if|if
 condition|(
@@ -741,6 +748,10 @@ name|pjdlog_initialized
 operator|=
 name|PJDLOG_INITIALIZED
 expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 block|}
 end_function
 
@@ -751,12 +762,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|int
+name|saved_errno
+decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
 operator|==
 name|PJDLOG_INITIALIZED
 argument_list|)
+expr_stmt|;
+name|saved_errno
+operator|=
+name|errno
 expr_stmt|;
 if|if
 condition|(
@@ -770,6 +788,10 @@ expr_stmt|;
 name|pjdlog_initialized
 operator|=
 name|PJDLOG_NOT_INITIALIZED
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 block|}
 end_function
@@ -786,6 +808,9 @@ name|int
 name|mode
 parameter_list|)
 block|{
+name|int
+name|saved_errno
+decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
@@ -811,6 +836,10 @@ operator|==
 name|mode
 condition|)
 return|return;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 if|if
 condition|(
 name|mode
@@ -836,6 +865,10 @@ expr_stmt|;
 name|pjdlog_mode
 operator|=
 name|mode
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 block|}
 end_function
@@ -990,6 +1023,9 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
+name|int
+name|saved_errno
+decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
@@ -1004,6 +1040,10 @@ operator|!=
 name|NULL
 argument_list|)
 expr_stmt|;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 name|vsnprintf
 argument_list|(
 name|pjdlog_prefix
@@ -1017,6 +1057,10 @@ name|fmt
 argument_list|,
 name|ap
 argument_list|)
+expr_stmt|;
+name|errno
+operator|=
+name|saved_errno
 expr_stmt|;
 block|}
 end_function
@@ -1208,6 +1252,9 @@ name|va_list
 name|ap
 parameter_list|)
 block|{
+name|int
+name|saved_errno
+decl_stmt|;
 name|assert
 argument_list|(
 name|pjdlog_initialized
@@ -1281,6 +1328,10 @@ operator|>
 name|pjdlog_debug_level
 condition|)
 return|return;
+name|saved_errno
+operator|=
+name|errno
+expr_stmt|;
 switch|switch
 condition|(
 name|pjdlog_mode
@@ -1548,6 +1599,10 @@ literal|"Invalid mode."
 argument_list|)
 expr_stmt|;
 block|}
+name|errno
+operator|=
+name|saved_errno
+expr_stmt|;
 block|}
 end_function
 

@@ -696,17 +696,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|D_PSEUDO
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* make_dev() can return NULL */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|D_NEEDGIANT
 value|0x00400000
 end_define
@@ -1713,6 +1702,25 @@ end_function_decl
 begin_comment
 comment|/* XXX This is not public KPI */
 end_comment
+
+begin_function_decl
+name|ino_t
+name|devfs_alloc_cdp_inode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|devfs_free_cdp_inode
+parameter_list|(
+name|ino_t
+name|ino
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_define
 define|#

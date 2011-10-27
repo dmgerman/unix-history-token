@@ -3447,7 +3447,7 @@ end_comment
 
 begin_function
 name|int
-name|posix_openpt
+name|sys_posix_openpt
 parameter_list|(
 name|struct
 name|thread

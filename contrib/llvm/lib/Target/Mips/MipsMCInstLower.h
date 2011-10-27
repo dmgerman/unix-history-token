@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- MipsMCInstLower.h - Lower MachineInstr to MCInst -------------------===//
+comment|//===-- MipsMCInstLower.h - Lower MachineInstr to MCInst -------------------==//
 end_comment
 
 begin_comment
@@ -154,6 +154,19 @@ name|MO
 argument_list|,
 name|MachineOperandType
 name|MOTy
+argument_list|,
+name|unsigned
+name|Offset
+argument_list|)
+decl|const
+decl_stmt|;
+name|MCOperand
+name|LowerOperand
+argument_list|(
+specifier|const
+name|MachineOperand
+operator|&
+name|MO
 argument_list|)
 decl|const
 decl_stmt|;

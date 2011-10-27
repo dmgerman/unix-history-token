@@ -311,7 +311,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Unlock lower node to avoid deadlock. 	 * (XXX) VOP_ISLOCKED is needed? 	 */
+comment|/* 	 * Unlock lower node to avoid possible deadlock. 	 */
 if|if
 condition|(
 operator|(
@@ -331,6 +331,8 @@ name|mp
 operator|->
 name|mnt_vnodecovered
 argument_list|)
+operator|==
+name|LK_EXCLUSIVE
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -376,14 +378,6 @@ comment|/* 	 * Re-lock vnode. 	 */
 if|if
 condition|(
 name|isvnunlocked
-operator|&&
-operator|!
-name|VOP_ISLOCKED
-argument_list|(
-name|mp
-operator|->
-name|mnt_vnodecovered
-argument_list|)
 condition|)
 name|vn_lock
 argument_list|(
@@ -499,13 +493,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|vrele
 argument_list|(
 name|lowerrootvp
@@ -832,23 +819,13 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NULLFS_DEBUG
-if|if
-condition|(
-name|VOP_ISLOCKED
+name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|vp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"root vnode is locked.\n"
+argument_list|,
+literal|"root vnode is locked"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vn_lock
 argument_list|(
 name|vp

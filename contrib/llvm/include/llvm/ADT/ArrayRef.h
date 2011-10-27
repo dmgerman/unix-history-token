@@ -623,6 +623,227 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
+comment|/// @name ArrayRef Convenience constructors
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_comment
+comment|/// Construct an ArrayRef from a single element.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const T&OneElt
+argument_list|)
+block|{
+return|return
+name|OneElt
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct an ArrayRef from a pointer and length.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const T *data
+argument_list|,
+argument|size_t length
+argument_list|)
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|data
+operator|,
+name|length
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct an ArrayRef from a range.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const T *begin
+argument_list|,
+argument|const T *end
+argument_list|)
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|begin
+operator|,
+name|end
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct an ArrayRef from a SmallVector.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const SmallVectorImpl<T>&Vec
+argument_list|)
+block|{
+return|return
+name|Vec
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct an ArrayRef from a SmallVector.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|unsigned
+name|N
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const SmallVector<T
+argument_list|,
+argument|N>&Vec
+argument_list|)
+block|{
+return|return
+name|Vec
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct an ArrayRef from a std::vector.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const std::vector<T>&Vec
+argument_list|)
+block|{
+return|return
+name|Vec
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// Construct an ArrayRef from a C array.
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|size_t
+name|N
+operator|>
+name|ArrayRef
+operator|<
+name|T
+operator|>
+name|makeArrayRef
+argument_list|(
+argument|const T (&Arr)[N]
+argument_list|)
+block|{
+return|return
+name|ArrayRef
+operator|<
+name|T
+operator|>
+operator|(
+name|Arr
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
 comment|/// @name ArrayRef Comparison Operators
 end_comment
 

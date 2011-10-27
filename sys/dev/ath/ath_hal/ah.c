@@ -3047,6 +3047,19 @@ name|HAL_OK
 else|:
 name|HAL_ENOTSUPP
 return|;
+case|case
+name|HAL_CAP_BB_READ_WAR
+case|:
+comment|/* Baseband read WAR */
+return|return
+name|pCap
+operator|->
+name|halHasBBReadWar
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
 default|default:
 return|return
 name|HAL_EINVAL

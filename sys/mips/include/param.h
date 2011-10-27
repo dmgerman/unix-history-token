@@ -574,17 +574,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BLKDEV_IOSIZE
-value|2048
-end_define
-
-begin_comment
-comment|/* xxx: Why is this 1/2 page? */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|MAXDUMPPGS
 value|1
 end_define

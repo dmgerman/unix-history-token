@@ -219,6 +219,17 @@ name|ARCSimulator_NoARCRuntime
 block|}
 name|ARCRuntimeForSimulator
 block|;
+name|mutable
+expr|enum
+block|{
+name|LibCXXSimulator_None
+block|,
+name|LibCXXSimulator_NotAvailable
+block|,
+name|LibCXXSimulator_Available
+block|}
+name|LibCXXForSimulator
+block|;
 name|private
 operator|:
 comment|/// Whether we are targeting iPhoneOS target.
@@ -287,6 +298,8 @@ name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
 argument|const ArgList&Args
+argument_list|,
+argument|types::ID InputType
 argument_list|)
 specifier|const
 block|;
@@ -494,15 +507,16 @@ block|}
 comment|/// getDarwinArchName - Get the "Darwin" arch name for a particular compiler
 comment|/// invocation. For example, Darwin treats different ARM variations as
 comment|/// distinct architectures.
-name|llvm
-operator|::
 name|StringRef
 name|getDarwinArchName
 argument_list|(
-argument|const ArgList&Args
-argument_list|)
 specifier|const
-expr_stmt|;
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|static
 name|bool
 name|isVersionLT
@@ -764,6 +778,12 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
+name|bool
+name|hasBlocksRuntime
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
 name|DerivedArgList
 modifier|*
 name|TranslateArgs
@@ -968,15 +988,20 @@ expr_stmt|;
 name|virtual
 name|unsigned
 name|GetDefaultStackProtectorLevel
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|KernelOrKext
+argument_list|)
+decl|const
 block|{
-comment|// Stack protectors default to on for 10.6 and beyond.
+comment|// Stack protectors default to on for user code on 10.5,
+comment|// and for everything in 10.6 and beyond
 return|return
 operator|!
 name|isTargetIPhoneOS
 argument_list|()
 operator|&&
+operator|(
 operator|!
 name|isMacosxVersionLT
 argument_list|(
@@ -984,6 +1009,20 @@ literal|10
 argument_list|,
 literal|6
 argument_list|)
+operator|||
+operator|(
+operator|!
+name|isMacosxVersionLT
+argument_list|(
+literal|10
+argument_list|,
+literal|5
+argument_list|)
+operator|&&
+operator|!
+name|KernelOrKext
+operator|)
+operator|)
 return|;
 block|}
 name|virtual
@@ -1046,6 +1085,14 @@ range|:
 name|public
 name|Darwin
 block|{
+name|private
+operator|:
+name|void
+name|AddGCCLibexecPath
+argument_list|(
+argument|unsigned darwinVersion
+argument_list|)
+block|;
 name|public
 operator|:
 name|DarwinClang
@@ -1173,6 +1220,8 @@ name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
 argument|const ArgList&Args
+argument_list|,
+argument|types::ID InputType
 argument_list|)
 specifier|const
 block|;

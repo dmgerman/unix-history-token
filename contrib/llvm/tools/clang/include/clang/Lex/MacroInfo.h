@@ -116,10 +116,14 @@ decl_stmt|;
 name|unsigned
 name|NumArguments
 decl_stmt|;
+comment|/// \brief The location at which this macro was exported from its module.
+comment|///
+comment|/// If invalid, this macro has not been explicitly exported.
+name|SourceLocation
+name|ExportLocation
+decl_stmt|;
 comment|/// ReplacementTokens - This is the list of tokens that the macro is defined
 comment|/// to.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Token
@@ -172,6 +176,12 @@ decl_stmt|;
 comment|/// IsFromAST - True if this macro was loaded from an AST file.
 name|bool
 name|IsFromAST
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether this macro changed after it was loaded from an AST file.
+name|bool
+name|ChangedAfterLoad
 range|:
 literal|1
 decl_stmt|;
@@ -701,6 +711,33 @@ operator|=
 name|FromAST
 expr_stmt|;
 block|}
+comment|/// \brief Determine whether this macro has changed since it was loaded from
+comment|/// an AST file.
+name|bool
+name|hasChangedAfterLoad
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ChangedAfterLoad
+return|;
+block|}
+comment|/// \brief Note whether this macro has changed after it was loaded from an
+comment|/// AST file.
+name|void
+name|setChangedAfterLoad
+parameter_list|(
+name|bool
+name|CAL
+init|=
+name|true
+parameter_list|)
+block|{
+name|ChangedAfterLoad
+operator|=
+name|CAL
+expr_stmt|;
+block|}
 comment|/// isUsed - Return false if this macro is defined in the main file and has
 comment|/// not yet been used.
 name|bool
@@ -777,8 +814,6 @@ index|]
 return|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Token
@@ -896,6 +931,43 @@ name|IsDisabled
 operator|=
 name|true
 expr_stmt|;
+block|}
+comment|/// \brief Set the export location for this macro.
+name|void
+name|setExportLocation
+parameter_list|(
+name|SourceLocation
+name|ExportLoc
+parameter_list|)
+block|{
+name|ExportLocation
+operator|=
+name|ExportLoc
+expr_stmt|;
+block|}
+comment|/// \brief Determine whether this macro was explicitly exported from its
+comment|/// module.
+name|bool
+name|isExported
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ExportLocation
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+comment|/// \brief Determine the location where this macro was explicitly exported
+comment|/// from its module.
+name|SourceLocation
+name|getExportLocation
+parameter_list|()
+block|{
+return|return
+name|ExportLocation
+return|;
 block|}
 name|private
 label|:

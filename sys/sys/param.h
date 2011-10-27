@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|900044
+value|1000000
 end_define
 
 begin_comment
@@ -72,6 +72,13 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_define
+define|#
+directive|define
+name|P_OSREL_SIGWAIT
+value|700000
+end_define
 
 begin_define
 define|#

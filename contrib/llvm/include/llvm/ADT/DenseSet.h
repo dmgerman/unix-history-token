@@ -122,7 +122,7 @@ name|explicit
 name|DenseSet
 argument_list|(
 argument|unsigned NumInitBuckets =
-literal|64
+literal|0
 argument_list|)
 operator|:
 name|TheMap

@@ -1392,7 +1392,7 @@ end_function
 
 begin_function
 name|int
-name|sigreturn
+name|sys_sigreturn
 parameter_list|(
 name|struct
 name|thread
@@ -1552,7 +1552,7 @@ name|uap
 parameter_list|)
 block|{
 return|return
-name|sigreturn
+name|sys_sigreturn
 argument_list|(
 name|td
 argument_list|,

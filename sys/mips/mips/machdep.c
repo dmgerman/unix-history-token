@@ -683,6 +683,21 @@ index|[]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/* MIPS wait skip region */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|char
+name|MipsWaitStart
+index|[]
+decl_stmt|,
+name|MipsWaitEnd
+index|[]
+decl_stmt|;
+end_decl_stmt
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -1227,6 +1242,20 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|/* 	 * Make sure that the Wait region logic is not been  	 * changed 	 */
+if|if
+condition|(
+name|MipsWaitEnd
+operator|-
+name|MipsWaitStart
+operator|!=
+literal|16
+condition|)
+name|panic
+argument_list|(
+literal|"startup: MIPS wait region not correct"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Copy down exception vector code. 	 */
 if|if
 condition|(
@@ -1827,7 +1856,9 @@ name|cpu_idleclock
 argument_list|()
 expr_stmt|;
 block|}
-asm|__asm __volatile ("wait");
+name|mips_wait
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

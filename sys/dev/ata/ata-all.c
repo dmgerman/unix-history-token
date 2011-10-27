@@ -706,6 +706,27 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ATA_CAM
+end_ifdef
+
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ata_cam
+argument_list|,
+literal|"ATA devices are accessed through the cam(4) driver"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * newbus device interface related functions  */
 end_comment
@@ -4633,7 +4654,7 @@ name|Giant
 argument_list|)
 expr_stmt|;
 comment|/* newbus suckage it needs Giant */
-comment|/* kick of probe and attach on all channels */
+comment|/* kick off probe and attach on all channels */
 for|for
 control|(
 name|ctlr

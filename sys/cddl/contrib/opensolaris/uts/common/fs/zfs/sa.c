@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 iXsystems, Inc  */
 end_comment
 
 begin_include
@@ -2818,15 +2818,17 @@ operator|==
 operator|-
 literal|1
 operator|&&
-name|P2ROUNDUP
-argument_list|(
+operator|(
 operator|*
 name|total
 operator|+
+name|P2ROUNDUP
+argument_list|(
 name|hdrsize
 argument_list|,
 literal|8
 argument_list|)
+operator|)
 operator|>
 operator|(
 name|full_space
@@ -2852,15 +2854,17 @@ name|next
 label|:
 if|if
 condition|(
-name|P2ROUNDUP
-argument_list|(
+operator|(
 operator|*
 name|total
 operator|+
+name|P2ROUNDUP
+argument_list|(
 name|hdrsize
 argument_list|,
 literal|8
 argument_list|)
+operator|)
 operator|>
 name|full_space
 operator|&&

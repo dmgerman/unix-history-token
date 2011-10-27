@@ -100,6 +100,18 @@ name|ui_sum
 value|ui_u.uh_sum
 end_define
 
+begin_struct_decl
+struct_decl|struct
+name|inpcb
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|mbuf
+struct_decl|;
+end_struct_decl
+
 begin_typedef
 typedef|typedef
 name|void

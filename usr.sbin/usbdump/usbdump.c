@@ -1350,7 +1350,7 @@ name|print_apacket
 parameter_list|(
 specifier|const
 name|struct
-name|bpf_xhdr
+name|bpf_hdr
 modifier|*
 name|hdr
 parameter_list|,
@@ -1559,7 +1559,7 @@ name|hdr
 operator|->
 name|bh_tstamp
 operator|.
-name|bt_sec
+name|tv_sec
 expr_stmt|;
 name|tv
 operator|.
@@ -1569,7 +1569,7 @@ name|hdr
 operator|->
 name|bh_tstamp
 operator|.
-name|bt_frac
+name|tv_usec
 expr_stmt|;
 name|tm
 operator|=
@@ -1928,7 +1928,7 @@ parameter_list|)
 block|{
 specifier|const
 name|struct
-name|bpf_xhdr
+name|bpf_hdr
 modifier|*
 name|hdr
 decl_stmt|;
@@ -1964,7 +1964,7 @@ operator|=
 operator|(
 specifier|const
 expr|struct
-name|bpf_xhdr
+name|bpf_hdr
 operator|*
 operator|)
 name|ptr

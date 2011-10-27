@@ -24,6 +24,17 @@ name|CONFIG_H
 end_define
 
 begin_comment
+comment|/* Bug report URL. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BUG_REPORT_URL
+value|"http://llvm.org/bugs/"
+end_define
+
+begin_comment
 comment|/* Relative directory for resource files */
 end_comment
 
@@ -973,45 +984,33 @@ begin_comment
 comment|/* Have pthread_getspecific */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PTHREAD_GETSPECIFIC
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_PTHREAD_GETSPECIFIC */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if you have the<pthread.h> header file. */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PTHREAD_H
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_PTHREAD_H */
+end_comment
 
 begin_comment
 comment|/* Have pthread_mutex_lock */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PTHREAD_MUTEX_LOCK
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_PTHREAD_MUTEX_LOCK */
+end_comment
 
 begin_comment
 comment|/* Have pthread_rwlock_init */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|HAVE_PTHREAD_RWLOCK_INIT
-value|1
-end_define
+begin_comment
+comment|/* #undef HAVE_PTHREAD_RWLOCK_INIT */
+end_comment
 
 begin_comment
 comment|/* Define to 1 if srand48/lrand48/drand48 exist in<stdlib.h> */
@@ -1773,6 +1772,17 @@ comment|/* #undef LLVM_ETCDIR */
 end_comment
 
 begin_comment
+comment|/* Has gcc/MSVC atomic intrinsics */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_HAS_ATOMICS
+value|1
+end_define
+
+begin_comment
 comment|/* Host triple we were built on */
 end_comment
 
@@ -1813,14 +1823,6 @@ comment|/* #undef LLVM_MANDIR */
 end_comment
 
 begin_comment
-comment|/* Build multithreading support into LLVM */
-end_comment
-
-begin_comment
-comment|/* #undef LLVM_MULTITHREADED */
-end_comment
-
-begin_comment
 comment|/* LLVM architecture name for the native architecture, if available */
 end_comment
 
@@ -1854,17 +1856,6 @@ value|LLVMInitializeX86AsmPrinter
 end_define
 
 begin_comment
-comment|/* LLVM name for the native MCAsmInfo init function, if available */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|LLVM_NATIVE_MCASMINFO
-value|LLVMInitializeX86MCAsmInfo
-end_define
-
-begin_comment
 comment|/* LLVM name for the native Target init function, if available */
 end_comment
 
@@ -1884,6 +1875,17 @@ define|#
 directive|define
 name|LLVM_NATIVE_TARGETINFO
 value|LLVMInitializeX86TargetInfo
+end_define
+
+begin_comment
+comment|/* LLVM name for the native target MC init function, if available */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LLVM_NATIVE_TARGETMC
+value|LLVMInitializeX86TargetMC
 end_define
 
 begin_comment
@@ -2086,7 +2088,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"llvm 3.0svn"
+value|"llvm 3.0"
 end_define
 
 begin_comment
@@ -2108,7 +2110,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"3.0svn"
+value|"3.0"
 end_define
 
 begin_comment
