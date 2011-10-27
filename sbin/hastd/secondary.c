@@ -997,7 +997,7 @@ block|}
 elseif|else
 if|if
 condition|(
-comment|/* Is primary is out-of-date? */
+comment|/* Is primary out-of-date? */
 operator|(
 name|res
 operator|->
@@ -1016,7 +1016,7 @@ operator|->
 name|hr_primary_localcnt
 operator|)
 operator|||
-comment|/* Nodes are more or less in sync? */
+comment|/* Are the nodes more or less in sync? */
 operator|(
 name|res
 operator|->
@@ -1035,7 +1035,7 @@ operator|->
 name|hr_primary_localcnt
 operator|)
 operator|||
-comment|/* Is secondary is out-of-date? */
+comment|/* Is secondary out-of-date? */
 operator|(
 name|res
 operator|->
