@@ -1152,6 +1152,30 @@ end_define
 begin_define
 define|#
 directive|define
+name|_IF_DEQUEUE_ALL
+parameter_list|(
+name|ifq
+parameter_list|,
+name|m
+parameter_list|)
+value|do {				\ 	(m) = (ifq)->ifq_head;					\ 	(ifq)->ifq_head = (ifq)->ifq_tail = NULL;		\ 	(ifq)->ifq_len = 0;					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_DEQUEUE_ALL
+parameter_list|(
+name|ifq
+parameter_list|,
+name|m
+parameter_list|)
+value|do {				\ 	IF_LOCK(ifq); 						\ 	_IF_DEQUEUE_ALL(ifq, m);				\ 	IF_UNLOCK(ifq); 					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_IF_POLL
 parameter_list|(
 name|ifq
