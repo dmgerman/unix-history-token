@@ -2064,19 +2064,9 @@ name|SMP
 comment|/* Before sched_bind() to a CPU, wait for all CPUs to go on-line. */
 if|if
 condition|(
-name|mp_ncpus
-operator|>
-literal|1
-operator|&&
 name|sc
 operator|->
-name|sc_crypto
-operator|==
-name|G_ELI_CRYPTO_SW
-operator|&&
-name|g_eli_threads
-operator|==
-literal|0
+name|sc_cpubind
 condition|)
 block|{
 while|while
@@ -2116,13 +2106,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|sc_crypto
-operator|==
-name|G_ELI_CRYPTO_SW
-operator|&&
-name|g_eli_threads
-operator|==
-literal|0
+name|sc_cpubind
 condition|)
 name|sched_bind
 argument_list|(
@@ -2131,6 +2115,8 @@ argument_list|,
 name|wr
 operator|->
 name|w_number
+operator|%
+name|mp_ncpus
 argument_list|)
 expr_stmt|;
 name|thread_unlock
@@ -3906,29 +3892,20 @@ name|threads
 operator|=
 name|mp_ncpus
 expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|threads
-operator|>
-name|mp_ncpus
-condition|)
-block|{
-comment|/* There is really no need for too many worker threads. */
-name|threads
+name|sc
+operator|->
+name|sc_cpubind
 operator|=
+operator|(
 name|mp_ncpus
-expr_stmt|;
-name|G_ELI_DEBUG
-argument_list|(
-literal|0
-argument_list|,
-literal|"Reducing number of threads to %u."
-argument_list|,
+operator|>
+literal|1
+operator|&&
 name|threads
-argument_list|)
+operator|==
+name|mp_ncpus
+operator|)
 expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -4165,16 +4142,6 @@ argument_list|,
 name|w_next
 argument_list|)
 expr_stmt|;
-comment|/* If we have hardware support, one thread is enough. */
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_crypto
-operator|==
-name|G_ELI_CRYPTO_HW
-condition|)
-break|break;
 block|}
 comment|/* 	 * Create decrypted provider. 	 */
 name|pp

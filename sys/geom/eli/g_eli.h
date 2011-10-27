@@ -684,6 +684,9 @@ decl_stmt|;
 name|u_int
 name|sc_data_per_sector
 decl_stmt|;
+name|boolean_t
+name|sc_cpubind
+decl_stmt|;
 comment|/* Only for software cryptography. */
 name|struct
 name|bio_queue_head
