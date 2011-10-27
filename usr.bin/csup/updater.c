@@ -1352,7 +1352,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Make sure to close the fixups even in case of an error, 	 * so that the lister thread doesn't block indefinitely. 	 */
+comment|/* 	 * Make sure to close the fixups even in case of an error, 	 * so that the detailer thread doesn't block indefinitely. 	 */
 name|fixups_close
 argument_list|(
 name|up
