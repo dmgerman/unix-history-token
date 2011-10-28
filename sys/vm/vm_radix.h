@@ -53,6 +53,27 @@ name|VM_RADIX_LIMIT
 value|howmany((sizeof(vm_pindex_t) * NBBY), VM_RADIX_WIDTH)
 end_define
 
+begin_define
+define|#
+directive|define
+name|VM_RADIX_HEIGHT
+value|0xf
+end_define
+
+begin_comment
+comment|/* Bits of height in root */
+end_comment
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_RADIX_HEIGHT
+operator|>=
+name|VM_RADIX_LIMIT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/* Calculates maximum value for a tree of height h. */
 end_comment
@@ -72,12 +93,6 @@ begin_struct
 struct|struct
 name|vm_radix_node
 block|{
-name|SLIST_ENTRY
-argument_list|(
-argument|vm_radix_node
-argument_list|)
-name|next
-expr_stmt|;
 name|void
 modifier|*
 name|rn_child
@@ -94,20 +109,18 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * Radix tree root.  The height and pointer are set together to permit  * coherent lookups while the root is modified.  */
+end_comment
+
 begin_struct
 struct|struct
 name|vm_radix
 block|{
-name|struct
-name|vm_radix_node
-modifier|*
+name|uintptr_t
 name|rt_root
 decl_stmt|;
-comment|/* Root node. */
-name|int
-name|rt_height
-decl_stmt|;
-comment|/* Number of levels + 1. */
+comment|/* root + height */
 block|}
 struct|;
 end_struct
