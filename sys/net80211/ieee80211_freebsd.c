@@ -2839,7 +2839,9 @@ name|wh
 operator|->
 name|i_addr2
 argument_list|,
-literal|"%s replay detected<rsc %ju, csc %ju, keyix %u rxkeyix %u>"
+literal|"%s replay detected tid %d<rsc %ju, csc %ju, keyix %u rxkeyix %u>"
+argument_list|,
+name|tid
 argument_list|,
 name|k
 operator|->
