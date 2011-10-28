@@ -16366,6 +16366,12 @@ name|m_len
 operator|=
 name|len
 expr_stmt|;
+name|bf
+operator|->
+name|bf_m
+operator|=
+name|NULL
+expr_stmt|;
 name|ath_rx_tap
 argument_list|(
 name|ifp
@@ -16383,6 +16389,11 @@ name|ieee80211_radiotap_rx_all
 argument_list|(
 name|ic
 argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+name|m_freem
+argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
