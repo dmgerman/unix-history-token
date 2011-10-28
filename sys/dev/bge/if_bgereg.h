@@ -1159,40 +1159,6 @@ name|BGE_HIF_SWAP_OPTIONS
 value|(BGE_PCIMISCCTL_ENDIAN_WORDSWAP)
 end_define
 
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|BGE_DMA_SWAP_OPTIONS
-define|\
-value|BGE_MODECTL_WORDSWAP_NONFRAME| \ 	BGE_MODECTL_BYTESWAP_DATA|BGE_MODECTL_WORDSWAP_DATA
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BGE_DMA_SWAP_OPTIONS
-define|\
-value|BGE_MODECTL_WORDSWAP_NONFRAME|BGE_MODECTL_BYTESWAP_NONFRAME| \ 	BGE_MODECTL_BYTESWAP_DATA|BGE_MODECTL_WORDSWAP_DATA
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1677,6 +1643,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5720_A0
+value|0x05720000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM57765_A0
 value|0x57785000
 end_define
@@ -1827,6 +1800,13 @@ define|#
 directive|define
 name|BGE_ASICREV_BCM5719
 value|0x5719
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5720
+value|0x5720
 end_define
 
 begin_define
@@ -4671,6 +4651,20 @@ name|BGE_TXMODE_MBUF_LOCKUP_FIX
 value|0x00000100
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_TXMODE_JMB_FRM_LEN
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXMODE_CNT_DN_MODE
+value|0x00800000
+end_define
+
 begin_comment
 comment|/* Transmit MAC status register */
 end_comment
@@ -4740,6 +4734,20 @@ define|#
 directive|define
 name|BGE_TXLEN_CRS
 value|0x00003000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXLEN_JMB_FRM_LEN_MSK
+value|0x00FF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXLEN_CNT_DN_VAL_MSK
+value|0xFF000000
 end_define
 
 begin_comment
@@ -7361,6 +7369,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CPMU_CLCK_ORIDE
+value|0x3624
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CPMU_CLCK_STAT
 value|0x3630
 end_define
@@ -7491,6 +7506,17 @@ define|#
 directive|define
 name|BGE_CPMU_HST_ACC_MACCLK_6_25
 value|0x00130000
+end_define
+
+begin_comment
+comment|/* Clock Speed Override Policy register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPMU_CLCK_ORIDE_MAC_ORIDE_EN
+value|0x80000000
 end_define
 
 begin_comment
@@ -8980,6 +9006,13 @@ define|#
 directive|define
 name|BGE_RDMAMODE_TSO6_ENABLE
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_H2BNC_VLAN_DET
+value|0x20000000
 end_define
 
 begin_comment
@@ -11382,6 +11415,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_MODECTL_BYTESWAP_B2HRX_DATA
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_MODECTL_WORDSWAP_B2HRX_DATA
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_MODECTL_NO_FRAME_CRACKING
 value|0x00000200
 end_define
@@ -11424,6 +11471,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_MODECTL_B2HRX_ENABLE
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_MODECTL_STACKUP
 value|0x00010000
 end_define
@@ -11433,6 +11487,13 @@ define|#
 directive|define
 name|BGE_MODECTL_HOST_SEND_BDS
 value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_MODECTL_HTX2B_ENABLE
+value|0x00040000
 end_define
 
 begin_define
@@ -12953,8 +13014,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCOM_DEVICEID_BCM5720
+name|BCOM_DEVICEID_BCM5720_PP
 value|0x1658
+end_define
+
+begin_comment
+comment|/* Not released to public. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5720
+value|0x165F
 end_define
 
 begin_define
