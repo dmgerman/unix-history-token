@@ -87,6 +87,9 @@ decl_stmt|;
 name|namespace
 name|ento
 block|{
+comment|/// \class BlockCounter
+comment|/// \brief An abstract data type used to count the number of times a given
+comment|/// block has been visited along a path analyzed by CoreEngine.
 name|class
 name|BlockCounter
 block|{

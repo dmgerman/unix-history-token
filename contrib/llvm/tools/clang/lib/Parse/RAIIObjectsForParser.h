@@ -101,7 +101,7 @@ operator|&
 argument_list|)
 expr_stmt|;
 comment|// DO NOT IMPLEMENT
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|Diags
 decl_stmt|;
@@ -109,7 +109,7 @@ name|public
 label|:
 name|ExtensionRAIIObject
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|diags
 argument_list|)

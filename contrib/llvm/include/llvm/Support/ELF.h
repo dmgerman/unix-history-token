@@ -108,21 +108,21 @@ name|Elf32_Addr
 typedef|;
 comment|// Program address
 typedef|typedef
-name|uint16_t
-name|Elf32_Half
-typedef|;
-typedef|typedef
 name|uint32_t
 name|Elf32_Off
 typedef|;
 comment|// File offset
 typedef|typedef
-name|int32_t
-name|Elf32_Sword
+name|uint16_t
+name|Elf32_Half
 typedef|;
 typedef|typedef
 name|uint32_t
 name|Elf32_Word
+typedef|;
+typedef|typedef
+name|int32_t
+name|Elf32_Sword
 typedef|;
 typedef|typedef
 name|uint64_t
@@ -133,32 +133,24 @@ name|uint64_t
 name|Elf64_Off
 typedef|;
 typedef|typedef
-name|int32_t
-name|Elf64_Shalf
-typedef|;
-typedef|typedef
-name|int32_t
-name|Elf64_Sword
+name|uint16_t
+name|Elf64_Half
 typedef|;
 typedef|typedef
 name|uint32_t
 name|Elf64_Word
 typedef|;
 typedef|typedef
-name|int64_t
-name|Elf64_Sxword
+name|int32_t
+name|Elf64_Sword
 typedef|;
 typedef|typedef
 name|uint64_t
 name|Elf64_Xword
 typedef|;
 typedef|typedef
-name|uint32_t
-name|Elf64_Half
-typedef|;
-typedef|typedef
-name|uint16_t
-name|Elf64_Quarter
+name|int64_t
+name|Elf64_Sxword
 typedef|;
 comment|// Object file magic string.
 specifier|static
@@ -364,13 +356,13 @@ index|[
 name|EI_NIDENT
 index|]
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_type
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_machine
 decl_stmt|;
-name|Elf64_Half
+name|Elf64_Word
 name|e_version
 decl_stmt|;
 name|Elf64_Addr
@@ -382,25 +374,25 @@ decl_stmt|;
 name|Elf64_Off
 name|e_shoff
 decl_stmt|;
-name|Elf64_Half
+name|Elf64_Word
 name|e_flags
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_ehsize
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_phentsize
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_phnum
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_shentsize
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_shnum
 decl_stmt|;
-name|Elf64_Quarter
+name|Elf64_Half
 name|e_shstrndx
 decl_stmt|;
 name|bool
@@ -553,6 +545,36 @@ init|=
 literal|8
 block|,
 comment|// MIPS R3000
+name|EM_S370
+init|=
+literal|9
+block|,
+comment|// IBM System/370
+name|EM_MIPS_RS3_LE
+init|=
+literal|10
+block|,
+comment|// MIPS RS3000 Little-endian
+name|EM_PARISC
+init|=
+literal|15
+block|,
+comment|// Hewlett-Packard PA-RISC
+name|EM_VPP500
+init|=
+literal|17
+block|,
+comment|// Fujitsu VPP500
+name|EM_SPARC32PLUS
+init|=
+literal|18
+block|,
+comment|// Enhanced instruction set SPARC
+name|EM_960
+init|=
+literal|19
+block|,
+comment|// Intel 80960
 name|EM_PPC
 init|=
 literal|20
@@ -563,6 +585,36 @@ init|=
 literal|21
 block|,
 comment|// PowerPC64
+name|EM_S390
+init|=
+literal|22
+block|,
+comment|// IBM System/390
+name|EM_SPU
+init|=
+literal|23
+block|,
+comment|// IBM SPU/SPC
+name|EM_V800
+init|=
+literal|36
+block|,
+comment|// NEC V800
+name|EM_FR20
+init|=
+literal|37
+block|,
+comment|// Fujitsu FR20
+name|EM_RH32
+init|=
+literal|38
+block|,
+comment|// TRW RH-32
+name|EM_RCE
+init|=
+literal|39
+block|,
+comment|// Motorola RCE
 name|EM_ARM
 init|=
 literal|40
@@ -573,16 +625,664 @@ init|=
 literal|41
 block|,
 comment|// DEC Alpha
+name|EM_SH
+init|=
+literal|42
+block|,
+comment|// Hitachi SH
 name|EM_SPARCV9
 init|=
 literal|43
 block|,
 comment|// SPARC V9
+name|EM_TRICORE
+init|=
+literal|44
+block|,
+comment|// Siemens TriCore
+name|EM_ARC
+init|=
+literal|45
+block|,
+comment|// Argonaut RISC Core
+name|EM_H8_300
+init|=
+literal|46
+block|,
+comment|// Hitachi H8/300
+name|EM_H8_300H
+init|=
+literal|47
+block|,
+comment|// Hitachi H8/300H
+name|EM_H8S
+init|=
+literal|48
+block|,
+comment|// Hitachi H8S
+name|EM_H8_500
+init|=
+literal|49
+block|,
+comment|// Hitachi H8/500
+name|EM_IA_64
+init|=
+literal|50
+block|,
+comment|// Intel IA-64 processor architecture
+name|EM_MIPS_X
+init|=
+literal|51
+block|,
+comment|// Stanford MIPS-X
+name|EM_COLDFIRE
+init|=
+literal|52
+block|,
+comment|// Motorola ColdFire
+name|EM_68HC12
+init|=
+literal|53
+block|,
+comment|// Motorola M68HC12
+name|EM_MMA
+init|=
+literal|54
+block|,
+comment|// Fujitsu MMA Multimedia Accelerator
+name|EM_PCP
+init|=
+literal|55
+block|,
+comment|// Siemens PCP
+name|EM_NCPU
+init|=
+literal|56
+block|,
+comment|// Sony nCPU embedded RISC processor
+name|EM_NDR1
+init|=
+literal|57
+block|,
+comment|// Denso NDR1 microprocessor
+name|EM_STARCORE
+init|=
+literal|58
+block|,
+comment|// Motorola Star*Core processor
+name|EM_ME16
+init|=
+literal|59
+block|,
+comment|// Toyota ME16 processor
+name|EM_ST100
+init|=
+literal|60
+block|,
+comment|// STMicroelectronics ST100 processor
+name|EM_TINYJ
+init|=
+literal|61
+block|,
+comment|// Advanced Logic Corp. TinyJ embedded processor family
 name|EM_X86_64
 init|=
 literal|62
 block|,
-comment|// AMD64
+comment|// AMD x86-64 architecture
+name|EM_PDSP
+init|=
+literal|63
+block|,
+comment|// Sony DSP Processor
+name|EM_PDP10
+init|=
+literal|64
+block|,
+comment|// Digital Equipment Corp. PDP-10
+name|EM_PDP11
+init|=
+literal|65
+block|,
+comment|// Digital Equipment Corp. PDP-11
+name|EM_FX66
+init|=
+literal|66
+block|,
+comment|// Siemens FX66 microcontroller
+name|EM_ST9PLUS
+init|=
+literal|67
+block|,
+comment|// STMicroelectronics ST9+ 8/16 bit microcontroller
+name|EM_ST7
+init|=
+literal|68
+block|,
+comment|// STMicroelectronics ST7 8-bit microcontroller
+name|EM_68HC16
+init|=
+literal|69
+block|,
+comment|// Motorola MC68HC16 Microcontroller
+name|EM_68HC11
+init|=
+literal|70
+block|,
+comment|// Motorola MC68HC11 Microcontroller
+name|EM_68HC08
+init|=
+literal|71
+block|,
+comment|// Motorola MC68HC08 Microcontroller
+name|EM_68HC05
+init|=
+literal|72
+block|,
+comment|// Motorola MC68HC05 Microcontroller
+name|EM_SVX
+init|=
+literal|73
+block|,
+comment|// Silicon Graphics SVx
+name|EM_ST19
+init|=
+literal|74
+block|,
+comment|// STMicroelectronics ST19 8-bit microcontroller
+name|EM_VAX
+init|=
+literal|75
+block|,
+comment|// Digital VAX
+name|EM_CRIS
+init|=
+literal|76
+block|,
+comment|// Axis Communications 32-bit embedded processor
+name|EM_JAVELIN
+init|=
+literal|77
+block|,
+comment|// Infineon Technologies 32-bit embedded processor
+name|EM_FIREPATH
+init|=
+literal|78
+block|,
+comment|// Element 14 64-bit DSP Processor
+name|EM_ZSP
+init|=
+literal|79
+block|,
+comment|// LSI Logic 16-bit DSP Processor
+name|EM_MMIX
+init|=
+literal|80
+block|,
+comment|// Donald Knuth's educational 64-bit processor
+name|EM_HUANY
+init|=
+literal|81
+block|,
+comment|// Harvard University machine-independent object files
+name|EM_PRISM
+init|=
+literal|82
+block|,
+comment|// SiTera Prism
+name|EM_AVR
+init|=
+literal|83
+block|,
+comment|// Atmel AVR 8-bit microcontroller
+name|EM_FR30
+init|=
+literal|84
+block|,
+comment|// Fujitsu FR30
+name|EM_D10V
+init|=
+literal|85
+block|,
+comment|// Mitsubishi D10V
+name|EM_D30V
+init|=
+literal|86
+block|,
+comment|// Mitsubishi D30V
+name|EM_V850
+init|=
+literal|87
+block|,
+comment|// NEC v850
+name|EM_M32R
+init|=
+literal|88
+block|,
+comment|// Mitsubishi M32R
+name|EM_MN10300
+init|=
+literal|89
+block|,
+comment|// Matsushita MN10300
+name|EM_MN10200
+init|=
+literal|90
+block|,
+comment|// Matsushita MN10200
+name|EM_PJ
+init|=
+literal|91
+block|,
+comment|// picoJava
+name|EM_OPENRISC
+init|=
+literal|92
+block|,
+comment|// OpenRISC 32-bit embedded processor
+name|EM_ARC_COMPACT
+init|=
+literal|93
+block|,
+comment|// ARC International ARCompact processor (old
+comment|// spelling/synonym: EM_ARC_A5)
+name|EM_XTENSA
+init|=
+literal|94
+block|,
+comment|// Tensilica Xtensa Architecture
+name|EM_VIDEOCORE
+init|=
+literal|95
+block|,
+comment|// Alphamosaic VideoCore processor
+name|EM_TMM_GPP
+init|=
+literal|96
+block|,
+comment|// Thompson Multimedia General Purpose Processor
+name|EM_NS32K
+init|=
+literal|97
+block|,
+comment|// National Semiconductor 32000 series
+name|EM_TPC
+init|=
+literal|98
+block|,
+comment|// Tenor Network TPC processor
+name|EM_SNP1K
+init|=
+literal|99
+block|,
+comment|// Trebia SNP 1000 processor
+name|EM_ST200
+init|=
+literal|100
+block|,
+comment|// STMicroelectronics (www.st.com) ST200
+name|EM_IP2K
+init|=
+literal|101
+block|,
+comment|// Ubicom IP2xxx microcontroller family
+name|EM_MAX
+init|=
+literal|102
+block|,
+comment|// MAX Processor
+name|EM_CR
+init|=
+literal|103
+block|,
+comment|// National Semiconductor CompactRISC microprocessor
+name|EM_F2MC16
+init|=
+literal|104
+block|,
+comment|// Fujitsu F2MC16
+name|EM_MSP430
+init|=
+literal|105
+block|,
+comment|// Texas Instruments embedded microcontroller msp430
+name|EM_BLACKFIN
+init|=
+literal|106
+block|,
+comment|// Analog Devices Blackfin (DSP) processor
+name|EM_SE_C33
+init|=
+literal|107
+block|,
+comment|// S1C33 Family of Seiko Epson processors
+name|EM_SEP
+init|=
+literal|108
+block|,
+comment|// Sharp embedded microprocessor
+name|EM_ARCA
+init|=
+literal|109
+block|,
+comment|// Arca RISC Microprocessor
+name|EM_UNICORE
+init|=
+literal|110
+block|,
+comment|// Microprocessor series from PKU-Unity Ltd. and MPRC
+comment|// of Peking University
+name|EM_EXCESS
+init|=
+literal|111
+block|,
+comment|// eXcess: 16/32/64-bit configurable embedded CPU
+name|EM_DXP
+init|=
+literal|112
+block|,
+comment|// Icera Semiconductor Inc. Deep Execution Processor
+name|EM_ALTERA_NIOS2
+init|=
+literal|113
+block|,
+comment|// Altera Nios II soft-core processor
+name|EM_CRX
+init|=
+literal|114
+block|,
+comment|// National Semiconductor CompactRISC CRX
+name|EM_XGATE
+init|=
+literal|115
+block|,
+comment|// Motorola XGATE embedded processor
+name|EM_C166
+init|=
+literal|116
+block|,
+comment|// Infineon C16x/XC16x processor
+name|EM_M16C
+init|=
+literal|117
+block|,
+comment|// Renesas M16C series microprocessors
+name|EM_DSPIC30F
+init|=
+literal|118
+block|,
+comment|// Microchip Technology dsPIC30F Digital Signal
+comment|// Controller
+name|EM_CE
+init|=
+literal|119
+block|,
+comment|// Freescale Communication Engine RISC core
+name|EM_M32C
+init|=
+literal|120
+block|,
+comment|// Renesas M32C series microprocessors
+name|EM_TSK3000
+init|=
+literal|131
+block|,
+comment|// Altium TSK3000 core
+name|EM_RS08
+init|=
+literal|132
+block|,
+comment|// Freescale RS08 embedded processor
+name|EM_SHARC
+init|=
+literal|133
+block|,
+comment|// Analog Devices SHARC family of 32-bit DSP
+comment|// processors
+name|EM_ECOG2
+init|=
+literal|134
+block|,
+comment|// Cyan Technology eCOG2 microprocessor
+name|EM_SCORE7
+init|=
+literal|135
+block|,
+comment|// Sunplus S+core7 RISC processor
+name|EM_DSP24
+init|=
+literal|136
+block|,
+comment|// New Japan Radio (NJR) 24-bit DSP Processor
+name|EM_VIDEOCORE3
+init|=
+literal|137
+block|,
+comment|// Broadcom VideoCore III processor
+name|EM_LATTICEMICO32
+init|=
+literal|138
+block|,
+comment|// RISC processor for Lattice FPGA architecture
+name|EM_SE_C17
+init|=
+literal|139
+block|,
+comment|// Seiko Epson C17 family
+name|EM_TI_C6000
+init|=
+literal|140
+block|,
+comment|// The Texas Instruments TMS320C6000 DSP family
+name|EM_TI_C2000
+init|=
+literal|141
+block|,
+comment|// The Texas Instruments TMS320C2000 DSP family
+name|EM_TI_C5500
+init|=
+literal|142
+block|,
+comment|// The Texas Instruments TMS320C55x DSP family
+name|EM_MMDSP_PLUS
+init|=
+literal|160
+block|,
+comment|// STMicroelectronics 64bit VLIW Data Signal Processor
+name|EM_CYPRESS_M8C
+init|=
+literal|161
+block|,
+comment|// Cypress M8C microprocessor
+name|EM_R32C
+init|=
+literal|162
+block|,
+comment|// Renesas R32C series microprocessors
+name|EM_TRIMEDIA
+init|=
+literal|163
+block|,
+comment|// NXP Semiconductors TriMedia architecture family
+name|EM_QDSP6
+init|=
+literal|164
+block|,
+comment|// QUALCOMM DSP6 Processor
+name|EM_8051
+init|=
+literal|165
+block|,
+comment|// Intel 8051 and variants
+name|EM_STXP7X
+init|=
+literal|166
+block|,
+comment|// STMicroelectronics STxP7x family of configurable
+comment|// and extensible RISC processors
+name|EM_NDS32
+init|=
+literal|167
+block|,
+comment|// Andes Technology compact code size embedded RISC
+comment|// processor family
+name|EM_ECOG1
+init|=
+literal|168
+block|,
+comment|// Cyan Technology eCOG1X family
+name|EM_ECOG1X
+init|=
+literal|168
+block|,
+comment|// Cyan Technology eCOG1X family
+name|EM_MAXQ30
+init|=
+literal|169
+block|,
+comment|// Dallas Semiconductor MAXQ30 Core Micro-controllers
+name|EM_XIMO16
+init|=
+literal|170
+block|,
+comment|// New Japan Radio (NJR) 16-bit DSP Processor
+name|EM_MANIK
+init|=
+literal|171
+block|,
+comment|// M2000 Reconfigurable RISC Microprocessor
+name|EM_CRAYNV2
+init|=
+literal|172
+block|,
+comment|// Cray Inc. NV2 vector architecture
+name|EM_RX
+init|=
+literal|173
+block|,
+comment|// Renesas RX family
+name|EM_METAG
+init|=
+literal|174
+block|,
+comment|// Imagination Technologies META processor
+comment|// architecture
+name|EM_MCST_ELBRUS
+init|=
+literal|175
+block|,
+comment|// MCST Elbrus general purpose hardware architecture
+name|EM_ECOG16
+init|=
+literal|176
+block|,
+comment|// Cyan Technology eCOG16 family
+name|EM_CR16
+init|=
+literal|177
+block|,
+comment|// National Semiconductor CompactRISC CR16 16-bit
+comment|// microprocessor
+name|EM_ETPU
+init|=
+literal|178
+block|,
+comment|// Freescale Extended Time Processing Unit
+name|EM_SLE9X
+init|=
+literal|179
+block|,
+comment|// Infineon Technologies SLE9X core
+name|EM_L10M
+init|=
+literal|180
+block|,
+comment|// Intel L10M
+name|EM_K10M
+init|=
+literal|181
+block|,
+comment|// Intel K10M
+name|EM_AVR32
+init|=
+literal|185
+block|,
+comment|// Atmel Corporation 32-bit microprocessor family
+name|EM_STM8
+init|=
+literal|186
+block|,
+comment|// STMicroeletronics STM8 8-bit microcontroller
+name|EM_TILE64
+init|=
+literal|187
+block|,
+comment|// Tilera TILE64 multicore architecture family
+name|EM_TILEPRO
+init|=
+literal|188
+block|,
+comment|// Tilera TILEPro multicore architecture family
+name|EM_MICROBLAZE
+init|=
+literal|189
+block|,
+comment|// Xilinx MicroBlaze 32-bit RISC soft processor core
+name|EM_CUDA
+init|=
+literal|190
+block|,
+comment|// NVIDIA CUDA architecture
+name|EM_TILEGX
+init|=
+literal|191
+block|,
+comment|// Tilera TILE-Gx multicore architecture family
+name|EM_CLOUDSHIELD
+init|=
+literal|192
+block|,
+comment|// CloudShield architecture family
+name|EM_COREA_1ST
+init|=
+literal|193
+block|,
+comment|// KIPO-KAIST Core-A 1st generation processor family
+name|EM_COREA_2ND
+init|=
+literal|194
+block|,
+comment|// KIPO-KAIST Core-A 2nd generation processor family
+name|EM_ARC_COMPACT2
+init|=
+literal|195
+block|,
+comment|// Synopsys ARCompact V2
+name|EM_OPEN8
+init|=
+literal|196
+block|,
+comment|// Open8 8-bit RISC soft processor core
+name|EM_RL78
+init|=
+literal|197
+block|,
+comment|// Renesas RL78 family
+name|EM_VIDEOCORE5
+init|=
+literal|198
+block|,
+comment|// Broadcom VideoCore V processor
+name|EM_78KOR
+init|=
+literal|199
+block|,
+comment|// Renesas 78KOR family
+name|EM_56800EX
+init|=
+literal|200
+block|,
+comment|// Freescale 56800EX Digital Signal Controller (DSC)
 name|EM_MBLAZE
 init|=
 literal|47787
@@ -840,6 +1540,26 @@ block|,
 name|R_X86_64_GOTPC32
 init|=
 literal|26
+block|,
+name|R_X86_64_GOT64
+init|=
+literal|27
+block|,
+name|R_X86_64_GOTPCREL64
+init|=
+literal|28
+block|,
+name|R_X86_64_GOTPC64
+init|=
+literal|29
+block|,
+name|R_X86_64_GOTPLT64
+init|=
+literal|30
+block|,
+name|R_X86_64_PLTOFF64
+init|=
+literal|31
 block|,
 name|R_X86_64_SIZE32
 init|=
@@ -1121,6 +1841,70 @@ block|,
 name|R_MICROBLAZE_COPY
 init|=
 literal|21
+block|}
+enum|;
+enum|enum
+block|{
+name|R_PPC_NONE
+init|=
+literal|0
+block|,
+comment|/* No relocation. */
+name|R_PPC_ADDR32
+init|=
+literal|1
+block|,
+name|R_PPC_ADDR24
+init|=
+literal|2
+block|,
+name|R_PPC_ADDR16
+init|=
+literal|3
+block|,
+name|R_PPC_ADDR16_LO
+init|=
+literal|4
+block|,
+name|R_PPC_ADDR16_HI
+init|=
+literal|5
+block|,
+name|R_PPC_ADDR16_HA
+init|=
+literal|6
+block|,
+name|R_PPC_ADDR14
+init|=
+literal|7
+block|,
+name|R_PPC_ADDR14_BRTAKEN
+init|=
+literal|8
+block|,
+name|R_PPC_ADDR14_BRNTAKEN
+init|=
+literal|9
+block|,
+name|R_PPC_REL24
+init|=
+literal|10
+block|,
+name|R_PPC_REL14
+init|=
+literal|11
+block|,
+name|R_PPC_REL14_BRTAKEN
+init|=
+literal|12
+block|,
+name|R_PPC_REL14_BRNTAKEN
+init|=
+literal|13
+block|,
+name|R_PPC_REL32
+init|=
+literal|26
 block|}
 enum|;
 comment|// ARM Specific e_flags
@@ -1660,6 +2444,218 @@ init|=
 literal|0x82
 block|}
 enum|;
+comment|// ELF Relocation types for Mips
+enum|enum
+block|{
+name|R_MIPS_NONE
+init|=
+literal|0
+block|,
+name|R_MIPS_16
+init|=
+literal|1
+block|,
+name|R_MIPS_32
+init|=
+literal|2
+block|,
+name|R_MIPS_REL32
+init|=
+literal|3
+block|,
+name|R_MIPS_26
+init|=
+literal|4
+block|,
+name|R_MIPS_HI16
+init|=
+literal|5
+block|,
+name|R_MIPS_LO16
+init|=
+literal|6
+block|,
+name|R_MIPS_GPREL16
+init|=
+literal|7
+block|,
+name|R_MIPS_LITERAL
+init|=
+literal|8
+block|,
+name|R_MIPS_GOT16
+init|=
+literal|9
+block|,
+name|R_MIPS_PC16
+init|=
+literal|10
+block|,
+name|R_MIPS_CALL16
+init|=
+literal|11
+block|,
+name|R_MIPS_GPREL32
+init|=
+literal|12
+block|,
+name|R_MIPS_SHIFT5
+init|=
+literal|16
+block|,
+name|R_MIPS_SHIFT6
+init|=
+literal|17
+block|,
+name|R_MIPS_64
+init|=
+literal|18
+block|,
+name|R_MIPS_GOT_DISP
+init|=
+literal|19
+block|,
+name|R_MIPS_GOT_PAGE
+init|=
+literal|20
+block|,
+name|R_MIPS_GOT_OFST
+init|=
+literal|21
+block|,
+name|R_MIPS_GOT_HI16
+init|=
+literal|22
+block|,
+name|R_MIPS_GOT_LO16
+init|=
+literal|23
+block|,
+name|R_MIPS_SUB
+init|=
+literal|24
+block|,
+name|R_MIPS_INSERT_A
+init|=
+literal|25
+block|,
+name|R_MIPS_INSERT_B
+init|=
+literal|26
+block|,
+name|R_MIPS_DELETE
+init|=
+literal|27
+block|,
+name|R_MIPS_HIGHER
+init|=
+literal|28
+block|,
+name|R_MIPS_HIGHEST
+init|=
+literal|29
+block|,
+name|R_MIPS_CALL_HI16
+init|=
+literal|30
+block|,
+name|R_MIPS_CALL_LO16
+init|=
+literal|31
+block|,
+name|R_MIPS_SCN_DISP
+init|=
+literal|32
+block|,
+name|R_MIPS_REL16
+init|=
+literal|33
+block|,
+name|R_MIPS_ADD_IMMEDIATE
+init|=
+literal|34
+block|,
+name|R_MIPS_PJUMP
+init|=
+literal|35
+block|,
+name|R_MIPS_RELGOT
+init|=
+literal|36
+block|,
+name|R_MIPS_JALR
+init|=
+literal|37
+block|,
+name|R_MIPS_TLS_DTPMOD32
+init|=
+literal|38
+block|,
+name|R_MIPS_TLS_DTPREL32
+init|=
+literal|39
+block|,
+name|R_MIPS_TLS_DTPMOD64
+init|=
+literal|40
+block|,
+name|R_MIPS_TLS_DTPREL64
+init|=
+literal|41
+block|,
+name|R_MIPS_TLS_GD
+init|=
+literal|42
+block|,
+name|R_MIPS_TLS_LDM
+init|=
+literal|43
+block|,
+name|R_MIPS_TLS_DTPREL_HI16
+init|=
+literal|44
+block|,
+name|R_MIPS_TLS_DTPREL_LO16
+init|=
+literal|45
+block|,
+name|R_MIPS_TLS_GOTTPREL
+init|=
+literal|46
+block|,
+name|R_MIPS_TLS_TPREL32
+init|=
+literal|47
+block|,
+name|R_MIPS_TLS_TPREL64
+init|=
+literal|48
+block|,
+name|R_MIPS_TLS_TPREL_HI16
+init|=
+literal|49
+block|,
+name|R_MIPS_TLS_TPREL_LO16
+init|=
+literal|50
+block|,
+name|R_MIPS_GLOB_DAT
+init|=
+literal|51
+block|,
+name|R_MIPS_COPY
+init|=
+literal|126
+block|,
+name|R_MIPS_JUMP_SLOT
+init|=
+literal|127
+block|,
+name|R_MIPS_NUM
+init|=
+literal|218
+block|}
+enum|;
 comment|// Section header.
 struct|struct
 name|Elf32_Shdr
@@ -1710,10 +2706,10 @@ comment|// Section header for ELF64 - same fields as ELF32, different types.
 struct|struct
 name|Elf64_Shdr
 block|{
-name|Elf64_Half
+name|Elf64_Word
 name|sh_name
 decl_stmt|;
-name|Elf64_Half
+name|Elf64_Word
 name|sh_type
 decl_stmt|;
 name|Elf64_Xword
@@ -1728,10 +2724,10 @@ decl_stmt|;
 name|Elf64_Xword
 name|sh_size
 decl_stmt|;
-name|Elf64_Half
+name|Elf64_Word
 name|sh_link
 decl_stmt|;
-name|Elf64_Half
+name|Elf64_Word
 name|sh_info
 decl_stmt|;
 name|Elf64_Xword
@@ -1765,6 +2761,16 @@ init|=
 literal|0xff1f
 block|,
 comment|// Highest processor-specific index
+name|SHN_LOOS
+init|=
+literal|0xff20
+block|,
+comment|// Lowest operating system-specific index
+name|SHN_HIOS
+init|=
+literal|0xff3f
+block|,
+comment|// Highest operating system-specific index
 name|SHN_ABS
 init|=
 literal|0xfff1
@@ -2003,10 +3009,25 @@ name|XCORE_SHF_DP_SECTION
 init|=
 literal|0x1000U
 block|,
+name|SHF_MASKOS
+init|=
+literal|0x0ff00000
+block|,
 comment|// Bits indicating processor-specific flags.
 name|SHF_MASKPROC
 init|=
 literal|0xf0000000
+block|,
+comment|// If an object file section does not have this flag set, then it may not hold
+comment|// more than 2GB and can be freely referred to in objects using smaller code
+comment|// models. Otherwise, only objects using larger code models can refer to them.
+comment|// For example, a medium code model object can refer to data in a section that
+comment|// sets this flag besides being able to refer to data in a section that does
+comment|// not set it; likewise, a small code model object can refer only to code in a
+comment|// section that does not set this flag.
+name|SHF_X86_64_LARGE
+init|=
+literal|0x10000000
 block|}
 enum|;
 comment|// Section Group Flags
@@ -2295,6 +3316,16 @@ init|=
 literal|2
 block|,
 comment|// Weak symbol, like global but lower-precedence
+name|STB_LOOS
+init|=
+literal|10
+block|,
+comment|// Lowest operating system-specific binding type
+name|STB_HIOS
+init|=
+literal|12
+block|,
+comment|// Highest operating system-specific binding type
 name|STB_LOPROC
 init|=
 literal|13
@@ -2344,6 +3375,16 @@ init|=
 literal|6
 block|,
 comment|// Thread local data object
+name|STT_LOOS
+init|=
+literal|7
+block|,
+comment|// Lowest operating system-specific symbol type
+name|STT_HIOS
+init|=
+literal|8
+block|,
+comment|// Highest operating system-specific symbol type
 name|STT_LOPROC
 init|=
 literal|13
@@ -2916,6 +3957,35 @@ init|=
 literal|6
 block|,
 comment|// The program header table itself.
+name|PT_TLS
+init|=
+literal|7
+block|,
+comment|// The thread-local storage template.
+name|PT_LOOS
+init|=
+literal|0x60000000
+block|,
+comment|// Lowest operating system-specific pt entry type.
+comment|// x86-64 program header types.
+comment|// These all contain stack unwind tables.
+name|PT_GNU_EH_FRAME
+init|=
+literal|0x6474e550
+block|,
+name|PT_SUNW_EH_FRAME
+init|=
+literal|0x6474e550
+block|,
+name|PT_SUNW_UNWIND
+init|=
+literal|0x6464e550
+block|,
+name|PT_HIOS
+init|=
+literal|0x6fffffff
+block|,
+comment|// Highest operating system-specific pt entry type.
 name|PT_LOPROC
 init|=
 literal|0x70000000
@@ -2945,10 +4015,15 @@ init|=
 literal|4
 block|,
 comment|// Read
+name|PF_MASKOS
+init|=
+literal|0x0ff00000
+block|,
+comment|// Bits for operating system-specific semantics.
 name|PF_MASKPROC
 init|=
 literal|0xf0000000
-comment|// Unspecified
+comment|// Bits for processor-specific semantics.
 block|}
 enum|;
 comment|// Dynamic table entry for ELF32.
@@ -3145,6 +4220,32 @@ init|=
 literal|28
 block|,
 comment|// Size of DT_FINI_ARRAY.
+name|DT_RUNPATH
+init|=
+literal|29
+block|,
+comment|// String table offset of lib search path.
+name|DT_FLAGS
+init|=
+literal|30
+block|,
+comment|// Flags.
+name|DT_ENCODING
+init|=
+literal|32
+block|,
+comment|// Values from here to DT_LOOS follow the rules
+comment|// for the interpretation of the d_un union.
+name|DT_PREINIT_ARRAY
+init|=
+literal|32
+block|,
+comment|// Pointer to array of preinit functions.
+name|DT_PREINIT_ARRAYSZ
+init|=
+literal|33
+block|,
+comment|// Size of the DT_PREINIT_ARRAY array.
 name|DT_LOOS
 init|=
 literal|0x60000000
@@ -3164,6 +4265,35 @@ name|DT_HIPROC
 init|=
 literal|0x7FFFFFFF
 comment|// End of processor specific tags.
+block|}
+enum|;
+comment|// DT_FLAGS values.
+enum|enum
+block|{
+name|DF_ORIGIN
+init|=
+literal|0x01
+block|,
+comment|// The object may reference $ORIGIN.
+name|DF_SYMBOLIC
+init|=
+literal|0x02
+block|,
+comment|// Search the shared lib before searching the exe.
+name|DF_TEXTREL
+init|=
+literal|0x04
+block|,
+comment|// Relocations may modify a non-writable segment.
+name|DF_BIND_NOW
+init|=
+literal|0x08
+block|,
+comment|// Process all relocations on load.
+name|DF_STATIC_TLS
+init|=
+literal|0x10
+comment|// Reject attempts to load dynamically.
 block|}
 enum|;
 block|}

@@ -193,11 +193,6 @@ argument|const MachineFunction&MF
 argument_list|)
 specifier|const
 block|;
-name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
-block|;
 comment|// Exception handling queries.
 name|unsigned
 name|getEHExceptionRegister
@@ -207,24 +202,6 @@ block|;
 name|unsigned
 name|getEHHandlerRegister
 argument_list|()
-specifier|const
-block|;
-name|int
-name|getDwarfRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
-name|int
-name|getLLVMRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
 specifier|const
 block|;
 comment|// Utility functions

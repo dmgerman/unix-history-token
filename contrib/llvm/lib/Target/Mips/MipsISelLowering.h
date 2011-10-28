@@ -167,6 +167,12 @@ block|,
 name|WrapperPIC
 block|,
 name|DynAlloc
+block|,
+name|Sync
+block|,
+name|Ext
+block|,
+name|Ins
 block|}
 enum|;
 block|}
@@ -188,6 +194,14 @@ name|MipsTargetMachine
 operator|&
 name|TM
 argument_list|)
+block|;
+name|virtual
+name|bool
+name|allowsUnalignedMemoryAccesses
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
 block|;
 comment|/// LowerOperation - Provide custom lowering hooks for some operations.
 name|virtual
@@ -213,9 +227,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// getSetCCResultType - get the ISD::SETCC result ValueType
-name|MVT
-operator|::
-name|SimpleValueType
+name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT
@@ -239,6 +251,11 @@ specifier|const
 name|MipsSubtarget
 operator|*
 name|Subtarget
+block|;
+name|bool
+name|HasMips64
+block|,
+name|IsN64
 block|;
 comment|// Lower Operand helpers
 name|SDValue
@@ -359,6 +376,24 @@ argument_list|(
 argument|SDValue Op
 argument_list|,
 argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerMEMBARRIER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG& DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerATOMIC_FENCE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG& DAG
 argument_list|)
 specifier|const
 block|;

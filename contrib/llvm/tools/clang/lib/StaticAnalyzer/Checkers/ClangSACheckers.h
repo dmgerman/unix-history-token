@@ -73,6 +73,9 @@ block|{
 name|class
 name|CheckerManager
 decl_stmt|;
+name|class
+name|CheckerRegistry
+decl_stmt|;
 define|#
 directive|define
 name|GET_CHECKERS

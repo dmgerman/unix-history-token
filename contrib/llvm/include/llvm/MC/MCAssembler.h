@@ -46,6 +46,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCFixup.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -77,18 +89,6 @@ begin_include
 include|#
 directive|include
 file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCFixup.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/MC/MCInst.h"
 end_include
 
 begin_include
@@ -154,7 +154,7 @@ name|class
 name|MCValue
 decl_stmt|;
 name|class
-name|TargetAsmBackend
+name|MCAsmBackend
 decl_stmt|;
 name|class
 name|MCFragment
@@ -2606,7 +2606,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|TargetAsmBackend
+name|MCAsmBackend
 modifier|&
 name|Backend
 decl_stmt|;
@@ -3249,7 +3249,7 @@ name|MCContext
 operator|&
 name|Context_
 argument_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 operator|&
 name|Backend_
 argument_list|,
@@ -3289,7 +3289,7 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
-name|TargetAsmBackend
+name|MCAsmBackend
 operator|&
 name|getBackend
 argument_list|()

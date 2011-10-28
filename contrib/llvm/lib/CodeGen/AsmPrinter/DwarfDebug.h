@@ -68,7 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineLocation.h"
+file|"llvm/CodeGen/LexicalScopes.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MachineLocation.h"
 end_include
 
 begin_include
@@ -134,9 +140,6 @@ name|CompileUnit
 decl_stmt|;
 name|class
 name|DbgConcreteScope
-decl_stmt|;
-name|class
-name|DbgScope
 decl_stmt|;
 name|class
 name|DbgVariable
@@ -734,12 +737,28 @@ name|unsigned
 name|DotDebugLocOffset
 decl_stmt|;
 comment|// Offset in DotDebugLocEntries.
+name|DbgVariable
+modifier|*
+name|AbsVar
+decl_stmt|;
+comment|// Corresponding Abstract variable, if any.
+specifier|const
+name|MachineInstr
+modifier|*
+name|MInsn
+decl_stmt|;
+comment|// DBG_VALUE instruction of the variable.
+name|int
+name|FrameIndex
+decl_stmt|;
 name|public
 label|:
 comment|// AbsVar may be NULL.
 name|DbgVariable
 argument_list|(
 argument|DIVariable V
+argument_list|,
+argument|DbgVariable *AV
 argument_list|)
 block|:
 name|Var
@@ -754,8 +773,24 @@ argument_list|)
 operator|,
 name|DotDebugLocOffset
 argument_list|(
-argument|~
+operator|~
 literal|0U
+argument_list|)
+operator|,
+name|AbsVar
+argument_list|(
+name|AV
+argument_list|)
+operator|,
+name|MInsn
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|FrameIndex
+argument_list|(
+argument|~
+literal|0
 argument_list|)
 block|{}
 comment|// Accessors.
@@ -824,18 +859,133 @@ name|getName
 argument_list|()
 return|;
 block|}
+name|DbgVariable
+operator|*
+name|getAbstractVariable
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AbsVar
+return|;
+block|}
+specifier|const
+name|MachineInstr
+operator|*
+name|getMInsn
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MInsn
+return|;
+block|}
+name|void
+name|setMInsn
+parameter_list|(
+specifier|const
+name|MachineInstr
+modifier|*
+name|M
+parameter_list|)
+block|{
+name|MInsn
+operator|=
+name|M
+expr_stmt|;
+block|}
+name|int
+name|getFrameIndex
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FrameIndex
+return|;
+block|}
+name|void
+name|setFrameIndex
+parameter_list|(
+name|int
+name|FI
+parameter_list|)
+block|{
+name|FrameIndex
+operator|=
+name|FI
+expr_stmt|;
+block|}
+comment|// Translate tag to proper Dwarf tag.
 name|unsigned
 name|getTag
 argument_list|()
 specifier|const
 block|{
-return|return
+if|if
+condition|(
 name|Var
 operator|.
 name|getTag
 argument_list|()
+operator|==
+name|dwarf
+operator|::
+name|DW_TAG_arg_variable
+condition|)
+return|return
+name|dwarf
+operator|::
+name|DW_TAG_formal_parameter
+return|;
+return|return
+name|dwarf
+operator|::
+name|DW_TAG_variable
 return|;
 block|}
+comment|/// isArtificial - Return true if DbgVariable is artificial.
+name|bool
+name|isArtificial
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|Var
+operator|.
+name|isArtificial
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+if|if
+condition|(
+name|Var
+operator|.
+name|getTag
+argument_list|()
+operator|==
+name|dwarf
+operator|::
+name|DW_TAG_arg_variable
+operator|&&
+name|getType
+argument_list|()
+operator|.
+name|isArtificial
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|bool
 name|variableHasComplexAddress
 argument_list|()
@@ -858,6 +1008,9 @@ name|hasComplexAddress
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|bool
 name|isBlockByrefVariable
 argument_list|()
@@ -880,6 +1033,9 @@ name|isBlockByrefVariable
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getNumAddrElements
 argument_list|()
@@ -902,6 +1058,9 @@ name|getNumAddrElements
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|uint64_t
 name|getAddrElement
 argument_list|(
@@ -919,13 +1078,18 @@ name|i
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|DIType
 name|getType
 argument_list|()
 specifier|const
 expr_stmt|;
-block|}
-empty_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+unit|};
 name|class
 name|DwarfDebug
 block|{
@@ -946,6 +1110,7 @@ name|CompileUnit
 modifier|*
 name|FirstCU
 decl_stmt|;
+comment|/// Maps MDNode with its corresponding CompileUnit.
 name|DenseMap
 operator|<
 specifier|const
@@ -956,6 +1121,18 @@ name|CompileUnit
 operator|*
 operator|>
 name|CUMap
+expr_stmt|;
+comment|/// Maps subprogram MDNode with its corresponding CompileUnit.
+name|DenseMap
+operator|<
+specifier|const
+name|MDNode
+operator|*
+operator|,
+name|CompileUnit
+operator|*
+operator|>
+name|SPMap
 expr_stmt|;
 comment|/// AbbreviationsSet - Used to uniquely define abbreviations.
 comment|///
@@ -1021,12 +1198,6 @@ operator|*
 operator|>
 name|SectionMap
 expr_stmt|;
-comment|/// CurrentFnDbgScope - Top level scope for the current function.
-comment|///
-name|DbgScope
-modifier|*
-name|CurrentFnDbgScope
-decl_stmt|;
 comment|/// CurrentFnArguments - List of Arguments (DbgValues) for current function.
 name|SmallVector
 operator|<
@@ -1037,42 +1208,9 @@ literal|8
 operator|>
 name|CurrentFnArguments
 expr_stmt|;
-comment|/// DbgScopeMap - Tracks the scopes in the current function.  Owns the
-comment|/// contained DbgScope*s.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|DbgScope
-operator|*
-operator|>
-name|DbgScopeMap
-expr_stmt|;
-comment|/// InlinedDbgScopeMap - Tracks inlined function scopes in current function.
-name|DenseMap
-operator|<
-name|DebugLoc
-operator|,
-name|DbgScope
-operator|*
-operator|>
-name|InlinedDbgScopeMap
-expr_stmt|;
-comment|/// AbstractScopes - Tracks the abstract scopes a module. These scopes are
-comment|/// not included DbgScopeMap.  AbstractScopes owns its DbgScope*s.
-name|DenseMap
-operator|<
-specifier|const
-name|MDNode
-operator|*
-operator|,
-name|DbgScope
-operator|*
-operator|>
-name|AbstractScopes
-expr_stmt|;
+name|LexicalScopes
+name|LScopes
+decl_stmt|;
 comment|/// AbstractSPDies - Collection of abstract subprogram DIEs.
 name|DenseMap
 operator|<
@@ -1085,19 +1223,23 @@ operator|*
 operator|>
 name|AbstractSPDies
 expr_stmt|;
-comment|/// AbstractScopesList - Tracks abstract scopes constructed while processing
-comment|/// a function. This list is cleared during endFunction().
-name|SmallVector
+comment|/// ScopeVariables - Collection of dbg variables of a scope.
+name|DenseMap
 operator|<
-name|DbgScope
+name|LexicalScope
 operator|*
 operator|,
-literal|4
+name|SmallVector
+operator|<
+name|DbgVariable
+operator|*
+operator|,
+literal|8
 operator|>
-name|AbstractScopesList
+expr|>
+name|ScopeVariables
 expr_stmt|;
-comment|/// AbstractVariables - Collection on abstract variables.  Owned by the
-comment|/// DbgScopes in AbstractScopes.
+comment|/// AbstractVariables - Collection on abstract variables.
 name|DenseMap
 operator|<
 specifier|const
@@ -1109,32 +1251,6 @@ operator|*
 operator|>
 name|AbstractVariables
 expr_stmt|;
-comment|/// DbgVariableToFrameIndexMap - Tracks frame index used to find
-comment|/// variable's value.
-name|DenseMap
-operator|<
-specifier|const
-name|DbgVariable
-operator|*
-operator|,
-name|int
-operator|>
-name|DbgVariableToFrameIndexMap
-expr_stmt|;
-comment|/// DbgVariableToDbgInstMap - Maps DbgVariable to corresponding DBG_VALUE
-comment|/// machine instruction.
-name|DenseMap
-operator|<
-specifier|const
-name|DbgVariable
-operator|*
-operator|,
-specifier|const
-name|MachineInstr
-operator|*
-operator|>
-name|DbgVariableToDbgInstMap
-expr_stmt|;
 comment|/// DotDebugLocEntries - Collection of DotDebugLocEntry.
 name|SmallVector
 operator|<
@@ -1143,32 +1259,6 @@ operator|,
 literal|4
 operator|>
 name|DotDebugLocEntries
-expr_stmt|;
-comment|/// UseDotDebugLocEntry - DW_AT_location attributes for the DIEs in this set
-comment|/// idetifies corresponding .debug_loc entry offset.
-name|SmallPtrSet
-operator|<
-specifier|const
-name|DIE
-operator|*
-operator|,
-literal|4
-operator|>
-name|UseDotDebugLocEntry
-expr_stmt|;
-comment|/// VarToAbstractVarMap - Maps DbgVariable with corresponding Abstract
-comment|/// DbgVariable, if any.
-name|DenseMap
-operator|<
-specifier|const
-name|DbgVariable
-operator|*
-operator|,
-specifier|const
-name|DbgVariable
-operator|*
-operator|>
-name|VarToAbstractVarMap
 expr_stmt|;
 comment|/// InliendSubprogramDIEs - Collection of subprgram DIEs that are marked
 comment|/// (at the end of the module) as DW_AT_inline.
@@ -1180,20 +1270,6 @@ operator|,
 literal|4
 operator|>
 name|InlinedSubprogramDIEs
-expr_stmt|;
-comment|/// ContainingTypeMap - This map is used to keep track of subprogram DIEs that
-comment|/// need DW_AT_containing_type attribute. This attribute points to a DIE that
-comment|/// corresponds to the MDNode mapped with the subprogram DIE.
-name|DenseMap
-operator|<
-name|DIE
-operator|*
-operator|,
-specifier|const
-name|MDNode
-operator|*
-operator|>
-name|ContainingTypeMap
 expr_stmt|;
 comment|/// InlineInfo - Keep track of inlined functions and their location.  This
 comment|/// information is used to populate debug_inlined section.
@@ -1422,23 +1498,16 @@ modifier|&
 name|Abbrev
 parameter_list|)
 function_decl|;
-comment|/// getOrCreateDbgScope - Create DbgScope for the scope.
-name|DbgScope
-modifier|*
-name|getOrCreateDbgScope
+name|void
+name|addScopeVariable
 parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|)
-function_decl|;
-name|DbgScope
+name|LexicalScope
 modifier|*
-name|getOrCreateAbstractScope
-parameter_list|(
-specifier|const
-name|MDNode
+name|LS
+parameter_list|,
+name|DbgVariable
 modifier|*
-name|N
+name|Var
 parameter_list|)
 function_decl|;
 comment|/// findAbstractVariable - Find abstract variable associated with Var.
@@ -1462,6 +1531,10 @@ name|DIE
 modifier|*
 name|updateSubprogramScopeDIE
 parameter_list|(
+name|CompileUnit
+modifier|*
+name|SPCU
+parameter_list|,
 specifier|const
 name|MDNode
 modifier|*
@@ -1474,7 +1547,11 @@ name|DIE
 modifier|*
 name|constructLexicalScopeDIE
 parameter_list|(
-name|DbgScope
+name|CompileUnit
+modifier|*
+name|TheCU
+parameter_list|,
+name|LexicalScope
 modifier|*
 name|Scope
 parameter_list|)
@@ -1486,7 +1563,11 @@ name|DIE
 modifier|*
 name|constructInlinedScopeDIE
 parameter_list|(
-name|DbgScope
+name|CompileUnit
+modifier|*
+name|TheCU
+parameter_list|,
+name|LexicalScope
 modifier|*
 name|Scope
 parameter_list|)
@@ -1500,7 +1581,7 @@ name|DbgVariable
 modifier|*
 name|DV
 parameter_list|,
-name|DbgScope
+name|LexicalScope
 modifier|*
 name|S
 parameter_list|)
@@ -1510,7 +1591,11 @@ name|DIE
 modifier|*
 name|constructScopeDIE
 parameter_list|(
-name|DbgScope
+name|CompileUnit
+modifier|*
+name|TheCU
+parameter_list|,
+name|LexicalScope
 modifier|*
 name|Scope
 parameter_list|)
@@ -1642,30 +1727,9 @@ parameter_list|()
 function_decl|;
 comment|/// constructCompileUnit - Create new CompileUnit for the given
 comment|/// metadata node with tag DW_TAG_compile_unit.
-name|void
-name|constructCompileUnit
-parameter_list|(
-specifier|const
-name|MDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// getCompielUnit - Get CompileUnit DIE.
 name|CompileUnit
 modifier|*
-name|getCompileUnit
-argument_list|(
-specifier|const
-name|MDNode
-operator|*
-name|N
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// constructGlobalVariableDIE - Construct global variable DIE.
-name|void
-name|constructGlobalVariableDIE
+name|constructCompileUnit
 parameter_list|(
 specifier|const
 name|MDNode
@@ -1677,6 +1741,10 @@ comment|/// construct SubprogramDIE - Construct subprogram DIE.
 name|void
 name|constructSubprogramDIE
 parameter_list|(
+name|CompileUnit
+modifier|*
+name|TheCU
+parameter_list|,
 specifier|const
 name|MDNode
 modifier|*
@@ -1704,53 +1772,10 @@ name|unsigned
 name|Flags
 parameter_list|)
 function_decl|;
-comment|/// recordVariableFrameIndex - Record a variable's index.
-name|void
-name|recordVariableFrameIndex
-parameter_list|(
-specifier|const
-name|DbgVariable
-modifier|*
-name|V
-parameter_list|,
-name|int
-name|Index
-parameter_list|)
-function_decl|;
-comment|/// findVariableFrameIndex - Return true if frame index for the variable
-comment|/// is found. Update FI to hold value of the index.
-name|bool
-name|findVariableFrameIndex
-parameter_list|(
-specifier|const
-name|DbgVariable
-modifier|*
-name|V
-parameter_list|,
-name|int
-modifier|*
-name|FI
-parameter_list|)
-function_decl|;
-comment|/// findDbgScope - Find DbgScope for the debug loc.
-name|DbgScope
-modifier|*
-name|findDbgScope
-parameter_list|(
-name|DebugLoc
-name|DL
-parameter_list|)
-function_decl|;
 comment|/// identifyScopeMarkers() - Indentify instructions that are marking
 comment|/// beginning of or end of a scope.
 name|void
 name|identifyScopeMarkers
-parameter_list|()
-function_decl|;
-comment|/// extractScopeInformation - Scan machine instructions in this function
-comment|/// and collect DbgScopes. Return true, if atleast one scope was found.
-name|bool
-name|extractScopeInformation
 parameter_list|()
 function_decl|;
 comment|/// addCurrentFnArgument - If Var is an current function argument that add
@@ -1767,12 +1792,12 @@ name|DbgVariable
 modifier|*
 name|Var
 parameter_list|,
-name|DbgScope
+name|LexicalScope
 modifier|*
 name|Scope
 parameter_list|)
 function_decl|;
-comment|/// collectVariableInfo - Populate DbgScope entries with variables' info.
+comment|/// collectVariableInfo - Populate LexicalScope entries with variables' info.
 name|void
 name|collectVariableInfo
 argument_list|(
@@ -1916,6 +1941,26 @@ operator|~
 name|DwarfDebug
 argument_list|()
 expr_stmt|;
+comment|/// collectInfoFromNamedMDNodes - Collect debug info from named mdnodes such
+comment|/// as llvm.dbg.enum and llvm.dbg.ty
+name|void
+name|collectInfoFromNamedMDNodes
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
+comment|/// collectLegacyDebugInfo - Collect debug info using DebugInfoFinder.
+comment|/// FIXME - Remove this when dragon-egg and llvm-gcc switch to DIBuilder.
+name|bool
+name|collectLegacyDebugInfo
+parameter_list|(
+name|Module
+modifier|*
+name|M
+parameter_list|)
+function_decl|;
 comment|/// beginModule - Emit all Dwarf sections that should come prior to the
 comment|/// content.
 name|void
@@ -1997,11 +2042,14 @@ name|SP
 parameter_list|)
 function_decl|;
 block|}
-empty_stmt|;
-block|}
 end_decl_stmt
 
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
+unit|}
 comment|// End of namespace llvm
 end_comment
 

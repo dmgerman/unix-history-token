@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -81,7 +87,8 @@ decl_stmt|;
 name|class
 name|Loop
 decl_stmt|;
-comment|/// ExtractCodeRegion - rip out a sequence of basic blocks into a new function
+comment|/// ExtractCodeRegion - Rip out a sequence of basic blocks into a new
+comment|/// function.
 comment|///
 name|Function
 modifier|*
@@ -91,15 +98,11 @@ name|DominatorTree
 operator|&
 name|DT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|BasicBlock
 operator|*
 operator|>
-operator|&
 name|code
 argument_list|,
 name|bool
@@ -108,7 +111,7 @@ operator|=
 name|false
 argument_list|)
 decl_stmt|;
-comment|/// ExtractLoop - rip out a natural loop into a new function
+comment|/// ExtractLoop - Rip out a natural loop into a new function.
 comment|///
 name|Function
 modifier|*
@@ -128,22 +131,26 @@ init|=
 name|false
 parameter_list|)
 function_decl|;
-comment|/// ExtractBasicBlock - rip out a basic block into a new function
+comment|/// ExtractBasicBlock - Rip out a basic block (and the associated landing pad)
+comment|/// into a new function.
 comment|///
 name|Function
 modifier|*
 name|ExtractBasicBlock
-parameter_list|(
+argument_list|(
+name|ArrayRef
+operator|<
 name|BasicBlock
-modifier|*
-name|BB
-parameter_list|,
+operator|*
+operator|>
+name|BBs
+argument_list|,
 name|bool
 name|AggregateArgs
-init|=
+operator|=
 name|false
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

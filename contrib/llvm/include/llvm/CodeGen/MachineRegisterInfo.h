@@ -93,6 +93,17 @@ comment|/// etc.
 name|class
 name|MachineRegisterInfo
 block|{
+specifier|const
+name|TargetRegisterInfo
+modifier|*
+specifier|const
+name|TRI
+decl_stmt|;
+comment|/// IsSSA - True when the machine function is in SSA form and virtual
+comment|/// registers have a single def.
+name|bool
+name|IsSSA
+decl_stmt|;
 comment|/// VRegInfo - Information we keep for each virtual register.
 comment|///
 comment|/// Each element in this list contains the register class of the vreg and the
@@ -213,6 +224,35 @@ operator|~
 name|MachineRegisterInfo
 argument_list|()
 expr_stmt|;
+comment|//===--------------------------------------------------------------------===//
+comment|// Function State
+comment|//===--------------------------------------------------------------------===//
+comment|// isSSA - Returns true when the machine function is in SSA form. Early
+comment|// passes require the machine function to be in SSA form where every virtual
+comment|// register has a single defining instruction.
+comment|//
+comment|// The TwoAddressInstructionPass and PHIElimination passes take the machine
+comment|// function out of SSA form when they introduce multiple defs per virtual
+comment|// register.
+name|bool
+name|isSSA
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsSSA
+return|;
+block|}
+comment|// leaveSSA - Indicates that the machine function is no longer in SSA form.
+name|void
+name|leaveSSA
+parameter_list|()
+block|{
+name|IsSSA
+operator|=
+name|false
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Register Info
 comment|//===--------------------------------------------------------------------===//
@@ -723,10 +763,12 @@ name|RC
 parameter_list|)
 function_decl|;
 comment|/// constrainRegClass - Constrain the register class of the specified virtual
-comment|/// register to be a common subclass of RC and the current register class.
-comment|/// Return the new register class, or NULL if no such class exists.
+comment|/// register to be a common subclass of RC and the current register class,
+comment|/// but only if the new class has at least MinNumRegs registers.  Return the
+comment|/// new register class, or NULL if no such class exists.
 comment|/// This should only be used when the constraint is known to be trivial, like
 comment|/// GR32 -> GR32_NOSP. Beware of increasing register pressure.
+comment|///
 specifier|const
 name|TargetRegisterClass
 modifier|*
@@ -739,6 +781,30 @@ specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
+parameter_list|,
+name|unsigned
+name|MinNumRegs
+init|=
+literal|0
+parameter_list|)
+function_decl|;
+comment|/// recomputeRegClass - Try to find a legal super-class of Reg's register
+comment|/// class that still satisfies the constraints from the instructions using
+comment|/// Reg.  Returns true if Reg was upgraded.
+comment|///
+comment|/// This method can be used after constraints have been removed from a
+comment|/// virtual register, for example after removing instructions or splitting
+comment|/// the live range.
+comment|///
+name|bool
+name|recomputeRegClass
+parameter_list|(
+name|unsigned
+name|Reg
+parameter_list|,
+specifier|const
+name|TargetMachine
+modifier|&
 parameter_list|)
 function_decl|;
 comment|/// createVirtualRegister - Create and return a new virtual register in the

@@ -121,7 +121,6 @@ comment|///
 name|class
 name|MachineConstantPoolValue
 block|{
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -131,7 +130,6 @@ label|:
 name|explicit
 name|MachineConstantPoolValue
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ty
@@ -149,7 +147,6 @@ argument_list|()
 block|{}
 comment|/// getType - get type of this MachineConstantPoolValue.
 comment|///
-specifier|const
 name|Type
 operator|*
 name|getType
@@ -188,7 +185,7 @@ literal|0
 function_decl|;
 name|virtual
 name|void
-name|AddSelectionDAGCSEId
+name|addSelectionDAGCSEId
 parameter_list|(
 name|FoldingSetNodeID
 modifier|&
@@ -363,7 +360,6 @@ operator|)
 operator|)
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getType

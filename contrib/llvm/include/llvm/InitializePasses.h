@@ -233,7 +233,7 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
-name|initializeBlockFrequencyPass
+name|initializeBlockFrequencyInfoPass
 parameter_list|(
 name|PassRegistry
 modifier|&
@@ -779,13 +779,6 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
-name|initializeLowerSetJmpPass
-parameter_list|(
-name|PassRegistry
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
 name|initializeLowerSwitchPass
 parameter_list|(
 name|PassRegistry
@@ -793,7 +786,7 @@ modifier|&
 parameter_list|)
 function_decl|;
 name|void
-name|initializeMachineBlockFrequencyPass
+name|initializeMachineBlockFrequencyInfoPass
 parameter_list|(
 name|PassRegistry
 modifier|&
@@ -1312,13 +1305,6 @@ parameter_list|)
 function_decl|;
 name|void
 name|initializeTailCallElimPass
-parameter_list|(
-name|PassRegistry
-modifier|&
-parameter_list|)
-function_decl|;
-name|void
-name|initializeTailDupPass
 parameter_list|(
 name|PassRegistry
 modifier|&

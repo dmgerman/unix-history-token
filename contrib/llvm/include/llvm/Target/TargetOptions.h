@@ -277,6 +277,10 @@ name|StringRef
 name|getTrapFunctionName
 parameter_list|()
 function_decl|;
+specifier|extern
+name|bool
+name|EnableSegmentedStacks
+decl_stmt|;
 block|}
 end_decl_stmt
 

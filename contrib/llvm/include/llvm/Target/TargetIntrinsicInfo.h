@@ -127,7 +127,7 @@ name|getName
 argument_list|(
 argument|unsigned IID
 argument_list|,
-argument|const Type **Tys =
+argument|Type **Tys =
 literal|0
 argument_list|,
 argument|unsigned numTys =
@@ -193,7 +193,6 @@ argument_list|,
 name|unsigned
 name|ID
 argument_list|,
-specifier|const
 name|Type
 operator|*
 operator|*

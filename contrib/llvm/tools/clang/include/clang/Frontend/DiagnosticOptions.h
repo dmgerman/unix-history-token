@@ -186,7 +186,7 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Overload candidates to show.  Values from
-comment|/// Diagnostic::OverloadsShown
+comment|/// DiagnosticsEngine::OverloadsShown
 name|unsigned
 name|VerifyDiagnostics
 range|:
@@ -298,7 +298,7 @@ literal|0
 expr_stmt|;
 name|ShowOverloads
 operator|=
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Ovl_All
 expr_stmt|;

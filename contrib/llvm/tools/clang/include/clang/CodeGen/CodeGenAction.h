@@ -131,7 +131,7 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|;
 name|virtual

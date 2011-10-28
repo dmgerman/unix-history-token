@@ -142,6 +142,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DepthFirstIterator.h"
 end_include
 
@@ -686,6 +692,19 @@ return|return
 name|Blocks
 operator|.
 name|end
+argument_list|()
+return|;
+block|}
+comment|/// getNumBlocks - Get the number of blocks in this loop in constant time.
+name|unsigned
+name|getNumBlocks
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Blocks
+operator|.
+name|size
 argument_list|()
 return|;
 block|}
@@ -2907,12 +2926,29 @@ end_comment
 begin_macro
 unit|void
 name|verifyLoopNest
-argument_list|()
+argument_list|(
+argument|DenseSet<const LoopT*> *Loops
+argument_list|)
 end_macro
 
 begin_expr_stmt
 specifier|const
 block|{
+name|Loops
+operator|->
+name|insert
+argument_list|(
+name|static_cast
+operator|<
+specifier|const
+name|LoopT
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+argument_list|)
+block|;
 comment|// Verify this loop.
 name|verifyLoop
 argument_list|()
@@ -2944,7 +2980,9 @@ name|I
 operator|)
 operator|->
 name|verifyLoopNest
-argument_list|()
+argument_list|(
+name|Loops
+argument_list|)
 expr_stmt|;
 block|}
 end_expr_stmt
@@ -3485,6 +3523,10 @@ block|,
 name|LoopT
 operator|>
 block|;
+name|friend
+name|class
+name|LoopInfo
+block|;
 name|void
 name|operator
 operator|=
@@ -3923,24 +3965,54 @@ modifier|*
 name|L
 parameter_list|)
 block|{
+if|if
+condition|(
+operator|!
+name|L
+condition|)
+block|{
+name|typename
+name|DenseMap
+operator|<
+name|BlockT
+operator|*
+operator|,
 name|LoopT
-modifier|*
-modifier|&
-name|OldLoop
-init|=
+operator|*
+operator|>
+operator|::
+name|iterator
+name|I
+operator|=
+name|BBMap
+operator|.
+name|find
+argument_list|(
+name|BB
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|I
+operator|!=
+name|BBMap
+operator|.
+name|end
+argument_list|()
+condition|)
+name|BBMap
+operator|.
+name|erase
+argument_list|(
+name|I
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|BBMap
 index|[
 name|BB
 index|]
-decl_stmt|;
-name|assert
-argument_list|(
-name|OldLoop
-operator|&&
-literal|"Block not in a loop yet!"
-argument_list|)
-expr_stmt|;
-name|OldLoop
 operator|=
 name|L
 expr_stmt|;
@@ -5771,6 +5843,33 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/// updateUnloop - Update LoopInfo after removing the last backedge from a
+end_comment
+
+begin_comment
+comment|/// loop--now the "unloop". This updates the loop forest and parent loops for
+end_comment
+
+begin_comment
+comment|/// each block so that Unloop is no longer referenced, but the caller must
+end_comment
+
+begin_comment
+comment|/// actually delete the Unloop object.
+end_comment
+
+begin_function_decl
+name|void
+name|updateUnloop
+parameter_list|(
+name|Loop
+modifier|*
+name|Unloop
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// replacementPreservesLCSSAForm - Returns true if replacing From with To

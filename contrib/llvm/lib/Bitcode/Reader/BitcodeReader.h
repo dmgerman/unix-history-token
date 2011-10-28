@@ -354,7 +354,6 @@ parameter_list|(
 name|unsigned
 name|Idx
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -367,7 +366,6 @@ parameter_list|(
 name|unsigned
 name|Idx
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -1002,7 +1000,6 @@ parameter_list|(
 name|unsigned
 name|ID
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -1234,7 +1231,6 @@ name|unsigned
 operator|&
 name|Slot
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty

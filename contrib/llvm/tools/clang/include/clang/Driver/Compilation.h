@@ -61,15 +61,11 @@ directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Path.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -161,6 +157,17 @@ comment|/// Result files which should be removed on failure.
 name|ArgStringList
 name|ResultFiles
 decl_stmt|;
+comment|/// Redirection for stdout, stderr, etc.
+specifier|const
+name|llvm
+operator|::
+name|sys
+operator|::
+name|Path
+operator|*
+operator|*
+name|Redirects
+expr_stmt|;
 name|public
 label|:
 name|Compilation
@@ -409,8 +416,6 @@ comment|/// \param Quote - Should separate arguments be quoted.
 name|void
 name|PrintJob
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -472,6 +477,13 @@ name|FailingCommand
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// initCompilationForDiagnostics - Remove stale state and suppress output
+comment|/// so compilation can be reexecuted to generate additional diagnostic
+comment|/// information (e.g., preprocessed source(s)).
+name|void
+name|initCompilationForDiagnostics
+parameter_list|()
+function_decl|;
 block|}
 empty_stmt|;
 block|}

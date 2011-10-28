@@ -65,6 +65,12 @@ directive|include
 file|"llvm/MC/MCInstPrinter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/MC/MCSubtargetInfo.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
@@ -86,25 +92,22 @@ specifier|const
 name|MCAsmInfo
 operator|&
 name|MAI
+argument_list|,
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
 argument_list|)
-operator|:
-name|MCInstPrinter
-argument_list|(
-argument|MAI
-argument_list|)
-block|{}
+block|;
 name|virtual
 name|void
 name|printInst
 argument_list|(
-specifier|const
-name|MCInst
-operator|*
-name|MI
+argument|const MCInst *MI
 argument_list|,
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
+argument_list|,
+argument|StringRef Annot
 argument_list|)
 block|;
 name|virtual
@@ -168,7 +171,37 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printSORegOperand
+name|printSORegRegOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printSORegImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAddrModeTBB
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAddrModeTBH
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -228,11 +261,21 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printAM3PostIndexOp
+name|printAddrMode3OffsetOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
 argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printAM3PostIndexOp
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned Op
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
@@ -242,13 +285,33 @@ name|printAM3PreOrOffsetIndexOp
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
+argument|unsigned Op
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printPostIdxImm8Operand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
 argument|unsigned OpNum
 argument_list|,
 argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printAddrMode3OffsetOperand
+name|printPostIdxRegOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printPostIdxImm8s4Operand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -338,7 +401,37 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printPKHLSLShiftImm
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printPKHASRShiftImm
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printThumbS4ImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printThumbSRImm
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -451,6 +544,16 @@ argument_list|)
 block|;
 name|void
 name|printT2AddrModeImm8s4Operand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printT2AddrModeImm0_1020s4Operand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -600,7 +703,7 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printVFPf32ImmOperand
+name|printCoprocOptionImm
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -610,7 +713,7 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
-name|printVFPf64ImmOperand
+name|printFPImmOperand
 argument_list|(
 argument|const MCInst *MI
 argument_list|,
@@ -630,7 +733,47 @@ argument|raw_ostream&O
 argument_list|)
 block|;
 name|void
+name|printImmPlusOneOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printRotImmOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
 name|printPCLabel
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printT2LdrLabelOperand
+argument_list|(
+argument|const MCInst *MI
+argument_list|,
+argument|unsigned OpNum
+argument_list|,
+argument|raw_ostream&O
+argument_list|)
+block|;
+name|void
+name|printVectorIndex
 argument_list|(
 argument|const MCInst *MI
 argument_list|,

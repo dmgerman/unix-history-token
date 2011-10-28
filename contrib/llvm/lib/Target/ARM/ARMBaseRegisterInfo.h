@@ -112,59 +112,6 @@ literal|2
 block|}
 enum|;
 block|}
-comment|/// isARMLowRegister - Returns true if the register is low register r0-r7.
-comment|///
-specifier|static
-specifier|inline
-name|bool
-name|isARMLowRegister
-parameter_list|(
-name|unsigned
-name|Reg
-parameter_list|)
-block|{
-name|using
-name|namespace
-name|ARM
-decl_stmt|;
-switch|switch
-condition|(
-name|Reg
-condition|)
-block|{
-case|case
-name|R0
-case|:
-case|case
-name|R1
-case|:
-case|case
-name|R2
-case|:
-case|case
-name|R3
-case|:
-case|case
-name|R4
-case|:
-case|case
-name|R5
-case|:
-case|case
-name|R6
-case|:
-case|case
-name|R7
-case|:
-return|return
-name|true
-return|;
-default|default:
-return|return
-name|false
-return|;
-block|}
-block|}
 comment|/// isARMArea1Register - Returns true if the register is a low register (r0-r7)
 comment|/// or a stack/pc register that we should push/pop.
 specifier|static
@@ -463,6 +410,15 @@ block|;
 specifier|const
 name|TargetRegisterClass
 operator|*
+name|getCrossCopyRegClass
+argument_list|(
+argument|const TargetRegisterClass *RC
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|TargetRegisterClass
+operator|*
 name|getLargestLegalSuperClass
 argument_list|(
 argument|const TargetRegisterClass *RC
@@ -605,11 +561,6 @@ specifier|const
 block|;
 comment|// Debug information queries.
 name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
@@ -634,24 +585,6 @@ block|;
 name|unsigned
 name|getEHHandlerRegister
 argument_list|()
-specifier|const
-block|;
-name|int
-name|getDwarfRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
-name|int
-name|getLLVMRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
 specifier|const
 block|;
 name|bool

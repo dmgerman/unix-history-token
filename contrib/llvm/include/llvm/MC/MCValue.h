@@ -164,21 +164,6 @@ operator|!
 name|SymB
 return|;
 block|}
-comment|/// getAssociatedSection - For relocatable values, return the section the
-comment|/// value is associated with.
-comment|///
-comment|/// @result - The value's associated section, or null for external or constant
-comment|/// values.
-comment|//
-comment|// FIXME: Switch to a tagged section, so this can return the tagged section
-comment|// value.
-specifier|const
-name|MCSection
-operator|*
-name|getAssociatedSection
-argument_list|()
-specifier|const
-expr_stmt|;
 comment|/// print - Print the value to the stream \arg OS.
 name|void
 name|print

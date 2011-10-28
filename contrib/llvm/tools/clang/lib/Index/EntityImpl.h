@@ -182,7 +182,7 @@ specifier|static
 name|Entity
 name|get
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|,
 argument|Program&Prog
 argument_list|,

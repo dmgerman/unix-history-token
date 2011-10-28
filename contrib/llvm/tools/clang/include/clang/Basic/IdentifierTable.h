@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -184,11 +190,11 @@ name|class
 name|IdentifierInfo
 block|{
 comment|// Note: DON'T make TokenID a 'tok::TokenKind'; MSVC will treat it as a
-comment|//       signed char and TokenKinds> 127 won't be handled correctly.
+comment|//       signed char and TokenKinds> 255 won't be handled correctly.
 name|unsigned
 name|TokenID
 range|:
-literal|8
+literal|9
 decl_stmt|;
 comment|// Front-end token ID or tok::identifier.
 comment|// Objective-C keyword ('protocol' in '@protocol') or builtin (__builtin_inf).
@@ -211,6 +217,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|// True if identifier is a lang extension.
+name|bool
+name|IsCXX11CompatKeyword
+range|:
+literal|1
+decl_stmt|;
+comment|// True if identifier is a keyword in C++11.
 name|bool
 name|IsPoisoned
 range|:
@@ -243,7 +255,7 @@ literal|1
 decl_stmt|;
 comment|// True if RevertTokenIDToIdentifier was
 comment|// called.
-comment|// 6 bits left in 32-bit word.
+comment|// 5 bits left in 32-bit word.
 name|void
 modifier|*
 name|FETokenInfo
@@ -465,16 +477,12 @@ comment|/// getName - Return the actual identifier string.
 end_comment
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|StringRef
 argument_list|(
 name|getNameStart
@@ -879,6 +887,61 @@ block|}
 end_function
 
 begin_comment
+comment|/// is/setIsCXX11CompatKeyword - Initialize information about whether or not
+end_comment
+
+begin_comment
+comment|/// this language token is a keyword in C++11. This controls compatibility
+end_comment
+
+begin_comment
+comment|/// warnings, and is only true when not parsing C++11. Once a compatibility
+end_comment
+
+begin_comment
+comment|/// problem has been diagnosed with this keyword, the flag will be cleared.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isCXX11CompatKeyword
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsCXX11CompatKeyword
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setIsCXX11CompatKeyword
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|IsCXX11CompatKeyword
+operator|=
+name|Val
+expr_stmt|;
+if|if
+condition|(
+name|Val
+condition|)
+name|NeedsHandleIdentifier
+operator|=
+literal|1
+expr_stmt|;
+else|else
+name|RecomputeNeedsHandleIdentifier
+argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// setIsPoisoned - Mark this identifier as poisoned.  After poisoning, the
 end_comment
 
@@ -1146,6 +1209,18 @@ argument_list|()
 operator||
 name|isExtensionToken
 argument_list|()
+operator||
+name|isCXX11CompatKeyword
+argument_list|()
+operator|||
+operator|(
+name|getTokenID
+argument_list|()
+operator|==
+name|tok
+operator|::
+name|kw___import_module__
+operator|)
 operator|)
 expr_stmt|;
 block|}
@@ -1312,16 +1387,14 @@ comment|/// \brief Retrieve the next string in the identifier table and
 comment|/// advances the iterator for the following string.
 comment|///
 comment|/// \returns The next string in the identifier table. If there is
-comment|/// no such string, returns an empty \c llvm::StringRef.
+comment|/// no such string, returns an empty \c StringRef.
 name|virtual
-name|llvm
-operator|::
 name|StringRef
 name|Next
-argument_list|()
-operator|=
+parameter_list|()
+init|=
 literal|0
-expr_stmt|;
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -1360,15 +1433,13 @@ name|virtual
 name|IdentifierInfo
 modifier|*
 name|get
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 comment|/// \brief Retrieve an iterator into the set of all identifiers
 comment|/// known to this identifier lookup source.
 comment|///
@@ -1542,12 +1613,10 @@ comment|///
 name|IdentifierInfo
 modifier|&
 name|get
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|)
+parameter_list|)
 block|{
 name|llvm
 operator|::
@@ -1666,8 +1735,6 @@ name|IdentifierInfo
 modifier|&
 name|get
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Name
 argument_list|,
@@ -1692,6 +1759,20 @@ name|TokenID
 operator|=
 name|TokenCode
 expr_stmt|;
+name|assert
+argument_list|(
+name|II
+operator|.
+name|TokenID
+operator|==
+operator|(
+name|unsigned
+operator|)
+name|TokenCode
+operator|&&
+literal|"TokenCode too large"
+argument_list|)
+expr_stmt|;
 return|return
 name|II
 return|;
@@ -1705,12 +1786,10 @@ comment|/// likely end up in a recursion.
 name|IdentifierInfo
 modifier|&
 name|getOwn
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|)
+parameter_list|)
 block|{
 name|llvm
 operator|::
@@ -1952,6 +2031,8 @@ name|OMF_autorelease
 block|,
 name|OMF_dealloc
 block|,
+name|OMF_finalize
+block|,
 name|OMF_release
 block|,
 name|OMF_retain
@@ -2030,7 +2111,7 @@ name|Selector
 block|{
 name|friend
 name|class
-name|DiagnosticInfo
+name|Diagnostic
 decl_stmt|;
 enum|enum
 name|IdentifierInfoFlag
@@ -2455,17 +2536,16 @@ begin_comment
 comment|/// name was supplied.
 end_comment
 
-begin_expr_stmt
-name|llvm
-operator|::
+begin_decl_stmt
 name|StringRef
 name|getNameForSlot
 argument_list|(
-argument|unsigned argIndex
+name|unsigned
+name|argIndex
 argument_list|)
-specifier|const
-expr_stmt|;
-end_expr_stmt
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// getAsString - Derive the full selector name (e.g. "foo:bar:") and return

@@ -445,6 +445,24 @@ operator|<
 literal|0
 return|;
 block|}
+comment|/// isPowerOfTwo - Test whether the quantity is a power of two.
+comment|/// Zero is not a power of two.
+name|bool
+name|isPowerOfTwo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|Quantity
+operator|&
+operator|-
+name|Quantity
+operator|)
+operator|==
+name|Quantity
+return|;
+block|}
 comment|// Arithmetic operators.
 name|CharUnits
 name|operator

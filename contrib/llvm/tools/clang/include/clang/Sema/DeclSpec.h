@@ -151,7 +151,7 @@ name|class
 name|LangOptions
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|IdentifierInfo
@@ -173,6 +173,9 @@ name|ObjCDeclSpec
 decl_stmt|;
 name|class
 name|Preprocessor
+decl_stmt|;
+name|class
+name|Sema
 decl_stmt|;
 name|class
 name|Declarator
@@ -838,6 +841,15 @@ decl_stmt|;
 specifier|static
 specifier|const
 name|TST
+name|TST_half
+init|=
+name|clang
+operator|::
+name|TST_half
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
 name|TST_float
 init|=
 name|clang
@@ -987,6 +999,15 @@ init|=
 name|clang
 operator|::
 name|TST_unknown_anytype
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_atomic
+init|=
+name|clang
+operator|::
+name|TST_atomic
 decl_stmt|;
 specifier|static
 specifier|const
@@ -1240,6 +1261,8 @@ decl_stmt|;
 name|SourceLocation
 name|FriendLoc
 decl_stmt|,
+name|ModulePrivateLoc
+decl_stmt|,
 name|ConstexprLoc
 decl_stmt|;
 name|WrittenBuiltinSpecs
@@ -1278,6 +1301,10 @@ operator|||
 name|T
 operator|==
 name|TST_underlyingType
+operator|||
+name|T
+operator|==
+name|TST_atomic
 operator|)
 return|;
 block|}
@@ -1413,7 +1440,7 @@ argument_list|)
 operator|,
 name|TypeQualifiers
 argument_list|(
-name|TSS_unspecified
+name|TQ_unspecified
 argument_list|)
 operator|,
 name|FS_inline_specified
@@ -2189,8 +2216,12 @@ comment|/// diagnostics to be ignored when desired.
 name|bool
 name|SetStorageClassSpec
 parameter_list|(
-name|SCS
+name|Sema
+modifier|&
 name|S
+parameter_list|,
+name|SCS
+name|SC
 parameter_list|,
 name|SourceLocation
 name|Loc
@@ -2204,11 +2235,6 @@ parameter_list|,
 name|unsigned
 modifier|&
 name|DiagID
-parameter_list|,
-specifier|const
-name|LangOptions
-modifier|&
-name|Lang
 parameter_list|)
 function_decl|;
 name|bool
@@ -2647,6 +2673,23 @@ name|DiagID
 parameter_list|)
 function_decl|;
 name|bool
+name|setModulePrivateSpec
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|&
+name|PrevSpec
+parameter_list|,
+name|unsigned
+modifier|&
+name|DiagID
+parameter_list|)
+function_decl|;
+name|bool
 name|SetConstexprSpec
 parameter_list|(
 name|SourceLocation
@@ -2679,6 +2722,27 @@ specifier|const
 block|{
 return|return
 name|FriendLoc
+return|;
+block|}
+name|bool
+name|isModulePrivateSpecified
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModulePrivateLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getModulePrivateSpecLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ModulePrivateLoc
 return|;
 block|}
 name|bool
@@ -2886,7 +2950,7 @@ comment|/// DeclSpec is guaranteed self-consistent, even if an error occurred.
 name|void
 name|Finish
 parameter_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|D
 parameter_list|,
@@ -3726,8 +3790,6 @@ empty_stmt|;
 comment|/// CachedTokens - A set of tokens that has been cached for later
 comment|/// parsing.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Token
@@ -4358,10 +4420,8 @@ name|Kind
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown decl type!"
 argument_list|)
 expr_stmt|;
@@ -4915,9 +4975,12 @@ comment|// File scope declaration.
 name|PrototypeContext
 block|,
 comment|// Within a function prototype.
-name|ObjCPrototypeContext
+name|ObjCResultContext
 block|,
-comment|// Within a method prototype.
+comment|// An ObjC method result type.
+name|ObjCParameterContext
+block|,
+comment|// An ObjC method parameter type.
 name|KNRTypeListContext
 block|,
 comment|// K&R type definition list for formals.
@@ -4986,8 +5049,6 @@ comment|/// DeclTypeInfo - This holds each type that the declarator includes as 
 comment|/// parsed.  This is pushed from the identifier out, which means that element
 comment|/// #0 will be the most closely bound to the identifier, and
 comment|/// DeclTypeInfo.back() will be the least closely bound.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|DeclaratorChunk
@@ -5005,6 +5066,18 @@ block|;
 comment|/// GroupingParens - Set by Parser::ParseParenDeclarator().
 name|bool
 name|GroupingParens
+operator|:
+literal|1
+block|;
+comment|/// FunctionDefinition - Is this Declarator for a function or member defintion
+name|bool
+name|FunctionDefinition
+operator|:
+literal|1
+block|;
+comment|// Redeclaration - Is this Declarator is a redeclaration.
+name|bool
+name|Redeclaration
 operator|:
 literal|1
 block|;
@@ -5086,6 +5159,16 @@ name|TST_error
 argument_list|)
 block|,
 name|GroupingParens
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|FunctionDefinition
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|Redeclaration
 argument_list|(
 name|false
 argument_list|)
@@ -5224,7 +5307,11 @@ name|PrototypeContext
 operator|||
 name|Context
 operator|==
-name|ObjCPrototypeContext
+name|ObjCParameterContext
+operator|||
+name|Context
+operator|==
+name|ObjCResultContext
 operator|)
 return|;
 block|}
@@ -5474,7 +5561,10 @@ case|case
 name|PrototypeContext
 case|:
 case|case
-name|ObjCPrototypeContext
+name|ObjCParameterContext
+case|:
+case|case
+name|ObjCResultContext
 case|:
 case|case
 name|TemplateParamContext
@@ -5563,7 +5653,10 @@ case|case
 name|AliasTemplateContext
 case|:
 case|case
-name|ObjCPrototypeContext
+name|ObjCParameterContext
+case|:
+case|case
+name|ObjCResultContext
 case|:
 case|case
 name|BlockLiteralContext
@@ -5626,7 +5719,10 @@ case|case
 name|PrototypeContext
 case|:
 case|case
-name|ObjCPrototypeContext
+name|ObjCParameterContext
+case|:
+case|case
+name|ObjCResultContext
 case|:
 case|case
 name|TemplateParamContext
@@ -6775,6 +6871,60 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|setFunctionDefinition
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|FunctionDefinition
+operator|=
+name|Val
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|isFunctionDefinition
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FunctionDefinition
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setRedeclaration
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|Redeclaration
+operator|=
+name|Val
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|isRedeclaration
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Redeclaration
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
 unit|};
 comment|/// FieldDeclarator - This little struct is used to capture information about
@@ -6949,6 +7099,157 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// LambdaCaptureDefault - The default, if any, capture method for a
+end_comment
+
+begin_comment
+comment|/// lambda expression.
+end_comment
+
+begin_enum
+enum|enum
+name|LambdaCaptureDefault
+block|{
+name|LCD_None
+block|,
+name|LCD_ByCopy
+block|,
+name|LCD_ByRef
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// LambdaCaptureKind - The different capture forms in a lambda
+end_comment
+
+begin_comment
+comment|/// introducer: 'this' or a copied or referenced variable.
+end_comment
+
+begin_enum
+enum|enum
+name|LambdaCaptureKind
+block|{
+name|LCK_This
+block|,
+name|LCK_ByCopy
+block|,
+name|LCK_ByRef
+block|}
+enum|;
+end_enum
+
+begin_comment
+comment|/// LambdaCapture - An individual capture in a lambda introducer.
+end_comment
+
+begin_struct
+struct|struct
+name|LambdaCapture
+block|{
+name|LambdaCaptureKind
+name|Kind
+decl_stmt|;
+name|SourceLocation
+name|Loc
+decl_stmt|;
+name|IdentifierInfo
+modifier|*
+name|Id
+decl_stmt|;
+name|LambdaCapture
+argument_list|(
+argument|LambdaCaptureKind Kind
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|IdentifierInfo* Id =
+literal|0
+argument_list|)
+block|:
+name|Kind
+argument_list|(
+name|Kind
+argument_list|)
+operator|,
+name|Loc
+argument_list|(
+name|Loc
+argument_list|)
+operator|,
+name|Id
+argument_list|(
+argument|Id
+argument_list|)
+block|{}
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/// LambdaIntroducer - Represents a complete lambda introducer.
+end_comment
+
+begin_struct
+struct|struct
+name|LambdaIntroducer
+block|{
+name|SourceRange
+name|Range
+decl_stmt|;
+name|LambdaCaptureDefault
+name|Default
+decl_stmt|;
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|LambdaCapture
+operator|,
+literal|4
+operator|>
+name|Captures
+expr_stmt|;
+name|LambdaIntroducer
+argument_list|()
+operator|:
+name|Default
+argument_list|(
+argument|LCD_None
+argument_list|)
+block|{}
+comment|/// addCapture - Append a capture in a lambda introducer.
+name|void
+name|addCapture
+argument_list|(
+argument|LambdaCaptureKind Kind
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|IdentifierInfo* Id =
+literal|0
+argument_list|)
+block|{
+name|Captures
+operator|.
+name|push_back
+argument_list|(
+name|LambdaCapture
+argument_list|(
+name|Kind
+argument_list|,
+name|Loc
+argument_list|,
+name|Id
+argument_list|)
+argument_list|)
+block|;   }
+block|}
+struct|;
+end_struct
 
 begin_comment
 unit|}

@@ -82,6 +82,18 @@ comment|/// The current set of available features.
 name|unsigned
 name|AvailableFeatures
 decl_stmt|;
+comment|/// Utility function for printing annotations.
+name|void
+name|printAnnotation
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|OS
+parameter_list|,
+name|StringRef
+name|Annot
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|MCInstPrinter
@@ -141,6 +153,9 @@ parameter_list|,
 name|raw_ostream
 modifier|&
 name|OS
+parameter_list|,
+name|StringRef
+name|Annot
 parameter_list|)
 init|=
 literal|0

@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|ALPHAMCTARGETDESC_H
+name|MSP430MCTARGETDESC_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|ALPHAMCTARGETDESC_H
+name|MSP430MCTARGETDESC_H
 end_define
 
 begin_decl_stmt

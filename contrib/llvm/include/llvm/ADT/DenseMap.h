@@ -3074,8 +3074,47 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|KeyT
+operator|,
+name|typename
+name|ValueT
+operator|,
+name|typename
+name|KeyInfoT
+operator|,
+name|typename
+name|ValueInfoT
+operator|>
+specifier|static
+specifier|inline
+name|size_t
+name|capacity_in_bytes
+argument_list|(
+argument|const DenseMap<KeyT
+argument_list|,
+argument|ValueT
+argument_list|,
+argument|KeyInfoT
+argument_list|,
+argument|ValueInfoT>&X
+argument_list|)
+block|{
+return|return
+name|X
+operator|.
+name|getMemorySize
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// end namespace llvm
 end_comment
 

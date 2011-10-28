@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Sema/SemaFixItUtils.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallPtrSet.h"
 end_include
 
@@ -639,6 +645,14 @@ name|EllipsisConversion
 range|:
 literal|1
 decl_stmt|;
+comment|/// HadMultipleCandidates - When this is true, it means that the
+comment|/// conversion function was resolved from an overloaded set having
+comment|/// size greater than 1.
+name|bool
+name|HadMultipleCandidates
+range|:
+literal|1
+decl_stmt|;
 comment|/// After - Represents the standard conversion that occurs after
 comment|/// the actual user-defined conversion.
 name|StandardConversionSequence
@@ -653,8 +667,7 @@ decl_stmt|;
 comment|/// \brief The declaration that we found via name lookup, which might be
 comment|/// the same as \c ConversionFunction or it might be a using declaration
 comment|/// that refers to \c ConversionFunction.
-name|NamedDecl
-modifier|*
+name|DeclAccessPair
 name|FoundConversionFunction
 decl_stmt|;
 name|void
@@ -669,8 +682,6 @@ struct|struct
 name|AmbiguousConversionSequence
 block|{
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|FunctionDecl
@@ -1421,6 +1432,19 @@ operator|==
 name|UserDefinedConversion
 return|;
 block|}
+name|bool
+name|isFailure
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isBad
+argument_list|()
+operator|||
+name|isAmbiguous
+argument_list|()
+return|;
+block|}
 comment|/// Determines whether this conversion sequence has been
 comment|/// initialized.  Most operations should never need to query
 comment|/// uninitialized conversions and should assert as above.
@@ -1620,6 +1644,11 @@ block|,
 comment|/// This conversion function template specialization candidate is not
 comment|/// viable because the final conversion was not an exact match.
 name|ovl_fail_final_conversion_not_exact
+block|,
+comment|/// (CUDA) This candidate was not viable because the callee
+comment|/// was not accessible from the caller's target (i.e. host->device,
+comment|/// global->host, device->host).
+name|ovl_fail_bad_target
 block|}
 enum|;
 comment|/// OverloadCandidate - A single candidate in an overload set (C++ 13.3).
@@ -1664,8 +1693,6 @@ name|Surrogate
 decl_stmt|;
 comment|/// Conversions - The conversion sequences used to convert the
 comment|/// function arguments to the function parameters.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ImplicitConversionSequence
@@ -1674,6 +1701,10 @@ literal|4
 operator|>
 name|Conversions
 expr_stmt|;
+comment|/// The FixIt hints which can be used to fix the Bad candidate.
+name|ConversionFixItGenerator
+name|Fix
+decl_stmt|;
 comment|/// Viable - True to indicate that this overload candidate is viable.
 name|bool
 name|Viable
@@ -1779,8 +1810,6 @@ specifier|const
 block|{
 for|for
 control|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|ImplicitConversionSequence
@@ -1835,6 +1864,71 @@ return|return
 name|false
 return|;
 block|}
+name|bool
+name|TryToFixBadConversion
+parameter_list|(
+name|unsigned
+name|Idx
+parameter_list|,
+name|Sema
+modifier|&
+name|S
+parameter_list|)
+block|{
+name|bool
+name|CanFix
+init|=
+name|Fix
+operator|.
+name|tryToFixConversion
+argument_list|(
+name|Conversions
+index|[
+name|Idx
+index|]
+operator|.
+name|Bad
+operator|.
+name|FromExpr
+argument_list|,
+name|Conversions
+index|[
+name|Idx
+index|]
+operator|.
+name|Bad
+operator|.
+name|getFromType
+argument_list|()
+argument_list|,
+name|Conversions
+index|[
+name|Idx
+index|]
+operator|.
+name|Bad
+operator|.
+name|getToType
+argument_list|()
+argument_list|,
+name|S
+argument_list|)
+decl_stmt|;
+comment|// If at least one conversion fails, the candidate cannot be fixed.
+if|if
+condition|(
+operator|!
+name|CanFix
+condition|)
+name|Fix
+operator|.
+name|clear
+argument_list|()
+expr_stmt|;
+return|return
+name|CanFix
+return|;
+block|}
 block|}
 struct|;
 comment|/// OverloadCandidateSet - A set of overload candidates, used in C++
@@ -1843,16 +1937,12 @@ name|class
 name|OverloadCandidateSet
 range|:
 name|public
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|OverloadCandidate
 decl_stmt|, 16>
 block|{
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|OverloadCandidate

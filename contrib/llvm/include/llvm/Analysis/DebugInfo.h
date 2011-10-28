@@ -148,6 +148,9 @@ name|class
 name|DILexicalBlock
 decl_stmt|;
 name|class
+name|DILexicalBlockFile
+decl_stmt|;
+name|class
 name|DIVariable
 decl_stmt|;
 name|class
@@ -365,6 +368,14 @@ name|explicit
 name|DIDescriptor
 parameter_list|(
 specifier|const
+name|DILexicalBlockFile
+name|F
+parameter_list|)
+function_decl|;
+name|explicit
+name|DIDescriptor
+parameter_list|(
+specifier|const
 name|DILexicalBlock
 name|F
 parameter_list|)
@@ -525,6 +536,11 @@ specifier|const
 expr_stmt|;
 name|bool
 name|isNameSpace
+argument_list|()
+specifier|const
+expr_stmt|;
+name|bool
+name|isLexicalBlockFile
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -856,6 +872,26 @@ literal|9
 argument_list|)
 return|;
 block|}
+name|DIArray
+name|getEnumTypes
+argument_list|()
+specifier|const
+block|;
+name|DIArray
+name|getRetainedTypes
+argument_list|()
+specifier|const
+block|;
+name|DIArray
+name|getSubprograms
+argument_list|()
+specifier|const
+block|;
+name|DIArray
+name|getGlobalVariables
+argument_list|()
+specifier|const
+block|;
 comment|/// Verify - Verify that a compile unit is well formed.
 name|bool
 name|Verify
@@ -944,6 +980,16 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion10
+operator|&&
+literal|"Invalid CompileUnit!"
+argument_list|)
+block|;
 return|return
 name|getFieldAs
 operator|<
@@ -1101,6 +1147,16 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion10
+operator|&&
+literal|"Invalid getCompileUnit!"
+argument_list|)
+block|;
 if|if
 condition|(
 name|getVersion
@@ -1426,6 +1482,11 @@ name|getFilename
 argument_list|()
 return|;
 block|}
+comment|/// isUnsignedDIType - Return true if type encoding is unsigned.
+name|bool
+name|isUnsignedDIType
+argument_list|()
+block|;
 comment|/// replaceAllUsesWith - Replace all uses of debug info referenced by
 comment|/// this descriptor.
 name|void
@@ -2237,6 +2298,16 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion10
+operator|&&
+literal|"Invalid getCompileUnit!"
+argument_list|)
+block|;
 if|if
 condition|(
 name|getVersion
@@ -2836,6 +2907,23 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+name|MDNode
+operator|*
+name|getVariablesNodes
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|DIArray
+name|getVariables
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 unit|};
 comment|/// DIGlobalVariable - This is a wrapper for a global variable.
@@ -2922,6 +3010,16 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion10
+operator|&&
+literal|"Invalid getCompileUnit!"
+argument_list|)
+block|;
 if|if
 condition|(
 name|getVersion
@@ -2961,9 +3059,93 @@ block|}
 end_decl_stmt
 
 begin_expr_stmt
-name|unsigned
+name|StringRef
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|<=
+name|llvm
+operator|::
+name|LLVMDebugVersion10
+condition|)
+return|return
+name|getContext
+argument_list|()
+operator|.
+name|getFilename
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|6
+operator|)
+operator|.
+name|getFilename
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}      StringRef
+name|getDirectory
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|<=
+name|llvm
+operator|::
+name|LLVMDebugVersion10
+condition|)
+return|return
+name|getContext
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|6
+operator|)
+operator|.
+name|getDirectory
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}       unsigned
 name|getLineNumber
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -3161,6 +3343,16 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion10
+operator|&&
+literal|"Invalid getCompileUnit!"
+argument_list|)
+block|;
 if|if
 condition|(
 name|getVersion
@@ -3301,19 +3493,29 @@ end_return
 
 begin_comment
 unit|}
+comment|/// getInlinedAt - If this variable is inlined then return inline location.
+end_comment
+
+begin_expr_stmt
+unit|MDNode
+operator|*
+name|getInlinedAt
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// Verify - Verify that a variable descriptor is well formed.
 end_comment
 
-begin_macro
-unit|bool
+begin_expr_stmt
+name|bool
 name|Verify
 argument_list|()
-end_macro
-
-begin_decl_stmt
 specifier|const
-decl_stmt|;
-end_decl_stmt
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// HasComplexAddr - Return true if the variable has a complex address.
@@ -3368,12 +3570,29 @@ operator|+
 literal|6
 argument_list|)
 return|;
+if|if
+condition|(
+name|getVersion
+argument_list|()
+operator|==
+name|llvm
+operator|::
+name|LLVMDebugVersion9
+condition|)
 return|return
 name|getUInt64Field
 argument_list|(
 name|Idx
 operator|+
 literal|7
+argument_list|)
+return|;
+return|return
+name|getUInt64Field
+argument_list|(
+name|Idx
+operator|+
+literal|8
 argument_list|)
 return|;
 block|}
@@ -3430,6 +3649,18 @@ end_comment
 begin_decl_stmt
 name|void
 name|print
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|printExtendedName
 argument_list|(
 name|raw_ostream
 operator|&
@@ -3592,6 +3823,157 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// DILexicalBlockFile - This is a wrapper for a lexical block with
+comment|/// a filename change.
+name|class
+name|DILexicalBlockFile
+operator|:
+name|public
+name|DIScope
+block|{
+name|public
+operator|:
+name|explicit
+name|DILexicalBlockFile
+argument_list|(
+specifier|const
+name|MDNode
+operator|*
+name|N
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|DIScope
+argument_list|(
+argument|N
+argument_list|)
+block|{}
+name|DIScope
+name|getContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getScope
+argument_list|()
+operator|.
+name|getContext
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getLineNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getScope
+argument_list|()
+operator|.
+name|getLineNumber
+argument_list|()
+return|;
+block|}
+name|unsigned
+name|getColumnNumber
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getScope
+argument_list|()
+operator|.
+name|getColumnNumber
+argument_list|()
+return|;
+block|}
+name|StringRef
+name|getDirectory
+argument_list|()
+specifier|const
+block|{
+name|StringRef
+name|dir
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|2
+operator|)
+operator|.
+name|getDirectory
+argument_list|()
+block|;
+return|return
+operator|!
+name|dir
+operator|.
+name|empty
+argument_list|()
+condition|?
+name|dir
+else|:
+name|getContext
+argument_list|()
+operator|.
+name|getDirectory
+argument_list|()
+return|;
+block|}
+name|StringRef
+name|getFilename
+argument_list|()
+specifier|const
+block|{
+name|StringRef
+name|filename
+operator|=
+name|getFieldAs
+operator|<
+name|DIFile
+operator|>
+operator|(
+literal|2
+operator|)
+operator|.
+name|getFilename
+argument_list|()
+block|;
+name|assert
+argument_list|(
+operator|!
+name|filename
+operator|.
+name|empty
+argument_list|()
+operator|&&
+literal|"Why'd you create this then?"
+argument_list|)
+block|;
+return|return
+name|filename
+return|;
+block|}
+name|DILexicalBlock
+name|getScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getFieldAs
+operator|<
+name|DILexicalBlock
+operator|>
+operator|(
+literal|1
+operator|)
+return|;
+block|}
+expr|}
+block|;
 comment|/// DINameSpace - A wrapper for a C++ style name space.
 name|class
 name|DINameSpace
@@ -3685,6 +4067,16 @@ name|getCompileUnit
 argument_list|()
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|getVersion
+argument_list|()
+operator|<=
+name|LLVMDebugVersion10
+operator|&&
+literal|"Invalid getCompileUnit!"
+argument_list|)
+block|;
 if|if
 condition|(
 name|getVersion
@@ -3733,21 +4125,12 @@ name|Verify
 argument_list|()
 specifier|const
 block|;   }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// DILocation - This object holds location information. This object
-end_comment
-
-begin_comment
 comment|/// is not associated with any DWARF tag.
-end_comment
-
-begin_decl_stmt
 name|class
 name|DILocation
-range|:
+operator|:
 name|public
 name|DIDescriptor
 block|{
@@ -3852,179 +4235,174 @@ name|Verify
 argument_list|()
 specifier|const
 block|;   }
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
+block|;
 comment|/// getDISubprogram - Find subprogram that is enclosing this scope.
-end_comment
-
-begin_function_decl
 name|DISubprogram
 name|getDISubprogram
-parameter_list|(
+argument_list|(
 specifier|const
 name|MDNode
-modifier|*
+operator|*
 name|Scope
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
+argument_list|)
+block|;
 comment|/// getDICompositeType - Find underlying composite type.
-end_comment
-
-begin_function_decl
 name|DICompositeType
 name|getDICompositeType
-parameter_list|(
-name|DIType
-name|T
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getOrInsertFnSpecificMDNode - Return a NameMDNode that is suitable
-end_comment
-
-begin_comment
-comment|/// to hold function specific information.
-end_comment
-
-begin_function_decl
-name|NamedMDNode
-modifier|*
-name|getOrInsertFnSpecificMDNode
-parameter_list|(
-name|Module
-modifier|&
-name|M
-parameter_list|,
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getFnSpecificMDNode - Return a NameMDNode, if available, that is
-end_comment
-
-begin_comment
-comment|/// suitable to hold function specific information.
-end_comment
-
-begin_function_decl
-name|NamedMDNode
-modifier|*
-name|getFnSpecificMDNode
-parameter_list|(
+argument_list|(
+argument|DIType T
+argument_list|)
+block|;
+comment|/// isSubprogramContext - Return true if Context is either a subprogram
+comment|/// or another context nested inside a subprogram.
+name|bool
+name|isSubprogramContext
+argument_list|(
 specifier|const
-name|Module
-modifier|&
-name|M
-parameter_list|,
-name|StringRef
-name|Name
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_decl_stmt
+name|MDNode
+operator|*
+name|Context
+argument_list|)
+block|;
+comment|/// getOrInsertFnSpecificMDNode - Return a NameMDNode that is suitable
+comment|/// to hold function specific information.
+name|NamedMDNode
+operator|*
+name|getOrInsertFnSpecificMDNode
+argument_list|(
+argument|Module&M
+argument_list|,
+argument|DISubprogram SP
+argument_list|)
+block|;
+comment|/// getFnSpecificMDNode - Return a NameMDNode, if available, that is
+comment|/// suitable to hold function specific information.
+name|NamedMDNode
+operator|*
+name|getFnSpecificMDNode
+argument_list|(
+argument|const Module&M
+argument_list|,
+argument|DISubprogram SP
+argument_list|)
+block|;
+comment|/// createInlinedVariable - Create a new inlined variable based on current
+comment|/// variable.
+comment|/// @param DV            Current Variable.
+comment|/// @param InlinedScope  Location at current variable is inlined.
+name|DIVariable
+name|createInlinedVariable
+argument_list|(
+name|MDNode
+operator|*
+name|DV
+argument_list|,
+name|MDNode
+operator|*
+name|InlinedScope
+argument_list|,
+name|LLVMContext
+operator|&
+name|VMContext
+argument_list|)
+block|;
+comment|/// cleanseInlinedVariable - Remove inlined scope from the variable.
+name|DIVariable
+name|cleanseInlinedVariable
+argument_list|(
+name|MDNode
+operator|*
+name|DV
+argument_list|,
+name|LLVMContext
+operator|&
+name|VMContext
+argument_list|)
+block|;
 name|class
 name|DebugInfoFinder
 block|{
 name|public
-label|:
+operator|:
 comment|/// processModule - Process entire module and collect debug info
 comment|/// anchors.
 name|void
 name|processModule
-parameter_list|(
+argument_list|(
 name|Module
-modifier|&
+operator|&
 name|M
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 name|private
-label|:
+operator|:
 comment|/// processType - Process DIType.
 name|void
 name|processType
-parameter_list|(
-name|DIType
-name|DT
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DIType DT
+argument_list|)
+block|;
 comment|/// processLexicalBlock - Process DILexicalBlock.
 name|void
 name|processLexicalBlock
-parameter_list|(
-name|DILexicalBlock
-name|LB
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DILexicalBlock LB
+argument_list|)
+block|;
 comment|/// processSubprogram - Process DISubprogram.
 name|void
 name|processSubprogram
-parameter_list|(
-name|DISubprogram
-name|SP
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DISubprogram SP
+argument_list|)
+block|;
 comment|/// processDeclare - Process DbgDeclareInst.
 name|void
 name|processDeclare
-parameter_list|(
+argument_list|(
 name|DbgDeclareInst
-modifier|*
+operator|*
 name|DDI
-parameter_list|)
-function_decl|;
+argument_list|)
+block|;
 comment|/// processLocation - Process DILocation.
 name|void
 name|processLocation
-parameter_list|(
-name|DILocation
-name|Loc
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DILocation Loc
+argument_list|)
+block|;
 comment|/// addCompileUnit - Add compile unit into CUs.
 name|bool
 name|addCompileUnit
-parameter_list|(
-name|DICompileUnit
-name|CU
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DICompileUnit CU
+argument_list|)
+block|;
 comment|/// addGlobalVariable - Add global variable into GVs.
 name|bool
 name|addGlobalVariable
-parameter_list|(
-name|DIGlobalVariable
-name|DIG
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DIGlobalVariable DIG
+argument_list|)
+block|;
 comment|// addSubprogram - Add subprgoram into SPs.
 name|bool
 name|addSubprogram
-parameter_list|(
-name|DISubprogram
-name|SP
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DISubprogram SP
+argument_list|)
+block|;
 comment|/// addType - Add type into Tys.
 name|bool
 name|addType
-parameter_list|(
-name|DIType
-name|DT
-parameter_list|)
-function_decl|;
+argument_list|(
+argument|DIType DT
+argument_list|)
+block|;
 name|public
-label|:
+operator|:
 typedef|typedef
 name|SmallVector
 operator|<
@@ -4182,62 +4560,58 @@ argument_list|()
 return|;
 block|}
 name|private
-label|:
+operator|:
 name|SmallVector
 operator|<
 name|MDNode
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
 name|CUs
-expr_stmt|;
+block|;
 comment|// Compile Units
 name|SmallVector
 operator|<
 name|MDNode
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
 name|SPs
-expr_stmt|;
+block|;
 comment|// Subprograms
 name|SmallVector
 operator|<
 name|MDNode
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
 name|GVs
-expr_stmt|;
+block|;
 comment|// Global Variables;
 name|SmallVector
 operator|<
 name|MDNode
 operator|*
-operator|,
+block|,
 literal|8
 operator|>
 name|TYs
-expr_stmt|;
+block|;
 comment|// Types
 name|SmallPtrSet
 operator|<
 name|MDNode
 operator|*
-operator|,
+block|,
 literal|64
 operator|>
 name|NodesSeen
-expr_stmt|;
-block|}
+block|;   }
+decl_stmt|;
 end_decl_stmt
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
 
 begin_comment
 unit|}

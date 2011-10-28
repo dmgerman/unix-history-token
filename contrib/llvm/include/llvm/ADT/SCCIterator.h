@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===-- Support/SCCIterator.h - Strongly Connected Comp. Iter. --*- C++ -*-===//
+comment|//===---- ADT/SCCIterator.h - Strongly Connected Comp. Iter. ----*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -660,7 +660,6 @@ parameter_list|(
 specifier|const
 name|GraphT
 modifier|&
-name|G
 parameter_list|)
 block|{
 return|return

@@ -63,7 +63,7 @@ name|class
 name|ASTContext
 decl_stmt|;
 name|class
-name|DiagnosticClient
+name|DiagnosticConsumer
 decl_stmt|;
 name|namespace
 name|arcmt
@@ -79,80 +79,103 @@ comment|///
 comment|/// It then checks the AST and produces errors/warning for ARC migration issues
 comment|/// that the user needs to handle manually.
 comment|///
+comment|/// \param emitPremigrationARCErrors if true all ARC errors will get emitted
+comment|/// even if the migrator can fix them, but the function will still return false
+comment|/// if all ARC errors can be fixed.
+comment|///
+comment|/// \param plistOut if non-empty, it is the file path to store the plist with
+comment|/// the pre-migration ARC diagnostics.
+comment|///
 comment|/// \returns false if no error is produced, true otherwise.
 name|bool
 name|checkForManualIssues
-argument_list|(
+parameter_list|(
 name|CompilerInvocation
-operator|&
+modifier|&
 name|CI
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Filename
-argument_list|,
+parameter_list|,
 name|InputKind
 name|Kind
-argument_list|,
-name|DiagnosticClient
-operator|*
+parameter_list|,
+name|DiagnosticConsumer
+modifier|*
 name|DiagClient
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|bool
+name|emitPremigrationARCErrors
+init|=
+name|false
+parameter_list|,
+name|StringRef
+name|plistOut
+init|=
+name|StringRef
+argument_list|()
+parameter_list|)
+function_decl|;
 comment|/// \brief Works similar to checkForManualIssues but instead of checking, it
 comment|/// applies automatic modifications to source files to conform to ARC.
 comment|///
 comment|/// \returns false if no error is produced, true otherwise.
 name|bool
 name|applyTransformations
-argument_list|(
+parameter_list|(
 name|CompilerInvocation
-operator|&
+modifier|&
 name|origCI
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Filename
-argument_list|,
+parameter_list|,
 name|InputKind
 name|Kind
-argument_list|,
-name|DiagnosticClient
-operator|*
+parameter_list|,
+name|DiagnosticConsumer
+modifier|*
 name|DiagClient
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Applies automatic modifications and produces temporary files
 comment|/// and metadata into the \arg outputDir path.
+comment|///
+comment|/// \param emitPremigrationARCErrors if true all ARC errors will get emitted
+comment|/// even if the migrator can fix them, but the function will still return false
+comment|/// if all ARC errors can be fixed.
+comment|///
+comment|/// \param plistOut if non-empty, it is the file path to store the plist with
+comment|/// the pre-migration ARC diagnostics.
 comment|///
 comment|/// \returns false if no error is produced, true otherwise.
 name|bool
 name|migrateWithTemporaryFiles
-argument_list|(
+parameter_list|(
 name|CompilerInvocation
-operator|&
+modifier|&
 name|origCI
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Filename
-argument_list|,
+parameter_list|,
 name|InputKind
 name|Kind
-argument_list|,
-name|DiagnosticClient
-operator|*
+parameter_list|,
+name|DiagnosticConsumer
+modifier|*
 name|DiagClient
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|outputDir
-argument_list|)
-decl_stmt|;
+parameter_list|,
+name|bool
+name|emitPremigrationARCErrors
+parameter_list|,
+name|StringRef
+name|plistOut
+parameter_list|)
+function_decl|;
 comment|/// \brief Get the set of file remappings from the \arg outputDir path that
 comment|/// migrateWithTemporaryFiles produced.
 comment|///
@@ -180,12 +203,10 @@ expr|>
 operator|&
 name|remap
 argument_list|,
-name|llvm
-operator|::
 name|StringRef
 name|outputDir
 argument_list|,
-name|DiagnosticClient
+name|DiagnosticConsumer
 operator|*
 name|DiagClient
 argument_list|)
@@ -217,7 +238,7 @@ block|{
 name|CompilerInvocation
 name|OrigCI
 decl_stmt|;
-name|DiagnosticClient
+name|DiagnosticConsumer
 modifier|*
 name|DiagClient
 decl_stmt|;
@@ -230,9 +251,9 @@ name|MigrationProcess
 argument_list|(
 argument|const CompilerInvocation&CI
 argument_list|,
-argument|DiagnosticClient *diagClient
+argument|DiagnosticConsumer *diagClient
 argument_list|,
-argument|llvm::StringRef outputDir = llvm::StringRef()
+argument|StringRef outputDir = StringRef()
 argument_list|)
 empty_stmt|;
 name|class
@@ -262,15 +283,13 @@ block|{ }
 name|virtual
 name|void
 name|insert
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|text
-argument_list|)
+parameter_list|)
 block|{ }
 name|virtual
 name|void

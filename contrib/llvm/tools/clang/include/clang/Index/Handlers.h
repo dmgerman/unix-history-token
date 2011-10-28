@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -191,8 +197,6 @@ name|receiving_type
 name|receiving_type
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|receiving_type

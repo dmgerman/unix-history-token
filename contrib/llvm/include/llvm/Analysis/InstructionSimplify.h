@@ -95,6 +95,14 @@ decl_stmt|;
 name|class
 name|TargetData
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 comment|/// SimplifyAddInst - Given operands for an Add, see if we can
 comment|/// fold the result.  If not, this returns null.
 name|Value
@@ -656,31 +664,64 @@ comment|/// fold the result.  If not, this returns null.
 name|Value
 modifier|*
 name|SimplifyGEPInst
-parameter_list|(
+argument_list|(
+name|ArrayRef
+operator|<
 name|Value
-modifier|*
-specifier|const
-modifier|*
+operator|*
+operator|>
 name|Ops
-parameter_list|,
-name|unsigned
-name|NumOps
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetData
-modifier|*
+operator|*
 name|TD
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 specifier|const
 name|DominatorTree
-modifier|*
+operator|*
 name|DT
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
+comment|/// SimplifyInsertValueInst - Given operands for an InsertValueInst, see if we
+comment|/// can fold the result.  If not, this returns null.
+name|Value
+modifier|*
+name|SimplifyInsertValueInst
+argument_list|(
+name|Value
+operator|*
+name|Agg
+argument_list|,
+name|Value
+operator|*
+name|Val
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|DominatorTree
+operator|*
+name|DT
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|//=== Helper functions for higher up the class hierarchy.
 comment|/// SimplifyCmpInst - Given operands for a CmpInst, see if we can
 comment|/// fold the result.  If not, this returns null.

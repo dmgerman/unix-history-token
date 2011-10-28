@@ -94,7 +94,7 @@ operator|:
 name|void
 name|VisitStmt
 argument_list|(
-argument|Stmt* S
+argument|Stmt *S
 argument_list|)
 block|{
 name|static_cast
@@ -178,10 +178,8 @@ undef|#
 directive|undef
 name|CONDVAR_CASE
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Infeasible"
 argument_list|)
 expr_stmt|;

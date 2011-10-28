@@ -281,6 +281,20 @@ name|FirstEl
 operator|)
 return|;
 block|}
+comment|/// grow_pod - This is an implementation of the grow() method which only works
+comment|/// on POD-like data types and is out of line to reduce code duplication.
+name|void
+name|grow_pod
+parameter_list|(
+name|size_t
+name|MinSizeInBytes
+parameter_list|,
+name|size_t
+name|TSize
+parameter_list|)
+function_decl|;
+name|public
+label|:
 comment|/// size_in_bytes - This returns size()*sizeof(T).
 name|size_t
 name|size_in_bytes
@@ -327,20 +341,6 @@ name|BeginX
 argument_list|)
 return|;
 block|}
-comment|/// grow_pod - This is an implementation of the grow() method which only works
-comment|/// on POD-like data types and is out of line to reduce code duplication.
-name|void
-name|grow_pod
-parameter_list|(
-name|size_t
-name|MinSizeInBytes
-parameter_list|,
-name|size_t
-name|TSize
-parameter_list|)
-function_decl|;
-name|public
-label|:
 name|bool
 name|empty
 argument_list|()
@@ -4292,8 +4292,37 @@ return|;
 block|}
 end_expr_stmt
 
+begin_expr_stmt
+unit|};
+name|template
+operator|<
+name|typename
+name|T
+operator|,
+name|unsigned
+name|N
+operator|>
+specifier|static
+specifier|inline
+name|size_t
+name|capacity_in_bytes
+argument_list|(
+argument|const SmallVector<T
+argument_list|,
+argument|N>&X
+argument_list|)
+block|{
+return|return
+name|X
+operator|.
+name|capacity_in_bytes
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
 begin_comment
-unit|};  }
+unit|}
 comment|// End llvm namespace
 end_comment
 

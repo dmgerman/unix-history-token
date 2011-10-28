@@ -726,7 +726,6 @@ return|;
 block|}
 comment|/// getType - Return the type of the instruction that generated this call site
 comment|///
-specifier|const
 name|Type
 operator|*
 name|getType

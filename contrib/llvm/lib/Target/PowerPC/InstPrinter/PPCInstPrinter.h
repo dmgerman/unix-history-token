@@ -126,14 +126,11 @@ name|virtual
 name|void
 name|printInst
 argument_list|(
-specifier|const
-name|MCInst
-operator|*
-name|MI
+argument|const MCInst *MI
 argument_list|,
-name|raw_ostream
-operator|&
-name|O
+argument|raw_ostream&O
+argument_list|,
+argument|StringRef Annot
 argument_list|)
 block|;
 name|virtual

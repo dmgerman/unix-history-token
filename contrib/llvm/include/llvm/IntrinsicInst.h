@@ -864,7 +864,6 @@ argument_list|,
 name|V
 argument_list|)
 block|;     }
-specifier|const
 name|Type
 operator|*
 name|getAlignmentType

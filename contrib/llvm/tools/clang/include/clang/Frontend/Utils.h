@@ -125,7 +125,7 @@ name|class
 name|DependencyOutputOptions
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|DiagnosticOptions
@@ -173,7 +173,7 @@ operator|::
 name|string
 name|NormalizeDashIncludePath
 argument_list|(
-argument|llvm::StringRef File
+argument|StringRef File
 argument_list|,
 argument|FileManager&FileMgr
 argument_list|)
@@ -234,7 +234,7 @@ comment|/// warning options specified on the command line.
 name|void
 name|ProcessWarningOptions
 parameter_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|Diags
 parameter_list|,
@@ -247,23 +247,21 @@ function_decl|;
 comment|/// DoPrintPreprocessedInput - Implement -E mode.
 name|void
 name|DoPrintPreprocessedInput
-argument_list|(
+parameter_list|(
 name|Preprocessor
-operator|&
+modifier|&
 name|PP
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|raw_ostream
-operator|*
+modifier|*
 name|OS
-argument_list|,
+parameter_list|,
 specifier|const
 name|PreprocessorOutputOptions
-operator|&
+modifier|&
 name|Opts
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// AttachDependencyFileGen - Create a dependency file generator, and attach
 comment|/// it to the given preprocessor.  This takes ownership of the output stream.
 name|void
@@ -290,29 +288,27 @@ comment|/// \param OutputPath - If non-empty, a path to write the header include
 comment|/// information to, instead of writing to stderr.
 name|void
 name|AttachHeaderIncludeGen
-argument_list|(
+parameter_list|(
 name|Preprocessor
-operator|&
+modifier|&
 name|PP
-argument_list|,
+parameter_list|,
 name|bool
 name|ShowAllHeaders
-operator|=
+init|=
 name|false
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|OutputPath
-operator|=
+init|=
 literal|""
-argument_list|,
+parameter_list|,
 name|bool
 name|ShowDepth
-operator|=
+init|=
 name|true
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// CacheTokens - Cache tokens for use with PCH. Note that this requires
 comment|/// a seekable stream.
 name|void
@@ -338,8 +334,6 @@ name|CompilerInvocation
 modifier|*
 name|createInvocationFromCommandLine
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 specifier|const
@@ -352,7 +346,7 @@ name|llvm
 operator|::
 name|IntrusiveRefCntPtr
 operator|<
-name|Diagnostic
+name|DiagnosticsEngine
 operator|>
 name|Diags
 operator|=
@@ -360,7 +354,7 @@ name|llvm
 operator|::
 name|IntrusiveRefCntPtr
 operator|<
-name|Diagnostic
+name|DiagnosticsEngine
 operator|>
 operator|(
 operator|)
