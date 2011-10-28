@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  */
 end_comment
 
 begin_include
@@ -14121,15 +14121,35 @@ modifier|*
 name|zc
 parameter_list|)
 block|{
-name|boolean_t
-name|recursive
+name|int
+name|flags
 init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
 name|zc
 operator|->
 name|zc_cookie
 operator|&
 literal|1
-decl_stmt|;
+condition|)
+name|flags
+operator||=
+name|ZFS_RENAME_RECURSIVE
+expr_stmt|;
+if|if
+condition|(
+name|zc
+operator|->
+name|zc_cookie
+operator|&
+literal|2
+condition|)
+name|flags
+operator||=
+name|ZFS_RENAME_ALLOW_MOUNTED
+expr_stmt|;
 name|zc
 operator|->
 name|zc_value
@@ -14179,7 +14199,11 @@ comment|/* 	 * Unmount snapshot unless we're doing a recursive rename, 	 * in wh
 if|if
 condition|(
 operator|!
-name|recursive
+operator|(
+name|flags
+operator|&
+name|ZFS_RENAME_RECURSIVE
+operator|)
 operator|&&
 name|strchr
 argument_list|(
@@ -14233,7 +14257,7 @@ name|zc
 operator|->
 name|zc_value
 argument_list|,
-name|recursive
+name|flags
 argument_list|)
 operator|)
 return|;

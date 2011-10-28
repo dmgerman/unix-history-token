@@ -424,9 +424,39 @@ name|ast_tx_desccfgerr
 decl_stmt|;
 comment|/* tx desc cfg error */
 name|u_int32_t
+name|ast_tx_swretries
+decl_stmt|;
+comment|/* software TX retries */
+name|u_int32_t
+name|ast_tx_swretrymax
+decl_stmt|;
+comment|/* software TX retry max limit reach */
+name|u_int32_t
+name|ast_tx_data_underrun
+decl_stmt|;
+name|u_int32_t
+name|ast_tx_delim_underrun
+decl_stmt|;
+name|u_int32_t
+name|ast_tx_aggrfail
+decl_stmt|;
+comment|/* aggregate TX failed in its entirety */
+name|u_int32_t
+name|ast_tx_getnobuf
+decl_stmt|;
+name|u_int32_t
+name|ast_tx_getbusybuf
+decl_stmt|;
+name|u_int32_t
+name|ast_tx_intr
+decl_stmt|;
+name|u_int32_t
+name|ast_rx_intr
+decl_stmt|;
+name|u_int32_t
 name|ast_pad
 index|[
-literal|13
+literal|4
 index|]
 decl_stmt|;
 block|}

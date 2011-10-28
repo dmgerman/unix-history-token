@@ -984,6 +984,9 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
+name|uint16_t
+name|ah_assocId
+decl_stmt|;
 comment|/* 	 * Runtime state. 	 */
 name|uint32_t
 name|ah_maskReg

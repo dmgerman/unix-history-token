@@ -908,7 +908,7 @@ if|if
 condition|(
 name|val
 operator|&
-name|AR_DIAG_RXCLEAR_CTL_LOW
+name|AR_DIAG_RXCLEAR_EXT_LOW
 condition|)
 block|{
 name|rxclear

@@ -1852,8 +1852,70 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_ISR_S5_GENTIMER7
+value|0x00000080
+end_define
+
+begin_comment
+comment|// Mask for timer 7 trigger
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_ISR_S5_TIM_TIMER
 value|0x00000010
+end_define
+
+begin_comment
+comment|// TIM Timer ISR
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_DTIM_TIMER
+value|0x00000020
+end_define
+
+begin_comment
+comment|// DTIM Timer ISR
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_TRIG
+value|0x0000FF80
+end_define
+
+begin_comment
+comment|// ISR for generic timer trigger 7-15
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_TRIG_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_THRESH
+value|0xFF800000
+end_define
+
+begin_comment
+comment|// ISR for generic timer threshold 7-15
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_THRESH_S
+value|16
 end_define
 
 begin_define

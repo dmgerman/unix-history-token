@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_include
@@ -1295,7 +1295,8 @@ argument_list|(
 literal|"\trename<filesystem|volume|snapshot> "
 literal|"<filesystem|volume|snapshot>\n"
 literal|"\trename -p<filesystem|volume><filesystem|volume>\n"
-literal|"\trename -r<snapshot><snapshot>"
+literal|"\trename -r<snapshot><snapshot>\n"
+literal|"\trename -u [-p]<filesystem><filesystem>"
 argument_list|)
 operator|)
 return|;
@@ -13095,7 +13096,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * zfs rename<fs | snap | vol><fs | snap | vol>  * zfs rename -p<fs | vol><fs | vol>  * zfs rename -r<snap><snap>  *  * Renames the given dataset to another of the same type.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  */
+comment|/*  * zfs rename<fs | snap | vol><fs | snap | vol>  * zfs rename -p<fs | vol><fs | vol>  * zfs rename -r<snap><snap>  * zfs rename -u [-p]<fs><fs>  *  * Renames the given dataset to another of the same type.  *  * The '-p' flag creates all the non-existing ancestors of the target first.  */
 end_comment
 
 begin_comment
@@ -13120,16 +13121,19 @@ name|zfs_handle_t
 modifier|*
 name|zhp
 decl_stmt|;
+name|renameflags_t
+name|flags
+init|=
+block|{
+literal|0
+block|}
+decl_stmt|;
 name|int
 name|c
-decl_stmt|;
-name|int
+decl_stmt|,
 name|ret
-decl_stmt|;
-name|boolean_t
-name|recurse
-init|=
-name|B_FALSE
+decl_stmt|,
+name|types
 decl_stmt|;
 name|boolean_t
 name|parents
@@ -13148,7 +13152,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"pr"
+literal|"pru"
 argument_list|)
 operator|)
 operator|!=
@@ -13172,7 +13176,19 @@ break|break;
 case|case
 literal|'r'
 case|:
+name|flags
+operator|.
 name|recurse
+operator|=
+name|B_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'u'
+case|:
+name|flags
+operator|.
+name|nounmount
 operator|=
 name|B_TRUE
 expr_stmt|;
@@ -13294,6 +13310,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|flags
+operator|.
 name|recurse
 operator|&&
 name|parents
@@ -13321,6 +13339,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|flags
+operator|.
 name|recurse
 operator|&&
 name|strchr
@@ -13358,6 +13378,61 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|flags
+operator|.
+name|nounmount
+operator|&&
+name|parents
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"-u and -r options are mutually "
+literal|"exclusive\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|flags
+operator|.
+name|nounmount
+condition|)
+name|types
+operator|=
+name|ZFS_TYPE_FILESYSTEM
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|parents
+condition|)
+name|types
+operator|=
+name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
+expr_stmt|;
+else|else
+name|types
+operator|=
+name|ZFS_TYPE_DATASET
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|zhp
 operator|=
@@ -13370,13 +13445,7 @@ index|[
 literal|0
 index|]
 argument_list|,
-name|parents
-condition|?
-name|ZFS_TYPE_FILESYSTEM
-operator||
-name|ZFS_TYPE_VOLUME
-else|:
-name|ZFS_TYPE_DATASET
+name|types
 argument_list|)
 operator|)
 operator|==
@@ -13441,7 +13510,7 @@ index|[
 literal|1
 index|]
 argument_list|,
-name|recurse
+name|flags
 argument_list|)
 operator|!=
 literal|0

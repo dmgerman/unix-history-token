@@ -1467,6 +1467,11 @@ modifier|*
 name|cookiep
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
 name|BUS_SETUP_INTR
 argument_list|(
 name|device_get_parent
@@ -1489,6 +1494,15 @@ argument_list|,
 name|cookiep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|intr_enabled
 operator||=
 literal|1

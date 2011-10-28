@@ -80,43 +80,64 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM
+name|BGE_SRAM_FW_MB
 value|0x00000B50
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM_SIG
+name|BGE_SRAM_DATA_SIG
 value|0x00000B54
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM_NICCFG
+name|BGE_SRAM_DATA_CFG
 value|0x00000B58
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENCOMM_FW
+name|BGE_SRAM_FW_CMD_MB
 value|0x00000B78
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENNCOMM_FW_LEN
+name|BGE_SRAM_FW_CMD_LEN_MB
 value|0x00000B7C
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_SOFTWARE_GENNCOMM_FW_DATA
+name|BGE_SRAM_FW_CMD_DATA_MB
 value|0x00000B80
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_SRAM_FW_DRV_STATE_MB
+value|0x00000C04
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_SRAM_MAC_ADDR_HIGH_MB
+value|0x00000C14
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_SRAM_MAC_ADDR_LOW_MB
+value|0x00000C18
 end_define
 
 begin_define
@@ -182,15 +203,110 @@ end_comment
 begin_define
 define|#
 directive|define
-name|BGE_FW_DRV_ALIVE
+name|BGE_SRAM_DATA_SIG_MAGIC
+value|0x4B657654
+end_define
+
+begin_comment
+comment|/* 'KevT' */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_CMD_DRV_ALIVE
 value|0x00000001
 end_define
 
 begin_define
 define|#
 directive|define
-name|BGE_FW_PAUSE
+name|BGE_FW_CMD_PAUSE
 value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_CMD_IPV4_ADDR_CHANGE
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_CMD_IPV6_ADDR_CHANGE
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_CMD_LINK_UPDATE
+value|0x0000000C
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_CMD_DRV_ALIVE2
+value|0x0000000D
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_CMD_DRV_ALIVE3
+value|0x0000000E
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_HB_TIMEOUT_SEC
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_DRV_STATE_START
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_DRV_STATE_START_DONE
+value|0x80000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_DRV_STATE_UNLOAD
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_DRV_STATE_UNLOAD_DONE
+value|0x80000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_DRV_STATE_WOL
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_FW_DRV_STATE_SUSPEND
+value|0x00000004
 end_define
 
 begin_comment
@@ -1043,40 +1159,6 @@ name|BGE_HIF_SWAP_OPTIONS
 value|(BGE_PCIMISCCTL_ENDIAN_WORDSWAP)
 end_define
 
-begin_if
-if|#
-directive|if
-name|BYTE_ORDER
-operator|==
-name|LITTLE_ENDIAN
-end_if
-
-begin_define
-define|#
-directive|define
-name|BGE_DMA_SWAP_OPTIONS
-define|\
-value|BGE_MODECTL_WORDSWAP_NONFRAME| \ 	BGE_MODECTL_BYTESWAP_DATA|BGE_MODECTL_WORDSWAP_DATA
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|BGE_DMA_SWAP_OPTIONS
-define|\
-value|BGE_MODECTL_WORDSWAP_NONFRAME|BGE_MODECTL_BYTESWAP_NONFRAME| \ 	BGE_MODECTL_BYTESWAP_DATA|BGE_MODECTL_WORDSWAP_DATA
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1561,6 +1643,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CHIPID_BCM5720_A0
+value|0x05720000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CHIPID_BCM57765_A0
 value|0x57785000
 end_define
@@ -1711,6 +1800,13 @@ define|#
 directive|define
 name|BGE_ASICREV_BCM5719
 value|0x5719
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_ASICREV_BCM5720
+value|0x5720
 end_define
 
 begin_define
@@ -4555,6 +4651,20 @@ name|BGE_TXMODE_MBUF_LOCKUP_FIX
 value|0x00000100
 end_define
 
+begin_define
+define|#
+directive|define
+name|BGE_TXMODE_JMB_FRM_LEN
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXMODE_CNT_DN_MODE
+value|0x00800000
+end_define
+
 begin_comment
 comment|/* Transmit MAC status register */
 end_comment
@@ -4624,6 +4734,20 @@ define|#
 directive|define
 name|BGE_TXLEN_CRS
 value|0x00003000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXLEN_JMB_FRM_LEN_MSK
+value|0x00FF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TXLEN_CNT_DN_VAL_MSK
+value|0xFF000000
 end_define
 
 begin_comment
@@ -7245,6 +7369,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_CPMU_CLCK_ORIDE
+value|0x3624
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_CPMU_CLCK_STAT
 value|0x3630
 end_define
@@ -7375,6 +7506,17 @@ define|#
 directive|define
 name|BGE_CPMU_HST_ACC_MACCLK_6_25
 value|0x00130000
+end_define
+
+begin_comment
+comment|/* Clock Speed Override Policy register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CPMU_CLCK_ORIDE_MAC_ORIDE_EN
+value|0x80000000
 end_define
 
 begin_comment
@@ -8864,6 +9006,13 @@ define|#
 directive|define
 name|BGE_RDMAMODE_TSO6_ENABLE
 value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RDMAMODE_H2BNC_VLAN_DET
+value|0x20000000
 end_define
 
 begin_comment
@@ -10888,8 +11037,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_CPU_EVENT
+name|BGE_RX_CPU_EVENT
 value|0x6810
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_TX_CPU_EVENT
+value|0x6820
 end_define
 
 begin_define
@@ -10932,6 +11088,13 @@ define|#
 directive|define
 name|BGE_FASTBOOT_PC
 value|0x6894
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_RX_CPU_DRV_EVENT
+value|0x00004000
 end_define
 
 begin_comment
@@ -11252,6 +11415,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_MODECTL_BYTESWAP_B2HRX_DATA
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_MODECTL_WORDSWAP_B2HRX_DATA
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_MODECTL_NO_FRAME_CRACKING
 value|0x00000200
 end_define
@@ -11294,6 +11471,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_MODECTL_B2HRX_ENABLE
+value|0x00008000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_MODECTL_STACKUP
 value|0x00010000
 end_define
@@ -11303,6 +11487,13 @@ define|#
 directive|define
 name|BGE_MODECTL_HOST_SEND_BDS
 value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_MODECTL_HTX2B_ENABLE
+value|0x00040000
 end_define
 
 begin_define
@@ -11845,13 +12036,13 @@ value|do {								\ 		pci_write_config(sc->bge_dev, BGE_PCI_MEMWIN_BASEADDR,	\ 	
 end_define
 
 begin_comment
-comment|/*  * This magic number is written to the firmware mailbox at 0xb50  * before a software reset is issued.  After the internal firmware  * has completed its initialization it will write the opposite of  * this value, ~BGE_MAGIC_NUMBER, to the same location, allowing the  * driver to synchronize with the firmware.  */
+comment|/*  * This magic number is written to the firmware mailbox at 0xb50  * before a software reset is issued.  After the internal firmware  * has completed its initialization it will write the opposite of  * this value, ~BGE_SRAM_FW_MB_MAGIC, to the same location,  * allowing the driver to synchronize with the firmware.  */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|BGE_MAGIC_NUMBER
+name|BGE_SRAM_FW_MB_MAGIC
 value|0x4B657654
 end_define
 
@@ -12823,8 +13014,19 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCOM_DEVICEID_BCM5720
+name|BCOM_DEVICEID_BCM5720_PP
 value|0x1658
+end_define
+
+begin_comment
+comment|/* Not released to public. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BCOM_DEVICEID_BCM5720
+value|0x165F
 end_define
 
 begin_define
@@ -14844,6 +15046,10 @@ define|#
 directive|define
 name|BGE_FLAG_SHORT_DMA_BUG
 value|0x08000000
+define|#
+directive|define
+name|BGE_FLAG_4K_RDMA_BUG
+value|0x10000000
 name|uint32_t
 name|bge_phy_flags
 decl_stmt|;

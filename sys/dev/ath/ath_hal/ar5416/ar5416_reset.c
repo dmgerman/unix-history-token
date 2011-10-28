@@ -1232,7 +1232,7 @@ argument_list|,
 name|saveDefAntenna
 argument_list|)
 expr_stmt|;
-comment|/* then our BSSID */
+comment|/* then our BSSID and associate id */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -1261,6 +1261,16 @@ name|ah_bssid
 operator|+
 literal|4
 argument_list|)
+operator||
+operator|(
+name|ahp
+operator|->
+name|ah_assocId
+operator|&
+literal|0x3fff
+operator|)
+operator|<<
+name|AR_BSS_ID1_AID_S
 argument_list|)
 expr_stmt|;
 comment|/* Restore bmiss rssi& count thresholds */
@@ -1541,9 +1551,6 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AH_AR5416_INTERRUPT_MITIGATION
 comment|/* 	 * Disable the "general" TX/RX mitigation timers. 	 */
 name|OS_REG_WRITE
 argument_list|(
@@ -1554,6 +1561,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_AR5416_INTERRUPT_MITIGATION
 comment|/* 	 * This initialises the RX interrupt mitigation timers. 	 * 	 * The mitigation timers begin at idle and are triggered 	 * upon the RXOK of a single frame (or sub-frame, for A-MPDU.) 	 * Then, the RX mitigation interrupt will fire: 	 * 	 * + 250uS after the last RX'ed frame, or 	 * + 700uS after the first RX'ed frame 	 * 	 * Thus, the LAST field dictates the extra latency 	 * induced by the RX mitigation method and the FIRST 	 * field dictates how long to delay before firing an 	 * RX mitigation interrupt. 	 * 	 * Please note this only seems to be for RXOK frames; 	 * not CRC or PHY error frames. 	 * 	 */
 name|OS_REG_RMW_FIELD
 argument_list|(
@@ -2191,11 +2201,7 @@ name|ahp
 operator|->
 name|ah_maskReg
 operator||=
-name|AR_IMR_TXINTM
-operator||
 name|AR_IMR_RXINTM
-operator||
-name|AR_IMR_TXMINTR
 operator||
 name|AR_IMR_RXMINTR
 expr_stmt|;
@@ -2205,12 +2211,16 @@ name|ahp
 operator|->
 name|ah_maskReg
 operator||=
-name|AR_IMR_TXOK
-operator||
 name|AR_IMR_RXOK
 expr_stmt|;
 endif|#
 directive|endif
+name|ahp
+operator|->
+name|ah_maskReg
+operator||=
+name|AR_IMR_TXOK
+expr_stmt|;
 if|if
 condition|(
 name|opmode

@@ -62,12 +62,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -394,26 +388,6 @@ define|#
 directive|define
 name|MEM_EXT
 value|0x15
-end_define
-
-begin_define
-define|#
-directive|define
-name|V86_CY
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_C)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V86_ZR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_Z)
 end_define
 
 begin_define

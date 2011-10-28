@@ -15123,13 +15123,11 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|pg
-operator|>>
-name|PAGE_SHIFT
+literal|0
 argument_list|,
-name|VM_ALLOC_NOOBJ
-operator||
 name|VM_ALLOC_SYSTEM
+operator||
+name|VM_ALLOC_NOOBJ
 operator||
 name|VM_ALLOC_WIRED
 operator||
@@ -15147,8 +15145,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
 name|p
+operator|==
+name|NULL
 condition|)
 block|{
 name|VM_WAIT
