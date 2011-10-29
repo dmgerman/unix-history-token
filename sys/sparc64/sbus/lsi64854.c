@@ -166,7 +166,10 @@ name|a
 parameter_list|,
 name|x
 parameter_list|)
-value|do { if (lsi64854debug& (a)) printf x ; } while (0)
+define|\
+value|do {								\ 		if ((lsi64854debug& (a)) != 0)				\ 			printf x;					\ 	} while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_else
@@ -236,7 +239,8 @@ name|struct
 name|lsi64854_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 parameter_list|,
 name|size_t
@@ -281,7 +285,8 @@ name|struct
 name|lsi64854_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 parameter_list|,
 name|size_t
@@ -808,7 +813,9 @@ name|MSG
 parameter_list|,
 name|DONTPANIC
 parameter_list|)
-value|do if (COND) {		\ 	int count = 500000;						\ 	while ((COND)&& --count> 0) DELAY(1);				\ 	if (count == 0) {						\ 		printf("%s: line %d: CSR = 0x%lx\n", __FILE__, __LINE__, \ 			(u_long)L64854_GCSR(SC));			\ 		if (DONTPANIC)						\ 			printf(MSG);					\ 		else							\ 			panic(MSG);					\ 	}								\ } while (0)
+value|do if (COND) {		\ 	int count = 500000;						\ 	while ((COND)&& --count> 0) DELAY(1);				\ 	if (count == 0) {						\ 		printf("%s: line %d: CSR = 0x%lx\n", __FILE__, __LINE__, \ 			(u_long)L64854_GCSR(SC));			\ 		if (DONTPANIC)						\ 			printf(MSG);					\ 		else							\ 			panic(MSG);					\ 	}								\ } while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -826,7 +833,9 @@ value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& D_ESC_R_PEND, "R_PEND", dontpanic);\ 	if (
 comment|/*							\ 	         * Select drain bit based on revision			\ 	         * also clears errors and D_TC flag			\ 	         */
 value|\ 	        csr = L64854_GCSR(sc);					\ 	        if (sc->sc_rev == DMAREV_1 || sc->sc_rev == DMAREV_0)	\ 		        csr |= D_ESC_DRAIN;				\ 	        else							\ 		        csr |= L64854_INVALIDATE;			\ 									\ 	        L64854_SCSR(sc,csr);					\ 	}								\
 comment|/*								\ 	 * Wait for draining to finish					\ 	 * rev0& rev1 call this PACKCNT				\ 	 */
-value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& L64854_DRAINING, "DRAINING", dontpanic);\ } while(0)
+value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& L64854_DRAINING, "DRAINING", dontpanic);\ } while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -844,7 +853,9 @@ value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& D_ESC_R_PEND, "R_PEND", dontpanic);\ 	csr 
 comment|/* no-ops on ENET */
 value|\ 	csr |= L64854_INVALIDATE;
 comment|/* XXX FAS ? */
-value|\ 	L64854_SCSR(sc,csr);						\ } while(0)
+value|\ 	L64854_SCSR(sc,csr);						\ } while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_function
@@ -1286,7 +1297,8 @@ name|lsi64854_softc
 modifier|*
 name|sc
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 name|addr
 parameter_list|,
@@ -2091,7 +2103,16 @@ operator|*
 name|sc
 operator|->
 name|sc_dmaaddr
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|*
+name|sc
+operator|->
+name|sc_dmaaddr
+operator|+
 name|trans
 expr_stmt|;
 if|#
@@ -2395,7 +2416,8 @@ name|lsi64854_softc
 modifier|*
 name|sc
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 name|addr
 parameter_list|,
@@ -2846,7 +2868,16 @@ operator|*
 name|sc
 operator|->
 name|sc_dmaaddr
-operator|+=
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+operator|*
+name|sc
+operator|->
+name|sc_dmaaddr
+operator|+
 name|trans
 expr_stmt|;
 if|if
