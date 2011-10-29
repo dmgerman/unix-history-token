@@ -264,7 +264,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Handle open from generic layer.  *  * This is called by the diskslice code on first open in order to get the   * basic device geometry paramters.  */
+comment|/*  * Handle open from generic layer.  *  * This is called by the diskslice code on first open in order to get the  * basic device geometry paramters.  */
 end_comment
 
 begin_function
