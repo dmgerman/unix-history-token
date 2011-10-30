@@ -1427,7 +1427,7 @@ parameter_list|,
 name|u_long
 name|alignment
 parameter_list|,
-name|u_long
+name|vm_paddr_t
 name|boundary
 parameter_list|,
 name|vm_memattr_t
