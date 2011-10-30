@@ -508,7 +508,7 @@ argument_list|,
 name|BOUNDARY
 argument_list|,
 comment|/* alignment, boundary */
-name|BUS_SPACE_MAXADDR
+name|BUS_SPACE_MAXADDR_32BIT
 argument_list|,
 comment|/* lowaddr */
 name|BUS_SPACE_MAXADDR
@@ -1645,7 +1645,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pseudo (chained) interrupt from the esp driver to kick the  * current running DMA transfer. Called from ncr53c9x_intr()  * for now.  *  * return 1 if it was a DMA continue.  */
+comment|/*  * Pseudo (chained) interrupt from the esp driver to kick the  * current running DMA transfer.  Called from ncr53c9x_intr()  * for now.  *  * return 1 if it was a DMA continue.  */
 end_comment
 
 begin_function
