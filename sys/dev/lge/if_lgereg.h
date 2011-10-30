@@ -2908,6 +2908,9 @@ decl_stmt|;
 name|int
 name|lge_if_flags
 decl_stmt|;
+name|int
+name|lge_timer
+decl_stmt|;
 name|struct
 name|lge_list_data
 modifier|*

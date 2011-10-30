@@ -311,6 +311,9 @@ name|struct
 name|mtx
 name|tl_mtx
 decl_stmt|;
+name|int
+name|tl_timer
+decl_stmt|;
 block|}
 struct|;
 end_struct
