@@ -6349,9 +6349,19 @@ name|free
 expr_stmt|;
 name|free
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 name|m
 operator|->
-name|right
+name|object
+expr_stmt|;
+name|m
+operator|->
+name|object
+operator|=
+name|NULL
 expr_stmt|;
 comment|/* Preserve the page's PG_ZERO setting. */
 name|vm_page_free_toq
@@ -6404,8 +6414,12 @@ name|PG_ZERO
 expr_stmt|;
 name|m
 operator|->
-name|right
+name|object
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|*
 name|free
 expr_stmt|;
