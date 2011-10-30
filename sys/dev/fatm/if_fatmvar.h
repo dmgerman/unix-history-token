@@ -462,6 +462,10 @@ name|ifmedia
 name|media
 decl_stmt|;
 comment|/* media */
+name|struct
+name|callout
+name|watchdog_timer
+decl_stmt|;
 name|int
 name|init_state
 decl_stmt|;
