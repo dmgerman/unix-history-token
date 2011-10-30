@@ -70,27 +70,6 @@ directive|include
 file|<security/audit/audit.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|KDTRACE_HOOKS
-end_ifdef
-
-begin_comment
-comment|/*  * This is a hook which is initialised by the systrace module  * when it is loaded. This keeps the DTrace syscall provider  * implementation opaque.  */
-end_comment
-
-begin_decl_stmt
-name|systrace_probe_func_t
-name|systrace_probe_func
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
 specifier|static
 specifier|inline
