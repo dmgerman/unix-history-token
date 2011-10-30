@@ -193,11 +193,22 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * The rules say we cannot transfer more than the limit of this DMA chip (64k  * for old and 16Mb for new), and we cannot cross a 16Mb boundary.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MAX_DMA_SZ
-value|(16*1024*1024)
+value|(64 * 1024)
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOUNDARY
+value|(16 * 1024 * 1024)
 end_define
 
 begin_function_decl
@@ -352,6 +363,12 @@ name|lockfuncarg
 operator|=
 name|NULL
 expr_stmt|;
+name|sc
+operator|->
+name|sc_maxdmasize
+operator|=
+name|MAX_DMA_SZ
+expr_stmt|;
 switch|switch
 condition|(
 name|sc
@@ -403,6 +420,14 @@ operator|&
 name|nsc
 operator|->
 name|sc_lock
+expr_stmt|;
+name|sc
+operator|->
+name|sc_maxdmasize
+operator|=
+name|nsc
+operator|->
+name|sc_maxxfer
 expr_stmt|;
 name|sc
 operator|->
@@ -480,7 +505,7 @@ argument_list|,
 comment|/* parent */
 literal|1
 argument_list|,
-literal|0
+name|BOUNDARY
 argument_list|,
 comment|/* alignment, boundary */
 name|BUS_SPACE_MAXADDR
@@ -494,13 +519,17 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|MAX_DMA_SZ
+name|sc
+operator|->
+name|sc_maxdmasize
 argument_list|,
 comment|/* maxsize */
 literal|1
 argument_list|,
 comment|/* nsegments */
-name|MAX_DMA_SZ
+name|sc
+operator|->
+name|sc_maxdmasize
 argument_list|,
 comment|/* maxsegsize */
 name|BUS_DMA_ALLOCNOW
@@ -829,11 +858,11 @@ name|dontpanic
 parameter_list|)
 value|do {					\ 	uint32_t csr;							\
 comment|/*								\ 	 * DMA rev0& rev1: we are not allowed to touch the DMA "flush"	\ 	 *     and "drain" bits while it is still thinking about a	\ 	 *     request.							\ 	 * other revs: D_ESC_R_PEND bit reads as 0			\ 	 */
-value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& D_ESC_R_PEND, "R_PEND", dontpanic);\ 	if (sc->sc_rev != DMAREV_HME) {                                 \
-comment|/*							\ 	         * Select drain bit based on revision			\ 	         * also clears errors and D_TC flag			\ 	         */
-value|\ 	        csr = L64854_GCSR(sc);					\ 	        if (sc->sc_rev == DMAREV_1 || sc->sc_rev == DMAREV_0)	\ 		        csr |= D_ESC_DRAIN;				\ 	        else							\ 		        csr |= L64854_INVALIDATE;			\ 									\ 	        L64854_SCSR(sc,csr);					\ 	}								\
+value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& D_ESC_R_PEND, "R_PEND", dontpanic);\ 	if (sc->sc_rev != DMAREV_HME) {					\
+comment|/*							\ 		 * Select drain bit based on revision			\ 		 * also clears errors and D_TC flag			\ 		 */
+value|\ 		csr = L64854_GCSR(sc);					\ 		if (sc->sc_rev == DMAREV_1 || sc->sc_rev == DMAREV_0)	\ 			csr |= D_ESC_DRAIN;				\ 		else							\ 			csr |= L64854_INVALIDATE;			\ 									\ 		L64854_SCSR(sc, csr);					\ 	}								\
 comment|/*								\ 	 * Wait for draining to finish					\ 	 * rev0& rev1 call this PACKCNT				\ 	 */
-value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& L64854_DRAINING, "DRAINING", dontpanic);\ } while (
+value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& L64854_DRAINING, "DRAINING",	\ 	    dontpanic);							\ } while (
 comment|/* CONSTCOND */
 value|0)
 end_define
@@ -853,7 +882,7 @@ value|\ 	DMAWAIT(sc, L64854_GCSR(sc)& D_ESC_R_PEND, "R_PEND", dontpanic);\ 	csr 
 comment|/* no-ops on ENET */
 value|\ 	csr |= L64854_INVALIDATE;
 comment|/* XXX FAS ? */
-value|\ 	L64854_SCSR(sc,csr);						\ } while (
+value|\ 	L64854_SCSR(sc, csr);						\ } while (
 comment|/* CONSTCOND */
 value|0)
 end_define
@@ -869,6 +898,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+name|bus_dma_tag_t
+name|dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|dmam
+decl_stmt|;
 name|uint32_t
 name|csr
 decl_stmt|;
@@ -908,15 +943,23 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|bus_dmamap_sync
-argument_list|(
+name|dmat
+operator|=
 name|sc
 operator|->
 name|sc_buffer_dmat
-argument_list|,
+expr_stmt|;
+name|dmam
+operator|=
 name|sc
 operator|->
 name|sc_dmamap
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|dmat
+argument_list|,
+name|dmam
 argument_list|,
 operator|(
 name|csr
@@ -933,13 +976,9 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
-name|sc
-operator|->
-name|sc_buffer_dmat
+name|dmat
 argument_list|,
-name|sc
-operator|->
-name|sc_dmamap
+name|dmam
 argument_list|)
 expr_stmt|;
 block|}
@@ -1222,6 +1261,13 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
 name|nseg
 operator|!=
 literal|1
@@ -1248,6 +1294,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_datain
+operator|!=
+literal|0
 condition|?
 name|BUS_DMASYNC_PREREAD
 else|:
@@ -1272,16 +1320,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_define
-define|#
-directive|define
-name|DMAMAX
-parameter_list|(
-name|a
-parameter_list|)
-value|(MAX_DMA_SZ - ((a)& (MAX_DMA_SZ - 1)))
-end_define
 
 begin_comment
 comment|/*  * setup a DMA transfer  */
@@ -1317,6 +1355,9 @@ block|{
 name|long
 name|bcnt
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
 name|uint32_t
 name|csr
 decl_stmt|;
@@ -1351,30 +1392,34 @@ name|sc_datain
 operator|=
 name|datain
 expr_stmt|;
-comment|/* 	 * The rules say we cannot transfer more than the limit 	 * of this DMA chip (64k for old and 16Mb for new), 	 * and we cannot cross a 16Mb boundary. 	 */
+name|KASSERT
+argument_list|(
 operator|*
 name|dmasize
-operator|=
+operator|<=
+name|sc
+operator|->
+name|sc_maxdmasize
+argument_list|,
+operator|(
+literal|"%s: transfer size %ld too large"
+operator|,
+name|__func__
+operator|,
+operator|(
+name|long
+operator|)
+operator|*
+name|dmasize
+operator|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_dmasize
 operator|=
-name|ulmin
-argument_list|(
 operator|*
 name|dmasize
-argument_list|,
-name|DMAMAX
-argument_list|(
-operator|(
-name|size_t
-operator|)
-operator|*
-name|sc
-operator|->
-name|sc_dmaaddr
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -1388,9 +1433,8 @@ operator|,
 operator|(
 name|long
 operator|)
-name|sc
-operator|->
-name|sc_dmasize
+operator|*
+name|dmasize
 operator|)
 argument_list|)
 expr_stmt|;
@@ -1437,17 +1481,17 @@ name|dmasize
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Program the DMA address */
+comment|/* 	 * Load the transfer buffer and program the DMA address. 	 * Note that the NCR53C9x core can't handle EINPROGRESS so we set 	 * BUS_DMA_NOWAIT. 	 */
 if|if
 condition|(
-name|sc
-operator|->
-name|sc_dmasize
+operator|*
+name|dmasize
 operator|!=
 literal|0
 condition|)
-if|if
-condition|(
+block|{
+name|error
+operator|=
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -1463,24 +1507,28 @@ name|sc
 operator|->
 name|sc_dmaaddr
 argument_list|,
-name|sc
-operator|->
-name|sc_dmasize
+operator|*
+name|dmasize
 argument_list|,
 name|lsi64854_map_scsi
 argument_list|,
 name|sc
 argument_list|,
-literal|0
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"%s: cannot allocate DVMA address"
-argument_list|,
-name|__func__
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
 if|if
 condition|(
 name|sc
@@ -1493,9 +1541,8 @@ block|{
 comment|/* DMA ESC chip bug work-around */
 name|bcnt
 operator|=
-name|sc
-operator|->
-name|sc_dmasize
+operator|*
+name|dmasize
 expr_stmt|;
 if|if
 condition|(
@@ -1538,7 +1585,7 @@ name|bcnt
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Setup DMA control register */
+comment|/* Setup the DMA control register. */
 name|csr
 operator|=
 name|L64854_GCSR
@@ -1549,6 +1596,8 @@ expr_stmt|;
 if|if
 condition|(
 name|datain
+operator|!=
+literal|0
 condition|)
 name|csr
 operator||=
@@ -1625,10 +1674,21 @@ name|sc
 operator|->
 name|sc_client
 decl_stmt|;
+name|bus_dma_tag_t
+name|dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|dmam
+decl_stmt|;
+name|size_t
+name|dmasize
+decl_stmt|;
 name|int
-name|trans
+name|lxfer
 decl_stmt|,
 name|resid
+decl_stmt|,
+name|trans
 decl_stmt|;
 name|uint32_t
 name|csr
@@ -1693,7 +1753,7 @@ operator|&=
 operator|~
 name|D_EN_DMA
 expr_stmt|;
-comment|/* Stop DMA */
+comment|/* Stop DMA. */
 comment|/* Invalidate the queue; SLAVE_ERR bit is write-to-clear */
 name|csr
 operator||=
@@ -1757,22 +1817,27 @@ name|sc_active
 operator|=
 literal|0
 expr_stmt|;
-if|if
-condition|(
+name|dmasize
+operator|=
 name|sc
 operator|->
 name|sc_dmasize
+expr_stmt|;
+if|if
+condition|(
+name|dmasize
 operator|==
 literal|0
 condition|)
 block|{
-comment|/* A "Transfer Pad" operation completed */
+comment|/* A "Transfer Pad" operation completed. */
 name|DPRINTF
 argument_list|(
 name|LDB_SCSI
 argument_list|,
 operator|(
-literal|"%s: discarded %d bytes (tcl=%d, tcm=%d)\n"
+literal|"%s: discarded %d bytes (tcl=%d, "
+literal|"tcm=%d)\n"
 operator|,
 name|__func__
 operator|,
@@ -1823,12 +1888,13 @@ expr_stmt|;
 comment|/* 	 * If a transfer onto the SCSI bus gets interrupted by the device 	 * (e.g. for a SAVEPOINTER message), the data in the FIFO counts 	 * as residual since the NCR53C9X counter registers get decremented 	 * as bytes are clocked into the FIFO. 	 */
 if|if
 condition|(
-operator|!
 operator|(
 name|csr
 operator|&
 name|D_WRITE
 operator|)
+operator|==
+literal|0
 operator|&&
 operator|(
 name|resid
@@ -1898,7 +1964,15 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * `Terminal count' is off, so read the residue 		 * out of the NCR53C9X counter registers. 		 */
+name|lxfer
+operator|=
+name|nsc
+operator|->
+name|sc_features
+operator|&
+name|NCR_F_LARGEXFER
+expr_stmt|;
+comment|/* 		 * "Terminal count" is off, so read the residue 		 * out of the NCR53C9X counter registers. 		 */
 name|resid
 operator|+=
 operator|(
@@ -1921,13 +1995,9 @@ literal|8
 operator|)
 operator||
 operator|(
-operator|(
-name|nsc
-operator|->
-name|sc_cfg2
-operator|&
-name|NCRCFG2_FE
-operator|)
+name|lxfer
+operator|!=
+literal|0
 condition|?
 operator|(
 name|NCR_READ_REG
@@ -1950,23 +2020,15 @@ name|resid
 operator|==
 literal|0
 operator|&&
-name|sc
-operator|->
-name|sc_dmasize
+name|dmasize
 operator|==
 literal|65536
 operator|&&
-operator|(
-name|nsc
-operator|->
-name|sc_cfg2
-operator|&
-name|NCRCFG2_FE
-operator|)
+name|lxfer
 operator|==
 literal|0
 condition|)
-comment|/* A transfer of 64K is encoded as `TCL=TCM=0' */
+comment|/* A transfer of 64k is encoded as TCL=TCM=0. */
 name|resid
 operator|=
 literal|65536
@@ -1974,9 +2036,7 @@ expr_stmt|;
 block|}
 name|trans
 operator|=
-name|sc
-operator|->
-name|sc_dmasize
+name|dmasize
 operator|-
 name|resid
 expr_stmt|;
@@ -1992,14 +2052,12 @@ if|#
 directive|if
 literal|0
 comment|/* 		 * This situation can happen in perfectly normal operation 		 * if the ESP is reselected while using DMA to select 		 * another target.  As such, don't print the warning. 		 */
-block|device_printf(sc->sc_dev, "xfer (%d)> req (%d)\n", trans, 		    sc->sc_dmasize);
+block|device_printf(sc->sc_dev, "xfer (%d)> req (%d)\n", trans, 		    dmasize);
 endif|#
 directive|endif
 name|trans
 operator|=
-name|sc
-operator|->
-name|sc_dmasize
+name|dmasize
 expr_stmt|;
 block|}
 name|DPRINTF
@@ -2028,10 +2086,12 @@ operator|,
 operator|(
 name|nsc
 operator|->
-name|sc_cfg2
+name|sc_sc_features
 operator|&
-name|NCRCFG2_FE
+name|NCR_F_LARGEXFER
 operator|)
+operator|!=
+literal|0
 condition|?
 name|NCR_READ_REG
 argument_list|(
@@ -2050,22 +2110,28 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|sc_dmasize
+name|dmasize
 operator|!=
 literal|0
 condition|)
 block|{
-name|bus_dmamap_sync
-argument_list|(
+name|dmat
+operator|=
 name|sc
 operator|->
 name|sc_buffer_dmat
-argument_list|,
+expr_stmt|;
+name|dmam
+operator|=
 name|sc
 operator|->
 name|sc_dmamap
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|dmat
+argument_list|,
+name|dmam
 argument_list|,
 operator|(
 name|csr
@@ -2082,13 +2148,9 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
-name|sc
-operator|->
-name|sc_buffer_dmat
+name|dmat
 argument_list|,
-name|sc
-operator|->
-name|sc_dmamap
+name|dmam
 argument_list|)
 expr_stmt|;
 block|}
@@ -2133,7 +2195,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Pseudo (chained) interrupt to le driver to handle DMA errors.  */
+comment|/*  * Pseudo (chained) interrupt to le(4) driver to handle DMA errors  */
 end_comment
 
 begin_function
@@ -2214,7 +2276,7 @@ operator|&=
 operator|~
 name|L64854_EN_DMA
 expr_stmt|;
-comment|/* Stop DMA */
+comment|/* Stop DMA. */
 comment|/* Invalidate the queue; SLAVE_ERR bit is write-to-clear */
 name|csr
 operator||=
@@ -2338,6 +2400,13 @@ name|arg
 expr_stmt|;
 if|if
 condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return;
+if|if
+condition|(
 name|nsegs
 operator|!=
 literal|1
@@ -2364,6 +2433,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_datain
+operator|!=
+literal|0
 condition|?
 name|BUS_DMASYNC_PREREAD
 else|:
@@ -2403,7 +2474,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * setup a DMA transfer  */
+comment|/*  * Setup a DMA transfer.  */
 end_comment
 
 begin_function
@@ -2433,6 +2504,9 @@ modifier|*
 name|dmasize
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
 name|uint32_t
 name|csr
 decl_stmt|;
@@ -2484,6 +2558,8 @@ operator|->
 name|sc_dmaaddr
 operator|,
 name|datain
+operator|!=
+literal|0
 condition|?
 literal|1
 else|:
@@ -2491,30 +2567,34 @@ literal|0
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* 	 * the rules say we cannot transfer more than the limit 	 * of this DMA chip (64k for old and 16Mb for new), 	 * and we cannot cross a 16Mb boundary. 	 */
+name|KASSERT
+argument_list|(
 operator|*
 name|dmasize
-operator|=
+operator|<=
+name|sc
+operator|->
+name|sc_maxdmasize
+argument_list|,
+operator|(
+literal|"%s: transfer size %ld too large"
+operator|,
+name|__func__
+operator|,
+operator|(
+name|long
+operator|)
+operator|*
+name|dmasize
+operator|)
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_dmasize
 operator|=
-name|ulmin
-argument_list|(
 operator|*
 name|dmasize
-argument_list|,
-name|DMAMAX
-argument_list|(
-operator|(
-name|size_t
-operator|)
-operator|*
-name|sc
-operator|->
-name|sc_dmaaddr
-argument_list|)
-argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -2528,23 +2608,22 @@ operator|,
 operator|(
 name|long
 operator|)
-name|sc
-operator|->
-name|sc_dmasize
+operator|*
+name|dmasize
 operator|)
 argument_list|)
 expr_stmt|;
-comment|/* Program the DMA address */
+comment|/* Load the transfer buffer and program the DMA address. */
 if|if
 condition|(
-name|sc
-operator|->
-name|sc_dmasize
+operator|*
+name|dmasize
 operator|!=
 literal|0
 condition|)
-if|if
-condition|(
+block|{
+name|error
+operator|=
 name|bus_dmamap_load
 argument_list|(
 name|sc
@@ -2560,25 +2639,29 @@ name|sc
 operator|->
 name|sc_dmaaddr
 argument_list|,
-name|sc
-operator|->
-name|sc_dmasize
+operator|*
+name|dmasize
 argument_list|,
 name|lsi64854_map_pp
 argument_list|,
 name|sc
 argument_list|,
-literal|0
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"%s: pp cannot allocate DVMA address"
-argument_list|,
-name|__func__
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
-comment|/* Setup DMA control register */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+comment|/* Setup the DMA control register. */
 name|csr
 operator|=
 name|L64854_GCSR
@@ -2632,8 +2715,8 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|/* This bit is read-only in PP csr register */
-block|if (datain) 		csr |= P_WRITE; 	else 		csr&= ~P_WRITE;
+comment|/* This bit is read-only in PP csr register. */
+block|if (datain != 0) 		csr |= P_WRITE; 	else 		csr&= ~P_WRITE;
 endif|#
 directive|endif
 name|L64854_SCSR
@@ -2652,7 +2735,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Parallel port DMA interrupt.  */
+comment|/*  * Parallel port DMA interrupt  */
 end_comment
 
 begin_function
@@ -2671,6 +2754,15 @@ modifier|*
 name|sc
 init|=
 name|arg
+decl_stmt|;
+name|bus_dma_tag_t
+name|dmat
+decl_stmt|;
+name|bus_dmamap_t
+name|dmam
+decl_stmt|;
+name|size_t
+name|dmasize
 decl_stmt|;
 name|int
 name|ret
@@ -2717,6 +2809,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|csr
 operator|&
 operator|(
@@ -2724,6 +2817,9 @@ name|P_ERR_PEND
 operator||
 name|P_SLAVE_ERR
 operator|)
+operator|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|resid
@@ -2757,7 +2853,7 @@ operator|&=
 operator|~
 name|P_EN_DMA
 expr_stmt|;
-comment|/* Stop DMA */
+comment|/* Stop DMA. */
 comment|/* Invalidate the queue; SLAVE_ERR bit is write-to-clear */
 name|csr
 operator||=
@@ -2836,11 +2932,15 @@ name|sc_active
 operator|=
 literal|0
 expr_stmt|;
-name|trans
+name|dmasize
 operator|=
 name|sc
 operator|->
 name|sc_dmasize
+expr_stmt|;
+name|trans
+operator|=
+name|dmasize
 operator|-
 name|resid
 expr_stmt|;
@@ -2853,9 +2953,7 @@ condition|)
 comment|/* transferred< 0? */
 name|trans
 operator|=
-name|sc
-operator|->
-name|sc_dmasize
+name|dmasize
 expr_stmt|;
 operator|*
 name|sc
@@ -2882,22 +2980,28 @@ name|trans
 expr_stmt|;
 if|if
 condition|(
-name|sc
-operator|->
-name|sc_dmasize
+name|dmasize
 operator|!=
 literal|0
 condition|)
 block|{
-name|bus_dmamap_sync
-argument_list|(
+name|dmat
+operator|=
 name|sc
 operator|->
 name|sc_buffer_dmat
-argument_list|,
+expr_stmt|;
+name|dmam
+operator|=
 name|sc
 operator|->
 name|sc_dmamap
+expr_stmt|;
+name|bus_dmamap_sync
+argument_list|(
+name|dmat
+argument_list|,
+name|dmam
 argument_list|,
 operator|(
 name|csr
@@ -2914,13 +3018,9 @@ argument_list|)
 expr_stmt|;
 name|bus_dmamap_unload
 argument_list|(
-name|sc
-operator|->
-name|sc_buffer_dmat
+name|dmat
 argument_list|,
-name|sc
-operator|->
-name|sc_dmamap
+name|dmam
 argument_list|)
 expr_stmt|;
 block|}
