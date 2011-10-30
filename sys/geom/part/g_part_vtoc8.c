@@ -1653,6 +1653,10 @@ operator|||
 name|tag
 operator|==
 name|VTOC_TAG_FREEBSD_SWAP
+operator|||
+name|tag
+operator|==
+name|VTOC_TAG_SWAP
 operator|)
 condition|?
 literal|1
