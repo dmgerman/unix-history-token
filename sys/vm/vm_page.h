@@ -57,18 +57,6 @@ argument_list|)
 name|listq
 expr_stmt|;
 comment|/* pages in same object (O) 	*/
-name|struct
-name|vm_page
-modifier|*
-name|left
-decl_stmt|;
-comment|/* splay tree link (O)		*/
-name|struct
-name|vm_page
-modifier|*
-name|right
-decl_stmt|;
-comment|/* splay tree link (O)		*/
 name|vm_object_t
 name|object
 decl_stmt|;
@@ -1276,11 +1264,7 @@ begin_function_decl
 name|void
 name|vm_page_cache_free
 parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|vm_pindex_t
+name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1296,13 +1280,13 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_cache_transfer
+name|vm_page_cache_rename
 parameter_list|(
+name|vm_page_t
+parameter_list|,
 name|vm_object_t
 parameter_list|,
 name|vm_pindex_t
-parameter_list|,
-name|vm_object_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1504,17 +1488,6 @@ specifier|const
 name|char
 modifier|*
 name|msg
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|vm_page_t
-name|vm_page_splay
-parameter_list|(
-name|vm_pindex_t
-parameter_list|,
-name|vm_page_t
 parameter_list|)
 function_decl|;
 end_function_decl

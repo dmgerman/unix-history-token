@@ -90,10 +90,6 @@ name|vm_radix
 name|rtree
 decl_stmt|;
 comment|/* root of the resident page radix index tree */
-name|vm_page_t
-name|root
-decl_stmt|;
-comment|/* root of the resident page splay tree */
 name|vm_pindex_t
 name|size
 decl_stmt|;
@@ -134,6 +130,10 @@ name|int
 name|resident_page_count
 decl_stmt|;
 comment|/* number of resident pages */
+name|int
+name|cached_page_count
+decl_stmt|;
+comment|/* number of cached pages */
 name|struct
 name|vm_object
 modifier|*
@@ -159,10 +159,6 @@ argument_list|)
 name|rvq
 expr_stmt|;
 comment|/* list of reservations */
-name|vm_page_t
-name|cache
-decl_stmt|;
-comment|/* root of the cache page splay tree */
 name|void
 modifier|*
 name|handle
