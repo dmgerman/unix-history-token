@@ -6884,6 +6884,16 @@ name|UQ_MSC_NO_SYNC_CACHE
 argument_list|)
 operator|==
 literal|0
+operator|&&
+name|usb_test_quirk
+argument_list|(
+operator|&
+name|uaa
+argument_list|,
+name|UQ_MSC_NO_GETMAXLUN
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 comment|/* 		 * Try to figure out if there are any MSC quirks we 		 * should apply automatically: 		 */

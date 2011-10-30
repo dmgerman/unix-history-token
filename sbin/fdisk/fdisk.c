@@ -2640,6 +2640,23 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|sb
+operator|.
+name|st_size
+operator|==
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s is empty, must not be."
+argument_list|,
+name|fname
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|mboot
 operator|.
