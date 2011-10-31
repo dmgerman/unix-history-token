@@ -311,7 +311,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Unlock lower node to avoid deadlock. 	 * (XXX) VOP_ISLOCKED is needed? 	 */
+comment|/* 	 * Unlock lower node to avoid possible deadlock. 	 */
 if|if
 condition|(
 operator|(
@@ -331,6 +331,8 @@ name|mp
 operator|->
 name|mnt_vnodecovered
 argument_list|)
+operator|==
+name|LK_EXCLUSIVE
 condition|)
 block|{
 name|VOP_UNLOCK
