@@ -378,14 +378,6 @@ comment|/* 	 * Re-lock vnode. 	 */
 if|if
 condition|(
 name|isvnunlocked
-operator|&&
-operator|!
-name|VOP_ISLOCKED
-argument_list|(
-name|mp
-operator|->
-name|mnt_vnodecovered
-argument_list|)
 condition|)
 name|vn_lock
 argument_list|(
