@@ -2682,7 +2682,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Optimize the page's removal from the object by 			 * resetting its "object" field.  Specifically, if 			 * the page is not wired, then the effect of this 			 * assignment is that vm_page_free()'s call to 			 * vm_page_remove() will return immediately without 			 * modifying the page or the object. 			 */
+comment|/* 			 * Optimize the page's removal from the object by 			 * resetting its "object" field.  Specifically, if 			 * the page is not wired, then the effect of this 			 * assignment is that vm_page_free()'s call to 			 * vm_page_remove() will return immediately without 			 * modifying the page or the object. 			 * Anyway, the radix tree cannot be accessed anymore 			 * from within the object, thus all the nodes need 			 * to be reclaimed later on. 			 */
 name|p
 operator|->
 name|object
@@ -2725,6 +2725,14 @@ name|VM_RADIX_STACK
 condition|)
 break|break;
 block|}
+name|vm_radix_reclaim_allnodes
+argument_list|(
+operator|&
+name|object
+operator|->
+name|rtree
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the object contained any pages, then reset it to an empty state. 	 * None of the object's fields, including "resident_page_count", were 	 * modified by the preceding loop. 	 */
 if|if
 condition|(
