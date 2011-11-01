@@ -145,6 +145,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
 decl_stmt|,
@@ -165,6 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rflag
 decl_stmt|,
@@ -173,12 +175,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uid_t
 name|uid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|info

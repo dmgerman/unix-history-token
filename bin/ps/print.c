@@ -1799,7 +1799,7 @@ name|str
 operator|=
 name|strdup
 argument_list|(
-literal|"??"
+literal|"-"
 argument_list|)
 expr_stmt|;
 else|else
@@ -1889,7 +1889,7 @@ name|str
 operator|=
 name|strdup
 argument_list|(
-literal|"?? "
+literal|"- "
 argument_list|)
 expr_stmt|;
 else|else
@@ -2031,7 +2031,7 @@ name|NULL
 condition|)
 name|ttname
 operator|=
-literal|"??"
+literal|"-"
 expr_stmt|;
 return|return
 operator|(

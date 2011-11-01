@@ -11,6 +11,18 @@ begin_comment
 comment|/* $FreeBSD$ */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_NCR53C9XREG_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_NCR53C9XREG_H_
+end_define
+
 begin_comment
 comment|/*  * Register addresses, relative to some base address  */
 end_comment
@@ -2125,6 +2137,15 @@ end_define
 
 begin_comment
 comment|/* FIFO is empty */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _NCR53C9XREG_H_ */
 end_comment
 
 end_unit

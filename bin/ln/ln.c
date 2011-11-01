@@ -127,6 +127,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fflag
 decl_stmt|;
@@ -137,6 +138,7 @@ comment|/* Unlink existing files. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Fflag
 decl_stmt|;
@@ -147,6 +149,7 @@ comment|/* Remove empty directories also. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hflag
 decl_stmt|;
@@ -157,6 +160,7 @@ comment|/* Check new name for symlink first. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|iflag
 decl_stmt|;
@@ -167,6 +171,7 @@ comment|/* Interactive mode. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Pflag
 decl_stmt|;
@@ -177,6 +182,7 @@ comment|/* Create hard links to symlinks. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
@@ -187,6 +193,7 @@ comment|/* Symbolic, not hard, link. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflag
 decl_stmt|;
@@ -197,6 +204,7 @@ comment|/* Verbose output. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|wflag
 decl_stmt|;
@@ -207,6 +215,7 @@ comment|/* Warn if symlink target does not 					 * exist, and -f is not enabled.
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|linkch
 decl_stmt|;
