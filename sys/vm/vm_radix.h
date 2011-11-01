@@ -151,6 +151,12 @@ define|\
 value|((h) == VM_RADIX_LIMIT ? ((vm_pindex_t)-1) :		\ 	    (((vm_pindex_t)1<< ((h) * VM_RADIX_WIDTH)) - 1))
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
 begin_struct
 struct|struct
 name|vm_radix_node
@@ -418,6 +424,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
 
 begin_endif
 endif|#
