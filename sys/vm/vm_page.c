@@ -5512,7 +5512,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize a page that has been freshly dequeued from a freelist.  * The caller has to drop the vnode returned, if it is not NULL.  *  * To be called with vm_page_queue_free_mtx held.  */
+comment|/*  * Initialize a page that has been freshly dequeued from a freelist.  * The caller has to drop the vnode returned, if it is not NULL.  *  * This function may only be used to initialize unmanaged pages.  *  * To be called with vm_page_queue_free_mtx held.  */
 end_comment
 
 begin_function
@@ -5658,6 +5658,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_ZERO
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_alloc_init: cached page %p is PG_ZERO"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|valid
@@ -5732,18 +5751,22 @@ operator|.
 name|v_free_count
 operator|--
 expr_stmt|;
-block|}
 if|if
 condition|(
+operator|(
 name|m
 operator|->
 name|flags
 operator|&
 name|PG_ZERO
+operator|)
+operator|!=
+literal|0
 condition|)
 name|vm_page_zero_count
 operator|--
 expr_stmt|;
+block|}
 comment|/* Don't clear the PG_ZERO flag; we'll need it later. */
 name|m
 operator|->
@@ -5773,7 +5796,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 	vm_page_alloc_freelist:  *   *	Allocate a page from the specified freelist.  *	Only the ALLOC_CLASS values in req are honored, other request flags  *	are ignored.  */
+comment|/*  * 	vm_page_alloc_freelist:  *  *	Allocate a physical page from the specified free page list.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -5794,6 +5817,9 @@ name|drop
 decl_stmt|;
 name|vm_page_t
 name|m
+decl_stmt|;
+name|u_int
+name|flags
 decl_stmt|;
 name|int
 name|page_req
@@ -5908,14 +5934,78 @@ operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Initialize the page.  Only the PG_ZERO flag is inherited. 	 */
+name|flags
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|req
+operator|&
+name|VM_ALLOC_ZERO
+operator|)
+operator|!=
+literal|0
+condition|)
+name|flags
+operator|=
+name|PG_ZERO
+expr_stmt|;
+name|m
+operator|->
+name|flags
+operator|&=
+name|flags
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|req
+operator|&
+name|VM_ALLOC_WIRED
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 		 * The page lock is not required for wiring a page that does 		 * not belong to an object. 		 */
+name|atomic_add_int
+argument_list|(
+operator|&
+name|cnt
+operator|.
+name|v_wire_count
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|m
+operator|->
+name|wire_count
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|drop
+operator|!=
+name|NULL
 condition|)
 name|vdrop
 argument_list|(
 name|drop
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|vm_paging_needed
+argument_list|()
+condition|)
+name|pagedaemon_wakeup
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
