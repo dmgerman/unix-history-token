@@ -884,7 +884,7 @@ name|_net_inet_tcp
 argument_list|,
 name|TCPCTL_RECVSPACE
 argument_list|,
-name|tcp_recvspace
+name|recvspace
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,

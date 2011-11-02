@@ -395,7 +395,7 @@ name|_net_inet_tcp
 argument_list|,
 name|TCPCTL_SENDSPACE
 argument_list|,
-name|tcp_sendspace
+name|sendspace
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,
