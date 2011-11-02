@@ -3671,6 +3671,20 @@ argument_list|)
 expr_stmt|;
 name|p
 argument_list|(
+name|tcps_hc_added
+argument_list|,
+literal|"\t%lu hostcache entrie%s added\n"
+argument_list|)
+expr_stmt|;
+name|p1a
+argument_list|(
+name|tcps_hc_bucketoverflow
+argument_list|,
+literal|"\t\t%lu bucket overflow\n"
+argument_list|)
+expr_stmt|;
+name|p
+argument_list|(
 name|tcps_sack_recovery_episode
 argument_list|,
 literal|"\t%lu SACK recovery episode%s\n"
