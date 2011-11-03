@@ -282,31 +282,5 @@ block|}
 struct|;
 end_struct
 
-begin_struct
-struct|struct
-name|bm_mii_frame
-block|{
-name|u_int8_t
-name|mii_stdelim
-decl_stmt|;
-name|u_int8_t
-name|mii_opcode
-decl_stmt|;
-name|u_int8_t
-name|mii_phyaddr
-decl_stmt|;
-name|u_int8_t
-name|mii_regaddr
-decl_stmt|;
-name|u_int8_t
-name|mii_turnaround
-decl_stmt|;
-name|u_int16_t
-name|mii_data
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 end_unit
 
