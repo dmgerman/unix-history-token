@@ -5903,6 +5903,8 @@ name|TI_JUMBO_FRAMELEN
 argument_list|,
 name|ti_jfree
 argument_list|,
+name|buf
+argument_list|,
 operator|(
 expr|struct
 name|ti_softc
