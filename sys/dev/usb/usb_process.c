@@ -257,6 +257,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_THREAD_SUSPEND_CHECK
+parameter_list|()
+value|kthread_suspend_check()
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_THREAD_SUSPEND
 parameter_list|(
 name|p
@@ -294,6 +302,14 @@ modifier|...
 parameter_list|)
 define|\
 value|kthread_create((f), (s), (p), RFHIGHPID, 0, __VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_THREAD_SUSPEND_CHECK
+parameter_list|()
+value|kthread_suspend_check()
 end_define
 
 begin_define
@@ -420,6 +436,10 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+comment|/* in case of attach error, check for suspended */
+name|USB_THREAD_SUSPEND_CHECK
+argument_list|()
+expr_stmt|;
 comment|/* adjust priority */
 name|td
 operator|=
