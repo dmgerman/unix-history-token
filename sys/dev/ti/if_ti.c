@@ -675,7 +675,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|ti_eeprom_putbyte
 parameter_list|(
 name|struct
@@ -689,7 +689,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|ti_eeprom_getbyte
 parameter_list|(
 name|struct
@@ -698,7 +698,7 @@ modifier|*
 parameter_list|,
 name|int
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -775,9 +775,9 @@ name|struct
 name|ti_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|void
 modifier|*
@@ -794,9 +794,9 @@ name|struct
 name|ti_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|void
 modifier|*
@@ -813,9 +813,9 @@ name|struct
 name|ti_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -829,9 +829,9 @@ name|struct
 name|ti_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|caddr_t
 parameter_list|,
@@ -851,9 +851,9 @@ name|struct
 name|ti_softc
 modifier|*
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 parameter_list|,
 name|caddr_t
 parameter_list|,
@@ -1374,7 +1374,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int32_t
+name|uint32_t
 name|ti_eeprom_putbyte
 parameter_list|(
 name|struct
@@ -1529,7 +1529,7 @@ end_comment
 
 begin_function
 specifier|static
-name|u_int8_t
+name|uint8_t
 name|ti_eeprom_getbyte
 parameter_list|(
 name|struct
@@ -1540,7 +1540,7 @@ parameter_list|,
 name|int
 name|addr
 parameter_list|,
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|dest
 parameter_list|)
@@ -1548,7 +1548,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|byte
 init|=
 literal|0
@@ -1813,7 +1813,7 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|byte
 init|=
 literal|0
@@ -1887,10 +1887,10 @@ name|ti_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|addr
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|len
 parameter_list|,
 name|void
@@ -1988,7 +1988,7 @@ operator|)
 operator|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|ptr
@@ -2028,10 +2028,10 @@ name|ti_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|addr
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|len
 parameter_list|,
 name|void
@@ -2129,7 +2129,7 @@ operator|)
 operator|)
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|ptr
@@ -2169,10 +2169,10 @@ name|ti_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|addr
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|len
 parameter_list|)
 block|{
@@ -2286,10 +2286,10 @@ name|ti_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|tigon_addr
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|len
 parameter_list|,
 name|caddr_t
@@ -2312,10 +2312,10 @@ decl_stmt|;
 name|caddr_t
 name|ptr
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|origwin
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 name|tmparray
 index|[
 name|TI_WINLEN
@@ -2531,7 +2531,7 @@ argument_list|,
 name|ti_offset
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|tmparray
@@ -2729,7 +2729,7 @@ argument_list|,
 name|ti_offset
 argument_list|,
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|tmparray
@@ -2761,7 +2761,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|tmpval
 decl_stmt|,
 name|tmpval2
@@ -2967,10 +2967,10 @@ name|ti_softc
 modifier|*
 name|sc
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|tigon_addr
 parameter_list|,
-name|u_int32_t
+name|uint32_t
 name|len
 parameter_list|,
 name|caddr_t
@@ -2986,13 +2986,13 @@ name|int
 name|cpu
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|segptr
 decl_stmt|;
 name|int
 name|cnt
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tmpval
 decl_stmt|,
 name|tmpval2
@@ -3272,11 +3272,11 @@ name|swap_type
 parameter_list|)
 block|{
 specifier|const
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tmpsrc
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|tmpdst
 decl_stmt|;
@@ -3329,7 +3329,7 @@ name|TI_SWAP_NTOH
 condition|)
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|tmpdst
@@ -3339,7 +3339,7 @@ argument_list|(
 operator|*
 operator|(
 specifier|const
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|tmpsrc
@@ -3348,7 +3348,7 @@ expr_stmt|;
 else|else
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|tmpdst
@@ -3358,7 +3358,7 @@ argument_list|(
 operator|*
 operator|(
 specifier|const
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 name|tmpsrc
@@ -3676,7 +3676,7 @@ operator|)
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -3761,7 +3761,7 @@ operator|)
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -3804,7 +3804,7 @@ operator|)
 argument_list|,
 operator|*
 operator|(
-name|u_int32_t
+name|uint32_t
 operator|*
 operator|)
 operator|(
@@ -7931,11 +7931,11 @@ name|struct
 name|ti_cmd_desc
 name|cmd
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|m
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ext
 index|[
 literal|2
@@ -7950,7 +7950,7 @@ decl_stmt|;
 name|m
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -8117,11 +8117,11 @@ name|struct
 name|ti_cmd_desc
 name|cmd
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 modifier|*
 name|m
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|ext
 index|[
 literal|2
@@ -8136,7 +8136,7 @@ decl_stmt|;
 name|m
 operator|=
 operator|(
-name|u_int16_t
+name|uint16_t
 operator|*
 operator|)
 operator|&
@@ -8317,7 +8317,7 @@ name|ti_mc_entry
 modifier|*
 name|mc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|intrs
 decl_stmt|;
 name|TI_LOCK_ASSERT
@@ -8684,15 +8684,15 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|u_int32_t
+name|uint32_t
 name|cacheline
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|pci_writemax
 init|=
 literal|0
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|hdrsplit
 decl_stmt|;
 comment|/* Initialize link to down state. */
@@ -12006,10 +12006,10 @@ name|m
 init|=
 name|NULL
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|rxidx
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|vlan_tag
 init|=
 literal|0
@@ -13255,7 +13255,7 @@ index|[
 name|TI_MAXTXSEGS
 index|]
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|csum_flags
 decl_stmt|;
 name|int
@@ -14212,7 +14212,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
-name|u_int8_t
+name|uint8_t
 modifier|*
 name|ea
 decl_stmt|;
@@ -14585,7 +14585,7 @@ name|struct
 name|ti_cmd_desc
 name|cmd
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|flowctl
 decl_stmt|;
 name|sc
@@ -14945,7 +14945,7 @@ name|ti_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|media
 init|=
 literal|0
@@ -16097,7 +16097,7 @@ name|ti_trace_buf
 modifier|*
 name|trace_buf
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|trace_start
 decl_stmt|,
 name|cur_trace_ptr
@@ -16260,7 +16260,7 @@ name|tg_mem
 modifier|*
 name|mem_param
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|sram_end
 decl_stmt|,
 name|scratch_end
@@ -16545,7 +16545,7 @@ name|tg_reg
 modifier|*
 name|regs
 decl_stmt|;
-name|u_int32_t
+name|uint32_t
 name|tmpval
 decl_stmt|;
 name|regs
