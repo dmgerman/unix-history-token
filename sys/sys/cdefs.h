@@ -1653,10 +1653,16 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__FreeBSD_cc_version
+argument_list|)
+operator|&&
 name|__FreeBSD_cc_version
 operator|>=
 literal|300001
 operator|&&
+expr|\
 name|defined
 argument_list|(
 name|__GNUC__
