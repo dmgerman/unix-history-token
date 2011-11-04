@@ -4585,7 +4585,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ar5212SetPowerMode
+name|ar5416SetPowerMode
 argument_list|(
 name|ah
 argument_list|,
