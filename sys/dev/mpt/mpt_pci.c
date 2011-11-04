@@ -731,15 +731,10 @@ return|;
 block|}
 switch|switch
 condition|(
-operator|(
 name|pci_get_device
 argument_list|(
 name|dev
 argument_list|)
-operator|&
-operator|~
-literal|1
-operator|)
 condition|)
 block|{
 case|case
