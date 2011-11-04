@@ -733,6 +733,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_object_page_cache
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|start
+parameter_list|,
+name|vm_pindex_t
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|vm_object_page_clean
 parameter_list|(
 name|vm_object_t

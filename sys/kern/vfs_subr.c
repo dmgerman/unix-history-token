@@ -5155,6 +5155,13 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|&&
+operator|!
+operator|(
+name|flags
+operator|&
+name|V_CLEANONLY
+operator|)
 condition|)
 name|error
 operator|=
@@ -5290,6 +5297,8 @@ operator|(
 name|V_ALT
 operator||
 name|V_NORMAL
+operator||
+name|V_CLEANONLY
 operator|)
 operator|)
 operator|==
@@ -5349,6 +5358,8 @@ operator|(
 name|V_ALT
 operator||
 name|V_NORMAL
+operator||
+name|V_CLEANONLY
 operator|)
 operator|)
 operator|==

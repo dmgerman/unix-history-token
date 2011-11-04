@@ -1251,9 +1251,88 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200112
+end_if
+
 begin_comment
-comment|/*  * XXX missing posix_fadvise() and POSIX_FADV_* macros.  */
+comment|/*  * Advice to posix_fadvise  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|POSIX_FADV_NORMAL
+value|0
+end_define
+
+begin_comment
+comment|/* no special treatment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POSIX_FADV_RANDOM
+value|1
+end_define
+
+begin_comment
+comment|/* expect random page references */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POSIX_FADV_SEQUENTIAL
+value|2
+end_define
+
+begin_comment
+comment|/* expect sequential page references */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POSIX_FADV_WILLNEED
+value|3
+end_define
+
+begin_comment
+comment|/* will need these pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POSIX_FADV_DONTNEED
+value|4
+end_define
+
+begin_comment
+comment|/* dont need these pages */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|POSIX_FADV_NOREUSE
+value|5
+end_define
+
+begin_comment
+comment|/* access data only once */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -1366,6 +1445,21 @@ name|__POSIX_VISIBLE
 operator|>=
 literal|200112
 end_if
+
+begin_function_decl
+name|int
+name|posix_fadvise
+parameter_list|(
+name|int
+parameter_list|,
+name|off_t
+parameter_list|,
+name|off_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int
