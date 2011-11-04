@@ -12190,8 +12190,6 @@ operator|=
 name|cur_rx
 operator|->
 name|ti_vlan_tag
-operator|&
-literal|0xfff
 expr_stmt|;
 block|}
 if|if
@@ -13810,8 +13808,6 @@ operator|->
 name|m_pkthdr
 operator|.
 name|ether_vtag
-operator|&
-literal|0xfff
 expr_stmt|;
 block|}
 else|else
