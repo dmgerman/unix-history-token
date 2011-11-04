@@ -13292,16 +13292,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Re-enable interrupts. */
-name|CSR_WRITE_4
-argument_list|(
-name|sc
-argument_list|,
-name|TI_MB_HOSTINTR
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -13318,11 +13308,23 @@ name|ifq_head
 operator|!=
 name|NULL
 condition|)
+block|{
+comment|/* Re-enable interrupts. */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|TI_MB_HOSTINTR
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 name|ti_start_locked
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 name|TI_UNLOCK
 argument_list|(
 name|sc
