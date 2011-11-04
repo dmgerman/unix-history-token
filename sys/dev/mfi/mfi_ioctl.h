@@ -23,6 +23,12 @@ directive|include
 file|<dev/mfi/mfireg.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
 begin_if
 if|#
 directive|if
@@ -54,6 +60,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_struct
+struct|struct
+name|megasas_sge
+block|{
+name|bus_addr_t
+name|phys_addr
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_define
 define|#

@@ -65,6 +65,12 @@ directive|include
 file|<sys/proc.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/bus.h>
+end_include
+
 begin_if
 if|#
 directive|if
