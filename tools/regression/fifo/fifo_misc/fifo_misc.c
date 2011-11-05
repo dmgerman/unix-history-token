@@ -392,9 +392,9 @@ name|lseek
 argument_list|(
 name|reader_fd
 argument_list|,
-name|SEEK_CUR
-argument_list|,
 literal|1
+argument_list|,
+name|SEEK_CUR
 argument_list|)
 operator|>=
 literal|0
