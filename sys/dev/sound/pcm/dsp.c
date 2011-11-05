@@ -3817,6 +3817,9 @@ name|snddev_info
 modifier|*
 name|d
 decl_stmt|;
+name|u_long
+name|xcmd
+decl_stmt|;
 name|int
 modifier|*
 name|arg_i
@@ -3826,8 +3829,6 @@ decl_stmt|,
 name|kill
 decl_stmt|,
 name|tmp
-decl_stmt|,
-name|xcmd
 decl_stmt|;
 name|d
 operator|=
