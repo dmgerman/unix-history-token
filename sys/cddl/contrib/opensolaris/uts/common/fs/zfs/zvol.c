@@ -4052,7 +4052,7 @@ name|spa_namespace_lock
 argument_list|)
 condition|)
 block|{
-comment|/* 		 * If the spa_namespace_lock is being held, it means that ZFS 		 * is trying to open ZVOL as its VDEV. This i not supported. 		 */
+comment|/* 		 * If the spa_namespace_lock is being held, it means that ZFS 		 * is trying to open ZVOL as its VDEV. This is not supported. 		 */
 return|return
 operator|(
 name|EOPNOTSUPP
