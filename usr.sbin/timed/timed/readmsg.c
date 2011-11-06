@@ -41,20 +41,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TSPTYPES
+end_define
+
 begin_include
 include|#
 directive|include
 file|"globals.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tsptype
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * LOOKAT checks if the message is of the requested type and comes from  * the right machine, returning 1 in case of affirmative answer  */
