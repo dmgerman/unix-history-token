@@ -76,6 +76,7 @@ value|0377
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|t1
 index|[
@@ -85,6 +86,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|t2
 index|[
@@ -94,6 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|t3
 index|[
@@ -103,6 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|deck
 index|[
@@ -112,6 +116,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|buf
 index|[
@@ -121,6 +126,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|shuffle
 parameter_list|(
@@ -131,6 +137,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setup
 parameter_list|(
@@ -141,6 +148,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|setup
 parameter_list|(
@@ -739,6 +747,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|shuffle
 parameter_list|(
