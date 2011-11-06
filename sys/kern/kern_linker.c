@@ -2629,7 +2629,10 @@ operator|(
 literal|"linker_file_unload: module %s"
 literal|" failed unload\n"
 operator|,
+name|module_getname
+argument_list|(
 name|mod
+argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
