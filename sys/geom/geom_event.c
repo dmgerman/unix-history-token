@@ -935,7 +935,17 @@ name|PDROP
 argument_list|,
 literal|"-"
 argument_list|,
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|g_doorstep
+argument_list|)
+condition|?
 literal|0
+else|:
+name|hz
+operator|/
+literal|10
 argument_list|)
 expr_stmt|;
 block|}
