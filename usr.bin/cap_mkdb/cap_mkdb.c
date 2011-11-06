@@ -117,6 +117,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|db_build
 parameter_list|(
@@ -128,6 +129,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dounlink
 parameter_list|(
@@ -137,6 +139,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -146,6 +149,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|DB
 modifier|*
 name|capdbp
@@ -153,16 +157,15 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
-modifier|*
-name|capdb
-decl_stmt|,
 modifier|*
 name|capname
 decl_stmt|,
@@ -176,6 +179,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|HASHINFO
 name|openinfo
 init|=
@@ -461,6 +465,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dounlink
 parameter_list|(
@@ -514,6 +519,7 @@ comment|/*  * Db_build() builds the name and capability databases according to t
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|db_build
 parameter_list|(
@@ -1094,6 +1100,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
