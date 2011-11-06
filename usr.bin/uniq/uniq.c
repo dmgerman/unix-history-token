@@ -140,6 +140,7 @@ file|<wctype.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cflag
 decl_stmt|,
@@ -152,6 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|numchars
 decl_stmt|,
@@ -162,6 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|FILE
 modifier|*
 name|file
@@ -178,6 +181,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|wchar_t
 modifier|*
 name|convert
@@ -190,6 +194,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|inlcmp
 parameter_list|(
@@ -205,6 +210,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|show
 parameter_list|(
@@ -219,6 +225,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|wchar_t
 modifier|*
 name|skip
@@ -230,6 +237,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|obsolete
 parameter_list|(
@@ -849,6 +857,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|wchar_t
 modifier|*
 name|convert
@@ -1079,6 +1088,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|inlcmp
 parameter_list|(
@@ -1178,6 +1188,7 @@ comment|/*  * show --  *	Output a line depending on the flags and number of repe
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|show
 parameter_list|(
@@ -1242,6 +1253,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|wchar_t
 modifier|*
 name|skip
@@ -1333,6 +1345,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
 name|file
@@ -1385,6 +1398,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|obsolete
 parameter_list|(
