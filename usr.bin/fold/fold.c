@@ -163,6 +163,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bflag
 decl_stmt|;
@@ -173,6 +174,7 @@ comment|/* Count bytes, not columns */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
