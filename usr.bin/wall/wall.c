@@ -183,6 +183,7 @@ function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
 struct|struct
 name|wallgroup
 block|{
@@ -205,18 +206,21 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nobanner
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mbufsize
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|mbuf
