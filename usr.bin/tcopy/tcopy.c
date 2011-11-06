@@ -160,6 +160,7 @@ value|(-2)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|filen
 decl_stmt|,
@@ -172,7 +173,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int64_t
+specifier|static
+name|uint64_t
 name|lastrec
 decl_stmt|,
 name|record
@@ -184,6 +186,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|msg
@@ -191,6 +194,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 modifier|*
 name|getspace
@@ -201,6 +205,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|intr
 parameter_list|(
@@ -221,6 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|verify
 parameter_list|(
@@ -235,6 +241,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|writeop
 parameter_list|(
@@ -246,6 +253,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|rewind_tape
 parameter_list|(
@@ -1078,6 +1086,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|verify
 parameter_list|(
@@ -1346,6 +1355,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|intr
 parameter_list|(
@@ -1437,6 +1447,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|getspace
@@ -1481,6 +1492,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|writeop
 parameter_list|(
@@ -1562,6 +1574,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|rewind_tape
 parameter_list|(
