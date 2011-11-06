@@ -102,13 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/bus.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<dev/mii/ruephyreg.h>
+file|<dev/usb/net/ruephyreg.h>
 end_include
 
 begin_include
