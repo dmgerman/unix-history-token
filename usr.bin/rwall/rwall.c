@@ -148,6 +148,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|mbuf
@@ -165,6 +166,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|makemsg
 parameter_list|(
@@ -374,6 +376,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|makemsg
 parameter_list|(
