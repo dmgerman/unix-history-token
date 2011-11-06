@@ -2972,7 +2972,7 @@ name|tw
 operator|=
 name|intotw
 argument_list|(
-name|inp
+name|t
 argument_list|)
 expr_stmt|;
 if|if
