@@ -175,6 +175,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|opt_offsets
 name|b0_ofs
@@ -219,6 +220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|b0_ver
 decl_stmt|;
@@ -513,6 +515,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|vol_id
 index|[
@@ -526,6 +529,7 @@ comment|/* 4 plus 1 for flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|v_flag
 decl_stmt|;
