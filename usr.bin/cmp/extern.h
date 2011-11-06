@@ -135,6 +135,8 @@ decl_stmt|,
 name|sflag
 decl_stmt|,
 name|xflag
+decl_stmt|,
+name|zflag
 decl_stmt|;
 end_decl_stmt
 
