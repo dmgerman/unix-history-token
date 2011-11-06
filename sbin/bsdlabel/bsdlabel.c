@@ -4393,10 +4393,6 @@ block|{
 if|if
 condition|(
 name|v
-operator|==
-literal|0
-operator|||
-name|v
 operator|>
 name|MAXPARTITIONS
 condition|)
@@ -6190,12 +6186,6 @@ name|d_bbsize
 expr_stmt|;
 if|if
 condition|(
-name|lp
-operator|->
-name|d_npartitions
-operator|==
-literal|0
-operator|||
 name|lp
 operator|->
 name|d_npartitions
