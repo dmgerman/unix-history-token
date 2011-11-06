@@ -192,6 +192,12 @@ directive|include
 file|"perm.h"
 end_include
 
+begin_define
+define|#
+directive|define
+name|MAIN
+end_define
+
 begin_include
 include|#
 directive|include
@@ -406,22 +412,6 @@ begin_decl_stmt
 name|char
 modifier|*
 name|namep
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|uid_t
-name|real_uid
-decl_stmt|,
-name|effective_uid
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|gid_t
-name|real_gid
-decl_stmt|,
-name|effective_gid
 decl_stmt|;
 end_decl_stmt
 

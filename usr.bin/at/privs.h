@@ -25,8 +25,16 @@ begin_comment
 comment|/* Relinquish privileges temporarily for a setuid or setgid program  * with the option of getting them back later.  This is done by  * utilizing POSIX saved user and group IDs.  Call RELINQUISH_PRIVS once  * at the beginning of the main program.  This will cause all operations  * to be executed with the real userid.  When you need the privileges  * of the setuid/setgid invocation, call PRIV_START; when you no longer  * need it, call PRIV_END.  Note that it is an error to call PRIV_START  * and not PRIV_END within the same function.  *  * Use RELINQUISH_PRIVS_ROOT(a,b) if your program started out running  * as root, and you want to drop back the effective userid to a  * and the effective group id to b, with the option to get them back  * later.  *  * If you no longer need root privileges, but those of some other  * userid/groupid, you can call REDUCE_PRIV(a,b) when your effective  * is the user's.  *  * Problems: Do not use return between PRIV_START and PRIV_END; this  * will cause the program to continue running in an unprivileged  * state.  *  * It is NOT safe to call exec(), system() or popen() with a user-  * supplied program (i.e. without carefully checking PATH and any  * library load paths) with relinquished privileges; the called program  * can acquire them just as easily.  Set both effective and real userid  * to the real userid before calling any of them.  */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAIN
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
+endif|#
+directive|endif
 name|uid_t
 name|real_uid
 decl_stmt|,
@@ -34,8 +42,16 @@ name|effective_uid
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MAIN
+end_ifndef
+
 begin_decl_stmt
 specifier|extern
+endif|#
+directive|endif
 name|gid_t
 name|real_gid
 decl_stmt|,
