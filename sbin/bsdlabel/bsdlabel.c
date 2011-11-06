@@ -116,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|MAXPARTITIONS
-value|26
+value|20
 end_define
 
 begin_include
