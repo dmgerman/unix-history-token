@@ -150,6 +150,7 @@ file|"functions.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fsflg
 decl_stmt|,
@@ -166,16 +167,18 @@ comment|/* show files open by a particular (effective) user */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|checkfile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true if restricting to particular files or filesystems */
+comment|/* restrict to particular files or filesystems */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nflg
 decl_stmt|;
@@ -186,6 +189,7 @@ comment|/* (numerical) display f.s. and rdev as dev_t */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mflg
 decl_stmt|;
@@ -196,6 +200,7 @@ comment|/* include memory-mapped files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflg
 decl_stmt|;
@@ -232,6 +237,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|DEVS
 modifier|*
 name|devs
@@ -239,6 +245,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|memf
