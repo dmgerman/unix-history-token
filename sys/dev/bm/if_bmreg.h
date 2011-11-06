@@ -690,38 +690,6 @@ comment|/* MDIO data in */
 end_comment
 
 begin_comment
-comment|/*  * MII constants  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|BM_MII_STARTDELIM
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_MII_READOP
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_MII_WRITEOP
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|BM_MII_TURNAROUND
-value|0x02
-end_define
-
-begin_comment
 comment|/*  * Various flags  */
 end_comment
 
@@ -895,6 +863,23 @@ name|reg
 parameter_list|)
 define|\
 value|bus_read_1(sc->sc_memr, reg)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CSR_BARRIER
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|length
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|bus_barrier(sc->sc_memr, reg, length, flags)
 end_define
 
 end_unit
