@@ -254,6 +254,16 @@ define|\
 value|kproc_kthread_add((f), (s),&usbproc, (p), RFHIGHPID, \ 		    0, "usb", __VA_ARGS__)
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|900000
+operator|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -261,6 +271,24 @@ name|USB_THREAD_SUSPEND_CHECK
 parameter_list|()
 value|kthread_suspend_check()
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|USB_THREAD_SUSPEND_CHECK
+parameter_list|()
+value|kthread_suspend_check(curthread)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -309,7 +337,7 @@ define|#
 directive|define
 name|USB_THREAD_SUSPEND_CHECK
 parameter_list|()
-value|kthread_suspend_check()
+value|kthread_suspend_check(curproc)
 end_define
 
 begin_define
