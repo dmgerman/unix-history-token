@@ -210,9 +210,11 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|geom_bsd_available
+name|geom_class_available
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1607,9 +1609,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|geom_bsd_available
+name|geom_class_available
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 block|{
 name|struct
@@ -1664,7 +1669,7 @@ name|class
 operator|->
 name|lg_name
 argument_list|,
-literal|"BSD"
+name|name
 argument_list|)
 operator|==
 literal|0
@@ -1876,11 +1881,44 @@ name|serrno
 operator|=
 name|errno
 expr_stmt|;
+if|if
+condition|(
+name|geom_class_available
+argument_list|(
+literal|"PART"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* Since we weren't able open provider for 			 * writing, then recommend user to use gpart(8). 			 */
+name|warnc
+argument_list|(
+name|serrno
+argument_list|,
+literal|"cannot open provider %s for writing label"
+argument_list|,
+name|specname
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"Try to use gpart(8)."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* Give up if GEOM_BSD is not available. */
 if|if
 condition|(
-name|geom_bsd_available
-argument_list|()
+name|geom_class_available
+argument_list|(
+literal|"BSD"
+argument_list|)
 operator|==
 literal|0
 condition|)
