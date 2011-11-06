@@ -100,6 +100,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -109,6 +110,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|do_lineno
 parameter_list|(
@@ -120,6 +122,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|do_rexp
 parameter_list|(
@@ -131,6 +134,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|getline
@@ -141,6 +145,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|handlesig
 parameter_list|(
@@ -150,6 +155,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|FILE
 modifier|*
 name|newfile
@@ -160,6 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|toomuch
 parameter_list|(
@@ -172,6 +179,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -185,6 +193,7 @@ comment|/*  * Command line options  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -197,6 +206,7 @@ comment|/* File name prefix */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|sufflen
 decl_stmt|;
@@ -207,6 +217,7 @@ comment|/* Number of decimal digits for suffix */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
@@ -217,6 +228,7 @@ comment|/* Suppress output of file names */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|kflag
 decl_stmt|;
@@ -231,6 +243,7 @@ comment|/*  * Other miscellaneous globals (XXX too many)  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|lineno
 decl_stmt|;
@@ -241,6 +254,7 @@ comment|/* Current line number in input file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|reps
 decl_stmt|;
@@ -251,6 +265,7 @@ comment|/* Number of repetitions for this pattern */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nfiles
 decl_stmt|;
@@ -261,6 +276,7 @@ comment|/* Number of files output so far */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|maxfiles
 decl_stmt|;
@@ -271,6 +287,7 @@ comment|/* Maximum number of files we can create */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|currfile
 index|[
@@ -284,6 +301,7 @@ comment|/* Current output file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -296,6 +314,7 @@ comment|/* Name of the input file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|infile
@@ -307,6 +326,7 @@ comment|/* Input file handle */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|overfile
@@ -318,6 +338,7 @@ comment|/* Overflow file for toomuch() */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|truncofs
 decl_stmt|;
@@ -328,6 +349,7 @@ comment|/* Offset this file should be truncated at */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|doclean
 decl_stmt|;
@@ -983,6 +1005,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1005,6 +1028,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|handlesig
 parameter_list|(
@@ -1050,6 +1074,7 @@ comment|/* Create a new output file. */
 end_comment
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
 name|newfile
@@ -1141,6 +1166,7 @@ comment|/* Remove partial output, called before exiting. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cleanup
 parameter_list|(
@@ -1212,6 +1238,7 @@ comment|/* Read a line from the input into a static buffer. */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|getline
@@ -1312,6 +1339,7 @@ comment|/* Conceptually rewind the input (as obtained by getline()) back `n' lin
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|toomuch
 parameter_list|(
@@ -1617,6 +1645,7 @@ comment|/* Handle splits for /regexp/ and %regexp% patterns. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_rexp
 parameter_list|(
@@ -2050,6 +2079,7 @@ comment|/* Handle splits based on line number. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_lineno
 parameter_list|(
