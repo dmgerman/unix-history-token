@@ -142,6 +142,7 @@ value|8
 end_define
 
 begin_function_decl
+specifier|static
 name|void
 name|c_columnate
 parameter_list|(
@@ -151,6 +152,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|input
 parameter_list|(
@@ -161,6 +163,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|maketbl
 parameter_list|(
@@ -170,6 +173,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print
 parameter_list|(
@@ -179,6 +183,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|r_columnate
 parameter_list|(
@@ -188,6 +193,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -197,6 +203,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|width
 parameter_list|(
@@ -208,6 +215,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|termwidth
 init|=
@@ -220,6 +228,7 @@ comment|/* default terminal width */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|entries
 decl_stmt|;
@@ -230,6 +239,7 @@ comment|/* number of records */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|eval
 decl_stmt|;
@@ -240,6 +250,7 @@ comment|/* exit value */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxlength
 decl_stmt|;
@@ -250,6 +261,7 @@ comment|/* longest record */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|wchar_t
 modifier|*
 modifier|*
@@ -262,6 +274,7 @@ comment|/* array of pointers to records */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|wchar_t
 modifier|*
@@ -655,6 +668,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|c_columnate
 parameter_list|(
@@ -803,6 +817,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|r_columnate
 parameter_list|(
@@ -962,6 +977,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print
 parameter_list|(
@@ -1035,6 +1051,7 @@ value|25
 end_define
 
 begin_function
+specifier|static
 name|void
 name|maketbl
 parameter_list|(
@@ -1561,6 +1578,7 @@ value|(LINE_MAX + 1)
 end_define
 
 begin_function
+specifier|static
 name|void
 name|input
 parameter_list|(
@@ -1814,6 +1832,7 @@ comment|/* Like wcswidth(), but ignores non-printing characters. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|width
 parameter_list|(
@@ -1870,6 +1889,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
