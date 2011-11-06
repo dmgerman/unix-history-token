@@ -58,6 +58,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -66,6 +67,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|u_int
 name|cargs
 decl_stmt|,
@@ -74,6 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|addarg
 parameter_list|(
@@ -85,6 +88,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|addlib
 parameter_list|(
@@ -96,6 +100,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -333,6 +338,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|addarg
 parameter_list|(
@@ -419,6 +425,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|addlib
 parameter_list|(
@@ -490,6 +497,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
