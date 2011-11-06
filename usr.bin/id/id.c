@@ -189,6 +189,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|void
@@ -198,6 +204,11 @@ name|void
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
