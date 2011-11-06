@@ -357,6 +357,7 @@ value|0x4
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|cmdtab
 block|{
@@ -615,6 +616,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|cd_toc_entry
 name|toc_buffer
@@ -625,6 +627,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -633,6 +636,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fd
 init|=
@@ -642,6 +646,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 init|=
@@ -650,6 +655,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|msf
 init|=
@@ -658,6 +664,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|setvol
 parameter_list|(
@@ -669,6 +676,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|read_toc_entrys
 parameter_list|(
@@ -678,6 +686,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|play_msf
 parameter_list|(
@@ -697,6 +706,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|play_track
 parameter_list|(
@@ -712,19 +722,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|get_vol
-parameter_list|(
-name|int
-modifier|*
-parameter_list|,
-name|int
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|int
 name|status
 parameter_list|(
@@ -744,6 +742,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|open_cd
 parameter_list|(
@@ -753,6 +752,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|next_prev
 parameter_list|(
@@ -766,6 +766,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|play
 parameter_list|(
@@ -777,6 +778,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|info
 parameter_list|(
@@ -788,6 +790,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|cdid
 parameter_list|(
@@ -797,6 +800,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pstatus
 parameter_list|(
@@ -808,6 +812,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|input
@@ -819,6 +824,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|prtrack
 parameter_list|(
@@ -834,6 +840,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|lba2msf
 parameter_list|(
@@ -857,6 +864,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|unsigned
 name|int
 name|msf2lba
@@ -874,6 +882,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|play_blocks
 parameter_list|(
@@ -887,6 +896,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|run
 parameter_list|(
@@ -901,6 +911,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|parse
@@ -917,6 +928,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|help
 parameter_list|(
@@ -926,6 +938,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -935,6 +948,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|use_cdrom_instead
@@ -947,7 +961,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__const
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|strstatus
@@ -968,7 +983,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__const
+specifier|static
+specifier|const
 name|char
 modifier|*
 name|cdcontrol_prompt
@@ -979,6 +995,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|help
 parameter_list|(
@@ -1114,6 +1131,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1136,6 +1154,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|use_cdrom_instead
@@ -1557,6 +1576,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|run
 parameter_list|(
@@ -2417,6 +2437,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|play
 parameter_list|(
@@ -4371,6 +4392,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|next_prev
 parameter_list|(
@@ -4553,6 +4575,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -4626,6 +4649,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|pstatus
 parameter_list|(
@@ -5395,6 +5419,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cdid
 parameter_list|(
@@ -5442,6 +5467,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|info
 parameter_list|(
@@ -5656,6 +5682,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|lba2msf
 parameter_list|(
@@ -5723,6 +5750,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|unsigned
 name|int
 name|msf2lba
@@ -5760,6 +5788,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|prtrack
 parameter_list|(
@@ -6018,6 +6047,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|play_track
 parameter_list|(
@@ -6077,6 +6107,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|play_blocks
 parameter_list|(
@@ -6118,6 +6149,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|setvol
 parameter_list|(
@@ -6215,6 +6247,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|read_toc_entrys
 parameter_list|(
@@ -6275,6 +6308,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|play_msf
 parameter_list|(
@@ -6356,6 +6390,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|status
 parameter_list|(
@@ -6584,6 +6619,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -6601,6 +6637,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|input
@@ -6891,6 +6928,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|parse
@@ -7235,6 +7273,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|open_cd
 parameter_list|(
