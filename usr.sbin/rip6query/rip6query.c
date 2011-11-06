@@ -138,12 +138,14 @@ file|"route6d.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|s
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|sockaddr_in6
 name|sin6
@@ -151,6 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|rip6
 modifier|*
