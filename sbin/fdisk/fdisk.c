@@ -4924,8 +4924,6 @@ block|{
 name|long
 name|long
 name|acc
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|c
@@ -4939,6 +4937,10 @@ condition|(
 literal|1
 condition|)
 block|{
+name|acc
+operator|=
+literal|0
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"Supply a decimal value for \"%s\" [%d] "
