@@ -192,12 +192,6 @@ directive|include
 file|"perm.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|MAIN
-end_define
-
 begin_include
 include|#
 directive|include
@@ -312,6 +306,7 @@ comment|/* File scope variables */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -338,6 +333,33 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|atinput
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* where to get input from */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|atqueue
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* which queue to examine for jobs (atq) */
+end_comment
 
 begin_comment
 comment|/* External variables */
@@ -370,35 +392,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|char
-modifier|*
-name|atinput
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* where to get input from */
-end_comment
-
-begin_decl_stmt
-name|char
-name|atqueue
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* which queue to examine for jobs (atq) */
-end_comment
-
-begin_decl_stmt
-name|char
 name|atverify
 init|=
 literal|0
@@ -413,6 +406,22 @@ begin_decl_stmt
 name|char
 modifier|*
 name|namep
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|uid_t
+name|real_uid
+decl_stmt|,
+name|effective_uid
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|gid_t
+name|real_gid
+decl_stmt|,
+name|effective_gid
 decl_stmt|;
 end_decl_stmt
 

@@ -208,6 +208,8 @@ comment|/* parse translation table - table driven parsers can be your FRIEND!  *
 end_comment
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 block|{
 specifier|const
