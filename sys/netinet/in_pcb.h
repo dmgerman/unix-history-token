@@ -2046,6 +2046,17 @@ begin_comment
 comment|/* in pcbgroup wildcard list */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|INP_REUSEPORT
+value|0x00000008
+end_define
+
+begin_comment
+comment|/* SO_REUSEPORT option is set */
+end_comment
+
 begin_comment
 comment|/*  * Flags passed to in_pcblookup*() functions.  */
 end_comment
