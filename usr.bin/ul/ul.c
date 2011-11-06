@@ -233,6 +233,7 @@ comment|/* Bold */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|must_use_uc
 decl_stmt|,
@@ -241,6 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -300,6 +302,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|CHAR
 name|obuf
@@ -310,6 +313,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|col
 decl_stmt|,
@@ -318,24 +322,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mode
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|halfpos
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|upln
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|iflag
 decl_stmt|;
@@ -352,6 +360,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setnewmode
 parameter_list|(
@@ -361,6 +370,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|initcap
 parameter_list|(
@@ -370,6 +380,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|reverse
 parameter_list|(
@@ -379,6 +390,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|outchar
 parameter_list|(
@@ -388,6 +400,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fwd
 parameter_list|(
@@ -397,6 +410,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|initbuf
 parameter_list|(
@@ -406,6 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|iattr
 parameter_list|(
@@ -415,6 +430,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|overstrike
 parameter_list|(
@@ -424,6 +440,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flushln
 parameter_list|(
@@ -433,6 +450,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|filter
 parameter_list|(
@@ -443,6 +461,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|outc
 parameter_list|(
@@ -753,6 +772,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|filter
 parameter_list|(
@@ -1417,6 +1437,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|flushln
 parameter_list|(
@@ -1620,6 +1641,7 @@ comment|/*  * For terminals that can overstrike, overstrike underlines and bolds
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|overstrike
 parameter_list|(
@@ -1846,6 +1868,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|iattr
 parameter_list|(
@@ -2006,6 +2029,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|initbuf
 parameter_list|(
@@ -2043,6 +2067,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|fwd
 parameter_list|(
@@ -2077,6 +2102,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reverse
 parameter_list|(
@@ -2106,6 +2132,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|initcap
 parameter_list|(
@@ -2379,6 +2406,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|outchar
 parameter_list|(
@@ -2413,6 +2441,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|outc
 parameter_list|(
@@ -2483,6 +2512,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setnewmode
 parameter_list|(
