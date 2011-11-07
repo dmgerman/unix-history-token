@@ -4454,14 +4454,12 @@ name|transport_version
 operator|=
 literal|2
 expr_stmt|;
-name|cpi
-operator|->
-name|maxio
-operator|=
-name|sc
-operator|->
-name|sc_maxxfer
-expr_stmt|;
+if|#
+directive|if
+literal|0
+block|cpi->maxio = sc->sc_maxxfer;
+endif|#
+directive|endif
 name|ccb
 operator|->
 name|ccb_h
