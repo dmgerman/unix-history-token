@@ -588,6 +588,7 @@ value|mac_label_set((l), lomac_slot, (uintptr_t)(val))
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_LOMAC

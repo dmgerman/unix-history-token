@@ -252,13 +252,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_TDFX
 argument_list|,
 literal|"tdfx_driver"
 argument_list|,
-literal|"3DFX Graphics[/2D]/3D Accelerator(s)"
+literal|"3DFX Graphics[/2D]/3D Accelerators"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

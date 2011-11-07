@@ -155,25 +155,27 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_PATH
 argument_list|,
 literal|"netgraph_path"
 argument_list|,
-literal|"netgraph path info "
+literal|"netgraph path info"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_SOCK
 argument_list|,
 literal|"netgraph_sock"
 argument_list|,
-literal|"netgraph socket info "
+literal|"netgraph socket info"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

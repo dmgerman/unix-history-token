@@ -147,13 +147,14 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_MPPC
 argument_list|,
 literal|"netgraph_mppc"
 argument_list|,
-literal|"netgraph mppc node "
+literal|"netgraph mppc node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

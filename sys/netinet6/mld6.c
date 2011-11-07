@@ -673,6 +673,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_MLD

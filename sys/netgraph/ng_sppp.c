@@ -148,13 +148,14 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_SPPP
 argument_list|,
 literal|"netgraph_sppp"
 argument_list|,
-literal|"netgraph sppp node "
+literal|"netgraph sppp node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

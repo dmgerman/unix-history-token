@@ -129,6 +129,7 @@ file|<net80211/ieee80211_var.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_80211_DFS
