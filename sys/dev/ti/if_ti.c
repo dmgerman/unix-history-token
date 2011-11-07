@@ -14729,11 +14729,28 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* Init RX ring. */
+if|if
+condition|(
 name|ti_init_rx_ring_std
 argument_list|(
 name|sc
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX */
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|ti_dev
+argument_list|,
+literal|"no memory for std Rx buffers.\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
 comment|/* Init jumbo RX ring. */
 if|if
 condition|(
@@ -14749,11 +14766,30 @@ operator|+
 name|ETHER_CRC_LEN
 operator|)
 condition|)
+block|{
+if|if
+condition|(
 name|ti_init_rx_ring_jumbo
 argument_list|(
 name|sc
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX */
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|ti_dev
+argument_list|,
+literal|"no memory for jumbo Rx buffers.\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
+block|}
 comment|/* 	 * If this is a Tigon 2, we can also configure the 	 * mini ring. 	 */
 if|if
 condition|(
@@ -14763,11 +14799,30 @@ name|ti_hwrev
 operator|==
 name|TI_HWREV_TIGON_II
 condition|)
+block|{
+if|if
+condition|(
 name|ti_init_rx_ring_mini
 argument_list|(
 name|sc
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* XXX */
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|ti_dev
+argument_list|,
+literal|"no memory for mini Rx buffers.\n"
+argument_list|)
 expr_stmt|;
+return|return;
+block|}
+block|}
 name|CSR_WRITE_4
 argument_list|(
 name|sc
