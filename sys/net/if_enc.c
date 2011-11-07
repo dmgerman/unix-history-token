@@ -381,6 +381,7 @@ comment|/*  * Before and after are relative to when we are stripping the  * oute
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net
@@ -399,6 +400,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_enc
@@ -477,6 +479,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_enc

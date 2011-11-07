@@ -291,6 +291,7 @@ comment|/*  * Sysctl stuff.  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_graph

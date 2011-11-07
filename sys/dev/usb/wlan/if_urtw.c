@@ -245,6 +245,7 @@ file|<dev/usb/wlan/if_urtwvar.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb

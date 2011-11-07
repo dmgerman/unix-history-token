@@ -190,6 +190,7 @@ comment|/*  * Driver for the USB PrismGT devices.  *  * For now just USB 2.0 dev
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw

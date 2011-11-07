@@ -138,6 +138,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_security_mac
@@ -903,6 +904,7 @@ block|}
 end_function
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_security_mac_bsdextended

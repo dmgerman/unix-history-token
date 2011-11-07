@@ -46,6 +46,7 @@ file|<support/debug.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug

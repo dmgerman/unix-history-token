@@ -254,6 +254,7 @@ comment|/*  * Support for sysctl vfs.nlm.sysid  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_vfs
@@ -272,6 +273,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_vfs_nlm

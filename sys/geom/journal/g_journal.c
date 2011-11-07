@@ -358,6 +358,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern_geom
@@ -714,6 +715,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern_geom_journal
@@ -1080,6 +1082,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern_geom_journal

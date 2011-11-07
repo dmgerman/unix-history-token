@@ -918,6 +918,7 @@ block|}
 end_function
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
