@@ -17419,10 +17419,10 @@ name|ti_chipinit
 argument_list|(
 name|sc
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-return|return;
+block|{
 name|ti_mem_zero
 argument_list|(
 name|sc
@@ -17434,16 +17434,13 @@ operator|-
 literal|0x2000
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
+comment|/* XXX ignore init errors. */
 name|ti_chipinit
 argument_list|(
 name|sc
 argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return;
+expr_stmt|;
+block|}
 comment|/* Free the RX lists. */
 name|ti_free_rx_ring_std
 argument_list|(
