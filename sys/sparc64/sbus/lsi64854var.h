@@ -64,6 +64,9 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|sc_buffer_dmat
 decl_stmt|;
+name|bus_size_t
+name|sc_maxdmasize
+decl_stmt|;
 name|int
 name|sc_datain
 decl_stmt|;
