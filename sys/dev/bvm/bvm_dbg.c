@@ -175,9 +175,10 @@ name|bvm_dbg_port
 operator|=
 name|port
 expr_stmt|;
+comment|/* 	 * Return a higher priority than 0 to override other 	 * gdb dbgport providers that may be present (e.g. uart) 	 */
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
