@@ -4356,6 +4356,20 @@ name|ENOBUFS
 operator|)
 return|;
 block|}
+comment|/* Mini ring is not available on Tigon 1. */
+if|if
+condition|(
+name|sc
+operator|->
+name|ti_hwrev
+operator|==
+name|TI_HWREV_TIGON
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 for|for
 control|(
 name|i
