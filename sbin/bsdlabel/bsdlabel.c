@@ -1891,7 +1891,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* Since we weren't able open provider for 			 * writing, then recommend user to use gpart(8). 			 */
+comment|/* 			 * Since we weren't able open provider for 			 * writing, then recommend user to use gpart(8). 			 */
 name|warnc
 argument_list|(
 name|serrno
