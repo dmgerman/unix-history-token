@@ -4116,10 +4116,6 @@ name|ifmedia
 decl_stmt|;
 comment|/* media info */
 name|uint8_t
-name|ti_unit
-decl_stmt|;
-comment|/* interface number */
-name|uint8_t
 name|ti_hwrev
 decl_stmt|;
 comment|/* Tigon rev (1 or 2) */
