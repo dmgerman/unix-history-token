@@ -119,7 +119,7 @@ name|hflag
 condition|)
 name|printf
 argument_list|(
-literal|"%5s %*s %*s %3s %4s %4s %3s %3s %2s %-2s %-s\n"
+literal|"%5s %*s %*s %3s %4s %4s %3s %3s %3s %-2s %-s\n"
 argument_list|,
 literal|"PID"
 argument_list|,
@@ -324,7 +324,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-1s "
+literal|"%-1s"
 argument_list|,
 name|kve
 operator|->
@@ -333,6 +333,21 @@ operator|&
 name|KVME_FLAG_NEEDS_COPY
 condition|?
 literal|"N"
+else|:
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"%-1s "
+argument_list|,
+name|kve
+operator|->
+name|kve_flags
+operator|&
+name|KVME_FLAG_SUPER
+condition|?
+literal|"S"
 else|:
 literal|"-"
 argument_list|)
