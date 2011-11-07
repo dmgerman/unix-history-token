@@ -15642,6 +15642,12 @@ condition|(
 name|ifr
 operator|->
 name|ifr_mtu
+operator|<
+name|ETHERMIN
+operator|||
+name|ifr
+operator|->
+name|ifr_mtu
 operator|>
 name|TI_JUMBO_MTU
 condition|)
