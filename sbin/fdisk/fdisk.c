@@ -4357,7 +4357,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* Try to write MBR directly. This may help when disk 		 * is not in use. 		 * XXX: hardcoded sectorsize 		 */
+comment|/* 		 * Try to write MBR directly. This may help when disk 		 * is not in use. 		 * XXX: hardcoded sectorsize 		 */
 name|error
 operator|=
 name|pwrite
@@ -4387,7 +4387,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* GEOM_MBR is not available or failed to write MBR. 	 * Now check that we have GEOM_PART and recommend to use gpart (8). 	 */
+comment|/* 	 * GEOM_MBR is not available or failed to write MBR. 	 * Now check that we have GEOM_PART and recommend to use gpart (8). 	 */
 if|if
 condition|(
 name|geom_class_available
