@@ -1095,10 +1095,6 @@ parameter_list|)
 value|do { \ 	TAILQ_REMOVE(&(_tq)->axq_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
 end_define
 
-begin_comment
-comment|/* NB: this does not do the "head empty check" that STAILQ_LAST does */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -1518,11 +1514,6 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* do self-linked final descriptor */
-name|sc_kickpcu
-range|:
-literal|1
-decl_stmt|,
-comment|/* kick PCU RX on next RX proc */
 name|sc_rxtsf32
 range|:
 literal|1
@@ -1644,6 +1635,15 @@ name|HAL_INT
 name|sc_imask
 decl_stmt|;
 comment|/* interrupt mask copy */
+comment|/* 	 * These are modified in the interrupt handler as well as 	 * the task queues and other contexts. Thus these must be 	 * protected by a mutex, or they could clash. 	 * 	 * For now, access to these is behind the ATH_LOCK, 	 * just to save time. 	 */
+name|uint32_t
+name|sc_txq_active
+decl_stmt|;
+comment|/* bitmap of active TXQs */
+name|uint32_t
+name|sc_kickpcu
+decl_stmt|;
+comment|/* whether to kick the PCU */
 name|u_int
 name|sc_keymax
 decl_stmt|;

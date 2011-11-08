@@ -15,6 +15,35 @@ directive|define
 name|__IF_ATH_TX_H__
 end_define
 
+begin_comment
+comment|/*  * How 'busy' to try and keep the hardware txq  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_AGGR_MIN_QDEPTH
+value|2
+end_define
+
+begin_comment
+comment|/*  * Watermark for scheduling TIDs in order to maximise aggregation.  *  * If hwq_depth is greater than this, don't schedule the TID  * for packet scheduling - the hardware is already busy servicing  * this TID.  *  * If hwq_depth is less than this, schedule the TID for packet  * scheduling in the completion handler.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_AGGR_SCHED_HIGH
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_AGGR_SCHED_LOW
+value|2
+end_define
+
 begin_function_decl
 specifier|extern
 name|void
