@@ -39,6 +39,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+specifier|const
 name|struct
 name|kobj_method
 name|kobj_method_t
