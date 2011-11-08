@@ -5509,6 +5509,14 @@ argument_list|(
 name|vap
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX Danger Will Robinson! Danger! 	 * 	 * Because ieee80211_vap_detach() can queue a frame (the station 	 * diassociate message?) after we've drained the TXQ and 	 * flushed the software TXQ, we will end up with a frame queued 	 * to a node whose vap is about to be freed. 	 * 	 * To work around this, flush the hardware/software again. 	 * This may be racy - the ath task may be running and the packet 	 * may be being scheduled between sw->hw txq. Tsk. 	 * 	 * TODO: figure out why a new node gets allocated somewhere around 	 * here (after the ath_tx_swq() call; and after an ath_stop_locked() 	 * call!) 	 */
+name|ath_draintxq
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_RESET_DEFAULT
+argument_list|)
+expr_stmt|;
 name|ATH_LOCK
 argument_list|(
 name|sc
@@ -5744,11 +5752,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|ATH_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|avp
@@ -5829,6 +5832,11 @@ name|sc_imask
 argument_list|)
 expr_stmt|;
 block|}
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -12265,6 +12273,38 @@ name|sc
 operator|->
 name|sc_ifp
 decl_stmt|;
+name|uint32_t
+name|hangs
+init|=
+literal|0
+decl_stmt|;
+if|if
+condition|(
+name|ath_hal_gethangstate
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+literal|0xff
+argument_list|,
+operator|&
+name|hangs
+argument_list|)
+operator|&&
+name|hangs
+operator|!=
+literal|0
+condition|)
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"bb hang detected (0x%x)\n"
+argument_list|,
+name|hangs
+argument_list|)
+expr_stmt|;
 name|if_printf
 argument_list|(
 name|ifp
@@ -12283,6 +12323,7 @@ operator|.
 name|ast_bstuck
 operator|++
 expr_stmt|;
+comment|/* 	 * This assumes that there's no simultaneous channel mode change 	 * occuring. 	 */
 name|ath_reset
 argument_list|(
 name|ifp
@@ -17727,6 +17768,12 @@ literal|0
 expr_stmt|;
 name|txq
 operator|->
+name|axq_aggr_depth
+operator|=
+literal|0
+expr_stmt|;
+name|txq
+operator|->
 name|axq_intrcnt
 operator|=
 literal|0
@@ -18250,6 +18297,7 @@ else|else
 block|{
 endif|#
 directive|endif
+comment|/* 		 * XXX shouldn't this just use the default flags 		 * used in the previous queue setup? 		 */
 name|qi
 operator|.
 name|tqi_qflags
@@ -20010,6 +20058,12 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_undef
+undef|#
+directive|undef
+name|TXQACTIVE
+end_undef
 
 begin_function
 specifier|static
