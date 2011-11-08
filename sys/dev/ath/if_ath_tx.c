@@ -893,6 +893,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Chain together segments+descriptors for a non-11n frame.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1088,6 +1092,12 @@ index|[
 literal|1
 index|]
 argument_list|)
+expr_stmt|;
+name|bf
+operator|->
+name|bf_lastds
+operator|=
+name|ds
 expr_stmt|;
 block|}
 block|}
@@ -1507,6 +1517,19 @@ block|}
 endif|#
 directive|endif
 comment|/* IEEE80211_SUPPORT_TDMA */
+if|if
+condition|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_aggr
+condition|)
+name|txq
+operator|->
+name|axq_aggr_depth
+operator|++
+expr_stmt|;
 name|txq
 operator|->
 name|axq_link
@@ -1514,15 +1537,8 @@ operator|=
 operator|&
 name|bf
 operator|->
-name|bf_desc
-index|[
-name|bf
+name|bf_lastds
 operator|->
-name|bf_nseg
-operator|-
-literal|1
-index|]
-operator|.
 name|ds_link
 expr_stmt|;
 name|ath_hal_txstart
