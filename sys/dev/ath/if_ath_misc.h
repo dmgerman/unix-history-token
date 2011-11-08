@@ -100,6 +100,8 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
+parameter_list|,
+name|ATH_RESET_TYPE
 parameter_list|)
 function_decl|;
 end_function_decl

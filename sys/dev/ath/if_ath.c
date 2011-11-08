@@ -1160,6 +1160,9 @@ parameter_list|(
 name|struct
 name|ath_softc
 modifier|*
+parameter_list|,
+name|ATH_RESET_TYPE
+name|reset_type
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5457,9 +5460,12 @@ comment|/* disable interrupts */
 name|ath_draintxq
 argument_list|(
 name|sc
+argument_list|,
+name|ATH_RESET_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/* stop xmit side */
+comment|/* stop hw xmit side */
+comment|/* XXX Do all frames from all vaps/nodes need draining here? */
 name|ath_stoprecv
 argument_list|(
 name|sc
@@ -6939,6 +6945,8 @@ block|}
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
 block|}
@@ -7251,6 +7259,8 @@ expr_stmt|;
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
 block|}
@@ -7896,6 +7906,8 @@ block|}
 name|ath_draintxq
 argument_list|(
 name|sc
+argument_list|,
+name|ATH_RESET_DEFAULT
 argument_list|)
 expr_stmt|;
 if|if
@@ -7984,6 +7996,9 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|ATH_RESET_TYPE
+name|reset_type
 parameter_list|)
 block|{
 name|struct
@@ -8027,6 +8042,8 @@ comment|/* disable interrupts */
 name|ath_draintxq
 argument_list|(
 name|sc
+argument_list|,
+name|reset_type
 argument_list|)
 expr_stmt|;
 comment|/* stop xmit side */
@@ -8259,10 +8276,13 @@ return|return
 literal|0
 return|;
 block|}
+comment|/* XXX? Full or NOLOSS? */
 return|return
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_FULL
 argument_list|)
 return|;
 block|}
@@ -12158,6 +12178,8 @@ expr_stmt|;
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
 block|}
@@ -20279,6 +20301,9 @@ name|struct
 name|ath_softc
 modifier|*
 name|sc
+parameter_list|,
+name|ATH_RESET_TYPE
+name|reset_type
 parameter_list|)
 block|{
 name|struct
@@ -21062,6 +21087,8 @@ comment|/* disable interrupts */
 name|ath_draintxq
 argument_list|(
 name|sc
+argument_list|,
+name|ATH_RESET_FULL
 argument_list|)
 expr_stmt|;
 comment|/* clear pending tx frames */
@@ -21448,6 +21475,8 @@ expr_stmt|;
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
 block|}
@@ -24680,6 +24709,8 @@ expr_stmt|;
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
 name|ifp

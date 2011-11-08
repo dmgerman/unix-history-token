@@ -1180,6 +1180,8 @@ condition|?
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
 argument_list|)
 else|:
 literal|0
@@ -1367,6 +1369,8 @@ condition|?
 name|ath_reset
 argument_list|(
 name|ifp
+argument_list|,
+name|ATH_RESET_FULL
 argument_list|)
 else|:
 literal|0
@@ -2041,6 +2045,8 @@ argument_list|(
 name|sc
 operator|->
 name|sc_ifp
+argument_list|,
+name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
 return|return
