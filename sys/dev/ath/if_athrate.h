@@ -253,13 +253,10 @@ parameter_list|,
 name|uint8_t
 name|rix0
 parameter_list|,
-name|uint8_t
+name|struct
+name|ath_rc_series
 modifier|*
-name|rix
-parameter_list|,
-name|uint8_t
-modifier|*
-name|try
+name|rc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -331,7 +328,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Update rate control state for a packet associated with the  * supplied transmit descriptor.  The routine is invoked both  * for packets that were successfully sent and for those that  * failed (consult the descriptor for details).  */
+comment|/*  * Update rate control state for a packet associated with the  * supplied transmit descriptor.  The routine is invoked both  * for packets that were successfully sent and for those that  * failed (consult the descriptor for details).  *  * For A-MPDU frames, nframes and nbad indicate how many frames  * were in the aggregate, and how many failed.  */
 end_comment
 
 begin_struct_decl
@@ -354,8 +351,22 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|ath_buf
+name|ath_rc_series
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ath_tx_status
+modifier|*
+parameter_list|,
+name|int
+name|pktlen
+parameter_list|,
+name|int
+name|nframes
+parameter_list|,
+name|int
+name|nbad
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -54,6 +54,10 @@ name|int
 name|min_switch
 decl_stmt|;
 comment|/* min time between rate changes */
+name|int
+name|min_good_pct
+decl_stmt|;
+comment|/* min good percentage for a rate to be considered */
 block|}
 struct|;
 end_struct
@@ -89,6 +93,10 @@ name|uint64_t
 name|packets_acked
 decl_stmt|;
 comment|/* pkts acked since assoc */
+name|int
+name|ewma_pct
+decl_stmt|;
+comment|/* EWMA percentage */
 name|unsigned
 name|perfect_tx_time
 decl_stmt|;
