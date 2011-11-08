@@ -951,6 +951,21 @@ specifier|static
 name|void
 name|ath_rx_proc
 parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|ath_rx_tasklet
+parameter_list|(
 name|void
 modifier|*
 parameter_list|,
@@ -2398,7 +2413,7 @@ name|sc_rxtask
 argument_list|,
 literal|0
 argument_list|,
-name|ath_rx_proc
+name|ath_rx_tasklet
 argument_list|,
 name|sc
 argument_list|)
@@ -15787,10 +15802,14 @@ block|}
 block|}
 end_function
 
+begin_comment
+comment|/*  * Only run the RX proc if it's not already running.  * Since this may get run as part of the reset/flush path,  * the task can't clash with an existing, running tasklet.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
-name|ath_rx_proc
+name|ath_rx_tasklet
 parameter_list|(
 name|void
 modifier|*
@@ -15798,6 +15817,59 @@ name|arg
 parameter_list|,
 name|int
 name|npending
+parameter_list|)
+block|{
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+init|=
+name|arg
+decl_stmt|;
+name|CTR1
+argument_list|(
+name|ATH_KTR_INTR
+argument_list|,
+literal|"ath_rx_proc: pending=%d"
+argument_list|,
+name|npending
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_RX_PROC
+argument_list|,
+literal|"%s: pending %u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|npending
+argument_list|)
+expr_stmt|;
+name|ath_rx_proc
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ath_rx_proc
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|int
+name|resched
 parameter_list|)
 block|{
 define|#
@@ -15810,13 +15882,6 @@ name|_pa
 parameter_list|)
 define|\
 value|((struct ath_desc *)((caddr_t)(_sc)->sc_rxdma.dd_desc + \ 		((_pa) - (_sc)->sc_rxdma.dd_desc_paddr)))
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-init|=
-name|arg
-decl_stmt|;
 name|struct
 name|ath_buf
 modifier|*
@@ -15896,11 +15961,9 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_RX_PROC
 argument_list|,
-literal|"%s: pending %u\n"
+literal|"%s: called\n"
 argument_list|,
 name|__func__
-argument_list|,
-name|npending
 argument_list|)
 expr_stmt|;
 name|ngood
@@ -17249,6 +17312,8 @@ expr_stmt|;
 comment|/* Queue DFS tasklet if needed */
 if|if
 condition|(
+name|resched
+operator|&&
 name|ath_dfs_tasklet_needed
 argument_list|(
 name|sc
@@ -17273,6 +17338,8 @@ expr_stmt|;
 comment|/* 	 * Now that all the RX frames were handled that 	 * need to be handled, kick the PCU if there's 	 * been an RXEOL condition. 	 */
 if|if
 condition|(
+name|resched
+operator|&&
 name|sc
 operator|->
 name|sc_kickpcu
@@ -17357,6 +17424,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|resched
+operator|&&
 operator|(
 name|ifp
 operator|->
@@ -18363,6 +18432,9 @@ name|struct
 name|ath_txq
 modifier|*
 name|txq
+parameter_list|,
+name|int
+name|dosched
 parameter_list|)
 block|{
 name|struct
@@ -19235,6 +19307,8 @@ name|sc_txq
 index|[
 literal|0
 index|]
+argument_list|,
+literal|1
 argument_list|)
 condition|)
 comment|/* XXX why is lastrx updated in tx code? */
@@ -19269,6 +19343,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_cabq
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ifp
@@ -19396,6 +19472,8 @@ name|sc_txq
 index|[
 literal|0
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -19420,6 +19498,8 @@ name|sc_txq
 index|[
 literal|1
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -19444,6 +19524,8 @@ name|sc_txq
 index|[
 literal|2
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -19468,6 +19550,8 @@ name|sc_txq
 index|[
 literal|3
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -19490,6 +19574,8 @@ argument_list|,
 name|sc
 operator|->
 name|sc_cabq
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -19654,6 +19740,8 @@ name|sc_txq
 index|[
 name|i
 index|]
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
