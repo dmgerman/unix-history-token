@@ -160,6 +160,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/ktr.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -354,6 +360,20 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|ATH_KTR_INTR
+value|KTR_SPARE4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_KTR_ERR
+value|KTR_SPARE3
+end_define
 
 begin_comment
 comment|/*  * ATH_BCBUF determines the number of vap's that can transmit  * beacons and also (currently) the number of vap's that can  * have unique mac addresses/bssid.  When staggering beacons  * 4 is probably a good max as otherwise the beacons become  * very closely spaced and there is limited time for cab q traffic  * to go out.  You can burst beacons instead but that is not good  * for stations in power save and at some point you really want  * another radio (and channel).  *  * The limit on the number of mac addresses is tied to our use of  * the U/L bit and tracking addresses in a byte; it would be  * worthwhile to allow more for applications like proxy sta.  */
@@ -5439,6 +5459,17 @@ argument_list|(
 name|vap
 argument_list|)
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifp
@@ -6338,6 +6369,57 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+name|CTR1
+argument_list|(
+name|ATH_KTR_INTR
+argument_list|,
+literal|"ath_intr: mask=0x%.8x"
+argument_list|,
+name|status
+argument_list|)
+expr_stmt|;
+name|CTR5
+argument_list|(
+name|ATH_KTR_INTR
+argument_list|,
+literal|"ath_intr: ISR=0x%.8x, ISR_S0=0x%.8x, ISR_S1=0x%.8x, ISR_S2=0x%.8x, ISR_S5=0x%.8x"
+argument_list|,
+name|ah
+operator|->
+name|ah_intrstate
+index|[
+literal|0
+index|]
+argument_list|,
+name|ah
+operator|->
+name|ah_intrstate
+index|[
+literal|1
+index|]
+argument_list|,
+name|ah
+operator|->
+name|ah_intrstate
+index|[
+literal|2
+index|]
+argument_list|,
+name|ah
+operator|->
+name|ah_intrstate
+index|[
+literal|3
+index|]
+argument_list|,
+name|ah
+operator|->
+name|ah_intrstate
+index|[
+literal|6
+index|]
+argument_list|)
+expr_stmt|;
 name|status
 operator|&=
 name|sc
@@ -6500,6 +6582,13 @@ block|{
 name|int
 name|imask
 decl_stmt|;
+name|CTR0
+argument_list|(
+name|ATH_KTR_ERR
+argument_list|,
+literal|"ath_intr: RXEOL"
+argument_list|)
+expr_stmt|;
 comment|/* 			 * NB: the hardware should re-read the link when 			 *     RXE bit is written, but it doesn't work at 			 *     least on older hardware revs. 			 */
 name|sc
 operator|->
@@ -6806,6 +6895,13 @@ name|HAL_INT_RXORN
 condition|)
 block|{
 comment|/* NB: hal marks HAL_INT_FATAL when RXORN is fatal */
+name|CTR0
+argument_list|(
+name|ATH_KTR_ERR
+argument_list|,
+literal|"ath_intr: RXORN"
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_stats
@@ -8031,6 +8127,17 @@ decl_stmt|;
 name|HAL_STATUS
 name|status
 decl_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_RESET
+argument_list|,
+literal|"%s: called\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -8047,6 +8154,7 @@ name|reset_type
 argument_list|)
 expr_stmt|;
 comment|/* stop xmit side */
+comment|/* 	 * XXX Don't flush if ATH_RESET_NOLOSS;but we have to first 	 * XXX need to ensure this doesn't race with an outstanding 	 * XXX taskqueue call. 	 */
 name|ath_stoprecv
 argument_list|(
 name|sc
@@ -17399,6 +17507,17 @@ name|sc_lastrx
 operator|=
 name|tsf
 expr_stmt|;
+name|CTR2
+argument_list|(
+name|ATH_KTR_INTR
+argument_list|,
+literal|"ath_rx_proc: npkts=%d, ngood=%d"
+argument_list|,
+name|npkts
+argument_list|,
+name|ngood
+argument_list|)
+expr_stmt|;
 comment|/* Queue DFS tasklet if needed */
 if|if
 condition|(
@@ -17435,6 +17554,13 @@ operator|->
 name|sc_kickpcu
 condition|)
 block|{
+name|CTR0
+argument_list|(
+name|ATH_KTR_ERR
+argument_list|,
+literal|"ath_rx_proc: kickpcu"
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
