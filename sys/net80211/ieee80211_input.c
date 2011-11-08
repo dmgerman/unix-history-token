@@ -2452,6 +2452,16 @@ name|frm
 expr_stmt|;
 break|break;
 case|case
+name|IEEE80211_ELEMID_QUIET
+case|:
+name|scan
+operator|->
+name|quiet
+operator|=
+name|frm
+expr_stmt|;
+break|break;
+case|case
 name|IEEE80211_ELEMID_FHPARMS
 case|:
 if|if

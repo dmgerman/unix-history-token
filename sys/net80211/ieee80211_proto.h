@@ -2064,6 +2064,11 @@ decl_stmt|;
 comment|/* start of CSA element */
 name|uint8_t
 modifier|*
+name|bo_quiet
+decl_stmt|;
+comment|/* start of Quiet element */
+name|uint8_t
+modifier|*
 name|bo_meshconf
 decl_stmt|;
 comment|/* start of MESHCONF element */
