@@ -6441,6 +6441,9 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|ATH_KTR_INTR_DEBUG
 name|CTR5
 argument_list|(
 name|ATH_KTR_INTR
@@ -6483,6 +6486,8 @@ literal|6
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|status
 operator|&=
 name|sc

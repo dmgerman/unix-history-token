@@ -2378,6 +2378,13 @@ modifier|*
 name|ah_eepromdata
 decl_stmt|;
 comment|/* eeprom buffer, if needed */
+name|uint32_t
+name|ah_intrstate
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* last int state */
 name|HAL_OPS_CONFIG
 name|ah_config
 decl_stmt|;
