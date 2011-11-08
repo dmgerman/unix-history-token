@@ -18560,6 +18560,8 @@ operator||
 name|HAL_TXQ_TXDESCINT_ENABLE
 operator||
 name|HAL_TXQ_TXURNINT_ENABLE
+operator||
+name|HAL_TXQ_TXEOLINT_ENABLE
 expr_stmt|;
 name|qi
 operator|.
