@@ -129,6 +129,7 @@ file|<net80211/ieee80211_var.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_80211_DFS
@@ -225,6 +226,27 @@ value|msecs_to_ticks(ieee80211_cac_timeout*1000)
 end_define
 
 begin_function
+specifier|static
+name|int
+name|null_set_quiet
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|quiet_elm
+parameter_list|)
+block|{
+return|return
+name|ENOSYS
+return|;
+block|}
+end_function
+
+begin_function
 name|void
 name|ieee80211_dfs_attach
 parameter_list|(
@@ -273,6 +295,12 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_set_quiet
+operator|=
+name|null_set_quiet
 expr_stmt|;
 block|}
 end_function

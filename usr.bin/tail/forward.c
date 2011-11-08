@@ -206,6 +206,7 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|kevent
 modifier|*
@@ -214,6 +215,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|action
 init|=
@@ -222,6 +224,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|kq
 decl_stmt|;

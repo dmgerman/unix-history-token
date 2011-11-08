@@ -192,6 +192,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|Boolean
+name|printGraphOnly
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* -p flag */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|Boolean
 name|allPrecious
 decl_stmt|;
 end_decl_stmt

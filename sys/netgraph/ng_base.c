@@ -1002,6 +1002,19 @@ end_expr_stmt
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
+name|M_NETGRAPH_MSG
+argument_list|,
+literal|"netgraph_msg"
+argument_list|,
+literal|"netgraph name storage"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
+name|MALLOC_DEFINE
+argument_list|(
 name|M_NETGRAPH_HOOK
 argument_list|,
 literal|"netgraph_hook"
@@ -1012,6 +1025,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_NODE
@@ -1024,6 +1038,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_ITEM
@@ -1031,18 +1046,6 @@ argument_list|,
 literal|"netgraph_item"
 argument_list|,
 literal|"netgraph item structures"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|MALLOC_DEFINE
-argument_list|(
-name|M_NETGRAPH_MSG
-argument_list|,
-literal|"netgraph_msg"
-argument_list|,
-literal|"netgraph name storage"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -13784,6 +13787,7 @@ parameter_list|,
 name|item_p
 name|item
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|address

@@ -261,6 +261,102 @@ name|ath_buf
 struct_decl|;
 end_struct_decl
 
+begin_define
+define|#
+directive|define
+name|ATH_TID_MAX_BUFS
+value|(2 * IEEE80211_AGGR_BAWMAX)
+end_define
+
+begin_comment
+comment|/*  * Per-TID state  *  * Note that TID 16 (WME_NUM_TID+1) is for handling non-QoS frames.  */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_tid
+block|{
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ath_buf
+argument_list|)
+name|axq_q
+expr_stmt|;
+comment|/* pending buffers */
+name|u_int
+name|axq_depth
+decl_stmt|;
+comment|/* SW queue depth */
+name|char
+name|axq_name
+index|[
+literal|48
+index|]
+decl_stmt|;
+comment|/* lock name */
+name|struct
+name|ath_node
+modifier|*
+name|an
+decl_stmt|;
+comment|/* pointer to parent */
+name|int
+name|tid
+decl_stmt|;
+comment|/* tid */
+name|int
+name|ac
+decl_stmt|;
+comment|/* which AC gets this trafic */
+name|int
+name|hwq_depth
+decl_stmt|;
+comment|/* how many buffers are on HW */
+comment|/* 	 * Entry on the ath_txq; when there's traffic 	 * to send 	 */
+name|TAILQ_ENTRY
+argument_list|(
+argument|ath_tid
+argument_list|)
+name|axq_qelem
+expr_stmt|;
+name|int
+name|sched
+decl_stmt|;
+name|int
+name|paused
+decl_stmt|;
+comment|/*>0 if the TID has been paused */
+comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
+name|int
+name|cleanup_inprogress
+decl_stmt|;
+comment|/* 	 * How many hardware-queued packets are 	 * waiting to be cleaned up. 	 * This is only valid if cleanup_inprogress is 1. 	 */
+name|int
+name|incomp
+decl_stmt|;
+comment|/* 	 * The following implements a ring representing 	 * the frames in the current BAW. 	 * To avoid copying the array content each time 	 * the BAW is moved, the baw_head/baw_tail point 	 * to the current BAW begin/end; when the BAW is 	 * shifted the head/tail of the array are also 	 * appropriately shifted. 	 */
+comment|/* active tx buffers, beginning at current BAW */
+name|struct
+name|ath_buf
+modifier|*
+name|tx_buf
+index|[
+name|ATH_TID_MAX_BUFS
+index|]
+decl_stmt|;
+comment|/* where the baw head is in the array */
+name|int
+name|baw_head
+decl_stmt|;
+comment|/* where the BAW tail is in the array */
+name|int
+name|baw_tail
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/* driver-specific node state */
 end_comment
@@ -291,6 +387,26 @@ name|WME_NUM_AC
 index|]
 decl_stmt|;
 comment|/* ff staging area */
+name|struct
+name|ath_tid
+name|an_tid
+index|[
+name|IEEE80211_TID_SIZE
+index|]
+decl_stmt|;
+comment|/* per-TID state */
+name|char
+name|an_name
+index|[
+literal|32
+index|]
+decl_stmt|;
+comment|/* eg "wlan0_a1" */
+name|struct
+name|mtx
+name|an_mtx
+decl_stmt|;
+comment|/* protecting the ath_node state */
 comment|/* variable-length rate control state follows */
 block|}
 struct|;
@@ -412,6 +528,12 @@ argument|ath_buf
 argument_list|)
 name|bf_list
 expr_stmt|;
+name|struct
+name|ath_buf
+modifier|*
+name|bf_next
+decl_stmt|;
+comment|/* next buffer in the aggregate */
 name|int
 name|bf_nseg
 decl_stmt|;
@@ -454,6 +576,18 @@ modifier|*
 name|bf_node
 decl_stmt|;
 comment|/* pointer to the node */
+name|struct
+name|ath_desc
+modifier|*
+name|bf_lastds
+decl_stmt|;
+comment|/* last descriptor for comp status */
+name|struct
+name|ath_buf
+modifier|*
+name|bf_last
+decl_stmt|;
+comment|/* last buffer in aggregate, or self for non-aggregate */
 name|bus_size_t
 name|bf_mapsize
 decl_stmt|;
@@ -468,6 +602,204 @@ index|[
 name|ATH_MAX_SCATTER
 index|]
 decl_stmt|;
+comment|/* Completion function to call on TX complete (fail or not) */
+comment|/* 	 * "fail" here is set to 1 if the queue entries were removed 	 * through a call to ath_tx_draintxq(). 	 */
+name|void
+function_decl|(
+modifier|*
+name|bf_comp
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+parameter_list|,
+name|int
+name|fail
+parameter_list|)
+function_decl|;
+comment|/* This state is kept to support software retries and aggregation */
+struct|struct
+block|{
+name|int
+name|bfs_seqno
+decl_stmt|;
+comment|/* sequence number of this packet */
+name|int
+name|bfs_retries
+decl_stmt|;
+comment|/* retry count */
+name|uint16_t
+name|bfs_tid
+decl_stmt|;
+comment|/* packet TID (or TID_MAX for no QoS) */
+name|uint16_t
+name|bfs_pri
+decl_stmt|;
+comment|/* packet AC priority */
+name|struct
+name|ath_txq
+modifier|*
+name|bfs_txq
+decl_stmt|;
+comment|/* eventual dest hardware TXQ */
+name|uint16_t
+name|bfs_pktdur
+decl_stmt|;
+comment|/* packet duration (at current rate?) */
+name|uint16_t
+name|bfs_nframes
+decl_stmt|;
+comment|/* number of frames in aggregate */
+name|uint16_t
+name|bfs_ndelim
+decl_stmt|;
+comment|/* number of delims for padding */
+name|int
+name|bfs_aggr
+range|:
+literal|1
+decl_stmt|;
+comment|/* part of aggregate? */
+name|int
+name|bfs_aggrburst
+range|:
+literal|1
+decl_stmt|;
+comment|/* part of aggregate burst? */
+name|int
+name|bfs_isretried
+range|:
+literal|1
+decl_stmt|;
+comment|/* retried frame? */
+name|int
+name|bfs_dobaw
+range|:
+literal|1
+decl_stmt|;
+comment|/* actually check against BAW? */
+name|int
+name|bfs_addedbaw
+range|:
+literal|1
+decl_stmt|;
+comment|/* has been added to the BAW */
+name|int
+name|bfs_shpream
+range|:
+literal|1
+decl_stmt|;
+comment|/* use short preamble */
+name|int
+name|bfs_istxfrag
+range|:
+literal|1
+decl_stmt|;
+comment|/* is fragmented */
+name|int
+name|bfs_ismrr
+range|:
+literal|1
+decl_stmt|;
+comment|/* do multi-rate TX retry */
+name|int
+name|bfs_doprot
+range|:
+literal|1
+decl_stmt|;
+comment|/* do RTS/CTS based protection */
+name|int
+name|bfs_doratelookup
+range|:
+literal|1
+decl_stmt|;
+comment|/* do rate lookup before each TX */
+name|int
+name|bfs_nfl
+decl_stmt|;
+comment|/* next fragment length */
+comment|/* 		 * These fields are passed into the 		 * descriptor setup functions. 		 */
+name|HAL_PKT_TYPE
+name|bfs_atype
+decl_stmt|;
+comment|/* packet type */
+name|int
+name|bfs_pktlen
+decl_stmt|;
+comment|/* length of this packet */
+name|int
+name|bfs_hdrlen
+decl_stmt|;
+comment|/* length of this packet header */
+name|uint16_t
+name|bfs_al
+decl_stmt|;
+comment|/* length of aggregate */
+name|int
+name|bfs_flags
+decl_stmt|;
+comment|/* HAL descriptor flags */
+name|int
+name|bfs_txrate0
+decl_stmt|;
+comment|/* first TX rate */
+name|int
+name|bfs_try0
+decl_stmt|;
+comment|/* first try count */
+name|uint8_t
+name|bfs_ctsrate0
+decl_stmt|;
+comment|/* Non-zero - use this as ctsrate */
+name|int
+name|bfs_keyix
+decl_stmt|;
+comment|/* crypto key index */
+name|int
+name|bfs_txpower
+decl_stmt|;
+comment|/* tx power */
+name|int
+name|bfs_txantenna
+decl_stmt|;
+comment|/* TX antenna config */
+name|enum
+name|ieee80211_protmode
+name|bfs_protmode
+decl_stmt|;
+name|HAL_11N_RATE_SERIES
+name|bfs_rc11n
+index|[
+name|ATH_RC_NUM
+index|]
+decl_stmt|;
+comment|/* 11n TX series */
+name|int
+name|bfs_ctsrate
+decl_stmt|;
+comment|/* CTS rate */
+name|int
+name|bfs_ctsduration
+decl_stmt|;
+comment|/* CTS duration (pre-11n NICs) */
+name|struct
+name|ath_rc_series
+name|bfs_rc
+index|[
+name|ATH_RC_NUM
+index|]
+decl_stmt|;
+comment|/* non-11n TX series */
+block|}
+name|bf_state
+struct|;
 block|}
 struct|;
 end_struct
@@ -550,6 +882,12 @@ begin_struct
 struct|struct
 name|ath_txq
 block|{
+name|struct
+name|ath_softc
+modifier|*
+name|axq_softc
+decl_stmt|;
+comment|/* Needed for scheduling */
 name|u_int
 name|axq_qnum
 decl_stmt|;
@@ -575,6 +913,10 @@ name|u_int
 name|axq_depth
 decl_stmt|;
 comment|/* queue depth (stat only) */
+name|u_int
+name|axq_aggr_depth
+decl_stmt|;
+comment|/* how many aggregates are queued */
 name|u_int
 name|axq_intrcnt
 decl_stmt|;
@@ -604,9 +946,48 @@ literal|12
 index|]
 decl_stmt|;
 comment|/* e.g. "ath0_txq4" */
+comment|/* Per-TID traffic queue for software -> hardware TX */
+name|TAILQ_HEAD
+argument_list|(
+argument|axq_t_s
+argument_list|,
+argument|ath_tid
+argument_list|)
+name|axq_tidq
+expr_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|ATH_NODE_LOCK
+parameter_list|(
+name|_an
+parameter_list|)
+value|mtx_lock(&(_an)->an_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_NODE_UNLOCK
+parameter_list|(
+name|_an
+parameter_list|)
+value|mtx_unlock(&(_an)->an_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_NODE_LOCK_ASSERT
+parameter_list|(
+name|_an
+parameter_list|)
+value|mtx_assert(&(_an)->an_mtx, MA_OWNED)
+end_define
 
 begin_define
 define|#
@@ -658,6 +1039,16 @@ parameter_list|(
 name|_tq
 parameter_list|)
 value|mtx_assert(&(_tq)->axq_lock, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_TXQ_IS_LOCKED
+parameter_list|(
+name|_tq
+parameter_list|)
+value|mtx_owned(&(_tq)->axq_lock)
 end_define
 
 begin_define
@@ -804,6 +1195,30 @@ name|ath_tx99
 struct_decl|;
 end_struct_decl
 
+begin_comment
+comment|/*  * Whether to reset the TX/RX queue with or without  * a queue flush.  */
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|ATH_RESET_DEFAULT
+init|=
+literal|0
+block|,
+name|ATH_RESET_NOLOSS
+init|=
+literal|1
+block|,
+name|ATH_RESET_FULL
+init|=
+literal|2
+block|, }
+name|ATH_RESET_TYPE
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ath_softc
@@ -819,6 +1234,10 @@ name|ath_stats
 name|sc_stats
 decl_stmt|;
 comment|/* interface statistics */
+name|struct
+name|ath_tx_aggr_stats
+name|sc_aggr_stats
+decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
@@ -851,6 +1270,17 @@ comment|/* bssid mask */
 name|void
 function_decl|(
 modifier|*
+name|sc_node_cleanup
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
 name|sc_node_free
 function_decl|)
 parameter_list|(
@@ -879,6 +1309,17 @@ name|mtx
 name|sc_mtx
 decl_stmt|;
 comment|/* master lock (recursive) */
+name|struct
+name|mtx
+name|sc_pcu_mtx
+decl_stmt|;
+comment|/* PCU access mutex */
+name|char
+name|sc_pcu_mtx_name
+index|[
+literal|32
+index|]
+decl_stmt|;
 name|struct
 name|taskqueue
 modifier|*
@@ -1496,6 +1937,16 @@ name|int
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
+comment|/* 	 * Aggregation twiddles 	 * 	 * hwq_limit:	how busy to keep the hardware queue - don't schedule 	 *		further packets to the hardware, regardless of the TID 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
+name|int
+name|sc_hwq_limit
+decl_stmt|;
+name|int
+name|sc_tid_hwq_lo
+decl_stmt|;
+name|int
+name|sc_tid_hwq_hi
+decl_stmt|;
 comment|/* DFS related state */
 name|void
 modifier|*
@@ -1511,6 +1962,99 @@ name|task
 name|sc_dfstask
 decl_stmt|;
 comment|/* DFS processing task */
+comment|/* TX AMPDU handling */
+name|int
+function_decl|(
+modifier|*
+name|sc_addba_request
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|sc_addba_response
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sc_addba_stop
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sc_addba_response_timeout
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sc_bar_response
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|struct
+name|ieee80211_tx_ampdu
+modifier|*
+name|tap
+parameter_list|,
+name|int
+name|status
+parameter_list|)
+function_decl|;
 block|}
 struct|;
 end_struct
@@ -1564,6 +2108,60 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->sc_mtx, MA_OWNED)
+end_define
+
+begin_comment
+comment|/*  * The PCU lock is non-recursive and should be treated as a spinlock.  * Although currently the interrupt code is run in netisr context and  * doesn't require this, this may change in the future.  * Please keep this in mind when protecting certain code paths  * with the PCU lock.  *  * The PCU lock is used to serialise access to the PCU so things such  * as TX, RX, state change (eg channel change), channel reset and updates  * from interrupt context (eg kickpcu, txqactive bits) do not clash.  *  * Although the current single-thread taskqueue mechanism protects the  * majority of these situations by simply serialising them, there are  * a few others which occur at the same time. These include the TX path  * (which only acquires ATH_LOCK when recycling buffers to the free list),  * ath_set_channel, the channel scanning API and perhaps quite a bit more.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_PCU_LOCK_INIT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|do {\ 	snprintf((_sc)->sc_pcu_mtx_name,				\ 	    sizeof((_sc)->sc_pcu_mtx_name),				\ 	    "%s PCU lock",						\ 	    device_get_nameunit((_sc)->sc_dev));			\ 	mtx_init(&(_sc)->sc_pcu_mtx, (_sc)->sc_pcu_mtx_name,		\ 		 NULL, MTX_DEF);					\ 	} while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_PCU_LOCK_DESTROY
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_destroy(&(_sc)->sc_pcu_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_PCU_LOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_lock(&(_sc)->sc_pcu_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_PCU_UNLOCK
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_unlock(&(_sc)->sc_pcu_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_PCU_LOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_pcu_mtx,	\ 		MA_OWNED)
 end_define
 
 begin_define
@@ -3537,6 +4135,35 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_setupfirsttxdesc
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_aggrlen
+parameter_list|,
+name|_flags
+parameter_list|,
+name|_txpower
+parameter_list|, \
+name|_txr0
+parameter_list|,
+name|_txtr0
+parameter_list|,
+name|_antm
+parameter_list|,
+name|_rcr
+parameter_list|,
+name|_rcd
+parameter_list|)
+define|\
+value|((*(_ah)->ah_setupFirstTxDesc)((_ah), (_ds), (_aggrlen), (_flags), \ 	(_txpower), (_txr0), (_txtr0), (_antm), (_rcr), (_rcd)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_chaintxdesc
 parameter_list|(
 name|_ah
@@ -3562,36 +4189,7 @@ parameter_list|,
 name|_last
 parameter_list|)
 define|\
-value|((*(_ah)->ah_chainTxDesc((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last))))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_setupfirsttxdesc
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_ds
-parameter_list|,
-name|_aggrlen
-parameter_list|,
-name|_flags
-parameter_list|,
-name|_txpower
-parameter_list|, \
-name|_txr0
-parameter_list|,
-name|_txtr0
-parameter_list|,
-name|_antm
-parameter_list|,
-name|_rcr
-parameter_list|,
-name|_rcd
-parameter_list|)
-define|\
-value|((*(_ah)->ah_setupFirstTxDesc)((_ah), (_ds), (_aggrlen), (_flags), \ 	(_txpower), (_txr0), (_txtr0), (_antm), (_rcr), (_rcd)))
+value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last)))
 end_define
 
 begin_define
@@ -3635,6 +4233,23 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_set11n_aggr_first
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|,
+name|_len
+parameter_list|,
+name|_num
+parameter_list|)
+define|\
+value|((*(_ah)->ah_set11nAggrFirst)((_ah), (_ds), (_len), (_num)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_set11naggrmiddle
 parameter_list|(
 name|_ah
@@ -3644,7 +4259,20 @@ parameter_list|,
 name|_num
 parameter_list|)
 define|\
-value|((*(_ah)->ah_set11nAggrMiddle((_ah), (_ds), (_num))))
+value|((*(_ah)->ah_set11nAggrMiddle)((_ah), (_ds), (_num)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_set11n_aggr_last
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|)
+define|\
+value|((*(_ah)->ah_set11nAggrLast)((_ah), (_ds)))
 end_define
 
 begin_define
@@ -3660,6 +4288,19 @@ name|_dur
 parameter_list|)
 define|\
 value|((*(_ah)->ah_set11nBurstDuration)((_ah), (_ds), (_dur)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_clr11n_aggr
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_ds
+parameter_list|)
+define|\
+value|((*(_ah)->ah_clr11nAggr)((_ah), (_ds)))
 end_define
 
 begin_comment

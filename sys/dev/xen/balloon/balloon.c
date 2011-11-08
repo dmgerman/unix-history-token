@@ -102,6 +102,7 @@ file|<vm/vm_page.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_BALLOON
@@ -222,6 +223,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_dev_xen

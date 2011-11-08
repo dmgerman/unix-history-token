@@ -194,6 +194,7 @@ value|"current"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 decl_stmt|,

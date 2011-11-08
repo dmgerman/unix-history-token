@@ -70,6 +70,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|find_inum
 parameter_list|(
@@ -81,6 +82,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -90,6 +92,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|compare_function
 parameter_list|(
@@ -112,6 +115,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|find_snapshot
 parameter_list|(
@@ -124,18 +128,21 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cont_search
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uint32_t
 name|inode
 decl_stmt|;
@@ -422,6 +429,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|find_snapshot
 parameter_list|(
@@ -549,6 +557,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|compare_function
 parameter_list|(
@@ -640,6 +649,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|find_inum
 parameter_list|(
@@ -692,6 +702,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

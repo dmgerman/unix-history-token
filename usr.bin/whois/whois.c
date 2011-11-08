@@ -306,6 +306,7 @@ value|(isalnum((unsigned char)h) || h == '.' || h == '-')
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -329,6 +330,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

@@ -10268,12 +10268,28 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|M_ASSERTPKTHDR
+argument_list|(
 name|m
-condition|)
-return|return;
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: no rcvif"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 name|m
@@ -10282,12 +10298,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ifp
-condition|)
-return|return;
 comment|/* XXX if we are router, we don't update route by icmp6 redirect */
 if|if
 condition|(
@@ -10868,8 +10878,9 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"icmp6_redirect_input: "
-literal|"invalid ND option, rejected: %s\n"
+literal|"%s: invalid ND option, rejected: %s\n"
+operator|,
+name|__func__
 operator|,
 name|icmp6_redirect_diag
 argument_list|(
@@ -10949,8 +10960,10 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"icmp6_redirect_input: lladdrlen mismatch for %s "
+literal|"%s: lladdrlen mismatch for %s "
 literal|"(if %d, icmp6 packet %d): %s\n"
+operator|,
+name|__func__
 operator|,
 name|ip6_sprintf
 argument_list|(

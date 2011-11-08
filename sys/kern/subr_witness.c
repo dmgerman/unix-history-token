@@ -528,6 +528,7 @@ value|MPASS((i)> 0&& (i)<= w_max_used_index&& (i)< WITNESS_COUNT)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_WITNESS
@@ -1599,6 +1600,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug

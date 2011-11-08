@@ -243,7 +243,7 @@ begin_define
 define|#
 directive|define
 name|T_DTRACE_RET
-value|31
+value|32
 end_define
 
 begin_comment
@@ -254,7 +254,7 @@ begin_define
 define|#
 directive|define
 name|T_DTRACE_PROBE
-value|32
+value|33
 end_define
 
 begin_comment

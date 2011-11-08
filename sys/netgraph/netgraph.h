@@ -5798,6 +5798,7 @@ parameter_list|,
 name|item_p
 name|item
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|address

@@ -587,6 +587,7 @@ comment|/* global variables */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -595,6 +596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nodaemon
 init|=
@@ -603,6 +605,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|background
 init|=
@@ -611,6 +614,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|paused
 init|=
@@ -619,6 +623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|identify
 init|=
@@ -627,6 +632,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|extioctl
 init|=
@@ -635,6 +641,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -645,6 +652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pidfh
 modifier|*

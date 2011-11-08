@@ -70,6 +70,7 @@ file|<unistd.h>
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 specifier|const
@@ -289,6 +290,7 @@ function_decl|;
 end_function_decl
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 specifier|const

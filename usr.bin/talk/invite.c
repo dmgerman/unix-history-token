@@ -108,6 +108,7 @@ comment|/*  * The msg.id's for the invitations  * on the local and remote machin
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|local_id
 decl_stmt|,
@@ -116,6 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|invitebuf
 decl_stmt|;

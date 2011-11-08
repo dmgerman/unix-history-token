@@ -160,16 +160,14 @@ directive|include
 file|<unistd.h>
 end_include
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument|ignhead
 argument_list|,
 argument|ignentry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|ignores
 expr_stmt|;
 end_expr_stmt

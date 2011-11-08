@@ -134,6 +134,7 @@ comment|/*  * Support for include path search  * First search in the current dir
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|path_entry
 block|{

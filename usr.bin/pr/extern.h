@@ -6,7 +6,21 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|eopterr
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|eoptind
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|eoptopt
 decl_stmt|;
 end_decl_stmt
 

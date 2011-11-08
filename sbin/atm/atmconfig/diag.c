@@ -232,6 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|cmdtab

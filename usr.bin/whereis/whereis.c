@@ -130,6 +130,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|opt_a
 decl_stmt|,
@@ -148,6 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|ccharp
 modifier|*
 name|bindirs
@@ -161,6 +163,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -169,6 +172,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -179,6 +183,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|colonify
@@ -190,6 +195,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|contains
 parameter_list|(
@@ -204,6 +210,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|decolonify
 parameter_list|(
@@ -221,6 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|defaults
 parameter_list|(
@@ -230,6 +238,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|scanopts
 parameter_list|(
@@ -243,6 +252,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -256,6 +266,7 @@ comment|/*  * Throughout this program, a number of strings are dynamically  * al
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -285,6 +296,7 @@ comment|/*  * Scan options passed to program.  *  * Note that the -B/-M/-S optio
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|scanopts
 parameter_list|(
@@ -562,6 +574,7 @@ comment|/*  * Find out whether string `s' is contained in list `cpp'.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|contains
 parameter_list|(
@@ -634,6 +647,7 @@ comment|/*  * Split string `s' at colons, and pass it to the string list pointed
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|decolonify
 parameter_list|(
@@ -783,6 +797,7 @@ comment|/*  * Join string list `cpp' into a colon-separated string.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|colonify
@@ -926,6 +941,7 @@ comment|/*  * Provide defaults for all options and directory lists.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|defaults
 parameter_list|(

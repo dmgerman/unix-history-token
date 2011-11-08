@@ -88,6 +88,7 @@ file|"fdutil.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|quiet
 decl_stmt|,
@@ -96,6 +97,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|unsigned
 name|char
 name|fillbyte
@@ -109,6 +111,7 @@ comment|/* "foo" */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|doread
 parameter_list|(
@@ -128,6 +131,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|doreadid
 parameter_list|(
@@ -146,6 +150,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -155,6 +160,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -556,6 +562,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|doread
 parameter_list|(
@@ -1333,6 +1340,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|doreadid
 parameter_list|(

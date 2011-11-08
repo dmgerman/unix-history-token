@@ -530,6 +530,7 @@ value|mtx_assert(&rtsock_mtx, MA_OWNED)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net
@@ -8965,6 +8966,7 @@ block|}
 end_function
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net

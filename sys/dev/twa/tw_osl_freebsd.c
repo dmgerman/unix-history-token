@@ -67,6 +67,7 @@ comment|/* TW_OSL_DEBUG */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|TW_OSLI_MALLOC_CLASS

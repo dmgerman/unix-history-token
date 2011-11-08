@@ -140,6 +140,17 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
+name|jflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable soft updates journaling for filesys */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|Xflag
 decl_stmt|;
 end_decl_stmt

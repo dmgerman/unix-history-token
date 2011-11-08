@@ -27989,13 +27989,6 @@ name|rport
 expr_stmt|;
 endif|#
 directive|endif
-if|if
-condition|(
-name|altsa
-operator|==
-name|NULL
-condition|)
-block|{
 name|iph
 operator|=
 name|mtod
@@ -28085,6 +28078,19 @@ name|ip_dst
 operator|.
 name|s_addr
 expr_stmt|;
+if|if
+condition|(
+name|altsa
+condition|)
+block|{
+comment|/* 				 * For cookies we use the src address NOT 				 * from the packet but from the original 				 * INIT. 				 */
+name|sa
+operator|=
+name|altsa
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sin
 operator|.
 name|sin_addr
@@ -28103,6 +28109,7 @@ operator|)
 operator|&
 name|sin
 expr_stmt|;
+block|}
 break|break;
 block|}
 endif|#
@@ -28185,6 +28192,27 @@ name|sh
 operator|->
 name|dest_port
 expr_stmt|;
+name|sin6_2
+operator|->
+name|sin6_addr
+operator|=
+name|ip6
+operator|->
+name|ip6_dst
+expr_stmt|;
+if|if
+condition|(
+name|altsa
+condition|)
+block|{
+comment|/* 				 * For cookies we use the src address NOT 				 * from the packet but from the original 				 * INIT. 				 */
+name|sa
+operator|=
+name|altsa
+expr_stmt|;
+block|}
+else|else
+block|{
 name|sin6
 operator|.
 name|sin6_addr
@@ -28203,6 +28231,7 @@ operator|)
 operator|&
 name|sin6
 expr_stmt|;
+block|}
 break|break;
 block|}
 endif|#
@@ -28215,15 +28244,6 @@ literal|1
 operator|)
 return|;
 break|break;
-block|}
-block|}
-else|else
-block|{
-comment|/* 		 * For cookies we use the src address NOT from the packet 		 * but from the original INIT 		 */
-name|sa
-operator|=
-name|altsa
-expr_stmt|;
 block|}
 comment|/* Turn off ECN until we get through all params */
 name|ecn_allowed

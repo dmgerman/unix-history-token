@@ -113,6 +113,7 @@ comment|/* spray buffer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|spray_buffer
 index|[
@@ -126,6 +127,7 @@ comment|/* RPC timeouts */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|NO_DEFAULT
@@ -141,6 +143,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|ONE_WAY
@@ -154,6 +157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|TIMEOUT

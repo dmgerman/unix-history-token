@@ -136,39 +136,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_decl_stmt
-name|char
-modifier|*
-name|user
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* user to switch to before running program */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|group
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* group to switch to ... */
-end_comment
-
-begin_decl_stmt
-name|char
-modifier|*
-name|grouplist
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* group list to switch to ... */
-end_comment
-
 begin_function
 name|int
 name|main
@@ -198,6 +165,15 @@ name|endp
 decl_stmt|,
 modifier|*
 name|p
+decl_stmt|,
+modifier|*
+name|user
+decl_stmt|,
+modifier|*
+name|group
+decl_stmt|,
+modifier|*
+name|grouplist
 decl_stmt|;
 specifier|const
 name|char
@@ -228,6 +204,14 @@ expr_stmt|;
 name|uid
 operator|=
 literal|0
+expr_stmt|;
+name|user
+operator|=
+name|group
+operator|=
+name|grouplist
+operator|=
+name|NULL
 expr_stmt|;
 while|while
 condition|(

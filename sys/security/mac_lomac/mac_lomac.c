@@ -248,6 +248,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_security_mac
@@ -588,6 +589,7 @@ value|mac_label_set((l), lomac_slot, (uintptr_t)(val))
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_LOMAC

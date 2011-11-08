@@ -351,7 +351,7 @@ parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|int
+name|vm_page_bits_t
 name|pagebits
 parameter_list|)
 function_decl|;
@@ -3687,7 +3687,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_page_alloc:  *  *	Allocate and return a page that is associated with the specified  *	object and offset pair.  By default, this page has the flag VPO_BUSY  *	set.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_IFCACHED	return page only if it is cached  *	VM_ALLOC_IFNOTCACHED	return NULL, do not reactivate if the page  *				is cached  *	VM_ALLOC_NOBUSY		do not set the flag VPO_BUSY on the page  *	VM_ALLOC_NOOBJ		page is not associated with an object and  *				should not have the flag VPO_BUSY set  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
+comment|/*  *	vm_page_alloc:  *  *	Allocate and return a page that is associated with the specified  *	object and offset pair.  By default, this page has the flag VPO_BUSY  *	set.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_COUNT(number)	the number of additional pages that the caller  *				intends to allocate  *	VM_ALLOC_IFCACHED	return page only if it is cached  *	VM_ALLOC_IFNOTCACHED	return NULL, do not reactivate if the page  *				is cached  *	VM_ALLOC_NOBUSY		do not set the flag VPO_BUSY on the page  *	VM_ALLOC_NOOBJ		page is not associated with an object and  *				should not have the flag VPO_BUSY set  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -3720,10 +3720,17 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|,
-name|page_req
+name|req_class
 decl_stmt|;
-if|if
-condition|(
+name|KASSERT
+argument_list|(
+operator|(
+name|object
+operator|!=
+name|NULL
+operator|)
+operator|==
+operator|(
 operator|(
 name|req
 operator|&
@@ -3731,19 +3738,19 @@ name|VM_ALLOC_NOOBJ
 operator|)
 operator|==
 literal|0
-condition|)
-block|{
-name|KASSERT
-argument_list|(
-name|object
-operator|!=
-name|NULL
+operator|)
 argument_list|,
 operator|(
-literal|"vm_page_alloc: NULL object."
+literal|"vm_page_alloc: inconsistent object/req"
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|object
+operator|!=
+name|NULL
+condition|)
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
 name|object
@@ -3751,29 +3758,24 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
-block|}
-name|page_req
+name|req_class
 operator|=
 name|req
 operator|&
 name|VM_ALLOC_CLASS_MASK
 expr_stmt|;
-comment|/* 	 * The pager is allowed to eat deeper into the free page list. 	 */
+comment|/* 	 * The page daemon is allowed to dig deeper into the free page list. 	 */
 if|if
 condition|(
-operator|(
 name|curproc
 operator|==
 name|pageproc
-operator|)
 operator|&&
-operator|(
-name|page_req
+name|req_class
 operator|!=
 name|VM_ALLOC_INTERRUPT
-operator|)
 condition|)
-name|page_req
+name|req_class
 operator|=
 name|VM_ALLOC_SYSTEM
 expr_stmt|;
@@ -3798,7 +3800,7 @@ operator|.
 name|v_free_reserved
 operator|||
 operator|(
-name|page_req
+name|req_class
 operator|==
 name|VM_ALLOC_SYSTEM
 operator|&&
@@ -3816,7 +3818,7 @@ name|v_interrupt_free_min
 operator|)
 operator|||
 operator|(
-name|page_req
+name|req_class
 operator|==
 name|VM_ALLOC_INTERRUPT
 operator|&&
@@ -4063,7 +4065,7 @@ argument_list|(
 operator|&
 name|vm_pageout_deficit
 argument_list|,
-name|MAX
+name|max
 argument_list|(
 operator|(
 name|u_int
@@ -4210,6 +4212,25 @@ operator|!=
 literal|0
 condition|)
 block|{
+name|KASSERT
+argument_list|(
+operator|(
+name|m
+operator|->
+name|flags
+operator|&
+name|PG_ZERO
+operator|)
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"vm_page_alloc: cached page %p is PG_ZERO"
+operator|,
+name|m
+operator|)
+argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|m
@@ -4810,7 +4831,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * 	vm_page_alloc_freelist:  *  *	Allocate a physical page from the specified free page list.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
+comment|/*  * 	vm_page_alloc_freelist:  *  *	Allocate a physical page from the specified free page list.  *  *	The caller must always specify an allocation class.  *  *	allocation classes:  *	VM_ALLOC_NORMAL		normal process request  *	VM_ALLOC_SYSTEM		system *really* needs a page  *	VM_ALLOC_INTERRUPT	interrupt time request  *  *	optional allocation flags:  *	VM_ALLOC_COUNT(number)	the number of additional pages that the caller  *				intends to allocate  *	VM_ALLOC_WIRED		wire the allocated page  *	VM_ALLOC_ZERO		prefer a zeroed page  *  *	This routine may not sleep.  */
 end_comment
 
 begin_function
@@ -4836,25 +4857,36 @@ name|u_int
 name|flags
 decl_stmt|;
 name|int
-name|page_req
+name|req_class
 decl_stmt|;
-name|m
-operator|=
-name|NULL
-expr_stmt|;
-name|page_req
+name|req_class
 operator|=
 name|req
 operator|&
 name|VM_ALLOC_CLASS_MASK
 expr_stmt|;
+comment|/* 	 * The page daemon is allowed to dig deeper into the free page list. 	 */
+if|if
+condition|(
+name|curproc
+operator|==
+name|pageproc
+operator|&&
+name|req_class
+operator|!=
+name|VM_ALLOC_INTERRUPT
+condition|)
+name|req_class
+operator|=
+name|VM_ALLOC_SYSTEM
+expr_stmt|;
+comment|/* 	 * Do not allocate reserved pages unless the req has asked for it. 	 */
 name|mtx_lock
 argument_list|(
 operator|&
 name|vm_page_queue_free_mtx
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Do not allocate reserved pages unless the req has asked for it. 	 */
 if|if
 condition|(
 name|cnt
@@ -4870,7 +4902,7 @@ operator|.
 name|v_free_reserved
 operator|||
 operator|(
-name|page_req
+name|req_class
 operator|==
 name|VM_ALLOC_SYSTEM
 operator|&&
@@ -4888,7 +4920,7 @@ name|v_interrupt_free_min
 operator|)
 operator|||
 operator|(
-name|page_req
+name|req_class
 operator|==
 name|VM_ALLOC_INTERRUPT
 operator|&&
@@ -4903,7 +4935,6 @@ operator|>
 literal|0
 operator|)
 condition|)
-block|{
 name|m
 operator|=
 name|vm_phys_alloc_freelist_pages
@@ -4915,6 +4946,40 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+else|else
+block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|vm_page_queue_free_mtx
+argument_list|)
+expr_stmt|;
+name|atomic_add_int
+argument_list|(
+operator|&
+name|vm_pageout_deficit
+argument_list|,
+name|max
+argument_list|(
+operator|(
+name|u_int
+operator|)
+name|req
+operator|>>
+name|VM_ALLOC_COUNT_SHIFT
+argument_list|,
+literal|1
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|pagedaemon_wakeup
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
 block|}
 if|if
 condition|(
@@ -7288,7 +7353,7 @@ operator|)
 return|;
 block|}
 comment|/*  * Mapping function for valid bits or for dirty bits in  * a page.  May not block.  *  * Inputs are required to range within a page.  */
-name|int
+name|vm_page_bits_t
 name|vm_page_bits
 parameter_list|(
 name|int
@@ -7354,12 +7419,18 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|2
 operator|<<
 name|last_bit
 operator|)
 operator|-
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 name|first_bit
@@ -7563,7 +7634,7 @@ parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|int
+name|vm_page_bits_t
 name|pagebits
 parameter_list|)
 block|{
@@ -7637,9 +7708,6 @@ directive|if
 name|PAGE_SIZE
 operator|==
 literal|32768
-error|#
-directive|error
-error|pagebits too short
 name|atomic_clear_64
 argument_list|(
 operator|(
@@ -7761,15 +7829,15 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|u_long
+name|vm_page_bits_t
 name|oldvalid
+decl_stmt|,
+name|pagebits
 decl_stmt|;
 name|int
 name|endoff
 decl_stmt|,
 name|frag
-decl_stmt|,
-name|pagebits
 decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
@@ -7812,6 +7880,9 @@ operator|->
 name|valid
 operator|&
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 operator|(
@@ -7865,6 +7936,9 @@ operator|->
 name|valid
 operator|&
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 operator|(
@@ -8026,7 +8100,7 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|int
+name|vm_page_bits_t
 name|bits
 decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
@@ -8174,6 +8248,9 @@ operator|->
 name|valid
 operator|&
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 name|i
@@ -8240,15 +8317,8 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|int
+name|vm_page_bits_t
 name|bits
-init|=
-name|vm_page_bits
-argument_list|(
-name|base
-argument_list|,
-name|size
-argument_list|)
 decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
@@ -8257,6 +8327,15 @@ operator|->
 name|object
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|bits
+operator|=
+name|vm_page_bits
+argument_list|(
+name|base
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 if|if

@@ -283,6 +283,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_PRISON_RACCT
@@ -18638,6 +18639,7 @@ comment|/*  * Jail-related sysctls.  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_security
