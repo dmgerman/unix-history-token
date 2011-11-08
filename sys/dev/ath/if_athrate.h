@@ -77,6 +77,93 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|ATH_RC_NUM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_DS_FLAG
+value|0x01
+end_define
+
+begin_comment
+comment|/* dual-stream rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_CW40_FLAG
+value|0x02
+end_define
+
+begin_comment
+comment|/* use HT40 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_SGI_FLAG
+value|0x04
+end_define
+
+begin_comment
+comment|/* use short-GI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_HT_FLAG
+value|0x08
+end_define
+
+begin_comment
+comment|/* use HT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_RTSCTS_FLAG
+value|0x10
+end_define
+
+begin_comment
+comment|/* enable RTS/CTS protection */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_rc_series
+block|{
+name|uint8_t
+name|rix
+decl_stmt|;
+comment|/* ratetable index, not rate code */
+name|uint8_t
+name|ratecode
+decl_stmt|;
+comment|/* hardware rate code */
+name|uint8_t
+name|tries
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+name|uint32_t
+name|max4msframelen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * State storage handling.  */
 end_comment
