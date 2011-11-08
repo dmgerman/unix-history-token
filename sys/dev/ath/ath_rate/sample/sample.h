@@ -78,15 +78,17 @@ decl_stmt|;
 name|int
 name|successive_failures
 decl_stmt|;
-name|int
+name|uint64_t
 name|tries
 decl_stmt|;
-name|int
+name|uint64_t
 name|total_packets
 decl_stmt|;
-name|int
+comment|/* pkts total since assoc */
+name|uint64_t
 name|packets_acked
 decl_stmt|;
+comment|/* pkts acked since assoc */
 name|unsigned
 name|perfect_tx_time
 decl_stmt|;

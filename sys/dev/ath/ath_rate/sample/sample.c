@@ -36,6 +36,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_ah.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -377,6 +383,16 @@ name|int
 name|rix
 parameter_list|)
 block|{
+if|if
+condition|(
+name|rix
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 return|return
 name|rt
 operator|->
@@ -432,6 +448,15 @@ name|int
 name|rix
 parameter_list|)
 block|{
+if|if
+condition|(
+name|rix
+operator|<
+literal|0
+condition|)
+return|return
+literal|""
+return|;
 return|return
 name|rt
 operator|->
@@ -5111,7 +5136,7 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"[%2u %s:%4u] %8d:%-8d (%3d%%) T %8d F %4d avg %5u last %u\n"
+literal|"[%2u %s:%4u] %8ju:%-8ju (%3d%%) T %8ju F %4d avg %5u last %u\n"
 argument_list|,
 name|dot11rate
 argument_list|(
@@ -5132,6 +5157,9 @@ argument_list|(
 name|y
 argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sn
 operator|->
 name|stats
@@ -5144,6 +5172,9 @@ index|]
 operator|.
 name|total_packets
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sn
 operator|->
 name|stats
@@ -5156,9 +5187,11 @@ index|]
 operator|.
 name|packets_acked
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 operator|(
-literal|100
-operator|*
 name|sn
 operator|->
 name|stats
@@ -5170,6 +5203,8 @@ name|rix
 index|]
 operator|.
 name|packets_acked
+operator|*
+literal|100ULL
 operator|)
 operator|/
 name|sn
@@ -5183,7 +5218,11 @@ name|rix
 index|]
 operator|.
 name|total_packets
+argument_list|)
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|sn
 operator|->
 name|stats
