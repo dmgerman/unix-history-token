@@ -94,6 +94,27 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
+name|struct
+name|ath_buf
+modifier|*
+name|ath_buf_clone
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|,
+specifier|const
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|int
 name|ath_reset
 parameter_list|(
