@@ -1640,7 +1640,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|bf
 argument_list|,

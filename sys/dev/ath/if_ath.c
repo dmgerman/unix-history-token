@@ -1873,7 +1873,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ATHDEV
@@ -4765,7 +4764,7 @@ if|if
 condition|(
 name|needbeacon
 operator|&
-name|STAILQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 name|sc
@@ -5003,7 +5002,7 @@ name|avp
 operator|->
 name|av_bcbuf
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -5011,12 +5010,16 @@ operator|->
 name|sc_bbuf
 argument_list|)
 expr_stmt|;
-name|STAILQ_REMOVE_HEAD
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_bbuf
+argument_list|,
+name|avp
+operator|->
+name|av_bcbuf
 argument_list|,
 name|bf_list
 argument_list|)
@@ -8138,7 +8141,7 @@ argument_list|)
 expr_stmt|;
 name|bf
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -8162,12 +8165,14 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|STAILQ_REMOVE_HEAD
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_txbuf
+argument_list|,
+name|bf
 argument_list|,
 name|bf_list
 argument_list|)
@@ -8194,7 +8199,7 @@ literal|"%s: %s\n"
 argument_list|,
 name|__func__
 argument_list|,
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -8398,7 +8403,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -8431,7 +8436,7 @@ operator|.
 name|rcvif
 expr_stmt|;
 comment|/* 		 * Check for fragmentation.  If this frame 		 * has been broken up verify we have enough 		 * buffers to send all the fragments so all 		 * go out or none... 		 */
-name|STAILQ_INIT
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|frags
@@ -8547,7 +8552,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -8641,7 +8646,7 @@ name|next
 expr_stmt|;
 name|bf
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|frags
@@ -8658,10 +8663,12 @@ literal|"no buf for txfrag"
 operator|)
 argument_list|)
 expr_stmt|;
-name|STAILQ_REMOVE_HEAD
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|frags
+argument_list|,
+name|bf
 argument_list|,
 name|bf_list
 argument_list|)
@@ -10729,7 +10736,7 @@ modifier|*
 name|src
 parameter_list|)
 block|{
-name|STAILQ_CONCAT
+name|TAILQ_CONCAT
 argument_list|(
 operator|&
 name|dst
@@ -10740,6 +10747,8 @@ operator|&
 name|src
 operator|->
 name|axq_q
+argument_list|,
+name|bf_list
 argument_list|)
 expr_stmt|;
 name|dst
@@ -11639,7 +11648,7 @@ decl_stmt|;
 comment|/* 			 * Move frames from the s/w mcast q to the h/w cab q. 			 * XXX MORE_DATA bit 			 */
 name|bfm
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|avp
@@ -11705,7 +11714,7 @@ comment|/* NB: gated by beacon so safe to start here */
 if|if
 condition|(
 operator|!
-name|STAILQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 operator|&
 operator|(
@@ -12080,7 +12089,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|sc
@@ -12115,7 +12124,7 @@ name|ath_buf
 modifier|*
 name|bf
 decl_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|bf
 argument_list|,
@@ -13518,7 +13527,7 @@ name|dd_bufptr
 operator|=
 name|bf
 expr_stmt|;
-name|STAILQ_INIT
+name|TAILQ_INIT
 argument_list|(
 name|head
 argument_list|)
@@ -13685,7 +13694,7 @@ return|return
 name|error
 return|;
 block|}
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 name|head
 argument_list|,
@@ -13849,7 +13858,7 @@ operator|->
 name|dd_dmat
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|bf
 argument_list|,
@@ -13933,7 +13942,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|STAILQ_INIT
+name|TAILQ_INIT
 argument_list|(
 name|head
 argument_list|)
@@ -15813,7 +15822,7 @@ do|do
 block|{
 name|bf
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -15887,12 +15896,14 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|STAILQ_REMOVE_HEAD
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_rxbuf
+argument_list|,
+name|bf
 argument_list|,
 name|bf_list
 argument_list|)
@@ -15996,12 +16007,14 @@ operator|==
 name|HAL_EINPROGRESS
 condition|)
 break|break;
-name|STAILQ_REMOVE_HEAD
+name|TAILQ_REMOVE
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_rxbuf
+argument_list|,
+name|bf
 argument_list|,
 name|bf_list
 argument_list|)
@@ -17065,7 +17078,7 @@ expr_stmt|;
 block|}
 name|rx_next
 label|:
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|sc
@@ -17301,12 +17314,26 @@ name|axq_link
 operator|=
 name|NULL
 expr_stmt|;
-name|STAILQ_INIT
+name|txq
+operator|->
+name|axq_softc
+operator|=
+name|sc
+expr_stmt|;
+name|TAILQ_INIT
 argument_list|(
 operator|&
 name|txq
 operator|->
 name|axq_q
+argument_list|)
+expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|txq
+operator|->
+name|axq_tidq
 argument_list|)
 expr_stmt|;
 name|ATH_TXQ_LOCK_INIT
@@ -18330,7 +18357,7 @@ expr_stmt|;
 comment|/* reset periodic desc intr count */
 name|bf
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|txq
@@ -18440,9 +18467,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|ATH_TXQ_REMOVE_HEAD
+name|ATH_TXQ_REMOVE
 argument_list|(
 name|txq
+argument_list|,
+name|bf
 argument_list|,
 name|bf_list
 argument_list|)
@@ -18907,16 +18936,14 @@ argument_list|)
 expr_stmt|;
 name|last
 operator|=
-name|STAILQ_LAST
+name|TAILQ_LAST
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_txbuf
 argument_list|,
-name|ath_buf
-argument_list|,
-name|bf_list
+name|ath_bufhead_s
 argument_list|)
 expr_stmt|;
 if|if
@@ -18932,7 +18959,7 @@ operator|&=
 operator|~
 name|ATH_BUF_BUSY
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|sc
@@ -19562,16 +19589,14 @@ argument_list|)
 expr_stmt|;
 name|bf
 operator|=
-name|STAILQ_LAST
+name|TAILQ_LAST
 argument_list|(
 operator|&
 name|sc
 operator|->
 name|sc_txbuf
 argument_list|,
-name|ath_buf
-argument_list|,
-name|bf_list
+name|ath_bufhead_s
 argument_list|)
 expr_stmt|;
 if|if
@@ -19610,7 +19635,7 @@ argument_list|)
 expr_stmt|;
 name|bf
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|txq
@@ -19638,9 +19663,11 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|ATH_TXQ_REMOVE_HEAD
+name|ATH_TXQ_REMOVE
 argument_list|(
 name|txq
+argument_list|,
+name|bf
 argument_list|,
 name|bf_list
 argument_list|)
@@ -19819,7 +19846,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 operator|&
 name|sc
@@ -20092,7 +20119,7 @@ name|ath_buf
 modifier|*
 name|bf
 init|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|sc
@@ -20304,7 +20331,7 @@ name|ix
 operator|=
 literal|0
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|bf
 argument_list|,
@@ -20470,7 +20497,7 @@ name|sc_rxpending
 operator|=
 name|NULL
 expr_stmt|;
-name|STAILQ_FOREACH
+name|TAILQ_FOREACH
 argument_list|(
 argument|bf
 argument_list|,
@@ -20516,7 +20543,7 @@ block|}
 block|}
 name|bf
 operator|=
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|sc

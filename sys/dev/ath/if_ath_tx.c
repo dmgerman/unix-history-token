@@ -389,7 +389,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|bf
 argument_list|,
@@ -401,14 +401,16 @@ argument|next
 argument_list|)
 block|{
 comment|/* NB: bf assumed clean */
-name|STAILQ_REMOVE_HEAD
+name|TAILQ_REMOVE
 argument_list|(
 name|frags
+argument_list|,
+name|bf
 argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
@@ -522,7 +524,7 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_TAIL
+name|TAILQ_INSERT_TAIL
 argument_list|(
 name|frags
 argument_list|,
@@ -539,7 +541,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|!
-name|STAILQ_EMPTY
+name|TAILQ_EMPTY
 argument_list|(
 name|frags
 argument_list|)
@@ -1355,7 +1357,7 @@ name|txq
 operator|->
 name|axq_qnum
 argument_list|,
-name|STAILQ_FIRST
+name|TAILQ_FIRST
 argument_list|(
 operator|&
 name|txq
@@ -1552,6 +1554,8 @@ init|=
 name|ATH_TXQ_LAST
 argument_list|(
 name|txq
+argument_list|,
+name|axq_q_s
 argument_list|)
 decl_stmt|;
 name|struct
@@ -5114,7 +5118,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-name|STAILQ_INSERT_HEAD
+name|TAILQ_INSERT_HEAD
 argument_list|(
 operator|&
 name|sc
