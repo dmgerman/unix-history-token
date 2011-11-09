@@ -5077,20 +5077,27 @@ condition|(
 name|vendorid
 operator|==
 name|ATHEROS_VENDOR_ID
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|devid
 operator|==
 name|AR5416_DEVID_PCI
-operator|||
-name|devid
-operator|==
-name|AR5416_DEVID_PCIE
-operator|)
 condition|)
 return|return
 literal|"Atheros 5416"
 return|;
+if|if
+condition|(
+name|devid
+operator|==
+name|AR5416_DEVID_PCIE
+condition|)
+return|return
+literal|"Atheros 5418"
+return|;
+block|}
 return|return
 name|AH_NULL
 return|;
