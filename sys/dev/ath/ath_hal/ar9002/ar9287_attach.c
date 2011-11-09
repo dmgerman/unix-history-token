@@ -2159,20 +2159,27 @@ condition|(
 name|vendorid
 operator|==
 name|ATHEROS_VENDOR_ID
-operator|&&
-operator|(
+condition|)
+block|{
+if|if
+condition|(
 name|devid
 operator|==
 name|AR9287_DEVID_PCI
-operator|||
+condition|)
+return|return
+literal|"Atheros 9227"
+return|;
+if|if
+condition|(
 name|devid
 operator|==
 name|AR9287_DEVID_PCIE
-operator|)
 condition|)
 return|return
 literal|"Atheros 9287"
 return|;
+block|}
 return|return
 name|AH_NULL
 return|;
