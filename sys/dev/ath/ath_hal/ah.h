@@ -2313,6 +2313,10 @@ name|int
 name|ah_additional_swba_backoff
 decl_stmt|;
 comment|/* in TU's */
+name|int
+name|ah_force_full_reset
+decl_stmt|;
+comment|/* force full chip reset rather then warm reset */
 block|}
 name|HAL_OPS_CONFIG
 typedef|;

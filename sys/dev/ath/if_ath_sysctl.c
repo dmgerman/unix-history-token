@@ -6144,6 +6144,42 @@ argument_list|,
 literal|"Atheros HAL additional SWBA backoff time"
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_ah
+operator|->
+name|ah_config
+operator|.
+name|ah_force_full_reset
+operator|=
+literal|0
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"force_full_reset"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ah
+operator|->
+name|ah_config
+operator|.
+name|ah_force_full_reset
+argument_list|,
+literal|0
+argument_list|,
+literal|"Force full chip reset rather than a warm reset"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

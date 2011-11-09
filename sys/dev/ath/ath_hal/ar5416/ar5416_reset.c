@@ -666,6 +666,14 @@ argument_list|,
 name|AR_EEP_OL_PWRCTRL
 argument_list|)
 operator|)
+operator|||
+operator|(
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_force_full_reset
+operator|)
 condition|)
 name|tsf
 operator|=
@@ -2725,7 +2733,7 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Warm reset is optimistic. 	 */
+comment|/* 	 * Warm reset is optimistic for open-loop TX power control. 	 */
 if|if
 condition|(
 name|AR_SREV_MERLIN
@@ -2739,6 +2747,30 @@ name|ah
 argument_list|,
 name|AR_EEP_OL_PWRCTRL
 argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ar5416SetResetReg
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_RESET_POWER_ON
+argument_list|)
+condition|)
+return|return
+name|AH_FALSE
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_force_full_reset
 condition|)
 block|{
 if|if
