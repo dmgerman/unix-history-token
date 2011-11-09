@@ -6180,6 +6180,33 @@ argument_list|,
 literal|"Force full chip reset rather than a warm reset"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * This is initialised by the driver. 	 */
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"serialise_reg_war"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_ah
+operator|->
+name|ah_config
+operator|.
+name|ah_serialise_reg_war
+argument_list|,
+literal|0
+argument_list|,
+literal|"Force register access serialisation"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

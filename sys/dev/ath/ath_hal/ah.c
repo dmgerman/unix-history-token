@@ -3084,6 +3084,19 @@ name|HAL_OK
 else|:
 name|HAL_ENOTSUPP
 return|;
+case|case
+name|HAL_CAP_SERIALISE_WAR
+case|:
+comment|/* PCI register serialisation */
+return|return
+name|pCap
+operator|->
+name|halSerialiseRegWar
+condition|?
+name|HAL_OK
+else|:
+name|HAL_ENOTSUPP
+return|;
 default|default:
 return|return
 name|HAL_EINVAL

@@ -166,6 +166,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/smp.h>
+end_include
+
+begin_comment
+comment|/* for mp_ncpus */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -3675,6 +3685,47 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * Check if the hardware requires PCI register serialisation. 	 * Some of the Owl based MACs require this. 	 */
+if|if
+condition|(
+name|mp_ncpus
+operator|>
+literal|1
+operator|&&
+name|ath_hal_getcapability
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_CAP_SERIALISE_WAR
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|)
+operator|==
+name|HAL_OK
+condition|)
+block|{
+name|sc
+operator|->
+name|sc_ah
+operator|->
+name|ah_config
+operator|.
+name|ah_serialise_reg_war
+operator|=
+literal|1
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"Enabling register serialisation\n"
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Indicate we need the 802.11 header padded to a 	 * 32-bit boundary for 4-address and QoS frames. 	 */
 name|ic
 operator|->

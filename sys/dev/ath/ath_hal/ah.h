@@ -467,6 +467,11 @@ init|=
 literal|244
 block|,
 comment|/* baseband read WAR */
+name|HAL_CAP_SERIALISE_WAR
+init|=
+literal|245
+block|,
+comment|/* serialise register access on PCI */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -2317,6 +2322,10 @@ name|int
 name|ah_force_full_reset
 decl_stmt|;
 comment|/* force full chip reset rather then warm reset */
+name|int
+name|ah_serialise_reg_war
+decl_stmt|;
+comment|/* force serialisation of register IO */
 block|}
 name|HAL_OPS_CONFIG
 typedef|;

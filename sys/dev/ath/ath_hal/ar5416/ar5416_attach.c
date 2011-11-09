@@ -5046,11 +5046,29 @@ operator|=
 name|AH_TRUE
 expr_stmt|;
 block|}
+comment|/* 	 * The MAC will mark frames as RXed if there's a descriptor 	 * to write them to. So if it hits a self-linked final descriptor, 	 * it'll keep ACKing frames even though they're being silently 	 * dropped. Thus, this particular feature of the driver can't 	 * be used for 802.11n devices. 	 */
 name|ahpriv
 operator|->
 name|ah_rxornIsFatal
 operator|=
 name|AH_FALSE
+expr_stmt|;
+comment|/* 	 * If it's a PCI NIC, ask the HAL OS layer to serialise 	 * register access, or SMP machines may cause the hardware 	 * to hang. This is applicable to AR5416 and AR9220; I'm not 	 * sure about AR9160 or AR9227. 	 */
+if|if
+condition|(
+operator|!
+name|AH_PRIVATE
+argument_list|(
+name|ah
+argument_list|)
+operator|->
+name|ah_ispcie
+condition|)
+name|pCap
+operator|->
+name|halSerialiseRegWar
+operator|=
+literal|1
 expr_stmt|;
 return|return
 name|AH_TRUE
