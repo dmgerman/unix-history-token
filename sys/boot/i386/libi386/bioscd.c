@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<edd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libi386.h"
 end_include
 
@@ -1301,7 +1307,11 @@ name|packet
 operator|.
 name|len
 operator|=
-literal|0x10
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|edd_packet
+argument_list|)
 expr_stmt|;
 name|packet
 operator|.
@@ -1311,7 +1321,7 @@ name|x
 expr_stmt|;
 name|packet
 operator|.
-name|offset
+name|off
 operator|=
 name|VTOPOFF
 argument_list|(
