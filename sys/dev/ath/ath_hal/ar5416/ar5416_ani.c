@@ -855,7 +855,7 @@ expr_stmt|;
 if|if
 condition|(
 name|level
-operator|>=
+operator|>
 name|params
 operator|->
 name|maxNoiseImmunityLevel
@@ -1383,7 +1383,7 @@ expr_stmt|;
 if|if
 condition|(
 name|level
-operator|>=
+operator|>
 name|params
 operator|->
 name|maxFirstepLevel
@@ -1490,7 +1490,7 @@ expr_stmt|;
 if|if
 condition|(
 name|level
-operator|>=
+operator|>
 name|params
 operator|->
 name|maxSpurImmunityLevel
@@ -1884,6 +1884,8 @@ operator|->
 name|maxFirstepLevel
 condition|)
 block|{
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -1896,7 +1898,7 @@ name|firstepLevel
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 block|}
@@ -1938,6 +1940,8 @@ name|params
 operator|->
 name|maxFirstepLevel
 condition|)
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -1950,7 +1954,7 @@ name|firstepLevel
 operator|+
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 else|else
@@ -1988,6 +1992,8 @@ name|firstepLevel
 operator|>
 literal|0
 condition|)
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -1996,7 +2002,7 @@ name|HAL_ANI_FIRSTEP_LEVEL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 block|}
@@ -3156,6 +3162,8 @@ operator|->
 name|ofdmWeakSigDetectOff
 condition|)
 block|{
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -3164,7 +3172,7 @@ name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
 argument_list|,
 name|AH_TRUE
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 if|if
@@ -3176,6 +3184,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -3188,7 +3198,7 @@ name|firstepLevel
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 block|}
@@ -3204,6 +3214,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -3216,7 +3228,7 @@ name|firstepLevel
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 block|}
@@ -3231,6 +3243,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -3243,7 +3257,7 @@ name|spurImmunityLevel
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 comment|/*  	 * if all else fails, lower noise immunity level down to a min value 	 * zero for now 	 */
@@ -3256,6 +3270,8 @@ operator|>
 literal|0
 condition|)
 block|{
+if|if
+condition|(
 name|ar5416AniControl
 argument_list|(
 name|ah
@@ -3268,7 +3284,7 @@ name|noiseImmunityLevel
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+condition|)
 return|return;
 block|}
 block|}
