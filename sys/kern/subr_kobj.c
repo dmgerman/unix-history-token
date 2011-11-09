@@ -789,6 +789,7 @@ name|ce
 condition|)
 name|ce
 operator|=
+operator|&
 name|desc
 operator|->
 name|deflt

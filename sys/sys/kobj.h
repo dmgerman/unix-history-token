@@ -194,7 +194,6 @@ name|id
 decl_stmt|;
 comment|/* unique ID */
 name|kobj_method_t
-modifier|*
 name|deflt
 decl_stmt|;
 comment|/* default implementation */
