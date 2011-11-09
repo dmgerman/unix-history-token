@@ -3689,6 +3689,9 @@ argument_list|(
 name|sc
 argument_list|)
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_DEBUG
 specifier|const
 name|HAL_RATE_TABLE
 modifier|*
@@ -3698,6 +3701,8 @@ name|sc
 operator|->
 name|sc_currates
 decl_stmt|;
+endif|#
+directive|endif
 specifier|const
 name|int
 name|size_bin
