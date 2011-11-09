@@ -4722,6 +4722,18 @@ name|uint32_t
 name|type
 parameter_list|)
 block|{
+comment|/* 	 * Set force wake 	 */
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_RTC_FORCE_WAKE
+argument_list|,
+name|AR_RTC_FORCE_WAKE_EN
+operator||
+name|AR_RTC_FORCE_WAKE_ON_INT
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -4787,7 +4799,7 @@ operator||
 name|AR_RTC_FORCE_WAKE_ON_INT
 argument_list|)
 expr_stmt|;
-comment|/*      * RTC reset and clear      */
+comment|/*      * PowerOn reset can be used in open loop power control or failure recovery.      * If we do RTC reset while DMA is still running, hardware may corrupt memory.      * Therefore, we need to reset AHB first to stop DMA.      */
 if|if
 condition|(
 operator|!
@@ -4805,6 +4817,7 @@ argument_list|,
 name|AR_RC_AHB
 argument_list|)
 expr_stmt|;
+comment|/*      * RTC reset and clear      */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -5016,7 +5029,7 @@ block|{
 endif|#
 directive|endif
 comment|/* AH_SUPPORT_AR9130 */
-comment|/*          * Reset AHB          */
+comment|/*          * Reset AHB          *          * (In case the last interrupt source was a bus timeout.)          * XXX TODO: this is not the way to do it! It should be recorded          * XXX by the interrupt handler and passed _into_ the          * XXX reset path routine so this occurs.          */
 name|tmpReg
 operator|=
 name|OS_REG_READ
