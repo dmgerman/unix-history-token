@@ -313,7 +313,7 @@ modifier|*
 name|ah
 parameter_list|)
 block|{
-comment|/* 	 * These are the parameters from the AR5416 ANI code; 	 * they likely need quite a bit of adjustment for the 	 * AR9280. 	 */
+comment|/* 	 * These are the parameters from the AR5416 ANI code; 	 * they likely need quite a bit of adjustment for the 	 * AR9287. 	 */
 specifier|static
 specifier|const
 name|struct
@@ -1923,34 +1923,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|AR_BASE_FREQ_2GHZ
-value|2300
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_BASE_FREQ_5GHZ
-value|4900
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_SPUR_FEEQ_BOUND_HT40
-value|19
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_SPUR_FEEQ_BOUND_HT20
-value|10
-end_define
-
 begin_comment
 comment|/*  * Fill all software cached or static hardware state information.  * Return failure if capabilities are to come from EEPROM and  * cannot be read.  */
 end_comment
@@ -2118,7 +2090,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This has been disabled - having the HAL flip chainmasks on/off  * when attempting to implement 11n disrupts things. For now, just  * leave this flipped off and worry about implementing TX diversity  * for legacy and MCS0-7 when 11n is fully functioning.  */
+comment|/*  * This has been disabled - having the HAL flip chainmasks on/off  * when attempting to implement 11n disrupts things. For now, just  * leave this flipped off and worry about implementing TX diversity  * for legacy and MCS0-15 when 11n is fully functioning.  */
 end_comment
 
 begin_function
