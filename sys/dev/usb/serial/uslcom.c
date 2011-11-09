@@ -472,12 +472,8 @@ begin_define
 define|#
 directive|define
 name|USLCOM_PORT_NO
-value|0xFFFF
+value|0x0000
 end_define
-
-begin_comment
-comment|/* XXX think this should be 0 --hps */
-end_comment
 
 begin_comment
 comment|/* USLCOM_BREAK values */
@@ -508,6 +504,10 @@ name|USLCOM_FLOW_DTR_ON
 value|0x00000001
 end_define
 
+begin_comment
+comment|/* DTR static active */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -519,13 +519,6 @@ begin_comment
 comment|/* CTS handshake */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USLCOM_FLOW_RESERVED
-value|0xFFFFFF80
-end_define
-
 begin_comment
 comment|/* USLCOM_SET_FLOWCTRL values - 2nd word */
 end_comment
@@ -536,6 +529,10 @@ directive|define
 name|USLCOM_FLOW_RTS_ON
 value|0x00000040
 end_define
+
+begin_comment
+comment|/* RTS static active */
+end_comment
 
 begin_define
 define|#
@@ -2982,8 +2979,6 @@ index|]
 operator|=
 name|htole32
 argument_list|(
-name|USLCOM_FLOW_RESERVED
-operator||
 name|USLCOM_FLOW_DTR_ON
 operator||
 name|USLCOM_FLOW_CTS_HS
@@ -3023,8 +3018,6 @@ index|]
 operator|=
 name|htole32
 argument_list|(
-name|USLCOM_FLOW_RESERVED
-operator||
 name|USLCOM_FLOW_DTR_ON
 argument_list|)
 expr_stmt|;
@@ -3722,7 +3715,7 @@ name|req
 operator|.
 name|wIndex
 argument_list|,
-literal|0
+name|USLCOM_PORT_NO
 argument_list|)
 expr_stmt|;
 name|USETW
