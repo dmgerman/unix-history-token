@@ -2747,7 +2747,7 @@ name|ah
 argument_list|,
 name|HAL_ANI_OFDM_WEAK_SIGNAL_DETECTION
 argument_list|,
-name|AH_TRUE
+name|AH_FALSE
 argument_list|)
 expr_stmt|;
 name|ar5416AniControl
