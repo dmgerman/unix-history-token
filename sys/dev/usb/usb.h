@@ -1656,7 +1656,7 @@ decl_stmt|;
 name|uByte
 name|bDevCapabilityType
 decl_stmt|;
-name|uByte
+name|uDWord
 name|bmAttributes
 decl_stmt|;
 define|#

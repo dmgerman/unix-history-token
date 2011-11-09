@@ -12659,6 +12659,9 @@ literal|2
 block|,
 operator|.
 name|bmAttributes
+index|[
+literal|0
+index|]
 operator|=
 literal|2
 block|, 	}
