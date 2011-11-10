@@ -13461,8 +13461,6 @@ name|sc
 operator|->
 name|ti_ifp
 expr_stmt|;
-comment|/*#ifdef notdef*/
-comment|/* Avoid this for now -- checking this register is expensive. */
 comment|/* Make sure this is really our interrupt. */
 if|if
 condition|(
@@ -13486,7 +13484,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/*#endif*/
 comment|/* Ack interrupt and stop others from occuring. */
 name|CSR_WRITE_4
 argument_list|(
