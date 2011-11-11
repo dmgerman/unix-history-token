@@ -1184,7 +1184,7 @@ name|inp_vflag
 operator|&
 name|INP_IPV6PROTO
 operator|)
-operator|==
+operator|!=
 literal|0
 operator|)
 condition|)
