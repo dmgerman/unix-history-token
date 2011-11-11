@@ -3347,9 +3347,13 @@ name|new
 operator|->
 name|expire
 expr_stmt|;
-comment|/* 			 * If the preference does not change, there's no need 			 * to sort the entries. 			 */
+comment|/* 			 * If the preference does not change, there's no need 			 * to sort the entries. Also make sure the selected 			 * router is still installed in the kernel. 			 */
 if|if
 condition|(
+name|dr
+operator|->
+name|installed
+operator|&&
 name|rtpref
 argument_list|(
 name|new

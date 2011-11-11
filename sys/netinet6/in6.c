@@ -545,7 +545,7 @@ name|ifa
 operator|->
 name|ifa_rtrequest
 operator|=
-name|NULL
+name|nd6_rtrequest
 expr_stmt|;
 comment|/* XXX QL 	 * we need to report rt_newaddrmsg 	 */
 name|ln
