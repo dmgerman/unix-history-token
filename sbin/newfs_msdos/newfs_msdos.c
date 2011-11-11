@@ -464,6 +464,7 @@ index|]
 decl_stmt|;
 comment|/* OEM name and version */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -547,6 +548,7 @@ index|]
 decl_stmt|;
 comment|/* big total sectors */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -604,6 +606,7 @@ index|]
 decl_stmt|;
 comment|/* reserved */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -645,6 +648,7 @@ index|]
 decl_stmt|;
 comment|/* file system type */
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -699,6 +703,7 @@ index|]
 decl_stmt|;
 comment|/* size */
 block|}
+name|__packed
 struct|;
 end_struct
 
