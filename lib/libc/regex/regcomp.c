@@ -228,7 +228,7 @@ name|parse
 modifier|*
 name|p
 parameter_list|,
-name|wint_t
+name|int
 name|stop
 parameter_list|)
 function_decl|;
@@ -261,10 +261,10 @@ name|parse
 modifier|*
 name|p
 parameter_list|,
-name|wint_t
+name|int
 name|end1
 parameter_list|,
-name|wint_t
+name|int
 name|end2
 parameter_list|)
 function_decl|;
@@ -1654,7 +1654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_ere - ERE parser top level, concatenation and alternation  == static void p_ere(struct parse *p, wint_t stop);  */
+comment|/*  - p_ere - ERE parser top level, concatenation and alternation  == static void p_ere(struct parse *p, int_t stop);  */
 end_comment
 
 begin_function
@@ -1667,7 +1667,7 @@ name|parse
 modifier|*
 name|p
 parameter_list|,
-name|wint_t
+name|int
 name|stop
 parameter_list|)
 comment|/* character this ERE should end at */
@@ -2609,7 +2609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  == static void p_bre(struct parse *p,  wint_t end1, \  ==	wint_t end2);  * Giving end1 as OUT essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  * The amount of lookahead needed to avoid this kludge is excessive.  */
+comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  == static void p_bre(struct parse *p,  int end1, \  ==	int end2);  * Giving end1 as OUT essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  * The amount of lookahead needed to avoid this kludge is excessive.  */
 end_comment
 
 begin_function
@@ -2622,11 +2622,11 @@ name|parse
 modifier|*
 name|p
 parameter_list|,
-name|wint_t
+name|int
 name|end1
 parameter_list|,
 comment|/* first terminating character */
-name|wint_t
+name|int
 name|end2
 parameter_list|)
 comment|/* second terminating character */
