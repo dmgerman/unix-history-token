@@ -1283,6 +1283,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+operator|&&
 name|__cplusplus
 operator|>=
 literal|201103L
