@@ -12659,6 +12659,9 @@ literal|2
 block|,
 operator|.
 name|bmAttributes
+index|[
+literal|0
+index|]
 operator|=
 literal|2
 block|, 	}
@@ -12713,12 +12716,21 @@ literal|255
 block|,
 comment|/* dummy - not used */
 operator|.
-name|bU2DevExitLat
+name|wU2DevExitLat
+index|[
+literal|0
+index|]
 operator|=
-literal|255
+literal|0x00
 block|,
-comment|/* dummy - not used */
-block|}
+operator|.
+name|wU2DevExitLat
+index|[
+literal|1
+index|]
+operator|=
+literal|0x08
+block|, 	}
 block|,
 operator|.
 name|cidd

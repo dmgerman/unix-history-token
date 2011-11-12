@@ -2348,7 +2348,7 @@ name|cmd_len
 operator|=
 name|cmd_len
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|sc
@@ -2356,6 +2356,8 @@ operator|->
 name|cbw
 operator|.
 name|CBWCDB
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2367,16 +2369,16 @@ name|CBWCDB
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|cmd_ptr
-argument_list|,
 operator|&
 name|sc
 operator|->
 name|cbw
 operator|.
 name|CBWCDB
+argument_list|,
+name|cmd_ptr
 argument_list|,
 name|cmd_len
 argument_list|)

@@ -237,7 +237,7 @@ literal|0
 condition|)
 return|return
 operator|(
-literal|0
+name|EFTYPE
 operator|)
 return|;
 comment|/* Now check if we've already loaded the CTF data.. */

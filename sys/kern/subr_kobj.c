@@ -304,6 +304,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|kobj_method
 name|null_method
@@ -788,6 +789,7 @@ name|ce
 condition|)
 name|ce
 operator|=
+operator|&
 name|desc
 operator|->
 name|deflt

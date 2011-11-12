@@ -198,6 +198,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATH_PCI_LATENCY_WAR
 comment|/* Override the system latency timer */
 name|pci_write_config
 argument_list|(
@@ -210,6 +213,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* If a PCI NIC, force wakeup */
 ifdef|#
 directive|ifdef

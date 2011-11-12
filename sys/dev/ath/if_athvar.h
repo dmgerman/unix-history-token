@@ -522,7 +522,7 @@ begin_struct
 struct|struct
 name|ath_buf
 block|{
-name|STAILQ_ENTRY
+name|TAILQ_ENTRY
 argument_list|(
 argument|ath_buf
 argument_list|)
@@ -806,8 +806,9 @@ end_struct
 
 begin_typedef
 typedef|typedef
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
+argument|ath_bufhead_s
 argument_list|,
 argument|ath_buf
 argument_list|)
@@ -926,8 +927,9 @@ modifier|*
 name|axq_link
 decl_stmt|;
 comment|/* link ptr in last TX desc */
-name|STAILQ_HEAD
+name|TAILQ_HEAD
 argument_list|(
+argument|axq_q_s
 argument_list|,
 argument|ath_buf
 argument_list|)
@@ -1054,6 +1056,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATH_TXQ_INSERT_HEAD
+parameter_list|(
+name|_tq
+parameter_list|,
+name|_elm
+parameter_list|,
+name|_field
+parameter_list|)
+value|do { \ 	TAILQ_INSERT_HEAD(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATH_TXQ_INSERT_TAIL
 parameter_list|(
 name|_tq
@@ -1062,24 +1078,22 @@ name|_elm
 parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	STAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
+value|do { \ 	TAILQ_INSERT_TAIL(&(_tq)->axq_q, (_elm), _field); \ 	(_tq)->axq_depth++; \ } while (0)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ATH_TXQ_REMOVE_HEAD
+name|ATH_TXQ_REMOVE
 parameter_list|(
 name|_tq
 parameter_list|,
+name|_elm
+parameter_list|,
 name|_field
 parameter_list|)
-value|do { \ 	STAILQ_REMOVE_HEAD(&(_tq)->axq_q, _field); \ 	(_tq)->axq_depth--; \ } while (0)
+value|do { \ 	TAILQ_REMOVE(&(_tq)->axq_q, _elm, _field); \ 	(_tq)->axq_depth--; \ } while (0)
 end_define
-
-begin_comment
-comment|/* NB: this does not do the "head empty check" that STAILQ_LAST does */
-end_comment
 
 begin_define
 define|#
@@ -1087,9 +1101,10 @@ directive|define
 name|ATH_TXQ_LAST
 parameter_list|(
 name|_tq
+parameter_list|,
+name|_field
 parameter_list|)
-define|\
-value|((struct ath_buf *)(void *) \ 	 ((char *)((_tq)->axq_q.stqh_last) - __offsetof(struct ath_buf, bf_list)))
+value|TAILQ_LAST(&(_tq)->axq_q, _field)
 end_define
 
 begin_struct
@@ -1499,11 +1514,6 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* do self-linked final descriptor */
-name|sc_kickpcu
-range|:
-literal|1
-decl_stmt|,
-comment|/* kick PCU RX on next RX proc */
 name|sc_rxtsf32
 range|:
 literal|1
@@ -1625,6 +1635,15 @@ name|HAL_INT
 name|sc_imask
 decl_stmt|;
 comment|/* interrupt mask copy */
+comment|/* 	 * These are modified in the interrupt handler as well as 	 * the task queues and other contexts. Thus these must be 	 * protected by a mutex, or they could clash. 	 * 	 * For now, access to these is behind the ATH_LOCK, 	 * just to save time. 	 */
+name|uint32_t
+name|sc_txq_active
+decl_stmt|;
+comment|/* bitmap of active TXQs */
+name|uint32_t
+name|sc_kickpcu
+decl_stmt|;
+comment|/* whether to kick the PCU */
 name|u_int
 name|sc_keymax
 decl_stmt|;

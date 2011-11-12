@@ -179,7 +179,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-comment|/* Look for the last '-' the pkgname */
+comment|/* Look for the last '-' in the pkgname */
 name|ch
 operator|=
 name|strrchr

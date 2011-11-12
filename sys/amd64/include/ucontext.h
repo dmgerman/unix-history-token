@@ -45,7 +45,7 @@ typedef|typedef
 struct|struct
 name|__mcontext
 block|{
-comment|/* 	 * The first 24 fields must match the definition of 	 * sigcontext. So that we can support sigcontext 	 * and ucontext_t at the same time. 	 */
+comment|/* 	 * The definition of mcontext_t must match the layout of 	 * struct sigcontext after the sc_mask member.  This is so 	 * that we can support sigcontext and ucontext_t at the same 	 * time. 	 */
 name|__register_t
 name|mc_onstack
 decl_stmt|;

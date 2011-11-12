@@ -1363,11 +1363,11 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|uvisor_config
-argument_list|,
 name|uvisor_config_copy
+argument_list|,
+name|uvisor_config
 argument_list|,
 sizeof|sizeof
 argument_list|(

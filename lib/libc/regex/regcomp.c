@@ -228,7 +228,7 @@ name|parse
 modifier|*
 name|p
 parameter_list|,
-name|wint_t
+name|int
 name|stop
 parameter_list|)
 function_decl|;
@@ -261,10 +261,10 @@ name|parse
 modifier|*
 name|p
 parameter_list|,
-name|wint_t
+name|int
 name|end1
 parameter_list|,
-name|wint_t
+name|int
 name|end2
 parameter_list|)
 function_decl|;
@@ -598,7 +598,7 @@ name|value
 parameter_list|)
 function_decl|;
 specifier|static
-name|void
+name|int
 name|enlarge
 parameter_list|(
 name|struct
@@ -1654,7 +1654,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_ere - ERE parser top level, concatenation and alternation  == static void p_ere(struct parse *p, int stop);  */
+comment|/*  - p_ere - ERE parser top level, concatenation and alternation  == static void p_ere(struct parse *p, int_t stop);  */
 end_comment
 
 begin_function
@@ -2609,7 +2609,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  == static void p_bre(struct parse *p, int end1, \  ==	int end2);  * Giving end1 as OUT essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  * The amount of lookahead needed to avoid this kludge is excessive.  */
+comment|/*  - p_bre - BRE parser top level, anchoring and concatenation  == static void p_bre(struct parse *p,  int end1, \  ==	int end2);  * Giving end1 as OUT essentially eliminates the end1/end2 check.  *  * This implementation is a bit of a kludge, in that a trailing $ is first  * taken as an ordinary character and then revised to be an anchor.  * The amount of lookahead needed to avoid this kludge is excessive.  */
 end_comment
 
 begin_function
@@ -4442,7 +4442,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_symbol - parse a character or [..]ed multicharacter collating symbol  == static char p_b_symbol(struct parse *p);  */
+comment|/*  - p_b_symbol - parse a character or [..]ed multicharacter collating symbol  == static wint_t p_b_symbol(struct parse *p);  */
 end_comment
 
 begin_function
@@ -4521,7 +4521,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - p_b_coll_elem - parse a collating-element name and look it up  == static char p_b_coll_elem(struct parse *p, int endc);  */
+comment|/*  - p_b_coll_elem - parse a collating-element name and look it up  == static wint_t p_b_coll_elem(struct parse *p, wint_t endc);  */
 end_comment
 
 begin_function
@@ -4734,7 +4734,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - othercase - return the case counterpart of an alphabetic  == static char othercase(int ch);  */
+comment|/*  - othercase - return the case counterpart of an alphabetic  == static wint_t othercase(wint_t ch);  */
 end_comment
 
 begin_function
@@ -4797,7 +4797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - bothcases - emit a dualcase version of a two-case character  == static void bothcases(struct parse *p, int ch);  *  * Boy, is this implementation ever a kludge...  */
+comment|/*  - bothcases - emit a dualcase version of a two-case character  == static void bothcases(struct parse *p, wint_t ch);  *  * Boy, is this implementation ever a kludge...  */
 end_comment
 
 begin_function
@@ -4955,7 +4955,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - ordinary - emit an ordinary character  == static void ordinary(struct parse *p, int ch);  */
+comment|/*  - ordinary - emit an ordinary character  == static void ordinary(struct parse *p, wint_t ch);  */
 end_comment
 
 begin_function
@@ -6572,6 +6572,9 @@ operator|(
 name|ret
 operator|)
 return|;
+if|if
+condition|(
+operator|!
 name|enlarge
 argument_list|(
 name|p
@@ -6582,21 +6585,13 @@ name|ssize
 operator|+
 name|len
 argument_list|)
-expr_stmt|;
+condition|)
 comment|/* this many unexpected additions */
-name|assert
-argument_list|(
-name|p
-operator|->
-name|ssize
-operator|>=
-name|p
-operator|->
-name|slen
-operator|+
-name|len
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 operator|(
 name|void
 operator|)
@@ -6705,6 +6700,9 @@ name|p
 operator|->
 name|ssize
 condition|)
+if|if
+condition|(
+operator|!
 name|enlarge
 argument_list|(
 name|p
@@ -6721,19 +6719,9 @@ literal|2
 operator|*
 literal|3
 argument_list|)
-expr_stmt|;
+condition|)
 comment|/* +50% */
-name|assert
-argument_list|(
-name|p
-operator|->
-name|slen
-operator|<
-name|p
-operator|->
-name|ssize
-argument_list|)
-expr_stmt|;
+return|return;
 comment|/* finally, it's all reduced to the easy case */
 name|p
 operator|->
@@ -7013,12 +7001,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  - enlarge - enlarge the strip  == static void enlarge(struct parse *p, sopno size);  */
+comment|/*  - enlarge - enlarge the strip  == static int enlarge(struct parse *p, sopno size);  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|enlarge
 parameter_list|(
 name|struct
@@ -7042,7 +7030,9 @@ name|ssize
 operator|>=
 name|size
 condition|)
-return|return;
+return|return
+literal|1
+return|;
 name|sp
 operator|=
 operator|(
@@ -7075,7 +7065,9 @@ argument_list|(
 name|REG_ESPACE
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+literal|0
+return|;
 block|}
 name|p
 operator|->
@@ -7089,6 +7081,9 @@ name|ssize
 operator|=
 name|size
 expr_stmt|;
+return|return
+literal|1
+return|;
 block|}
 end_function
 

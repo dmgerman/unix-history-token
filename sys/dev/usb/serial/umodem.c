@@ -2376,10 +2376,12 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ls
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

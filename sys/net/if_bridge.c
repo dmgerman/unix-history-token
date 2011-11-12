@@ -3678,11 +3678,9 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free_type
+name|if_free
 argument_list|(
 name|ifp
-argument_list|,
-name|IFT_ETHER
 argument_list|)
 expr_stmt|;
 comment|/* Tear down the routing table. */

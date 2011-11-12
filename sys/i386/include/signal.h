@@ -55,7 +55,7 @@ comment|/* codes for SIGILL, SIGFPE */
 end_comment
 
 begin_comment
-comment|/*  * Only the kernel should need these old type definitions.  */
+comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  */
 end_comment
 
 begin_if
@@ -73,7 +73,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Information pushed on stack when a signal is delivered.  * This is used by the kernel to restore state following  * execution of the signal handler.  It is also made available  * to the handler to allow it to restore state properly if  * a non-standard exit is performed.  */
+comment|/*  * Only the kernel should need these old type definitions.  */
 end_comment
 
 begin_struct
@@ -156,7 +156,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * The sequence of the fields/registers in struct sigcontext should match  * those in mcontext_t.  */
+comment|/*  * The sequence of the fields/registers in struct sigcontext should match  * those in mcontext_t and struct trapframe.  */
 end_comment
 
 begin_struct
@@ -234,7 +234,7 @@ name|int
 name|sc_len
 decl_stmt|;
 comment|/* sizeof(mcontext_t) */
-comment|/* 	 * XXX - See<machine/ucontext.h> and<machine/npx.h> for 	 *       the following fields. 	 */
+comment|/* 	 * See<machine/ucontext.h> and<machine/npx.h> for 	 * the following fields. 	 */
 name|int
 name|sc_fpformat
 decl_stmt|;

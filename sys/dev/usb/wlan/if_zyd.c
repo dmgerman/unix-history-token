@@ -3988,15 +3988,15 @@ name|cnt
 condition|)
 continue|continue;
 comment|/* copy answer into caller-supplied buffer */
-name|bcopy
+name|memcpy
 argument_list|(
-name|cmd
-operator|->
-name|data
-argument_list|,
 name|rqp
 operator|->
 name|odata
+argument_list|,
+name|cmd
+operator|->
+name|data
 argument_list|,
 name|rqp
 operator|->
@@ -4424,13 +4424,13 @@ argument_list|(
 name|code
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|idata
-argument_list|,
 name|cmd
 operator|.
 name|data
+argument_list|,
+name|idata
 argument_list|,
 name|ilen
 argument_list|)

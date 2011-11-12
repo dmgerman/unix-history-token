@@ -418,6 +418,11 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
+name|thread_lock
+argument_list|(
+name|tdfirst
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|tdfirst
@@ -455,6 +460,11 @@ else|else
 name|wmesg
 operator|=
 literal|"nochan"
+expr_stmt|;
+name|thread_unlock
+argument_list|(
+name|tdfirst
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
