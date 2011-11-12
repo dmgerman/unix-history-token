@@ -1600,6 +1600,16 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+comment|/* enable power saving mode */
+name|usbd_set_power_mode
+argument_list|(
+name|uaa
+operator|->
+name|device
+argument_list|,
+name|USB_POWER_MODE_SAVE
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|unit
