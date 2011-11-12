@@ -3514,9 +3514,11 @@ name|cmd
 operator|->
 name|buf
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|hdr
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3525,7 +3527,6 @@ name|uath_cmd_hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* XXX not needed */
 name|hdr
 operator|->
 name|len
@@ -3576,10 +3577,8 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|idata
-argument_list|,
 operator|(
 name|uint8_t
 operator|*
@@ -3589,6 +3588,8 @@ name|hdr
 operator|+
 literal|1
 operator|)
+argument_list|,
+name|idata
 argument_list|,
 name|ilen
 argument_list|)
@@ -7030,9 +7031,11 @@ name|uath_tx_desc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|desc
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7451,13 +7454,17 @@ name|struct
 name|uath_cmd_reset
 name|reset
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|reset
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
+argument_list|(
 name|reset
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -9963,13 +9970,17 @@ operator|->
 name|iv_bss
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|create
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
+argument_list|(
 name|create
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|create
@@ -10145,13 +10156,17 @@ name|struct
 name|uath_cmd_rates
 name|rates
 decl_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|rates
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
+argument_list|(
 name|rates
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|rates
@@ -10294,13 +10309,17 @@ operator|->
 name|iv_bss
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|associd
 argument_list|,
+literal|0
+argument_list|,
 sizeof|sizeof
+argument_list|(
 name|associd
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|associd
@@ -11003,7 +11022,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|struct uath_cmd_crypto crypto; 	int i;  	bzero(&crypto, sizeof crypto); 	crypto.keyidx = htobe32(index); 	crypto.magic1 = htobe32(1); 	crypto.size   = htobe32(368); 	crypto.mask   = htobe32(0xffff); 	crypto.flags  = htobe32(0x80000068); 	if (index != UATH_DEFAULT_KEY) 		crypto.flags |= htobe32(index<< 16); 	memset(crypto.magic2, 0xff, sizeof crypto.magic2);
+block|struct uath_cmd_crypto crypto; 	int i;  	memset(&crypto, 0, sizeof(crypto)); 	crypto.keyidx = htobe32(index); 	crypto.magic1 = htobe32(1); 	crypto.size   = htobe32(368); 	crypto.mask   = htobe32(0xffff); 	crypto.flags  = htobe32(0x80000068); 	if (index != UATH_DEFAULT_KEY) 		crypto.flags |= htobe32(index<< 16); 	memset(crypto.magic2, 0xff, sizeof(crypto.magic2));
 comment|/* 	 * Each byte of the key must be XOR'ed with 10101010 before being 	 * transmitted to the firmware. 	 */
 block|for (i = 0; i< wk->wk_keylen; i++) 		crypto.key[i] = wk->wk_key[i] ^ 0xaa;  	DPRINTF(sc, UATH_DEBUG_CRYPTO, 	    "setting crypto key index=%d len=%d\n", index, wk->wk_keylen); 	return uath_cmd_write(sc, WDCMSG_SET_KEY_CACHE_ENTRY,&crypto, 	    sizeof crypto, 0);
 else|#

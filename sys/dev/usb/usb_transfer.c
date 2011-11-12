@@ -3215,10 +3215,12 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|parm
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3824,10 +3826,12 @@ operator|=
 operator|&
 name|dummy
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

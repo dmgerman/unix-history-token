@@ -9881,13 +9881,15 @@ name|len
 operator|=
 literal|16
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|sc
 operator|->
 name|sc_hub_desc
 operator|.
 name|temp
+argument_list|,
+literal|0
 argument_list|,
 literal|16
 argument_list|)

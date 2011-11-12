@@ -7827,11 +7827,13 @@ name|status_bus_reset
 condition|)
 block|{
 comment|/* reset endpoint flags */
-name|bzero
+name|memset
 argument_list|(
 name|sc
 operator|->
 name|sc_ep_flags
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
