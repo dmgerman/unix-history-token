@@ -986,6 +986,9 @@ operator|-
 name|secsize
 argument_list|)
 operator|!=
+operator|(
+name|ssize_t
+operator|)
 name|secsize
 condition|)
 block|{
