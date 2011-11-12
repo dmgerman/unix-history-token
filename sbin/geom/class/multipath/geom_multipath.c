@@ -470,13 +470,14 @@ decl_stmt|;
 name|uuid_t
 name|uuid
 decl_stmt|;
-name|uint32_t
+name|ssize_t
 name|secsize
 init|=
 literal|0
 decl_stmt|,
 name|ssize
-decl_stmt|,
+decl_stmt|;
+name|uint32_t
 name|status
 decl_stmt|;
 specifier|const
@@ -620,10 +621,13 @@ name|gctl_error
 argument_list|(
 name|req
 argument_list|,
-literal|"%s sector size %u different."
+literal|"%s sector size %ju different."
 argument_list|,
 name|name
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|ssize
 argument_list|)
 expr_stmt|;
