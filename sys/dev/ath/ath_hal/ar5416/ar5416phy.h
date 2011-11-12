@@ -705,24 +705,6 @@ name|AR_PHY_EXT_CCA_THRESH62_S
 value|16
 end_define
 
-begin_comment
-comment|/*  * This duplicates AR_PHY_EXT_CCA_CYCPWR_THR1; it reads more like  * an ANI register this way.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|AR_PHY_EXT_TIMING5_CYCPWR_THR1
-value|0x0000FE00
-end_define
-
-begin_define
-define|#
-directive|define
-name|AR_PHY_EXT_TIMING5_CYCPWR_THR1_S
-value|9
-end_define
-
 begin_define
 define|#
 directive|define
