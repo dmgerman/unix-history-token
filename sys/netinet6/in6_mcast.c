@@ -7726,7 +7726,7 @@ name|optval
 operator|=
 name|im6o
 operator|->
-name|im6o_multicast_loop
+name|im6o_multicast_hlim
 expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
