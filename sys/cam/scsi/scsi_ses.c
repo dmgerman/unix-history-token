@@ -3243,7 +3243,7 @@ comment|/*  * The code after this point runs on many platforms,  * so forgive th
 end_comment
 
 begin_comment
-comment|/*  * Is this a device that supports enclosure services?  *  * It's a a pretty simple ruleset- if it is device type 0x0D (13), it's  * an SES device. If it happens to be an old UNISYS SEN device, we can  * handle that too.  */
+comment|/*  * Is this a device that supports enclosure services?  *  * It's a pretty simple ruleset- if it is device type 0x0D (13), it's  * an SES device. If it happens to be an old UNISYS SEN device, we can  * handle that too.  */
 end_comment
 
 begin_define

@@ -4469,7 +4469,7 @@ literal|"ERROR: option -O is required if counting and "
 literal|"sampling PMCs are specified together."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
+comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
 if|if
 condition|(
 name|args
