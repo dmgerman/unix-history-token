@@ -7112,7 +7112,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-comment|/* 	 * V2 can only handle 32 bit filesizes.  A 4GB-1 limit may be too 	 * high, depending on whether we end up with negative offsets in 	 * the client or server somewhere.  2GB-1 may be safer. 	 * 	 * For V3, ncl_fsinfo will adjust this as necessary.  Assume maximum 	 * that we can handle until we find out otherwise. 	 * XXX Our "safe" limit on the client is what we can store in our 	 * buffer cache using signed(!) block numbers. 	 */
+comment|/* 	 * V2 can only handle 32 bit filesizes.  A 4GB-1 limit may be too 	 * high, depending on whether we end up with negative offsets in 	 * the client or server somewhere.  2GB-1 may be safer. 	 * 	 * For V3, ncl_fsinfo will adjust this as necessary.  Assume maximum 	 * that we can handle until we find out otherwise. 	 */
 if|if
 condition|(
 operator|(
