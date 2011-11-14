@@ -5030,6 +5030,11 @@ name|TRUE
 argument_list|)
 expr_stmt|;
 block|}
+name|cache_purge
+argument_list|(
+name|fvp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
