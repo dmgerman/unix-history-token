@@ -1901,6 +1901,7 @@ begin_function
 name|int
 name|copyiniov
 parameter_list|(
+specifier|const
 name|struct
 name|iovec
 modifier|*
@@ -2003,6 +2004,7 @@ begin_function
 name|int
 name|copyinuio
 parameter_list|(
+specifier|const
 name|struct
 name|iovec
 modifier|*
