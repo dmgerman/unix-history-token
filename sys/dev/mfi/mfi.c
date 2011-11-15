@@ -4863,6 +4863,17 @@ name|sc
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * Do a dummy read to flush the interrupt ACK that we just performed, 	 * ensuring that everything is really, truly consistent. 	 */
+operator|(
+name|void
+operator|)
+name|sc
+operator|->
+name|mfi_read_fw_status
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|pi
 operator|=
 name|sc
