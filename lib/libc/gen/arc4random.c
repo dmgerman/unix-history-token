@@ -1,10 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|/*	$OpenBSD: arc4random.c,v 1.22 2010/12/22 08:23:42 otto Exp $	*/
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1996, David Mazieres<dm@uun.org>  * Copyright (c) 2008, Damien Miller<djm@openbsd.org>  *  * Permission to use, copy, modify, and distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES  * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR  * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF  * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * Arc4 random number generator for OpenBSD.  *  * This code is derived from section 17.1 of Applied Cryptography,  * second edition, which describes a stream cipher allegedly  * compatible with RSA Labs "RC4" cipher (the actual description of  * which is a trade secret).  The same algorithm is used as a stream  * cipher called "arcfour" in Tatu Ylonen's ssh package.  *  * Here the stream cipher has been modified always to include the time  * when initializing the state.  That makes it impossible to  * regenerate the same random sequence twice, so this can't be used  * for encryption, but will generate good random numbers.  *  * RC4 is a registered trademark of RSA Laboratories.  */
+comment|/*  * Arc4 random number generator for OpenBSD.  *  * This code is derived from section 17.1 of Applied Cryptography,  * second edition, which describes a stream cipher allegedly  * compatible with RSA Labs "RC4" cipher (the actual description of  * which is a trade secret).  The same algorithm is used as a stream  * cipher called "arcfour" in Tatu Ylonen's ssh package.  *  * RC4 is a registered trademark of RSA Laboratories.  */
 end_comment
 
 begin_include
@@ -75,6 +79,43 @@ directive|include
 file|"un-namespace.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|inline
+value|__inline
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|inline
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !__GNUC__ */
+end_comment
+
 begin_struct
 struct|struct
 name|arc4_stream
@@ -121,7 +162,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|THREAD_LOCK
+name|_ARC4_LOCK
 parameter_list|()
 define|\
 value|do {							\ 		if (__isthreaded)				\ 			_pthread_mutex_lock(&arc4random_mtx);	\ 	} while (0)
@@ -130,7 +171,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|THREAD_UNLOCK
+name|_ARC4_UNLOCK
 parameter_list|()
 define|\
 value|do {							\ 		if (__isthreaded)				\ 			_pthread_mutex_unlock(&arc4random_mtx);	\ 	} while (0)
@@ -370,7 +411,7 @@ name|done
 decl_stmt|,
 name|fd
 decl_stmt|,
-name|n
+name|i
 decl_stmt|;
 struct|struct
 block|{
@@ -381,7 +422,7 @@ decl_stmt|;
 name|pid_t
 name|pid
 decl_stmt|;
-name|u_int8_t
+name|u_char
 name|rnd
 index|[
 name|KEYSIZE
@@ -479,18 +520,18 @@ argument_list|,
 name|KEYSIZE
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Throw away the first N bytes of output, as suggested in the 	 * paper "Weaknesses in the Key Scheduling Algorithm of RC4" 	 * by Fluher, Mantin, and Shamir.  N=1024 is based on 	 * suggestions in the paper "(Not So) Random Shuffles of RC4" 	 * by Ilya Mironov. 	 */
+comment|/* 	 * Discard early keystream, as per recommendations in: 	 * "(Not So) Random Shuffles of RC4" by Ilya Mironov. 	 */
 for|for
 control|(
-name|n
+name|i
 operator|=
 literal|0
 init|;
-name|n
+name|i
 operator|<
 literal|1024
 condition|;
-name|n
+name|i
 operator|++
 control|)
 operator|(
@@ -646,9 +687,7 @@ name|arc4_getbyte
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
 name|val
-operator|)
 return|;
 block|}
 end_function
@@ -715,7 +754,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|THREAD_LOCK
+name|_ARC4_LOCK
 argument_list|()
 expr_stmt|;
 name|arc4_check_init
@@ -728,7 +767,7 @@ name|rs_stired
 operator|=
 literal|1
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_ARC4_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -746,7 +785,7 @@ name|int
 name|datlen
 parameter_list|)
 block|{
-name|THREAD_LOCK
+name|_ARC4_LOCK
 argument_list|()
 expr_stmt|;
 name|arc4_check_init
@@ -762,7 +801,7 @@ argument_list|,
 name|datlen
 argument_list|)
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_ARC4_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -776,9 +815,9 @@ name|void
 parameter_list|)
 block|{
 name|u_int32_t
-name|rnd
+name|val
 decl_stmt|;
-name|THREAD_LOCK
+name|_ARC4_LOCK
 argument_list|()
 expr_stmt|;
 name|arc4_check_init
@@ -787,7 +826,7 @@ expr_stmt|;
 name|arc4_check_stir
 argument_list|()
 expr_stmt|;
-name|rnd
+name|val
 operator|=
 name|arc4_getword
 argument_list|()
@@ -796,13 +835,11 @@ name|arc4_count
 operator|-=
 literal|4
 expr_stmt|;
-name|THREAD_UNLOCK
+name|_ARC4_UNLOCK
 argument_list|()
 expr_stmt|;
 return|return
-operator|(
-name|rnd
-operator|)
+name|val
 return|;
 block|}
 end_function
@@ -829,7 +866,7 @@ operator|*
 operator|)
 name|_buf
 decl_stmt|;
-name|THREAD_LOCK
+name|_ARC4_LOCK
 argument_list|()
 expr_stmt|;
 name|arc4_check_init
@@ -856,7 +893,7 @@ name|arc4_count
 operator|--
 expr_stmt|;
 block|}
-name|THREAD_UNLOCK
+name|_ARC4_UNLOCK
 argument_list|()
 expr_stmt|;
 block|}
@@ -886,9 +923,7 @@ operator|<
 literal|2
 condition|)
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 if|#
 directive|if
@@ -965,11 +1000,9 @@ condition|)
 break|break;
 block|}
 return|return
-operator|(
 name|r
 operator|%
 name|upper_bound
-operator|)
 return|;
 block|}
 end_function
