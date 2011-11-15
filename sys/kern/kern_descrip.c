@@ -4200,7 +4200,7 @@ operator|->
 name|fd_nfiles
 condition|)
 block|{
-comment|/* 			 * The resource limits are here instead of e.g. fdalloc(), 			 * because the file descriptor table may be shared between 			 * processes, so we can't really use racct_add()/racct_sub(). 			 * Instead of counting the number of actually allocated 			 * descriptors, just put the limit on the size of the file 			 * descriptor table. 			 */
+comment|/* 			 * The resource limits are here instead of e.g. 			 * fdalloc(), because the file descriptor table may be 			 * shared between processes, so we can't really use 			 * racct_add()/racct_sub().  Instead of counting the 			 * number of actually allocated descriptors, just put 			 * the limit on the size of the file descriptor table. 			 */
 ifdef|#
 directive|ifdef
 name|RACCT
@@ -10524,7 +10524,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize the file pointer with the specified properties.  *   * The ops are set with release semantics to be certain that the flags, type,  * and data are visible when ops is.  This is to prevent ops methods from being  * called with bad data.  */
+comment|/*  * Initialize the file pointer with the specified properties.  *  * The ops are set with release semantics to be certain that the flags, type,  * and data are visible when ops is.  This is to prevent ops methods from being  * called with bad data.  */
 end_comment
 
 begin_function

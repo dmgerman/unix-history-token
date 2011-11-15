@@ -13047,10 +13047,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX; prepare mbuf for (__FreeBSD__< 3) routines. */
-end_comment
-
 begin_function
 name|int
 name|soopt_getm
@@ -13327,10 +13323,6 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX; copyin sopt data into mbuf chain for (__FreeBSD__< 3) routines. */
-end_comment
-
 begin_function
 name|int
 name|soopt_mcopyin
@@ -13503,10 +13495,6 @@ operator|)
 return|;
 block|}
 end_function
-
-begin_comment
-comment|/* XXX; copyout mbuf chain data into soopt for (__FreeBSD__< 3) routines. */
-end_comment
 
 begin_function
 name|int

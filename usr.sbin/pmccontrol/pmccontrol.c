@@ -587,8 +587,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"Unable to determine the number of "
-literal|"PMCs in CPU %d"
+literal|"Unable to determine the number of PMCs in CPU %d"
 argument_list|,
 name|c
 argument_list|)
@@ -1388,8 +1387,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot find information for "
-literal|"event class \"%s\""
+literal|"ERROR: Cannot find information for event class \"%s\""
 argument_list|,
 name|pmc_name_of_class
 argument_list|(

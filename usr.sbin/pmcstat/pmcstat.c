@@ -535,8 +535,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: Illegal CPU specification "
-literal|"\"%s\"."
+literal|"ERROR: Illegal CPU specification \"%s\"."
 argument_list|,
 name|cpuspec
 argument_list|)
@@ -650,8 +649,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot attach pmc "
-literal|"\"%s\" to process %d"
+literal|"ERROR: cannot attach pmc \"%s\" to process %d"
 argument_list|,
 name|ev
 operator|->
@@ -732,8 +730,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot stop pmc 0x%x "
-literal|"\"%s\""
+literal|"ERROR: cannot stop pmc 0x%x \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -759,8 +756,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot release pmc "
-literal|"0x%x \"%s\""
+literal|"ERROR: cannot release pmc 0x%x \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -1896,8 +1892,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot read pmc "
-literal|"\"%s\""
+literal|"ERROR: Cannot read pmc \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -2713,8 +2708,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: \"%s\" is not a "
-literal|"directory."
+literal|"ERROR: \"%s\" is not a directory."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3488,8 +3482,7 @@ name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot open \"%s\" for "
-literal|"writing."
+literal|"ERROR: cannot open \"%s\" for writing."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3515,8 +3508,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -O may only be "
-literal|"specified once."
+literal|"ERROR: option -O may only be specified once."
 argument_list|)
 expr_stmt|;
 name|args
@@ -3570,8 +3562,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -R may only be "
-literal|"specified once."
+literal|"ERROR: option -R may only be specified once."
 argument_list|)
 expr_stmt|;
 name|args
@@ -3705,8 +3696,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: Illegal wait interval "
-literal|"value \"%s\"."
+literal|"ERROR: Illegal wait interval value \"%s\"."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3774,8 +3764,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: Illegal callchain "
-literal|"depth \"%s\"."
+literal|"ERROR: Illegal callchain depth \"%s\"."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3905,8 +3894,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -O and -R are mutually "
-literal|"exclusive."
+literal|"ERROR: options -O and -R are mutually exclusive."
 argument_list|)
 expr_stmt|;
 comment|/* -m option is allowed with -R only. */
@@ -3954,8 +3942,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -m and -g | -G are mutually "
-literal|"exclusive"
+literal|"ERROR: option -m and -g | -G are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4020,8 +4007,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -R may not be used with "
-literal|"%s."
+literal|"ERROR: option -R may not be used with %s."
 argument_list|,
 name|errmsg
 argument_list|)
@@ -4067,8 +4053,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -t requires a process mode PMC "
-literal|"to be specified."
+literal|"ERROR: option -t requires a process mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for process-mode options without a command or -t pid */
@@ -4100,8 +4085,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -d, -E, -p, -P, and -W require "
-literal|"a command line or target process."
+literal|"ERROR: options -d, -E, -p, -P, and -W require a command line or target process."
 argument_list|)
 expr_stmt|;
 comment|/* check for -p | -P without a target process of some sort */
@@ -4137,8 +4121,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -P and -p require a "
-literal|"target process or a command line."
+literal|"ERROR: options -P and -p require a target process or a command line."
 argument_list|)
 expr_stmt|;
 comment|/* check for process-mode options without a process-mode PMC */
@@ -4166,8 +4149,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -d, -E, and -W require a "
-literal|"process mode PMC to be specified."
+literal|"ERROR: options -d, -E, and -W require a process mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for -c cpu with no system mode PMCs or logfile. */
@@ -4205,8 +4187,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -c requires at least one "
-literal|"system mode PMC to be specified."
+literal|"ERROR: option -c requires at least one system mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for counting mode options without a counting PMC */
@@ -4234,8 +4215,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -C, -W and -o require at "
-literal|"least one counting mode PMC to be specified."
+literal|"ERROR: options -C, -W and -o require at least one counting mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for sampling mode options without a sampling PMC spec */
@@ -4263,8 +4243,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -N, -n and -O require at "
-literal|"least one sampling mode PMC to be specified."
+literal|"ERROR: options -N, -n and -O require at least one sampling mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check if -g/-G/-m/-T are being used correctly */
@@ -4295,8 +4274,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -g/-G/-m/-T require sampling PMCs "
-literal|"or -R to be specified."
+literal|"ERROR: options -g/-G/-m/-T require sampling PMCs or -R to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check if -O was spuriously specified */
@@ -4324,8 +4302,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -O is used only with options "
-literal|"-E, -P, -S and -W."
+literal|"ERROR: option -O is used only with options -E, -P, -S and -W."
 argument_list|)
 expr_stmt|;
 comment|/* -k kernel path require -g/-G/-m/-T or -R */
@@ -4465,11 +4442,10 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -O is required if counting and "
-literal|"sampling PMCs are specified together."
+literal|"ERROR: option -O is required if counting and sampling PMCs are specified together."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
+comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
 if|if
 condition|(
 name|args
@@ -4644,8 +4620,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: \"%s\" is not a "
-literal|"directory."
+literal|"ERROR: \"%s\" is not a directory."
 argument_list|,
 name|buffer
 argument_list|)
@@ -4706,8 +4681,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot open \"%s\" "
-literal|"for writing"
+literal|"ERROR: cannot open \"%s\" for writing"
 argument_list|,
 name|graphfilename
 argument_list|)
@@ -4798,8 +4772,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot determine the number of PMCs "
-literal|"on CPU %d"
+literal|"ERROR: Cannot determine the number of PMCs on CPU %d"
 argument_list|,
 literal|0
 argument_list|)
@@ -5200,8 +5173,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot allocate %s-mode pmc with "
-literal|"specification \"%s\""
+literal|"ERROR: Cannot allocate %s-mode pmc with specification \"%s\""
 argument_list|,
 name|PMC_IS_SYSTEM_MODE
 argument_list|(
@@ -5245,8 +5217,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot set sampling count "
-literal|"for PMC \"%s\""
+literal|"ERROR: Cannot set sampling count for PMC \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -5462,8 +5433,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot register kevent for "
-literal|"SIGWINCH"
+literal|"ERROR: Cannot register kevent for SIGWINCH"
 argument_list|)
 expr_stmt|;
 name|args
@@ -5746,8 +5716,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot register kevent for "
-literal|"timer"
+literal|"ERROR: Cannot register kevent for timer"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5810,8 +5779,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"ERROR: No matching target "
-literal|"processes."
+literal|"ERROR: No matching target processes."
 argument_list|)
 expr_stmt|;
 if|if
@@ -6304,8 +6272,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot determine "
-literal|"window size"
+literal|"ERROR: Cannot determine window size"
 argument_list|)
 expr_stmt|;
 name|pmcstat_displayheight
@@ -6510,8 +6477,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot retrieve driver "
-literal|"statistics"
+literal|"ERROR: Cannot retrieve driver statistics"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6532,9 +6498,8 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some samples were dropped.  Please "
-literal|"consider tuning the \"kern.hwpmc.nsamples\" "
-literal|"tunable."
+literal|"WARNING: some samples were dropped.\n"
+literal|"Please consider tuning the \"kern.hwpmc.nsamples\" tunable."
 argument_list|)
 expr_stmt|;
 if|if
@@ -6555,9 +6520,8 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some events were discarded.  Please "
-literal|"consider tuning the \"kern.hwpmc.nbuffers\" "
-literal|"tunable."
+literal|"WARNING: some events were discarded.\n"
+literal|"Please consider tuning the \"kern.hwpmc.nbuffers\" tunable."
 argument_list|)
 expr_stmt|;
 block|}

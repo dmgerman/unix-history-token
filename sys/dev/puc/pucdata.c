@@ -3063,6 +3063,54 @@ literal|0
 block|, 	}
 block|,
 block|{
+literal|0x14d2
+block|,
+literal|0xa007
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Titan VScom PCIex-800H"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
+literal|0x14d2
+block|,
+literal|0xa008
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Titan VScom PCIex-800H"
+block|,
+name|DEFAULT_RCLK
+operator|*
+literal|8
+block|,
+name|PUC_PORT_4S
+block|,
+literal|0x10
+block|,
+literal|0
+block|,
+literal|8
+block|, 	}
+block|,
+block|{
 literal|0x14db
 block|,
 literal|0x2130

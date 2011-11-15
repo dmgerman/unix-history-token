@@ -2943,17 +2943,6 @@ operator|>
 name|INT_MAX
 condition|)
 block|{
-if|if
-condition|(
-name|proc
-operator|!=
-name|NULL
-condition|)
-name|PRELE
-argument_list|(
-name|proc
-argument_list|)
-expr_stmt|;
 name|error
 operator|=
 name|EINVAL

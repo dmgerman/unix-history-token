@@ -184,6 +184,11 @@ argument|vm_page
 argument_list|)
 name|devp_pglist
 expr_stmt|;
+name|struct
+name|cdev_pager_ops
+modifier|*
+name|ops
+decl_stmt|;
 block|}
 name|devp
 struct|;
