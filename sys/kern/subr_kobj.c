@@ -195,16 +195,12 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/*  * In the event that kobj_mtx has not been initialized yet,  * we will ignore it, and run without locks in order to support  * use of KOBJ before mutexes are available. This early in the boot  * process, everything is single threaded and so races should not  * happen. This is used to provide the PMAP layer on PowerPC, as well  * as board support.  */
-end_comment
-
 begin_define
 define|#
 directive|define
 name|KOBJ_LOCK
 parameter_list|()
-value|if (kobj_mutex_inited) mtx_lock(&kobj_mtx);
+value|mtx_lock(&kobj_mtx)
 end_define
 
 begin_define
@@ -212,7 +208,7 @@ define|#
 directive|define
 name|KOBJ_UNLOCK
 parameter_list|()
-value|if (kobj_mutex_inited) mtx_unlock(&kobj_mtx);
+value|mtx_unlock(&kobj_mtx)
 end_define
 
 begin_define
@@ -222,7 +218,7 @@ name|KOBJ_ASSERT
 parameter_list|(
 name|what
 parameter_list|)
-value|if (kobj_mutex_inited) mtx_assert(&kobj_mtx,what);
+value|mtx_assert(&kobj_mtx, what);
 end_define
 
 begin_expr_stmt
@@ -333,55 +329,6 @@ end_function
 begin_function
 specifier|static
 name|void
-name|kobj_register_method
-parameter_list|(
-name|struct
-name|kobjop_desc
-modifier|*
-name|desc
-parameter_list|)
-block|{
-name|KOBJ_ASSERT
-argument_list|(
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|desc
-operator|->
-name|id
-operator|==
-literal|0
-condition|)
-block|{
-name|desc
-operator|->
-name|id
-operator|=
-name|kobj_next_id
-operator|++
-expr_stmt|;
-block|}
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|kobj_unregister_method
-parameter_list|(
-name|struct
-name|kobjop_desc
-modifier|*
-name|desc
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-specifier|static
-name|void
 name|kobj_class_compile_common
 parameter_list|(
 name|kobj_class_t
@@ -398,11 +345,6 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|KOBJ_ASSERT
-argument_list|(
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Don't do anything if we are already compiled. 	 */
 if|if
 condition|(
@@ -434,13 +376,27 @@ operator|,
 name|m
 operator|++
 control|)
-name|kobj_register_method
-argument_list|(
+block|{
+if|if
+condition|(
 name|m
 operator|->
 name|desc
-argument_list|)
+operator|->
+name|id
+operator|==
+literal|0
+condition|)
+name|m
+operator|->
+name|desc
+operator|->
+name|id
+operator|=
+name|kobj_next_id
+operator|++
 expr_stmt|;
+block|}
 comment|/* 	 * Then initialise the ops table. 	 */
 for|for
 control|(
@@ -519,7 +475,9 @@ name|ops
 condition|)
 name|panic
 argument_list|(
-literal|"kobj_compile_methods: out of memory"
+literal|"%s: out of memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|KOBJ_LOCK
@@ -569,15 +527,20 @@ name|kobj_ops_t
 name|ops
 parameter_list|)
 block|{
-name|KOBJ_ASSERT
+name|KASSERT
 argument_list|(
-name|MA_NOTOWNED
+name|kobj_mutex_inited
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: only supported during early cycles"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Increment refs to make sure that the ops table is not freed. 	 */
-name|KOBJ_LOCK
-argument_list|()
-expr_stmt|;
 name|cls
 operator|->
 name|refs
@@ -589,9 +552,6 @@ name|cls
 argument_list|,
 name|ops
 argument_list|)
-expr_stmt|;
-name|KOBJ_UNLOCK
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -813,13 +773,6 @@ name|kobj_class_t
 name|cls
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|;
-name|kobj_method_t
-modifier|*
-name|m
-decl_stmt|;
 name|void
 modifier|*
 name|ops
@@ -844,36 +797,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* 		 * Unregister any methods which are no longer used. 		 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-operator|,
-name|m
-operator|=
-name|cls
-operator|->
-name|methods
-init|;
-name|m
-operator|->
-name|desc
-condition|;
-name|i
-operator|++
-operator|,
-name|m
-operator|++
-control|)
-name|kobj_unregister_method
-argument_list|(
-name|m
-operator|->
-name|desc
-argument_list|)
-expr_stmt|;
+comment|/* 		 * For now we don't do anything to unregister any methods 		 * which are no longer used. 		 */
 comment|/* 		 * Free memory and clean up. 		 */
 name|ops
 operator|=
@@ -962,6 +886,34 @@ block|}
 end_function
 
 begin_function
+specifier|static
+name|void
+name|kobj_init_common
+parameter_list|(
+name|kobj_t
+name|obj
+parameter_list|,
+name|kobj_class_t
+name|cls
+parameter_list|)
+block|{
+name|obj
+operator|->
+name|ops
+operator|=
+name|cls
+operator|->
+name|ops
+expr_stmt|;
+name|cls
+operator|->
+name|refs
+operator|++
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|void
 name|kobj_init
 parameter_list|(
@@ -1004,21 +956,49 @@ goto|goto
 name|retry
 goto|;
 block|}
+name|kobj_init_common
+argument_list|(
 name|obj
-operator|->
-name|ops
-operator|=
+argument_list|,
 name|cls
-operator|->
-name|ops
-expr_stmt|;
-name|cls
-operator|->
-name|refs
-operator|++
+argument_list|)
 expr_stmt|;
 name|KOBJ_UNLOCK
 argument_list|()
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|kobj_init_static
+parameter_list|(
+name|kobj_t
+name|obj
+parameter_list|,
+name|kobj_class_t
+name|cls
+parameter_list|)
+block|{
+name|KASSERT
+argument_list|(
+name|kobj_mutex_inited
+operator|==
+literal|0
+argument_list|,
+operator|(
+literal|"%s: only supported during early cycles"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
+name|kobj_init_common
+argument_list|(
+name|obj
+argument_list|,
+name|cls
+argument_list|)
 expr_stmt|;
 block|}
 end_function
