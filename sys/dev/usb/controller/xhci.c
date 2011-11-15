@@ -1694,7 +1694,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -2681,7 +2681,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -2858,7 +2858,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
