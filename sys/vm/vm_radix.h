@@ -126,16 +126,6 @@ begin_comment
 comment|/* Nodes to store on stack. */
 end_comment
 
-begin_expr_stmt
-name|CTASSERT
-argument_list|(
-name|VM_RADIX_HEIGHT
-operator|>=
-name|VM_RADIX_LIMIT
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* Calculates maximum value for a tree of height h. */
 end_comment
@@ -151,11 +141,37 @@ define|\
 value|((h) == VM_RADIX_LIMIT ? ((vm_pindex_t)-1) :		\ 	    (((vm_pindex_t)1<< ((h) * VM_RADIX_WIDTH)) - 1))
 end_define
 
+begin_comment
+comment|/*  * Radix tree root.  The height and pointer are set together to permit  * coherent lookups while the root is modified.  */
+end_comment
+
+begin_struct
+struct|struct
+name|vm_radix
+block|{
+name|uintptr_t
+name|rt_root
+decl_stmt|;
+comment|/* root + height */
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_RADIX_HEIGHT
+operator|>=
+name|VM_RADIX_LIMIT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_struct
 struct|struct
@@ -173,22 +189,6 @@ name|uint16_t
 name|rn_count
 decl_stmt|;
 comment|/* Valid children. */
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * Radix tree root.  The height and pointer are set together to permit  * coherent lookups while the root is modified.  */
-end_comment
-
-begin_struct
-struct|struct
-name|vm_radix
-block|{
-name|uintptr_t
-name|rt_root
-decl_stmt|;
-comment|/* root + height */
 block|}
 struct|;
 end_struct
