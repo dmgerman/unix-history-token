@@ -4069,7 +4069,7 @@ block|}
 name|PFS_TRACE
 argument_list|(
 operator|(
-literal|"%zd bytes"
+literal|"%d bytes"
 operator|,
 name|i
 operator|*
