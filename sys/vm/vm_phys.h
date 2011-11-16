@@ -55,6 +55,10 @@ name|mem_affinity
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * The following functions are only to be used by the virtual memory system.  */
+end_comment
+
 begin_function_decl
 name|void
 name|vm_phys_add_page
