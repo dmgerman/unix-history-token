@@ -749,6 +749,16 @@ name|RL_MTU
 block|}
 block|,
 block|{
+name|RL_HWREV_8402
+block|,
+name|RL_8169
+block|,
+literal|"8402"
+block|,
+name|RL_MTU
+block|}
+block|,
+block|{
 name|RL_HWREV_8105E
 block|,
 name|RL_8169
@@ -6619,6 +6629,9 @@ expr_stmt|;
 break|break;
 case|case
 name|RL_HWREV_8401E
+case|:
+case|case
+name|RL_HWREV_8402
 case|:
 case|case
 name|RL_HWREV_8105E
