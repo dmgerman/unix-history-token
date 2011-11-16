@@ -859,6 +859,16 @@ name|RL_JUMBO_MTU_6K
 block|}
 block|,
 block|{
+name|RL_HWREV_8411
+block|,
+name|RL_8169
+block|,
+literal|"8411"
+block|,
+name|RL_JUMBO_MTU_9K
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -6766,6 +6776,9 @@ expr_stmt|;
 break|break;
 case|case
 name|RL_HWREV_8168E_VL
+case|:
+case|case
+name|RL_HWREV_8411
 case|:
 name|sc
 operator|->
