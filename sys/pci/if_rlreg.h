@@ -4639,6 +4639,9 @@ name|int
 name|rl_eewidth
 decl_stmt|;
 name|int
+name|rl_expcap
+decl_stmt|;
+name|int
 name|rl_txthresh
 decl_stmt|;
 name|struct
