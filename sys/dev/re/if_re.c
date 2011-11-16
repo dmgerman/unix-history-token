@@ -15804,6 +15804,11 @@ block|}
 endif|#
 directive|endif
 comment|/* DEVICE_POLLING */
+name|RL_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -16207,12 +16212,17 @@ operator|&=
 operator|~
 name|IFF_DRV_RUNNING
 expr_stmt|;
-name|re_init
+name|re_init_locked
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|RL_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|VLAN_CAPABILITIES
 argument_list|(
 name|ifp
