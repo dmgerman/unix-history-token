@@ -12425,6 +12425,26 @@ end_function
 
 begin_function
 name|int
+name|pmc_close_logfile
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PMC_CALL
+argument_list|(
+name|CLOSELOG
+argument_list|,
+literal|0
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
 name|pmc_get_driver_stats
 parameter_list|(
 name|struct

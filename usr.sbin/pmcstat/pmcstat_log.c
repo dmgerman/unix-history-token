@@ -6850,7 +6850,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pmc_flush_logfile
+name|pmc_close_logfile
 argument_list|()
 operator|<
 literal|0
