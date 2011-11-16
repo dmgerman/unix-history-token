@@ -351,6 +351,43 @@ name|PRI_MAX_IDLE
 value|(PRI_MAX)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/* Other arguments for kern_yield(9). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRI_USER
+value|-2
+end_define
+
+begin_comment
+comment|/* Change to current user priority. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PRI_UNCHANGED
+value|-1
+end_define
+
+begin_comment
+comment|/* Do not change priority. */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|priority
