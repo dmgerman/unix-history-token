@@ -540,7 +540,7 @@ directive|define
 name|__PMC_OPS
 parameter_list|()
 define|\
-value|__PMC_OP(CONFIGURELOG, "Set log file")				\ 	__PMC_OP(FLUSHLOG, "Flush log file")				\ 	__PMC_OP(GETCPUINFO, "Get system CPU information")		\ 	__PMC_OP(GETDRIVERSTATS, "Get driver statistics")		\ 	__PMC_OP(GETMODULEVERSION, "Get module version")		\ 	__PMC_OP(GETPMCINFO, "Get per-cpu PMC information")		\ 	__PMC_OP(PMCADMIN, "Set PMC state")				\ 	__PMC_OP(PMCALLOCATE, "Allocate and configure a PMC")		\ 	__PMC_OP(PMCATTACH, "Attach a PMC to a process")		\ 	__PMC_OP(PMCDETACH, "Detach a PMC from a process")		\ 	__PMC_OP(PMCGETMSR, "Get a PMC's hardware address")		\ 	__PMC_OP(PMCRELEASE, "Release a PMC")				\ 	__PMC_OP(PMCRW, "Read/Set a PMC")				\ 	__PMC_OP(PMCSETCOUNT, "Set initial count/sampling rate")	\ 	__PMC_OP(PMCSTART, "Start a PMC")				\ 	__PMC_OP(PMCSTOP, "Start a PMC")				\ 	__PMC_OP(WRITELOG, "Write a cookie to the log file")
+value|__PMC_OP(CONFIGURELOG, "Set log file")				\ 	__PMC_OP(FLUSHLOG, "Flush log file")				\ 	__PMC_OP(GETCPUINFO, "Get system CPU information")		\ 	__PMC_OP(GETDRIVERSTATS, "Get driver statistics")		\ 	__PMC_OP(GETMODULEVERSION, "Get module version")		\ 	__PMC_OP(GETPMCINFO, "Get per-cpu PMC information")		\ 	__PMC_OP(PMCADMIN, "Set PMC state")				\ 	__PMC_OP(PMCALLOCATE, "Allocate and configure a PMC")		\ 	__PMC_OP(PMCATTACH, "Attach a PMC to a process")		\ 	__PMC_OP(PMCDETACH, "Detach a PMC from a process")		\ 	__PMC_OP(PMCGETMSR, "Get a PMC's hardware address")		\ 	__PMC_OP(PMCRELEASE, "Release a PMC")				\ 	__PMC_OP(PMCRW, "Read/Set a PMC")				\ 	__PMC_OP(PMCSETCOUNT, "Set initial count/sampling rate")	\ 	__PMC_OP(PMCSTART, "Start a PMC")				\ 	__PMC_OP(PMCSTOP, "Start a PMC")				\ 	__PMC_OP(WRITELOG, "Write a cookie to the log file")		\ 	__PMC_OP(CLOSELOG, "Close log file")
 end_define
 
 begin_enum
@@ -2995,6 +2995,17 @@ end_define
 
 begin_comment
 comment|/* sample */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_DEBUG_MIN_CLO
+value|12
+end_define
+
+begin_comment
+comment|/* close */
 end_comment
 
 begin_else
