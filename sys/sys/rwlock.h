@@ -336,6 +336,7 @@ begin_function_decl
 name|int
 name|rw_wowned
 parameter_list|(
+specifier|const
 name|struct
 name|rwlock
 modifier|*
@@ -568,6 +569,7 @@ begin_function_decl
 name|void
 name|_rw_assert
 parameter_list|(
+specifier|const
 name|struct
 name|rwlock
 modifier|*

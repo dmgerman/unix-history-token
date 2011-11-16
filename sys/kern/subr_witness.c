@@ -1112,6 +1112,7 @@ name|lock_list_entry
 modifier|*
 name|list
 parameter_list|,
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -9716,6 +9717,7 @@ name|lock_list_entry
 modifier|*
 name|list
 parameter_list|,
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -10517,6 +10519,7 @@ begin_function
 name|void
 name|witness_assert
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*

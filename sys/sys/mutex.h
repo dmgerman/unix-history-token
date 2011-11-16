@@ -512,6 +512,7 @@ begin_function_decl
 name|void
 name|_mtx_assert
 parameter_list|(
+specifier|const
 name|struct
 name|mtx
 modifier|*

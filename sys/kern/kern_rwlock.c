@@ -238,6 +238,7 @@ specifier|static
 name|void
 name|db_show_rwlock
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -256,6 +257,7 @@ specifier|static
 name|void
 name|assert_rw
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -294,6 +296,7 @@ specifier|static
 name|int
 name|owner_rw
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -472,6 +475,7 @@ begin_function
 name|void
 name|assert_rw
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -484,6 +488,7 @@ block|{
 name|rw_assert
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|rwlock
 operator|*
@@ -620,6 +625,7 @@ begin_function
 name|int
 name|owner_rw
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -632,12 +638,14 @@ modifier|*
 name|owner
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rwlock
 modifier|*
 name|rw
 init|=
 operator|(
+specifier|const
 expr|struct
 name|rwlock
 operator|*
@@ -971,6 +979,7 @@ begin_function
 name|int
 name|rw_wowned
 parameter_list|(
+specifier|const
 name|struct
 name|rwlock
 modifier|*
@@ -4276,6 +4285,7 @@ begin_function
 name|void
 name|_rw_assert
 parameter_list|(
+specifier|const
 name|struct
 name|rwlock
 modifier|*
@@ -4641,12 +4651,14 @@ begin_function
 name|void
 name|db_show_rwlock
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
 name|lock
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rwlock
 modifier|*
@@ -4660,6 +4672,7 @@ decl_stmt|;
 name|rw
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|rwlock
 operator|*

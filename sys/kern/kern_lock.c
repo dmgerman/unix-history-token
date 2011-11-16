@@ -496,6 +496,7 @@ specifier|static
 name|void
 name|assert_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -518,6 +519,7 @@ specifier|static
 name|void
 name|db_show_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -558,6 +560,7 @@ specifier|static
 name|int
 name|owner_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -749,7 +752,7 @@ name|thread
 operator|*
 name|lockmgr_xholder
 argument_list|(
-argument|struct lock *lk
+argument|const struct lock *lk
 argument_list|)
 block|{
 name|uintptr_t
@@ -1476,6 +1479,7 @@ specifier|static
 name|void
 name|assert_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -1545,6 +1549,7 @@ specifier|static
 name|int
 name|owner_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -5221,6 +5226,7 @@ begin_function
 name|void
 name|lockmgr_printinfo
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5364,6 +5370,7 @@ begin_function
 name|int
 name|lockstatus
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5485,6 +5492,7 @@ begin_function
 name|void
 name|_lockmgr_assert
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5969,6 +5977,7 @@ specifier|static
 name|void
 name|db_show_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -5980,6 +5989,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5988,6 +5998,7 @@ decl_stmt|;
 name|lk
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|lock
 operator|*
