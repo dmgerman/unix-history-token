@@ -2086,7 +2086,7 @@ operator|,
 operator|(
 name|nsc
 operator|->
-name|sc_sc_features
+name|sc_features
 operator|&
 name|NCR_F_LARGEXFER
 operator|)
