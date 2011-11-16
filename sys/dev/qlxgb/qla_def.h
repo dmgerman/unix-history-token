@@ -330,7 +330,7 @@ begin_define
 define|#
 directive|define
 name|QLA_MAX_TSO_FRAME_SIZE
-value|(64 * 1024 - 1)
+value|((64 * 1024 - 1) + 22)
 end_define
 
 begin_comment
