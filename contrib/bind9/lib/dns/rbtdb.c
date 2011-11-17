@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: rbtdb.c,v 1.270.12.32 2011-06-09 00:16:35 each Exp $ */
+comment|/* $Id: rbtdb.c,v 1.270.12.32.8.1 2011-11-16 09:11:42 marka Exp $ */
 end_comment
 
 begin_comment
@@ -19656,6 +19656,12 @@ name|found
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|NEGATIVE
+argument_list|(
+name|found
+argument_list|)
+operator|&&
 name|foundsig
 operator|!=
 name|NULL
@@ -22779,6 +22785,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|NEGATIVE
+argument_list|(
+name|found
+argument_list|)
+operator|&&
 name|foundsig
 operator|!=
 name|NULL

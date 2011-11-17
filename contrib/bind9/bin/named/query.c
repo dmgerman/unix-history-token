@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: query.c,v 1.313.20.27 2011-03-19 09:47:54 marka Exp $ */
+comment|/* $Id: query.c,v 1.313.20.27.8.1 2011-11-16 09:11:42 marka Exp $ */
 end_comment
 
 begin_comment
@@ -5246,18 +5246,20 @@ argument_list|(
 name|rdataset
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Negative cache entries don't have sigrdatasets. 			 */
-name|INSIST
-argument_list|(
+if|if
+condition|(
 name|sigrdataset
-operator|==
+operator|!=
 name|NULL
-operator|||
-operator|!
+operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
 name|sigrdataset
 argument_list|)
+condition|)
+name|dns_rdataset_disassociate
+argument_list|(
+name|sigrdataset
 argument_list|)
 expr_stmt|;
 block|}
@@ -5459,17 +5461,20 @@ argument_list|(
 name|rdataset
 argument_list|)
 expr_stmt|;
-name|INSIST
-argument_list|(
+if|if
+condition|(
 name|sigrdataset
-operator|==
+operator|!=
 name|NULL
-operator|||
-operator|!
+operator|&&
 name|dns_rdataset_isassociated
 argument_list|(
 name|sigrdataset
 argument_list|)
+condition|)
+name|dns_rdataset_disassociate
+argument_list|(
+name|sigrdataset
 argument_list|)
 expr_stmt|;
 block|}
@@ -7324,14 +7329,16 @@ argument_list|(
 name|rdataset
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Negative cache entries don't have sigrdatasets. 		 */
-name|INSIST
-argument_list|(
-operator|!
+if|if
+condition|(
 name|dns_rdataset_isassociated
 argument_list|(
 name|sigrdataset
 argument_list|)
+condition|)
+name|dns_rdataset_disassociate
+argument_list|(
+name|sigrdataset
 argument_list|)
 expr_stmt|;
 block|}
