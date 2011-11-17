@@ -769,6 +769,16 @@ name|RL_MTU
 block|}
 block|,
 block|{
+name|RL_HWREV_8105E_SPIN1
+block|,
+name|RL_8169
+block|,
+literal|"8105E"
+block|,
+name|RL_MTU
+block|}
+block|,
+block|{
 name|RL_HWREV_8168B_SPIN2
 block|,
 name|RL_8169
@@ -6758,6 +6768,9 @@ name|RL_HWREV_8402
 case|:
 case|case
 name|RL_HWREV_8105E
+case|:
+case|case
+name|RL_HWREV_8105E_SPIN1
 case|:
 name|sc
 operator|->
