@@ -476,7 +476,12 @@ name|PAGE_SIZE
 argument_list|,
 literal|0
 argument_list|,
-literal|0x3FFFFFFFFFFFULL
+name|MIN
+argument_list|(
+literal|0x3FFFFFFFFFFFUL
+argument_list|,
+name|BUS_SPACE_MAXADDR
+argument_list|)
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,

@@ -498,7 +498,7 @@ name|std_put
 expr_stmt|;
 name|put
 operator|=
-name|atomic_readandclear_long
+name|atomic_readandclear_ptr
 argument_list|(
 name|putp
 argument_list|)
@@ -1960,7 +1960,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|atomic_cmpset_long
+name|atomic_cmpset_ptr
 argument_list|(
 name|putp
 argument_list|,
@@ -5874,7 +5874,12 @@ literal|1
 argument_list|,
 literal|0x1000
 argument_list|,
-literal|0x3FFFFFFFFFFFULL
+name|MIN
+argument_list|(
+literal|0x3FFFFFFFFFFFUL
+argument_list|,
+name|BUS_SPACE_MAXADDR
+argument_list|)
 argument_list|,
 name|BUS_SPACE_MAXADDR
 argument_list|,

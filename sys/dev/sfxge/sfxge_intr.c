@@ -492,7 +492,7 @@ expr_stmt|;
 block|}
 do|while
 condition|(
-name|atomic_cmpset_long
+name|atomic_cmpset_ptr
 argument_list|(
 operator|&
 name|intr
