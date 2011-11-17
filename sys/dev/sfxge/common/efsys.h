@@ -220,12 +220,12 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__i386
+name|__i386__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__amd64
+name|__amd64__
 argument_list|)
 specifier|static
 name|__inline
@@ -251,6 +251,58 @@ parameter_list|)
 block|{
 asm|__asm__( 	    "prefetchnta (%0)" 	    : 	    : "r" (addr));
 block|}
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+specifier|static
+name|__inline
+name|void
+name|prefetch_read_many
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+block|{
+asm|__asm__( 	    "prefetch [%0], 0" 	    : 	    : "r" (addr));
+block|}
+specifier|static
+name|__inline
+name|void
+name|prefetch_read_once
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+block|{
+asm|__asm__( 	    "prefetch [%0], 1" 	    : 	    : "r" (addr));
+block|}
+else|#
+directive|else
+specifier|static
+name|__inline
+name|void
+name|prefetch_read_many
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+block|{  }
+specifier|static
+name|__inline
+name|void
+name|prefetch_read_once
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+block|{  }
 endif|#
 directive|endif
 if|#
