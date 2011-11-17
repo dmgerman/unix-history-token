@@ -432,7 +432,7 @@ name|RT_DEVICEID_8168
 block|,
 literal|0
 block|,
-literal|"RealTek 8168/8111 B/C/CP/D/DP/E PCIe Gigabit Ethernet"
+literal|"RealTek 8168/8111 B/C/CP/D/DP/E/F PCIe Gigabit Ethernet"
 block|}
 block|,
 block|{
@@ -866,6 +866,16 @@ block|,
 literal|"8168E/8111E-VL"
 block|,
 name|RL_JUMBO_MTU_6K
+block|}
+block|,
+block|{
+name|RL_HWREV_8168F
+block|,
+name|RL_8169
+block|,
+literal|"8168F/8111F"
+block|,
+name|RL_JUMBO_MTU_9K
 block|}
 block|,
 block|{
@@ -6902,6 +6912,9 @@ expr_stmt|;
 break|break;
 case|case
 name|RL_HWREV_8168E_VL
+case|:
+case|case
+name|RL_HWREV_8168F
 case|:
 case|case
 name|RL_HWREV_8411
