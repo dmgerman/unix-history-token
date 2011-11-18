@@ -1644,6 +1644,30 @@ name|uint32_t
 name|sc_kickpcu
 decl_stmt|;
 comment|/* whether to kick the PCU */
+name|uint32_t
+name|sc_rxproc_cnt
+decl_stmt|;
+comment|/* In RX processing */
+name|uint32_t
+name|sc_txproc_cnt
+decl_stmt|;
+comment|/* In TX processing */
+name|uint32_t
+name|sc_txstart_cnt
+decl_stmt|;
+comment|/* In TX output (raw/start) */
+name|uint32_t
+name|sc_inreset_cnt
+decl_stmt|;
+comment|/* In active reset/chanchange */
+name|uint32_t
+name|sc_txrx_cnt
+decl_stmt|;
+comment|/* refcount on stop/start'ing TX */
+name|uint32_t
+name|sc_intr_cnt
+decl_stmt|;
+comment|/* refcount on interrupt handling */
 name|u_int
 name|sc_keymax
 decl_stmt|;
@@ -2129,6 +2153,16 @@ parameter_list|)
 value|mtx_assert(&(_sc)->sc_mtx, MA_OWNED)
 end_define
 
+begin_define
+define|#
+directive|define
+name|ATH_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_mtx, MA_NOTOWNED)
+end_define
+
 begin_comment
 comment|/*  * The PCU lock is non-recursive and should be treated as a spinlock.  * Although currently the interrupt code is run in netisr context and  * doesn't require this, this may change in the future.  * Please keep this in mind when protecting certain code paths  * with the PCU lock.  *  * The PCU lock is used to serialise access to the PCU so things such  * as TX, RX, state change (eg channel change), channel reset and updates  * from interrupt context (eg kickpcu, txqactive bits) do not clash.  *  * Although the current single-thread taskqueue mechanism protects the  * majority of these situations by simply serialising them, there are  * a few others which occur at the same time. These include the TX path  * (which only acquires ATH_LOCK when recycling buffers to the free list),  * ath_set_channel, the channel scanning API and perhaps quite a bit more.  */
 end_comment
@@ -2181,6 +2215,16 @@ parameter_list|(
 name|_sc
 parameter_list|)
 value|mtx_assert(&(_sc)->sc_pcu_mtx,	\ 		MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_PCU_UNLOCK_ASSERT
+parameter_list|(
+name|_sc
+parameter_list|)
+value|mtx_assert(&(_sc)->sc_pcu_mtx,	\ 		MA_NOTOWNED)
 end_define
 
 begin_define
