@@ -5394,7 +5394,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static usb_error_t xhci_cmd_nop(struct xhci_softc *sc) { 	struct xhci_trb trb; 	uint32_t temp;  	DPRINTF("\n");  	trb.qwTrb0 = 0; 	trb.dwTrb2 = 0; 	temp = XHCI_TRB_3_TYPE_SET(XHCI_TRB_TYPE_NOOP);  	trb.dwTrb3 = htole32(temp);  	return (xhci_do_command(sc,&trb, 50
+unit|static usb_error_t xhci_cmd_nop(struct xhci_softc *sc) { 	struct xhci_trb trb; 	uint32_t temp;  	DPRINTF("\n");  	trb.qwTrb0 = 0; 	trb.dwTrb2 = 0; 	temp = XHCI_TRB_3_TYPE_SET(XHCI_TRB_TYPE_NOOP);  	trb.dwTrb3 = htole32(temp);  	return (xhci_do_command(sc,&trb, 100
 comment|/* ms */
 end_comment
 
@@ -5467,7 +5467,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 expr_stmt|;
@@ -5573,7 +5573,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6176,7 +6176,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6258,7 +6258,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6353,7 +6353,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6456,7 +6456,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6551,7 +6551,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6627,7 +6627,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
