@@ -103,6 +103,13 @@ end_include
 
 begin_decl_stmt
 specifier|static
+name|device_attach_t
+name|miibus_attach
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|bus_child_location_str_t
 name|miibus_child_location_str
 decl_stmt|;
@@ -117,6 +124,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+name|device_detach_t
+name|miibus_detach
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
 name|bus_hinted_child_t
 name|miibus_hinted_child
 decl_stmt|;
@@ -126,6 +140,13 @@ begin_decl_stmt
 specifier|static
 name|bus_print_child_t
 name|miibus_print_child
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|device_probe_t
+name|miibus_probe
 decl_stmt|;
 end_decl_stmt
 
@@ -358,6 +379,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|int
 name|miibus_probe
 parameter_list|(
@@ -381,6 +403,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|miibus_attach
 parameter_list|(
@@ -563,6 +586,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|miibus_detach
 parameter_list|(
