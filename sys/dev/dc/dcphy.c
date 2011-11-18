@@ -1047,13 +1047,9 @@ operator|->
 name|mii_pdata
 decl_stmt|;
 name|int
-name|reg
-decl_stmt|,
 name|anlpar
 decl_stmt|,
 name|tstat
-init|=
-literal|0
 decl_stmt|;
 name|struct
 name|dc_softc
@@ -1095,7 +1091,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|reg
+name|tstat
 operator|=
 name|CSR_READ_4
 argument_list|(
@@ -1108,14 +1104,14 @@ if|if
 condition|(
 operator|!
 operator|(
-name|reg
+name|tstat
 operator|&
 name|DC_TSTAT_LS10
 operator|)
 operator|||
 operator|!
 operator|(
-name|reg
+name|tstat
 operator|&
 name|DC_TSTAT_LS100
 operator|)
@@ -1139,15 +1135,6 @@ name|DC_TCTL_AUTONEGENBL
 condition|)
 block|{
 comment|/* Erg, still trying, I guess... */
-name|tstat
-operator|=
-name|CSR_READ_4
-argument_list|(
-name|dc_sc
-argument_list|,
-name|DC_10BTSTAT
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1327,7 +1314,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|reg
+name|tstat
 operator|&
 name|DC_TSTAT_LS100
 operator|)
@@ -1345,7 +1332,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|reg
+name|tstat
 operator|&
 name|DC_TSTAT_LS10
 operator|)
