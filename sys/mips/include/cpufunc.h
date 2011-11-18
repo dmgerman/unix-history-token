@@ -48,9 +48,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|CPU_CNMIPS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_RMI
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
 asm|__asm __volatile("" : : : "memory");
 else|#
 directive|else
