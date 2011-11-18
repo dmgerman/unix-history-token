@@ -4014,9 +4014,6 @@ decl_stmt|;
 name|int
 name|dc_if_flags
 decl_stmt|;
-name|int
-name|dc_if_media
-decl_stmt|;
 name|uint32_t
 name|dc_flags
 decl_stmt|;
