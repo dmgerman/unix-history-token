@@ -567,5 +567,30 @@ name|NEED_INDICATE_EXEC_STACK
 value|1
 end_define
 
+begin_comment
+comment|/* This is how to declare the size of a function.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|ASM_DECLARE_FUNCTION_SIZE
+end_undef
+
+begin_define
+define|#
+directive|define
+name|ASM_DECLARE_FUNCTION_SIZE
+parameter_list|(
+name|FILE
+parameter_list|,
+name|FNAME
+parameter_list|,
+name|DECL
+parameter_list|)
+define|\
+value|do                                                                    \     {                                                                   \       if (!flag_inhibit_size_directive)                                 \         {                                                               \           fputs ("\t.size\t", (FILE));                                  \           if (TARGET_64BIT&& DOT_SYMBOLS)                              \             putc ('.', (FILE));                                         \           assemble_name ((FILE), (FNAME));                              \           fputs (",.-", (FILE));                                        \           rs6000_output_function_entry (FILE, FNAME);                   \           putc ('\n', (FILE));                                          \         }                                                               \     }                                                                   \   while (0)
+end_define
+
 end_unit
 

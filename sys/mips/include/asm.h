@@ -3383,6 +3383,55 @@ begin_comment
 comment|/*  * Assume that w alaways need nops to escape CP0 hazard  * TODO: Make hazard delays configurable. Stuck with 5 cycles on the moment  * For more info on CP0 hazards see Chapter 7 (p.99) of "MIPS32 Architecture   *    For Programmers Volume III: The MIPS32 Privileged Resource Architecture"  */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|CPU_NLM
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|HAZARD_DELAY
+value|sll $0,3
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITLBNOPFIX
+value|sll $0,3
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|CPU_RMI
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|HAZARD_DELAY
+end_define
+
+begin_define
+define|#
+directive|define
+name|ITLBNOPFIX
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -3396,6 +3445,11 @@ directive|define
 name|HAZARD_DELAY
 value|nop;nop;nop;nop;nop;
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

@@ -1133,7 +1133,7 @@ modifier|*
 name|timeout
 parameter_list|,
 name|int
-name|check_unparking
+name|flags
 parameter_list|)
 block|{
 if|if
@@ -1194,11 +1194,7 @@ name|cv
 argument_list|,
 name|UMTX_OP_CV_WAIT
 argument_list|,
-name|check_unparking
-condition|?
-name|UMTX_CHECK_UNPARKING
-else|:
-literal|0
+name|flags
 argument_list|,
 name|m
 argument_list|,

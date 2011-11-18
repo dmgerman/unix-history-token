@@ -943,6 +943,26 @@ modifier|*
 name|vc_tolocal
 decl_stmt|;
 comment|/* server charset to local one */
+name|void
+modifier|*
+name|vc_cp_toserver
+decl_stmt|;
+comment|/* local charset to server one (using CodePage) */
+name|void
+modifier|*
+name|vc_cp_tolocal
+decl_stmt|;
+comment|/* server charset to local one (using CodePage) */
+name|void
+modifier|*
+name|vc_ucs_toserver
+decl_stmt|;
+comment|/* local charset to server one (using UCS-2) */
+name|void
+modifier|*
+name|vc_ucs_tolocal
+decl_stmt|;
+comment|/* server charset to local one (using UCS-2) */
 name|int
 name|vc_number
 decl_stmt|;
@@ -1063,6 +1083,13 @@ parameter_list|(
 name|vcp
 parameter_list|)
 value|((vcp)->vc_hflags2& SMB_FLAGS2_UNICODE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SMB_UNICODE_NAME
+value|"UCS-2LE"
 end_define
 
 begin_comment

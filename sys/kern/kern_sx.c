@@ -240,6 +240,7 @@ specifier|static
 name|void
 name|assert_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -262,6 +263,7 @@ specifier|static
 name|void
 name|db_show_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -302,6 +304,7 @@ specifier|static
 name|int
 name|owner_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -515,6 +518,7 @@ begin_function
 name|void
 name|assert_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -527,6 +531,7 @@ block|{
 name|sx_assert
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sx
 operator|*
@@ -662,6 +667,7 @@ begin_function
 name|int
 name|owner_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -674,12 +680,14 @@ modifier|*
 name|owner
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|sx
 modifier|*
 name|sx
 init|=
 operator|(
+specifier|const
 expr|struct
 name|sx
 operator|*
@@ -4419,6 +4427,7 @@ begin_function
 name|void
 name|_sx_assert
 parameter_list|(
+specifier|const
 name|struct
 name|sx
 modifier|*
@@ -4809,6 +4818,7 @@ specifier|static
 name|void
 name|db_show_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -4820,6 +4830,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|const
 name|struct
 name|sx
 modifier|*
@@ -4828,6 +4839,7 @@ decl_stmt|;
 name|sx
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sx
 operator|*

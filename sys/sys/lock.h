@@ -61,6 +61,7 @@ modifier|*
 name|lc_assert
 function_decl|)
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -76,6 +77,7 @@ modifier|*
 name|lc_ddb_show
 function_decl|)
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -103,6 +105,7 @@ modifier|*
 name|lc_owner
 function_decl|)
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -1075,6 +1078,7 @@ begin_function_decl
 name|void
 name|witness_assert
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*

@@ -503,6 +503,7 @@ begin_function_decl
 name|void
 name|_sx_assert
 parameter_list|(
+specifier|const
 name|struct
 name|sx
 modifier|*

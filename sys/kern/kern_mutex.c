@@ -266,6 +266,7 @@ specifier|static
 name|void
 name|assert_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -288,6 +289,7 @@ specifier|static
 name|void
 name|db_show_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -344,6 +346,7 @@ specifier|static
 name|int
 name|owner_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -529,6 +532,7 @@ begin_function
 name|void
 name|assert_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -541,6 +545,7 @@ block|{
 name|mtx_assert
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|mtx
 operator|*
@@ -674,6 +679,7 @@ begin_function
 name|int
 name|owner_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -686,12 +692,14 @@ modifier|*
 name|owner
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|mtx
 modifier|*
 name|m
 init|=
 operator|(
+specifier|const
 expr|struct
 name|mtx
 operator|*
@@ -3212,6 +3220,7 @@ begin_function
 name|void
 name|_mtx_assert
 parameter_list|(
+specifier|const
 name|struct
 name|mtx
 modifier|*
@@ -3928,6 +3937,7 @@ begin_function
 name|void
 name|db_show_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -3939,6 +3949,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|const
 name|struct
 name|mtx
 modifier|*
@@ -3947,6 +3958,7 @@ decl_stmt|;
 name|m
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|mtx
 operator|*

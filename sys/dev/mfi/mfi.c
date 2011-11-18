@@ -652,7 +652,6 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
-specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -2461,57 +2460,7 @@ operator|->
 name|mfi_io_lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Set up the interrupt handler.  XXX This should happen in 	 * mfi_pci.c 	 */
-name|sc
-operator|->
-name|mfi_irq_rid
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|sc
-operator|->
-name|mfi_irq
-operator|=
-name|bus_alloc_resource_any
-argument_list|(
-name|sc
-operator|->
-name|mfi_dev
-argument_list|,
-name|SYS_RES_IRQ
-argument_list|,
-operator|&
-name|sc
-operator|->
-name|mfi_irq_rid
-argument_list|,
-name|RF_SHAREABLE
-operator||
-name|RF_ACTIVE
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|sc
-operator|->
-name|mfi_dev
-argument_list|,
-literal|"Cannot allocate interrupt\n"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
+comment|/* 	 * Set up the interrupt handler. 	 */
 if|if
 condition|(
 name|bus_setup_intr

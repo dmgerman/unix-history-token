@@ -482,37 +482,6 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|__powerpc64__
-end_ifdef
-
-begin_expr_stmt
-specifier|register
-expr|struct
-name|thread
-operator|*
-name|curthread_reg
-asm|__asm("%r13");
-else|#
-directive|else
-specifier|register
-expr|struct
-name|thread
-operator|*
-name|curthread_reg
-end_expr_stmt
-
-begin_asm
-asm|__asm("%r2");
-end_asm
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|AIM
 end_ifdef
 
@@ -520,11 +489,44 @@ begin_comment
 comment|/* Book-E not yet adapted */
 end_comment
 
+begin_expr_stmt
+specifier|static
+name|__inline
+name|__pure2
+expr|struct
+name|thread
+operator|*
+name|__curthread
+argument_list|(
+argument|void
+argument_list|)
+block|{ 	struct
+name|thread
+operator|*
+name|td
+block|;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("mr %0,13" : "=r"(td));
+else|#
+directive|else
+asm|__asm __volatile("mr %0,2" : "=r"(td));
+endif|#
+directive|endif
+return|return
+operator|(
+name|td
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_define
 define|#
 directive|define
 name|curthread
-value|curthread_reg
+value|(__curthread())
 end_define
 
 begin_endif
