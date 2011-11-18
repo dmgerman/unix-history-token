@@ -266,6 +266,18 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|mb_put_padbyte
+parameter_list|(
+name|struct
+name|mbchain
+modifier|*
+name|mbp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|mb_put_uint8
 parameter_list|(
 name|struct
