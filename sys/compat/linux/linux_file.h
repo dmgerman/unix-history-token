@@ -32,8 +32,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|LINUX_AT_EACCESS
+value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
 name|LINUX_AT_REMOVEDIR
 value|0x200
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_AT_SYMLINK_FOLLOW
+value|0x400
 end_define
 
 begin_endif
