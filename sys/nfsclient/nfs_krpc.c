@@ -2232,6 +2232,12 @@ goto|goto
 name|tryagain
 goto|;
 block|}
+comment|/* 		 * Make sure NFSERR_RETERR isn't bogusly set by a server 		 * such as amd. (No actual NFS error has bit 31 set.) 		 */
+name|error
+operator|&=
+operator|~
+name|NFSERR_RETERR
+expr_stmt|;
 comment|/* 		 * If the File Handle was stale, invalidate the lookup 		 * cache, just in case. 		 */
 if|if
 condition|(
