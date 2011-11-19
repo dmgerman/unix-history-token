@@ -189,9 +189,6 @@ name|uart_softc
 modifier|*
 name|sc
 decl_stmt|;
-name|uint64_t
-name|ubase
-decl_stmt|;
 if|if
 condition|(
 name|pci_get_vendor
@@ -213,15 +210,6 @@ operator|(
 name|ENXIO
 operator|)
 return|;
-name|ubase
-operator|=
-name|nlm_get_uart_regbase
-argument_list|(
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
 name|sc
 operator|=
 name|device_get_softc
