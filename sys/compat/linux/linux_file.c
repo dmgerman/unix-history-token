@@ -2605,7 +2605,7 @@ if|if
 condition|(
 name|args
 operator|->
-name|flags
+name|amode
 operator|&
 operator|~
 operator|(
@@ -2658,7 +2658,7 @@ name|path
 argument_list|,
 name|args
 operator|->
-name|flags
+name|amode
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2675,7 +2675,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|args
 operator|->
-name|flags
+name|amode
 argument_list|)
 expr_stmt|;
 name|LFREEPATH
@@ -2720,7 +2720,7 @@ if|if
 condition|(
 name|args
 operator|->
-name|mode
+name|amode
 operator|&
 operator|~
 operator|(
@@ -2791,7 +2791,7 @@ name|path
 argument_list|,
 name|args
 operator|->
-name|mode
+name|amode
 argument_list|)
 expr_stmt|;
 endif|#
@@ -2813,7 +2813,7 @@ comment|/* XXX */
 argument_list|,
 name|args
 operator|->
-name|mode
+name|amode
 argument_list|)
 expr_stmt|;
 name|LFREEPATH

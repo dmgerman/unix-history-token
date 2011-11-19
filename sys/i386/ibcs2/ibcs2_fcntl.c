@@ -1267,7 +1267,7 @@ name|UIO_SYSSPACE
 argument_list|,
 name|uap
 operator|->
-name|flags
+name|amode
 argument_list|)
 expr_stmt|;
 name|free
