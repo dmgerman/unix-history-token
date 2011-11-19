@@ -1189,6 +1189,8 @@ parameter_list|(
 name|struct
 name|ath_softc
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5606,6 +5608,8 @@ comment|/* XXX Do all frames from all vaps/nodes need draining here? */
 name|ath_stoprecv
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 comment|/* stop recv side */
@@ -8240,6 +8244,8 @@ block|{
 name|ath_stoprecv
 argument_list|(
 name|sc
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 name|ath_hal_phydisable
@@ -8562,7 +8568,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * XXX should now wait for pending TX/RX to complete 	 * and block future ones from occuring. 	 */
+comment|/* 	 * Should now wait for pending TX/RX to complete 	 * and block future ones from occuring. This needs to be 	 * done before the TX queue is drained. 	 */
 name|ath_txrx_stop
 argument_list|(
 name|sc
@@ -8577,16 +8583,15 @@ argument_list|)
 expr_stmt|;
 comment|/* stop xmit side */
 comment|/* 	 * Regardless of whether we're doing a no-loss flush or 	 * not, stop the PCU and handle what's in the RX queue. 	 * That way frames aren't dropped which shouldn't be. 	 */
-name|ath_hal_stoppcurecv
+name|ath_stoprecv
 argument_list|(
-name|ah
-argument_list|)
-expr_stmt|;
-name|ath_hal_setrxfilter
-argument_list|(
-name|ah
+name|sc
 argument_list|,
-literal|0
+operator|(
+name|reset_type
+operator|!=
+name|ATH_RESET_NOLOSS
+operator|)
 argument_list|)
 expr_stmt|;
 name|ath_rx_proc
@@ -8596,19 +8601,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If we're not doing a noloss reset, now call ath_stoprecv(). 	 * This fully stops all of the RX machinery and flushes whatever 	 * frames are in the RX ring buffer. Hopefully all completed 	 * frames have been handled at this point. 	 */
-if|if
-condition|(
-name|reset_type
-operator|!=
-name|ATH_RESET_NOLOSS
-condition|)
-name|ath_stoprecv
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* stop recv side */
 name|ath_settkipmic
 argument_list|(
 name|sc
@@ -22362,6 +22354,9 @@ name|struct
 name|ath_softc
 modifier|*
 name|sc
+parameter_list|,
+name|int
+name|dodelay
 parameter_list|)
 block|{
 define|#
@@ -22403,6 +22398,10 @@ name|ah
 argument_list|)
 expr_stmt|;
 comment|/* disable DMA engine */
+if|if
+condition|(
+name|dodelay
+condition|)
 name|DELAY
 argument_list|(
 literal|3000
@@ -22933,6 +22932,30 @@ block|ath_hal_intrset(ah, 0);
 comment|/* disable interrupts */
 endif|#
 directive|endif
+name|ath_stoprecv
+argument_list|(
+name|sc
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+comment|/* turn off frame recv */
+comment|/* 		 * First, handle completed TX/RX frames. 		 */
+name|ath_rx_proc
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|ath_draintxq
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_RESET_NOLOSS
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Next, flush the non-scheduled frames. 		 */
 name|ath_draintxq
 argument_list|(
 name|sc
@@ -22941,12 +22964,6 @@ name|ATH_RESET_FULL
 argument_list|)
 expr_stmt|;
 comment|/* clear pending tx frames */
-name|ath_stoprecv
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-comment|/* turn off frame recv */
 if|if
 condition|(
 operator|!
