@@ -1157,7 +1157,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|flags
+name|amode
 expr_stmt|;
 comment|/* l_int */
 operator|*
@@ -9821,7 +9821,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|mode
+name|amode
 expr_stmt|;
 comment|/* l_int */
 operator|*
