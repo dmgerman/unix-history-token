@@ -438,6 +438,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|kobj_init_static
+parameter_list|(
+name|kobj_t
+name|obj
+parameter_list|,
+name|kobj_class_t
+name|cls
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Delete an object. If mtype is non-zero, free the memory.  */
 end_comment

@@ -429,7 +429,7 @@ operator|&
 name|plat_kernel_kops
 argument_list|)
 expr_stmt|;
-name|kobj_init
+name|kobj_init_static
 argument_list|(
 operator|(
 name|kobj_t
@@ -518,7 +518,7 @@ operator|&
 name|plat_kernel_kops
 argument_list|)
 expr_stmt|;
-name|kobj_init
+name|kobj_init_static
 argument_list|(
 operator|(
 name|kobj_t
