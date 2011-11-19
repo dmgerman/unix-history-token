@@ -2179,10 +2179,12 @@ literal|"\tvp=%p, lowervp=%p\n"
 argument_list|,
 name|vp
 argument_list|,
-name|NULLVPTOLOWERVP
+name|VTONULL
 argument_list|(
 name|vp
 argument_list|)
+operator|->
+name|null_lowervp
 argument_list|)
 expr_stmt|;
 return|return
