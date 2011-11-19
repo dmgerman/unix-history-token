@@ -3316,7 +3316,7 @@ name|buflen
 operator|=
 name|i
 expr_stmt|;
-name|vhold
+name|vref
 argument_list|(
 operator|*
 name|dvp

@@ -1170,7 +1170,7 @@ name|dvp
 operator|=
 name|vp
 expr_stmt|;
-name|vhold
+name|vref
 argument_list|(
 operator|*
 name|dvp
@@ -1304,6 +1304,18 @@ name|dvp
 argument_list|)
 expr_stmt|;
 name|VI_UNLOCK
+argument_list|(
+operator|*
+name|dvp
+argument_list|)
+expr_stmt|;
+name|vref
+argument_list|(
+operator|*
+name|dvp
+argument_list|)
+expr_stmt|;
+name|vdrop
 argument_list|(
 operator|*
 name|dvp
