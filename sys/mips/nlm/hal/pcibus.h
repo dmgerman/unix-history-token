@@ -189,7 +189,7 @@ parameter_list|(
 name|cpu
 parameter_list|)
 define|\
-value|(MSI_MIPS_ADDR_BASE | (cpu)<< 12 |			       \ 	 MSI_MIPS_ADDR_RH_OFF | MSI_MIPS_ADDR_DM_PHYSICAL)
+value|(MSI_MIPS_ADDR_BASE | (cpu)<< 12 |			\ 	MSI_MIPS_ADDR_RH_OFF | MSI_MIPS_ADDR_DM_PHYSICAL)
 end_define
 
 begin_define
@@ -200,7 +200,7 @@ parameter_list|(
 name|irq
 parameter_list|)
 define|\
-value|(MSI_MIPS_DATA_TRGRLVL | MSI_MIPS_DATA_DELFIXED |	       \ 	 MSI_MIPS_DATA_ASSERT | (irq))
+value|(MSI_MIPS_DATA_TRGRLVL | MSI_MIPS_DATA_DELFIXED |	\ 	MSI_MIPS_DATA_ASSERT | (irq))
 end_define
 
 begin_define

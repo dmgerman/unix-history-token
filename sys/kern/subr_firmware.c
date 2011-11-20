@@ -548,7 +548,6 @@ name|parent
 operator|!=
 name|NULL
 condition|)
-block|{
 name|frp
 operator|->
 name|parent
@@ -558,14 +557,6 @@ argument_list|(
 name|parent
 argument_list|)
 expr_stmt|;
-name|frp
-operator|->
-name|parent
-operator|->
-name|refcnt
-operator|++
-expr_stmt|;
-block|}
 name|mtx_unlock
 argument_list|(
 operator|&
@@ -674,22 +665,6 @@ operator|->
 name|file
 decl_stmt|;
 comment|/* save value */
-if|if
-condition|(
-name|fp
-operator|->
-name|parent
-operator|!=
-name|NULL
-condition|)
-comment|/* release parent reference */
-name|fp
-operator|->
-name|parent
-operator|->
-name|refcnt
-operator|--
-expr_stmt|;
 comment|/* 		 * Clear the whole entry with bzero to make sure we 		 * do not forget anything. Then restore 'file' which is 		 * non-null for autoloaded images. 		 */
 name|bzero
 argument_list|(
@@ -1106,6 +1081,27 @@ block|}
 name|found
 label|:
 comment|/* common exit point on success */
+if|if
+condition|(
+name|fp
+operator|->
+name|refcnt
+operator|==
+literal|0
+operator|&&
+name|fp
+operator|->
+name|parent
+operator|!=
+name|NULL
+condition|)
+name|fp
+operator|->
+name|parent
+operator|->
+name|refcnt
+operator|++
+expr_stmt|;
 name|fp
 operator|->
 name|refcnt
@@ -1174,6 +1170,21 @@ operator|==
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|fp
+operator|->
+name|parent
+operator|!=
+name|NULL
+condition|)
+name|fp
+operator|->
+name|parent
+operator|->
+name|refcnt
+operator|--
+expr_stmt|;
 if|if
 condition|(
 name|flags

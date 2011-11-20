@@ -10507,7 +10507,7 @@ modifier|*
 name|path
 decl_stmt|;
 name|int
-name|flags
+name|amode
 decl_stmt|;
 block|}
 struct|;
@@ -10534,7 +10534,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|access_args
-comment|/* { 		char *path; 		int flags; 	} */
+comment|/* { 		char *path; 		int amode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10553,7 +10553,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|flags
+name|amode
 argument_list|)
 operator|)
 return|;
@@ -10578,7 +10578,7 @@ modifier|*
 name|path
 decl_stmt|;
 name|int
-name|mode
+name|amode
 decl_stmt|;
 name|int
 name|flag
@@ -10636,7 +10636,7 @@ name|flag
 argument_list|,
 name|uap
 operator|->
-name|mode
+name|amode
 argument_list|)
 operator|)
 return|;
@@ -10658,7 +10658,7 @@ name|uio_seg
 name|pathseg
 argument_list|,
 name|int
-name|mode
+name|amode
 argument_list|)
 block|{
 return|return
@@ -10675,7 +10675,7 @@ name|pathseg
 argument_list|,
 literal|0
 argument_list|,
-name|mode
+name|amode
 argument_list|)
 operator|)
 return|;
@@ -10700,10 +10700,10 @@ name|uio_seg
 name|pathseg
 argument_list|,
 name|int
-name|flags
+name|flag
 argument_list|,
 name|int
-name|mode
+name|amode
 argument_list|)
 block|{
 name|struct
@@ -10734,7 +10734,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|flags
+name|flag
 operator|&
 name|AT_EACCESS
 operator|)
@@ -10790,7 +10790,7 @@ name|td_ucred
 expr_stmt|;
 name|AUDIT_ARG_VALUE
 argument_list|(
-name|mode
+name|amode
 argument_list|)
 expr_stmt|;
 name|NDINIT_ATRIGHTS
@@ -10858,7 +10858,7 @@ name|vn_access
 argument_list|(
 name|vp
 argument_list|,
-name|mode
+name|amode
 argument_list|,
 name|tmpcred
 argument_list|,
@@ -10889,7 +10889,7 @@ if|if
 condition|(
 operator|!
 operator|(
-name|flags
+name|flag
 operator|&
 name|AT_EACCESS
 operator|)
@@ -10925,7 +10925,7 @@ modifier|*
 name|path
 decl_stmt|;
 name|int
-name|flags
+name|amode
 decl_stmt|;
 block|}
 struct|;
@@ -10952,7 +10952,7 @@ decl_stmt|;
 specifier|register
 name|struct
 name|eaccess_args
-comment|/* { 		char *path; 		int flags; 	} */
+comment|/* { 		char *path; 		int amode; 	} */
 modifier|*
 name|uap
 decl_stmt|;
@@ -10971,7 +10971,7 @@ name|UIO_USERSPACE
 argument_list|,
 name|uap
 operator|->
-name|flags
+name|amode
 argument_list|)
 operator|)
 return|;
@@ -10996,7 +10996,7 @@ name|uio_seg
 name|pathseg
 parameter_list|,
 name|int
-name|flags
+name|amode
 parameter_list|)
 block|{
 return|return
@@ -11013,7 +11013,7 @@ name|pathseg
 argument_list|,
 name|AT_EACCESS
 argument_list|,
-name|flags
+name|amode
 argument_list|)
 operator|)
 return|;

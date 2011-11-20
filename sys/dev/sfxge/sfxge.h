@@ -477,9 +477,6 @@ decl_stmt|;
 name|efsys_mem_t
 name|status
 decl_stmt|;
-name|uint64_t
-name|mask
-decl_stmt|;
 name|uint32_t
 name|zero_count
 decl_stmt|;

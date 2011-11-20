@@ -320,7 +320,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1282,6 +1281,25 @@ argument_list|,
 name|new
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|strcpy
+argument_list|(
+name|__xlocale_global_locale
+operator|.
+name|components
+index|[
+name|category
+operator|-
+literal|1
+index|]
+operator|->
+name|locale
+argument_list|,
+name|new
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|old
@@ -1297,7 +1315,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 specifier|const
 name|char
 modifier|*

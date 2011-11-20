@@ -1157,7 +1157,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|flags
+name|amode
 expr_stmt|;
 comment|/* l_int */
 operator|*
@@ -9597,7 +9597,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|flags
+name|flag
 expr_stmt|;
 comment|/* l_int */
 operator|*
@@ -9821,13 +9821,23 @@ index|]
 operator|=
 name|p
 operator|->
-name|mode
+name|amode
 expr_stmt|;
 comment|/* l_int */
+name|iarg
+index|[
+literal|3
+index|]
+operator|=
+name|p
+operator|->
+name|flag
+expr_stmt|;
+comment|/* int */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|4
 expr_stmt|;
 break|break;
 block|}
@@ -16820,6 +16830,14 @@ case|:
 name|p
 operator|=
 literal|"l_int"
+expr_stmt|;
+break|break;
+case|case
+literal|3
+case|:
+name|p
+operator|=
+literal|"int"
 expr_stmt|;
 break|break;
 default|default:

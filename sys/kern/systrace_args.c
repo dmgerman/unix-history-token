@@ -1284,7 +1284,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|flags
+name|amode
 expr_stmt|;
 comment|/* int */
 operator|*
@@ -10675,7 +10675,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|flags
+name|amode
 expr_stmt|;
 comment|/* int */
 operator|*
@@ -15547,7 +15547,7 @@ index|]
 operator|=
 name|p
 operator|->
-name|mode
+name|amode
 expr_stmt|;
 comment|/* int */
 name|iarg

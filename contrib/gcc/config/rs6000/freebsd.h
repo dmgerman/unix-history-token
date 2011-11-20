@@ -412,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|LINK_OS_FREEBSD_SPEC
-value|"%{m32:-melf32ppc}%{!m32:-melf64ppc} " LINK_OS_FREEBSD_SPEC_DEF
+value|"%{m32:-melf32ppc_fbsd}%{!m32:-melf64ppc_fbsd} " LINK_OS_FREEBSD_SPEC_DEF
 end_define
 
 begin_endif

@@ -214,7 +214,7 @@ name|int
 ifdef|#
 directive|ifdef
 name|KR_headers
-name|strtord
+name|strtord_l
 parameter_list|(
 name|s
 parameter_list|,
@@ -223,6 +223,8 @@ parameter_list|,
 name|rounding
 parameter_list|,
 name|d
+parameter_list|,
+name|locale
 parameter_list|)
 name|CONST
 name|char
@@ -241,9 +243,12 @@ name|double
 modifier|*
 name|d
 decl_stmt|;
+name|locale_t
+name|locale
+decl_stmt|;
 else|#
 directive|else
-function|strtord
+function|strtord_l
 parameter_list|(
 name|CONST
 name|char
@@ -261,6 +266,9 @@ parameter_list|,
 name|double
 modifier|*
 name|d
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|)
 endif|#
 directive|endif
@@ -341,7 +349,7 @@ expr_stmt|;
 block|}
 name|k
 operator|=
-name|strtodg
+name|strtodg_l
 argument_list|(
 name|s
 argument_list|,
@@ -353,6 +361,8 @@ operator|&
 name|exp
 argument_list|,
 name|bits
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 name|ULtod

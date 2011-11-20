@@ -386,7 +386,7 @@ name|node
 parameter_list|,
 name|i
 parameter_list|)
-value|XLP_HDR_OFFSET(node, 0, 6, 2 + i)
+value|XLP_HDR_OFFSET(node, 0, 6, 2 + (i))
 end_define
 
 begin_define
@@ -497,7 +497,7 @@ parameter_list|,
 name|slot
 parameter_list|)
 define|\
-value|((XLP_IO_SD_OFFSET(node))+(slot*0x100)+XLP_IO_PCI_HDRSZ)
+value|((XLP_IO_SD_OFFSET(node)) + (slot * 0x100) + XLP_IO_PCI_HDRSZ)
 end_define
 
 begin_comment
