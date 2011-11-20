@@ -1273,7 +1273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pause() is almost like tsleep() except that the intention is to not  * be explicitly woken up by another thread. Instead, the current  * thread simply wishes to sleep until the timeout expires.  It is  * implemented using a dummy wait channel. During cold bootup pause()  * will use the DELAY() function instead of tsleep() to wait the given  * number of system ticks. The passed "timo" argument must not be  * negative and also greater than zero.  */
+comment|/*  * pause() delays the calling thread by the given number of system ticks.  * During cold bootup, pause() uses the DELAY() function instead of  * the tsleep() function to do the waiting. The "timo" argument must be  * greater than zero.  */
 end_comment
 
 begin_function
@@ -1296,17 +1296,27 @@ operator|>
 literal|0
 argument_list|,
 operator|(
-literal|"pause: a positive and non-zero "
-literal|"timeout is required"
+literal|"pause: timo must be> 0"
 operator|)
 argument_list|)
+expr_stmt|;
+comment|/* silently convert invalid timeouts */
+if|if
+condition|(
+name|timo
+operator|<
+literal|1
+condition|)
+name|timo
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
 name|cold
 condition|)
 block|{
-comment|/* 		 * We delay one HZ at a time to avoid overflowing the 		 * DELAY() argument: 		 */
+comment|/* 		 * We delay one HZ at a time to avoid overflowing the 		 * system specific DELAY() function(s): 		 */
 while|while
 condition|(
 name|timo
