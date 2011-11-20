@@ -4,7 +4,7 @@ comment|/*  * Powerdog Industries kindly requests feedback from anyone modifying
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1994 Powerdog Industries.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer  *    in the documentation and/or other materials provided with the  *    distribution.  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgement:  *      This product includes software developed by Powerdog Industries.  * 4. The name of Powerdog Industries may not be used to endorse or  *    promote products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED BY POWERDOG INDUSTRIES ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE POWERDOG INDUSTRIES BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1994 Powerdog Industries.  All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer  *    in the documentation and/or other materials provided with the  *    distribution.  * 3. All advertising materials mentioning features or use of this  *    software must display the following acknowledgement:  *      This product includes software developed by Powerdog Industries.  * 4. The name of Powerdog Industries may not be used to endorse or  *    promote products derived from this software without specific prior  *    written permission.  *  * THIS SOFTWARE IS PROVIDED BY POWERDOG INDUSTRIES ``AS IS'' AND ANY  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE POWERDOG INDUSTRIES BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR  * BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,  * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE  * OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,  * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -153,6 +153,8 @@ modifier|*
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|locale_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -191,6 +193,9 @@ parameter_list|,
 name|int
 modifier|*
 name|GMTp
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|)
 block|{
 name|char
@@ -217,7 +222,9 @@ modifier|*
 name|tptr
 init|=
 name|__get_current_time_locale
-argument_list|()
+argument_list|(
+name|locale
+argument_list|)
 decl_stmt|;
 name|ptr
 operator|=
@@ -254,13 +261,15 @@ condition|)
 block|{
 if|if
 condition|(
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
 name|char
 operator|)
 name|c
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -270,7 +279,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -278,6 +287,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|buf
@@ -352,6 +363,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -370,7 +383,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -378,6 +391,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -401,7 +416,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -409,6 +424,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -466,6 +483,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -492,6 +511,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -550,6 +571,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -576,6 +599,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -604,6 +629,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -630,6 +657,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -658,6 +687,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -686,6 +717,8 @@ argument_list|,
 name|tm
 argument_list|,
 name|GMTp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -704,7 +737,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -712,6 +745,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -734,7 +769,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -742,6 +777,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -798,7 +835,7 @@ name|buf
 operator|==
 literal|0
 operator|||
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -806,13 +843,15 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 break|break;
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -820,6 +859,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -842,7 +883,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -850,6 +891,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -919,7 +962,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -927,6 +970,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -937,7 +982,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -945,6 +990,8 @@ name|char
 operator|)
 operator|*
 name|ptr
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|ptr
@@ -967,7 +1014,7 @@ comment|/* 			 * Of these, %l is the only specifier explicitly 			 * documented 
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -975,6 +1022,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -997,7 +1046,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1005,6 +1054,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -1070,7 +1121,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1078,6 +1129,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -1088,7 +1141,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1096,6 +1149,8 @@ name|char
 operator|)
 operator|*
 name|ptr
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|ptr
@@ -1117,7 +1172,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncasecmp
+name|strncasecmp_l
 argument_list|(
 name|buf
 argument_list|,
@@ -1126,6 +1181,8 @@ operator|->
 name|am
 argument_list|,
 name|len
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -1173,7 +1230,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncasecmp
+name|strncasecmp_l
 argument_list|(
 name|buf
 argument_list|,
@@ -1182,6 +1239,8 @@ operator|->
 name|pm
 argument_list|,
 name|len
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -1260,7 +1319,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncasecmp
+name|strncasecmp_l
 argument_list|(
 name|buf
 argument_list|,
@@ -1272,6 +1331,8 @@ name|i
 index|]
 argument_list|,
 name|len
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -1291,7 +1352,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncasecmp
+name|strncasecmp_l
 argument_list|(
 name|buf
 argument_list|,
@@ -1303,6 +1364,8 @@ name|i
 index|]
 argument_list|,
 name|len
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -1344,7 +1407,7 @@ comment|/* 			 * XXX This is bogus, as we can not assume any valid 			 * informa
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1352,6 +1415,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -1374,7 +1439,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1382,6 +1447,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -1419,7 +1486,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1427,6 +1494,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -1437,7 +1506,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1445,6 +1514,8 @@ name|char
 operator|)
 operator|*
 name|ptr
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|ptr
@@ -1457,7 +1528,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1465,6 +1536,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -1499,7 +1572,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1507,6 +1580,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -1517,7 +1592,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1525,6 +1600,8 @@ name|char
 operator|)
 operator|*
 name|ptr
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|ptr
@@ -1541,7 +1618,7 @@ comment|/* 			 * The %e specifier is explicitly documented as not 			 * being ze
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1549,6 +1626,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -1571,7 +1650,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1579,6 +1658,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -1622,7 +1703,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1630,6 +1711,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -1640,7 +1723,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1648,6 +1731,8 @@ name|char
 operator|)
 operator|*
 name|ptr
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|ptr
@@ -1708,7 +1793,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncasecmp
+name|strncasecmp_l
 argument_list|(
 name|buf
 argument_list|,
@@ -1720,6 +1805,8 @@ name|i
 index|]
 argument_list|,
 name|len
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -1743,7 +1830,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncasecmp
+name|strncasecmp_l
 argument_list|(
 name|buf
 argument_list|,
@@ -1755,6 +1842,8 @@ name|i
 index|]
 argument_list|,
 name|len
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -1811,7 +1900,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|strncasecmp
+name|strncasecmp_l
 argument_list|(
 name|buf
 argument_list|,
@@ -1823,6 +1912,8 @@ name|i
 index|]
 argument_list|,
 name|len
+argument_list|,
+name|locale
 argument_list|)
 operator|==
 literal|0
@@ -1861,7 +1952,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1869,6 +1960,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -1891,7 +1984,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1899,6 +1992,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -1948,7 +2043,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1956,6 +2051,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -1966,7 +2063,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -1974,6 +2071,8 @@ name|char
 operator|)
 operator|*
 name|ptr
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|ptr
@@ -2007,7 +2106,7 @@ literal|0
 expr_stmt|;
 name|n
 operator|=
-name|strtol
+name|strtol_l
 argument_list|(
 name|buf
 argument_list|,
@@ -2015,6 +2114,8 @@ operator|&
 name|cp
 argument_list|,
 literal|10
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -2079,7 +2180,7 @@ name|buf
 operator|==
 literal|0
 operator|||
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -2087,13 +2188,15 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 break|break;
 if|if
 condition|(
 operator|!
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -2101,6 +2204,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 return|return
@@ -2131,7 +2236,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -2139,6 +2244,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 name|buf
@@ -2206,7 +2313,7 @@ name|buf
 operator|!=
 literal|0
 operator|&&
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -2214,6 +2321,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 while|while
@@ -2224,7 +2333,7 @@ operator|!=
 literal|0
 operator|&&
 operator|!
-name|isspace
+name|isspace_l
 argument_list|(
 operator|(
 name|unsigned
@@ -2232,6 +2341,8 @@ name|char
 operator|)
 operator|*
 name|ptr
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 name|ptr
@@ -2260,7 +2371,7 @@ init|;
 operator|*
 name|cp
 operator|&&
-name|isupper
+name|isupper_l
 argument_list|(
 operator|(
 name|unsigned
@@ -2268,6 +2379,8 @@ name|char
 operator|)
 operator|*
 name|cp
+argument_list|,
+name|locale
 argument_list|)
 condition|;
 operator|++
@@ -2453,7 +2566,7 @@ control|)
 block|{
 if|if
 condition|(
-name|isdigit
+name|isdigit_l
 argument_list|(
 operator|(
 name|unsigned
@@ -2461,6 +2574,8 @@ name|char
 operator|)
 operator|*
 name|buf
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 block|{
@@ -2530,7 +2645,7 @@ end_function
 begin_function
 name|char
 modifier|*
-name|strptime
+name|strptime_l
 parameter_list|(
 specifier|const
 name|char
@@ -2549,6 +2664,9 @@ name|tm
 modifier|*
 name|__restrict
 name|tm
+parameter_list|,
+name|locale_t
+name|loc
 parameter_list|)
 block|{
 name|char
@@ -2558,6 +2676,11 @@ decl_stmt|;
 name|int
 name|gmt
 decl_stmt|;
+name|FIX_LOCALE
+argument_list|(
+name|loc
+argument_list|)
+expr_stmt|;
 name|gmt
 operator|=
 literal|0
@@ -2574,6 +2697,8 @@ name|tm
 argument_list|,
 operator|&
 name|gmt
+argument_list|,
+name|loc
 argument_list|)
 expr_stmt|;
 if|if
@@ -2604,6 +2729,46 @@ return|return
 operator|(
 name|ret
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|char
+modifier|*
+name|strptime
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|__restrict
+name|buf
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|__restrict
+name|fmt
+parameter_list|,
+name|struct
+name|tm
+modifier|*
+name|__restrict
+name|tm
+parameter_list|)
+block|{
+return|return
+name|strptime_l
+argument_list|(
+name|buf
+argument_list|,
+name|fmt
+argument_list|,
+name|tm
+argument_list|,
+name|__get_locale
+argument_list|()
+argument_list|)
 return|;
 block|}
 end_function

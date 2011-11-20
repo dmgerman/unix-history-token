@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1990, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Chris Torek.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_if
@@ -137,22 +137,11 @@ directive|include
 file|"local.h"
 end_include
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NO_FLOATING_POINT
-end_ifndef
-
 begin_include
 include|#
 directive|include
-file|<locale.h>
+file|"xlocale_private.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -438,6 +427,8 @@ modifier|*
 parameter_list|,
 name|wchar_t
 modifier|*
+parameter_list|,
+name|locale_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -472,12 +463,15 @@ end_comment
 
 begin_function
 name|int
-name|vfwscanf
+name|vfwscanf_l
 parameter_list|(
 name|FILE
 modifier|*
 name|__restrict
 name|fp
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|,
 specifier|const
 name|wchar_t
@@ -492,6 +486,11 @@ block|{
 name|int
 name|ret
 decl_stmt|;
+name|FIX_LOCALE
+argument_list|(
+name|locale
+argument_list|)
+expr_stmt|;
 name|FLOCKFILE
 argument_list|(
 name|fp
@@ -509,6 +508,8 @@ operator|=
 name|__vfwscanf
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|,
 name|fmt
 argument_list|,
@@ -528,6 +529,41 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|vfwscanf
+parameter_list|(
+name|FILE
+modifier|*
+name|__restrict
+name|fp
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+name|__restrict
+name|fmt
+parameter_list|,
+name|va_list
+name|ap
+parameter_list|)
+block|{
+return|return
+name|vfwscanf_l
+argument_list|(
+name|fp
+argument_list|,
+name|__get_locale
+argument_list|()
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Non-MT-safe version.  */
 end_comment
@@ -540,6 +576,9 @@ name|FILE
 modifier|*
 name|__restrict
 name|fp
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|,
 specifier|const
 name|wchar_t
@@ -740,14 +779,18 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
 name|WEOF
 operator|&&
-name|iswspace
+name|iswspace_l
 argument_list|(
 name|c
+argument_list|,
+name|locale
 argument_list|)
 condition|)
 empty_stmt|;
@@ -762,6 +805,8 @@ argument_list|(
 name|c
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -810,6 +855,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|==
@@ -830,6 +877,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -1431,6 +1480,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -1458,6 +1509,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 block|}
@@ -1524,6 +1577,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -1619,6 +1674,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -1704,6 +1761,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1825,6 +1884,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -1854,6 +1915,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -1894,6 +1957,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -1929,6 +1994,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 name|n
@@ -1992,6 +2059,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -2132,6 +2201,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -2203,6 +2274,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -2233,6 +2306,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 block|}
@@ -2264,6 +2339,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -2305,6 +2382,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 operator|*
@@ -2349,6 +2428,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|!=
@@ -2490,6 +2571,8 @@ argument_list|(
 name|wi
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 if|if
@@ -2581,6 +2664,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Switch on the character; `goto ok' 				 * if we accept it as a part of number. 				 */
@@ -2864,6 +2949,8 @@ argument_list|(
 name|c
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2901,6 +2988,8 @@ operator|--
 name|p
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -2934,6 +3023,8 @@ argument_list|(
 name|c
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 block|}
@@ -3222,6 +3313,8 @@ argument_list|,
 name|buf
 operator|+
 name|width
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|==
@@ -3389,6 +3482,9 @@ parameter_list|,
 name|wchar_t
 modifier|*
 name|end
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|)
 block|{
 name|mbstate_t
@@ -3526,6 +3622,8 @@ operator|=
 name|__fgetwc
 argument_list|(
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 operator|)
 operator|==
@@ -3999,6 +4097,8 @@ argument_list|(
 name|c
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 while|while
@@ -4014,6 +4114,8 @@ operator|*
 name|p
 argument_list|,
 name|fp
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 operator|*
