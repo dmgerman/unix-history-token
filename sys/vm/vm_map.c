@@ -1774,7 +1774,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_lock_flags
+name|mtx_lock_flags_
 argument_list|(
 operator|&
 name|map
@@ -1888,7 +1888,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_unlock_flags
+name|mtx_unlock_flags_
 argument_list|(
 operator|&
 name|map
@@ -1945,7 +1945,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_lock_flags
+name|mtx_lock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2002,7 +2002,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_unlock_flags
+name|mtx_unlock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2063,7 +2063,7 @@ operator|->
 name|system_map
 condition|?
 operator|!
-name|_mtx_trylock
+name|mtx_trylock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2137,7 +2137,7 @@ operator|->
 name|system_map
 condition|?
 operator|!
-name|_mtx_trylock
+name|mtx_trylock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2205,10 +2205,7 @@ operator|->
 name|system_map
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|_mtx_assert
+name|mtx_assert_
 argument_list|(
 operator|&
 name|map
@@ -2222,8 +2219,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
@@ -2347,10 +2342,7 @@ operator|->
 name|system_map
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|_mtx_assert
+name|mtx_assert_
 argument_list|(
 operator|&
 name|map
@@ -2364,8 +2356,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|_sx_downgrade
@@ -2427,6 +2417,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* XXX: INVARIANTS here is still necessary because of sx support. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2456,7 +2450,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_assert
+name|mtx_assert_
 argument_list|(
 operator|&
 name|map
@@ -2495,7 +2489,7 @@ literal|0
 end_if
 
 begin_endif
-unit|static void _vm_map_assert_locked_read(vm_map_t map, const char *file, int line) {  	if (map->system_map) 		_mtx_assert(&map->system_mtx, MA_OWNED, file, line); 	else 		_sx_assert(&map->lock, SA_SLOCKED, file, line); }
+unit|static void _vm_map_assert_locked_read(vm_map_t map, const char *file, int line) {  	if (map->system_map) 		mtx_assert_(&map->system_mtx, MA_OWNED, file, line); 	else 		_sx_assert(&map->lock, SA_SLOCKED, file, line); }
 endif|#
 directive|endif
 end_endif
@@ -2585,7 +2579,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_unlock_flags
+name|mtx_unlock_flags_
 argument_list|(
 operator|&
 name|map
