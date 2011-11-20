@@ -18,7 +18,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * These functions implement the client side state handling for NFSv4.  * NFSv4 state handling:  * - A lockowner is used to determine lock contention, so it  *   corresponds directly to a Posix pid. (1 to 1 mapping)  * - The correct granularity of an OpenOwner is not nearly so  *   obvious. An OpenOwner does the following:  *   - provides a serial sequencing of Open/Close/Lock-with-new-lockowner  *   - is used to check for Open/Share contention (not applicable to  *     this client, since all Opens are Deny_None)  *   As such, I considered both extreme.  *   1 OpenOwner per ClientID - Simple to manage, but fully serializes  *   all Open, Close and Lock (with a new lockowner) Ops.  *   1 OpenOwner for each Open - This one results in an OpenConfirm for  *   every Open, for most servers.  *   So, I chose to use the same mapping as I did for LockOwnwers.  *   The main concern here is that you can end up with multiple Opens  *   for the same File Handle, but on different OpenOwners (opens  *   inherited from parents, grandparents...) and you do not know  *   which of these the vnodeop close applies to. This is handled by  *   delaying the Close Op(s) until all of the Opens have been closed.  *   (It is not yet obvious if this is the correct granularity.)  * - How the code handles serialization:  *   - For the ClientId, it uses an exclusive lock while getting its  *     SetClientId and during recovery. Otherwise, it uses a shared  *     lock via a reference count.  *   - For the rest of the data structures, it uses an SMP mutex  *     (once the nfs client is SMP safe) and doesn't sleep while  *     manipulating the linked lists.  *   - The serialization of Open/Close/Lock/LockU falls out in the  *     "wash", since OpenOwners and LockOwners are both mapped from  *     Posix pid. In other words, there is only one Posix pid using  *     any given owner, so that owner is serialized. (If you change  *     the granularity of the OpenOwner, then code must be added to  *     serialize Ops on the OpenOwner.)  * - When to get rid of OpenOwners and LockOwners.  *   - When a process exits, it calls nfscl_cleanup(), which goes  *     through the client list looking for all Open and Lock Owners.  *     When one is found, it is marked "defunct" or in the case of  *     an OpenOwner without any Opens, freed.  *     The renew thread scans for defunct Owners and gets rid of them,  *     if it can. The LockOwners will also be deleted when the  *     associated Open is closed.  *   - If the LockU or Close Op(s) fail during close in a way  *     that could be recovered upon retry, they are relinked to the  *     ClientId's defunct open list and retried by the renew thread  *     until they succeed or an unmount/recovery occurs.  *     (Since we are done with them, they do not need to be recovered.)  */
+comment|/*  * These functions implement the client side state handling for NFSv4.  * NFSv4 state handling:  * - A lockowner is used to determine lock contention, so it  *   corresponds directly to a Posix pid. (1 to 1 mapping)  * - The correct granularity of an OpenOwner is not nearly so  *   obvious. An OpenOwner does the following:  *   - provides a serial sequencing of Open/Close/Lock-with-new-lockowner  *   - is used to check for Open/Share contention (not applicable to  *     this client, since all Opens are Deny_None)  *   As such, I considered both extreme.  *   1 OpenOwner per ClientID - Simple to manage, but fully serializes  *   all Open, Close and Lock (with a new lockowner) Ops.  *   1 OpenOwner for each Open - This one results in an OpenConfirm for  *   every Open, for most servers.  *   So, I chose to use the same mapping as I did for LockOwnwers.  *   The main concern here is that you can end up with multiple Opens  *   for the same File Handle, but on different OpenOwners (opens  *   inherited from parents, grandparents...) and you do not know  *   which of these the vnodeop close applies to. This is handled by  *   delaying the Close Op(s) until all of the Opens have been closed.  *   (It is not yet obvious if this is the correct granularity.)  * - How the code handles serialization:  *   - For the ClientId, it uses an exclusive lock while getting its  *     SetClientId and during recovery. Otherwise, it uses a shared  *     lock via a reference count.  *   - For the rest of the data structures, it uses an SMP mutex  *     (once the nfs client is SMP safe) and doesn't sleep while  *     manipulating the linked lists.  *   - The serialization of Open/Close/Lock/LockU falls out in the  *     "wash", since OpenOwners and LockOwners are both mapped from  *     Posix pid. In other words, there is only one Posix pid using  *     any given owner, so that owner is serialized. (If you change  *     the granularity of the OpenOwner, then code must be added to  *     serialize Ops on the OpenOwner.)  * - When to get rid of OpenOwners and LockOwners.  *   - The function nfscl_cleanup_common() is executed after a process exits.  *     It goes through the client list looking for all Open and Lock Owners.  *     When one is found, it is marked "defunct" or in the case of  *     an OpenOwner without any Opens, freed.  *     The renew thread scans for defunct Owners and gets rid of them,  *     if it can. The LockOwners will also be deleted when the  *     associated Open is closed.  *   - If the LockU or Close Op(s) fail during close in a way  *     that could be recovered upon retry, they are relinked to the  *     ClientId's defunct open list and retried by the renew thread  *     until they succeed or an unmount/recovery occurs.  *     (Since we are done with them, they do not need to be recovered.)  */
 end_comment
 
 begin_ifndef
@@ -7872,90 +7872,8 @@ block|}
 block|}
 end_function
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|__FreeBSD__
-end_ifndef
-
 begin_comment
-comment|/*  * Called from exit() upon process termination.  */
-end_comment
-
-begin_function
-name|APPLESTATIC
-name|void
-name|nfscl_cleanup
-parameter_list|(
-name|NFSPROC_T
-modifier|*
-name|p
-parameter_list|)
-block|{
-name|struct
-name|nfsclclient
-modifier|*
-name|clp
-decl_stmt|;
-name|u_int8_t
-name|own
-index|[
-name|NFSV4CL_LOCKNAMELEN
-index|]
-decl_stmt|;
-if|if
-condition|(
-operator|!
-name|nfscl_inited
-condition|)
-return|return;
-name|nfscl_filllockowner
-argument_list|(
-name|p
-operator|->
-name|td_proc
-argument_list|,
-name|own
-argument_list|,
-name|F_POSIX
-argument_list|)
-expr_stmt|;
-name|NFSLOCKCLSTATE
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Loop through all the clientids, looking for the OpenOwners. 	 */
-name|LIST_FOREACH
-argument_list|(
-argument|clp
-argument_list|,
-argument|&nfsclhead
-argument_list|,
-argument|nfsc_list
-argument_list|)
-name|nfscl_cleanup_common
-argument_list|(
-name|clp
-argument_list|,
-name|own
-argument_list|)
-expr_stmt|;
-name|NFSUNLOCKCLSTATE
-argument_list|()
-expr_stmt|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !__FreeBSD__ */
-end_comment
-
-begin_comment
-comment|/*  * Common code used by nfscl_cleanup() and nfscl_cleanupkext().  * Must be called with CLSTATE lock held.  */
+comment|/*  * This function must be called after the process represented by "own" has  * exited. Must be called with CLSTATE lock held.  */
 end_comment
 
 begin_function
@@ -8196,7 +8114,7 @@ argument_list|)
 end_if
 
 begin_comment
-comment|/*  * Simulate the call nfscl_cleanup() by looking for open owners associated  * with processes that no longer exist, since a call to nfscl_cleanup()  * can't be patched into exit().  */
+comment|/*  * Find open/lock owners for processes that have exited.  */
 end_comment
 
 begin_function
@@ -12111,7 +12029,7 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-comment|/* 		 * Simulate the calls to nfscl_cleanup() when a process 		 * exits, since the call can't be patched into exit(). 		 */
+comment|/* 		 * Call nfscl_cleanupkext() once per second to check for 		 * open/lock owners where the process has exited. 		 */
 block|{
 name|struct
 name|timespec
