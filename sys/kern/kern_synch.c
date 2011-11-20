@@ -1292,11 +1292,11 @@ block|{
 name|KASSERT
 argument_list|(
 name|timo
-operator|>
+operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"pause: timo must be> 0"
+literal|"pause: timo must be>= 0"
 operator|)
 argument_list|)
 expr_stmt|;
