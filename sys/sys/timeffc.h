@@ -112,7 +112,7 @@ value|2
 end_define
 
 begin_comment
-comment|/*  * Clock flags to select how the feed-forward counter is converted to absolute  * time by ffclock_convert_abs().  * FAST:    do not read the hardware counter, return feed-forward clock time  *          at last tick. The time returned has the resolution of the kernel  *           tick (1/hz [s]).  * LERP:    linear interpolation of ffclock time to guarantee monotonic time.  * LEAPSEC: include leap seconds.  * UPTIME:  removes time of boot.  */
+comment|/*  * Clock flags to select how the feed-forward counter is converted to absolute  * time by ffclock_convert_abs().  * FAST:    do not read the hardware counter, return feed-forward clock time  *          at last tick. The time returned has the resolution of the kernel  *          tick (1/hz [s]).  * LERP:    linear interpolation of ffclock time to guarantee monotonic time.  * LEAPSEC: include leap seconds.  * UPTIME:  removes time of boot.  */
 end_comment
 
 begin_define
