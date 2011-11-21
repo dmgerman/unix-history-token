@@ -1131,7 +1131,7 @@ end_function
 
 begin_function
 name|int
-name|_sx_try_slock
+name|sx_try_slock_
 parameter_list|(
 name|struct
 name|sx
@@ -1413,7 +1413,7 @@ end_function
 
 begin_function
 name|int
-name|_sx_try_xlock
+name|sx_try_xlock_
 parameter_list|(
 name|struct
 name|sx
@@ -1803,7 +1803,7 @@ end_comment
 
 begin_function
 name|int
-name|_sx_try_upgrade
+name|sx_try_upgrade_
 parameter_list|(
 name|struct
 name|sx
@@ -1947,7 +1947,7 @@ end_comment
 
 begin_function
 name|void
-name|_sx_downgrade
+name|sx_downgrade_
 parameter_list|(
 name|struct
 name|sx
