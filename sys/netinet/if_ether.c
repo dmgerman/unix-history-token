@@ -2271,7 +2271,8 @@ name|log
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"arp: unknown hardware address format (0x%2D)\n"
+literal|"arp: unknown hardware address format (0x%2D)"
+literal|" (from %*D to %*D)\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -2284,6 +2285,32 @@ operator|->
 name|ar_hrd
 argument_list|,
 literal|""
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_sha
+argument_list|(
+name|ar
+argument_list|)
+argument_list|,
+literal|":"
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_tha
+argument_list|(
+name|ar
+argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|m_freem
