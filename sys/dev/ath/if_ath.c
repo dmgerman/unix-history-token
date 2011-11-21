@@ -8346,7 +8346,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_mtx
+name|sc_pcu_mtx
 argument_list|,
 literal|0
 argument_list|,
