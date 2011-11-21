@@ -3281,6 +3281,10 @@ decl_stmt|;
 name|uint32_t
 name|start
 decl_stmt|;
+define|#
+directive|define
+name|IWN5000_CALIB_DC
+value|(1<< 1)
 name|uint32_t
 name|send
 decl_stmt|;
