@@ -8363,7 +8363,6 @@ name|vm
 operator|->
 name|vm_map
 expr_stmt|;
-comment|/* XXXRW: More locking required? */
 name|vm_map_lock_read
 argument_list|(
 name|map
@@ -9303,7 +9302,6 @@ name|vm
 operator|->
 name|vm_map
 expr_stmt|;
-comment|/* XXXRW: More locking required? */
 name|vm_map_lock_read
 argument_list|(
 name|map
