@@ -6236,13 +6236,16 @@ block|}
 block|,
 comment|/* 240 = nanosleep */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|ffclock_getcounter_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sys_ffclock_getcounter
 block|,
 name|AUE_NULL
 block|,
@@ -6254,18 +6257,21 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_ABSENT
+name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 241 = nosys */
+comment|/* 241 = ffclock_getcounter */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|ffclock_setestimate_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sys_ffclock_setestimate
 block|,
 name|AUE_NULL
 block|,
@@ -6277,18 +6283,21 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_ABSENT
+name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 242 = nosys */
+comment|/* 242 = ffclock_setestimate */
 block|{
-literal|0
+name|AS
+argument_list|(
+name|ffclock_getestimate_args
+argument_list|)
 block|,
 operator|(
 name|sy_call_t
 operator|*
 operator|)
-name|nosys
+name|sys_ffclock_getestimate
 block|,
 name|AUE_NULL
 block|,
@@ -6300,10 +6309,10 @@ literal|0
 block|,
 literal|0
 block|,
-name|SY_THR_ABSENT
+name|SY_THR_STATIC
 block|}
 block|,
-comment|/* 243 = nosys */
+comment|/* 243 = ffclock_getestimate */
 block|{
 literal|0
 block|,
