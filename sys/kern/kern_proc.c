@@ -8359,9 +8359,7 @@ expr_stmt|;
 name|map
 operator|=
 operator|&
-name|p
-operator|->
-name|p_vmspace
+name|vm
 operator|->
 name|vm_map
 expr_stmt|;
