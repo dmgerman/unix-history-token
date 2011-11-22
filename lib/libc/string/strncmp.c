@@ -75,6 +75,7 @@ name|size_t
 name|n
 parameter_list|)
 block|{
+comment|/* use a bitwise or to avoid an additional branch instruction */
 if|if
 condition|(
 operator|(

@@ -257,6 +257,7 @@ operator|*
 operator|)
 name|s2
 decl_stmt|;
+comment|/* use a bitwise or to avoid an additional branch instruction */
 if|if
 condition|(
 operator|(
