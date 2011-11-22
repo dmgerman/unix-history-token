@@ -7014,6 +7014,8 @@ operator|->
 name|children
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -7158,6 +7160,8 @@ operator|->
 name|children
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
