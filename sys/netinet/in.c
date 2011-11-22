@@ -1649,6 +1649,16 @@ case|:
 case|case
 name|SIOCDIFADDR
 case|:
+if|if
+condition|(
+name|ifra
+operator|->
+name|ifra_addr
+operator|.
+name|sin_len
+operator|==
+name|AF_INET
+condition|)
 block|{
 name|struct
 name|in_ifaddr
