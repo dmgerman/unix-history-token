@@ -5131,6 +5131,11 @@ goto|goto
 name|fail
 goto|;
 block|}
+name|vge_miipoll_start
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Do MII setup */
 name|error
 operator|=
@@ -9572,6 +9577,11 @@ name|sc
 argument_list|)
 expr_stmt|;
 name|vge_reset
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|vge_miipoll_start
 argument_list|(
 name|sc
 argument_list|)
