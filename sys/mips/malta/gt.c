@@ -488,19 +488,8 @@ argument_list|,
 name|gt_activate_resource
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 

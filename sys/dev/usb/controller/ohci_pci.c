@@ -1618,19 +1618,7 @@ argument_list|,
 name|bus_generic_shutdown
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 block|,
 operator|.
