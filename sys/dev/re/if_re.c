@@ -15233,11 +15233,6 @@ operator|->
 name|rl_testmode
 condition|)
 return|return;
-name|mii_mediachg
-argument_list|(
-name|mii
-argument_list|)
-expr_stmt|;
 name|CSR_WRITE_1
 argument_list|(
 name|sc
@@ -15273,6 +15268,11 @@ name|rl_flags
 operator|&=
 operator|~
 name|RL_FLAG_LINK
+expr_stmt|;
+name|mii_mediachg
+argument_list|(
+name|mii
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
