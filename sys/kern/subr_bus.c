@@ -7119,7 +7119,7 @@ end_comment
 
 begin_function
 name|int
-name|device_delete_all_children
+name|device_delete_children
 parameter_list|(
 name|device_t
 name|dev
