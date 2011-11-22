@@ -77,9 +77,17 @@ parameter_list|)
 block|{
 if|if
 condition|(
+operator|(
 name|n
 operator|==
 literal|0
+operator|)
+operator||
+operator|(
+name|s1
+operator|==
+name|s2
+operator|)
 condition|)
 return|return
 operator|(

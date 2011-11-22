@@ -76,6 +76,17 @@ modifier|*
 name|s2
 parameter_list|)
 block|{
+if|if
+condition|(
+name|s1
+operator|==
+name|s2
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 while|while
 condition|(
 operator|*
