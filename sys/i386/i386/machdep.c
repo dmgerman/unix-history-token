@@ -16357,6 +16357,13 @@ name|TD_IS_SUSPENDED
 argument_list|(
 name|td
 argument_list|)
+operator|||
+name|P_SHOULDSTOP
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|)
 argument_list|,
 operator|(
 literal|"not suspended thread %p"

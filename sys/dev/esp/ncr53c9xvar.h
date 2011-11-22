@@ -18,13 +18,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_DEV_IC_NCR53C9XVAR_H_
+name|_NCR53C9XVAR_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_DEV_IC_NCR53C9XVAR_H_
+name|_NCR53C9XVAR_H_
 end_define
 
 begin_include
@@ -205,7 +205,11 @@ begin_struct
 struct|struct
 name|ncr53c9x_ecb
 block|{
-comment|/* These fields are preserved between alloc and free */
+comment|/* These fields are preserved between alloc and free. */
+name|struct
+name|callout
+name|ch
+decl_stmt|;
 name|struct
 name|ncr53c9x_softc
 modifier|*
@@ -261,10 +265,6 @@ name|ECB_TENTATIVE_DONE
 value|0x100
 name|int
 name|timeout
-decl_stmt|;
-name|struct
-name|callout
-name|ch
 decl_stmt|;
 struct|struct
 block|{
@@ -871,7 +871,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Function switch used as glue to MD code.  */
+comment|/*  * Function switch used as glue to MD code  */
 end_comment
 
 begin_struct
@@ -996,18 +996,6 @@ name|ncr53c9x_softc
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/* Optional entry points. */
-name|void
-function_decl|(
-modifier|*
-name|gl_clear_latched_intr
-function_decl|)
-parameter_list|(
-name|struct
-name|ncr53c9x_softc
-modifier|*
-parameter_list|)
-function_decl|;
 block|}
 struct|;
 end_struct
@@ -1080,7 +1068,7 @@ comment|/* Clock Conversion */
 name|uint8_t
 name|sc_timeout
 decl_stmt|;
-comment|/* register copies, see espreadregs() */
+comment|/* register copies, see ncr53c9x_readregs() */
 name|uint8_t
 name|sc_espintr
 decl_stmt|;
@@ -1485,6 +1473,17 @@ end_define
 
 begin_comment
 comment|/* chip supports SELATN3 command */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NCR_F_LARGEXFER
+value|0x10
+end_define
+
+begin_comment
+comment|/* chip supports transfers> 64k */
 end_comment
 
 begin_comment
@@ -1925,6 +1924,13 @@ define|\
 value|((250 * (cpb)) / (sc)->sc_freq)
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|devclass_t
+name|esp_devclass
+decl_stmt|;
+end_decl_stmt
+
 begin_function_decl
 name|int
 name|ncr53c9x_attach
@@ -1966,7 +1972,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* _DEV_IC_NCR53C9XVAR_H_ */
+comment|/* _NCR53C9XVAR_H_ */
 end_comment
 
 end_unit

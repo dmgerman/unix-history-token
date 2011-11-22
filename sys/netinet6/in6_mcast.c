@@ -820,6 +820,7 @@ comment|/* XXX Not in any common header. */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet6_ip6
@@ -970,6 +971,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet6_ip6_mcast
@@ -7724,7 +7726,7 @@ name|optval
 operator|=
 name|im6o
 operator|->
-name|im6o_multicast_loop
+name|im6o_multicast_hlim
 expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(

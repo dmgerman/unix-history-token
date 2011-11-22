@@ -574,9 +574,6 @@ operator|++
 control|)
 if|if
 condition|(
-name|pgops
-operator|&&
-operator|(
 operator|(
 operator|*
 name|pgops
@@ -585,7 +582,6 @@ operator|->
 name|pgo_init
 operator|!=
 name|NULL
-operator|)
 condition|)
 operator|(
 operator|*

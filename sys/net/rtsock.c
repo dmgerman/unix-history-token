@@ -530,6 +530,7 @@ value|mtx_assert(&rtsock_mtx, MA_OWNED)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net
@@ -762,10 +763,7 @@ name|struct
 name|mbuf
 modifier|*
 parameter_list|,
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
+name|sa_family_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2518,6 +2516,11 @@ name|union
 name|sockaddr_union
 name|saun
 decl_stmt|;
+name|sa_family_t
+name|saf
+init|=
+name|AF_UNSPEC
+decl_stmt|;
 define|#
 directive|define
 name|senderr
@@ -2823,6 +2826,17 @@ name|senderr
 argument_list|(
 name|EINVAL
 argument_list|)
+expr_stmt|;
+name|saf
+operator|=
+name|info
+operator|.
+name|rti_info
+index|[
+name|RTAX_DST
+index|]
+operator|->
+name|sa_family
 expr_stmt|;
 comment|/* 	 * Verify that the caller has the appropriate privilege; RTM_GET 	 * is the only operation the non-superuser is allowed. 	 */
 if|if
@@ -4526,12 +4540,7 @@ name|rt_dispatch
 argument_list|(
 name|m
 argument_list|,
-name|info
-operator|.
-name|rti_info
-index|[
-name|RTAX_DST
-index|]
+name|saf
 argument_list|)
 expr_stmt|;
 name|rp
@@ -4548,12 +4557,7 @@ name|rt_dispatch
 argument_list|(
 name|m
 argument_list|,
-name|info
-operator|.
-name|rti_info
-index|[
-name|RTAX_DST
-index|]
+name|saf
 argument_list|)
 expr_stmt|;
 block|}
@@ -5735,6 +5739,12 @@ argument_list|(
 name|m
 argument_list|,
 name|sa
+condition|?
+name|sa
+operator|->
+name|sa_family
+else|:
+name|AF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -5892,7 +5902,7 @@ name|rt_dispatch
 argument_list|(
 name|m
 argument_list|,
-name|NULL
+name|AF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -6364,6 +6374,12 @@ argument_list|(
 name|m
 argument_list|,
 name|sa
+condition|?
+name|sa
+operator|->
+name|sa_family
+else|:
+name|AF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -6576,6 +6592,14 @@ argument_list|,
 name|ifma
 operator|->
 name|ifma_addr
+condition|?
+name|ifma
+operator|->
+name|ifma_addr
+operator|->
+name|sa_family
+else|:
+name|AF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -6892,7 +6916,7 @@ name|rt_dispatch
 argument_list|(
 name|m
 argument_list|,
-name|NULL
+name|AF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -6949,7 +6973,7 @@ name|rt_dispatch
 argument_list|(
 name|m
 argument_list|,
-name|NULL
+name|AF_UNSPEC
 argument_list|)
 expr_stmt|;
 block|}
@@ -6965,11 +6989,8 @@ name|mbuf
 modifier|*
 name|m
 parameter_list|,
-specifier|const
-name|struct
-name|sockaddr
-modifier|*
-name|sa
+name|sa_family_t
+name|saf
 parameter_list|)
 block|{
 name|struct
@@ -6980,9 +7001,9 @@ decl_stmt|;
 comment|/* 	 * Preserve the family from the sockaddr, if any, in an m_tag for 	 * use when injecting the mbuf into the routing socket buffer from 	 * the netisr. 	 */
 if|if
 condition|(
-name|sa
+name|saf
 operator|!=
-name|NULL
+name|AF_UNSPEC
 condition|)
 block|{
 name|tag
@@ -7026,9 +7047,7 @@ operator|+
 literal|1
 operator|)
 operator|=
-name|sa
-operator|->
-name|sa_family
+name|saf
 expr_stmt|;
 name|m_tag_prepend
 argument_list|(
@@ -8947,6 +8966,7 @@ block|}
 end_function
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net

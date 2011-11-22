@@ -119,6 +119,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tape
 init|=
@@ -128,6 +129,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|record
@@ -135,6 +137,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxrecsize
 init|=
@@ -151,6 +154,7 @@ value|64
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|device
 index|[
@@ -160,6 +164,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|count
 index|[
@@ -184,6 +189,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|resp
 index|[
@@ -193,6 +199,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|debug
@@ -236,6 +243,7 @@ value|if (debug) fprintf(debug, f, a1, a2)
 end_define
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|checkbuf
@@ -249,6 +257,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|error
 parameter_list|(
@@ -258,6 +267,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getstring
 parameter_list|(
@@ -1069,6 +1079,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|checkbuf
@@ -1170,6 +1181,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|error
 parameter_list|(

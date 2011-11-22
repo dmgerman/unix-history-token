@@ -74,6 +74,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 name|copyright

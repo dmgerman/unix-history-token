@@ -129,6 +129,7 @@ file|"zopen.h"
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|compress
 parameter_list|(
@@ -146,6 +147,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|cwarn
 parameter_list|(
@@ -168,6 +170,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|cwarnx
 parameter_list|(
@@ -190,6 +193,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|decompress
 parameter_list|(
@@ -207,6 +211,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|permission
 parameter_list|(
@@ -218,6 +223,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setfile
 parameter_list|(
@@ -233,6 +239,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -242,6 +249,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|eval
 decl_stmt|,
@@ -934,6 +942,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|compress
 parameter_list|(
@@ -1449,6 +1458,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|decompress
 parameter_list|(
@@ -1870,6 +1880,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|setfile
 parameter_list|(
@@ -2040,6 +2051,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|permission
 parameter_list|(
@@ -2115,6 +2127,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2156,6 +2169,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cwarnx
 parameter_list|(
@@ -2197,6 +2211,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|cwarn
 parameter_list|(

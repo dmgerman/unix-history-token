@@ -27,28 +27,6 @@ directive|include
 file|"opt_ipfw.h"
 end_include
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
-
-begin_include
-include|#
-directive|include
-file|"opt_ipdivert.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipdn.h"
-end_include
-
 begin_include
 include|#
 directive|include
@@ -76,21 +54,10 @@ begin_comment
 comment|/* INET */
 end_comment
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"opt_ipsec.h"
 end_include
 
 begin_include
@@ -219,6 +186,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_IPFW_TBL

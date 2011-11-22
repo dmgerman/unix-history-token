@@ -178,6 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_enum
+specifier|static
 enum|enum
 block|{
 name|SWAPON

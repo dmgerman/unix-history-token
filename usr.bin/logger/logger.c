@@ -143,6 +143,7 @@ file|<syslog.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|int
 name|decode
 parameter_list|(
@@ -156,6 +157,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|pencode
 parameter_list|(
@@ -226,6 +228,7 @@ name|INET6
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -243,6 +246,7 @@ directive|else
 end_else
 
 begin_decl_stmt
+specifier|static
 name|int
 name|family
 init|=
@@ -260,6 +264,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|send_to_all
 init|=
@@ -743,6 +748,7 @@ comment|/*  *  Send the message to syslog, either on the local host, or on a rem
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|logmessage
 parameter_list|(
@@ -1210,6 +1216,7 @@ comment|/*  *  Decode a symbolic name to a numeric value  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|pencode
 parameter_list|(
@@ -1341,6 +1348,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|decode
 parameter_list|(

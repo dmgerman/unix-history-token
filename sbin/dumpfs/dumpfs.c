@@ -172,6 +172,7 @@ value|disk.d_cg
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uufsd
 name|disk

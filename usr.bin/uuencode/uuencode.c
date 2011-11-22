@@ -131,6 +131,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|encode
 parameter_list|(
@@ -140,6 +141,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|base64_encode
 parameter_list|(
@@ -159,6 +161,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|output
@@ -166,12 +169,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mode
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -470,6 +475,7 @@ comment|/*  * Copy from in to out, encoding in base64 as you go along.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|base64_encode
 parameter_list|(
@@ -637,6 +643,7 @@ comment|/*  * Copy from in to out, encoding as you go along.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|encode
 parameter_list|(

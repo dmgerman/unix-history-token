@@ -164,6 +164,7 @@ specifier|static
 name|void
 name|assert_rm
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -202,6 +203,7 @@ specifier|static
 name|int
 name|owner_rm
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -297,6 +299,7 @@ specifier|static
 name|void
 name|assert_rm
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -366,6 +369,7 @@ specifier|static
 name|int
 name|owner_rm
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -887,6 +891,7 @@ begin_function
 name|int
 name|rm_wowned
 parameter_list|(
+specifier|const
 name|struct
 name|rmlock
 modifier|*

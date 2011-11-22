@@ -110,6 +110,9 @@ decl_stmt|;
 name|off_t
 name|d_end
 decl_stmt|;
+name|int
+name|d_removed
+decl_stmt|;
 block|}
 struct|;
 end_struct

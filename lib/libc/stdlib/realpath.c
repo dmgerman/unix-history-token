@@ -953,7 +953,7 @@ name|left
 argument_list|,
 sizeof|sizeof
 argument_list|(
-name|left
+name|symlink
 argument_list|)
 argument_list|)
 expr_stmt|;

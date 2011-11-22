@@ -126,18 +126,21 @@ file|<wctype.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|all
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nstops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tabstops
 index|[

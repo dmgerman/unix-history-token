@@ -85,14 +85,6 @@ directive|include
 file|"talk.h"
 end_include
 
-begin_decl_stmt
-specifier|extern
-specifier|volatile
-name|sig_atomic_t
-name|gotwinch
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * Make sure the callee can write to the screen  */
 end_comment

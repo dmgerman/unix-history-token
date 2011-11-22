@@ -526,6 +526,7 @@ comment|/* XXX: this should move to a device specific sysctl dev.pcm.X.debug.Y v
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug

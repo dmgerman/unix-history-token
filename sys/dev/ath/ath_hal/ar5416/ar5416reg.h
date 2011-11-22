@@ -4017,12 +4017,20 @@ name|AR_XSREV_REVISION_KIWI_10
 value|0
 end_define
 
+begin_comment
+comment|/* Kiwi 1.0 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_XSREV_REVISION_KIWI_11
 value|1
 end_define
+
+begin_comment
+comment|/* Kiwi 1.1 */
+end_comment
 
 begin_define
 define|#
@@ -4031,12 +4039,20 @@ name|AR_XSREV_REVISION_KIWI_12
 value|2
 end_define
 
+begin_comment
+comment|/* Kiwi 1.2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_XSREV_REVISION_KIWI_13
 value|3
 end_define
+
+begin_comment
+comment|/* Kiwi 1.3 */
+end_comment
 
 begin_comment
 comment|/* Owl (AR5416) */
@@ -4276,6 +4292,21 @@ parameter_list|)
 define|\
 value|(AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_KIWI)
 end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_10_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_KIWI)
+end_define
+
+begin_comment
+comment|/* XXX TODO: make these handle macVersion> Kiwi */
+end_comment
 
 begin_define
 define|#

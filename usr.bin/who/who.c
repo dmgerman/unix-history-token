@@ -138,6 +138,16 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
+name|boottime
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|process_utmp
 parameter_list|(
 name|void
@@ -160,6 +170,7 @@ specifier|static
 name|void
 name|row
 parameter_list|(
+specifier|const
 name|struct
 name|utmpx
 modifier|*
@@ -206,6 +217,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Write column headings */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Show date of the last reboot */
 end_comment
 
 begin_decl_stmt
@@ -297,7 +319,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HTmqsu"
+literal|"HTbmqsu"
 argument_list|)
 operator|)
 operator|!=
@@ -324,6 +346,15 @@ literal|'T'
 case|:
 comment|/* Show terminal state */
 name|Tflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+comment|/* Show date of the last reboot */
+name|bflag
 operator|=
 literal|1
 expr_stmt|;
@@ -511,6 +542,14 @@ condition|)
 name|whoami
 argument_list|()
 expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|bflag
+condition|)
+name|boottime
+argument_list|()
+expr_stmt|;
 else|else
 name|process_utmp
 argument_list|()
@@ -539,7 +578,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: who [-HmqsTu] [am I] [file]\n"
+literal|"usage: who [-bHmqsTu] [am I] [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -576,7 +615,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-8s %-12s "
+literal|"%-12s %-12s "
 argument_list|,
 literal|"LINE"
 argument_list|,
@@ -607,6 +646,7 @@ specifier|static
 name|void
 name|row
 parameter_list|(
+specifier|const
 name|struct
 name|utmpx
 modifier|*
@@ -761,9 +801,25 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ut
+operator|->
+name|ut_type
+operator|==
+name|BOOT_TIME
+condition|)
 name|printf
 argument_list|(
-literal|"%-8s "
+literal|"%-12s "
+argument_list|,
+literal|"system boot"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%-12s "
 argument_list|,
 name|ut
 operator|->
@@ -1020,6 +1076,50 @@ name|utx
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|boottime
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|utmpx
+name|u1
+decl_stmt|,
+modifier|*
+name|u2
+decl_stmt|;
+name|u1
+operator|.
+name|ut_type
+operator|=
+name|BOOT_TIME
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|u2
+operator|=
+name|getutxid
+argument_list|(
+operator|&
+name|u1
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return;
+name|row
+argument_list|(
+name|u2
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

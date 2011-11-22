@@ -181,21 +181,31 @@ value|0x7fffffff
 end_define
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
 name|int
 name|__mb_cur_max
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|int
+name|___mb_cur_max
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
 name|MB_CUR_MAX
-value|__mb_cur_max
+value|(___mb_cur_max())
 end_define
 
 begin_decl_stmt
-name|__BEGIN_DECLS
 name|void
 name|abort
 argument_list|(

@@ -139,6 +139,31 @@ init|=
 literal|0x02000000
 block|,
 comment|/* regulatory processing */
+name|ATH_DEBUG_SW_TX
+init|=
+literal|0x04000000
+block|,
+comment|/* per-packet software TX */
+name|ATH_DEBUG_SW_TX_BAW
+init|=
+literal|0x08000000
+block|,
+comment|/* BAW handling */
+name|ATH_DEBUG_SW_TX_CTRL
+init|=
+literal|0x10000000
+block|,
+comment|/* queue control */
+name|ATH_DEBUG_SW_TX_AGGR
+init|=
+literal|0x20000000
+block|,
+comment|/* aggregate TX */
+name|ATH_DEBUG_SW_TX_RETRIES
+init|=
+literal|0x40000000
+block|,
+comment|/* software TX retries */
 name|ATH_DEBUG_FATAL
 init|=
 literal|0x80000000

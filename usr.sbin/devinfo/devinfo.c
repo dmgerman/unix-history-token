@@ -58,12 +58,14 @@ file|"devinfo.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflag
 decl_stmt|;

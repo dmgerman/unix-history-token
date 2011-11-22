@@ -229,6 +229,86 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|sx_try_slock_
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sx_try_xlock_
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|sx_try_upgrade_
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|sx_downgrade_
+parameter_list|(
+name|struct
+name|sx
+modifier|*
+name|sx
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|_sx_slock
 parameter_list|(
 name|struct
@@ -274,46 +354,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|_sx_try_slock
-parameter_list|(
-name|struct
-name|sx
-modifier|*
-name|sx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sx_try_xlock
-parameter_list|(
-name|struct
-name|sx
-modifier|*
-name|sx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|_sx_sunlock
 parameter_list|(
@@ -336,46 +376,6 @@ end_function_decl
 begin_function_decl
 name|void
 name|_sx_xunlock
-parameter_list|(
-name|struct
-name|sx
-modifier|*
-name|sx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|_sx_try_upgrade
-parameter_list|(
-name|struct
-name|sx
-modifier|*
-name|sx
-parameter_list|,
-specifier|const
-name|char
-modifier|*
-name|file
-parameter_list|,
-name|int
-name|line
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|_sx_downgrade
 parameter_list|(
 name|struct
 name|sx
@@ -503,6 +503,7 @@ begin_function_decl
 name|void
 name|_sx_assert
 parameter_list|(
+specifier|const
 name|struct
 name|sx
 modifier|*
@@ -987,63 +988,91 @@ end_if
 begin_define
 define|#
 directive|define
-name|sx_xlock
+name|sx_xlock_
 parameter_list|(
 name|sx
-parameter_list|)
-value|(void)_sx_xlock((sx), 0, LOCK_FILE, LOCK_LINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sx_xlock_sig
-parameter_list|(
-name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|_sx_xlock((sx), SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
+value|(void)_sx_xlock((sx), 0, (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sx_xunlock
+name|sx_xlock_sig_
 parameter_list|(
 name|sx
-parameter_list|)
-value|_sx_xunlock((sx), LOCK_FILE, LOCK_LINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sx_slock
-parameter_list|(
-name|sx
-parameter_list|)
-value|(void)_sx_slock((sx), 0, LOCK_FILE, LOCK_LINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sx_slock_sig
-parameter_list|(
-name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|_sx_slock((sx), SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
+value|_sx_xlock((sx), SX_INTERRUPTIBLE, (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sx_sunlock
+name|sx_xunlock_
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|_sx_sunlock((sx), LOCK_FILE, LOCK_LINE)
+define|\
+value|_sx_xunlock((sx), (file), (line))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_slock_
+parameter_list|(
+name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|(void)_sx_slock((sx), 0, (file), (line))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_slock_sig_
+parameter_list|(
+name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|_sx_slock((sx), SX_INTERRUPTIBLE, (file) , (line))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_sunlock_
+parameter_list|(
+name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|_sx_sunlock((sx), (file), (line))
 end_define
 
 begin_else
@@ -1054,65 +1083,91 @@ end_else
 begin_define
 define|#
 directive|define
-name|sx_xlock
+name|sx_xlock_
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|(void)__sx_xlock((sx), curthread, 0, LOCK_FILE, LOCK_LINE)
+value|(void)__sx_xlock((sx), curthread, 0, (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sx_xlock_sig
+name|sx_xlock_sig_
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|__sx_xlock((sx), curthread, SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
+value|__sx_xlock((sx), curthread, SX_INTERRUPTIBLE, (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sx_xunlock
+name|sx_xunlock_
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|__sx_xunlock((sx), curthread, LOCK_FILE, LOCK_LINE)
+value|__sx_xunlock((sx), curthread, (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sx_slock
+name|sx_slock_
 parameter_list|(
 name|sx
-parameter_list|)
-value|(void)__sx_slock((sx), 0, LOCK_FILE, LOCK_LINE)
-end_define
-
-begin_define
-define|#
-directive|define
-name|sx_slock_sig
-parameter_list|(
-name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|__sx_slock((sx), SX_INTERRUPTIBLE, LOCK_FILE, LOCK_LINE)
+value|(void)__sx_slock((sx), 0, (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|sx_sunlock
+name|sx_slock_sig_
 parameter_list|(
 name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
-value|__sx_sunlock((sx), LOCK_FILE, LOCK_LINE)
+define|\
+value|__sx_slock((sx), SX_INTERRUPTIBLE, (file), (line))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_sunlock_
+parameter_list|(
+name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|__sx_sunlock((sx), (file), (line))
 end_define
 
 begin_endif
@@ -1131,7 +1186,7 @@ name|sx_try_slock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_try_slock((sx), LOCK_FILE, LOCK_LINE)
+value|sx_try_slock_((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1141,7 +1196,7 @@ name|sx_try_xlock
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_try_xlock((sx), LOCK_FILE, LOCK_LINE)
+value|sx_try_xlock_((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1151,7 +1206,7 @@ name|sx_try_upgrade
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_try_upgrade((sx), LOCK_FILE, LOCK_LINE)
+value|sx_try_upgrade_((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1161,7 +1216,128 @@ name|sx_downgrade
 parameter_list|(
 name|sx
 parameter_list|)
-value|_sx_downgrade((sx), LOCK_FILE, LOCK_LINE)
+value|sx_downgrade_((sx), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|sx_assert_
+parameter_list|(
+name|sx
+parameter_list|,
+name|what
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|_sx_assert((sx), (what), (file), (line))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|sx_assert_
+parameter_list|(
+name|sx
+parameter_list|,
+name|what
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|(void)0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|sx_xlock
+parameter_list|(
+name|sx
+parameter_list|)
+value|sx_xlock_((sx), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_xlock_sig
+parameter_list|(
+name|sx
+parameter_list|)
+value|sx_xlock_sig_((sx), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_xunlock
+parameter_list|(
+name|sx
+parameter_list|)
+value|sx_xunlock_((sx), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_slock
+parameter_list|(
+name|sx
+parameter_list|)
+value|sx_slock_((sx), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_slock_sig
+parameter_list|(
+name|sx
+parameter_list|)
+value|sx_slock_sig_((sx), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_sunlock
+parameter_list|(
+name|sx
+parameter_list|)
+value|sx_sunlock_((sx), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|sx_assert
+parameter_list|(
+name|sx
+parameter_list|,
+name|what
+parameter_list|)
+value|sx_assert_((sx), (what), __FILE__, __LINE__)
 end_define
 
 begin_comment
@@ -1193,11 +1369,25 @@ end_define
 begin_define
 define|#
 directive|define
+name|sx_unlock_
+parameter_list|(
+name|sx
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|do {					\ 	if (sx_xlocked(sx))						\ 		sx_xunlock_(sx, file, line);				\ 	else								\ 		sx_sunlock_(sx, file, line);				\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|sx_unlock
 parameter_list|(
 name|sx
 parameter_list|)
-value|do {						\ 	if (sx_xlocked(sx))						\ 		sx_xunlock(sx);						\ 	else								\ 		sx_sunlock(sx);						\ } while (0)
+value|sx_unlock_((sx), LOCK_FILE, LOCK_LINE)
 end_define
 
 begin_define
@@ -1376,46 +1566,6 @@ define|#
 directive|define
 name|SX_NOTRECURSED
 value|LA_NOTRECURSED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|sx_assert
-parameter_list|(
-name|sx
-parameter_list|,
-name|what
-parameter_list|)
-value|_sx_assert((sx), (what), LOCK_FILE, LOCK_LINE)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|sx_assert
-parameter_list|(
-name|sx
-parameter_list|,
-name|what
-parameter_list|)
-value|(void)0
 end_define
 
 begin_endif

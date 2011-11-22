@@ -862,22 +862,12 @@ name|int
 name|line
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|struct
-name|ppb_data
-modifier|*
-name|ppb
-init|=
+name|mtx_assert_
+argument_list|(
 name|DEVTOSOFTC
 argument_list|(
 name|bus
 argument_list|)
-decl_stmt|;
-name|_mtx_assert
-argument_list|(
-name|ppb
 operator|->
 name|ppc_lock
 argument_list|,
@@ -888,8 +878,6 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

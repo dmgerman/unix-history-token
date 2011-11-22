@@ -2995,6 +2995,61 @@ begin_comment
 comment|/* TDMA: beacon intvl (slots) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET
+value|205
+end_define
+
+begin_comment
+comment|/* Quiet Enable/Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_PERIOD
+value|206
+end_define
+
+begin_comment
+comment|/* Quiet Period */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_OFFSET
+value|207
+end_define
+
+begin_comment
+comment|/* Quiet Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_DUR
+value|208
+end_define
+
+begin_comment
+comment|/* Quiet Duration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_COUNT
+value|209
+end_define
+
+begin_comment
+comment|/* Quiet Count */
+end_comment
+
 begin_comment
 comment|/*  * Parameters for controlling a scan requested with  * IEEE80211_IOC_SCAN_REQ.  *  * Active scans cause ProbeRequest frames to be issued for each  * specified ssid and, by default, a broadcast ProbeRequest frame.  * The set of ssid's is specified in the request.  *  * By default the scan will cause a BSS to be joined (in station/adhoc  * mode) or a channel to be selected for operation (hostap mode).  * To disable that specify IEEE80211_IOC_SCAN_NOPICK and if the  *  * If the station is currently associated to an AP then a scan request  * will cause the station to leave the current channel and potentially  * miss frames from the AP.  Alternatively the station may notify the  * AP that it is going into power save mode before it leaves the channel.  * This ensures frames for the station are buffered by the AP.  This is  * termed a ``bg scan'' and is requested with the IEEE80211_IOC_SCAN_BGSCAN  * flag.  Background scans may take longer than foreground scans and may  * be preempted by traffic.  If a station is not associated to an AP  * then a request for a background scan is automatically done in the  * foreground.  *  * The results of the scan request are cached by the system.  This  * information is aged out and/or invalidated based on events like not  * being able to associated to an AP.  To flush the current cache  * contents before doing a scan the IEEE80211_IOC_SCAN_FLUSH flag may  * be specified.  *  * By default the scan will be done until a suitable AP is located  * or a channel is found for use.  A scan can also be constrained  * to be done once (IEEE80211_IOC_SCAN_ONCE) or to last for no more  * than a specified duration.  */
 end_comment

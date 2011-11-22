@@ -7581,6 +7581,25 @@ operator||=
 name|i
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+operator|!
+operator|(
+name|moea_vsid_bitmap
+index|[
+name|n
+index|]
+operator|&
+name|mask
+operator|)
+argument_list|,
+operator|(
+literal|"Allocating in-use VSID group %#x\n"
+operator|,
+name|hash
+operator|)
+argument_list|)
+expr_stmt|;
 name|moea_vsid_bitmap
 index|[
 name|n

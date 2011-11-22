@@ -184,6 +184,7 @@ value|15
 end_define
 
 begin_function_decl
+specifier|static
 name|void
 name|quit
 parameter_list|(
@@ -193,6 +194,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|bye
 parameter_list|(
@@ -202,6 +204,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|hi
 parameter_list|(
@@ -221,6 +224,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|timeout
@@ -228,6 +232,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timeval
 name|zerotime
@@ -235,6 +240,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termios
 name|tty
@@ -244,6 +250,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|long
 name|nexttime
 decl_stmt|;
@@ -254,6 +261,7 @@ comment|/* keep the timeout time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|no_timeout
 decl_stmt|;
@@ -264,6 +272,7 @@ comment|/* lock terminal forever */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vtyunlock
 decl_stmt|;
@@ -1249,6 +1258,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|hi
 parameter_list|(
@@ -1342,6 +1352,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|quit
 parameter_list|(
@@ -1399,6 +1410,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|bye
 parameter_list|(

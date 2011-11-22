@@ -125,6 +125,7 @@ value|'!'
 end_define
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -135,6 +136,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|char
@@ -185,6 +187,7 @@ struct|;
 end_struct
 
 begin_struct
+specifier|static
 struct|struct
 block|{
 name|char
@@ -204,6 +207,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|char
 name|NULLUNIT
 index|[]
@@ -243,12 +247,14 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|int
 name|unitcount
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|prefixcount
 decl_stmt|;

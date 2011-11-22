@@ -108,6 +108,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|u_short
 name|holes
 index|[
@@ -631,6 +632,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|printcard
 parameter_list|(
@@ -739,6 +741,7 @@ value|48
 end_define
 
 begin_function
+specifier|static
 name|void
 name|printcard
 parameter_list|(

@@ -114,6 +114,7 @@ file|<netsmb/smb_subr.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SMBDATA
@@ -126,6 +127,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SMBSTR
@@ -1407,6 +1409,18 @@ name|mb_udata
 operator|=
 name|dp
 expr_stmt|;
+if|if
+condition|(
+name|SMB_UNICODE_STRINGS
+argument_list|(
+name|vcp
+argument_list|)
+condition|)
+name|mb_put_padbyte
+argument_list|(
+name|mbp
+argument_list|)
+expr_stmt|;
 return|return
 name|mb_put_mem
 argument_list|(
@@ -1472,6 +1486,21 @@ name|error
 condition|)
 return|return
 name|error
+return|;
+if|if
+condition|(
+name|SMB_UNICODE_STRINGS
+argument_list|(
+name|vcp
+argument_list|)
+condition|)
+return|return
+name|mb_put_uint16le
+argument_list|(
+name|mbp
+argument_list|,
+literal|0
+argument_list|)
 return|;
 return|return
 name|mb_put_uint8

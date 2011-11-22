@@ -234,15 +234,6 @@ name|PAM_OPT_NIS_PASS
 value|"nis_pass"
 end_define
 
-begin_decl_stmt
-name|char
-modifier|*
-name|tempname
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/*  * authentication management  */
 end_comment

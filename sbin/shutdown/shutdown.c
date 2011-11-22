@@ -203,6 +203,7 @@ value|5*60
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|interval
 block|{

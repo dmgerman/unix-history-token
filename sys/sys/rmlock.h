@@ -123,6 +123,7 @@ begin_function_decl
 name|int
 name|rm_wowned
 parameter_list|(
+specifier|const
 name|struct
 name|rmlock
 modifier|*

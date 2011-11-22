@@ -77,6 +77,93 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|ATH_RC_NUM
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_DS_FLAG
+value|0x01
+end_define
+
+begin_comment
+comment|/* dual-stream rate */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_CW40_FLAG
+value|0x02
+end_define
+
+begin_comment
+comment|/* use HT40 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_SGI_FLAG
+value|0x04
+end_define
+
+begin_comment
+comment|/* use short-GI */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_HT_FLAG
+value|0x08
+end_define
+
+begin_comment
+comment|/* use HT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ATH_RC_RTSCTS_FLAG
+value|0x10
+end_define
+
+begin_comment
+comment|/* enable RTS/CTS protection */
+end_comment
+
+begin_struct
+struct|struct
+name|ath_rc_series
+block|{
+name|uint8_t
+name|rix
+decl_stmt|;
+comment|/* ratetable index, not rate code */
+name|uint8_t
+name|ratecode
+decl_stmt|;
+comment|/* hardware rate code */
+name|uint8_t
+name|tries
+decl_stmt|;
+name|uint8_t
+name|flags
+decl_stmt|;
+name|uint32_t
+name|max4msframelen
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * State storage handling.  */
 end_comment
@@ -166,13 +253,10 @@ parameter_list|,
 name|uint8_t
 name|rix0
 parameter_list|,
-name|uint8_t
+name|struct
+name|ath_rc_series
 modifier|*
-name|rix
-parameter_list|,
-name|uint8_t
-modifier|*
-name|try
+name|rc
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -244,7 +328,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Update rate control state for a packet associated with the  * supplied transmit descriptor.  The routine is invoked both  * for packets that were successfully sent and for those that  * failed (consult the descriptor for details).  */
+comment|/*  * Update rate control state for a packet associated with the  * supplied transmit descriptor.  The routine is invoked both  * for packets that were successfully sent and for those that  * failed (consult the descriptor for details).  *  * For A-MPDU frames, nframes and nbad indicate how many frames  * were in the aggregate, and how many failed.  */
 end_comment
 
 begin_struct_decl
@@ -267,8 +351,22 @@ modifier|*
 parameter_list|,
 specifier|const
 name|struct
-name|ath_buf
+name|ath_rc_series
 modifier|*
+parameter_list|,
+specifier|const
+name|struct
+name|ath_tx_status
+modifier|*
+parameter_list|,
+name|int
+name|pktlen
+parameter_list|,
+name|int
+name|nframes
+parameter_list|,
+name|int
+name|nbad
 parameter_list|)
 function_decl|;
 end_function_decl

@@ -254,6 +254,42 @@ define|\
 value|kproc_kthread_add((f), (s),&usbproc, (p), RFHIGHPID, \ 		    0, "usb", __VA_ARGS__)
 end_define
 
+begin_if
+if|#
+directive|if
+operator|(
+name|__FreeBSD_version
+operator|>=
+literal|900000
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|USB_THREAD_SUSPEND_CHECK
+parameter_list|()
+value|kthread_suspend_check()
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|USB_THREAD_SUSPEND_CHECK
+parameter_list|()
+value|kthread_suspend_check(curthread)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -299,6 +335,14 @@ end_define
 begin_define
 define|#
 directive|define
+name|USB_THREAD_SUSPEND_CHECK
+parameter_list|()
+value|kthread_suspend_check(curproc)
+end_define
+
+begin_define
+define|#
+directive|define
 name|USB_THREAD_SUSPEND
 parameter_list|(
 name|p
@@ -335,6 +379,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -420,6 +465,10 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+comment|/* in case of attach error, check for suspended */
+name|USB_THREAD_SUSPEND_CHECK
+argument_list|()
+expr_stmt|;
 comment|/* adjust priority */
 name|td
 operator|=

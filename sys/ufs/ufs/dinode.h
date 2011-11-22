@@ -384,7 +384,7 @@ name|u_int64_t
 name|di_modrev
 decl_stmt|;
 comment|/* 232: i_modrev for NFSv4 */
-name|ino_t
+name|uint32_t
 name|di_freelink
 decl_stmt|;
 comment|/* 240: SUJ: Next unlinked inode. */
@@ -426,7 +426,7 @@ name|int16_t
 name|di_nlink
 decl_stmt|;
 comment|/*   2: File link count. */
-name|ino_t
+name|uint32_t
 name|di_freelink
 decl_stmt|;
 comment|/*   4: SUJ: Next unlinked inode. */

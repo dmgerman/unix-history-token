@@ -142,6 +142,20 @@ name|sflag
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|unsigned
+name|char
+modifier|*
+name|checkAgainst
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|checksFailed
+decl_stmt|;
+end_decl_stmt
+
 begin_typedef
 typedef|typedef
 name|void
@@ -748,6 +762,14 @@ name|failed
 operator|=
 literal|0
 expr_stmt|;
+name|checkAgainst
+operator|=
+name|NULL
+expr_stmt|;
+name|checksFailed
+operator|=
+literal|0
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -759,7 +781,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"pqrs:tx"
+literal|"c:pqrs:tx"
 argument_list|)
 operator|)
 operator|!=
@@ -771,6 +793,14 @@ condition|(
 name|ch
 condition|)
 block|{
+case|case
+literal|'c'
+case|:
+name|checkAgainst
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
 case|case
 literal|'p'
 case|:
@@ -915,7 +945,7 @@ name|qflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s\n"
+literal|"%s"
 argument_list|,
 name|p
 argument_list|)
@@ -927,7 +957,7 @@ name|rflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s %s\n"
+literal|"%s %s"
 argument_list|,
 name|p
 argument_list|,
@@ -938,7 +968,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s (%s) = %s\n"
+literal|"%s (%s) = %s"
 argument_list|,
 name|Algorithm
 index|[
@@ -951,6 +981,37 @@ operator|*
 name|argv
 argument_list|,
 name|p
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|checkAgainst
+operator|&&
+name|strcmp
+argument_list|(
+name|checkAgainst
+argument_list|,
+name|p
+argument_list|)
+condition|)
+block|{
+name|checksFailed
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
+name|printf
+argument_list|(
+literal|" [ Failed ]"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1001,6 +1062,17 @@ operator|(
 literal|1
 operator|)
 return|;
+if|if
+condition|(
+name|checksFailed
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+literal|2
+operator|)
+return|;
 return|return
 operator|(
 literal|0
@@ -1042,14 +1114,6 @@ index|[
 name|HEX_DIGEST_LENGTH
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|qflag
-condition|)
-name|printf
-argument_list|(
-literal|"%s\n"
-argument_list|,
 name|alg
 operator|->
 name|Data
@@ -1060,6 +1124,16 @@ name|len
 argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|qflag
+condition|)
+name|printf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|buf
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -1069,18 +1143,9 @@ name|rflag
 condition|)
 name|printf
 argument_list|(
-literal|"%s \"%s\"\n"
-argument_list|,
-name|alg
-operator|->
-name|Data
-argument_list|(
-name|string
-argument_list|,
-name|len
+literal|"%s \"%s\""
 argument_list|,
 name|buf
-argument_list|)
 argument_list|,
 name|string
 argument_list|)
@@ -1088,7 +1153,7 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%s (\"%s\") = %s\n"
+literal|"%s (\"%s\") = %s"
 argument_list|,
 name|alg
 operator|->
@@ -1096,16 +1161,38 @@ name|name
 argument_list|,
 name|string
 argument_list|,
-name|alg
-operator|->
-name|Data
-argument_list|(
-name|string
-argument_list|,
-name|len
-argument_list|,
 name|buf
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|checkAgainst
+operator|&&
+name|strcmp
+argument_list|(
+name|buf
+argument_list|,
+name|checkAgainst
+argument_list|)
+condition|)
+block|{
+name|checksFailed
+operator|++
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|qflag
+condition|)
+name|printf
+argument_list|(
+literal|" [ failed ]"
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

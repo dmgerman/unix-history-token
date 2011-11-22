@@ -439,6 +439,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern_geom
@@ -2392,6 +2393,36 @@ expr_stmt|;
 return|return
 operator|(
 name|EINVAL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|gp
+operator|->
+name|flags
+operator|&
+name|G_GEOM_WITHER
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|gctl_error
+argument_list|(
+name|req
+argument_list|,
+literal|"%d %s"
+argument_list|,
+name|ENXIO
+argument_list|,
+name|gname
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
 operator|)
 return|;
 block|}

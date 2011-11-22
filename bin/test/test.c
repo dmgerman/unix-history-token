@@ -303,6 +303,7 @@ enum|;
 end_enum
 
 begin_struct
+specifier|static
 struct|struct
 name|t_op
 block|{
@@ -655,6 +656,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|t_op
 specifier|const
@@ -664,12 +666,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nargc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -678,6 +682,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|parenlevel
 decl_stmt|;

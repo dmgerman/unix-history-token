@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1992-2009 Edwin Groothuis<edwin@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *   */
+comment|/*-  * Copyright (c) 1992-2009 Edwin Groothuis<edwin@FreeBSD.org>.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_include
@@ -216,7 +216,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Expected styles:  *  * Date			::=	Month . ' ' . DayOfMonth |  *				Month . ' ' . DayOfWeek . ModifierIndex |  *				Month . '/' . DayOfMonth |  *				Month . '/' . DayOfWeek . ModifierIndex |  *				DayOfMonth . ' ' . Month |  *				DayOfMonth . '/' . Month |  *				DayOfWeek . ModifierIndex . ' ' .Month |  *				DayOfWeek . ModifierIndex . '/' .Month |  *				DayOfWeek . ModifierIndex |  *				SpecialDay . ModifierOffset  *  * Month		::=	MonthName | MonthNumber | '*'  * MonthNumber		::=	'0' ... '9' | '00' ... '09' | '10' ... '12'  * MonthName		::=	MonthNameShort | MonthNameLong  * MonthNameLong	::=	'January' ... 'December'  * MonthNameShort	::=	'Jan' ... 'Dec' | 'Jan.' ... 'Dec.'  *  * DayOfWeek		::=	DayOfWeekShort | DayOfWeekLong  * DayOfWeekShort	::=	'Mon' .. 'Sun'  * DayOfWeekLong	::=	'Monday' .. 'Sunday'  * DayOfMonth		::=	'0' ... '9' | '00' ... '09' | '10' ... '29' |  *				'30' ... '31' | '*'  *  * ModifierOffset	::=	'' | '+' . ModifierNumber | '-' . ModifierNumber  * ModifierNumber	::=	'0' ... '9' | '00' ... '99' | '000' ... '299' |  *				'300' ... '359' | '360' ... '365'  * ModifierIndex	::=	'Second' | 'Third' | 'Fourth' | 'Fifth' |  *				'First' | 'Last'  *   * SpecialDay		::=	'Easter' | 'Paskha' | 'ChineseNewYear'  *  */
+comment|/*  * Expected styles:  *  * Date			::=	Month . ' ' . DayOfMonth |  *				Month . ' ' . DayOfWeek . ModifierIndex |  *				Month . '/' . DayOfMonth |  *				Month . '/' . DayOfWeek . ModifierIndex |  *				DayOfMonth . ' ' . Month |  *				DayOfMonth . '/' . Month |  *				DayOfWeek . ModifierIndex . ' ' .Month |  *				DayOfWeek . ModifierIndex . '/' .Month |  *				DayOfWeek . ModifierIndex |  *				SpecialDay . ModifierOffset  *  * Month		::=	MonthName | MonthNumber | '*'  * MonthNumber		::=	'0' ... '9' | '00' ... '09' | '10' ... '12'  * MonthName		::=	MonthNameShort | MonthNameLong  * MonthNameLong	::=	'January' ... 'December'  * MonthNameShort	::=	'Jan' ... 'Dec' | 'Jan.' ... 'Dec.'  *  * DayOfWeek		::=	DayOfWeekShort | DayOfWeekLong  * DayOfWeekShort	::=	'Mon' .. 'Sun'  * DayOfWeekLong	::=	'Monday' .. 'Sunday'  * DayOfMonth		::=	'0' ... '9' | '00' ... '09' | '10' ... '29' |  *				'30' ... '31' | '*'  *  * ModifierOffset	::=	'' | '+' . ModifierNumber | '-' . ModifierNumber  * ModifierNumber	::=	'0' ... '9' | '00' ... '99' | '000' ... '299' |  *				'300' ... '359' | '360' ... '365'  * ModifierIndex	::=	'Second' | 'Third' | 'Fourth' | 'Fifth' |  *				'First' | 'Last'  *  * SpecialDay		::=	'Easter' | 'Paskha' | 'ChineseNewYear'  *  */
 end_comment
 
 begin_function
@@ -2073,7 +2073,7 @@ decl_stmt|,
 modifier|*
 name|yearinfo
 decl_stmt|;
-comment|/* 	 * CONVENTION 	 * 	 * Month:     1-12 	 * Monthname: Jan .. Dec 	 * Day:       1-31 	 * Weekday:   Mon .. Sun 	 * 	 */
+comment|/* 	 * CONVENTION 	 * 	 * Month:     1-12 	 * Monthname: Jan .. Dec 	 * Day:	      1-31 	 * Weekday:   Mon .. Sun 	 * 	 */
 operator|*
 name|flags
 operator|=
@@ -4132,6 +4132,11 @@ expr_stmt|;
 block|}
 continue|continue;
 block|}
+if|if
+condition|(
+name|debug
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"Unprocessed:\n"
@@ -4168,6 +4173,7 @@ argument_list|,
 name|iyear
 argument_list|)
 expr_stmt|;
+block|}
 name|retvalsign
 operator|=
 operator|-

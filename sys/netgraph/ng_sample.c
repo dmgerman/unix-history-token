@@ -94,13 +94,14 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_XXX
 argument_list|,
 literal|"netgraph_xxx"
 argument_list|,
-literal|"netgraph xxx node "
+literal|"netgraph xxx node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

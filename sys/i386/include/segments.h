@@ -1117,7 +1117,7 @@ begin_define
 define|#
 directive|define
 name|IDT_DTRACE_RET
-value|0x92
+value|0x20
 end_define
 
 begin_comment

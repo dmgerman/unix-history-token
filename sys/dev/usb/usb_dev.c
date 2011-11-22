@@ -282,6 +282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -7627,12 +7628,14 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* reset queues */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|f
 operator|->
 name|free_q
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7642,12 +7645,14 @@ name|free_q
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|f
 operator|->
 name|used_q
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8035,13 +8040,13 @@ operator|->
 name|cur_data_len
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|ptr
-argument_list|,
 name|m
 operator|->
 name|cur_data_ptr
+argument_list|,
+name|ptr
 argument_list|,
 name|io_len
 argument_list|)
@@ -8564,13 +8569,13 @@ operator|->
 name|cur_data_len
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|ptr
+argument_list|,
 name|m
 operator|->
 name|cur_data_ptr
-argument_list|,
-name|ptr
 argument_list|,
 name|io_len
 argument_list|)

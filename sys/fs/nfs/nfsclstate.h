@@ -137,10 +137,6 @@ name|NFSCLDELEGHASHSIZE
 index|]
 decl_stmt|;
 name|struct
-name|nfscllockownerhead
-name|nfsc_defunctlockowner
-decl_stmt|;
-name|struct
 name|nfsv4lock
 name|nfsc_lock
 decl_stmt|;

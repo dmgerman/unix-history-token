@@ -16,10 +16,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
 end_if
 
 begin_include
@@ -130,10 +126,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
 end_if
 
 begin_include
@@ -687,10 +679,6 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
-operator|&&
-name|__FreeBSD__
-operator|>=
-literal|3
 operator|&&
 name|__FreeBSD_version
 operator|<

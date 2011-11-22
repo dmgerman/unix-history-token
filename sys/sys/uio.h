@@ -240,6 +240,7 @@ begin_function_decl
 name|int
 name|copyiniov
 parameter_list|(
+specifier|const
 name|struct
 name|iovec
 modifier|*
@@ -293,6 +294,7 @@ begin_function_decl
 name|int
 name|copyinuio
 parameter_list|(
+specifier|const
 name|struct
 name|iovec
 modifier|*

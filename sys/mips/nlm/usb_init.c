@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/nlm/hal/cpuinfo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<mips/nlm/hal/usb.h>
 end_include
 

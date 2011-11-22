@@ -2622,11 +2622,21 @@ end_if
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|acoshl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	acoshl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2645,11 +2655,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|asinhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	asinhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2682,11 +2702,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|atanhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	atanhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2742,11 +2772,21 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|coshl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	coshl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2765,11 +2805,32 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|erfcl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|erfl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	erfcl(long double); long double	erfl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2788,11 +2849,32 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|expl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|expm1l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	expl(long double); long double	expm1l(long double);
 endif|#
 directive|endif
 end_endif
@@ -2955,11 +3037,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|lgammal
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	lgammal(long double);
 endif|#
 directive|endif
 end_endif
@@ -2989,11 +3081,43 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|log10l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|log1pl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|log2l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double);
 endif|#
 directive|endif
 end_endif
@@ -3012,11 +3136,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|logl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	logl(long double);
 endif|#
 directive|endif
 end_endif
@@ -3139,11 +3273,24 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|powl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	powl(long double, long double);
 endif|#
 directive|endif
 end_endif
@@ -3230,11 +3377,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|sinhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	sinhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -3264,11 +3421,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|tanhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	tanhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -3287,11 +3454,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|tgammal
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	tgammal(long double);
 endif|#
 directive|endif
 end_endif

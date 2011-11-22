@@ -214,6 +214,8 @@ directive|endif
 end_endif
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|commands
 block|{
@@ -569,6 +571,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -580,6 +583,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printreg
 parameter_list|(
@@ -597,6 +601,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|status
 parameter_list|(
@@ -608,6 +613,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -617,6 +623,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|st_status
 parameter_list|(
@@ -628,6 +635,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|stringtodens
 parameter_list|(
@@ -640,6 +648,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -652,6 +661,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|denstobp
 parameter_list|(
@@ -665,6 +675,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|u_int32_t
 name|stringtocomp
 parameter_list|(
@@ -677,6 +688,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -689,6 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|warn_eof
 parameter_list|(
@@ -710,6 +723,7 @@ name|argv
 index|[]
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|commands
 modifier|*
@@ -1895,6 +1909,8 @@ block|}
 end_function
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|tape_desc
 block|{
@@ -1953,6 +1969,7 @@ comment|/*  * Interpret the status buffer returned  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|status
 parameter_list|(
@@ -1962,6 +1979,7 @@ modifier|*
 name|bp
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|tape_desc
 modifier|*
@@ -2095,6 +2113,7 @@ comment|/*  * Print a register a la the %b format of the kernel's printf.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|printreg
 parameter_list|(
@@ -2255,6 +2274,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2280,6 +2300,8 @@ block|}
 end_function
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|densities
 block|{
@@ -2728,6 +2750,8 @@ struct|;
 end_struct
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 name|compression_types
 block|{
@@ -2790,6 +2814,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2806,6 +2831,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|densities
 modifier|*
@@ -2894,6 +2920,7 @@ comment|/*  * Given a specific density number, return either the bits per inch o
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|denstobp
 parameter_list|(
@@ -2904,6 +2931,7 @@ name|int
 name|bpi
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|densities
 modifier|*
@@ -2970,6 +2998,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|stringtodens
 parameter_list|(
@@ -2979,6 +3008,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|densities
 modifier|*
@@ -3030,6 +3060,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -3074,6 +3105,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -3090,6 +3122,7 @@ index|[
 literal|20
 index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|compression_types
 modifier|*
@@ -3172,6 +3205,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|u_int32_t
 name|stringtocomp
 parameter_list|(
@@ -3181,6 +3215,7 @@ modifier|*
 name|s
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|compression_types
 modifier|*
@@ -3234,6 +3269,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|st_status
 parameter_list|(
@@ -3663,6 +3699,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|warn_eof
 parameter_list|(

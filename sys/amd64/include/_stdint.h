@@ -534,14 +534,14 @@ begin_define
 define|#
 directive|define
 name|SIG_ATOMIC_MIN
-value|INT32_MIN
+value|LONG_MIN
 end_define
 
 begin_define
 define|#
 directive|define
 name|SIG_ATOMIC_MAX
-value|INT32_MAX
+value|LONG_MAX
 end_define
 
 begin_comment

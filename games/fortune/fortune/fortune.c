@@ -349,6 +349,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Found_one
 decl_stmt|;
@@ -359,6 +360,7 @@ comment|/* did we find a match? */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Find_files
 init|=
@@ -371,6 +373,7 @@ comment|/* just find a list of proper fortune files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Fortunes_only
 init|=
@@ -383,6 +386,7 @@ comment|/* check only "fortunes" files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Wait
 init|=
@@ -395,6 +399,7 @@ comment|/* wait desired after fortune */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Short_only
 init|=
@@ -407,6 +412,7 @@ comment|/* short fortune desired */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Long_only
 init|=
@@ -419,6 +425,7 @@ comment|/* long fortune desired */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Offend
 init|=
@@ -431,6 +438,7 @@ comment|/* offensive fortunes only */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|All_forts
 init|=
@@ -443,6 +451,7 @@ comment|/* any fortune allowed */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Equal_probs
 init|=
@@ -455,6 +464,7 @@ comment|/* scatter un-allocted prob equally */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Match
 init|=
@@ -473,6 +483,7 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|bool
 name|Debug
 init|=
@@ -490,6 +501,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|Fortbuf
@@ -503,6 +515,7 @@ comment|/* fortune buffer for -m */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Fort_len
 init|=
@@ -511,6 +524,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|Seekpts
 index|[
@@ -524,6 +538,7 @@ comment|/* seek pointers to fortunes */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILEDESC
 modifier|*
 name|File_list
@@ -543,6 +558,7 @@ comment|/* Tail of file list */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILEDESC
 modifier|*
 name|Fortfile
@@ -554,6 +570,7 @@ comment|/* Fortune file to use */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|STRFILE
 name|Noprob_tbl
 decl_stmt|;
@@ -564,6 +581,7 @@ comment|/* sum of data for all no prob files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -572,6 +590,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -580,6 +599,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|add_dir
 parameter_list|(
@@ -590,6 +610,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|add_file
 parameter_list|(
@@ -618,6 +639,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|all_forts
 parameter_list|(
@@ -631,6 +653,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|copy
@@ -645,6 +668,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|display
 parameter_list|(
@@ -655,6 +679,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|do_free
 parameter_list|(
@@ -665,6 +690,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 modifier|*
 name|do_malloc
@@ -675,6 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|form_file_list
 parameter_list|(
@@ -688,6 +715,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|fortlen
 parameter_list|(
@@ -697,6 +725,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_fort
 parameter_list|(
@@ -706,6 +735,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_pos
 parameter_list|(
@@ -716,6 +746,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_tbl
 parameter_list|(
@@ -726,6 +757,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -739,6 +771,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getpath
 parameter_list|(
@@ -748,6 +781,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|init_prob
 parameter_list|(
@@ -757,6 +791,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|is_dir
 parameter_list|(
@@ -768,6 +803,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|is_fortfile
 parameter_list|(
@@ -789,6 +825,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|is_off_name
 parameter_list|(
@@ -800,6 +837,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|max
 parameter_list|(
@@ -811,6 +849,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|FILEDESC
 modifier|*
 name|new_fp
@@ -821,6 +860,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|off_name
@@ -833,6 +873,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|open_dat
 parameter_list|(
@@ -843,6 +884,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|open_fp
 parameter_list|(
@@ -853,6 +895,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|FILEDESC
 modifier|*
 name|pick_child
@@ -864,6 +907,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_file_list
 parameter_list|(
@@ -873,6 +917,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_list
 parameter_list|(
@@ -885,6 +930,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sum_noprobs
 parameter_list|(
@@ -895,6 +941,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sum_tbl
 parameter_list|(
@@ -908,6 +955,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -917,6 +965,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|zero_tbl
 parameter_list|(
@@ -927,6 +976,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|conv_pat
@@ -938,6 +988,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|find_matches
 parameter_list|(
@@ -947,6 +998,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|matches_in_list
 parameter_list|(
@@ -957,6 +1009,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|maxlen_in_list
 parameter_list|(
@@ -1213,6 +1266,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|display
 parameter_list|(
@@ -1429,6 +1483,7 @@ comment|/*  * fortlen:  *	Return the length of the fortune.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|fortlen
 parameter_list|(
@@ -1554,6 +1609,7 @@ comment|/*  *	This routine evaluates the arguments on the command line  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -1854,6 +1910,7 @@ comment|/*  * form_file_list:  *	Form the file list from the file specifications
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|form_file_list
 parameter_list|(
@@ -2319,6 +2376,7 @@ comment|/*  * add_file:  *	Add a file to the file list.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|add_file
 parameter_list|(
@@ -3010,6 +3068,7 @@ comment|/*  * new_fp:  *	Return a pointer to an initialized new FILEDESC.  */
 end_comment
 
 begin_function
+specifier|static
 name|FILEDESC
 modifier|*
 name|new_fp
@@ -3119,6 +3178,7 @@ comment|/*  * off_name:  *	Return a pointer to the offensive version of a file o
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|off_name
@@ -3171,6 +3231,7 @@ comment|/*  * is_off_name:  *	Is the file an offensive-style name?  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|is_off_name
 parameter_list|(
@@ -3223,6 +3284,7 @@ comment|/*  * all_forts:  *	Modify a FILEDESC element to be the parent of two ch
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|all_forts
 parameter_list|(
@@ -3485,6 +3547,7 @@ comment|/*  * add_dir:  *	Add the contents of an entire directory.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|add_dir
 parameter_list|(
@@ -3694,6 +3757,7 @@ comment|/*  * is_dir:  *	Return TRUE if the file is a directory, FALSE otherwise
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|is_dir
 parameter_list|(
@@ -3745,6 +3809,7 @@ comment|/* ARGSUSED */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|is_fortfile
 parameter_list|(
@@ -4221,6 +4286,7 @@ comment|/*  * copy:  *	Return a malloc()'ed copy of the string  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|copy
@@ -4285,6 +4351,7 @@ comment|/*  * do_malloc:  *	Do a malloc, checking for NULL return.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|do_malloc
@@ -4341,6 +4408,7 @@ comment|/*  * do_free:  *	Free malloc'ed space, if any.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_free
 parameter_list|(
@@ -4368,6 +4436,7 @@ comment|/*  * init_prob:  *	Initialize the fortune probabilities.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|init_prob
 parameter_list|(
@@ -4690,6 +4759,7 @@ comment|/*  * get_fort:  *	Get the fortune data file's seek pointer for the next
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_fort
 parameter_list|(
@@ -5075,6 +5145,7 @@ comment|/*  * pick_child  *	Pick a child from a chosen parent.  */
 end_comment
 
 begin_function
+specifier|static
 name|FILEDESC
 modifier|*
 name|pick_child
@@ -5291,6 +5362,7 @@ comment|/*  * sum_noprobs:  *	Sum up all the noprob probabilities, starting with
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sum_noprobs
 parameter_list|(
@@ -5354,6 +5426,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|max
 parameter_list|(
@@ -5383,6 +5456,7 @@ comment|/*  * open_fp:  *	Assocatiate a FILE * with the given FILEDESC.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|open_fp
 parameter_list|(
@@ -5438,6 +5512,7 @@ comment|/*  * open_dat:  *	Open up the dat file if we need to.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|open_dat
 parameter_list|(
@@ -5493,6 +5568,7 @@ comment|/*  * get_pos:  *	Get the position from the pos file, if there is one.  
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_pos
 parameter_list|(
@@ -5690,6 +5766,7 @@ comment|/*  * get_tbl:  *	Get the tbl data file the datfile.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|get_tbl
 parameter_list|(
@@ -5932,6 +6009,7 @@ comment|/*  * zero_tbl:  *	Zero out the fields we care about in a tbl structure.
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|zero_tbl
 parameter_list|(
@@ -5967,6 +6045,7 @@ comment|/*  * sum_tbl:  *	Merge the tbl data of t2 into t1.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|sum_tbl
 parameter_list|(
@@ -6041,6 +6120,7 @@ comment|/*  * print_file_list:  *	Print out the file list  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_file_list
 parameter_list|(
@@ -6062,6 +6142,7 @@ comment|/*  * print_list:  *	Print out the actual list, recursively.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_list
 parameter_list|(
@@ -6207,6 +6288,7 @@ comment|/*  * conv_pat:  *	Convert the pattern to an ignore-case equivalent.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|conv_pat
@@ -6431,6 +6513,7 @@ comment|/*  * find_matches:  *	Find all the fortunes which match the pattern we'
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|find_matches
 parameter_list|(
@@ -6493,6 +6576,7 @@ comment|/*  * maxlen_in_list  *	Return the maximum fortune len in the file list.
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|maxlen_in_list
 parameter_list|(
@@ -6604,6 +6688,7 @@ comment|/*  * matches_in_list  *	Print out the matches from the files in the lis
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|matches_in_list
 parameter_list|(
@@ -6946,6 +7031,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -7021,6 +7107,7 @@ comment|/*  * getpath  * 	Set up file search patch from environment var FORTUNE_
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|getpath
 parameter_list|(

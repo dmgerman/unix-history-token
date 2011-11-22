@@ -205,6 +205,7 @@ value|_PW_VERSIONED(x, 4)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|HASHINFO
 name|openinfo
 init|=

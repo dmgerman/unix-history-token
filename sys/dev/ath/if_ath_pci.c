@@ -198,6 +198,9 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|ATH_PCI_LATENCY_WAR
 comment|/* Override the system latency timer */
 name|pci_write_config
 argument_list|(
@@ -210,6 +213,8 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* If a PCI NIC, force wakeup */
 ifdef|#
 directive|ifdef
@@ -620,6 +625,11 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_PCU_LOCK_INIT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|ath_attach
@@ -642,6 +652,11 @@ comment|/* success */
 return|return
 literal|0
 return|;
+name|ATH_PCU_LOCK_DESTROY
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|ATH_LOCK_DESTROY
 argument_list|(
 name|sc
@@ -816,6 +831,11 @@ argument_list|,
 name|psc
 operator|->
 name|sc_sr
+argument_list|)
+expr_stmt|;
+name|ATH_PCU_LOCK_DESTROY
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|ATH_LOCK_DESTROY

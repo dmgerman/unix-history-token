@@ -128,6 +128,7 @@ value|xh(a)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cmos_wall
 init|=

@@ -208,6 +208,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -2795,9 +2796,11 @@ name|uint8_t
 name|type
 parameter_list|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 name|cfg
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

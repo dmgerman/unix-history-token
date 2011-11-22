@@ -108,6 +108,7 @@ argument_list|)
 end_macro
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ACPIINTR

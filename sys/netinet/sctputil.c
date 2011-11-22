@@ -6353,6 +6353,16 @@ literal|0
 expr_stmt|;
 name|asoc
 operator|->
+name|port
+operator|=
+name|m
+operator|->
+name|sctp_ep
+operator|.
+name|port
+expr_stmt|;
+name|asoc
+operator|->
 name|timoinit
 operator|=
 literal|0

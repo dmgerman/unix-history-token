@@ -759,7 +759,7 @@ parameter_list|,
 name|type
 parameter_list|)
 define|\
-value|struct sdt_argtype sdt_##prov##_##mod##_##func##_##name##num[1]		\ 	    = { { num, type, { NULL, NULL },					\ 	    sdt_##prov##_##mod##_##func##_##name }				\ 	};									\ 	SYSINIT(sdt_##prov##_##mod##_##func##_##name##num##_init,		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 2, sdt_argtype_register, 		\ 	    sdt_##prov##_##mod##_##func##_##name##num );			\ 	SYSUNINIT(sdt_##prov##_##mod##_##func##_##name##num##_uninit, 		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 2, sdt_argtype_deregister,	\ 	    sdt_##prov##_##mod##_##func##_##name##num )
+value|static struct sdt_argtype sdt_##prov##_##mod##_##func##_##name##num[1]	\ 	    = { { num, type, { NULL, NULL },					\ 	    sdt_##prov##_##mod##_##func##_##name }				\ 	};									\ 	SYSINIT(sdt_##prov##_##mod##_##func##_##name##num##_init,		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 2, sdt_argtype_register, 		\ 	    sdt_##prov##_##mod##_##func##_##name##num );			\ 	SYSUNINIT(sdt_##prov##_##mod##_##func##_##name##num##_uninit, 		\ 	    SI_SUB_KDTRACE, SI_ORDER_SECOND + 2, sdt_argtype_deregister,	\ 	    sdt_##prov##_##mod##_##func##_##name##num )
 end_define
 
 begin_define

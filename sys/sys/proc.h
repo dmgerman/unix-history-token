@@ -2413,7 +2413,7 @@ comment|/* (c) Trap thread */
 name|int
 name|p_boundary_count
 decl_stmt|;
-comment|/* (c) Num threads at user boundary */
+comment|/* (j) Num threads at user boundary */
 name|int
 name|p_pendingcnt
 decl_stmt|;
@@ -3690,7 +3690,7 @@ name|_PRELE
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(--(p)->p_lock);						\ 	if (((p)->p_flag& P_WEXIT)&& (p)->p_lock == 0)		\ 		wakeup(&(p)->p_lock);					\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	PROC_ASSERT_HELD(p);						\ 	(--(p)->p_lock);						\ 	if (((p)->p_flag& P_WEXIT)&& (p)->p_lock == 0)		\ 		wakeup(&(p)->p_lock);					\ } while (0)
 end_define
 
 begin_define

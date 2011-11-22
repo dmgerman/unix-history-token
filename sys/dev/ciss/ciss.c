@@ -164,6 +164,7 @@ file|<dev/ciss/cissvar.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|CISS_MALLOC_CLASS

@@ -149,16 +149,14 @@ name|NOT_IN_LIST
 enum|;
 end_enum
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|fstypelist
 argument_list|,
 argument|entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|opthead
 operator|,
 name|selhead

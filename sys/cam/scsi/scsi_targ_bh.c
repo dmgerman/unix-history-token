@@ -132,6 +132,7 @@ file|<cam/scsi/scsi_message.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SCSIBH

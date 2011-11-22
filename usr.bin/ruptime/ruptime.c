@@ -136,6 +136,7 @@ file|<unistd.h>
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|hs
 block|{
@@ -180,18 +181,21 @@ value|__offsetof(struct whod, wd_we)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|size_t
 name|nhosts
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|now
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rflg
 init|=
@@ -200,6 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|DIR
 modifier|*
 name|dirp
@@ -207,6 +212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|hscmp
 parameter_list|(
@@ -222,6 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|interval
@@ -236,6 +243,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|lcmp
 parameter_list|(
@@ -251,15 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|morehosts
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|ruptime
 parameter_list|(
@@ -287,6 +287,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|tcmp
 parameter_list|(
@@ -302,6 +303,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ucmp
 parameter_list|(
@@ -317,6 +319,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -517,6 +520,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|interval
@@ -681,6 +685,7 @@ comment|/* Alphabetical comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|hscmp
 parameter_list|(
@@ -729,6 +734,7 @@ comment|/* Load average comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lcmp
 parameter_list|(
@@ -832,6 +838,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ruptime
 parameter_list|(
@@ -1441,6 +1448,7 @@ comment|/* Number of users comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ucmp
 parameter_list|(
@@ -1538,6 +1546,7 @@ comment|/* Uptime comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tcmp
 parameter_list|(
@@ -1641,6 +1650,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

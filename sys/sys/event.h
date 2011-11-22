@@ -695,25 +695,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_DECLARE
-end_ifdef
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_KQUEUE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Flags for knote call  */
 end_comment

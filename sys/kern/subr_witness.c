@@ -528,6 +528,7 @@ value|MPASS((i)> 0&& (i)<= w_max_used_index&& (i)< WITNESS_COUNT)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_WITNESS
@@ -1111,6 +1112,7 @@ name|lock_list_entry
 modifier|*
 name|list
 parameter_list|,
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -1599,6 +1601,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -9714,6 +9717,7 @@ name|lock_list_entry
 modifier|*
 name|list
 parameter_list|,
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -10515,6 +10519,7 @@ begin_function
 name|void
 name|witness_assert
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*

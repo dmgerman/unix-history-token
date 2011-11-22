@@ -206,11 +206,20 @@ comment|/* Indicates version 0 of RuneLocale */
 end_comment
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 specifier|extern
+specifier|const
 name|_RuneLocale
 name|_DefaultRuneLocale
 decl_stmt|;
 end_decl_stmt
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(deprecated)
+argument_list|)
+end_macro
 
 begin_decl_stmt
 specifier|extern
@@ -219,6 +228,32 @@ modifier|*
 name|_CurrentRuneLocale
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* TODO: This is called quite a lot, so we should use a __thread variable when  * it's available. */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|_RuneLocale
+modifier|*
+name|__getCurrentRuneLocale
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|_CurrentRuneLocale
+value|(__getCurrentRuneLocale())
+end_define
+
+begin_macro
+name|__END_DECLS
+end_macro
 
 begin_endif
 endif|#

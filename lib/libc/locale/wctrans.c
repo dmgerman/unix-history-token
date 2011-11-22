@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002 Tim J. Robbins.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2002 Tim J. Robbins.  * All rights reserved.  *  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  * Portions of this software were developed by David Chisnall  * under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -35,6 +35,12 @@ directive|include
 file|<wctype.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"xlocale_private.h"
+end_include
+
 begin_enum
 enum|enum
 block|{
@@ -55,13 +61,16 @@ end_enum
 
 begin_function
 name|wint_t
-name|towctrans
+name|towctrans_l
 parameter_list|(
 name|wint_t
 name|wc
 parameter_list|,
 name|wctrans_t
 name|desc
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|)
 block|{
 switch|switch
@@ -74,9 +83,11 @@ name|_WCT_TOLOWER
 case|:
 name|wc
 operator|=
-name|towlower
+name|towlower_l
 argument_list|(
 name|wc
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 break|break;
@@ -85,9 +96,11 @@ name|_WCT_TOUPPER
 case|:
 name|wc
 operator|=
-name|towupper
+name|towupper_l
 argument_list|(
 name|wc
+argument_list|,
+name|locale
 argument_list|)
 expr_stmt|;
 break|break;
@@ -110,13 +123,45 @@ block|}
 end_function
 
 begin_function
+name|wint_t
+name|towctrans
+parameter_list|(
+name|wint_t
+name|wc
+parameter_list|,
 name|wctrans_t
-name|wctrans
+name|desc
+parameter_list|)
+block|{
+return|return
+name|towctrans_l
+argument_list|(
+name|wc
+argument_list|,
+name|desc
+argument_list|,
+name|__get_locale
+argument_list|()
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * wctrans() calls this will a 0 locale.  If this is ever modified to actually  * use the locale, wctrans() must be modified to call __get_locale().  */
+end_comment
+
+begin_function
+name|wctrans_t
+name|wctrans_l
 parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|charclass
+parameter_list|,
+name|locale_t
+name|locale
 parameter_list|)
 block|{
 struct|struct
@@ -214,6 +259,27 @@ index|]
 operator|.
 name|trans
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|wctrans_t
+name|wctrans
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|charclass
+parameter_list|)
+block|{
+return|return
+name|wctrans_l
+argument_list|(
+name|charclass
+argument_list|,
+literal|0
+argument_list|)
 return|;
 block|}
 end_function

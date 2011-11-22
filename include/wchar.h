@@ -199,11 +199,30 @@ endif|#
 directive|endif
 end_endif
 
-begin_struct_decl
-struct_decl|struct
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_STDFILE_DECLARED
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_STDFILE_DECLARED
+end_define
+
+begin_typedef
+typedef|typedef
+name|struct
 name|__sFILE
-struct_decl|;
-end_struct_decl
+name|FILE
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct_decl
 struct_decl|struct
@@ -225,8 +244,7 @@ begin_function_decl
 name|wint_t
 name|fgetwc
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -243,8 +261,7 @@ name|__restrict
 parameter_list|,
 name|int
 parameter_list|,
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__restrict
 parameter_list|)
@@ -257,8 +274,7 @@ name|fputwc
 parameter_list|(
 name|wchar_t
 parameter_list|,
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -273,8 +289,7 @@ name|wchar_t
 modifier|*
 name|__restrict
 parameter_list|,
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__restrict
 parameter_list|)
@@ -285,8 +300,7 @@ begin_function_decl
 name|int
 name|fwide
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 parameter_list|,
 name|int
@@ -298,8 +312,7 @@ begin_function_decl
 name|int
 name|fwprintf
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__restrict
 parameter_list|,
@@ -317,8 +330,7 @@ begin_function_decl
 name|int
 name|fwscanf
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__restrict
 parameter_list|,
@@ -336,8 +348,7 @@ begin_function_decl
 name|wint_t
 name|getwc
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -432,8 +443,7 @@ name|putwc
 parameter_list|(
 name|wchar_t
 parameter_list|,
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -494,8 +504,7 @@ name|ungetwc
 parameter_list|(
 name|wint_t
 parameter_list|,
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 parameter_list|)
 function_decl|;
@@ -505,8 +514,7 @@ begin_function_decl
 name|int
 name|vfwprintf
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__restrict
 parameter_list|,
@@ -1077,8 +1085,7 @@ end_ifndef
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__stdinp
 decl_stmt|;
@@ -1086,8 +1093,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__stdoutp
 decl_stmt|;
@@ -1095,8 +1101,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__stderrp
 decl_stmt|;
@@ -1165,8 +1170,7 @@ begin_function_decl
 name|int
 name|vfwscanf
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__restrict
 parameter_list|,
@@ -1532,8 +1536,7 @@ name|wchar_t
 modifier|*
 name|fgetwln
 parameter_list|(
-name|struct
-name|__sFILE
+name|FILE
 modifier|*
 name|__restrict
 parameter_list|,

@@ -172,6 +172,7 @@ file|<dev/usb/net/usb_ethernet.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net

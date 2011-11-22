@@ -186,6 +186,7 @@ file|<security/audit/audit.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern
@@ -2289,6 +2290,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|tsp
+operator|->
+name|tv_sec
+operator|<
+literal|0
+operator|||
 name|tsp
 operator|->
 name|tv_nsec

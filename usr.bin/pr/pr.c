@@ -163,6 +163,7 @@ comment|/*  * parameter variables  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pgnm
 decl_stmt|;
@@ -173,6 +174,7 @@ comment|/* starting page number */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|clcnt
 decl_stmt|;
@@ -183,6 +185,7 @@ comment|/* number of columns */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|colwd
 decl_stmt|;
@@ -193,6 +196,7 @@ comment|/* column data width - multiple columns */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|across
 decl_stmt|;
@@ -203,6 +207,7 @@ comment|/* mult col flag; write across page */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dspace
 decl_stmt|;
@@ -213,6 +218,7 @@ comment|/* double space flag */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|inchar
 decl_stmt|;
@@ -223,6 +229,7 @@ comment|/* expand input char */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ingap
 decl_stmt|;
@@ -233,6 +240,7 @@ comment|/* expand input gap */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pausefst
 decl_stmt|;
@@ -243,6 +251,7 @@ comment|/* Pause before first page */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pauseall
 decl_stmt|;
@@ -253,6 +262,7 @@ comment|/* Pause before each page */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|formfeed
 decl_stmt|;
@@ -263,6 +273,7 @@ comment|/* use formfeed as trailer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|header
@@ -274,6 +285,7 @@ comment|/* header name instead of file name */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ochar
 decl_stmt|;
@@ -284,6 +296,7 @@ comment|/* contract output char */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ogap
 decl_stmt|;
@@ -294,6 +307,7 @@ comment|/* contract output gap */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lines
 decl_stmt|;
@@ -304,6 +318,7 @@ comment|/* number of lines per page */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|merge
 decl_stmt|;
@@ -314,6 +329,7 @@ comment|/* merge multiple files in output */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|nmchar
 decl_stmt|;
@@ -324,6 +340,7 @@ comment|/* line numbering append char */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nmwd
 decl_stmt|;
@@ -334,6 +351,7 @@ comment|/* width of line number field */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|offst
 decl_stmt|;
@@ -344,6 +362,7 @@ comment|/* number of page offset spaces */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nodiag
 decl_stmt|;
@@ -354,6 +373,7 @@ comment|/* do not report file open errors */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|schar
 decl_stmt|;
@@ -364,6 +384,7 @@ comment|/* text column separation character */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
@@ -374,6 +395,7 @@ comment|/* -s option for multiple columns */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nohead
 decl_stmt|;
@@ -384,6 +406,7 @@ comment|/* do not write head and trailer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pgwd
 decl_stmt|;
@@ -394,6 +417,7 @@ comment|/* page width with multiple col output */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -410,6 +434,7 @@ comment|/*  * misc globals  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|err
@@ -421,6 +446,7 @@ comment|/* error message file pointer */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|addone
 decl_stmt|;
@@ -431,6 +457,7 @@ comment|/* page length is odd with double space */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|errcnt
 decl_stmt|;
@@ -441,6 +468,7 @@ comment|/* error count on file processing */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|digs
 index|[]
@@ -454,6 +482,7 @@ comment|/* page number translation map */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|fnamedefault
 index|[]

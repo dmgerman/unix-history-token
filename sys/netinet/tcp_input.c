@@ -724,6 +724,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet_tcp
@@ -884,7 +885,7 @@ name|_net_inet_tcp
 argument_list|,
 name|TCPCTL_RECVSPACE
 argument_list|,
-name|tcp_recvspace
+name|recvspace
 argument_list|,
 name|CTLFLAG_RW
 argument_list|,

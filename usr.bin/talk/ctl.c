@@ -67,6 +67,12 @@ directive|include
 file|"talk.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"talk_ctl.h"
+end_include
+
 begin_decl_stmt
 name|struct
 name|sockaddr_in

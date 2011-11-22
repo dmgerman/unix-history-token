@@ -155,25 +155,6 @@ directive|include
 file|<sys/_sx.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_DECLARE
-end_ifdef
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_SMBFSMNT
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_struct_decl
 struct_decl|struct
 name|smbnode

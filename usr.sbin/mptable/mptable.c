@@ -298,6 +298,7 @@ end_typedef
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|busTypeName
 name|busTypeTable
 index|[]
@@ -421,6 +422,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -468,55 +470,8 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
-name|tableEntry
-name|basetableEntryTypes
-index|[]
-init|=
-block|{
-block|{
-literal|0
-block|,
-literal|20
-block|,
-literal|"Processor"
-block|}
-block|,
-block|{
-literal|1
-block|,
-literal|8
-block|,
-literal|"Bus"
-block|}
-block|,
-block|{
-literal|2
-block|,
-literal|8
-block|,
-literal|"I/O APIC"
-block|}
-block|,
-block|{
-literal|3
-block|,
-literal|8
-block|,
-literal|"I/O INT"
-block|}
-block|,
-block|{
-literal|4
-block|,
-literal|8
-block|,
-literal|"Local INT"
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
+specifier|const
 name|tableEntry
 name|extendedtableEntryTypes
 index|[]
@@ -1054,6 +1009,7 @@ comment|/* global data */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pfd
 decl_stmt|;
@@ -1064,6 +1020,7 @@ comment|/* physical /dev/mem fd */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|busses
 index|[
@@ -1073,6 +1030,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|apics
 index|[
@@ -1082,42 +1040,49 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ncpu
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nbus
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|napic
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nintr
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dmesg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|grope
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;
@@ -3902,6 +3867,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -3921,6 +3887,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -3940,6 +3907,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

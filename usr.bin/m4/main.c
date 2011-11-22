@@ -470,6 +470,8 @@ comment|/* Line synchronisation for C preprocessor */
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|keyblk
 name|keywrds

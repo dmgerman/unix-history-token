@@ -38,7 +38,7 @@ name|lint
 end_ifndef
 
 begin_endif
-unit|static char sccsid[] = "@(#)calendar.c  8.3 (Berkeley) 3/25/94";
+unit|static char sccsid[] = "@(#)calendar.c	8.3 (Berkeley) 3/25/94";
 endif|#
 directive|endif
 end_endif
@@ -273,7 +273,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-A:aB:dD:F:f:l:t:U:W:"
+literal|"-A:aB:D:dF:f:l:t:U:W:?"
 argument_list|)
 operator|)
 operator|!=
@@ -316,15 +316,6 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
-literal|'f'
-case|:
-comment|/* other calendar file */
-name|calendarFile
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
 literal|'W'
 case|:
 comment|/* we don't need no steenking Fridays */
@@ -359,6 +350,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+comment|/* debug output of sun and moon info */
+name|DEBUG
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'d'
+case|:
+comment|/* debug output of current date */
+name|debug
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'F'
 case|:
 comment|/* Change the time: When does weekend start? */
@@ -368,6 +377,15 @@ name|atoi
 argument_list|(
 name|optarg
 argument_list|)
+expr_stmt|;
+break|break;
+case|case
+literal|'f'
+case|:
+comment|/* other calendar file */
+name|calendarFile
+operator|=
+name|optarg
 expr_stmt|;
 break|break;
 case|case
@@ -387,6 +405,18 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+literal|'t'
+case|:
+comment|/* other date, for tests */
+name|f_time
+operator|=
+name|Mktime
+argument_list|(
+name|optarg
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'U'
 case|:
 comment|/* Change UTC offset */
@@ -397,34 +427,6 @@ argument_list|(
 name|optarg
 argument_list|,
 name|NULL
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-literal|'d'
-case|:
-name|debug
-operator|=
-literal|1
-expr_stmt|;
-break|break;
-case|case
-literal|'D'
-case|:
-name|DEBUG
-operator|=
-name|optarg
-expr_stmt|;
-break|break;
-case|case
-literal|'t'
-case|:
-comment|/* other date, undocumented, for tests */
-name|f_time
-operator|=
-name|Mktime
-argument_list|(
-name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
@@ -798,12 +800,11 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: calendar [-a] [-A days] [-B days] [-F friday] "
-literal|"[-f calendarfile]"
+literal|"usage: calendar [-A days] [-a] [-B days] [-D sun|moon] [-d]"
 argument_list|,
-literal|"                [-d] [-t dd[.mm[.year]]] [-W days]"
+literal|"		     [-F friday] [-f calendarfile] [-l longitude]"
 argument_list|,
-literal|"                [-U utcoffset] [-l longitude]"
+literal|"		     [-t dd[.mm[.year]]] [-U utcoffset] [-W days]"
 argument_list|)
 expr_stmt|;
 name|exit

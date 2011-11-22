@@ -1562,9 +1562,9 @@ name|PAM_RHOST
 argument_list|,
 name|rhost
 argument_list|)
+operator|)
 operator|!=
 name|PAM_SUCCESS
-operator|)
 condition|)
 block|{
 name|syslog

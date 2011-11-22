@@ -1211,6 +1211,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_link
@@ -1770,11 +1771,9 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|if_free_type
+name|if_free
 argument_list|(
 name|ifp
-argument_list|,
-name|IFT_ETHER
 argument_list|)
 expr_stmt|;
 name|free
@@ -1876,12 +1875,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_type
-operator|=
-name|IFT_ETHER
-expr_stmt|;
-name|ifp
-operator|->
 name|if_softc
 operator|=
 name|sc
@@ -1940,7 +1933,7 @@ operator|->
 name|if_snd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Attach as an ordinary ethernet device, childs will be attached 	 * as special device IFT_IEEE8023ADLAG. 	 */
+comment|/* 	 * Attach as an ordinary ethernet device, children will be attached 	 * as special device IFT_IEEE8023ADLAG. 	 */
 name|ether_ifattach
 argument_list|(
 name|ifp
@@ -2149,11 +2142,9 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free_type
+name|if_free
 argument_list|(
 name|ifp
-argument_list|,
-name|IFT_ETHER
 argument_list|)
 expr_stmt|;
 name|mtx_lock

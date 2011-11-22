@@ -652,6 +652,26 @@ elif|#
 directive|elif
 name|defined
 argument_list|(
+name|CPU_NLM
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|COP0_SYNC
+value|.word 0xc0
+end_define
+
+begin_comment
+comment|/* ehb */
+end_comment
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|CPU_SB1
 argument_list|)
 end_elif

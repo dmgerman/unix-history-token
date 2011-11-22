@@ -1697,6 +1697,13 @@ name|KVME_FLAG_NOCOREDUMP
 value|0x00000004
 end_define
 
+begin_define
+define|#
+directive|define
+name|KVME_FLAG_SUPER
+value|0x00000008
+end_define
+
 begin_if
 if|#
 directive|if

@@ -397,6 +397,7 @@ comment|/* inode block */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|ino_t
 name|maxino
 decl_stmt|;

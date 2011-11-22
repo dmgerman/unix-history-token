@@ -358,15 +358,6 @@ block|}
 struct|;
 end_struct
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|error_desc
-name|array
-index|[]
-decl_stmt|;
-end_decl_stmt
-
 begin_comment
 comment|/* ----------- q services ------------- */
 end_comment

@@ -371,15 +371,6 @@ argument_list|,
 name|biosdev
 argument_list|)
 expr_stmt|;
-name|printf
-argument_list|(
-literal|"looking for bios device 0x%x, nbcinfo=%d\n"
-argument_list|,
-name|biosdev
-argument_list|,
-name|nbcinfo
-argument_list|)
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -503,13 +494,6 @@ name|int
 name|biosdev
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"bc_add(%d)\n"
-argument_list|,
-name|biosdev
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|nbcinfo
@@ -600,23 +584,12 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|printf
-argument_list|(
-literal|"CD probe failed, eax=0x%08x\n"
-argument_list|,
-name|v86
-operator|.
-name|eax
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 operator|-
 literal|1
 operator|)
 return|;
-block|}
 name|printf
 argument_list|(
 literal|"BIOS CD is cd%d\n"

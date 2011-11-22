@@ -467,6 +467,11 @@ init|=
 literal|244
 block|,
 comment|/* baseband read WAR */
+name|HAL_CAP_SERIALISE_WAR
+init|=
+literal|245
+block|,
+comment|/* serialise register access on PCI */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -2313,6 +2318,14 @@ name|int
 name|ah_additional_swba_backoff
 decl_stmt|;
 comment|/* in TU's */
+name|int
+name|ah_force_full_reset
+decl_stmt|;
+comment|/* force full chip reset rather then warm reset */
+name|int
+name|ah_serialise_reg_war
+decl_stmt|;
+comment|/* force serialisation of register IO */
 block|}
 name|HAL_OPS_CONFIG
 typedef|;
@@ -2378,6 +2391,13 @@ modifier|*
 name|ah_eepromdata
 decl_stmt|;
 comment|/* eeprom buffer, if needed */
+name|uint32_t
+name|ah_intrstate
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* last int state */
 name|HAL_OPS_CONFIG
 name|ah_config
 decl_stmt|;
@@ -4340,6 +4360,30 @@ name|ath_desc
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_get_mib_cycle_counts_pct
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
 parameter_list|)
 function_decl|;
 name|uint32_t

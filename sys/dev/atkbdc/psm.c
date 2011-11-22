@@ -10554,6 +10554,7 @@ comment|/* Add all sysctls under the debug.psm and hw.psm nodes */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -10572,6 +10573,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw

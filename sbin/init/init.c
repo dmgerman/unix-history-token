@@ -618,6 +618,7 @@ function_decl|;
 end_function_decl
 
 begin_enum
+specifier|static
 enum|enum
 block|{
 name|AUTOBOOT
@@ -645,6 +646,7 @@ value|1
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|Reboot
 init|=
@@ -653,6 +655,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|howto
 init|=
@@ -661,6 +664,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|devfs
 decl_stmt|;

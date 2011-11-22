@@ -423,7 +423,7 @@ index|[
 name|AR5416_KEYTABLE_SIZE
 index|]
 decl_stmt|;
-comment|/* 	 * Extension Channel Rx Clear State 	 */
+comment|/* 	 * Primary/Extension Channel Tx, Rx, Rx Clear State 	 */
 name|uint32_t
 name|ah_cycleCount
 decl_stmt|;
@@ -432,6 +432,12 @@ name|ah_ctlBusy
 decl_stmt|;
 name|uint32_t
 name|ah_extBusy
+decl_stmt|;
+name|uint32_t
+name|ah_rxBusy
+decl_stmt|;
+name|uint32_t
+name|ah_txBusy
 decl_stmt|;
 name|uint32_t
 name|ah_rx_chainmask
@@ -1134,6 +1140,35 @@ parameter_list|,
 name|uint8_t
 parameter_list|,
 name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|ar5416GetMibCycleCountsPct
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|uint32_t
+modifier|*
+name|rxc_pcnt
+parameter_list|,
+name|uint32_t
+modifier|*
+name|rxextc_pcnt
+parameter_list|,
+name|uint32_t
+modifier|*
+name|rxf_pcnt
+parameter_list|,
+name|uint32_t
+modifier|*
+name|txf_pcnt
 parameter_list|)
 function_decl|;
 end_function_decl

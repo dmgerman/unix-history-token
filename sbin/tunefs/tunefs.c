@@ -196,6 +196,7 @@ value|"should optimize for %s with minfree %s %d%%"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uufsd
 name|disk
@@ -2727,6 +2728,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|blocks
 decl_stmt|;

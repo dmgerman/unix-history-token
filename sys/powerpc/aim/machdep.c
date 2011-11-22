@@ -857,7 +857,17 @@ argument|proc_linkup0(&proc0,&thread0); 	thread0.td_frame =&frame0;
 comment|/* 	 * Set up per-cpu data. 	 */
 argument|pc = __pcpu; 	pcpu_init(pc,
 literal|0
-argument|, sizeof(struct pcpu)); 	curthread_reg = pc->pc_curthread =&thread0; 	pc->pc_cpuid =
+argument|, sizeof(struct pcpu)); 	pc->pc_curthread =&thread0;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("mr 13,%0" :: "r"(pc->pc_curthread));
+else|#
+directive|else
+asm|__asm __volatile("mr 2,%0" :: "r"(pc->pc_curthread));
+endif|#
+directive|endif
+argument|pc->pc_cpuid =
 literal|0
 argument|;
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));

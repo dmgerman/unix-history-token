@@ -131,6 +131,7 @@ file|<wchar.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|wchar_t
 modifier|*
 name|delim
@@ -138,12 +139,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|delimcnt
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|parallel
 parameter_list|(
@@ -155,6 +158,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|sequential
 parameter_list|(
@@ -166,6 +170,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|tr
 parameter_list|(
@@ -186,6 +191,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|wchar_t
 name|tab
 index|[]
@@ -478,6 +484,7 @@ typedef|;
 end_typedef
 
 begin_function
+specifier|static
 name|int
 name|parallel
 parameter_list|(
@@ -910,6 +917,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|sequential
 parameter_list|(
@@ -1113,6 +1121,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|tr
 parameter_list|(

@@ -139,6 +139,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|a_gid
 parameter_list|(
@@ -150,6 +151,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|a_uid
 parameter_list|(
@@ -161,6 +163,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|chownerr
 parameter_list|(
@@ -172,6 +175,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|uid_t
 name|id
 parameter_list|(
@@ -187,6 +191,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -196,24 +201,28 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|uid_t
 name|uid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|gid_t
 name|gid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ischown
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -994,6 +1003,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|a_gid
 parameter_list|(
@@ -1051,6 +1061,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|a_uid
 parameter_list|(
@@ -1104,6 +1115,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|uid_t
 name|id
 parameter_list|(
@@ -1171,6 +1183,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|chownerr
 parameter_list|(
@@ -1371,6 +1384,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

@@ -260,6 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -7826,11 +7827,13 @@ name|status_bus_reset
 condition|)
 block|{
 comment|/* reset endpoint flags */
-name|bzero
+name|memset
 argument_list|(
 name|sc
 operator|->
 name|sc_ep_flags
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

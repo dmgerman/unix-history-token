@@ -160,6 +160,7 @@ function_decl|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|get_t
 name|get_ident
 decl_stmt|,
@@ -178,6 +179,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|native_ident
 parameter_list|(
@@ -187,6 +189,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|native_platform
 parameter_list|(
@@ -196,6 +199,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|native_hostname
 parameter_list|(
@@ -205,6 +209,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|native_arch
 parameter_list|(
@@ -214,6 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|native_release
 parameter_list|(
@@ -223,6 +229,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|native_sysname
 parameter_list|(
@@ -232,6 +239,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|native_version
 parameter_list|(
@@ -241,6 +249,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_uname
 parameter_list|(
@@ -250,6 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setup_get
 parameter_list|(
@@ -259,6 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -268,6 +279,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|ident
@@ -293,6 +305,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|space
 decl_stmt|;
@@ -483,6 +496,7 @@ value|do {							\ 	if ((var = getenv("UNAME_" opt)) == NULL) {	\ 		get_##var = 
 end_define
 
 begin_function
+specifier|static
 name|void
 name|setup_get
 parameter_list|(
@@ -557,6 +571,7 @@ value|if ((flags& flag) == flag) {		\ 		if (space)			\ 			printf(" ");		\ 		else
 end_define
 
 begin_function
+specifier|static
 name|void
 name|print_uname
 parameter_list|(
@@ -647,7 +662,7 @@ parameter_list|,
 name|mib1
 parameter_list|)
 define|\
-value|void						\ native_##var(void)				\ {						\ 	int mib[] = { (mib0), (mib1) };		\ 	size_t len;				\ 	static char buf[1024];			\ 	char **varp =&(var);			\ 						\ 	len = sizeof buf;			\ 	if (sysctl(mib, sizeof mib / sizeof mib[0],	\&buf,&len, NULL, 0) == -1)		\ 		err(1, "sysctl");
+value|static void					\ native_##var(void)				\ {						\ 	int mib[] = { (mib0), (mib1) };		\ 	size_t len;				\ 	static char buf[1024];			\ 	char **varp =&(var);			\ 						\ 	len = sizeof buf;			\ 	if (sysctl(mib, sizeof mib / sizeof mib[0],	\&buf,&len, NULL, 0) == -1)		\ 		err(1, "sysctl");
 end_define
 
 begin_define
@@ -660,7 +675,7 @@ parameter_list|,
 name|name
 parameter_list|)
 define|\
-value|void						\ native_##var(void)				\ {						\ 	size_t len;				\ 	static char buf[1024];			\ 	char **varp =&(var);			\ 						\ 	len = sizeof buf;			\ 	if (sysctlbyname(name,&buf,&len, NULL,\ 	    0) == -1)				\ 		err(1, "sysctlbyname");
+value|static void					\ native_##var(void)				\ {						\ 	size_t len;				\ 	static char buf[1024];			\ 	char **varp =&(var);			\ 						\ 	len = sizeof buf;			\ 	if (sysctlbyname(name,&buf,&len, NULL,\ 	    0) == -1)				\ 		err(1, "sysctlbyname");
 end_define
 
 begin_define
@@ -866,6 +881,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

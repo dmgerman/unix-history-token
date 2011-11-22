@@ -192,6 +192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -1362,11 +1363,11 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|uvisor_config
-argument_list|,
 name|uvisor_config_copy
+argument_list|,
+name|uvisor_config
 argument_list|,
 sizeof|sizeof
 argument_list|(

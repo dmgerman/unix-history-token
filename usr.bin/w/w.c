@@ -270,13 +270,7 @@ file|"extern.h"
 end_include
 
 begin_decl_stmt
-name|struct
-name|timeval
-name|boottime
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|utmpx
 modifier|*
@@ -285,6 +279,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|winsize
 name|ws
@@ -292,6 +287,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|kvm_t
 modifier|*
 name|kd
@@ -299,6 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|now
 decl_stmt|;
@@ -309,6 +306,7 @@ comment|/* the current time of day */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ttywidth
 decl_stmt|;
@@ -319,6 +317,7 @@ comment|/* width of tty */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|argwidth
 decl_stmt|;
@@ -329,6 +328,7 @@ comment|/* width of tty */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|header
 init|=
@@ -341,6 +341,7 @@ comment|/* true if -h flag: don't print heading */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nflag
 decl_stmt|;
@@ -351,6 +352,7 @@ comment|/* true if -n flag: don't convert addrs */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
 decl_stmt|;
@@ -361,6 +363,7 @@ comment|/* true if -d flag: output debug info */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sortidle
 decl_stmt|;
@@ -381,6 +384,7 @@ comment|/* use AM/PM time */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|use_comma
 decl_stmt|;
@@ -391,6 +395,7 @@ comment|/* use comma as floats separator */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -407,6 +412,7 @@ comment|/*  * One of these per active utmp entry.  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|entry
 block|{

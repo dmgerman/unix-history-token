@@ -234,18 +234,21 @@ value|(sizeof(KEYWORDS_STR) - 1)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|exit_code
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|file_count
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*

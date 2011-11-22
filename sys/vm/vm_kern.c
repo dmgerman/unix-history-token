@@ -1789,13 +1789,10 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|OFF_TO_IDX
-argument_list|(
-name|addr
-operator|-
-name|VM_MIN_KERNEL_ADDRESS
-argument_list|)
+literal|0
 argument_list|,
+name|VM_ALLOC_NORMAL
+operator||
 name|VM_ALLOC_NOOBJ
 operator||
 name|VM_ALLOC_WIRED

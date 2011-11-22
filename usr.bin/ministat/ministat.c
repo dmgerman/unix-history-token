@@ -86,6 +86,7 @@ value|6
 end_define
 
 begin_decl_stmt
+specifier|static
 name|double
 specifier|const
 name|studentpct
@@ -108,6 +109,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|double
 name|student
 index|[

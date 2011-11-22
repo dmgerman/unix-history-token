@@ -39,6 +39,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+specifier|const
 name|struct
 name|kobj_method
 name|kobj_method_t
@@ -193,7 +194,6 @@ name|id
 decl_stmt|;
 comment|/* unique ID */
 name|kobj_method_t
-modifier|*
 name|deflt
 decl_stmt|;
 comment|/* default implementation */
@@ -428,6 +428,19 @@ end_comment
 begin_function_decl
 name|void
 name|kobj_init
+parameter_list|(
+name|kobj_t
+name|obj
+parameter_list|,
+name|kobj_class_t
+name|cls
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|kobj_init_static
 parameter_list|(
 name|kobj_t
 name|obj

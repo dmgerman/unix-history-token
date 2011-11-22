@@ -796,6 +796,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern
@@ -10809,9 +10810,9 @@ name|kernel
 argument_list|, ,
 name|signal_discard
 argument_list|,
-name|ps
-argument_list|,
 name|td
+argument_list|,
+name|p
 argument_list|,
 name|sig
 argument_list|,

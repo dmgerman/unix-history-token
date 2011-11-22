@@ -240,6 +240,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|DB
 modifier|*
 name|db
@@ -247,6 +248,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|NODE
 modifier|*
 name|graph
@@ -262,6 +264,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 decl_stmt|,
@@ -272,6 +275,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|add_arc
 parameter_list|(
@@ -285,6 +289,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|find_cycle
 parameter_list|(
@@ -302,6 +307,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|NODE
 modifier|*
 name|get_node
@@ -313,6 +319,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 modifier|*
 name|grow_buf
@@ -326,6 +333,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|remove_node
 parameter_list|(
@@ -336,6 +344,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|clear_cycle
 parameter_list|(
@@ -345,6 +354,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|tsort
 parameter_list|(
@@ -354,6 +364,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -741,6 +752,7 @@ comment|/* double the size of oldbuf and return a pointer to the new buffer. */
 end_comment
 
 begin_function
+specifier|static
 name|void
 modifier|*
 name|grow_buf
@@ -788,6 +800,7 @@ comment|/*  * add an arc from node s1 to node s2 in the graph.  If s1 or s2 are 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|add_arc
 parameter_list|(
@@ -960,6 +973,7 @@ comment|/* Find a node in the graph (insert if not found) and return a pointer t
 end_comment
 
 begin_function
+specifier|static
 name|NODE
 modifier|*
 name|get_node
@@ -1254,6 +1268,7 @@ comment|/*  * Clear the NODEST flag from all nodes.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|clear_cycle
 parameter_list|(
@@ -1295,6 +1310,7 @@ comment|/* do topological sort on graph */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|tsort
 parameter_list|(
@@ -1587,6 +1603,7 @@ comment|/* print node and remove from graph (does not actually free node) */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|remove_node
 parameter_list|(
@@ -1684,6 +1701,7 @@ comment|/* look for the longest? cycle from node from to node to. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|find_cycle
 parameter_list|(
@@ -1935,6 +1953,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

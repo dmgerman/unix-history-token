@@ -2663,6 +2663,58 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|INIT_PROCESS
+case|:
+name|printf
+argument_list|(
+literal|"init process: id=\""
+argument_list|)
+expr_stmt|;
+name|UTMPXPRINTID
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\" pid=\"%d\"\n"
+argument_list|,
+name|ut
+operator|->
+name|ut_pid
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|LOGIN_PROCESS
+case|:
+name|printf
+argument_list|(
+literal|"login process: id=\""
+argument_list|)
+expr_stmt|;
+name|UTMPXPRINTID
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\" pid=\"%d\" user=\"%s\" line=\"%s\" host=\"%s\"\n"
+argument_list|,
+name|ut
+operator|->
+name|ut_pid
+argument_list|,
+name|ut
+operator|->
+name|ut_user
+argument_list|,
+name|ut
+operator|->
+name|ut_line
+argument_list|,
+name|ut
+operator|->
+name|ut_host
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|DEAD_PROCESS
 case|:
 name|printf
@@ -2685,7 +2737,11 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"unknown record type\n"
+literal|"unknown record type %hu\n"
+argument_list|,
+name|ut
+operator|->
+name|ut_type
 argument_list|)
 expr_stmt|;
 break|break;

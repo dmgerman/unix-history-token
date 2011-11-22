@@ -1507,14 +1507,13 @@ argument_list|)
 operator|)
 return|;
 comment|/* OK so it came from a protocol, heading out. Prepend general data 	   packet header. For now, IP,IPX only  */
-name|m
-operator|=
-name|NGI_M
+name|NGI_GET_M
 argument_list|(
 name|item
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
-comment|/* still associated with item */
 name|M_PREPEND
 argument_list|(
 name|m
@@ -1538,6 +1537,13 @@ goto|goto
 name|out
 goto|;
 block|}
+name|NGI_M
+argument_list|(
+name|item
+argument_list|)
+operator|=
+name|m
+expr_stmt|;
 name|h
 operator|=
 name|mtod

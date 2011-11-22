@@ -138,6 +138,7 @@ comment|/* Max number of commands known */
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|addcmd
 parameter_list|(
@@ -148,6 +149,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|addmac
 parameter_list|(
@@ -159,6 +161,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|binsrch
 parameter_list|(
@@ -170,6 +173,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|checkknown
 parameter_list|(
@@ -181,6 +185,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|chkcmd
 parameter_list|(
@@ -196,6 +201,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|complain
 parameter_list|(
@@ -205,6 +211,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|eq
 parameter_list|(
@@ -220,6 +227,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|nomatch
 parameter_list|(
@@ -231,6 +239,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pe
 parameter_list|(
@@ -240,6 +249,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|process
 parameter_list|(
@@ -250,6 +260,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|prop
 parameter_list|(
@@ -273,6 +284,7 @@ comment|/*  * The stack on which we remember what we've seen so far.  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|stkstr
 block|{
@@ -301,6 +313,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|stktop
 decl_stmt|;
@@ -311,6 +324,7 @@ comment|/*  * The kinds of opening and closing brackets.  */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|brstr
 block|{
@@ -601,6 +615,7 @@ comment|/*  * All commands known to nroff, plus macro packages.  * Used so we ca
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1338,6 +1353,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lineno
 decl_stmt|;
@@ -1348,6 +1364,7 @@ comment|/* current line number in input file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1360,6 +1377,7 @@ comment|/* name of current file */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nfiles
 decl_stmt|;
@@ -1370,6 +1388,7 @@ comment|/* number of files to process */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fflag
 decl_stmt|;
@@ -1380,6 +1399,7 @@ comment|/* -f: ignore \f */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
@@ -1390,6 +1410,7 @@ comment|/* -s: ignore \s */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ncmds
 decl_stmt|;
@@ -1400,6 +1421,7 @@ comment|/* size of knowncmds */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|slot
 decl_stmt|;
@@ -1845,6 +1867,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process
 parameter_list|(
@@ -2361,6 +2384,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|complain
 parameter_list|(
@@ -2397,6 +2421,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|prop
 parameter_list|(
@@ -2526,6 +2551,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|chkcmd
 parameter_list|(
@@ -2678,6 +2704,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|nomatch
 parameter_list|(
@@ -2891,6 +2918,7 @@ comment|/* eq: are two strings equal? */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|eq
 parameter_list|(
@@ -2925,6 +2953,7 @@ comment|/* print the first part of an error message, given the line number */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|pe
 parameter_list|(
@@ -2956,6 +2985,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|checkknown
 parameter_list|(
@@ -3023,6 +3053,7 @@ comment|/*  * We have a .de xx line in "line".  Add xx to the list of known comm
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|addcmd
 parameter_list|(
@@ -3139,6 +3170,7 @@ comment|/*  * Add mac to the list.  We should really have some kind of tree  * s
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|addmac
 parameter_list|(
@@ -3309,6 +3341,7 @@ comment|/*  * Do a binary search in knowncmds for mac.  * If found, return the i
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|binsrch
 parameter_list|(

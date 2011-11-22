@@ -762,6 +762,10 @@ decl_stmt|,
 name|halHasBBReadWar
 range|:
 literal|1
+decl_stmt|,
+name|halSerialiseRegWar
+range|:
+literal|1
 decl_stmt|;
 name|uint32_t
 name|halWirelessModes

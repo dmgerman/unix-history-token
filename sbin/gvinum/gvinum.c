@@ -3048,7 +3048,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* Find a free name for an object given a a prefix. */
+comment|/* Find a free name for an object given a prefix. */
 end_comment
 
 begin_function

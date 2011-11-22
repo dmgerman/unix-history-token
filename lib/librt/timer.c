@@ -464,6 +464,11 @@ name|__sigev_check_init
 argument_list|()
 condition|)
 block|{
+name|free
+argument_list|(
+name|timer
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|EINVAL
@@ -495,6 +500,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|free
+argument_list|(
+name|timer
+argument_list|)
+expr_stmt|;
 name|errno
 operator|=
 name|EAGAIN

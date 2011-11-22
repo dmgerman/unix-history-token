@@ -156,6 +156,7 @@ file|"mntopts.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mntopt
 name|mopts

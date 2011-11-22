@@ -245,6 +245,7 @@ value|(sizeof(rndtest_funcs)/sizeof(rndtest_funcs[0]))
 end_define
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern

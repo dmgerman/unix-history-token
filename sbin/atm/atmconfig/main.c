@@ -117,6 +117,7 @@ comment|/* verbosity level */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 decl_stmt|;

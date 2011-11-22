@@ -51,6 +51,12 @@ directive|include
 file|<curses.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<signal.h>
+end_include
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -85,6 +91,14 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|current_line
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+specifier|volatile
+name|sig_atomic_t
+name|gotwinch
 decl_stmt|;
 end_decl_stmt
 

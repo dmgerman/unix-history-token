@@ -457,12 +457,6 @@ operator|*
 name|sin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|which
-operator|!=
-name|MASK
-condition|)
 name|sin
 operator|->
 name|sin_family

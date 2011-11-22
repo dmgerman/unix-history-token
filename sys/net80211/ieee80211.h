@@ -3730,6 +3730,42 @@ end_comment
 
 begin_struct
 struct|struct
+name|ieee80211_quiet_ie
+block|{
+name|uint8_t
+name|quiet_ie
+decl_stmt|;
+comment|/* IEEE80211_ELEMID_QUIET */
+name|uint8_t
+name|len
+decl_stmt|;
+name|uint8_t
+name|tbttcount
+decl_stmt|;
+comment|/* quiet start */
+name|uint8_t
+name|period
+decl_stmt|;
+comment|/* beacon intervals between quiets */
+name|uint16_t
+name|duration
+decl_stmt|;
+comment|/* TUs of each quiet*/
+name|uint16_t
+name|offset
+decl_stmt|;
+comment|/* TUs of from TBTT of quiet start */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_comment
+comment|/*  * 802.11h Channel Switch Announcement (CSA).  */
+end_comment
+
+begin_struct
+struct|struct
 name|ieee80211_csa_ie
 block|{
 name|uint8_t

@@ -8945,9 +8945,9 @@ operator|->
 name|is_fc
 operator|)
 condition|?
-literal|30000
+literal|300000
 else|:
-literal|3000
+literal|30000
 argument_list|)
 expr_stmt|;
 if|if

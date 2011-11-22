@@ -2329,6 +2329,24 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_udpencaps
+block|{
+name|sctp_assoc_t
+name|sue_assoc_id
+decl_stmt|;
+name|struct
+name|sockaddr_storage
+name|sue_address
+decl_stmt|;
+name|uint16_t
+name|sue_port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_cwnd_args
 block|{
 name|struct

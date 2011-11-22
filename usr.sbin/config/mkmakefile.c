@@ -3813,7 +3813,7 @@ argument_list|(
 name|cmd
 argument_list|)
 argument_list|,
-literal|"${%s_%c%s}\n\t@${NORMAL_CTFCONVERT}"
+literal|"${%s_%c%s}\n"
 argument_list|,
 name|ftype
 argument_list|,
@@ -3856,7 +3856,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t%s $S/%s\n\n"
+literal|"\t%s $S/%s\n"
 argument_list|,
 name|compilewith
 argument_list|,
@@ -3868,9 +3868,35 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t%s\n\n"
+literal|"\t%s\n"
 argument_list|,
 name|compilewith
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|ftp
+operator|->
+name|f_flags
+operator|&
+name|NO_OBJ
+operator|)
+condition|)
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\t@${NORMAL_CTFCONVERT}\n\n"
+argument_list|)
+expr_stmt|;
+else|else
+name|fprintf
+argument_list|(
+name|f
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}

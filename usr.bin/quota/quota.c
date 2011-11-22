@@ -208,16 +208,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|qfname
-init|=
-name|QUOTAFILENAME
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -498,36 +489,42 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|lflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|qflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|filename

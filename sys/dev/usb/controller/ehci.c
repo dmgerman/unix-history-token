@@ -278,6 +278,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -15192,13 +15193,15 @@ name|len
 operator|=
 literal|16
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|sc
 operator|->
 name|sc_hub_desc
 operator|.
 name|temp
+argument_list|,
+literal|0
 argument_list|,
 literal|16
 argument_list|)

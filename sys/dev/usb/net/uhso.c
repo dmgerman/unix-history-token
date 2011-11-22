@@ -1082,6 +1082,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -5629,10 +5630,12 @@ name|USB_ST_SETUP
 case|:
 name|tr_setup
 label|:
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|req
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -5932,10 +5935,12 @@ operator|&
 name|res
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|req
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8700,11 +8705,11 @@ argument_list|,
 name|M_PKTHDR
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
 name|mtod
 argument_list|(
-name|m0
+name|m
 argument_list|,
 name|uint8_t
 operator|*
@@ -8712,7 +8717,7 @@ argument_list|)
 argument_list|,
 name|mtod
 argument_list|(
-name|m
+name|m0
 argument_list|,
 name|uint8_t
 operator|*

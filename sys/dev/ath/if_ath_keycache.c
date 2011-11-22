@@ -875,6 +875,11 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_key
@@ -1050,8 +1055,17 @@ name|kv_type
 operator|=
 name|HAL_CIPHER_CLR
 expr_stmt|;
+comment|/* 	 * XXX TODO: check this: 	 *  	 * Group keys on hardware that supports multicast frame 	 * key search should only be done in adhoc/hostap mode, 	 * not STA mode. 	 * 	 * XXX TODO: what about mesh, tdma? 	 */
+if|#
+directive|if
+literal|0
+block|if ((vap->iv_opmode == IEEE80211_M_HOSTAP || 	     vap->iv_opmode == IEEE80211_M_IBSS)&&
+else|#
+directive|else
 if|if
 condition|(
+endif|#
+directive|endif
 operator|(
 name|k
 operator|->
@@ -2279,6 +2293,8 @@ return|return
 name|ath_keyset
 argument_list|(
 name|sc
+argument_list|,
+name|vap
 argument_list|,
 name|k
 argument_list|,

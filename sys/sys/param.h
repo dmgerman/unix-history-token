@@ -60,7 +60,7 @@ begin_define
 define|#
 directive|define
 name|__FreeBSD_version
-value|1000000
+value|1000001
 end_define
 
 begin_comment
@@ -1274,7 +1274,7 @@ name|array
 parameter_list|,
 name|offset
 parameter_list|)
-value|(((typeof(*(array)) *)(array))[offset])
+value|(((__typeof__(*(array)) *)(array))[offset])
 end_define
 
 begin_endif

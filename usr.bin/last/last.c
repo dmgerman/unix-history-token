@@ -241,6 +241,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|ARG
 modifier|*
 name|arglist
@@ -251,16 +252,14 @@ begin_comment
 comment|/* head of linked list */
 end_comment
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|LIST_HEAD
 argument_list|(
 argument|idlisthead
 argument_list|,
 argument|idtab
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|idlist
 expr_stmt|;
 end_expr_stmt
@@ -430,6 +429,7 @@ comment|/* if != 0, we will only 						 * report users logged in 						 * at thi
 end_comment
 
 begin_function_decl
+specifier|static
 name|void
 name|addarg
 parameter_list|(
@@ -442,6 +442,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|time_t
 name|dateconv
 parameter_list|(
@@ -452,6 +453,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|doentry
 parameter_list|(
@@ -463,6 +465,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|hostconv
 parameter_list|(
@@ -473,6 +476,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|printentry
 parameter_list|(
@@ -488,6 +492,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|ttyconv
@@ -499,6 +504,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|want
 parameter_list|(
@@ -510,6 +516,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -519,6 +526,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|wtmp
 parameter_list|(
@@ -528,6 +536,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -925,6 +934,7 @@ comment|/*  * wtmp --  *	read through the wtmp file  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|wtmp
 parameter_list|(
@@ -1147,6 +1157,7 @@ comment|/*  * doentry --  *	process a single wtmp entry  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|doentry
 parameter_list|(
@@ -1490,6 +1501,7 @@ comment|/*  * printentry --  *	output an entry  *  * If `tt' is non-NULL, use it
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|printentry
 parameter_list|(
@@ -1858,6 +1870,7 @@ comment|/*  * want --  *	see if want this entry  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|want
 parameter_list|(
@@ -1994,6 +2007,7 @@ comment|/*  * addarg --  *	add an entry to a linked list of arguments  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|addarg
 parameter_list|(
@@ -2062,6 +2076,7 @@ comment|/*  * hostconv --  *	convert the hostname to search pattern; if the supp
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|hostconv
 parameter_list|(
@@ -2168,6 +2183,7 @@ comment|/*  * ttyconv --  *	convert tty to correct name.  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|ttyconv
@@ -2301,6 +2317,7 @@ comment|/*  * dateconv --  * 	Convert the snapshot time in command line given in
 end_comment
 
 begin_function
+specifier|static
 name|time_t
 name|dateconv
 parameter_list|(

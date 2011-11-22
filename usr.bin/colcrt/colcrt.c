@@ -109,6 +109,7 @@ comment|/*  * colcrt - replaces col for crts with new nroff esp. when using tbl.
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|wchar_t
 name|page
 index|[
@@ -121,6 +122,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|outline
 init|=
@@ -129,18 +131,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|outcol
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|suppresul
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|printall
 decl_stmt|;
