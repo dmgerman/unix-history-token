@@ -7726,6 +7726,17 @@ name|ifp
 operator|->
 name|if_capabilities
 expr_stmt|;
+name|ifp
+operator|->
+name|if_capenable
+operator|&=
+operator|~
+operator|(
+name|IFCAP_WOL_UCAST
+operator||
+name|IFCAP_WOL_MCAST
+operator|)
+expr_stmt|;
 comment|/* 	 * Don't enable TSO by default.  It is known to generate 	 * corrupted TCP segments(bad TCP options) under certain 	 * circumtances. 	 */
 name|ifp
 operator|->
@@ -17306,16 +17317,6 @@ argument_list|,
 name|v
 argument_list|)
 expr_stmt|;
-comment|/* Config register write done. */
-name|CSR_WRITE_1
-argument_list|(
-name|sc
-argument_list|,
-name|RL_EECMD
-argument_list|,
-name|RL_EEMODE_OFF
-argument_list|)
-expr_stmt|;
 name|v
 operator|=
 name|CSR_READ_1
@@ -17334,12 +17335,9 @@ operator||
 name|RL_CFG5_WOL_MCAST
 operator||
 name|RL_CFG5_WOL_UCAST
-operator|)
-expr_stmt|;
-name|v
-operator|&=
-operator|~
+operator||
 name|RL_CFG5_WOL_LANWAKE
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -17398,6 +17396,16 @@ argument_list|,
 name|RL_CFG5
 argument_list|,
 name|v
+argument_list|)
+expr_stmt|;
+comment|/* Config register write done. */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|RL_EECMD
+argument_list|,
+name|RL_EEMODE_OFF
 argument_list|)
 expr_stmt|;
 if|if
