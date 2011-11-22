@@ -5169,7 +5169,7 @@ name|vge_phyaddr
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -9919,14 +9919,35 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Enable flow control */
+comment|/* Initialize pause timer. */
+name|CSR_WRITE_2
+argument_list|(
+name|sc
+argument_list|,
+name|VGE_TX_PAUSE_TIMER
+argument_list|,
+literal|0xFFFF
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Initialize flow control parameters. 	 *  TX XON high threshold : 48 	 *  TX pause low threshold : 24 	 *  Disable hald-duplex flow control 	 */
+name|CSR_WRITE_1
+argument_list|(
+name|sc
+argument_list|,
+name|VGE_CRC2
+argument_list|,
+literal|0xFF
+argument_list|)
+expr_stmt|;
 name|CSR_WRITE_1
 argument_list|(
 name|sc
 argument_list|,
 name|VGE_CRS2
 argument_list|,
-literal|0x8B
+name|VGE_CR2_XON_ENABLE
+operator||
+literal|0x0B
 argument_list|)
 expr_stmt|;
 comment|/* Enable jumbo frame reception (if desired) */
