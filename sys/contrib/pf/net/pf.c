@@ -14881,13 +14881,19 @@ argument|; 		goto done; 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (pd.pf_mtag->flags& PF_TAG_GENERATED)
+argument|if (pd.pf_mtag->flags& PF_TAG_GENERATED) { 		PF_UNLOCK();
 else|#
 directive|else
 argument|if (m->m_pkthdr.pf.flags& PF_TAG_GENERATED)
 endif|#
 directive|endif
 argument|return (PF_PASS);
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|}
+endif|#
+directive|endif
 comment|/* We do IP header normalization and packet reassembly here */
 argument|if (pf_normalize_ip6(m0, dir, kif,&reason,&pd) != PF_PASS) { 		action = PF_DROP; 		goto done; 	} 	m = *m0;
 comment|/* pf_normalize messes with m0 */
