@@ -1418,12 +1418,16 @@ name|ncpus
 init|=
 literal|0
 decl_stmt|;
+comment|/* Look comments in the !SMP case. */
 if|if
 condition|(
 operator|!
 name|smp_started
 condition|)
 block|{
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|setup_func
@@ -1456,6 +1460,9 @@ name|teardown_func
 argument_list|(
 name|arg
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
@@ -2648,6 +2655,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+comment|/* 	 * In the !SMP case we just need to ensure the same initial conditions 	 * as the SMP case. 	 */
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|setup_func
@@ -2680,6 +2691,9 @@ name|teardown_func
 argument_list|(
 name|arg
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -2723,6 +2737,10 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
+comment|/* Look comments in the smp_rendezvous_cpus() case. */
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|setup_func
@@ -2755,6 +2773,9 @@ name|teardown_func
 argument_list|(
 name|arg
 argument_list|)
+expr_stmt|;
+name|spinlock_exit
+argument_list|()
 expr_stmt|;
 block|}
 end_function
