@@ -16591,6 +16591,32 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
+comment|/* 	 * Disable accepting frames to put RX MAC into idle state. 	 * Otherwise it's possible to get frames while stop command 	 * execution is in progress and controller can DMA the frame 	 * to already freed RX buffer during that period. 	 */
+name|CSR_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|RL_RXCFG
+argument_list|,
+name|CSR_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|RL_RXCFG
+argument_list|)
+operator|&
+operator|~
+operator|(
+name|RL_RXCFG_RX_ALLPHYS
+operator||
+name|RL_RXCFG_RX_INDIV
+operator||
+name|RL_RXCFG_RX_MULTI
+operator||
+name|RL_RXCFG_RX_BROAD
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -17204,7 +17230,15 @@ name|IFCAP_WOL
 operator|)
 operator|!=
 literal|0
-operator|&&
+condition|)
+block|{
+name|re_set_rxmode
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 operator|(
 name|sc
 operator|->
@@ -17224,6 +17258,7 @@ argument_list|,
 name|RL_CMD_RX_ENB
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Enable config register write. */
 name|CSR_WRITE_1
 argument_list|(
