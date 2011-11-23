@@ -1055,6 +1055,11 @@ name|firmware
 operator|=
 name|NULL
 expr_stmt|;
+name|fclose
+argument_list|(
+name|firmware_file
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
