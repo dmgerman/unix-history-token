@@ -23427,6 +23427,11 @@ argument_list|,
 name|ATH_RESET_NOLOSS
 argument_list|)
 expr_stmt|;
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 comment|/* 		 * If this long cal is after an idle period, then 		 * reset the data collection state so we start fresh. 		 */
