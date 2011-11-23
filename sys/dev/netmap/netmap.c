@@ -7316,6 +7316,9 @@ literal|"netmap_buffer_base %p (offset %d)"
 argument_list|,
 name|netmap_buffer_base
 argument_list|,
+operator|(
+name|int
+operator|)
 name|netmap_mem_d
 operator|->
 name|nm_buf_start
@@ -7350,13 +7353,16 @@ operator|>>
 literal|20
 operator|)
 argument_list|,
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|netmap_mem_d
 operator|->
 name|nm_size
 operator|>>
 literal|10
-operator|)
+argument_list|)
 argument_list|,
 name|nm_buf_pool
 operator|.
@@ -7567,6 +7573,9 @@ name|printf
 argument_list|(
 literal|"netmap: leaked %d bytes at %p\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|mem_obj
 operator|->
 name|nmo_size
@@ -7651,11 +7660,16 @@ name|printf
 argument_list|(
 literal|"netmap: loaded module with %d Mbytes\n"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|netmap_mem_d
 operator|->
 name|nm_totalsize
 operator|>>
 literal|20
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|netmap_dev
