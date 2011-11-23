@@ -1673,7 +1673,7 @@ literal|"txaggrfail"
 block|,
 literal|"TXAF"
 block|,
-literal|"A-MPDU sub-frame TX attempt success"
+literal|"A-MPDU sub-frame TX attempt failures"
 block|}
 block|,
 define|#
@@ -1687,7 +1687,7 @@ literal|"txaggrfailall"
 block|,
 literal|"TXAFALL"
 block|,
-literal|"A-MPDU sub-frame TX attempt success"
+literal|"A-MPDU TX frame failures"
 block|}
 block|,
 ifndef|#
