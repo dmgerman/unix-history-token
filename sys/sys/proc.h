@@ -2413,7 +2413,7 @@ comment|/* (c) Trap thread */
 name|int
 name|p_boundary_count
 decl_stmt|;
-comment|/* (c) Num threads at user boundary */
+comment|/* (j) Num threads at user boundary */
 name|int
 name|p_pendingcnt
 decl_stmt|;
