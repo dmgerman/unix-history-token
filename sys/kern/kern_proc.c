@@ -8093,6 +8093,11 @@ name|type
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
 block|}
 name|proc_vector32
 operator|=
@@ -8619,6 +8624,12 @@ name|type
 operator|)
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|EINVAL
+operator|)
+return|;
+comment|/* In case we are built without INVARIANTS. */
 block|}
 name|proc_vector
 operator|=
