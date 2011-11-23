@@ -4814,6 +4814,10 @@ name|RL_FLAG_CMDSTOP_WAIT_TXQ
 value|0x00008000
 define|#
 directive|define
+name|RL_FLAG_WOL_MANLINK
+value|0x00010000
+define|#
+directive|define
 name|RL_FLAG_PCIE
 value|0x40000000
 define|#
