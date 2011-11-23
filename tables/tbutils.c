@@ -109,6 +109,22 @@ block|{
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+comment|/* If Hardware Reduced flag is set, there is no FACS */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|AcpiGbl_FACS
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 name|Status
 operator|=
 name|AcpiGetTableByIndex

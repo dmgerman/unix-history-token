@@ -425,6 +425,36 @@ comment|/* ACPI_MADT_TYPE_LOCAL_X2APIC */
 literal|"Local x2APIC NMI"
 block|,
 comment|/* ACPI_MADT_TYPE_LOCAL_X2APIC_NMI */
+literal|"Generic Interrupt Controller"
+block|,
+comment|/* ACPI_MADT_GENERIC_INTERRUPT */
+literal|"Generic Interrupt Distributor"
+block|,
+comment|/* ACPI_MADT_GENERIC_DISTRIBUTOR */
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmPmttSubnames
+index|[]
+init|=
+block|{
+literal|"Socket"
+block|,
+comment|/* ACPI_PMTT_TYPE_SOCKET */
+literal|"Memory Controller"
+block|,
+comment|/* ACPI_PMTT_TYPE_CONTROLLER */
+literal|"Physical Component (DIMM)"
+block|,
+comment|/* ACPI_PMTT_TYPE_DIMM  */
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -611,6 +641,20 @@ literal|"Boot Error Record Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_BGRT
+block|,
+name|AcpiDmTableInfoBgrt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateBgrt
+block|,
+literal|"Boot Graphics Resource Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_CPEP
 block|,
 name|NULL
@@ -709,6 +753,34 @@ literal|"Fixed ACPI Description Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_FPDT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpFpdt
+block|,
+name|DtCompileFpdt
+block|,
+name|TemplateFpdt
+block|,
+literal|"Firmware Performance Data Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_GTDT
+block|,
+name|AcpiDmTableInfoGtdt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateGtdt
+block|,
+literal|"Generic Timer Description Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_HEST
 block|,
 name|NULL
@@ -793,6 +865,20 @@ literal|"Management Controller Host Interface table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_MPST
+block|,
+name|AcpiDmTableInfoMpst
+block|,
+name|AcpiDmDumpMpst
+block|,
+name|DtCompileMpst
+block|,
+name|TemplateMpst
+block|,
+literal|"Memory Power State Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_MSCT
 block|,
 name|NULL
@@ -807,6 +893,34 @@ literal|"Maximum System Characteristics Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_PCCT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpPcct
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Platform Communications Channel Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_PMTT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpPmtt
+block|,
+name|DtCompilePmtt
+block|,
+name|TemplatePmtt
+block|,
+literal|"Platform Memory Topology Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_RSDT
 block|,
 name|NULL
@@ -818,6 +932,20 @@ block|,
 name|TemplateRsdt
 block|,
 literal|"Root System Description Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_S3PT
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateS3pt
+block|,
+literal|"S3 Performance Table"
 block|}
 block|,
 block|{
@@ -1180,7 +1308,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/*      * Handle tables that don't use the common ACPI table header structure.      * Currently, these are the FACS and RSDP.      */
+comment|/*      * Handle tables that don't use the common ACPI table header structure.      * Currently, these are the FACS, RSDP, and S3PT.      */
 if|if
 condition|(
 name|ACPI_COMPARE_NAME
@@ -1229,6 +1357,27 @@ block|{
 name|Length
 operator|=
 name|AcpiDmDumpRsdp
+argument_list|(
+name|Table
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|,
+name|ACPI_SIG_S3PT
+argument_list|)
+condition|)
+block|{
+name|Length
+operator|=
+name|AcpiDmDumpS3pt
 argument_list|(
 name|Table
 argument_list|)
@@ -1818,6 +1967,9 @@ case|case
 name|ACPI_DMT_MADT
 case|:
 case|case
+name|ACPI_DMT_PMTT
+case|:
+case|case
 name|ACPI_DMT_SRAT
 case|:
 case|case
@@ -1885,6 +2037,17 @@ operator|=
 literal|4
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_DMT_UINT40
+case|:
+name|ByteLength
+operator|=
+literal|5
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_UINT48
+case|:
 case|case
 name|ACPI_DMT_NAME6
 case|:
@@ -2033,6 +2196,26 @@ name|AE_BAD_DATA
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|Info
+operator|->
+name|Opcode
+operator|==
+name|ACPI_DMT_EXTRA_TEXT
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|Info
+operator|->
+name|Name
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* Start a new line and decode the opcode */
 name|AcpiDmLineHeader
 argument_list|(
@@ -2110,6 +2293,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_FLAGS1
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+name|Target
+operator|>>
+literal|1
+operator|)
+operator|&
+literal|0x03
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_FLAGS2
 case|:
 name|AcpiOsPrintf
@@ -2121,6 +2322,24 @@ operator|*
 name|Target
 operator|>>
 literal|2
+operator|)
+operator|&
+literal|0x03
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_FLAGS4
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+name|Target
+operator|>>
+literal|4
 operator|)
 operator|&
 literal|0x03
@@ -2139,6 +2358,12 @@ name|ACPI_DMT_UINT24
 case|:
 case|case
 name|ACPI_DMT_UINT32
+case|:
+case|case
+name|ACPI_DMT_UINT40
+case|:
+case|case
+name|ACPI_DMT_UINT48
 case|:
 case|case
 name|ACPI_DMT_UINT56
@@ -2962,6 +3187,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmMadtSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_PMTT
+case|:
+comment|/* PMTT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_PMTT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_PMTT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmPmttSubnames
 index|[
 name|Temp8
 index|]

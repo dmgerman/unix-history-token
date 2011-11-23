@@ -172,12 +172,12 @@ if|if
 condition|(
 name|ByteCount
 operator|>
-literal|7
+literal|8
 condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|"/* %04X */    "
+literal|"/* %04X */  "
 argument_list|,
 name|i
 argument_list|)
@@ -186,7 +186,7 @@ block|}
 block|}
 name|AcpiOsPrintf
 argument_list|(
-literal|"0x%2.2X"
+literal|" 0x%2.2X"
 argument_list|,
 operator|(
 name|UINT32
@@ -211,7 +211,7 @@ condition|)
 block|{
 name|AcpiOsPrintf
 argument_list|(
-literal|", "
+literal|","
 argument_list|)
 expr_stmt|;
 block|}

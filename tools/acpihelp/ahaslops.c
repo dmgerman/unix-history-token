@@ -27,7 +27,8 @@ block|{
 block|{
 literal|"AccessAs"
 block|,
-literal|"(AccessType, AccessAttibute)"
+literal|"(AccessType, AccessAttribKeyword | "
+literal|"ExtendedAttribKeyword (AccessLength))"
 block|,
 literal|"ChangeFieldUnitAccess"
 block|}
@@ -75,7 +76,9 @@ block|,
 block|{
 literal|"BankField"
 block|,
-literal|"(RegionName, BankName, BankValue, AccessType, LockRule, UpdateRule) {FieldUnitList}"
+literal|"(RegionName, BankName, BankValue, "
+literal|"AccessTypeKeyword, LockRuleKeyword, "
+literal|"UpdateRuleKeyword) {FieldUnitList}"
 block|,
 literal|"Declare fields in a banked configuration object"
 block|}
@@ -83,7 +86,7 @@ block|,
 block|{
 literal|"Break"
 block|,
-name|NULL
+literal|"No parameters"
 block|,
 literal|"Continue following the innermost enclosing While"
 block|}
@@ -91,7 +94,7 @@ block|,
 block|{
 literal|"BreakPoint"
 block|,
-name|NULL
+literal|"No parameters"
 block|,
 literal|"Used for debugging, stops execution in the debugger"
 block|}
@@ -137,9 +140,17 @@ literal|"Conditional reference to an object"
 block|}
 block|,
 block|{
+literal|"Connection"
+block|,
+literal|"(ResourceMacro)"
+block|,
+literal|"Associate connection with FieldUnits within a Field object"
+block|}
+block|,
+block|{
 literal|"Continue"
 block|,
-name|NULL
+literal|"No parameters"
 block|,
 literal|"Continue innermost enclosing While loop"
 block|}
@@ -211,7 +222,7 @@ block|,
 block|{
 literal|"Debug"
 block|,
-name|NULL
+literal|"No parameters"
 block|,
 literal|"Debugger output"
 block|}
@@ -235,7 +246,8 @@ block|,
 block|{
 literal|"DefinitionBlock"
 block|,
-literal|"(AMLFileName, TableSignature, ComplianceRevision, OEMID, TableID, OEMRevision) {TermList}"
+literal|"(AMLFileName, TableSignature, ComplianceRevision, "
+literal|"OEMID, TableID, OEMRevision) {TermList}"
 block|,
 literal|"Declare a Definition Block"
 block|}
@@ -267,7 +279,8 @@ block|,
 block|{
 literal|"DMA"
 block|,
-literal|"(DmaType, IsBusMaster, DmaTransferSize, DescriptorName) {DmaChannelList} => Buffer"
+literal|"(DmaTypeKeyword, BusMasterKeyword, XferTypeKeyword, "
+literal|"DescriptorName) {DmaChannelList} => Buffer"
 block|,
 literal|"DMA Resource Descriptor macro"
 block|}
@@ -275,9 +288,11 @@ block|,
 block|{
 literal|"DWordIO"
 block|,
-literal|"(ResourceUsage, IsMinFixed, IsMaxFixed, Decode, ISARanges, AddressGranularity, "
-literal|"AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, ResourceSourceIndex, "
-literal|"ResourceSource, DescriptorName, TranslationType, TranslationDensity)"
+literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, "
+literal|"DecodeKeyword, RangeTypeKeyword, AddressGranularity, "
+literal|"AddressMinimum, AddressMaximum, AddressTranslation, "
+literal|"RangeLength, ResourceSourceIndex, "
+literal|"ResourceSource, DescriptorName, TypeKeyword, TranslationKeyword)"
 block|,
 literal|"DWord IO Resource Descriptor macro"
 block|}
@@ -285,10 +300,11 @@ block|,
 block|{
 literal|"DWordMemory"
 block|,
-literal|"(ResourceUsage, Decode, IsMinFixed, IsMaxFixed, Cacheable, ReadAndWrite, "
+literal|"(ResourceTypeKeyword, DecodeKeyword, MinKeyword, "
+literal|"MaxKeyword, MemTypeKeyword, ReadWriteKeyword, "
 literal|"AddressGranularity, AddressMinimum, AddressMaximum, AddressTranslation, "
-literal|"RangeLength, ResourceSourceIndex, ResourceSource, DescriptorName, MemoryType, "
-literal|"TranslationType)"
+literal|"RangeLength, ResourceSourceIndex, ResourceSource, DescriptorName, AddressKeyword, "
+literal|"TypeKeyword)"
 block|,
 literal|"DWord Memory Resource Descriptor macro"
 block|}
@@ -296,8 +312,10 @@ block|,
 block|{
 literal|"DWordSpace"
 block|,
-literal|"(ResourceType, ResourceUsage, Decode, IsMinFixed, IsMaxFixed, TypeSpecificFlags, "
-literal|"AddressGranularity, AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, "
+literal|"(ResourceType, ResourceTypeKeyword, DecodeKeyword, "
+literal|"MinKeyword, MaxKeyword, TypeSpecificFlags, "
+literal|"AddressGranularity, AddressMinimum, AddressMaximum, "
+literal|"AddressTranslation, RangeLength, "
 literal|"ResourceSourceIndex, ResourceSource, DescriptorName)"
 block|,
 literal|"DWord Space Resource Descriptor macro"
@@ -346,9 +364,10 @@ block|,
 block|{
 literal|"ExtendedIO"
 block|,
-literal|"(ResourceUsage, IsMinFixed, IsMaxFixed, Decode, ISARanges, AddressGranularity, "
+literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, "
+literal|"DecodeKeyword, RangeTypeKeyword, AddressGranularity, "
 literal|"AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, "
-literal|"TypeSpecificAttributes, DescriptorName, TranslationType, TranslationDensity)"
+literal|"TypeSpecificAttributes, DescriptorName, TypeKeyword, TranslationKeyword)"
 block|,
 literal|"Extended IO Resource Descriptor macro"
 block|}
@@ -356,9 +375,11 @@ block|,
 block|{
 literal|"ExtendedMemory"
 block|,
-literal|"(ResourceUsage, Decode, IsMinFixed, IsMaxFixed, Cacheable, ReadAndWrite, "
+literal|"(ResourceTypeKeyword, DecodeKeyword, MinKeyword, "
+literal|"MaxKeyword, MemTypeKeyword, ReadWriteKeyword, "
 literal|"AddressGranularity, AddressMinimum, AddressMaximum, AddressTranslation, "
-literal|"RangeLength, TypeSpecificAttributes, DescriptorName, MemoryType, TranslationType)"
+literal|"RangeLength, TypeSpecificAttributes, DescriptorName, "
+literal|"AddressKeyword, TypeKeyword)"
 block|,
 literal|"Extended Memory Resource Descriptor macro"
 block|}
@@ -366,7 +387,8 @@ block|,
 block|{
 literal|"ExtendedSpace"
 block|,
-literal|"(ResourceType, ResourceUsage, Decode, IsMinFixed, IsMaxFixed, TypeSpecificFlags, "
+literal|"(ResourceType, ResourceTypeKeyword, DecodeKeyword, "
+literal|"MinKeyword, MaxKeyword, TypeSpecificFlags, "
 literal|"AddressGranularity, AddressMinimum, AddressMaximum, AddressTranslation, "
 literal|"RangeLength, TypeSpecificAttributes, DescriptorName)"
 block|,
@@ -376,7 +398,7 @@ block|,
 block|{
 literal|"External"
 block|,
-literal|"(ObjectName, ObjectType, ReturnType, ParameterTypes)"
+literal|"(ObjectName, ObjectTypeKeyword, ReturnType, ParameterTypes)"
 block|,
 literal|"Declare external objects"
 block|}
@@ -392,7 +414,8 @@ block|,
 block|{
 literal|"Field"
 block|,
-literal|"(RegionName, AccessType, LockRule, UpdateRule) {FieldUnitList}"
+literal|"(RegionName, AccessTypeKeyword, LockRuleKeyword, "
+literal|"UpdateRuleKeyword) {FieldUnitList}"
 block|,
 literal|"Declare fields of an operation region object"
 block|}
@@ -411,6 +434,14 @@ block|,
 literal|"(Source, Result) => Integer"
 block|,
 literal|"Index of first most significant bit set"
+block|}
+block|,
+block|{
+literal|"FixedDMA"
+block|,
+literal|"(DmaRequestLine, Channel, TransferWidthKeyword, DescriptorName) => Buffer"
+block|,
+literal|"Fixed DMA Resource Descriptor macro"
 block|}
 block|,
 block|{
@@ -435,6 +466,40 @@ block|,
 literal|"(FunctionName, ReturnType, ParameterTypes) {TermList}"
 block|,
 literal|"Declare control method"
+block|}
+block|,
+block|{
+literal|"GpioInt"
+block|,
+literal|"(InterruptTypeKeyword, InterruptLevelKeyword, "
+literal|"ShareTypeKeyword, PinConfigKeyword, "
+literal|"DebounceTimeout, ResourceSource, "
+literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, "
+literal|"RawDataBuffer() {VendorData}) {Pin}"
+block|,
+literal|"GPIO Interrupt Connection Resource Descriptor Macro"
+block|}
+block|,
+block|{
+literal|"GpioIo"
+block|,
+literal|"(ShareTypeKeyword, PinConfigKeyword, DebounceTimeout, DriveStrength, "
+literal|"IoRestrictionKeyword, ResourceSource, "
+literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, "
+literal|"RawDataBuffer() {VendorData}) {PinList}"
+block|,
+literal|"GPIO I/O Connection Resource Descriptor Macro"
+block|}
+block|,
+block|{
+literal|"I2cSerialBus"
+block|,
+literal|"(SlaveAddress, SlaveModeKeyword, ConnectionSpeed, "
+literal|"AddressingModeKeyword, ResourceSource, "
+literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, "
+literal|"RawDataBuffer() {VendorData})"
+block|,
+literal|"I2C Serial Bus Connection Resource Descriptor Macro"
 block|}
 block|,
 block|{
@@ -472,7 +537,8 @@ block|,
 block|{
 literal|"IndexField"
 block|,
-literal|"(IndexName, DataName, AccessType, LockRule, UpdateRule) {FieldUnitList}"
+literal|"(IndexName, DataName, AccessTypeKeyword, LockRuleKeyword, "
+literal|"UpdateRuleKeyword) {FieldUnitList}"
 block|,
 literal|"Declare Index/Data Fields"
 block|}
@@ -480,7 +546,8 @@ block|,
 block|{
 literal|"Interrupt"
 block|,
-literal|"(ResourceUsage, EdgeLevel, ActiveLevel, Shared, ResourceSourceIndex, "
+literal|"(ResourceTypeKeyword, InterruptTypeKeyword, InterruptLevelKeyword, "
+literal|"ShareTypeKeyword, ResourceSourceIndex, "
 literal|"ResourceSource, DescriptorName) {InterruptList} => Buffer"
 block|,
 literal|"Interrupt Resource Descriptor macro"
@@ -489,7 +556,8 @@ block|,
 block|{
 literal|"IO"
 block|,
-literal|"(Decode, AddressMin, AddressMax, AddressAlignment, RangeLength, DescriptorName) => Buffer"
+literal|"(IoDecodeKeyword, AddressMin, AddressMax, AddressAlignment, "
+literal|"RangeLength, DescriptorName) => Buffer"
 block|,
 literal|"IO Resource Descriptor macro"
 block|}
@@ -497,7 +565,8 @@ block|,
 block|{
 literal|"IRQ"
 block|,
-literal|"(EdgeLevel, ActiveLevel, Shared, DescriptorName) {InterruptList} => Buffer"
+literal|"(InterruptTypeKeyword, InterruptLevelKeyword, ShareTypeKeyword, "
+literal|"DescriptorName) {InterruptList} => Buffer"
 block|,
 literal|"Interrupt Resource Descriptor macro"
 block|}
@@ -610,7 +679,8 @@ block|,
 block|{
 literal|"Match"
 block|,
-literal|"(SearchPackage, Op1, MatchObject1, Op2, MatchObject2, StartIndex) => Ones | Integer"
+literal|"(SearchPackage, MatchOpKeyword, MatchObject1, MatchOpKeyword, "
+literal|"MatchObject2, StartIndex) => Ones | Integer"
 block|,
 literal|"Search for match in package array"
 block|}
@@ -618,7 +688,7 @@ block|,
 block|{
 literal|"Memory24"
 block|,
-literal|"(ReadAndWrite, AddressMinimum, AddressMaximum, AddressAlignment, "
+literal|"(ReadWriteKeyword, AddressMinimum, AddressMaximum, AddressAlignment, "
 literal|"RangeLength, DescriptorName)"
 block|,
 literal|"Memory Resource Descriptor macro"
@@ -627,7 +697,7 @@ block|,
 block|{
 literal|"Memory32"
 block|,
-literal|"(ReadAndWrite, AddressMinimum, AddressMaximum, AddressAlignment, "
+literal|"(ReadWriteKeyword, AddressMinimum, AddressMaximum, AddressAlignment, "
 literal|"RangeLength, DescriptorName)"
 block|,
 literal|"Memory Resource Descriptor macro"
@@ -636,7 +706,7 @@ block|,
 block|{
 literal|"Memory32Fixed"
 block|,
-literal|"(ReadAndWrite, AddressBase, RangeLength, DescriptorName)"
+literal|"(ReadWriteKeyword, AddressBase, RangeLength, DescriptorName)"
 block|,
 literal|"Memory Resource Descriptor macro"
 block|}
@@ -644,7 +714,8 @@ block|,
 block|{
 literal|"Method"
 block|,
-literal|"(MethodName, NumArgs, SerializeRule, SyncLevel, ReturnType, ParameterTypes) "
+literal|"(MethodName, NumArgs, SerializeRuleKeyword, "
+literal|"SyncLevel, ReturnType, ParameterTypes) "
 literal|"{TermList}"
 block|,
 literal|"Declare a control method"
@@ -701,7 +772,7 @@ block|,
 block|{
 literal|"NoOp"
 block|,
-name|NULL
+literal|"No parameters"
 block|,
 literal|"No operation"
 block|}
@@ -765,7 +836,7 @@ block|,
 block|{
 literal|"OperationRegion"
 block|,
-literal|"(RegionName, RegionSpace, Offset, Length)"
+literal|"(RegionName, RegionSpaceKeyword, Offset, Length)"
 block|,
 literal|"Declare an operational region"
 block|}
@@ -805,10 +876,11 @@ block|,
 block|{
 literal|"QWordIO"
 block|,
-literal|"(ResourceUsage, IsMinFixed, IsMaxFixed, Decode, ISARanges, AddressGranularity, "
+literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, DecodeKeyword, "
+literal|"RangeTypeKeyword, AddressGranularity, "
 literal|"AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, "
-literal|"ResourceSourceIndex, ResourceSource, DescriptorName, TranslationType, "
-literal|"TranslationDensity)"
+literal|"ResourceSourceIndex, ResourceSource, DescriptorName, TypeKeyword, "
+literal|"TranslationKeyword)"
 block|,
 literal|"QWord IO Resource Descriptor macro"
 block|}
@@ -816,10 +888,12 @@ block|,
 block|{
 literal|"QWordMemory"
 block|,
-literal|"(ResourceUsage, Decode, IsMinFixed, IsMaxFixed, Cacheable, ReadAndWrite, "
+literal|"(ResourceTypeKeyword, DecodeKeyword, MinKeyword, MaxKeyword, "
+literal|"MemTypeKeyword, ReadWriteKeyword, "
 literal|"AddressGranularity, AddressMinimum, AddressMaximum, AddressTranslation, "
-literal|"RangeLength, ResourceSourceIndex, ResourceSource, DescriptorName, MemoryType, "
-literal|"TranslationType)"
+literal|"RangeLength, ResourceSourceIndex, ResourceSource, "
+literal|"DescriptorName, AddressKeyword, "
+literal|"TypeKeyword)"
 block|,
 literal|"QWord Memory Resource Descriptor macro"
 block|}
@@ -827,11 +901,20 @@ block|,
 block|{
 literal|"QWordSpace"
 block|,
-literal|"(ResourceType, ResourceUsage, Decode, IsMinFixed, IsMaxFixed, TypeSpecificFlags, "
+literal|"(ResourceType, ResourceTypeKeyword, DecodeKeyword, "
+literal|"MinKeyword, MaxKeyword, TypeSpecificFlags, "
 literal|"AddressGranularity, AddressMinimum, AddressMaximum, AddressTranslation, "
 literal|"RangeLength, ResourceSourceIndex, ResourceSource, DescriptorName)"
 block|,
 literal|"Qword Space Resource Descriptor macro"
+block|}
+block|,
+block|{
+literal|"RawDataBuffer"
+block|,
+literal|"(BufferSize) {ByteList} => RawDataBuffer"
+block|,
+literal|"Create a raw data buffer (does not use Buffer AML opcode)"
 block|}
 block|,
 block|{
@@ -845,7 +928,8 @@ block|,
 block|{
 literal|"Register"
 block|,
-literal|"(AddressSpaceKeyword, RegisterBitWidth, RegisterBitOffset, RegisterAddress, "
+literal|"(AddressSpaceKeyword, RegisterBitWidth, "
+literal|"RegisterBitOffset, RegisterAddress, "
 literal|"AccessSize, DescriptorName)"
 block|,
 literal|"Generic register Resource Descriptor macro"
@@ -937,6 +1021,18 @@ block|,
 literal|"(MilliSeconds)"
 block|,
 literal|"Sleep n milliseconds (yields the processor)"
+block|}
+block|,
+block|{
+literal|"SpiSerialBus"
+block|,
+literal|"(DeviceSelection, PolarityKeyword, WireModeKeyword, "
+literal|"DataBitLength, SlaveModeKeyword, "
+literal|"ConnectionSpeed, ClockPolarityKeyword, ClockPhaseKeyword, "
+literal|"ResourceSource, ResourceSourceIndex, "
+literal|"ResourceTypeKeyword, DescriptorName, RawDataBuffer() {VendorData})"
+block|,
+literal|"SPI Serial Bus Connection Resource Descriptor Macro"
 block|}
 block|,
 block|{
@@ -1060,6 +1156,18 @@ literal|"Convert Ascii string to UUID"
 block|}
 block|,
 block|{
+literal|"UartSerialBus"
+block|,
+literal|"(ConnectionSpeed, ByteLengthKeyword, StopBitsKeyword, "
+literal|"LinesInUse, EndianKeyword, ParityKeyword, "
+literal|"FlowControlKeyword, ReceiveBufferSize, TransmitBufferSize, ResourceSource, "
+literal|"ResourceSourceIndex, ResourceTypeKeyword, DescriptorName, "
+literal|"RawDataBuffer() {VendorData})"
+block|,
+literal|"UART Serial Bus Connection Resource Descriptor Macro"
+block|}
+block|,
+block|{
 literal|"Unicode"
 block|,
 literal|"(String) => Buffer"
@@ -1110,7 +1218,8 @@ block|,
 block|{
 literal|"WordBusNumber"
 block|,
-literal|"(ResourceUsage, IsMinFixed, IsMaxFixed, Decode, AddressGranularity, AddressMinimum, "
+literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, DecodeKeyword, "
+literal|"AddressGranularity, AddressMinimum, "
 literal|"AddressMaximum, AddressTranslation, RangeLength, ResourceSourceIndex, "
 literal|"ResourceSource, DescriptorName)"
 block|,
@@ -1120,10 +1229,11 @@ block|,
 block|{
 literal|"WordIO"
 block|,
-literal|"(ResourceUsage, IsMinFixed, IsMaxFixed, Decode, ISARanges, AddressGranularity, "
+literal|"(ResourceTypeKeyword, MinKeyword, MaxKeyword, DecodeKeyword, "
+literal|"RangeTypeKeyword, AddressGranularity, "
 literal|"AddressMinimum, AddressMaximum, AddressTranslation, RangeLength, "
-literal|"ResourceSourceIndex, ResourceSource, DescriptorName, TranslationType, "
-literal|"TranslationDensity)"
+literal|"ResourceSourceIndex, ResourceSource, DescriptorName, TypeKeyword, "
+literal|"TranslationKeyword)"
 block|,
 literal|"Word IO Resource Descriptor macro"
 block|}
@@ -1131,7 +1241,8 @@ block|,
 block|{
 literal|"WordSpace"
 block|,
-literal|"(ResourceType, ResourceUsage, Decode, IsMinFixed, IsMaxFixed, TypeSpecificFlags, "
+literal|"(ResourceType, ResourceTypeKeyword, DecodeKeyword, MinKeyword, "
+literal|"MaxKeyword, TypeSpecificFlags, "
 literal|"AddressGranularity, AddressMinimum, AddressMaximum, AddressTranslation, "
 literal|"RangeLength, ResourceSourceIndex, ResourceSource, DescriptorName)"
 block|,

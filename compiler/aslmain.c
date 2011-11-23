@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:c:d^e:fgh^i^I:l^no:p:r:s:t:T:G^v:w:x:z"
+value|"@:2b:c:d^e:fgh^i^I:l^mno:p:r:s:t:T:G^v:w:x:z"
 end_define
 
 begin_comment
@@ -431,6 +431,13 @@ argument_list|(
 literal|"-e  [f1,f2]"
 argument_list|,
 literal|"Include ACPI table(s) for external symbol resolution"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-m"
+argument_list|,
+literal|"Do not translate Buffers to Resource Templates"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -1428,6 +1435,23 @@ return|;
 block|}
 break|break;
 case|case
+literal|'m'
+case|:
+name|AcpiGbl_NoResourceDisassembly
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+comment|/* Parse only */
+name|Gbl_ParseOnlyFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'o'
 case|:
 switch|switch
@@ -1506,15 +1530,6 @@ literal|1
 operator|)
 return|;
 block|}
-break|break;
-case|case
-literal|'n'
-case|:
-comment|/* Parse only */
-name|Gbl_ParseOnlyFlag
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 case|case
 literal|'p'

@@ -149,6 +149,20 @@ name|AcpiGbl_RegionFillValue
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|UINT8
+name|AcpiGbl_UseHwReducedFadt
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|AcpiGbl_DisplayRegionAccess
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* Check for unexpected exceptions */
 end_comment

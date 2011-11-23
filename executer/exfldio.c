@@ -145,6 +145,9 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RgnDesc
 decl_stmt|;
+name|UINT8
+name|SpaceId
+decl_stmt|;
 name|ACPI_FUNCTION_TRACE_U32
 argument_list|(
 name|ExSetupRegion
@@ -198,6 +201,41 @@ name|AE_AML_OPERAND_TYPE
 argument_list|)
 expr_stmt|;
 block|}
+name|SpaceId
+operator|=
+name|RgnDesc
+operator|->
+name|Region
+operator|.
+name|SpaceId
+expr_stmt|;
+comment|/* Validate the Space ID */
+if|if
+condition|(
+operator|!
+name|AcpiIsValidSpaceId
+argument_list|(
+name|SpaceId
+argument_list|)
+condition|)
+block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid/unknown Address Space ID: 0x%2.2X"
+operator|,
+name|SpaceId
+operator|)
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_INVALID_SPACE_ID
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * If the Region Address and Length have not been previously evaluated,      * evaluate them now and save the results.      */
 if|if
 condition|(
@@ -235,21 +273,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/*      * Exit now for SMBus or IPMI address space, it has a non-linear      * address space and the request cannot be directly validated      */
+comment|/*      * Exit now for SMBus, GSBus or IPMI address space, it has a non-linear      * address space and the request cannot be directly validated      */
 if|if
 condition|(
-name|RgnDesc
-operator|->
-name|Region
-operator|.
 name|SpaceId
 operator|==
 name|ACPI_ADR_SPACE_SMBUS
 operator|||
-name|RgnDesc
-operator|->
-name|Region
-operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_GSBUS
+operator|||
 name|SpaceId
 operator|==
 name|ACPI_ADR_SPACE_IPMI
@@ -665,6 +699,8 @@ name|AcpiEvAddressSpaceDispatch
 argument_list|(
 name|RgnDesc
 argument_list|,
+name|ObjDesc
+argument_list|,
 name|Function
 argument_list|,
 name|RegionOffset
@@ -780,6 +816,11 @@ name|UINT64
 name|Value
 parameter_list|)
 block|{
+name|ACPI_FUNCTION_NAME
+argument_list|(
+name|ExRegisterOverflow
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ObjDesc
@@ -817,6 +858,26 @@ operator|)
 condition|)
 block|{
 comment|/*          * The Value is larger than the maximum value that can fit into          * the register.          */
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Index value 0x%8.8X%8.8X overflows field width 0x%X"
+operator|,
+name|ACPI_FORMAT_UINT64
+argument_list|(
+name|Value
+argument_list|)
+operator|,
+name|ObjDesc
+operator|->
+name|CommonField
+operator|.
+name|BitLength
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|TRUE

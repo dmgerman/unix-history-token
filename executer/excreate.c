@@ -522,7 +522,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiExCreateRegion  *  * PARAMETERS:  AmlStart            - Pointer to the region declaration AML  *              AmlLength           - Max length of the declaration AML  *              RegionSpace         - SpaceID for the region  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new operation region object  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiExCreateRegion  *  * PARAMETERS:  AmlStart            - Pointer to the region declaration AML  *              AmlLength           - Max length of the declaration AML  *              SpaceId             - Address space ID for the region  *              WalkState           - Current state  *  * RETURN:      Status  *  * DESCRIPTION: Create a new operation region object  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -537,7 +537,7 @@ name|UINT32
 name|AmlLength
 parameter_list|,
 name|UINT8
-name|RegionSpace
+name|SpaceId
 parameter_list|,
 name|ACPI_WALK_STATE
 modifier|*
@@ -593,39 +593,23 @@ block|}
 comment|/*      * Space ID must be one of the predefined IDs, or in the user-defined      * range      */
 if|if
 condition|(
-operator|(
-name|RegionSpace
-operator|>=
-name|ACPI_NUM_PREDEFINED_REGIONS
-operator|)
-operator|&&
-operator|(
-name|RegionSpace
-operator|<
-name|ACPI_USER_REGION_BEGIN
-operator|)
-operator|&&
-operator|(
-name|RegionSpace
-operator|!=
-name|ACPI_ADR_SPACE_DATA_TABLE
-operator|)
+operator|!
+name|AcpiIsValidSpaceId
+argument_list|(
+name|SpaceId
+argument_list|)
 condition|)
 block|{
+comment|/*          * Print an error message, but continue. We don't want to abort          * a table load for this exception. Instead, if the region is          * actually used at runtime, abort the executing method.          */
 name|ACPI_ERROR
 argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"Invalid AddressSpace type 0x%X"
+literal|"Invalid/unknown Address Space ID: 0x%2.2X"
 operator|,
-name|RegionSpace
+name|SpaceId
 operator|)
-argument_list|)
-expr_stmt|;
-name|return_ACPI_STATUS
-argument_list|(
-name|AE_AML_INVALID_SPACE_ID
 argument_list|)
 expr_stmt|;
 block|}
@@ -638,10 +622,10 @@ literal|"Region Type - %s (0x%X)\n"
 operator|,
 name|AcpiUtGetRegionName
 argument_list|(
-name|RegionSpace
+name|SpaceId
 argument_list|)
 operator|,
-name|RegionSpace
+name|SpaceId
 operator|)
 argument_list|)
 expr_stmt|;
@@ -692,6 +676,39 @@ name|AmlLength
 operator|=
 name|AmlLength
 expr_stmt|;
+if|if
+condition|(
+name|WalkState
+operator|->
+name|ScopeInfo
+condition|)
+block|{
+name|RegionObj2
+operator|->
+name|Extra
+operator|.
+name|ScopeNode
+operator|=
+name|WalkState
+operator|->
+name|ScopeInfo
+operator|->
+name|Scope
+operator|.
+name|Node
+expr_stmt|;
+block|}
+else|else
+block|{
+name|RegionObj2
+operator|->
+name|Extra
+operator|.
+name|ScopeNode
+operator|=
+name|Node
+expr_stmt|;
+block|}
 comment|/* Init the region from the operands */
 name|ObjDesc
 operator|->
@@ -699,7 +716,7 @@ name|Region
 operator|.
 name|SpaceId
 operator|=
-name|RegionSpace
+name|SpaceId
 expr_stmt|;
 name|ObjDesc
 operator|->

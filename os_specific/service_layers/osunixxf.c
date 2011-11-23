@@ -432,11 +432,6 @@ name|va_list
 name|Args
 parameter_list|)
 block|{
-name|INT32
-name|Count
-init|=
-literal|0
-decl_stmt|;
 name|UINT8
 name|Flags
 decl_stmt|;
@@ -458,8 +453,6 @@ name|AcpiGbl_DebugFile
 condition|)
 block|{
 comment|/* Output file is open, send the output there */
-name|Count
-operator|=
 name|vfprintf
 argument_list|(
 name|AcpiGbl_DebugFile
@@ -486,8 +479,6 @@ operator|&
 name|ACPI_DB_CONSOLE_OUTPUT
 condition|)
 block|{
-name|Count
-operator|=
 name|vfprintf
 argument_list|(
 name|AcpiGbl_OutputFile
@@ -1895,12 +1886,19 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|pthread_t
+name|thread
+decl_stmt|;
+name|thread
+operator|=
+name|pthread_self
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|ACPI_CAST_PTHREAD_T
 argument_list|(
-name|pthread_self
-argument_list|()
+name|thread
 argument_list|)
 operator|)
 return|;

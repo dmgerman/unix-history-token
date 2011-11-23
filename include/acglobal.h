@@ -244,10 +244,36 @@ name|AcpiGbl_SystemAwakeAndRunning
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * ACPI 5.0 introduces the concept of a "reduced hardware platform", meaning  * that the ACPI hardware is no longer required. A flag in the FADT indicates  * a reduced HW machine, and that flag is duplicated here for convenience.  */
+end_comment
+
+begin_decl_stmt
+name|BOOLEAN
+name|AcpiGbl_ReducedHardware
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* Do not disassemble buffers to resource descriptors */
+end_comment
+
+begin_function_decl
+name|ACPI_EXTERN
+name|UINT8
+name|ACPI_INIT_GLOBAL
+parameter_list|(
+name|AcpiGbl_NoResourceDisassembly
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/*****************************************************************************  *  * ACPI Table globals  *  ****************************************************************************/
@@ -349,7 +375,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*****************************************************************************  *  * Mutual exlusion within ACPICA subsystem  *  ****************************************************************************/
+comment|/*****************************************************************************  *  * Mutual exclusion within ACPICA subsystem  *  ****************************************************************************/
 end_comment
 
 begin_comment

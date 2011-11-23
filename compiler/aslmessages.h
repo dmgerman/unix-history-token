@@ -102,6 +102,10 @@ name|ASL_MSG_COMPILER_INTERNAL
 block|,
 name|ASL_MSG_COMPILER_RESERVED
 block|,
+name|ASL_MSG_CONNECTION_MISSING
+block|,
+name|ASL_MSG_CONNECTION_INVALID
+block|,
 name|ASL_MSG_CONSTANT_EVALUATION
 block|,
 name|ASL_MSG_CONSTANT_FOLDED
@@ -141,6 +145,10 @@ block|,
 name|ASL_MSG_GPE_NAME_CONFLICT
 block|,
 name|ASL_MSG_HID_LENGTH
+block|,
+name|ASL_MSG_HID_PREFIX
+block|,
+name|ASL_MSG_HID_SUFFIX
 block|,
 name|ASL_MSG_INCLUDE_FILE_OPEN
 block|,
@@ -424,6 +432,12 @@ block|,
 comment|/*    ASL_MSG_COMPILER_RESERVED */
 literal|"Use of compiler reserved name"
 block|,
+comment|/*    ASL_MSG_CONNECTION_MISSING */
+literal|"A Connection operator is required for this field SpaceId"
+block|,
+comment|/*    ASL_MSG_CONNECTION_INVALID */
+literal|"Invalid OpRegion SpaceId for use of Connection operator"
+block|,
 comment|/*    ASL_MSG_CONSTANT_EVALUATION */
 literal|"Could not evaluate constant expression"
 block|,
@@ -483,6 +497,12 @@ literal|"Name conflicts with a previous GPE method"
 block|,
 comment|/*    ASL_MSG_HID_LENGTH */
 literal|"_HID string must be exactly 7 or 8 characters"
+block|,
+comment|/*    ASL_MSG_HID_PREFIX */
+literal|"_HID prefix must be all uppercase or decimal digits"
+block|,
+comment|/*    ASL_MSG_HID_SUFFIX */
+literal|"_HID suffix must be all hex digits"
 block|,
 comment|/*    ASL_MSG_INCLUDE_FILE_OPEN */
 literal|"Could not open include file"

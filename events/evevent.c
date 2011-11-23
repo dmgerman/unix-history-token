@@ -83,6 +83,18 @@ argument_list|(
 name|EvInitializeEvents
 argument_list|)
 expr_stmt|;
+comment|/* If Hardware Reduced flag is set, there are no fixed events */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/*      * Initialize the Fixed and General Purpose Events. This is done prior to      * enabling SCIs to prevent interrupts from occurring before the handlers      * are installed.      */
 name|Status
 operator|=
@@ -171,6 +183,18 @@ argument_list|(
 name|EvInstallXruptHandlers
 argument_list|)
 expr_stmt|;
+comment|/* If Hardware Reduced flag is set, there is no ACPI h/w */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Install the SCI handler */
 name|Status
 operator|=

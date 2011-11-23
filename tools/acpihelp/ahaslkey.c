@@ -27,10 +27,12 @@ block|{
 block|{
 literal|"AccessAttribKeyword"
 block|,
-literal|"SMBus Attributes"
+literal|"Serial Bus Attributes (with legacy SMBus aliases)"
 block|,
-literal|":= SMBQuick | SMBSendReceive | SMBByte | SMBWord | "
-literal|"SMBBlock | SMBProcessCall | SMBBlockProcessCall"
+literal|":= AttribQuick (SMBusQuick) | AttribSendReceive (SMBusSendReceive) | "
+literal|"AttribByte (SMBusByte) | AttribWord (SMBusWord) | "
+literal|"AttribBlock (SMBusBlock) | AttribProcessCall (SMBusProcessCall) | "
+literal|"AttribBlockProcessCall (SMBusProcessCall)"
 block|}
 block|,
 block|{
@@ -39,6 +41,14 @@ block|,
 literal|"Field Access Types"
 block|,
 literal|":= AnyAcc | ByteAcc | WordAcc | DWordAcc | QWordAcc | BufferAcc"
+block|}
+block|,
+block|{
+literal|"AddressingModeKeyword"
+block|,
+literal|"Mode - Resource Descriptors"
+block|,
+literal|":= AddressingMode7Bit | AddressingMode10Bit"
 block|}
 block|,
 block|{
@@ -67,6 +77,30 @@ literal|":= BusMaster | NotBusMaster"
 block|}
 block|,
 block|{
+literal|"ByteLengthKeyword"
+block|,
+literal|"Bits per Byte - Resource Descriptors"
+block|,
+literal|":= DataBitsFive | DataBitsSix | DataBitsSeven | DataBitsEight | DataBitsNine"
+block|}
+block|,
+block|{
+literal|"ClockPhaseKeyword"
+block|,
+literal|"Resource Descriptors"
+block|,
+literal|":= ClockPhaseFirst | ClockPhaseSecond"
+block|}
+block|,
+block|{
+literal|"ClockPolarityKeyword"
+block|,
+literal|"Resource Descriptors"
+block|,
+literal|":= ClockPolarityLow | ClockPolarityHigh"
+block|}
+block|,
+block|{
 literal|"DecodeKeyword"
 block|,
 literal|"Type of Memory Decoding - Resource Descriptors"
@@ -75,11 +109,44 @@ literal|":= SubDecode | PosDecode"
 block|}
 block|,
 block|{
-literal|"DMATypeKeyword"
+literal|"DmaTypeKeyword"
 block|,
 literal|"DMA Types - DMA Resource Descriptor"
 block|,
 literal|":= Compatibility | TypeA | TypeB | TypeF"
+block|}
+block|,
+block|{
+literal|"EndianKeyword"
+block|,
+literal|"Endian type - Resource Descriptor"
+block|,
+literal|":= BigEndian | LittleEndian"
+block|}
+block|,
+block|{
+literal|"ExtendedAttribKeyword"
+block|,
+literal|"Extended Bus Attributes"
+block|,
+literal|":= AttribBytes (AccessLength) | AttribRawBytes (AccessLength) | "
+literal|"AttribRawProcessBytes (AccessLength)"
+block|}
+block|,
+block|{
+literal|"FlowControlKeyword"
+block|,
+literal|"Resource Descriptor"
+block|,
+literal|":= FlowControlNone | FlowControlXon | FlowControlHardware"
+block|}
+block|,
+block|{
+literal|"InterruptLevelKeyword"
+block|,
+literal|"Interrupt Active Types"
+block|,
+literal|":= ActiveHigh | ActiveLow | ActiveBoth"
 block|}
 block|,
 block|{
@@ -91,19 +158,20 @@ literal|":= Edge | Level"
 block|}
 block|,
 block|{
-literal|"InterruptLevel"
-block|,
-literal|"Interrupt Active Types"
-block|,
-literal|":= ActiveHigh | ActiveLow"
-block|}
-block|,
-block|{
-literal|"IODecodeKeyword"
+literal|"IoDecodeKeyword"
 block|,
 literal|"I/O Decoding - IO Resource Descriptor"
 block|,
 literal|":= Decode16 | Decode10"
+block|}
+block|,
+block|{
+literal|"IoRestrictionKeyword"
+block|,
+literal|"I/O Restriction - GPIO Resource Descriptors"
+block|,
+literal|":= IoRestrictionNone | IoRestrictionInputOnly | "
+literal|"IoRestrictionOutputOnly | IoRestrictionNoneAndPreserve"
 block|}
 block|,
 block|{
@@ -157,6 +225,31 @@ literal|"ProcessorObj | ThermalZoneObj | BuffFieldObj | DDBHandleObj"
 block|}
 block|,
 block|{
+literal|"ParityKeyword"
+block|,
+literal|"Resource Descriptors"
+block|,
+literal|":= ParityTypeNone | ParityTypeSpace | ParityTypeMark | "
+literal|"ParityTypeOdd | ParityTypeEven"
+block|}
+block|,
+block|{
+literal|"PinConfigKeyword"
+block|,
+literal|"Pin Configuration - GPIO Resource Descriptors"
+block|,
+literal|":= PullDefault | PullUp | PullDown | PullNone"
+block|}
+block|,
+block|{
+literal|"PolarityKeyword"
+block|,
+literal|"Resource Descriptors"
+block|,
+literal|":= PolarityHigh | PolarityLow"
+block|}
+block|,
+block|{
 literal|"RangeTypeKeyword"
 block|,
 literal|"I/O Range Types - Resource Descriptors"
@@ -178,7 +271,8 @@ block|,
 literal|"Operation Region Address Space Types"
 block|,
 literal|":= UserDefRegionSpace | SystemIO | SystemMemory | PCI_Config | "
-literal|"EmbeddedControl | SMBus | SystemCMOS | PciBarTarget | IPMI"
+literal|"EmbeddedControl | SMBus | SystemCMOS | PciBarTarget | IPMI | "
+literal|"GeneralPurposeIo, GenericSerialBus"
 block|}
 block|,
 block|{
@@ -202,7 +296,32 @@ literal|"ShareTypeKeyword"
 block|,
 literal|"Interrupt Sharing - Resource Descriptors"
 block|,
-literal|":= Shared | Exclusive"
+literal|":= Shared | Exclusive | SharedAndWake | ExclusiveAndWake"
+block|}
+block|,
+block|{
+literal|"SlaveModeKeyword"
+block|,
+literal|"Resource Descriptors"
+block|,
+literal|":= ControllerInitiated | DeviceInitiated"
+block|}
+block|,
+block|{
+literal|"StopBitsKeyword"
+block|,
+literal|"Resource Descriptors"
+block|,
+literal|":= StopBitsZero | StopBitsOne | StopBitsOnePlusHalf | StopBitsTwo"
+block|}
+block|,
+block|{
+literal|"TransferWidthKeyword"
+block|,
+literal|"DMA Widths - Fixed DMA Resource Descriptor"
+block|,
+literal|":= Width8bit | Width16bit | Width32bit | Width64bit | "
+literal|"Width128bit | Width256bit"
 block|}
 block|,
 block|{
@@ -235,6 +354,14 @@ block|,
 literal|"User defined address spaces"
 block|,
 literal|":= IntegerData => 0x80 - 0xFF"
+block|}
+block|,
+block|{
+literal|"WireModeKeyword"
+block|,
+literal|"SPI Wire Mode - Resource Descriptors"
+block|,
+literal|":= ThreeWireMode | FourWireMode"
 block|}
 block|,
 block|{

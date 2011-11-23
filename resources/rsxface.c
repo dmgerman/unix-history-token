@@ -584,6 +584,85 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiGetEventResources  *  * PARAMETERS:  DeviceHandle    - Handle to the device object for the  *                                device we are getting resources  *              InBuffer        - Pointer to a buffer containing the  *                                resources to be set for the device  *  * RETURN:      Status  *  * DESCRIPTION: This function is called to get the event resources for a  *              specific device. The caller must first acquire a handle for  *              the desired device. The resource data is passed to the routine  *              the buffer pointed to by the InBuffer variable. Uses the  *              _AEI method.  *  ******************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiGetEventResources
+parameter_list|(
+name|ACPI_HANDLE
+name|DeviceHandle
+parameter_list|,
+name|ACPI_BUFFER
+modifier|*
+name|RetBuffer
+parameter_list|)
+block|{
+name|ACPI_STATUS
+name|Status
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+name|ACPI_FUNCTION_TRACE
+argument_list|(
+name|AcpiGetEventResources
+argument_list|)
+expr_stmt|;
+comment|/* Validate parameters then dispatch to internal routine */
+name|Status
+operator|=
+name|AcpiRsValidateParameters
+argument_list|(
+name|DeviceHandle
+argument_list|,
+name|RetBuffer
+argument_list|,
+operator|&
+name|Node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+name|Status
+operator|=
+name|AcpiRsGetAeiMethodData
+argument_list|(
+name|Node
+argument_list|,
+name|RetBuffer
+argument_list|)
+expr_stmt|;
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_macro
+name|ACPI_EXPORT_SYMBOL
+argument_list|(
+argument|AcpiGetEventResources
+argument_list|)
+end_macro
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiResourceToAddress64  *  * PARAMETERS:  Resource        - Pointer to a resource  *              Out             - Pointer to the users's return buffer  *                                (a struct acpi_resource_address64)  *  * RETURN:      Status  *  * DESCRIPTION: If the resource is an address16, address32, or address64,  *              copy it to the address64 return buffer. This saves the  *              caller from having to duplicate code for different-sized  *              addresses.  *  ******************************************************************************/
 end_comment
 
@@ -1010,7 +1089,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkResources  *  * PARAMETERS:  DeviceHandle    - Handle to the device object for the  *                                device we are querying  *              Name            - Method name of the resources we want  *                                (METHOD_NAME__CRS or METHOD_NAME__PRS)  *              UserFunction    - Called for each resource  *              Context         - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Retrieves the current or possible resource list for the  *              specified device. The UserFunction is called once for  *              each resource in the list.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiWalkResources  *  * PARAMETERS:  DeviceHandle    - Handle to the device object for the  *                                device we are querying  *              Name            - Method name of the resources we want.  *                                (METHOD_NAME__CRS, METHOD_NAME__PRS, or  *                                METHOD_NAME__AEI)  *              UserFunction    - Called for each resource  *              Context         - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Retrieves the current or possible resource list for the  *              specified device. The UserFunction is called once for  *              each resource in the list.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -1079,6 +1158,14 @@ name|Name
 argument_list|,
 name|METHOD_NAME__PRS
 argument_list|)
+operator|&&
+operator|!
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Name
+argument_list|,
+name|METHOD_NAME__AEI
+argument_list|)
 operator|)
 condition|)
 block|{
@@ -1088,7 +1175,7 @@ name|AE_BAD_PARAMETER
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Get the _CRS or _PRS resource list */
+comment|/* Get the _CRS/_PRS/_AEI resource list */
 name|Buffer
 operator|.
 name|Length

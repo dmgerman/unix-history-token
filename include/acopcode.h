@@ -271,6 +271,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_CONNECTFIELD_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_CONTINUE_OP
 value|ARG_NONE
 end_define
@@ -768,6 +775,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ARGP_SERIALFIELD_OP
+value|ARGP_LIST1 (ARGP_NAMESTRING)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ARGP_SHIFT_LEFT_OP
 value|ARGP_LIST3 (ARGP_TERMARG,    ARGP_TERMARG,       ARGP_TARGET)
 end_define
@@ -1124,6 +1138,13 @@ define|#
 directive|define
 name|ARGI_COND_REF_OF_OP
 value|ARGI_LIST2 (ARGI_OBJECT_REF, ARGI_TARGETREF)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_CONNECTFIELD_OP
+value|ARGI_INVALID_OPCODE
 end_define
 
 begin_define
@@ -1620,6 +1641,13 @@ begin_define
 define|#
 directive|define
 name|ARGI_SCOPE_OP
+value|ARGI_INVALID_OPCODE
+end_define
+
+begin_define
+define|#
+directive|define
+name|ARGI_SERIALFIELD_OP
 value|ARGI_INVALID_OPCODE
 end_define
 

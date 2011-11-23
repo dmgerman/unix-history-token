@@ -28,7 +28,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"amlresrc.h"
+file|"acresrc.h"
 end_include
 
 begin_define
@@ -357,6 +357,350 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_PpcDecode
+index|[]
+init|=
+block|{
+literal|"PullDefault"
+block|,
+literal|"PullUp"
+block|,
+literal|"PullDown"
+block|,
+literal|"PullNone"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_IorDecode
+index|[]
+init|=
+block|{
+literal|"IoRestrictionNone"
+block|,
+literal|"IoRestrictionInputOnly"
+block|,
+literal|"IoRestrictionOutputOnly"
+block|,
+literal|"IoRestrictionNoneAndPreserve"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DtsDecode
+index|[]
+init|=
+block|{
+literal|"Width8bit"
+block|,
+literal|"Width16bit"
+block|,
+literal|"Width32bit"
+block|,
+literal|"Width64bit"
+block|,
+literal|"Width128bit"
+block|,
+literal|"Width256bit"
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* GPIO connection type */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_CtDecode
+index|[]
+init|=
+block|{
+literal|"Interrupt"
+block|,
+literal|"I/O"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Serial bus type */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_SbtDecode
+index|[]
+init|=
+block|{
+literal|"/* UNKNOWN serial bus type */"
+block|,
+literal|"I2C"
+block|,
+literal|"SPI"
+block|,
+literal|"UART"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* I2C serial bus access mode */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_AmDecode
+index|[]
+init|=
+block|{
+literal|"AddressingMode7Bit"
+block|,
+literal|"AddressingMode10Bit"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* I2C serial bus slave mode */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_SmDecode
+index|[]
+init|=
+block|{
+literal|"ControllerInitiated"
+block|,
+literal|"DeviceInitiated"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial bus wire mode */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_WmDecode
+index|[]
+init|=
+block|{
+literal|"FourWireMode"
+block|,
+literal|"ThreeWireMode"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial clock phase */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_CphDecode
+index|[]
+init|=
+block|{
+literal|"ClockPhaseFirst"
+block|,
+literal|"ClockPhaseSecond"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial bus clock polarity */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_CpoDecode
+index|[]
+init|=
+block|{
+literal|"ClockPolarityLow"
+block|,
+literal|"ClockPolarityHigh"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* SPI serial bus device polarity */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_DpDecode
+index|[]
+init|=
+block|{
+literal|"PolarityLow"
+block|,
+literal|"PolarityHigh"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus endian */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_EdDecode
+index|[]
+init|=
+block|{
+literal|"LittleEndian"
+block|,
+literal|"BigEndian"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus bits per byte */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_BpbDecode
+index|[]
+init|=
+block|{
+literal|"DataBitsFive"
+block|,
+literal|"DataBitsSix"
+block|,
+literal|"DataBitsSeven"
+block|,
+literal|"DataBitsEight"
+block|,
+literal|"DataBitsNine"
+block|,
+literal|"/* UNKNOWN Bits per byte */"
+block|,
+literal|"/* UNKNOWN Bits per byte */"
+block|,
+literal|"/* UNKNOWN Bits per byte */"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus stop bits */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_SbDecode
+index|[]
+init|=
+block|{
+literal|"StopBitsNone"
+block|,
+literal|"StopBitsOne"
+block|,
+literal|"StopBitsOnePlusHalf"
+block|,
+literal|"StopBitsTwo"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus flow control */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_FcDecode
+index|[]
+init|=
+block|{
+literal|"FlowControlNone"
+block|,
+literal|"FlowControlHardware"
+block|,
+literal|"FlowControlXON"
+block|,
+literal|"/* UNKNOWN flow control keyword */"
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* UART serial bus parity type */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|char
+modifier|*
+name|AcpiGbl_PtDecode
+index|[]
+init|=
+block|{
+literal|"ParityTypeNone"
+block|,
+literal|"ParityTypeEven"
+block|,
+literal|"ParityTypeOdd"
+block|,
+literal|"ParityTypeMark"
+block|,
+literal|"ParityTypeSpace"
+block|,
+literal|"/* UNKNOWN parity keyword */"
+block|,
+literal|"/* UNKNOWN parity keyword */"
+block|,
+literal|"/* UNKNOWN parity keyword */"
+block|}
+decl_stmt|;
+end_decl_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -412,7 +756,10 @@ argument_list|(
 name|AML_RESOURCE_FIXED_IO
 argument_list|)
 block|,
-literal|0
+name|ACPI_AML_SIZE_SMALL
+argument_list|(
+name|AML_RESOURCE_FIXED_DMA
+argument_list|)
 block|,
 literal|0
 block|,
@@ -482,9 +829,48 @@ argument_list|)
 block|,
 name|ACPI_AML_SIZE_LARGE
 argument_list|(
-argument|AML_RESOURCE_EXTENDED_ADDRESS64
+name|AML_RESOURCE_EXTENDED_ADDRESS64
 argument_list|)
-block|}
+block|,
+name|ACPI_AML_SIZE_LARGE
+argument_list|(
+name|AML_RESOURCE_GPIO
+argument_list|)
+block|,
+literal|0
+block|,
+name|ACPI_AML_SIZE_LARGE
+argument_list|(
+name|AML_RESOURCE_COMMON_SERIALBUS
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|UINT8
+name|AcpiGbl_ResourceAmlSerialBusSizes
+index|[]
+init|=
+block|{
+literal|0
+block|,
+name|ACPI_AML_SIZE_LARGE
+argument_list|(
+name|AML_RESOURCE_I2C_SERIALBUS
+argument_list|)
+block|,
+name|ACPI_AML_SIZE_LARGE
+argument_list|(
+name|AML_RESOURCE_SPI_SERIALBUS
+argument_list|)
+block|,
+name|ACPI_AML_SIZE_LARGE
+argument_list|(
+name|AML_RESOURCE_UART_SERIALBUS
+argument_list|)
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -511,18 +897,25 @@ literal|0
 block|,
 name|ACPI_SMALL_VARIABLE_LENGTH
 block|,
+comment|/* 04 IRQ */
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 05 DMA */
 name|ACPI_SMALL_VARIABLE_LENGTH
 block|,
+comment|/* 06 StartDependentFunctions */
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 07 EndDependentFunctions */
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 08 IO */
 name|ACPI_FIXED_LENGTH
 block|,
-literal|0
+comment|/* 09 FixedIO */
+name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 0A FixedDMA */
 literal|0
 block|,
 literal|0
@@ -531,35 +924,94 @@ literal|0
 block|,
 name|ACPI_VARIABLE_LENGTH
 block|,
+comment|/* 0E VendorShort */
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 0F EndTag */
 comment|/* Large descriptors */
 literal|0
 block|,
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 01 Memory24 */
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 02 GenericRegister */
 literal|0
 block|,
 name|ACPI_VARIABLE_LENGTH
 block|,
+comment|/* 04 VendorLong */
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 05 Memory32 */
 name|ACPI_FIXED_LENGTH
 block|,
+comment|/* 06 Memory32Fixed */
 name|ACPI_VARIABLE_LENGTH
 block|,
+comment|/* 07 Dword* address */
 name|ACPI_VARIABLE_LENGTH
 block|,
+comment|/* 08 Word* address */
 name|ACPI_VARIABLE_LENGTH
 block|,
+comment|/* 09 ExtendedIRQ */
 name|ACPI_VARIABLE_LENGTH
 block|,
+comment|/* 0A Qword* address */
 name|ACPI_FIXED_LENGTH
+block|,
+comment|/* 0B Extended* address */
+name|ACPI_VARIABLE_LENGTH
+block|,
+comment|/* 0C Gpio* */
+literal|0
+block|,
+name|ACPI_VARIABLE_LENGTH
+comment|/* 0E *SerialBus */
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * For the iASL compiler/disassembler, we don't want any error messages  * because the disassembler uses the resource validation code to determine  * if Buffer objects are actually Resource Templates.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|ACPI_ASL_COMPILER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_ERROR
+parameter_list|(
+name|plist
+parameter_list|)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_ERROR
+parameter_list|(
+name|plist
+parameter_list|)
+value|ACPI_ERROR(plist)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiUtWalkAmlResources  *  * PARAMETERS:  Aml             - Pointer to the raw AML resource template  *              AmlLength       - Length of the entire template  *              UserFunction    - Called once for each descriptor found. If  *                                NULL, a pointer to the EndTag is returned  *              Context         - Passed to UserFunction  *  * RETURN:      Status  *  * DESCRIPTION: Walk a raw AML resource list(buffer). User function called  *              once for each resource found.  *  ******************************************************************************/
@@ -601,6 +1053,18 @@ name|UINT32
 name|Offset
 init|=
 literal|0
+decl_stmt|;
+name|UINT8
+name|EndTag
+index|[
+literal|2
+index|]
+init|=
+block|{
+literal|0x79
+block|,
+literal|0x00
+block|}
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -658,6 +1122,7 @@ name|Status
 argument_list|)
 condition|)
 block|{
+comment|/*              * Exit on failure. Cannot continue because the descriptor length              * may be bogus also.              */
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -701,11 +1166,11 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|(
+name|return_ACPI_STATUS
+argument_list|(
 name|Status
-operator|)
-return|;
+argument_list|)
+expr_stmt|;
 block|}
 block|}
 comment|/* An EndTag descriptor terminates this resource template */
@@ -772,11 +1237,58 @@ name|Length
 expr_stmt|;
 block|}
 comment|/* Did not find an EndTag descriptor */
-return|return
+if|if
+condition|(
+name|UserFunction
+condition|)
+block|{
+comment|/* Insert an EndTag anyway. AcpiRsGetListLength always leaves room */
 operator|(
-name|AE_AML_NO_RESOURCE_END_TAG
+name|void
 operator|)
-return|;
+name|AcpiUtValidateResource
+argument_list|(
+name|EndTag
+argument_list|,
+operator|&
+name|ResourceIndex
+argument_list|)
+expr_stmt|;
+name|Status
+operator|=
+name|UserFunction
+argument_list|(
+name|EndTag
+argument_list|,
+literal|2
+argument_list|,
+name|Offset
+argument_list|,
+name|ResourceIndex
+argument_list|,
+name|Context
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|Status
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_AML_NO_RESOURCE_END_TAG
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -797,6 +1309,10 @@ modifier|*
 name|ReturnIndex
 parameter_list|)
 block|{
+name|AML_RESOURCE
+modifier|*
+name|AmlResource
+decl_stmt|;
 name|UINT8
 name|ResourceType
 decl_stmt|;
@@ -836,11 +1352,9 @@ operator|>
 name|ACPI_RESOURCE_NAME_LARGE_MAX
 condition|)
 block|{
-return|return
-operator|(
-name|AE_AML_INVALID_RESOURCE_TYPE
-operator|)
-return|;
+goto|goto
+name|InvalidResource
+goto|;
 block|}
 comment|/*          * Large Resource Type -- bits 6:0 contain the name          * Translate range 0x80-0x8B to index range 0x10-0x1B          */
 name|ResourceIndex
@@ -874,7 +1388,7 @@ literal|3
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Check validity of the resource type, zero indicates name is invalid */
+comment|/*      * Check validity of the resource type, via AcpiGbl_ResourceTypes. Zero      * indicates an invalid resource.      */
 if|if
 condition|(
 operator|!
@@ -884,13 +1398,11 @@ name|ResourceIndex
 index|]
 condition|)
 block|{
-return|return
-operator|(
-name|AE_AML_INVALID_RESOURCE_TYPE
-operator|)
-return|;
+goto|goto
+name|InvalidResource
+goto|;
 block|}
-comment|/*      * 2) Validate the ResourceLength field. This ensures that the length      *    is at least reasonable, and guarantees that it is non-zero.      */
+comment|/*      * Validate the ResourceLength field. This ensures that the length      * is at least reasonable, and guarantees that it is non-zero.      */
 name|ResourceLength
 operator|=
 name|AcpiUtGetResourceLength
@@ -925,11 +1437,9 @@ operator|!=
 name|MinimumResourceLength
 condition|)
 block|{
-return|return
-operator|(
-name|AE_AML_BAD_RESOURCE_LENGTH
-operator|)
-return|;
+goto|goto
+name|BadResourceLength
+goto|;
 block|}
 break|break;
 case|case
@@ -943,11 +1453,9 @@ operator|<
 name|MinimumResourceLength
 condition|)
 block|{
-return|return
-operator|(
-name|AE_AML_BAD_RESOURCE_LENGTH
-operator|)
-return|;
+goto|goto
+name|BadResourceLength
+goto|;
 block|}
 break|break;
 case|case
@@ -973,20 +1481,78 @@ operator|)
 operator|)
 condition|)
 block|{
-return|return
-operator|(
-name|AE_AML_BAD_RESOURCE_LENGTH
-operator|)
-return|;
+goto|goto
+name|BadResourceLength
+goto|;
 block|}
 break|break;
 default|default:
 comment|/* Shouldn't happen (because of validation earlier), but be sure */
+goto|goto
+name|InvalidResource
+goto|;
+block|}
+name|AmlResource
+operator|=
+name|ACPI_CAST_PTR
+argument_list|(
+name|AML_RESOURCE
+argument_list|,
+name|Aml
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ResourceType
+operator|==
+name|ACPI_RESOURCE_NAME_SERIAL_BUS
+condition|)
+block|{
+comment|/* Validate the BusType field */
+if|if
+condition|(
+operator|(
+name|AmlResource
+operator|->
+name|CommonSerialBus
+operator|.
+name|Type
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|AmlResource
+operator|->
+name|CommonSerialBus
+operator|.
+name|Type
+operator|>
+name|AML_RESOURCE_MAX_SERIALBUSTYPE
+operator|)
+condition|)
+block|{
+name|ACPI_RESOURCE_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid/unsupported SerialBus resource descriptor: BusType 0x%2.2X"
+operator|,
+name|AmlResource
+operator|->
+name|CommonSerialBus
+operator|.
+name|Type
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_AML_INVALID_RESOURCE_TYPE
 operator|)
 return|;
+block|}
 block|}
 comment|/* Optionally return the resource table index */
 if|if
@@ -1003,6 +1569,47 @@ block|}
 return|return
 operator|(
 name|AE_OK
+operator|)
+return|;
+name|InvalidResource
+label|:
+name|ACPI_RESOURCE_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid/unsupported resource descriptor: Type 0x%2.2X"
+operator|,
+name|ResourceType
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_AML_INVALID_RESOURCE_TYPE
+operator|)
+return|;
+name|BadResourceLength
+label|:
+name|ACPI_RESOURCE_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Invalid resource descriptor length: Type "
+literal|"0x%2.2X, Length 0x%4.4X, MinLength 0x%4.4X"
+operator|,
+name|ResourceType
+operator|,
+name|ResourceLength
+operator|,
+name|MinimumResourceLength
+operator|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_AML_BAD_RESOURCE_LENGTH
 operator|)
 return|;
 block|}

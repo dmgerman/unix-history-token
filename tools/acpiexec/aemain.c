@@ -77,6 +77,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|UINT8
+name|AcpiGbl_UseHwReducedFadt
+init|=
+name|FALSE
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 specifier|static
 name|UINT8
 name|AcpiGbl_BatchMode
@@ -127,7 +135,7 @@ begin_define
 define|#
 directive|define
 name|AE_SUPPORTED_OPTIONS
-value|"?b:d:e:f:gm^ovx:"
+value|"?b:d:e:f:gm^orv:x:"
 end_define
 
 begin_comment
@@ -255,9 +263,23 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-v"
+literal|"-r"
+argument_list|,
+literal|"Use hardware-reduced FADT V5"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vi"
 argument_list|,
 literal|"Verbose initialization output"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-vr"
+argument_list|,
+literal|"Verbose region handler output"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
@@ -1284,12 +1306,60 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'r'
+case|:
+name|AcpiGbl_UseHwReducedFadt
+operator|=
+name|TRUE
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Using ACPI 5.0 Hardware Reduced Mode and FADT\n"
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'v'
+case|:
+switch|switch
+condition|(
+name|AcpiGbl_Optarg
+index|[
+literal|0
+index|]
+condition|)
+block|{
+case|case
+literal|'i'
 case|:
 name|AcpiDbgLevel
 operator||=
 name|ACPI_LV_INIT_NAMES
 expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|AcpiGbl_DisplayRegionAccess
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+default|default:
+name|printf
+argument_list|(
+literal|"Unknown option: -v%s\n"
+argument_list|,
+name|AcpiGbl_Optarg
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
 break|break;
 case|case
 literal|'x'

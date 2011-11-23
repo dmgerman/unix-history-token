@@ -41,6 +41,14 @@ literal|"Returns the address of a device on its parent bus"
 block|}
 block|,
 block|{
+literal|"_AEI"
+block|,
+literal|"ACPI Event Interrupts"
+block|,
+literal|"Returns a list of GPIO events to be used as ACPI events"
+block|}
+block|,
+block|{
 literal|"_ALC"
 block|,
 literal|"Ambient Light Chromaticity"
@@ -305,6 +313,22 @@ literal|"Returns a device's Plug and Play Compatible ID list"
 block|}
 block|,
 block|{
+literal|"_CLS"
+block|,
+literal|"Class Code"
+block|,
+literal|"Returns PCI class code and subclass"
+block|}
+block|,
+block|{
+literal|"_CPC"
+block|,
+literal|"Continuous Performance Control"
+block|,
+literal|"Returns a list of performance control interfaces"
+block|}
+block|,
+block|{
 literal|"_CRS"
 block|,
 literal|"Current Resource Settings"
@@ -334,6 +358,22 @@ block|,
 literal|"C States"
 block|,
 literal|"Returns a list of supported C-states"
+block|}
+block|,
+block|{
+literal|"_CWS"
+block|,
+literal|"Clear Wake Alarm Status"
+block|,
+literal|"Clear the status of wake alarms"
+block|}
+block|,
+block|{
+literal|"_DBT"
+block|,
+literal|"Debounce Timeout"
+block|,
+literal|"Timeout value, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -377,6 +417,14 @@ literal|"Device decoding type, Resource Descriptor field"
 block|}
 block|,
 block|{
+literal|"_DEP"
+block|,
+literal|"Dependencies"
+block|,
+literal|"Returns a list of operation region dependencies"
+block|}
+block|,
+block|{
 literal|"_DGS"
 block|,
 literal|"Display Graphics State"
@@ -390,6 +438,14 @@ block|,
 literal|"Disable"
 block|,
 literal|"Disables a device"
+block|}
+block|,
+block|{
+literal|"_DLM"
+block|,
+literal|"Device Lock Mutex"
+block|,
+literal|"Defines mutex for OS/AML sharing"
 block|}
 block|,
 block|{
@@ -414,6 +470,22 @@ block|,
 literal|"Disable Output Switching"
 block|,
 literal|"Sets the display output switching mode"
+block|}
+block|,
+block|{
+literal|"_DPL"
+block|,
+literal|"Device Selection Polarity"
+block|,
+literal|"Polarity of Device Selection signal, Resource Descriptor field"
+block|}
+block|,
+block|{
+literal|"_DRS"
+block|,
+literal|"Drive Strength"
+block|,
+literal|"Drive Strength setting for GPIO connection, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -489,6 +561,22 @@ literal|"Begin or cancel a device ejection request (docking)"
 block|}
 block|,
 block|{
+literal|"_END"
+block|,
+literal|"Endian-ness"
+block|,
+literal|"Endian orientation, Resource Descriptor field"
+block|}
+block|,
+block|{
+literal|"_EVT"
+block|,
+literal|"Event"
+block|,
+literal|"Event method for GPIO events"
+block|}
+block|,
+block|{
 literal|"_FDE"
 block|,
 literal|"Floppy Disk Enumerate"
@@ -529,6 +617,14 @@ literal|"Returns a list of devices that implement FADT register blocks"
 block|}
 block|,
 block|{
+literal|"_FLC"
+block|,
+literal|"Flow Control"
+block|,
+literal|"Flow control, Resource Descriptor field"
+block|}
+block|,
+block|{
 literal|"_FPS"
 block|,
 literal|"Fan Performance States"
@@ -558,6 +654,14 @@ block|,
 literal|"Get Averaging Interval"
 block|,
 literal|"Returns the power meter averaging interval"
+block|}
+block|,
+block|{
+literal|"_GCP"
+block|,
+literal|"Get Capability"
+block|,
+literal|"Get device time capabilities"
 block|}
 block|,
 block|{
@@ -617,6 +721,14 @@ literal|"Returns the GSB for a I/O APIC device"
 block|}
 block|,
 block|{
+literal|"_GRT"
+block|,
+literal|"Get Real Time"
+block|,
+literal|"Returns current time-of-day"
+block|}
+block|,
+block|{
 literal|"_GTF"
 block|,
 literal|"Get Task File"
@@ -638,6 +750,14 @@ block|,
 literal|"Going To Sleep"
 block|,
 literal|"Inform AML of pending sleep"
+block|}
+block|,
+block|{
+literal|"_GWS"
+block|,
+literal|"Get Wake Status"
+block|,
+literal|"Return status of wake alarms"
 block|}
 block|,
 block|{
@@ -681,6 +801,14 @@ literal|"Returns a list of hot-plug information for a PCI device. Supersedes _HP
 block|}
 block|,
 block|{
+literal|"_HRV"
+block|,
+literal|"Hardware Revision"
+block|,
+literal|"Returns a hardware revision value"
+block|}
+block|,
+block|{
 literal|"_IFT"
 block|,
 literal|"IPMI Interface Type"
@@ -702,6 +830,14 @@ block|,
 literal|"Interrupts"
 block|,
 literal|"Interrupt mask bits, Resource Descriptor field"
+block|}
+block|,
+block|{
+literal|"_IOR"
+block|,
+literal|"I/O Restriction"
+block|,
+literal|"Restriction type, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -742,6 +878,14 @@ block|,
 literal|"Lid"
 block|,
 literal|"Returns the open/closed status of the lid on a mobile system"
+block|}
+block|,
+block|{
+literal|"_LIN"
+block|,
+literal|"Lines In Use"
+block|,
+literal|"Handshake lines, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -814,6 +958,14 @@ block|,
 literal|"Multiple Language String"
 block|,
 literal|"Returns a device description in multiple languages"
+block|}
+block|,
+block|{
+literal|"_MOD"
+block|,
+literal|"Mode"
+block|,
+literal|"Interrupt mode, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -905,6 +1057,14 @@ literal|"Sets the averaging interval for a power meter"
 block|}
 block|,
 block|{
+literal|"_PAR"
+block|,
+literal|"Parity"
+block|,
+literal|"Parity bits, Resource Descriptor field"
+block|}
+block|,
+block|{
 literal|"_PCL"
 block|,
 literal|"Power Consumer List"
@@ -937,6 +1097,14 @@ literal|"Returns the lowest available performance P-state"
 block|}
 block|,
 block|{
+literal|"_PHA"
+block|,
+literal|"Phase"
+block|,
+literal|"Clock phase, Resource Descriptor field"
+block|}
+block|,
+block|{
 literal|"_PIC"
 block|,
 literal|"PIC"
@@ -950,6 +1118,14 @@ block|,
 literal|"Power Source Information"
 block|,
 literal|"Returns a Power Source information block"
+block|}
+block|,
+block|{
+literal|"_PIN"
+block|,
+literal|"Pins"
+block|,
+literal|"Pin list, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -985,6 +1161,14 @@ literal|"Returns the current value of the Power Meter"
 block|}
 block|,
 block|{
+literal|"_POL"
+block|,
+literal|"Polarity"
+block|,
+literal|"Interrupt polarity, Resource Descriptor field"
+block|}
+block|,
+block|{
 literal|"_PPC"
 block|,
 literal|"Performance Present Capabilites"
@@ -998,6 +1182,14 @@ block|,
 literal|"Polling for Platform Error"
 block|,
 literal|"Returns the polling interval to retrieve Corrected Platform Error information"
+block|}
+block|,
+block|{
+literal|"_PPI"
+block|,
+literal|"Pin Configuration"
+block|,
+literal|"Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -1038,6 +1230,14 @@ block|,
 literal|"Power Resources for D3hot"
 block|,
 literal|"Returns a list of dependent power resources to enter state D3hot"
+block|}
+block|,
+block|{
+literal|"_PRE"
+block|,
+literal|"Power Resources for Enumeration"
+block|,
+literal|"Returns a list of dependent power resources to enumerate devices on a bus"
 block|}
 block|,
 block|{
@@ -1118,6 +1318,14 @@ block|,
 literal|"Processor State Dependencies"
 block|,
 literal|"Returns processor P-State dependencies"
+block|}
+block|,
+block|{
+literal|"_PSE"
+block|,
+literal|"Power State for Enumeration"
+block|,
+literal|"Put a bus into enumeration power mode"
 block|}
 block|,
 block|{
@@ -1286,6 +1494,14 @@ block|,
 literal|"Read-Write Status"
 block|,
 literal|"Resource Descriptor field"
+block|}
+block|,
+block|{
+literal|"_RXL"
+block|,
+literal|"Receive Buffer Size"
+block|,
+literal|"Serial channel buffer, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -1489,6 +1705,14 @@ literal|"Returns a list of NUMA system localities"
 block|}
 block|,
 block|{
+literal|"_SLV"
+block|,
+literal|"Slave Mode"
+block|,
+literal|"Mode setting, Resource Descriptor field"
+block|}
+block|,
+block|{
 literal|"_SPD"
 block|,
 literal|"Set Post Device"
@@ -1497,11 +1721,27 @@ literal|"Sets which video device will be posted at boot"
 block|}
 block|,
 block|{
+literal|"_SPE"
+block|,
+literal|"Speed"
+block|,
+literal|"Connection speed, Resource Descriptor field"
+block|}
+block|,
+block|{
 literal|"_SRS"
 block|,
 literal|"Set Resource Settings"
 block|,
 literal|"Sets a device's resource allocation"
+block|}
+block|,
+block|{
+literal|"_SRT"
+block|,
+literal|"Set Real Time"
+block|,
+literal|"Interrupt triggering, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -1526,6 +1766,14 @@ block|,
 literal|"Status"
 block|,
 literal|" (1) returns the current status of a device"
+block|}
+block|,
+block|{
+literal|"_STB"
+block|,
+literal|"Stop Bits"
+block|,
+literal|"Serial channel stop bits, Resource Descriptor field"
 block|}
 block|,
 block|{
@@ -1558,6 +1806,14 @@ block|,
 literal|"Set Timer Value"
 block|,
 literal|"Set timer values of the wake alarm device"
+block|}
+block|,
+block|{
+literal|"_SUB"
+block|,
+literal|"Subsystem ID"
+block|,
+literal|"Returns the subsystem ID for a device"
 block|}
 block|,
 block|{
@@ -1729,6 +1985,14 @@ literal|"Inform AML of an S-state transition"
 block|}
 block|,
 block|{
+literal|"_TXL"
+block|,
+literal|"Transmit Buffer Size"
+block|,
+literal|"Serial Channel buffer, Resource Descriptor field"
+block|}
+block|,
+block|{
 literal|"_TYP"
 block|,
 literal|"Type"
@@ -1798,6 +2062,14 @@ block|,
 literal|"User Presence Polling"
 block|,
 literal|"Returns the recommended user presence polling interval"
+block|}
+block|,
+block|{
+literal|"_VEN"
+block|,
+literal|"Vendor Data"
+block|,
+literal|"Resource Descriptor field"
 block|}
 block|,
 block|{

@@ -440,7 +440,7 @@ name|Buffer
 operator|.
 name|Length
 argument_list|,
-name|DB_DWORD_DISPLAY
+name|DB_BYTE_DISPLAY
 argument_list|,
 name|_COMPONENT
 argument_list|)

@@ -558,11 +558,15 @@ name|ACPI_EINJ_GET_COMMAND_STATUS
 init|=
 literal|7
 block|,
-name|ACPI_EINJ_ACTION_RESERVED
+name|ACPI_EINJ_SET_ERROR_TYPE_WITH_ADDRESS
 init|=
 literal|8
 block|,
-comment|/* 8 and greater are reserved */
+name|ACPI_EINJ_ACTION_RESERVED
+init|=
+literal|9
+block|,
+comment|/* 9 and greater are reserved */
 name|ACPI_EINJ_TRIGGER_ERROR
 init|=
 literal|0xFF
@@ -599,13 +603,79 @@ name|ACPI_EINJ_NOOP
 init|=
 literal|4
 block|,
-name|ACPI_EINJ_INSTRUCTION_RESERVED
+name|ACPI_EINJ_FLUSH_CACHELINE
 init|=
 literal|5
-comment|/* 5 and greater are reserved */
+block|,
+name|ACPI_EINJ_INSTRUCTION_RESERVED
+init|=
+literal|6
+comment|/* 6 and greater are reserved */
 block|}
 enum|;
 end_enum
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_einj_error_type_with_addr
+block|{
+name|UINT32
+name|ErrorType
+decl_stmt|;
+name|UINT32
+name|VendorStructOffset
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT32
+name|ApicId
+decl_stmt|;
+name|UINT64
+name|Address
+decl_stmt|;
+name|UINT64
+name|Range
+decl_stmt|;
+name|UINT32
+name|PcieId
+decl_stmt|;
+block|}
+name|ACPI_EINJ_ERROR_TYPE_WITH_ADDR
+typedef|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_einj_vendor
+block|{
+name|UINT32
+name|Length
+decl_stmt|;
+name|UINT32
+name|PcieId
+decl_stmt|;
+name|UINT16
+name|VendorId
+decl_stmt|;
+name|UINT16
+name|DeviceId
+decl_stmt|;
+name|UINT8
+name|RevisionId
+decl_stmt|;
+name|UINT8
+name|Reserved
+index|[
+literal|3
+index|]
+decl_stmt|;
+block|}
+name|ACPI_EINJ_VENDOR
+typedef|;
+end_typedef
 
 begin_comment
 comment|/* EINJ Trigger Error Action Table */
@@ -747,6 +817,13 @@ define|#
 directive|define
 name|ACPI_EINJ_PLATFORM_FATAL
 value|(1<<11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_EINJ_VENDOR_DEFINED
+value|(1<<31)
 end_define
 
 begin_comment
@@ -1853,10 +1930,18 @@ name|ACPI_MADT_TYPE_LOCAL_X2APIC_NMI
 init|=
 literal|10
 block|,
-name|ACPI_MADT_TYPE_RESERVED
+name|ACPI_MADT_TYPE_GENERIC_INTERRUPT
 init|=
 literal|11
-comment|/* 11 and greater are reserved */
+block|,
+name|ACPI_MADT_TYPE_GENERIC_DISTRIBUTOR
+init|=
+literal|12
+block|,
+name|ACPI_MADT_TYPE_RESERVED
+init|=
+literal|13
+comment|/* 13 and greater are reserved */
 block|}
 enum|;
 end_enum
@@ -2241,11 +2326,87 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/* 11: Generic Interrupt (ACPI 5.0) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_madt_generic_interrupt
+block|{
+name|ACPI_SUBTABLE_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* Reserved - must be zero */
+name|UINT32
+name|GicId
+decl_stmt|;
+name|UINT32
+name|Uid
+decl_stmt|;
+name|UINT32
+name|Flags
+decl_stmt|;
+name|UINT32
+name|ParkingVersion
+decl_stmt|;
+name|UINT32
+name|PerformanceInterrupt
+decl_stmt|;
+name|UINT64
+name|ParkedAddress
+decl_stmt|;
+name|UINT64
+name|BaseAddress
+decl_stmt|;
+block|}
+name|ACPI_MADT_GENERIC_INTERRUPT
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* 12: Generic Distributor (ACPI 5.0) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_madt_generic_distributor
+block|{
+name|ACPI_SUBTABLE_HEADER
+name|Header
+decl_stmt|;
+name|UINT16
+name|Reserved
+decl_stmt|;
+comment|/* Reserved - must be zero */
+name|UINT32
+name|GicId
+decl_stmt|;
+name|UINT64
+name|BaseAddress
+decl_stmt|;
+name|UINT32
+name|GlobalIrqBase
+decl_stmt|;
+name|UINT32
+name|Reserved2
+decl_stmt|;
+comment|/* Reserved - must be zero */
+block|}
+name|ACPI_MADT_GENERIC_DISTRIBUTOR
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*  * Common flags fields for MADT subtables  */
 end_comment
 
 begin_comment
-comment|/* MADT Local APIC flags (LapicFlags) */
+comment|/* MADT Local APIC flags (LapicFlags) and GIC flags */
 end_comment
 
 begin_define

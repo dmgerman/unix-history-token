@@ -1359,9 +1359,6 @@ modifier|*
 name|Buffer
 parameter_list|)
 block|{
-name|UINT32
-name|Length
-decl_stmt|;
 name|char
 modifier|*
 name|SubBuffer
@@ -1617,13 +1614,6 @@ operator|++
 expr_stmt|;
 name|SubBuffer
 operator|++
-expr_stmt|;
-name|Length
-operator|=
-name|strlen
-argument_list|(
-name|SubBuffer
-argument_list|)
 expr_stmt|;
 name|Gbl_MadeChanges
 operator|=
@@ -3130,9 +3120,6 @@ modifier|*
 name|EndKeyword
 decl_stmt|;
 name|int
-name|StrLength
-decl_stmt|;
-name|int
 name|InsertLength
 decl_stmt|;
 name|char
@@ -3311,13 +3298,6 @@ comment|/* Prefix the keyword with the insert string */
 name|Gbl_MadeChanges
 operator|=
 name|TRUE
-expr_stmt|;
-name|StrLength
-operator|=
-name|strlen
-argument_list|(
-name|SubString
-argument_list|)
 expr_stmt|;
 comment|/* Is there room for insertion */
 name|EndKeyword

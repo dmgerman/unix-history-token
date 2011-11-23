@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20110922
+value|0x20111123
 end_define
 
 begin_include
@@ -66,6 +66,17 @@ name|BOOLEAN
 name|AcpiGbl_SystemAwakeAndRunning
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|BOOLEAN
+name|AcpiGbl_ReducedHardware
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ACPI 5.0 */
+end_comment
 
 begin_comment
 comment|/* Runtime configuration of debug print levels */
@@ -963,6 +974,39 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/*  * Interfaces to AML mutex objects  */
+end_comment
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiAcquireMutex
+parameter_list|(
+name|ACPI_HANDLE
+name|Handle
+parameter_list|,
+name|ACPI_STRING
+name|Pathname
+parameter_list|,
+name|UINT16
+name|Timeout
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiReleaseMutex
+parameter_list|(
+name|ACPI_HANDLE
+name|Handle
+parameter_list|,
+name|ACPI_STRING
+name|Pathname
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * Fixed Event interfaces  */
 end_comment
 
@@ -1283,6 +1327,20 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
+name|AcpiGetEventResources
+parameter_list|(
+name|ACPI_HANDLE
+name|DeviceHandle
+parameter_list|,
+name|ACPI_BUFFER
+modifier|*
+name|RetBuffer
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
 name|AcpiWalkResources
 parameter_list|(
 name|ACPI_HANDLE
@@ -1341,6 +1399,25 @@ parameter_list|,
 name|ACPI_RESOURCE_ADDRESS64
 modifier|*
 name|Out
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiBufferToResource
+parameter_list|(
+name|UINT8
+modifier|*
+name|AmlBuffer
+parameter_list|,
+name|UINT16
+name|AmlBufferLength
+parameter_list|,
+name|ACPI_RESOURCE
+modifier|*
+modifier|*
+name|ResourcePtr
 parameter_list|)
 function_decl|;
 end_function_decl

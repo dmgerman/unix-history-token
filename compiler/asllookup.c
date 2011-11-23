@@ -3343,6 +3343,9 @@ case|:
 case|case
 name|ACPI_ADR_SPACE_CMOS
 case|:
+case|case
+name|ACPI_ADR_SPACE_GPIO
+case|:
 if|if
 condition|(
 operator|(
@@ -3381,6 +3384,9 @@ name|ACPI_ADR_SPACE_SMBUS
 case|:
 case|case
 name|ACPI_ADR_SPACE_IPMI
+case|:
+case|case
+name|ACPI_ADR_SPACE_GSBUS
 case|:
 if|if
 condition|(

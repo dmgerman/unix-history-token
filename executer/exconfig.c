@@ -845,6 +845,8 @@ name|AcpiEvAddressSpaceDispatch
 argument_list|(
 name|ObjDesc
 argument_list|,
+name|NULL
+argument_list|,
 name|ACPI_READ
 argument_list|,
 name|RegionOffset

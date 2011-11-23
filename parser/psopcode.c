@@ -2695,17 +2695,54 @@ name|ACPI_OP
 argument_list|(
 literal|"Timer"
 argument_list|,
-argument|ARGP_TIMER_OP
+name|ARGP_TIMER_OP
 argument_list|,
-argument|ARGI_TIMER_OP
+name|ARGI_TIMER_OP
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|AML_CLASS_EXECUTE
+argument_list|,
+name|AML_TYPE_EXEC_0A_0T_1R
+argument_list|,
+name|AML_FLAGS_EXEC_0A_0T_1R
+argument_list|)
+block|,
+comment|/* ACPI 5.0 opcodes */
+comment|/* 7F */
+name|ACPI_OP
+argument_list|(
+literal|"-ConnectField-"
+argument_list|,
+name|ARGP_CONNECTFIELD_OP
+argument_list|,
+name|ARGI_CONNECTFIELD_OP
+argument_list|,
+name|ACPI_TYPE_ANY
+argument_list|,
+name|AML_CLASS_INTERNAL
+argument_list|,
+name|AML_TYPE_BOGUS
+argument_list|,
+name|AML_HAS_ARGS
+argument_list|)
+block|,
+comment|/* 80 */
+name|ACPI_OP
+argument_list|(
+literal|"-ExtAccessField-"
+argument_list|,
+argument|ARGP_CONNECTFIELD_OP
+argument_list|,
+argument|ARGI_CONNECTFIELD_OP
 argument_list|,
 argument|ACPI_TYPE_ANY
 argument_list|,
-argument|AML_CLASS_EXECUTE
+argument|AML_CLASS_INTERNAL
 argument_list|,
-argument|AML_TYPE_EXEC_0A_0T_1R
+argument|AML_TYPE_BOGUS
 argument_list|,
-argument|AML_FLAGS_EXEC_0A_0T_1R
+literal|0
 argument_list|)
 comment|/*! [End] no source code translation !*/
 block|}
@@ -2848,9 +2885,9 @@ block|,
 literal|0x7D
 block|,
 comment|/* 0x38 */
-name|_UNK
+literal|0x7F
 block|,
-name|_UNK
+literal|0x80
 block|,
 name|_UNK
 block|,

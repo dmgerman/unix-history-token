@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x7F
+value|0x81
 end_define
 
 begin_comment
@@ -757,6 +757,14 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DataRegisterNode
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ConnectionNode
+decl_stmt|;
+name|UINT8
+modifier|*
+name|ResourceBuffer
+decl_stmt|;
 name|UINT32
 name|BankValue
 decl_stmt|;
@@ -766,6 +774,9 @@ decl_stmt|;
 name|UINT32
 name|FieldBitLength
 decl_stmt|;
+name|UINT16
+name|ResourceLength
+decl_stmt|;
 name|UINT8
 name|FieldFlags
 decl_stmt|;
@@ -774,6 +785,9 @@ name|Attribute
 decl_stmt|;
 name|UINT8
 name|FieldType
+decl_stmt|;
+name|UINT8
+name|AccessLength
 decl_stmt|;
 block|}
 name|ACPI_CREATE_FIELD_INFO
@@ -1010,7 +1024,7 @@ comment|/*  * Secondary information structures for ACPI predefined objects that 
 end_comment
 
 begin_comment
-comment|/*  * Used for ACPI_PTYPE1_FIXED, ACPI_PTYPE1_VAR, ACPI_PTYPE2,  * ACPI_PTYPE2_MIN, ACPI_PTYPE2_PKG_COUNT, ACPI_PTYPE2_COUNT  */
+comment|/*  * Used for ACPI_PTYPE1_FIXED, ACPI_PTYPE1_VAR, ACPI_PTYPE2,  * ACPI_PTYPE2_MIN, ACPI_PTYPE2_PKG_COUNT, ACPI_PTYPE2_COUNT,  * ACPI_PTYPE2_FIX_VAR  */
 end_comment
 
 begin_typedef
@@ -3342,7 +3356,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_RESOURCE_NAME_RESERVED_S1
+name|ACPI_RESOURCE_NAME_FIXED_DMA
 value|0x50
 end_define
 
@@ -3465,8 +3479,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_RESOURCE_NAME_GPIO
+value|0x8C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_NAME_SERIAL_BUS
+value|0x8E
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_RESOURCE_NAME_LARGE_MAX
-value|0x8B
+value|0x8E
 end_define
 
 begin_comment

@@ -349,6 +349,9 @@ case|:
 case|case
 name|AML_INT_ACCESSFIELD_OP
 case|:
+case|case
+name|AML_INT_CONNECTION_OP
+case|:
 break|break;
 default|default:
 name|Status
