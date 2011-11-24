@@ -1857,12 +1857,12 @@ begin_struct
 struct|struct
 name|sctp_paddrthlds
 block|{
-name|sctp_assoc_t
-name|spt_assoc_id
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|spt_address
+decl_stmt|;
+name|sctp_assoc_t
+name|spt_assoc_id
 decl_stmt|;
 name|uint16_t
 name|spt_pathmaxrxt
