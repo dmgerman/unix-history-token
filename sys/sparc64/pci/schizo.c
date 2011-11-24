@@ -6189,7 +6189,7 @@ name|end
 operator|.
 name|tv_sec
 operator|=
-literal|1
+literal|15
 expr_stmt|;
 name|end
 operator|.
