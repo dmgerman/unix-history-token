@@ -240,6 +240,8 @@ decl_stmt|,
 name|result
 decl_stmt|,
 name|choice
+init|=
+literal|0
 decl_stmt|;
 name|DIALOG_LISTITEM
 modifier|*
@@ -262,6 +264,8 @@ argument_list|(
 name|DIALOG_LISTITEM
 argument_list|,
 name|item_no
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|assert_ptr
@@ -460,12 +464,12 @@ name|dialog_vars
 operator|.
 name|default_item
 operator|=
-name|ditems
+name|listitems
 index|[
 name|choice
 index|]
 operator|.
-name|prompt
+name|name
 expr_stmt|;
 name|result
 operator|=
