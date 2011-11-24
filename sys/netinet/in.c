@@ -1655,7 +1655,7 @@ name|ifra
 operator|->
 name|ifra_addr
 operator|.
-name|sin_len
+name|sin_family
 operator|==
 name|AF_INET
 condition|)
