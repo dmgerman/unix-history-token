@@ -443,9 +443,9 @@ end_endif
 begin_if
 if|#
 directive|if
-name|__FreeBSD__
-operator|>
-literal|2
+name|__FreeBSD_version
+operator|>=
+literal|300000
 end_if
 
 begin_include
