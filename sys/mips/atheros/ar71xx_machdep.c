@@ -551,6 +551,8 @@ name|platform_counter_freq
 decl_stmt|;
 name|int
 name|argc
+init|=
+literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -558,10 +560,14 @@ name|char
 modifier|*
 modifier|*
 name|argv
+init|=
+name|NULL
 decl_stmt|,
 modifier|*
 modifier|*
 name|envp
+init|=
+name|NULL
 decl_stmt|;
 name|vm_offset_t
 name|kernend
@@ -600,6 +606,10 @@ comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init
 argument_list|()
 expr_stmt|;
+comment|/* 	 * Until some more sensible abstractions for uboot/redboot 	 * environment handling, we have to make this a compile-time 	 * hack.  The existing code handles the uboot environment 	 * very incorrectly so we should just ignore initialising 	 * the relevant pointers. 	 */
+ifndef|#
+directive|ifndef
+name|AR71XX_ENV_UBOOT
 name|argc
 operator|=
 name|a0
@@ -622,6 +632,8 @@ operator|*
 operator|)
 name|a2
 expr_stmt|;
+endif|#
+directive|endif
 comment|/*  	 * Protect ourselves from garbage in registers  	 */
 if|if
 condition|(
@@ -877,6 +889,7 @@ argument_list|,
 name|a3
 argument_list|)
 expr_stmt|;
+comment|/* 	 * XXX this code is very redboot specific. 	 */
 name|printf
 argument_list|(
 literal|"Cmd line:"
