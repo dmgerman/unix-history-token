@@ -490,9 +490,6 @@ name|DeviceType
 name|type
 parameter_list|,
 name|Boolean
-name|enabled
-parameter_list|,
-name|Boolean
 function_decl|(
 modifier|*
 name|init
@@ -576,12 +573,6 @@ operator|->
 name|type
 operator|=
 name|type
-expr_stmt|;
-name|newdev
-operator|->
-name|enabled
-operator|=
-name|enabled
 expr_stmt|;
 name|newdev
 operator|->
@@ -918,8 +909,6 @@ name|name
 argument_list|,
 name|DEVICE_TYPE_DISK
 argument_list|,
-name|FALSE
-argument_list|,
 name|dummyInit
 argument_list|,
 name|dummyGet
@@ -950,7 +939,7 @@ literal|0
 comment|/* Look for existing DOS partitions to register as "DOS media devices" */
 block|for (c1 = d->chunks->part; c1; c1 = c1->next) { 		if (c1->type == fat || c1->type == efi || c1->type == extended) { 		    Device *dev; 		    char devname[80];
 comment|/* Got one! */
-block|snprintf(devname, sizeof devname, "/dev/%s", c1->name); 		    dev = deviceRegister(c1->name, c1->name, strdup(devname), DEVICE_TYPE_DOS, TRUE, 			mediaInitDOS, mediaGetDOS, mediaShutdownDOS, NULL); 		    dev->private = c1; 		    if (isDebug()) 			msgDebug("Found a DOS partition %s on drive %s\n", c1->name, d->name); 		} 	    }
+block|snprintf(devname, sizeof devname, "/dev/%s", c1->name); 		    dev = deviceRegister(c1->name, c1->name, strdup(devname), DEVICE_TYPE_DOS, 			mediaInitDOS, mediaGetDOS, mediaShutdownDOS, NULL); 		    dev->private = c1; 		    if (isDebug()) 			msgDebug("Found a DOS partition %s on drive %s\n", c1->name, d->name); 		} 	    }
 endif|#
 directive|endif
 block|}
@@ -1298,17 +1287,6 @@ name|dialogMenuItem
 modifier|*
 name|d
 parameter_list|)
-parameter_list|,
-name|int
-function_decl|(
-modifier|*
-name|check
-function_decl|)
-parameter_list|(
-name|dialogMenuItem
-modifier|*
-name|d
-parameter_list|)
 parameter_list|)
 block|{
 name|Device
@@ -1497,17 +1475,6 @@ operator|.
 name|fire
 operator|=
 name|hook
-expr_stmt|;
-name|tmp
-operator|->
-name|items
-index|[
-name|i
-index|]
-operator|.
-name|checked
-operator|=
-name|check
 expr_stmt|;
 block|}
 name|tmp

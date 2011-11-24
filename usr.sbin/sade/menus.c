@@ -40,18 +40,18 @@ name|DMenu
 name|MenuDiskDevices
 init|=
 block|{
-name|DMENU_CHECKLIST_TYPE
+name|DMENU_NORMAL_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
 literal|"Select Drive(s)"
 block|,
-literal|"Please select the drive, or drives, on which you wish to perform\n"
-literal|"this operation.  If you are attempting to install a boot partition\n"
+literal|"Please select the drive on which you wish to perform this\n"
+literal|"operation.  If you are attempting to install a boot partition\n"
 literal|"on a drive other than the first one or have multiple operating\n"
 literal|"systems on your machine, you will have the option to install a boot\n"
 literal|"manager later.  To select a drive, use the arrow keys to move to it\n"
-literal|"and press [SPACE] or [ENTER].  To de-select it, press it again.\n\n"
+literal|"and press [SPACE] or [ENTER].\n\n"
 literal|"Use [TAB] to get to the buttons and leave this menu."
 block|,
 literal|"Press F1 for important information regarding disk geometry!"
