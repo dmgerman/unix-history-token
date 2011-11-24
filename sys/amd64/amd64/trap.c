@@ -412,7 +412,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TRAP_MSG
-value|30
+value|33
 end_define
 
 begin_decl_stmt
@@ -516,6 +516,15 @@ comment|/* 29 T_XMMFLT */
 literal|"reserved (unknown) fault"
 block|,
 comment|/* 30 T_RESERVED */
+literal|""
+block|,
+comment|/* 31 unused (reserved) */
+literal|"DTrace pid return trap"
+block|,
+comment|/* 32 T_DTRACE_RET */
+literal|"DTrace fasttrap probe trap"
+block|,
+comment|/* 33 T_DTRACE_PROBE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -828,27 +837,6 @@ name|KDTRACE_HOOKS
 comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in it's per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * If the DTrace kernel module has registered a trap handler, 	 * call it and if it returns non-zero, assume that it has 	 * handled the trap and modified the trap frame so that this 	 * function can return normally. 	 */
 if|if
 condition|(
-name|dtrace_trap_func
-operator|!=
-name|NULL
-condition|)
-if|if
-condition|(
-call|(
-modifier|*
-name|dtrace_trap_func
-call|)
-argument_list|(
-name|frame
-argument_list|,
-name|type
-argument_list|)
-condition|)
-goto|goto
-name|out
-goto|;
-if|if
-condition|(
 name|type
 operator|==
 name|T_DTRACE_PROBE
@@ -895,6 +883,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+elseif|else
 if|if
 condition|(
 name|type
@@ -916,6 +905,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+elseif|else
 if|if
 condition|(
 name|type
@@ -938,6 +928,25 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|dtrace_trap_func
+operator|!=
+name|NULL
+operator|&&
+call|(
+modifier|*
+name|dtrace_trap_func
+call|)
+argument_list|(
+name|frame
+argument_list|,
+name|type
+argument_list|)
+condition|)
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 if|if
