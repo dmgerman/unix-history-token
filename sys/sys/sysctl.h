@@ -2596,6 +2596,17 @@ begin_comment
 comment|/* get ELF auxiliary vector */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_RLIMIT
+value|37
+end_define
+
+begin_comment
+comment|/* process resource limits */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
