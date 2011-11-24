@@ -65,20 +65,6 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 block|}
 block|, }
@@ -109,21 +95,7 @@ literal|"1 Partition"
 block|,
 literal|"Managing disk partitions"
 block|,
-name|NULL
-block|,
 name|diskPartitionEditor
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 block|,
 endif|#
@@ -133,21 +105,7 @@ literal|"2 Label"
 block|,
 literal|"Label allocated disk partitions"
 block|,
-name|NULL
-block|,
 name|diskLabelEditor
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -156,20 +114,6 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 block|}
 block|, }
@@ -205,7 +149,7 @@ name|DMenu
 name|MenuIPLType
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_RADIO_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -225,22 +169,7 @@ literal|"BootMgr"
 block|,
 literal|"Install the FreeBSD Boot Manager"
 block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
 name|NULL
-block|,
-operator|&
-name|BootMgr
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -248,22 +177,7 @@ literal|"None"
 block|,
 literal|"Leave the IPL untouched"
 block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
 name|NULL
-block|,
-operator|&
-name|BootMgr
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|1
 block|}
 block|,
 block|{
@@ -272,20 +186,6 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 block|}
 block|, }
@@ -306,7 +206,7 @@ name|DMenu
 name|MenuMBRType
 init|=
 block|{
-name|DMENU_NORMAL_TYPE
+name|DMENU_RADIO_TYPE
 operator||
 name|DMENU_SELECTION_RETURNS
 block|,
@@ -320,7 +220,7 @@ literal|"from the second one, the boot manager will also make it possible\n"
 literal|"to do so (limitations in the PC BIOS usually prevent this otherwise).\n"
 literal|"If you have other operating systems installed and would like a choice when\n"
 literal|"booting, choose \"BootMgr\". If you would prefer to keep your existing\n"
-literal|"boot manager, select \"None\".\n\n"
+literal|"boot manager, select \"None\".\n"
 block|,
 literal|""
 block|,
@@ -332,22 +232,7 @@ literal|"Standard"
 block|,
 literal|"Install a standard MBR (non-interactive boot manager)"
 block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
 name|NULL
-block|,
-operator|&
-name|BootMgr
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|1
 block|}
 block|,
 block|{
@@ -355,22 +240,7 @@ literal|"BootMgr"
 block|,
 literal|"Install the FreeBSD boot manager"
 block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
 name|NULL
-block|,
-operator|&
-name|BootMgr
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|0
 block|}
 block|,
 block|{
@@ -378,22 +248,7 @@ literal|"None"
 block|,
 literal|"Do not install a boot manager"
 block|,
-name|dmenuRadioCheck
-block|,
-name|dmenuSetValue
-block|,
 name|NULL
-block|,
-operator|&
-name|BootMgr
-block|,
-literal|'('
-block|,
-literal|'*'
-block|,
-literal|')'
-block|,
-literal|2
 block|}
 block|,
 block|{
@@ -402,20 +257,6 @@ block|,
 name|NULL
 block|,
 name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
-block|,
-literal|0
 block|}
 block|}
 block|}

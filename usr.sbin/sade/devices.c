@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sade.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -61,6 +55,12 @@ begin_include
 include|#
 directive|include
 file|<libdisk.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sade.h"
 end_include
 
 begin_comment
@@ -949,7 +949,7 @@ name|names
 argument_list|)
 expr_stmt|;
 block|}
-name|dialog_clear_norefresh
+name|dlg_clear
 argument_list|()
 expr_stmt|;
 block|}

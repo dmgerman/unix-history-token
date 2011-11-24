@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sade.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ctype.h>
 end_include
 
@@ -127,6 +121,12 @@ begin_include
 include|#
 directive|include
 file|<termios.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sade.h"
 end_include
 
 begin_define
@@ -770,7 +770,7 @@ operator|!
 name|i
 condition|)
 block|{
-name|dialog_clear_norefresh
+name|dlg_clear
 argument_list|()
 expr_stmt|;
 name|msgNotify
@@ -936,7 +936,7 @@ expr_stmt|;
 name|command_execute
 argument_list|()
 expr_stmt|;
-name|dialog_clear_norefresh
+name|dlg_clear
 argument_list|()
 expr_stmt|;
 return|return

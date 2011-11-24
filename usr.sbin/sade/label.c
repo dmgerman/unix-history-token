@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"sade.h"
+file|<sys/types.h>
 end_include
 
 begin_include
@@ -43,6 +43,12 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"sade.h"
 end_include
 
 begin_define
@@ -584,11 +590,9 @@ else|else
 block|{
 name|result
 operator|=
-name|dmenuOpenSimple
+name|dmenuOpen
 argument_list|(
 name|menu
-argument_list|,
-name|FALSE
 argument_list|)
 condition|?
 name|DITEM_SUCCESS
@@ -1909,17 +1913,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|char
-name|selection
-index|[
-literal|20
-index|]
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
 specifier|static
-name|unsigned
 name|char
 modifier|*
 name|fs_types
@@ -1951,6 +1948,9 @@ init|=
 name|savescr
 argument_list|()
 decl_stmt|;
+name|dlg_clr_result
+argument_list|()
+expr_stmt|;
 name|i
 operator|=
 name|dialog_menu
@@ -1982,12 +1982,6 @@ argument_list|,
 endif|#
 directive|endif
 name|fs_types
-argument_list|,
-name|selection
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 name|restorescr
@@ -2009,7 +2003,9 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|selection
+name|dialog_vars
+operator|.
+name|input_result
 argument_list|,
 literal|"EFI"
 argument_list|)
@@ -2024,7 +2020,9 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|selection
+name|dialog_vars
+operator|.
+name|input_result
 argument_list|,
 literal|"FS"
 argument_list|)
@@ -2038,7 +2036,9 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|selection
+name|dialog_vars
+operator|.
+name|input_result
 argument_list|,
 literal|"Swap"
 argument_list|)
@@ -5983,7 +5983,7 @@ literal|"expected to understand!"
 argument_list|)
 condition|)
 block|{
-name|dialog_clear
+name|dlg_clear
 argument_list|()
 expr_stmt|;
 name|end_dialog
