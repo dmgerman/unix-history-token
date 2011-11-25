@@ -494,7 +494,9 @@ end_comment
 begin_function
 name|int
 name|get_confirmation
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|str
