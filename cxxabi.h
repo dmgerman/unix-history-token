@@ -20,7 +20,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<unwind.h>
+file|"unwind.h"
 end_include
 
 begin_decl_stmt
@@ -118,6 +118,20 @@ comment|/** 	 * The number of handlers that currently have references to this 	 
 name|int
 name|handlerCount
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|__arm__
+comment|/** 	 * The ARM EH ABI requires the unwind library to keep track of exceptions 	 * during cleanups.  These support nesting, so we need to keep a list of 	 * them. 	 */
+name|_Unwind_Exception
+modifier|*
+name|nextCleanup
+decl_stmt|;
+comment|/** 	 * The number of cleanups that are currently being run on this exception.  	 */
+name|int
+name|cleanupCount
+decl_stmt|;
+endif|#
+directive|endif
 comment|/** 	 * The selector value to be returned when installing the catch handler. 	 * Used at the call site to determine which catch() block should execute. 	 * This is found in phase 1 of unwinding then installed in phase 2. 	 */
 name|int
 name|handlerSwitchValue

@@ -45,7 +45,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|<unwind.h>
+file|"unwind.h"
 end_include
 
 begin_undef
@@ -62,7 +62,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<unwind.h>
+file|"unwind.h"
 end_include
 
 begin_endif
@@ -1075,6 +1075,21 @@ name|type_table
 expr_stmt|;
 comment|//lsda.type_table = (uintptr_t*)(data + v);
 block|}
+if|#
+directive|if
+name|__arm__
+name|lsda
+operator|.
+name|type_table_encoding
+operator|=
+operator|(
+name|DW_EH_PE_pcrel
+operator||
+name|DW_EH_PE_indirect
+operator|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lsda
 operator|.
 name|callsite_encoding
