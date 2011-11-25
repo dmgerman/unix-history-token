@@ -2901,7 +2901,7 @@ comment|/* No wildcard device matches */
 end_comment
 
 begin_comment
-comment|/**  * Shorthand for constructing method tables.  */
+comment|/**  * Shorthands for constructing method tables.  */
 end_comment
 
 begin_define
@@ -2909,6 +2909,13 @@ define|#
 directive|define
 name|DEVMETHOD
 value|KOBJMETHOD
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVMETHOD_END
+value|KOBJMETHOD_END
 end_define
 
 begin_comment
