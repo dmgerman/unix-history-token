@@ -208,6 +208,17 @@ directive|include
 file|<opencrypto/xform.h>
 end_include
 
+begin_decl_stmt
+specifier|static
+name|int
+name|esp_max_ivlen
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* max iv length over all algorithms */
+end_comment
+
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -286,28 +297,6 @@ literal|""
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|esp_max_ivlen
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* max iv length over all algorithms */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V_esp_max_ivlen
-value|VNET(esp_max_ivlen)
-end_define
 
 begin_function_decl
 specifier|static
@@ -527,7 +516,7 @@ expr|struct
 name|newesp
 argument_list|)
 operator|+
-name|V_esp_max_ivlen
+name|esp_max_ivlen
 operator|+
 literal|9
 operator|+
@@ -4868,7 +4857,7 @@ parameter_list|(
 name|xform
 parameter_list|)
 define|\
-value|if (xform.blocksize> V_esp_max_ivlen)		\ 		V_esp_max_ivlen = xform.blocksize	\  	MAXIV(enc_xform_des);
+value|if (xform.blocksize> esp_max_ivlen)		\ 		esp_max_ivlen = xform.blocksize		\  	MAXIV(enc_xform_des);
 comment|/* SADB_EALG_DESCBC */
 name|MAXIV
 argument_list|(
