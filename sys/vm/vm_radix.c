@@ -1124,7 +1124,7 @@ name|CTR4
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, root %p, index: %d, level: %d failed to allocate a new node"
+literal|"insert: tree %p, root %p, index: %d, level: %d ENOMEM"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1255,11 +1255,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %jd, level %d, slot %d, child %p failed to populate"
+literal|"insert: tree %p, index %jd, level %d, slot %d, rnode %p, child %p ENOMEM"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1270,11 +1270,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -1289,11 +1299,11 @@ name|rn_count
 operator|++
 expr_stmt|;
 block|}
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %p, level %d, slot %d, child %p"
+literal|"insert: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1308,11 +1318,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 name|rnode
@@ -1334,11 +1354,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %p, level %d, slot %d, child %p"
+literal|"insert: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1353,11 +1373,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 name|KASSERT
@@ -1504,11 +1534,11 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup: tree %p, index %p, level %d, slot %d, child %p"
+literal|"lookup: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1523,11 +1553,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1653,11 +1693,11 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"color: tree %p, index %p, level %d, slot %d, child %p"
+literal|"color: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1672,11 +1712,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -1868,11 +1918,11 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"leaf: tree %p, index %p, level %d, slot %d, child %p"
+literal|"leaf: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -1887,11 +1937,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2547,11 +2607,11 @@ argument_list|,
 name|level
 argument_list|)
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: tree %p, index %p, level %d, slot %d, child %p"
+literal|"lookup_le: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -2566,11 +2626,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 if|if
@@ -2869,11 +2939,11 @@ index|[
 name|slot
 index|]
 expr_stmt|;
-name|CTR5
+name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"remove: tree %p, index %p, level %d, slot %d, child %p"
+literal|"remove: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
@@ -2888,11 +2958,21 @@ argument_list|,
 name|slot
 argument_list|,
 name|rnode
+argument_list|,
+operator|(
+name|rnode
+operator|!=
+name|NULL
+operator|)
+condition|?
+name|rnode
 operator|->
 name|rn_child
 index|[
 name|slot
 index|]
+else|:
+name|NULL
 argument_list|)
 expr_stmt|;
 name|level
