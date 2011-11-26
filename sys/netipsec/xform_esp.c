@@ -3117,8 +3117,6 @@ name|hlen
 decl_stmt|,
 name|rlen
 decl_stmt|,
-name|plen
-decl_stmt|,
 name|padding
 decl_stmt|,
 name|blks
@@ -3301,13 +3299,6 @@ operator|)
 operator|+
 literal|2
 expr_stmt|;
-name|plen
-operator|=
-name|rlen
-operator|+
-name|padding
-expr_stmt|;
-comment|/* Padded payload length. */
 if|if
 condition|(
 name|esph
