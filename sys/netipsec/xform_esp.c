@@ -208,17 +208,6 @@ directive|include
 file|<opencrypto/xform.h>
 end_include
 
-begin_decl_stmt
-specifier|static
-name|int
-name|esp_max_ivlen
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* max iv length over all algorithms */
-end_comment
-
 begin_expr_stmt
 name|VNET_DEFINE
 argument_list|(
@@ -516,7 +505,7 @@ expr|struct
 name|newesp
 argument_list|)
 operator|+
-name|esp_max_ivlen
+name|EALG_MAX_BLOCK_LEN
 operator|+
 literal|9
 operator|+
@@ -4820,66 +4809,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-define|#
-directive|define
-name|MAXIV
-parameter_list|(
-name|xform
-parameter_list|)
-define|\
-value|if (xform.blocksize> esp_max_ivlen)		\ 		esp_max_ivlen = xform.blocksize		\  	MAXIV(enc_xform_des);
-comment|/* SADB_EALG_DESCBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_3des
-argument_list|)
-expr_stmt|;
-comment|/* SADB_EALG_3DESCBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_rijndael128
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_AES */
-name|MAXIV
-argument_list|(
-name|enc_xform_blf
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_BLOWFISHCBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_cast5
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_CAST128CBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_skipjack
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_SKIPJACK */
-name|MAXIV
-argument_list|(
-name|enc_xform_null
-argument_list|)
-expr_stmt|;
-comment|/* SADB_EALG_NULL */
-name|MAXIV
-argument_list|(
-name|enc_xform_camellia
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_CAMELLIACBC */
 name|xform_register
 argument_list|(
 operator|&
 name|esp_xformsw
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|MAXIV
 block|}
 end_function
 
