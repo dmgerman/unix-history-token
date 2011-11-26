@@ -5187,9 +5187,6 @@ decl_stmt|;
 name|caddr_t
 name|ptr
 decl_stmt|;
-name|int
-name|err
-decl_stmt|;
 name|tc
 operator|=
 operator|(
@@ -5477,7 +5474,7 @@ block|}
 endif|#
 directive|endif
 comment|/* NB: m is reclaimed by ipsec_process_done. */
-name|err
+name|error
 operator|=
 name|ipsec_process_done
 argument_list|(
@@ -5498,7 +5495,7 @@ name|isr
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+name|error
 return|;
 name|bad
 label|:
