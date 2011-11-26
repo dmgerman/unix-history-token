@@ -48,7 +48,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|s
+name|s1
 parameter_list|,
 specifier|const
 name|char
@@ -122,7 +122,7 @@ condition|)
 return|return
 name|strcmp
 argument_list|(
-name|s
+name|s1
 argument_list|,
 name|s2
 argument_list|)
@@ -154,7 +154,7 @@ name|__collate_substitute
 argument_list|(
 name|table
 argument_list|,
-name|s
+name|s1
 argument_list|)
 expr_stmt|;
 name|t2
@@ -179,7 +179,7 @@ name|NULL
 expr_stmt|;
 name|t
 operator|=
-name|s
+name|s1
 expr_stmt|;
 name|t2
 operator|=
@@ -380,7 +380,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|s
+name|s1
 parameter_list|,
 specifier|const
 name|char
@@ -391,7 +391,7 @@ block|{
 return|return
 name|strcoll_l
 argument_list|(
-name|s
+name|s1
 argument_list|,
 name|s2
 argument_list|,

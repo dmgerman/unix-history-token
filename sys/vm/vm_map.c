@@ -1774,7 +1774,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_lock_flags
+name|mtx_lock_flags_
 argument_list|(
 operator|&
 name|map
@@ -1789,17 +1789,12 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|_sx_xlock
+name|sx_xlock_
 argument_list|(
 operator|&
 name|map
 operator|->
 name|lock
-argument_list|,
-literal|0
 argument_list|,
 name|file
 argument_list|,
@@ -1888,7 +1883,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_unlock_flags
+name|mtx_unlock_flags_
 argument_list|(
 operator|&
 name|map
@@ -1904,7 +1899,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|_sx_xunlock
+name|sx_xunlock_
 argument_list|(
 operator|&
 name|map
@@ -1945,7 +1940,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_lock_flags
+name|mtx_lock_flags_
 argument_list|(
 operator|&
 name|map
@@ -1960,17 +1955,12 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-operator|(
-name|void
-operator|)
-name|_sx_slock
+name|sx_slock_
 argument_list|(
 operator|&
 name|map
 operator|->
 name|lock
-argument_list|,
-literal|0
 argument_list|,
 name|file
 argument_list|,
@@ -2002,7 +1992,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_unlock_flags
+name|mtx_unlock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2018,7 +2008,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-name|_sx_sunlock
+name|sx_sunlock_
 argument_list|(
 operator|&
 name|map
@@ -2063,7 +2053,7 @@ operator|->
 name|system_map
 condition|?
 operator|!
-name|_mtx_trylock
+name|mtx_trylock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2078,7 +2068,7 @@ name|line
 argument_list|)
 else|:
 operator|!
-name|_sx_try_xlock
+name|sx_try_xlock_
 argument_list|(
 operator|&
 name|map
@@ -2137,7 +2127,7 @@ operator|->
 name|system_map
 condition|?
 operator|!
-name|_mtx_trylock
+name|mtx_trylock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2152,7 +2142,7 @@ name|line
 argument_list|)
 else|:
 operator|!
-name|_sx_try_slock
+name|sx_try_slock_
 argument_list|(
 operator|&
 name|map
@@ -2205,10 +2195,7 @@ operator|->
 name|system_map
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|_mtx_assert
+name|mtx_assert_
 argument_list|(
 operator|&
 name|map
@@ -2222,15 +2209,13 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 block|{
 if|if
 condition|(
 operator|!
-name|_sx_try_upgrade
+name|sx_try_upgrade_
 argument_list|(
 operator|&
 name|map
@@ -2249,7 +2234,7 @@ name|map
 operator|->
 name|timestamp
 expr_stmt|;
-name|_sx_sunlock
+name|sx_sunlock_
 argument_list|(
 operator|&
 name|map
@@ -2265,17 +2250,12 @@ name|vm_map_process_deferred
 argument_list|()
 expr_stmt|;
 comment|/* 			 * If the map's timestamp does not change while the 			 * map is unlocked, then the upgrade succeeds. 			 */
-operator|(
-name|void
-operator|)
-name|_sx_xlock
+name|sx_xlock_
 argument_list|(
 operator|&
 name|map
 operator|->
 name|lock
-argument_list|,
-literal|0
 argument_list|,
 name|file
 argument_list|,
@@ -2291,7 +2271,7 @@ operator|->
 name|timestamp
 condition|)
 block|{
-name|_sx_xunlock
+name|sx_xunlock_
 argument_list|(
 operator|&
 name|map
@@ -2347,10 +2327,7 @@ operator|->
 name|system_map
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-name|_mtx_assert
+name|mtx_assert_
 argument_list|(
 operator|&
 name|map
@@ -2364,11 +2341,9 @@ argument_list|,
 name|line
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
-name|_sx_downgrade
+name|sx_downgrade_
 argument_list|(
 operator|&
 name|map
@@ -2456,7 +2431,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_assert
+name|mtx_assert_
 argument_list|(
 operator|&
 name|map
@@ -2471,7 +2446,7 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|_sx_assert
+name|sx_assert_
 argument_list|(
 operator|&
 name|map
@@ -2488,18 +2463,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_endif
-unit|static void _vm_map_assert_locked_read(vm_map_t map, const char *file, int line) {  	if (map->system_map) 		_mtx_assert(&map->system_mtx, MA_OWNED, file, line); 	else 		_sx_assert(&map->lock, SA_SLOCKED, file, line); }
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -2511,17 +2474,6 @@ define|\
 value|_vm_map_assert_locked(map, LOCK_FILE, LOCK_LINE)
 end_define
 
-begin_define
-define|#
-directive|define
-name|VM_MAP_ASSERT_LOCKED_READ
-parameter_list|(
-name|map
-parameter_list|)
-define|\
-value|_vm_map_assert_locked_read(map, LOCK_FILE, LOCK_LINE)
-end_define
-
 begin_else
 else|#
 directive|else
@@ -2531,15 +2483,6 @@ begin_define
 define|#
 directive|define
 name|VM_MAP_ASSERT_LOCKED
-parameter_list|(
-name|map
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAP_ASSERT_LOCKED_READ
 parameter_list|(
 name|map
 parameter_list|)
@@ -2585,7 +2528,7 @@ name|map
 operator|->
 name|system_map
 condition|)
-name|_mtx_unlock_flags
+name|mtx_unlock_flags_
 argument_list|(
 operator|&
 name|map
@@ -2600,7 +2543,7 @@ name|line
 argument_list|)
 expr_stmt|;
 else|else
-name|_sx_xunlock
+name|sx_xunlock_
 argument_list|(
 operator|&
 name|map

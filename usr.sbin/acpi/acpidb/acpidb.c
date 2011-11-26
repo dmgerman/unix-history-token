@@ -1575,6 +1575,11 @@ argument_list|(
 literal|"fstat"
 argument_list|)
 expr_stmt|;
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 operator|-

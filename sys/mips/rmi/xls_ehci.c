@@ -910,7 +910,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* during module unload there are lots of children leftover */
-name|device_delete_all_children
+name|device_delete_children
 argument_list|(
 name|self
 argument_list|)
@@ -1101,19 +1101,7 @@ argument_list|,
 name|ehci_xls_shutdown
 argument_list|)
 block|,
-comment|/* Bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -901,6 +901,10 @@ decl_stmt|;
 name|char
 name|last_secret_number
 decl_stmt|;
+name|uint16_t
+name|port
+decl_stmt|;
+comment|/* remote UDP encapsulation port */
 block|}
 struct|;
 end_struct

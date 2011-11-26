@@ -470,7 +470,7 @@ name|u_int32_t
 name|ast_tx_delim_underrun
 decl_stmt|;
 name|u_int32_t
-name|ast_tx_aggrfail
+name|ast_tx_aggr_failall
 decl_stmt|;
 comment|/* aggregate TX failed in its entirety */
 name|u_int32_t
@@ -486,9 +486,17 @@ name|u_int32_t
 name|ast_rx_intr
 decl_stmt|;
 name|u_int32_t
+name|ast_tx_aggr_ok
+decl_stmt|;
+comment|/* aggregate TX ok */
+name|u_int32_t
+name|ast_tx_aggr_fail
+decl_stmt|;
+comment|/* aggregate TX failed */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|4
+literal|2
 index|]
 decl_stmt|;
 block|}

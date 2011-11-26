@@ -8346,7 +8346,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|sc_mtx
+name|sc_pcu_mtx
 argument_list|,
 literal|0
 argument_list|,
@@ -23425,6 +23425,11 @@ argument_list|(
 name|ifp
 argument_list|,
 name|ATH_RESET_NOLOSS
+argument_list|)
+expr_stmt|;
+name|ATH_LOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return;

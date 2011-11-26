@@ -751,15 +751,15 @@ comment|/* 239 = timer_getoverrun */
 literal|"freebsd32_nanosleep"
 block|,
 comment|/* 240 = freebsd32_nanosleep */
-literal|"#241"
+literal|"ffclock_getcounter"
 block|,
-comment|/* 241 = nosys */
-literal|"#242"
+comment|/* 241 = ffclock_getcounter */
+literal|"ffclock_setestimate"
 block|,
-comment|/* 242 = nosys */
-literal|"#243"
+comment|/* 242 = ffclock_setestimate */
+literal|"ffclock_getestimate"
 block|,
-comment|/* 243 = nosys */
+comment|/* 243 = ffclock_getestimate */
 literal|"#244"
 block|,
 comment|/* 244 = nosys */

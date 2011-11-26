@@ -1349,7 +1349,7 @@ end_comment
 
 begin_function
 name|int
-name|_mtx_trylock
+name|mtx_trylock_flags_
 parameter_list|(
 name|struct
 name|mtx
@@ -2487,7 +2487,7 @@ end_comment
 
 begin_function
 name|void
-name|_thread_lock_flags
+name|thread_lock_flags_
 parameter_list|(
 name|struct
 name|thread

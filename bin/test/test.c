@@ -307,10 +307,11 @@ specifier|static
 struct|struct
 name|t_op
 block|{
-specifier|const
 name|char
-modifier|*
 name|op_text
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|short
 name|op_num
@@ -645,7 +646,7 @@ name|PAREN
 block|}
 block|,
 block|{
-literal|0
+literal|""
 block|,
 literal|0
 block|,
@@ -2199,6 +2200,7 @@ return|;
 block|}
 while|while
 condition|(
+operator|*
 name|op
 operator|->
 name|op_text
@@ -2359,6 +2361,7 @@ operator|)
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|op
 operator|->
 name|op_text
@@ -2483,6 +2486,7 @@ literal|0
 return|;
 while|while
 condition|(
+operator|*
 name|op
 operator|->
 name|op_text

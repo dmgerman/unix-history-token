@@ -6470,9 +6470,13 @@ literal|0
 condition|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
-literal|"ifa_add_loopback_route: insertion failed\n"
+literal|"%s: insertion failed: %u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return
@@ -6626,9 +6630,13 @@ literal|0
 condition|)
 name|log
 argument_list|(
-name|LOG_INFO
+name|LOG_DEBUG
 argument_list|,
-literal|"ifa_del_loopback_route: deletion failed\n"
+literal|"%s: deletion failed: %u\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|error
 argument_list|)
 expr_stmt|;
 return|return

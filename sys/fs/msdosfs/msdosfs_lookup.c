@@ -3332,6 +3332,9 @@ argument_list|(
 name|bp
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 if|if
 condition|(
 name|error
@@ -3343,6 +3346,8 @@ argument_list|(
 literal|"doscheckpath(): .. not a directory?\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|dep

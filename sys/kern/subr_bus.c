@@ -7014,6 +7014,8 @@ operator|->
 name|children
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -7117,7 +7119,7 @@ end_comment
 
 begin_function
 name|int
-name|device_delete_all_children
+name|device_delete_children
 parameter_list|(
 name|device_t
 name|dev
@@ -7158,6 +7160,8 @@ operator|->
 name|children
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error

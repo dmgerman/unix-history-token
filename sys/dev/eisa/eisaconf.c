@@ -2541,13 +2541,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_alloc_resource
 argument_list|,
 name|eisa_alloc_resource
@@ -2610,11 +2603,7 @@ argument_list|,
 name|eisa_add_mspace_m
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

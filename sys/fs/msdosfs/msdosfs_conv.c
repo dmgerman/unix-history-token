@@ -6246,6 +6246,9 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"msdosfs: non-decreasing id: id %d, last id %d\n"
@@ -6257,6 +6260,8 @@ operator|->
 name|nb_last_id
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* Will store this substring in a WIN_CHARS-aligned slot. */
@@ -6298,6 +6303,9 @@ operator|>
 name|MAXNAMLEN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"msdosfs: file name length %zu too large\n"
@@ -6305,6 +6313,8 @@ argument_list|,
 name|newlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* Shift suffix upwards by the amount length exceeds WIN_CHARS. */

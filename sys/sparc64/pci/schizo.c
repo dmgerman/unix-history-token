@@ -566,13 +566,6 @@ block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_read_ivar
 argument_list|,
 name|schizo_read_ivar
@@ -679,7 +672,7 @@ argument_list|,
 name|schizo_setup_device
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -6196,7 +6189,7 @@ name|end
 operator|.
 name|tv_sec
 operator|=
-literal|1
+literal|15
 expr_stmt|;
 name|end
 operator|.

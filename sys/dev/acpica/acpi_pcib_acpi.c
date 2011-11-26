@@ -497,13 +497,6 @@ block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_read_ivar
 argument_list|,
 name|acpi_pcib_read_ivar
@@ -650,11 +643,7 @@ argument_list|,
 name|acpi_pcib_power_for_sleep
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
