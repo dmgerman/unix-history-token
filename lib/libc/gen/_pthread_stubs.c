@@ -1741,7 +1741,9 @@ name|void
 parameter_list|)
 block|{
 return|return
+operator|(
 name|ENOSYS
+operator|)
 return|;
 block|}
 end_function
