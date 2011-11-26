@@ -113,6 +113,16 @@ directive|ifdef
 name|FFCLOCK
 end_ifdef
 
+begin_expr_stmt
+name|FEATURE
+argument_list|(
+name|ffclock
+argument_list|,
+literal|"Feed-forward clock support"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|extern
 name|struct
