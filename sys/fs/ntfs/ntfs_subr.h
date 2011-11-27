@@ -882,7 +882,8 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|wchar
+name|char
+modifier|*
 name|ntfs_u28
 parameter_list|(
 name|struct
@@ -905,8 +906,10 @@ name|ntfsmount
 modifier|*
 name|ntmp
 parameter_list|,
-name|wchar
-name|wc
+specifier|const
+name|char
+modifier|*
+name|c
 parameter_list|,
 name|int
 modifier|*
