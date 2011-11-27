@@ -1318,7 +1318,8 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tsend [-RDp] [-[iI] snapshot]<snapshot>\n"
+literal|"\tsend [-DvRp] "
+literal|"[-i snapshot | -I snapshot]<snapshot>\n"
 argument_list|)
 operator|)
 return|;
@@ -1426,7 +1427,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tuserspace [-hniHp] [-o field[,...]] "
+literal|"\tuserspace [-niHp] [-o field[,...]] "
 literal|"[-sS field] ... [-t type[,...]]\n"
 literal|"\t<filesystem|snapshot>\n"
 argument_list|)
@@ -1439,7 +1440,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tgroupspace [-hniHpU] [-o field[,...]] "
+literal|"\tgroupspace [-niHp] [-o field[,...]] "
 literal|"[-sS field] ... [-t type[,...]]\n"
 literal|"\t<filesystem|snapshot>\n"
 argument_list|)

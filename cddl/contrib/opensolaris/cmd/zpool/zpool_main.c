@@ -1033,7 +1033,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tonline<pool><device> ...\n"
+literal|"\tonline [-e]<pool><device> ...\n"
 argument_list|)
 operator|)
 return|;
@@ -1090,8 +1090,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tupgrade\n"
-literal|"\tupgrade -v\n"
+literal|"\tupgrade [-v]\n"
 literal|"\tupgrade [-V version]<-a | pool ...>\n"
 argument_list|)
 operator|)
