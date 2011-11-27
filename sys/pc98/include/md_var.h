@@ -40,8 +40,25 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * The ad driver maps the IDE disk's actual geometry to the firmware's  * notion of geometry.  However, PC98 machines need to do something  * different sometimes, so override the hook so we can do so.  */
+comment|/*  * The geometry of disks might need adjustment on PC98 machines.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ccb_calc_geometry
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|scsi_da_bios_params
+parameter_list|(
+name|struct
+name|ccb_calc_geometry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct_decl
 struct_decl|struct
