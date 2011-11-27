@@ -215,6 +215,16 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/md_var.h>
+end_include
+
+begin_comment
+comment|/* geometry translation */
+end_comment
+
+begin_include
+include|#
+directive|include
 file|<machine/stdarg.h>
 end_include
 
@@ -11086,10 +11096,18 @@ name|CAM_REQ_CMP
 expr_stmt|;
 break|break;
 block|}
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|PC98
-comment|/* 		 * In a PC-98 system, geometry translation depens on 		 * the "real" device geometry obtained from mode page 4. 		 * SCSI geometry translation is performed in the 		 * initialization routine of the SCSI BIOS and the result 		 * stored in host memory.  If the translation is available 		 * in host memory, use it.  If not, rely on the default 		 * translation the device driver performs. 		 */
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__sparc64__
+argument_list|)
+comment|/* 		 * In a PC-98 system, geometry translation depens on 		 * the "real" device geometry obtained from mode page 4. 		 * SCSI geometry translation is performed in the 		 * initialization routine of the SCSI BIOS and the result 		 * stored in host memory.  If the translation is available 		 * in host memory, use it.  If not, rely on the default 		 * translation the device driver performs. 		 * For sparc64, we may need adjust the geometry of large 		 * disks in order to fit the limitations of the 16-bit 		 * fields of the VTOC8 disk label. 		 */
 if|if
 condition|(
 name|scsi_da_bios_params
