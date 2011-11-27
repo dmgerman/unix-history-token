@@ -926,7 +926,10 @@ condition|(
 name|te
 operator|==
 name|NULL
-operator|&&
+condition|)
+block|{
+if|if
+condition|(
 name|th
 operator|->
 name|th_seq
@@ -978,8 +981,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: global zone limit reached, "
-literal|"segment dropped\n"
+literal|"%s; %s: global zone limit "
+literal|"reached, segment dropped\n"
 argument_list|,
 name|s
 argument_list|,
@@ -1000,17 +1003,7 @@ literal|0
 operator|)
 return|;
 block|}
-elseif|else
-if|if
-condition|(
-name|th
-operator|->
-name|th_seq
-operator|==
-name|tp
-operator|->
-name|rcv_nxt
-condition|)
+else|else
 block|{
 name|bzero
 argument_list|(
@@ -1056,8 +1049,8 @@ name|log
 argument_list|(
 name|LOG_DEBUG
 argument_list|,
-literal|"%s; %s: global zone limit reached, "
-literal|"using stack for missing segment\n"
+literal|"%s; %s: global zone limit reached, using "
+literal|"stack for missing segment\n"
 argument_list|,
 name|s
 argument_list|,
@@ -1071,6 +1064,7 @@ argument_list|,
 name|M_TCPLOG
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 name|tp
