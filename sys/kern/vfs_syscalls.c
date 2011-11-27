@@ -21618,6 +21618,7 @@ block|}
 endif|#
 directive|endif
 comment|/* CAPABILITIES */
+comment|/* 	 * The file could be not of the vnode type, or it may be not 	 * yet fully initialized, in which case the f_vnode pointer 	 * may be set, but f_ops is still badfileops.  E.g., 	 * devfs_open() transiently create such situation to 	 * facilitate csw d_fdopen(). 	 * 	 * Dupfdopen() handling in kern_openat() installs the 	 * half-baked file into the process descriptor table, allowing 	 * other thread to dereference it. Guard against the race by 	 * checking f_ops. 	 */
 if|if
 condition|(
 name|fp
@@ -21625,6 +21626,13 @@ operator|->
 name|f_vnode
 operator|==
 name|NULL
+operator|||
+name|fp
+operator|->
+name|f_ops
+operator|==
+operator|&
+name|badfileops
 condition|)
 block|{
 name|fdrop
