@@ -189,10 +189,10 @@ comment|/* type=SCTP_SUPPORTED_ADDRTYPE */
 name|uint16_t
 name|addr_type
 index|[
-name|SCTP_ARRAY_MIN_LEN
+literal|2
 index|]
 decl_stmt|;
-comment|/* array of supported address 						 * types */
+comment|/* array of supported address types */
 block|}
 name|SCTP_PACKED
 struct|;
