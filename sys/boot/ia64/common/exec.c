@@ -625,7 +625,7 @@ name|pa
 argument_list|,
 name|shft
 argument_list|,
-name|PTE_AR_RX
+name|PTE_AR_RWX
 argument_list|)
 expr_stmt|;
 name|ia64_copyin
