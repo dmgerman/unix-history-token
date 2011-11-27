@@ -3644,22 +3644,12 @@ name|fifo_tx
 argument_list|)
 expr_stmt|;
 comment|/* set PLL registers */
-if|if
-condition|(
+name|ar71xx_device_set_pll_ge
+argument_list|(
 name|sc
 operator|->
 name|arge_mac_unit
-operator|==
-literal|0
-condition|)
-name|ar71xx_device_set_pll_ge0
-argument_list|(
-name|if_speed
-argument_list|)
-expr_stmt|;
-else|else
-name|ar71xx_device_set_pll_ge1
-argument_list|(
+argument_list|,
 name|if_speed
 argument_list|)
 expr_stmt|;
