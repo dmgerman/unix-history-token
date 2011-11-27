@@ -1499,13 +1499,6 @@ operator||
 name|EXP_TILDE
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|evalskip
-condition|)
-goto|goto
-name|out
-goto|;
 block|}
 operator|*
 name|arglist
@@ -1608,8 +1601,6 @@ block|}
 name|loopnest
 operator|--
 expr_stmt|;
-name|out
-label|:
 name|popstackmark
 argument_list|(
 operator|&
