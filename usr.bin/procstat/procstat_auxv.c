@@ -342,6 +342,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -384,6 +387,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -405,6 +411,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -426,6 +435,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -517,6 +529,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -543,6 +558,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -569,6 +587,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -595,6 +616,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -621,6 +645,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -686,6 +713,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -707,6 +737,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -728,6 +761,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -770,6 +806,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
@@ -833,6 +872,9 @@ argument_list|,
 operator|%
 name|ld
 argument_list|,
+operator|(
+name|long
+operator|)
 name|auxv
 index|[
 name|i
