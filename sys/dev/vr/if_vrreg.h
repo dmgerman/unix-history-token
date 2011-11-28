@@ -3810,6 +3810,10 @@ value|0x0001
 comment|/* Restart unit on next tick */
 define|#
 directive|define
+name|VR_F_TXPAUSE
+value|0x0010
+define|#
+directive|define
 name|VR_F_SUSPENDED
 value|0x2000
 define|#
