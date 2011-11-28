@@ -2566,7 +2566,7 @@ name|table
 operator|->
 name|self
 operator|.
-name|ent_pmblkcnt
+name|ent_size
 operator|+
 literal|1
 expr_stmt|;
