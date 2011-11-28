@@ -237,8 +237,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Given that the Sun disk label only uses 16-bit fields for cylinders,  * heads and sectors we might need to adjust the geometry of large IDE  * disks.  */
+comment|/*  * Given that the VTOC8 disk label only uses 16-bit fields for cylinders,  * heads and sectors we might need to adjust the geometry of large disks.  */
 end_comment
+
+begin_struct_decl
+struct_decl|struct
+name|ccb_calc_geometry
+struct_decl|;
+end_struct_decl
+
+begin_function_decl
+name|int
+name|scsi_da_bios_params
+parameter_list|(
+name|struct
+name|ccb_calc_geometry
+modifier|*
+name|ccg
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_struct_decl
 struct_decl|struct

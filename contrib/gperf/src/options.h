@@ -4,11 +4,11 @@ comment|/* This may look like C code, but it is really -*- C++ -*- */
 end_comment
 
 begin_comment
-comment|/* Handles parsing the Options provided to the user.     Copyright (C) 1989-1998, 2000 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111, USA.  */
+comment|/* Handles parsing the Options provided to the user.     Copyright (C) 1989-1998, 2000, 2002-2004 Free Software Foundation, Inc.    Written by Douglas C. Schmidt<schmidt@ics.uci.edu>    and Bruno Haible<bruno@clisp.org>.     This file is part of GNU GPERF.     GNU GPERF is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU GPERF is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; see the file COPYING.    If not, write to the Free Software Foundation, Inc.,    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_comment
-comment|/* This module provides a uniform interface to the various options available    to a user of the gperf hash function generator.  In addition to the    run-time options, found in the Option_Type below, there is also the    hash table Size and the Keys to be used in the hashing.    The overall design of this module was an experiment in using C++    classes as a mechanism to enhance centralization of option and    and error handling, which tend to get out of hand in a C program. */
+comment|/* This module provides a uniform interface to the various options available    to a user of the gperf hash function generator.  */
 end_comment
 
 begin_ifndef
@@ -30,161 +30,184 @@ directive|include
 file|<stdio.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"positions.h"
+end_include
+
 begin_comment
-comment|/* Enumerate the potential debugging Options. */
+comment|/* Enumeration of the possible boolean options.  */
 end_comment
 
 begin_enum
 enum|enum
 name|Option_Type
 block|{
-name|DEBUG
-init|=
-literal|01
-block|,
-comment|/* Enable debugging (prints diagnostics to stderr). */
-name|ORDER
-init|=
-literal|02
-block|,
-comment|/* Apply ordering heuristic to speed-up search time. */
-name|ALLCHARS
-init|=
-literal|04
-block|,
-comment|/* Use all characters in hash function. */
+comment|/* --- Input file interpretation --- */
+comment|/* Handle user-defined type structured keyword input.  */
 name|TYPE
 init|=
-literal|010
-block|,
-comment|/* Handle user-defined type structured keyword input. */
-name|RANDOM
-init|=
-literal|020
-block|,
-comment|/* Randomly initialize the associated values table. */
-name|DEFAULTCHARS
-init|=
-literal|040
-block|,
-comment|/* Make default char positions be 1,$ (end of keyword). */
-name|SWITCH
-init|=
-literal|0100
-block|,
-comment|/* Generate switch output to save space. */
-name|NOLENGTH
-init|=
-literal|0200
-block|,
-comment|/* Don't include keyword length in hash computations. */
-name|LENTABLE
-init|=
-literal|0400
-block|,
-comment|/* Generate a length table for string comparison. */
-name|DUP
-init|=
-literal|01000
-block|,
-comment|/* Handle duplicate hash values for keywords. */
-name|FAST
-init|=
-literal|02000
-block|,
-comment|/* Generate the hash function ``fast.'' */
-name|NOTYPE
-init|=
-literal|04000
-block|,
-comment|/* Don't include user-defined type definition in output -- it's already defined elsewhere. */
-name|COMP
-init|=
-literal|010000
-block|,
-comment|/* Generate strncmp rather than strcmp. */
-name|GLOBAL
-init|=
-literal|020000
-block|,
-comment|/* Make the keyword table a global variable. */
-name|CONST
-init|=
-literal|040000
-block|,
-comment|/* Make the generated tables readonly (const). */
-name|KRC
-init|=
-literal|0100000
-block|,
-comment|/* Generate K&R C code: no prototypes, no const. */
-name|C
-init|=
-literal|0200000
-block|,
-comment|/* Generate C code: no prototypes, but const (user can #define it away). */
-name|ANSIC
-init|=
-literal|0400000
-block|,
-comment|/* Generate ISO/ANSI C code: prototypes and const, but no class. */
-name|CPLUSPLUS
-init|=
-literal|01000000
-block|,
-comment|/* Generate C++ code: prototypes, const, class, inline, enum. */
-name|ENUM
-init|=
-literal|02000000
-block|,
-comment|/* Use enum for constants. */
-name|INCLUDE
-init|=
-literal|04000000
-block|,
-comment|/* Generate #include statements. */
-name|SEVENBIT
-init|=
-literal|010000000
-comment|/* Assume 7-bit, not 8-bit, characters. */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/* Define some useful constants (these don't really belong here, but I'm    not sure where else to put them!).  These should be consts, but g++    doesn't seem to do the right thing with them at the moment... ;-( */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|MAX_KEY_POS
-init|=
-literal|128
-operator|-
 literal|1
-block|,
-comment|/* Max size of each word's key set. */
-name|WORD_START
-init|=
-literal|1
-block|,
-comment|/* Signals the start of a word. */
-name|WORD_END
-init|=
+operator|<<
 literal|0
 block|,
-comment|/* Signals the end of a word. */
-name|EOS
+comment|/* Ignore case of ASCII characters.  */
+name|UPPERLOWER
 init|=
-name|MAX_KEY_POS
-comment|/* Signals end of the key list. */
+literal|1
+operator|<<
+literal|1
+block|,
+comment|/* --- Language for the output code --- */
+comment|/* Generate K&R C code: no prototypes, no const.  */
+name|KRC
+init|=
+literal|1
+operator|<<
+literal|2
+block|,
+comment|/* Generate C code: no prototypes, but const (user can #define it away).  */
+name|C
+init|=
+literal|1
+operator|<<
+literal|3
+block|,
+comment|/* Generate ISO/ANSI C code: prototypes and const, but no class.  */
+name|ANSIC
+init|=
+literal|1
+operator|<<
+literal|4
+block|,
+comment|/* Generate C++ code: prototypes, const, class, inline, enum.  */
+name|CPLUSPLUS
+init|=
+literal|1
+operator|<<
+literal|5
+block|,
+comment|/* --- Details in the output code --- */
+comment|/* Assume 7-bit, not 8-bit, characters.  */
+name|SEVENBIT
+init|=
+literal|1
+operator|<<
+literal|6
+block|,
+comment|/* Generate a length table for string comparison.  */
+name|LENTABLE
+init|=
+literal|1
+operator|<<
+literal|7
+block|,
+comment|/* Generate strncmp rather than strcmp.  */
+name|COMP
+init|=
+literal|1
+operator|<<
+literal|8
+block|,
+comment|/* Make the generated tables readonly (const).  */
+name|CONST
+init|=
+literal|1
+operator|<<
+literal|9
+block|,
+comment|/* Use enum for constants.  */
+name|ENUM
+init|=
+literal|1
+operator|<<
+literal|10
+block|,
+comment|/* Generate #include statements.  */
+name|INCLUDE
+init|=
+literal|1
+operator|<<
+literal|11
+block|,
+comment|/* Make the keyword table a global variable.  */
+name|GLOBAL
+init|=
+literal|1
+operator|<<
+literal|12
+block|,
+comment|/* Use NULL strings instead of empty strings for empty table entries.  */
+name|NULLSTRINGS
+init|=
+literal|1
+operator|<<
+literal|13
+block|,
+comment|/* Optimize for position-independent code.  */
+name|SHAREDLIB
+init|=
+literal|1
+operator|<<
+literal|14
+block|,
+comment|/* Generate switch output to save space.  */
+name|SWITCH
+init|=
+literal|1
+operator|<<
+literal|15
+block|,
+comment|/* Don't include user-defined type definition in output -- it's already      defined elsewhere.  */
+name|NOTYPE
+init|=
+literal|1
+operator|<<
+literal|16
+block|,
+comment|/* --- Algorithm employed by gperf --- */
+comment|/* Use the given key positions.  */
+name|POSITIONS
+init|=
+literal|1
+operator|<<
+literal|17
+block|,
+comment|/* Handle duplicate hash values for keywords.  */
+name|DUP
+init|=
+literal|1
+operator|<<
+literal|18
+block|,
+comment|/* Don't include keyword length in hash computations.  */
+name|NOLENGTH
+init|=
+literal|1
+operator|<<
+literal|19
+block|,
+comment|/* Randomly initialize the associated values table.  */
+name|RANDOM
+init|=
+literal|1
+operator|<<
+literal|20
+block|,
+comment|/* --- Informative output --- */
+comment|/* Enable debugging (prints diagnostics to stderr).  */
+name|DEBUG
+init|=
+literal|1
+operator|<<
+literal|21
 block|}
 enum|;
 end_enum
 
 begin_comment
-comment|/* Class manager for gperf program Options. */
+comment|/* Class manager for gperf program Options.  */
 end_comment
 
 begin_decl_stmt
@@ -193,339 +216,417 @@ name|Options
 block|{
 name|public
 label|:
+comment|/* Constructor.  */
 name|Options
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
+comment|/* Destructor.  */
 operator|~
 name|Options
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
+comment|/* Parses the options given in the command-line arguments.  */
+name|void
+name|parse_options
+parameter_list|(
 name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+name|argv
+index|[]
+parameter_list|)
+function_decl|;
+comment|/* Prints the given options.  */
+name|void
+name|print_options
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Accessors.  */
+comment|/* Tests a given boolean option.  Returns true if set, false otherwise.  */
+name|bool
 name|operator
-function_decl|[]
+index|[]
+argument_list|(
+name|Option_Type
+name|option
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/* Sets a given boolean option.  */
+name|void
+name|set
 parameter_list|(
 name|Option_Type
 name|option
 parameter_list|)
 function_decl|;
-name|void
-name|operator
-argument_list|()
-operator|(
-name|int
-name|argc
-operator|,
+comment|/* Returns the input file name.  */
+specifier|const
 name|char
 operator|*
-name|argv
-index|[]
-operator|)
+name|get_input_file_name
+argument_list|()
+specifier|const
 expr_stmt|;
-name|void
-name|operator
-init|=
-operator|(
-expr|enum
-name|Option_Type
-operator|)
-decl_stmt|;
-name|void
-name|operator
-operator|!=
-operator|(
-expr|enum
-name|Option_Type
-operator|)
+comment|/* Returns the output file name.  */
+specifier|const
+name|char
+operator|*
+name|get_output_file_name
+argument_list|()
+specifier|const
 expr_stmt|;
-specifier|static
+comment|/* Sets the output language, if not already set.  */
 name|void
-name|print_options
+name|set_language
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|language
 parameter_list|)
 function_decl|;
-specifier|static
-name|void
-name|set_asso_max
-parameter_list|(
-name|int
-name|r
-parameter_list|)
-function_decl|;
-specifier|static
-name|int
-name|get_asso_max
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-name|void
-name|reset
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-name|int
-name|get
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-name|int
-name|get_iterations
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-name|int
-name|get_max_keysig_size
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-name|void
-name|set_keysig_size
-parameter_list|(
-name|int
-parameter_list|)
-function_decl|;
-specifier|static
+comment|/* Returns the jump value.  */
 name|int
 name|get_jump
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Returns the initial associated character value.  */
 name|int
-name|initial_value
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
+name|get_initial_asso_value
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Returns the number of iterations for finding good asso_values.  */
+name|int
+name|get_asso_iterations
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Returns the total number of switch statements to generate.  */
 name|int
 name|get_total_switches
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
+argument_list|()
 specifier|const
-name|char
-modifier|*
-name|get_function_name
-parameter_list|(
+expr_stmt|;
+comment|/* Sets the total number of switch statements, if not already set.  */
 name|void
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|get_key_name
+name|set_total_switches
 parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|get_initializer_suffix
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|get_class_name
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|get_hash_name
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|get_wordlist_name
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-specifier|static
-specifier|const
-name|char
-modifier|*
-name|get_delimiter
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-name|private
-label|:
-specifier|static
-name|int
-name|option_word
-decl_stmt|;
-comment|/* Holds the user-specified Options. */
-specifier|static
 name|int
 name|total_switches
-decl_stmt|;
-comment|/* Number of switch statements to generate. */
-specifier|static
-name|int
-name|total_keysig_size
-decl_stmt|;
-comment|/* Total number of distinct key_positions. */
-specifier|static
-name|int
-name|size
-decl_stmt|;
-comment|/* Range of the hash table. */
-specifier|static
-name|int
-name|key_pos
-decl_stmt|;
-comment|/* Tracks current key position for Iterator. */
-specifier|static
-name|int
-name|jump
-decl_stmt|;
-comment|/* Jump length when trying alternative values. */
-specifier|static
-name|int
-name|initial_asso_value
-decl_stmt|;
-comment|/* Initial value for asso_values table. */
-specifier|static
-name|int
-name|argument_count
-decl_stmt|;
-comment|/* Records count of command-line arguments. */
-specifier|static
-name|int
-name|iterations
-decl_stmt|;
-comment|/* Amount to iterate when a collision occurs. */
-specifier|static
+parameter_list|)
+function_decl|;
+comment|/* Returns the factor by which to multiply the generated table's size.  */
+name|float
+name|get_size_multiple
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Returns the generated function name.  */
+specifier|const
 name|char
-modifier|*
-modifier|*
-name|argument_vector
-decl_stmt|;
-comment|/* Stores a pointer to command-line vector. */
-specifier|static
+operator|*
+name|get_function_name
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the generated function name, if not already set.  */
+name|void
+name|set_function_name
+parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|function_name
-decl_stmt|;
-comment|/* Names used for generated lookup function. */
-specifier|static
+name|name
+parameter_list|)
+function_decl|;
+comment|/* Returns the keyword key name.  */
+specifier|const
+name|char
+operator|*
+name|get_slot_name
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the keyword key name, if not already set.  */
+name|void
+name|set_slot_name
+parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|key_name
-decl_stmt|;
-comment|/* Name used for keyword key. */
-specifier|static
+name|name
+parameter_list|)
+function_decl|;
+comment|/* Returns the struct initializer suffix.  */
+specifier|const
+name|char
+operator|*
+name|get_initializer_suffix
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the struct initializer suffix, if not already set.  */
+name|void
+name|set_initializer_suffix
+parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|initializer_suffix
-decl_stmt|;
-comment|/* Suffix for empty struct initializers. */
-specifier|static
+name|initializers
+parameter_list|)
+function_decl|;
+comment|/* Returns the generated class name.  */
+specifier|const
+name|char
+operator|*
+name|get_class_name
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the generated class name, if not already set.  */
+name|void
+name|set_class_name
+parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|class_name
-decl_stmt|;
-comment|/* Name used for generated C++ class. */
-specifier|static
+name|name
+parameter_list|)
+function_decl|;
+comment|/* Returns the hash function name.  */
+specifier|const
+name|char
+operator|*
+name|get_hash_name
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the hash function name, if not already set.  */
+name|void
+name|set_hash_name
+parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|hash_name
-decl_stmt|;
-comment|/* Name used for generated hash function. */
-specifier|static
+name|name
+parameter_list|)
+function_decl|;
+comment|/* Returns the hash table array name.  */
+specifier|const
+name|char
+operator|*
+name|get_wordlist_name
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the hash table array name, if not already set.  */
+name|void
+name|set_wordlist_name
+parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|wordlist_name
-decl_stmt|;
-comment|/* Name used for hash table array. */
-specifier|static
+name|name
+parameter_list|)
+function_decl|;
+comment|/* Returns the length table array name.  */
+specifier|const
+name|char
+operator|*
+name|get_lengthtable_name
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the length table array name, if not already set.  */
+name|void
+name|set_lengthtable_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+comment|/* Returns the string pool name.  */
+specifier|const
+name|char
+operator|*
+name|get_stringpool_name
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the string pool name, if not already set.  */
+name|void
+name|set_stringpool_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+comment|/* Returns the string used to delimit keywords from other attributes.  */
+specifier|const
+name|char
+operator|*
+name|get_delimiters
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/* Sets the delimiters string, if not already set.  */
+name|void
+name|set_delimiters
+parameter_list|(
 specifier|const
 name|char
 modifier|*
 name|delimiters
-decl_stmt|;
-comment|/* Separates keywords from other attributes. */
-specifier|static
-name|char
-name|key_positions
-index|[
-name|MAX_KEY_POS
-index|]
-decl_stmt|;
-comment|/* Contains user-specified key choices. */
-specifier|static
-name|int
-name|key_sort
-parameter_list|(
-name|char
-modifier|*
-name|base
-parameter_list|,
-name|int
-name|len
 parameter_list|)
 function_decl|;
-comment|/* Sorts key positions in REVERSE order. */
+comment|/* Returns key positions.  */
+specifier|const
+name|Positions
+operator|&
+name|get_key_positions
+argument_list|()
+specifier|const
+expr_stmt|;
+name|private
+label|:
+comment|/* Prints program usage to given stream.  */
 specifier|static
 name|void
 name|short_usage
 parameter_list|(
 name|FILE
 modifier|*
-name|strm
+name|stream
 parameter_list|)
 function_decl|;
-comment|/* Prints proper program usage. */
+comment|/* Prints program usage to given stream.  */
 specifier|static
 name|void
 name|long_usage
 parameter_list|(
 name|FILE
 modifier|*
-name|strm
+name|stream
 parameter_list|)
 function_decl|;
-comment|/* Prints proper program usage. */
+comment|/* Records count of command-line arguments.  */
+name|int
+name|_argument_count
+decl_stmt|;
+comment|/* Stores a pointer to command-line argument vector.  */
+name|char
+modifier|*
+modifier|*
+name|_argument_vector
+decl_stmt|;
+comment|/* Holds the boolean options.  */
+name|int
+name|_option_word
+decl_stmt|;
+comment|/* Name of input file.  */
+name|char
+modifier|*
+name|_input_file_name
+decl_stmt|;
+comment|/* Name of output file.  */
+name|char
+modifier|*
+name|_output_file_name
+decl_stmt|;
+comment|/* The output language.  */
+specifier|const
+name|char
+modifier|*
+name|_language
+decl_stmt|;
+comment|/* Jump length when trying alternative values.  */
+name|int
+name|_jump
+decl_stmt|;
+comment|/* Initial value for asso_values table.  */
+name|int
+name|_initial_asso_value
+decl_stmt|;
+comment|/* Number of attempts at finding good asso_values.  */
+name|int
+name|_asso_iterations
+decl_stmt|;
+comment|/* Number of switch statements to generate.  */
+name|int
+name|_total_switches
+decl_stmt|;
+comment|/* Factor by which to multiply the generated table's size.  */
+name|float
+name|_size_multiple
+decl_stmt|;
+comment|/* Names used for generated lookup function.  */
+specifier|const
+name|char
+modifier|*
+name|_function_name
+decl_stmt|;
+comment|/* Name used for keyword key.  */
+specifier|const
+name|char
+modifier|*
+name|_slot_name
+decl_stmt|;
+comment|/* Suffix for empty struct initializers.  */
+specifier|const
+name|char
+modifier|*
+name|_initializer_suffix
+decl_stmt|;
+comment|/* Name used for generated C++ class.  */
+specifier|const
+name|char
+modifier|*
+name|_class_name
+decl_stmt|;
+comment|/* Name used for generated hash function.  */
+specifier|const
+name|char
+modifier|*
+name|_hash_name
+decl_stmt|;
+comment|/* Name used for hash table array.  */
+specifier|const
+name|char
+modifier|*
+name|_wordlist_name
+decl_stmt|;
+comment|/* Name used for length table array.  */
+specifier|const
+name|char
+modifier|*
+name|_lengthtable_name
+decl_stmt|;
+comment|/* Name used for the string pool.  */
+specifier|const
+name|char
+modifier|*
+name|_stringpool_name
+decl_stmt|;
+comment|/* Separates keywords from other attributes.  */
+specifier|const
+name|char
+modifier|*
+name|_delimiters
+decl_stmt|;
+comment|/* Contains user-specified key choices.  */
+name|Positions
+name|_key_positions
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -534,7 +635,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/* Global option coordinator for the entire program. */
+comment|/* Global option coordinator for the entire program.  */
 end_comment
 
 begin_decl_stmt
@@ -544,93 +645,11 @@ name|option
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Set to 1 if your want to stack-allocate some large arrays.    This requires compiler support for variable-size arrays on the stack    (not ANSI). */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LARGE_STACK_ARRAYS
-end_ifndef
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__GNUG__
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__STRICT_ANSI__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|LARGE_STACK_ARRAYS
-value|1
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|LARGE_STACK_ARRAYS
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* Set to 1 if the stack is large enough for holding a text line. */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LARGE_STACK
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|LARGE_STACK
-value|1
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|__OPTIMIZE__
 end_ifdef
-
-begin_include
-include|#
-directive|include
-file|"trace.h"
-end_include
 
 begin_define
 define|#

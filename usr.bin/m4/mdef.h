@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*	$OpenBSD: mdef.h,v 1.21 2001/09/27 11:40:33 espie Exp $	*/
+comment|/*	$OpenBSD: mdef.h,v 1.31 2011/09/27 07:24:02 espie Exp $	*/
 end_comment
 
 begin_comment
@@ -8,8 +8,37 @@ comment|/*	$NetBSD: mdef.h,v 1.7 1996/01/13 23:25:27 pk Exp $	*/
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit at York University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mdef.h	8.1 (Berkeley) 6/6/93  * $FreeBSD$  */
+comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from software contributed to Berkeley by  * Ozan Yigit at York University.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *	@(#)mdef.h	8.1 (Berkeley) 6/6/93  * $FreeBSD$  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__GNUC__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|UNUSED
+value|__attribute__((__unused__))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|UNUSED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -315,6 +344,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|FORMATTYPE
+value|44
+end_define
+
+begin_define
+define|#
+directive|define
+name|BUILTIN_MARKER
+value|"__builtin_"
+end_define
+
+begin_define
+define|#
+directive|define
 name|TYPEMASK
 value|63
 end_define
@@ -456,7 +499,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* maximum include files   	    */
+comment|/* maximum include files	    */
 end_comment
 
 begin_define
@@ -467,7 +510,7 @@ value|10
 end_define
 
 begin_comment
-comment|/* maximum # of diversions 	    */
+comment|/* maximum # of diversions	    */
 end_comment
 
 begin_define
@@ -511,18 +554,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* maximum chars in a tokn 	    */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|HASHSIZE
-value|199
-end_define
-
-begin_comment
-comment|/* maximum size of hashtab 	    */
+comment|/* maximum chars in a tokn	    */
 end_comment
 
 begin_define
@@ -586,14 +618,13 @@ end_typedef
 
 begin_struct
 struct|struct
-name|ndblock
+name|macro_definition
 block|{
-comment|/* hastable structure         */
-name|char
+name|struct
+name|macro_definition
 modifier|*
-name|name
+name|next
 decl_stmt|;
-comment|/* entry name..               */
 name|char
 modifier|*
 name|defn
@@ -604,40 +635,35 @@ name|int
 name|type
 decl_stmt|;
 comment|/* type of the entry..        */
-name|unsigned
-name|int
-name|hv
-decl_stmt|;
-comment|/* hash function value..      */
-name|ndptr
-name|nxtptr
-decl_stmt|;
-comment|/* link to next entry..       */
 block|}
 struct|;
 end_struct
 
-begin_define
-define|#
-directive|define
-name|nil
-value|((ndptr) 0)
-end_define
-
 begin_struct
 struct|struct
-name|keyblk
+name|ndblock
 block|{
-specifier|const
-name|char
-modifier|*
-name|knam
-decl_stmt|;
-comment|/* keyword name */
+comment|/* hashtable structure         */
+name|unsigned
 name|int
-name|ktyp
+name|builtin_type
 decl_stmt|;
-comment|/* keyword type */
+name|unsigned
+name|int
+name|trace_flags
+decl_stmt|;
+name|struct
+name|macro_definition
+modifier|*
+name|d
+decl_stmt|;
+name|char
+name|name
+index|[
+literal|1
+index|]
+decl_stmt|;
+comment|/* entry name..               */
 block|}
 struct|;
 end_struct
@@ -677,6 +703,11 @@ name|unsigned
 name|long
 name|lineno
 decl_stmt|;
+name|unsigned
+name|long
+name|synch_lineno
+decl_stmt|;
+comment|/* used for -s */
 name|int
 name|c
 decl_stmt|;
@@ -699,8 +730,16 @@ value|(infile[ilevel].lineno)
 end_define
 
 begin_comment
-comment|/*  * macros for readibility and/or speed  *  *      pushf() - push a call frame entry onto stack  *      pushs() - push a string pointer onto stack  */
+comment|/*  * macros for readibility and/or speed  *  *      gpbc()  - get a possibly pushed-back character  *      pushf() - push a call frame entry onto stack  *      pushs() - push a string pointer onto stack  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|gpbc
+parameter_list|()
+value|(bp> bufbase) ? *--bp : obtain_char(infile+ilevel)
+end_define
 
 begin_define
 define|#
@@ -710,7 +749,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {						\ 		if ((uintptr_t)++sp == STACKMAX) 	\ 			enlarge_stack();		\ 		mstack[sp].sfra = (x);			\ 		sstack[sp] = 0;				\ 	} while (0)
+value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sfra = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
 end_define
 
 begin_define
@@ -721,7 +760,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {						\ 		if ((uintptr_t)++sp == STACKMAX) 	\ 			enlarge_stack();		\ 		mstack[sp].sstr = (x);			\ 		sstack[sp] = 1;				\ 	} while (0)
+value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 1; \ 	} while (0)
 end_define
 
 begin_define
@@ -732,11 +771,11 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|do {						\ 		if ((uintptr_t)++sp == STACKMAX) 	\ 			enlarge_stack();		\ 		mstack[sp].sstr = (x);			\ 		sstack[sp] = 0;				\ 	} while (0)
+value|do {				\ 		if (++sp == (int)STACKMAX)	\ 			enlarge_stack();\ 		mstack[sp].sstr = (x);	\ 		sstack[sp] = 0; \ 	} while (0)
 end_define
 
 begin_comment
-comment|/*  *	    .				   .  *	|   .	|<-- sp		|  .  |  *	+-------+			+-----+  *	| arg 3 ----------------------->| str |  *	+-------+			|  .  |  *	| arg 2 ---PREVEP-----+ 	   .  *	+-------+	      |  *	    .		      |		|     |  *	+-------+	      | 	+-----+  *	| plev	|  PARLEV     +-------->| str |  *	+-------+			|  .  |  *	| type	|  CALTYP		   .  *	+-------+  *	| prcf	---PREVFP--+  *	+-------+  	   |  *	|   .	|  PREVSP  |  *	    .	   	   |  *	+-------+	   |  *	|<----------+  *	+-------+  *  */
+comment|/*  *	    .				   .  *	|   .	|<-- sp		|  .  |  *	+-------+			+-----+  *	| arg 3 ----------------------->| str |  *	+-------+			|  .  |  *	| arg 2 ---PREVEP-----+		   .  *	+-------+	      |  *	    .		      |		|     |  *	+-------+	      |		+-----+  *	| plev	|  PARLEV     +-------->| str |  *	+-------+			|  .  |  *	| type	|  CALTYP		   .  *	+-------+  *	| prcf	---PREVFP--+  *	+-------+	   |  *	|   .	|  PREVSP  |  *	    .		   |  *	+-------+	   |  *	|<----------+  *	+-------+  *  */
 end_comment
 
 begin_define
@@ -750,6 +789,13 @@ begin_define
 define|#
 directive|define
 name|CALTYP
+value|(mstack[fp-2].sfra)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TRACESTATUS
 value|(mstack[fp-1].sfra)
 end_define
 
@@ -764,14 +810,14 @@ begin_define
 define|#
 directive|define
 name|PREVSP
-value|(fp-3)
+value|(fp-4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|PREVFP
-value|(mstack[fp-2].sfra)
+value|(mstack[fp-3].sfra)
 end_define
 
 end_unit

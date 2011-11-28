@@ -2515,8 +2515,10 @@ case|:
 name|ia
 operator|->
 name|ia_sockmask
+operator|.
+name|sin_addr
 operator|=
-operator|*
+operator|(
 operator|(
 expr|struct
 name|sockaddr_in
@@ -2526,6 +2528,9 @@ operator|&
 name|ifr
 operator|->
 name|ifr_addr
+operator|)
+operator|->
+name|sin_addr
 expr_stmt|;
 name|ia
 operator|->

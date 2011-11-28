@@ -20,6 +20,138 @@ name|_USB_TRANSFER_H_
 end_define
 
 begin_comment
+comment|/*  * Definition of internal USB transfer states:  * ===========================================  *  * The main reason there are many USB states is that we are allowed to  * cancel USB transfers, then start the USB transfer again and that  * this state transaction cannot always be done in a single atomic  * operation without blocking the calling thread. One reason for this  * is that the USB hardware sometimes needs to wait for DMA  * controllers to finish which is done asynchronously and grows the  * statemachine.  *  * When extending the following statemachine there are basically two  * things you should think about: Which states should be executed or  * modified in case of USB transfer stop and which states should be  * executed or modified in case of USB transfer start. Also respect  * the "can_cancel_immed" flag which basically tells if you can go  * directly from a wait state to the cancelling states.  */
+end_comment
+
+begin_enum
+enum|enum
+block|{
+comment|/* XFER start execute state */
+comment|/* USB_ST_SETUP = 0 (already defined) */
+comment|/* XFER transferred execute state */
+comment|/* USB_ST_TRANSFERRED = 1 (already defined) */
+comment|/* XFER error execute state */
+comment|/* USB_ST_ERROR = 2 (already defined) */
+comment|/* XFER restart after error execute state */
+name|USB_ST_RESTART
+init|=
+literal|8
+block|,
+comment|/* XFER transfer idle state */
+name|USB_ST_WAIT_SETUP
+block|,
+comment|/* Other XFER execute states */
+name|USB_ST_PIPE_OPEN
+init|=
+literal|16
+block|,
+name|USB_ST_PIPE_OPEN_ERROR
+block|,
+name|USB_ST_PIPE_OPEN_RESTART
+block|,
+name|USB_ST_BDMA_LOAD
+block|,
+name|USB_ST_BDMA_LOAD_ERROR
+block|,
+name|USB_ST_BDMA_LOAD_RESTART
+block|,
+name|USB_ST_IVAL_DLY
+block|,
+name|USB_ST_IVAL_DLY_ERROR
+block|,
+name|USB_ST_IVAL_DLY_RESTART
+block|,
+name|USB_ST_PIPE_STALL
+block|,
+name|USB_ST_PIPE_STALL_ERROR
+block|,
+name|USB_ST_PIPE_STALL_RESTART
+block|,
+name|USB_ST_ENTER
+block|,
+name|USB_ST_ENTER_ERROR
+block|,
+name|USB_ST_ENTER_RESTART
+block|,
+name|USB_ST_START
+block|,
+name|USB_ST_START_ERROR
+block|,
+name|USB_ST_START_RESTART
+block|,
+name|USB_ST_PIPE_CLOSE
+block|,
+name|USB_ST_PIPE_CLOSE_ERROR
+block|,
+name|USB_ST_PIPE_CLOSE_RESTART
+block|,
+name|USB_ST_BDMA_DLY
+block|,
+name|USB_ST_BDMA_DLY_ERROR
+block|,
+name|USB_ST_BDMA_DLY_RESTART
+block|,
+comment|/* XFER transfer wait states */
+name|USB_ST_WAIT_PIPE_OPEN
+init|=
+literal|64
+block|,
+name|USB_ST_WAIT_PIPE_OPEN_ERROR
+block|,
+name|USB_ST_WAIT_PIPE_OPEN_RESTART
+block|,
+name|USB_ST_WAIT_BDMA_LOAD
+block|,
+name|USB_ST_WAIT_BDMA_LOAD_ERROR
+block|,
+name|USB_ST_WAIT_BDMA_LOAD_RESTART
+block|,
+name|USB_ST_WAIT_IVAL_DLY
+block|,
+name|USB_ST_WAIT_IVAL_DLY_ERROR
+block|,
+name|USB_ST_WAIT_IVAL_DLY_RESTART
+block|,
+name|USB_ST_WAIT_PIPE_STALL
+block|,
+name|USB_ST_WAIT_PIPE_STALL_ERROR
+block|,
+name|USB_ST_WAIT_PIPE_STALL_RESTART
+block|,
+name|USB_ST_WAIT_ENTER
+block|,
+name|USB_ST_WAIT_ENTER_ERROR
+block|,
+name|USB_ST_WAIT_ENTER_RESTART
+block|,
+name|USB_ST_WAIT_START
+block|,
+name|USB_ST_WAIT_START_ERROR
+block|,
+name|USB_ST_WAIT_START_RESTART
+block|,
+name|USB_ST_WAIT_PIPE_CLOSE
+block|,
+name|USB_ST_WAIT_PIPE_CLOSE_ERROR
+block|,
+name|USB_ST_WAIT_PIPE_CLOSE_RESTART
+block|,
+name|USB_ST_WAIT_BDMA_DLY
+block|,
+name|USB_ST_WAIT_BDMA_DLY_ERROR
+block|,
+name|USB_ST_WAIT_BDMA_DLY_RESTART
+block|,
+name|USB_ST_WAIT_TRANSFERRED
+block|,
+name|USB_ST_WAIT_TRANSFERRED_ERROR
+block|,
+name|USB_ST_WAIT_TRANSFERRED_RESTART
+block|, }
+enum|;
+end_enum
+
+begin_comment
 comment|/*  * The following structure defines the messages that is used to signal  * the "done_p" USB process.  */
 end_comment
 

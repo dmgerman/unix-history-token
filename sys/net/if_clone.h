@@ -41,7 +41,7 @@ parameter_list|,
 name|destroy
 parameter_list|)
 define|\
-value|{ { 0 }, name, maxunit, NULL, 0, data, attach, match, create, destroy }
+value|{									\ 	.ifc_name = name,						\ 	.ifc_maxunit = maxunit,						\ 	.ifc_data = data,						\ 	.ifc_attach = attach,						\ 	.ifc_match = match,						\ 	.ifc_create = create,						\ 	.ifc_destroy = destroy,						\     }
 end_define
 
 begin_comment
@@ -69,18 +69,12 @@ name|int
 name|ifc_maxunit
 decl_stmt|;
 comment|/* (c) Maximum unit number */
-name|unsigned
-name|char
+name|struct
+name|unrhdr
 modifier|*
-name|ifc_units
+name|ifc_unrhdr
 decl_stmt|;
-comment|/* (i) Bitmap to handle units. */
-comment|/*     Considered private, access */
-comment|/*     via ifc_(alloc|free)_unit(). */
-name|int
-name|ifc_bmlen
-decl_stmt|;
-comment|/* (c) Bitmap length. */
+comment|/* (c) alloc_unr(9) header */
 name|void
 modifier|*
 name|ifc_data
@@ -154,7 +148,7 @@ name|struct
 name|mtx
 name|ifc_mtx
 decl_stmt|;
-comment|/* Muted to protect members. */
+comment|/* Mutex to protect members. */
 name|LIST_HEAD
 argument_list|(
 argument_list|,
@@ -177,7 +171,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|if_clone_attach
 parameter_list|(
 name|struct
