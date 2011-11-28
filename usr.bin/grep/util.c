@@ -480,10 +480,17 @@ comment|/* FALLTHROUGH */
 case|case
 name|FTS_ERR
 case|:
-name|errx
+name|notfound
+operator|=
+name|true
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|sflag
+condition|)
+name|warnx
 argument_list|(
-literal|2
-argument_list|,
 literal|"%s: %s"
 argument_list|,
 name|p
