@@ -1016,6 +1016,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|Op
 operator|->
 name|Common
@@ -1023,6 +1024,17 @@ operator|.
 name|DisasmOpcode
 operator|==
 name|ACPI_DASM_LNOT_PREFIX
+operator|)
+operator|||
+operator|(
+name|Op
+operator|->
+name|Common
+operator|.
+name|AmlOpcode
+operator|==
+name|AML_INT_CONNECTION_OP
+operator|)
 condition|)
 block|{
 return|return

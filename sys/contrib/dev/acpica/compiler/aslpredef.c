@@ -211,6 +211,17 @@ block|}
 block|,
 block|{
 block|{
+literal|"_DBT"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
 literal|"_DEC"
 block|,
 literal|0
@@ -219,6 +230,50 @@ literal|0
 block|}
 block|}
 block|,
+block|{
+block|{
+literal|"_DPL"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_DRS"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_END"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_FLC"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
 block|{
 block|{
 literal|"_GRA"
@@ -251,6 +306,17 @@ block|}
 block|,
 block|{
 block|{
+literal|"_IOR"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
 literal|"_LEN"
 block|,
 literal|0
@@ -259,6 +325,17 @@ literal|0
 block|}
 block|}
 block|,
+block|{
+block|{
+literal|"_LIN"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
 block|{
 block|{
 literal|"_LL_"
@@ -321,6 +398,17 @@ block|}
 block|,
 block|{
 block|{
+literal|"_MOD"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
 literal|"_MTP"
 block|,
 literal|0
@@ -329,6 +417,61 @@ literal|0
 block|}
 block|}
 block|,
+block|{
+block|{
+literal|"_PAR"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_PHA"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_PIN"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_PPI"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_POL"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
 block|{
 block|{
 literal|"_RBO"
@@ -382,6 +525,17 @@ block|}
 block|,
 block|{
 block|{
+literal|"_RXL"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
 literal|"_SHR"
 block|,
 literal|0
@@ -400,6 +554,39 @@ literal|0
 block|}
 block|}
 block|,
+block|{
+block|{
+literal|"_SLV"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_SPE"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
+literal|"_STB"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
 block|{
 block|{
 literal|"_TRA"
@@ -443,6 +630,17 @@ block|}
 block|,
 block|{
 block|{
+literal|"_TXL"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
+block|{
+block|{
 literal|"_TYP"
 block|,
 literal|0
@@ -451,6 +649,17 @@ literal|0
 block|}
 block|}
 block|,
+block|{
+block|{
+literal|"_VEN"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|}
+block|,
+comment|/* Acpi 5.0 */
 block|{
 block|{
 block|{
@@ -1662,6 +1871,9 @@ expr_stmt|;
 break|break;
 case|case
 name|PARSEOP_PACKAGE
+case|:
+case|case
+name|PARSEOP_VAR_PACKAGE
 case|:
 name|ReturnBtype
 operator|=

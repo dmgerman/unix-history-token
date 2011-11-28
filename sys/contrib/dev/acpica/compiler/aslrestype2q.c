@@ -376,7 +376,7 @@ argument_list|,
 literal|3
 argument_list|)
 expr_stmt|;
-name|RsCreateBitField
+name|RsCreateMultiBitField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -392,6 +392,8 @@ name|SpecificFlags
 argument_list|)
 argument_list|,
 literal|0
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -413,7 +415,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -452,7 +454,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -491,7 +493,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -565,7 +567,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1250,7 +1252,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|RsCreateBitField
+name|RsCreateMultiBitField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1266,6 +1268,8 @@ name|SpecificFlags
 argument_list|)
 argument_list|,
 literal|1
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1326,7 +1330,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1365,7 +1369,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1404,7 +1408,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1443,7 +1447,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1478,7 +1482,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1679,7 +1683,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|RsCreateBitField
+name|RsCreateMultiBitField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -1695,6 +1699,8 @@ name|SpecificFlags
 argument_list|)
 argument_list|,
 literal|3
+argument_list|,
+literal|2
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2197,7 +2203,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -2236,7 +2242,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -2275,7 +2281,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -2314,7 +2320,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,
@@ -2349,7 +2355,7 @@ name|Value
 operator|.
 name|Integer
 expr_stmt|;
-name|RsCreateByteField
+name|RsCreateQwordField
 argument_list|(
 name|InitializerOp
 argument_list|,

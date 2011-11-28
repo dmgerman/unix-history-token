@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x7F
+value|0x81
 end_define
 
 begin_comment
@@ -553,17 +553,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ANOBJ_IS_BIT_OFFSET
-value|0x40
-end_define
-
-begin_comment
-comment|/* iASL only: Reference is a bit offset */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ANOBJ_IS_REFERENCED
 value|0x80
 end_define
@@ -768,6 +757,14 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DataRegisterNode
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ConnectionNode
+decl_stmt|;
+name|UINT8
+modifier|*
+name|ResourceBuffer
+decl_stmt|;
 name|UINT32
 name|BankValue
 decl_stmt|;
@@ -777,6 +774,9 @@ decl_stmt|;
 name|UINT32
 name|FieldBitLength
 decl_stmt|;
+name|UINT16
+name|ResourceLength
+decl_stmt|;
 name|UINT8
 name|FieldFlags
 decl_stmt|;
@@ -785,6 +785,9 @@ name|Attribute
 decl_stmt|;
 name|UINT8
 name|FieldType
+decl_stmt|;
+name|UINT8
+name|AccessLength
 decl_stmt|;
 block|}
 name|ACPI_CREATE_FIELD_INFO
@@ -1021,7 +1024,7 @@ comment|/*  * Secondary information structures for ACPI predefined objects that 
 end_comment
 
 begin_comment
-comment|/*  * Used for ACPI_PTYPE1_FIXED, ACPI_PTYPE1_VAR, ACPI_PTYPE2,  * ACPI_PTYPE2_MIN, ACPI_PTYPE2_PKG_COUNT, ACPI_PTYPE2_COUNT  */
+comment|/*  * Used for ACPI_PTYPE1_FIXED, ACPI_PTYPE1_VAR, ACPI_PTYPE2,  * ACPI_PTYPE2_MIN, ACPI_PTYPE2_PKG_COUNT, ACPI_PTYPE2_COUNT,  * ACPI_PTYPE2_FIX_VAR  */
 end_comment
 
 begin_typedef
@@ -1154,6 +1157,10 @@ name|union
 name|acpi_operand_object
 modifier|*
 name|ParentPackage
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
 decl_stmt|;
 name|UINT32
 name|Flags
@@ -2083,6 +2090,30 @@ name|ACPI_OPCODE_INFO
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Structure for Resource Tag information */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_tag_info
+block|{
+name|UINT32
+name|BitOffset
+decl_stmt|;
+name|UINT32
+name|BitLength
+decl_stmt|;
+block|}
+name|ACPI_TAG_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Value associated with the parse object */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -2117,6 +2148,10 @@ modifier|*
 name|Arg
 decl_stmt|;
 comment|/* arguments and contained ops */
+name|ACPI_TAG_INFO
+name|Tag
+decl_stmt|;
+comment|/* Resource descriptor tag info  */
 block|}
 name|ACPI_PARSE_VALUE
 typedef|;
@@ -3321,7 +3356,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_RESOURCE_NAME_RESERVED_S1
+name|ACPI_RESOURCE_NAME_FIXED_DMA
 value|0x50
 end_define
 
@@ -3444,8 +3479,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_RESOURCE_NAME_GPIO
+value|0x8C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_NAME_SERIAL_BUS
+value|0x8E
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_RESOURCE_NAME_LARGE_MAX
-value|0x8B
+value|0x8E
 end_define
 
 begin_comment

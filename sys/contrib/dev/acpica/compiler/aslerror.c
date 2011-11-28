@@ -688,6 +688,18 @@ operator|->
 name|LineNumber
 condition|)
 block|{
+comment|/* Main message: try to use string from AslMessages first */
+if|if
+condition|(
+operator|!
+name|MainMessage
+condition|)
+block|{
+name|MainMessage
+operator|=
+literal|""
+expr_stmt|;
+block|}
 name|MsgLength
 operator|=
 name|strlen
@@ -702,12 +714,24 @@ operator|==
 literal|0
 condition|)
 block|{
+comment|/* Use the secondary/extra message as main message */
 name|MainMessage
 operator|=
 name|Enode
 operator|->
 name|Message
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|MainMessage
+condition|)
+block|{
+name|MainMessage
+operator|=
+literal|""
+expr_stmt|;
+block|}
 name|MsgLength
 operator|=
 name|strlen
@@ -1422,6 +1446,7 @@ begin_function
 name|int
 name|AslCompilererror
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|CompilerMessage
@@ -1448,7 +1473,12 @@ index|]
 operator|.
 name|Filename
 argument_list|,
+name|ACPI_CAST_PTR
+argument_list|(
+name|char
+argument_list|,
 name|CompilerMessage
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

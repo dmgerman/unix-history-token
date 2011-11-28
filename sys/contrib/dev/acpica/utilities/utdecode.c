@@ -345,6 +345,10 @@ block|,
 literal|"PCIBARTarget"
 block|,
 literal|"IPMI"
+block|,
+literal|"GeneralPurposeIo"
+block|,
+literal|"GenericSerialBus"
 block|}
 decl_stmt|;
 end_decl_stmt

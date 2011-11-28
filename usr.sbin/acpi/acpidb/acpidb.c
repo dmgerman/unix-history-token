@@ -96,7 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/tools/acpiexec/aecommon.h>
+file|<contrib/dev/acpica/include/accommon.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
 begin_comment

@@ -982,9 +982,11 @@ name|AcpiDsExecuteArguments
 argument_list|(
 name|Node
 argument_list|,
-name|Node
+name|ExtraDesc
 operator|->
-name|Parent
+name|Extra
+operator|.
+name|ScopeNode
 argument_list|,
 name|ExtraDesc
 operator|->

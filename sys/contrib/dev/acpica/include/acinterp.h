@@ -1688,6 +1688,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|BOOLEAN
+name|AcpiIsValidSpaceId
+parameter_list|(
+name|UINT8
+name|SpaceId
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * exregion - default OpRegion handlers  */
 end_comment
