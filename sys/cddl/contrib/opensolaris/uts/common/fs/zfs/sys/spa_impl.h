@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -265,6 +265,11 @@ name|MAXNAMELEN
 index|]
 decl_stmt|;
 comment|/* pool name */
+name|char
+modifier|*
+name|spa_comment
+decl_stmt|;
+comment|/* comment */
 name|avl_node_t
 name|spa_avl
 decl_stmt|;
@@ -380,9 +385,13 @@ name|spa_root_vdev
 decl_stmt|;
 comment|/* top-level vdev container */
 name|uint64_t
+name|spa_config_guid
+decl_stmt|;
+comment|/* config pool guid */
+name|uint64_t
 name|spa_load_guid
 decl_stmt|;
-comment|/* initial guid for spa_load */
+comment|/* spa_load initialized guid */
 name|list_t
 name|spa_config_dirty_list
 decl_stmt|;

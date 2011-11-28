@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -634,18 +634,37 @@ name|defer
 parameter_list|)
 function_decl|;
 name|int
-name|dmu_snapshots_destroy
+name|dmu_get_recursive_snaps_nvl
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fsname
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|snapname
 parameter_list|,
+name|struct
+name|nvlist
+modifier|*
+name|snaps
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_snapshots_destroy_nvl
+parameter_list|(
+name|struct
+name|nvlist
+modifier|*
+name|snaps
+parameter_list|,
 name|boolean_t
 name|defer
+parameter_list|,
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 name|int
@@ -2597,6 +2616,25 @@ parameter_list|,
 name|offset_t
 modifier|*
 name|off
+parameter_list|)
+function_decl|;
+name|int
+name|dmu_send_estimate
+parameter_list|(
+name|objset_t
+modifier|*
+name|tosnap
+parameter_list|,
+name|objset_t
+modifier|*
+name|fromsnap
+parameter_list|,
+name|boolean_t
+name|fromorigin
+parameter_list|,
+name|uint64_t
+modifier|*
+name|sizep
 parameter_list|)
 function_decl|;
 typedef|typedef
