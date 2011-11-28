@@ -3074,7 +3074,7 @@ name|CTR3
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"remove: rnode %p, count %p, color %d"
+literal|"remove: rnode %p, count %d, color %d"
 argument_list|,
 name|rnode
 argument_list|,
@@ -3088,7 +3088,8 @@ name|rnode
 operator|->
 name|rn_count
 else|:
-name|NULL
+operator|-
+literal|1
 argument_list|,
 name|color
 argument_list|)
