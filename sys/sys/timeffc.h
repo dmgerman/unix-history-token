@@ -100,6 +100,13 @@ name|SYSCLOCK_FFWD
 value|1
 end_define
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|sysclock_active
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Parameters of counter characterisation required by feed-forward algorithms.  */
 end_comment

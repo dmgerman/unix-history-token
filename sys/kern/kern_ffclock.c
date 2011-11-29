@@ -687,13 +687,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|sysclock_active
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|int
