@@ -3849,6 +3849,13 @@ operator|.
 name|arrays
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arrays
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -3877,6 +3884,7 @@ argument_list|(
 name|arrays
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fd
