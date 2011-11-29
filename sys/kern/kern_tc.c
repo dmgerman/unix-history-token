@@ -1067,7 +1067,6 @@ name|FFCLOCK
 end_ifdef
 
 begin_function
-specifier|static
 name|void
 name|fbclock_binuptime
 parameter_list|(
@@ -1137,7 +1136,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_nanouptime
 parameter_list|(
@@ -1169,7 +1167,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_microuptime
 parameter_list|(
@@ -1201,7 +1198,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_bintime
 parameter_list|(
@@ -1228,7 +1224,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_nanotime
 parameter_list|(
@@ -1260,7 +1255,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_microtime
 parameter_list|(
@@ -1292,7 +1286,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_getbinuptime
 parameter_list|(
@@ -1348,7 +1341,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_getnanouptime
 parameter_list|(
@@ -1407,7 +1399,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_getmicrouptime
 parameter_list|(
@@ -1466,7 +1457,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_getbintime
 parameter_list|(
@@ -1530,7 +1520,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_getnanotime
 parameter_list|(
@@ -1586,7 +1575,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|fbclock_getmicrotime
 parameter_list|(
