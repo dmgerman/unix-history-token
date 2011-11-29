@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Portions of this software were developed by Julien Ridoux at the University  * of Melbourne under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h	8.1 (Berkeley) 6/10/93  *	@(#)bpf.h	1.34 (LBL)     6/16/96  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h	8.1 (Berkeley) 6/10/93  *	@(#)bpf.h	1.34 (LBL)     6/16/96  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -560,31 +560,6 @@ name|BPF_T_FLAG_MASK
 value|0x0300
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FFCLOCK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BPF_T_FFCLOCK
-value|0x8000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_T_CLOCK_MASK
-value|0x8000
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -605,28 +580,6 @@ parameter_list|)
 value|((t)& BPF_T_FLAG_MASK)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|FFCLOCK
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|BPF_T_VALID
-parameter_list|(
-name|t
-parameter_list|)
-define|\
-value|((t) == BPF_T_NONE || (BPF_T_FORMAT(t) != BPF_T_NONE&&	\     ((t)& ~(BPF_T_FORMAT_MASK | BPF_T_FLAG_MASK | BPF_T_CLOCK_MASK)) == 0))
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -637,11 +590,6 @@ parameter_list|)
 define|\
 value|((t) == BPF_T_NONE || (BPF_T_FORMAT(t) != BPF_T_NONE&&	\     ((t)& ~(BPF_T_FORMAT_MASK | BPF_T_FLAG_MASK)) == 0))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -747,15 +695,6 @@ name|u_short
 name|bh_hdrlen
 decl_stmt|;
 comment|/* length of bpf header (this struct 					   plus alignment padding) */
-ifdef|#
-directive|ifdef
-name|FFCLOCK
-name|ffcounter
-name|ffcount_stamp
-decl_stmt|;
-comment|/* feed-forward counter timestamp */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
@@ -785,15 +724,6 @@ name|u_short
 name|bh_hdrlen
 decl_stmt|;
 comment|/* length of bpf header (this struct 					   plus alignment padding) */
-ifdef|#
-directive|ifdef
-name|FFCLOCK
-name|ffcounter
-name|ffcount_stamp
-decl_stmt|;
-comment|/* feed-forward counter timestamp */
-endif|#
-directive|endif
 block|}
 struct|;
 end_struct
