@@ -1151,7 +1151,7 @@ name|struct
 name|bintime
 name|bt
 decl_stmt|;
-name|binuptime
+name|fbclock_binuptime
 argument_list|(
 operator|&
 name|bt
@@ -1183,7 +1183,7 @@ name|struct
 name|bintime
 name|bt
 decl_stmt|;
-name|binuptime
+name|fbclock_binuptime
 argument_list|(
 operator|&
 name|bt
@@ -1211,7 +1211,7 @@ modifier|*
 name|bt
 parameter_list|)
 block|{
-name|binuptime
+name|fbclock_binuptime
 argument_list|(
 name|bt
 argument_list|)
@@ -1242,7 +1242,7 @@ name|struct
 name|bintime
 name|bt
 decl_stmt|;
-name|bintime
+name|fbclock_bintime
 argument_list|(
 operator|&
 name|bt
@@ -1274,7 +1274,7 @@ name|struct
 name|bintime
 name|bt
 decl_stmt|;
-name|bintime
+name|fbclock_bintime
 argument_list|(
 operator|&
 name|bt
