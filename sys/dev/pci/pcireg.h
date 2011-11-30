@@ -4450,6 +4450,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PCIM_AER_COR_ADVISORY_NF_ERROR
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
 name|PCIR_AER_COR_MASK
 value|0x14
 end_define
