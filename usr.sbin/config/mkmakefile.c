@@ -3888,7 +3888,7 @@ name|fprintf
 argument_list|(
 name|f
 argument_list|,
-literal|"\t@${NORMAL_CTFCONVERT}\n\n"
+literal|"\t${NORMAL_CTFCONVERT}\n\n"
 argument_list|)
 expr_stmt|;
 else|else
