@@ -13905,7 +13905,7 @@ name|eoff
 operator|>
 name|off
 condition|)
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 argument_list|(
 name|m
 argument_list|,
@@ -14527,7 +14527,7 @@ name|n
 operator|=
 name|size
 expr_stmt|;
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 argument_list|(
 name|m
 argument_list|,

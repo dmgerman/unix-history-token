@@ -9314,9 +9314,9 @@ operator|)
 operator|)
 return|;
 block|}
-comment|/*  *	vm_page_set_valid:  *  *	Sets portions of a page valid.  The arguments are expected  *	to be DEV_BSIZE aligned but if they aren't the bitmap is inclusive  *	of any partial chunks touched by the range.  The invalid portion of  *	such chunks will be zeroed.  *  *	(base + size) must be less then or equal to PAGE_SIZE.  */
+comment|/*  *	vm_page_set_valid_range:  *  *	Sets portions of a page valid.  The arguments are expected  *	to be DEV_BSIZE aligned but if they aren't the bitmap is inclusive  *	of any partial chunks touched by the range.  The invalid portion of  *	such chunks will be zeroed.  *  *	(base + size) must be less then or equal to PAGE_SIZE.  */
 name|void
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 parameter_list|(
 name|vm_page_t
 name|m
@@ -9482,7 +9482,7 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"vm_page_set_valid: page %p is dirty"
+literal|"vm_page_set_valid_range: page %p is dirty"
 operator|,
 name|m
 operator|)

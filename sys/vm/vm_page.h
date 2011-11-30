@@ -1576,7 +1576,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 parameter_list|(
 name|vm_page_t
 name|m
