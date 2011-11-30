@@ -4,6 +4,10 @@ comment|/* $OpenBSD: compat.c,v 1.78 2008/09/11 14:22:37 markus Exp $ */
 end_comment
 
 begin_comment
+comment|/* $FreeBSD$ */
+end_comment
+
+begin_comment
 comment|/*  * Copyright (c) 1999, 2000, 2001, 2002 Markus Friedl.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
@@ -611,6 +615,38 @@ index|]
 operator|.
 name|bugs
 expr_stmt|;
+comment|/* 			 * Check to see if the remote side is OpenSSH and not 			 * HPN.  It is utterly strange to check it from the 			 * version string and expose the option that way. 			 */
+if|if
+condition|(
+name|strstr
+argument_list|(
+name|version
+argument_list|,
+literal|"OpenSSH"
+argument_list|)
+operator|!=
+name|NULL
+operator|&&
+name|strstr
+argument_list|(
+name|version
+argument_list|,
+literal|"hpn"
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|datafellows
+operator||=
+name|SSH_BUG_LARGEWINDOW
+expr_stmt|;
+name|debug
+argument_list|(
+literal|"Remote is not HPN-aware"
+argument_list|)
+expr_stmt|;
+block|}
 return|return;
 block|}
 block|}
