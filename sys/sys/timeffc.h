@@ -83,6 +83,30 @@ name|_KERNEL
 end_ifdef
 
 begin_comment
+comment|/* Define the kern.sysclock sysctl tree. */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_sysclock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Define the kern.sysclock.ffclock sysctl tree. */
+end_comment
+
+begin_expr_stmt
+name|SYSCTL_DECL
+argument_list|(
+name|_kern_sysclock_ffclock
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/*  * Index into the sysclocks array for obtaining the ASCII name of a particular  * sysclock.  */
 end_comment
 
