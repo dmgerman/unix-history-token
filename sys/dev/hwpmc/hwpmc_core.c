@@ -11653,6 +11653,18 @@ condition|)
 block|{
 comment|/* 		 * Events valid only on counter 0. 		 */
 case|case
+name|PMC_EV_IAP_EVENT_60H_01H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_60H_02H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_60H_04H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_60H_08H
+case|:
+case|case
 name|PMC_EV_IAP_EVENT_B3H_01H
 case|:
 case|case
@@ -11667,6 +11679,18 @@ literal|0x1
 expr_stmt|;
 break|break;
 comment|/* 		 * Events valid only on counter 0, 1. 		 */
+case|case
+name|PMC_EV_IAP_EVENT_4CH_01H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_4EH_01H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_4EH_02H
+case|:
+case|case
+name|PMC_EV_IAP_EVENT_4EH_04H
+case|:
 case|case
 name|PMC_EV_IAP_EVENT_51H_01H
 case|:
