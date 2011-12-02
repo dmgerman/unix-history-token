@@ -2670,7 +2670,8 @@ literal|"mpp"
 argument_list|)
 operator|)
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 if|if
 condition|(
@@ -2696,7 +2697,8 @@ literal|"/"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -3314,7 +3316,8 @@ literal|"/"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -3410,7 +3413,8 @@ literal|"sram"
 argument_list|)
 operator|)
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 if|if
 condition|(

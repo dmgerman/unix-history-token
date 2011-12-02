@@ -220,7 +220,8 @@ literal|"soc"
 argument_list|)
 operator|)
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 if|if
 condition|(
@@ -246,7 +247,8 @@ literal|"/"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -2607,8 +2609,9 @@ expr_stmt|;
 if|if
 condition|(
 name|memory
-operator|<=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|rv
