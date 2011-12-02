@@ -263,6 +263,26 @@ name|NVNOFORCE
 value|0x08
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|force_ahci
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ahci.force"
+argument_list|,
+operator|&
+name|force_ahci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * nVidia chipset support functions  */
 end_comment
@@ -1732,6 +1752,11 @@ operator|)
 operator|&&
 operator|(
 operator|(
+name|force_ahci
+operator|==
+literal|1
+operator|&&
+operator|(
 name|ctlr
 operator|->
 name|chip
@@ -1742,6 +1767,7 @@ name|NVNOFORCE
 operator|)
 operator|==
 literal|0
+operator|)
 operator|||
 name|pci_get_subclass
 argument_list|(
