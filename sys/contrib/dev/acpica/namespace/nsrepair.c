@@ -1507,6 +1507,9 @@ case|:
 case|case
 name|ACPI_PTYPE2_REV_FIXED
 case|:
+case|case
+name|ACPI_PTYPE2_FIX_VAR
+case|:
 break|break;
 default|default:
 case|case

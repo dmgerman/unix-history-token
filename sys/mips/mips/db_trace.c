@@ -120,7 +120,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A function using a stack frame has the following instruction as the first  * one: addiu sp,sp,-<frame_size>  *  * We make use of this to detect starting address of a function. This works  * better than using 'j ra' instruction to signify end of the previous  * function (for e.g. functions like boot() or panic() do not actually  * emit a 'j ra' instruction).  *  * XXX the abi does not require that the addiu instruction be the first one.  */
+comment|/*  * A function using a stack frame has the following instruction as the first  * one: [d]addiu sp,sp,-<frame_size>  *  * We make use of this to detect starting address of a function. This works  * better than using 'j ra' instruction to signify end of the previous  * function (for e.g. functions like boot() or panic() do not actually  * emit a 'j ra' instruction).  *  * XXX the abi does not require that the addiu instruction be the first one.  */
 end_comment
 
 begin_define
@@ -130,7 +130,7 @@ name|MIPS_START_OF_FUNCTION
 parameter_list|(
 name|ins
 parameter_list|)
-value|(((ins)& 0xffff8000) == 0x27bd8000)
+value|((((ins)& 0xffff8000) == 0x27bd8000) \ 	|| (((ins)& 0xffff8000) == 0x67bd8000))
 end_define
 
 begin_comment
@@ -1548,6 +1548,12 @@ name|OP_ADDI
 case|:
 case|case
 name|OP_ADDIU
+case|:
+case|case
+name|OP_DADDI
+case|:
+case|case
+name|OP_DADDIU
 case|:
 comment|/* look for stack pointer adjustment */
 if|if

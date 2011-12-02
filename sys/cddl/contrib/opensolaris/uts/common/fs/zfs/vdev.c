@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1299,6 +1299,15 @@ operator|->
 name|spa_root_vdev
 operator|=
 name|vd
+expr_stmt|;
+name|spa
+operator|->
+name|spa_load_guid
+operator|=
+name|spa_generate_guid
+argument_list|(
+name|NULL
+argument_list|)
 expr_stmt|;
 block|}
 if|if

@@ -4,6 +4,10 @@ comment|/*-  * Copyright (c) 2011 Sandvine Incorporated. All rights reserved.  *
 end_comment
 
 begin_comment
+comment|/*  * This software is derived from Andre Albsmeier's fwprog.c which contained  * the following note:  *  * Many thanks goes to Marc Frajola<marc@terasolutions.com> from  * TeraSolutions for the initial idea and his programme for upgrading  * the firmware of I*M DDYS drives.  */
+end_comment
+
+begin_comment
 comment|/*  * BEWARE:  *  * The fact that you see your favorite vendor listed below does not  * imply that your equipment won't break when you use this software  * with it. It only means that the firmware of at least one device type  * of each vendor listed has been programmed successfully using this code.  *  * The -s option simulates a download but does nothing apart from that.  * It can be used to check what chunk sizes would have been used with the  * specified device.  */
 end_comment
 

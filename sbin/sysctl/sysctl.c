@@ -794,6 +794,8 @@ condition|(
 name|newval
 operator|==
 name|NULL
+operator|||
+name|dflag
 condition|)
 block|{
 if|if

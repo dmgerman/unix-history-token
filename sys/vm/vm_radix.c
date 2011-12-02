@@ -141,6 +141,23 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+operator|(
+sizeof|sizeof
+argument_list|(
+name|u_int
+argument_list|)
+operator|*
+name|NBBY
+operator|)
+operator|>=
+name|VM_RADIX_LIMIT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_decl_stmt
 specifier|static
 name|uma_zone_t

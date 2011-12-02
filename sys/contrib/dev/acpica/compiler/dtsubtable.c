@@ -403,6 +403,17 @@ control|)
 block|{
 if|if
 condition|(
+name|Info
+operator|->
+name|Opcode
+operator|==
+name|ACPI_DMT_EXTRA_TEXT
+condition|)
+block|{
+continue|continue;
+block|}
+if|if
+condition|(
 operator|!
 name|Field
 condition|)

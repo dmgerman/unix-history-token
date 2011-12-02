@@ -209,6 +209,8 @@ name|CMD_STOP
 block|,
 name|CMD_TABLES
 block|,
+name|CMD_TEMPLATE
+block|,
 name|CMD_TERMINATE
 block|,
 name|CMD_THREADS
@@ -562,6 +564,12 @@ literal|0
 block|}
 block|,
 block|{
+literal|"TEMPLATE"
+block|,
+literal|1
+block|}
+block|,
+block|{
 literal|"TERMINATE"
 block|,
 literal|0
@@ -825,7 +833,7 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|"  Resources<Device>                  Get and display Device resources\n"
+literal|"  Resources<DeviceName | *>          Display Device resources (* = all devices)\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -836,6 +844,11 @@ expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
 literal|"  Sleep<SleepState>                  Simulate sleep/wake sequence\n"
+argument_list|)
+expr_stmt|;
+name|AcpiOsPrintf
+argument_list|(
+literal|"  Template<Object>                   Format/dump a Buffer/ResourceTemplate\n"
 argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
@@ -2459,6 +2472,18 @@ case|case
 name|CMD_TABLES
 case|:
 name|AcpiDbDisplayTableInfo
+argument_list|(
+name|AcpiGbl_DbArgs
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CMD_TEMPLATE
+case|:
+name|AcpiDbDisplayTemplate
 argument_list|(
 name|AcpiGbl_DbArgs
 index|[

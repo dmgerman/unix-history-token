@@ -2344,8 +2344,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_ADR_SPACE_GPIO
+value|(ACPI_ADR_SPACE_TYPE) 8
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_ADR_SPACE_GSBUS
+value|(ACPI_ADR_SPACE_TYPE) 9
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NUM_PREDEFINED_REGIONS
-value|8
+value|10
 end_define
 
 begin_comment
@@ -3260,6 +3274,30 @@ directive|define
 name|ACPI_DEFAULT_HANDLER
 value|NULL
 end_define
+
+begin_comment
+comment|/* Special Context data for GenericSerialBus/GeneralPurposeIo (ACPI 5.0) */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_connection_info
+block|{
+name|UINT8
+modifier|*
+name|Connection
+decl_stmt|;
+name|UINT16
+name|Length
+decl_stmt|;
+name|UINT8
+name|AccessLength
+decl_stmt|;
+block|}
+name|ACPI_CONNECTION_INFO
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef

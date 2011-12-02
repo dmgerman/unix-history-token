@@ -75,20 +75,11 @@ name|size_t
 name|n
 parameter_list|)
 block|{
-comment|/* use a bitwise or to avoid an additional branch instruction */
 if|if
 condition|(
-operator|(
 name|n
 operator|==
 literal|0
-operator|)
-operator||
-operator|(
-name|s1
-operator|==
-name|s2
-operator|)
 condition|)
 return|return
 operator|(

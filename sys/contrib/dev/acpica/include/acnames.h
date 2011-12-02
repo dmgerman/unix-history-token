@@ -110,6 +110,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|METHOD_NAME__AEI
+value|"_AEI"
+end_define
+
+begin_define
+define|#
+directive|define
 name|METHOD_NAME__PRW
 value|"_PRW"
 end_define

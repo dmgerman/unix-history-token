@@ -1160,7 +1160,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*      * Copy and uppercase the string. From the ACPI specification:      *      * A valid PNP ID must be of the form "AAA####" where A is an uppercase      * letter and # is a hex digit. A valid ACPI ID must be of the form      * "ACPI####" where # is a hex digit.      */
+comment|/*      * Copy and uppercase the string. From the ACPI 5.0 specification:      *      * A valid PNP ID must be of the form "AAA####" where A is an uppercase      * letter and # is a hex digit. A valid ACPI ID must be of the form      * "NNNN####" where N is an uppercase letter or decimal digit, and      * # is a hex digit.      */
 for|for
 control|(
 name|Dest
@@ -1241,6 +1241,41 @@ decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
+comment|/*      * We can only sort the _TSS return package if there is no _PSS in the      * same scope. This is because if _PSS is present, the ACPI specification      * dictates that the _TSS Power Dissipation field is to be ignored, and      * therefore some BIOSs leave garbage values in the _TSS Power field(s).      * In this case, it is best to just return the _TSS package as-is.      * (May, 2011)      */
+name|Status
+operator|=
+name|AcpiNsGetNode
+argument_list|(
+name|Data
+operator|->
+name|Node
+argument_list|,
+literal|"^_PSS"
+argument_list|,
+name|ACPI_NS_NO_UPSEARCH
+argument_list|,
+operator|&
+name|Node
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_SUCCESS
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
 name|Status
 operator|=
 name|AcpiNsCheckSortedList

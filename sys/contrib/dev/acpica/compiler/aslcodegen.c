@@ -596,7 +596,7 @@ name|Aml
 operator|.
 name|Opcode
 operator|=
-literal|0x00
+name|AML_FIELD_OFFSET_OP
 expr_stmt|;
 break|break;
 case|case
@@ -606,7 +606,17 @@ name|Aml
 operator|.
 name|Opcode
 operator|=
-literal|0x01
+name|AML_FIELD_ACCESS_OP
+expr_stmt|;
+break|break;
+case|case
+name|AML_INT_CONNECTION_OP
+case|:
+name|Aml
+operator|.
+name|Opcode
+operator|=
+name|AML_FIELD_CONNECTION_OP
 expr_stmt|;
 break|break;
 default|default:

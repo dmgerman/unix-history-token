@@ -109,7 +109,17 @@ name|AcpiRsConvertExtIrq
 block|,
 comment|/* 0x0F, ACPI_RESOURCE_TYPE_EXTENDED_IRQ */
 name|AcpiRsConvertGenericReg
+block|,
 comment|/* 0x10, ACPI_RESOURCE_TYPE_GENERIC_REGISTER */
+name|AcpiRsConvertGpio
+block|,
+comment|/* 0x11, ACPI_RESOURCE_TYPE_GPIO */
+name|AcpiRsConvertFixedDma
+block|,
+comment|/* 0x12, ACPI_RESOURCE_TYPE_FIXED_DMA */
+name|NULL
+block|,
+comment|/* 0x13, ACPI_RESOURCE_TYPE_SERIAL_BUS - Use subtype table below */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -156,9 +166,9 @@ comment|/* 0x08, ACPI_RESOURCE_NAME_IO */
 name|AcpiRsConvertFixedIo
 block|,
 comment|/* 0x09, ACPI_RESOURCE_NAME_FIXED_IO */
-name|NULL
+name|AcpiRsConvertFixedDma
 block|,
-comment|/* 0x0A, Reserved */
+comment|/* 0x0A, ACPI_RESOURCE_NAME_FIXED_DMA */
 name|NULL
 block|,
 comment|/* 0x0B, Reserved */
@@ -209,8 +219,40 @@ name|AcpiRsConvertAddress64
 block|,
 comment|/* 0x0A, ACPI_RESOURCE_NAME_ADDRESS64 */
 name|AcpiRsConvertExtAddress64
+block|,
 comment|/* 0x0B, ACPI_RESOURCE_NAME_EXTENDED_ADDRESS64 */
+name|AcpiRsConvertGpio
+block|,
+comment|/* 0x0C, ACPI_RESOURCE_NAME_GPIO */
+name|NULL
+block|,
+comment|/* 0x0D, Reserved */
+name|NULL
+block|,
+comment|/* 0x0E, ACPI_RESOURCE_NAME_SERIAL_BUS - Use subtype table below */
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Subtype table for SerialBus -- I2C, SPI, and UART */
+end_comment
+
+begin_decl_stmt
+name|ACPI_RSCONVERT_INFO
+modifier|*
+name|AcpiGbl_ConvertResourceSerialBusDispatch
+index|[]
+init|=
+block|{
+name|NULL
+block|,
+name|AcpiRsConvertI2cSerialBus
+block|,
+name|AcpiRsConvertSpiSerialBus
+block|,
+name|AcpiRsConvertUartSerialBus
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -290,6 +332,37 @@ comment|/* ACPI_RESOURCE_TYPE_EXTENDED_IRQ */
 name|AcpiRsDumpGenericReg
 block|,
 comment|/* ACPI_RESOURCE_TYPE_GENERIC_REGISTER */
+name|AcpiRsDumpGpio
+block|,
+comment|/* ACPI_RESOURCE_TYPE_GPIO */
+name|AcpiRsDumpFixedDma
+block|,
+comment|/* ACPI_RESOURCE_TYPE_FIXED_DMA */
+name|NULL
+block|,
+comment|/* ACPI_RESOURCE_TYPE_SERIAL_BUS */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ACPI_RSDUMP_INFO
+modifier|*
+name|AcpiGbl_DumpSerialBusDispatch
+index|[]
+init|=
+block|{
+name|NULL
+block|,
+name|AcpiRsDumpI2cSerialBus
+block|,
+comment|/* AML_RESOURCE_I2C_BUS_TYPE */
+name|AcpiRsDumpSpiSerialBus
+block|,
+comment|/* AML_RESOURCE_SPI_BUS_TYPE */
+name|AcpiRsDumpUartSerialBus
+block|,
+comment|/* AML_RESOURCE_UART_BUS_TYPE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -406,11 +479,30 @@ name|AML_RESOURCE_EXTENDED_IRQ
 argument_list|)
 block|,
 comment|/* ACPI_RESOURCE_TYPE_EXTENDED_IRQ */
-expr|sizeof
-operator|(
+sizeof|sizeof
+argument_list|(
 name|AML_RESOURCE_GENERIC_REGISTER
-operator|)
+argument_list|)
+block|,
 comment|/* ACPI_RESOURCE_TYPE_GENERIC_REGISTER */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_GPIO
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_GPIO */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_FIXED_DMA
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_FIXED_DMA */
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_COMMON_SERIALBUS
+argument_list|)
+block|,
+comment|/* ACPI_RESOURCE_TYPE_SERIAL_BUS */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -458,7 +550,10 @@ argument_list|(
 name|ACPI_RESOURCE_FIXED_IO
 argument_list|)
 block|,
-literal|0
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_FIXED_DMA
+argument_list|)
 block|,
 literal|0
 block|,
@@ -525,9 +620,73 @@ argument_list|)
 block|,
 name|ACPI_RS_SIZE
 argument_list|(
-argument|ACPI_RESOURCE_EXTENDED_ADDRESS64
+name|ACPI_RESOURCE_EXTENDED_ADDRESS64
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_GPIO
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+argument|ACPI_RESOURCE_COMMON_SERIALBUS
 argument_list|)
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|UINT8
+name|AcpiGbl_AmlResourceSerialBusSizes
+index|[]
+init|=
+block|{
+literal|0
+block|,
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_I2C_SERIALBUS
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_SPI_SERIALBUS
+argument_list|)
+block|,
+sizeof|sizeof
+argument_list|(
+name|AML_RESOURCE_UART_SERIALBUS
+argument_list|)
+block|, }
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|UINT8
+name|AcpiGbl_ResourceStructSerialBusSizes
+index|[]
+init|=
+block|{
+literal|0
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_I2C_SERIALBUS
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_SPI_SERIALBUS
+argument_list|)
+block|,
+name|ACPI_RS_SIZE
+argument_list|(
+name|ACPI_RESOURCE_UART_SERIALBUS
+argument_list|)
+block|, }
 decl_stmt|;
 end_decl_stmt
 

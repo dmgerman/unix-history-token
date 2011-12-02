@@ -1584,7 +1584,8 @@ literal|"/chosen"
 argument_list|)
 operator|)
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 block|{
 if|if

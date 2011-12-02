@@ -614,6 +614,13 @@ argument_list|,
 name|ACPI_TABLE_INDEX_DSDT
 argument_list|)
 expr_stmt|;
+comment|/* If Hardware Reduced flag is set, there is no FACS */
+if|if
+condition|(
+operator|!
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
 name|AcpiTbInstallTable
 argument_list|(
 operator|(
@@ -628,6 +635,7 @@ argument_list|,
 name|ACPI_TABLE_INDEX_FACS
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -647,7 +655,7 @@ name|UINT32
 name|Length
 parameter_list|)
 block|{
-comment|/*      * Check if the FADT is larger than the largest table that we expect      * (the ACPI 2.0/3.0 version). If so, truncate the table, and issue      * a warning.      */
+comment|/*      * Check if the FADT is larger than the largest table that we expect      * (the ACPI 5.0 version). If so, truncate the table, and issue      * a warning.      */
 if|if
 condition|(
 name|Length
@@ -663,7 +671,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"FADT (revision %u) is longer than ACPI 2.0 version, "
+literal|"FADT (revision %u) is longer than ACPI 5.0 version, "
 literal|"truncating length %u to %u"
 operator|,
 name|Table
@@ -716,6 +724,25 @@ argument_list|)
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Take a copy of the Hardware Reduced flag */
+name|AcpiGbl_ReducedHardware
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|AcpiGbl_FADT
+operator|.
+name|Flags
+operator|&
+name|ACPI_FADT_HW_REDUCED
+condition|)
+block|{
+name|AcpiGbl_ReducedHardware
+operator|=
+name|TRUE
+expr_stmt|;
+block|}
 comment|/* Convert the local copy of the FADT to the common internal format */
 name|AcpiTbConvertFadt
 argument_list|()
@@ -1112,6 +1139,14 @@ name|AcpiGbl_FADT
 operator|.
 name|Dsdt
 expr_stmt|;
+block|}
+comment|/* If Hardware Reduced flag is set, we are all done */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+return|return;
 block|}
 comment|/* Examine all of the 64-bit extended address fields (X fields) */
 for|for

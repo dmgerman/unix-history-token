@@ -114,7 +114,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|NODE_IS_BIT_OFFSET
+name|NODE_UNUSED_FLAG
 value|0x00001000
 end_define
 
@@ -337,7 +337,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* File types */
+comment|/*  * File types. Note: Any changes to this table must also be reflected  * in the AslFileTypeNames array.  */
 end_comment
 
 begin_typedef

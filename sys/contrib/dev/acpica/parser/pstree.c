@@ -109,6 +109,7 @@ decl_stmt|;
 name|ACPI_FUNCTION_ENTRY
 argument_list|()
 expr_stmt|;
+comment|/*     if (Op->Common.AmlOpcode == AML_INT_CONNECTION_OP)     {         return (Op->Common.Value.Arg);     } */
 comment|/* Get the info structure for this opcode */
 name|OpInfo
 operator|=

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/dsl_pool.h>
 end_include
 
 begin_function
@@ -2484,11 +2490,37 @@ operator|->
 name|maxtxg
 condition|)
 block|{
+if|if
+condition|(
+name|dsl_pool_sync_context
+argument_list|(
+name|spa_get_dsl
+argument_list|(
+name|sra
+operator|->
+name|spa
+argument_list|)
+argument_list|)
+condition|)
 name|sra
 operator|->
 name|used
 operator|+=
 name|bp_get_dsize_sync
+argument_list|(
+name|sra
+operator|->
+name|spa
+argument_list|,
+name|bp
+argument_list|)
+expr_stmt|;
+else|else
+name|sra
+operator|->
+name|used
+operator|+=
+name|bp_get_dsize
 argument_list|(
 name|sra
 operator|->

@@ -201,11 +201,11 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_SLEEP
-value|20000
+value|2000
 end_define
 
 begin_comment
-comment|/* Two seconds */
+comment|/* 2000 millisec == two seconds */
 end_comment
 
 begin_comment
@@ -390,13 +390,20 @@ value|36
 end_define
 
 begin_comment
-comment|/* SMBus and IPMI bidirectional buffer size */
+comment|/* SMBus, GSBus and IPMI bidirectional buffer size */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|ACPI_SMBUS_BUFFER_SIZE
+value|34
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GSBUS_BUFFER_SIZE
 value|34
 end_define
 

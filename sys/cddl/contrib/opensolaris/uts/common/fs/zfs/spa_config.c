@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1380,6 +1380,28 @@ name|spa_guid
 argument_list|(
 name|spa
 argument_list|)
+argument_list|)
+operator|==
+literal|0
+argument_list|)
+expr_stmt|;
+name|VERIFY
+argument_list|(
+name|spa
+operator|->
+name|spa_comment
+operator|==
+name|NULL
+operator|||
+name|nvlist_add_string
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_COMMENT
+argument_list|,
+name|spa
+operator|->
+name|spa_comment
 argument_list|)
 operator|==
 literal|0

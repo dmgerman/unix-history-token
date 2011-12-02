@@ -1349,7 +1349,7 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Update the valid bits to reflect the blocks that 			 * have been zeroed.  Some of these valid bits may 			 * have already been set. 			 */
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 argument_list|(
 name|m
 argument_list|,

@@ -785,13 +785,14 @@ condition|(
 operator|(
 name|root
 operator|=
-name|OF_peer
+name|OF_finddevice
 argument_list|(
-literal|0
+literal|"/"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 name|panic
 argument_list|(

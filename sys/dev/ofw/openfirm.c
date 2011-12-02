@@ -302,8 +302,9 @@ argument_list|(
 literal|"/chosen"
 argument_list|)
 operator|)
-operator|>
-literal|0
+operator|!=
+operator|-
+literal|1
 condition|)
 if|if
 condition|(

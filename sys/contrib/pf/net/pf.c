@@ -10840,7 +10840,7 @@ condition|(
 name|pfsync_defer_ptr
 operator|!=
 name|NULL
-condition|)
+operator|&&
 name|pfsync_defer_ptr
 argument_list|(
 operator|*
@@ -10848,7 +10848,7 @@ name|sm
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
+condition|)
 else|#
 directive|else
 if|if

@@ -4,7 +4,7 @@ comment|/*-  * Copyright 1998 Massachusetts Institute of Technology  *  * Permis
 end_comment
 
 begin_comment
-comment|/*  * if_vlan.c - pseudo-device driver for IEEE 802.1Q virtual LANs.  * Might be extended some day to also handle IEEE 802.1p priority  * tagging.  This is sort of sneaky in the implementation, since  * we need to pretend to be enough of an Ethernet implementation  * to make arp work.  The way we do this is by telling everyone  * that we are an Ethernet, and then catch the packets that  * ether_output() left on our output queue when it calls  * if_start(), rewrite them for use by the real outgoing interface,  * and ask it to send them.  */
+comment|/*  * if_vlan.c - pseudo-device driver for IEEE 802.1Q virtual LANs.  * Might be extended some day to also handle IEEE 802.1p priority  * tagging.  This is sort of sneaky in the implementation, since  * we need to pretend to be enough of an Ethernet implementation  * to make arp work.  The way we do this is by telling everyone  * that we are an Ethernet, and then catch the packets that  * ether_output() sends to us via if_transmit(), rewrite them for  * use by the real outgoing interface, and ask it to send them.  */
 end_comment
 
 begin_include
@@ -790,19 +790,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|vlan_start
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|void
 name|vlan_init
 parameter_list|(
 name|void
@@ -845,6 +832,19 @@ name|cmd
 parameter_list|,
 name|caddr_t
 name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|vlan_qflush
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -906,6 +906,24 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|vlan_transmit
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4235,23 +4253,21 @@ name|vlan_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_start
+name|if_transmit
 operator|=
-name|vlan_start
+name|vlan_transmit
+expr_stmt|;
+name|ifp
+operator|->
+name|if_qflush
+operator|=
+name|vlan_qflush
 expr_stmt|;
 name|ifp
 operator|->
 name|if_ioctl
 operator|=
 name|vlan_ioctl
-expr_stmt|;
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_maxlen
-operator|=
-name|ifqmaxlen
 expr_stmt|;
 name|ifp
 operator|->
@@ -4461,15 +4477,20 @@ name|foo
 name|__unused
 parameter_list|)
 block|{ }
-comment|/*  * The if_start method for vlan(4) interface. It doesn't  * raises the IFF_DRV_OACTIVE flag, since it is called  * only from IFQ_HANDOFF() macro in ether_output_frame().  * If the interface queue is full, and vlan_start() is  * not called, the queue would never get emptied and  * interface would stall forever.  */
+comment|/*  * The if_transmit method for vlan(4) interface.  */
 specifier|static
-name|void
-name|vlan_start
+name|int
+name|vlan_transmit
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
 name|ifp
+parameter_list|,
+name|struct
+name|mbuf
+modifier|*
+name|m
 parameter_list|)
 block|{
 name|struct
@@ -4481,11 +4502,6 @@ name|struct
 name|ifnet
 modifier|*
 name|p
-decl_stmt|;
-name|struct
-name|mbuf
-modifier|*
-name|m
 decl_stmt|;
 name|int
 name|error
@@ -4503,29 +4519,6 @@ argument_list|(
 name|ifv
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-init|;
-condition|;
-control|)
-block|{
-name|IF_DEQUEUE
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|m
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-break|break;
 name|BPF_MTAP
 argument_list|(
 name|ifp
@@ -4533,7 +4526,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Do not run parent's if_start() if the parent is not up, 		 * or parent's driver will cause a system crash. 		 */
+comment|/* 	 * Do not run parent's if_transmit() if the parent is not up, 	 * or parent's driver will cause a system crash. 	 */
 if|if
 condition|(
 operator|!
@@ -4553,9 +4546,13 @@ operator|->
 name|if_collisions
 operator|++
 expr_stmt|;
-continue|continue;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
-comment|/* 		 * Pad the frame to the minimum size allowed if told to. 		 * This option is in accord with IEEE Std 802.1Q, 2003 Ed., 		 * paragraph C.4.4.3.b.  It can help to work around buggy 		 * bridges that violate paragraph C.4.4.3.a from the same 		 * document, i.e., fail to pad short frames after untagging. 		 * E.g., a tagged frame 66 bytes long (incl. FCS) is OK, but 		 * untagging it will produce a 62-byte frame, which is a runt 		 * and requires padding.  There are VLAN-enabled network 		 * devices that just discard such runts instead or mishandle 		 * them somehow. 		 */
+comment|/* 	 * Pad the frame to the minimum size allowed if told to. 	 * This option is in accord with IEEE Std 802.1Q, 2003 Ed., 	 * paragraph C.4.4.3.b.  It can help to work around buggy 	 * bridges that violate paragraph C.4.4.3.a from the same 	 * document, i.e., fail to pad short frames after untagging. 	 * E.g., a tagged frame 66 bytes long (incl. FCS) is OK, but 	 * untagging it will produce a 62-byte frame, which is a runt 	 * and requires padding.  There are VLAN-enabled network 	 * devices that just discard such runts instead or mishandle 	 * them somehow. 	 */
 if|if
 condition|(
 name|soft_pad
@@ -4648,10 +4645,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-continue|continue;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
-comment|/* 		 * If underlying interface can do VLAN tag insertion itself, 		 * just pass the packet along. However, we need some way to 		 * tell the interface where the packet came from so that it 		 * knows how to find the VLAN tag to use, so we attach a 		 * packet tag that holds it. 		 */
+comment|/* 	 * If underlying interface can do VLAN tag insertion itself, 	 * just pass the packet along. However, we need some way to 	 * tell the interface where the packet came from so that it 	 * knows how to find the VLAN tag to use, so we attach a 	 * packet tag that holds it. 	 */
 if|if
 condition|(
 name|p
@@ -4710,10 +4711,14 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
-continue|continue;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 block|}
-comment|/* 		 * Send it, precisely as ether_output() would have. 		 * We are already running at splimp. 		 */
+comment|/* 	 * Send it, precisely as ether_output() would have. 	 */
 name|error
 operator|=
 call|(
@@ -4743,8 +4748,24 @@ operator|->
 name|if_oerrors
 operator|++
 expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
 block|}
-block|}
+comment|/*  * The ifp->if_qflush entry point for vlan(4) is a no-op.  */
+specifier|static
+name|void
+name|vlan_qflush
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+name|ifp
+name|__unused
+parameter_list|)
+block|{ }
 specifier|static
 name|void
 name|vlan_input

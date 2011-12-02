@@ -826,7 +826,8 @@ literal|"/cpus"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 goto|goto
 name|out
