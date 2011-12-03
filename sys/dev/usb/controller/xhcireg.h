@@ -1147,7 +1147,7 @@ begin_define
 define|#
 directive|define
 name|XHCI_PS_CLEAR
-value|0x80FF00F7U
+value|0x80FF01FFU
 end_define
 
 begin_comment

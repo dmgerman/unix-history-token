@@ -1693,7 +1693,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -2680,7 +2680,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -2857,7 +2857,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -5393,7 +5393,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static usb_error_t xhci_cmd_nop(struct xhci_softc *sc) { 	struct xhci_trb trb; 	uint32_t temp;  	DPRINTF("\n");  	trb.qwTrb0 = 0; 	trb.dwTrb2 = 0; 	temp = XHCI_TRB_3_TYPE_SET(XHCI_TRB_TYPE_NOOP);  	trb.dwTrb3 = htole32(temp);  	return (xhci_do_command(sc,&trb, 50
+unit|static usb_error_t xhci_cmd_nop(struct xhci_softc *sc) { 	struct xhci_trb trb; 	uint32_t temp;  	DPRINTF("\n");  	trb.qwTrb0 = 0; 	trb.dwTrb2 = 0; 	temp = XHCI_TRB_3_TYPE_SET(XHCI_TRB_TYPE_NOOP);  	trb.dwTrb3 = htole32(temp);  	return (xhci_do_command(sc,&trb, 100
 comment|/* ms */
 end_comment
 
@@ -5466,7 +5466,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 expr_stmt|;
@@ -5572,7 +5572,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6175,7 +6175,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6257,7 +6257,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6352,7 +6352,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6455,7 +6455,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6550,7 +6550,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6626,7 +6626,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -12658,6 +12658,9 @@ literal|2
 block|,
 operator|.
 name|bmAttributes
+index|[
+literal|0
+index|]
 operator|=
 literal|2
 block|, 	}
@@ -12712,12 +12715,21 @@ literal|255
 block|,
 comment|/* dummy - not used */
 operator|.
-name|bU2DevExitLat
+name|wU2DevExitLat
+index|[
+literal|0
+index|]
 operator|=
-literal|255
+literal|0x00
 block|,
-comment|/* dummy - not used */
-block|}
+operator|.
+name|wU2DevExitLat
+index|[
+literal|1
+index|]
+operator|=
+literal|0x08
+block|, 	}
 block|,
 operator|.
 name|cidd
@@ -13671,7 +13683,16 @@ name|oper
 argument_list|,
 name|port
 argument_list|)
-operator|&
+expr_stmt|;
+name|i
+operator|=
+name|XHCI_PS_PLS_GET
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+name|v
+operator|&=
 operator|~
 name|XHCI_PS_CLEAR
 expr_stmt|;
@@ -13858,6 +13879,49 @@ break|break;
 case|case
 name|UHF_PORT_SUSPEND
 case|:
+comment|/* U3 -> U15 */
+if|if
+condition|(
+name|i
+operator|==
+literal|3
+condition|)
+block|{
+name|XWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|oper
+argument_list|,
+name|port
+argument_list|,
+name|v
+operator||
+name|XHCI_PS_PLS_SET
+argument_list|(
+literal|0xF
+argument_list|)
+operator||
+name|XHCI_PS_LWS
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* wait 20ms for resume sequence to complete */
+name|usb_pause_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bus_mtx
+argument_list|,
+name|hz
+operator|/
+literal|50
+argument_list|)
+expr_stmt|;
+comment|/* U0 */
 name|XWRITE4
 argument_list|(
 name|sc
