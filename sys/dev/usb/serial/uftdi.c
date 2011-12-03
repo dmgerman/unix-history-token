@@ -2795,9 +2795,11 @@ name|uint8_t
 name|type
 parameter_list|)
 block|{
-name|bzero
+name|memset
 argument_list|(
 name|cfg
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

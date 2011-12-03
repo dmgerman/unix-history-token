@@ -1911,11 +1911,11 @@ block|}
 else|else
 endif|#
 directive|endif
-name|bcopy
+name|memcpy
 argument_list|(
-name|desc
-argument_list|,
 name|data
+argument_list|,
+name|desc
 argument_list|,
 name|length
 argument_list|)

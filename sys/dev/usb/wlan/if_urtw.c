@@ -12686,11 +12686,13 @@ name|xferlen
 operator|+=
 literal|1
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|data
 operator|->
 name|buf
+argument_list|,
+literal|0
 argument_list|,
 name|URTW_TX_MAXSIZE
 argument_list|)
