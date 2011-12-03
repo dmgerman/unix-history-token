@@ -1273,7 +1273,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pause() delays the calling thread by the given number of system ticks.  * During cold bootup, pause() uses the DELAY() function instead of  * the tsleep() function to do the waiting. The "timo" argument must be  * greater than zero.  */
+comment|/*  * pause() delays the calling thread by the given number of system ticks.  * During cold bootup, pause() uses the DELAY() function instead of  * the tsleep() function to do the waiting. The "timo" argument must be  * greater than or equal to zero. A "timo" value of zero is equivalent  * to a "timo" value of one.  */
 end_comment
 
 begin_function
