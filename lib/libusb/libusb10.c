@@ -1844,8 +1844,6 @@ operator|==
 name|product_id
 condition|)
 block|{
-if|if
-condition|(
 name|libusb_open
 argument_list|(
 name|devs
@@ -1856,12 +1854,6 @@ argument_list|,
 operator|&
 name|pdev
 argument_list|)
-operator|<
-literal|0
-condition|)
-name|pdev
-operator|=
-name|NULL
 expr_stmt|;
 break|break;
 block|}
