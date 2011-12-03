@@ -988,6 +988,21 @@ end_function
 
 begin_function_decl
 name|int
+name|umtx_copyin_timeout
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|umtx_key_get
 parameter_list|(
 name|void
