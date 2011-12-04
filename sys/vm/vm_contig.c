@@ -987,6 +987,9 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|tries
+operator|++
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
