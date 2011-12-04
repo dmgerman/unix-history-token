@@ -1243,6 +1243,22 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|pmap_demote_DMAP
+parameter_list|(
+name|vm_paddr_t
+name|base
+parameter_list|,
+name|vm_size_t
+name|len
+parameter_list|,
+name|boolean_t
+name|invalidate
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|pmap_init_pat
 parameter_list|(
 name|void
