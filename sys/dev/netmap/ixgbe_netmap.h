@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: ixgbe_netmap.h 9662 2011-11-16 13:18:06Z luigi $  *  * netmap modifications for ixgbe  */
+comment|/*  * $FreeBSD$  * $Id: ixgbe_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap modifications for ixgbe  *  * This file is meant to be a reference on how to implement  * netmap support for a network driver.  * This file contains code but only static or inline functions  * that are used by a single driver. To avoid replication of  * code we just #include it near the beginning of the  * standard driver.  */
 end_comment
 
 begin_include
@@ -20,11 +20,7 @@ file|<sys/selinfo.h>
 end_include
 
 begin_comment
-comment|// #include<vm/vm.h>
-end_comment
-
-begin_comment
-comment|// #include<vm/pmap.h>    /* vtophys ? */
+comment|/*  * Some drivers may need the following headers. Others  * already include them by default  #include<vm/vm.h> #include<vm/pmap.h>   */
 end_comment
 
 begin_include
@@ -32,6 +28,10 @@ include|#
 directive|include
 file|<dev/netmap/netmap_kern.h>
 end_include
+
+begin_comment
+comment|/*  * prototypes for the new API calls that are used by the  * *_netmap_attach() routine.  */
+end_comment
 
 begin_function_decl
 specifier|static
@@ -93,23 +93,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_dev
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|ixgbe
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"ixgbe card"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/*  * The attach routine, called near the end of ixgbe_attach(),  * fills the parameters for netmap_attach() and calls it.  * It cannot fail, in the worst case (such as no memory)  * netmap mode will be disabled and the driver will only  * operate in standard mode.  */
+end_comment
 
 begin_function
 specifier|static
@@ -151,6 +137,7 @@ name|separate_locks
 operator|=
 literal|1
 expr_stmt|;
+comment|/* this card has separate rx/tx locks */
 name|na
 operator|.
 name|num_tx_desc
@@ -191,12 +178,12 @@ name|nm_register
 operator|=
 name|ixgbe_netmap_reg
 expr_stmt|;
-comment|/* 	 * adapter->rx_mbuf_sz is set by SIOCSETMTU, but in netmap mode 	 * we allocate the buffers on the first register. So we must 	 * disallow a SIOCSETMTU when if_capenable& IFCAP_NETMAP is set. 	 */
+comment|/* 	 * XXX where do we put this comment ? 	 * adapter->rx_mbuf_sz is set by SIOCSETMTU, but in netmap mode 	 * we allocate the buffers on the first register. So we must 	 * disallow a SIOCSETMTU when if_capenable& IFCAP_NETMAP is set. 	 */
 name|na
 operator|.
 name|buff_size
 operator|=
-name|MCLBYTES
+name|NETMAP_BUF_SIZE
 expr_stmt|;
 name|netmap_attach
 argument_list|(
@@ -212,7 +199,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wrapper to export locks to the generic code  */
+comment|/*  * wrapper to export locks to the generic netmap code.  */
 end_comment
 
 begin_function
@@ -335,7 +322,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * support for netmap register/unregisted. We are already under core lock.  * only called on the first init or the last unregister.  */
+comment|/*  * Netmap register/unregister. We are already under core lock.  * Only called on the first register or the last unregister.  */
 end_comment
 
 begin_function
@@ -381,6 +368,7 @@ condition|(
 operator|!
 name|na
 condition|)
+comment|/* probably, netmap_attach() failed */
 return|return
 name|EINVAL
 return|;
@@ -406,13 +394,14 @@ condition|(
 name|onoff
 condition|)
 block|{
+comment|/* enable netmap mode */
 name|ifp
 operator|->
 name|if_capenable
 operator||=
 name|IFCAP_NETMAP
 expr_stmt|;
-comment|/* save if_transmit to restore it later */
+comment|/* save if_transmit and replace with our routine */
 name|na
 operator|->
 name|if_transmit
@@ -427,6 +416,7 @@ name|if_transmit
 operator|=
 name|netmap_start
 expr_stmt|;
+comment|/* 		 * reinitialize the adapter, now with netmap flag set, 		 * so the rings will be set accordingly. 		 */
 name|ixgbe_init_locked
 argument_list|(
 name|adapter
@@ -460,6 +450,7 @@ block|}
 block|}
 else|else
 block|{
+comment|/* reset normal mode (explicit request or netmap failed) */
 name|fail
 label|:
 comment|/* restore if_transmit */
@@ -478,6 +469,7 @@ operator|&=
 operator|~
 name|IFCAP_NETMAP
 expr_stmt|;
+comment|/* initialize the card, this time in standard mode */
 name|ixgbe_init_locked
 argument_list|(
 name|adapter
@@ -494,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  *  * Userspace has filled tx slots up to cur (excluded).  * The last unused slot previously known to the kernel was nr_hwcur,  * and the last interrupt reported nr_hwavail slots available  * (using the special value -1 to indicate idle transmit ring).  * The function must first update avail to what the kernel  * knows, subtract the newly used slots (cur - nr_hwcur)  * from both avail and nr_hwavail, and set nr_hwcur = cur  * issuing a dmamap_sync on all slots.  *  * Check parameters in the struct netmap_ring.  * We don't use avail, only check for bogus values.  * Make sure cur is valid, and same goes for buffer indexes and lengths.  * To avoid races, read the values once, and never use those from  * the ring afterwards.  */
+comment|/*  * Reconcile kernel and user view of the transmit ring.  * This routine might be called frequently so it must be efficient.  *  * Userspace has filled tx slots up to ring->cur (excluded).  * The last unused slot previously known to the kernel was kring->nkr_hwcur,  * and the last interrupt reported kring->nr_hwavail slots available.  *  * This function runs under lock (acquired from the caller or internally).  * It must first update ring->avail to what the kernel knows,  * subtract the newly used slots (ring->cur - kring->nkr_hwcur)  * from both avail and nr_hwavail, and set ring->nkr_hwcur = ring->cur  * issuing a dmamap_sync on all slots.  *  * Since ring comes from userspace, its content must be read only once,  * and validated before being used to update the kernel's structures.  * (this is also true for every use of ring in the kernel).  *  * ring->avail is never used, only checked for bogus values.  */
 end_comment
 
 begin_function
@@ -572,6 +564,8 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
+name|l
+decl_stmt|,
 name|n
 init|=
 literal|0
@@ -584,7 +578,7 @@ name|nkr_num_slots
 operator|-
 literal|1
 decl_stmt|;
-comment|/* generate an interrupt approximately every half ring */
+comment|/* 	 * ixgbe can generate an interrupt on every tx packet, but it 	 * seems very expensive, so we interrupt once every half ring, 	 * or when requested with NS_REPORT 	 */
 name|int
 name|report_frequency
 init|=
@@ -594,33 +588,6 @@ name|nkr_num_slots
 operator|>>
 literal|1
 decl_stmt|;
-name|k
-operator|=
-name|ring
-operator|->
-name|cur
-expr_stmt|;
-comment|/* ring is not protected by any lock */
-if|if
-condition|(
-operator|(
-name|kring
-operator|->
-name|nr_kflags
-operator|&
-name|NR_REINIT
-operator|)
-operator|||
-name|k
-operator|>
-name|lim
-condition|)
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
 if|if
 condition|(
 name|do_lock
@@ -630,6 +597,63 @@ argument_list|(
 name|txr
 argument_list|)
 expr_stmt|;
+comment|/* take a copy of ring->cur now, and never read it again */
+name|k
+operator|=
+name|ring
+operator|->
+name|cur
+expr_stmt|;
+name|l
+operator|=
+name|k
+operator|-
+name|kring
+operator|->
+name|nr_hwcur
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
+literal|0
+condition|)
+name|l
+operator|+=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
+comment|/* if cur is invalid reinitialize the ring. */
+if|if
+condition|(
+name|k
+operator|>
+name|lim
+operator|||
+name|l
+operator|>
+name|kring
+operator|->
+name|nr_hwavail
+condition|)
+block|{
+if|if
+condition|(
+name|do_lock
+condition|)
+name|IXGBE_TX_UNLOCK
+argument_list|(
+name|txr
+argument_list|)
+expr_stmt|;
+return|return
+name|netmap_ring_reinit
+argument_list|(
+name|kring
+argument_list|)
+return|;
+block|}
 name|bus_dmamap_sync
 argument_list|(
 name|txr
@@ -647,15 +671,7 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* update avail to what the hardware knows */
-name|ring
-operator|->
-name|avail
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
-expr_stmt|;
+comment|/* 	 * Process new packets to send. j is the current index in the 	 * netmap ring, l is the corresponding index in the NIC ring. 	 * The two numbers differ because upon a *_init() we reset 	 * the NIC ring but leave the netmap ring unchanged. 	 * For the transmit ring, we have 	 * 	 *		j = kring->nr_hwcur 	 *		l = IXGBE_TDT (not tracked in the driver) 	 * and 	 * 		j == (l + kring->nkr_hwofs) % ring_size 	 * 	 * In this driver kring->nkr_hwofs>= 0, but for other 	 * drivers it might be negative as well. 	 */
 name|j
 operator|=
 name|kring
@@ -670,6 +686,27 @@ name|k
 condition|)
 block|{
 comment|/* we have new packets to send */
+name|l
+operator|=
+name|j
+operator|-
+name|kring
+operator|->
+name|nkr_hwofs
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
+literal|0
+condition|)
+comment|/* wraparound */
+name|l
+operator|+=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
 while|while
 condition|(
 name|j
@@ -677,6 +714,7 @@ operator|!=
 name|k
 condition|)
 block|{
+comment|/* 			 * Collect per-slot info. 			 * Note that txbuf and curr are indexed by l. 			 * 			 * In this driver we collect the buffer address 			 * (using the NMB() macro) because we always 			 * need to rewrite it into the NIC ring. 			 * Many other drivers preserve the address, so 			 * we only need to access it if NS_BUF_CHANGED 			 * is set. 			 */
 name|struct
 name|netmap_slot
 modifier|*
@@ -700,7 +738,7 @@ name|txr
 operator|->
 name|tx_buffers
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|union
@@ -713,7 +751,7 @@ name|txr
 operator|->
 name|tx_base
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|void
@@ -725,6 +763,7 @@ argument_list|(
 name|slot
 argument_list|)
 decl_stmt|;
+comment|// XXX type for flags and len ?
 name|int
 name|flags
 init|=
@@ -757,6 +796,7 @@ name|slot
 operator|->
 name|len
 decl_stmt|;
+comment|/* 			 * Quick check for valid addr and len. 			 * NMB() returns netmap_buffer_base for invalid 			 * buffer indexes (but the address is still a 			 * valid one to be used in a ring). slot->len is 			 * unsigned so no need to check for negative values. 			 */
 if|if
 condition|(
 name|addr
@@ -768,6 +808,8 @@ operator|>
 name|NETMAP_BUF_SIZE
 condition|)
 block|{
+name|ring_reset
+label|:
 if|if
 condition|(
 name|do_lock
@@ -791,6 +833,7 @@ operator|&=
 operator|~
 name|NS_REPORT
 expr_stmt|;
+comment|/* 			 * Fill the slot in the NIC ring. 			 * In this driver we need to rewrite the buffer 			 * address in the NIC ring. Other drivers do not 			 * need this. 			 */
 name|curr
 operator|->
 name|read
@@ -838,6 +881,7 @@ name|flags
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* If the buffer has changed, unload and reload map 			 * (and possibly the physical address in the NIC 			 * slot, but we did it already). 			 */
 if|if
 condition|(
 name|slot
@@ -873,6 +917,7 @@ operator|~
 name|NS_BUF_CHANGED
 expr_stmt|;
 block|}
+comment|/* make sure changes to the buffer are synced */
 name|bus_dmamap_sync
 argument_list|(
 name|txr
@@ -900,6 +945,20 @@ name|j
 operator|+
 literal|1
 expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
+expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
@@ -910,21 +969,15 @@ name|nr_hwcur
 operator|=
 name|k
 expr_stmt|;
+comment|/* the saved ring->cur */
 comment|/* decrease avail by number of sent packets */
-name|ring
-operator|->
-name|avail
-operator|-=
-name|n
-expr_stmt|;
 name|kring
 operator|->
 name|nr_hwavail
-operator|=
-name|ring
-operator|->
-name|avail
+operator|-=
+name|n
 expr_stmt|;
+comment|/* synchronize the NIC ring */
 name|bus_dmamap_sync
 argument_list|(
 name|txr
@@ -944,6 +997,7 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
+comment|/* (re)start the transmitter up to slot l (excluded) */
 name|IXGBE_WRITE_REG
 argument_list|(
 operator|&
@@ -958,10 +1012,11 @@ operator|->
 name|me
 argument_list|)
 argument_list|,
-name|k
+name|l
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 	 * If no packets are sent, or there is no room in the tx ring, 	 * Check whether there are completed transmissions. 	 * Because this is expensive (we need a register etc.) 	 * we only do it if absolutely necessary, i.e. there is no room 	 * in the tx ring, or where were no completed transmissions 	 * (meaning that probably the caller really wanted to check 	 * for completed transmissions). 	 */
 if|if
 condition|(
 name|n
@@ -975,8 +1030,11 @@ operator|<
 literal|1
 condition|)
 block|{
-comment|/* record completed transmissions. TODO 		 * 		 * The datasheet discourages the use of TDH to find out the 		 * number of sent packets; the right way to do so, is to check 		 * the DD bit inside the status of a packet descriptor.  On the 		 * other hand, we avoid to set the `report status' bit for 		 * *all* outgoing packets (kind of interrupt mitigation), 		 * consequently the DD bit is not guaranteed to be set for all 		 * the packets: thats way, for the moment we continue to use 		 * TDH. 		 */
-name|j
+name|int
+name|delta
+decl_stmt|;
+comment|/* 		 * Record completed transmissions. 		 * We (re)use the driver's txr->next_to_clean to keep 		 * track of the most recently completed transmission. 		 * 		 * The datasheet discourages the use of TDH to find out the 		 * number of sent packets. We should rather check the DD 		 * status bit in a packet descriptor. However, we only set 		 * the "report status" bit for some descriptors (a kind of 		 * interrupt mitigation), so we can only check on those. 		 * For the time being we use TDH, as we do it infrequently 		 * enough not to pose performance problems. 		 */
+name|l
 operator|=
 name|IXGBE_READ_REG
 argument_list|(
@@ -993,7 +1051,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|j
+name|l
 operator|>=
 name|kring
 operator|->
@@ -1005,31 +1063,30 @@ name|D
 argument_list|(
 literal|"TDH wrap %d"
 argument_list|,
-name|j
+name|l
 argument_list|)
 expr_stmt|;
-name|j
+name|l
 operator|-=
 name|kring
 operator|->
 name|nkr_num_slots
 expr_stmt|;
 block|}
-name|int
 name|delta
-init|=
-name|j
+operator|=
+name|l
 operator|-
 name|txr
 operator|->
 name|next_to_clean
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|delta
 condition|)
 block|{
-comment|/* new transmissions were completed, increment 			   ring->nr_hwavail. */
+comment|/* some tx completed, increment avail */
 if|if
 condition|(
 name|delta
@@ -1046,7 +1103,7 @@ name|txr
 operator|->
 name|next_to_clean
 operator|=
-name|j
+name|l
 expr_stmt|;
 name|kring
 operator|->
@@ -1054,6 +1111,20 @@ name|nr_hwavail
 operator|+=
 name|delta
 expr_stmt|;
+if|if
+condition|(
+name|kring
+operator|->
+name|nr_hwavail
+operator|>
+name|lim
+condition|)
+goto|goto
+name|ring_reset
+goto|;
+block|}
+block|}
+comment|/* update avail to what the kernel knows */
 name|ring
 operator|->
 name|avail
@@ -1062,8 +1133,6 @@ name|kring
 operator|->
 name|nr_hwavail
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|do_lock
@@ -1080,7 +1149,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the receive ring.  *  * Userspace has read rx slots up to cur (excluded).  * The last unread slot previously known to the kernel was nr_hwcur,  * and the last interrupt reported nr_hwavail slots available.  * We must subtract the newly consumed slots (cur - nr_hwcur)  * from nr_hwavail, clearing the descriptors for the next  * read, tell the hardware that they are available,  * and set nr_hwcur = cur and avail = nr_hwavail.  * issuing a dmamap_sync on all slots.  */
+comment|/*  * Reconcile kernel and user view of the receive ring.  * Same as for the txsync, this routine must be efficient and  * avoid races in accessing the shared regions.  *  * When called, userspace has read data from slots kring->nr_hwcur  * up to ring->cur (excluded).  *  * The last interrupt reported kring->nr_hwavail slots available  * after kring->nr_hwcur.  * We must subtract the newly consumed slots (cur - nr_hwcur)  * from nr_hwavail, make the descriptors available for the next reads,  * and set kring->nr_hwcur = ring->cur and ring->avail = kring->nr_hwavail.  */
 end_comment
 
 begin_function
@@ -1158,6 +1227,8 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
+name|l
+decl_stmt|,
 name|n
 decl_stmt|,
 name|lim
@@ -1174,21 +1245,40 @@ name|ring
 operator|->
 name|cur
 expr_stmt|;
-comment|/* ring is not protected by any lock */
-if|if
-condition|(
-operator|(
+comment|/* cache and check value, same as in txsync */
+name|n
+operator|=
+name|k
+operator|-
 name|kring
 operator|->
-name|nr_kflags
-operator|&
-name|NR_REINIT
-operator|)
-operator|||
+name|nr_hwcur
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+name|n
+operator|+=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
+if|if
+condition|(
 name|k
 operator|>
 name|lim
+operator|||
+name|n
+operator|>
+name|kring
+operator|->
+name|nr_hwavail
 condition|)
+comment|/* userspace is cheating */
 return|return
 name|netmap_ring_reinit
 argument_list|(
@@ -1203,6 +1293,18 @@ name|IXGBE_RX_LOCK
 argument_list|(
 name|rxr
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|n
+operator|<
+literal|0
+condition|)
+name|n
+operator|+=
+name|lim
+operator|+
+literal|1
 expr_stmt|;
 comment|/* XXX check sync modes */
 name|bus_dmamap_sync
@@ -1224,11 +1326,34 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+comment|/* 	 * First part, import newly received packets into the netmap ring. 	 * 	 * j is the index of the next free slot in the netmap ring, 	 * and l is the index of the next received packet in the NIC ring, 	 * and they may differ in case if_init() has been called while 	 * in netmap mode. For the receive ring we have 	 * 	 *	j = (kring->nr_hwcur + kring->nr_hwavail) % ring_size 	 *	l = rxr->next_to_check; 	 * and 	 *	j == (l + kring->nkr_hwofs) % ring_size 	 * 	 * rxr->next_to_check is set to 0 on a ring reinit 	 */
+name|l
+operator|=
+name|rxr
+operator|->
+name|next_to_check
+expr_stmt|;
 name|j
 operator|=
 name|rxr
 operator|->
 name|next_to_check
+operator|+
+name|kring
+operator|->
+name|nkr_hwofs
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>
+name|lim
+condition|)
+name|j
+operator|-=
+name|lim
+operator|+
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -1251,7 +1376,7 @@ name|rxr
 operator|->
 name|rx_base
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|uint32_t
@@ -1309,7 +1434,7 @@ name|rxr
 operator|->
 name|rx_buffers
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|pmap
@@ -1331,17 +1456,32 @@ name|j
 operator|+
 literal|1
 expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
 name|n
 condition|)
 block|{
+comment|/* update the state variables */
 name|rxr
 operator|->
 name|next_to_check
 operator|=
-name|j
+name|l
 expr_stmt|;
 name|kring
 operator|->
@@ -1349,31 +1489,8 @@ name|nr_hwavail
 operator|+=
 name|n
 expr_stmt|;
-if|if
-condition|(
-name|kring
-operator|->
-name|nr_hwavail
-operator|>=
-name|lim
-operator|-
-literal|10
-condition|)
-block|{
-name|ND
-argument_list|(
-literal|"rx ring %d almost full %d"
-argument_list|,
-name|ring_nr
-argument_list|,
-name|kring
-operator|->
-name|nr_hwavail
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-comment|/* skip past packets that userspace has already processed, 	 * making them available for reception. 	 * advance nr_hwcur and issue a bus_dmamap_sync on the 	 * buffers so it is safe to write to them. 	 * Also increase nr_hwavail 	 */
+comment|/* 	 * Skip past packets that userspace has already processed 	 * (from kring->nr_hwcur to ring->cur excluded), and make 	 * the buffers available for reception. 	 * As usual j is the index in the netmap ring, l is the index 	 * in the NIC ring, and j == (l + kring->nkr_hwofs) % ring_size 	 */
 name|j
 operator|=
 name|kring
@@ -1392,6 +1509,28 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
+name|l
+operator|=
+name|kring
+operator|->
+name|nr_hwcur
+operator|-
+name|kring
+operator|->
+name|nkr_hwofs
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
+literal|0
+condition|)
+name|l
+operator|+=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
 while|while
 condition|(
 name|j
@@ -1399,16 +1538,19 @@ operator|!=
 name|k
 condition|)
 block|{
+comment|/* collect per-slot info, with similar validations 			 * and flag handling as in the txsync code. 			 * 			 * NOTE curr and rxbuf are indexed by l. 			 * Also, this driver needs to update the physical				 * address in the NIC ring, but other drivers 			 * may not have this requirement. 			 */
 name|struct
 name|netmap_slot
 modifier|*
 name|slot
 init|=
+operator|&
 name|ring
 operator|->
 name|slot
-operator|+
+index|[
 name|j
+index|]
 decl_stmt|;
 name|union
 name|ixgbe_adv_rx_desc
@@ -1420,7 +1562,7 @@ name|rxr
 operator|->
 name|rx_base
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|struct
@@ -1428,11 +1570,13 @@ name|ixgbe_rx_buf
 modifier|*
 name|rxbuf
 init|=
+operator|&
 name|rxr
 operator|->
 name|rx_buffers
-operator|+
-name|j
+index|[
+name|l
+index|]
 decl_stmt|;
 name|void
 modifier|*
@@ -1449,24 +1593,10 @@ name|addr
 operator|==
 name|netmap_buffer_base
 condition|)
-block|{
 comment|/* bad buf */
-if|if
-condition|(
-name|do_lock
-condition|)
-name|IXGBE_RX_UNLOCK
-argument_list|(
-name|rxr
-argument_list|)
-expr_stmt|;
-return|return
-name|netmap_ring_reinit
-argument_list|(
-name|kring
-argument_list|)
-return|;
-block|}
+goto|goto
+name|ring_reset
+goto|;
 name|curr
 operator|->
 name|wb
@@ -1552,6 +1682,20 @@ name|j
 operator|+
 literal|1
 expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
+expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
@@ -1566,9 +1710,7 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1589,18 +1731,18 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* IMPORTANT: we must leave one free slot in the ring, 		 * so move j back by one unit 		 */
-name|j
+comment|/* IMPORTANT: we must leave one free slot in the ring, 		 * so move l back by one unit 		 */
+name|l
 operator|=
 operator|(
-name|j
+name|l
 operator|==
 literal|0
 operator|)
 condition|?
 name|lim
 else|:
-name|j
+name|l
 operator|-
 literal|1
 expr_stmt|;
@@ -1618,7 +1760,7 @@ operator|->
 name|me
 argument_list|)
 argument_list|,
-name|j
+name|l
 argument_list|)
 expr_stmt|;
 block|}
@@ -1643,8 +1785,29 @@ expr_stmt|;
 return|return
 literal|0
 return|;
+name|ring_reset
+label|:
+if|if
+condition|(
+name|do_lock
+condition|)
+name|IXGBE_RX_UNLOCK
+argument_list|(
+name|rxr
+argument_list|)
+expr_stmt|;
+return|return
+name|netmap_ring_reinit
+argument_list|(
+name|kring
+argument_list|)
+return|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

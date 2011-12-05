@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: netmap.c 9662 2011-11-16 13:18:06Z luigi $  *  * This module supports memory mapped access to network devices,  * see netmap(4).  *  * The module uses a large, memory pool allocated by the kernel  * and accessible as mmapped memory by multiple userspace threads/processes.  * The memory pool contains packet buffers and "netmap rings",  * i.e. user-accessible copies of the interface's queues.  *  * Access to the network card works like this:  * 1. a process/thread issues one or more open() on /dev/netmap, to create  *    select()able file descriptor on which events are reported.  * 2. on each descriptor, the process issues an ioctl() to identify  *    the interface that should report events to the file descriptor.  * 3. on each descriptor, the process issues an mmap() request to  *    map the shared memory region within the process' address space.  *    The list of interesting queues is indicated by a location in  *    the shared memory region.  * 4. using the functions in the netmap(4) userspace API, a process  *    can look up the occupation state of a queue, access memory buffers,  *    and retrieve received packets or enqueue packets to transmit.  * 5. using some ioctl()s the process can synchronize the userspace view  *    of the queue with the actual status in the kernel. This includes both  *    receiving the notification of new packets, and transmitting new  *    packets on the output interface.  * 6. select() or poll() can be used to wait for events on individual  *    transmit or receive queues (or all queues for a given interface).  */
+comment|/*  * $FreeBSD$  * $Id: netmap.c 9795 2011-12-02 11:39:08Z luigi $  *  * This module supports memory mapped access to network devices,  * see netmap(4).  *  * The module uses a large, memory pool allocated by the kernel  * and accessible as mmapped memory by multiple userspace threads/processes.  * The memory pool contains packet buffers and "netmap rings",  * i.e. user-accessible copies of the interface's queues.  *  * Access to the network card works like this:  * 1. a process/thread issues one or more open() on /dev/netmap, to create  *    select()able file descriptor on which events are reported.  * 2. on each descriptor, the process issues an ioctl() to identify  *    the interface that should report events to the file descriptor.  * 3. on each descriptor, the process issues an mmap() request to  *    map the shared memory region within the process' address space.  *    The list of interesting queues is indicated by a location in  *    the shared memory region.  * 4. using the functions in the netmap(4) userspace API, a process  *    can look up the occupation state of a queue, access memory buffers,  *    and retrieve received packets or enqueue packets to transmit.  * 5. using some ioctl()s the process can synchronize the userspace view  *    of the queue with the actual status in the kernel. This includes both  *    receiving the notification of new packets, and transmitting new  *    packets on the output interface.  * 6. select() or poll() can be used to wait for events on individual  *    transmit or receive queues (or all queues for a given interface).  */
 end_comment
 
 begin_include
@@ -52,6 +52,12 @@ end_include
 begin_comment
 comment|/* defines used in kernel.h */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<sys/jail.h>
+end_include
 
 begin_include
 include|#
@@ -124,6 +130,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vm/vm.h>
 end_include
 
@@ -184,6 +196,12 @@ end_include
 begin_comment
 comment|/* BIOCIMMEDIATE */
 end_comment
+
+begin_include
+include|#
+directive|include
+file|<net/vnet.h>
+end_include
 
 begin_include
 include|#
@@ -3031,7 +3049,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Error routine called when txsync/rxsync detects an error.  * Can't do much more than resetting cur = hwcur, avail = hwavail.  * Return 1 on reinit.  */
+comment|/*  * Error routine called when txsync/rxsync detects an error.  * Can't do much more than resetting cur = hwcur, avail = hwavail.  * Return 1 on reinit.  *  * This routine is only called by the upper half of the kernel.  * It only reads hwcur (which is changed only by the upper half, too)  * and hwavail (which may be changed by the lower half, but only on  * a tx ring and only to increase it, so any error will be recovered  * on the next call). For the above, we don't strictly need to call  * it under lock.  */
 end_comment
 
 begin_function
@@ -3320,20 +3338,6 @@ name|kring
 operator|->
 name|nr_hwavail
 expr_stmt|;
-name|ring
-operator|->
-name|flags
-operator||=
-name|NR_REINIT
-expr_stmt|;
-name|kring
-operator|->
-name|na
-operator|->
-name|flags
-operator||=
-name|NR_REINIT
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -3344,93 +3348,6 @@ else|:
 literal|0
 operator|)
 return|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * Clean the reinit flag for our rings.  * XXX at the moment, clear for all rings  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|netmap_clean_reinit
-parameter_list|(
-name|struct
-name|netmap_adapter
-modifier|*
-name|na
-parameter_list|)
-block|{
-comment|//struct netmap_kring *kring;
-name|u_int
-name|i
-decl_stmt|;
-name|na
-operator|->
-name|flags
-operator|&=
-operator|~
-name|NR_REINIT
-expr_stmt|;
-name|D
-argument_list|(
-literal|"--- NR_REINIT reset on %s"
-argument_list|,
-name|na
-operator|->
-name|ifp
-operator|->
-name|if_xname
-argument_list|)
-expr_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|na
-operator|->
-name|num_queues
-operator|+
-literal|1
-condition|;
-name|i
-operator|++
-control|)
-block|{
-name|na
-operator|->
-name|tx_rings
-index|[
-name|i
-index|]
-operator|.
-name|ring
-operator|->
-name|flags
-operator|&=
-operator|~
-name|NR_REINIT
-expr_stmt|;
-name|na
-operator|->
-name|rx_rings
-index|[
-name|i
-index|]
-operator|.
-name|ring
-operator|->
-name|flags
-operator|&=
-operator|~
-name|NR_REINIT
-expr_stmt|;
-block|}
 block|}
 end_function
 
@@ -3727,7 +3644,6 @@ name|__unused
 name|int
 name|fflag
 parameter_list|,
-name|__unused
 name|struct
 name|thread
 modifier|*
@@ -3778,6 +3694,14 @@ name|netmap_if
 modifier|*
 name|nifp
 decl_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|TD_TO_VNET
+argument_list|(
+name|td
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|devfs_get_cdevpriv
@@ -3801,11 +3725,16 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 name|error
 operator|=
 literal|0
@@ -3918,8 +3847,10 @@ name|priv
 operator|!=
 name|NULL
 condition|)
+block|{
 comment|/* thread already registered */
-return|return
+name|error
+operator|=
 name|netmap_set_ringid
 argument_list|(
 name|priv
@@ -3928,7 +3859,9 @@ name|nmr
 operator|->
 name|nr_ringid
 argument_list|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 comment|/* find the interface and a reference */
 name|error
 operator|=
@@ -4353,11 +4286,13 @@ name|priv
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ENXIO
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 comment|/* the interface is unregistered inside the 		   destructor of the private data. */
 name|devfs_clear_cdevpriv
 argument_list|()
@@ -4375,11 +4310,13 @@ name|priv
 operator|==
 name|NULL
 condition|)
-return|return
-operator|(
+block|{
+name|error
+operator|=
 name|ENXIO
-operator|)
-return|;
+expr_stmt|;
+break|break;
+block|}
 name|ifp
 operator|=
 name|priv
@@ -4402,19 +4339,6 @@ operator|->
 name|if_softc
 expr_stmt|;
 comment|/* shorthand */
-if|if
-condition|(
-name|na
-operator|->
-name|flags
-operator|&
-name|NR_REINIT
-condition|)
-name|netmap_clean_reinit
-argument_list|(
-name|na
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|priv
@@ -4446,9 +4370,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-return|return
-name|error
-return|;
+break|break;
 block|}
 for|for
 control|(
@@ -4663,6 +4585,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -4829,26 +4754,6 @@ name|ifp
 argument_list|)
 expr_stmt|;
 comment|/* retrieve netmap adapter */
-comment|/* pending reinit, report up as a poll error. Pending 	 * reads and writes are lost. 	 */
-if|if
-condition|(
-name|na
-operator|->
-name|flags
-operator|&
-name|NR_REINIT
-condition|)
-block|{
-name|netmap_clean_reinit
-argument_list|(
-name|na
-argument_list|)
-expr_stmt|;
-name|revents
-operator||=
-name|POLLERR
-expr_stmt|;
-block|}
 comment|/* how many queues we are scanning */
 name|i
 operator|=
@@ -6136,7 +6041,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * netmap_reset() is called by the driver routines when reinitializing  * a ring. The driver is in charge of locking to protect the kring.  * If netmap mode is not set just return NULL.  * Otherwise set NR_REINIT (in the ring and in na) to signal  * that a ring has been reinitialized,  * set cur = hwcur = 0 and avail = hwavail = num_slots - 1 .  * IT IS IMPORTANT to leave one slot free even in the tx ring because  * we rely on cur=hwcur only for empty rings.  * These are good defaults but can be overridden later in the device  * specific code if, after a reinit, the ring does not start from 0  * (e.g. if_em.c does this).  *  * XXX we shouldn't be touching the ring, but there is a  * race anyways and this is our best option.  *  * XXX setting na->flags makes the syscall code faster, as there is  * only one place to check. On the other hand, we will need a better  * way to notify multiple threads that rings have been reset.  * One way is to increment na->rst_count at each ring reset.  * Each thread in its own priv structure will keep a matching counter,  * and on a reset will acknowledge and clean its own rings.  */
+comment|/*  * netmap_reset() is called by the driver routines when reinitializing  * a ring. The driver is in charge of locking to protect the kring.  * If netmap mode is not set just return NULL.  */
 end_comment
 
 begin_function
@@ -6171,13 +6076,10 @@ name|netmap_ring
 modifier|*
 name|ring
 decl_stmt|;
-name|struct
-name|netmap_slot
-modifier|*
-name|slot
-decl_stmt|;
-name|u_int
-name|i
+name|int
+name|new_hwofs
+decl_stmt|,
+name|lim
 decl_stmt|;
 if|if
 condition|(
@@ -6230,81 +6132,66 @@ name|kring
 operator|->
 name|ring
 expr_stmt|;
+name|lim
+operator|=
+name|kring
+operator|->
+name|nkr_num_slots
+operator|-
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|tx
 operator|==
 name|NR_TX
 condition|)
-block|{
-comment|/* 	 * The last argument is the new value of next_to_clean. 	 * 	 * In the TX ring, we have P pending transmissions (from 	 * next_to_clean to nr_hwcur) followed by nr_hwavail free slots. 	 * Generally we can use all the slots in the ring so 	 * P = ring_size - nr_hwavail hence (modulo ring_size): 	 *	next_to_clean == nr_hwcur + nr_hwavail 	 *  	 * If, upon a reset, nr_hwavail == ring_size and next_to_clean 	 * does not change we have nothing to report. Otherwise some 	 * pending packets may be lost, or newly injected packets will. 	 */
-comment|/* if hwcur does not change, nothing to report. 	 * otherwise remember the change so perhaps we can 	 * shift the block at the next reinit 	 */
-if|if
-condition|(
-name|new_cur
-operator|==
+name|new_hwofs
+operator|=
 name|kring
 operator|->
 name|nr_hwcur
-operator|&&
+operator|-
+name|new_cur
+expr_stmt|;
+else|else
+name|new_hwofs
+operator|=
+name|kring
+operator|->
+name|nr_hwcur
+operator|+
 name|kring
 operator|->
 name|nr_hwavail
-operator|==
+operator|-
+name|new_cur
+expr_stmt|;
+if|if
+condition|(
+name|new_hwofs
+operator|>
+name|lim
+condition|)
+name|new_hwofs
+operator|-=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
+comment|/* Alwayws set the new offset value and realign the ring. */
 name|kring
 operator|->
-name|nkr_num_slots
-operator|-
-literal|1
-condition|)
-block|{
-comment|/* all ok */
-name|D
-argument_list|(
-literal|"+++ NR_REINIT ok on %s TX[%d]"
-argument_list|,
-name|na
-operator|->
-name|ifp
-operator|->
-name|if_xname
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|D
-argument_list|(
-literal|"+++ NR_REINIT set on %s TX[%d]"
-argument_list|,
-name|na
-operator|->
-name|ifp
-operator|->
-name|if_xname
-argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-block|}
-name|ring
-operator|->
-name|flags
-operator||=
-name|NR_REINIT
-expr_stmt|;
-name|na
-operator|->
-name|flags
-operator||=
-name|NR_REINIT
-expr_stmt|;
-name|ring
-operator|->
-name|avail
+name|nkr_hwofs
 operator|=
+name|new_hwofs
+expr_stmt|;
+if|if
+condition|(
+name|tx
+operator|==
+name|NR_TX
+condition|)
 name|kring
 operator|->
 name|nr_hwavail
@@ -6315,39 +6202,13 @@ name|nkr_num_slots
 operator|-
 literal|1
 expr_stmt|;
-name|ring
-operator|->
-name|cur
-operator|=
-name|kring
-operator|->
-name|nr_hwcur
-operator|=
-name|new_cur
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 	 * The last argument is the next free slot. 	 * In the RX ring we have nr_hwavail full buffers starting 	 * from nr_hwcur. 	 * If nr_hwavail == 0 and nr_hwcur does not change we are ok 	 * otherwise we might be in trouble as the buffers are 	 * changing. 	 */
-if|if
-condition|(
-name|new_cur
-operator|==
-name|kring
-operator|->
-name|nr_hwcur
-operator|&&
-name|kring
-operator|->
-name|nr_hwavail
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* all ok */
 name|D
 argument_list|(
-literal|"+++ NR_REINIT ok on %s RX[%d]"
+literal|"new hwofs %d on %s %s[%d]"
+argument_list|,
+name|kring
+operator|->
+name|nkr_hwofs
 argument_list|,
 name|na
 operator|->
@@ -6355,132 +6216,18 @@ name|ifp
 operator|->
 name|if_xname
 argument_list|,
-name|n
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|D
-argument_list|(
-literal|"+++ NR_REINIT set on %s RX[%d]"
-argument_list|,
-name|na
-operator|->
-name|ifp
-operator|->
-name|if_xname
+name|tx
+operator|==
+name|NR_TX
+condition|?
+literal|"TX"
+else|:
+literal|"RX"
 argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
-block|}
-name|ring
-operator|->
-name|flags
-operator||=
-name|NR_REINIT
-expr_stmt|;
-name|na
-operator|->
-name|flags
-operator||=
-name|NR_REINIT
-expr_stmt|;
-name|ring
-operator|->
-name|avail
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no data */
-name|ring
-operator|->
-name|cur
-operator|=
-name|kring
-operator|->
-name|nr_hwcur
-operator|=
-name|new_cur
-expr_stmt|;
-block|}
-name|slot
-operator|=
-name|ring
-operator|->
-name|slot
-expr_stmt|;
-comment|/* 	 * Check that buffer indexes are correct. If we find a 	 * bogus value we are a bit in trouble because we cannot 	 * recover easily. Best we can do is (probably) persistently 	 * reset the ring. 	 */
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|kring
-operator|->
-name|nkr_num_slots
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-name|slot
-index|[
-name|i
-index|]
-operator|.
-name|buf_idx
-operator|>=
-name|netmap_total_buffers
-condition|)
-block|{
-name|D
-argument_list|(
-literal|"invalid buf_idx %d at slot %d"
-argument_list|,
-name|slot
-index|[
-name|i
-index|]
-operator|.
-name|buf_idx
-argument_list|,
-name|i
-argument_list|)
-expr_stmt|;
-name|slot
-index|[
-name|i
-index|]
-operator|.
-name|buf_idx
-operator|=
-literal|0
-expr_stmt|;
-comment|/* XXX reset */
-block|}
-comment|/* XXX we don't really need to set the length */
-name|slot
-index|[
-name|i
-index|]
-operator|.
-name|len
-operator|=
-literal|0
-expr_stmt|;
-block|}
-comment|/* wakeup possible waiters, both on the ring and on the global 	 * selfd. Perhaps a bit early now but the device specific 	 * routine is locked so hopefully we won't have a race. 	 */
+comment|/* 	 * We do the wakeup here, but the ring is not yet reconfigured. 	 * However, we are under lock so there are no races. 	 */
 name|selwakeuppri
 argument_list|(
 operator|&
