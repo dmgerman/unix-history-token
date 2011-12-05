@@ -1010,13 +1010,12 @@ name|CTR3
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %p, val %p"
+literal|"insert: tree %p, index %ju, val %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -1124,12 +1123,15 @@ name|CTR4
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, root %p, index: %d, level: %d ENOMEM"
+literal|"insert: tree %p, root %p, index: %ju, level: %d ENOMEM"
 argument_list|,
 name|rtree
 argument_list|,
 name|root
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|index
 argument_list|,
 name|level
@@ -1259,10 +1261,13 @@ name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %jd, level %d, slot %d, rnode %p ENOMEM"
+literal|"insert: tree %p, index %ju, level %d, slot %d, rnode %p ENOMEM"
 argument_list|,
 name|rtree
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|index
 argument_list|,
 name|level
@@ -1310,13 +1315,12 @@ name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %p, level %d, slot %d, rnode %p"
+literal|"insert: tree %p, index %ju, level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -1446,13 +1450,12 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: tree %p, index %p, level %d, slot %d, rnode %p, count %u"
+literal|"insert: tree %p, index %ju, level %d, slot %d, rnode %p, count %u"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -1548,13 +1551,12 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
+literal|"lookup: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -1608,13 +1610,12 @@ name|CTR2
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup: tree %p, index %p failed"
+literal|"lookup: tree %p, index %ju failed"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|)
@@ -1699,13 +1700,12 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"color: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
+literal|"color: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -1916,13 +1916,12 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"leaf: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
+literal|"leaf: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|start
 argument_list|,
@@ -2001,17 +2000,15 @@ name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"leaf: start %p end %p inc %d mask 0x%lX slot %d"
+literal|"leaf: start %ju end %ju inc %d mask 0x%lX slot %d"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|start
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|end
 argument_list|,
@@ -2161,19 +2158,17 @@ name|CTR3
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookupn: tree %p, start %p, end %p"
+literal|"lookupn: tree %p, start %ju, end %ju"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|start
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|end
 argument_list|)
@@ -2275,13 +2270,12 @@ name|CTR4
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookupn: tree %p index %p slot %d found child %p"
+literal|"lookupn: tree %p index %ju slot %d found child %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|start
 argument_list|,
@@ -2528,13 +2522,12 @@ name|CTR2
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: tree %p, index %p"
+literal|"lookup_le: tree %p, index %ju"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|)
@@ -2605,13 +2598,12 @@ name|CTR6
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: tree %p, index %p, level %d, slot %d, rnode %p, child %p"
+literal|"lookup_le: tree %p, index %ju, level %d, slot %d, rnode %p, child %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -2682,11 +2674,10 @@ name|CTR4
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: start %p inc %ld mask 0x%lX slot %d"
+literal|"lookup_le: start %ju inc %ld mask 0x%lX slot %d"
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -2868,10 +2859,13 @@ name|level
 argument_list|)
 argument_list|,
 operator|(
-literal|"vm_radix_remove: %p index %jd out of range %jd."
+literal|"vm_radix_remove: %p index %ju out of range %jd."
 operator|,
 name|rtree
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|index
 operator|,
 name|VM_RADIX_MAX
@@ -2920,13 +2914,12 @@ name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"remove: tree %p, index %p, level %d, slot %d, rnode %p"
+literal|"remove: tree %p, index %ju, level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
@@ -2979,8 +2972,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vm_radix_remove: index %jd not present in the tree.\n"
+literal|"vm_radix_remove: index %ju not present in the tree.\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|index
 operator|)
 argument_list|)
@@ -3015,8 +3011,11 @@ operator|!=
 name|NULL
 argument_list|,
 operator|(
-literal|"vm_radix_remove: index %jd not present in the tree.\n"
+literal|"vm_radix_remove: index %ju not present in the tree.\n"
 operator|,
+operator|(
+name|uintmax_t
+operator|)
 name|index
 operator|)
 argument_list|)
@@ -3031,13 +3030,12 @@ name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"remove: resetting tree %p, index %p, level %d, slot %d, rnode %p"
+literal|"remove: resetting tree %p, index %ju, level %d, slot %d, rnode %p"
 argument_list|,
 name|rtree
 argument_list|,
 operator|(
-name|void
-operator|*
+name|uintmax_t
 operator|)
 name|index
 argument_list|,
