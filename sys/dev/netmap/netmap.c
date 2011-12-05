@@ -2495,7 +2495,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * handler for synchronization of the queues from/to the host  */
+comment|/*  * Handlers for synchronization of the queues from/to the host.  *  * netmap_sync_to_host() passes packets up. We are called from a  * system call in user process context, and the only contention  * can be among multiple user threads erroneously calling  * this routine concurrently. In principle we should not even  * need to lock.  */
 end_comment
 
 begin_function
@@ -2549,6 +2549,8 @@ modifier|*
 name|m
 decl_stmt|;
 name|u_int
+name|k
+decl_stmt|,
 name|n
 decl_stmt|,
 name|lim
@@ -2559,21 +2561,27 @@ name|nkr_num_slots
 operator|-
 literal|1
 decl_stmt|;
-name|na
+name|k
+operator|=
+name|ring
 operator|->
-name|nm_lock
+name|cur
+expr_stmt|;
+if|if
+condition|(
+name|k
+operator|>
+name|lim
+condition|)
+block|{
+name|netmap_ring_reinit
 argument_list|(
-name|na
-operator|->
-name|ifp
-operator|->
-name|if_softc
-argument_list|,
-name|NETMAP_CORE_LOCK
-argument_list|,
-literal|0
+name|kring
 argument_list|)
 expr_stmt|;
+return|return;
+block|}
+comment|// na->nm_lock(na->ifp->if_softc, NETMAP_CORE_LOCK, 0);
 comment|/* Take packets from hwcur to cur and pass them up. 	 * In case of no buffers we give up. At the end of the loop, 	 * the queue is drained in all cases. 	 */
 for|for
 control|(
@@ -2585,9 +2593,7 @@ name|nr_hwcur
 init|;
 name|n
 operator|!=
-name|ring
-operator|->
-name|cur
+name|k
 condition|;
 control|)
 block|{
@@ -2705,9 +2711,7 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 expr_stmt|;
 name|kring
 operator|->
@@ -2719,21 +2723,7 @@ name|avail
 operator|=
 name|lim
 expr_stmt|;
-name|na
-operator|->
-name|nm_lock
-argument_list|(
-name|na
-operator|->
-name|ifp
-operator|->
-name|if_softc
-argument_list|,
-name|NETMAP_CORE_UNLOCK
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
+comment|// na->nm_lock(na->ifp->if_softc, NETMAP_CORE_UNLOCK, 0);
 comment|/* send packets up, outside the lock */
 while|while
 condition|(
@@ -2807,7 +2797,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This routine also does the selrecord if called from the poll handler  * (we know because td != NULL).  */
+comment|/*  * rxsync backend for packets coming from the host stack.  * They have been put in the queue by netmap_start() so we  * need to protect access to the kring using a lock.  *  * This routine also does the selrecord if called from the poll handler  * (we know because td != NULL).  */
 end_comment
 
 begin_function
@@ -2851,7 +2841,24 @@ operator|->
 name|ring
 decl_stmt|;
 name|int
+name|error
+init|=
+literal|1
+decl_stmt|,
 name|delta
+decl_stmt|;
+name|u_int
+name|k
+init|=
+name|ring
+operator|->
+name|cur
+decl_stmt|,
+name|lim
+init|=
+name|kring
+operator|->
+name|nkr_num_slots
 decl_stmt|;
 name|na
 operator|->
@@ -2868,12 +2875,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* skip past packets processed by userspace, 	 * and then sync cur/avail with hwcur/hwavail 	 */
+if|if
+condition|(
+name|k
+operator|>=
+name|lim
+condition|)
+comment|/* bad value */
+goto|goto
+name|done
+goto|;
 name|delta
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 operator|-
 name|kring
 operator|->
@@ -2887,9 +2901,7 @@ literal|0
 condition|)
 name|delta
 operator|+=
-name|kring
-operator|->
-name|nkr_num_slots
+name|lim
 expr_stmt|;
 name|kring
 operator|->
@@ -2897,14 +2909,30 @@ name|nr_hwavail
 operator|-=
 name|delta
 expr_stmt|;
+if|if
+condition|(
+name|kring
+operator|->
+name|nr_hwavail
+operator|<
+literal|0
+condition|)
+comment|/* error */
+goto|goto
+name|done
+goto|;
 name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
+name|k
+operator|=
 name|ring
 operator|->
 name|avail
@@ -2915,9 +2943,7 @@ name|nr_hwavail
 expr_stmt|;
 if|if
 condition|(
-name|ring
-operator|->
-name|avail
+name|k
 operator|==
 literal|0
 operator|&&
@@ -2935,9 +2961,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ring
-operator|->
-name|avail
+name|k
 operator|&&
 operator|(
 name|netmap_verbose
@@ -2949,11 +2973,11 @@ name|D
 argument_list|(
 literal|"%d pkts from stack"
 argument_list|,
-name|ring
-operator|->
-name|avail
+name|k
 argument_list|)
 expr_stmt|;
+name|done
+label|:
 name|na
 operator|->
 name|nm_lock
@@ -2967,6 +2991,15 @@ argument_list|,
 name|NETMAP_CORE_UNLOCK
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+name|netmap_ring_reinit
+argument_list|(
+name|kring
 argument_list|)
 expr_stmt|;
 block|}
@@ -5751,7 +5784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * intercept packets coming from the network stack and present  * them to netmap as incoming packets on a separate ring.  * We are not locked when called.  */
+comment|/*  * Intercept packets from the network stack and pass them  * to netmap as incoming packets on the 'software' ring.  * We are not locked when called.  */
 end_comment
 
 begin_function
@@ -5779,22 +5812,6 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
-name|u_int
-name|i
-decl_stmt|,
-name|len
-decl_stmt|,
-name|n
-init|=
-name|na
-operator|->
-name|num_queues
-decl_stmt|;
-name|int
-name|error
-init|=
-name|EBUSY
-decl_stmt|;
 name|struct
 name|netmap_kring
 modifier|*
@@ -5805,22 +5822,40 @@ name|na
 operator|->
 name|rx_rings
 index|[
-name|n
+name|na
+operator|->
+name|num_queues
 index|]
+decl_stmt|;
+name|u_int
+name|i
+decl_stmt|,
+name|len
+init|=
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|len
+decl_stmt|;
+name|int
+name|error
+init|=
+name|EBUSY
+decl_stmt|,
+name|lim
+init|=
+name|kring
+operator|->
+name|nkr_num_slots
+operator|-
+literal|1
 decl_stmt|;
 name|struct
 name|netmap_slot
 modifier|*
 name|slot
 decl_stmt|;
-name|len
-operator|=
-name|m
-operator|->
-name|m_pkthdr
-operator|.
-name|len
-expr_stmt|;
 if|if
 condition|(
 name|netmap_verbose
@@ -5865,14 +5900,7 @@ name|kring
 operator|->
 name|nr_hwavail
 operator|>=
-operator|(
-name|int
-operator|)
-name|kring
-operator|->
-name|nkr_num_slots
-operator|-
-literal|1
+name|lim
 condition|)
 block|{
 name|D
@@ -5928,16 +5956,14 @@ expr_stmt|;
 if|if
 condition|(
 name|i
-operator|>=
-name|kring
-operator|->
-name|nkr_num_slots
+operator|>
+name|lim
 condition|)
 name|i
 operator|-=
-name|kring
-operator|->
-name|nkr_num_slots
+name|lim
+operator|+
+literal|1
 expr_stmt|;
 name|slot
 operator|=
