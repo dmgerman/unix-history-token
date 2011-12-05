@@ -4380,7 +4380,7 @@ operator|&
 name|PMU_INT_ENVIRONMENT
 condition|)
 block|{
-comment|// if the lid was just closed, notify devd.
+comment|/* if the lid was just closed, notify devd. */
 if|if
 condition|(
 operator|(
@@ -4443,7 +4443,7 @@ name|lid_closed
 operator|)
 condition|)
 block|{
-comment|// if the lid was just opened, notify devd.
+comment|/* if the lid was just opened, notify devd. */
 if|if
 condition|(
 name|devctl_process_running
