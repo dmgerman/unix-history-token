@@ -240,6 +240,10 @@ operator|&&
 name|errno
 operator|!=
 name|ESRCH
+operator|&&
+name|errno
+operator|!=
+name|EPERM
 condition|)
 block|{
 name|warn
