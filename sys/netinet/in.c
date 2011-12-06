@@ -287,6 +287,8 @@ name|sockaddr_in
 modifier|*
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2427,6 +2429,8 @@ operator|->
 name|ifr_addr
 argument_list|,
 literal|1
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2706,6 +2710,8 @@ operator|->
 name|ifra_addr
 argument_list|,
 literal|0
+argument_list|,
+name|maskIsNew
 argument_list|)
 expr_stmt|;
 if|if
@@ -3970,6 +3976,9 @@ name|sin
 parameter_list|,
 name|int
 name|scrub
+parameter_list|,
+name|int
+name|masksupplied
 parameter_list|)
 block|{
 specifier|register
@@ -4094,11 +4103,8 @@ return|;
 comment|/* 	 * Be compatible with network classes, if netmask isn't supplied, 	 * guess it based on classes. 	 */
 if|if
 condition|(
-name|ia
-operator|->
-name|ia_subnetmask
-operator|==
-literal|0
+operator|!
+name|masksupplied
 condition|)
 block|{
 if|if
