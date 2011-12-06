@@ -285,6 +285,7 @@ operator|=
 name|SV_ABI_FREEBSD
 operator||
 name|SV_LP64
+block|,
 operator|.
 name|sv_schedtail
 operator|=
