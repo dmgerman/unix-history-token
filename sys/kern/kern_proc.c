@@ -13253,7 +13253,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|p_cansee
+name|p_candebug
 argument_list|(
 name|curthread
 argument_list|,
