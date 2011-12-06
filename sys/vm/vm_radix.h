@@ -185,6 +185,7 @@ name|VM_RADIX_COUNT
 index|]
 decl_stmt|;
 comment|/* Child nodes. */
+specifier|volatile
 name|uint32_t
 name|rn_count
 decl_stmt|;
