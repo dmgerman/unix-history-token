@@ -1067,6 +1067,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ET_FLAG_FASTETHER
+value|0x0004
+end_define
+
+begin_define
+define|#
+directive|define
 name|ET_FLAG_TXRX_ENABLED
 value|0x0100
 end_define
@@ -1076,6 +1083,13 @@ define|#
 directive|define
 name|ET_FLAG_JUMBO
 value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_FLAG_LINK
+value|0x8000
 end_define
 
 begin_endif
