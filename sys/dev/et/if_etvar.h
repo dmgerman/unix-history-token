@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|ET_NSEG_SPARE
-value|8
+value|4
 end_define
 
 begin_define
