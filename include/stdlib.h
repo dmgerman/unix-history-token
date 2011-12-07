@@ -205,15 +205,15 @@ name|MB_CUR_MAX
 value|(___mb_cur_max())
 end_define
 
-begin_decl_stmt
+begin_function_decl
+name|__noreturn
 name|void
 name|abort
-argument_list|(
+parameter_list|(
 name|void
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|int
@@ -332,15 +332,15 @@ name|__pure2
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
+name|__noreturn
 name|void
 name|exit
-argument_list|(
+parameter_list|(
 name|int
-argument_list|)
-name|__dead2
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -784,13 +784,56 @@ begin_comment
 comment|/* __LONG_LONG_SUPPORTED */
 end_comment
 
-begin_decl_stmt
+begin_function_decl
+name|__noreturn
 name|void
 name|_Exit
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __ISO_C_VISIBLE>= 1999 */
+end_comment
+
+begin_comment
+comment|/*  * If we're in a mode greater than C99, expose C1x functions.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>
+literal|1999
+end_if
+
+begin_decl_stmt
+name|__noreturn
+name|void
+name|quick_exit
 argument_list|(
 name|int
 argument_list|)
-name|__dead2
+name|int
+name|at_quick_exit
+argument_list|(
+name|void
+argument_list|(
+operator|*
+name|func
+argument_list|)
+argument_list|(
+name|void
+argument_list|)
+argument_list|)
 decl_stmt|;
 end_decl_stmt
 
@@ -800,7 +843,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ISO_C_VISIBLE>= 1999 */
+comment|/* __ISO_C_VISIBLE> 1999 */
 end_comment
 
 begin_comment
