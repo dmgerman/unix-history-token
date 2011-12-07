@@ -3102,30 +3102,22 @@ operator|&
 name|vm_kmem_size
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Limit kmem virtual size to twice the physical memory. 	 * This allows for kmem map sparseness, but limits the size 	 * to something sane. Be careful to not overflow the 32bit 	 * ints while doing the check. 	 */
+comment|/* 	 * Limit kmem virtual size to twice the physical memory. 	 * This allows for kmem map sparseness, but limits the size 	 * to something sane.  Be careful to not overflow the 32bit 	 * ints while doing the check or the adjustment. 	 */
 if|if
 condition|(
-operator|(
-operator|(
 name|vm_kmem_size
 operator|/
 literal|2
-operator|)
 operator|/
 name|PAGE_SIZE
-operator|)
 operator|>
-name|cnt
-operator|.
-name|v_page_count
+name|mem_size
 condition|)
 name|vm_kmem_size
 operator|=
 literal|2
 operator|*
-name|cnt
-operator|.
-name|v_page_count
+name|mem_size
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
