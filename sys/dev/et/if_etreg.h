@@ -276,6 +276,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EM_PM_GIGEPHY_ENB
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|ET_PM_SYSCLK_GATE
 value|0x00000008
 end_define
@@ -292,6 +299,13 @@ define|#
 directive|define
 name|ET_PM_RXCLK_GATE
 value|0x00000020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_PM_PHY_SW_COMA
+value|0x00000040
 end_define
 
 begin_define
