@@ -11565,11 +11565,6 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-name|m_freem
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
 name|IP6STAT_INC
 argument_list|(
 name|ip6s_odropped
