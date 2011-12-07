@@ -41,22 +41,6 @@ block|}
 struct|;
 end_struct
 
-begin_macro
-name|__attribute
-argument_list|(
-argument|(weak)
-argument_list|)
-end_macro
-
-begin_function_decl
-name|void
-name|_ZSt9terminatev
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_comment
 comment|/**  * Lock protecting the handlers list.  */
 end_comment
@@ -113,15 +97,13 @@ argument_list|)
 decl_stmt|;
 if|if
 condition|(
-literal|0
+name|NULL
 operator|==
 name|h
 condition|)
-block|{
 return|return
 literal|1
 return|;
-block|}
 name|h
 operator|->
 name|cleanup
@@ -151,7 +133,9 @@ name|atexit_mutex
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -164,14 +148,16 @@ name|int
 name|status
 parameter_list|)
 block|{
-comment|/* 	 * XXX: The C++ spec requires us to call std::terminate if there is an 	 * exception here. 	 */
-for|for
-control|(
 name|struct
 name|quick_exit_handler
 modifier|*
 name|h
-init|=
+decl_stmt|;
+comment|/* 	 * XXX: The C++ spec requires us to call std::terminate if there is an 	 * exception here. 	 */
+for|for
+control|(
+name|h
+operator|=
 name|handlers
 init|;
 name|NULL
@@ -184,13 +170,11 @@ name|h
 operator|->
 name|next
 control|)
-block|{
 name|h
 operator|->
 name|cleanup
 argument_list|()
 expr_stmt|;
-block|}
 name|_Exit
 argument_list|(
 name|status
