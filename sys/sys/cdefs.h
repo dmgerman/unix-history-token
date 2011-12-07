@@ -1049,7 +1049,7 @@ end_if
 begin_define
 define|#
 directive|define
-name|__noreturn
+name|_Noreturn
 value|[[noreturn]]
 end_define
 
@@ -1066,12 +1066,9 @@ operator|>
 literal|201000L
 end_elif
 
-begin_define
-define|#
-directive|define
-name|__noreturn
-value|_Noreturn
-end_define
+begin_comment
+comment|/* Do nothing - _Noreturn is a keyword */
+end_comment
 
 begin_elif
 elif|#
@@ -1085,7 +1082,7 @@ end_elif
 begin_define
 define|#
 directive|define
-name|__noreturn
+name|_Noreturn
 value|__attribute__((__noreturn__))
 end_define
 
@@ -1097,7 +1094,7 @@ end_else
 begin_define
 define|#
 directive|define
-name|__noreturn
+name|_Noreturn
 end_define
 
 begin_endif

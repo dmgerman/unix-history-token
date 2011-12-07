@@ -206,7 +206,7 @@ value|(___mb_cur_max())
 end_define
 
 begin_function_decl
-name|__noreturn
+specifier|_Noreturn
 name|void
 name|abort
 parameter_list|(
@@ -333,7 +333,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
-name|__noreturn
+specifier|_Noreturn
 name|void
 name|exit
 parameter_list|(
@@ -785,7 +785,7 @@ comment|/* __LONG_LONG_SUPPORTED */
 end_comment
 
 begin_function_decl
-name|__noreturn
+specifier|_Noreturn
 name|void
 name|_Exit
 parameter_list|(
@@ -816,7 +816,7 @@ literal|1999
 end_if
 
 begin_decl_stmt
-name|__noreturn
+specifier|_Noreturn
 name|void
 name|quick_exit
 argument_list|(
