@@ -23,7 +23,7 @@ name|char
 modifier|*
 name|version
 init|=
-literal|"version 20091126 (FreeBSD)"
+literal|"version 20110810 (FreeBSD)"
 decl_stmt|;
 end_decl_stmt
 
@@ -102,6 +102,14 @@ name|int
 name|dbg
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|Awkfloat
+name|srand_seed
+init|=
+literal|1
 decl_stmt|;
 end_decl_stmt
 
@@ -303,6 +311,15 @@ argument_list|(
 name|SIGFPE
 argument_list|,
 name|fpecatch
+argument_list|)
+expr_stmt|;
+name|srand_seed
+operator|=
+literal|1
+expr_stmt|;
+name|srand
+argument_list|(
+name|srand_seed
 argument_list|)
 expr_stmt|;
 name|yyin
@@ -714,6 +731,9 @@ block|{
 comment|/* arg is -vsomething */
 if|if
 condition|(
+name|isclvar
+argument_list|(
+operator|&
 name|argv
 index|[
 literal|1
@@ -721,11 +741,25 @@ index|]
 index|[
 literal|2
 index|]
-operator|!=
-literal|0
+argument_list|)
 condition|)
 name|setclvar
 argument_list|(
+operator|&
+name|argv
+index|[
+literal|1
+index|]
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|FATAL
+argument_list|(
+literal|"invalid -v option argument: %s"
+argument_list|,
 operator|&
 name|argv
 index|[
@@ -749,9 +783,16 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|>
+operator|<=
 literal|1
-operator|&&
+condition|)
+name|FATAL
+argument_list|(
+literal|"no variable name"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|isclvar
 argument_list|(
 name|argv
@@ -762,6 +803,17 @@ argument_list|)
 condition|)
 name|setclvar
 argument_list|(
+name|argv
+index|[
+literal|1
+index|]
+argument_list|)
+expr_stmt|;
+else|else
+name|FATAL
+argument_list|(
+literal|"invalid -v option argument: %s"
+argument_list|,
 name|argv
 index|[
 literal|1

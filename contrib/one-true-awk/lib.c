@@ -514,21 +514,41 @@ name|i
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|!
-name|isclvar
-argument_list|(
 name|p
 operator|=
 name|getargv
 argument_list|(
 name|i
 argument_list|)
+expr_stmt|;
+comment|/* find 1st real filename */
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+operator|||
+operator|*
+name|p
+operator|==
+literal|'\0'
+condition|)
+block|{
+comment|/* deleted or zapped */
+name|argno
+operator|++
+expr_stmt|;
+continue|continue;
+block|}
+if|if
+condition|(
+operator|!
+name|isclvar
+argument_list|(
+name|p
 argument_list|)
 condition|)
 block|{
-comment|/* find 1st real filename */
 name|setsval
 argument_list|(
 name|lookup
@@ -538,10 +558,7 @@ argument_list|,
 name|symtab
 argument_list|)
 argument_list|,
-name|getargv
-argument_list|(
-name|i
-argument_list|)
+name|p
 argument_list|)
 expr_stmt|;
 return|return;
@@ -715,13 +732,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|file
+operator|==
+name|NULL
+operator|||
 operator|*
 name|file
 operator|==
 literal|'\0'
 condition|)
 block|{
-comment|/* it's been zapped */
+comment|/* deleted or zapped */
 name|argno
 operator|++
 expr_stmt|;
@@ -1101,6 +1122,7 @@ operator|*
 name|FS
 argument_list|)
 expr_stmt|;
+comment|/*fflush(stdout); avoids some buffering problem but makes it 25% slower*/
 name|strcpy
 argument_list|(
 name|inputFS
@@ -1436,6 +1458,20 @@ argument_list|,
 name|n
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|lookup
+argument_list|(
+name|temp
+argument_list|,
+name|ARGVtab
+argument_list|)
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 name|x
 operator|=
 name|setsymtab
@@ -1597,6 +1633,7 @@ comment|/* create fields from current record */
 block|{
 comment|/* this relies on having fields[] the same length as $0 */
 comment|/* the fields are all stored in this one array with \0's */
+comment|/* possibly with a final trailing \0 not associated with any field */
 name|char
 modifier|*
 name|r
@@ -1682,12 +1719,13 @@ name|malloc
 argument_list|(
 name|n
 operator|+
-literal|1
+literal|2
 argument_list|)
 operator|)
 operator|==
 name|NULL
 condition|)
+comment|/* possibly 2 final \0s */
 name|FATAL
 argument_list|(
 literal|"out of space for fields in fldbld %d"
@@ -3082,6 +3120,10 @@ literal|"in recbld inputFS=%s, fldtab[0]=%p\n"
 operator|,
 name|inputFS
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fldtab
 index|[
 literal|0
@@ -3138,6 +3180,10 @@ literal|"in recbld inputFS=%s, fldtab[0]=%p\n"
 operator|,
 name|inputFS
 operator|,
+operator|(
+name|void
+operator|*
+operator|)
 name|fldtab
 index|[
 literal|0

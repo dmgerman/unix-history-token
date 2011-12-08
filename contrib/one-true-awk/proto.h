@@ -224,7 +224,7 @@ specifier|extern
 name|int
 name|hexstr
 parameter_list|(
-name|char
+name|uschar
 modifier|*
 modifier|*
 parameter_list|)
@@ -236,7 +236,7 @@ specifier|extern
 name|int
 name|quoted
 parameter_list|(
-name|char
+name|uschar
 modifier|*
 modifier|*
 parameter_list|)
