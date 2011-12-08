@@ -4799,6 +4799,10 @@ name|bfd_mach_mips8000
 value|8000
 define|#
 directive|define
+name|bfd_mach_mips9000
+value|9000
+define|#
+directive|define
 name|bfd_mach_mips10000
 value|10000
 define|#
@@ -4813,6 +4817,10 @@ define|#
 directive|define
 name|bfd_mach_mips5
 value|5
+define|#
+directive|define
+name|bfd_mach_mips_octeon
+value|6502
 define|#
 directive|define
 name|bfd_mach_mips_sb1

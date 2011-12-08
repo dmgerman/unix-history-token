@@ -3478,6 +3478,14 @@ block|,
 literal|64
 block|}
 block|,
+block|{
+literal|"mips64r2"
+block|,
+name|PROCESSOR_5KC
+block|,
+literal|65
+block|}
+block|,
 comment|/* MIPS I */
 block|{
 literal|"r3000"
@@ -3762,6 +3770,15 @@ block|,
 name|PROCESSOR_SR71000
 block|,
 literal|64
+block|}
+block|,
+comment|/* MIPS64R2 */
+block|{
+literal|"octeon"
+block|,
+name|PROCESSOR_OCTEON
+block|,
+literal|65
 block|}
 block|,
 comment|/* End marker */
@@ -20161,6 +20178,8 @@ operator|||
 name|ISA_MIPS32R2
 operator|||
 name|ISA_MIPS64
+operator|||
+name|ISA_MIPS64R2
 operator|)
 operator|&&
 operator|!
@@ -38994,6 +39013,9 @@ name|PROCESSOR_R7000
 case|:
 case|case
 name|PROCESSOR_R9000
+case|:
+case|case
+name|PROCESSOR_OCTEON
 case|:
 return|return
 literal|2
