@@ -2406,41 +2406,19 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This version should only be called by intefaces that switch their type  * after calling if_alloc().  if_free_type() will go away again now that we  * have if_alloctype to cache the original allocation type.  For now, assert  * that they match, since we require that in practice.  */
+comment|/*  * Deregister an interface and free the associated storage.  */
 end_comment
 
 begin_function
 name|void
-name|if_free_type
+name|if_free
 parameter_list|(
 name|struct
 name|ifnet
 modifier|*
 name|ifp
-parameter_list|,
-name|u_char
-name|type
 parameter_list|)
 block|{
-name|KASSERT
-argument_list|(
-name|ifp
-operator|->
-name|if_alloctype
-operator|==
-name|type
-argument_list|,
-operator|(
-literal|"if_free_type: type (%d) != alloctype (%d)"
-operator|,
-name|type
-operator|,
-name|ifp
-operator|->
-name|if_alloctype
-operator|)
-argument_list|)
-expr_stmt|;
 name|ifp
 operator|->
 name|if_flags
@@ -2496,32 +2474,6 @@ return|return;
 name|if_free_internal
 argument_list|(
 name|ifp
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * This is the normal version of if_free(), used by device drivers to free a  * detached network interface.  The contents of if_free_type() will move into  * here when if_free_type() goes away.  */
-end_comment
-
-begin_function
-name|void
-name|if_free
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{
-name|if_free_type
-argument_list|(
-name|ifp
-argument_list|,
-name|ifp
-operator|->
-name|if_alloctype
 argument_list|)
 expr_stmt|;
 block|}

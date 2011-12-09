@@ -3467,19 +3467,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|if_free_type
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|u_char
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|if_initname
 parameter_list|(
 name|struct
