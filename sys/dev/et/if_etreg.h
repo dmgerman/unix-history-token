@@ -57,13 +57,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ET_PCIR_BAR
-value|PCIR_BAR(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ET_PCIR_DEVICE_CAPS
 value|0x4C
 end_define
