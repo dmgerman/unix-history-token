@@ -1948,7 +1948,7 @@ name|MII_PHY_ANY
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -2972,6 +2972,7 @@ name|cfg2
 operator||=
 name|ET_MAC_CFG2_FDX
 expr_stmt|;
+comment|/* 		 * Controller lacks automatic TX pause frame 		 * generation so it should be handled by driver. 		 * Even though driver can send pause frame with 		 * arbitrary pause time, controller does not 		 * provide a way that tells how many free RX 		 * buffers are available in controller.  This 		 * limitation makes it hard to generate XON frame 		 * in time on driver side so don't enable TX flow 		 * control. 		 */
 ifdef|#
 directive|ifdef
 name|notyet
@@ -2990,6 +2991,8 @@ name|cfg1
 operator||=
 name|ET_MAC_CFG1_TXFLOW
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|IFM_OPTIONS
@@ -3005,8 +3008,6 @@ name|cfg1
 operator||=
 name|ET_MAC_CFG1_RXFLOW
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 else|else
 name|ctrl
@@ -9821,7 +9822,7 @@ argument_list|,
 name|ET_TXMAC_CTRL_FC_DISABLE
 argument_list|)
 expr_stmt|;
-comment|/* No flow control yet */
+comment|/* 	 * Initialize pause time. 	 * This register should be set before XON/XOFF frame is 	 * sent by driver. 	 */
 name|CSR_WRITE_4
 argument_list|(
 name|sc
@@ -9829,6 +9830,8 @@ argument_list|,
 name|ET_TXMAC_FLOWCTRL
 argument_list|,
 literal|0
+operator|<<
+name|ET_TXMAC_FLOWCTRL_CFPT_SHIFT
 argument_list|)
 expr_stmt|;
 comment|/* Enable TX MAC but leave FC(?) diabled */
