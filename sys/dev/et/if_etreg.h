@@ -1954,7 +1954,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ET_INTR_TXEOF
+name|ET_INTR_TXDMA
 value|0x00000008
 end_define
 
@@ -1968,7 +1968,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_INTR_RXEOF
+name|ET_INTR_RXDMA
 value|0x00000020
 end_define
 
@@ -2053,7 +2053,8 @@ begin_define
 define|#
 directive|define
 name|ET_INTRS
-value|(ET_INTR_TXEOF | \ 					 ET_INTR_RXEOF | \ 					 ET_INTR_TIMER)
+define|\
+value|(ET_INTR_TXDMA | ET_INTR_RXDMA | ET_INTR_TIMER |	\ 	 ET_INTR_TXDMA_ERROR | ET_INTR_RXDMA_ERROR)
 end_define
 
 begin_comment
