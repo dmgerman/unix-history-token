@@ -2962,13 +2962,14 @@ name|file
 modifier|*
 name|fpop
 decl_stmt|;
+comment|/* 	 * NB: td may be NULL if this descriptor is closed due to 	 * garbage collection from a closed UNIX domain socket. 	 */
 name|fpop
 operator|=
-name|td
+name|curthread
 operator|->
 name|td_fpop
 expr_stmt|;
-name|td
+name|curthread
 operator|->
 name|td_fpop
 operator|=
@@ -2985,7 +2986,7 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|td
+name|curthread
 operator|->
 name|td_fpop
 operator|=
