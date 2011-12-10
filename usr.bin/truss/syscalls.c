@@ -286,6 +286,7 @@ comment|/*  * This should probably be in its own file, sorted alphabetically.  *
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|syscall
 name|syscalls
@@ -3632,6 +3633,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|xlat
 name|poll_flags
