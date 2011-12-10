@@ -1672,6 +1672,13 @@ name|SCTP_OUTPUT_FROM_CLOSING
 value|16
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_OUTPUT_FROM_SOCKOPT
+value|17
+end_define
+
 begin_comment
 comment|/* SCTP chunk types are moved sctp.h for application (NAT, FW) use */
 end_comment

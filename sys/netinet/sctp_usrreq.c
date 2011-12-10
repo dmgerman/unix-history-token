@@ -23638,6 +23638,17 @@ argument_list|,
 name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
+name|sctp_chunk_output
+argument_list|(
+name|inp
+argument_list|,
+name|stcb
+argument_list|,
+name|SCTP_OUTPUT_FROM_SOCKOPT
+argument_list|,
+name|SCTP_SO_LOCKED
+argument_list|)
+expr_stmt|;
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_HEARTBEAT
