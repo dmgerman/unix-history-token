@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -143,6 +143,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_EEPROM_PCIE_CTRL_WORD_2
+value|0x28
+end_define
+
+begin_comment
+comment|/* EEPROM PCIe Ctrl Word 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_BARCTRL
 value|0x5BBC
 end_define
@@ -171,6 +182,17 @@ end_define
 
 begin_comment
 comment|/* BAR ctrl CSR size */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I350_BARCTRL
+value|0x5BFC
+end_define
+
+begin_comment
+comment|/* BAR ctrl reg */
 end_comment
 
 begin_define
@@ -772,6 +794,94 @@ end_comment
 begin_define
 define|#
 directive|define
+name|E1000_I2CBB_EN
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* I2C - Bit Bang Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_CLK_OUT
+value|0x00000200
+end_define
+
+begin_comment
+comment|/* I2C- Clock */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_DATA_OUT
+value|0x00000400
+end_define
+
+begin_comment
+comment|/* I2C- Data Out */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_DATA_OE_N
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* I2C- Data Output Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_DATA_IN
+value|0x00001000
+end_define
+
+begin_comment
+comment|/* I2C- Data In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_CLK_OE_N
+value|0x00002000
+end_define
+
+begin_comment
+comment|/* I2C- Clock Output Enable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_CLK_IN
+value|0x00004000
+end_define
+
+begin_comment
+comment|/* I2C- Clock In */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_CLK_STRETCH_DIS
+value|0x00008000
+end_define
+
+begin_comment
+comment|/* I2C- Dis Clk Stretching */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|E1000_WDSTP
 value|0x01040
 end_define
@@ -832,7 +942,7 @@ value|0x01500
 end_define
 
 begin_comment
-comment|/* Interrupt Cause - new location - RC */
+comment|/* Intr Cause - new location - RC */
 end_comment
 
 begin_define
@@ -843,7 +953,7 @@ value|0x01504
 end_define
 
 begin_comment
-comment|/* Interrupt Cause Set - new location - WO */
+comment|/* Intr Cause Set - new location - WO */
 end_comment
 
 begin_define
@@ -854,7 +964,7 @@ value|0x01508
 end_define
 
 begin_comment
-comment|/* Interrupt Mask Set/Read - new location - RW */
+comment|/* Intr Mask Set/Read - new location - RW */
 end_comment
 
 begin_define
@@ -865,7 +975,7 @@ value|0x0150C
 end_define
 
 begin_comment
-comment|/* Interrupt Mask Clear - new location - WO */
+comment|/* Intr Mask Clear - new location - WO */
 end_comment
 
 begin_define
@@ -876,7 +986,7 @@ value|0x01510
 end_define
 
 begin_comment
-comment|/* Interrupt Ack Auto Mask - new location - RW */
+comment|/* Intr Ack Auto Mask - new location - RW */
 end_comment
 
 begin_define
@@ -1044,7 +1154,7 @@ value|0x02404
 end_define
 
 begin_comment
-comment|/* Same as RXPBS, renamed for newer adapters - RW */
+comment|/* Same as RXPBS, renamed for newer Si - RW */
 end_comment
 
 begin_define
@@ -1091,7 +1201,7 @@ name|E1000_RDBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02800 + ((_n) * 0x100)) : \                                          (0x0C000 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02800 + ((_n) * 0x100)) : \ 			 (0x0C000 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1101,7 +1211,7 @@ name|E1000_RDBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02804 + ((_n) * 0x100)) : \                                          (0x0C004 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02804 + ((_n) * 0x100)) : \ 			 (0x0C004 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1111,7 +1221,7 @@ name|E1000_RDLEN
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02808 + ((_n) * 0x100)) : \                                          (0x0C008 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02808 + ((_n) * 0x100)) : \ 			 (0x0C008 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1121,7 +1231,7 @@ name|E1000_SRRCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x0280C + ((_n) * 0x100)) : \                                          (0x0C00C + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x0280C + ((_n) * 0x100)) : \ 				 (0x0C00C + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1131,7 +1241,7 @@ name|E1000_RDH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02810 + ((_n) * 0x100)) : \                                          (0x0C010 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02810 + ((_n) * 0x100)) : \ 			 (0x0C010 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1141,7 +1251,7 @@ name|E1000_RXCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02814 + ((_n) * 0x100)) : \                                          (0x0C014 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02814 + ((_n) * 0x100)) : \ 			 (0x0C014 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1161,7 +1271,7 @@ name|E1000_RDT
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02818 + ((_n) * 0x100)) : \                                          (0x0C018 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02818 + ((_n) * 0x100)) : \ 			 (0x0C018 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1171,7 +1281,7 @@ name|E1000_RXDCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02828 + ((_n) * 0x100)) : \                                          (0x0C028 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02828 + ((_n) * 0x100)) : \ 				 (0x0C028 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1181,7 +1291,7 @@ name|E1000_RQDPC
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x02830 + ((_n) * 0x100)) : \                                          (0x0C030 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x02830 + ((_n) * 0x100)) : \ 			 (0x0C030 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1191,7 +1301,7 @@ name|E1000_TDBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03800 + ((_n) * 0x100)) : \                                          (0x0E000 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03800 + ((_n) * 0x100)) : \ 			 (0x0E000 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1201,7 +1311,7 @@ name|E1000_TDBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03804 + ((_n) * 0x100)) : \                                          (0x0E004 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03804 + ((_n) * 0x100)) : \ 			 (0x0E004 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1211,7 +1321,7 @@ name|E1000_TDLEN
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03808 + ((_n) * 0x100)) : \                                          (0x0E008 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03808 + ((_n) * 0x100)) : \ 			 (0x0E008 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1221,7 +1331,7 @@ name|E1000_TDH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03810 + ((_n) * 0x100)) : \                                          (0x0E010 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03810 + ((_n) * 0x100)) : \ 			 (0x0E010 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1231,7 +1341,7 @@ name|E1000_TXCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03814 + ((_n) * 0x100)) : \                                          (0x0E014 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03814 + ((_n) * 0x100)) : \ 			 (0x0E014 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1251,7 +1361,7 @@ name|E1000_TDT
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03818 + ((_n) * 0x100)) : \                                          (0x0E018 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03818 + ((_n) * 0x100)) : \ 			 (0x0E018 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1261,7 +1371,7 @@ name|E1000_TXDCTL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03828 + ((_n) * 0x100)) : \                                          (0x0E028 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03828 + ((_n) * 0x100)) : \ 				 (0x0E028 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1271,7 +1381,7 @@ name|E1000_TDWBAL
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x03838 + ((_n) * 0x100)) : \                                          (0x0E038 + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x03838 + ((_n) * 0x100)) : \ 				 (0x0E038 + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1281,7 +1391,7 @@ name|E1000_TDWBAH
 parameter_list|(
 name|_n
 parameter_list|)
-value|((_n)< 4 ? (0x0383C + ((_n) * 0x100)) : \                                          (0x0E03C + ((_n) * 0x40)))
+value|((_n)< 4 ? (0x0383C + ((_n) * 0x100)) : \ 				 (0x0E03C + ((_n) * 0x40)))
 end_define
 
 begin_define
@@ -1355,7 +1465,7 @@ name|E1000_RAL
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : \                                        (0x054E0 + ((_i - 16) * 8)))
+value|(((_i)<= 15) ? (0x05400 + ((_i) * 8)) : \ 				 (0x054E0 + ((_i - 16) * 8)))
 end_define
 
 begin_define
@@ -1365,7 +1475,7 @@ name|E1000_RAH
 parameter_list|(
 name|_i
 parameter_list|)
-value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : \                                        (0x054E4 + ((_i - 16) * 8)))
+value|(((_i)<= 15) ? (0x05404 + ((_i) * 8)) : \ 				 (0x054E4 + ((_i - 16) * 8)))
 end_define
 
 begin_define
@@ -1456,7 +1566,7 @@ value|0x03100
 end_define
 
 begin_comment
-comment|/* Packet Buffer Slave Access Control */
+comment|/* Pkt Buffer Slave Access Control */
 end_comment
 
 begin_define
@@ -1470,7 +1580,7 @@ value|(0x03110 + (0x4 * (_n)))
 end_define
 
 begin_comment
-comment|/* Packet Buffer DWORD (_n) */
+comment|/* Pkt Buffer DWORD */
 end_comment
 
 begin_define
@@ -1484,16 +1594,16 @@ begin_comment
 comment|/* Tx Packet Buffer Size - RW */
 end_comment
 
+begin_comment
+comment|/* Same as TXPBS, renamed for newer Si - RW */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_ITPBS
 value|0x03404
 end_define
-
-begin_comment
-comment|/* Same as TXPBS, renamed for newer adpaters - RW */
-end_comment
 
 begin_define
 define|#
@@ -1558,7 +1668,7 @@ value|0x0357C
 end_define
 
 begin_comment
-comment|/* DMA Tx Descriptor uC Mail Box - RW */
+comment|/* DMA Tx Desc uC Mail Box - RW */
 end_comment
 
 begin_define
@@ -1569,7 +1679,7 @@ value|0x03580
 end_define
 
 begin_comment
-comment|/* DMA Tx Descriptor uC Addr Command - RW */
+comment|/* DMA Tx Desc uC Addr Command - RW */
 end_comment
 
 begin_define
@@ -1580,7 +1690,7 @@ value|0x03584
 end_define
 
 begin_comment
-comment|/* DMA Tx Descriptor uC Data Write - RW */
+comment|/* DMA Tx Desc uC Data Write - RW */
 end_comment
 
 begin_define
@@ -1591,7 +1701,7 @@ value|0x03588
 end_define
 
 begin_comment
-comment|/* DMA Tx Descriptor uC Data  Read  - RW */
+comment|/* DMA Tx Desc uC Data  Read  - RW */
 end_comment
 
 begin_define
@@ -1602,7 +1712,7 @@ value|0x0358C
 end_define
 
 begin_comment
-comment|/* DMA Tx Descriptor uC Control - RW */
+comment|/* DMA Tx Desc uC Control - RW */
 end_comment
 
 begin_define
@@ -1638,16 +1748,16 @@ begin_comment
 comment|/* DMA Tx Control flag high - RW */
 end_comment
 
+begin_comment
+comment|/* DMA Tx Max Total Allow Size Reqs - RW */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_DTXMXSZRQ
 value|0x03540
 end_define
-
-begin_comment
-comment|/* DMA Tx Max Total Allow Size Requests - RW */
-end_comment
 
 begin_define
 define|#
@@ -2587,6 +2697,10 @@ parameter_list|)
 value|(0x010050 + (0x100 * (_n)))
 end_define
 
+begin_comment
+comment|/* LinkSec */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -2595,7 +2709,7 @@ value|0x04300
 end_define
 
 begin_comment
-comment|/* LinkSec Tx Untagged Packet Count - OutPktsUntagged */
+comment|/* Tx Untagged Pkt Cnt */
 end_comment
 
 begin_define
@@ -2606,7 +2720,7 @@ value|0x04304
 end_define
 
 begin_comment
-comment|/* LinkSec Encrypted Tx Packets Count - OutPktsEncrypted */
+comment|/* Encrypted Tx Pkts Cnt */
 end_comment
 
 begin_define
@@ -2617,7 +2731,7 @@ value|0x04308
 end_define
 
 begin_comment
-comment|/* LinkSec Protected Tx Packet Count - OutPktsProtected */
+comment|/* Protected Tx Pkt Cnt */
 end_comment
 
 begin_define
@@ -2628,7 +2742,7 @@ value|0x0430C
 end_define
 
 begin_comment
-comment|/* LinkSec Encrypted Tx Octets Count - OutOctetsEncrypted */
+comment|/* Encrypted Tx Octets Cnt */
 end_comment
 
 begin_define
@@ -2639,7 +2753,7 @@ value|0x04310
 end_define
 
 begin_comment
-comment|/* LinkSec Protected Tx Octets Count - OutOctetsProtected */
+comment|/* Protected Tx Octets Cnt */
 end_comment
 
 begin_define
@@ -2650,7 +2764,7 @@ value|0x04314
 end_define
 
 begin_comment
-comment|/* LinkSec Untagged non-Strict Rx Packet Count - InPktsUntagged/InPktsNoTag */
+comment|/* Untagged non-Strict Rx Pkt Cnt */
 end_comment
 
 begin_define
@@ -2661,7 +2775,7 @@ value|0x0431C
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Octets Decrypted Count - InOctetsDecrypted */
+comment|/* Rx Octets Decrypted Count */
 end_comment
 
 begin_define
@@ -2672,7 +2786,7 @@ value|0x04320
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Octets Validated - InOctetsValidated */
+comment|/* Rx Octets Validated */
 end_comment
 
 begin_define
@@ -2683,7 +2797,7 @@ value|0x04324
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Bad Tag - InPktsBadTag */
+comment|/* Rx Bad Tag */
 end_comment
 
 begin_define
@@ -2694,7 +2808,7 @@ value|0x04328
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Packet No SCI Count - InPktsNoSci */
+comment|/* Rx Packet No SCI Count */
 end_comment
 
 begin_define
@@ -2705,7 +2819,7 @@ value|0x0432C
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Packet Unknown SCI Count - InPktsUnknownSci */
+comment|/* Rx Packet Unknown SCI Count */
 end_comment
 
 begin_define
@@ -2716,7 +2830,7 @@ value|0x04330
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Unchecked Packets Count - InPktsUnchecked */
+comment|/* Rx Unchecked Packets Count */
 end_comment
 
 begin_define
@@ -2727,7 +2841,7 @@ value|0x04340
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Delayed Packet Count - InPktsDelayed */
+comment|/* Rx Delayed Packet Count */
 end_comment
 
 begin_define
@@ -2738,7 +2852,7 @@ value|0x04350
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Late Packets Count - InPktsLate */
+comment|/* Rx Late Packets Count */
 end_comment
 
 begin_define
@@ -2752,7 +2866,7 @@ value|(0x04360 + (0x04 * (_n)))
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Packet OK Count - InPktsOk */
+comment|/* Rx Pkt OK Cnt */
 end_comment
 
 begin_define
@@ -2766,7 +2880,7 @@ value|(0x04380 + (0x04 * (_n)))
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Invalid Count - InPktsInvalid */
+comment|/* Rx Invalid Cnt */
 end_comment
 
 begin_define
@@ -2780,7 +2894,7 @@ value|(0x043A0 + (0x04 * (_n)))
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Not Valid Count - InPktsNotValid */
+comment|/* Rx Not Valid Cnt */
 end_comment
 
 begin_define
@@ -2791,7 +2905,7 @@ value|0x043C0
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Unused SA Count - InPktsUnusedSa */
+comment|/* Rx Unused SA Count */
 end_comment
 
 begin_define
@@ -2802,7 +2916,7 @@ value|0x043D0
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Not Using SA Count - InPktsNotUsingSa */
+comment|/* Rx Not Using SA Count */
 end_comment
 
 begin_define
@@ -2813,7 +2927,7 @@ value|0x0B000
 end_define
 
 begin_comment
-comment|/* LinkSec Tx Capabilities Register - RO */
+comment|/* Tx Capabilities Register - RO */
 end_comment
 
 begin_define
@@ -2824,7 +2938,7 @@ value|0x0B300
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Capabilities Register - RO */
+comment|/* Rx Capabilities Register - RO */
 end_comment
 
 begin_define
@@ -2835,7 +2949,7 @@ value|0x0B004
 end_define
 
 begin_comment
-comment|/* LinkSec Tx Control - RW */
+comment|/* Tx Control - RW */
 end_comment
 
 begin_define
@@ -2846,7 +2960,7 @@ value|0x0B304
 end_define
 
 begin_comment
-comment|/* LinkSec Rx Control - RW */
+comment|/* Rx Control - RW */
 end_comment
 
 begin_define
@@ -2857,7 +2971,7 @@ value|0x0B008
 end_define
 
 begin_comment
-comment|/* LinkSec Tx SCI Low - RW */
+comment|/* Tx SCI Low - RW */
 end_comment
 
 begin_define
@@ -2868,7 +2982,7 @@ value|0x0B00C
 end_define
 
 begin_comment
-comment|/* LinkSec Tx SCI High - RW */
+comment|/* Tx SCI High - RW */
 end_comment
 
 begin_define
@@ -2879,7 +2993,7 @@ value|0x0B010
 end_define
 
 begin_comment
-comment|/* LinkSec Tx SA0 - RW */
+comment|/* Tx SA0 - RW */
 end_comment
 
 begin_define
@@ -2890,7 +3004,7 @@ value|0x0B018
 end_define
 
 begin_comment
-comment|/* LinkSec Tx SA PN 0 - RW */
+comment|/* Tx SA PN 0 - RW */
 end_comment
 
 begin_define
@@ -2901,7 +3015,7 @@ value|0x0B01C
 end_define
 
 begin_comment
-comment|/* LinkSec Tx SA PN 1 - RW */
+comment|/* Tx SA PN 1 - RW */
 end_comment
 
 begin_define
@@ -2912,7 +3026,7 @@ value|0x0B3D0
 end_define
 
 begin_comment
-comment|/* LinkSec Rx SCI Low - RW */
+comment|/* Rx SCI Low - RW */
 end_comment
 
 begin_define
@@ -2923,7 +3037,11 @@ value|0x0B3E0
 end_define
 
 begin_comment
-comment|/* LinkSec Rx SCI High - RW */
+comment|/* Rx SCI High - RW */
+end_comment
+
+begin_comment
+comment|/* LinkSec Tx 128-bit Key 0 - WO */
 end_comment
 
 begin_define
@@ -2937,7 +3055,7 @@ value|(0x0B020 + (0x04 * (_n)))
 end_define
 
 begin_comment
-comment|/* LinkSec Tx 128-bit Key 0 - WO */
+comment|/* LinkSec Tx 128-bit Key 1 - WO */
 end_comment
 
 begin_define
@@ -2950,10 +3068,6 @@ parameter_list|)
 value|(0x0B030 + (0x04 * (_n)))
 end_define
 
-begin_comment
-comment|/* LinkSec Tx 128-bit Key 1 - WO */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -2965,7 +3079,7 @@ value|(0x0B310 + (0x04 * (_n)))
 end_define
 
 begin_comment
-comment|/* LinkSec Rx SAs - RW */
+comment|/* Rx SAs - RW */
 end_comment
 
 begin_define
@@ -2979,7 +3093,7 @@ value|(0x0B330 + (0x04 * (_n)))
 end_define
 
 begin_comment
-comment|/* LinkSec Rx SAs - RW */
+comment|/* Rx SAs - RW */
 end_comment
 
 begin_comment
@@ -3006,7 +3120,7 @@ value|0x041A0
 end_define
 
 begin_comment
-comment|/* Switch Security Violation Packet Count */
+comment|/* Switch Security Violation Pkt Cnt */
 end_comment
 
 begin_define
@@ -3042,6 +3156,10 @@ begin_comment
 comment|/* IPSec Rx Index - RW */
 end_comment
 
+begin_comment
+comment|/* IPSec Rx IPv4/v6 Address - RW */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3049,11 +3167,11 @@ name|E1000_IPSRXIPADDR
 parameter_list|(
 name|_n
 parameter_list|)
-value|(0x0B420+ (0x04 * (_n)))
+value|(0x0B420 + (0x04 * (_n)))
 end_define
 
 begin_comment
-comment|/* IPSec Rx IPv4/v6 Address - RW */
+comment|/* IPSec Rx 128-bit Key - RW */
 end_comment
 
 begin_define
@@ -3065,10 +3183,6 @@ name|_n
 parameter_list|)
 value|(0x0B410 + (0x04 * (_n)))
 end_define
-
-begin_comment
-comment|/* IPSec Rx 128-bit Key - RW */
-end_comment
 
 begin_define
 define|#
@@ -3092,6 +3206,10 @@ begin_comment
 comment|/* IPSec Rx SPI - RW */
 end_comment
 
+begin_comment
+comment|/* IPSec Tx 128-bit Key - RW */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3101,10 +3219,6 @@ name|_n
 parameter_list|)
 value|(0x0B460 + (0x04 * (_n)))
 end_define
-
-begin_comment
-comment|/* IPSec Tx 128-bit Key - RW */
-end_comment
 
 begin_define
 define|#
@@ -3356,7 +3470,7 @@ value|0x04224
 end_define
 
 begin_comment
-comment|/* Link Partner Ability Next Page - RW */
+comment|/* Link Partner Ability Next Pg - RW */
 end_comment
 
 begin_define
@@ -3367,7 +3481,7 @@ value|0x04228
 end_define
 
 begin_comment
-comment|/* 1GSTAT Code Violation Packet Count - RW */
+comment|/* 1GSTAT Code Violation Pkt Cnt - RW */
 end_comment
 
 begin_define
@@ -3433,7 +3547,7 @@ value|0x054E0
 end_define
 
 begin_comment
-comment|/* 2nd half of receive address array - RW Array */
+comment|/* 2nd half of Rx address array - RW Array */
 end_comment
 
 begin_define
@@ -3456,6 +3570,28 @@ end_define
 
 begin_comment
 comment|/* VMDq Control - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CIAA
+value|0x05B88
+end_define
+
+begin_comment
+comment|/* Config Indirect Access Address - RW */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_CIAD
+value|0x05B8C
+end_define
+
+begin_comment
+comment|/* Config Indirect Access Data - RW */
 end_comment
 
 begin_define
@@ -3634,6 +3770,10 @@ begin_comment
 comment|/* Flexible Filter Value Table - RW Array */
 end_comment
 
+begin_comment
+comment|/* Flexible Host Filter Table */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3645,7 +3785,7 @@ value|(0x09000 + (_n * 0x100))
 end_define
 
 begin_comment
-comment|/* Flexible Host Filter Table */
+comment|/* Ext Flexible Host Filter Table */
 end_comment
 
 begin_define
@@ -3657,10 +3797,6 @@ name|_n
 parameter_list|)
 value|(0x09A00 + (_n * 0x100))
 end_define
-
-begin_comment
-comment|/* Ext Flexible Host Filter Table */
-end_comment
 
 begin_define
 define|#
@@ -3695,6 +3831,10 @@ begin_comment
 comment|/* Management Control To Host - RW */
 end_comment
 
+begin_comment
+comment|/* Management Decision Filters */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -3705,10 +3845,6 @@ parameter_list|)
 value|(0x05890 + (4 * (_n)))
 end_define
 
-begin_comment
-comment|/* Mngmt Decision Filters */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -3717,7 +3853,7 @@ value|0x05B5C
 end_define
 
 begin_comment
-comment|/* Software-Firmware Synchronization - RW */
+comment|/* SW-FW Synchronization - RW */
 end_comment
 
 begin_define
@@ -3852,16 +3988,16 @@ begin_comment
 comment|/* FW Semaphore */
 end_comment
 
+begin_comment
+comment|/* Driver-only SW semaphore (not used by BOOT agents) */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_SWSM2
 value|0x05B58
 end_define
-
-begin_comment
-comment|/* Driver-only SW semaphore (not used by BOOT agents) */
-end_comment
 
 begin_define
 define|#
@@ -3980,7 +4116,7 @@ value|(0x05AA0 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* Immediate Interrupt Ext*/
+comment|/* Immediate INTR Ext*/
 end_comment
 
 begin_define
@@ -3991,7 +4127,7 @@ value|0x05AC0
 end_define
 
 begin_comment
-comment|/* Immediate Interrupt Rx VLAN Priority - RW */
+comment|/* Immediate INT Rx VLAN Priority -RW */
 end_comment
 
 begin_define
@@ -4005,7 +4141,11 @@ value|(0x01600 + ((_i) * 4))
 end_define
 
 begin_comment
-comment|/* MSI-X Allocation Register                                                     * (_i) - RW */
+comment|/* MSI-X Alloc Reg -RW */
+end_comment
+
+begin_comment
+comment|/* MSI-X Table entry addr low reg - RW */
 end_comment
 
 begin_define
@@ -4019,7 +4159,7 @@ value|(0x0C000 + ((_i) * 0x10))
 end_define
 
 begin_comment
-comment|/* MSI-X Table entry addr                                                        * low reg - RW */
+comment|/* MSI-X Table entry addr upper reg - RW */
 end_comment
 
 begin_define
@@ -4033,7 +4173,7 @@ value|(0x0C004 + ((_i) * 0x10))
 end_define
 
 begin_comment
-comment|/* MSI-X Table entry addr                                                        * upper reg - RW */
+comment|/* MSI-X Table entry message reg - RW */
 end_comment
 
 begin_define
@@ -4047,7 +4187,7 @@ value|(0x0C008 + ((_i) * 0x10))
 end_define
 
 begin_comment
-comment|/* MSI-X Table entry                                                        * message reg - RW */
+comment|/* MSI-X Table entry vector ctrl reg - RW */
 end_comment
 
 begin_define
@@ -4059,10 +4199,6 @@ name|_i
 parameter_list|)
 value|(0x0C00C + ((_i) * 0x10))
 end_define
-
-begin_comment
-comment|/* MSI-X Table entry                                                        * vector ctrl reg - RW */
-end_comment
 
 begin_define
 define|#
@@ -4414,6 +4550,10 @@ parameter_list|)
 value|(0x05AD0 + (4 * (_n)))
 end_define
 
+begin_comment
+comment|/* VLAN Virtual Machine Filter - RW */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4423,10 +4563,6 @@ name|_n
 parameter_list|)
 value|(0x05D00 + (4 * (_n)))
 end_define
-
-begin_comment
-comment|/* VLAN Virtual Machine                                                        * Filter - RW */
-end_comment
 
 begin_define
 define|#
@@ -4452,8 +4588,18 @@ begin_comment
 comment|/* DMA VM offload */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|E1000_VTCTRL
+parameter_list|(
+name|_n
+parameter_list|)
+value|(0x10000 + (0x100 * (_n)))
+end_define
+
 begin_comment
-comment|/* Time Sync */
+comment|/* VT Control */
 end_comment
 
 begin_define
@@ -4789,6 +4935,10 @@ begin_comment
 comment|/* Transmit User Priority to Traffic Class */
 end_comment
 
+begin_comment
+comment|/* Tx Desc plane TC Rate-scheduler config */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4800,7 +4950,7 @@ value|(0x3610 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Tx Desc plane TC Rate-scheduler config */
+comment|/* Tx Packet plane TC Rate-Scheduler Config */
 end_comment
 
 begin_define
@@ -4814,7 +4964,7 @@ value|(0x3480 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Tx Packet plane TC Rate-Scheduler Config */
+comment|/* Rx Packet plane TC Rate-Scheduler Config */
 end_comment
 
 begin_define
@@ -4828,7 +4978,7 @@ value|(0x2480 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Rx Packet plane TC Rate-Scheduler Config */
+comment|/* Tx Desc Plane TC Rate-Scheduler Status */
 end_comment
 
 begin_define
@@ -4842,7 +4992,7 @@ value|(0x3630 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Tx Desc Plane TC Rate-Scheduler Status */
+comment|/* Tx Desc Plane TC Rate-Scheduler MMW */
 end_comment
 
 begin_define
@@ -4856,7 +5006,7 @@ value|(0x3650 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Tx Desc Plane TC Rate-Scheduler MMW */
+comment|/* Tx Packet plane TC Rate-Scheduler Status */
 end_comment
 
 begin_define
@@ -4870,7 +5020,7 @@ value|(0x34A0 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Tx Packet plane TC Rate-Scheduler Status */
+comment|/* Tx Packet plane TC Rate-scheduler MMW */
 end_comment
 
 begin_define
@@ -4884,7 +5034,7 @@ value|(0x34C0 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Tx Packet plane TC Rate-scheduler MMW */
+comment|/* Rx Packet plane TC Rate-Scheduler Status */
 end_comment
 
 begin_define
@@ -4898,7 +5048,7 @@ value|(0x24A0 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Rx Packet plane TC Rate-Scheduler Status */
+comment|/* Rx Packet plane TC Rate-Scheduler MMW */
 end_comment
 
 begin_define
@@ -4912,7 +5062,7 @@ value|(0x24C0 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Rx Packet plane TC Rate-Scheduler MMW */
+comment|/* Tx Desc plane VM Rate-Scheduler MMW*/
 end_comment
 
 begin_define
@@ -4926,7 +5076,7 @@ value|(0x3670 + ((_n) * 4))
 end_define
 
 begin_comment
-comment|/* Tx Desc plane VM Rate-Scheduler MMW*/
+comment|/* Tx BCN Rate-Scheduler MMW */
 end_comment
 
 begin_define
@@ -4938,10 +5088,6 @@ name|_n
 parameter_list|)
 value|(0x3690 + ((_n) * 4))
 end_define
-
-begin_comment
-comment|/* Tx BCN Rate-Scheduler MMW */
-end_comment
 
 begin_define
 define|#
@@ -5188,6 +5334,39 @@ directive|define
 name|E1000_PCIEERRSTS
 value|0x05BA8
 end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRMINV
+value|0x5BB0
+end_define
+
+begin_comment
+comment|/* LTR Minimum Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_LTRMAXV
+value|0x5BB4
+end_define
+
+begin_comment
+comment|/* LTR Maximum Value */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_DOBFFCTL
+value|0x3F24
+end_define
+
+begin_comment
+comment|/* DMA OBFF Control Register */
+end_comment
 
 begin_define
 define|#
