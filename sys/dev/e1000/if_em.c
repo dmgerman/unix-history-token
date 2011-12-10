@@ -19609,8 +19609,9 @@ name|num_rx_desc
 expr_stmt|;
 for|for
 control|(
+name|int
 name|j
-operator|=
+init|=
 literal|0
 init|;
 name|j
