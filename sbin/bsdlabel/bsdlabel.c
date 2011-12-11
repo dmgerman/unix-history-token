@@ -622,6 +622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_enum
+specifier|static
 enum|enum
 block|{
 name|UNSPEC
