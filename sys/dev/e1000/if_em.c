@@ -5504,13 +5504,13 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
+endif|#
+directive|endif
 name|bool
 name|avoid_reset
 init|=
 name|FALSE
 decl_stmt|;
-endif|#
-directive|endif
 name|int
 name|error
 init|=
@@ -5573,17 +5573,6 @@ name|TRUE
 expr_stmt|;
 endif|#
 directive|endif
-if|#
-directive|if
-name|defined
-argument_list|(
-name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
 comment|/* 		** Calling init results in link renegotiation, 		** so we avoid doing it when possible. 		*/
 if|if
 condition|(
@@ -5612,6 +5601,9 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 operator|!
@@ -5630,6 +5622,8 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 name|error
@@ -5643,8 +5637,6 @@ argument_list|,
 name|data
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 break|break;
 case|case
 name|SIOCSIFMTU
