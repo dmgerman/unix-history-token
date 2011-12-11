@@ -171,11 +171,11 @@ value|1
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
+modifier|*
 name|legal_colors
-index|[
-literal|16
-index|]
 index|[
 literal|16
 index|]
@@ -245,6 +245,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hex
 init|=
@@ -253,42 +254,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|number
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|int
 name|vesa_cols
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vesa_rows
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|font_height
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|colors_changed
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|video_mode_changed
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|normal_fore_color
 decl_stmt|,
@@ -297,6 +298,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|revers_fore_color
 decl_stmt|,
@@ -305,12 +307,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|letter
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|vid_info
 name|info
@@ -318,6 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|video_info
 name|new_mode_info
