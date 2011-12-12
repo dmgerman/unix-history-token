@@ -2055,6 +2055,52 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|reloc_iresolve
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|reloc_gnu_ifunc
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Setup the plt glue routines.  */
 end_comment
