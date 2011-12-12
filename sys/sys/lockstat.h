@@ -787,7 +787,7 @@ name|f
 parameter_list|,
 name|l
 parameter_list|)
-value|do {   \ 	uint32_t id;							     \ 									     \ 	if (!SCHEDULER_STOPPED()) {					     \ 		lock_profile_obtain_lock_success(&(lp)->lock_object, c, wt,  \ 		    f, l);						     \ 		if ((id = lockstat_probemap[(probe)]))			     \ 			(*lockstat_probe_func)(id, (uintptr_t)(lp), 0, 0,    \ 			    0, 0);					     \ 	}								     \ } while (0)
+value|do {   \ 	uint32_t id;							     \ 									     \     	lock_profile_obtain_lock_success(&(lp)->lock_object, c, wt, f, l);   \ 	if ((id = lockstat_probemap[(probe)])) 			     	     \ 		(*lockstat_probe_func)(id, (uintptr_t)(lp), 0, 0, 0, 0);     \ } while (0)
 end_define
 
 begin_define
@@ -799,7 +799,7 @@ name|probe
 parameter_list|,
 name|lp
 parameter_list|)
-value|do {			     \ 	uint32_t id;							     \ 									     \ 	if (!SCHEDULER_STOPPED()) {					     \ 		lock_profile_release_lock(&(lp)->lock_object);		     \ 		if ((id = lockstat_probemap[(probe)])) 		     	     \ 			(*lockstat_probe_func)(id, (uintptr_t)(lp), 0, 0,    \ 			    0, 0);					     \ 	}								     \ } while (0)
+value|do {			     \ 	uint32_t id;							     \ 									     \ 	lock_profile_release_lock(&(lp)->lock_object);			     \ 	if ((id = lockstat_probemap[(probe)])) 			     	     \ 		(*lockstat_probe_func)(id, (uintptr_t)(lp), 0, 0, 0, 0);     \ } while (0)
 end_define
 
 begin_else
