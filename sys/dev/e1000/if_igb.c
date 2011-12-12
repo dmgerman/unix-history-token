@@ -1354,7 +1354,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
+name|bool
 name|igb_tx_ctx_setup
 parameter_list|(
 name|struct
@@ -2094,7 +2094,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|igb_header_split
 init|=
 name|FALSE
@@ -16215,7 +16215,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|igb_tso_setup
 parameter_list|(
 name|struct
