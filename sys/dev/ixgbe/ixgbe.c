@@ -1673,7 +1673,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|ixgbe_header_split
 init|=
 name|FALSE
@@ -14168,7 +14168,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|ixgbe_tx_ctx_setup
 parameter_list|(
 name|struct
@@ -14661,7 +14661,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|ixgbe_tso_setup
 parameter_list|(
 name|struct
@@ -15480,7 +15480,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|ixgbe_txeof
 parameter_list|(
 name|struct
