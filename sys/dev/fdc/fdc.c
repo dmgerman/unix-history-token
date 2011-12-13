@@ -1139,8 +1139,8 @@ comment|/*  * Bus space handling (access to low-level IO).  */
 end_comment
 
 begin_function
-name|__inline
 specifier|static
+specifier|inline
 name|void
 name|fdregwr
 parameter_list|(
@@ -1183,8 +1183,8 @@ block|}
 end_function
 
 begin_function
-name|__inline
 specifier|static
+specifier|inline
 name|uint8_t
 name|fdregrd
 parameter_list|(
