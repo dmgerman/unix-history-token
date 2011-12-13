@@ -140,13 +140,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<mips/atheros/ar91xxreg.h>
+file|<mips/atheros/ar71xx_cpudef.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<mips/atheros/ar71xx_cpudef.h>
+file|<mips/atheros/ar91xxreg.h>
 end_include
 
 begin_include
