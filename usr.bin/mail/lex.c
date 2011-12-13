@@ -1955,7 +1955,7 @@ comment|/*  * Find the correct command in the command table corresponding  * to 
 end_comment
 
 begin_function
-name|__const
+specifier|const
 name|struct
 name|cmd
 modifier|*

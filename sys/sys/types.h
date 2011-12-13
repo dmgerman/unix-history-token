@@ -203,7 +203,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__const
+specifier|const
 name|char
 modifier|*
 name|c_caddr_t
