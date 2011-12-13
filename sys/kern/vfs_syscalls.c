@@ -4314,7 +4314,7 @@ name|chroot_allow_open_directories
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow a process to chroot(2) if it has a directory open"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

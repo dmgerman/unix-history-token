@@ -2460,7 +2460,7 @@ name|poweroff_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay before poweroff to write disk caches (msec)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2531,7 +2531,7 @@ name|kproc_shutdown_wait
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max wait time (sec) to stop for each process"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
