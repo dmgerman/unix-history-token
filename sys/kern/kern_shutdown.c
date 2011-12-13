@@ -349,6 +349,8 @@ name|debugger_on_panic
 argument_list|,
 name|CTLFLAG_RW
 operator||
+name|CTLFLAG_SECURE
+operator||
 name|CTLFLAG_TUN
 argument_list|,
 operator|&
@@ -416,6 +418,8 @@ argument_list|,
 name|trace_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 operator||
 name|CTLFLAG_TUN
 argument_list|,
