@@ -1266,6 +1266,17 @@ operator|->
 name|time
 expr_stmt|;
 break|break;
+case|case
+name|BT_COUNTER
+case|:
+name|number
+operator|=
+name|pfile
+operator|->
+name|nextcounter
+operator|++
+expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(

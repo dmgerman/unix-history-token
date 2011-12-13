@@ -1266,7 +1266,10 @@ name|BT_PRAGMA
 block|,
 comment|/* `_Pragma' operator */
 name|BT_TIMESTAMP
+block|,
 comment|/* `__TIMESTAMP__' */
+name|BT_COUNTER
+comment|/* `__COUNTER__' */
 block|}
 enum|;
 end_enum
