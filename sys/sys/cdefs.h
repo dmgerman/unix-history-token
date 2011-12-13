@@ -1033,6 +1033,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/*  * Keywords added in C1X.  */
+end_comment
+
 begin_if
 if|#
 directive|if
@@ -1049,8 +1053,37 @@ end_if
 begin_define
 define|#
 directive|define
+name|_Alignof
+parameter_list|(
+name|e
+parameter_list|)
+value|alignof(e)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_Noreturn
 value|[[noreturn]]
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Static_assert
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|)
+value|static_assert(e, s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Thread_local
+value|thread_local
 end_define
 
 begin_elif
@@ -1067,23 +1100,46 @@ literal|201000L
 end_elif
 
 begin_comment
-comment|/* Do nothing - _Noreturn is a keyword */
+comment|/* Do nothing.  They are language keywords. */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Not supported.  Implement them manually. */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__GNUC__
-argument_list|)
-end_elif
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_Alignof
+parameter_list|(
+name|e
+parameter_list|)
+value|__alignof__(e)
+end_define
 
 begin_define
 define|#
 directive|define
 name|_Noreturn
 value|__attribute__((__noreturn__))
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Thread_local
+value|__thread
 end_define
 
 begin_else
@@ -1094,7 +1150,92 @@ end_else
 begin_define
 define|#
 directive|define
+name|_Alignof
+parameter_list|(
+name|e
+parameter_list|)
+value|__offsetof(struct { char __a; e __b; }, __b)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_Noreturn
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Thread_local
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__COUNTER__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_Static_assert
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|)
+value|__Static_assert(e, __COUNTER__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_Static_assert
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|)
+value|__Static_assert(e, __LINE__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_define
+define|#
+directive|define
+name|__Static_assert
+parameter_list|(
+name|e
+parameter_list|,
+name|c
+parameter_list|)
+value|___Static_assert(e, c)
+end_define
+
+begin_define
+define|#
+directive|define
+name|___Static_assert
+parameter_list|(
+name|e
+parameter_list|,
+name|c
+parameter_list|)
+value|typedef char __assert ## c[(e) ? 1 : -1]
 end_define
 
 begin_endif
