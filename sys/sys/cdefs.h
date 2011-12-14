@@ -1053,6 +1053,16 @@ end_if
 begin_define
 define|#
 directive|define
+name|_Alignas
+parameter_list|(
+name|e
+parameter_list|)
+value|alignas(e)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_Alignof
 parameter_list|(
 name|e
@@ -1121,6 +1131,16 @@ end_ifdef
 begin_define
 define|#
 directive|define
+name|_Alignas
+parameter_list|(
+name|e
+parameter_list|)
+value|__attribute__((__aligned__(e)))
+end_define
+
+begin_define
+define|#
+directive|define
 name|_Alignof
 parameter_list|(
 name|e
@@ -1146,6 +1166,15 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_define
+define|#
+directive|define
+name|_Alignas
+parameter_list|(
+name|e
+parameter_list|)
+end_define
 
 begin_define
 define|#
@@ -1192,28 +1221,6 @@ parameter_list|)
 value|__Static_assert(e, __COUNTER__)
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_Static_assert
-parameter_list|(
-name|e
-parameter_list|,
-name|s
-parameter_list|)
-value|__Static_assert(e, __LINE__)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -1237,6 +1244,27 @@ name|c
 parameter_list|)
 value|typedef char __assert ## c[(e) ? 1 : -1]
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|_Static_assert
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
