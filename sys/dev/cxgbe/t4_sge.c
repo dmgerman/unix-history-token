@@ -6583,7 +6583,7 @@ expr_stmt|;
 name|c
 operator|.
 name|iqns_to_fl0congen
-operator|=
+operator||=
 name|htobe32
 argument_list|(
 name|V_FW_IQ_CMD_FL0HOSTFCMODE
