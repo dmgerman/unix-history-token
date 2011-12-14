@@ -1206,13 +1206,40 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
+name|VM_STATS
+parameter_list|(
+name|parent
+parameter_list|,
+name|var
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_PROC(parent, OID_AUTO, var, \ 	    CTLTYPE_UINT | CTLFLAG_RD | CTLFLAG_MPSAFE,&cnt.var, 0, vcnt, \ 	    "IU", descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_STATS_VM
+parameter_list|(
+name|var
+parameter_list|,
+name|descr
+parameter_list|)
+value|VM_STATS(_vm_stats_vm, var, descr)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_STATS_SYS
 parameter_list|(
 name|var
 parameter_list|,
 name|descr
 parameter_list|)
-value|SYSCTL_PROC(_vm_stats_sys, OID_AUTO, var, \     (CTLTYPE_UINT | CTLFLAG_RD | CTLFLAG_MPSAFE),&cnt.v_swtch, 0, vcnt, \     "IU", descr);
+value|VM_STATS(_vm_stats_sys, var, descr)
 end_define
 
 begin_expr_stmt
@@ -1266,7 +1293,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VM_STATS_SYS
+name|VM_STATS_VM
 argument_list|(
 name|v_vm_faults
 argument_list|,
@@ -1276,7 +1303,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|VM_STATS_SYS
+name|VM_STATS_VM
 argument_list|(
 name|v_cow_faults
 argument_list|,
@@ -1285,383 +1312,425 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_cow_optim
+name|v_cow_optim
 argument_list|,
 literal|"Optimized COW faults"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_zfod
+name|v_zfod
 argument_list|,
 literal|"Pages zero-filled on demand"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_ozfod
+name|v_ozfod
 argument_list|,
 literal|"Optimized zero fill pages"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_swapin
+name|v_swapin
 argument_list|,
 literal|"Swap pager pageins"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_swapout
+name|v_swapout
 argument_list|,
 literal|"Swap pager pageouts"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_swappgsin
+name|v_swappgsin
 argument_list|,
 literal|"Swap pages swapped in"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_swappgsout
+name|v_swappgsout
 argument_list|,
 literal|"Swap pages swapped out"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_vnodein
+name|v_vnodein
 argument_list|,
 literal|"Vnode pager pageins"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_vnodeout
+name|v_vnodeout
 argument_list|,
 literal|"Vnode pager pageouts"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_vnodepgsin
+name|v_vnodepgsin
 argument_list|,
 literal|"Vnode pages paged in"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_vnodepgsout
+name|v_vnodepgsout
 argument_list|,
 literal|"Vnode pages paged out"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_intrans
+name|v_intrans
 argument_list|,
 literal|"In transit page faults"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_reactivated
+name|v_reactivated
 argument_list|,
 literal|"Pages reactivated from free list"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_pdwakeups
+name|v_pdwakeups
 argument_list|,
 literal|"Pagedaemon wakeups"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_pdpages
+name|v_pdpages
 argument_list|,
 literal|"Pages analyzed by pagedaemon"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_tcached
+name|v_tcached
 argument_list|,
 literal|"Total pages cached"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_dfree
+name|v_dfree
 argument_list|,
 literal|"Pages freed by pagedaemon"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_pfree
+name|v_pfree
 argument_list|,
 literal|"Pages freed by exiting processes"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_tfree
+name|v_tfree
 argument_list|,
 literal|"Total pages freed"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_page_size
+name|v_page_size
 argument_list|,
 literal|"Page size in bytes"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_page_count
+name|v_page_count
 argument_list|,
 literal|"Total number of pages in system"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_free_reserved
+name|v_free_reserved
 argument_list|,
 literal|"Pages reserved for deadlock"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_free_target
+name|v_free_target
 argument_list|,
 literal|"Pages desired free"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_free_min
+name|v_free_min
 argument_list|,
 literal|"Minimum low-free-pages threshold"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_free_count
+name|v_free_count
 argument_list|,
 literal|"Free pages"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_wire_count
+name|v_wire_count
 argument_list|,
 literal|"Wired pages"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_active_count
+name|v_active_count
 argument_list|,
 literal|"Active pages"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_inactive_target
+name|v_inactive_target
 argument_list|,
 literal|"Desired inactive pages"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_inactive_count
+name|v_inactive_count
 argument_list|,
 literal|"Inactive pages"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_cache_count
+name|v_cache_count
 argument_list|,
 literal|"Pages on cache queue"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_cache_min
+name|v_cache_min
 argument_list|,
 literal|"Min pages on cache queue"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_cache_max
+name|v_cache_max
 argument_list|,
 literal|"Max pages on cached queue"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_pageout_free_min
+name|v_pageout_free_min
 argument_list|,
 literal|"Min pages reserved for kernel"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_interrupt_free_min
+name|v_interrupt_free_min
 argument_list|,
 literal|"Reserved pages for interrupt code"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_forks
+name|v_forks
 argument_list|,
 literal|"Number of fork() calls"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_vforks
+name|v_vforks
 argument_list|,
 literal|"Number of vfork() calls"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_rforks
+name|v_rforks
 argument_list|,
 literal|"Number of rfork() calls"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_kthreads
+name|v_kthreads
 argument_list|,
 literal|"Number of fork() calls by kernel"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_forkpages
+name|v_forkpages
 argument_list|,
 literal|"VM pages affected by fork()"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_vforkpages
+name|v_vforkpages
 argument_list|,
 literal|"VM pages affected by vfork()"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_rforkpages
+name|v_rforkpages
 argument_list|,
 literal|"VM pages affected by rfork()"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
-begin_macro
-name|VM_STATS_SYS
+begin_expr_stmt
+name|VM_STATS_VM
 argument_list|(
-argument|v_kthreadpages
+name|v_kthreadpages
 argument_list|,
 literal|"VM pages affected by fork() by kernel"
 argument_list|)
-end_macro
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|SYSCTL_INT
