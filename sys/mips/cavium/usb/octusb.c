@@ -3945,6 +3945,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|octusb_suspend
 parameter_list|(
@@ -3953,10 +3954,13 @@ name|octusb_softc
 modifier|*
 name|sc
 parameter_list|)
-block|{  }
+block|{
+comment|/* TODO */
+block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|octusb_resume
 parameter_list|(
@@ -3965,7 +3969,9 @@ name|octusb_softc
 modifier|*
 name|sc
 parameter_list|)
-block|{  }
+block|{
+comment|/* TODO */
+block|}
 end_function
 
 begin_comment
@@ -8016,6 +8022,68 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|octusb_set_hw_power_sleep
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|,
+name|uint32_t
+name|state
+parameter_list|)
+block|{
+name|struct
+name|octusb_softc
+modifier|*
+name|sc
+init|=
+name|OCTUSB_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|USB_HW_POWER_SUSPEND
+case|:
+name|octusb_suspend
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_SHUTDOWN
+case|:
+name|octusb_uninit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_RESUME
+case|:
+name|octusb_resume
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|usb_bus_methods
@@ -8056,6 +8124,11 @@ operator|.
 name|set_hw_power
 operator|=
 name|octusb_set_hw_power
+block|,
+operator|.
+name|set_hw_power_sleep
+operator|=
+name|octusb_set_hw_power_sleep
 block|,
 operator|.
 name|roothub_exec
