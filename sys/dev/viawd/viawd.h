@@ -48,12 +48,6 @@ name|resource
 modifier|*
 name|wd_res
 decl_stmt|;
-name|bus_space_tag_t
-name|wd_bst
-decl_stmt|;
-name|bus_space_handle_t
-name|wd_bsh
-decl_stmt|;
 name|eventhandler_tag
 name|ev_tag
 decl_stmt|;
