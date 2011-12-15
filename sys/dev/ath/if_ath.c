@@ -27523,6 +27523,21 @@ operator|&
 literal|0xf
 argument_list|)
 expr_stmt|;
+name|if_printf
+argument_list|(
+name|ifp
+argument_list|,
+literal|"2GHz radio: 0x%.4x; 5GHz radio: 0x%.4x\n"
+argument_list|,
+name|ah
+operator|->
+name|ah_analog2GhzRev
+argument_list|,
+name|ah
+operator|->
+name|ah_analog5GhzRev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bootverbose
