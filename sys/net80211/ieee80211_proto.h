@@ -1254,6 +1254,12 @@ name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
+name|struct
+name|ieee80211_frame
+modifier|*
+name|wh
+parameter_list|,
+specifier|const
 name|uint8_t
 name|mac
 index|[
