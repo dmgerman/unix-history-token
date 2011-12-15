@@ -6395,10 +6395,6 @@ name|wait
 parameter_list|)
 block|{
 comment|/* 	 * This entire routine is a horrible hack to avoid bothering kmem 	 * for new KVA addresses. Because this can get called from inside 	 * kmem allocation routines, calling kmem for a new address here 	 * can lead to multiply locking non-recursive mutexes. 	 */
-specifier|static
-name|vm_pindex_t
-name|color
-decl_stmt|;
 name|vm_offset_t
 name|va
 decl_stmt|;
@@ -6481,8 +6477,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|pflags
 operator||

@@ -3164,10 +3164,6 @@ index|[
 name|NPGPTD
 index|]
 decl_stmt|;
-specifier|static
-name|int
-name|color
-decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -3197,8 +3193,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|VM_ALLOC_NORMAL
 operator||
