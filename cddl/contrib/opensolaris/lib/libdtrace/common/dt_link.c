@@ -5941,7 +5941,7 @@ name|char
 name|dt_symfmt
 index|[]
 init|=
-literal|"%s%d.%s"
+literal|"%s%ld.%s"
 decl_stmt|;
 name|int
 name|fd
