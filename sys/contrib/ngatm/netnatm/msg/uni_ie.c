@@ -73,6 +73,16 @@ directive|include
 file|<netnatm/msg/priv.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|UNUSED
+parameter_list|(
+name|_p
+parameter_list|)
+value|do { (void)(_p); } while (0)
+end_define
+
 begin_comment
 comment|/*  * Define internal functions.  */
 end_comment
@@ -6398,9 +6408,10 @@ operator|&
 name|UNI_CAUSE_PARAM_P
 condition|)
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 block|}
 return|return
@@ -8540,9 +8551,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -8846,9 +8858,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9155,9 +9168,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -9561,9 +9575,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11500,9 +11515,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11724,9 +11740,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -11952,9 +11969,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12268,9 +12286,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12496,9 +12515,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -12812,9 +12832,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -13009,9 +13030,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -13362,9 +13384,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -14424,9 +14447,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -18871,9 +18895,10 @@ decl_stmt|;
 name|u_int
 name|xbr
 decl_stmt|;
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 name|abr
 operator|=
@@ -19338,9 +19363,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -19748,9 +19774,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -20172,9 +20199,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -20227,9 +20255,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -20649,9 +20678,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -21194,9 +21224,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -22800,9 +22831,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 comment|/* 	if(ie->h.present& UNI_BLLI_L1_P) 		; */
 if|if
@@ -25227,13 +25259,15 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
+name|UNUSED
+argument_list|(
 name|ie
-operator|=
-name|ie
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
@@ -25397,13 +25431,15 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
+name|UNUSED
+argument_list|(
 name|ie
-operator|=
-name|ie
+argument_list|)
 expr_stmt|;
 return|return
 operator|-
@@ -25567,13 +25603,15 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|ie
-operator|=
-name|ie
+argument_list|)
 expr_stmt|;
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -26068,9 +26106,10 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -26383,9 +26422,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -26640,9 +26680,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -27755,13 +27796,15 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
+name|UNUSED
+argument_list|(
 name|ie
-operator|=
-name|ie
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -29331,9 +29374,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -29664,9 +29708,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -29699,9 +29744,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -30935,9 +30981,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -32419,9 +32466,10 @@ block|{
 name|u_int
 name|i
 decl_stmt|;
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -32963,9 +33011,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -33215,9 +33264,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -33391,13 +33441,15 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
+name|UNUSED
+argument_list|(
 name|ie
-operator|=
-name|ie
+argument_list|)
 expr_stmt|;
 return|return
 literal|0
@@ -33762,9 +33814,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -34325,9 +34378,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 switch|switch
 condition|(
@@ -34998,9 +35052,10 @@ end_macro
 
 begin_block
 block|{
+name|UNUSED
+argument_list|(
 name|cx
-operator|=
-name|cx
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
