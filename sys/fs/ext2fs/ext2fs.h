@@ -37,6 +37,17 @@ value|32000
 end_define
 
 begin_comment
+comment|/*  * A summary of contiguous blocks of various sizes is maintained  * in each cylinder group. Normally this is set by the initial  * value of fs_maxcontig.  *  * XXX:FS_MAXCONTIG is set to 16 to conserve space. Here we set  * EXT2_MAXCONTIG to 32 for better performance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_MAXCONTIG
+value|32
+end_define
+
+begin_comment
 comment|/*  * Constants relative to the data blocks  */
 end_comment
 
@@ -442,6 +453,25 @@ modifier|*
 name|e2fs_gd
 decl_stmt|;
 comment|/* Group Descriptors */
+name|int32_t
+name|e2fs_maxcontig
+decl_stmt|;
+comment|/* max number of contiguous blks */
+name|int32_t
+name|e2fs_contigsumsize
+decl_stmt|;
+comment|/* size of cluster summary array */
+name|int32_t
+modifier|*
+name|e2fs_maxcluster
+decl_stmt|;
+comment|/* max cluster in each cyl group */
+name|struct
+name|csum
+modifier|*
+name|e2fs_clustersum
+decl_stmt|;
+comment|/* cluster summary in each cyl group */
 block|}
 struct|;
 end_struct
@@ -814,6 +844,27 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* cluster summary information */
+end_comment
+
+begin_struct
+struct|struct
+name|csum
+block|{
+name|int8_t
+name|cs_init
+decl_stmt|;
+comment|/* cluster summary has been initialized */
+name|int32_t
+modifier|*
+name|cs_sum
+decl_stmt|;
+comment|/* cluster summary array */
 block|}
 struct|;
 end_struct
