@@ -1754,7 +1754,7 @@ argument_list|)
 operator|->
 name|ah_analog5GhzRev
 operator|=
-name|ar5212GetRadioRev
+name|ar5416GetRadioRev
 argument_list|(
 name|ah
 argument_list|)
