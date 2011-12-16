@@ -1783,7 +1783,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|((__size_t)(__uintptr_t)((const volatile void *)&((type *)0)->member))
+value|((__size_t)(__uintptr_t)((const volatile void *)&((type *)0)->field))
 end_define
 
 begin_else
