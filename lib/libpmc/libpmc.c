@@ -1518,7 +1518,7 @@ struct|struct
 name|pmc_cputype_map
 block|{
 name|enum
-name|pmc_class
+name|pmc_cputype
 name|pm_cputype
 decl_stmt|;
 specifier|const
