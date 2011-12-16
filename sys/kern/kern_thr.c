@@ -877,6 +877,13 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+name|cpu_set_upcall
+argument_list|(
+name|newtd
+argument_list|,
+name|td
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Try the copyout as soon as we allocate the td so we don't 	 * have to tear things down in a failure case below. 	 * Here we copy out tid to two places, one for child and one 	 * for parent, because pthread can create a detached thread, 	 * if parent wants to safely access child tid, it has to provide  	 * its storage, because child thread may exit quickly and 	 * memory is freed before parent thread can access it. 	 */
 if|if
 condition|(
@@ -1007,13 +1014,6 @@ argument_list|(
 name|td
 operator|->
 name|td_ucred
-argument_list|)
-expr_stmt|;
-name|cpu_set_upcall
-argument_list|(
-name|newtd
-argument_list|,
-name|td
 argument_list|)
 expr_stmt|;
 if|if
