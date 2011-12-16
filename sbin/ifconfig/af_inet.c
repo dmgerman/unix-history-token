@@ -586,6 +586,12 @@ expr_stmt|;
 block|}
 name|min
 operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|min
+operator|->
 name|sin_len
 operator|=
 sizeof|sizeof
