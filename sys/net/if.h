@@ -183,9 +183,9 @@ name|ifi_link_state
 decl_stmt|;
 comment|/* current link state */
 name|u_char
-name|ifi_spare_char1
+name|ifi_vhid
 decl_stmt|;
-comment|/* spare byte */
+comment|/* carp vhid */
 name|u_char
 name|ifi_spare_char2
 decl_stmt|;
@@ -1014,6 +1014,11 @@ name|int
 name|ifam_metric
 decl_stmt|;
 comment|/* value of ifa_metric */
+name|struct
+name|if_data
+name|ifam_data
+decl_stmt|;
+comment|/* statistics and other data about if or 				 * address */
 block|}
 struct|;
 end_struct
@@ -1323,6 +1328,9 @@ decl_stmt|;
 name|struct
 name|sockaddr
 name|ifra_mask
+decl_stmt|;
+name|int
+name|ifra_vhid
 decl_stmt|;
 block|}
 struct|;

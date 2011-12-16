@@ -73,6 +73,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|carp_softc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ifvlantrunk
 struct_decl|;
 end_struct_decl
@@ -2742,6 +2748,12 @@ modifier|*
 name|ifa_ifp
 decl_stmt|;
 comment|/* back-pointer to interface */
+name|struct
+name|carp_softc
+modifier|*
+name|ifa_carp
+decl_stmt|;
+comment|/* pointer to CARP data */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ifaddr

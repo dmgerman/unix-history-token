@@ -613,6 +613,9 @@ name|struct
 name|in6_addrlifetime
 name|ifra_lifetime
 decl_stmt|;
+name|int
+name|ifra_vhid
+decl_stmt|;
 block|}
 struct|;
 end_struct

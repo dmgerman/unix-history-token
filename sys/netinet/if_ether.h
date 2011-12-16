@@ -318,6 +318,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|arp_ifscrub
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_include
 include|#
 directive|include
