@@ -3627,6 +3627,8 @@ name|NEW_ENV_VAR
 case|:
 name|output_data
 argument_list|(
+literal|"%s"
+argument_list|,
 literal|"\" VAR "
 operator|+
 name|noquote
@@ -3642,6 +3644,8 @@ name|NEW_ENV_VALUE
 case|:
 name|output_data
 argument_list|(
+literal|"%s"
+argument_list|,
 literal|"\" VALUE "
 operator|+
 name|noquote
@@ -3657,6 +3661,8 @@ name|ENV_ESC
 case|:
 name|output_data
 argument_list|(
+literal|"%s"
+argument_list|,
 literal|"\" ESC "
 operator|+
 name|noquote
@@ -3672,6 +3678,8 @@ name|ENV_USERVAR
 case|:
 name|output_data
 argument_list|(
+literal|"%s"
+argument_list|,
 literal|"\" USERVAR "
 operator|+
 name|noquote
