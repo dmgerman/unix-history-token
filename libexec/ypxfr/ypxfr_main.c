@@ -331,6 +331,9 @@ name|ypxfr_resp
 operator|.
 name|status
 operator|=
+operator|(
+name|yppush_status
+operator|)
 name|retval
 expr_stmt|;
 if|if
