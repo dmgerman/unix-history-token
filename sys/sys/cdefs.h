@@ -1033,6 +1033,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+operator|!
+name|__GNUC_PREREQ__
+argument_list|(
+literal|2
+operator|,
+literal|95
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__alignof
+parameter_list|(
+name|x
+parameter_list|)
+value|__offsetof(struct { char __a; x __b; }, __b)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Keywords added in C1X.  */
 end_comment
@@ -1119,23 +1146,17 @@ directive|else
 end_else
 
 begin_comment
-comment|/* Not supported.  Implement them manually. */
+comment|/* Not supported.  Implement them using our versions. */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC__
-end_ifdef
 
 begin_define
 define|#
 directive|define
 name|_Alignas
 parameter_list|(
-name|e
+name|x
 parameter_list|)
-value|__attribute__((__aligned__(e)))
+value|__aligned(x)
 end_define
 
 begin_define
@@ -1143,16 +1164,16 @@ define|#
 directive|define
 name|_Alignof
 parameter_list|(
-name|e
+name|x
 parameter_list|)
-value|__alignof__(e)
+value|__alignof(x)
 end_define
 
 begin_define
 define|#
 directive|define
 name|_Noreturn
-value|__attribute__((__noreturn__))
+value|__dead2
 end_define
 
 begin_define
@@ -1161,47 +1182,6 @@ directive|define
 name|_Thread_local
 value|__thread
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_Alignas
-parameter_list|(
-name|e
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_Alignof
-parameter_list|(
-name|e
-parameter_list|)
-value|__offsetof(struct { char __a; e __b; }, __b)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_Noreturn
-end_define
-
-begin_define
-define|#
-directive|define
-name|_Thread_local
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -1214,11 +1194,11 @@ define|#
 directive|define
 name|_Static_assert
 parameter_list|(
-name|e
+name|x
 parameter_list|,
-name|s
+name|y
 parameter_list|)
-value|__Static_assert(e, __COUNTER__)
+value|__Static_assert(x, __COUNTER__)
 end_define
 
 begin_define
@@ -1226,11 +1206,11 @@ define|#
 directive|define
 name|__Static_assert
 parameter_list|(
-name|e
+name|x
 parameter_list|,
-name|c
+name|y
 parameter_list|)
-value|___Static_assert(e, c)
+value|___Static_assert(x, y)
 end_define
 
 begin_define
@@ -1238,11 +1218,11 @@ define|#
 directive|define
 name|___Static_assert
 parameter_list|(
-name|e
+name|x
 parameter_list|,
-name|c
+name|y
 parameter_list|)
-value|typedef char __assert ## c[(e) ? 1 : -1]
+value|typedef char __assert_ ## y[(x) ? 1 : -1]
 end_define
 
 begin_else
@@ -1255,10 +1235,11 @@ define|#
 directive|define
 name|_Static_assert
 parameter_list|(
-name|e
+name|x
 parameter_list|,
-name|s
+name|y
 parameter_list|)
+value|struct __hack
 end_define
 
 begin_endif
@@ -1801,7 +1782,8 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|((size_t)(&((type *)0)->field))
+define|\
+value|((__size_t)(__uintptr_t)((const volatile void *)&((type *)0)->member))
 end_define
 
 begin_else
@@ -1819,7 +1801,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(__offsetof__ (reinterpret_cast<size_t>			\                  (&reinterpret_cast<const volatile char&>	\                   (static_cast<type *> (0)->field))))
+value|(__offsetof__ (reinterpret_cast<__size_t>			\                  (&reinterpret_cast<const volatile char&>	\                   (static_cast<type *> (0)->field))))
 end_define
 
 begin_endif
@@ -2524,7 +2506,7 @@ name|type
 parameter_list|,
 name|var
 parameter_list|)
-value|((type)(uintptr_t)(const void *)(var))
+value|((type)(__uintptr_t)(const void *)(var))
 end_define
 
 begin_endif
@@ -2547,7 +2529,7 @@ name|type
 parameter_list|,
 name|var
 parameter_list|)
-value|((type)(uintptr_t)(volatile void *)(var))
+value|((type)(__uintptr_t)(volatile void *)(var))
 end_define
 
 begin_endif
@@ -2570,7 +2552,7 @@ name|type
 parameter_list|,
 name|var
 parameter_list|)
-value|((type)(uintptr_t)(const volatile void *)(var))
+value|((type)(__uintptr_t)(const volatile void *)(var))
 end_define
 
 begin_endif
