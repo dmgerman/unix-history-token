@@ -666,6 +666,13 @@ name|PCI_EXP_LNKSTA_NLW
 value|PCIM_LINK_STA_WIDTH
 end_define
 
+begin_define
+define|#
+directive|define
+name|PCI_EXP_DEVCTL2
+value|0x28
+end_define
+
 begin_function
 specifier|static
 specifier|inline
