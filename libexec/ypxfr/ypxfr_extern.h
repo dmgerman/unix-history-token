@@ -82,7 +82,8 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|ypxfrstat
+name|enum
+name|ypstat
 name|yp_errno
 decl_stmt|;
 end_decl_stmt

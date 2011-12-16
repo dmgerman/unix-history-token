@@ -132,7 +132,7 @@ index|]
 decl_stmt|;
 name|yp_errno
 operator|=
-name|YPXFR_SUCC
+name|YP_TRUE
 expr_stmt|;
 if|if
 condition|(
@@ -153,7 +153,7 @@ condition|)
 block|{
 name|yp_errno
 operator|=
-name|YPXFR_BADARGS
+name|YP_BADARGS
 expr_stmt|;
 return|return
 operator|(
@@ -220,7 +220,7 @@ name|ENOENT
 case|:
 name|yp_errno
 operator|=
-name|YPXFR_NOMAP
+name|YP_NOMAP
 expr_stmt|;
 break|break;
 case|case
@@ -228,13 +228,13 @@ name|EFTYPE
 case|:
 name|yp_errno
 operator|=
-name|YPXFR_MADDR
+name|YP_BADDB
 expr_stmt|;
 break|break;
 default|default:
 name|yp_errno
 operator|=
-name|YPXFR_YPERR
+name|YP_YPERR
 expr_stmt|;
 break|break;
 block|}

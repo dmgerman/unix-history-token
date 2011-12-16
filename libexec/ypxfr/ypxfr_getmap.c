@@ -99,6 +99,14 @@ name|specdbp
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|enum
+name|ypstat
+name|yp_errno
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * This is largely the same as yp_all() except we do the transfer  * from a specific server without the aid of ypbind(8). We need to  * be able to specify the source host explicitly since ypxfr may  * only transfer maps from the NIS master server for any given domain.  * However, if we use the libc version of yp_all(), we could end up  * talking to one of the slaves instead. We do need to dig into libc  * a little though, since it contains the magic XDR function we need.  */
 end_comment
