@@ -1600,7 +1600,7 @@ decl_stmt|;
 if|if
 condition|(
 name|chat_debug
-operator|&&
+operator|&
 name|CHATDEBUG_SEND
 condition|)
 name|syslog
