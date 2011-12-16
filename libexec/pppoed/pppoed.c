@@ -2888,17 +2888,12 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s: Cannot allocate %d bytes\n"
+literal|"%s: Cannot allocate %zu bytes\n"
 argument_list|,
 name|prog
 argument_list|,
-call|(
-name|int
-call|)
-argument_list|(
 sizeof|sizeof
 name|DEFAULT_EXEC_PREFIX
-argument_list|)
 operator|+
 name|strlen
 argument_list|(
