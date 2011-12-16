@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_FS_EXT2FS_EXT2_FS_H_
+name|_FS_EXT2FS_EXT2FS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_FS_EXT2FS_EXT2_FS_H_
+name|_FS_EXT2FS_EXT2FS_H_
 end_define
 
 begin_include
@@ -90,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|EXT2_MAXSYMLINKLEN
-value|(EXT2_N_BLOCKS * sizeof (uint32_t))
+value|(EXT2_N_BLOCKS * sizeof(uint32_t))
 end_define
 
 begin_comment
@@ -972,7 +972,7 @@ name|EXT2_ADDR_PER_BLOCK
 parameter_list|(
 name|s
 parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / sizeof (uint32_t))
+value|(EXT2_BLOCK_SIZE(s) / sizeof(uint32_t))
 end_define
 
 begin_if
@@ -1232,7 +1232,7 @@ name|EXT2_DESC_PER_BLOCK
 parameter_list|(
 name|s
 parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / sizeof (struct ext2_gd))
+value|(EXT2_BLOCK_SIZE(s) / sizeof(struct ext2_gd))
 end_define
 
 begin_endif

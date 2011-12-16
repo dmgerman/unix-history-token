@@ -3008,24 +3008,16 @@ operator|=
 name|malloc
 argument_list|(
 sizeof|sizeof
-expr|*
+argument_list|(
+operator|*
 name|ump
+argument_list|)
 argument_list|,
 name|M_EXT2MNT
 argument_list|,
 name|M_WAITOK
-argument_list|)
-expr_stmt|;
-name|bzero
-argument_list|(
-operator|(
-name|caddr_t
-operator|)
-name|ump
-argument_list|,
-sizeof|sizeof
-expr|*
-name|ump
+operator||
+name|M_ZERO
 argument_list|)
 expr_stmt|;
 comment|/* 	 * I don't know whether this is the right strategy. Note that 	 * we dynamically allocate both an ext2_sb_info and an ext2_super_block 	 * while Linux keeps the super block in a locked buffer. 	 */
@@ -3123,7 +3115,7 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* 	 * Calculate the maximum contiguous blocks and size of cluster summary 	 * array.  In FFS this is done by newfs; however the superblock in  	 * ext2fs doesn't have these variables so we just can calculate 	 * them here. 	 */
+comment|/* 	 * Calculate the maximum contiguous blocks and size of cluster summary 	 * array.  In FFS this is done by newfs; however, the superblock  	 * in ext2fs doesn't have these variables, so we can calculate  	 * them here. 	 */
 name|ump
 operator|->
 name|um_e2fs
