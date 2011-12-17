@@ -1813,6 +1813,9 @@ block|}
 name|print_uptime
 argument_list|()
 expr_stmt|;
+name|cngrab
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Ok, now do things that assume all filesystem activity has 	 * been completed. 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
@@ -2310,6 +2313,9 @@ expr_stmt|;
 name|panicstr
 operator|=
 name|buf
+expr_stmt|;
+name|cngrab
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(

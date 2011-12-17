@@ -44,6 +44,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kdb.h>
 end_include
 
@@ -2617,6 +2623,9 @@ argument_list|(
 name|curthread
 argument_list|)
 expr_stmt|;
+name|cngrab
+argument_list|()
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -2668,6 +2677,9 @@ name|dbbe_name
 argument_list|)
 expr_stmt|;
 block|}
+name|cnungrab
+argument_list|()
+expr_stmt|;
 name|kdb_active
 operator|--
 expr_stmt|;
