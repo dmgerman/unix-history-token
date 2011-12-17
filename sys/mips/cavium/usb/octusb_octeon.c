@@ -238,13 +238,6 @@ name|octusb_octeon_detach
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|static
-name|device_shutdown_t
-name|octusb_octeon_shutdown
-decl_stmt|;
-end_decl_stmt
-
 begin_struct
 struct|struct
 name|octusb_octeon_softc
