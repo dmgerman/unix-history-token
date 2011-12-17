@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -250,11 +250,6 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
 parameter_list|,
 name|int
 modifier|*
@@ -1080,11 +1075,6 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
 parameter_list|)
 block|{
 name|struct
@@ -2039,8 +2029,6 @@ operator|)
 name|cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -2080,8 +2068,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 operator|(
 name|offset
@@ -2449,7 +2435,7 @@ name|sh
 argument_list|,
 name|op_err
 argument_list|,
-literal|0
+name|vrf_id
 argument_list|,
 name|net
 operator|->
@@ -4307,8 +4293,6 @@ name|stcb
 argument_list|,
 name|cp
 argument_list|,
-name|net
-argument_list|,
 name|abort_flag
 argument_list|)
 expr_stmt|;
@@ -4710,6 +4694,7 @@ name|struct
 name|sctp_shutdown_ack_chunk
 modifier|*
 name|cp
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -6786,10 +6771,6 @@ name|int
 modifier|*
 name|notification
 parameter_list|,
-name|sctp_assoc_t
-modifier|*
-name|sac_assoc_id
-parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -7329,8 +7310,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -7722,8 +7701,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -8358,8 +8335,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -8402,8 +8377,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -8947,14 +8920,6 @@ operator|+
 name|SCTP_LOC_16
 argument_list|)
 expr_stmt|;
-operator|*
-name|sac_assoc_id
-operator|=
-name|sctp_get_associd
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
 comment|/* notify upper layer */
 operator|*
 name|notification
@@ -9418,8 +9383,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -9469,8 +9432,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -10384,9 +10345,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-operator|*
-name|netp
 argument_list|)
 expr_stmt|;
 else|else
@@ -10505,8 +10463,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -11553,9 +11509,6 @@ name|struct
 name|sockaddr
 modifier|*
 name|to
-decl_stmt|;
-name|sctp_assoc_t
-name|sac_restart_id
 decl_stmt|;
 name|struct
 name|sctp_pcb
@@ -13087,9 +13040,6 @@ argument_list|,
 operator|&
 name|notification
 argument_list|,
-operator|&
-name|sac_restart_id
-argument_list|,
 name|vrf_id
 argument_list|,
 name|auth_skipped
@@ -13330,12 +13280,7 @@ name|stcb
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|sac_restart_id
+name|NULL
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -14173,6 +14118,7 @@ name|struct
 name|sctp_cookie_ack_chunk
 modifier|*
 name|cp
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -15402,6 +15348,7 @@ name|struct
 name|sctp_shutdown_complete_chunk
 modifier|*
 name|cp
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -22009,8 +21956,6 @@ name|sctp_findassociation_ep_asconf
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
-argument_list|,
 operator|*
 name|offset
 argument_list|,
@@ -23187,9 +23132,6 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-operator|*
-name|netp
-argument_list|,
 operator|&
 name|abort_no_unlock
 argument_list|,
@@ -23898,9 +23840,6 @@ name|offset_dup
 argument_list|,
 name|stcb
 argument_list|,
-operator|*
-name|netp
-argument_list|,
 name|num_seg
 argument_list|,
 literal|0
@@ -24371,9 +24310,6 @@ argument_list|,
 name|offset_dup
 argument_list|,
 name|stcb
-argument_list|,
-operator|*
-name|netp
 argument_list|,
 name|num_seg
 argument_list|,
@@ -27456,11 +27392,6 @@ operator|*
 name|mm
 decl_stmt|;
 name|int
-name|abort_flag
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|un_sent
 decl_stmt|;
 name|int
@@ -27679,11 +27610,7 @@ condition|)
 block|{
 name|sctp_pathmtu_adjustment
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|,
 name|net
 operator|->
@@ -28191,21 +28118,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|was_a_gap
-argument_list|,
-operator|&
-name|abort_flag
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|abort_flag
-condition|)
-block|{
-comment|/* Again, we aborted so NO UNLOCK needed */
-goto|goto
-name|out_now
-goto|;
-block|}
 block|}
 elseif|else
 if|if
@@ -28983,8 +28897,6 @@ name|sctp_findassociation_addr
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
-argument_list|,
 name|offset
 operator|-
 sizeof|sizeof
@@ -29028,11 +28940,7 @@ condition|)
 block|{
 name|sctp_pathmtu_adjustment
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|,
 name|net
 operator|->
@@ -29193,8 +29101,6 @@ name|sctp_findassociation_addr
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
-argument_list|,
 name|offset
 operator|-
 sizeof|sizeof
@@ -29238,11 +29144,7 @@ condition|)
 block|{
 name|sctp_pathmtu_adjustment
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|,
 name|net
 operator|->
@@ -29420,8 +29322,6 @@ block|{
 name|sctp_send_shutdown_complete2
 argument_list|(
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|sh
 argument_list|,

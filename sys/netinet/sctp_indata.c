@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -422,10 +422,6 @@ name|read_queue_e
 operator|->
 name|sinfo_context
 operator|=
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|context
 expr_stmt|;
 name|read_queue_e
@@ -3969,9 +3965,6 @@ name|prev_tsn
 decl_stmt|,
 name|post_tsn
 decl_stmt|;
-name|u_char
-name|last_flags
-decl_stmt|;
 name|struct
 name|sctp_tmit_chunk
 modifier|*
@@ -5085,16 +5078,6 @@ return|return;
 block|}
 else|else
 block|{
-name|last_flags
-operator|=
-name|at
-operator|->
-name|rec
-operator|.
-name|data
-operator|.
-name|rcv_flags
-expr_stmt|;
 name|last_tsn
 operator|=
 name|at
@@ -7443,8 +7426,6 @@ modifier|*
 name|dmbuf
 decl_stmt|;
 name|int
-name|indx
-decl_stmt|,
 name|the_len
 decl_stmt|;
 name|int
@@ -8125,11 +8106,6 @@ name|sctps_datadroprwnd
 argument_list|)
 expr_stmt|;
 block|}
-name|indx
-operator|=
-operator|*
-name|break_flag
-expr_stmt|;
 operator|*
 name|break_flag
 operator|=
@@ -11756,10 +11732,6 @@ name|stcb
 operator|->
 name|asoc
 expr_stmt|;
-name|at
-operator|=
-literal|0
-expr_stmt|;
 name|old_cumack
 operator|=
 name|asoc
@@ -12548,10 +12520,6 @@ name|stcb
 parameter_list|,
 name|int
 name|was_a_gap
-parameter_list|,
-name|int
-modifier|*
-name|abort_flag
 parameter_list|)
 block|{
 name|struct
@@ -14394,20 +14362,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|was_a_gap
-argument_list|,
-operator|&
-name|abort_flag
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|abort_flag
-condition|)
-return|return
-operator|(
-literal|2
-operator|)
-return|;
 return|return
 operator|(
 literal|0
@@ -14455,10 +14411,6 @@ parameter_list|,
 name|uint32_t
 modifier|*
 name|this_sack_lowest_newack
-parameter_list|,
-name|int
-modifier|*
-name|ecn_seg_sums
 parameter_list|,
 name|int
 modifier|*
@@ -15511,10 +15463,6 @@ name|num_nr_seg
 parameter_list|,
 name|int
 modifier|*
-name|ecn_seg_sums
-parameter_list|,
-name|int
-modifier|*
 name|rto_ok
 parameter_list|)
 block|{
@@ -15770,8 +15718,6 @@ argument_list|,
 name|biggest_newly_acked_tsn
 argument_list|,
 name|this_sack_lowest_newack
-argument_list|,
-name|ecn_seg_sums
 argument_list|,
 name|rto_ok
 argument_list|)
@@ -18137,11 +18083,6 @@ modifier|*
 name|asoc
 parameter_list|,
 name|struct
-name|sctp_nets
-modifier|*
-name|net
-parameter_list|,
-name|struct
 name|sctp_tmit_chunk
 modifier|*
 name|tp1
@@ -19456,8 +19397,6 @@ name|sctp_wakeup_log
 argument_list|(
 name|stcb
 argument_list|,
-name|cumack
-argument_list|,
 literal|1
 argument_list|,
 name|SCTP_WAKESND_FROM_SACK
@@ -19595,8 +19534,6 @@ block|{
 name|sctp_wakeup_log
 argument_list|(
 name|stcb
-argument_list|,
-name|cumack
 argument_list|,
 literal|1
 argument_list|,
@@ -20053,8 +19990,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|asoc
-argument_list|,
-name|net
 argument_list|,
 name|tp1
 argument_list|)
@@ -21113,11 +21048,6 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net_from
-parameter_list|,
 name|uint16_t
 name|num_seg
 parameter_list|,
@@ -21166,9 +21096,6 @@ name|biggest_tsn_newly_acked
 decl_stmt|,
 name|this_sack_lowest_newack
 decl_stmt|;
-name|uint32_t
-name|sav_cum_ack
-decl_stmt|;
 name|uint16_t
 name|wake_him
 init|=
@@ -21215,11 +21142,6 @@ init|=
 name|NULL
 decl_stmt|;
 name|int
-name|ecn_seg_sums
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|done_once
 decl_stmt|;
 name|int
@@ -21244,10 +21166,6 @@ argument_list|)
 expr_stmt|;
 comment|/* CMT DAC algo */
 name|this_sack_lowest_newack
-operator|=
-literal|0
-expr_stmt|;
-name|j
 operator|=
 literal|0
 expr_stmt|;
@@ -21792,12 +21710,6 @@ block|{
 comment|/* acking something behind */
 return|return;
 block|}
-name|sav_cum_ack
-operator|=
-name|asoc
-operator|->
-name|last_acked_seq
-expr_stmt|;
 comment|/* update the Rwnd of the peer */
 if|if
 condition|(
@@ -22589,9 +22501,6 @@ argument_list|,
 name|num_nr_seg
 argument_list|,
 operator|&
-name|ecn_seg_sums
-argument_list|,
-operator|&
 name|rto_ok
 argument_list|)
 condition|)
@@ -23016,8 +22925,6 @@ name|sctp_wakeup_log
 argument_list|(
 name|stcb
 argument_list|,
-name|cum_ack
-argument_list|,
 name|wake_him
 argument_list|,
 name|SCTP_WAKESND_FROM_SACK
@@ -23155,8 +23062,6 @@ block|{
 name|sctp_wakeup_log
 argument_list|(
 name|stcb
-argument_list|,
-name|cum_ack
 argument_list|,
 name|wake_him
 argument_list|,
@@ -24604,8 +24509,6 @@ name|stcb
 argument_list|,
 name|asoc
 argument_list|,
-name|net
-argument_list|,
 name|tp1
 argument_list|)
 expr_stmt|;
@@ -25111,11 +25014,6 @@ name|struct
 name|sctp_shutdown_chunk
 modifier|*
 name|cp
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|netp
 parameter_list|,
 name|int
 modifier|*
@@ -25795,8 +25693,6 @@ name|i
 decl_stmt|,
 name|fwd_sz
 decl_stmt|,
-name|cumack_set_flag
-decl_stmt|,
 name|m_size
 decl_stmt|;
 name|uint32_t
@@ -25823,10 +25719,6 @@ decl_stmt|,
 modifier|*
 name|sv
 decl_stmt|;
-name|cumack_set_flag
-operator|=
-literal|0
-expr_stmt|;
 name|asoc
 operator|=
 operator|&
