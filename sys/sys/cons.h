@@ -441,6 +441,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|cngets
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|cnputc
 parameter_list|(
 name|int
