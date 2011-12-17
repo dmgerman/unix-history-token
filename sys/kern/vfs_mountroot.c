@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/libkern.h>
 end_include
 
 begin_include
@@ -2021,7 +2021,7 @@ argument_list|(
 literal|"\nmountroot> "
 argument_list|)
 expr_stmt|;
-name|gets
+name|cngets
 argument_list|(
 name|name
 argument_list|,
