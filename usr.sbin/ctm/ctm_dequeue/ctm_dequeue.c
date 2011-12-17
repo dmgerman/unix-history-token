@@ -508,11 +508,16 @@ name|err
 argument_list|(
 literal|"%.*s %d/%d sent"
 argument_list|,
+call|(
+name|int
+call|)
+argument_list|(
 name|ftsent
 operator|->
 name|fts_namelen
 operator|-
 literal|8
+argument_list|)
 argument_list|,
 name|ftsent
 operator|->
