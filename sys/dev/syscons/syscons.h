@@ -1091,7 +1091,14 @@ name|status
 decl_stmt|;
 comment|/* status (bitfield) */
 name|int
+name|grabbed
+decl_stmt|;
+name|int
 name|kbd_mode
+decl_stmt|;
+comment|/* keyboard I/O mode */
+name|int
+name|kbd_prev_mode
 decl_stmt|;
 comment|/* keyboard I/O mode */
 name|int
