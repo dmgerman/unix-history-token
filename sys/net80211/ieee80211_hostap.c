@@ -7684,10 +7684,6 @@ argument_list|(
 name|vap
 argument_list|,
 name|wh
-argument_list|,
-name|wh
-operator|->
-name|i_addr2
 argument_list|)
 condition|)
 block|{
@@ -8076,10 +8072,6 @@ argument_list|(
 name|vap
 argument_list|,
 name|wh
-argument_list|,
-name|wh
-operator|->
-name|i_addr2
 argument_list|)
 condition|)
 block|{
