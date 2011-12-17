@@ -713,20 +713,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|gets
-parameter_list|(
-name|char
-modifier|*
-parameter_list|,
-name|size_t
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|locc
 parameter_list|(
