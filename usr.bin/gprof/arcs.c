@@ -1474,7 +1474,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no room for %d bytes of cycle headers"
+literal|"no room for %zu bytes of cycle headers"
 argument_list|,
 operator|(
 name|ncycle
@@ -1994,7 +1994,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no room for %d bytes of cycle stack"
+literal|"no room for %zu bytes of cycle stack"
 argument_list|,
 operator|(
 name|size
@@ -2641,7 +2641,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"no room for %d bytes of subcycle storage"
+literal|"no room for %zu bytes of subcycle storage"
 argument_list|,
 sizeof|sizeof
 argument_list|(

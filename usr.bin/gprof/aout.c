@@ -635,7 +635,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no room for %d bytes of symbol table"
+literal|"no room for %zu bytes of symbol table"
 argument_list|,
 name|askfor
 operator|*
