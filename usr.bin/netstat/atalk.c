@@ -227,6 +227,9 @@ name|mybuf
 argument_list|,
 literal|"%hu"
 argument_list|,
+operator|(
+name|short
+operator|)
 name|ntohs
 argument_list|(
 name|sat
