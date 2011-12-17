@@ -1745,7 +1745,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s:%lld:%ld:%ld:%d:%d"
+literal|"%s:%jd:%ld:%ld:%d:%d"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1755,8 +1755,7 @@ name|sin_addr
 argument_list|)
 argument_list|,
 operator|(
-name|long
-name|long
+name|intmax_t
 operator|)
 name|tv
 operator|.
