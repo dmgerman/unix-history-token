@@ -10323,6 +10323,20 @@ name|sio_cnputc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cn_grab_t
+name|sio_cngrab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_ungrab_t
+name|sio_cnungrab
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|CONSOLE_DRIVER
 argument_list|(
@@ -11162,6 +11176,32 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sio_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|sio_cnungrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
 end_function
 
 begin_function
