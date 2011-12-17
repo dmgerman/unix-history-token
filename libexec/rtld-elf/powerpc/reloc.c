@@ -1483,7 +1483,7 @@ operator|=
 literal|0x4e800420
 expr_stmt|;
 block|}
-comment|/* 	 * The icache will be sync'd in init_pltgot, which is called 	 * after all the slots have been updated 	 */
+comment|/* 	 * The icache will be sync'd in reloc_plt, which is called 	 * after all the slots have been updated 	 */
 return|return
 operator|(
 literal|0
@@ -1514,6 +1514,18 @@ specifier|const
 name|Elf_Rela
 modifier|*
 name|rela
+decl_stmt|;
+name|int
+name|N
+init|=
+name|obj
+operator|->
+name|pltrelasize
+operator|/
+sizeof|sizeof
+argument_list|(
+name|Elf_Rela
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1594,6 +1606,29 @@ return|;
 block|}
 block|}
 block|}
+comment|/* 	 * Sync the icache for the byte range represented by the 	 * trampoline routines and call slots. 	 */
+if|if
+condition|(
+name|obj
+operator|->
+name|pltgot
+operator|!=
+name|NULL
+condition|)
+name|__syncicache
+argument_list|(
+name|obj
+operator|->
+name|pltgot
+argument_list|,
+name|JMPTAB_BASE
+argument_list|(
+name|N
+argument_list|)
+operator|*
+literal|4
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -2321,21 +2356,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sync the icache for the byte range represented by the 	 * trampoline routines and call slots. 	 */
-name|__syncicache
-argument_list|(
-name|obj
-operator|->
-name|pltgot
-argument_list|,
-name|JMPTAB_BASE
-argument_list|(
-name|N
-argument_list|)
-operator|*
-literal|4
-argument_list|)
-expr_stmt|;
+comment|/* 	 * The icache will be sync'd in reloc_plt, which is called 	 * after all the slots have been updated 	 */
 block|}
 end_function
 
