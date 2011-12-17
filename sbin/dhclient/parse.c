@@ -328,7 +328,7 @@ argument_list|,
 name|val
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|memcpy
 argument_list|(
 name|s
 argument_list|,
@@ -1041,7 +1041,7 @@ argument_list|(
 literal|"no temp space for number."
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|memcpy
 argument_list|(
 name|t
 argument_list|,

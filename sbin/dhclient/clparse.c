@@ -3854,7 +3854,7 @@ argument_list|(
 literal|"no memory for string list entry."
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|memcpy
 argument_list|(
 name|tmp
 operator|->
