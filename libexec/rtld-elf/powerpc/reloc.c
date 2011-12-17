@@ -1233,6 +1233,18 @@ argument_list|(
 name|cache
 argument_list|)
 expr_stmt|;
+comment|/* Synchronize icache for text seg in case we made any changes */
+name|__syncicache
+argument_list|(
+name|obj
+operator|->
+name|mapbase
+argument_list|,
+name|obj
+operator|->
+name|textsize
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|r
