@@ -7181,7 +7181,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"invalid character %s at position %d in %s"
+literal|"invalid character %s at position %td in %s"
 argument_list|,
 name|showch
 argument_list|,
