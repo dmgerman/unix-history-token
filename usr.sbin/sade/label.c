@@ -4492,6 +4492,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
