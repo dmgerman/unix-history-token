@@ -1106,9 +1106,6 @@ name|printf
 argument_list|(
 literal|"LINKCNT=%hd FLAGS=%#x BLKCNT=%jx GEN=%jx\n"
 argument_list|,
-operator|(
-name|short
-operator|)
 name|DIP
 argument_list|(
 name|dp
