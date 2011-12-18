@@ -523,7 +523,7 @@ argument_list|(
 name|yplastbuf
 argument_list|)
 argument_list|,
-literal|"%ju"
+literal|"%jd"
 argument_list|,
 operator|(
 name|intmax_t
