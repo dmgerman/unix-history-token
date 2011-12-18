@@ -1580,7 +1580,7 @@ name|bus_dmamap_sync
 argument_list|(
 name|rxr
 operator|->
-name|tag
+name|rxtag
 argument_list|,
 name|rxr
 operator|->
