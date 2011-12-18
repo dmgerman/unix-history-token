@@ -517,8 +517,11 @@ argument_list|(
 name|yplastbuf
 argument_list|)
 argument_list|,
-literal|"%lu"
+literal|"%ju"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time
 argument_list|(
 name|NULL
