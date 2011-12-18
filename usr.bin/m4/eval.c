@@ -1054,6 +1054,25 @@ literal|2
 index|]
 argument_list|)
 condition|)
+if|if
+condition|(
+name|mimic_gnu
+condition|)
+name|warn
+argument_list|(
+literal|"%s at line %lu: include(%s)"
+argument_list|,
+name|CURRENT_NAME
+argument_list|,
+name|CURRENT_LINE
+argument_list|,
+name|argv
+index|[
+literal|2
+index|]
+argument_list|)
+expr_stmt|;
+else|else
 name|err
 argument_list|(
 literal|1
