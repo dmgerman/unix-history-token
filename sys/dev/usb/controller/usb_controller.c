@@ -400,7 +400,9 @@ name|OID_AUTO
 argument_list|,
 name|no_shutdown_wait
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|usb_no_shutdown_wait
