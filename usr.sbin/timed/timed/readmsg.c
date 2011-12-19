@@ -724,6 +724,9 @@ name|fd
 argument_list|,
 literal|"readmsg: wait %ld.%6ld at %s\n"
 argument_list|,
+operator|(
+name|long
+operator|)
 name|rwait
 operator|.
 name|tv_sec
@@ -901,7 +904,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"short packet (%u/%u bytes) from %s"
+literal|"short packet (%zd/%zu bytes) from %s"
 argument_list|,
 name|n
 argument_list|,
@@ -1944,7 +1947,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %d %-6u (%ld,%ld) %-15s %s\n"
+literal|"%s %d %-6u (%d,%d) %-15s %s\n"
 argument_list|,
 name|tsptype
 index|[

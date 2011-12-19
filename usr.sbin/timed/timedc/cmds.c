@@ -1023,7 +1023,7 @@ name|argv
 index|[]
 decl_stmt|;
 block|{
-name|int
+name|ssize_t
 name|cc
 decl_stmt|;
 name|fd_set
@@ -1403,7 +1403,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"short packet (%u/%u bytes) from %s\n"
+literal|"short packet (%zd/%zu bytes) from %s\n"
 argument_list|,
 name|cc
 argument_list|,
@@ -1813,7 +1813,7 @@ decl_stmt|;
 name|int
 name|length
 decl_stmt|;
-name|int
+name|ssize_t
 name|cc
 decl_stmt|;
 name|fd_set
@@ -2168,7 +2168,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"short packet (%u/%u bytes) from %s\n"
+literal|"short packet (%zd/%zu bytes) from %s\n"
 argument_list|,
 name|cc
 argument_list|,
