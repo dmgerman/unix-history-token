@@ -1519,6 +1519,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 name|bus_generic_shutdown
 argument_list|(
 name|bus
@@ -1624,6 +1629,11 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+name|USB_BUS_LOCK
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1690,6 +1700,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 name|usbd_enum_lock
 argument_list|(
 name|udev
@@ -1813,6 +1828,11 @@ argument_list|(
 name|udev
 argument_list|)
 expr_stmt|;
+name|USB_BUS_LOCK
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1879,6 +1899,11 @@ operator|==
 name|NULL
 condition|)
 return|return;
+name|USB_BUS_UNLOCK
+argument_list|(
+name|bus
+argument_list|)
+expr_stmt|;
 name|bus_generic_shutdown
 argument_list|(
 name|bus
@@ -1982,6 +2007,11 @@ expr_stmt|;
 name|usbd_enum_unlock
 argument_list|(
 name|udev
+argument_list|)
+expr_stmt|;
+name|USB_BUS_LOCK
+argument_list|(
+name|bus
 argument_list|)
 expr_stmt|;
 block|}
