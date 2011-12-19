@@ -1054,6 +1054,7 @@ literal|2
 index|]
 argument_list|)
 condition|)
+block|{
 if|if
 condition|(
 name|mimic_gnu
@@ -1089,6 +1090,7 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|SINCTYPE
