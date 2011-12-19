@@ -722,10 +722,10 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"readmsg: wait %ld.%6ld at %s\n"
+literal|"readmsg: wait %jd.%6ld at %s\n"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|rwait
 operator|.

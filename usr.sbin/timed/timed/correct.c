@@ -623,10 +623,10 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"clock correction %ld sec too large to adjust"
+literal|"clock correction %jd sec too large to adjust"
 argument_list|,
 operator|(
-name|long
+name|intmax_t
 operator|)
 name|adj
 operator|.
