@@ -910,7 +910,7 @@ expr_stmt|;
 comment|/* ino */
 name|assert
 argument_list|(
-name|dev
+name|ino
 operator|!=
 name|from_octal
 argument_list|(
