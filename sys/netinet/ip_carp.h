@@ -322,6 +322,10 @@ value|2
 name|int
 name|carpr_advskew
 decl_stmt|;
+define|#
+directive|define
+name|CARP_MAXSKEW
+value|240
 name|int
 name|carpr_advbase
 decl_stmt|;
@@ -348,68 +352,6 @@ define|#
 directive|define
 name|SIOCGVH
 value|_IOWR('i', 246, struct ifreq)
-end_define
-
-begin_comment
-comment|/*  * Names for CARP sysctl objects  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CARPCTL_ALLOW
-value|1
-end_define
-
-begin_comment
-comment|/* accept incoming CARP packets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CARPCTL_PREEMPT
-value|2
-end_define
-
-begin_comment
-comment|/* high-pri backup preemption mode */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CARPCTL_LOG
-value|3
-end_define
-
-begin_comment
-comment|/* log bad packets */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CARPCTL_STATS
-value|4
-end_define
-
-begin_comment
-comment|/* statistics (read-only) */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|CARPCTL_MAXID
-value|5
-end_define
-
-begin_define
-define|#
-directive|define
-name|CARPCTL_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "allow", CTLTYPE_INT }, \ 	{ "preempt", CTLTYPE_INT }, \ 	{ "log", CTLTYPE_INT }, \ 	{ "stats", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_ifdef
@@ -656,6 +598,22 @@ function_decl|)
 parameter_list|(
 name|struct
 name|ifnet
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+function_decl|(
+modifier|*
+name|carp_demote_adj_p
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|char
 modifier|*
 parameter_list|)
 function_decl|;

@@ -608,6 +608,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+function_decl|(
+modifier|*
+name|carp_demote_adj_p
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_if
 if|#
 directive|if
