@@ -3145,7 +3145,9 @@ comment|/* vcpu_guest_context_t is too large to allocate on the stack. 	 * Hence
 name|vm_page_t
 name|m
 index|[
-literal|4
+name|NPGPTD
+operator|+
+literal|2
 index|]
 decl_stmt|;
 specifier|static
@@ -3219,7 +3221,7 @@ name|kmem_alloc_nofault
 argument_list|(
 name|kernel_map
 argument_list|,
-literal|1
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|newPTD
@@ -3229,6 +3231,8 @@ argument_list|(
 name|kernel_map
 argument_list|,
 name|NPGPTD
+operator|*
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 name|ma
@@ -3370,6 +3374,8 @@ argument_list|,
 name|newPTD
 argument_list|,
 literal|4
+operator|*
+name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * map actual idle stack to boot_stack 	 */
