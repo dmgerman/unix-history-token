@@ -391,11 +391,6 @@ name|uint32_t
 name|mask
 parameter_list|)
 block|{
-name|GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|GPIO_SET_BITS
 argument_list|(
 name|sc
@@ -403,11 +398,6 @@ argument_list|,
 name|AR71XX_GPIO_FUNCTION
 argument_list|,
 name|mask
-argument_list|)
-expr_stmt|;
-name|GPIO_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -427,11 +417,6 @@ name|uint32_t
 name|mask
 parameter_list|)
 block|{
-name|GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|GPIO_CLEAR_BITS
 argument_list|(
 name|sc
@@ -439,11 +424,6 @@ argument_list|,
 name|AR71XX_GPIO_FUNCTION
 argument_list|,
 name|mask
-argument_list|)
-expr_stmt|;
-name|GPIO_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 block|}
@@ -479,11 +459,6 @@ operator|<<
 name|pin
 operator|->
 name|gp_pin
-expr_stmt|;
-name|GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 comment|/* 	 * Manage input/output 	 */
 if|if
@@ -550,11 +525,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1152,11 +1122,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|value
@@ -1186,11 +1151,6 @@ literal|1
 operator|<<
 name|pin
 operator|)
-argument_list|)
-expr_stmt|;
-name|GPIO_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1275,11 +1235,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 operator|*
 name|val
 operator|=
@@ -1301,11 +1256,6 @@ condition|?
 literal|1
 else|:
 literal|0
-expr_stmt|;
-name|GPIO_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -1386,11 +1336,6 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-name|GPIO_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|res
 operator|=
 operator|(
@@ -1441,11 +1386,6 @@ literal|1
 operator|<<
 name|pin
 operator|)
-argument_list|)
-expr_stmt|;
-name|GPIO_UNLOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 return|return
