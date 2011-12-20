@@ -2972,6 +2972,9 @@ operator|->
 name|sc_detachtag
 argument_list|)
 expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
 endif|#
 directive|endif
 name|timeout_del
@@ -2982,7 +2985,6 @@ operator|->
 name|sc_bulk_tmo
 argument_list|)
 expr_stmt|;
-comment|/* XXX: need PF_LOCK() before */
 name|timeout_del
 argument_list|(
 operator|&
@@ -2991,6 +2993,14 @@ operator|->
 name|sc_tmo
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|NCARP
@@ -16601,6 +16611,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+name|PF_LOCK
+argument_list|()
+expr_stmt|;
 name|pfsync_state_import_ptr
 operator|=
 name|pfsync_state_import
@@ -16633,6 +16646,9 @@ name|pfsync_defer_ptr
 operator|=
 name|pfsync_defer
 expr_stmt|;
+name|PF_UNLOCK
+argument_list|()
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -16655,6 +16671,9 @@ name|pfsync_swi
 operator|.
 name|pfsync_swi_cookie
 argument_list|)
+expr_stmt|;
+name|PF_LOCK
+argument_list|()
 expr_stmt|;
 name|pfsync_state_import_ptr
 operator|=
@@ -16687,6 +16706,9 @@ expr_stmt|;
 name|pfsync_defer_ptr
 operator|=
 name|NULL
+expr_stmt|;
+name|PF_UNLOCK
+argument_list|()
 expr_stmt|;
 name|if_clone_detach
 argument_list|(
