@@ -916,6 +916,13 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+name|GPIOBUS_LOCK_BUS
+argument_list|(
+name|sc
+operator|->
+name|sc_busdev
+argument_list|)
+expr_stmt|;
 name|GPIOBUS_ACQUIRE_BUS
 argument_list|(
 name|sc
@@ -943,6 +950,13 @@ argument_list|,
 name|sc
 operator|->
 name|sc_dev
+argument_list|)
+expr_stmt|;
+name|GPIOBUS_UNLOCK_BUS
+argument_list|(
+name|sc
+operator|->
+name|sc_busdev
 argument_list|)
 expr_stmt|;
 return|return
