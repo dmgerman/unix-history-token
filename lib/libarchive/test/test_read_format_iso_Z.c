@@ -150,7 +150,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -417,7 +417,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -429,7 +429,7 @@ end_function
 begin_macro
 name|DEFINE_TEST
 argument_list|(
-argument|test_read_format_iso_gz
+argument|test_read_format_iso_Z
 argument_list|)
 end_macro
 

@@ -533,6 +533,13 @@ modifier|*
 name|state
 parameter_list|)
 block|{
+specifier|static
+specifier|const
+name|lzma_stream
+name|lzma_stream_init_data
+init|=
+name|LZMA_STREAM_INIT
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -540,10 +547,7 @@ name|state
 operator|->
 name|stream
 operator|=
-operator|(
-name|lzma_stream
-operator|)
-name|LZMA_STREAM_INIT
+name|lzma_stream_init_data
 expr_stmt|;
 name|state
 operator|->

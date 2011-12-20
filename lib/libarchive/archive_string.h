@@ -93,6 +93,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_include
+include|#
+directive|include
+file|"archive.h"
+end_include
+
 begin_comment
 comment|/*  * Basic resizable/reusable string support a la Java's "StringBuffer."  *  * Unlike sbuf(9), the buffers here are fully reusable and track the  * length throughout.  *  * Note that all visible symbols here begin with "__archive" as they  * are internal symbols not intended for anyone outside of this library  * to see or use.  */
 end_comment
@@ -493,8 +499,17 @@ modifier|*
 parameter_list|,
 name|va_list
 parameter_list|)
-function_decl|;
+function_decl|__LA_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|0
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
@@ -517,8 +532,17 @@ modifier|*
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__LA_PRINTF
+parameter_list|(
+function_decl|2
+operator|,
+function_decl|3
 end_function_decl
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#

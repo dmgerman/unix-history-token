@@ -7581,6 +7581,8 @@ name|errno
 argument_list|,
 literal|"Can't create directory '%s': "
 literal|"Conflicting file cannot be removed"
+argument_list|,
+name|path
 argument_list|)
 expr_stmt|;
 return|return

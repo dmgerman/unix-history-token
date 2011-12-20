@@ -4488,10 +4488,16 @@ name|name
 operator|.
 name|s
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|iso9660
 operator|->
 name|current_position
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|parent
 operator|->
 name|offset
@@ -4532,6 +4538,8 @@ argument_list|,
 name|parent
 operator|->
 name|name
+operator|.
+name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -5551,6 +5559,8 @@ argument_list|,
 name|file
 operator|->
 name|name
+operator|.
+name|s
 argument_list|)
 expr_stmt|;
 name|iso9660
@@ -5815,9 +5825,7 @@ name|archive
 argument_list|,
 name|ARCHIVE_ERRNO_MISC
 argument_list|,
-literal|"Ignoring out-of-order file @%x (%s) %jd< %jd"
-argument_list|,
-name|file
+literal|"Ignoring out-of-order file (%s) %jd< %jd"
 argument_list|,
 name|iso9660
 operator|->
@@ -5825,10 +5833,16 @@ name|pathname
 operator|.
 name|s
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|file
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|iso9660
 operator|->
 name|current_position
@@ -7482,12 +7496,18 @@ name|pathname
 operator|.
 name|s
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|iso9660
 operator|->
 name|entry_content
 operator|->
 name|offset
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|iso9660
 operator|->
 name|current_position
@@ -8031,8 +8051,7 @@ operator|)
 operator|)
 operator|>
 operator|(
-name|unsigned
-name|int
+name|uint32_t
 operator|)
 name|iso9660
 operator|->
