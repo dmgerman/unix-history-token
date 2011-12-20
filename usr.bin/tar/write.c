@@ -2902,8 +2902,11 @@ name|e
 decl_stmt|;
 while|while
 condition|(
-literal|0
+name|ARCHIVE_OK
 operator|==
+operator|(
+name|e
+operator|=
 name|archive_read_next_header
 argument_list|(
 name|ina
@@ -2911,6 +2914,7 @@ argument_list|,
 operator|&
 name|in_entry
 argument_list|)
+operator|)
 condition|)
 block|{
 if|if
@@ -3119,10 +3123,15 @@ literal|"\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Note: If we got here, we saw no write errors, so return success. */
 return|return
 operator|(
-literal|0
+name|e
+operator|==
+name|ARCHIVE_EOF
+condition|?
+name|ARCHIVE_OK
+else|:
+name|e
 operator|)
 return|;
 block|}
