@@ -776,6 +776,7 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
+name|__restrict
 name|pattern
 parameter_list|,
 name|int
@@ -796,6 +797,7 @@ parameter_list|)
 parameter_list|,
 name|glob_t
 modifier|*
+name|__restrict
 name|pglob
 parameter_list|)
 block|{
