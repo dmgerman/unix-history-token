@@ -33393,7 +33393,6 @@ argument_list|,
 name|cad
 argument_list|)
 expr_stmt|;
-comment|/* Cast some spells for VIA VT1708S. */
 name|id
 operator|=
 name|hdac_codec_id
@@ -33403,17 +33402,35 @@ operator|->
 name|codec
 argument_list|)
 expr_stmt|;
-if|if
+switch|switch
 condition|(
 name|id
-operator|>=
-name|HDA_CODEC_VT1708S_0
-operator|&&
-name|id
-operator|<=
-name|HDA_CODEC_VT1708S_7
 condition|)
 block|{
+case|case
+name|HDA_CODEC_VT1708S_0
+case|:
+case|case
+name|HDA_CODEC_VT1708S_1
+case|:
+case|case
+name|HDA_CODEC_VT1708S_2
+case|:
+case|case
+name|HDA_CODEC_VT1708S_3
+case|:
+case|case
+name|HDA_CODEC_VT1708S_4
+case|:
+case|case
+name|HDA_CODEC_VT1708S_5
+case|:
+case|case
+name|HDA_CODEC_VT1708S_6
+case|:
+case|case
+name|HDA_CODEC_VT1708S_7
+case|:
 comment|/* Enable Mic Boost Volume controls. */
 name|hdac_command
 argument_list|(
@@ -33456,6 +33473,7 @@ argument_list|,
 name|cad
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 comment|/* Commit controls. */
 name|hdac_audio_ctl_commit
