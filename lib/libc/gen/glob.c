@@ -1157,6 +1157,7 @@ operator|&
 name|GLOB_BRACE
 condition|)
 return|return
+operator|(
 name|globexp1
 argument_list|(
 name|patbuf
@@ -1166,9 +1167,11 @@ argument_list|,
 operator|&
 name|limit
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 name|glob0
 argument_list|(
 name|patbuf
@@ -1178,6 +1181,7 @@ argument_list|,
 operator|&
 name|limit
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1512,7 +1516,9 @@ name|limit
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 for|for
@@ -1704,7 +1710,9 @@ operator|=
 literal|0
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1775,7 +1783,9 @@ name|GLOB_TILDE
 operator|)
 condition|)
 return|return
+operator|(
 name|pattern
+operator|)
 return|;
 comment|/*  	 * Copy up to the end of the string or /  	 */
 name|eb
@@ -1914,7 +1924,9 @@ name|pw_dir
 expr_stmt|;
 else|else
 return|return
+operator|(
 name|pattern
+operator|)
 return|;
 block|}
 block|}
@@ -1939,7 +1951,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|pattern
+operator|)
 return|;
 else|else
 name|h
@@ -1998,7 +2012,9 @@ operator|=
 name|EOS
 expr_stmt|;
 return|return
+operator|(
 name|patbuf
+operator|)
 return|;
 block|}
 end_function
