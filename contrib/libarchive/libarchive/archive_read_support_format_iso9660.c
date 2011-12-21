@@ -4265,6 +4265,7 @@ literal|0
 operator|)
 return|;
 comment|/* Reserved field must be 0. */
+comment|/* FreeBSD: makefs erroneously created images with 0x20 */
 for|for
 control|(
 name|i
@@ -4288,6 +4289,15 @@ name|i
 index|]
 operator|!=
 literal|0
+operator|&&
+name|h
+index|[
+name|PVD_reserved4_offset
+operator|+
+name|i
+index|]
+operator|!=
+literal|32
 condition|)
 return|return
 operator|(
