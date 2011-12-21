@@ -1332,6 +1332,22 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|u_long
+name|ocmd
+init|=
+name|cmd
+decl_stmt|;
+comment|/* 	 * Compat to make pre-10.x ifconfig(8) operable. 	 */
+if|if
+condition|(
+name|cmd
+operator|==
+name|OSIOCAIFADDR_IN6
+condition|)
+name|cmd
+operator|=
+name|SIOCAIFADDR_IN6
+expr_stmt|;
 switch|switch
 condition|(
 name|cmd
@@ -2836,6 +2852,10 @@ break|break;
 block|}
 if|if
 condition|(
+name|cmd
+operator|==
+name|ocmd
+operator|&&
 name|ifra
 operator|->
 name|ifra_vhid
