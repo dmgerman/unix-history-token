@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: head/lib/libarchive/archive_write_disk_set_standard_lookup.c 201083 2009-12-28 02:09:57Z kientzle $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: head/lib/libarchive/archive_read_support_format_empty.c 191524 2009-04-26 18:24:14Z kientzle $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

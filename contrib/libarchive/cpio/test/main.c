@@ -40,7 +40,7 @@ end_comment
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: src/usr.bin/cpio/test/main.c,v 1.3 2008/08/24 04:58:22 kientzle Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

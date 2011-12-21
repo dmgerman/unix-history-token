@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|__FBSDID
 argument_list|(
-literal|"$FreeBSD: src/usr.bin/tar/test/test_symlink_dir.c,v 1.1 2008/09/14 02:16:04 kientzle Exp $"
+literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
