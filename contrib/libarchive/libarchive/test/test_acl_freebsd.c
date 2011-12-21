@@ -990,6 +990,29 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+if|if
+condition|(
+name|n
+operator|!=
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EINVAL
+condition|)
+block|{
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+name|skipping
+argument_list|(
+literal|"POSIX.1e ACL tests require that POSIX.1e ACL support be enabled on the filesystem"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 name|failure
 argument_list|(
 literal|"acl_set_fd(): errno = %d (%s)"

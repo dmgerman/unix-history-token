@@ -182,6 +182,7 @@ literal|4
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -256,6 +257,7 @@ literal|11
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -348,6 +350,7 @@ literal|8
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
