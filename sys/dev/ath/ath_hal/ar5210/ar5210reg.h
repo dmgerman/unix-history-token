@@ -2108,7 +2108,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_WAKE
-value|0x00000000
+value|0
 end_define
 
 begin_comment
@@ -2119,7 +2119,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_SLP
-value|0x00010000
+value|1
 end_define
 
 begin_comment
@@ -2130,7 +2130,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_ALLOW
-value|0x00020000
+value|2
 end_define
 
 begin_comment
