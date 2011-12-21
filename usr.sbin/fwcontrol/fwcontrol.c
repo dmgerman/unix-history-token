@@ -612,12 +612,6 @@ index|]
 operator|.
 name|dst
 expr_stmt|;
-if|if
-condition|(
-name|data
-operator|!=
-name|NULL
-condition|)
 name|free
 argument_list|(
 name|data
