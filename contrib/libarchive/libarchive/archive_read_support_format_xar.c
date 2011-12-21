@@ -13908,6 +13908,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buff
@@ -13917,6 +13920,9 @@ literal|1
 condition|)
 name|len
 operator|=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buff
