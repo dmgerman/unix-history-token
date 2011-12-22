@@ -13693,7 +13693,7 @@ name|nlen
 operator|>
 name|sc
 operator|->
-name|sc_ifp
+name|sc_sync_if
 operator|->
 name|if_mtu
 condition|)
