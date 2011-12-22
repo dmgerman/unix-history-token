@@ -5413,7 +5413,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_WAKE
-value|0
+value|0x00000000
 end_define
 
 begin_comment
@@ -5424,7 +5424,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_SLP
-value|1
+value|0x00010000
 end_define
 
 begin_comment
@@ -5435,7 +5435,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_NORM
-value|2
+value|0x00020000
 end_define
 
 begin_comment
