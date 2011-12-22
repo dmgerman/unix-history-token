@@ -5447,7 +5447,7 @@ condition|)
 block|{
 name|CARP_LOG
 argument_list|(
-literal|"VHID %u@%s: BACKUP -> MASTER (preempting)\n"
+literal|"VHID %u@%s: BACKUP -> MASTER (master down)\n"
 argument_list|,
 name|sc
 operator|->
