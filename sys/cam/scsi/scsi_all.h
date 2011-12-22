@@ -3255,6 +3255,13 @@ name|READ_ELEMENT_STATUS
 value|0xB8
 end_define
 
+begin_define
+define|#
+directive|define
+name|READ_CD
+value|0xBE
+end_define
+
 begin_comment
 comment|/* Maintenance In Service Action Codes */
 end_comment
