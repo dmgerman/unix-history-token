@@ -2407,7 +2407,7 @@ operator|>=
 name|HAL_DECOMP_MASK_SIZE
 condition|)
 return|return
-name|AH_FALSE
+name|HAL_EINVAL
 return|;
 name|OS_REG_WRITE
 argument_list|(

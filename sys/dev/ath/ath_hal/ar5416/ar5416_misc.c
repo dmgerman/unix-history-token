@@ -560,7 +560,7 @@ name|en
 parameter_list|)
 block|{
 return|return
-name|AH_TRUE
+name|HAL_OK
 return|;
 block|}
 end_function
