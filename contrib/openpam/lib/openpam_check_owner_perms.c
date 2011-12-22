@@ -295,6 +295,13 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
+block|{
 name|serrno
 operator|=
 name|errno
@@ -312,6 +319,7 @@ name|errno
 operator|=
 name|serrno
 expr_stmt|;
+block|}
 return|return
 operator|(
 operator|-
