@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  */
 end_comment
 
 begin_ifdef
@@ -3722,7 +3722,7 @@ name|creation
 operator|=
 name|htonl
 argument_list|(
-name|time_second
+name|time_uptime
 operator|-
 name|st
 operator|->
@@ -4838,7 +4838,7 @@ name|st
 operator|->
 name|creation
 operator|=
-name|time_second
+name|time_uptime
 operator|-
 name|ntohl
 argument_list|(
@@ -5014,7 +5014,7 @@ name|st
 operator|->
 name|pfsync_time
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 name|st
 operator|->
@@ -7442,7 +7442,7 @@ name|st
 operator|->
 name|pfsync_time
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 block|}
 ifdef|#
@@ -7982,7 +7982,7 @@ name|st
 operator|->
 name|pfsync_time
 operator|=
-name|time_second
+name|time_uptime
 expr_stmt|;
 block|}
 ifdef|#
@@ -13584,7 +13584,7 @@ condition|(
 name|sync
 operator|||
 operator|(
-name|time_second
+name|time_uptime
 operator|-
 name|st
 operator|->
