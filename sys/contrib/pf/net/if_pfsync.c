@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  */
 end_comment
 
 begin_ifdef
@@ -13523,6 +13523,20 @@ case|case
 name|PFSYNC_S_INS
 case|:
 comment|/* we're already handling it */
+if|if
+condition|(
+name|st
+operator|->
+name|key
+index|[
+name|PF_SK_WIRE
+index|]
+operator|->
+name|proto
+operator|==
+name|IPPROTO_TCP
+condition|)
+block|{
 name|st
 operator|->
 name|sync_updates
@@ -13542,6 +13556,7 @@ name|sync
 operator|=
 literal|1
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|PFSYNC_S_IACK
