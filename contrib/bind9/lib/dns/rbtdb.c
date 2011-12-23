@@ -938,6 +938,13 @@ name|RDATASET_ATTR_NXDOMAIN
 value|0x0010
 end_define
 
+begin_define
+define|#
+directive|define
+name|RDATASET_ATTR_NEGATIVE
+value|0x0100
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -1050,6 +1057,17 @@ name|header
 parameter_list|)
 define|\
 value|(((header)->attributes& RDATASET_ATTR_NXDOMAIN) != 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NEGATIVE
+parameter_list|(
+name|header
+parameter_list|)
+define|\
+value|(((header)->attributes& RDATASET_ATTR_NEGATIVE) != 0)
 end_define
 
 begin_define
@@ -14803,6 +14821,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|NEGATIVE
+argument_list|(
+name|found
+argument_list|)
+operator|&&
 name|foundsig
 operator|!=
 name|NULL
@@ -17587,6 +17611,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|NEGATIVE
+argument_list|(
+name|found
+argument_list|)
+operator|&&
 name|foundsig
 operator|!=
 name|NULL

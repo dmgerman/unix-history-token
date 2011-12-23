@@ -1670,7 +1670,7 @@ directive|ifdef
 name|NS_CACHING
 name|handle
 operator|=
-name|dlopen
+name|libc_dlopen
 argument_list|(
 name|NULL
 argument_list|,
@@ -2197,7 +2197,7 @@ name|mod
 operator|.
 name|handle
 operator|=
-name|dlopen
+name|libc_dlopen
 argument_list|(
 name|buf
 argument_list|,

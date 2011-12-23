@@ -1168,6 +1168,33 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+comment|/* don't allow to escape from policy_path */
+if|if
+condition|(
+name|strchr
+argument_list|(
+name|service
+argument_list|,
+literal|'/'
+argument_list|)
+condition|)
+block|{
+name|openpam_log
+argument_list|(
+name|PAM_LOG_ERROR
+argument_list|,
+literal|"invalid service name: %s"
+argument_list|,
+name|service
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+name|PAM_SYSTEM_ERR
+operator|)
+return|;
+block|}
 for|for
 control|(
 name|path

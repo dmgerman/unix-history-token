@@ -7473,6 +7473,9 @@ goto|goto
 name|bad
 goto|;
 block|}
+name|__FreeBSD_libc_enter_restricted_mode
+argument_list|()
+expr_stmt|;
 block|}
 else|else
 comment|/* real user w/o chroot */
