@@ -9745,6 +9745,7 @@ name|dp
 operator|->
 name|stripeoffset
 operator|=
+operator|(
 name|dp
 operator|->
 name|stripesize
@@ -9752,6 +9753,11 @@ operator|-
 name|block_len
 operator|*
 name|lalba
+operator|)
+operator|%
+name|dp
+operator|->
+name|stripesize
 expr_stmt|;
 block|}
 elseif|else
