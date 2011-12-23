@@ -1538,7 +1538,7 @@ operator|!=
 name|k
 condition|)
 block|{
-comment|/* collect per-slot info, with similar validations 			 * and flag handling as in the txsync code. 			 * 			 * NOTE curr and rxbuf are indexed by l. 			 * Also, this driver needs to update the physical				 * address in the NIC ring, but other drivers 			 * may not have this requirement. 			 */
+comment|/* collect per-slot info, with similar validations 			 * and flag handling as in the txsync code. 			 * 			 * NOTE curr and rxbuf are indexed by l. 			 * Also, this driver needs to update the physical 			 * address in the NIC ring, but other drivers 			 * may not have this requirement. 			 */
 name|struct
 name|netmap_slot
 modifier|*
