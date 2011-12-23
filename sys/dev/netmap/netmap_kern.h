@@ -514,8 +514,29 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * return a pointer to the struct netmap adapter from the ifp  */
+comment|/*  * NA returns a pointer to the struct netmap adapter from the ifp,  * WNA is used to write it.  */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|WNA
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|WNA
+parameter_list|(
+name|_ifp
+parameter_list|)
+value|(_ifp)->if_pspare[0]
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -524,7 +545,7 @@ name|NA
 parameter_list|(
 name|_ifp
 parameter_list|)
-value|((struct netmap_adapter *)(_ifp)->if_pspare[0])
+value|((struct netmap_adapter *)WNA(_ifp))
 end_define
 
 begin_comment

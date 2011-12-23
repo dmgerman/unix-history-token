@@ -4676,6 +4676,8 @@ modifier|*
 name|kring
 decl_stmt|;
 name|u_int
+name|core_lock
+decl_stmt|,
 name|i
 decl_stmt|,
 name|check_all
@@ -4912,9 +4914,8 @@ block|,
 name|LOCKED_CL
 block|}
 enum|;
-name|int
 name|core_lock
-init|=
+operator|=
 operator|(
 name|check_all
 operator|||
@@ -4927,7 +4928,7 @@ condition|?
 name|NEED_CL
 else|:
 name|NO_CL
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * We start with a lock free round which is good if we have 	 * data available. If this fails, then lock and call the sync 	 * routines. 	 */
 for|for
 control|(
@@ -5583,12 +5584,10 @@ condition|(
 name|buf
 condition|)
 block|{
+name|WNA
+argument_list|(
 name|ifp
-operator|->
-name|if_pspare
-index|[
-literal|0
-index|]
+argument_list|)
 operator|=
 name|buf
 expr_stmt|;
@@ -5764,12 +5763,10 @@ name|na
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|WNA
+argument_list|(
 name|ifp
-operator|->
-name|if_pspare
-index|[
-literal|0
-index|]
+argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
