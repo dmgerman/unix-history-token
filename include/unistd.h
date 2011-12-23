@@ -3787,6 +3787,15 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|__FreeBSD_libc_enter_restricted_mode
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|long
 name|lpathconf
 parameter_list|(
