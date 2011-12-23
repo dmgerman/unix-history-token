@@ -17402,6 +17402,9 @@ name|npkts
 operator|++
 expr_stmt|;
 comment|/* These aren't specifically errors */
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
 if|if
 condition|(
 name|rs
@@ -17492,6 +17495,9 @@ operator|.
 name|ast_rx_hi_rx_chain
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 if|if
 condition|(
 name|rs
@@ -18269,6 +18275,9 @@ name|sc_lastrs
 operator|=
 name|rs
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_SUPPORT_AR5416
 if|if
 condition|(
 name|rs
@@ -18282,6 +18291,9 @@ operator|.
 name|ast_rx_agg
 operator|++
 expr_stmt|;
+endif|#
+directive|endif
+comment|/* AH_SUPPORT_AR5416 */
 if|if
 condition|(
 name|ni
