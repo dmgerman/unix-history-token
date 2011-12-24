@@ -8838,7 +8838,7 @@ literal|4
 operator|*
 name|hz
 operator|+
-name|pf_pool_limits
+name|V_pf_pool_limits
 index|[
 name|PF_LIMIT_STATES
 index|]
