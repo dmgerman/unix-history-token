@@ -93,6 +93,16 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|guest_msr_valid
+parameter_list|(
+name|int
+name|msr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|restore_host_msrs
 parameter_list|(
 name|struct
