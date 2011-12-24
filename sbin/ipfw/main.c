@@ -1104,6 +1104,7 @@ literal|"An absolute pathname must be used "
 literal|"with -p option."
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 literal|'q'
 case|:
