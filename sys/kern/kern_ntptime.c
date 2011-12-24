@@ -310,7 +310,6 @@ comment|/* clock state */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|time_status
 init|=
@@ -384,7 +383,6 @@ comment|/* maximum error (us) */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|long
 name|time_esterror
 init|=
