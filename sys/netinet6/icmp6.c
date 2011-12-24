@@ -7927,16 +7927,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-name|ifp0
-condition|?
-name|ifp0
-else|:
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|V_ifnet
-argument_list|)
 decl_stmt|;
 name|struct
 name|in6_ifaddr
@@ -8009,6 +7999,18 @@ return|;
 comment|/* needless to copy */
 name|IFNET_RLOCK_NOSLEEP
 argument_list|()
+expr_stmt|;
+name|ifp
+operator|=
+name|ifp0
+condition|?
+name|ifp0
+else|:
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|V_ifnet
+argument_list|)
 expr_stmt|;
 name|again
 label|:
