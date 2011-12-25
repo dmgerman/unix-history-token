@@ -2539,6 +2539,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|__isthreaded
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2584,13 +2591,6 @@ name|p
 parameter_list|)
 value|((p)->_file)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|__isthreaded
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
