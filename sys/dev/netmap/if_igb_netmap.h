@@ -659,11 +659,6 @@ name|olinfo_status
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|n
-init|=
-literal|0
-decl_stmt|;
 name|l
 operator|=
 name|j
