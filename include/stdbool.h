@@ -6,18 +6,6 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_STDBOOL_H_
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|_STDBOOL_H_
-end_define
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|__bool_true_false_are_defined
 end_ifndef
 
@@ -101,15 +89,6 @@ end_endif
 
 begin_comment
 comment|/* __bool_true_false_are_defined */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* !_STDBOOL_H_ */
 end_comment
 
 end_unit
