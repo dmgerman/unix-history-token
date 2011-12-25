@@ -1034,7 +1034,7 @@ parameter_list|,
 name|order
 parameter_list|)
 define|\
-value|__sync_swap(&(object)->value, desired)
+value|__sync_swap(&(object)->__val, desired)
 end_define
 
 begin_else
