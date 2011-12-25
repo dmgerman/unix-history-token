@@ -278,7 +278,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * 7.17.3 Order and consistency.  *  * The memory_order_* constants that denote the barrier behaviour of the  * atomic operations.    */
+comment|/*  * 7.17.3 Order and consistency.  *  * The memory_order_* constants that denote the barrier behaviour of the  * atomic operations.  */
 end_comment
 
 begin_enum
