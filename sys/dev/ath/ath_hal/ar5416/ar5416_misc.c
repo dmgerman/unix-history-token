@@ -197,12 +197,6 @@ block|,
 name|AR_MAC_LED_ASSOC_NONE
 block|, 	}
 decl_stmt|;
-if|#
-directive|if
-literal|0
-block|uint32_t bits;
-endif|#
-directive|endif
 if|if
 condition|(
 name|AR_SREV_HOWL
@@ -211,6 +205,7 @@ name|ah
 argument_list|)
 condition|)
 return|return;
+comment|/* 	 * Set the blink operating mode. 	 */
 name|OS_REG_RMW_FIELD
 argument_list|(
 name|ah
@@ -227,20 +222,21 @@ literal|0x7
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For now, don't override the power/network LED 	 * "on" bits.  The reference driver notes that some 	 * devices connect the LED pins to other functionality 	 * so we can't just leave this on by default. 	 */
-if|#
-directive|if
-literal|0
-block|bits = OS_REG_READ(ah, AR_MAC_LED); 	bits = (bits&~ AR_MAC_LED_MODE) 	     | SM(AR_MAC_LED_MODE_POWON, AR_MAC_LED_MODE)
-if|#
-directive|if
-literal|1
-block|| SM(AR_MAC_LED_MODE_NETON, AR_MAC_LED_MODE)
-endif|#
-directive|endif
-block|; 	bits = (bits&~ AR_MAC_LED_ASSOC) 	     | SM(ledbits[state& 0x7], AR_MAC_LED_ASSOC); 	OS_REG_WRITE(ah, AR_MAC_LED, bits);
-endif|#
-directive|endif
+comment|/* XXX Blink slow mode? */
+comment|/* XXX Blink threshold? */
+comment|/* XXX Blink sleep hystersis? */
+comment|/* 	 * Set the LED blink configuration to be proportional 	 * to the current TX and RX filter bytes.  (Ie, RX'ed 	 * frames that don't match the filter are ignored.) 	 * This means that higher TX/RX throughput will result 	 * in the blink rate increasing. 	 */
+name|OS_REG_RMW_FIELD
+argument_list|(
+name|ah
+argument_list|,
+name|AR_MAC_LED
+argument_list|,
+name|AR_MAC_LED_MODE
+argument_list|,
+name|AR_MAC_LED_MODE_PROP
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
