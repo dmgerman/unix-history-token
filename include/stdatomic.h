@@ -157,7 +157,7 @@ name|obj
 parameter_list|,
 name|value
 parameter_list|)
-value|(obj = ATOMIC_VAR_INIT(value))
+value|do {					\ 	(obj)->__val = (value);						\ } while (0)
 end_define
 
 begin_endif
@@ -408,7 +408,7 @@ name|atomic_is_lock_free
 parameter_list|(
 name|obj
 parameter_list|)
-value|(sizeof((obj->__val))<= sizeof(void *))
+value|(sizeof((obj)->__val)<= sizeof(void *))
 end_define
 
 begin_endif
@@ -987,7 +987,7 @@ name|success
 parameter_list|,
 name|failure
 parameter_list|)
-value|({					\ 	__typeof__((object)->__val) __v;				\ 	__v =								\ 	__sync_val_compare_and_swap((__typeof(&((object)->__val)))object,\ 		*expected, desired);					\ 	*expected = __v;						\ 	(*expected == __v);						\ 	})
+value|({					\ 	__typeof__((object)->__val) __v;				\ 	_Bool __r;							\ 	__v = __sync_val_compare_and_swap(&(object)->__val,		\ 	    *(expected), desired);					\ 	__r = *(expected) == __v;					\ 	*(expected) = __v;						\ 	__r;								\ })
 end_define
 
 begin_define
@@ -1057,7 +1057,7 @@ name|desired
 parameter_list|,
 name|order
 parameter_list|)
-value|({		\ 	__typeof__((object)->__val) __v;				\ 	__v = __sync_lock_test_and_set(object, desired);		\ 	__sync_synchronize();						\ 	__v;								\ })
+value|({		\ 	__typeof__((object)->__val) __v;				\ 	__v = __sync_lock_test_and_set(&(object)->__val, desired);	\ 	__sync_synchronize();						\ 	__v;								\ })
 end_define
 
 begin_endif
