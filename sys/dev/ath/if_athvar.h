@@ -1389,6 +1389,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* enable LED gpio status */
+name|sc_hardled
+range|:
+literal|1
+decl_stmt|,
+comment|/* enable MAC LED status */
 name|sc_splitmic
 range|:
 literal|1
@@ -1679,6 +1684,7 @@ name|ATH_KEYBYTES
 index|]
 decl_stmt|;
 comment|/* key use bit map */
+comment|/* 	 * Software based LED blinking 	 */
 name|u_int
 name|sc_ledpin
 decl_stmt|;
@@ -1708,6 +1714,15 @@ name|callout
 name|sc_ledtimer
 decl_stmt|;
 comment|/* led off timer */
+comment|/* 	 * Hardware based LED blinking 	 */
+name|int
+name|sc_led_pwr_pin
+decl_stmt|;
+comment|/* MAC power LED GPIO pin */
+name|int
+name|sc_led_net_pin
+decl_stmt|;
+comment|/* MAC network LED GPIO pin */
 name|u_int
 name|sc_rfsilentpin
 decl_stmt|;

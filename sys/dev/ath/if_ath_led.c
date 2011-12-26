@@ -345,7 +345,7 @@ comment|/*  * XXX TODO: move the LED sysctls here.  */
 end_comment
 
 begin_comment
-comment|/*  * Configure the hardware for software and/or LED blinking.  *  * This requires the configuration to be set beforehand.  */
+comment|/*  * Configure the hardware for software and LED blinking.  * The user may choose to configure part of each, depending upon the  * NIC being used.  *  * This requires the configuration to be set before this function  * is called.  */
 end_comment
 
 begin_function
@@ -395,9 +395,59 @@ operator|->
 name|sc_ledon
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 comment|/* Hardware LED blinking - MAC controlled LED */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_hardled
+condition|)
+block|{
+comment|/* 		 * Only enable each LED if required. 		 * 		 * Some NICs only have one LED connected; others may 		 * have GPIO1/GPIO2 connected to other hardware. 		 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_led_pwr_pin
+operator|>
+literal|0
+condition|)
+name|ath_hal_gpioCfgOutput
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|sc
+operator|->
+name|sc_led_pwr_pin
+argument_list|,
+name|HAL_GPIO_MUX_MAC_POWER_LED
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_led_net_pin
+operator|>
+literal|0
+condition|)
+name|ath_hal_gpioCfgOutput
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|sc
+operator|->
+name|sc_led_net_pin
+argument_list|,
+name|HAL_GPIO_MUX_MAC_NETWORK_LED
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -2845,6 +2845,7 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* Configure LED state */
 name|sc
 operator|->
 name|sc_blinking
@@ -2886,6 +2887,31 @@ name|sc_ledtimer
 argument_list|,
 name|CALLOUT_MPSAFE
 argument_list|)
+expr_stmt|;
+comment|/* 	 * Don't setup hardware-based blinking. 	 * 	 * Although some NICs may have this configured in the 	 * default reset register values, the user may wish 	 * to alter which pins have which function. 	 * 	 * The reference driver attaches the MAC network LED to GPIO1 and 	 * the MAC power LED to GPIO2.  However, the DWA-552 cardbus 	 * NIC has these reversed. 	 */
+name|sc
+operator|->
+name|sc_hardled
+operator|=
+operator|(
+literal|1
+operator|==
+literal|0
+operator|)
+expr_stmt|;
+name|sc
+operator|->
+name|sc_led_net_pin
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+name|sc
+operator|->
+name|sc_led_pwr_pin
+operator|=
+operator|-
+literal|1
 expr_stmt|;
 comment|/* 	 * Auto-enable soft led processing for IBM cards and for 	 * 5211 minipci cards.  Users can also manually enable/disable 	 * support with a sysctl. 	 */
 name|sc
