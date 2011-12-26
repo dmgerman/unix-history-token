@@ -134,7 +134,7 @@ name|struct
 name|stat
 name|st
 decl_stmt|;
-comment|/* Create a sample file heirarchy. */
+comment|/* Create a sample file hierarchy. */
 name|assertMakeDir
 argument_list|(
 literal|"in"

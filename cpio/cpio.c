@@ -1372,6 +1372,7 @@ case|case
 literal|'R'
 case|:
 comment|/* GNU cpio, also --owner */
+comment|/* TODO: owner_parse should return uname/gname 			 * also; use that to set [ug]name_override. */
 name|errmsg
 operator|=
 name|owner_parse
@@ -1413,12 +1414,20 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 name|cpio
 operator|->
 name|uid_override
 operator|=
 name|uid
 expr_stmt|;
+name|cpio
+operator|->
+name|uname_override
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|gid
@@ -1426,12 +1435,20 @@ operator|!=
 operator|-
 literal|1
 condition|)
+block|{
 name|cpio
 operator|->
 name|gid_override
 operator|=
 name|gid
 expr_stmt|;
+name|cpio
+operator|->
+name|gname_override
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 break|break;
 case|case
 literal|'r'
@@ -2705,6 +2722,7 @@ name|uid_override
 operator|>=
 literal|0
 condition|)
+block|{
 name|archive_entry_set_uid
 argument_list|(
 name|entry
@@ -2714,6 +2732,16 @@ operator|->
 name|uid_override
 argument_list|)
 expr_stmt|;
+name|archive_entry_set_uname
+argument_list|(
+name|entry
+argument_list|,
+name|cpio
+operator|->
+name|uname_override
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cpio
@@ -2722,6 +2750,7 @@ name|gid_override
 operator|>=
 literal|0
 condition|)
+block|{
 name|archive_entry_set_gid
 argument_list|(
 name|entry
@@ -2731,6 +2760,16 @@ operator|->
 name|gid_override
 argument_list|)
 expr_stmt|;
+name|archive_entry_set_gname
+argument_list|(
+name|entry
+argument_list|,
+name|cpio
+operator|->
+name|gname_override
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * Generate a destination path for this entry. 	 * "destination path" is the name to which it will be copied in 	 * pass mode or the name that will go into the archive in 	 * output mode. 	 */
 name|destpath
 operator|=

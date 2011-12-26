@@ -836,16 +836,9 @@ name|ret
 init|=
 name|ARCHIVE_OK
 decl_stmt|;
-if|#
-directive|if
-name|ARCHIVE_API_VERSION
-operator|>
-literal|1
 name|ret
 operator|=
-endif|#
-directive|endif
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 operator|->

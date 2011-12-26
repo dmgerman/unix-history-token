@@ -1866,7 +1866,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"Unable to continue traversing"
-literal|" directory heirarchy after a fatal error."
+literal|" directory hierarchy after a fatal error."
 argument_list|)
 expr_stmt|;
 name|abort

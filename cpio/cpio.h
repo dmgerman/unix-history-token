@@ -138,8 +138,16 @@ decl_stmt|;
 name|int
 name|uid_override
 decl_stmt|;
+name|char
+modifier|*
+name|uname_override
+decl_stmt|;
 name|int
 name|gid_override
+decl_stmt|;
+name|char
+modifier|*
+name|gname_override
 decl_stmt|;
 name|int
 name|day_first

@@ -100,6 +100,34 @@ directive|include
 file|"archive_read_private.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|__packed
+end_define
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|push
+name|,
+name|1
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_struct
 struct|struct
 name|cpio_bin_header
@@ -182,6 +210,7 @@ literal|4
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -256,6 +285,7 @@ literal|11
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -348,8 +378,35 @@ literal|8
 index|]
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_MSC_VER
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|__packed
+end_undef
+
+begin_pragma
+pragma|#
+directive|pragma
+name|pack
+name|(
+name|pop
+name|)
+end_pragma
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_struct
 struct|struct

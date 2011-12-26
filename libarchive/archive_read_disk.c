@@ -50,7 +50,7 @@ end_include
 begin_function_decl
 specifier|static
 name|int
-name|_archive_read_finish
+name|_archive_read_free
 parameter_list|(
 name|struct
 name|archive
@@ -132,9 +132,9 @@ condition|)
 block|{
 name|av
 operator|.
-name|archive_finish
+name|archive_free
 operator|=
-name|_archive_read_finish
+name|_archive_read_free
 expr_stmt|;
 name|av
 operator|.
@@ -618,7 +618,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|_archive_read_finish
+name|_archive_read_free
 parameter_list|(
 name|struct
 name|archive
