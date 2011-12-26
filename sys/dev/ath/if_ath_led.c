@@ -376,7 +376,7 @@ name|sc
 operator|->
 name|sc_ledpin
 argument_list|,
-name|HAL_GPIO_MUX_MAC_NETWORK_LED
+name|HAL_GPIO_MUX_OUTPUT
 argument_list|)
 expr_stmt|;
 name|ath_hal_gpioset
