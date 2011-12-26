@@ -4842,7 +4842,7 @@ name|pCap
 operator|->
 name|halNumGpioPins
 operator|=
-literal|6
+literal|14
 expr_stmt|;
 name|pCap
 operator|->
