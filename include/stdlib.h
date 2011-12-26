@@ -811,31 +811,34 @@ begin_if
 if|#
 directive|if
 name|__ISO_C_VISIBLE
-operator|>
-literal|1999
+operator|>=
+literal|2011
 end_if
 
-begin_decl_stmt
+begin_function_decl
 specifier|_Noreturn
 name|void
 name|quick_exit
-argument_list|(
+parameter_list|(
 name|int
-argument_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|at_quick_exit
-argument_list|(
+parameter_list|(
 name|void
-argument_list|(
-operator|*
-name|func
-argument_list|)
-argument_list|(
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
 name|void
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -843,7 +846,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ISO_C_VISIBLE> 1999 */
+comment|/* __ISO_C_VISIBLE>= 2011 */
 end_comment
 
 begin_comment
