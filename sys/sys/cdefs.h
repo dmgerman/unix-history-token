@@ -3036,6 +3036,47 @@ name|__ISO_C_VISIBLE
 value|1999
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_C11_SOURCE
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Localism to specify strict C11 env. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__POSIX_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__XSI_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__BSD_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ISO_C_VISIBLE
+value|2011
+end_define
+
 begin_else
 else|#
 directive|else
@@ -3070,7 +3111,7 @@ begin_define
 define|#
 directive|define
 name|__ISO_C_VISIBLE
-value|1999
+value|2011
 end_define
 
 begin_endif
