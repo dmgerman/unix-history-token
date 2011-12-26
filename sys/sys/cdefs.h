@@ -1061,7 +1061,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Keywords added in C1X.  */
+comment|/*  * Keywords added in C11.  */
 end_comment
 
 begin_if
@@ -1132,8 +1132,8 @@ name|__STDC_VERSION__
 argument_list|)
 operator|&&
 name|__STDC_VERSION__
-operator|>
-literal|201000L
+operator|>=
+literal|201112L
 end_elif
 
 begin_comment
