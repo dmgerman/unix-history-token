@@ -344,6 +344,63 @@ begin_comment
 comment|/*  * XXX TODO: move the LED sysctls here.  */
 end_comment
 
+begin_comment
+comment|/*  * Configure the hardware for software and/or LED blinking.  *  * This requires the configuration to be set beforehand.  */
+end_comment
+
+begin_function
+name|void
+name|ath_led_config
+parameter_list|(
+name|struct
+name|ath_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/* Software LED blinking - GPIO controlled LED */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_softled
+condition|)
+block|{
+name|ath_hal_gpioCfgOutput
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|sc
+operator|->
+name|sc_ledpin
+argument_list|,
+name|HAL_GPIO_MUX_MAC_NETWORK_LED
+argument_list|)
+expr_stmt|;
+name|ath_hal_gpioset
+argument_list|(
+name|sc
+operator|->
+name|sc_ah
+argument_list|,
+name|sc
+operator|->
+name|sc_ledpin
+argument_list|,
+operator|!
+name|sc
+operator|->
+name|sc_ledon
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* Hardware LED blinking - MAC controlled LED */
+block|}
+end_function
+
 begin_function
 specifier|static
 name|void
