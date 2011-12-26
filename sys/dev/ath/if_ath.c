@@ -3066,7 +3066,7 @@ directive|ifdef
 name|ATH_ENABLE_DFS
 operator||
 name|IEEE80211_C_DFS
-comment|/* Enable DFS radar detection */
+comment|/* Enable radar detection */
 endif|#
 directive|endif
 expr_stmt|;
@@ -3603,7 +3603,7 @@ name|IEEE80211_HTCAP_CHWIDTH40
 operator||
 name|IEEE80211_HTCAP_SHORTGI40
 expr_stmt|;
-comment|/* 		 * rx/tx stream is not currently used anywhere; it needs to be taken 		 * into account when negotiating which MCS rates it'll receive and 		 * what MCS rates are available for TX. 		 */
+comment|/* 		 * TX/RX streams need to be taken into account when 		 * negotiating which MCS rates it'll receive and 		 * what MCS rates are available for TX. 		 */
 operator|(
 name|void
 operator|)
