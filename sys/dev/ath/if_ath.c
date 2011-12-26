@@ -2907,6 +2907,13 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_hal_setledstate
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_LED_INIT
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|->
 name|if_softc
@@ -6166,6 +6173,19 @@ operator|->
 name|ic_curchan
 argument_list|)
 expr_stmt|;
+comment|/* Restore the LED configuration */
+name|ath_led_config
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ath_hal_setledstate
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_LED_INIT
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -6185,6 +6205,13 @@ block|{
 name|ath_init
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|ath_hal_setledstate
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_LED_RUN
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Program the beacon registers using the last rx'd 			 * beacon frame and enable sync on the next beacon 			 * we see.  This should handle the case where we 			 * wakeup and find the same AP and also the case where 			 * we wakeup and need to roam.  For the latter we 			 * should get bmiss events that trigger a roam. 			 */
@@ -6209,11 +6236,6 @@ name|ic
 argument_list|)
 expr_stmt|;
 block|}
-name|ath_led_config
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 comment|/* XXX beacons ? */
 block|}
 end_function
