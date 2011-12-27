@@ -10850,18 +10850,6 @@ name|cnt
 operator|++
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|cnt
-operator|>
-name|SCTP_ADDRESS_LIMIT
-condition|)
-block|{
-name|limit_out
-operator|=
-literal|1
-expr_stmt|;
-block|}
 comment|/* 		 * To get through a NAT we only list addresses if we have 		 * more than one. That way if you just bind a single address 		 * we let the source of the init dictate our address. 		 */
 if|if
 condition|(
@@ -10870,6 +10858,10 @@ operator|>
 literal|1
 condition|)
 block|{
+name|cnt
+operator|=
+name|cnt_inits_to
+expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|laddr
@@ -10879,10 +10871,6 @@ argument_list|,
 argument|sctp_nxt_addr
 argument_list|)
 block|{
-name|cnt
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|laddr
@@ -10904,7 +10892,9 @@ name|localifa_flags
 operator|&
 name|SCTP_BEING_DELETED
 condition|)
+block|{
 continue|continue;
+block|}
 if|if
 condition|(
 name|sctp_is_address_in_scope
@@ -17997,10 +17987,6 @@ name|cookie_sz
 operator|=
 literal|0
 expr_stmt|;
-name|m_at
-operator|=
-name|mret
-expr_stmt|;
 for|for
 control|(
 name|m_at
@@ -24124,17 +24110,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|m_at
-operator|=
-name|m
-expr_stmt|;
 comment|/* now the addresses */
 block|{
 name|struct
 name|sctp_scoping
 name|scp
 decl_stmt|;
-comment|/* 		 * To optimize this we could put the scoping stuff into a 		 * structure and remove the individual uint8's from the 		 * assoc structure. Then we could just sifa in the address 		 * within the stcb.. but for now this is a quick hack to get 		 * the address stuff teased apart. 		 */
+comment|/* 		 * To optimize this we could put the scoping stuff into a 		 * structure and remove the individual uint8's from the 		 * assoc structure. Then we could just sifa in the address 		 * within the stcb. But for now this is a quick hack to get 		 * the address stuff teased apart. 		 */
 name|scp
 operator|.
 name|ipv4_addr_legal
@@ -24195,8 +24177,6 @@ name|asoc
 operator|.
 name|site_scope
 expr_stmt|;
-name|m_at
-operator|=
 name|sctp_add_addresses_to_i_ia
 argument_list|(
 name|inp
@@ -24206,7 +24186,7 @@ argument_list|,
 operator|&
 name|scp
 argument_list|,
-name|m_at
+name|m
 argument_list|,
 name|cnt_inits_to
 argument_list|)
@@ -24311,10 +24291,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|p_len
-operator|+=
-name|padval
-expr_stmt|;
 block|}
 name|SCTPDBG
 argument_list|(
@@ -25371,10 +25347,6 @@ name|caddr_t
 operator|)
 name|phdr
 argument_list|)
-expr_stmt|;
-name|err_at
-operator|+=
-name|plen
 expr_stmt|;
 block|}
 return|return
@@ -26653,6 +26625,7 @@ operator|)
 operator|&
 name|sin4
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
@@ -26754,6 +26727,7 @@ operator|)
 operator|&
 name|sin6
 expr_stmt|;
+break|break;
 block|}
 endif|#
 directive|endif
@@ -26762,6 +26736,7 @@ name|sa_touse
 operator|=
 name|NULL
 expr_stmt|;
+break|break;
 block|}
 if|if
 condition|(
@@ -27725,7 +27700,6 @@ name|do_a_abort
 goto|;
 break|break;
 block|}
-empty_stmt|;
 if|if
 condition|(
 name|net
@@ -30425,11 +30399,8 @@ operator|)
 condition|)
 block|{
 comment|/* see my previous comments on mp_last */
-name|int
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|sctp_add_pad_tombuf
 argument_list|(
 name|mp_last
@@ -30440,10 +30411,6 @@ operator|-
 name|padval
 operator|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
 condition|)
 block|{
 comment|/* Houston we have a problem, no space */
@@ -30454,10 +30421,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|p_len
-operator|+=
-name|padval
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -31148,8 +31111,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|,
-name|holds_lock
 decl_stmt|;
 name|struct
 name|mbuf
@@ -31169,10 +31130,6 @@ modifier|*
 name|strm
 decl_stmt|;
 comment|/* 	 * Given an mbuf chain, put it into the association send queue and 	 * place it on the wheel 	 */
-name|holds_lock
-operator|=
-name|hold_stcb_lock
-expr_stmt|;
 if|if
 condition|(
 name|srcv
@@ -31615,11 +31572,19 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|hold_stcb_lock
+operator|==
+literal|0
+condition|)
+block|{
 name|SCTP_TCB_SEND_LOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 name|sctp_snd_sb_alloc
 argument_list|(
 name|stcb
@@ -31706,11 +31671,19 @@ name|m
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|hold_stcb_lock
+operator|==
+literal|0
+condition|)
+block|{
 name|SCTP_TCB_SEND_UNLOCK
 argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+block|}
 name|out_now
 label|:
 if|if
@@ -37959,10 +37932,6 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
-name|send_lock_up
-operator|=
-literal|0
-expr_stmt|;
 block|}
 return|return
 operator|(
@@ -38026,9 +37995,6 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
-decl_stmt|,
-modifier|*
-name|strqn
 decl_stmt|;
 name|int
 name|goal_mtu
@@ -38168,10 +38134,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|strqn
-operator|=
-name|strq
-expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -39666,8 +39628,6 @@ block|{
 comment|/* 			 * Nothing on control or asconf and flight is full, 			 * we can skip even in the CMT case. 			 */
 continue|continue;
 block|}
-name|ctl_cnt
-operator|=
 name|bundle_at
 operator|=
 literal|0
@@ -42668,10 +42628,6 @@ operator|>=
 name|SCTP_MAX_DATA_BUNDLING
 condition|)
 block|{
-name|mtu
-operator|=
-literal|0
-expr_stmt|;
 break|break;
 block|}
 if|if
@@ -43103,8 +43059,6 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
-name|outchain
-operator|=
 name|endoutchain
 operator|=
 name|NULL
@@ -45480,9 +45434,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m_ack
-decl_stmt|,
-modifier|*
-name|m
 decl_stmt|;
 name|struct
 name|sctp_nets
@@ -45850,10 +45801,6 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* Get size */
-name|m
-operator|=
-name|m_ack
-expr_stmt|;
 name|chk
 operator|->
 name|send_size
@@ -46307,10 +46254,6 @@ name|fwd_tsn
 operator|=
 literal|1
 expr_stmt|;
-name|fwd
-operator|=
-name|chk
-expr_stmt|;
 block|}
 comment|/* 			 * Add an AUTH chunk, if chunk requires it save the 			 * offset into the chain for AUTH 			 */
 if|if
@@ -46568,8 +46511,6 @@ name|error
 operator|)
 return|;
 block|}
-name|m
-operator|=
 name|endofchain
 operator|=
 name|NULL
@@ -47325,6 +47266,8 @@ literal|0
 condition|)
 block|{
 comment|/* 			 * now are there anymore forward from chk to pick 			 * up? 			 */
+for|for
+control|(
 name|fwd
 operator|=
 name|TAILQ_NEXT
@@ -47333,11 +47276,20 @@ name|chk
 argument_list|,
 name|sctp_next
 argument_list|)
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|fwd
-condition|)
+operator|!=
+name|NULL
+condition|;
+name|fwd
+operator|=
+name|TAILQ_NEXT
+argument_list|(
+name|fwd
+argument_list|,
+name|sctp_next
+argument_list|)
+control|)
 block|{
 if|if
 condition|(
@@ -47349,15 +47301,6 @@ name|SCTP_DATAGRAM_RESEND
 condition|)
 block|{
 comment|/* Nope, not for retran */
-name|fwd
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|fwd
-argument_list|,
-name|sctp_next
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -47370,15 +47313,6 @@ name|net
 condition|)
 block|{
 comment|/* Nope, not the net in question */
-name|fwd
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|fwd
-argument_list|,
-name|sctp_next
-argument_list|)
-expr_stmt|;
 continue|continue;
 block|}
 if|if
@@ -47611,15 +47545,6 @@ condition|)
 block|{
 break|break;
 block|}
-name|fwd
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|fwd
-argument_list|,
-name|sctp_next
-argument_list|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -47748,8 +47673,6 @@ name|error
 operator|)
 return|;
 block|}
-name|m
-operator|=
 name|endofchain
 operator|=
 name|NULL
@@ -50265,6 +50188,13 @@ operator|->
 name|sent_queue
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|at
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -50301,6 +50231,7 @@ name|at
 operator|=
 name|tp1
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
@@ -64615,7 +64546,11 @@ name|mm
 operator|=
 name|sctp_get_mbuf_for_msg
 argument_list|(
-literal|1
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|sctp_paramhdr
+argument_list|)
 argument_list|,
 literal|0
 argument_list|,
@@ -64633,14 +64568,21 @@ operator|!=
 literal|0
 condition|)
 block|{
+for|for
+control|(
 name|cntm
 operator|=
 name|top
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|cntm
-condition|)
+condition|;
+name|cntm
+operator|=
+name|SCTP_BUF_NEXT
+argument_list|(
+name|cntm
+argument_list|)
+control|)
 block|{
 name|tot_out
 operator|+=
@@ -64649,27 +64591,8 @@ argument_list|(
 name|cntm
 argument_list|)
 expr_stmt|;
-name|cntm
-operator|=
-name|SCTP_BUF_NEXT
-argument_list|(
-name|cntm
-argument_list|)
-expr_stmt|;
 block|}
 block|}
-name|tot_demand
-operator|=
-operator|(
-name|tot_out
-operator|+
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|sctp_paramhdr
-argument_list|)
-operator|)
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -64930,10 +64853,6 @@ name|SCTP_TCB_LOCK
 argument_list|(
 name|stcb
 argument_list|)
-expr_stmt|;
-name|hold_tcblock
-operator|=
-literal|1
 expr_stmt|;
 block|}
 name|atomic_add_int
@@ -68151,14 +68070,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|queue_only_for_init
-condition|)
-name|queue_only_for_init
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 operator|(
 name|queue_only
 operator|==
@@ -68430,10 +68341,6 @@ argument_list|,
 name|sndlen
 argument_list|)
 expr_stmt|;
-name|local_soresv
-operator|=
-literal|0
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -68444,10 +68351,6 @@ name|SCTP_ASOC_CREATE_UNLOCK
 argument_list|(
 name|inp
 argument_list|)
-expr_stmt|;
-name|create_lock_applied
-operator|=
-literal|0
 expr_stmt|;
 block|}
 if|if
@@ -68637,6 +68540,11 @@ name|auth
 decl_stmt|;
 name|int
 name|chunk_len
+decl_stmt|;
+name|struct
+name|mbuf
+modifier|*
+name|cn
 decl_stmt|;
 if|if
 condition|(
@@ -68850,31 +68758,26 @@ argument_list|)
 expr_stmt|;
 comment|/* key id and hmac digest will be computed and filled in upon send */
 comment|/* save the offset where the auth was inserted into the chain */
-if|if
-condition|(
-name|m
-operator|!=
-name|NULL
-condition|)
-block|{
-name|struct
-name|mbuf
-modifier|*
-name|cn
-decl_stmt|;
 operator|*
 name|offset
 operator|=
 literal|0
 expr_stmt|;
+for|for
+control|(
 name|cn
 operator|=
 name|m
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|cn
-condition|)
+condition|;
+name|cn
+operator|=
+name|SCTP_BUF_NEXT
+argument_list|(
+name|cn
+argument_list|)
+control|)
 block|{
 operator|*
 name|offset
@@ -68884,21 +68787,7 @@ argument_list|(
 name|cn
 argument_list|)
 expr_stmt|;
-name|cn
-operator|=
-name|SCTP_BUF_NEXT
-argument_list|(
-name|cn
-argument_list|)
-expr_stmt|;
 block|}
-block|}
-else|else
-operator|*
-name|offset
-operator|=
-literal|0
-expr_stmt|;
 comment|/* update length and return pointer to the auth chunk */
 name|SCTP_BUF_LEN
 argument_list|(

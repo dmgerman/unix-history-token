@@ -120,7 +120,7 @@ name|stcb
 parameter_list|,
 name|feature
 parameter_list|)
-value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features |= feature; \ 	} else { \ 		inp->sctp_features |= feature; \ 	} \ }
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features |= feature; \ 	} else if (inp) { \ 		inp->sctp_features |= feature; \ 	} \ }
 end_define
 
 begin_define
@@ -134,7 +134,7 @@ name|stcb
 parameter_list|,
 name|feature
 parameter_list|)
-value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features&= ~feature; \ 	} else { \ 		inp->sctp_features&= ~feature; \ 	} \ }
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features&= ~feature; \ 	} else if (inp) { \ 		inp->sctp_features&= ~feature; \ 	} \ }
 end_define
 
 begin_define
@@ -149,7 +149,7 @@ parameter_list|,
 name|feature
 parameter_list|)
 define|\
-value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == feature)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == feature)))
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == feature)) || \ 	 ((stcb == NULL)&& (inp != NULL)&& \ 	  ((inp->sctp_features& feature) == feature)))
 end_define
 
 begin_define
@@ -164,7 +164,7 @@ parameter_list|,
 name|feature
 parameter_list|)
 define|\
-value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == 0)))
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& (inp != NULL)&& \ 	  ((inp->sctp_features& feature) == 0)) || \          ((stcb == NULL)&& (inp == NULL)))
 end_define
 
 begin_comment
@@ -410,7 +410,7 @@ name|sctp_mbuf_crush
 parameter_list|(
 name|data
 parameter_list|)
-value|do { \ 	struct mbuf *_m; \ 	_m = (data); \ 	while(_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 		(data)  = SCTP_BUF_NEXT(_m); \ 		SCTP_BUF_NEXT(_m) = NULL; \ 		sctp_m_free(_m); \ 		_m = (data); \ 	} \ } while (0)
+value|do { \ 	struct mbuf *_m; \ 	_m = (data); \ 	while (_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 		(data)  = SCTP_BUF_NEXT(_m); \ 		SCTP_BUF_NEXT(_m) = NULL; \ 		sctp_m_free(_m); \ 		_m = (data); \ 	} \ } while (0)
 end_define
 
 begin_define

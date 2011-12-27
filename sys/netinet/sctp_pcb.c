@@ -217,7 +217,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 name|memcpy
@@ -251,7 +253,9 @@ literal|0
 condition|)
 block|{
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 return|return
@@ -1681,9 +1685,6 @@ modifier|*
 name|sctp_ifap
 parameter_list|)
 block|{
-name|uint32_t
-name|ifn_index
-decl_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|sctp_ifap
@@ -1752,14 +1753,6 @@ directive|endif
 default|default:
 break|break;
 block|}
-name|ifn_index
-operator|=
-name|sctp_ifap
-operator|->
-name|ifn_p
-operator|->
-name|ifn_index
-expr_stmt|;
 if|if
 condition|(
 name|LIST_EMPTY
@@ -1812,6 +1805,10 @@ condition|)
 block|{
 name|SCTP_DEREGISTER_INTERFACE
 argument_list|(
+name|sctp_ifap
+operator|->
+name|ifn_p
+operator|->
 name|ifn_index
 argument_list|,
 name|AF_INET6
@@ -1819,6 +1816,10 @@ argument_list|)
 expr_stmt|;
 name|SCTP_REGISTER_INTERFACE
 argument_list|(
+name|sctp_ifap
+operator|->
+name|ifn_p
+operator|->
 name|ifn_index
 argument_list|,
 name|AF_INET
@@ -1859,6 +1860,10 @@ condition|)
 block|{
 name|SCTP_DEREGISTER_INTERFACE
 argument_list|(
+name|sctp_ifap
+operator|->
+name|ifn_p
+operator|->
 name|ifn_index
 argument_list|,
 name|AF_INET
@@ -1866,6 +1871,10 @@ argument_list|)
 expr_stmt|;
 name|SCTP_REGISTER_INTERFACE
 argument_list|(
+name|sctp_ifap
+operator|->
+name|ifn_p
+operator|->
 name|ifn_index
 argument_list|,
 name|AF_INET6
@@ -7634,14 +7643,7 @@ name|nam
 expr_stmt|;
 name|lport
 operator|=
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|nam
-operator|)
+name|sin
 operator|->
 name|sin_port
 expr_stmt|;
@@ -7665,14 +7667,7 @@ name|nam
 expr_stmt|;
 name|lport
 operator|=
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-name|nam
-operator|)
+name|sin6
 operator|->
 name|sin6_port
 expr_stmt|;
@@ -8855,7 +8850,8 @@ condition|(
 name|from
 condition|)
 block|{
-name|net
+operator|*
+name|netp
 operator|=
 name|sctp_findnet
 argument_list|(
@@ -14438,11 +14434,6 @@ parameter_list|)
 block|{
 comment|/* 	 * Here we free a endpoint. We must find it (if it is in the Hash 	 * table) and remove it from there. Then we must also find it in the 	 * overall list and remove it from there. After all removals are 	 * complete then any timer has to be stopped. Then start the actual 	 * freeing. a) Any local lists. b) Any associations. c) The hash of 	 * all associations. d) finally the ep itself. 	 */
 name|struct
-name|sctp_pcb
-modifier|*
-name|m
-decl_stmt|;
-name|struct
 name|sctp_tcb
 modifier|*
 name|asoc
@@ -14665,13 +14656,6 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|m
-operator|=
-operator|&
-name|inp
-operator|->
-name|sctp_ep
-expr_stmt|;
 name|ip_pcb
 operator|=
 operator|&
@@ -16496,10 +16480,6 @@ expr_stmt|;
 block|}
 comment|/* Now the sctp_pcb things */
 comment|/* 	 * free each asoc if it is not already closed/free. we can't use the 	 * macro here since le_next will get freed as part of the 	 * sctp_free_assoc() call. 	 */
-name|cnt
-operator|=
-literal|0
-expr_stmt|;
 if|if
 condition|(
 name|so
@@ -25039,11 +25019,6 @@ name|ifa
 parameter_list|)
 block|{
 name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-decl_stmt|;
-name|struct
 name|sctp_laddr
 modifier|*
 name|laddr
@@ -25062,12 +25037,6 @@ operator|->
 name|asoc
 operator|.
 name|sctp_restricted_addrs
-expr_stmt|;
-name|inp
-operator|=
-name|stcb
-operator|->
-name|sctp_ep
 expr_stmt|;
 ifdef|#
 directive|ifdef
@@ -25940,7 +25909,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
-empty_stmt|;
 block|}
 end_function
 
@@ -27613,9 +27581,6 @@ name|struct
 name|sctp_inpcb
 modifier|*
 name|inp
-decl_stmt|,
-modifier|*
-name|l_inp
 decl_stmt|;
 name|struct
 name|sctp_nets
@@ -28140,8 +28105,6 @@ name|SCTP_ADDR_NOT_IN_ASSOC
 expr_stmt|;
 block|}
 comment|/* does the source address already exist? if so skip it */
-name|l_inp
-operator|=
 name|inp
 operator|=
 name|stcb
