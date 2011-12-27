@@ -8940,7 +8940,7 @@ block|{
 name|struct
 name|file_info
 modifier|*
-name|p
+name|r
 decl_stmt|;
 if|if
 condition|(
@@ -9026,22 +9026,22 @@ expr_stmt|;
 comment|/* 			 * Sanity check: cl_offset does not point at its 			 * the parents or itself. 			 */
 for|for
 control|(
-name|p
+name|r
 operator|=
 name|parent
 init|;
-name|p
+name|r
 condition|;
-name|p
+name|r
 operator|=
-name|p
+name|r
 operator|->
 name|parent
 control|)
 block|{
 if|if
 condition|(
-name|p
+name|r
 operator|->
 name|offset
 operator|==
