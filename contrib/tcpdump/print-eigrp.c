@@ -1249,11 +1249,8 @@ name|tptr
 operator|+
 sizeof|sizeof
 argument_list|(
-sizeof|sizeof
-argument_list|(
 expr|struct
 name|eigrp_tlv_header
-argument_list|)
 argument_list|)
 argument_list|,
 literal|"\n\t    "
@@ -2286,11 +2283,8 @@ name|tptr
 operator|+
 sizeof|sizeof
 argument_list|(
-sizeof|sizeof
-argument_list|(
 expr|struct
 name|eigrp_tlv_header
-argument_list|)
 argument_list|)
 argument_list|,
 literal|"\n\t    "
