@@ -4835,6 +4835,25 @@ goto|goto
 name|retry
 goto|;
 block|}
+if|#
+directive|if
+name|VM_NRESERVLEVEL
+operator|>
+literal|0
+comment|/* 		 * If some of the reservation's allocated pages remain with 		 * the original object, then transferring the reservation to 		 * the new object is neither particularly beneficial nor 		 * particularly harmful as compared to leaving the reservation 		 * with the original object.  If, however, all of the 		 * reservation's allocated pages are transferred to the new 		 * object, then transferring the reservation is typically 		 * beneficial.  Determining which of these two cases applies 		 * would be more costly than unconditionally renaming the 		 * reservation. 		 */
+name|vm_reserv_rename
+argument_list|(
+name|m
+argument_list|,
+name|new_object
+argument_list|,
+name|orig_object
+argument_list|,
+name|offidxstart
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|vm_page_lock
 argument_list|(
 name|m
