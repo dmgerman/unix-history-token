@@ -571,7 +571,7 @@ name|__XSI_VISIBLE
 define|#
 directive|define
 name|P_tmpdir
-value|"/var/tmp/"
+value|"/tmp/"
 endif|#
 directive|endif
 define|#
