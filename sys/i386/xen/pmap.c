@@ -4605,9 +4605,14 @@ operator|&
 name|pa
 argument_list|)
 condition|)
+block|{
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 goto|goto
 name|retry
 goto|;
+block|}
 name|m
 operator|=
 name|PHYS_TO_VM_PAGE
