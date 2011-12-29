@@ -5948,6 +5948,11 @@ name|if_flags
 operator||=
 name|PP_CISCO
 expr_stmt|;
+if|#
+directive|if
+name|PP_FR
+operator|!=
+literal|0
 block|}
 elseif|else
 if|if
@@ -5963,8 +5968,6 @@ operator|*
 operator|)
 name|data
 argument_list|)
-operator|&&
-name|PP_FR
 condition|)
 block|{
 name|d
@@ -5991,6 +5994,8 @@ name|PP_FR
 operator||
 name|PP_KEEPALIVE
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 elseif|else
 if|if
