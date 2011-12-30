@@ -2049,7 +2049,7 @@ condition|)
 goto|goto
 name|quit
 goto|;
-comment|/* setup poll(2) machanism. */
+comment|/* setup poll(2) mechanism. */
 name|memset
 argument_list|(
 name|fds
@@ -2645,7 +2645,7 @@ condition|)
 goto|goto
 name|quit
 goto|;
-comment|/* setup poll(2) machanism. */
+comment|/* setup poll(2) mechanism. */
 name|memset
 argument_list|(
 name|fds
@@ -2821,7 +2821,7 @@ name|tv_sec
 operator|-=
 literal|1
 expr_stmt|;
-comment|/* Substract timeout time. */
+comment|/* Subtract timeout time. */
 break|break;
 block|}
 for|for
@@ -4756,7 +4756,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * Collect threads o1utput and extract information about 		 * how log it took to send all the packets. 		 */
+comment|/* 		 * Collect threads output and extract information about 		 * how long it took to send all the packets. 		 */
 name|count
 operator|+=
 name|targs

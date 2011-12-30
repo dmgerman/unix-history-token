@@ -3672,7 +3672,7 @@ name|notok_mode
 argument_list|(
 name|testname
 argument_list|,
-literal|"write suceeded"
+literal|"write succeeded"
 argument_list|,
 name|mode
 argument_list|)
@@ -4132,7 +4132,7 @@ name|notok_mode
 argument_list|(
 name|testname
 argument_list|,
-literal|"read suceeded"
+literal|"read succeeded"
 argument_list|,
 name|mode
 argument_list|)

@@ -1163,7 +1163,7 @@ name|buf_idx
 operator|=
 name|pkt
 expr_stmt|;
-comment|/* copy the packet lenght. */
+comment|/* copy the packet length. */
 if|if
 condition|(
 name|rs
