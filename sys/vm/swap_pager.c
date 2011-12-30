@@ -796,13 +796,13 @@ name|printf
 argument_list|(
 literal|"uid %d, pid %d: swap reservation for %jd bytes failed\n"
 argument_list|,
-name|curproc
-operator|->
-name|p_pid
-argument_list|,
 name|uip
 operator|->
 name|ui_uid
+argument_list|,
+name|curproc
+operator|->
+name|p_pid
 argument_list|,
 name|incr
 argument_list|)
