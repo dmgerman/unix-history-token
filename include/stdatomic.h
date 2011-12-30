@@ -45,9 +45,11 @@ end_define
 begin_elif
 elif|#
 directive|elif
-name|defined
+name|__GNUC_PREREQ__
 argument_list|(
-name|__GNUC__
+literal|4
+operator|,
+literal|7
 argument_list|)
 end_elif
 
@@ -57,10 +59,15 @@ directive|define
 name|__GNUC_ATOMICS
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
+begin_elif
+elif|#
+directive|elif
+operator|!
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+end_elif
 
 begin_error
 error|#
@@ -73,11 +80,15 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__GNUC_ATOMICS
-end_ifdef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__CLANG_ATOMICS
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -129,14 +140,10 @@ parameter_list|)
 value|__atomic_init(obj, value)
 end_define
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__GNUC_ATOMICS
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -335,6 +342,16 @@ parameter_list|)
 value|__atomic_thread_fence(order)
 end_define
 
+begin_define
+define|#
+directive|define
+name|atomic_signal_fence
+parameter_list|(
+name|order
+parameter_list|)
+value|__asm volatile ("" : : : "memory");
+end_define
+
 begin_elif
 elif|#
 directive|elif
@@ -351,13 +368,33 @@ name|atomic_thread_fence
 parameter_list|(
 name|order
 parameter_list|)
-value|__sync_synchronize()
+value|__atomic_thread_fence(order)
 end_define
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_define
+define|#
+directive|define
+name|atomic_signal_fence
+parameter_list|(
+name|order
+parameter_list|)
+value|__atomic_signal_fence(order)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|atomic_thread_fence
+parameter_list|(
+name|order
+parameter_list|)
+value|__sync_synchronize()
+end_define
 
 begin_define
 define|#
@@ -368,6 +405,11 @@ name|order
 parameter_list|)
 value|__asm volatile ("" : : : "memory");
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * 7.17.5 Lock-free property.  */
@@ -389,6 +431,7 @@ name|atomic_is_lock_free
 parameter_list|(
 name|obj
 parameter_list|)
+define|\
 value|__atomic_is_lock_free(obj)
 end_define
 
@@ -408,6 +451,23 @@ name|atomic_is_lock_free
 parameter_list|(
 name|obj
 parameter_list|)
+define|\
+value|__atomic_is_lock_free(sizeof((obj)->__val))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|atomic_is_lock_free
+parameter_list|(
+name|obj
+parameter_list|)
+define|\
 value|(sizeof((obj)->__val)<= sizeof(void *))
 end_define
 
@@ -971,6 +1031,167 @@ argument_list|(
 name|__GNUC_ATOMICS
 argument_list|)
 end_elif
+
+begin_define
+define|#
+directive|define
+name|atomic_compare_exchange_strong_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|expected
+parameter_list|,	\
+name|desired
+parameter_list|,
+name|success
+parameter_list|,
+name|failure
+parameter_list|)
+define|\
+value|__atomic_compare_exchange_n(&(object)->__val, expected,		\ 	    desired, 0, success, failure)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_compare_exchange_weak_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|expected
+parameter_list|,		\
+name|desired
+parameter_list|,
+name|success
+parameter_list|,
+name|failure
+parameter_list|)
+define|\
+value|__atomic_compare_exchange_n(&(object)->__val, expected,		\ 	    desired, 1, success, failure)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_exchange_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|desired
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_exchange_n(&(object)->__val, desired, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetch_add_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|operand
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_fetch_add(&(object)->__val, operand, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetch_and_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|operand
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_fetch_and(&(object)->__val, operand, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetch_or_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|operand
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_fetch_or(&(object)->__val, operand, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetch_sub_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|operand
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_fetch_sub(&(object)->__val, operand, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_fetch_xor_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|operand
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_fetch_xor(&(object)->__val, operand, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_load_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_load_n(&(object)->__val, order)
+end_define
+
+begin_define
+define|#
+directive|define
+name|atomic_store_explicit
+parameter_list|(
+name|object
+parameter_list|,
+name|desired
+parameter_list|,
+name|order
+parameter_list|)
+define|\
+value|__atomic_store_n(&(object)->__val, desired, order)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
