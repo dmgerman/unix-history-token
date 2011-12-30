@@ -139,6 +139,24 @@ name|IgnoreSysRoot
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if this entry is an internal search path.
+comment|///
+comment|/// This typically indicates that users didn't directly provide it, but
+comment|/// instead it was provided by a compatibility layer for a particular
+comment|/// system. This isn't redundant with IsUserSupplied (even though perhaps
+comment|/// it should be) because that is false for user provided '-iwithprefix'
+comment|/// header search entries.
+name|unsigned
+name|IsInternal
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief True if this entry's headers should be wrapped in extern "C".
+name|unsigned
+name|ImplicitExternC
+range|:
+literal|1
+decl_stmt|;
 name|Entry
 argument_list|(
 argument|StringRef path
@@ -150,6 +168,10 @@ argument_list|,
 argument|bool isFramework
 argument_list|,
 argument|bool ignoreSysRoot
+argument_list|,
+argument|bool isInternal
+argument_list|,
+argument|bool implicitExternC
 argument_list|)
 block|:
 name|Path
@@ -174,7 +196,17 @@ argument_list|)
 operator|,
 name|IgnoreSysRoot
 argument_list|(
-argument|ignoreSysRoot
+name|ignoreSysRoot
+argument_list|)
+operator|,
+name|IsInternal
+argument_list|(
+name|isInternal
+argument_list|)
+operator|,
+name|ImplicitExternC
+argument_list|(
+argument|implicitExternC
 argument_list|)
 block|{}
 block|}
@@ -303,6 +335,10 @@ argument_list|,
 argument|bool IsFramework
 argument_list|,
 argument|bool IgnoreSysRoot
+argument_list|,
+argument|bool IsInternal = false
+argument_list|,
+argument|bool ImplicitExternC = false
 argument_list|)
 block|{
 name|UserEntries
@@ -320,6 +356,10 @@ argument_list|,
 name|IsFramework
 argument_list|,
 name|IgnoreSysRoot
+argument_list|,
+name|IsInternal
+argument_list|,
+name|ImplicitExternC
 argument_list|)
 argument_list|)
 block|;   }

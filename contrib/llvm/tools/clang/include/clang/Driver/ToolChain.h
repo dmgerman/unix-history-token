@@ -646,6 +646,25 @@ return|return
 name|true
 return|;
 block|}
+comment|/// \brief Add the clang cc1 arguments for system include paths.
+comment|///
+comment|/// This routine is responsible for adding the necessary cc1 arguments to
+comment|/// include headers from standard system header directories.
+name|virtual
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+specifier|const
+name|ArgList
+operator|&
+name|DriverArgs
+argument_list|,
+name|ArgStringList
+operator|&
+name|CC1Args
+argument_list|)
+decl|const
+decl_stmt|;
 comment|// GetCXXStdlibType - Determine the C++ standard library type to use with the
 comment|// given compilation arguments.
 name|virtual
@@ -668,14 +687,11 @@ argument_list|(
 specifier|const
 name|ArgList
 operator|&
-name|Args
+name|DriverArgs
 argument_list|,
 name|ArgStringList
 operator|&
-name|CmdArgs
-argument_list|,
-name|bool
-name|ObjCXXAutoRefCount
+name|CC1Args
 argument_list|)
 decl|const
 decl_stmt|;
