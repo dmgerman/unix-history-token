@@ -1427,6 +1427,11 @@ comment|/// \brief Objective-C "SEL" redefinition type
 name|SPECIAL_TYPE_OBJC_SEL_REDEFINITION
 init|=
 literal|8
+block|,
+comment|/// \brief C ucontext_t typedef type
+name|SPECIAL_TYPE_UCONTEXT_T
+init|=
+literal|9
 block|}
 enum|;
 comment|/// \brief The number of special type IDs.

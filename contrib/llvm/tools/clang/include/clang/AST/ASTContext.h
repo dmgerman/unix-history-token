@@ -955,6 +955,11 @@ name|TypeDecl
 operator|*
 name|sigjmp_bufDecl
 block|;
+comment|/// \brief The type for the C ucontext_t type.
+name|TypeDecl
+operator|*
+name|ucontext_tDecl
+block|;
 comment|/// \brief Type for the Block descriptor for Blocks CodeGen.
 comment|///
 comment|/// Since this is only used for generation of debug info, it is not
@@ -3440,6 +3445,59 @@ end_return
 
 begin_comment
 unit|}
+comment|/// \brief Set the type for the C ucontext_t type.
+end_comment
+
+begin_macro
+unit|void
+name|setucontext_tDecl
+argument_list|(
+argument|TypeDecl *ucontext_tDecl
+argument_list|)
+end_macro
+
+begin_block
+block|{
+name|this
+operator|->
+name|ucontext_tDecl
+operator|=
+name|ucontext_tDecl
+expr_stmt|;
+block|}
+end_block
+
+begin_comment
+comment|/// \brief Retrieve the C ucontext_t type.
+end_comment
+
+begin_expr_stmt
+name|QualType
+name|getucontext_tType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|ucontext_tDecl
+condition|)
+return|return
+name|getTypeDeclType
+argument_list|(
+name|ucontext_tDecl
+argument_list|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|QualType
+argument_list|()
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// \brief The result type of logical operations, '<', '>', '!=', etc.
 end_comment
 
@@ -4212,7 +4270,10 @@ name|GE_Missing_stdio
 block|,
 comment|//< Missing a type from<stdio.h>
 name|GE_Missing_setjmp
+block|,
 comment|//< Missing a type from<setjmp.h>
+name|GE_Missing_ucontext
+comment|//< Missing a type from<ucontext.h>
 block|}
 enum|;
 end_enum
