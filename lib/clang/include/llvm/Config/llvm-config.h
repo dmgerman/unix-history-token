@@ -105,7 +105,7 @@ begin_define
 define|#
 directive|define
 name|LLVM_HAS_ATOMICS
-value|1
+value|0
 end_define
 
 begin_comment
