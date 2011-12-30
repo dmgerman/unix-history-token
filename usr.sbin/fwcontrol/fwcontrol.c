@@ -5595,7 +5595,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Recieve data file from node "-R" 	 */
+comment|/* 	 * Receive data file from node "-R" 	 */
 define|#
 directive|define
 name|TAG

@@ -846,7 +846,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * A simple implementation of interned strings.  Each interned string  * is assigned a unique address, so that subsequent string compares  * can be done by a simple pointer comparision instead of using  * strcmp().  This speeds up hash table lookups and saves memory if  * duplicate strings are the norm.  */
+comment|/*  * A simple implementation of interned strings.  Each interned string  * is assigned a unique address, so that subsequent string compares  * can be done by a simple pointer comparison instead of using  * strcmp().  This speeds up hash table lookups and saves memory if  * duplicate strings are the norm.  */
 end_comment
 
 begin_struct

@@ -245,7 +245,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert a port entry in the base port TAILQ starting to search  * for its place from the position of the first bridge port for the bridge  * interface. Update the first bridge port if neccessary.  */
+comment|/*  * Insert a port entry in the base port TAILQ starting to search  * for its place from the position of the first bridge port for the bridge  * interface. Update the first bridge port if necessary.  */
 end_comment
 
 begin_function
@@ -376,7 +376,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find a port entry's possition in the ports list according  * to it's parent bridge interface name. Returns a NULL if  * we should be at the TAILQ head, otherwise the entry after  * which we should be inserted.  */
+comment|/*  * Find a port entry's position in the ports list according  * to it's parent bridge interface name. Returns a NULL if  * we should be at the TAILQ head, otherwise the entry after  * which we should be inserted.  */
 end_comment
 
 begin_function

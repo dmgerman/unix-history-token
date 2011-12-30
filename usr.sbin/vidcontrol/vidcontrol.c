@@ -2323,7 +2323,7 @@ name|set_cursor_type
 parameter_list|(
 name|char
 modifier|*
-name|appearence
+name|appearance
 parameter_list|)
 block|{
 name|int
@@ -2334,7 +2334,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|appearence
+name|appearance
 argument_list|,
 literal|"normal"
 argument_list|)
@@ -2349,7 +2349,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|appearence
+name|appearance
 argument_list|,
 literal|"blink"
 argument_list|)
@@ -2364,7 +2364,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|appearence
+name|appearance
 argument_list|,
 literal|"destructive"
 argument_list|)

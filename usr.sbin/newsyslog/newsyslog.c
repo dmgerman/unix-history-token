@@ -7509,7 +7509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate a log filename, when using clasic filenames.  */
+comment|/*  * Generate a log filename, when using classic filenames.  */
 end_comment
 
 begin_function
@@ -7586,7 +7586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete a rotated logfiles, when using clasic filenames.  */
+comment|/*  * Delete a rotated logfiles, when using classic filenames.  */
 end_comment
 
 begin_function

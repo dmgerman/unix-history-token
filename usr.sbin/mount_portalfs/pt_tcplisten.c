@@ -96,7 +96,7 @@ file|"portald.h"
 end_include
 
 begin_comment
-comment|/*  * Key will be tcplisten/host/port  *  * Create a TCP socket bound to the requested host and port.  * If the host is "ANY" the receving address will be set to INADDR_ANY.  * If the port is 0 the caller must find out the returned port number  * using a call to getsockname.  *  * XXX!  The owner of the socket will be root rather then the user.  This  * 	 may cause remote auth (identd) to return unexpected results.  *  */
+comment|/*  * Key will be tcplisten/host/port  *  * Create a TCP socket bound to the requested host and port.  * If the host is "ANY" the receiving address will be set to INADDR_ANY.  * If the port is 0 the caller must find out the returned port number  * using a call to getsockname.  *  * XXX!  The owner of the socket will be root rather then the user.  This  * 	 may cause remote auth (identd) to return unexpected results.  *  */
 end_comment
 
 begin_function

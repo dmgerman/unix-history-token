@@ -5383,7 +5383,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"enddisc: Only changable before"
+literal|"enddisc: Only changeable before"
 literal|" LCP negotiations\n"
 argument_list|)
 expr_stmt|;
@@ -5397,7 +5397,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"enddisc: Only changable at phase DEAD/ESTABLISH\n"
+literal|"enddisc: Only changeable at phase DEAD/ESTABLISH\n"
 argument_list|)
 expr_stmt|;
 return|return

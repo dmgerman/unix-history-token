@@ -249,7 +249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * block operations  *  * check if a block is available  *  returns true if all the correponding bits in the free map are 1  *  returns false if any corresponding bit in the free map is 0   */
+comment|/*  * block operations  *  * check if a block is available  *  returns true if all the corresponding bits in the free map are 1  *  returns false if any corresponding bit in the free map is 0  */
 end_comment
 
 begin_function

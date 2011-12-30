@@ -1085,7 +1085,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-r supressed\n"
+literal|"-r suppressed\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1099,7 +1099,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-B supressed\n"
+literal|"-B suppressed\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1113,7 +1113,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-b supressed\n"
+literal|"-b suppressed\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1127,7 +1127,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"-h supressed\n"
+literal|"-h suppressed\n"
 argument_list|)
 expr_stmt|;
 name|rflag

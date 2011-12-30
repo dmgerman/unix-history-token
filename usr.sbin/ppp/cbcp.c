@@ -2033,7 +2033,7 @@ modifier|*
 name|data
 parameter_list|)
 block|{
-comment|/*    * We've received a REQ (data).  Adjust our reponse (cbcp->fsm.*)    * so that we (hopefully) agree with the peer    */
+comment|/*    * We've received a REQ (data).  Adjust our response (cbcp->fsm.*)    * so that we (hopefully) agree with the peer    */
 name|struct
 name|cbcp_addr
 modifier|*

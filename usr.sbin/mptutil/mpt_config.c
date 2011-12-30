@@ -2248,7 +2248,7 @@ condition|)
 goto|goto
 name|restart
 goto|;
-comment|/* Seach volumes second. */
+comment|/* Search volumes second. */
 name|vol
 operator|=
 name|state
