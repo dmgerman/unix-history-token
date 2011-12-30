@@ -5181,6 +5181,8 @@ name|cdev
 argument_list|,
 name|pdev
 argument_list|,
+literal|"%s"
+argument_list|,
 name|devfspath
 argument_list|)
 expr_stmt|;
