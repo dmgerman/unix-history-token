@@ -1171,7 +1171,7 @@ operator|>
 name|target
 condition|)
 block|{
-comment|/* if comment cant fit on this line, 					 * put it on next line */
+comment|/* if comment can't fit on this line, 					 * put it on next line */
 name|putc
 argument_list|(
 literal|'\n'

@@ -701,7 +701,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*-  *-----------------------------------------------------------------------  * For_Run --  *	Run the for loop, immitating the actions of an include file  *  * Results:  *	None.  *  * Side Effects:  *	The values of the variables forLst, forVar and forBuf are freed.  *  *-----------------------------------------------------------------------  */
+comment|/*-  *-----------------------------------------------------------------------  * For_Run --  *	Run the for loop, imitating the actions of an include file  *  * Results:  *	None.  *  * Side Effects:  *	The values of the variables forLst, forVar and forBuf are freed.  *  *-----------------------------------------------------------------------  */
 end_comment
 
 begin_function

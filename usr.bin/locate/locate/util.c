@@ -830,7 +830,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read integer from mmap pointer.   * Essential a simple  ``return *(int *)p'' but avoid sigbus   * for integer alignment (SunOS 4.x, 5.x).  *  * Convert network byte order to host byte order if neccessary.   * So we can read on FreeBSD/i386 (little endian) a locate database  * which was built on SunOS/sparc (big endian).  */
+comment|/*  * Read integer from mmap pointer.  * Essential a simple  ``return *(int *)p'' but avoid sigbus  * for integer alignment (SunOS 4.x, 5.x).  *  * Convert network byte order to host byte order if necessary.  * So we can read on FreeBSD/i386 (little endian) a locate database  * which was built on SunOS/sparc (big endian).  */
 end_comment
 
 begin_function
@@ -967,7 +967,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read integer from stream.  *  * Convert network byte order to host byte order if neccessary.   * So we can read on FreeBSD/i386 (little endian) a locate database  * which was built on SunOS/sparc (big endian).  */
+comment|/*  * Read integer from stream.  *  * Convert network byte order to host byte order if necessary.  * So we can read on FreeBSD/i386 (little endian) a locate database  * which was built on SunOS/sparc (big endian).  */
 end_comment
 
 begin_function

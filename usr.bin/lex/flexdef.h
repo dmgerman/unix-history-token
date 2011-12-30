@@ -3145,7 +3145,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Generate a data statment for a two-dimensional array. */
+comment|/* Generate a data statement for a two-dimensional array. */
 end_comment
 
 begin_decl_stmt

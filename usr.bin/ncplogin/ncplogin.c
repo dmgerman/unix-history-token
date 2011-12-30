@@ -815,7 +815,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"an error occured while parsing '%s'"
+literal|"an error occurred while parsing '%s'"
 argument_list|,
 name|argv
 index|[

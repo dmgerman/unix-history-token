@@ -1164,7 +1164,7 @@ condition|)
 goto|goto
 name|net
 goto|;
-comment|/* 	 * Mark any arguments beginning with '/' as invalid so that we  	 * don't accidently confuse them with expansions from finger.conf 	 */
+comment|/* 	 * Mark any arguments beginning with '/' as invalid so that we 	 * don't accidentally confuse them with expansions from finger.conf 	 */
 for|for
 control|(
 name|p
