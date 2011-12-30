@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_base.c  */
-end_comment
-
-begin_comment
 comment|/*-  * Copyright (c) 1996-1999 Whistle Communications, Inc.  * All rights reserved.  *  * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *  * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Authors: Julian Elischer<julian@freebsd.org>  *          Archie Cobbs<archie@freebsd.org>  *  * $FreeBSD$  * $Whistle: ng_base.c,v 1.39 1999/01/28 23:54:53 julian Exp $  */
 end_comment
 
@@ -1508,7 +1504,7 @@ parameter_list|(
 name|hook
 parameter_list|)
 define|\
-value|do {								\ 		mtx_lock(&ng_nodelist_mtx);			\ 		LIST_INSERT_HEAD(&ng_freehooks, hook, hk_hooks);	\ 		hook->hk_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);			\ 	} while (0)
+value|do {								\ 		mtx_lock(&ng_nodelist_mtx);				\ 		LIST_INSERT_HEAD(&ng_freehooks, hook, hk_hooks);	\ 		hook->hk_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);				\ 	} while (0)
 end_define
 
 begin_define
@@ -1519,7 +1515,7 @@ parameter_list|(
 name|node
 parameter_list|)
 define|\
-value|do {								\ 		mtx_lock(&ng_nodelist_mtx);			\ 		LIST_INSERT_HEAD(&ng_freenodes, node, nd_nodes);	\ 		node->nd_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);			\ 	} while (0)
+value|do {								\ 		mtx_lock(&ng_nodelist_mtx);				\ 		LIST_INSERT_HEAD(&ng_freenodes, node, nd_nodes);	\ 		node->nd_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);				\ 	} while (0)
 end_define
 
 begin_else
@@ -3021,7 +3017,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Assign a node a name. Once assigned, the name cannot be changed.  */
+comment|/*  * Assign a node a name.  */
 end_comment
 
 begin_function
@@ -3436,7 +3432,6 @@ index|]
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|(
@@ -3445,7 +3440,6 @@ operator|)
 literal|0
 operator|)
 return|;
-block|}
 comment|/* Decode number */
 name|val
 operator|=
@@ -3485,7 +3479,6 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|(
@@ -3494,18 +3487,19 @@ operator|)
 literal|0
 operator|)
 return|;
-block|}
 return|return
+operator|(
 operator|(
 name|ng_ID_t
 operator|)
 name|val
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  * IF we allow name changing this may be more resurrected.  */
+comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  */
 end_comment
 
 begin_function
@@ -4291,7 +4285,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Netgraph: Node type rejected. ABI mismatch. Suggest recompile\n"
+literal|"Netgraph: Node type rejected. ABI mismatch. "
+literal|"Suggest recompile\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -6769,8 +6764,8 @@ name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) queued reader "
-literal|"can't proceed; queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) queued "
+literal|"reader can't proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6849,8 +6844,8 @@ name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) queued writer "
-literal|"can't proceed; queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) queued writer can't "
+literal|"proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6916,8 +6911,8 @@ name|CTR6
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) returning item %p as %s; "
-literal|"queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) returning item %p as %s; queue "
+literal|"flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7100,10 +7095,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reader needs node without writer and pending items. */
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|long
 name|t
@@ -7301,11 +7297,11 @@ end_comment
 
 begin_comment
 unit|ng_apply_item(node, item, 0);
-comment|/* 		 * Having acted on the item, atomically  		 * down grade back to READER and finish up 	 	 */
+comment|/* 		 * Having acted on the item, atomically 		 * downgrade back to READER and finish up. 	 	 */
 end_comment
 
 begin_comment
-unit|atomic_add_int(&ngq->q_flags, 		    READER_INCREMENT - WRITER_ACTIVE);
+unit|atomic_add_int(&ngq->q_flags, READER_INCREMENT - WRITER_ACTIVE);
 comment|/* Our caller will call ng_leave_read() */
 end_comment
 
@@ -7880,12 +7876,10 @@ operator|)
 operator|)
 operator|)
 condition|)
-block|{
 name|queue
 operator|=
 literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -8279,7 +8273,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * If no receive method, just silently drop it. 		 * Give preference to the hook over-ride method 		 */
+comment|/* 		 * If no receive method, just silently drop it. 		 * Give preference to the hook over-ride method. 		 */
 if|if
 condition|(
 operator|(
@@ -10980,7 +10974,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-comment|/* 	 * Sometimes a generic message may be statically allocated 	 * to avoid problems with allocating when in tight memeory situations. 	 * Don't free it if it is so. 	 * I break them appart here, because erros may cause a free if the item 	 * in which case we'd be doing it twice. 	 * they are kept together above, to simplify freeing. 	 */
+comment|/* 	 * Sometimes a generic message may be statically allocated 	 * to avoid problems with allocating when in tight memory situations. 	 * Don't free it if it is so. 	 * I break them appart here, because erros may cause a free if the item 	 * in which case we'd be doing it twice. 	 * they are kept together above, to simplify freeing. 	 */
 name|out
 label|:
 name|NG_RESPOND_MSG
@@ -11660,8 +11654,6 @@ init|=
 name|data
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -11675,11 +11667,6 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* Register new netgraph node type */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11693,14 +11680,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 comment|/* Call type specific code */
 if|if
 condition|(
@@ -11757,20 +11737,10 @@ name|ng_typelist_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|type
@@ -11796,15 +11766,8 @@ name|refs
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* failed load, nothing to undo */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 if|if
 condition|(
 name|type
@@ -11837,15 +11800,8 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 comment|/* type refuses.. */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 block|}
 name|mtx_lock
 argument_list|(
@@ -11867,11 +11823,6 @@ name|ng_typelist_mtx
 argument_list|)
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 if|if
@@ -12024,8 +11975,7 @@ block|{
 comment|/* This should never happen */
 name|printf
 argument_list|(
-literal|"ng node %s needs"
-literal|"NGF_REALLY_DIE\n"
+literal|"ng node %s needs NGF_REALLY_DIE\n"
 argument_list|,
 name|node
 operator|->
@@ -13365,7 +13315,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* XXX fafe in mutex? */
+comment|/* XXX safe in mutex? */
 name|NG_WORKLIST_LOCK
 argument_list|()
 expr_stmt|;
