@@ -738,7 +738,7 @@ name|error
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * If we are using the ps/cmdline caching, use that.  Otherwise 	 * revert back to the old way which only implements full cmdline 	 * for the currept process and just p->p_comm for all other 	 * processes. 	 * Note that if the argv is no longer available, we deliberately 	 * don't fall back on p->p_comm or return an error: the authentic 	 * Linux behaviour is to return zero-length in this case. 	 */
+comment|/* 	 * If we are using the ps/cmdline caching, use that.  Otherwise 	 * revert back to the old way which only implements full cmdline 	 * for the current process and just p->p_comm for all other 	 * processes. 	 * Note that if the argv is no longer available, we deliberately 	 * don't fall back on p->p_comm or return an error: the authentic 	 * Linux behaviour is to return zero-length in this case. 	 */
 name|PROC_LOCK
 argument_list|(
 name|p
