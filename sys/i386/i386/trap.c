@@ -3909,7 +3909,7 @@ file|"../../kern/subr_syscall.c"
 end_include
 
 begin_comment
-comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */
+comment|/*  * syscall - system call request C handler.  A system call is  * essentially treated as a trap by reusing the frame layout.  */
 end_comment
 
 begin_function

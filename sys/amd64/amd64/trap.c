@@ -3388,7 +3388,7 @@ file|"../../kern/subr_syscall.c"
 end_include
 
 begin_comment
-comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */
+comment|/*  * System call handler for native binaries.  The trap frame is already  * set up by the assembler trampoline and a pointer to it is saved in  * td_frame.  */
 end_comment
 
 begin_function
