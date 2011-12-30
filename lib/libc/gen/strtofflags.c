@@ -305,10 +305,12 @@ name|char
 modifier|*
 name|string
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|sp
-decl_stmt|,
+decl_stmt|;
+name|char
 modifier|*
 name|dp
 decl_stmt|;
