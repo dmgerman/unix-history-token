@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h	8.1 (Berkeley) 6/10/93  *	@(#)bpf.h	1.34 (LBL)     6/16/96  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 1990, 1991, 1993  *	The Regents of the University of California.  * Copyright (c) 2011 The University of Melbourne.  * All rights reserved.  *  * This code is derived from the Stanford/CMU enet packet filter,  * (net/enet.c) distributed as part of 4.3BSD, and code contributed  * to Berkeley by Steven McCanne and Van Jacobson both of Lawrence  * Berkeley Laboratory.  *  * Portions of this software were developed by Julien Ridoux at the University  * of Melbourne under sponsorship from the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  *      @(#)bpf.h	8.1 (Berkeley) 6/10/93  *	@(#)bpf.h	1.34 (LBL)     6/16/96  *  * $FreeBSD$  */
 end_comment
 
 begin_ifndef
@@ -535,29 +535,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|BPF_T_FAST
+name|BPF_T_MONOTONIC
 value|0x0100
 end_define
 
 begin_define
 define|#
 directive|define
-name|BPF_T_MONOTONIC
-value|0x0200
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_T_MONOTONIC_FAST
-value|(BPF_T_FAST | BPF_T_MONOTONIC)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BPF_T_FLAG_MASK
-value|0x0300
+value|0x0100
 end_define
 
 begin_define
@@ -594,27 +580,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BPF_T_MICROTIME_FAST
-value|(BPF_T_MICROTIME | BPF_T_FAST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_T_NANOTIME_FAST
-value|(BPF_T_NANOTIME | BPF_T_FAST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_T_BINTIME_FAST
-value|(BPF_T_BINTIME | BPF_T_FAST)
-end_define
-
-begin_define
-define|#
-directive|define
 name|BPF_T_MICROTIME_MONOTONIC
 value|(BPF_T_MICROTIME | BPF_T_MONOTONIC)
 end_define
@@ -631,27 +596,6 @@ define|#
 directive|define
 name|BPF_T_BINTIME_MONOTONIC
 value|(BPF_T_BINTIME | BPF_T_MONOTONIC)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_T_MICROTIME_MONOTONIC_FAST
-value|(BPF_T_MICROTIME | BPF_T_MONOTONIC_FAST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_T_NANOTIME_MONOTONIC_FAST
-value|(BPF_T_NANOTIME | BPF_T_MONOTONIC_FAST)
-end_define
-
-begin_define
-define|#
-directive|define
-name|BPF_T_BINTIME_MONOTONIC_FAST
-value|(BPF_T_BINTIME | BPF_T_MONOTONIC_FAST)
 end_define
 
 begin_comment
@@ -2842,6 +2786,16 @@ name|mtx
 name|bif_mtx
 decl_stmt|;
 comment|/* mutex for interface */
+name|struct
+name|sysctl_oid
+modifier|*
+name|tscfgoid
+decl_stmt|;
+comment|/* timestamp sysctl oid for interface */
+name|int
+name|tstype
+decl_stmt|;
+comment|/* timestamp setting for interface */
 block|}
 struct|;
 end_struct
