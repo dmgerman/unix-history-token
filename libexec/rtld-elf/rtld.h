@@ -955,7 +955,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Return newes versioned symbol. Used by 				   dlsym. */
+comment|/* Return newest versioned symbol. Used by 				   dlsym. */
 end_comment
 
 begin_comment
