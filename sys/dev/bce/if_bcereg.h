@@ -1779,13 +1779,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|BCE_CHIP_NUM_5716
-value|0x57160000
-end_define
-
-begin_define
-define|#
-directive|define
 name|BCE_CHIP_REV
 parameter_list|(
 name|sc
@@ -1940,13 +1933,6 @@ define|#
 directive|define
 name|BCE_CHIP_ID_5709_C0
 value|0x57092000
-end_define
-
-begin_define
-define|#
-directive|define
-name|BCE_CHIP_ID_5716_C0
-value|0x57162000
 end_define
 
 begin_define
