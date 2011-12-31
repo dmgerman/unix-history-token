@@ -275,6 +275,12 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bool_true_false_are_defined
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|boolean_t
@@ -295,6 +301,11 @@ directive|define
 name|true
 value|TRUE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

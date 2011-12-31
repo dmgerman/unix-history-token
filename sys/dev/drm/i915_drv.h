@@ -2284,6 +2284,12 @@ name|defined
 argument_list|(
 name|__FreeBSD__
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__bool_true_false_are_defined
+argument_list|)
 end_if
 
 begin_typedef
