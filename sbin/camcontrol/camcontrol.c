@@ -12685,8 +12685,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -21874,8 +21874,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -22431,8 +22431,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -23690,8 +23690,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -24031,8 +24031,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -25883,8 +25883,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -26283,8 +26283,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
