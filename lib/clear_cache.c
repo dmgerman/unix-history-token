@@ -3,12 +3,6 @@ begin_comment
 comment|/* ===-- clear_cache.c - Implement __clear_cache ---------------------------===  *  *                     The LLVM Compiler Infrastructure  *  * This file is dual licensed under the MIT and the University of Illinois Open  * Source Licenses. See LICENSE.TXT for details.  *  * ===----------------------------------------------------------------------===  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_if
 if|#
 directive|if

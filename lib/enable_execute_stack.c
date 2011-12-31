@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|"int_lib.h"
 end_include
 
 begin_include
