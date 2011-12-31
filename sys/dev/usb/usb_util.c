@@ -396,7 +396,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*------------------------------------------------------------------------*  *	 usb_pause_mtx - factored out code  *  * This function will delay the code by the passed number of system  * ticks. The passed mutex "mtx" will be dropped while waiting, if  * "mtx" is not NULL.  *------------------------------------------------------------------------*/
+comment|/*------------------------------------------------------------------------*  *	 usb_pause_mtx - factored out code  *  * This function will delay the code by the passed number of system  * ticks. The passed mutex "mtx" will be dropped while waiting, if  * "mtx" is different from NULL.  *------------------------------------------------------------------------*/
 end_comment
 
 begin_function
@@ -409,7 +409,7 @@ modifier|*
 name|mtx
 parameter_list|,
 name|int
-name|_ticks
+name|timo
 parameter_list|)
 block|{
 if|if
@@ -423,58 +423,16 @@ argument_list|(
 name|mtx
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|cold
-condition|)
-block|{
-comment|/* convert to milliseconds */
-name|_ticks
-operator|=
-operator|(
-name|_ticks
-operator|*
-literal|1000
-operator|)
-operator|/
-name|hz
-expr_stmt|;
-comment|/* convert to microseconds, rounded up */
-name|_ticks
-operator|=
-operator|(
-name|_ticks
-operator|+
-literal|1
-operator|)
-operator|*
-literal|1000
-expr_stmt|;
-name|DELAY
-argument_list|(
-name|_ticks
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* 		 * Add one to the number of ticks so that we don't return 		 * too early! 		 */
-name|_ticks
-operator|++
-expr_stmt|;
-if|if
-condition|(
+comment|/* 	 * Add one tick to the timeout so that we don't return too 	 * early! Note that pause() will assert that the passed 	 * timeout is positive and non-zero! 	 */
 name|pause
 argument_list|(
 literal|"USBWAIT"
 argument_list|,
-name|_ticks
+name|timo
+operator|+
+literal|1
 argument_list|)
-condition|)
-block|{
-comment|/* ignore */
-block|}
-block|}
+expr_stmt|;
 if|if
 condition|(
 name|mtx
