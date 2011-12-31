@@ -302,6 +302,9 @@ name|progname
 argument_list|,
 name|progname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|progname
