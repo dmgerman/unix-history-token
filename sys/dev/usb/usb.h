@@ -1656,7 +1656,7 @@ decl_stmt|;
 name|uByte
 name|bDevCapabilityType
 decl_stmt|;
-name|uByte
+name|uDWord
 name|bmAttributes
 decl_stmt|;
 define|#
@@ -1701,8 +1701,8 @@ decl_stmt|;
 name|uByte
 name|bU1DevExitLat
 decl_stmt|;
-name|uByte
-name|bU2DevExitLat
+name|uWord
+name|wU2DevExitLat
 decl_stmt|;
 block|}
 name|__packed
