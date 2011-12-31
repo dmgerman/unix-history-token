@@ -210,6 +210,10 @@ argument_list|)
 expr_stmt|;
 name|yp_errno
 operator|=
+operator|(
+expr|enum
+name|ypstat
+operator|)
 name|YPXFR_YPERR
 expr_stmt|;
 return|return
@@ -291,6 +295,10 @@ condition|)
 block|{
 name|yp_errno
 operator|=
+operator|(
+expr|enum
+name|ypstat
+operator|)
 name|YPXFR_YPERR
 expr_stmt|;
 return|return
