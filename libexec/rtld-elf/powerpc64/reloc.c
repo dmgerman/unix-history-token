@@ -1205,7 +1205,6 @@ if|if
 condition|(
 name|cache
 condition|)
-block|{
 name|munmap
 argument_list|(
 name|cache
@@ -1213,7 +1212,18 @@ argument_list|,
 name|bytes
 argument_list|)
 expr_stmt|;
-block|}
+comment|/* Synchronize icache for text seg in case we made any changes */
+name|__syncicache
+argument_list|(
+name|obj
+operator|->
+name|mapbase
+argument_list|,
+name|obj
+operator|->
+name|textsize
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|r
