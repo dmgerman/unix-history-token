@@ -832,13 +832,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_probe_nomatch
 argument_list|,
 name|spibus_probe_nomatch
@@ -880,11 +873,7 @@ argument_list|,
 name|spibus_transfer_impl
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

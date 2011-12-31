@@ -1230,13 +1230,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_alloc_resource
 argument_list|,
 name|sbbc_bus_alloc_resource
@@ -1285,7 +1278,7 @@ argument_list|,
 name|sbbc_tod_settime
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2766,7 +2759,7 @@ argument_list|,
 name|uart_bus_detach
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3849,7 +3842,7 @@ argument_list|,
 name|sbbc_uart_bus_transmit
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
