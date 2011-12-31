@@ -1838,7 +1838,9 @@ name|labeloffset
 operator|+
 name|labelsoffset
 operator|*
-name|secsize
+name|lab
+operator|.
+name|d_secsize
 argument_list|,
 name|lp
 argument_list|)
@@ -1998,7 +2000,9 @@ name|labeloffset
 operator|+
 name|labelsoffset
 operator|*
-name|secsize
+name|lab
+operator|.
+name|d_secsize
 argument_list|)
 expr_stmt|;
 name|errstr
