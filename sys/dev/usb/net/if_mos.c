@@ -2534,11 +2534,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-name|MOS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_active
@@ -2554,6 +2549,11 @@ operator|=
 name|mii
 operator|->
 name|mii_media_status
+expr_stmt|;
+name|MOS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
