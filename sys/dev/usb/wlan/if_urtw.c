@@ -9082,7 +9082,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|ret
 operator|!=
 literal|0
 condition|)
@@ -9098,7 +9098,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|ret
 operator|!=
 literal|0
 condition|)
