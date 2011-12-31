@@ -1069,7 +1069,7 @@ name|avr32dci_mod_ctrl
 argument_list|(
 name|sc
 argument_list|,
-name|AVR32_UDADDR_ADDEN
+name|AVR32_CTRL_DEV_FADDR_EN
 operator||
 name|addr
 argument_list|,
@@ -2071,14 +2071,14 @@ name|AVR32_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
-name|AVR32_EPTCLRSTA
+name|AVR32_EPTCTL
 argument_list|(
 name|td
 operator|->
 name|ep_no
 argument_list|)
 argument_list|,
-name|AVR32_EPTSTA_TX_BK_RDY
+name|AVR32_EPTCTL_TX_PK_RDY
 argument_list|)
 expr_stmt|;
 comment|/* check remainder */
@@ -2988,7 +2988,7 @@ name|UE_GET_ADDR
 argument_list|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 argument_list|)
 argument_list|,
 name|xfer
@@ -3101,7 +3101,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 operator|)
@@ -3223,7 +3223,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_DIR_IN
 condition|)
@@ -3493,7 +3493,7 @@ if|if
 condition|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_DIR_IN
 condition|)
@@ -3646,9 +3646,23 @@ name|ep_no
 init|=
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
-name|UE_ADDR_MASK
+name|UE_ADDR
+decl_stmt|;
+name|struct
+name|avr32dci_softc
+modifier|*
+name|sc
+init|=
+name|AVR32_BUS2SC
+argument_list|(
+name|xfer
+operator|->
+name|xroot
+operator|->
+name|bus
+argument_list|)
 decl_stmt|;
 name|avr32dci_mod_ien
 argument_list|(
@@ -3992,7 +4006,7 @@ name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|)
 expr_stmt|;
 comment|/* reset scanner */
@@ -4178,7 +4192,7 @@ name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 argument_list|,
 name|error
 argument_list|)
@@ -4199,7 +4213,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 operator|)
@@ -4254,7 +4268,7 @@ parameter_list|,
 name|struct
 name|usb_endpoint
 modifier|*
-name|ep
+name|pipe
 parameter_list|,
 name|uint8_t
 modifier|*
@@ -4641,7 +4655,7 @@ parameter_list|,
 name|struct
 name|usb_endpoint
 modifier|*
-name|ep
+name|pipe
 parameter_list|)
 block|{
 name|struct
@@ -4856,7 +4870,6 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* reset all endpoints */
-comment|/**INDENT** Warning@1207: Extra ) */
 name|AVR32_WRITE_4
 argument_list|(
 name|sc
@@ -4871,15 +4884,8 @@ operator|)
 operator|-
 literal|1
 argument_list|)
-block|)
-function|;
-end_function
-
-begin_comment
+expr_stmt|;
 comment|/* disable all endpoints */
-end_comment
-
-begin_for
 for|for
 control|(
 name|n
@@ -4908,21 +4914,12 @@ name|AVR32_EPTCTL_EPT_ENABL
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_comment
 comment|/* turn off clocks */
-end_comment
-
-begin_expr_stmt
 name|avr32dci_clocks_off
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|USB_BUS_UNLOCK
 argument_list|(
 operator|&
@@ -4931,13 +4928,7 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* catch any lost interrupts */
-end_comment
-
-begin_expr_stmt
 name|avr32dci_do_poll
 argument_list|(
 operator|&
@@ -4946,29 +4937,24 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_return
 return|return
 operator|(
 literal|0
 operator|)
 return|;
-end_return
-
-begin_comment
 comment|/* success */
-end_comment
+block|}
+end_function
 
-begin_macro
-unit|}  void
+begin_function
+name|void
 name|avr32dci_uninit
-argument_list|(
-argument|struct avr32dci_softc *sc
-argument_list|)
-end_macro
-
-begin_block
+parameter_list|(
+name|struct
+name|avr32dci_softc
+modifier|*
+name|sc
+parameter_list|)
 block|{
 name|uint8_t
 name|n
@@ -5005,7 +4991,6 @@ literal|0xFFFFFFFF
 argument_list|)
 expr_stmt|;
 comment|/* reset all endpoints */
-comment|/**INDENT** Warning@1242: Extra ) */
 name|AVR32_WRITE_4
 argument_list|(
 name|sc
@@ -5020,18 +5005,8 @@ operator|)
 operator|-
 literal|1
 argument_list|)
-block|)
-end_block
-
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
-
-begin_comment
+expr_stmt|;
 comment|/* disable all endpoints */
-end_comment
-
-begin_for
 for|for
 control|(
 name|n
@@ -5060,9 +5035,6 @@ name|AVR32_EPTCTL_EPT_ENABL
 argument_list|)
 expr_stmt|;
 block|}
-end_for
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_flags
@@ -5071,9 +5043,6 @@ name|port_powered
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_flags
@@ -5082,9 +5051,6 @@ name|status_vbus
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_flags
@@ -5093,9 +5059,6 @@ name|status_bus_reset
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_flags
@@ -5104,9 +5067,6 @@ name|status_suspend
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_flags
@@ -5115,9 +5075,6 @@ name|change_suspend
 operator|=
 literal|0
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|sc
 operator|->
 name|sc_flags
@@ -5126,25 +5083,16 @@ name|change_connect
 operator|=
 literal|1
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|avr32dci_pull_down
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|avr32dci_clocks_off
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|USB_BUS_UNLOCK
 argument_list|(
 operator|&
@@ -5153,23 +5101,26 @@ operator|->
 name|sc_bus
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_macro
-unit|}  void
-name|avr32dci_suspend
-argument_list|(
-argument|struct avr32dci_softc *sc
-argument_list|)
-end_macro
-
-begin_block
-block|{
-return|return;
 block|}
-end_block
+end_function
 
 begin_function
+specifier|static
+name|void
+name|avr32dci_suspend
+parameter_list|(
+name|struct
+name|avr32dci_softc
+modifier|*
+name|sc
+parameter_list|)
+block|{
+comment|/* TODO */
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|avr32dci_resume
 parameter_list|(
@@ -5179,7 +5130,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return;
+comment|/* TODO */
 block|}
 end_function
 
@@ -5421,7 +5372,7 @@ name|xfer
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|,
@@ -5435,9 +5386,9 @@ name|ep_no
 operator|=
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
-name|UE_ADDR_MASK
+name|UE_ADDR
 expr_stmt|;
 name|nframes
 operator|=
@@ -5464,7 +5415,7 @@ name|nframes
 operator|-
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|)
@@ -5476,7 +5427,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|==
@@ -5495,7 +5446,7 @@ block|{
 comment|/* 		 * If there is data underflow or the pipe queue is 		 * empty we schedule the transfer a few frames ahead 		 * of the current frame position. Else two isochronous 		 * transfers might overlap. 		 */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|=
@@ -5509,7 +5460,7 @@ name|AVR32_FRAME_MASK
 expr_stmt|;
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|is_synced
 operator|=
@@ -5523,7 +5474,7 @@ literal|"start next=%d\n"
 argument_list|,
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 argument_list|)
@@ -5535,7 +5486,7 @@ operator|=
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|-
@@ -5568,7 +5519,7 @@ expr_stmt|;
 comment|/* compute frame number for next insertion */
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|isoc_next
 operator|+=
@@ -7061,7 +7012,7 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|,
-name|AVR32_EPTCFG_TYPE_CONTROL
+name|AVR32_EPTCFG_TYPE_CTRL
 operator||
 name|AVR32_EPTCFG_NBANK
 argument_list|(
@@ -7579,7 +7530,7 @@ condition|(
 operator|(
 name|xfer
 operator|->
-name|pipe
+name|endpoint
 operator|->
 name|edesc
 operator|->
@@ -7637,7 +7588,7 @@ name|ep_no
 operator|=
 name|xfer
 operator|->
-name|endpoint
+name|endpointno
 operator|&
 name|UE_ADDR
 expr_stmt|;
@@ -7868,7 +7819,7 @@ parameter_list|,
 name|struct
 name|usb_endpoint
 modifier|*
-name|ep
+name|pipe
 parameter_list|)
 block|{
 name|struct
@@ -7992,6 +7943,68 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|avr32dci_set_hw_power_sleep
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|,
+name|uint32_t
+name|state
+parameter_list|)
+block|{
+name|struct
+name|avr32dci_softc
+modifier|*
+name|sc
+init|=
+name|AVR32_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|USB_HW_POWER_SUSPEND
+case|:
+name|avr32dci_suspend
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_SHUTDOWN
+case|:
+name|avr32dci_uninit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_RESUME
+case|:
+name|avr32dci_resume
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|usb_bus_methods
@@ -8045,6 +8058,12 @@ name|xfer_poll
 operator|=
 operator|&
 name|avr32dci_do_poll
+block|,
+operator|.
+name|set_hw_power_sleep
+operator|=
+operator|&
+name|avr32dci_set_hw_power_sleep
 block|, }
 decl_stmt|;
 end_decl_stmt

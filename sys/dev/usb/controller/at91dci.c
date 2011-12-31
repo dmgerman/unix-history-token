@@ -5595,6 +5595,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|at91dci_suspend
 parameter_list|(
@@ -5604,11 +5605,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return;
+comment|/* TODO */
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|at91dci_resume
 parameter_list|(
@@ -5618,7 +5620,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return;
+comment|/* TODO */
 block|}
 end_function
 
@@ -8528,6 +8530,68 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|at91dci_set_hw_power_sleep
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|,
+name|uint32_t
+name|state
+parameter_list|)
+block|{
+name|struct
+name|at91dci_softc
+modifier|*
+name|sc
+init|=
+name|AT9100_DCI_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|USB_HW_POWER_SUSPEND
+case|:
+name|at91dci_suspend
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_SHUTDOWN
+case|:
+name|at91dci_uninit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_RESUME
+case|:
+name|at91dci_resume
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|usb_bus_methods
@@ -8581,6 +8645,12 @@ name|xfer_poll
 operator|=
 operator|&
 name|at91dci_do_poll
+block|,
+operator|.
+name|set_hw_power_sleep
+operator|=
+operator|&
+name|at91dci_set_hw_power_sleep
 block|, }
 decl_stmt|;
 end_decl_stmt
