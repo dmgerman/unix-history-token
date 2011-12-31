@@ -391,12 +391,38 @@ name|CPU_SPINWAIT
 value|__asm__ volatile("pause")
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TLS_MODEL
+end_define
+
+begin_comment
+comment|/* clang does not support tls_model yet */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|TLS_MODEL
 value|__attribute__((tls_model("initial-exec")))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -528,12 +554,38 @@ name|CPU_SPINWAIT
 value|__asm__ volatile("pause")
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__clang__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TLS_MODEL
+end_define
+
+begin_comment
+comment|/* clang does not support tls_model yet */
+end_comment
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|TLS_MODEL
 value|__attribute__((tls_model("initial-exec")))
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
