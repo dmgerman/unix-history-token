@@ -631,6 +631,8 @@ operator|->
 name|qh
 operator|->
 name|ep_num
+operator|&
+name|UE_ADDR
 argument_list|,
 name|octusb_convert_speed
 argument_list|(
