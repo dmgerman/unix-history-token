@@ -3676,7 +3676,7 @@ decl_stmt|;
 name|bool
 name|nvm_k1_enabled
 decl_stmt|;
-name|bool
+name|int
 name|eee_disable
 decl_stmt|;
 block|}
@@ -3693,7 +3693,7 @@ decl_stmt|;
 name|bool
 name|global_device_reset
 decl_stmt|;
-name|bool
+name|int
 name|eee_disable
 decl_stmt|;
 block|}
