@@ -1173,6 +1173,13 @@ argument_list|)
 block|,
 name|RUN_DEV
 argument_list|(
+name|LOGITECH
+argument_list|,
+name|LANW300NU2
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
 name|MELCO
 argument_list|,
 name|RT2870_1
@@ -1211,6 +1218,13 @@ argument_list|(
 name|MELCO
 argument_list|,
 name|WLIUCGN
+argument_list|)
+block|,
+name|RUN_DEV
+argument_list|(
+name|MELCO
+argument_list|,
+name|WLIUCGNM
 argument_list|)
 block|,
 name|RUN_DEV
