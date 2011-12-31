@@ -1218,9 +1218,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|usb_config
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -1642,9 +1644,11 @@ literal|0
 operator|)
 return|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 name|usb_config
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

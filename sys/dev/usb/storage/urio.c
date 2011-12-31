@@ -2035,10 +2035,12 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ur
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2084,10 +2086,12 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ur
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

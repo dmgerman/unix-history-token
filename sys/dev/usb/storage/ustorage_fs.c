@@ -1578,7 +1578,7 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* 	 * NOTE: the softc struct is bzero-ed in device_set_driver. 	 * We can safely call ustorage_fs_detach without specifically 	 * initializing the struct. 	 */
+comment|/* 	 * NOTE: the softc struct is cleared in device_set_driver. 	 * We can safely call ustorage_fs_detach without specifically 	 * initializing the struct. 	 */
 name|sc
 operator|->
 name|sc_dev

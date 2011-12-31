@@ -3799,9 +3799,11 @@ index|]
 operator|.
 name|hw_ep_scratch
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|ues
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4981,9 +4983,11 @@ index|]
 operator|.
 name|temp_setup
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|uts
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
