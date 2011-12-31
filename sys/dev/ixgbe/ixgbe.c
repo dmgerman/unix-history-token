@@ -997,7 +997,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|boolean_t
+name|bool
 name|ixgbe_tso_setup
 parameter_list|(
 name|struct
@@ -13763,7 +13763,7 @@ operator|>=
 literal|700000
 comment|/**********************************************************************  *  *  Setup work for hardware segmentation offload (TSO) on  *  adapters using advanced tx descriptors  *  **********************************************************************/
 specifier|static
-name|boolean_t
+name|bool
 name|ixgbe_tso_setup
 parameter_list|(
 name|struct
@@ -14201,7 +14201,7 @@ directive|else
 comment|/* For 6.2 RELEASE */
 comment|/* This makes it easy to keep the code common */
 specifier|static
-name|boolean_t
+name|bool
 name|ixgbe_tso_setup
 parameter_list|(
 name|struct
@@ -14229,7 +14229,7 @@ endif|#
 directive|endif
 comment|/**********************************************************************  *  *  Examine each tx_buffer in the used queue. If the hardware is done  *  processing the packet then free associated resources. The  *  tx_buffer is put back on the free queue.  *  **********************************************************************/
 specifier|static
-name|boolean_t
+name|bool
 name|ixgbe_txeof
 parameter_list|(
 name|struct
