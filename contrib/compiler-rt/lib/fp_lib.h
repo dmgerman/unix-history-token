@@ -105,6 +105,12 @@ directive|include
 file|<limits.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"int_lib.h"
+end_include
+
 begin_if
 if|#
 directive|if

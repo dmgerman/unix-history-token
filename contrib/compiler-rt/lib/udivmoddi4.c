@@ -6,12 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"abi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"int_lib.h"
 end_include
 
@@ -585,9 +579,8 @@ name|n
 operator|.
 name|all
 return|;
-name|unsigned
 name|sr
-init|=
+operator|=
 name|__builtin_ctz
 argument_list|(
 name|d
@@ -596,7 +589,7 @@ name|s
 operator|.
 name|low
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|q
 operator|.
 name|s
