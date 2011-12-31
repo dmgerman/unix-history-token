@@ -1632,11 +1632,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-name|AGE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_status
@@ -1652,6 +1647,11 @@ operator|=
 name|mii
 operator|->
 name|mii_media_active
+expr_stmt|;
+name|AGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
