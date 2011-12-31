@@ -4016,6 +4016,10 @@ name|rqp
 operator|->
 name|olen
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|rqp
 operator|->
 name|odata
