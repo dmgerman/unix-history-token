@@ -1248,7 +1248,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|bool
+name|int
 name|ixv_header_split
 init|=
 name|FALSE
@@ -10514,7 +10514,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|ixv_tx_ctx_setup
 parameter_list|(
 name|struct
@@ -11037,7 +11037,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|ixv_tso_setup
 parameter_list|(
 name|struct
@@ -11478,7 +11478,7 @@ end_comment
 
 begin_function
 specifier|static
-name|boolean_t
+name|bool
 name|ixv_txeof
 parameter_list|(
 name|struct
