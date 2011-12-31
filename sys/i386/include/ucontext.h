@@ -20,7 +20,7 @@ typedef|typedef
 struct|struct
 name|__mcontext
 block|{
-comment|/* 	 * The definition of mcontext_t shall match the layout of 	 * struct sigcontext after the sc_mask member.  So that we can 	 * support sigcontext and ucontext_t at the same time. 	 */
+comment|/* 	 * The definition of mcontext_t must match the layout of 	 * struct sigcontext after the sc_mask member.  This is so 	 * that we can support sigcontext and ucontext_t at the same 	 * time. 	 */
 name|__register_t
 name|mc_onstack
 decl_stmt|;
