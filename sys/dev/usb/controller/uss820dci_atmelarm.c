@@ -800,7 +800,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* during module unload there are lots of children leftover */
-name|device_delete_all_children
+name|device_delete_children
 argument_list|(
 name|dev
 argument_list|)
