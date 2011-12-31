@@ -7710,7 +7710,7 @@ literal|"The Page_Scan_Window can only be less than or equal to the Page_Scan_In
 expr|\
 literal|"\t<interval> - Range: 0x0012 -- 0x100, Time = N * 0.625 msec\n"
 expr|\
-literal|"\t<window>   - Range: 0x0012 -- 0x100, Time = N * 0.625 msen"
+literal|"\t<window>   - Range: 0x0012 -- 0x100, Time = N * 0.625 msec"
 block|,
 operator|&
 name|hci_write_page_scan_activity
@@ -7752,7 +7752,7 @@ literal|"The Inquiry_Scan_Window can only be less than or equal to the Inquiry_S
 expr|\
 literal|"\t<interval> - Range: 0x0012 -- 0x100, Time = N * 0.625 msec\n"
 expr|\
-literal|"\t<window>   - Range: 0x0012 -- 0x100, Time = N * 0.625 msen"
+literal|"\t<window>   - Range: 0x0012 -- 0x100, Time = N * 0.625 msec"
 block|,
 operator|&
 name|hci_write_inquiry_scan_activity
