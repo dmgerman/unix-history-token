@@ -509,6 +509,9 @@ literal|"\ Usage: %s [-dEiInv] [-s subject] [-c cc-addr] [-b bcc-addr] [-F] to-a
 argument_list|,
 name|__progname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|__progname
