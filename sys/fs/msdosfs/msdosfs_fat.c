@@ -1896,11 +1896,16 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"fatentry(): function code doesn't specify get or set\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -1921,11 +1926,16 @@ operator|==
 name|NULL
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"fatentry(): get function with no place to put result\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
@@ -4252,11 +4262,16 @@ name|ATTR_DIRECTORY
 operator|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"extendfile(): attempt to extend root directory\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|ENOSPC
