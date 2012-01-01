@@ -245,6 +245,32 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|int
+name|not_fcnumber
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|str_to_event
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Set history and editing status.  Called whenever the status may  * have changed (figures out what to do).  */
 end_comment
@@ -1763,6 +1789,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|not_fcnumber
 parameter_list|(
@@ -1806,6 +1833,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|str_to_event
 parameter_list|(
