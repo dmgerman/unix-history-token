@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -517,8 +523,11 @@ argument_list|(
 name|yplastbuf
 argument_list|)
 argument_list|,
-literal|"%lu"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time
 argument_list|(
 name|NULL
