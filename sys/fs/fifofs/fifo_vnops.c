@@ -959,6 +959,10 @@ return|;
 block|}
 name|fip
 operator|->
+name|fi_wgen
+operator|=
+name|fip
+operator|->
 name|fi_readers
 operator|=
 name|fip
