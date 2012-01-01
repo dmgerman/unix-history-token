@@ -293,7 +293,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"  %6ld (%p)  "
+literal|"  %6ld (%p) (stack %p)  "
 argument_list|,
 operator|(
 name|long
@@ -303,6 +303,14 @@ operator|->
 name|td_tid
 argument_list|,
 name|thr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|thr
+operator|->
+name|td_kstack
 argument_list|)
 expr_stmt|;
 name|prev_jb
