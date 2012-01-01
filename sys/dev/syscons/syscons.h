@@ -1091,7 +1091,14 @@ name|status
 decl_stmt|;
 comment|/* status (bitfield) */
 name|int
+name|grabbed
+decl_stmt|;
+name|int
 name|kbd_mode
+decl_stmt|;
+comment|/* keyboard I/O mode */
+name|int
+name|kbd_prev_mode
 decl_stmt|;
 comment|/* keyboard I/O mode */
 name|int
@@ -2250,27 +2257,6 @@ name|void
 name|sc_touch_scrn_saver
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|sc_puts
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|u_char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-name|int
-name|kernel
 parameter_list|)
 function_decl|;
 end_function_decl

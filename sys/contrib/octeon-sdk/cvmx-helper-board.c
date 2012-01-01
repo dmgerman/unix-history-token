@@ -3367,6 +3367,17 @@ name|CVMX_BOARD_TYPE_CUST_LANNER_MR321X
 case|:
 endif|#
 directive|endif
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OCTEON_BOARD_CAPK_0100ND
+argument_list|)
+case|case
+name|CVMX_BOARD_TYPE_CN3010_EVB_HS5
+case|:
+endif|#
+directive|endif
 return|return
 name|USB_CLOCK_TYPE_CRYSTAL_12
 return|;

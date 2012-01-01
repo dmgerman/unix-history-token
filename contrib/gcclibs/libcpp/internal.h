@@ -1247,6 +1247,10 @@ name|cpp_savedstate
 modifier|*
 name|savedstate
 decl_stmt|;
+name|unsigned
+name|int
+name|nextcounter
+decl_stmt|;
 block|}
 struct|;
 end_struct

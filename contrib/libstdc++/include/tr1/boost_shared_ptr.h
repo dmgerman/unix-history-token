@@ -3536,6 +3536,8 @@ return|return
 name|__shared_ptr
 operator|<
 name|element_type
+operator|,
+name|_Lp
 operator|>
 operator|(
 operator|)

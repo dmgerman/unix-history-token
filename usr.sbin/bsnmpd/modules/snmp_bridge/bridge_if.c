@@ -1462,7 +1462,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Update the info we have for a single bridge interface.  * Return:  * 1, if successful  * 0, if the interface was deleted  * -1, error occured while fetching the info from the kernel.  */
+comment|/*  * Update the info we have for a single bridge interface.  * Return:  * 1, if successful  * 0, if the interface was deleted  * -1, error occurred while fetching the info from the kernel.  */
 end_comment
 
 begin_function

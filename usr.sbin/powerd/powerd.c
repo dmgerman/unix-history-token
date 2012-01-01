@@ -203,6 +203,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

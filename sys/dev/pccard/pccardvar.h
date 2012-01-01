@@ -296,23 +296,30 @@ begin_comment
 comment|/*  * make this inline so that we don't have to worry about dangling references  * to it in the modules or the code.  */
 end_comment
 
-begin_expr_stmt
+begin_function
 specifier|static
-name|__inline
+specifier|inline
 specifier|const
-expr|struct
+name|struct
 name|pccard_product
-operator|*
+modifier|*
 name|pccard_product_lookup
-argument_list|(
-argument|device_t dev
-argument_list|,
-argument|const struct pccard_product *tab
-argument_list|,
-argument|size_t ent_size
-argument_list|,
-argument|pccard_product_match_fn matchfn
-argument_list|)
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|struct
+name|pccard_product
+modifier|*
+name|tab
+parameter_list|,
+name|size_t
+name|ent_size
+parameter_list|,
+name|pccard_product_match_fn
+name|matchfn
+parameter_list|)
 block|{
 return|return
 name|CARD_DO_PRODUCT_LOOKUP
@@ -332,7 +339,7 @@ name|matchfn
 argument_list|)
 return|;
 block|}
-end_expr_stmt
+end_function
 
 begin_define
 define|#
@@ -447,7 +454,7 @@ end_comment
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|pccard_cis_scan
 parameter_list|(
@@ -484,7 +491,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|pccard_attr_read_1
 parameter_list|(
@@ -521,7 +528,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|pccard_attr_write_1
 parameter_list|(
@@ -557,7 +564,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|pccard_ccr_read_1
 parameter_list|(
@@ -594,7 +601,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|pccard_ccr_write_1
 parameter_list|(
@@ -692,7 +699,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|__inline static int							\ pccard_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev,		\ 	    PCCARD_IVAR_ ## B, (uintptr_t *) t);			\ }
+value|static inline int							\ pccard_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev,		\ 	    PCCARD_IVAR_ ## B, (uintptr_t *) t);			\ }
 end_define
 
 begin_macro

@@ -79,6 +79,17 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|stop_scheduler
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* only one thread runs after panic */
+end_comment
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -337,31 +348,7 @@ name|CTASSERT
 parameter_list|(
 name|x
 parameter_list|)
-value|_CTASSERT(x, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|__CTASSERT(x, y)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|typedef char __assert ## y[(x) ? 1 : -1]
+value|_Static_assert(x, "compile-time assertion failed")
 end_define
 
 begin_endif
@@ -384,6 +371,18 @@ name|msg
 parameter_list|)
 define|\
 value|KASSERT(sizeof(var) == sizeof(void *)&&			\ 	    ((uintptr_t)&(var)& (sizeof(void *) - 1)) == 0, msg)
+end_define
+
+begin_comment
+comment|/*  * If we have already panic'd and this is the thread that called  * panic(), then don't block on any mutexes but silently succeed.  * Otherwise, the kernel will deadlock since the scheduler isn't  * going to run the thread that holds any lock we need.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHEDULER_STOPPED
+parameter_list|()
+value|__predict_false(stop_scheduler)
 end_define
 
 begin_comment

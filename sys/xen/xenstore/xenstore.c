@@ -1246,7 +1246,7 @@ name|PDROP
 argument_list|,
 literal|"xbread"
 argument_list|,
-comment|/*timout*/
+comment|/*timeout*/
 literal|0
 argument_list|)
 expr_stmt|;

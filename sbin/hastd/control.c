@@ -1455,10 +1455,6 @@ argument_list|(
 literal|"Control header is missing 'cmd' field."
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|EHAST_INVALID
-expr_stmt|;
 goto|goto
 name|close
 goto|;
@@ -1480,10 +1476,6 @@ name|pjdlog_error
 argument_list|(
 literal|"Unable to allocate header for control response."
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EHAST_NOMEMORY
 expr_stmt|;
 goto|goto
 name|close

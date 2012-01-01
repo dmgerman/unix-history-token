@@ -310,7 +310,6 @@ comment|/* clock state */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|time_status
 init|=
@@ -384,7 +383,6 @@ comment|/* maximum error (us) */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|long
 name|time_esterror
 init|=
@@ -1134,7 +1132,7 @@ name|pps_shiftmax
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max interval duration (sec) (shift)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1155,7 +1153,7 @@ name|pps_shift
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Interval duration (sec) (shift)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1176,7 +1174,7 @@ name|time_monitor
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Last time offset scaled (ns)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1202,7 +1200,7 @@ argument_list|)
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Scaled frequency offset (ns/sec)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1228,7 +1226,7 @@ argument_list|)
 argument_list|,
 literal|"I"
 argument_list|,
-literal|""
+literal|"Frequency offset (ns/sec)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

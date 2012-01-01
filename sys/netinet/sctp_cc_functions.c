@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -3062,9 +3062,6 @@ name|nbw
 parameter_list|,
 name|uint64_t
 name|vtag
-parameter_list|,
-name|uint8_t
-name|inst_ind
 parameter_list|)
 block|{
 name|uint64_t
@@ -3342,12 +3339,13 @@ name|uint64_t
 name|bw_offset
 decl_stmt|,
 name|rtt_offset
+decl_stmt|;
+name|uint64_t
+name|probepoint
 decl_stmt|,
 name|rtt
 decl_stmt|,
 name|vtag
-decl_stmt|,
-name|probepoint
 decl_stmt|;
 name|uint64_t
 name|bytes_for_this_rtt
@@ -3568,6 +3566,16 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|inst_ind
+operator|=
+name|net
+operator|->
+name|cc_mod
+operator|.
+name|rtcc
+operator|.
+name|last_inst_ind
+expr_stmt|;
 name|inst_bw
 operator|=
 name|bytes_for_this_rtt
@@ -3582,16 +3590,6 @@ name|rtt
 argument_list|)
 expr_stmt|;
 comment|/* Can't determine do not change */
-name|inst_ind
-operator|=
-name|net
-operator|->
-name|cc_mod
-operator|.
-name|rtcc
-operator|.
-name|last_inst_ind
-expr_stmt|;
 name|probepoint
 operator||=
 operator|(
@@ -3608,11 +3606,6 @@ block|}
 block|}
 else|else
 block|{
-name|inst_bw
-operator|=
-name|bytes_for_this_rtt
-expr_stmt|;
-comment|/* Can't determine do not change */
 name|inst_ind
 operator|=
 name|net
@@ -3623,6 +3616,11 @@ name|rtcc
 operator|.
 name|last_inst_ind
 expr_stmt|;
+name|inst_bw
+operator|=
+name|bytes_for_this_rtt
+expr_stmt|;
+comment|/* Can't determine do not change */
 name|probepoint
 operator||=
 operator|(
@@ -3734,8 +3732,6 @@ argument_list|,
 name|nbw
 argument_list|,
 name|vtag
-argument_list|,
-name|inst_ind
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -3851,6 +3847,7 @@ name|accum_moved
 parameter_list|,
 name|int
 name|reneged_all
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|will_exit
@@ -4079,18 +4076,6 @@ block|}
 block|}
 if|if
 condition|(
-name|t_ucwnd_sbw
-operator|==
-literal|0
-condition|)
-block|{
-name|t_ucwnd_sbw
-operator|=
-literal|1
-expr_stmt|;
-block|}
-if|if
-condition|(
 name|t_path_mptcp
 operator|>
 literal|0
@@ -4114,6 +4099,30 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+block|}
+if|if
+condition|(
+name|t_ssthresh
+operator|==
+literal|0
+condition|)
+block|{
+name|t_ssthresh
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|t_ucwnd_sbw
+operator|==
+literal|0
+condition|)
+block|{
+name|t_ucwnd_sbw
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/******************************/
 comment|/* update cwnd and Early FR   */
@@ -5593,6 +5602,18 @@ block|}
 block|}
 if|if
 condition|(
+name|t_ssthresh
+operator|<
+literal|1
+condition|)
+block|{
+name|t_ssthresh
+operator|=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|t_ucwnd_sbw
 operator|<
 literal|1
@@ -7013,6 +7034,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
@@ -8133,6 +8155,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
@@ -8232,6 +8255,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
@@ -8242,6 +8266,7 @@ name|struct
 name|timeval
 modifier|*
 name|now
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|net
@@ -9679,6 +9704,7 @@ name|accum_moved
 parameter_list|,
 name|int
 name|reneged_all
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|will_exit
@@ -10078,6 +10104,7 @@ name|seq3
 parameter_list|)
 block|{
 return|return
+operator|(
 name|seq3
 operator|-
 name|seq2
@@ -10085,6 +10112,7 @@ operator|>=
 name|seq1
 operator|-
 name|seq2
+operator|)
 return|;
 block|}
 end_function
@@ -10102,12 +10130,14 @@ name|ca
 parameter_list|)
 block|{
 return|return
+operator|(
 name|sctp_get_tick_count
 argument_list|()
 operator|-
 name|ca
 operator|->
 name|last_cong
+operator|)
 return|;
 block|}
 end_function
@@ -10125,6 +10155,7 @@ name|ca
 parameter_list|)
 block|{
 return|return
+operator|(
 name|htcp_cong_time
 argument_list|(
 name|ca
@@ -10133,6 +10164,7 @@ operator|/
 name|ca
 operator|->
 name|minRTT
+operator|)
 return|;
 block|}
 end_function
@@ -10254,6 +10286,7 @@ operator|.
 name|undo_old_maxB
 expr_stmt|;
 return|return
+operator|(
 name|max
 argument_list|(
 name|net
@@ -10286,6 +10319,7 @@ name|net
 operator|->
 name|mtu
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -10301,11 +10335,6 @@ specifier|inline
 name|void
 name|measure_rtt
 parameter_list|(
-name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
@@ -10461,11 +10490,6 @@ specifier|static
 name|void
 name|measure_achieved_throughput
 parameter_list|(
-name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
@@ -11144,11 +11168,6 @@ name|void
 name|htcp_param_update
 parameter_list|(
 name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
-name|struct
 name|sctp_nets
 modifier|*
 name|net
@@ -11242,11 +11261,6 @@ name|uint32_t
 name|htcp_recalc_ssthresh
 parameter_list|(
 name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
-name|struct
 name|sctp_nets
 modifier|*
 name|net
@@ -11254,12 +11268,11 @@ parameter_list|)
 block|{
 name|htcp_param_update
 argument_list|(
-name|stcb
-argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|max
 argument_list|(
 operator|(
@@ -11294,6 +11307,7 @@ name|net
 operator|->
 name|mtu
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -11468,8 +11482,6 @@ else|else
 block|{
 name|measure_rtt
 argument_list|(
-name|stcb
-argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
@@ -11636,9 +11648,11 @@ name|net
 parameter_list|)
 block|{
 return|return
+operator|(
 name|net
 operator|->
 name|ssthresh
+operator|)
 return|;
 block|}
 end_function
@@ -11653,11 +11667,6 @@ specifier|static
 name|void
 name|htcp_init
 parameter_list|(
-name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
@@ -11785,8 +11794,6 @@ name|peers_rwnd
 expr_stmt|;
 name|htcp_init
 argument_list|(
-name|stcb
-argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
@@ -11839,6 +11846,7 @@ name|accum_moved
 parameter_list|,
 name|int
 name|reneged_all
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|will_exit
@@ -12003,8 +12011,6 @@ argument_list|)
 expr_stmt|;
 name|measure_achieved_throughput
 argument_list|(
-name|stcb
-argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
@@ -12130,8 +12136,6 @@ name|ssthresh
 operator|=
 name|htcp_recalc_ssthresh
 argument_list|(
-name|stcb
-argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
@@ -12366,8 +12370,6 @@ name|ssthresh
 operator|=
 name|htcp_recalc_ssthresh
 argument_list|(
-name|stcb
-argument_list|,
 name|net
 argument_list|)
 expr_stmt|;
@@ -12434,6 +12436,7 @@ name|in_window
 parameter_list|,
 name|int
 name|num_pkt_lost
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|int
@@ -12474,8 +12477,6 @@ name|ssthresh
 operator|=
 name|htcp_recalc_ssthresh
 argument_list|(
-name|stcb
-argument_list|,
 name|net
 argument_list|)
 expr_stmt|;

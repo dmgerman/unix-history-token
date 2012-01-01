@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Luigi Rizzo. All rights reserved.  *  * Redistr
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_re_netmap.h 9662 2011-11-16 13:18:06Z luigi $  *  * netmap support for if_re  */
+comment|/*  * $FreeBSD$  * $Id: if_re_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap support for if_re  */
 end_comment
 
 begin_include
@@ -189,7 +189,7 @@ name|na
 operator|.
 name|buff_size
 operator|=
-name|MCLBYTES
+name|NETMAP_BUF_SIZE
 expr_stmt|;
 name|netmap_attach
 argument_list|(
@@ -320,8 +320,9 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
-operator|!
 name|na
+operator|==
+name|NULL
 condition|)
 return|return
 name|EINVAL
@@ -354,7 +355,7 @@ name|if_capenable
 operator||=
 name|IFCAP_NETMAP
 expr_stmt|;
-comment|/* save if_transmit and restore it */
+comment|/* save if_transmit to restore it later */
 name|na
 operator|->
 name|if_transmit
@@ -363,7 +364,6 @@ name|ifp
 operator|->
 name|if_transmit
 expr_stmt|;
-comment|/* XXX if_start and if_qflush ??? */
 name|ifp
 operator|->
 name|if_transmit
@@ -437,7 +437,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  *  * Userspace has filled tx slots up to cur (excluded).  * The last unused slot previously known to the kernel was nr_hwcur,  * and the last interrupt reported nr_hwavail slots available  * (using the special value -1 to indicate idle transmit ring).  * The function must first update avail to what the kernel  * knows (translating the -1 to nkr_num_slots - 1),  * subtract the newly used slots (cur - nr_hwcur)  * from both avail and nr_hwavail, and set nr_hwcur = cur  * issuing a dmamap_sync on all slots.  */
+comment|/*  * Reconcile kernel and user view of the transmit ring.  */
 end_comment
 
 begin_function
@@ -513,6 +513,8 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
+name|l
+decl_stmt|,
 name|n
 decl_stmt|,
 name|lim
@@ -531,14 +533,6 @@ name|cur
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|kring
-operator|->
-name|nr_kflags
-operator|&
-name|NR_REINIT
-operator|)
-operator|||
 name|k
 operator|>
 name|lim
@@ -578,6 +572,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+comment|/* XXX move after the transmissions */
 comment|/* record completed transmissions */
 for|for
 control|(
@@ -585,7 +580,7 @@ name|n
 operator|=
 literal|0
 operator|,
-name|j
+name|l
 operator|=
 name|sc
 operator|->
@@ -593,7 +588,7 @@ name|rl_ldata
 operator|.
 name|rl_tx_considx
 init|;
-name|j
+name|l
 operator|!=
 name|sc
 operator|->
@@ -604,13 +599,13 @@ condition|;
 name|n
 operator|++
 operator|,
-name|j
+name|l
 operator|=
 name|RL_TX_DESC_NXT
 argument_list|(
 name|sc
 argument_list|,
-name|j
+name|l
 argument_list|)
 control|)
 block|{
@@ -625,7 +620,7 @@ name|rl_ldata
 operator|.
 name|rl_tx_list
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|rl_cmdstat
@@ -652,7 +647,7 @@ name|rl_ldata
 operator|.
 name|rl_tx_considx
 operator|=
-name|j
+name|l
 expr_stmt|;
 name|sc
 operator|->
@@ -678,18 +673,11 @@ name|kring
 operator|->
 name|nr_hwavail
 expr_stmt|;
-comment|/* we trust prodidx, not hwcur */
 name|j
 operator|=
 name|kring
 operator|->
 name|nr_hwcur
-operator|=
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_tx_prodidx
 expr_stmt|;
 if|if
 condition|(
@@ -702,6 +690,14 @@ comment|/* we have new packets to send */
 name|n
 operator|=
 literal|0
+expr_stmt|;
+name|l
+operator|=
+name|sc
+operator|->
+name|rl_ldata
+operator|.
+name|rl_tx_prodidx
 expr_stmt|;
 while|while
 condition|(
@@ -735,7 +731,7 @@ name|rl_ldata
 operator|.
 name|rl_tx_list
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|int
@@ -787,6 +783,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|// XXX what about prodidx ?
 return|return
 name|netmap_ring_reinit
 argument_list|(
@@ -796,7 +793,7 @@ return|;
 block|}
 if|if
 condition|(
-name|j
+name|l
 operator|==
 name|lim
 condition|)
@@ -857,7 +854,7 @@ name|rl_tx_mtag
 argument_list|,
 name|txd
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|tx_dmamap
@@ -903,7 +900,7 @@ name|rl_tx_mtag
 argument_list|,
 name|txd
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|tx_dmamap
@@ -925,6 +922,20 @@ name|j
 operator|+
 literal|1
 expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
+expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
@@ -935,13 +946,13 @@ name|rl_ldata
 operator|.
 name|rl_tx_prodidx
 operator|=
+name|l
+expr_stmt|;
 name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 expr_stmt|;
 comment|/* decrease avail by number of sent packets */
 name|ring
@@ -1006,7 +1017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the receive ring.  *  * Userspace has read rx slots up to cur (excluded).  * The last unread slot previously known to the kernel was nr_hwcur,  * and the last interrupt reported nr_hwavail slots available.  * We must subtract the newly consumed slots (cur - nr_hwcur)  * from nr_hwavail, clearing the descriptors for the next  * read, tell the hardware that they are available,  * and set nr_hwcur = cur and avail = nr_hwavail.  * issuing a dmamap_sync on all slots.  */
+comment|/*  * Reconcile kernel and user view of the receive ring.  */
 end_comment
 
 begin_function
@@ -1082,6 +1093,8 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
+name|l
+decl_stmt|,
 name|n
 decl_stmt|,
 name|lim
@@ -1100,14 +1113,6 @@ name|cur
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|kring
-operator|->
-name|nr_kflags
-operator|&
-name|NR_REINIT
-operator|)
-operator|||
 name|k
 operator|>
 name|lim
@@ -1148,13 +1153,22 @@ name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * The device uses all the buffers in the ring, so we need 	 * another termination condition in addition to RL_RDESC_STAT_OWN 	 * cleared (all buffers could have it cleared. The easiest one 	 * is to limit the amount of data reported up to 'lim' 	 */
-name|j
+name|l
 operator|=
 name|sc
 operator|->
 name|rl_ldata
 operator|.
 name|rl_rx_prodidx
+expr_stmt|;
+comment|/* next pkt to check */
+name|j
+operator|=
+name|l
+operator|+
+name|kring
+operator|->
+name|nkr_hwofs
 expr_stmt|;
 for|for
 control|(
@@ -1184,7 +1198,7 @@ name|rl_ldata
 operator|.
 name|rl_rx_list
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|uint32_t
@@ -1258,7 +1272,7 @@ name|rl_rx_mtag
 argument_list|,
 name|rxd
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|rx_dmamap
@@ -1268,12 +1282,31 @@ argument_list|)
 expr_stmt|;
 name|j
 operator|=
-name|RL_RX_DESC_NXT
-argument_list|(
-name|sc
-argument_list|,
+operator|(
 name|j
-argument_list|)
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|j
+operator|+
+literal|1
+expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
 expr_stmt|;
 block|}
 if|if
@@ -1291,7 +1324,7 @@ name|rl_ldata
 operator|.
 name|rl_rx_prodidx
 operator|=
-name|j
+name|l
 expr_stmt|;
 name|sc
 operator|->
@@ -1331,6 +1364,28 @@ name|n
 operator|=
 literal|0
 expr_stmt|;
+name|l
+operator|=
+name|kring
+operator|->
+name|nr_hwcur
+operator|-
+name|kring
+operator|->
+name|nkr_hwofs
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
+literal|0
+condition|)
+name|l
+operator|+=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
 while|while
 condition|(
 name|j
@@ -1361,7 +1416,7 @@ name|rl_ldata
 operator|.
 name|rl_rx_list
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|int
@@ -1408,7 +1463,7 @@ return|;
 block|}
 if|if
 condition|(
-name|j
+name|l
 operator|==
 name|lim
 condition|)
@@ -1484,7 +1539,7 @@ name|rl_rx_mtag
 argument_list|,
 name|rxd
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|rx_dmamap
@@ -1514,7 +1569,7 @@ name|rl_rx_mtag
 argument_list|,
 name|rxd
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|rx_dmamap
@@ -1533,6 +1588,20 @@ condition|?
 literal|0
 else|:
 name|j
+operator|+
+literal|1
+expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
 operator|+
 literal|1
 expr_stmt|;
@@ -1597,6 +1666,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Additional routines to init the tx and rx rings.  * In other drivers we do that inline in the main code.  */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -1620,6 +1693,8 @@ name|desc
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|n
 decl_stmt|;
 name|struct
 name|netmap_adapter
@@ -1673,6 +1748,15 @@ name|rl_ldata
 operator|.
 name|rl_tx_list
 expr_stmt|;
+name|n
+operator|=
+name|sc
+operator|->
+name|rl_ldata
+operator|.
+name|rl_tx_desc_cnt
+expr_stmt|;
+comment|/* l points in the netmap ring, i points in the NIC ring */
 for|for
 control|(
 name|i
@@ -1681,11 +1765,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_tx_desc_cnt
+name|n
 condition|;
 name|i
 operator|++
@@ -1694,22 +1774,58 @@ block|{
 name|void
 modifier|*
 name|addr
+decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
 init|=
+operator|&
+name|na
+operator|->
+name|tx_rings
+index|[
+literal|0
+index|]
+decl_stmt|;
+name|int
+name|l
+init|=
+name|i
+operator|+
+name|kring
+operator|->
+name|nkr_hwofs
+decl_stmt|;
+if|if
+condition|(
+name|l
+operator|>=
+name|n
+condition|)
+name|l
+operator|-=
+name|n
+expr_stmt|;
+name|addr
+operator|=
 name|NMB
 argument_list|(
 name|slot
 operator|+
-name|i
+name|l
 argument_list|)
-decl_stmt|;
-name|uint64_t
+expr_stmt|;
 name|paddr
-init|=
+operator|=
 name|vtophys
 argument_list|(
 name|addr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|desc
 index|[
 name|i
@@ -1777,7 +1893,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* slot is NULL if we are not in netmap mode */
 name|struct
 name|netmap_adapter
 modifier|*
@@ -1822,6 +1937,8 @@ name|cmdstat
 decl_stmt|;
 name|int
 name|i
+decl_stmt|,
+name|n
 decl_stmt|;
 if|if
 condition|(
@@ -1829,6 +1946,14 @@ operator|!
 name|slot
 condition|)
 return|return;
+name|n
+operator|=
+name|sc
+operator|->
+name|rl_ldata
+operator|.
+name|rl_rx_desc_cnt
+expr_stmt|;
 for|for
 control|(
 name|i
@@ -1837,11 +1962,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_rx_desc_cnt
+name|n
 condition|;
 name|i
 operator|++
@@ -1850,22 +1971,58 @@ block|{
 name|void
 modifier|*
 name|addr
+decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
+name|struct
+name|netmap_kring
+modifier|*
+name|kring
 init|=
+operator|&
+name|na
+operator|->
+name|rx_rings
+index|[
+literal|0
+index|]
+decl_stmt|;
+name|int
+name|l
+init|=
+name|i
+operator|+
+name|kring
+operator|->
+name|nkr_hwofs
+decl_stmt|;
+if|if
+condition|(
+name|l
+operator|>=
+name|n
+condition|)
+name|l
+operator|-=
+name|n
+expr_stmt|;
+name|addr
+operator|=
 name|NMB
 argument_list|(
 name|slot
 operator|+
-name|i
+name|l
 argument_list|)
-decl_stmt|;
-name|uint64_t
+expr_stmt|;
 name|paddr
-init|=
+operator|=
 name|vtophys
 argument_list|(
 name|addr
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|desc
 index|[
 name|i
@@ -1898,33 +2055,39 @@ argument_list|)
 expr_stmt|;
 name|cmdstat
 operator|=
-name|slot
-index|[
-name|i
-index|]
-operator|.
-name|len
-operator|=
 name|na
 operator|->
 name|buff_size
 expr_stmt|;
-comment|// XXX
 if|if
 condition|(
 name|i
 operator|==
-name|sc
-operator|->
-name|rl_ldata
-operator|.
-name|rl_rx_desc_cnt
+name|n
 operator|-
 literal|1
 condition|)
 name|cmdstat
 operator||=
 name|RL_RDESC_CMD_EOR
+expr_stmt|;
+comment|/* 		 * userspace knows that hwavail packets were ready before the 		 * reset, so we need to tell the NIC that last hwavail 		 * descriptors of the ring are still owned by the driver. 		 */
+if|if
+condition|(
+name|i
+operator|<
+name|n
+operator|-
+literal|1
+operator|-
+name|kring
+operator|->
+name|nr_hwavail
+condition|)
+comment|// XXX + 1 ?
+name|cmdstat
+operator||=
+name|RL_RDESC_CMD_OWN
 expr_stmt|;
 name|desc
 index|[
@@ -1936,8 +2099,6 @@ operator|=
 name|htole32
 argument_list|(
 name|cmdstat
-operator||
-name|RL_RDESC_CMD_OWN
 argument_list|)
 expr_stmt|;
 name|netmap_reload_map

@@ -1754,7 +1754,7 @@ argument_list|)
 operator|->
 name|ah_analog5GhzRev
 operator|=
-name|ar5212GetRadioRev
+name|ar5416GetRadioRev
 argument_list|(
 name|ah
 argument_list|)
@@ -4842,7 +4842,7 @@ name|pCap
 operator|->
 name|halNumGpioPins
 operator|=
-literal|6
+literal|14
 expr_stmt|;
 name|pCap
 operator|->

@@ -1213,7 +1213,7 @@ block|{
 comment|/* truncated option */
 name|printf
 argument_list|(
-literal|" |(%d>%d)"
+literal|" |(%d>%td)"
 argument_list|,
 name|len
 argument_list|,

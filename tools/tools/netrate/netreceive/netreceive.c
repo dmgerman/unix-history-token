@@ -554,7 +554,7 @@ operator|=
 literal|0
 init|;
 name|i
-operator|>
+operator|<
 name|nsock
 condition|;
 name|i

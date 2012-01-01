@@ -2158,7 +2158,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Take a list of priviledges and get it edited.  */
+comment|/*  * Take a list of privileges and get it edited.  */
 end_comment
 
 begin_function

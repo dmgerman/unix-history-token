@@ -443,7 +443,7 @@ name|char
 modifier|*
 name|v_abrev
 decl_stmt|;
-comment|/* possible abreviation */
+comment|/* possible abbreviation */
 name|char
 modifier|*
 name|v_value
@@ -795,7 +795,7 @@ value|do { (v) = (char *)(n); } while (0)
 end_define
 
 begin_comment
-comment|/*  * Escape command table definitions --  *   lookup in this table is performed when ``escapec'' is recognized  *   at the begining of a line (as defined by the eolmarks variable). */
+comment|/*  * Escape command table definitions --  *   lookup in this table is performed when ``escapec'' is recognized  *   at the beginning of a line (as defined by the eolmarks variable). */
 end_comment
 
 begin_typedef

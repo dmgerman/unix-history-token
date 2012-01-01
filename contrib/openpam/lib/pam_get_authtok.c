@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2007 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_get_authtok.c 408 2007-12-21 11:36:24Z des $  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_get_authtok.c 455 2011-10-29 18:31:11Z des $  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -99,6 +116,15 @@ modifier|*
 name|prompt
 parameter_list|)
 block|{
+name|char
+name|prompt_buf
+index|[
+literal|1024
+index|]
+decl_stmt|;
+name|size_t
+name|prompt_size
+decl_stmt|;
 specifier|const
 name|void
 modifier|*
@@ -112,6 +138,9 @@ name|promptp
 decl_stmt|;
 specifier|const
 name|char
+modifier|*
+name|prompt_option
+decl_stmt|,
 modifier|*
 name|default_prompt
 decl_stmt|;
@@ -170,6 +199,10 @@ name|pitem
 operator|=
 name|PAM_AUTHTOK_PROMPT
 expr_stmt|;
+name|prompt_option
+operator|=
+literal|"authtok_prompt"
+expr_stmt|;
 name|default_prompt
 operator|=
 name|authtok_prompt
@@ -213,6 +246,10 @@ case|:
 name|pitem
 operator|=
 name|PAM_OLDAUTHTOK_PROMPT
+expr_stmt|;
+name|prompt_option
+operator|=
+literal|"oldauthtok_prompt"
 expr_stmt|;
 name|default_prompt
 operator|=
@@ -303,15 +340,35 @@ name|r
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* pam policy overrides the module's choice */
+if|if
+condition|(
+operator|(
+name|promptp
+operator|=
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+name|prompt_option
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
+name|prompt
+operator|=
+name|promptp
+expr_stmt|;
+comment|/* no prompt provided, see if there is one tucked away somewhere */
 if|if
 condition|(
 name|prompt
 operator|==
 name|NULL
 condition|)
-block|{
-name|r
-operator|=
+if|if
+condition|(
 name|pam_get_item
 argument_list|(
 name|pamh
@@ -321,14 +378,19 @@ argument_list|,
 operator|&
 name|promptp
 argument_list|)
+operator|&&
+name|promptp
+operator|!=
+name|NULL
+condition|)
+name|prompt
+operator|=
+name|promptp
 expr_stmt|;
+comment|/* fall back to hardcoded default */
 if|if
 condition|(
-name|r
-operator|!=
-name|PAM_SUCCESS
-operator|||
-name|promptp
+name|prompt
 operator|==
 name|NULL
 condition|)
@@ -336,12 +398,41 @@ name|prompt
 operator|=
 name|default_prompt
 expr_stmt|;
-else|else
+comment|/* expand */
+name|prompt_size
+operator|=
+sizeof|sizeof
+name|prompt_buf
+expr_stmt|;
+name|r
+operator|=
+name|openpam_subst
+argument_list|(
+name|pamh
+argument_list|,
+name|prompt_buf
+argument_list|,
+operator|&
+name|prompt_size
+argument_list|,
+name|prompt
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|r
+operator|==
+name|PAM_SUCCESS
+operator|&&
+name|prompt_size
+operator|<=
+sizeof|sizeof
+name|prompt_buf
+condition|)
 name|prompt
 operator|=
-name|promptp
+name|prompt_buf
 expr_stmt|;
-block|}
 name|style
 operator|=
 name|openpam_get_option
@@ -511,7 +602,7 @@ comment|/*  * Error codes:  *  *	=pam_get_item  *	=pam_prompt  *	=pam_set_item  
 end_comment
 
 begin_comment
-comment|/**  * The =pam_get_authtok function returns the cached authentication token,  * or prompts the user if no token is currently cached.  * Either way, a pointer to the authentication token is stored in the  * location pointed to by the =authtok argument.  *  * The =item argument must have one of the following values:  *  *	=PAM_AUTHTOK:  *		Returns the current authentication token, or the new token  *		when changing authentication tokens.  *	=PAM_OLDAUTHTOK:  *		Returns the previous authentication token when changing  *		authentication tokens.  *  * The =prompt argument specifies a prompt to use if no token is cached.  * If it is =NULL, the =PAM_AUTHTOK_PROMPT or =PAM_OLDAUTHTOK_PROMPT item,  * as appropriate, will be used.  * If that item is also =NULL, a hardcoded default prompt will be used.  *  * If =item is set to =PAM_AUTHTOK and there is a non-null =PAM_OLDAUTHTOK  * item, =pam_get_authtok will ask the user to confirm the new token by  * retyping it.  * If there is a mismatch, =pam_get_authtok will return =PAM_TRY_AGAIN.  *  *>pam_get_item  *>pam_get_user  */
+comment|/**  * The =pam_get_authtok function returns the cached authentication token,  * or prompts the user if no token is currently cached.  * Either way, a pointer to the authentication token is stored in the  * location pointed to by the =authtok argument.  *  * The =item argument must have one of the following values:  *  *	=PAM_AUTHTOK:  *		Returns the current authentication token, or the new token  *		when changing authentication tokens.  *	=PAM_OLDAUTHTOK:  *		Returns the previous authentication token when changing  *		authentication tokens.  *  * The =prompt argument specifies a prompt to use if no token is cached.  * If it is =NULL, the =PAM_AUTHTOK_PROMPT or =PAM_OLDAUTHTOK_PROMPT item,  * as appropriate, will be used.  * If that item is also =NULL, a hardcoded default prompt will be used.  * Either way, the prompt is expanded using =openpam_subst before it is  * passed to the conversation function.  *  * If =pam_get_authtok is called from a module and the ;authtok_prompt /  * ;oldauthtok_prompt option is set in the policy file, the value of that  * option takes precedence over both the =prompt argument and the  * =PAM_AUTHTOK_PROMPT / =PAM_OLDAUTHTOK_PROMPT item.  *  * If =item is set to =PAM_AUTHTOK and there is a non-null =PAM_OLDAUTHTOK  * item, =pam_get_authtok will ask the user to confirm the new token by  * retyping it.  * If there is a mismatch, =pam_get_authtok will return =PAM_TRY_AGAIN.  *  *>pam_get_item  *>pam_get_user  *>openpam_subst  */
 end_comment
 
 end_unit

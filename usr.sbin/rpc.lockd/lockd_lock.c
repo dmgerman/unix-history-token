@@ -173,7 +173,7 @@ value|1024
 end_define
 
 begin_comment
-comment|/*  * A set of utilities for managing file locking  *  * XXX: All locks are in a linked list, a better structure should be used  * to improve search/access effeciency.  */
+comment|/*  * A set of utilities for managing file locking  *  * XXX: All locks are in a linked list, a better structure should be used  * to improve search/access efficiency.  */
 end_comment
 
 begin_comment
@@ -318,7 +318,7 @@ value|3
 end_define
 
 begin_comment
-comment|/* child is trying to aquire the lock */
+comment|/* child is trying to acquire the lock */
 end_comment
 
 begin_define
@@ -7525,7 +7525,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * getlock: try to aquire the lock.  * If file is already locked and we can sleep, put the lock in the list with  * status LKST_WAITING; it'll be processed later.  * Otherwise try to lock. If we're allowed to block, fork a child which  * will do the blocking lock.  */
+comment|/*  * getlock: try to acquire the lock.  * If file is already locked and we can sleep, put the lock in the list with  * status LKST_WAITING; it'll be processed later.  * Otherwise try to lock. If we're allowed to block, fork a child which  * will do the blocking lock.  */
 end_comment
 
 begin_function
@@ -7672,7 +7672,7 @@ condition|)
 block|{
 name|debuglog
 argument_list|(
-literal|"recieved fhandle size %d, local size %d"
+literal|"received fhandle size %d, local size %d"
 argument_list|,
 name|lckarg
 operator|->

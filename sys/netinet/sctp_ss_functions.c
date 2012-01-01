@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010-2011, by Michael Tuexen. All rights reserved.  * Copyright (c) 2010-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2010-2011, by Robin Seggelmann. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2010-2011, by Michael Tuexen. All rights reserved.  * Copyright (c) 2010-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2010-2011, by Robin Seggelmann. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -182,6 +182,7 @@ name|asoc
 parameter_list|,
 name|int
 name|clear_values
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -317,6 +318,7 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|with_strq
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|strq
@@ -371,6 +373,7 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -475,6 +478,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
@@ -536,6 +540,7 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -734,6 +739,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
@@ -917,16 +923,19 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
 name|net
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
 modifier|*
 name|asoc
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_stream_out
@@ -935,6 +944,7 @@ name|strq
 parameter_list|,
 name|int
 name|moved_how_much
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|asoc
@@ -956,16 +966,19 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
 name|net
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
 modifier|*
 name|asoc
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 comment|/* Nothing to be done here */
@@ -982,20 +995,24 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
 modifier|*
 name|asoc
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+name|SCTP_UNUSED
 parameter_list|,
 name|uint16_t
 modifier|*
 name|value
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 comment|/* Nothing to be done here */
@@ -1017,19 +1034,23 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
 modifier|*
 name|asoc
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+name|SCTP_UNUSED
 parameter_list|,
 name|uint16_t
 name|value
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 comment|/* Nothing to be done here */
@@ -1070,6 +1091,7 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -1286,11 +1308,13 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
 name|net
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
@@ -1299,9 +1323,11 @@ name|asoc
 parameter_list|)
 block|{
 return|return
+operator|(
 name|asoc
 operator|->
 name|last_out_stream
+operator|)
 return|;
 block|}
 end_function
@@ -1315,6 +1341,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
@@ -1753,6 +1780,7 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -1985,6 +2013,7 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -2183,6 +2212,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
@@ -2392,11 +2422,13 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
 modifier|*
 name|asoc
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_stream_out
@@ -2788,6 +2820,7 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -2936,6 +2969,7 @@ name|struct
 name|sctp_stream_queue_pending
 modifier|*
 name|sp
+name|SCTP_UNUSED
 parameter_list|,
 name|int
 name|holds_lock
@@ -3134,6 +3168,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
@@ -3419,11 +3454,13 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets
 modifier|*
 name|net
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
@@ -3437,6 +3474,7 @@ name|strq
 parameter_list|,
 name|int
 name|moved_how_much
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -3859,11 +3897,13 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_stream_out
 modifier|*
 name|with_strq
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 comment|/* Nothing to be done here */
@@ -3890,6 +3930,7 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_stream_queue_pending
@@ -3979,6 +4020,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_association
@@ -4035,6 +4077,7 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_stream_queue_pending
@@ -4128,6 +4171,7 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_nets

@@ -342,6 +342,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|TASK_INITIALIZER
+parameter_list|(
+name|priority
+parameter_list|,
+name|func
+parameter_list|,
+name|context
+parameter_list|)
+define|\
+value|{ .ta_pending = 0,				\ 	  .ta_priority = (priority),			\ 	  .ta_func = (func),				\ 	  .ta_context = (context) }
+end_define
+
 begin_comment
 comment|/*  * Functions for dedicated thread taskqueues  */
 end_comment

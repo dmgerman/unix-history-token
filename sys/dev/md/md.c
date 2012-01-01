@@ -307,7 +307,7 @@ name|md_debug
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Enable md(4) debug messages"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -335,7 +335,7 @@ name|md_malloc_wait
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow malloc to wait for memory allocations"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

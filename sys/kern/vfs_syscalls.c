@@ -4314,7 +4314,7 @@ name|chroot_allow_open_directories
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow a process to chroot(2) if it has a directory open"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10116,6 +10116,13 @@ operator|->
 name|f_offset
 operator|=
 name|offset
+expr_stmt|;
+name|VFS_KNOTE_UNLOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(

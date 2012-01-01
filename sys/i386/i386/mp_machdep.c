@@ -576,18 +576,6 @@ name|dpcpu
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|/* Hotwire a 0->4MB V==P mapping */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|pt_entry_t
-modifier|*
-name|KPTphys
-decl_stmt|;
-end_decl_stmt
-
 begin_decl_stmt
 name|struct
 name|pcb
@@ -3658,9 +3646,6 @@ name|mpbiosreason
 decl_stmt|;
 endif|#
 directive|endif
-name|uintptr_t
-name|kptbase
-decl_stmt|;
 name|u_int32_t
 name|mpbioswarmvec
 decl_stmt|;
@@ -3720,17 +3705,6 @@ endif|#
 directive|endif
 comment|/* set up temporary P==V mapping for AP boot */
 comment|/* XXX this is a hack, we should boot the AP on its own stack/PTD */
-name|kptbase
-operator|=
-operator|(
-name|uintptr_t
-operator|)
-operator|(
-name|void
-operator|*
-operator|)
-name|KPTphys
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -3749,26 +3723,12 @@ index|[
 name|i
 index|]
 operator|=
-call|(
-name|pd_entry_t
-call|)
-argument_list|(
-name|PG_V
-operator||
-name|PG_RW
-operator||
-operator|(
-operator|(
-name|kptbase
+name|PTD
+index|[
+name|KPTDI
 operator|+
 name|i
-operator|*
-name|PAGE_SIZE
-operator|)
-operator|&
-name|PG_FRAME
-operator|)
-argument_list|)
+index|]
 expr_stmt|;
 name|invltlb
 argument_list|()

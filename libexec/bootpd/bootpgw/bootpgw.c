@@ -1831,11 +1831,16 @@ name|LOG_INFO
 argument_list|,
 literal|"exiting after %ld minutes of inactivity"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|actualtimeout
 operator|.
 name|tv_sec
 operator|/
 literal|60
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit

@@ -162,6 +162,8 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|fw_vendor
 name|vendors_list
@@ -285,6 +287,7 @@ end_decl_stmt
 
 begin_function_decl
 specifier|static
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*
@@ -304,10 +307,12 @@ name|char
 modifier|*
 name|fw_read_img
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fw_img_path
 parameter_list|,
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*
@@ -330,6 +335,7 @@ name|cam_device
 modifier|*
 name|cam_dev
 parameter_list|,
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*
@@ -363,6 +369,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*
@@ -382,6 +389,7 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*
@@ -494,10 +502,12 @@ name|char
 modifier|*
 name|fw_read_img
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|fw_img_path
 parameter_list|,
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*
@@ -842,6 +852,7 @@ name|cam_device
 modifier|*
 name|cam_dev
 parameter_list|,
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*
@@ -1482,6 +1493,7 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|fw_vendor
 modifier|*

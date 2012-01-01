@@ -3235,7 +3235,7 @@ name|hbuf
 operator|+
 name|offst
 expr_stmt|;
-comment|/* 	 * do not know how many columns yet. The number of operands provide an 	 * upper bound on the number of columns. We use the number of files 	 * we can open successfully to set the number of columns. The operation 	 * of the merge operation (-m) in relation to unsuccesful file opens 	 * is unspecified by posix. 	 */
+comment|/* 	 * do not know how many columns yet. The number of operands provide an 	 * upper bound on the number of columns. We use the number of files 	 * we can open successfully to set the number of columns. The operation 	 * of the merge operation (-m) in relation to unsuccessful file opens 	 * is unspecified by posix. 	 */
 name|j
 operator|=
 literal|0
@@ -3313,7 +3313,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * calculate page boundries based on open file count 	 */
+comment|/* 	 * calculate page boundaries based on open file count 	 */
 name|clcnt
 operator|=
 name|j
@@ -3864,7 +3864,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inln():	input a line of data (unlimited length lines supported)  *		Input is optionally expanded to spaces  *  *	inf:	file  *	buf:	buffer  *	lim:	buffer length  *	cps:	column positon 1st char in buffer (large line support)  *	trnc:	throw away data more than lim up to \n  *	mor:	set if more data in line (not truncated)  */
+comment|/*  * inln():	input a line of data (unlimited length lines supported)  *		Input is optionally expanded to spaces  *  *	inf:	file  *	buf:	buffer  *	lim:	buffer length  *	cps:	column position 1st char in buffer (large line support)  *	trnc:	throw away data more than lim up to \n  *	mor:	set if more data in line (not truncated)  */
 end_comment
 
 begin_function

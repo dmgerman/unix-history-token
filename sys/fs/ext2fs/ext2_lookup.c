@@ -3954,7 +3954,7 @@ decl_stmt|;
 define|#
 directive|define
 name|MINDIRSIZ
-value|(sizeof (struct dirtemplate) / 2)
+value|(sizeof(struct dirtemplate) / 2)
 for|for
 control|(
 name|off

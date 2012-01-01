@@ -11332,9 +11332,17 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-comment|/* 	 * By default keep the memtest enabled.  Use a general name so that 	 * one could eventually do more with the code than just disable it. 	 */
+comment|/* 	 * By default enable the memory test on real hardware, and disable 	 * it if we appear to be running in a VM.  This avoids touching all 	 * pages unnecessarily, which doesn't matter on real hardware but is 	 * bad for shared VM hosts.  Use a general name so that 	 * one could eventually do more with the code than just disable it. 	 */
 name|memtest
 operator|=
+operator|(
+name|vm_guest
+operator|>
+name|VM_GUEST_NO
+operator|)
+condition|?
+literal|0
+else|:
 literal|1
 expr_stmt|;
 name|TUNABLE_ULONG_FETCH

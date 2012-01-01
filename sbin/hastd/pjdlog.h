@@ -679,7 +679,7 @@ name|PJDLOG_VERIFY
 parameter_list|(
 name|expr
 parameter_list|)
-value|do {					\ 	if (!(expr)) {							\ 		pjdlog_abort(__func__, __FILE__, __LINE__, #expr,	\ 		    __func__);						\ 	}								\ } while (0)
+value|do {					\ 	if (!(expr)) {							\ 		pjdlog_abort(__func__, __FILE__, __LINE__, #expr,	\ 		    "%s", __func__);					\ 	}								\ } while (0)
 end_define
 
 begin_define

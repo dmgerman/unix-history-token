@@ -574,9 +574,8 @@ name|n
 operator|.
 name|all
 return|;
-name|unsigned
 name|sr
-init|=
+operator|=
 name|__builtin_ctzll
 argument_list|(
 name|d
@@ -585,7 +584,7 @@ name|s
 operator|.
 name|low
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 name|q
 operator|.
 name|s

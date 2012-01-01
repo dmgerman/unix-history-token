@@ -2705,8 +2705,8 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 specifier|static
+specifier|inline
 name|void
 name|net_tx_action_dealloc
 parameter_list|(

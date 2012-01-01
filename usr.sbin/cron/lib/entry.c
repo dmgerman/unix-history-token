@@ -1200,7 +1200,7 @@ name|eof
 goto|;
 block|}
 block|}
-comment|/* make sundays equivilent */
+comment|/* make sundays equivalent */
 if|if
 condition|(
 name|bit_test

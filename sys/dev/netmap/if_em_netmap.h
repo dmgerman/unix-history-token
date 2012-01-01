@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9662 2011-11-16 13:18:06Z luigi $  *  * netmap changes for if_em.  */
+comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap changes for if_em.  *  * For structure and details on the individual functions please see  * ixgbe_netmap.h  */
 end_comment
 
 begin_include
@@ -205,12 +205,11 @@ name|nm_register
 operator|=
 name|em_netmap_reg
 expr_stmt|;
-comment|/* 	 * adapter->rx_mbuf_sz is set by SIOCSETMTU, but in netmap mode 	 * we allocate the buffers on the first register. So we must 	 * disallow a SIOCSETMTU when if_capenable& IFCAP_NETMAP is set. 	 */
 name|na
 operator|.
 name|buff_size
 operator|=
-name|MCLBYTES
+name|NETMAP_BUF_SIZE
 expr_stmt|;
 name|netmap_attach
 argument_list|(
@@ -347,6 +346,10 @@ break|break;
 block|}
 block|}
 end_function
+
+begin_comment
+comment|// XXX do we need to block/unblock the tasks ?
+end_comment
 
 begin_function
 specifier|static
@@ -662,7 +665,6 @@ name|if_capenable
 operator||=
 name|IFCAP_NETMAP
 expr_stmt|;
-comment|/* save if_transmit for later restore. 		 * XXX also if_start and if_qflush ? 		 */
 name|na
 operator|->
 name|if_transmit
@@ -749,7 +751,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile hardware and user view of the transmit ring, see  * ixgbe.c for details.  */
+comment|/*  * Reconcile hardware and user view of the transmit ring.  */
 end_comment
 
 begin_function
@@ -827,7 +829,11 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
+name|l
+decl_stmt|,
 name|n
+init|=
+literal|0
 decl_stmt|,
 name|lim
 init|=
@@ -855,14 +861,6 @@ name|cur
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|kring
-operator|->
-name|nr_kflags
-operator|&
-name|NR_REINIT
-operator|)
-operator|||
 name|k
 operator|>
 name|lim
@@ -899,95 +897,7 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* record completed transmissions TODO 	 * 	 * instead of using TDH, we could read the transmitted status bit. 	 */
-name|j
-operator|=
-name|E1000_READ_REG
-argument_list|(
-operator|&
-name|adapter
-operator|->
-name|hw
-argument_list|,
-name|E1000_TDH
-argument_list|(
-name|ring_nr
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|j
-operator|>=
-name|kring
-operator|->
-name|nkr_num_slots
-condition|)
-block|{
-comment|/* XXX can happen */
-name|D
-argument_list|(
-literal|"TDH wrap %d"
-argument_list|,
-name|j
-argument_list|)
-expr_stmt|;
-name|j
-operator|-=
-name|kring
-operator|->
-name|nkr_num_slots
-expr_stmt|;
-block|}
-name|int
-name|delta
-init|=
-name|j
-operator|-
-name|txr
-operator|->
-name|next_to_clean
-decl_stmt|;
-if|if
-condition|(
-name|delta
-condition|)
-block|{
-comment|/* new transmissions were completed, increment 		   ring->nr_hwavail. */
-if|if
-condition|(
-name|delta
-operator|<
-literal|0
-condition|)
-name|delta
-operator|+=
-name|kring
-operator|->
-name|nkr_num_slots
-expr_stmt|;
-name|txr
-operator|->
-name|next_to_clean
-operator|=
-name|j
-expr_stmt|;
-name|kring
-operator|->
-name|nr_hwavail
-operator|+=
-name|delta
-expr_stmt|;
-block|}
-comment|/* update avail to what the hardware knows */
-name|ring
-operator|->
-name|avail
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
-expr_stmt|;
+comment|/* check for new packets to send. 	 * j indexes the netmap ring, l indexes the nic ring, and 	 *	j = kring->nr_hwcur, l = E1000_TDT (not tracked), 	 *	j == (l + kring->nkr_hwofs) % ring_size 	 */
 name|j
 operator|=
 name|kring
@@ -1002,9 +912,25 @@ name|k
 condition|)
 block|{
 comment|/* we have packets to send */
-name|n
+name|l
 operator|=
+name|j
+operator|-
+name|kring
+operator|->
+name|nkr_hwofs
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|<
 literal|0
+condition|)
+name|l
+operator|+=
+name|lim
+operator|+
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -1036,7 +962,7 @@ name|txr
 operator|->
 name|tx_base
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|struct
@@ -1049,7 +975,7 @@ name|txr
 operator|->
 name|tx_buffers
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|int
@@ -1147,15 +1073,13 @@ name|adapter
 operator|->
 name|txd_cmd
 operator||
+name|len
+operator||
 operator|(
 name|E1000_TXD_CMD_EOP
 operator||
 name|flags
 operator|)
-operator||
-name|slot
-operator|->
-name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1179,7 +1103,7 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* buffer has changed, unload and reload map */
+comment|/* buffer has changed, reload map */
 name|netmap_reload_map
 argument_list|(
 name|txr
@@ -1232,6 +1156,20 @@ name|j
 operator|+
 literal|1
 expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
+expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
@@ -1240,24 +1178,14 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 expr_stmt|;
 comment|/* decrease avail by number of sent packets */
-name|ring
-operator|->
-name|avail
-operator|-=
-name|n
-expr_stmt|;
 name|kring
 operator|->
 name|nr_hwavail
-operator|=
-name|ring
-operator|->
-name|avail
+operator|-=
+name|n
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1292,12 +1220,115 @@ operator|->
 name|me
 argument_list|)
 argument_list|,
-name|ring
-operator|->
-name|cur
+name|l
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|n
+operator|==
+literal|0
+operator|||
+name|kring
+operator|->
+name|nr_hwavail
+operator|<
+literal|1
+condition|)
+block|{
+name|int
+name|delta
+decl_stmt|;
+comment|/* record completed transmissions using THD. */
+name|l
+operator|=
+name|E1000_READ_REG
+argument_list|(
+operator|&
+name|adapter
+operator|->
+name|hw
+argument_list|,
+name|E1000_TDH
+argument_list|(
+name|ring_nr
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|l
+operator|>=
+name|kring
+operator|->
+name|nkr_num_slots
+condition|)
+block|{
+comment|/* XXX can happen */
+name|D
+argument_list|(
+literal|"TDH wrap %d"
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
+name|l
+operator|-=
+name|kring
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+block|}
+name|delta
+operator|=
+name|l
+operator|-
+name|txr
+operator|->
+name|next_to_clean
+expr_stmt|;
+if|if
+condition|(
+name|delta
+condition|)
+block|{
+comment|/* some completed, increment hwavail. */
+if|if
+condition|(
+name|delta
+operator|<
+literal|0
+condition|)
+name|delta
+operator|+=
+name|kring
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+name|txr
+operator|->
+name|next_to_clean
+operator|=
+name|l
+expr_stmt|;
+name|kring
+operator|->
+name|nr_hwavail
+operator|+=
+name|delta
+expr_stmt|;
+block|}
+block|}
+comment|/* update avail to what the hardware knows */
+name|ring
+operator|->
+name|avail
+operator|=
+name|kring
+operator|->
+name|nr_hwavail
+expr_stmt|;
 if|if
 condition|(
 name|do_lock
@@ -1314,7 +1345,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the receive ring, see ixgbe.c  */
+comment|/*  * Reconcile kernel and user view of the receive ring.  */
 end_comment
 
 begin_function
@@ -1392,6 +1423,8 @@ name|j
 decl_stmt|,
 name|k
 decl_stmt|,
+name|l
+decl_stmt|,
 name|n
 decl_stmt|,
 name|lim
@@ -1410,14 +1443,6 @@ name|cur
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|kring
-operator|->
-name|nr_kflags
-operator|&
-name|NR_REINIT
-operator|)
-operator|||
 name|k
 operator|>
 name|lim
@@ -1457,12 +1482,46 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* acknowledge all the received packets. */
-name|j
+comment|/* import newly received packets into the netmap ring. 	 * j is an index in the netmap ring, l in the NIC ring, and 	 *	j = (kring->nr_hwcur + kring->nr_hwavail) % ring_size 	 *	l = rxr->next_to_check; 	 * and 	 *	j == (l + kring->nkr_hwofs) % ring_size 	 */
+name|l
 operator|=
 name|rxr
 operator|->
 name|next_to_check
+expr_stmt|;
+name|j
+operator|=
+name|l
+operator|+
+name|kring
+operator|->
+name|nkr_hwofs
+expr_stmt|;
+comment|/* here nkr_hwofs can be negative so must check for j< 0 */
+if|if
+condition|(
+name|j
+operator|<
+literal|0
+condition|)
+name|j
+operator|+=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|j
+operator|>
+name|lim
+condition|)
+name|j
+operator|-=
+name|lim
+operator|+
+literal|1
 expr_stmt|;
 for|for
 control|(
@@ -1485,7 +1544,7 @@ name|rxr
 operator|->
 name|rx_base
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 if|if
@@ -1521,13 +1580,13 @@ name|bus_dmamap_sync
 argument_list|(
 name|rxr
 operator|->
-name|tag
+name|rxtag
 argument_list|,
 name|rxr
 operator|->
 name|rx_buffers
 index|[
-name|j
+name|l
 index|]
 operator|.
 name|map
@@ -1549,6 +1608,28 @@ name|j
 operator|+
 literal|1
 expr_stmt|;
+comment|/* make sure next_to_refresh follows next_to_check */
+name|rxr
+operator|->
+name|next_to_refresh
+operator|=
+name|l
+expr_stmt|;
+comment|// XXX
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -1559,7 +1640,7 @@ name|rxr
 operator|->
 name|next_to_check
 operator|=
-name|j
+name|l
 expr_stmt|;
 name|kring
 operator|->
@@ -1568,7 +1649,7 @@ operator|+=
 name|n
 expr_stmt|;
 block|}
-comment|/* skip past packets that userspace has already processed: 	 * making them available for reception. 	 * advance nr_hwcur and issue a bus_dmamap_sync on the 	 * buffers so it is safe to write to them. 	 * Also increase nr_hwavail          */
+comment|/* skip past packets that userspace has already processed */
 name|j
 operator|=
 name|kring
@@ -1586,6 +1667,41 @@ comment|/* userspace has read some packets. */
 name|n
 operator|=
 literal|0
+expr_stmt|;
+name|l
+operator|=
+name|j
+operator|-
+name|kring
+operator|->
+name|nkr_hwofs
+expr_stmt|;
+comment|/* NIC ring index */
+comment|/* here nkr_hwofs can be negative so check for l> lim */
+if|if
+condition|(
+name|l
+operator|<
+literal|0
+condition|)
+name|l
+operator|+=
+name|lim
+operator|+
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|l
+operator|>
+name|lim
+condition|)
+name|l
+operator|-=
+name|lim
+operator|+
+literal|1
 expr_stmt|;
 while|while
 condition|(
@@ -1617,7 +1733,7 @@ name|rxr
 operator|->
 name|rx_base
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|struct
@@ -1630,7 +1746,7 @@ name|rxr
 operator|->
 name|rx_buffers
 index|[
-name|j
+name|l
 index|]
 decl_stmt|;
 name|void
@@ -1693,7 +1809,7 @@ name|addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-comment|/* buffer has changed, unload and reload map */
+comment|/* buffer has changed, reload map */
 name|netmap_reload_map
 argument_list|(
 name|rxr
@@ -1746,6 +1862,20 @@ name|j
 operator|+
 literal|1
 expr_stmt|;
+name|l
+operator|=
+operator|(
+name|l
+operator|==
+name|lim
+operator|)
+condition|?
+literal|0
+else|:
+name|l
+operator|+
+literal|1
+expr_stmt|;
 name|n
 operator|++
 expr_stmt|;
@@ -1760,9 +1890,7 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1783,18 +1911,18 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* 		 * IMPORTANT: we must leave one free slot in the ring, 		 * so move j back by one unit 		 */
-name|j
+comment|/* 		 * IMPORTANT: we must leave one free slot in the ring, 		 * so move l back by one unit 		 */
+name|l
 operator|=
 operator|(
-name|j
+name|l
 operator|==
 literal|0
 operator|)
 condition|?
 name|lim
 else|:
-name|j
+name|l
 operator|-
 literal|1
 expr_stmt|;
@@ -1812,7 +1940,7 @@ operator|->
 name|me
 argument_list|)
 argument_list|,
-name|j
+name|l
 argument_list|)
 expr_stmt|;
 block|}

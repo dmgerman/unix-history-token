@@ -2371,12 +2371,12 @@ name|WINDOW
 modifier|*
 name|ChunkWin
 decl_stmt|;
-comment|/********************************************************/
-comment|/*** These values are for controling screen resources ***/
-comment|/*** Each label line holds up to 2 labels, so beware! ***/
-comment|/*** strategy will be to try to always make sure the  ***/
-comment|/*** highlighted label is in the active display area. ***/
-comment|/********************************************************/
+comment|/*********************************************************/
+comment|/*** These values are for controlling screen resources ***/
+comment|/*** Each label line holds up to 2 labels, so beware!  ***/
+comment|/*** strategy will be to try to always make sure the   ***/
+comment|/*** highlighted label is in the active display area.  ***/
+comment|/*********************************************************/
 name|int
 name|pslice_max
 decl_stmt|,
@@ -2410,7 +2410,7 @@ argument_list|(
 name|A_NORMAL
 argument_list|)
 expr_stmt|;
-comment|/*** Count the number of parition slices ***/
+comment|/*** Count the number of partition slices ***/
 name|pslice_count
 operator|=
 literal|0
@@ -4492,6 +4492,8 @@ condition|)
 block|{
 name|msgConfirm
 argument_list|(
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -4999,7 +5001,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|__alpha__
-comment|/* 		 * SRM requires that the root partition is at the 		 * begining of the disk and cannot boot otherwise.  		 * Warn Alpha users if they are about to shoot themselves in 		 * the foot in this way. 		 * 		 * Since partitions may not start precisely at offset 0 we 		 * check for a "close to 0" instead. :-( 		 */
+comment|/* 		 * SRM requires that the root partition is at the 		 * beginning of the disk and cannot boot otherwise. 		 * Warn Alpha users if they are about to shoot themselves in 		 * the foot in this way. 		 * 		 * Since partitions may not start precisely at offset 0 we 		 * check for a "close to 0" instead. :-( 		 */
 if|if
 condition|(
 operator|(

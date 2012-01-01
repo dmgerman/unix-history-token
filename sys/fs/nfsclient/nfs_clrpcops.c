@@ -7666,12 +7666,6 @@ name|np
 operator|->
 name|n_fhp
 expr_stmt|;
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
 name|newcred
 operator|=
 name|NFSNEWCRED
@@ -7914,10 +7908,6 @@ name|NFSHASNFSV4
 argument_list|(
 name|nmp
 argument_list|)
-operator|&&
-name|p
-operator|==
-name|NULL
 condition|)
 name|NFSFREECRED
 argument_list|(
@@ -8642,12 +8632,6 @@ name|nmp
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|p
-operator|==
-name|NULL
-condition|)
 name|newcred
 operator|=
 name|NFSNEWCRED
@@ -8984,10 +8968,6 @@ name|NFSHASNFSV4
 argument_list|(
 name|nmp
 argument_list|)
-operator|&&
-name|p
-operator|==
-name|NULL
 condition|)
 name|NFSFREECRED
 argument_list|(

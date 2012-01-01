@@ -22355,7 +22355,6 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|zfs_setsecattr
 parameter_list|(

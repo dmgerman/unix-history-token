@@ -881,6 +881,9 @@ condition|(
 name|td
 operator|->
 name|td_owepreempt
+operator|&&
+operator|!
+name|kdb_active
 condition|)
 block|{
 name|td

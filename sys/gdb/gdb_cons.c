@@ -274,6 +274,32 @@ end_function
 
 begin_function
 specifier|static
+name|void
+name|gdb_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|gdb_cnungrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
 name|int
 name|gdb_cngetc
 parameter_list|(

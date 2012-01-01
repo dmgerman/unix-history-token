@@ -2179,10 +2179,13 @@ condition|)
 block|{
 name|rv
 operator|=
-name|device_probe
+name|device_set_driver
 argument_list|(
 operator|*
 name|miibus
+argument_list|,
+operator|&
+name|miibus_driver
 argument_list|)
 expr_stmt|;
 if|if
@@ -2247,10 +2250,9 @@ goto|;
 block|}
 name|rv
 operator|=
-name|device_attach
+name|bus_generic_attach
 argument_list|(
-operator|*
-name|miibus
+name|dev
 argument_list|)
 expr_stmt|;
 if|if
@@ -2679,6 +2681,7 @@ name|char
 name|x
 parameter_list|)
 block|{
+specifier|static
 name|unsigned
 specifier|const
 name|char

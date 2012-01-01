@@ -2614,7 +2614,7 @@ modifier|*
 name|little
 parameter_list|)
 block|{
-comment|/* Get the first occurance of the word ``little'' in ``big'' */
+comment|/* Get the first occurrance of the word ``little'' in ``big'' */
 name|char
 modifier|*
 name|pos
@@ -12713,7 +12713,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"mrru: Only changable before LCP negotiations\n"
+literal|"mrru: Only changeable before LCP negotiations\n"
 argument_list|)
 expr_stmt|;
 name|res
@@ -12728,7 +12728,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"mrru: Only changable at phase DEAD/ESTABLISH\n"
+literal|"mrru: Only changeable at phase DEAD/ESTABLISH\n"
 argument_list|)
 expr_stmt|;
 name|res
@@ -20737,7 +20737,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"shortseq: Only changable before"
+literal|"shortseq: Only changeable before"
 literal|" LCP negotiations\n"
 argument_list|)
 expr_stmt|;
@@ -20751,7 +20751,7 @@ name|log_Printf
 argument_list|(
 name|LogWARN
 argument_list|,
-literal|"shortseq: Only changable at phase"
+literal|"shortseq: Only changeable at phase"
 literal|" DEAD/ESTABLISH\n"
 argument_list|)
 expr_stmt|;

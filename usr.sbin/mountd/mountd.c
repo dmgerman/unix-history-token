@@ -15794,7 +15794,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare two sockaddrs according to a specified mask. Return zero if  * `sa1' matches `sa2' when filtered by the netmask in `samask'.  * If samask is NULL, perform a full comparision.  */
+comment|/*  * Compare two sockaddrs according to a specified mask. Return zero if  * `sa1' matches `sa2' when filtered by the netmask in `samask'.  * If samask is NULL, perform a full comparison.  */
 end_comment
 
 begin_function

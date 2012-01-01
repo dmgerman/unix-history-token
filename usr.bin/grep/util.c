@@ -480,7 +480,7 @@ comment|/* FALLTHROUGH */
 case|case
 name|FTS_ERR
 case|:
-name|notfound
+name|file_err
 operator|=
 name|true
 expr_stmt|;
@@ -777,6 +777,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|file_err
+operator|=
+name|true
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -788,16 +792,6 @@ literal|"%s"
 argument_list|,
 name|fn
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|errno
-operator|==
-name|ENOENT
-condition|)
-name|notfound
-operator|=
-name|true
 expr_stmt|;
 return|return
 operator|(

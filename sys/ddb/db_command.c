@@ -802,6 +802,16 @@ name|CS_OWN
 block|,
 literal|0
 block|}
+block|,
+block|{
+literal|"findstack"
+block|,
+name|db_findstack_cmd
+block|,
+literal|0
+block|,
+literal|0
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt

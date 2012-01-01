@@ -915,6 +915,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Filtees loaded */
+name|bool
+name|irelative
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object has R_MACHDEP_IRELATIVE relocs */
+name|bool
+name|gnu_ifunc
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object has references to STT_GNU_IFUNC */
 name|struct
 name|link_map
 name|linkmap
@@ -990,7 +1002,7 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Return newes versioned symbol. Used by 				   dlsym. */
+comment|/* Return newest versioned symbol. Used by 				   dlsym. */
 end_comment
 
 begin_comment
@@ -1418,6 +1430,24 @@ end_function_decl
 
 begin_function_decl
 name|void
+modifier|*
+name|rtld_resolve_ifunc
+parameter_list|(
+specifier|const
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|Elf_Sym
+modifier|*
+name|def
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|symlook_init
 parameter_list|(
 name|SymLook
@@ -1589,6 +1619,34 @@ end_function_decl
 begin_function_decl
 name|int
 name|reloc_jmpslots
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|reloc_iresolve
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|reloc_gnu_ifunc
 parameter_list|(
 name|Obj_Entry
 modifier|*

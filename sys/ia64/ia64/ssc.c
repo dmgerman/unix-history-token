@@ -364,6 +364,32 @@ end_function
 begin_function
 specifier|static
 name|void
+name|ssc_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|ssc_cnungrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
 name|ssc_cnattach
 parameter_list|(
 name|void

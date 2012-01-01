@@ -99,6 +99,7 @@ name|DEBUG
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -461,6 +462,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|filenode
 name|fn_head_s
 decl_stmt|,
@@ -470,6 +472,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|strnodelist
 modifier|*
 name|bl_list
@@ -477,6 +480,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|strnodelist
 modifier|*
 name|keep_list
@@ -484,6 +488,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|strnodelist
 modifier|*
 name|skip_list
@@ -491,6 +496,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|do_file
 parameter_list|(
@@ -502,6 +508,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|strnode_add
 parameter_list|(
@@ -519,6 +526,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|skip_ok
 parameter_list|(
@@ -530,6 +538,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|keep_ok
 parameter_list|(
@@ -541,6 +550,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|satisfy_req
 parameter_list|(
@@ -556,6 +566,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|crunch_file
 parameter_list|(
@@ -566,6 +577,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|parse_require
 parameter_list|(
@@ -579,6 +591,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|parse_provide
 parameter_list|(
@@ -592,6 +605,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|parse_before
 parameter_list|(
@@ -605,6 +619,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|parse_keywords
 parameter_list|(
@@ -618,6 +633,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|filenode
 modifier|*
 name|filenode_new
@@ -629,6 +645,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|add_require
 parameter_list|(
@@ -642,6 +659,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|add_provide
 parameter_list|(
@@ -655,6 +673,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|add_before
 parameter_list|(
@@ -668,6 +687,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|add_keyword
 parameter_list|(
@@ -681,6 +701,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|insert_before
 parameter_list|(
@@ -690,6 +711,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|Hash_Entry
 modifier|*
 name|make_fake_provision
@@ -701,6 +723,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|crunch_all_files
 parameter_list|(
@@ -710,6 +733,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|initialize
 parameter_list|(
@@ -719,23 +743,11 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|generate_ordering
 parameter_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-index|[]
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -905,6 +917,7 @@ comment|/*  * initialise various variables.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|initialize
 parameter_list|(
@@ -936,6 +949,7 @@ comment|/* generic function to insert a new strnodelist element */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|strnode_add
 parameter_list|(
@@ -1010,6 +1024,7 @@ comment|/*  * we have a new filename, create a new filenode structure.  * fill i
 end_comment
 
 begin_function
+specifier|static
 name|filenode
 modifier|*
 name|filenode_new
@@ -1130,6 +1145,7 @@ comment|/*  * add a requirement to a filenode.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|add_require
 parameter_list|(
@@ -1215,6 +1231,7 @@ comment|/*  * add a provision to a filenode.  if this provision doesn't  * have 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|add_provide
 parameter_list|(
@@ -1430,6 +1447,7 @@ comment|/*  * put the BEFORE: lines to a list and handle them later.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|add_before
 parameter_list|(
@@ -1493,6 +1511,7 @@ comment|/*  * add a key to a filenode.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|add_keyword
 parameter_list|(
@@ -1525,6 +1544,7 @@ comment|/*  * loop over the rest of a REQUIRE line, giving each word to  * add_r
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|parse_require
 parameter_list|(
@@ -1579,6 +1599,7 @@ comment|/*  * loop over the rest of a PROVIDE line, giving each word to  * add_p
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|parse_provide
 parameter_list|(
@@ -1633,6 +1654,7 @@ comment|/*  * loop over the rest of a BEFORE line, giving each word to  * add_be
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|parse_before
 parameter_list|(
@@ -1687,6 +1709,7 @@ comment|/*  * loop over the rest of a KEYWORD line, giving each word to  * add_k
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|parse_keywords
 parameter_list|(
@@ -1741,6 +1764,7 @@ comment|/*  * given a file name, create a filenode for it, read in lines looking
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|crunch_file
 parameter_list|(
@@ -2139,6 +2163,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|Hash_Entry
 modifier|*
 name|make_fake_provision
@@ -2368,6 +2393,7 @@ comment|/*  * go through the BEFORE list, inserting requirements into the graph(
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|insert_before
 parameter_list|(
@@ -2532,6 +2558,7 @@ comment|/*  * loop over all the files calling crunch_file() on them to do the  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|crunch_all_files
 parameter_list|(
@@ -2577,6 +2604,7 @@ comment|/*  * given a requirement node (in a filename) we attempt to satisfy it.
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|satisfy_req
 parameter_list|(
@@ -2701,6 +2729,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|skip_ok
 parameter_list|(
@@ -2776,6 +2805,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|keep_ok
 parameter_list|(
@@ -2857,6 +2887,7 @@ comment|/*  * given a filenode, we ensure we are not a cyclic graph.  if this  *
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|do_file
 parameter_list|(
@@ -3169,6 +3200,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|generate_ordering
 parameter_list|(

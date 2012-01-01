@@ -806,7 +806,7 @@ name|NULL
 operator|)
 return|;
 block|}
-comment|/* 	 * From here till the end of this function we reuse name_len 	 * for a diferrent purpose - for device_entry::descr 	 */
+comment|/* 	 * From here till the end of this function we reuse name_len 	 * for a different purpose - for device_entry::descr 	 */
 if|if
 condition|(
 name|name

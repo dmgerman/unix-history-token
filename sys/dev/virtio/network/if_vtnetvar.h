@@ -226,6 +226,11 @@ index|[
 name|ETHER_ADDR_LEN
 index|]
 decl_stmt|;
+name|struct
+name|vtnet_mac_filter
+modifier|*
+name|vtnet_mac_filter
+decl_stmt|;
 comment|/* 	 * During reset, the host's VLAN filtering table is lost. The 	 * array below is used to restore all the VLANs configured on 	 * this interface after a reset. 	 */
 define|#
 directive|define

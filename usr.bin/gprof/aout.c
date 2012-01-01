@@ -635,7 +635,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"no room for %d bytes of symbol table"
+literal|"no room for %zu bytes of symbol table"
 argument_list|,
 name|askfor
 operator|*
@@ -850,7 +850,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"no room for %lu bytes of text space: can't do -c"
+literal|"no room for %u bytes of text space: can't do -c"
 argument_list|,
 name|xbuf
 operator|.

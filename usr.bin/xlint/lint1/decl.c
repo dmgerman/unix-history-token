@@ -1286,7 +1286,7 @@ operator|==
 name|UNSIGN
 condition|)
 block|{
-comment|/* remeber specifiers "signed" and "unsigned" in dcs->d_smod */
+comment|/* remember specifiers "signed" and "unsigned" in dcs->d_smod */
 if|if
 condition|(
 name|dcs
@@ -2159,7 +2159,7 @@ break|break;
 case|case
 name|ABSTRACT
 case|:
-comment|/* 		 * casts and sizeof 		 * Append all symbols declared in the abstract declaration 		 * to the list of symbols declared in the surounding decl. 		 * or block. 		 * XXX I'm not sure whether they should be removed from the 		 * symbol table now or later. 		 */
+comment|/* 		 * casts and sizeof 		 * Append all symbols declared in the abstract declaration 		 * to the list of symbols declared in the surrounding decl. 		 * or block. 		 * XXX I'm not sure whether they should be removed from the 		 * symbol table now or later. 		 */
 if|if
 condition|(
 operator|(
@@ -10944,7 +10944,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print an error or a warning if the symbol cant be initialized due  * to type/storage class. Returnvalue is 1 if an error has been  * detected.  */
+comment|/*  * Print an error or a warning if the symbol can't be initialized due  * to type/storage class. Return value is 1 if an error has been  * detected.  */
 end_comment
 
 begin_function
@@ -11077,7 +11077,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Create a symbole for an abstract declaration.  */
+comment|/*  * Create a symbol for an abstract declaration.  */
 end_comment
 
 begin_function
@@ -12119,7 +12119,7 @@ name|s_type
 argument_list|)
 condition|)
 return|return;
-comment|/* complain alwasy about incomplet tags declared inside blocks */
+comment|/* complain always about incomplete tags declared inside blocks */
 if|if
 condition|(
 operator|!

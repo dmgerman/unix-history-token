@@ -2602,6 +2602,12 @@ literal|0
 operator|)
 return|;
 block|}
+comment|/* 	 * Make sure we don't race against user-space applications 	 * like LibUSB: 	 */
+name|usbd_enum_lock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 for|for
 control|(
 name|x
@@ -2907,6 +2913,11 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|usbd_enum_unlock
+argument_list|(
+name|udev
+argument_list|)
+expr_stmt|;
 comment|/* initial status checked */
 name|sc
 operator|->

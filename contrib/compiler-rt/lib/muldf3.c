@@ -51,12 +51,6 @@ begin_comment
 comment|//===----------------------------------------------------------------------===//
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"abi.h"
-end_include
-
 begin_define
 define|#
 directive|define
