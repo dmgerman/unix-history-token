@@ -1274,7 +1274,7 @@ name|array
 parameter_list|,
 name|offset
 parameter_list|)
-value|(((typeof(*(array)) *)(array))[offset])
+value|(((__typeof__(*(array)) *)(array))[offset])
 end_define
 
 begin_endif
