@@ -1558,6 +1558,8 @@ name|syslog
 argument_list|(
 name|pri
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -6261,6 +6263,8 @@ expr_stmt|;
 name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 index|[
