@@ -2711,6 +2711,8 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -2744,6 +2746,8 @@ expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
+argument_list|,
+literal|"%s"
 argument_list|,
 name|msg
 argument_list|)
