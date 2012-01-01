@@ -181,6 +181,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
 end_include
 
@@ -6685,6 +6691,9 @@ name|printf
 argument_list|(
 literal|"%-*s %20s %10s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|istrnamlen
 argument_list|,
 literal|"interrupt"
@@ -6737,6 +6746,9 @@ name|printf
 argument_list|(
 literal|"%-*s %20lu %10lu\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|istrnamlen
 argument_list|,
 name|intrname
@@ -6771,27 +6783,24 @@ name|void
 operator|)
 name|printf
 argument_list|(
-literal|"%-*s %20llu %10llu\n"
+literal|"%-*s %20"
+name|PRIu64
+literal|" %10"
+name|PRIu64
+literal|"\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|istrnamlen
 argument_list|,
 literal|"Total"
 argument_list|,
-operator|(
-name|long
-name|long
-operator|)
 name|inttotal
 argument_list|,
-call|(
-name|long
-name|long
-call|)
-argument_list|(
 name|inttotal
 operator|/
 name|uptime
-argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -6981,7 +6990,13 @@ condition|)
 continue|continue;
 name|printf
 argument_list|(
-literal|"%13s %5lld %5lldK %7s %8lld  "
+literal|"%13s %5"
+name|PRIu64
+literal|" %5"
+name|PRIu64
+literal|"K %7s %8"
+name|PRIu64
+literal|"  "
 argument_list|,
 name|memstat_get_name
 argument_list|(
@@ -6994,9 +7009,6 @@ name|mtp
 argument_list|)
 argument_list|,
 operator|(
-operator|(
-name|int64_t
-operator|)
 name|memstat_get_bytes
 argument_list|(
 name|mtp
@@ -7286,7 +7298,21 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-20s %6llu, %6llu,%8llu,%8llu,%8llu,%4llu,%4llu\n"
+literal|"%-20s %6"
+name|PRIu64
+literal|", %6"
+name|PRIu64
+literal|",%8"
+name|PRIu64
+literal|",%8"
+name|PRIu64
+literal|",%8"
+name|PRIu64
+literal|",%4"
+name|PRIu64
+literal|",%4"
+name|PRIu64
+literal|"\n"
 argument_list|,
 name|name
 argument_list|,
