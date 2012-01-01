@@ -2036,10 +2036,6 @@ return|return
 operator|(
 name|pr_expand
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|eqproto
 argument_list|,
 literal|0
@@ -2093,10 +2089,6 @@ operator|&
 name|CH_HELPFILE
 operator|)
 condition|?
-operator|(
-name|char
-operator|*
-operator|)
 name|hproto
 else|:
 name|prproto
@@ -2140,10 +2132,6 @@ return|return
 operator|(
 name|pr_expand
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|wproto
 argument_list|,
 name|sc_width
