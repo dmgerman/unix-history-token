@@ -3743,6 +3743,9 @@ name|char
 modifier|*
 name|val
 decl_stmt|;
+name|size_t
+name|valsize
+decl_stmt|;
 name|struct
 name|string_list
 modifier|*
@@ -3812,16 +3815,20 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|tmp
+name|valsize
 operator|=
-name|new_string_list
-argument_list|(
 name|strlen
 argument_list|(
 name|val
 argument_list|)
 operator|+
 literal|1
+expr_stmt|;
+name|tmp
+operator|=
+name|new_string_list
+argument_list|(
+name|valsize
 argument_list|)
 expr_stmt|;
 if|if
@@ -3835,7 +3842,7 @@ argument_list|(
 literal|"no memory for string list entry."
 argument_list|)
 expr_stmt|;
-name|strlcpy
+name|memcpy
 argument_list|(
 name|tmp
 operator|->
@@ -3843,12 +3850,7 @@ name|string
 argument_list|,
 name|val
 argument_list|,
-name|strlen
-argument_list|(
-name|val
-argument_list|)
-operator|+
-literal|1
+name|valsize
 argument_list|)
 expr_stmt|;
 name|tmp
