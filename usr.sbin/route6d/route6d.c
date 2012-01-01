@@ -6370,7 +6370,7 @@ name|tracet
 argument_list|(
 literal|1
 argument_list|,
-literal|"Recv(%s): from %s.%d info(%d)\n"
+literal|"Recv(%s): from %s.%d info(%zd)\n"
 argument_list|,
 name|ifcp
 operator|->
