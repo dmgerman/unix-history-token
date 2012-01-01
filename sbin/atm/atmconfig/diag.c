@@ -2142,6 +2142,8 @@ condition|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
@@ -2187,6 +2189,8 @@ argument_list|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
@@ -5428,6 +5432,8 @@ condition|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
@@ -5503,6 +5509,8 @@ condition|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
