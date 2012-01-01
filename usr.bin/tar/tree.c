@@ -1217,6 +1217,7 @@ argument_list|)
 expr_stmt|;
 operator|*
 operator|(
+specifier|volatile
 name|int
 operator|*
 operator|)
