@@ -816,6 +816,9 @@ name|mp
 operator|->
 name|myhost
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mp
@@ -836,6 +839,9 @@ name|printf
 argument_list|(
 literal|"%-*.*s %-*s %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mp
@@ -845,6 +851,9 @@ operator|.
 name|out_name
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mp
