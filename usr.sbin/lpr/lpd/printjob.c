@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -5982,7 +5988,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%c%qd %s\n"
+literal|"%c%"
+name|PRId64
+literal|" %s\n"
 argument_list|,
 name|type
 argument_list|,
@@ -6001,7 +6009,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%c%qd %s_c%d\n"
+literal|"%c%"
+name|PRId64
+literal|" %s_c%d\n"
 argument_list|,
 name|type
 argument_list|,
