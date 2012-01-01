@@ -1913,6 +1913,8 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
+literal|"%s"
+argument_list|,
 name|usage_message
 argument_list|)
 expr_stmt|;
@@ -1936,6 +1938,8 @@ operator|)
 name|errx
 argument_list|(
 name|EX_USAGE
+argument_list|,
+literal|"%s"
 argument_list|,
 name|usage_message
 argument_list|)
