@@ -2678,11 +2678,16 @@ name|error
 operator|=
 name|EINVAL
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"mountmsdosfs(): bad FAT32 filesystem\n"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 goto|goto
 name|error_exit
 goto|;
@@ -3107,6 +3112,9 @@ operator|>=
 name|clusters
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"Warning: number of clusters (%ld) exceeds FAT "
@@ -3121,6 +3129,8 @@ argument_list|,
 name|clusters
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|pmp
 operator|->
 name|pm_maxcluster

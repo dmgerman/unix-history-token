@@ -828,6 +828,9 @@ operator|!=
 name|dirclust
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"deget(): \".\" entry at clust %lu != %lu\n"
@@ -839,6 +842,8 @@ operator|->
 name|de_StartCluster
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|ldep
 operator|->
 name|de_StartCluster
@@ -901,6 +906,10 @@ literal|0
 expr_stmt|;
 block|}
 else|else
+block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"deget(): pcbmap returned %d\n"
@@ -908,6 +917,9 @@ argument_list|,
 name|error
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 block|}
 else|else
@@ -1236,6 +1248,9 @@ name|pmp
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"detrunc(): can't truncate root directory, clust %ld, offset %ld\n"
@@ -1249,6 +1264,8 @@ operator|->
 name|de_diroffset
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|EINVAL
