@@ -368,6 +368,13 @@ argument_list|,
 name|io
 argument_list|)
 expr_stmt|;
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+literal|"ATA channel"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ata_probe
