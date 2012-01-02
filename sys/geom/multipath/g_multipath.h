@@ -59,12 +59,16 @@ block|{
 name|struct
 name|g_provider
 modifier|*
-name|pp
+name|sc_pp
 decl_stmt|;
 name|struct
 name|g_consumer
 modifier|*
-name|cp_active
+name|sc_active
+decl_stmt|;
+name|struct
+name|mtx
+name|sc_mtx
 decl_stmt|;
 name|char
 name|sc_name
@@ -78,6 +82,19 @@ index|[
 literal|40
 index|]
 decl_stmt|;
+name|int
+name|sc_opened
+decl_stmt|;
+name|int
+name|sc_stopping
+decl_stmt|;
+name|int
+name|sc_ndisks
+decl_stmt|;
+name|int
+name|sc_active_active
+decl_stmt|;
+comment|/* Active/Active mode */
 block|}
 struct|;
 end_struct
@@ -128,6 +145,10 @@ name|uint64_t
 name|md_size
 decl_stmt|;
 comment|/* absolute size of provider */
+name|uint8_t
+name|md_active_active
+decl_stmt|;
+comment|/* Active/Active mode */
 block|}
 struct|;
 end_struct
@@ -302,6 +323,22 @@ operator|->
 name|md_size
 argument_list|)
 expr_stmt|;
+name|data
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|md_size
+argument_list|)
+expr_stmt|;
+operator|*
+name|data
+operator|=
+name|md
+operator|->
+name|md_active_active
+expr_stmt|;
 block|}
 end_function
 
@@ -440,6 +477,22 @@ name|le64dec
 argument_list|(
 name|data
 argument_list|)
+expr_stmt|;
+name|data
+operator|+=
+sizeof|sizeof
+argument_list|(
+name|md
+operator|->
+name|md_size
+argument_list|)
+expr_stmt|;
+name|md
+operator|->
+name|md_active_active
+operator|=
+operator|*
+name|data
 expr_stmt|;
 block|}
 end_function
