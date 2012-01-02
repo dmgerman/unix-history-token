@@ -349,7 +349,7 @@ name|atomic_signal_fence
 parameter_list|(
 name|order
 parameter_list|)
-value|__asm volatile ("" : : : "memory");
+value|__asm volatile ("" : : : "memory")
 end_define
 
 begin_elif
@@ -403,7 +403,7 @@ name|atomic_signal_fence
 parameter_list|(
 name|order
 parameter_list|)
-value|__asm volatile ("" : : : "memory");
+value|__asm volatile ("" : : : "memory")
 end_define
 
 begin_endif
