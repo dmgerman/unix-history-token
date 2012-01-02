@@ -3144,12 +3144,6 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|inpcb
-struct_decl|;
-end_struct_decl
-
 begin_decl_stmt
 name|int
 name|in6_src_ioctl
