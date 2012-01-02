@@ -12764,6 +12764,13 @@ argument_list|,
 name|MA_OWNED
 argument_list|)
 expr_stmt|;
+comment|/* Don't use ISR for this SIM while polling. */
+name|sim
+operator|->
+name|flags
+operator||=
+name|CAM_SIM_POLLED
+expr_stmt|;
 comment|/* 	 * Steal an opening so that no other queued requests 	 * can get it before us while we simulate interrupts. 	 */
 name|dev
 operator|->
@@ -12941,6 +12948,14 @@ operator|=
 name|CAM_RESRC_UNAVAIL
 expr_stmt|;
 block|}
+comment|/* We will use CAM ISR for this SIM again. */
+name|sim
+operator|->
+name|flags
+operator|&=
+operator|~
+name|CAM_SIM_POLLED
+expr_stmt|;
 block|}
 end_function
 
@@ -18266,7 +18281,11 @@ name|sim
 operator|->
 name|flags
 operator|&
+operator|(
 name|CAM_SIM_ON_DONEQ
+operator||
+name|CAM_SIM_POLLED
+operator|)
 operator|)
 operator|==
 literal|0
