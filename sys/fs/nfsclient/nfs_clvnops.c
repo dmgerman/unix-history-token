@@ -13883,6 +13883,24 @@ modifier|*
 name|ap
 parameter_list|)
 block|{
+if|if
+condition|(
+name|ap
+operator|->
+name|a_vp
+operator|->
+name|v_type
+operator|!=
+name|VREG
+condition|)
+block|{
+comment|/* 		 * For NFS, metadata is changed synchronously on the server, 		 * so there is nothing to flush. Also, ncl_flush() clears 		 * the NMODIFIED flag and that shouldn't be done here for 		 * directories. 		 */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|ncl_flush
