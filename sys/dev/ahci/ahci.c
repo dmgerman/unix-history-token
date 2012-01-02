@@ -2457,6 +2457,26 @@ name|recovery_slot
 value|spriv_field1
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|force_ahci
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ahci.force"
+argument_list|,
+operator|&
+name|force_ahci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -2566,6 +2586,11 @@ operator|&&
 operator|(
 name|valid
 operator|||
+operator|(
+name|force_ahci
+operator|==
+literal|1
+operator|&&
 operator|!
 operator|(
 name|ahci_ids
@@ -2576,6 +2601,7 @@ operator|.
 name|quirks
 operator|&
 name|AHCI_Q_NOFORCE
+operator|)
 operator|)
 operator|)
 condition|)
