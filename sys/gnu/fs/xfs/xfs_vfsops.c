@@ -6233,7 +6233,7 @@ condition|(
 operator|(
 name|value
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|this_char
 argument_list|,

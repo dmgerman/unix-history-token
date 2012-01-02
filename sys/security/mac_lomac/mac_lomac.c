@@ -3481,7 +3481,7 @@ name|string
 expr_stmt|;
 name|range
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|string
 argument_list|,
@@ -3500,7 +3500,7 @@ name|NULL
 expr_stmt|;
 name|auxsingle
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|string
 argument_list|,
@@ -3560,7 +3560,7 @@ name|range
 expr_stmt|;
 name|rangehigh
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|rangelow
 argument_list|,
@@ -3600,7 +3600,7 @@ operator|)
 return|;
 name|rangeend
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|rangehigh
 argument_list|,
@@ -3695,7 +3695,7 @@ operator|++
 expr_stmt|;
 name|auxsingleend
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|auxsingle
 argument_list|,
