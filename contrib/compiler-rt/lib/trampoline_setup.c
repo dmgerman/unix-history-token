@@ -179,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ppc__ */
+comment|/* __ppc__&& !defined(__powerpc64__) */
 end_comment
 
 end_unit
