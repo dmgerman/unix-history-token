@@ -586,6 +586,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|pmclog_close
+parameter_list|(
+name|struct
+name|pmc_owner
+modifier|*
+name|_po
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|pmclog_initialize
 parameter_list|(

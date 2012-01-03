@@ -208,6 +208,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pmc_close_logfile
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pmc_detach
 parameter_list|(
 name|pmc_id_t
