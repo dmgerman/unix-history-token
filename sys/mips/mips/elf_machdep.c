@@ -294,9 +294,8 @@ block|,
 operator|.
 name|sv_fetch_syscall_args
 operator|=
-name|NULL
+name|cpu_fetch_syscall_args
 block|,
-comment|/* XXXKIB */
 operator|.
 name|sv_syscallnames
 operator|=
@@ -571,9 +570,8 @@ block|,
 operator|.
 name|sv_fetch_syscall_args
 operator|=
-name|NULL
+name|cpu_fetch_syscall_args
 block|,
-comment|/* XXXKIB */
 operator|.
 name|sv_syscallnames
 operator|=
