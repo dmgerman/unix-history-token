@@ -5666,9 +5666,6 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa0
-decl_stmt|,
-modifier|*
-name|nifa
 decl_stmt|;
 if|if
 condition|(
@@ -5690,15 +5687,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifa0
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
-argument_list|,
-argument|nifa
 argument_list|)
 block|{
 if|if

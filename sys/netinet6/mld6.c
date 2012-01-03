@@ -11146,9 +11146,6 @@ name|struct
 name|ifmultiaddr
 modifier|*
 name|ifma
-decl_stmt|,
-modifier|*
-name|tifma
 decl_stmt|;
 name|struct
 name|ifnet
@@ -11199,15 +11196,13 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
 argument|&ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
-argument_list|,
-argument|tifma
 argument_list|)
 block|{
 if|if
