@@ -7245,6 +7245,9 @@ name|struct
 name|in_multi
 modifier|*
 name|inm
+decl_stmt|,
+modifier|*
+name|tinm
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -7357,20 +7360,17 @@ break|break;
 case|case
 name|IGMP_LEAVING_MEMBER
 case|:
-comment|/* 			 * If we are leaving the group and switching to 			 * compatibility mode, we need to release the final 			 * reference held for issuing the INCLUDE {}, and 			 * transition to REPORTING to ensure the host leave 			 * message is sent upstream to the old querier -- 			 * transition to NOT would lose the leave and race. 			 * 			 * SMPNG: Must drop and re-acquire IF_ADDR_LOCK 			 * around inm_release_locked(), as it is not 			 * a recursive mutex. 			 */
-name|IF_ADDR_UNLOCK
+comment|/* 			 * If we are leaving the group and switching to 			 * compatibility mode, we need to release the final 			 * reference held for issuing the INCLUDE {}, and 			 * transition to REPORTING to ensure the host leave 			 * message is sent upstream to the old querier -- 			 * transition to NOT would lose the leave and race. 			 */
+name|SLIST_INSERT_HEAD
 argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|inm_release_locked
-argument_list|(
+operator|&
+name|igi
+operator|->
+name|igi_relinmhead
+argument_list|,
 name|inm
-argument_list|)
-expr_stmt|;
-name|IF_ADDR_LOCK
-argument_list|(
-name|ifp
+argument_list|,
+name|inm_nrele
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -7424,6 +7424,33 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|SLIST_FOREACH_SAFE
+argument_list|(
+argument|inm
+argument_list|,
+argument|&igi->igi_relinmhead
+argument_list|,
+argument|inm_nrele
+argument_list|,
+argument|tinm
+argument_list|)
+block|{
+name|SLIST_REMOVE_HEAD
+argument_list|(
+operator|&
+name|igi
+operator|->
+name|igi_relinmhead
+argument_list|,
+name|inm_nrele
+argument_list|)
+expr_stmt|;
+name|inm_release_locked
+argument_list|(
+name|inm
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 

@@ -5884,6 +5884,9 @@ name|struct
 name|in6_multi
 modifier|*
 name|inm
+decl_stmt|,
+modifier|*
+name|tinm
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -6000,20 +6003,17 @@ break|break;
 case|case
 name|MLD_LEAVING_MEMBER
 case|:
-comment|/* 			 * If we are leaving the group and switching 			 * version, we need to release the final 			 * reference held for issuing the INCLUDE {}. 			 * 			 * SMPNG: Must drop and re-acquire IF_ADDR_LOCK 			 * around in6m_release_locked(), as it is not 			 * a recursive mutex. 			 */
-name|IF_ADDR_UNLOCK
+comment|/* 			 * If we are leaving the group and switching 			 * version, we need to release the final 			 * reference held for issuing the INCLUDE {}. 			 */
+name|SLIST_INSERT_HEAD
 argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|in6m_release_locked
-argument_list|(
+operator|&
+name|mli
+operator|->
+name|mli_relinmhead
+argument_list|,
 name|inm
-argument_list|)
-expr_stmt|;
-name|IF_ADDR_LOCK
-argument_list|(
-name|ifp
+argument_list|,
+name|in6m_nrele
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -6067,6 +6067,33 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|SLIST_FOREACH_SAFE
+argument_list|(
+argument|inm
+argument_list|,
+argument|&mli->mli_relinmhead
+argument_list|,
+argument|in6m_nrele
+argument_list|,
+argument|tinm
+argument_list|)
+block|{
+name|SLIST_REMOVE_HEAD
+argument_list|(
+operator|&
+name|mli
+operator|->
+name|mli_relinmhead
+argument_list|,
+name|in6m_nrele
+argument_list|)
+expr_stmt|;
+name|in6m_release_locked
+argument_list|(
+name|inm
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
