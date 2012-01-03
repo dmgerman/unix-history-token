@@ -493,11 +493,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|lowerrootvp
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|xmp
@@ -505,7 +500,6 @@ argument_list|,
 name|M_NULLFSMNT
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|error
