@@ -1120,7 +1120,7 @@ name|p
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 operator|*
 name|p

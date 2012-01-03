@@ -8065,7 +8065,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|dirpart
 argument_list|,
@@ -8129,7 +8129,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|ent
 operator|->
@@ -10551,7 +10551,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|tmp
 argument_list|,
@@ -10609,7 +10609,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,

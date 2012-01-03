@@ -597,7 +597,7 @@ operator|--
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|LOCATE_REG
 argument_list|,
@@ -616,7 +616,7 @@ operator|>=
 name|name
 operator|&&
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -625,7 +625,7 @@ argument_list|)
 operator|!=
 name|NULL
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -673,7 +673,7 @@ name|p
 operator|>=
 name|name
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|LOCATE_REG
 argument_list|,
@@ -720,7 +720,7 @@ operator|--
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|LOCATE_REG
 argument_list|,

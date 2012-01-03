@@ -699,7 +699,7 @@ operator|&&
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|domain
 argument_list|,
@@ -773,7 +773,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hp
 operator|->
@@ -995,7 +995,7 @@ break|break;
 block|}
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,

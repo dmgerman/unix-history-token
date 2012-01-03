@@ -967,7 +967,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|line
 argument_list|,
@@ -987,7 +987,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|line
 argument_list|,
@@ -1005,7 +1005,7 @@ expr_stmt|;
 comment|/* remove # comments */
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -1291,7 +1291,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|line
 argument_list|,
@@ -1311,7 +1311,7 @@ condition|(
 operator|(
 name|s
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|line
 argument_list|,
@@ -1329,7 +1329,7 @@ expr_stmt|;
 comment|/* remove # comments */
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -3432,7 +3432,7 @@ name|cp
 decl_stmt|;
 name|cp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|fn
 argument_list|,

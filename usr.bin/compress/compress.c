@@ -308,7 +308,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -632,7 +632,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|argv
@@ -778,7 +778,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 operator|*
 name|argv
