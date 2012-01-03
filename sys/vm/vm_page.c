@@ -345,7 +345,7 @@ parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|int
+name|vm_page_bits_t
 name|pagebits
 parameter_list|)
 function_decl|;
@@ -8473,7 +8473,7 @@ operator|)
 return|;
 block|}
 comment|/*  * Mapping function for valid bits or for dirty bits in  * a page.  May not block.  *  * Inputs are required to range within a page.  */
-name|int
+name|vm_page_bits_t
 name|vm_page_bits
 parameter_list|(
 name|int
@@ -8539,12 +8539,18 @@ expr_stmt|;
 return|return
 operator|(
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|2
 operator|<<
 name|last_bit
 operator|)
 operator|-
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 name|first_bit
@@ -8748,7 +8754,7 @@ parameter_list|(
 name|vm_page_t
 name|m
 parameter_list|,
-name|int
+name|vm_page_bits_t
 name|pagebits
 parameter_list|)
 block|{
@@ -8822,9 +8828,6 @@ directive|if
 name|PAGE_SIZE
 operator|==
 literal|32768
-error|#
-directive|error
-error|pagebits too short
 name|atomic_clear_64
 argument_list|(
 operator|(
@@ -8946,15 +8949,15 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|u_long
+name|vm_page_bits_t
 name|oldvalid
+decl_stmt|,
+name|pagebits
 decl_stmt|;
 name|int
 name|endoff
 decl_stmt|,
 name|frag
-decl_stmt|,
-name|pagebits
 decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
@@ -8997,6 +9000,9 @@ operator|->
 name|valid
 operator|&
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 operator|(
@@ -9050,6 +9056,9 @@ operator|->
 name|valid
 operator|&
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 operator|(
@@ -9211,7 +9220,7 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|int
+name|vm_page_bits_t
 name|bits
 decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
@@ -9359,6 +9368,9 @@ operator|->
 name|valid
 operator|&
 operator|(
+operator|(
+name|vm_page_bits_t
+operator|)
 literal|1
 operator|<<
 name|i
@@ -9425,15 +9437,8 @@ name|int
 name|size
 parameter_list|)
 block|{
-name|int
+name|vm_page_bits_t
 name|bits
-init|=
-name|vm_page_bits
-argument_list|(
-name|base
-argument_list|,
-name|size
-argument_list|)
 decl_stmt|;
 name|VM_OBJECT_LOCK_ASSERT
 argument_list|(
@@ -9442,6 +9447,15 @@ operator|->
 name|object
 argument_list|,
 name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|bits
+operator|=
+name|vm_page_bits
+argument_list|(
+name|base
+argument_list|,
+name|size
 argument_list|)
 expr_stmt|;
 if|if
