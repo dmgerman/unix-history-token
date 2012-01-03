@@ -33,6 +33,12 @@ begin_if
 if|#
 directive|if
 name|__ppc__
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__powerpc64__
+argument_list|)
 end_if
 
 begin_function
@@ -173,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ppc__ */
+comment|/* __ppc__&& !defined(__powerpc64__) */
 end_comment
 
 end_unit
