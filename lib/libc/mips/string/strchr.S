@@ -44,7 +44,7 @@ __FBSDID("$FreeBSD$");
 	.abicalls
 #endif
 
-LEAF(index)
+LEAF(strchr)
 1:
 	lbu		a2, 0(a0)		# get a byte
 	PTR_ADDU	a0, a0, 1
@@ -56,4 +56,6 @@ notfnd:
 fnd:
 	PTR_SUBU	v0, a0, 1
 	j		ra
-END(index)
+END(strchr)
+
+STRONG_ALIAS(index, strchr)
