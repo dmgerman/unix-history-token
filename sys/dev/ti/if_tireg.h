@@ -4169,6 +4169,14 @@ decl_stmt|;
 name|ti_flag_vals
 name|ti_flags
 decl_stmt|;
+name|uint8_t
+modifier|*
+name|ti_membuf
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|ti_membuf2
+decl_stmt|;
 name|struct
 name|cdev
 modifier|*
