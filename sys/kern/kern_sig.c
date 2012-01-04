@@ -10809,9 +10809,9 @@ name|kernel
 argument_list|, ,
 name|signal_discard
 argument_list|,
-name|ps
-argument_list|,
 name|td
+argument_list|,
+name|p
 argument_list|,
 name|sig
 argument_list|,
