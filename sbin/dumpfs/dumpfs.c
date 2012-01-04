@@ -2756,7 +2756,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dumpfs [-fm] filesys | device\n"
+literal|"usage: dumpfs [-flm] filesys | device\n"
 argument_list|)
 expr_stmt|;
 name|exit
