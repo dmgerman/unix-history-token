@@ -3329,7 +3329,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* copy args to in_aliasreq, perform ioctl(SIOCAIFADDR_IN6). */
+comment|/* copy args to in_aliasreq, perform ioctl(SIOCAIFADDR). */
 name|bzero
 argument_list|(
 operator|&
@@ -3639,7 +3639,7 @@ name|ifa_addr
 operator|->
 name|sa_family
 operator|!=
-name|AF_INET6
+name|AF_INET
 condition|)
 continue|continue;
 if|if
@@ -3820,7 +3820,7 @@ name|struct
 name|in_aliasreq
 name|ifra
 decl_stmt|;
-comment|/* fill in_aliasreq and do ioctl(SIOCDIFADDR_IN6) */
+comment|/* fill in_aliasreq and do ioctl(SIOCDIFADDR) */
 name|bzero
 argument_list|(
 operator|&
