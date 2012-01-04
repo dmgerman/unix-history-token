@@ -82,8 +82,23 @@ decl_stmt|;
 name|uint32_t
 name|gpio_shift
 decl_stmt|,
-name|reg
+name|tmp
 decl_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_GPIO
+argument_list|,
+literal|"%s: gpio=%d, type=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|gpio
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 comment|/* each MUX controls 6 GPIO pins */
 if|if
 condition|(
@@ -123,7 +138,43 @@ operator|*
 literal|5
 expr_stmt|;
 comment|/* 	 * From Owl to Merlin 1.0, the value read from MUX1 bit 4 to bit 	 * 9 are wrong.  Here is hardware's coding: 	 * PRDATA[4:0]<= gpio_output_mux[0]; 	 * PRDATA[9:4]<= gpio_output_mux[1]; 	 *<==== Bit 4 is used by both gpio_output_mux[0] [1]. 	 * Currently the max value for gpio_output_mux[] is 6. So bit 4 	 * will never be used.  So it should be fine that bit 4 won't be 	 * able to recover. 	 */
-name|reg
+if|if
+condition|(
+name|AR_SREV_MERLIN_20_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+operator|||
+operator|(
+name|addr
+operator|!=
+name|AR_GPIO_OUTPUT_MUX1
+operator|)
+condition|)
+block|{
+name|OS_REG_RMW
+argument_list|(
+name|ah
+argument_list|,
+name|addr
+argument_list|,
+operator|(
+name|type
+operator|<<
+name|gpio_shift
+operator|)
+argument_list|,
+operator|(
+literal|0x1f
+operator|<<
+name|gpio_shift
+operator|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tmp
 operator|=
 name|OS_REG_READ
 argument_list|(
@@ -132,23 +183,11 @@ argument_list|,
 name|addr
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|addr
-operator|==
-name|AR_GPIO_OUTPUT_MUX1
-operator|&&
-operator|!
-name|AR_SREV_MERLIN_20_OR_LATER
-argument_list|(
-name|ah
-argument_list|)
-condition|)
-name|reg
+name|tmp
 operator|=
 operator|(
 operator|(
-name|reg
+name|tmp
 operator|&
 literal|0x1F0
 operator|)
@@ -157,13 +196,13 @@ literal|1
 operator|)
 operator||
 operator|(
-name|reg
+name|tmp
 operator|&
 operator|~
 literal|0x1F0
 operator|)
 expr_stmt|;
-name|reg
+name|tmp
 operator|&=
 operator|~
 operator|(
@@ -172,7 +211,7 @@ operator|<<
 name|gpio_shift
 operator|)
 expr_stmt|;
-name|reg
+name|tmp
 operator||=
 name|type
 operator|<<
@@ -184,9 +223,10 @@ name|ah
 argument_list|,
 name|addr
 argument_list|,
-name|reg
+name|tmp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -229,7 +269,23 @@ operator|.
 name|halNumGpioPins
 argument_list|)
 expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_GPIO
+argument_list|,
+literal|"%s: gpio=%d, type=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|gpio
+argument_list|,
+name|type
+argument_list|)
+expr_stmt|;
 comment|/* NB: type maps directly to hardware */
+comment|/* XXX this may not actually be the case, for anything but output */
 name|cfgOutputMux
 argument_list|(
 name|ah
@@ -264,6 +320,7 @@ operator|<<
 name|gpio_shift
 operator|)
 expr_stmt|;
+comment|/* Always drive, rather than tristate/drive low/drive high */
 name|reg
 operator||=
 name|AR_GPIO_OE_OUT_DRV_ALL
@@ -319,6 +376,19 @@ operator|->
 name|ah_caps
 operator|.
 name|halNumGpioPins
+argument_list|)
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_GPIO
+argument_list|,
+literal|"%s: gpio=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|gpio
 argument_list|)
 expr_stmt|;
 comment|/* TODO: configure input mux for AR5416 */
@@ -405,6 +475,21 @@ operator|.
 name|halNumGpioPins
 argument_list|)
 expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_GPIO
+argument_list|,
+literal|"%s: gpio=%d, val=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|gpio
+argument_list|,
+name|val
+argument_list|)
+expr_stmt|;
 name|reg
 operator|=
 name|OS_REG_READ
@@ -488,6 +573,27 @@ return|return
 literal|0xffffffff
 return|;
 comment|/* 	 * Read output value for all gpio's, shift it, 	 * and verify whether the specific bit is set. 	 */
+if|if
+condition|(
+name|AR_SREV_KIWI_10_OR_LATER
+argument_list|(
+name|ah
+argument_list|)
+condition|)
+name|bits
+operator|=
+name|MS
+argument_list|(
+name|OS_REG_READ
+argument_list|(
+name|ah
+argument_list|,
+name|AR_GPIO_IN_OUT
+argument_list|)
+argument_list|,
+name|AR9287_GPIO_IN_VAL
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|AR_SREV_KITE_10_OR_LATER
@@ -600,6 +706,21 @@ operator|->
 name|ah_caps
 operator|.
 name|halNumGpioPins
+argument_list|)
+expr_stmt|;
+name|HALDEBUG
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_DEBUG_GPIO
+argument_list|,
+literal|"%s: gpio=%d, ilevel=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|gpio
+argument_list|,
+name|ilevel
 argument_list|)
 expr_stmt|;
 if|if

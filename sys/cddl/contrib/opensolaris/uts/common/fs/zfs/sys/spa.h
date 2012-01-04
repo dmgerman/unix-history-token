@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -1968,6 +1968,15 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|uint64_t
+name|spa_load_guid
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|uint64_t
 name|spa_last_synced_txg
 parameter_list|(
 name|spa_t
@@ -2259,6 +2268,15 @@ function_decl|;
 specifier|extern
 name|void
 name|spa_freeze
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|spa_change_guid
 parameter_list|(
 name|spa_t
 modifier|*

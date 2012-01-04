@@ -3799,15 +3799,31 @@ name|uint8_t
 name|vr_revid
 decl_stmt|;
 comment|/* Rhine chip revision */
-name|uint8_t
+name|int
 name|vr_flags
 decl_stmt|;
 comment|/* See VR_F_* below */
 define|#
 directive|define
 name|VR_F_RESTART
-value|0x01
+value|0x0001
 comment|/* Restart unit on next tick */
+define|#
+directive|define
+name|VR_F_TXPAUSE
+value|0x0010
+define|#
+directive|define
+name|VR_F_SUSPENDED
+value|0x2000
+define|#
+directive|define
+name|VR_F_DETACHED
+value|0x4000
+define|#
+directive|define
+name|VR_F_LINK
+value|0x8000
 name|int
 name|vr_if_flags
 decl_stmt|;
@@ -3832,23 +3848,13 @@ name|mtx
 name|vr_mtx
 decl_stmt|;
 name|int
-name|vr_suspended
-decl_stmt|;
-comment|/* if 1, sleeping/detaching */
-name|int
 name|vr_quirks
-decl_stmt|;
-name|int
-name|vr_link
 decl_stmt|;
 name|int
 name|vr_watchdog_timer
 decl_stmt|;
 name|int
 name|vr_txthresh
-decl_stmt|;
-name|int
-name|vr_detach
 decl_stmt|;
 ifdef|#
 directive|ifdef

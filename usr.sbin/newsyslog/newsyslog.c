@@ -7509,7 +7509,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Generate a log filename, when using clasic filenames.  */
+comment|/*  * Generate a log filename, when using classic filenames.  */
 end_comment
 
 begin_function
@@ -7586,7 +7586,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete a rotated logfiles, when using clasic filenames.  */
+comment|/*  * Delete a rotated logfiles, when using classic filenames.  */
 end_comment
 
 begin_function
@@ -8065,7 +8065,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|dirpart
 argument_list|,
@@ -8129,7 +8129,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|ent
 operator|->
@@ -9060,6 +9060,13 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|assert
+argument_list|(
+name|zwork
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|pgm_path
 operator|=
 name|NULL
@@ -9080,10 +9087,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zwork
-operator|!=
-name|NULL
-operator|&&
 name|zwork
 operator|->
 name|zw_conf
@@ -10548,7 +10551,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|tmp
 argument_list|,
@@ -10606,7 +10609,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,

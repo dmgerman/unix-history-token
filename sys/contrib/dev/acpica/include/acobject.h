@@ -644,14 +644,18 @@ value|\     UINT32                          Value;
 comment|/* Value to store into the Bank or Index register */
 value|\     UINT8                           StartFieldBitOffset;
 comment|/* Bit offset within first field datum (0-63) */
-value|\   typedef struct acpi_object_field_common
+value|\     UINT8                           AccessLength;
 end_define
 
 begin_comment
-comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
+comment|/* For serial regions/fields */
 end_comment
 
-begin_block
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_object_field_common
+comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -662,12 +666,9 @@ name|RegionObj
 expr_stmt|;
 comment|/* Parent Operation Region object (REGION/BANK fields only) */
 block|}
-end_block
-
-begin_expr_stmt
 name|ACPI_OBJECT_FIELD_COMMON
-expr_stmt|;
-end_expr_stmt
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -676,12 +677,20 @@ name|acpi_object_region_field
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
-expr|union
+name|UINT16
+name|ResourceLength
+decl_stmt|;
+name|union
 name|acpi_operand_object
-operator|*
+modifier|*
 name|RegionObj
-expr_stmt|;
+decl_stmt|;
 comment|/* Containing OpRegion object */
+name|UINT8
+modifier|*
+name|ResourceBuffer
+decl_stmt|;
+comment|/* ResourceTemplate for serial regions/fields */
 block|}
 name|ACPI_OBJECT_REGION_FIELD
 typedef|;
@@ -956,6 +965,10 @@ modifier|*
 name|Method_REG
 decl_stmt|;
 comment|/* _REG method for this region (if any) */
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ScopeNode
+decl_stmt|;
 name|void
 modifier|*
 name|RegionContext

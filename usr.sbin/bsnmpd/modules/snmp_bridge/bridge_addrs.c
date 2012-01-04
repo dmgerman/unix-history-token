@@ -326,7 +326,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert an address entry in the bridge address TAILQ starting to search  * for its place from the position of the first bridge address for the bridge  * interface. Update the first bridge address if neccessary.  */
+comment|/*  * Insert an address entry in the bridge address TAILQ starting to search  * for its place from the position of the first bridge address for the bridge  * interface. Update the first bridge address if necessary.  */
 end_comment
 
 begin_function
@@ -463,7 +463,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Find an address entry's possition in the address list  * according to bridge interface name.  */
+comment|/*  * Find an address entry's position in the address list  * according to bridge interface name.  */
 end_comment
 
 begin_function

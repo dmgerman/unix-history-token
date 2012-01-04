@@ -1362,7 +1362,7 @@ name|siba
 parameter_list|)
 block|{
 comment|/* detach& delete all children */
-name|device_delete_all_children
+name|device_delete_children
 argument_list|(
 name|siba
 operator|->

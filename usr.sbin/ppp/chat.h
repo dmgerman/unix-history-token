@@ -118,12 +118,12 @@ name|char
 modifier|*
 name|bufstart
 decl_stmt|;
-comment|/* start of relevent data */
+comment|/* start of relevant data */
 name|char
 modifier|*
 name|bufend
 decl_stmt|;
-comment|/* end of relevent data */
+comment|/* end of relevant data */
 name|int
 name|TimeoutSec
 decl_stmt|;

@@ -1094,7 +1094,7 @@ init|;
 operator|*
 name|p1
 operator|&&
-name|index
+name|strchr
 argument_list|(
 name|spec
 argument_list|,

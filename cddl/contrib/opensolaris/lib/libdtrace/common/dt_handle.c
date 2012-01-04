@@ -1616,6 +1616,9 @@ name|size
 argument_list|,
 literal|"%llu %sdrop%s on CPU %d\n"
 argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
 name|howmany
 argument_list|,
 name|what
@@ -2099,9 +2102,14 @@ name|size
 argument_list|,
 literal|"%llu %s%s%s\n"
 argument_list|,
+call|(
+name|u_longlong_t
+call|)
+argument_list|(
 name|nval
 operator|-
 name|oval
+argument_list|)
 argument_list|,
 name|_dt_droptab
 index|[

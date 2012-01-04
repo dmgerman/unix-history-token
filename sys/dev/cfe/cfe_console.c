@@ -277,6 +277,20 @@ name|cfe_cnputc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cn_grab_t
+name|cfe_cngrab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_ungrab_t
+name|cfe_cnungrab
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|CONSOLE_DRIVER
 argument_list|(
@@ -694,6 +708,32 @@ begin_function
 specifier|static
 name|void
 name|cfe_cnterm
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cfe_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|cfe_cnungrab
 parameter_list|(
 name|struct
 name|consdev

@@ -528,7 +528,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* bit 3 for retry on error responce */
+comment|/* bit 3 for retry on error response */
 end_comment
 
 begin_define
@@ -580,7 +580,7 @@ comment|/*	0x00000080 */
 end_comment
 
 begin_comment
-comment|/* bit 7 reserverd */
+comment|/* bit 7 reserved */
 end_comment
 
 begin_define
@@ -599,7 +599,7 @@ comment|/*	0x0000f000 */
 end_comment
 
 begin_comment
-comment|/* bit 12-15 reserverd */
+comment|/* bit 12-15 reserved */
 end_comment
 
 begin_define

@@ -258,6 +258,9 @@ decl_stmt|;
 name|UINT32
 name|FileSize
 decl_stmt|;
+name|long
+name|Offset
+decl_stmt|;
 name|fp
 operator|=
 name|Gbl_Files
@@ -266,6 +269,13 @@ name|FileId
 index|]
 operator|.
 name|Handle
+expr_stmt|;
+name|Offset
+operator|=
+name|ftell
+argument_list|(
+name|fp
+argument_list|)
 expr_stmt|;
 name|fseek
 argument_list|(
@@ -286,11 +296,12 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* Restore file pointer */
 name|fseek
 argument_list|(
 name|fp
 argument_list|,
-literal|0
+name|Offset
 argument_list|,
 name|SEEK_SET
 argument_list|)

@@ -670,7 +670,7 @@ condition|(
 operator|!
 name|checkfile
 condition|)
-comment|/* file(s) specified, but none accessable */
+comment|/* file(s) specified, but none accessible */
 name|exit
 argument_list|(
 literal|1

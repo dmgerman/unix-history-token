@@ -2753,7 +2753,7 @@ name|entry_type
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * It doesnt matter which one gets written 		 * since they are the same size 		 */
+comment|/* 		 * It doesn't matter which one gets written 		 * since they are the same size 		 */
 name|fwrite
 argument_list|(
 operator|&

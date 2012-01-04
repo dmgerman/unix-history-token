@@ -9867,6 +9867,36 @@ name|tid
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* XXX Dump the frame, see what it is? */
+name|ieee80211_dump_pkt
+argument_list|(
+name|ni
+operator|->
+name|ni_ic
+argument_list|,
+name|mtod
+argument_list|(
+name|bf
+operator|->
+name|bf_m
+argument_list|,
+specifier|const
+name|uint8_t
+operator|*
+argument_list|)
+argument_list|,
+name|bf
+operator|->
+name|bf_m
+operator|->
+name|m_len
+argument_list|,
+literal|0
+argument_list|,
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
 name|t
 operator|=
 literal|1
@@ -12034,13 +12064,6 @@ operator|&
 name|bf_cq
 argument_list|)
 expr_stmt|;
-name|sc
-operator|->
-name|sc_stats
-operator|.
-name|ast_tx_aggrfail
-operator|++
-expr_stmt|;
 comment|/* 	 * Update rate control - all frames have failed. 	 * 	 * XXX use the length in the first frame in the series; 	 * XXX just so things are consistent for now. 	 */
 name|ath_tx_update_ratectrl
 argument_list|(
@@ -12103,6 +12126,13 @@ operator|->
 name|tid
 argument_list|)
 expr_stmt|;
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_aggr_failall
+operator|++
+expr_stmt|;
 comment|/* Retry all subframes */
 name|bf
 operator|=
@@ -12126,6 +12156,13 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* Remove it from the aggr list */
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_aggr_fail
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|ath_tx_retry_subframe
@@ -13058,6 +13095,13 @@ name|ba_index
 argument_list|)
 condition|)
 block|{
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_aggr_ok
+operator|++
+expr_stmt|;
 name|ath_tx_update_baw
 argument_list|(
 name|sc
@@ -13125,6 +13169,13 @@ expr_stmt|;
 block|}
 else|else
 block|{
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_aggr_fail
+operator|++
+expr_stmt|;
 if|if
 condition|(
 name|ath_tx_retry_subframe

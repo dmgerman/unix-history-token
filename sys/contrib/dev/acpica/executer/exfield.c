@@ -207,11 +207,23 @@ name|Region
 operator|.
 name|SpaceId
 operator|==
+name|ACPI_ADR_SPACE_GSBUS
+operator|||
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
 name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus or IPMI read. We must create a buffer to hold          * the data and then directly access the region handler.          *          * Note: Smbus protocol value is passed in upper 16-bits of Function          */
+comment|/*          * This is an SMBus, GSBus or IPMI read. We must create a buffer to hold          * the data and then directly access the region handler.          *          * Note: SMBus and GSBus protocol value is passed in upper 16-bits of Function          */
 if|if
 condition|(
 name|ObjDesc
@@ -230,6 +242,41 @@ block|{
 name|Length
 operator|=
 name|ACPI_SMBUS_BUFFER_SIZE
+expr_stmt|;
+name|Function
+operator|=
+name|ACPI_READ
+operator||
+operator|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|Attribute
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_GSBUS
+condition|)
+block|{
+name|Length
+operator|=
+name|ACPI_GSBUS_BUFFER_SIZE
 expr_stmt|;
 name|Function
 operator|=
@@ -677,11 +724,23 @@ name|Region
 operator|.
 name|SpaceId
 operator|==
+name|ACPI_ADR_SPACE_GSBUS
+operator|||
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
 name|ACPI_ADR_SPACE_IPMI
 operator|)
 condition|)
 block|{
-comment|/*          * This is an SMBus or IPMI write. We will bypass the entire field          * mechanism and handoff the buffer directly to the handler. For          * these address spaces, the buffer is bi-directional; on a write,          * return data is returned in the same buffer.          *          * Source must be a buffer of sufficient size:          * ACPI_SMBUS_BUFFER_SIZE or ACPI_IPMI_BUFFER_SIZE.          *          * Note: SMBus protocol type is passed in upper 16-bits of Function          */
+comment|/*          * This is an SMBus, GSBus or IPMI write. We will bypass the entire field          * mechanism and handoff the buffer directly to the handler. For          * these address spaces, the buffer is bi-directional; on a write,          * return data is returned in the same buffer.          *          * Source must be a buffer of sufficient size:          * ACPI_SMBUS_BUFFER_SIZE, ACPI_GSBUS_BUFFER_SIZE, or ACPI_IPMI_BUFFER_SIZE.          *          * Note: SMBus and GSBus protocol type is passed in upper 16-bits of Function          */
 if|if
 condition|(
 name|SourceDesc
@@ -698,7 +757,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus or IPMI write requires Buffer, found type %s"
+literal|"SMBus/IPMI/GenericSerialBus write requires Buffer, found type %s"
 operator|,
 name|AcpiUtGetObjectTypeName
 argument_list|(
@@ -747,6 +806,41 @@ literal|16
 operator|)
 expr_stmt|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_GSBUS
+condition|)
+block|{
+name|Length
+operator|=
+name|ACPI_GSBUS_BUFFER_SIZE
+expr_stmt|;
+name|Function
+operator|=
+name|ACPI_WRITE
+operator||
+operator|(
+name|ObjDesc
+operator|->
+name|Field
+operator|.
+name|Attribute
+operator|<<
+literal|16
+operator|)
+expr_stmt|;
+block|}
 else|else
 comment|/* IPMI */
 block|{
@@ -775,7 +869,7 @@ argument_list|(
 operator|(
 name|AE_INFO
 operator|,
-literal|"SMBus or IPMI write requires Buffer of length %u, found length %u"
+literal|"SMBus/IPMI/GenericSerialBus write requires Buffer of length %u, found length %u"
 operator|,
 name|Length
 operator|,

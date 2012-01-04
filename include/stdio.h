@@ -571,7 +571,7 @@ name|__XSI_VISIBLE
 define|#
 directive|define
 name|P_tmpdir
-value|"/var/tmp/"
+value|"/tmp/"
 endif|#
 directive|endif
 define|#
@@ -2146,7 +2146,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|__const
+specifier|const
 name|int
 name|sys_nerr
 decl_stmt|;
@@ -2154,10 +2154,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|__const
+specifier|const
 name|char
 modifier|*
-name|__const
+specifier|const
 name|sys_errlist
 index|[]
 decl_stmt|;
@@ -2539,6 +2539,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|__isthreaded
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -2584,13 +2591,6 @@ name|p
 parameter_list|)
 value|((p)->_file)
 end_define
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|__isthreaded
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#

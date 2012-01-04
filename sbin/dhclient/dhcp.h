@@ -792,6 +792,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|DHO_DOMAIN_SEARCH
+value|119
+end_define
+
+begin_define
+define|#
+directive|define
 name|DHO_CLASSLESS_ROUTES
 value|121
 end_define

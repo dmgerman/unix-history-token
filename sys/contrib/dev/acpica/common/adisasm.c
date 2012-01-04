@@ -2300,6 +2300,9 @@ case|case
 name|AML_REGION_OP
 case|:
 case|case
+name|AML_DATA_REGION_OP
+case|:
+case|case
 name|AML_CREATE_QWORD_FIELD_OP
 case|:
 case|case

@@ -1787,6 +1787,13 @@ literal|"infty "
 argument_list|)
 expr_stmt|;
 block|}
+name|print_vhid
+argument_list|(
+name|ifa
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'

@@ -497,13 +497,6 @@ block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_read_ivar
 argument_list|,
 name|acpi_pcib_read_ivar
@@ -650,11 +643,7 @@ argument_list|,
 name|acpi_pcib_power_for_sleep
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2437,6 +2426,7 @@ argument_list|,
 name|flags
 argument_list|)
 expr_stmt|;
+comment|/*      * XXX: If this is a request for a specific range, assume it is      * correct and pass it up to the parent.  What we probably want to      * do long-term is explicitly trust any firmware-configured      * resources during the initial bus scan on boot and then disable      * this after that.      */
 if|if
 condition|(
 name|res
@@ -2453,8 +2443,10 @@ name|end
 condition|)
 name|res
 operator|=
-name|acpi_alloc_sysres
+name|bus_generic_alloc_resource
 argument_list|(
+name|dev
+argument_list|,
 name|child
 argument_list|,
 name|type

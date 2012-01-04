@@ -2412,7 +2412,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read an u-record (emited by lint1 if a symbol was used).  */
+comment|/*  * Read an u-record (emitted by lint1 if a symbol was used).  */
 end_comment
 
 begin_function

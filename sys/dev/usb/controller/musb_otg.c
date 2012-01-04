@@ -7710,6 +7710,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|musbotg_suspend
 parameter_list|(
@@ -7719,11 +7720,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return;
+comment|/* TODO */
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|musbotg_resume
 parameter_list|(
@@ -7733,7 +7735,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return;
+comment|/* TODO */
 block|}
 end_function
 
@@ -10737,6 +10739,68 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|musbotg_set_hw_power_sleep
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|,
+name|uint32_t
+name|state
+parameter_list|)
+block|{
+name|struct
+name|musbotg_softc
+modifier|*
+name|sc
+init|=
+name|MUSBOTG_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|USB_HW_POWER_SUSPEND
+case|:
+name|musbotg_suspend
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_SHUTDOWN
+case|:
+name|musbotg_uninit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_RESUME
+case|:
+name|musbotg_resume
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|usb_bus_methods
@@ -10790,6 +10854,12 @@ name|xfer_poll
 operator|=
 operator|&
 name|musbotg_do_poll
+block|,
+operator|.
+name|set_hw_power_sleep
+operator|=
+operator|&
+name|musbotg_set_hw_power_sleep
 block|, }
 decl_stmt|;
 end_decl_stmt

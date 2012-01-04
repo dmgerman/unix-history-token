@@ -1342,7 +1342,8 @@ index|]
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
 parameter_list|,
@@ -22519,7 +22520,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -104792,7 +104794,7 @@ argument_list|,
 name|bwn_resume
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -44,7 +44,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__signed
+name|signed
 name|char
 name|__int8_t
 typedef|;

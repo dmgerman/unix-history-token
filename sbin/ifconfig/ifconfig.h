@@ -662,5 +662,21 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|print_vhid
+parameter_list|(
+specifier|const
+name|struct
+name|ifaddrs
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

@@ -224,7 +224,8 @@ name|char
 modifier|*
 name|c_name
 decl_stmt|;
-name|int
+name|unsigned
+name|long
 name|c_code
 decl_stmt|;
 name|int

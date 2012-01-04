@@ -1393,7 +1393,7 @@ argument_list|)
 expr_stmt|;
 else|else
 block|{
-comment|/* 		 * Otherwise use a prefix from the original name and 		 * upto 3 digits. 		 */
+comment|/* 		 * Otherwise use a prefix from the original name and 		 * up to 3 digits. 		 */
 name|nlen
 operator|=
 name|strlen

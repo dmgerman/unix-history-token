@@ -519,7 +519,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|USE_SIGCHLD
-comment|/* our parent is watching for our death by catching SIGCHLD.  we 	 * do not care to watch for our children's deaths this way -- we 	 * use wait() explictly.  so we have to disable the signal (which 	 * was inherited from the parent). 	 */
+comment|/* our parent is watching for our death by catching SIGCHLD.  we 	 * do not care to watch for our children's deaths this way -- we 	 * use wait() explicitly.  so we have to disable the signal (which 	 * was inherited from the parent). 	 */
 operator|(
 name|void
 operator|)

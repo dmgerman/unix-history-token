@@ -4633,6 +4633,9 @@ operator|(
 name|error
 operator|)
 return|;
+operator|(
+name|void
+operator|)
 name|device_set_driver
 argument_list|(
 name|dev
@@ -7014,6 +7017,8 @@ operator|->
 name|children
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -7117,7 +7122,7 @@ end_comment
 
 begin_function
 name|int
-name|device_delete_all_children
+name|device_delete_children
 parameter_list|(
 name|device_t
 name|dev
@@ -7158,6 +7163,8 @@ operator|->
 name|children
 argument_list|)
 operator|)
+operator|!=
+name|NULL
 condition|)
 block|{
 name|error
@@ -7616,6 +7623,8 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|device_set_driver
 argument_list|(
 name|child
@@ -7625,6 +7634,25 @@ operator|->
 name|driver
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|==
+name|ENOMEM
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
+elseif|else
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+continue|continue;
 if|if
 condition|(
 operator|!
@@ -7643,24 +7671,24 @@ name|driver
 operator|->
 name|name
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"driver bug: Unable to set devclass (devname: %s)\n"
+literal|"driver bug: Unable to set "
+literal|"devclass (devname: %s)\n"
 argument_list|,
-operator|(
-name|child
-condition|?
 name|device_get_name
 argument_list|(
 name|child
 argument_list|)
-else|:
-literal|"no device"
-operator|)
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|device_set_driver
 argument_list|(
 name|child
@@ -7711,6 +7739,9 @@ condition|(
 operator|!
 name|hasclass
 condition|)
+operator|(
+name|void
+operator|)
 name|device_set_devclass
 argument_list|(
 name|child
@@ -7744,6 +7775,9 @@ operator|>
 literal|0
 condition|)
 block|{
+operator|(
+name|void
+operator|)
 name|device_set_driver
 argument_list|(
 name|child
@@ -7877,6 +7911,8 @@ name|result
 operator|)
 return|;
 block|}
+name|result
+operator|=
 name|device_set_driver
 argument_list|(
 name|child
@@ -7886,6 +7922,17 @@ operator|->
 name|driver
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|result
+operator|)
+return|;
 name|resource_int_value
 argument_list|(
 name|best
@@ -9779,6 +9826,9 @@ operator|)
 operator|==
 literal|0
 condition|)
+operator|(
+name|void
+operator|)
 name|device_set_devclass
 argument_list|(
 name|dev
@@ -9786,6 +9836,9 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|device_set_driver
 argument_list|(
 name|dev
@@ -9975,6 +10028,9 @@ name|state
 operator|=
 name|DS_NOTPRESENT
 expr_stmt|;
+operator|(
+name|void
+operator|)
 name|device_set_driver
 argument_list|(
 name|dev

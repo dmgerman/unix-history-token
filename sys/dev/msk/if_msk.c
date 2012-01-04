@@ -1620,26 +1620,7 @@ argument_list|,
 name|mskc_shutdown
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1706,21 +1687,6 @@ argument_list|,
 name|bus_generic_shutdown
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -1743,11 +1709,7 @@ argument_list|,
 name|msk_miibus_statchg
 argument_list|)
 block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3294,7 +3256,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|10
+literal|100
 init|;
 name|i
 operator|>
@@ -3306,7 +3268,7 @@ control|)
 block|{
 name|DELAY
 argument_list|(
-literal|10
+literal|100
 argument_list|)
 expr_stmt|;
 name|idx

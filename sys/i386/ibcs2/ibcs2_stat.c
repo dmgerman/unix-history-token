@@ -1087,7 +1087,7 @@ argument_list|)
 expr_stmt|;
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|machine_name
 argument_list|,

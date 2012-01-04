@@ -62,7 +62,7 @@ begin_define
 define|#
 directive|define
 name|ASL_COMPLIANCE
-value|"Supports ACPI Specification Revision 4.0a"
+value|"Supports ACPI Specification Revision 5.0"
 end_define
 
 begin_comment
@@ -529,6 +529,95 @@ define|#
 directive|define
 name|POSITIVE
 value|0
+end_define
+
+begin_comment
+comment|/* Helper macros for resource tag creation */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RsCreateMultiBitField
+define|\
+value|RsCreateResourceField
+end_define
+
+begin_define
+define|#
+directive|define
+name|RsCreateBitField
+parameter_list|(
+name|Op
+parameter_list|,
+name|Name
+parameter_list|,
+name|ByteOffset
+parameter_list|,
+name|BitOffset
+parameter_list|)
+define|\
+value|RsCreateResourceField (Op, Name, ByteOffset, BitOffset, 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|RsCreateByteField
+parameter_list|(
+name|Op
+parameter_list|,
+name|Name
+parameter_list|,
+name|ByteOffset
+parameter_list|)
+define|\
+value|RsCreateResourceField (Op, Name, ByteOffset, 0, 8);
+end_define
+
+begin_define
+define|#
+directive|define
+name|RsCreateWordField
+parameter_list|(
+name|Op
+parameter_list|,
+name|Name
+parameter_list|,
+name|ByteOffset
+parameter_list|)
+define|\
+value|RsCreateResourceField (Op, Name, ByteOffset, 0, 16);
+end_define
+
+begin_define
+define|#
+directive|define
+name|RsCreateDwordField
+parameter_list|(
+name|Op
+parameter_list|,
+name|Name
+parameter_list|,
+name|ByteOffset
+parameter_list|)
+define|\
+value|RsCreateResourceField (Op, Name, ByteOffset, 0, 32);
+end_define
+
+begin_define
+define|#
+directive|define
+name|RsCreateQwordField
+parameter_list|(
+name|Op
+parameter_list|,
+name|Name
+parameter_list|,
+name|ByteOffset
+parameter_list|)
+define|\
+value|RsCreateResourceField (Op, Name, ByteOffset, 0, 64);
 end_define
 
 begin_endif

@@ -80,6 +80,18 @@ argument_list|(
 name|EvInitGlobalLockHandler
 argument_list|)
 expr_stmt|;
+comment|/* If Hardware Reduced flag is set, there is no global lock */
+if|if
+condition|(
+name|AcpiGbl_ReducedHardware
+condition|)
+block|{
+name|return_ACPI_STATUS
+argument_list|(
+name|AE_OK
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Attempt installation of the global lock handler */
 name|Status
 operator|=

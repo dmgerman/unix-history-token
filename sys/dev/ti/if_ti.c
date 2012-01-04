@@ -7900,10 +7900,6 @@ decl_stmt|;
 name|vm_page_t
 name|frame
 decl_stmt|;
-specifier|static
-name|int
-name|color
-decl_stmt|;
 comment|/* 1 extra buf to make nobufs easy*/
 name|struct
 name|sf_buf
@@ -8153,8 +8149,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|VM_ALLOC_INTERRUPT
 operator||

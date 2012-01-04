@@ -1411,7 +1411,7 @@ begin_define
 define|#
 directive|define
 name|AR_MAC_LED_ASSOC_NONE
-value|0x00000000
+value|0x0
 end_define
 
 begin_comment
@@ -1422,7 +1422,7 @@ begin_define
 define|#
 directive|define
 name|AR_MAC_LED_ASSOC_ACTIVE
-value|0x00000400
+value|0x1
 end_define
 
 begin_comment
@@ -1433,7 +1433,7 @@ begin_define
 define|#
 directive|define
 name|AR_MAC_LED_ASSOC_PEND
-value|0x00000800
+value|0x2
 end_define
 
 begin_comment
@@ -3367,6 +3367,20 @@ define|#
 directive|define
 name|AR9285_GPIO_IN_VAL_S
 value|12
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR9287_GPIO_IN_VAL
+value|0x003FF800
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR9287_GPIO_IN_VAL_S
+value|11
 end_define
 
 begin_define

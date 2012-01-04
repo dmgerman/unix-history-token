@@ -119,8 +119,9 @@ argument_list|(
 literal|"/options"
 argument_list|)
 operator|)
-operator|>
-literal|0
+operator|!=
+operator|-
+literal|1
 operator|&&
 name|OF_getprop
 argument_list|(

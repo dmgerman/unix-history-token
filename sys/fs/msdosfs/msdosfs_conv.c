@@ -103,6 +103,9 @@ name|u_char
 modifier|*
 name|dos2unixchr
 parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -146,6 +149,9 @@ name|u_char
 modifier|*
 name|win2unixchr
 parameter_list|(
+name|u_char
+modifier|*
+parameter_list|,
 name|u_int16_t
 parameter_list|,
 name|struct
@@ -2463,6 +2469,11 @@ decl_stmt|;
 name|u_char
 modifier|*
 name|c
+decl_stmt|,
+name|tmpbuf
+index|[
+literal|5
+index|]
 decl_stmt|;
 comment|/* 	 * If first char of the filename is SLOT_E5 (0x05), then the real 	 * first char of the filename should be 0xe5. But, they couldn't 	 * just have a 0xe5 mean 0xe5 because that is used to mean a freed 	 * directory slot. Another dos quirk. 	 */
 if|if
@@ -2499,6 +2510,8 @@ name|c
 operator|=
 name|dos2unixchr
 argument_list|(
+name|tmpbuf
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -2582,6 +2595,8 @@ name|c
 operator|=
 name|dos2unixchr
 argument_list|(
+name|tmpbuf
+argument_list|,
 operator|(
 specifier|const
 name|u_char
@@ -4286,6 +4301,11 @@ block|{
 name|u_char
 modifier|*
 name|c
+decl_stmt|,
+name|tmpbuf
+index|[
+literal|5
+index|]
 decl_stmt|;
 name|u_int8_t
 modifier|*
@@ -4479,6 +4499,8 @@ name|c
 operator|=
 name|win2unixchr
 argument_list|(
+name|tmpbuf
+argument_list|,
 name|code
 argument_list|,
 name|pmp
@@ -4598,6 +4620,8 @@ name|c
 operator|=
 name|win2unixchr
 argument_list|(
+name|tmpbuf
+argument_list|,
 name|code
 argument_list|,
 name|pmp
@@ -4717,6 +4741,8 @@ name|c
 operator|=
 name|win2unixchr
 argument_list|(
+name|tmpbuf
+argument_list|,
 name|code
 argument_list|,
 name|pmp
@@ -5154,6 +5180,10 @@ name|u_char
 modifier|*
 name|dos2unixchr
 parameter_list|(
+name|u_char
+modifier|*
+name|outbuf
+parameter_list|,
 specifier|const
 name|u_char
 modifier|*
@@ -5178,11 +5208,6 @@ name|c
 decl_stmt|,
 modifier|*
 name|outp
-decl_stmt|,
-name|outbuf
-index|[
-literal|5
-index|]
 decl_stmt|;
 name|size_t
 name|len
@@ -5741,6 +5766,10 @@ name|u_char
 modifier|*
 name|win2unixchr
 parameter_list|(
+name|u_char
+modifier|*
+name|outbuf
+parameter_list|,
 name|u_int16_t
 name|wc
 parameter_list|,
@@ -5760,11 +5789,6 @@ decl_stmt|,
 name|inbuf
 index|[
 literal|3
-index|]
-decl_stmt|,
-name|outbuf
-index|[
-literal|5
 index|]
 decl_stmt|;
 name|size_t
@@ -6246,6 +6270,9 @@ operator|-
 literal|1
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"msdosfs: non-decreasing id: id %d, last id %d\n"
@@ -6257,6 +6284,8 @@ operator|->
 name|nb_last_id
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* Will store this substring in a WIN_CHARS-aligned slot. */
@@ -6298,6 +6327,9 @@ operator|>
 name|MAXNAMLEN
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|MSDOSFS_DEBUG
 name|printf
 argument_list|(
 literal|"msdosfs: file name length %zu too large\n"
@@ -6305,6 +6337,8 @@ argument_list|,
 name|newlen
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return;
 block|}
 comment|/* Shift suffix upwards by the amount length exceeds WIN_CHARS. */

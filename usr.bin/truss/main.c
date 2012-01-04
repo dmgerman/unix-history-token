@@ -168,6 +168,7 @@ comment|/*  * WARNING! "FreeBSD a.out" must be first, or set_etype will not  * w
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
 name|ex_types
 block|{

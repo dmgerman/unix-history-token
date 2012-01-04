@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -250,11 +250,6 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
 parameter_list|,
 name|int
 modifier|*
@@ -1080,11 +1075,6 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
-parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
 parameter_list|)
 block|{
 name|struct
@@ -2039,8 +2029,6 @@ operator|)
 name|cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -2080,8 +2068,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 operator|(
 name|offset
@@ -2449,7 +2435,7 @@ name|sh
 argument_list|,
 name|op_err
 argument_list|,
-literal|0
+name|vrf_id
 argument_list|,
 name|net
 operator|->
@@ -4307,8 +4293,6 @@ name|stcb
 argument_list|,
 name|cp
 argument_list|,
-name|net
-argument_list|,
 name|abort_flag
 argument_list|)
 expr_stmt|;
@@ -4710,6 +4694,7 @@ name|struct
 name|sctp_shutdown_ack_chunk
 modifier|*
 name|cp
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -6786,10 +6771,6 @@ name|int
 modifier|*
 name|notification
 parameter_list|,
-name|sctp_assoc_t
-modifier|*
-name|sac_assoc_id
-parameter_list|,
 name|uint32_t
 name|vrf_id
 parameter_list|,
@@ -6839,9 +6820,6 @@ name|struct
 name|sctp_paramhdr
 modifier|*
 name|ph
-decl_stmt|;
-name|int
-name|chk_length
 decl_stmt|;
 name|int
 name|init_offset
@@ -7125,17 +7103,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|chk_length
-operator|=
-name|ntohs
-argument_list|(
-name|init_cp
-operator|->
-name|ch
-operator|.
-name|chunk_length
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|init_cp
@@ -7160,7 +7127,14 @@ name|init_offset
 operator|+
 name|SCTP_SIZE32
 argument_list|(
-name|chk_length
+name|ntohs
+argument_list|(
+name|init_cp
+operator|->
+name|ch
+operator|.
+name|chunk_length
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|initack_cp
@@ -7204,17 +7178,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|chk_length
-operator|=
-name|ntohs
-argument_list|(
-name|initack_cp
-operator|->
-name|ch
-operator|.
-name|chunk_length
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|initack_cp
@@ -7329,8 +7292,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -7722,8 +7683,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -8358,8 +8317,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -8402,8 +8359,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -8947,14 +8902,6 @@ operator|+
 name|SCTP_LOC_16
 argument_list|)
 expr_stmt|;
-operator|*
-name|sac_assoc_id
-operator|=
-name|sctp_get_associd
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
 comment|/* notify upper layer */
 operator|*
 name|notification
@@ -9418,8 +9365,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|)
 expr_stmt|;
 if|if
@@ -9469,8 +9414,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -9699,9 +9642,6 @@ modifier|*
 name|asoc
 decl_stmt|;
 name|int
-name|chk_length
-decl_stmt|;
-name|int
 name|init_offset
 decl_stmt|,
 name|initack_offset
@@ -9715,9 +9655,6 @@ name|int
 name|error
 init|=
 literal|0
-decl_stmt|;
-name|uint32_t
-name|old_tag
 decl_stmt|;
 name|uint8_t
 name|auth_chunk_buf
@@ -9829,17 +9766,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|chk_length
-operator|=
-name|ntohs
-argument_list|(
-name|init_cp
-operator|->
-name|ch
-operator|.
-name|chunk_length
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|init_cp
@@ -9870,7 +9796,14 @@ name|init_offset
 operator|+
 name|SCTP_SIZE32
 argument_list|(
-name|chk_length
+name|ntohs
+argument_list|(
+name|init_cp
+operator|->
+name|ch
+operator|.
+name|chunk_length
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * find and validate the INIT-ACK chunk in the cookie (my info) the 	 * INIT-ACK follows the INIT chunk 	 */
@@ -9922,17 +9855,6 @@ name|NULL
 operator|)
 return|;
 block|}
-name|chk_length
-operator|=
-name|ntohs
-argument_list|(
-name|initack_cp
-operator|->
-name|ch
-operator|.
-name|chunk_length
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|initack_cp
@@ -10258,12 +10180,6 @@ operator|)
 return|;
 block|}
 comment|/* process the INIT-ACK info (my info) */
-name|old_tag
-operator|=
-name|asoc
-operator|->
-name|my_vtag
-expr_stmt|;
 name|asoc
 operator|->
 name|my_vtag
@@ -10384,9 +10300,6 @@ argument_list|(
 name|init_cp
 argument_list|,
 name|stcb
-argument_list|,
-operator|*
-name|netp
 argument_list|)
 expr_stmt|;
 else|else
@@ -10505,8 +10418,6 @@ argument_list|(
 name|stcb
 argument_list|,
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|init_offset
 operator|+
@@ -11553,9 +11464,6 @@ name|struct
 name|sockaddr
 modifier|*
 name|to
-decl_stmt|;
-name|sctp_assoc_t
-name|sac_restart_id
 decl_stmt|;
 name|struct
 name|sctp_pcb
@@ -13087,9 +12995,6 @@ argument_list|,
 operator|&
 name|notification
 argument_list|,
-operator|&
-name|sac_restart_id
-argument_list|,
 name|vrf_id
 argument_list|,
 name|auth_skipped
@@ -13183,11 +13088,8 @@ name|NULL
 condition|)
 block|{
 comment|/* TSNH! Huh, why do I need to add this address here? */
-name|int
-name|ret
-decl_stmt|;
-name|ret
-operator|=
+if|if
+condition|(
 name|sctp_add_remote_addr
 argument_list|(
 operator|*
@@ -13201,7 +13103,14 @@ name|SCTP_DONOT_SETSCOPE
 argument_list|,
 name|SCTP_IN_COOKIE_PROC
 argument_list|)
-expr_stmt|;
+condition|)
+block|{
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|netl
 operator|=
 name|sctp_findnet
@@ -13330,12 +13239,7 @@ name|stcb
 argument_list|,
 literal|0
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
-operator|&
-name|sac_restart_id
+name|NULL
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
@@ -14173,6 +14077,7 @@ name|struct
 name|sctp_cookie_ack_chunk
 modifier|*
 name|cp
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -14728,8 +14633,6 @@ name|bkup
 decl_stmt|;
 name|uint8_t
 name|override_bit
-init|=
-literal|0
 decl_stmt|;
 name|uint32_t
 name|tsn
@@ -14981,12 +14884,17 @@ name|last_cwr_tsn
 condition|)
 block|{
 comment|/* Found him, send it off */
-goto|goto
-name|out
-goto|;
+break|break;
 block|}
 block|}
-comment|/* 		 * If we reach here, we need to send a special CWR that says 		 * hey, we did this a long time ago and you lost the 		 * response. 		 */
+if|if
+condition|(
+name|net
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* 			 * If we reach here, we need to send a special CWR 			 * that says hey, we did this a long time ago and 			 * you lost the response. 			 */
 name|net
 operator|=
 name|TAILQ_FIRST
@@ -14999,13 +14907,36 @@ operator|.
 name|nets
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|net
+operator|==
+name|NULL
+condition|)
+block|{
+comment|/* TSNH */
+return|return;
+block|}
 name|override_bit
 operator|=
 name|SCTP_CWR_REDUCE_OVERRIDE
 expr_stmt|;
 block|}
-name|out
-label|:
+else|else
+block|{
+name|override_bit
+operator|=
+literal|0
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|override_bit
+operator|=
+literal|0
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|SCTP_TSN_GT
@@ -15029,15 +14960,6 @@ operator|)
 condition|)
 block|{
 comment|/* 		 * JRS - Use the congestion control given in the pluggable 		 * CC module 		 */
-name|int
-name|ocwnd
-decl_stmt|;
-name|ocwnd
-operator|=
-name|net
-operator|->
-name|cwnd
-expr_stmt|;
 name|stcb
 operator|->
 name|asoc
@@ -15402,6 +15324,7 @@ name|struct
 name|sctp_shutdown_complete_chunk
 modifier|*
 name|cp
+name|SCTP_UNUSED
 parameter_list|,
 name|struct
 name|sctp_tcb
@@ -22009,8 +21932,6 @@ name|sctp_findassociation_ep_asconf
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
-argument_list|,
 operator|*
 name|offset
 argument_list|,
@@ -23187,9 +23108,6 @@ name|inp
 argument_list|,
 name|stcb
 argument_list|,
-operator|*
-name|netp
-argument_list|,
 operator|&
 name|abort_no_unlock
 argument_list|,
@@ -23898,9 +23816,6 @@ name|offset_dup
 argument_list|,
 name|stcb
 argument_list|,
-operator|*
-name|netp
-argument_list|,
 name|num_seg
 argument_list|,
 literal|0
@@ -24371,9 +24286,6 @@ argument_list|,
 name|offset_dup
 argument_list|,
 name|stcb
-argument_list|,
-operator|*
-name|netp
 argument_list|,
 name|num_seg
 argument_list|,
@@ -25284,10 +25196,6 @@ name|SCTP_DEBUG_INPUT3
 argument_list|,
 literal|"GAK, null buffer\n"
 argument_list|)
-expr_stmt|;
-name|auth_skipped
-operator|=
-literal|0
 expr_stmt|;
 operator|*
 name|offset
@@ -27456,11 +27364,6 @@ operator|*
 name|mm
 decl_stmt|;
 name|int
-name|abort_flag
-init|=
-literal|0
-decl_stmt|;
-name|int
 name|un_sent
 decl_stmt|;
 name|int
@@ -27679,11 +27582,7 @@ condition|)
 block|{
 name|sctp_pathmtu_adjustment
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|,
 name|net
 operator|->
@@ -28077,6 +27976,12 @@ comment|/* take care of ecn */
 if|if
 condition|(
 operator|(
+name|data_processed
+operator|==
+literal|1
+operator|)
+operator|&&
+operator|(
 name|stcb
 operator|->
 name|asoc
@@ -28191,21 +28096,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|was_a_gap
-argument_list|,
-operator|&
-name|abort_flag
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|abort_flag
-condition|)
-block|{
-comment|/* Again, we aborted so NO UNLOCK needed */
-goto|goto
-name|out_now
-goto|;
-block|}
 block|}
 elseif|else
 if|if
@@ -28614,14 +28506,21 @@ operator|&
 name|SCTP_MBUF_LOGGING_ENABLE
 condition|)
 block|{
+for|for
+control|(
 name|mat
 operator|=
 name|m
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|mat
-condition|)
+condition|;
+name|mat
+operator|=
+name|SCTP_BUF_NEXT
+argument_list|(
+name|mat
+argument_list|)
+control|)
 block|{
 if|if
 condition|(
@@ -28639,13 +28538,6 @@ name|SCTP_MBUF_INPUT
 argument_list|)
 expr_stmt|;
 block|}
-name|mat
-operator|=
-name|SCTP_BUF_NEXT
-argument_list|(
-name|mat
-argument_list|)
-expr_stmt|;
 block|}
 block|}
 endif|#
@@ -28983,8 +28875,6 @@ name|sctp_findassociation_addr
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
-argument_list|,
 name|offset
 operator|-
 sizeof|sizeof
@@ -29028,11 +28918,7 @@ condition|)
 block|{
 name|sctp_pathmtu_adjustment
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|,
 name|net
 operator|->
@@ -29193,8 +29079,6 @@ name|sctp_findassociation_addr
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
-argument_list|,
 name|offset
 operator|-
 sizeof|sizeof
@@ -29238,11 +29122,7 @@ condition|)
 block|{
 name|sctp_pathmtu_adjustment
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|,
 name|net
 operator|->
@@ -29420,8 +29300,6 @@ block|{
 name|sctp_send_shutdown_complete2
 argument_list|(
 name|m
-argument_list|,
-name|iphlen
 argument_list|,
 name|sh
 argument_list|,

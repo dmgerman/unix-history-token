@@ -2394,7 +2394,10 @@ name|int
 operator|)
 name|cmd_len
 argument_list|,
-operator|&
+operator|(
+name|char
+operator|*
+operator|)
 name|sc
 operator|->
 name|cbw

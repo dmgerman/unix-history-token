@@ -1869,7 +1869,7 @@ argument_list|,
 name|siba_bwn_msi_count
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

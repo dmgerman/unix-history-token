@@ -474,6 +474,10 @@ name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RegionObj
 parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|FieldObj
+parameter_list|,
 name|UINT32
 name|Function
 parameter_list|,

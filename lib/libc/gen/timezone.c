@@ -155,7 +155,7 @@ condition|(
 operator|(
 name|end
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|beg
 argument_list|,

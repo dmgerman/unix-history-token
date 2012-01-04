@@ -417,6 +417,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PRI_BATCH_RANGE
+value|(PRI_TIMESHARE_RANGE - PRI_INTERACT_RANGE)
+end_define
+
+begin_define
+define|#
+directive|define
 name|PRI_MIN_INTERACT
 value|PRI_MIN_TIMESHARE
 end_define
@@ -1992,13 +1999,6 @@ return|;
 block|}
 end_function
 
-begin_define
-define|#
-directive|define
-name|TS_RQ_PPQ
-value|(((PRI_MAX_BATCH - PRI_MIN_BATCH) + 1) / RQ_NQS)
-end_define
-
 begin_comment
 comment|/*  * Add a thread to the actual run-queue.  Keeps transferable counts up to  * date with what is actually on the run-queue.  Selects the correct  * queue position for timeshare threads.  */
 end_comment
@@ -2151,13 +2151,15 @@ condition|)
 block|{
 name|pri
 operator|=
+name|RQ_NQS
+operator|*
 operator|(
 name|pri
 operator|-
 name|PRI_MIN_BATCH
 operator|)
 operator|/
-name|TS_RQ_PPQ
+name|PRI_BATCH_RANGE
 expr_stmt|;
 name|pri
 operator|=
@@ -6446,11 +6448,16 @@ name|ts_ticks
 condition|)
 name|pri
 operator|+=
+name|min
+argument_list|(
 name|SCHED_PRI_TICKS
 argument_list|(
 name|td
 operator|->
 name|td_sched
+argument_list|)
+argument_list|,
+name|SCHED_PRI_RANGE
 argument_list|)
 expr_stmt|;
 name|pri
@@ -10846,6 +10853,21 @@ expr_stmt|;
 name|spinlock_exit
 argument_list|()
 expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|switchtime
+argument_list|,
+name|cpu_ticks
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|PCPU_SET
+argument_list|(
+name|switchticks
+argument_list|,
+name|ticks
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -10911,21 +10933,6 @@ operator|(
 name|uintptr_t
 operator|)
 name|newtd
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchtime
-argument_list|,
-name|cpu_ticks
-argument_list|()
-argument_list|)
-expr_stmt|;
-name|PCPU_SET
-argument_list|(
-name|switchticks
-argument_list|,
-name|ticks
-argument_list|)
 expr_stmt|;
 name|cpu_throw
 argument_list|(

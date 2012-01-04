@@ -4288,11 +4288,16 @@ name|dts
 operator|.
 name|dts_name
 argument_list|,
+call|(
+name|u_longlong_t
+call|)
+argument_list|(
 name|pc
 operator|-
 name|sym
 operator|.
 name|st_value
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -4361,6 +4366,9 @@ name|dts
 operator|.
 name|dts_object
 argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
 name|pc
 argument_list|)
 expr_stmt|;
@@ -4381,6 +4389,9 @@ argument_list|)
 argument_list|,
 literal|"0x%llx"
 argument_list|,
+operator|(
+name|u_longlong_t
+operator|)
 name|pc
 argument_list|)
 expr_stmt|;

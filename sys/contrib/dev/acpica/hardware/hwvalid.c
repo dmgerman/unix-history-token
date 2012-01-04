@@ -306,6 +306,17 @@ literal|32
 operator|)
 condition|)
 block|{
+name|ACPI_ERROR
+argument_list|(
+operator|(
+name|AE_INFO
+operator|,
+literal|"Bad BitWidth parameter: %8.8X"
+operator|,
+name|BitWidth
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|AE_BAD_PARAMETER

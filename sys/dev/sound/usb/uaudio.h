@@ -11,6 +11,18 @@ begin_comment
 comment|/* prototypes from "uaudio.c" used by "uaudio_pcm.c" */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_UAUDIO_H_
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_UAUDIO_H_
+end_define
+
 begin_struct_decl
 struct_decl|struct
 name|uaudio_chan
@@ -346,6 +358,15 @@ name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _UAUDIO_H_ */
+end_comment
 
 end_unit
 

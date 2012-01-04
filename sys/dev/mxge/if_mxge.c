@@ -13793,7 +13793,7 @@ control|)
 block|{
 name|ptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ptr
 argument_list|,

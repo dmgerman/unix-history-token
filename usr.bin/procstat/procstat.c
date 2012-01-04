@@ -72,6 +72,8 @@ name|bflag
 decl_stmt|,
 name|cflag
 decl_stmt|,
+name|eflag
+decl_stmt|,
 name|fflag
 decl_stmt|,
 name|iflag
@@ -80,11 +82,20 @@ name|jflag
 decl_stmt|,
 name|kflag
 decl_stmt|,
-name|sflag
+name|lflag
 decl_stmt|,
+name|sflag
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|tflag
 decl_stmt|,
 name|vflag
+decl_stmt|,
+name|xflag
 decl_stmt|;
 end_decl_stmt
 
@@ -111,14 +122,15 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"usage: procstat [-h] [-C] [-M core] [-N system] "
-literal|"[-w interval] [-b | -c | -f | -i | -j | -k | -s | -t | -v]\n"
+literal|"[-w interval] \n"
 argument_list|)
 expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"                [-a | pid ...]\n"
+literal|"                [-b | -c | -e | -f | -i | -j | -k | "
+literal|"-l | -s | -t | -v | -x] [-a | pid ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -160,6 +172,16 @@ condition|(
 name|cflag
 condition|)
 name|procstat_args
+argument_list|(
+name|kipp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|eflag
+condition|)
+name|procstat_env
 argument_list|(
 name|kipp
 argument_list|)
@@ -215,6 +237,16 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+name|lflag
+condition|)
+name|procstat_rlimit
+argument_list|(
+name|kipp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
 name|sflag
 condition|)
 name|procstat_cred
@@ -238,6 +270,16 @@ condition|(
 name|vflag
 condition|)
 name|procstat_vm
+argument_list|(
+name|kipp
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|xflag
+condition|)
+name|procstat_auxv
 argument_list|(
 name|kipp
 argument_list|)
@@ -450,7 +492,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CN:M:abcfijkhstvw:"
+literal|"CN:M:abcefijklhstvw:x"
 argument_list|)
 operator|)
 operator|!=
@@ -508,6 +550,13 @@ operator|++
 expr_stmt|;
 break|break;
 case|case
+literal|'e'
+case|:
+name|eflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'f'
 case|:
 name|fflag
@@ -532,6 +581,13 @@ case|case
 literal|'k'
 case|:
 name|kflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
 operator|++
 expr_stmt|;
 break|break;
@@ -614,6 +670,13 @@ name|l
 expr_stmt|;
 break|break;
 case|case
+literal|'x'
+case|:
+name|xflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -637,6 +700,8 @@ name|bflag
 operator|+
 name|cflag
 operator|+
+name|eflag
+operator|+
 name|fflag
 operator|+
 operator|(
@@ -647,11 +712,15 @@ else|:
 literal|0
 operator|)
 operator|+
+name|lflag
+operator|+
 name|sflag
 operator|+
 name|tflag
 operator|+
 name|vflag
+operator|+
+name|xflag
 expr_stmt|;
 if|if
 condition|(

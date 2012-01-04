@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netdb.h>
 end_include
 
@@ -4248,7 +4254,8 @@ name|stream_printf
 argument_list|(
 name|wr
 argument_list|,
-literal|"%llu"
+literal|"%"
+name|PRId64
 argument_list|,
 name|off
 argument_list|)

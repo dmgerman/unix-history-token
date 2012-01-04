@@ -69,14 +69,6 @@ directive|include
 file|"xlocale_private.h"
 end_include
 
-begin_typedef
-typedef|typedef
-name|unsigned
-name|char
-name|u_char
-typedef|;
-end_typedef
-
 begin_function
 name|int
 name|strcasecmp_l

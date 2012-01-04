@@ -55,27 +55,6 @@ begin_comment
 comment|/* Dispatch tables for Resource disassembly functions */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|void
-function_decl|(
-modifier|*
-name|ACPI_RESOURCE_HANDLER
-function_decl|)
-parameter_list|(
-name|AML_RESOURCE
-modifier|*
-name|Resource
-parameter_list|,
-name|UINT32
-name|Length
-parameter_list|,
-name|UINT32
-name|Level
-parameter_list|)
-function_decl|;
-end_typedef
-
 begin_decl_stmt
 specifier|static
 name|ACPI_RESOURCE_HANDLER
@@ -114,9 +93,9 @@ comment|/* 0x08, ACPI_RESOURCE_NAME_IO_PORT */
 name|AcpiDmFixedIoDescriptor
 block|,
 comment|/* 0x09, ACPI_RESOURCE_NAME_FIXED_IO_PORT */
-name|NULL
+name|AcpiDmFixedDmaDescriptor
 block|,
-comment|/* 0x0A, Reserved */
+comment|/* 0x0A, ACPI_RESOURCE_NAME_FIXED_DMA */
 name|NULL
 block|,
 comment|/* 0x0B, Reserved */
@@ -167,7 +146,16 @@ name|AcpiDmQwordDescriptor
 block|,
 comment|/* 0x0A, ACPI_RESOURCE_NAME_QWORD_ADDRESS_SPACE */
 name|AcpiDmExtendedDescriptor
+block|,
 comment|/* 0x0B, ACPI_RESOURCE_NAME_EXTENDED_ADDRESS_SPACE */
+name|AcpiDmGpioDescriptor
+block|,
+comment|/* 0x0C, ACPI_RESOURCE_NAME_GPIO */
+name|NULL
+block|,
+comment|/* 0x0D, Reserved */
+name|AcpiDmSerialBusDescriptor
+comment|/* 0x0E, ACPI_RESOURCE_NAME_SERIAL_BUS */
 block|}
 decl_stmt|;
 end_decl_stmt

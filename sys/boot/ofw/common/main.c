@@ -512,7 +512,7 @@ argument_list|)
 expr_stmt|;
 name|ch
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|bootpath
 argument_list|,

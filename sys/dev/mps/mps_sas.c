@@ -4485,6 +4485,12 @@ name|SCSI_REV_SPC
 expr_stmt|;
 name|cpi
 operator|->
+name|maxio
+operator|=
+name|MAXPHYS
+expr_stmt|;
+name|cpi
+operator|->
 name|ccb_h
 operator|.
 name|status

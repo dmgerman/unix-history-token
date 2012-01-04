@@ -110,7 +110,7 @@ condition|(
 operator|(
 name|t
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|bp
 argument_list|,

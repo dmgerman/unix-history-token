@@ -698,14 +698,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|map
-operator|=
-name|NULL
-expr_stmt|;
-name|mapsize
-operator|=
-literal|0
-expr_stmt|;
 name|nvout
 operator|=
 name|nv_alloc

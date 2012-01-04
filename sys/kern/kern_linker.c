@@ -4299,14 +4299,14 @@ expr_stmt|;
 comment|/* 	 * If file does not contain a qualified name or any dot in it 	 * (kldname.ko, or kldname.ver.ko) treat it as an interface 	 * name. 	 */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|file
 argument_list|,
 literal|'/'
 argument_list|)
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|file
 argument_list|,
@@ -8752,7 +8752,7 @@ decl_stmt|;
 comment|/* qualified at all? */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -8867,7 +8867,7 @@ name|filename
 decl_stmt|;
 name|filename
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|path
 argument_list|,

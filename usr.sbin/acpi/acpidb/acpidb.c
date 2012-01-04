@@ -96,7 +96,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/dev/acpica/tools/acpiexec/aecommon.h>
+file|<contrib/dev/acpica/include/accommon.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acdebug.h>
 end_include
 
 begin_comment
@@ -1573,6 +1579,11 @@ block|{
 name|perror
 argument_list|(
 literal|"fstat"
+argument_list|)
+expr_stmt|;
+name|close
+argument_list|(
+name|fd
 argument_list|)
 expr_stmt|;
 return|return

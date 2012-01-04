@@ -153,7 +153,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the time in seconds since the beginning of the day.  *  * Some BIOSes (notably qemu) don't correctly read the RTC  * registers in an atomic way, sometimes returning bogus values.  * Therefore we "debounce" the reading by accepting it only when  * we got two identical values in succession.  *  * If we pass midnight, don't wrap back to 0.  */
+comment|/*  * Return the time in seconds since the beginning of the day.  *  * Some BIOSes (notably qemu) don't correctly read the RTC  * registers in an atomic way, sometimes returning bogus values.  * Therefore we "debounce" the reading by accepting it only when  * we got 8 identical values in succession.  *  * If we pass midnight, don't wrap back to 0.  */
 end_comment
 
 begin_function
@@ -175,8 +175,12 @@ decl_stmt|,
 name|check
 decl_stmt|;
 name|int
+name|same
+decl_stmt|,
 name|try
 decl_stmt|;
+name|same
+operator|=
 name|try
 operator|=
 literal|0
@@ -197,12 +201,23 @@ operator|=
 name|bios_seconds
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|check
+operator|!=
+name|now
+condition|)
+name|same
+operator|=
+literal|0
+expr_stmt|;
 block|}
 do|while
 condition|(
-name|now
-operator|!=
-name|check
+operator|++
+name|same
+operator|<
+literal|8
 operator|&&
 operator|++
 name|try

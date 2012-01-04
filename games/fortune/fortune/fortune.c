@@ -3474,7 +3474,7 @@ condition|(
 operator|(
 name|sp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|offensive
 argument_list|,
@@ -3959,7 +3959,7 @@ condition|(
 operator|(
 name|sp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|file
 argument_list|,
@@ -4040,7 +4040,7 @@ condition|(
 operator|(
 name|sp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|sp
 argument_list|,

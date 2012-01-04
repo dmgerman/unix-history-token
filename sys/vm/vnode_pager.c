@@ -1545,7 +1545,7 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* 			 * Update the valid bits to reflect the blocks that 			 * have been zeroed.  Some of these valid bits may 			 * have already been set. 			 */
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 argument_list|(
 name|m
 argument_list|,
@@ -4173,7 +4173,7 @@ block|}
 else|else
 block|{
 comment|/* 			 * Read did not fill up entire page. 			 * 			 * Currently we do not set the entire page valid, 			 * we just try to clear the piece that we couldn't 			 * read. 			 */
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 argument_list|(
 name|mt
 argument_list|,

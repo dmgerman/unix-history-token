@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<beat@chruetertee.ch> wrote this file. As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.          Beat Gätzi  * ----------------------------------------------------------------------------  */
+comment|/*-  * ----------------------------------------------------------------------------  * "THE BEER-WARE LICENSE" (Revision 42):  *<beat@chruetertee.ch> wrote this file. As long as you retain this notice you  * can do whatever you want with this stuff. If we meet some day, and you think  * this stuff is worth it, you can buy me a beer in return.          Beat GÃ¤tzi  * ----------------------------------------------------------------------------  */
 end_comment
 
 begin_include
@@ -618,12 +618,10 @@ name|tmp_file
 argument_list|,
 name|pkgdbpath
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
-name|pkgdbpath
+name|tmp_file
 argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|n
@@ -889,12 +887,12 @@ name|name
 argument_list|,
 name|pname
 argument_list|,
-name|strlen
+sizeof|sizeof
 argument_list|(
-name|pname
+name|curr
+operator|->
+name|name
 argument_list|)
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|curr

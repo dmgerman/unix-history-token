@@ -511,6 +511,22 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|uint32_t
+name|biospci_locator
+parameter_list|(
+name|int8_t
+name|bus
+parameter_list|,
+name|uint8_t
+name|device
+parameter_list|,
+name|uint8_t
+name|function
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|biosacpi_detect
 parameter_list|(

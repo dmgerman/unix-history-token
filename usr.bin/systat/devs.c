@@ -1178,7 +1178,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|tmpstr1
 argument_list|,

@@ -391,6 +391,15 @@ argument_list|)
 block|,
 name|AXE_DEV
 argument_list|(
+name|ASIX
+argument_list|,
+name|AX88772B_1
+argument_list|,
+name|AXE_FLAG_772B
+argument_list|)
+block|,
+name|AXE_DEV
+argument_list|(
 name|ATEN
 argument_list|,
 name|UC210T
@@ -1131,14 +1140,6 @@ argument_list|,
 name|axe_detach
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -1161,11 +1162,7 @@ argument_list|,
 name|axe_miibus_statchg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

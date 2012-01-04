@@ -3702,7 +3702,7 @@ end_define
 begin_function
 specifier|static
 name|int
-comment|/* # of characters upto \r,\n or \0 */
+comment|/* # of characters up to \r,\n or \0 */
 name|getline
 parameter_list|(
 name|int

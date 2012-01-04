@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -374,7 +374,9 @@ literal|"asconf_success_response: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|aph
@@ -444,7 +446,9 @@ name|param_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -535,7 +539,9 @@ literal|"asconf_error_response: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|aph
@@ -643,7 +649,9 @@ argument_list|)
 expr_stmt|;
 comment|/* discard */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -713,7 +721,9 @@ name|param_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -898,7 +908,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v4addr
@@ -1045,7 +1057,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v6addr
@@ -1191,7 +1205,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* end switch */
@@ -1385,7 +1401,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -1433,8 +1451,10 @@ condition|)
 block|{
 comment|/* not found */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* delete all destination addresses except the source */
@@ -1513,7 +1533,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1702,7 +1724,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v4addr
@@ -1819,7 +1843,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v6addr
@@ -1946,7 +1972,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* make sure the source address is not being deleted */
@@ -1994,7 +2022,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* if deleting 0.0.0.0/::0, delete all addresses except src addr */
@@ -2074,7 +2104,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* delete the address */
@@ -2157,7 +2189,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -2329,7 +2363,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v4addr
@@ -2438,7 +2474,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v6addr
@@ -2560,7 +2598,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* if 0.0.0.0/::0, use the source address instead */
@@ -2874,7 +2914,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -5804,9 +5846,6 @@ name|sctp_ifa
 modifier|*
 name|addr
 parameter_list|,
-name|uint16_t
-name|type
-parameter_list|,
 name|uint32_t
 name|flag
 parameter_list|)
@@ -7775,8 +7814,6 @@ name|aparam
 operator|->
 name|ifa
 argument_list|,
-name|param_type
-argument_list|,
 name|flag
 argument_list|)
 expr_stmt|;
@@ -9218,6 +9255,7 @@ name|ptr
 parameter_list|,
 name|uint32_t
 name|val
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -9423,6 +9461,7 @@ name|ptr
 parameter_list|,
 name|uint32_t
 name|val
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -9578,6 +9617,7 @@ name|ptr
 parameter_list|,
 name|uint32_t
 name|val
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -10248,6 +10288,7 @@ name|ptr
 parameter_list|,
 name|uint32_t
 name|val
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -11114,11 +11155,15 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -13244,11 +13289,6 @@ name|uint32_t
 name|sctp_addr_in_initack
 parameter_list|(
 name|struct
-name|sctp_tcb
-modifier|*
-name|stcb
-parameter_list|,
-name|struct
 name|mbuf
 modifier|*
 name|m
@@ -13885,8 +13925,6 @@ condition|(
 operator|!
 name|sctp_addr_in_initack
 argument_list|(
-name|stcb
-argument_list|,
 name|m
 argument_list|,
 name|offset
@@ -13990,6 +14028,26 @@ decl_stmt|;
 name|uint32_t
 name|vrf_id
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin
+decl_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+name|struct
+name|sockaddr_in6
+modifier|*
+name|sin6
+decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|stcb
@@ -14083,14 +14141,136 @@ condition|)
 block|{
 continue|continue;
 block|}
+switch|switch
+condition|(
+name|sctp_ifa
+operator|->
+name|address
+operator|.
+name|sa
+operator|.
+name|sa_family
+condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|INET
+case|case
+name|AF_INET
+case|:
+name|sin
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+operator|&
+name|sctp_ifa
+operator|->
+name|address
+operator|.
+name|sin
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ipv4_scope
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|IN4_ISPRIVATE_ADDRESS
+argument_list|(
+operator|&
+name|sin
+operator|->
+name|sin_addr
+argument_list|)
+operator|)
+condition|)
+block|{
+comment|/* private address not in scope */
+continue|continue;
+block|}
+break|break;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+case|case
+name|AF_INET6
+case|:
+name|sin6
+operator|=
+operator|(
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+operator|&
+name|sctp_ifa
+operator|->
+name|address
+operator|.
+name|sin6
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|local_scope
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|IN6_IS_ADDR_LINKLOCAL
+argument_list|(
+operator|&
+name|sin6
+operator|->
+name|sin6_addr
+argument_list|)
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+if|if
+condition|(
+operator|(
+name|site_scope
+operator|==
+literal|0
+operator|)
+operator|&&
+operator|(
+name|IN6_IS_ADDR_SITELOCAL
+argument_list|(
+operator|&
+name|sin6
+operator|->
+name|sin6_addr
+argument_list|)
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+break|break;
+endif|#
+directive|endif
+default|default:
+break|break;
+block|}
 comment|/* check to see if in the init-ack */
 if|if
 condition|(
 operator|!
 name|sctp_addr_in_initack
 argument_list|(
-name|stcb
-argument_list|,
 name|m
 argument_list|,
 name|offset

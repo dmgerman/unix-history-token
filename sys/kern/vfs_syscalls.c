@@ -4314,7 +4314,7 @@ name|chroot_allow_open_directories
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow a process to chroot(2) if it has a directory open"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10116,6 +10116,13 @@ operator|->
 name|f_offset
 operator|=
 name|offset
+expr_stmt|;
+name|VFS_KNOTE_UNLOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(
@@ -21631,6 +21638,7 @@ block|}
 endif|#
 directive|endif
 comment|/* CAPABILITIES */
+comment|/* 	 * The file could be not of the vnode type, or it may be not 	 * yet fully initialized, in which case the f_vnode pointer 	 * may be set, but f_ops is still badfileops.  E.g., 	 * devfs_open() transiently create such situation to 	 * facilitate csw d_fdopen(). 	 * 	 * Dupfdopen() handling in kern_openat() installs the 	 * half-baked file into the process descriptor table, allowing 	 * other thread to dereference it. Guard against the race by 	 * checking f_ops. 	 */
 if|if
 condition|(
 name|fp
@@ -21638,6 +21646,13 @@ operator|->
 name|f_vnode
 operator|==
 name|NULL
+operator|||
+name|fp
+operator|->
+name|f_ops
+operator|==
+operator|&
+name|badfileops
 condition|)
 block|{
 name|fdrop

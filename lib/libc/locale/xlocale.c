@@ -746,7 +746,16 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-else|else
+elseif|else
+if|if
+condition|(
+name|base
+operator|->
+name|components
+index|[
+name|type
+index|]
+condition|)
 block|{
 name|new
 operator|->
@@ -765,6 +774,13 @@ name|type
 index|]
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* If the component was NULL, return success - if base is a valid 		 * locale then the flag indicating that this isn't present should be 		 * set.  If it isn't a valid locale, then we're stuck anyway. */
+return|return
+literal|1
+return|;
 block|}
 return|return
 operator|(

@@ -1094,10 +1094,10 @@ argument_list|,
 literal|"CENDVAR"
 argument_list|)
 expr_stmt|;
-comment|/* ':/' for tilde expansion, '-' for [a\-x] pattern ranges */
+comment|/* ':/' for tilde expansion, '-^]' for [a\-x] pattern ranges */
 name|add
 argument_list|(
-literal|"!*?[=~:/-"
+literal|"!*?[]=~:/-^"
 argument_list|,
 literal|"CCTL"
 argument_list|)
@@ -1138,10 +1138,10 @@ argument_list|,
 literal|"CENDQUOTE"
 argument_list|)
 expr_stmt|;
-comment|/* ':/' for tilde expansion, '-' for [a\-x] pattern ranges */
+comment|/* ':/' for tilde expansion, '-^]' for [a\-x] pattern ranges */
 name|add
 argument_list|(
-literal|"!*?[=~:/-"
+literal|"!*?[]=~:/-^"
 argument_list|,
 literal|"CCTL"
 argument_list|)

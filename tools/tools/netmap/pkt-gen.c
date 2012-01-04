@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: pkt-gen.c 9638 2011-11-07 18:07:43Z luigi $  *  * Example program to show how to build a multithreaded packet  * source/sink using the netmap device.  *  * In this example we create a programmable number of threads  * to take care of all the queues of the interface used to  * send or receive traffic.  *  */
+comment|/*  * $FreeBSD$  * $Id: pkt-gen.c 9827 2011-12-05 11:29:34Z luigi $  *  * Example program to show how to build a multithreaded packet  * source/sink using the netmap device.  *  * In this example we create a programmable number of threads  * to take care of all the queues of the interface used to  * send or receive traffic.  *  */
 end_comment
 
 begin_decl_stmt
@@ -65,6 +65,16 @@ include|#
 directive|include
 file|<stdio.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|<inttypes.h>
+end_include
+
+begin_comment
+comment|/* PRI* macros */
+end_comment
 
 begin_include
 include|#
@@ -2039,7 +2049,7 @@ condition|)
 goto|goto
 name|quit
 goto|;
-comment|/* setup poll(2) machanism. */
+comment|/* setup poll(2) mechanism. */
 name|memset
 argument_list|(
 name|fds
@@ -2635,7 +2645,7 @@ condition|)
 goto|goto
 name|quit
 goto|;
-comment|/* setup poll(2) machanism. */
+comment|/* setup poll(2) mechanism. */
 name|memset
 argument_list|(
 name|fds
@@ -2811,7 +2821,7 @@ name|tv_sec
 operator|-=
 literal|1
 expr_stmt|;
-comment|/* Substract timeout time. */
+comment|/* Subtract timeout time. */
 break|break;
 block|}
 for|for
@@ -3008,7 +3018,9 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Sent %llu packets, %d bytes each, in %.2f seconds.\n"
+literal|"Sent %"
+name|PRIu64
+literal|" packets, %d bytes each, in %.2f seconds.\n"
 argument_list|,
 name|sent
 argument_list|,
@@ -3097,7 +3109,9 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"Received %llu packets, in %.2f seconds.\n"
+literal|"Received %"
+name|PRIu64
+literal|" packets, in %.2f seconds.\n"
 argument_list|,
 name|received
 argument_list|,
@@ -4634,7 +4648,9 @@ name|pps
 expr_stmt|;
 name|D
 argument_list|(
-literal|"%llu pps"
+literal|"%"
+name|PRIu64
+literal|" pps"
 argument_list|,
 name|pps
 argument_list|)
@@ -4740,7 +4756,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-comment|/* 		 * Collect threads o1utput and extract information about 		 * how log it took to send all the packets. 		 */
+comment|/* 		 * Collect threads output and extract information about 		 * how long it took to send all the packets. 		 */
 name|count
 operator|+=
 name|targs

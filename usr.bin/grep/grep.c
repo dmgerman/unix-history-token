@@ -724,12 +724,12 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|notfound
+name|file_err
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file not found */
+comment|/* file reading error */
 end_comment
 
 begin_comment
@@ -825,6 +825,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|option
 name|long_options
@@ -3772,7 +3774,7 @@ argument_list|(
 name|c
 condition|?
 operator|(
-name|notfound
+name|file_err
 condition|?
 operator|(
 name|qflag
@@ -3786,7 +3788,7 @@ literal|0
 operator|)
 else|:
 operator|(
-name|notfound
+name|file_err
 condition|?
 literal|2
 else|:

@@ -537,7 +537,7 @@ comment|/* XXX: for buf.c::getblk() */
 end_comment
 
 begin_comment
-comment|/* publically visible functions */
+comment|/* publicly visible functions */
 end_comment
 
 begin_function

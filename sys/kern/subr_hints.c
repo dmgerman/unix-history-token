@@ -504,10 +504,9 @@ argument_list|,
 name|cp
 argument_list|)
 expr_stmt|;
-comment|/* XXX: abuse bogus index() declaration */
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -701,7 +700,7 @@ comment|/* This is a bit of a hack, but at least is reentrant */
 comment|/* Note that it returns some !unterminated! strings. */
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
@@ -722,7 +721,7 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
@@ -760,7 +759,7 @@ name|r_unit
 expr_stmt|;
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,
@@ -781,7 +780,7 @@ name|s
 expr_stmt|;
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,

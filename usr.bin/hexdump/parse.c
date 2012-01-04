@@ -177,7 +177,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -797,7 +797,7 @@ continue|continue;
 comment|/* 			 * skip any special chars -- save precision in 			 * case it's a %s format. 			 */
 while|while
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|spec
 operator|+
@@ -1161,7 +1161,7 @@ control|(
 operator|++
 name|p1
 init|;
-name|index
+name|strchr
 argument_list|(
 name|spec
 argument_list|,
@@ -1179,7 +1179,7 @@ block|{
 comment|/* Skip any special chars, field width. */
 while|while
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|spec
 operator|+

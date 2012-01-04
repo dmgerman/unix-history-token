@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1995 Søren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1994-1995 SÃ¸ren Schmidt  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -161,6 +161,8 @@ value|0x80000000
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|ctrl_names
 index|[
@@ -239,6 +241,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|acc_names
 index|[
@@ -283,6 +287,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|acc_names_u
 index|[
@@ -327,6 +333,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|fkey_table
 index|[
@@ -557,6 +565,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|int
 name|delays
@@ -575,6 +584,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|int
 name|repeats
@@ -649,6 +659,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|int
 name|ndelays
@@ -668,6 +679,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|int
 name|nrepeats
@@ -687,10 +699,18 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hex
 init|=
 literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|token
 decl_stmt|;
 end_decl_stmt
 
@@ -706,13 +726,8 @@ name|letter
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-name|int
-name|token
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
+specifier|static
 name|void
 name|dump_accent_definition
 parameter_list|(
@@ -728,6 +743,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dump_entry
 parameter_list|(
@@ -738,6 +754,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dump_key_definition
 parameter_list|(
@@ -753,6 +770,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_accent_definition_line
 parameter_list|(
@@ -763,6 +781,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_entry
 parameter_list|(
@@ -772,6 +791,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|get_key_definition_line
 parameter_list|(
@@ -782,6 +802,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|load_keymap
 parameter_list|(
@@ -796,6 +817,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|load_default_functionkeys
 parameter_list|(
@@ -805,6 +827,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|nextarg
@@ -828,6 +851,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|mkfullname
@@ -851,6 +875,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_accent_definition_line
 parameter_list|(
@@ -870,6 +895,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_entry
 parameter_list|(
@@ -884,6 +910,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_key_definition_line
 parameter_list|(
@@ -903,6 +930,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_keymap
 parameter_list|(
@@ -912,6 +940,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|release_keyboard
 parameter_list|(
@@ -921,6 +950,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mux_keyboard
 parameter_list|(
@@ -935,6 +965,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|set_bell_values
 parameter_list|(
@@ -946,6 +977,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|set_functionkey
 parameter_list|(
@@ -961,6 +993,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|set_keyboard
 parameter_list|(
@@ -972,6 +1005,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|set_keyrates
 parameter_list|(
@@ -983,6 +1017,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|show_kbd_info
 parameter_list|(
@@ -992,6 +1027,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 argument_list|(
@@ -1002,6 +1038,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|nextarg
@@ -1055,6 +1092,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|mkfullname
@@ -1197,6 +1235,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_entry
 parameter_list|(
@@ -1705,6 +1744,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_key_definition_line
 parameter_list|(
@@ -1863,6 +1903,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|get_accent_definition_line
 parameter_list|(
@@ -2135,6 +2176,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_entry
 parameter_list|(
@@ -2740,6 +2782,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_key_definition_line
 parameter_list|(
@@ -2895,6 +2938,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_accent_definition_line
 parameter_list|(
@@ -3166,6 +3210,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dump_entry
 parameter_list|(
@@ -3602,6 +3647,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dump_key_definition
 parameter_list|(
@@ -3769,6 +3815,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dump_accent_definition
 parameter_list|(
@@ -4048,6 +4095,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|load_keymap
 parameter_list|(
@@ -4437,6 +4485,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|print_keymap
 parameter_list|(
@@ -4575,6 +4624,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|load_default_functionkeys
 parameter_list|(
@@ -4655,6 +4705,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_functionkey
 parameter_list|(
@@ -4796,6 +4847,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_bell_values
 parameter_list|(
@@ -5032,6 +5084,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_keyrates
 parameter_list|(
@@ -5440,6 +5493,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show_kbd_info
 parameter_list|(
@@ -5519,6 +5573,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set_keyboard
 parameter_list|(
@@ -5674,6 +5729,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|release_keyboard
 parameter_list|(
@@ -5778,6 +5834,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mux_keyboard
 parameter_list|(
@@ -6061,6 +6118,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

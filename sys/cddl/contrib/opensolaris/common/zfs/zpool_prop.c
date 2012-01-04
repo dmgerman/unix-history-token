@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2007, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -221,6 +221,23 @@ argument_list|,
 literal|"<file> | none"
 argument_list|,
 literal|"CACHEFILE"
+argument_list|)
+expr_stmt|;
+name|zprop_register_string
+argument_list|(
+name|ZPOOL_PROP_COMMENT
+argument_list|,
+literal|"comment"
+argument_list|,
+name|NULL
+argument_list|,
+name|PROP_DEFAULT
+argument_list|,
+name|ZFS_TYPE_POOL
+argument_list|,
+literal|"<comment-string>"
+argument_list|,
+literal|"COMMENT"
 argument_list|)
 expr_stmt|;
 comment|/* readonly number properties */

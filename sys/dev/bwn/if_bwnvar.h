@@ -2808,7 +2808,6 @@ index|[
 literal|2
 index|]
 decl_stmt|;
-empty_stmt|;
 name|struct
 name|bwn_plcp6
 name|plcp

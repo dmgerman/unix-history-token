@@ -89,18 +89,6 @@ directive|include
 file|"ofw_bus_if.h"
 end_include
 
-begin_define
-define|#
-directive|define
-name|DEBUG
-end_define
-
-begin_undef
-undef|#
-directive|undef
-name|DEBUG
-end_undef
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -785,13 +773,14 @@ condition|(
 operator|(
 name|root
 operator|=
-name|OF_peer
+name|OF_finddevice
 argument_list|(
-literal|0
+literal|"/"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 name|panic
 argument_list|(

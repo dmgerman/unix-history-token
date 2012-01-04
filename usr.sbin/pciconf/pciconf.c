@@ -788,7 +788,7 @@ argument_list|,
 literal|"ioctl(PCIOCGETCONF)"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * 255 entries should be more than enough for most people, 		 * but if someone has more devices, and then changes things 		 * around between ioctls, we'll do the cheezy thing and 		 * just bail.  The alternative would be to go back to the 		 * beginning of the list, and print things twice, which may 		 * not be desireable. 		 */
+comment|/* 		 * 255 entries should be more than enough for most people, 		 * but if someone has more devices, and then changes things 		 * around between ioctls, we'll do the cheesy thing and 		 * just bail.  The alternative would be to go back to the 		 * beginning of the list, and print things twice, which may 		 * not be desirable. 		 */
 if|if
 condition|(
 name|pc

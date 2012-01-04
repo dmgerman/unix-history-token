@@ -9473,7 +9473,7 @@ index|]
 operator|!=
 literal|'/'
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|path
 operator|+
@@ -10061,7 +10061,7 @@ index|]
 operator|!=
 literal|'/'
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|path
 operator|+

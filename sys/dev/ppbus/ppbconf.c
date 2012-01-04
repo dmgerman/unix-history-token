@@ -1798,7 +1798,7 @@ name|error
 operator|)
 return|;
 comment|/* detach& delete all children */
-name|device_delete_all_children
+name|device_delete_children
 argument_list|(
 name|dev
 argument_list|)

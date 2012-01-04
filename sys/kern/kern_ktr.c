@@ -1736,7 +1736,7 @@ expr_stmt|;
 name|db_ktr_verbose
 operator||=
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|modif
 argument_list|,
@@ -1753,7 +1753,7 @@ expr_stmt|;
 name|db_ktr_verbose
 operator||=
 operator|(
-name|index
+name|strchr
 argument_list|(
 name|modif
 argument_list|,
@@ -1770,7 +1770,7 @@ expr_stmt|;
 comment|/* just timestap please */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|modif
 argument_list|,

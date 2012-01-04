@@ -2928,7 +2928,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|s
 argument_list|,

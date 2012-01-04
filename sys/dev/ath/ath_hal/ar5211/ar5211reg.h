@@ -5409,11 +5409,15 @@ begin_comment
 comment|/* sleep enable bits shift */
 end_comment
 
+begin_comment
+comment|/*  * The previous values for the following three defines were:  *  *	AR_SCR_SLE_WAKE	0x00000000  *	AR_SCR_SLE_SLP	0x00010000  *	AR_SCR_SLE_NORM	0x00020000  *  * However, these have been pre-shifted with AR_SCR_SLE_S.  The  * OS_REG_READ() macro would attempt to shift them again, effectively  * shifting out any of the set bits completely.  */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_WAKE
-value|0x00000000
+value|0
 end_define
 
 begin_comment
@@ -5424,7 +5428,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_SLP
-value|0x00010000
+value|1
 end_define
 
 begin_comment
@@ -5435,7 +5439,7 @@ begin_define
 define|#
 directive|define
 name|AR_SCR_SLE_NORM
-value|0x00020000
+value|2
 end_define
 
 begin_comment

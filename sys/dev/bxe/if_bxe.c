@@ -3332,22 +3332,7 @@ argument_list|,
 name|bxe_shutdown
 argument_list|)
 block|,
-comment|/* Bus interface (bus_if.h) */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

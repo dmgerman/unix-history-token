@@ -1694,7 +1694,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Copy password file from one descriptor to another, replacing or adding  * a single record on the way.  */
+comment|/*  * Copy password file from one descriptor to another, replacing, deleting  * or adding a single record on the way.  */
 end_comment
 
 begin_function
@@ -1747,6 +1747,12 @@ name|passwd
 modifier|*
 name|fpw
 decl_stmt|;
+specifier|const
+name|struct
+name|passwd
+modifier|*
+name|spw
+decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
@@ -1755,6 +1761,39 @@ name|eof
 decl_stmt|,
 name|readlen
 decl_stmt|;
+name|spw
+operator|=
+name|pw
+expr_stmt|;
+if|if
+condition|(
+name|pw
+operator|==
+name|NULL
+condition|)
+block|{
+name|line
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
+name|old_pw
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+name|spw
+operator|=
+name|old_pw
+expr_stmt|;
+block|}
+elseif|else
 if|if
 condition|(
 operator|(
@@ -2104,18 +2143,13 @@ name|fpw
 operator|==
 name|NULL
 operator|||
-name|strcmp
-argument_list|(
 name|fpw
 operator|->
-name|pw_name
-argument_list|,
-name|pw
-operator|->
-name|pw_name
-argument_list|)
+name|pw_uid
 operator|!=
-literal|0
+name|spw
+operator|->
+name|pw_uid
 condition|)
 block|{
 comment|/* nope */
@@ -2196,7 +2230,14 @@ argument_list|(
 name|fpw
 argument_list|)
 expr_stmt|;
-comment|/* it is, replace it */
+comment|/* it is, replace or remove it */
+if|if
+condition|(
+name|line
+operator|!=
+name|NULL
+condition|)
+block|{
 name|len
 operator|=
 name|strlen
@@ -2223,6 +2264,14 @@ condition|)
 goto|goto
 name|err
 goto|;
+block|}
+else|else
+block|{
+comment|/* when removed, avoid the \n */
+name|q
+operator|++
+expr_stmt|;
+block|}
 comment|/* we're done, just copy the rest over */
 for|for
 control|(
@@ -2304,7 +2353,22 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* if we got here, we have a new entry */
+comment|/* if we got here, we didn't find the old entry */
+if|if
+condition|(
+name|line
+operator|==
+name|NULL
+condition|)
+block|{
+name|errno
+operator|=
+name|ENOENT
+expr_stmt|;
+goto|goto
+name|err
+goto|;
+block|}
 name|len
 operator|=
 name|strlen
@@ -2344,6 +2408,12 @@ name|err
 goto|;
 name|done
 label|:
+if|if
+condition|(
+name|line
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|line
@@ -2356,6 +2426,12 @@ operator|)
 return|;
 name|err
 label|:
+if|if
+condition|(
+name|line
+operator|!=
+name|NULL
+condition|)
 name|free
 argument_list|(
 name|line

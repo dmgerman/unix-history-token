@@ -768,7 +768,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the entire accounting file, accumulating statistics  * for the users that we have in the hash table.  If allflag  * is set, then just gather the facts on everyone.  * Note that we must accomodate both the active and summary file  * formats here.  * Host names are ignored if the -m flag is present.  */
+comment|/*  * Read the entire accounting file, accumulating statistics  * for the users that we have in the hash table.  If allflag  * is set, then just gather the facts on everyone.  * Note that we must accommodate both the active and summary file  * formats here.  * Host names are ignored if the -m flag is present.  */
 end_comment
 
 begin_function

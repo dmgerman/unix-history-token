@@ -180,6 +180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|dumpfs
 parameter_list|(
@@ -191,6 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dumpfsid
 parameter_list|(
@@ -200,6 +202,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dumpcg
 parameter_list|(
@@ -209,6 +212,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|dumpfreespace
 parameter_list|(
@@ -222,6 +226,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dumpfreespacecg
 parameter_list|(
@@ -231,6 +236,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|marshal
 parameter_list|(
@@ -242,6 +248,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pbits
 parameter_list|(
@@ -254,6 +261,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pblklist
 parameter_list|(
@@ -270,6 +278,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|ufserr
 parameter_list|(
@@ -281,6 +290,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|void
 name|usage
 argument_list|(
@@ -517,6 +527,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dumpfsid
 parameter_list|(
@@ -551,6 +562,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dumpfs
 parameter_list|(
@@ -1650,6 +1662,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dumpcg
 parameter_list|(
@@ -2080,6 +2093,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|dumpfreespace
 parameter_list|(
@@ -2147,6 +2161,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dumpfreespacecg
 parameter_list|(
@@ -2181,6 +2196,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|marshal
 parameter_list|(
@@ -2439,6 +2455,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pbits
 parameter_list|(
@@ -2567,6 +2584,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pblklist
 parameter_list|(
@@ -2700,6 +2718,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ufserr
 parameter_list|(
@@ -2744,6 +2763,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2757,7 +2777,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: dumpfs [-fm] filesys | device\n"
+literal|"usage: dumpfs [-flm] filesys | device\n"
 argument_list|)
 expr_stmt|;
 name|exit

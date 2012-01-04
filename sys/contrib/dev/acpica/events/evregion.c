@@ -743,7 +743,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - Internal region object  *              Function            - Read or Write operation  *              RegionOffset        - Where in the region to read or write  *              BitWidth            - Field width in bits (8, 16, 32, or 64)  *              Value               - Pointer to in or out value, must be  *                                    a full 64-bit integer  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEvAddressSpaceDispatch  *  * PARAMETERS:  RegionObj           - Internal region object  *              FieldObj            - Corresponding field. Can be NULL.  *              Function            - Read or Write operation  *              RegionOffset        - Where in the region to read or write  *              BitWidth            - Field width in bits (8, 16, 32, or 64)  *              Value               - Pointer to in or out value, must be  *                                    a full 64-bit integer  *  * RETURN:      Status  *  * DESCRIPTION: Dispatch an address space or operation region access to  *              a previously installed handler.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -753,6 +753,10 @@ parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
 name|RegionObj
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|FieldObj
 parameter_list|,
 name|UINT32
 name|Function
@@ -790,6 +794,10 @@ modifier|*
 name|RegionContext
 init|=
 name|NULL
+decl_stmt|;
+name|ACPI_CONNECTION_INFO
+modifier|*
+name|Context
 decl_stmt|;
 name|ACPI_FUNCTION_TRACE
 argument_list|(
@@ -865,6 +873,14 @@ name|AE_NOT_EXIST
 argument_list|)
 expr_stmt|;
 block|}
+name|Context
+operator|=
+name|HandlerDesc
+operator|->
+name|AddressSpace
+operator|.
+name|Context
+expr_stmt|;
 comment|/*      * It may be the case that the region has never been initialized.      * Some types of regions require special init code      */
 if|if
 condition|(
@@ -934,10 +950,6 @@ name|RegionObj
 argument_list|,
 name|ACPI_REGION_ACTIVATE
 argument_list|,
-name|HandlerDesc
-operator|->
-name|AddressSpace
-operator|.
 name|Context
 argument_list|,
 operator|&
@@ -1085,6 +1097,68 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/*      * Special handling for GenericSerialBus and GeneralPurposeIo:      * There are three extra parameters that must be passed to the      * handler via the context:      *   1) Connection buffer, a resource template from Connection() op.      *   2) Length of the above buffer.      *   3) Actual access length from the AccessAs() op.      */
+if|if
+condition|(
+operator|(
+operator|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_GSBUS
+operator|)
+operator|||
+operator|(
+name|RegionObj
+operator|->
+name|Region
+operator|.
+name|SpaceId
+operator|==
+name|ACPI_ADR_SPACE_GPIO
+operator|)
+operator|)
+operator|&&
+name|Context
+operator|&&
+name|FieldObj
+condition|)
+block|{
+comment|/* Get the Connection (ResourceTemplate) buffer */
+name|Context
+operator|->
+name|Connection
+operator|=
+name|FieldObj
+operator|->
+name|Field
+operator|.
+name|ResourceBuffer
+expr_stmt|;
+name|Context
+operator|->
+name|Length
+operator|=
+name|FieldObj
+operator|->
+name|Field
+operator|.
+name|ResourceLength
+expr_stmt|;
+name|Context
+operator|->
+name|AccessLength
+operator|=
+name|FieldObj
+operator|->
+name|Field
+operator|.
+name|AccessLength
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -1125,10 +1199,6 @@ name|BitWidth
 argument_list|,
 name|Value
 argument_list|,
-name|HandlerDesc
-operator|->
-name|AddressSpace
-operator|.
 name|Context
 argument_list|,
 name|RegionObj2

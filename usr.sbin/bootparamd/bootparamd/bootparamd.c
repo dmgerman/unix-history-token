@@ -758,10 +758,6 @@ block|{
 name|char
 modifier|*
 name|where
-decl_stmt|,
-modifier|*
-name|index
-argument_list|()
 decl_stmt|;
 specifier|static
 name|bp_getfile_res
@@ -874,7 +870,7 @@ condition|(
 operator|(
 name|where
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buffer
 argument_list|,

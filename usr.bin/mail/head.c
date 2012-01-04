@@ -61,7 +61,7 @@ comment|/*  * Mail -- a mail program  *  * Routines for processing and detecting
 end_comment
 
 begin_comment
-comment|/*  * See if the passed line buffer is a mail header.  * Return true if yes.  Note the extreme pains to  * accomodate all funny formats.  */
+comment|/*  * See if the passed line buffer is a mail header.  * Return true if yes.  Note the extreme pains to  * accommodate all funny formats.  */
 end_comment
 
 begin_function

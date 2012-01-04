@@ -6735,9 +6735,9 @@ end_comment
 begin_if
 if|#
 directive|if
-name|__FreeBSD__
+name|__FreeBSD_version
 operator|<
-literal|3
+literal|300000
 end_if
 
 begin_include
@@ -6754,9 +6754,9 @@ end_else
 begin_if
 if|#
 directive|if
-name|__FreeBSD__
-operator|==
-literal|3
+name|__FreeBSD_version
+operator|<
+literal|400000
 end_if
 
 begin_if

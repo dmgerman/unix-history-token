@@ -1178,9 +1178,9 @@ name|ed
 operator|->
 name|bInterval
 operator|=
-literal|8
+literal|4
 expr_stmt|;
-comment|/* 8*125 us */
+comment|/* 1 ms */
 break|break;
 block|}
 break|break;

@@ -1371,6 +1371,19 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|rad_bind_to
+parameter_list|(
+name|struct
+name|rad_handle
+modifier|*
+parameter_list|,
+name|in_addr_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|rad_close
 parameter_list|(
 name|struct

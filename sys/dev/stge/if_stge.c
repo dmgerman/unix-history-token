@@ -1155,7 +1155,7 @@ argument_list|,
 name|stge_miibus_statchg
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -577,6 +577,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cold
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
@@ -1044,6 +1047,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cold
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
@@ -1273,7 +1279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pause() delays the calling thread by the given number of system ticks.  * During cold bootup, pause() uses the DELAY() function instead of  * the tsleep() function to do the waiting. The "timo" argument must be  * greater than zero.  */
+comment|/*  * pause() delays the calling thread by the given number of system ticks.  * During cold bootup, pause() uses the DELAY() function instead of  * the tsleep() function to do the waiting. The "timo" argument must be  * greater than or equal to zero. A "timo" value of zero is equivalent  * to a "timo" value of one.  */
 end_comment
 
 begin_function
@@ -1658,6 +1664,12 @@ condition|)
 name|kdb_switch
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 if|if
 condition|(
 name|flags
