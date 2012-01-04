@@ -25,6 +25,12 @@ directive|include
 file|<sys/types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/psl.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -209,6 +215,26 @@ parameter_list|(
 name|va
 parameter_list|)
 value|(u_int16_t)(VTOP((caddr_t)va)& 0xf)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V86_CY
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& PSL_C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V86_ZR
+parameter_list|(
+name|x
+parameter_list|)
+value|((x)& PSL_Z)
 end_define
 
 begin_function_decl
