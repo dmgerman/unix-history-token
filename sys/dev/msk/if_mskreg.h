@@ -16729,6 +16729,51 @@ begin_comment
 comment|/* Bit 15.. 0:	Buffer Byte Counter */
 end_comment
 
+begin_comment
+comment|/*  * Controller requires an additional LE op code for 64bit DMA operation.  * Driver uses fixed number of RX buffers such that this limitation  * reduces number of available RX buffers with 64bit DMA so double  * number of RX buffers on platforms that support 64bit DMA. For TX  * side, controller requires an additional OP_ADDR64 op code if a TX  * buffer uses different high address value than previously used one.  * Driver monitors high DMA address change in TX and inserts an  * OP_ADDR64 op code if the high DMA address is changed.  Driver  * allocates 50% more total TX buffers on platforms that support 64bit  * DMA.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+name|BUS_SPACE_MAXADDR
+operator|>
+literal|0xFFFFFFFF
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|MSK_64BIT_DMA
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSK_TX_RING_CNT
+value|384
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSK_RX_RING_CNT
+value|512
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|MSK_64BIT_DMA
+end_undef
+
 begin_define
 define|#
 directive|define
@@ -16743,6 +16788,11 @@ name|MSK_RX_RING_CNT
 value|256
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -16755,13 +16805,6 @@ define|#
 directive|define
 name|MSK_JUMBO_RX_RING_CNT
 value|MSK_RX_RING_CNT
-end_define
-
-begin_define
-define|#
-directive|define
-name|MSK_STAT_RING_CNT
-value|((1 + 3) * (MSK_TX_RING_CNT + MSK_RX_RING_CNT))
 end_define
 
 begin_define
@@ -16786,8 +16829,26 @@ value|(65535 + sizeof(struct ether_vlan_header))
 end_define
 
 begin_comment
-comment|/*  * It seems that the hardware requires extra decriptors(LEs) to offload  * TCP/UDP checksum, VLAN hardware tag inserstion and TSO.  *  * 1 descriptor for TCP/UDP checksum offload.  * 1 descriptor VLAN hardware tag insertion.  * 1 descriptor for TSO(TCP Segmentation Offload)  * 1 descriptor for 64bits DMA : Not applicatable due to the use of  *  BUS_SPACE_MAXADDR_32BIT in parent DMA tag creation.  */
+comment|/*  * It seems that the hardware requires extra descriptors(LEs) to offload  * TCP/UDP checksum, VLAN hardware tag insertion and TSO.  *  * 1 descriptor for TCP/UDP checksum offload.  * 1 descriptor VLAN hardware tag insertion.  * 1 descriptor for TSO(TCP Segmentation Offload)  * 1 descriptor for each 64bits DMA transfers   */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MSK_64BIT_DMA
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MSK_RESERVED_TX_DESC_CNT
+value|(MSK_MAXTXSEGS + 3)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_define
 define|#
@@ -16796,9 +16857,10 @@ name|MSK_RESERVED_TX_DESC_CNT
 value|3
 end_define
 
-begin_comment
-comment|/*  * Jumbo buffer stuff. Note that we must allocate more jumbo  * buffers than there are descriptors in the receive ring. This  * is because we don't know how long it will take for a packet  * to be released after we hand it off to the upper protocol  * layers. To be safe, we allocate 1.5 times the number of  * receive descriptors.  */
-end_comment
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -16938,6 +17000,9 @@ decl_stmt|;
 name|uint32_t
 name|msk_last_csum
 decl_stmt|;
+name|uint32_t
+name|msk_tx_high_addr
+decl_stmt|;
 name|int
 name|msk_tx_prod
 decl_stmt|;
@@ -17061,14 +17126,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|MSK_STAT_RING_SZ
-define|\
-value|(sizeof(struct msk_stat_desc) * MSK_STAT_RING_CNT)
-end_define
-
-begin_define
-define|#
-directive|define
 name|MSK_INC
 parameter_list|(
 name|x
@@ -17077,6 +17134,74 @@ name|y
 parameter_list|)
 value|(x) = (x + 1) % y
 end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|MSK_64BIT_DMA
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|MSK_RX_INC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(x) = (x + 2) % y
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSK_RX_BUF_CNT
+value|(MSK_RX_RING_CNT / 2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSK_JUMBO_RX_BUF_CNT
+value|(MSK_JUMBO_RX_RING_CNT / 2)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MSK_RX_INC
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|(x) = (x + 1) % y
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSK_RX_BUF_CNT
+value|MSK_RX_RING_CNT
+end_define
+
+begin_define
+define|#
+directive|define
+name|MSK_JUMBO_RX_BUF_CNT
+value|MSK_JUMBO_RX_RING_CNT
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -17449,6 +17574,9 @@ name|msk_process_limit
 decl_stmt|;
 name|int
 name|msk_stat_cons
+decl_stmt|;
+name|int
+name|msk_stat_count
 decl_stmt|;
 name|struct
 name|mtx
