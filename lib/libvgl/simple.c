@@ -1355,14 +1355,7 @@ name|y
 operator|=
 name|y2
 expr_stmt|;
-name|x1
-operator|=
-name|x1
-expr_stmt|;
-name|y1
-operator|=
-name|y1
-expr_stmt|;
+comment|/*  x1 = x1;     y1 = y1; */
 block|}
 else|else
 block|{
