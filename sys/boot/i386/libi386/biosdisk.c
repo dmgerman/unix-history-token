@@ -78,6 +78,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<edd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"libi386.h"
 end_include
 
@@ -1296,7 +1302,7 @@ name|v86
 operator|.
 name|ecx
 operator|&
-literal|0x1
+name|EDD_INTERFACE_FIXED_DISK
 operator|)
 condition|)
 block|{
@@ -5909,7 +5915,11 @@ name|packet
 operator|.
 name|len
 operator|=
-literal|0x10
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|edd_packet
+argument_list|)
 expr_stmt|;
 name|packet
 operator|.
@@ -5919,7 +5929,7 @@ name|blks
 expr_stmt|;
 name|packet
 operator|.
-name|offset
+name|off
 operator|=
 name|VTOPOFF
 argument_list|(
