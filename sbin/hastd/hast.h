@@ -379,6 +379,13 @@ name|proto_conn
 modifier|*
 name|hc_controlin
 decl_stmt|;
+comment|/* PID file path. */
+name|char
+name|hc_pidfile
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
 comment|/* List of addresses to listen on. */
 name|TAILQ_HEAD
 argument_list|(
@@ -538,6 +545,14 @@ comment|/* Sector size of local provider. */
 name|unsigned
 name|int
 name|hr_local_sectorsize
+decl_stmt|;
+comment|/* Is flushing write cache supported by the local provider? */
+name|bool
+name|hr_localflush
+decl_stmt|;
+comment|/* Flush write cache on metadata updates? */
+name|int
+name|hr_metaflush
 decl_stmt|;
 comment|/* Descriptor for /dev/ggctl communication. */
 name|int

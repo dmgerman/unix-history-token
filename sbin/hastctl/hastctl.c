@@ -50,12 +50,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<err.h>
 end_include
 
@@ -2092,7 +2086,7 @@ argument_list|,
 name|true
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|cfg
 operator|!=
@@ -2121,9 +2115,8 @@ name|keepdirty
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"What are we doing here?!"
 argument_list|)
 expr_stmt|;
@@ -2140,9 +2133,8 @@ name|argv
 argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"What are we doing here?!"
 argument_list|)
 expr_stmt|;
@@ -2348,9 +2340,8 @@ expr_stmt|;
 block|}
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"Impossible command!"
 argument_list|)
 expr_stmt|;
@@ -2552,9 +2543,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"Impossible command!"
 argument_list|)
 expr_stmt|;
