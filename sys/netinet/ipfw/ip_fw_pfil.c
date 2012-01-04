@@ -17,16 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-operator|!
-name|defined
-argument_list|(
-name|KLD_MODULE
-argument_list|)
-end_if
-
 begin_include
 include|#
 directive|include
@@ -36,13 +26,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_ipdn.h"
+file|"opt_inet.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"opt_inet.h"
+file|"opt_inet6.h"
 end_include
 
 begin_ifndef
@@ -65,21 +55,6 @@ end_endif
 begin_comment
 comment|/* INET */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KLD_MODULE */
-end_comment
-
-begin_include
-include|#
-directive|include
-file|"opt_inet6.h"
-end_include
 
 begin_include
 include|#
@@ -688,9 +663,27 @@ name|NULL
 condition|)
 break|break;
 comment|/* pass */
-ifndef|#
-directive|ifndef
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|IPFIREWALL_FORWARD
+argument_list|)
+operator|||
+operator|(
+operator|!
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+operator|)
 name|ret
 operator|=
 name|EACCES
@@ -822,6 +815,7 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* IPFIREWALL_FORWARD */
 break|break;
 case|case
 name|IP_FW_DENY
