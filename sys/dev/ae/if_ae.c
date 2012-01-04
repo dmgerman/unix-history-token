@@ -7386,11 +7386,8 @@ expr_stmt|;
 return|return
 operator|(
 name|avail
-operator|-
-literal|4
 operator|)
 return|;
-comment|/* 4-byte header. */
 block|}
 end_function
 
@@ -7456,12 +7453,19 @@ operator|)
 operator|==
 literal|0
 operator|||
+name|len
+operator|+
+sizeof|sizeof
+argument_list|(
+name|ae_txd_t
+argument_list|)
+operator|+
+literal|3
+operator|>
 name|ae_tx_avail_size
 argument_list|(
 name|sc
 argument_list|)
-operator|<
-name|len
 condition|)
 block|{
 ifdef|#
@@ -7509,6 +7513,7 @@ name|hdr
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* Skip header size. */
 name|sc
 operator|->
 name|txd_cur
@@ -7518,12 +7523,15 @@ name|sc
 operator|->
 name|txd_cur
 operator|+
-literal|4
+sizeof|sizeof
+argument_list|(
+name|ae_txd_t
+argument_list|)
 operator|)
 operator|%
 name|AE_TXD_BUFSIZE_DEFAULT
 expr_stmt|;
-comment|/* Header 								     size. */
+comment|/* Space available to the end of the ring */
 name|to_end
 operator|=
 name|AE_TXD_BUFSIZE_DEFAULT
@@ -7532,7 +7540,6 @@ name|sc
 operator|->
 name|txd_cur
 expr_stmt|;
-comment|/* Space available to 							* the end of the ring 							*/
 if|if
 condition|(
 name|to_end
@@ -9201,7 +9208,10 @@ operator|->
 name|len
 argument_list|)
 operator|+
-literal|4
+sizeof|sizeof
+argument_list|(
+name|ae_txs_t
+argument_list|)
 operator|+
 literal|3
 operator|)
