@@ -311,7 +311,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Determine whether the the DFS check task needs to be queued.  *  * This is called in the RX task when the current batch of packets  * have been received. It will return whether there are any radar  * events for ath_dfs_process_radar_event() to handle.  */
+comment|/*  * Determine whether the DFS check task needs to be queued.  *  * This is called in the RX task when the current batch of packets  * have been received. It will return whether there are any radar  * events for ath_dfs_process_radar_event() to handle.  */
 end_comment
 
 begin_function

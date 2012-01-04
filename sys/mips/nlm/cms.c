@@ -271,7 +271,7 @@ comment|/* all threads are under a proc */
 end_comment
 
 begin_comment
-comment|/*  * The device drivers can register a handler for the the messages sent  * from a station (corresponding to the device).  */
+comment|/*  * The device drivers can register a handler for the messages sent  * from a station (corresponding to the device).  */
 end_comment
 
 begin_struct
