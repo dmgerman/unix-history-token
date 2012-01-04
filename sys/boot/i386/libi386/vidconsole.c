@@ -2108,13 +2108,12 @@ expr_stmt|;
 return|return
 operator|(
 operator|!
-operator|(
+name|V86_ZR
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-name|PSL_Z
-operator|)
+argument_list|)
 operator|)
 return|;
 block|}
