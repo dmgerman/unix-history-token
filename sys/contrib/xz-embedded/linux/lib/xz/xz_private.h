@@ -222,7 +222,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"xz_config.h"
+file|<contrib/xz-embedded/freebsd/xz_config.h>
 end_include
 
 begin_endif
