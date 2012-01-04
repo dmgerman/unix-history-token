@@ -3656,11 +3656,8 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|candidate
-operator|.
-name|s_addr
+name|sin
 operator|=
-operator|(
 operator|(
 expr|struct
 name|sockaddr_in
@@ -3670,7 +3667,12 @@ operator|&
 name|ifa
 operator|->
 name|ifa_addr
-operator|)
+expr_stmt|;
+name|candidate
+operator|.
+name|s_addr
+operator|=
+name|sin
 operator|->
 name|sin_addr
 operator|.
