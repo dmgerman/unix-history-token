@@ -268,6 +268,20 @@ name|bvm_cnputc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cn_grab_t
+name|bvm_cngrab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_ungrab_t
+name|bvm_cnungrab
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|CONSOLE_DRIVER
 argument_list|(
@@ -864,6 +878,32 @@ name|c
 argument_list|)
 expr_stmt|;
 block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bvm_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|bvm_cnungrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
 end_function
 
 begin_expr_stmt
