@@ -18,12 +18,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<errno.h>
 end_include
 
@@ -51,6 +45,39 @@ directive|include
 file|<time.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<pjdlog.h>
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PJDLOG_ASSERT
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ASSERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|assert(__VA_ARGS__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|__inline
@@ -74,7 +101,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -105,7 +132,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -136,7 +163,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -167,7 +194,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -209,7 +236,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -266,7 +293,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -297,7 +324,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -328,7 +355,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -359,7 +386,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -390,7 +417,7 @@ argument_list|(
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -425,7 +452,7 @@ operator|&
 name|attr
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -442,7 +469,7 @@ argument_list|,
 name|CLOCK_MONOTONIC
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -459,7 +486,7 @@ operator|&
 name|attr
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -474,7 +501,7 @@ operator|&
 name|attr
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -511,7 +538,7 @@ argument_list|,
 name|lock
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -576,7 +603,7 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -601,7 +628,7 @@ operator|&
 name|ts
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -643,7 +670,7 @@ argument_list|(
 name|cv
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==
@@ -674,7 +701,7 @@ argument_list|(
 name|cv
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|error
 operator|==

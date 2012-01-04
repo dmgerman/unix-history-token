@@ -32,12 +32,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<assert.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<bitstring.h>
 end_include
 
@@ -92,8 +86,62 @@ end_include
 begin_include
 include|#
 directive|include
-file|<nv.h>
+file|<pjdlog.h>
 end_include
+
+begin_include
+include|#
+directive|include
+file|"nv.h"
+end_include
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PJDLOG_ASSERT
+end_ifndef
+
+begin_include
+include|#
+directive|include
+file|<assert.h>
+end_include
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ASSERT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|assert(__VA_ARGS__)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|PJDLOG_ABORT
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|PJDLOG_ABORT
+parameter_list|(
+modifier|...
+parameter_list|)
+value|abort()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -362,7 +410,7 @@ name|NV_CHECK
 parameter_list|(
 name|nv
 parameter_list|)
-value|do {						\ 	assert((nv) != NULL);						\ 	assert((nv)->nv_magic == NV_MAGIC);				\ } while (0)
+value|do {						\ 	PJDLOG_ASSERT((nv) != NULL);					\ 	PJDLOG_ASSERT((nv)->nv_magic == NV_MAGIC);			\ } while (0)
 end_define
 
 begin_function_decl
@@ -767,7 +815,7 @@ argument_list|(
 name|nv
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|nv
 operator|->
@@ -1191,9 +1239,8 @@ break|break;
 block|}
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
 expr_stmt|;
@@ -1305,7 +1352,7 @@ argument_list|(
 name|nv
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|nv
 operator|->
@@ -1334,7 +1381,7 @@ literal|0
 condition|)
 block|{
 comment|/* 		 * Minimum size at this point is size of nvhdr structure, 		 * one character long name plus terminating '\0'. 		 */
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>=
@@ -1356,7 +1403,7 @@ operator|*
 operator|)
 name|ptr
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|NVH_SIZE
 argument_list|(
@@ -1425,7 +1472,7 @@ decl_stmt|;
 name|int
 name|rerrno
 decl_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|eb
 operator|!=
@@ -1937,7 +1984,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|type##_t								\ nv_get_##type(struct nv *nv, const char *namefmt, ...)			\ {									\ 	struct nvhdr *nvh;						\ 	va_list nameap;							\ 	type##_t value;							\ 									\ 	va_start(nameap, namefmt);					\ 	nvh = nv_find(nv, NV_TYPE_##TYPE, namefmt, nameap);		\ 	va_end(nameap);							\ 	if (nvh == NULL)						\ 		return (0);						\ 	assert((nvh->nvh_type& NV_ORDER_MASK) == NV_ORDER_HOST);	\ 	assert(sizeof(value) == nvh->nvh_dsize);			\ 	bcopy(NVH_DATA(nvh),&value, sizeof(value));			\ 									\ 	return (value);							\ }
+value|type##_t								\ nv_get_##type(struct nv *nv, const char *namefmt, ...)			\ {									\ 	struct nvhdr *nvh;						\ 	va_list nameap;							\ 	type##_t value;							\ 									\ 	va_start(nameap, namefmt);					\ 	nvh = nv_find(nv, NV_TYPE_##TYPE, namefmt, nameap);		\ 	va_end(nameap);							\ 	if (nvh == NULL)						\ 		return (0);						\ 	PJDLOG_ASSERT((nvh->nvh_type& NV_ORDER_MASK) == NV_ORDER_HOST);\ 	PJDLOG_ASSERT(sizeof(value) == nvh->nvh_dsize);			\ 	bcopy(NVH_DATA(nvh),&value, sizeof(value));			\ 									\ 	return (value);							\ }
 end_define
 
 begin_macro
@@ -2028,7 +2075,7 @@ parameter_list|,
 name|TYPE
 parameter_list|)
 define|\
-value|const type##_t *							\ nv_get_##type##_array(struct nv *nv, size_t *sizep,			\     const char *namefmt, ...)						\ {									\ 	struct nvhdr *nvh;						\ 	va_list nameap;							\ 									\ 	va_start(nameap, namefmt);					\ 	nvh = nv_find(nv, NV_TYPE_##TYPE##_ARRAY, namefmt, nameap);	\ 	va_end(nameap);							\ 	if (nvh == NULL)						\ 		return (NULL);						\ 	assert((nvh->nvh_type& NV_ORDER_MASK) == NV_ORDER_HOST);	\ 	assert((nvh->nvh_dsize % sizeof(type##_t)) == 0);		\ 	if (sizep != NULL)						\ 		*sizep = nvh->nvh_dsize / sizeof(type##_t);		\ 	return ((type##_t *)(void *)NVH_DATA(nvh));			\ }
+value|const type##_t *							\ nv_get_##type##_array(struct nv *nv, size_t *sizep,			\     const char *namefmt, ...)						\ {									\ 	struct nvhdr *nvh;						\ 	va_list nameap;							\ 									\ 	va_start(nameap, namefmt);					\ 	nvh = nv_find(nv, NV_TYPE_##TYPE##_ARRAY, namefmt, nameap);	\ 	va_end(nameap);							\ 	if (nvh == NULL)						\ 		return (NULL);						\ 	PJDLOG_ASSERT((nvh->nvh_type& NV_ORDER_MASK) == NV_ORDER_HOST);\ 	PJDLOG_ASSERT((nvh->nvh_dsize % sizeof(type##_t)) == 0);	\ 	if (sizep != NULL)						\ 		*sizep = nvh->nvh_dsize / sizeof(type##_t);		\ 	return ((type##_t *)(void *)NVH_DATA(nvh));			\ }
 end_define
 
 begin_macro
@@ -2176,7 +2223,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 operator|(
 name|nvh
@@ -2189,7 +2236,7 @@ operator|==
 name|NV_ORDER_HOST
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|nvh
 operator|->
@@ -2205,7 +2252,7 @@ argument_list|(
 name|nvh
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|str
 index|[
@@ -2219,7 +2266,7 @@ operator|==
 literal|'\0'
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|strlen
 argument_list|(
@@ -2405,7 +2452,7 @@ argument_list|,
 name|namefmt
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|nv_vexists
 argument_list|(
@@ -2490,7 +2537,7 @@ argument_list|(
 name|nv
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|nv
 operator|->
@@ -2518,7 +2565,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>=
@@ -2540,7 +2587,7 @@ operator|*
 operator|)
 name|ptr
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>=
@@ -3420,9 +3467,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
 expr_stmt|;
@@ -3623,7 +3669,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|errno
 operator|!=
@@ -3673,7 +3719,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|errno
 operator|!=
@@ -3715,7 +3761,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|vsize
 operator|>
@@ -3745,7 +3791,7 @@ operator|<
 literal|0
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|errno
 operator|!=
@@ -3827,7 +3873,7 @@ argument_list|,
 name|nameap
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|namesize
 operator|>
@@ -3940,7 +3986,7 @@ argument_list|,
 name|nameap
 argument_list|)
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|namesize
 operator|>
@@ -3976,7 +4022,7 @@ operator|>
 literal|0
 condition|)
 block|{
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>=
@@ -3998,7 +4044,7 @@ operator|*
 operator|)
 name|ptr
 expr_stmt|;
-name|assert
+name|PJDLOG_ASSERT
 argument_list|(
 name|size
 operator|>=
@@ -4458,9 +4504,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
 expr_stmt|;
@@ -4561,9 +4606,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"invalid condition"
 argument_list|)
 expr_stmt|;
@@ -4576,9 +4620,8 @@ name|NV_TYPE_STRING
 case|:
 break|break;
 default|default:
-name|assert
+name|PJDLOG_ABORT
 argument_list|(
-operator|!
 literal|"unrecognized type"
 argument_list|)
 expr_stmt|;

@@ -310,8 +310,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -321,7 +319,6 @@ argument_list|,
 name|res
 operator|->
 name|hr_localpath
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -347,8 +344,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -358,7 +353,6 @@ argument_list|,
 name|res
 operator|->
 name|hr_localpath
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -398,8 +392,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -409,7 +401,6 @@ argument_list|,
 name|res
 operator|->
 name|hr_localpath
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -438,8 +429,6 @@ operator|<
 literal|0
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -449,7 +438,6 @@ argument_list|,
 name|res
 operator|->
 name|hr_localpath
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -649,8 +637,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -658,7 +644,6 @@ argument_list|,
 literal|"Unable to find info about '%s' user"
 argument_list|,
 name|HAST_USER
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -848,8 +833,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -859,7 +842,6 @@ argument_list|,
 name|pw
 operator|->
 name|pw_dir
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -902,8 +884,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -917,7 +897,6 @@ operator|)
 name|pw
 operator|->
 name|pw_gid
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -940,8 +919,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -955,7 +932,6 @@ operator|)
 name|pw
 operator|->
 name|pw_gid
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -978,8 +954,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_errno
 argument_list|(
 name|LOG_ERR
@@ -993,7 +967,6 @@ operator|)
 name|pw
 operator|->
 name|pw_uid
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

@@ -1432,8 +1432,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_common
 argument_list|(
 name|LOG_DEBUG
@@ -1443,7 +1441,6 @@ argument_list|,
 name|errno
 argument_list|,
 literal|"fcntl(F_GETFL) failed"
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1474,8 +1471,6 @@ operator|-
 literal|1
 condition|)
 block|{
-name|KEEP_ERRNO
-argument_list|(
 name|pjdlog_common
 argument_list|(
 name|LOG_DEBUG
@@ -1485,7 +1480,6 @@ argument_list|,
 name|errno
 argument_list|,
 literal|"fcntl(F_SETFL, O_NONBLOCK) failed"
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
