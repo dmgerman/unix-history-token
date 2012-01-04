@@ -2614,7 +2614,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-literal|"/sbin/init:/sbin/oinit:/sbin/init.bak:/rescue/init:/stand/sysinstall"
+literal|"/sbin/init:/sbin/oinit:/sbin/init.bak:/rescue/init"
 expr_stmt|;
 end_expr_stmt
 
