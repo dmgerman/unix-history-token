@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -6361,7 +6361,7 @@ name|hdr
 operator|->
 name|b_spa
 operator|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -10283,7 +10283,7 @@ name|spa
 condition|)
 name|guid
 operator|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -13426,7 +13426,7 @@ decl_stmt|;
 name|uint64_t
 name|guid
 init|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -20473,7 +20473,7 @@ decl_stmt|;
 name|uint64_t
 name|guid
 init|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)

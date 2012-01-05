@@ -438,6 +438,15 @@ parameter_list|,
 name|zfs_type_t
 parameter_list|)
 function_decl|;
+name|boolean_t
+name|zfs_prop_written
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
 ifdef|#
 directive|ifdef
 name|__cplusplus

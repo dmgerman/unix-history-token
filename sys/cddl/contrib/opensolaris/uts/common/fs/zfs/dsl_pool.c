@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -1753,6 +1753,27 @@ name|dl
 init|=
 name|arg
 decl_stmt|;
+name|dsl_pool_t
+modifier|*
+name|dp
+init|=
+name|dmu_objset_pool
+argument_list|(
+name|dl
+operator|->
+name|dl_os
+argument_list|)
+decl_stmt|;
+name|rw_enter
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_config_rwlock
+argument_list|,
+name|RW_READER
+argument_list|)
+expr_stmt|;
 name|dsl_deadlist_insert
 argument_list|(
 name|dl
@@ -1760,6 +1781,14 @@ argument_list|,
 name|bp
 argument_list|,
 name|tx
+argument_list|)
+expr_stmt|;
+name|rw_exit
+argument_list|(
+operator|&
+name|dp
+operator|->
+name|dp_config_rwlock
 argument_list|)
 expr_stmt|;
 return|return

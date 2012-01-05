@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_comment
@@ -225,6 +225,10 @@ name|ZFS_PROP_SYNC
 block|,
 name|ZFS_PROP_REFRATIO
 block|,
+name|ZFS_PROP_WRITTEN
+block|,
+name|ZFS_PROP_CLONES
+block|,
 name|ZFS_NUM_PROPS
 block|}
 name|zfs_prop_t
@@ -295,10 +299,17 @@ name|ZPOOL_PROP_ALLOCATED
 block|,
 name|ZPOOL_PROP_READONLY
 block|,
+name|ZPOOL_PROP_COMMENT
+block|,
 name|ZPOOL_NUM_PROPS
 block|}
 name|zpool_prop_t
 typedef|;
+comment|/* Small enough to not hog a whole line of printout in zpool(1M). */
+define|#
+directive|define
+name|ZPROP_MAX_COMMENT
+value|32
 define|#
 directive|define
 name|ZPROP_CONT
@@ -1354,6 +1365,10 @@ name|ZPOOL_CONFIG_RESILVERING
 value|"resilvering"
 define|#
 directive|define
+name|ZPOOL_CONFIG_COMMENT
+value|"comment"
+define|#
+directive|define
 name|ZPOOL_CONFIG_SUSPENDED
 value|"suspended"
 comment|/* not stored on disk */
@@ -2065,7 +2080,7 @@ name|ZFS_IOC_PROMOTE
 value|_IOWR('Z', 34, struct zfs_cmd)
 define|#
 directive|define
-name|ZFS_IOC_DESTROY_SNAPS
+name|ZFS_IOC_DESTROY_SNAPS_NVL
 value|_IOWR('Z', 35, struct zfs_cmd)
 define|#
 directive|define
@@ -2163,6 +2178,18 @@ define|#
 directive|define
 name|ZFS_IOC_UNJAIL
 value|_IOWR('Z', 59, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_POOL_REGUID
+value|_IOWR('Z', 60, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_SPACE_WRITTEN
+value|_IOWR('Z', 61, struct zfs_cmd)
+define|#
+directive|define
+name|ZFS_IOC_SPACE_SNAPS
+value|_IOWR('Z', 62, struct zfs_cmd)
 comment|/*  * Internal SPA load state.  Used by FMA diagnosis engine.  */
 typedef|typedef
 enum|enum
@@ -2283,7 +2310,7 @@ define|#
 directive|define
 name|ZFS_IMPORT_ONLY
 value|0x8
-comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  */
+comment|/*  * Sysevent payload members.  ZFS will generate the following sysevents with the  * given payloads:  *  *	ESC_ZFS_RESILVER_START  *	ESC_ZFS_RESILVER_END  *	ESC_ZFS_POOL_DESTROY  *	ESC_ZFS_POOL_REGUID  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *  *	ESC_ZFS_VDEV_REMOVE  *	ESC_ZFS_VDEV_CLEAR  *	ESC_ZFS_VDEV_CHECK  *  *		ZFS_EV_POOL_NAME	DATA_TYPE_STRING  *		ZFS_EV_POOL_GUID	DATA_TYPE_UINT64  *		ZFS_EV_VDEV_PATH	DATA_TYPE_STRING	(optional)  *		ZFS_EV_VDEV_GUID	DATA_TYPE_UINT64  */
 define|#
 directive|define
 name|ZFS_EV_POOL_NAME

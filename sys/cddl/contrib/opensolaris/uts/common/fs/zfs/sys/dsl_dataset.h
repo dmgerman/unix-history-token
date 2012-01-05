@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -989,6 +989,54 @@ parameter_list|(
 name|dsl_dataset_t
 modifier|*
 name|ds
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_dataset_space_written
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|oldsnap
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|new
+parameter_list|,
+name|uint64_t
+modifier|*
+name|usedp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|compp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|uncompp
+parameter_list|)
+function_decl|;
+name|int
+name|dsl_dataset_space_wouldfree
+parameter_list|(
+name|dsl_dataset_t
+modifier|*
+name|firstsnap
+parameter_list|,
+name|dsl_dataset_t
+modifier|*
+name|last
+parameter_list|,
+name|uint64_t
+modifier|*
+name|usedp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|compp
+parameter_list|,
+name|uint64_t
+modifier|*
+name|uncompp
 parameter_list|)
 function_decl|;
 name|int
