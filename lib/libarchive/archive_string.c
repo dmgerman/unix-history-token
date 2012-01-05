@@ -657,12 +657,12 @@ name|p
 expr_stmt|;
 while|while
 condition|(
-operator|*
-name|pp
-operator|&&
 name|s
 operator|<
 name|n
+operator|&&
+operator|*
+name|pp
 condition|)
 block|{
 name|pp

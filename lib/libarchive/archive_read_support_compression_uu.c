@@ -3907,8 +3907,8 @@ condition|(
 name|len
 operator|-
 name|nl
-operator|>
-literal|13
+operator|>=
+literal|11
 operator|&&
 name|memcmp
 argument_list|(
@@ -3931,7 +3931,7 @@ condition|(
 name|len
 operator|-
 name|nl
-operator|>
+operator|>=
 literal|18
 operator|&&
 name|memcmp

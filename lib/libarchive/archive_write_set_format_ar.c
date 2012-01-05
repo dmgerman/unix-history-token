@@ -1998,6 +1998,9 @@ name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Padding wrong size: %d should be 1 or 0"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|ar
 operator|->
 name|entry_padding
