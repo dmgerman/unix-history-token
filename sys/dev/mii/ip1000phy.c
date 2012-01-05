@@ -1474,6 +1474,14 @@ name|IP1000PHY_1000CR_1000T
 operator||
 name|IP1000PHY_1000CR_1000T_FDX
 expr_stmt|;
+if|if
+condition|(
+name|isc
+operator|->
+name|model
+operator|!=
+name|MII_MODEL_ICPLUS_IP1001
+condition|)
 name|reg
 operator||=
 name|IP1000PHY_1000CR_MASTER
