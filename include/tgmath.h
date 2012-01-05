@@ -28,7 +28,7 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|/*  * This implementation of<tgmath.h> uses the two following macros,  * which are based on the macros described in C11 proposal N1404:  * __tg_impl_simple(x, y, z, fnl, fn, fnf, ...)  *	Invokes fnl() if the corresponding real type of x, y or z is long  *	double, fn() if it is double or any has an integer type, and fnf()  *	otherwise.  * __tg_impl_full(x, y, cfnl, cfn, cfnf, fnl, fn, fnf, ...)  *	Invokes [c]fnl() if the corresponding real type of x or y is long  *	double, [c]fn() if it is double or any has an integer type, and  *	[c]fnf() otherwise.  The function with the 'c' prefix is called if  *	any of x or y is a complex number.  * Both macros call the chosen function with all additional arguments passed  * to them, as given by __VA_ARGS__.  *  * Note that these macros cannot be implemented with C's ?: operator,  * because the return type of the whole expression would incorrectly be long  * double complex regardless of the argument types.  *  * The _Complex_I distinction should not be needed, but due to a bug in  * GCC 4.2, _Complex_I is not of type float _Complex.  */
+comment|/*  * This implementation of<tgmath.h> uses the two following macros,  * which are based on the macros described in C11 proposal N1404:  * __tg_impl_simple(x, y, z, fnl, fn, fnf, ...)  *	Invokes fnl() if the corresponding real type of x, y or z is long  *	double, fn() if it is double or any has an integer type, and fnf()  *	otherwise.  * __tg_impl_full(x, y, cfnl, cfn, cfnf, fnl, fn, fnf, ...)  *	Invokes [c]fnl() if the corresponding real type of x or y is long  *	double, [c]fn() if it is double or any has an integer type, and  *	[c]fnf() otherwise.  The function with the 'c' prefix is called if  *	any of x or y is a complex number.  * Both macros call the chosen function with all additional arguments passed  * to them, as given by __VA_ARGS__.  *  * Note that these macros cannot be implemented with C's ?: operator,  * because the return type of the whole expression would incorrectly be long  * double complex regardless of the argument types.  */
 end_comment
 
 begin_ifndef
@@ -62,7 +62,7 @@ parameter_list|,
 name|fnf
 parameter_list|)
 define|\
-value|__generic(x, long double _Complex, fnl,				\ 	    __generic(x, double _Complex, fn,				\ 	        __generic(x, float _Complex, fnf,			\ 	            __generic(x, __typeof(_Complex_I), fnf,		\ 	                __generic(x, long double, fnl,			\ 	                    __generic(x, float, fnf, fn))))))
+value|__generic(x, long double _Complex, fnl,				\ 	    __generic(x, double _Complex, fn,				\ 	        __generic(x, float _Complex, fnf,			\ 	            __generic(x, long double, fnl,			\ 	                __generic(x, float, fnf, fn)))))
 end_define
 
 begin_define
@@ -108,7 +108,7 @@ parameter_list|,
 name|fnf
 parameter_list|)
 define|\
-value|__generic(x, long double _Complex, cfnl,			\ 	    __generic(x, double _Complex, cfn,				\ 	        __generic(x, float _Complex, cfnf,			\ 	            __generic(x, __typeof(_Complex_I), cfnf,		\ 	                __generic(x, long double, fnl,			\ 	                    __generic(x, float, fnf, fn))))))
+value|__generic(x, long double _Complex, cfnl,			\ 	    __generic(x, double _Complex, cfn,				\ 	        __generic(x, float _Complex, cfnf,			\ 	            __generic(x, long double, fnl,			\ 	                __generic(x, float, fnf, fn)))))
 end_define
 
 begin_define
