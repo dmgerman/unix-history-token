@@ -148,7 +148,7 @@ argument_list|)
 comment|// Available locking policies:
 comment|// _S_single    single-threaded code that doesn't need to be locked.
 comment|// _S_mutex     multi-threaded code that requires additional support
-comment|//              from gthr.h or abstraction layers in concurrance.h.
+comment|//              from gthr.h or abstraction layers in concurrence.h.
 comment|// _S_atomic    multi-threaded code using atomic operations.
 expr|enum
 name|_Lock_policy

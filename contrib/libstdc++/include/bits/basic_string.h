@@ -5027,7 +5027,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find position of a character of C substring.        *  @param s  String containing characters to locate.        *  @param pos  Index of character to search from (default 0).        *  @param n  Number of characters from s to search for.        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches forward for one of the first @a n        *  characters of @a s within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
+comment|/**        *  @brief  Find position of a character of C substring.        *  @param s  String containing characters to locate.        *  @param pos  Index of character to search from.        *  @param n  Number of characters from s to search for.        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches forward for one of the first @a n        *  characters of @a s within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -5167,7 +5167,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find last position of a character of C substring.        *  @param s  C string containing characters to locate.        *  @param pos  Index of character to search back from (default end).        *  @param n  Number of characters from s to search for.        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for one of the first @a n        *  characters of @a s within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
+comment|/**        *  @brief  Find last position of a character of C substring.        *  @param s  C string containing characters to locate.        *  @param pos  Index of character to search back from.        *  @param n  Number of characters from s to search for.        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for one of the first @a n        *  characters of @a s within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -5235,7 +5235,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find last position of a character.        *  @param c  Character to locate.        *  @param pos  Index of character to search back from (default 0).        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for @a c within this string.        *  If found, returns the index where it was found.  If not found,        *  returns npos.        *        *  Note: equivalent to rfind(c, pos).       */
+comment|/**        *  @brief  Find last position of a character.        *  @param c  Character to locate.        *  @param pos  Index of character to search back from (default end).        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for @a c within this string.        *  If found, returns the index where it was found.  If not found,        *  returns npos.        *        *  Note: equivalent to rfind(c, pos).       */
 end_comment
 
 begin_decl_stmt
@@ -5307,7 +5307,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find position of a character not in C substring.        *  @param s  C string containing characters to avoid.        *  @param pos  Index of character to search from (default 0).        *  @param n  Number of characters from s to consider.        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches forward for a character not contained        *  in the first @a n characters of @a s within this string.  If found,        *  returns the index where it was found.  If not found, returns npos.       */
+comment|/**        *  @brief  Find position of a character not in C substring.        *  @param s  C string containing characters to avoid.        *  @param pos  Index of character to search from.        *  @param n  Number of characters from s to consider.        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches forward for a character not contained        *  in the first @a n characters of @a s within this string.  If found,        *  returns the index where it was found.  If not found, returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -5395,7 +5395,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find last position of a character not in string.        *  @param str  String containing characters to avoid.        *  @param pos  Index of character to search from (default 0).        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches backward for a character not        *  contained in @a str within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
+comment|/**        *  @brief  Find last position of a character not in string.        *  @param str  String containing characters to avoid.        *  @param pos  Index of character to search back from (default end).        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for a character not        *  contained in @a str within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -5436,7 +5436,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find last position of a character not in C substring.        *  @param s  C string containing characters to avoid.        *  @param pos  Index of character to search from (default 0).        *  @param n  Number of characters from s to consider.        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches backward for a character not        *  contained in the first @a n characters of @a s within this string.        *  If found, returns the index where it was found.  If not found,        *  returns npos.       */
+comment|/**        *  @brief  Find last position of a character not in C substring.        *  @param s  C string containing characters to avoid.        *  @param pos  Index of character to search back from.        *  @param n  Number of characters from s to consider.        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for a character not        *  contained in the first @a n characters of @a s within this string.        *  If found, returns the index where it was found.  If not found,        *  returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -5459,7 +5459,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find position of a character not in C string.        *  @param s  C string containing characters to avoid.        *  @param pos  Index of character to search from (default 0).        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches backward for a character not        *  contained in @a s within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
+comment|/**        *  @brief  Find last position of a character not in C string.        *  @param s  C string containing characters to avoid.        *  @param pos  Index of character to search back from (default end).        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for a character not        *  contained in @a s within this string.  If found, returns the index        *  where it was found.  If not found, returns npos.       */
 end_comment
 
 begin_decl_stmt
@@ -5504,7 +5504,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-comment|/**        *  @brief  Find last position of a different character.        *  @param c  Character to avoid.        *  @param pos  Index of character to search from (default 0).        *  @return  Index of first occurrence.        *        *  Starting from @a pos, searches backward for a character other than        *  @a c within this string.  If found, returns the index where it was        *  found.  If not found, returns npos.       */
+comment|/**        *  @brief  Find last position of a different character.        *  @param c  Character to avoid.        *  @param pos  Index of character to search back from (default end).        *  @return  Index of last occurrence.        *        *  Starting from @a pos, searches backward for a character other than        *  @a c within this string.  If found, returns the index where it was        *  found.  If not found, returns npos.       */
 end_comment
 
 begin_decl_stmt

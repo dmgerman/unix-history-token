@@ -142,7 +142,7 @@ comment|// Functions for portable atomic access.
 end_comment
 
 begin_comment
-comment|// To abstract locking primatives across all thread policies, use:
+comment|// To abstract locking primitives across all thread policies, use:
 end_comment
 
 begin_comment
