@@ -1424,7 +1424,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* HAVE_BZLIB_H */
+comment|/* HAVE_BZLIB_H&& BZ_CONFIG_ERROR */
 end_comment
 
 end_unit

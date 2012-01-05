@@ -3154,7 +3154,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close the file and release most resources.  *  * Be careful: client might just call read_new and then read_finish.  * Don't assume we actually read anything or performed any non-trivial  * initialization.  */
+comment|/*  * Close the file and release most resources.  *  * Be careful: client might just call read_new and then read_free.  * Don't assume we actually read anything or performed any non-trivial  * initialization.  */
 end_comment
 
 begin_function

@@ -502,6 +502,12 @@ expr_stmt|;
 elseif|else
 if|if
 condition|(
+operator|!
+name|archive_entry_size_is_set
+argument_list|(
+name|entry
+argument_list|)
+operator|||
 name|archive_entry_size
 argument_list|(
 name|entry

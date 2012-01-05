@@ -2851,13 +2851,6 @@ argument_list|,
 literal|"chflags %s "
 argument_list|,
 name|p
-argument_list|,
-name|archive_entry_pathname
-argument_list|(
-name|shar
-operator|->
-name|entry
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|shar_quote

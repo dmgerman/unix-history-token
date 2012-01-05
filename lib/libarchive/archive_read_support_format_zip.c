@@ -873,11 +873,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bytes_avail
-operator|<
-name|offset
-operator|+
-literal|1
+name|buff
+operator|==
+name|NULL
 condition|)
 break|break;
 name|p

@@ -454,6 +454,12 @@ name|error
 operator|=
 name|NULL
 expr_stmt|;
+name|a
+operator|->
+name|archive_error_number
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

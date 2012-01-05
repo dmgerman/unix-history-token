@@ -163,6 +163,11 @@ name|defined
 argument_list|(
 name|_SSIZE_T_DEFINED
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_SSIZE_T_
+argument_list|)
 end_if
 
 begin_define
@@ -427,6 +432,57 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__GNUC__
+argument_list|)
+operator|&&
+name|__GNUC__
+operator|>=
+literal|3
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_PRINTF
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+define|\
+value|__attribute__((__format__ (__printf__, fmtarg, firstvararg)))
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|__LA_PRINTF
+parameter_list|(
+name|fmtarg
+parameter_list|,
+name|firstvararg
+parameter_list|)
+end_define
+
+begin_comment
+comment|/* nothing */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -444,7 +500,7 @@ comment|/*  * The version number is expressed as a single integer that makes it 
 define|#
 directive|define
 name|ARCHIVE_VERSION_NUMBER
-value|2008004
+value|2008005
 name|__LA_DECL
 name|int
 name|archive_version_number
@@ -456,7 +512,7 @@ comment|/*  * Textual name/version of the library, useful for version displays. 
 define|#
 directive|define
 name|ARCHIVE_VERSION_STRING
-value|"libarchive 2.8.4"
+value|"libarchive 2.8.5"
 name|__LA_DECL
 specifier|const
 name|char
@@ -2581,7 +2637,16 @@ name|fmt
 parameter_list|,
 modifier|...
 parameter_list|)
-function_decl|;
+function_decl|__LA_PRINTF
+parameter_list|(
+function_decl|3
+operator|,
+function_decl|4
+block|)
+empty_stmt|;
+end_extern
+
+begin_function_decl
 name|__LA_DECL
 name|void
 name|archive_copy_error
@@ -2597,6 +2662,9 @@ modifier|*
 name|src
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|__LA_DECL
 name|int
 name|archive_file_count
@@ -2606,13 +2674,16 @@ name|archive
 modifier|*
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_ifdef
 ifdef|#
 directive|ifdef
 name|__cplusplus
-block|}
-end_extern
+end_ifdef
 
 begin_endif
+unit|}
 endif|#
 directive|endif
 end_endif

@@ -1671,6 +1671,9 @@ name|ARCHIVE_ERRNO_MISC
 argument_list|,
 literal|"Internal: template_header wrong size: %d should be 512"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|template_header

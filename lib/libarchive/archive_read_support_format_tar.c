@@ -2984,16 +2984,12 @@ argument_list|,
 literal|512
 argument_list|)
 expr_stmt|;
-name|archive_set_error
+name|archive_clear_error
 argument_list|(
 operator|&
 name|a
 operator|->
 name|archive
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
 argument_list|)
 expr_stmt|;
 if|if
