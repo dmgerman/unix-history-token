@@ -390,6 +390,9 @@ modifier|*
 name|new_thread_ID
 parameter_list|)
 block|{
+name|pthread_t
+name|dummy
+decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
@@ -444,6 +447,17 @@ name|attr
 argument_list|,
 name|PTHREAD_CREATE_DETACHED
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|new_thread_ID
+operator|==
+name|NULL
+condition|)
+name|new_thread_ID
+operator|=
+operator|&
+name|dummy
 expr_stmt|;
 comment|/* This function ignores the THR_BOUND flag, since NPTL doesn't seem to support PTHREAD_SCOPE_PROCESS */
 name|ret
