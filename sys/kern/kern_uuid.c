@@ -270,7 +270,7 @@ argument|if_link
 argument_list|)
 block|{
 comment|/* Walk the address list */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -327,7 +327,7 @@ argument_list|,
 name|UUID_NODE_LEN
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -341,7 +341,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

@@ -2179,7 +2179,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2210,7 +2210,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4744,7 +4744,7 @@ name|end
 goto|;
 block|}
 comment|/* 	 * 5.5.3 (d).  If the prefix advertised is not equal to the prefix of 	 * an address configured by stateless autoconfiguration already in the 	 * list of addresses associated with the interface, and the Valid 	 * Lifetime is not 0, form an address.  We first check if we have 	 * a matching prefix. 	 * Note: we apply a clarification in rfc2462bis-02 here.  We only 	 * consider autoconfigured addresses while RFC2462 simply said 	 * "address". 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5130,7 +5130,7 @@ operator|=
 name|time_second
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6327,7 +6327,7 @@ name|NULL
 condition|)
 block|{
 comment|/* XXX: freebsd does not have ifa_ifwithaf */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6364,7 +6364,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

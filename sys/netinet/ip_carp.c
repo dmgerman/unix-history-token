@@ -2768,7 +2768,7 @@ decl_stmt|,
 name|ch_tv
 decl_stmt|;
 comment|/* verify that the VHID is valid on the receiving interface */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2807,7 +2807,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5027,7 +5027,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5072,7 +5072,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5083,7 +5083,7 @@ name|ifa
 operator|)
 return|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5122,7 +5122,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5168,7 +5168,7 @@ name|m_tag
 modifier|*
 name|mtag
 decl_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5248,7 +5248,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7641,7 +7641,7 @@ operator|->
 name|cif_vrs
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7657,7 +7657,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7726,7 +7726,7 @@ name|__func__
 operator|)
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7742,7 +7742,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
