@@ -679,7 +679,7 @@ argument_list|,
 operator|(
 literal|"Unreferenced vnode %p\n"
 operator|,
-name|vp
+name|lowervp
 operator|)
 argument_list|)
 expr_stmt|;
