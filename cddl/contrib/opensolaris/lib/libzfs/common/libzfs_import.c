@@ -4630,7 +4630,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Given a file descriptor, clear (zero) the label information.  This function  * is currently only used in the appliance stack as part of the ZFS sysevent  * module.  */
+comment|/*  * Given a file descriptor, clear (zero) the label information.  This function  * is used in the appliance stack as part of the ZFS sysevent module and  * to implement the "zpool labelclear" command.  */
 end_comment
 
 begin_function
