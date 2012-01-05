@@ -654,6 +654,34 @@ literal|0x10
 block|}
 block|,
 block|{
+literal|0x8086
+block|,
+literal|0x1c3d
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"Intel AMT - KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x9710
+block|,
+literal|0x9820
+block|,
+literal|0x1000
+block|,
+literal|1
+block|,
+literal|"NetMos NM9820 Serial Port"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
 literal|0x9710
 block|,
 literal|0x9835
