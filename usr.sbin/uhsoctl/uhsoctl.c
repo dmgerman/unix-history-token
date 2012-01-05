@@ -2190,6 +2190,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_NOFOLLOW
+argument_list|,
+literal|0666
 argument_list|)
 expr_stmt|;
 if|if

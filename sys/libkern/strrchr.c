@@ -29,27 +29,19 @@ directive|include
 file|<sys/libkern.h>
 end_include
 
-begin_comment
-comment|/*  * rindex() is also present as the strrchr() in the kernel; it does exactly the  * same thing as it's userland equivalent.  */
-end_comment
-
 begin_function
 name|char
 modifier|*
-name|rindex
+name|strrchr
 parameter_list|(
-name|p
-parameter_list|,
-name|ch
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|int
 name|ch
-decl_stmt|;
+parameter_list|)
 block|{
 union|union
 block|{

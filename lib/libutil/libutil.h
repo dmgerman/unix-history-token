@@ -868,6 +868,20 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|char
+modifier|*
+name|pw_make_v7
+parameter_list|(
+specifier|const
+name|struct
+name|passwd
+modifier|*
+name|_pw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pw_mkdb
 parameter_list|(

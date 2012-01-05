@@ -1006,7 +1006,7 @@ condition|(
 operator|(
 name|t
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 operator|+
@@ -2578,7 +2578,7 @@ condition|(
 operator|(
 name|s2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s1
 argument_list|,
@@ -2631,7 +2631,7 @@ condition|(
 operator|(
 name|s2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s1
 argument_list|,

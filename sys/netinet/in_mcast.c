@@ -2058,7 +2058,7 @@ name|error
 operator|)
 return|;
 comment|/* XXX ifma_protospec must be covered by IF_ADDR_LOCK */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2186,7 +2186,7 @@ name|pinm
 operator|=
 name|inm
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2197,7 +2197,7 @@ literal|0
 operator|)
 return|;
 block|}
-name|IF_ADDR_LOCK_ASSERT
+name|IF_ADDR_WLOCK_ASSERT
 argument_list|(
 name|ifp
 argument_list|)
@@ -2232,7 +2232,7 @@ argument_list|(
 name|ifma
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2334,7 +2334,7 @@ name|pinm
 operator|=
 name|inm
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -12252,7 +12252,7 @@ return|;
 name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -12445,7 +12445,7 @@ condition|)
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

@@ -1528,6 +1528,7 @@ end_comment
 begin_function
 specifier|static
 name|char
+name|constant
 modifier|*
 name|skipcond
 parameter_list|(
@@ -1535,6 +1536,7 @@ name|p
 parameter_list|)
 specifier|register
 name|char
+name|constant
 modifier|*
 name|p
 decl_stmt|;
@@ -1632,6 +1634,7 @@ end_comment
 begin_function
 specifier|static
 name|char
+name|constant
 modifier|*
 name|wherechar
 parameter_list|(
@@ -1640,6 +1643,7 @@ parameter_list|,
 name|wp
 parameter_list|)
 name|char
+name|constant
 modifier|*
 name|p
 decl_stmt|;
@@ -1759,6 +1763,7 @@ parameter_list|,
 name|maxwidth
 parameter_list|)
 name|char
+name|constant
 modifier|*
 name|proto
 decl_stmt|;
@@ -1768,6 +1773,7 @@ decl_stmt|;
 block|{
 specifier|register
 name|char
+name|constant
 modifier|*
 name|p
 decl_stmt|;
@@ -2036,10 +2042,6 @@ return|return
 operator|(
 name|pr_expand
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|eqproto
 argument_list|,
 literal|0
@@ -2093,10 +2095,6 @@ operator|&
 name|CH_HELPFILE
 operator|)
 condition|?
-operator|(
-name|char
-operator|*
-operator|)
 name|hproto
 else|:
 name|prproto
@@ -2140,10 +2138,6 @@ return|return
 operator|(
 name|pr_expand
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|wproto
 argument_list|,
 name|sc_width

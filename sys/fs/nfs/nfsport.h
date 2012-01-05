@@ -3046,7 +3046,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|index((s), (c))
+value|strchr((s), (c))
 end_define
 
 begin_comment

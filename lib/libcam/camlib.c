@@ -448,11 +448,7 @@ name|tmpstr
 expr_stmt|;
 name|tmpstr
 operator|=
-operator|(
-name|char
-operator|*
-operator|)
-name|rindex
+name|strrchr
 argument_list|(
 name|tmpstr2
 argument_list|,

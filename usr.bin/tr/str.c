@@ -788,7 +788,7 @@ index|]
 operator|!=
 literal|'*'
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,

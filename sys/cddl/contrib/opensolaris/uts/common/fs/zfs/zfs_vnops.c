@@ -11302,7 +11302,7 @@ name|MIN
 argument_list|(
 name|links
 argument_list|,
-name|UINT32_MAX
+name|LINK_MAX
 argument_list|)
 expr_stmt|;
 comment|/* nlink_t limit! */

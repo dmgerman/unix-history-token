@@ -1245,7 +1245,7 @@ directive|ifdef
 name|RDUMP
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|tape
 argument_list|,

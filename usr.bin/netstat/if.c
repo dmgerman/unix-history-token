@@ -1171,7 +1171,7 @@ condition|)
 continue|continue;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,

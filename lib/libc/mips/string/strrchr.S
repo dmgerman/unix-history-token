@@ -44,7 +44,7 @@ __FBSDID("$FreeBSD$");
 	.abicalls
 #endif
 
-LEAF(rindex)
+LEAF(strrchr)
 	move		v0, zero		# default if not found
 1:
 	lbu		a3, 0(a0)		# get a byte
@@ -54,4 +54,6 @@ LEAF(rindex)
 2:
 	bne		a3, zero, 1b		# continue if not end
 	j		ra
-END(rindex)
+END(strrchr)
+
+WEAK_ALIAS(rindex, strrchr)

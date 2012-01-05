@@ -2389,7 +2389,7 @@ decl_stmt|;
 name|IN6_MULTI_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2403,7 +2403,7 @@ argument_list|,
 name|mcaddr
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3143,12 +3143,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_struct_decl
-struct_decl|struct
-name|inpcb
-struct_decl|;
-end_struct_decl
 
 begin_decl_stmt
 name|int

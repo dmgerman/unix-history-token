@@ -7672,7 +7672,7 @@ name|addrsofif
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7846,7 +7846,7 @@ operator|++
 expr_stmt|;
 comment|/* count the address */
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8016,7 +8016,7 @@ name|if_list
 argument_list|)
 control|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8224,7 +8224,7 @@ name|u_int32_t
 argument_list|)
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8380,7 +8380,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

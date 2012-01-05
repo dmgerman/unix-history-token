@@ -3561,7 +3561,7 @@ expr_stmt|;
 comment|/* 	 * Look for an existing description by checking for an 	 * existing ":".  This assumes device names do not include 	 * colons.  If one is found, prepare to insert the new 	 * description at that point.  If one is not found, find the 	 * end of the name to use as the insertion point. 	 */
 name|start
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ih
 operator|->
@@ -3578,7 +3578,7 @@ name|NULL
 condition|)
 name|start
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|ih
 operator|->
@@ -8048,7 +8048,7 @@ name|verbose
 decl_stmt|;
 name|verbose
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|modif
 argument_list|,
@@ -8059,7 +8059,7 @@ name|NULL
 expr_stmt|;
 name|all
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|modif
 argument_list|,

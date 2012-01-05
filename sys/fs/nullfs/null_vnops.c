@@ -796,13 +796,9 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+literal|0
 condition|)
-name|vput
-argument_list|(
-name|lvp
-argument_list|)
-expr_stmt|;
-else|else
 operator|*
 name|ap
 operator|->
@@ -2588,12 +2584,6 @@ argument_list|)
 expr_stmt|;
 comment|/* keep reference on *dvp */
 block|}
-else|else
-name|vput
-argument_list|(
-name|ldvp
-argument_list|)
-expr_stmt|;
 name|vn_lock
 argument_list|(
 name|vp

@@ -930,7 +930,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 parameter_list|(
 define|if)	mtx_lock(&(if)->if_addr_mtx)
 end_define
@@ -938,7 +938,23 @@ end_define
 begin_define
 define|#
 directive|define
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
+parameter_list|(
+define|if)	mtx_unlock(&(if)->if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_RLOCK
+parameter_list|(
+define|if)	mtx_lock(&(if)->if_addr_mtx)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_RUNLOCK
 parameter_list|(
 define|if)	mtx_unlock(&(if)->if_addr_mtx)
 end_define
@@ -949,6 +965,34 @@ directive|define
 name|IF_ADDR_LOCK_ASSERT
 parameter_list|(
 define|if)	mtx_assert(&(if)->if_addr_mtx, MA_OWNED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_WLOCK_ASSERT
+parameter_list|(
+define|if)	mtx_assert(&(if)->if_addr_mtx, MA_OWNED)
+end_define
+
+begin_comment
+comment|/* XXX: Compat. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_LOCK
+parameter_list|(
+define|if)	IF_ADDR_WLOCK(if)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_UNLOCK
+parameter_list|(
+define|if)	IF_ADDR_WUNLOCK(if)
 end_define
 
 begin_comment

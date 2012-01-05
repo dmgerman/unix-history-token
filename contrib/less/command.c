@@ -535,6 +535,7 @@ modifier|*
 name|prompt
 decl_stmt|;
 name|void
+name|constant
 modifier|*
 name|mlist
 decl_stmt|;
@@ -2300,6 +2301,7 @@ parameter_list|()
 block|{
 specifier|register
 name|char
+name|constant
 modifier|*
 name|p
 decl_stmt|;
@@ -4179,10 +4181,6 @@ name|A_EXAMINE
 argument_list|,
 literal|"Examine: "
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|ml_examine
 argument_list|,
 literal|0
@@ -4282,10 +4280,6 @@ name|A_SHELL
 argument_list|,
 literal|"!"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|ml_shell
 argument_list|,
 literal|0
@@ -4842,10 +4836,6 @@ name|A_SHELL
 argument_list|,
 literal|"!"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|ml_shell
 argument_list|,
 literal|0
@@ -5075,10 +5065,6 @@ name|A_PIPE
 argument_list|,
 literal|"!"
 argument_list|,
-operator|(
-name|void
-operator|*
-operator|)
 name|ml_shell
 argument_list|,
 literal|0

@@ -45,7 +45,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * String functions.  *  *	equal(s1, s2)		Return true if strings are equal.  *	scopy(from, to)		Copy a string.  *	scopyn(from, to, n)	Like scopy, but checks for overflow.  *	number(s)		Convert a string of digits to an integer.  *	is_number(s)		Return true if s is a string of digits.  */
+comment|/*  * String functions.  *  *	equal(s1, s2)		Return true if strings are equal.  *	scopy(from, to)		Copy a string.  *	number(s)		Convert a string of digits to an integer.  *	is_number(s)		Return true if s is a string of digits.  */
 end_comment
 
 begin_include
@@ -98,59 +98,6 @@ end_comment
 begin_comment
 comment|/*  * scopy - #defined in mystring.h  */
 end_comment
-
-begin_comment
-comment|/*  * scopyn - copy a string from "from" to "to", truncating the string  *		if necessary.  "To" is always nul terminated, even if  *		truncation is performed.  "Size" is the size of "to".  */
-end_comment
-
-begin_function
-name|void
-name|scopyn
-parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|from
-parameter_list|,
-name|char
-modifier|*
-name|to
-parameter_list|,
-name|int
-name|size
-parameter_list|)
-block|{
-while|while
-condition|(
-operator|--
-name|size
-operator|>
-literal|0
-condition|)
-block|{
-if|if
-condition|(
-operator|(
-operator|*
-name|to
-operator|++
-operator|=
-operator|*
-name|from
-operator|++
-operator|)
-operator|==
-literal|'\0'
-condition|)
-return|return;
-block|}
-operator|*
-name|to
-operator|=
-literal|'\0'
-expr_stmt|;
-block|}
-end_function
 
 begin_comment
 comment|/*  * prefix -- see if pfx is a prefix of string.  */

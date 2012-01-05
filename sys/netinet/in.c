@@ -1546,7 +1546,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1622,7 +1622,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1977,7 +1977,7 @@ name|ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1994,7 +1994,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2892,7 +2892,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2926,7 +2926,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * If we lost the race with another thread, there is no need to 		 * try it again for the next loop as there is no other exit 		 * path between here and out. 		 */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2954,7 +2954,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3329,7 +3329,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* copy args to in_aliasreq, perform ioctl(SIOCAIFADDR_IN6). */
+comment|/* copy args to in_aliasreq, perform ioctl(SIOCAIFADDR). */
 name|bzero
 argument_list|(
 operator|&
@@ -3622,6 +3622,11 @@ name|s_addr
 expr_stmt|;
 block|}
 block|}
+name|IF_ADDR_RLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -3639,7 +3644,7 @@ name|ifa_addr
 operator|->
 name|sa_family
 operator|!=
-name|AF_INET6
+name|AF_INET
 condition|)
 continue|continue;
 if|if
@@ -3651,11 +3656,8 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|candidate
-operator|.
-name|s_addr
+name|sin
 operator|=
-operator|(
 operator|(
 expr|struct
 name|sockaddr_in
@@ -3665,7 +3667,12 @@ operator|&
 name|ifa
 operator|->
 name|ifa_addr
-operator|)
+expr_stmt|;
+name|candidate
+operator|.
+name|s_addr
+operator|=
+name|sin
 operator|->
 name|sin_addr
 operator|.
@@ -3691,6 +3698,22 @@ name|s_addr
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_RUNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifa
@@ -3808,6 +3831,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*XXX*/
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3820,7 +3848,7 @@ name|struct
 name|in_aliasreq
 name|ifra
 decl_stmt|;
-comment|/* fill in_aliasreq and do ioctl(SIOCDIFADDR_IN6) */
+comment|/* fill in_aliasreq and do ioctl(SIOCDIFADDR) */
 name|bzero
 argument_list|(
 operator|&
@@ -3919,6 +3947,11 @@ operator|->
 name|ia_sockmask
 operator|.
 name|sin_len
+argument_list|)
+expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
 argument_list|)
 expr_stmt|;
 return|return
@@ -6069,7 +6102,7 @@ name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Extract list of in_multi associated with the detaching ifp 	 * which the PF_INET layer is about to release. 	 * We need to do this as IF_ADDR_LOCK() may be re-acquired 	 * by code further down. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6128,7 +6161,7 @@ name|inm_link
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

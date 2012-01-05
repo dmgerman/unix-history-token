@@ -2148,7 +2148,7 @@ name|headp
 operator|==
 name|NULL
 operator|||
-name|index
+name|idx
 operator|==
 name|NULL
 condition|)

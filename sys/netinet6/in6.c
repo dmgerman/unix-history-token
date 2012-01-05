@@ -4111,7 +4111,7 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4131,7 +4131,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5666,9 +5666,6 @@ name|struct
 name|ifaddr
 modifier|*
 name|ifa0
-decl_stmt|,
-modifier|*
-name|nifa
 decl_stmt|;
 if|if
 condition|(
@@ -5685,20 +5682,18 @@ name|ifa
 argument_list|)
 expr_stmt|;
 comment|/* 	 * find another IPv6 address as the gateway for the 	 * link-local and node-local all-nodes multicast 	 * address routes 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifa0
 argument_list|,
 argument|&ifp->if_addrhead
 argument_list|,
 argument|ifa_link
-argument_list|,
-argument|nifa
 argument_list|)
 block|{
 if|if
@@ -5756,7 +5751,7 @@ argument_list|(
 name|ifa0
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6679,7 +6674,7 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6699,7 +6694,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7701,7 +7696,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7824,7 +7819,18 @@ argument_list|)
 condition|)
 break|break;
 block|}
-name|IF_ADDR_UNLOCK
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7895,11 +7901,18 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 if|if
 condition|(
 operator|(
@@ -7953,11 +7966,18 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|error
 operator|)
 return|;
+block|}
 block|}
 else|else
 name|bzero
@@ -8000,6 +8020,11 @@ operator|->
 name|ia6_flags
 expr_stmt|;
 comment|/* XXX */
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -8137,6 +8162,11 @@ name|ia
 operator|->
 name|ia6_flags
 expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 name|in6_control
 argument_list|(
@@ -8216,7 +8246,7 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* 	 * Give the interface a chance to initialize 	 * if this is its first address, 	 * and to validate the address if necessary. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8245,7 +8275,7 @@ name|ifacount
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8542,7 +8572,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8606,7 +8636,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8650,7 +8680,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8696,7 +8726,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9813,7 +9843,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * We first look for addresses in the same scope. 	 * If there is one, return it. 	 * If two or more, return one which matches the dst longest. 	 * If none, return one of global addresses assigned other ifs. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10021,7 +10051,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10032,14 +10062,6 @@ name|besta
 operator|)
 return|;
 block|}
-name|IF_ADDR_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|IN6_IFADDR_RLOCK
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -10155,8 +10177,10 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IN6_IFADDR_RUNLOCK
-argument_list|()
+name|IF_ADDR_RUNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -10167,8 +10191,10 @@ operator|)
 name|ifa
 return|;
 block|}
-name|IN6_IFADDR_RUNLOCK
-argument_list|()
+name|IF_ADDR_RUNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 comment|/* use the last-resort values, that are, deprecated addresses */
 if|if
@@ -10227,7 +10253,7 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10287,7 +10313,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

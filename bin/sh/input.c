@@ -402,6 +402,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|popstring
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1345,6 +1355,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|popstring
 parameter_list|(

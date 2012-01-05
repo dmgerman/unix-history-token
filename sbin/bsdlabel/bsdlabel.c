@@ -4044,7 +4044,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -4075,7 +4075,7 @@ condition|)
 continue|continue;
 name|tp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,

@@ -21428,16 +21428,12 @@ name|m_pkthdr
 operator|.
 name|ether_vtag
 operator|=
-operator|(
 name|le16toh
 argument_list|(
 name|cur
 operator|->
 name|special
 argument_list|)
-operator|&
-name|E1000_RXD_SPC_VLAN_MASK
-operator|)
 expr_stmt|;
 name|sendmp
 operator|->

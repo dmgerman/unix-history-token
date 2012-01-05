@@ -7876,9 +7876,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|bzero
+name|memset
 argument_list|(
 name|data
+argument_list|,
+literal|0
 argument_list|,
 name|tocopy
 argument_list|)
@@ -8613,9 +8615,11 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|bzero
+name|memset
 argument_list|(
 name|data
+argument_list|,
+literal|0
 argument_list|,
 name|tocopy
 argument_list|)
