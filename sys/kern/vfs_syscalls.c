@@ -10104,6 +10104,13 @@ name|f_offset
 operator|=
 name|offset
 expr_stmt|;
+name|VFS_KNOTE_UNLOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 operator|*
 operator|(
 name|off_t
