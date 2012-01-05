@@ -423,7 +423,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Delete plist item 'type' in the list (if 'name' is non-null, match it  * too.)  If 'all' is set, delete all items, not just the first occurrance.  */
+comment|/*  * Delete plist item 'type' in the list (if 'name' is non-null, match it  * too.)  If 'all' is set, delete all items, not just the first occurrence.  */
 end_comment
 
 begin_function
