@@ -93,12 +93,6 @@ name|I
 value|_Complex_I
 end_define
 
-begin_include
-include|#
-directive|include
-file|<sys/cdefs.h>
-end_include
-
 begin_function_decl
 name|__BEGIN_DECLS
 name|double
