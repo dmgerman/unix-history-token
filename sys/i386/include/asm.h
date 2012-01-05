@@ -217,6 +217,23 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/*  * WEAK_ALIAS: create a weak alias.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|WEAK_ALIAS
+parameter_list|(
+name|alias
+parameter_list|,
+name|sym
+parameter_list|)
+define|\
+value|.weak alias;							\ 	alias = sym
+end_define
+
+begin_comment
 comment|/*  * STRONG_ALIAS: create a strong alias.  */
 end_comment
 
