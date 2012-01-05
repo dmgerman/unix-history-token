@@ -6831,7 +6831,7 @@ case|:
 ifdef|#
 directive|ifdef
 name|VIMAGE
-comment|/* 		 * XXXRW/XXXBZ: The goal in these checks is to allow a VLAN 		 * interface to be delegated to a jail without allowing the 		 * jail to change what underlying interface/VID it is 		 * associated with.  We are not entirely convinced that this 		 * is the right way to accomplish that goal policy goal. 		 */
+comment|/* 		 * XXXRW/XXXBZ: The goal in these checks is to allow a VLAN 		 * interface to be delegated to a jail without allowing the 		 * jail to change what underlying interface/VID it is 		 * associated with.  We are not entirely convinced that this 		 * is the right way to accomplish that policy goal. 		 */
 if|if
 condition|(
 name|ifp
