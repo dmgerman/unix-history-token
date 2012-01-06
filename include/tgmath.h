@@ -48,6 +48,105 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_comment
+comment|/* XXX: Much shorter and faster to compile, but broken with GCC 4.2. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__tg_generic
+parameter_list|(
+name|x
+parameter_list|,
+name|cfnl
+parameter_list|,
+name|cfn
+parameter_list|,
+name|cfnf
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|)
+define|\
+value|__generic(x, long double _Complex, cfnl,			\ 	    __generic(x, double _Complex, cfn,				\ 	        __generic(x, float _Complex, cfnf,			\ 	            __generic(x, long double, fnl,			\ 	                __generic(x, float, fnf, fn)))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_type
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|__tg_generic(x, (long double _Complex)0, (double _Complex)0,	\ 	    (float _Complex)0, (long double)0, (double)0, (float)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_impl_simple
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__tg_generic(							\ 	    __tg_type(x) + __tg_type(y) + __tg_type(z),			\ 	    fnl, fn, fnf, fnl, fn, fnf)(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_impl_full
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|cfnl
+parameter_list|,
+name|cfn
+parameter_list|,
+name|cfnf
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__tg_generic(							\ 	    __tg_type(x) + __tg_type(y),				\ 	    cfnl, cfn, cfnf, fnl, fn, fnf)(__VA_ARGS__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
@@ -137,6 +236,11 @@ parameter_list|)
 define|\
 value|__tg_generic_full(x,						\ 	    __tg_generic_full(y, cfnl, cfnl, cfnl, cfnl, cfnl, cfnl),	\ 	    __tg_generic_full(y, cfnl, cfn , cfn , cfnl, cfn , cfn ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfnf, cfnl, cfn , cfnf),	\ 	    __tg_generic_full(y, cfnl, cfnl, cfnl, fnl , fnl , fnl ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfn , fnl , fn  , fn  ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfnf, fnl , fn  , fnf ))	\ 	    (__VA_ARGS__)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Macros to save lots of repetition below */
