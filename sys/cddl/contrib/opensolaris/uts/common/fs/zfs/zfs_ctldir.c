@@ -7461,7 +7461,7 @@ operator|->
 name|sd_lock
 argument_list|)
 expr_stmt|;
-name|vhold
+name|vref
 argument_list|(
 name|dvp
 argument_list|)
