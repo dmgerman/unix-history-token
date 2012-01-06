@@ -18293,7 +18293,7 @@ name|rc
 parameter_list|)
 block|{
 name|struct
-name|vop_setattr_args
+name|vop_deleteextattr_args
 modifier|*
 name|a
 init|=
@@ -18707,7 +18707,7 @@ name|rc
 parameter_list|)
 block|{
 name|struct
-name|vop_setattr_args
+name|vop_setextattr_args
 modifier|*
 name|a
 init|=
