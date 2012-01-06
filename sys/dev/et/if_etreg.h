@@ -57,15 +57,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ET_PCIR_BAR
-value|PCIR_BAR(0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|ET_PCIR_DEVICE_CAPS
-value|0x4c
+value|0x4C
 end_define
 
 begin_define
@@ -122,21 +115,21 @@ begin_define
 define|#
 directive|define
 name|ET_PCIR_MAC_ADDR0
-value|0xa4
+value|0xA4
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PCIR_MAC_ADDR1
-value|0xa8
+value|0xA8
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PCIR_EEPROM_STATUS
-value|0xb2
+value|0xB2
 end_define
 
 begin_comment
@@ -147,14 +140,14 @@ begin_define
 define|#
 directive|define
 name|ET_PCIM_EEPROM_STATUS_ERROR
-value|0x4c
+value|0x4C
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_PCIR_ACK_LATENCY
-value|0xc0
+value|0xC0
 end_define
 
 begin_define
@@ -175,7 +168,7 @@ begin_define
 define|#
 directive|define
 name|ET_PCIR_REPLAY_TIMER
-value|0xc2
+value|0xC2
 end_define
 
 begin_define
@@ -207,7 +200,7 @@ begin_define
 define|#
 directive|define
 name|ET_PCIR_L0S_L1_LATENCY
-value|0xcf
+value|0xCF
 end_define
 
 begin_comment
@@ -239,7 +232,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXQUEUE_END
-value|0x000c
+value|0x000C
 end_define
 
 begin_define
@@ -276,6 +269,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EM_PM_GIGEPHY_ENB
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|ET_PM_SYSCLK_GATE
 value|0x00000008
 end_define
@@ -297,6 +297,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ET_PM_PHY_SW_COMA
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
 name|ET_INTR_STATUS
 value|0x0018
 end_define
@@ -305,7 +312,7 @@ begin_define
 define|#
 directive|define
 name|ET_INTR_MASK
-value|0x001c
+value|0x001C
 end_define
 
 begin_define
@@ -442,14 +449,14 @@ begin_define
 define|#
 directive|define
 name|ET_TX_RING_CNT
-value|0x100c
+value|0x100C
 end_define
 
 begin_define
 define|#
 directive|define
 name|ET_TX_STATUS_HI
-value|0x101c
+value|0x101C
 end_define
 
 begin_define
@@ -656,7 +663,7 @@ begin_define
 define|#
 directive|define
 name|ET_RX_INTR_NPKTS
-value|0x200c
+value|0x200C
 end_define
 
 begin_define
@@ -719,7 +726,7 @@ begin_define
 define|#
 directive|define
 name|ET_RX_RING0_LO
-value|0x203c
+value|0x203C
 end_define
 
 begin_define
@@ -740,7 +747,7 @@ begin_define
 define|#
 directive|define
 name|ET_RX_RING0_POS
-value|0x204c
+value|0x204C
 end_define
 
 begin_define
@@ -775,7 +782,7 @@ begin_define
 define|#
 directive|define
 name|ET_RX_RING1_HI
-value|0x205c
+value|0x205C
 end_define
 
 begin_define
@@ -839,6 +846,48 @@ define|#
 directive|define
 name|ET_TXMAC_FLOWCTRL
 value|0x3010
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TXMAC_FLOWCTRL_CFPT_MASK
+value|0x0000FFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TXMAC_FLOWCTRL_CFEP_MASK
+value|0xFFFF0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TXMAC_FLOWCTRL_CFPT_SHIFT
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TXMAC_BP_CTRL
+value|0x3020
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TXMAC_BP_CTRL_XONXOFF
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|ET_TXMAC_BP_CTRL_REQ
+value|0x00000002
 end_define
 
 begin_define
@@ -908,7 +957,7 @@ begin_define
 define|#
 directive|define
 name|ET_UCAST_FILTADDR2
-value|0x406c
+value|0x406C
 end_define
 
 begin_define
@@ -1023,7 +1072,7 @@ begin_define
 define|#
 directive|define
 name|ET_RXMAC_MC_WATERMARK
-value|0x408c
+value|0x408C
 end_define
 
 begin_define
@@ -1303,7 +1352,7 @@ begin_define
 define|#
 directive|define
 name|ET_MAC_HDX
-value|0x500c
+value|0x500C
 end_define
 
 begin_define
@@ -1471,7 +1520,7 @@ begin_define
 define|#
 directive|define
 name|ET_MII_CTRL
-value|0x502c
+value|0x502C
 end_define
 
 begin_define
@@ -1940,7 +1989,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ET_INTR_TXEOF
+name|ET_INTR_TXDMA
 value|0x00000008
 end_define
 
@@ -1954,7 +2003,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ET_INTR_RXEOF
+name|ET_INTR_RXDMA
 value|0x00000020
 end_define
 
@@ -2039,7 +2088,8 @@ begin_define
 define|#
 directive|define
 name|ET_INTRS
-value|(ET_INTR_TXEOF | \ 					 ET_INTR_RXEOF | \ 					 ET_INTR_TIMER)
+define|\
+value|(ET_INTR_TXDMA | ET_INTR_RXDMA | ET_INTR_TIMER |	\ 	 ET_INTR_TXDMA_ERROR | ET_INTR_RXDMA_ERROR)
 end_define
 
 begin_comment
@@ -2068,14 +2118,14 @@ begin_define
 define|#
 directive|define
 name|PCI_VENDOR_LUCENT
-value|0x11c1
+value|0x11C1
 end_define
 
 begin_define
 define|#
 directive|define
 name|PCI_PRODUCT_LUCENT_ET1310
-value|0xed00
+value|0xED00
 end_define
 
 begin_comment
@@ -2086,7 +2136,7 @@ begin_define
 define|#
 directive|define
 name|PCI_PRODUCT_LUCENT_ET1310_FAST
-value|0xed01
+value|0xED01
 end_define
 
 begin_comment
