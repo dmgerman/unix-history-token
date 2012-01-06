@@ -7825,7 +7825,7 @@ do|do
 block|{
 name|DRM_DEBUG
 argument_list|(
-literal|"tex: ofs=0x%x p=%d f=%d x=%hd y=%hd w=%hd h=%hd\n"
+literal|"tex: ofs=0x%x p=%d f=%d x=%d y=%d w=%d h=%d\n"
 argument_list|,
 name|tex
 operator|->
