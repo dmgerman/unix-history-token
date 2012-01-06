@@ -249,7 +249,6 @@ decl_stmt|;
 name|register_t
 name|fdummy
 decl_stmt|;
-comment|/* 	 * COP2 registers may need to be saved here based on the CPU, and those 	 * might need to be per process, or even for the kernel, so we need 	 * some thought here. 	 */
 block|}
 struct|;
 end_struct
