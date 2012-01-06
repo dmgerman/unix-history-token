@@ -3972,8 +3972,9 @@ expr_stmt|;
 if|if
 condition|(
 name|pid
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* TODO: There's no need for this to be fatal error. */

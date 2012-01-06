@@ -1580,8 +1580,9 @@ expr_stmt|;
 if|if
 condition|(
 name|pid
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|KEEP_ERRNO
