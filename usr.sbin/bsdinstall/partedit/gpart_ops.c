@@ -1573,7 +1573,7 @@ expr_stmt|;
 if|if
 condition|(
 name|bootfd
-operator|<=
+operator|<
 literal|0
 condition|)
 block|{
