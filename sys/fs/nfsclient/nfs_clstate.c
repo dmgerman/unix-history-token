@@ -8099,20 +8099,6 @@ block|}
 block|}
 end_function
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|APPLEKEXT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
-end_if
-
 begin_comment
 comment|/*  * Find open/lock owners for processes that have exited.  */
 end_comment
@@ -8180,15 +8166,6 @@ argument_list|()
 expr_stmt|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* APPLEKEXT || __FreeBSD__ */
-end_comment
 
 begin_decl_stmt
 specifier|static
@@ -11109,6 +11086,16 @@ name|recover_done_time
 init|=
 literal|0
 decl_stmt|;
+name|struct
+name|timespec
+name|mytime
+decl_stmt|;
+specifier|static
+name|time_t
+name|prevsec
+init|=
+literal|0
+decl_stmt|;
 name|cred
 operator|=
 name|newnfs_getcred
@@ -12018,29 +12005,7 @@ name|M_NFSCLDELEG
 argument_list|)
 expr_stmt|;
 block|}
-if|#
-directive|if
-name|defined
-argument_list|(
-name|APPLEKEXT
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__FreeBSD__
-argument_list|)
 comment|/* 		 * Call nfscl_cleanupkext() once per second to check for 		 * open/lock owners where the process has exited. 		 */
-block|{
-name|struct
-name|timespec
-name|mytime
-decl_stmt|;
-specifier|static
-name|time_t
-name|prevsec
-init|=
-literal|0
-decl_stmt|;
 name|NFSGETNANOTIME
 argument_list|(
 operator|&
@@ -12068,10 +12033,6 @@ name|clp
 argument_list|)
 expr_stmt|;
 block|}
-block|}
-endif|#
-directive|endif
-comment|/* APPLEKEXT || __FreeBSD__ */
 name|NFSLOCKCLSTATE
 argument_list|()
 expr_stmt|;
