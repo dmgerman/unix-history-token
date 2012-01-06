@@ -631,6 +631,26 @@ end_comment
 
 begin_struct
 struct|struct
+name|fadvise_info
+block|{
+name|int
+name|fa_advice
+decl_stmt|;
+comment|/* (f) FADV_* type. */
+name|off_t
+name|fa_start
+decl_stmt|;
+comment|/* (f) Region start. */
+name|off_t
+name|fa_end
+decl_stmt|;
+comment|/* (f) Region end. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|file
 block|{
 name|void
@@ -683,12 +703,22 @@ name|off_t
 name|f_nextoff
 decl_stmt|;
 comment|/* next expected read/write offset. */
+union|union
+block|{
 name|struct
 name|cdev_privdata
 modifier|*
-name|f_cdevpriv
+name|fvn_cdevpriv
 decl_stmt|;
 comment|/* (d) Private data for the cdev. */
+name|struct
+name|fadvise_info
+modifier|*
+name|fvn_advice
+decl_stmt|;
+block|}
+name|f_vnun
+union|;
 comment|/* 	 *  DFLAG_SEEKABLE specific fields 	 */
 name|off_t
 name|f_offset
@@ -702,6 +732,20 @@ comment|/* Place-holder for MAC label. */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|f_cdevpriv
+value|f_vnun.fvn_cdevpriv
+end_define
+
+begin_define
+define|#
+directive|define
+name|f_advice
+value|f_vnun.fvn_advice
+end_define
 
 begin_define
 define|#

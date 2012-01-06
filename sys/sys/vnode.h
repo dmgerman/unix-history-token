@@ -1469,6 +1469,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|V_CLEANONLY
+value|0x0008
+end_define
+
+begin_comment
+comment|/* vinvalbuf: invalidate only clean bufs */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|REVOKEALL
 value|0x0001
 end_define
@@ -3864,6 +3875,18 @@ name|vop_stdaccessx
 parameter_list|(
 name|struct
 name|vop_accessx_args
+modifier|*
+name|ap
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|vop_stdadvise
+parameter_list|(
+name|struct
+name|vop_advise_args
 modifier|*
 name|ap
 parameter_list|)
