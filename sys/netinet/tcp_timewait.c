@@ -971,7 +971,7 @@ expr_stmt|;
 comment|/* 	 * Recover last window size sent. 	 */
 if|if
 condition|(
-name|SEQ_GE
+name|SEQ_GEQ
 argument_list|(
 name|tp
 operator|->
