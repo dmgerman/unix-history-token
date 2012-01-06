@@ -1058,10 +1058,6 @@ name|resource
 modifier|*
 name|sc_mem_res
 decl_stmt|;
-name|struct
-name|arpcom
-name|arpcom
-decl_stmt|;
 name|int
 name|sc_if_flags
 decl_stmt|;
