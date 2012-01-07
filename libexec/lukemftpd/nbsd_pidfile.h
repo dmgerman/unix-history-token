@@ -47,7 +47,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"Need to impliment NetBSD semantics."
+literal|"Need to implement NetBSD semantics."
 argument_list|)
 expr_stmt|;
 block|}

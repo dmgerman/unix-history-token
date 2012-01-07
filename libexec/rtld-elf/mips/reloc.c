@@ -1721,7 +1721,7 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning4, cant find symbole %d"
+literal|"Warning4, can't find symbole %d"
 argument_list|,
 name|i
 argument_list|)

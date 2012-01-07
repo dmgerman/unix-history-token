@@ -3675,7 +3675,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 32-bits of address zero. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hi(addr), %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 32-bits of address zero. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hi(addr), %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|2
@@ -3734,7 +3734,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 32-bits of address -1. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hix(addr), %g1 			 *	xor	%g1, %lox(addr), %g1 			 *	jmp	%g1 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 32-bits of address -1. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hix(addr), %g1 			 *	xor	%g1, %lox(addr), %g1 			 *	jmp	%g1 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -3820,7 +3820,7 @@ literal|4
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 32-bits -- we can use a direct call 			 * insn 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	mov	%o7, %g1 			 *	call	(.+offset) 			 *	 mov	%g1, %o7 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 32-bits -- we can use a direct call 			 * insn 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	mov	%o7, %g1 			 *	call	(.+offset) 			 *	 mov	%g1, %o7 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -3890,7 +3890,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3991,7 +3991,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4

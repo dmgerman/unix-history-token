@@ -878,7 +878,7 @@ begin_escape
 end_escape
 
 begin_comment
-comment|/*  * Option description data follows.  * These are decribed in: RFC-1048, RFC-1395, RFC-1497, RFC-1533  *  * The first char of each option string encodes the data format:  * ?: unknown  * a: ASCII  * b: byte (8-bit)  * i: inet address  * l: int32  * s: short (16-bit)  */
+comment|/*  * Option description data follows.  * These are described in: RFC-1048, RFC-1395, RFC-1497, RFC-1533  *  * The first char of each option string encodes the data format:  * ?: unknown  * a: ASCII  * b: byte (8-bit)  * i: inet address  * l: int32  * s: short (16-bit)  */
 end_comment
 
 begin_decl_stmt

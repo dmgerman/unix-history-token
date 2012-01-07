@@ -952,7 +952,7 @@ name|void
 modifier|*
 name|priv
 decl_stmt|;
-comment|/* Platform-dependant */
+comment|/* Platform-dependent */
 block|}
 name|Obj_Entry
 typedef|;
