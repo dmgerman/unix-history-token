@@ -4192,7 +4192,7 @@ argument_list|(
 literal|"Privileges successfully dropped."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Create the guard thread first, so we can handle signals from the 	 * very begining. 	 */
+comment|/* 	 * Create the guard thread first, so we can handle signals from the 	 * very beginning. 	 */
 name|error
 operator|=
 name|pthread_create

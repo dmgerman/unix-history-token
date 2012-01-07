@@ -6038,7 +6038,7 @@ block|{
 name|int
 name|mtu
 decl_stmt|;
-comment|/* 			 * receive control messages only. Process the 			 * exceptions (currently the only possiblity is 			 * a path MTU notification.) 			 */
+comment|/* 			 * receive control messages only. Process the 			 * exceptions (currently the only possibility is 			 * a path MTU notification.) 			 */
 if|if
 condition|(
 operator|(

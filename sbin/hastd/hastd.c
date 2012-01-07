@@ -3927,7 +3927,7 @@ argument_list|,
 literal|"token"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NULL token means that this is first conection. 	 */
+comment|/* 	 * NULL token means that this is first connection. 	 */
 if|if
 condition|(
 name|token

@@ -4360,7 +4360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is purely a NetBSD compatability interface.  The NetBSD  * interface is too inflexible, but it's there so we'll support it since  * it's not all that hard.  */
+comment|/*  * This function is purely a NetBSD compatibility interface.  The NetBSD  * interface is too inflexible, but it's there so we'll support it since  * it's not all that hard.  */
 end_comment
 
 begin_function

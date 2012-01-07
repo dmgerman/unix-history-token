@@ -110,7 +110,7 @@ name|fp
 parameter_list|,
 name|unsigned
 name|long
-name|reqest
+name|request
 parameter_list|,
 name|devfs_rsnum
 name|rsnum

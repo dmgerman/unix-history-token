@@ -1117,7 +1117,7 @@ operator|*
 name|offset
 condition|)
 block|{
-comment|/* 				 * The pointer must indicates a prior 				 * occurance. 				 */
+comment|/* 				 * The pointer must indicate a prior 				 * occurrence. 				 */
 name|warning
 argument_list|(
 literal|"Invalid forward pointer in DHCP "

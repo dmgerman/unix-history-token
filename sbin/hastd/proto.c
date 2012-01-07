@@ -487,7 +487,7 @@ name|ctx
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * ret == 0  - success 		 * ret == -1 - dstaddr is not for this protocol 		 * ret> 0   - right protocol, but an error occured 		 */
+comment|/* 		 * ret == 0  - success 		 * ret == -1 - dstaddr is not for this protocol 		 * ret> 0   - right protocol, but an error occurred 		 */
 if|if
 condition|(
 name|ret
@@ -522,7 +522,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* An error occured. */
+comment|/* An error occurred. */
 name|errno
 operator|=
 name|ret

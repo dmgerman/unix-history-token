@@ -4768,7 +4768,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Try each entry returned by getaddrinfo(). Note the 		 * occurence of remote errors by setting `remoteerr'. 		 */
+comment|/* 		 * Try each entry returned by getaddrinfo(). Note the 		 * occurrence of remote errors by setting `remoteerr'. 		 */
 name|remoteerr
 operator|=
 literal|0

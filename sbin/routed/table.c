@@ -8784,7 +8784,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* Delete a dead route after it has been publically mourned. */
+comment|/* Delete a dead route after it has been publicly mourned. */
 if|if
 condition|(
 name|now_garbage
