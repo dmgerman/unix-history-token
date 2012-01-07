@@ -22943,12 +22943,6 @@ literal|1
 operator|)
 operator|||
 operator|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_strict_init
-argument_list|)
-operator|&&
-operator|(
 name|length
 operator|-
 operator|*
@@ -22961,7 +22955,6 @@ name|SCTP_SIZE32
 argument_list|(
 name|chk_length
 argument_list|)
-operator|)
 operator|)
 condition|)
 block|{
@@ -23276,7 +23269,7 @@ operator|)
 return|;
 block|}
 block|}
-comment|/* The INIT-CK chunk must be the only chunk. */
+comment|/* The INIT-ACK chunk must be the only chunk. */
 if|if
 condition|(
 operator|(
@@ -23285,12 +23278,6 @@ operator|>
 literal|1
 operator|)
 operator|||
-operator|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_strict_init
-argument_list|)
-operator|&&
 operator|(
 name|length
 operator|-
@@ -23304,7 +23291,6 @@ name|SCTP_SIZE32
 argument_list|(
 name|chk_length
 argument_list|)
-operator|)
 operator|)
 condition|)
 block|{
