@@ -567,7 +567,7 @@ name|__res_state_ext
 modifier|*
 name|ext
 decl_stmt|;
-comment|/*%< extention for IPv6 */
+comment|/*%< extension for IPv6 */
 block|}
 name|_ext
 struct|;
