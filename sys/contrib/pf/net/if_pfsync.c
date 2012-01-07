@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.170 - SIOCSIFMTU checks  */
 end_comment
 
 begin_ifdef
@@ -2654,13 +2654,9 @@ name|ifp
 operator|->
 name|if_mtu
 operator|=
-literal|1500
+name|ETHERMTU
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_ifdef
 ifdef|#
@@ -2714,19 +2710,6 @@ begin_else
 else|#
 directive|else
 end_else
-
-begin_expr_stmt
-name|ifp
-operator|->
-name|if_hardmtu
-operator|=
-name|MCLBYTES
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* XXX */
-end_comment
 
 begin_expr_stmt
 name|timeout_set
@@ -8849,7 +8832,7 @@ operator|(
 operator|(
 name|sc
 operator|->
-name|sc_sync_if
+name|sc_ifp
 operator|->
 name|if_mtu
 operator|-
@@ -9759,32 +9742,32 @@ name|SIOCSIFMTU
 case|:
 if|if
 condition|(
+operator|!
+name|sc
+operator|->
+name|sc_sync_if
+operator|||
 name|ifr
 operator|->
 name|ifr_mtu
 operator|<=
 name|PFSYNC_MINPKT
+operator|||
+name|ifr
+operator|->
+name|ifr_mtu
+operator|>
+name|sc
+operator|->
+name|sc_sync_if
+operator|->
+name|if_mtu
 condition|)
 return|return
 operator|(
 name|EINVAL
 operator|)
 return|;
-if|if
-condition|(
-name|ifr
-operator|->
-name|ifr_mtu
-operator|>
-name|MCLBYTES
-condition|)
-comment|/* XXX could be bigger */
-name|ifr
-operator|->
-name|ifr_mtu
-operator|=
-name|MCLBYTES
-expr_stmt|;
 if|if
 condition|(
 name|ifr
@@ -13750,7 +13733,7 @@ name|nlen
 operator|>
 name|sc
 operator|->
-name|sc_sync_if
+name|sc_ifp
 operator|->
 name|if_mtu
 condition|)
