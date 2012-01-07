@@ -307,6 +307,11 @@ name|savednumber
 decl_stmt|,
 name|curblocks
 decl_stmt|;
+name|off_t
+name|threshold
+decl_stmt|,
+name|threshold_sign
+decl_stmt|;
 name|int
 name|ftsoptions
 decl_stmt|;
@@ -395,6 +400,14 @@ name|savednumber
 operator|=
 literal|0
 expr_stmt|;
+name|threshold
+operator|=
+literal|0
+expr_stmt|;
+name|threshold_sign
+operator|=
+literal|1
+expr_stmt|;
 name|cblocksize
 operator|=
 name|DEV_BSIZE
@@ -424,7 +437,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"AB:HI:LPasd:chklmnrx"
+literal|"AB:HI:LPasd:chklmnrt:x"
 argument_list|)
 operator|)
 operator|!=
@@ -647,6 +660,50 @@ case|:
 comment|/* Compatibility. */
 break|break;
 case|case
+literal|'t'
+case|:
+if|if
+condition|(
+name|expand_number
+argument_list|(
+name|optarg
+argument_list|,
+operator|&
+name|threshold
+argument_list|)
+operator|!=
+literal|0
+operator|||
+name|threshold
+operator|==
+literal|0
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"invalid threshold: %s"
+argument_list|,
+name|optarg
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|()
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|threshold
+operator|<
+literal|0
+condition|)
+name|threshold_sign
+operator|=
+operator|-
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'x'
 case|:
 name|ftsoptions
@@ -848,6 +905,25 @@ operator|/=
 name|DEV_BSIZE
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|threshold
+operator|!=
+literal|0
+condition|)
+name|threshold
+operator|=
+name|howmany
+argument_list|(
+name|threshold
+operator|/
+name|DEV_BSIZE
+operator|*
+name|cblocksize
+argument_list|,
+name|blocksize
+argument_list|)
+expr_stmt|;
 name|rval
 operator|=
 literal|0
@@ -974,6 +1050,21 @@ operator|->
 name|fts_level
 operator|<=
 name|depth
+operator|&&
+name|threshold
+operator|<=
+name|threshold_sign
+operator|*
+name|howmany
+argument_list|(
+name|p
+operator|->
+name|fts_bignum
+operator|*
+name|cblocksize
+argument_list|,
+name|blocksize
+argument_list|)
 condition|)
 block|{
 if|if
@@ -2035,9 +2126,9 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: du [-A] [-H | -L | -P] [-a | -s | -d depth] [-c] "
-literal|"[-l] [-h | -k | -m | -B bsize] [-n] [-x] [-I mask] "
-literal|"[file ...]\n"
+literal|"usage: du [-Aclnx] [-H | -L | -P] [-h | -k | -m ] "
+literal|"[-a | -s | -d depth] [-B blocksize] [-I mask] "
+literal|"[-t threshold] [file ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
