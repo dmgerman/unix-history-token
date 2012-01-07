@@ -746,7 +746,7 @@ literal|'\0'
 expr_stmt|;
 else|#
 directive|else
-comment|/* Make a good size salt for algoritms that can use it. */
+comment|/* Make a good size salt for algorithms that can use it. */
 name|gettimeofday
 argument_list|(
 operator|&
