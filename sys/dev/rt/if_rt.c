@@ -2112,12 +2112,6 @@ name|if_start
 operator|=
 name|rt_start
 expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
 define|#
 directive|define
 name|RT_TX_QLEN
