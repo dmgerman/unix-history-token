@@ -2119,6 +2119,9 @@ decl_stmt|;
 name|int
 name|lkflags_save
 decl_stmt|;
+name|int
+name|ni_dvp_unlocked
+decl_stmt|;
 comment|/* 	 * Setup: break out flag bits into variables. 	 */
 name|dvfslocked
 operator|=
@@ -2135,6 +2138,10 @@ operator|!=
 literal|0
 expr_stmt|;
 name|vfslocked
+operator|=
+literal|0
+expr_stmt|;
+name|ni_dvp_unlocked
 operator|=
 literal|0
 expr_stmt|;
@@ -3728,6 +3735,7 @@ name|ndp
 operator|->
 name|ni_vp
 condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|ndp
@@ -3737,6 +3745,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ni_dvp_unlocked
+operator|=
+literal|1
+expr_stmt|;
+block|}
 goto|goto
 name|success
 goto|;
@@ -3931,6 +3944,10 @@ operator|!
 name|wantparent
 condition|)
 block|{
+name|ni_dvp_unlocked
+operator|=
+literal|2
+expr_stmt|;
 if|if
 condition|(
 name|ndp
@@ -3983,6 +4000,7 @@ name|ni_dvp
 operator|!=
 name|dp
 condition|)
+block|{
 name|VOP_UNLOCK
 argument_list|(
 name|ndp
@@ -3992,6 +4010,11 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+name|ni_dvp_unlocked
+operator|=
+literal|1
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|cnp
@@ -4124,11 +4147,21 @@ name|bad2
 label|:
 if|if
 condition|(
+name|ni_dvp_unlocked
+operator|!=
+literal|2
+condition|)
+block|{
+if|if
+condition|(
 name|dp
 operator|!=
 name|ndp
 operator|->
 name|ni_dvp
+operator|&&
+operator|!
+name|ni_dvp_unlocked
 condition|)
 name|vput
 argument_list|(
@@ -4145,6 +4178,7 @@ operator|->
 name|ni_dvp
 argument_list|)
 expr_stmt|;
+block|}
 name|bad
 label|:
 if|if
