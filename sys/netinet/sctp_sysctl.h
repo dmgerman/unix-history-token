@@ -267,6 +267,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_initial_cwnd
 decl_stmt|;
+name|uint32_t
+name|sctp_blackhole
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -2417,6 +2420,34 @@ end_define
 begin_comment
 comment|/* 0 means disable feature */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_DESC
+value|"Enable SCTP blackholing"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_MAX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_DEFAULT
+value|SCTPCTL_BLACKHOLE_MIN
+end_define
 
 begin_if
 if|#
