@@ -6155,8 +6155,13 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * RFC 1813 3.3.21: if count is 0, a flush from offset to the end of 	 * file is done.  At this time VOP_FSYNC does not accept offset and 	 * byte count parameters so call VOP_FSYNC the whole file for now. 	 * The same is true for NFSv4: RFC 3530 Sec. 14.2.3. 	 */
 if|if
 condition|(
+name|cnt
+operator|==
+literal|0
+operator|||
 name|cnt
 operator|>
 name|MAX_COMMIT_COUNT
