@@ -9131,6 +9131,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_BD_512
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_BD_4K
 value|0x00030000
 end_define
