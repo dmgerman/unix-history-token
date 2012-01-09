@@ -392,6 +392,7 @@ argument_list|)
 expr_stmt|;
 name|omask
 operator|=
+operator|~
 operator|(
 name|control
 operator||
@@ -428,7 +429,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|~
 name|omask
 operator|)
 return|;
@@ -469,6 +469,7 @@ argument_list|)
 expr_stmt|;
 name|omask
 operator|=
+operator|~
 operator|(
 name|control
 operator||
@@ -501,7 +502,6 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-operator|~
 name|omask
 operator|)
 return|;
