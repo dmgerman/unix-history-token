@@ -11285,12 +11285,6 @@ name|M_DONTWAIT
 argument_list|,
 name|pktlen
 operator|<=
-name|MSIZE
-condition|?
-name|MSIZE
-else|:
-name|pktlen
-operator|<=
 name|MCLBYTES
 condition|?
 name|MCLBYTES
