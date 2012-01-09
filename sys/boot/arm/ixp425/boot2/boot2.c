@@ -352,7 +352,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|uint8_t
 name|dsk_meta
 decl_stmt|;
 end_decl_stmt
