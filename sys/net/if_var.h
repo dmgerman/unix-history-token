@@ -650,10 +650,10 @@ name|if_linktask
 decl_stmt|;
 comment|/* task for link change events */
 name|struct
-name|mtx
-name|if_addr_mtx
+name|rwlock
+name|if_addr_lock
 decl_stmt|;
-comment|/* mutex to protect address lists */
+comment|/* lock to protect address lists */
 name|LIST_ENTRY
 argument_list|(
 argument|ifnet
@@ -669,7 +669,7 @@ argument_list|)
 name|if_groups
 expr_stmt|;
 comment|/* linked list of groups per if */
-comment|/* protected by if_addr_mtx */
+comment|/* protected by if_addr_lock */
 name|void
 modifier|*
 name|if_pf_kif
@@ -916,7 +916,7 @@ define|#
 directive|define
 name|IF_ADDR_LOCK_INIT
 parameter_list|(
-define|if)	mtx_init(&(if)->if_addr_mtx,		\ 				    "if_addr_mtx", NULL, MTX_DEF)
+define|if)	rw_init(&(if)->if_addr_lock, "if_addr_lock")
 end_define
 
 begin_define
@@ -924,7 +924,7 @@ define|#
 directive|define
 name|IF_ADDR_LOCK_DESTROY
 parameter_list|(
-define|if)	mtx_destroy(&(if)->if_addr_mtx)
+define|if)	rw_destroy(&(if)->if_addr_lock)
 end_define
 
 begin_define
@@ -932,7 +932,7 @@ define|#
 directive|define
 name|IF_ADDR_WLOCK
 parameter_list|(
-define|if)	mtx_lock(&(if)->if_addr_mtx)
+define|if)	rw_wlock(&(if)->if_addr_lock)
 end_define
 
 begin_define
@@ -940,7 +940,7 @@ define|#
 directive|define
 name|IF_ADDR_WUNLOCK
 parameter_list|(
-define|if)	mtx_unlock(&(if)->if_addr_mtx)
+define|if)	rw_wunlock(&(if)->if_addr_lock)
 end_define
 
 begin_define
@@ -948,7 +948,7 @@ define|#
 directive|define
 name|IF_ADDR_RLOCK
 parameter_list|(
-define|if)	mtx_lock(&(if)->if_addr_mtx)
+define|if)	rw_rlock(&(if)->if_addr_lock)
 end_define
 
 begin_define
@@ -956,7 +956,7 @@ define|#
 directive|define
 name|IF_ADDR_RUNLOCK
 parameter_list|(
-define|if)	mtx_unlock(&(if)->if_addr_mtx)
+define|if)	rw_runlock(&(if)->if_addr_lock)
 end_define
 
 begin_define
@@ -964,7 +964,7 @@ define|#
 directive|define
 name|IF_ADDR_LOCK_ASSERT
 parameter_list|(
-define|if)	mtx_assert(&(if)->if_addr_mtx, MA_OWNED)
+define|if)	rw_assert(&(if)->if_addr_lock, RA_LOCKED)
 end_define
 
 begin_define
@@ -972,7 +972,7 @@ define|#
 directive|define
 name|IF_ADDR_WLOCK_ASSERT
 parameter_list|(
-define|if)	mtx_assert(&(if)->if_addr_mtx, MA_OWNED)
+define|if) rw_assert(&(if)->if_addr_lock, RA_WLOCKED)
 end_define
 
 begin_comment
