@@ -816,6 +816,18 @@ literal|2011
 end_if
 
 begin_function_decl
+name|void
+modifier|*
+name|aligned_alloc
+parameter_list|(
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|at_quick_exit
 parameter_list|(
