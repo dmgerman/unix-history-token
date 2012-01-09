@@ -4644,7 +4644,7 @@ name|PCIM_STATUS_RMABORT
 operator||
 name|PCIM_STATUS_RTABORT
 operator||
-name|PCIM_STATUS_PERRREPORT
+name|PCIM_STATUS_MDPERR
 operator|)
 operator|)
 operator|!=
