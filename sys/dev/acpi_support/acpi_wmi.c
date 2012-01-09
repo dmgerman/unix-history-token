@@ -1206,7 +1206,12 @@ name|GID_WHEEL
 argument_list|,
 literal|0644
 argument_list|,
-literal|"wmistat"
+literal|"wmistat%d"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|sc
