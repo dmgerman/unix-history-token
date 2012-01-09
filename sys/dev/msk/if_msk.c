@@ -3294,7 +3294,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|10
+literal|100
 init|;
 name|i
 operator|>
@@ -3306,7 +3306,7 @@ control|)
 block|{
 name|DELAY
 argument_list|(
-literal|10
+literal|100
 argument_list|)
 expr_stmt|;
 name|idx
