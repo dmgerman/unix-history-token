@@ -51,35 +51,12 @@ directive|include
 file|"opt_pf.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_BPF
-end_ifdef
-
 begin_define
 define|#
 directive|define
-name|NBPFILTER
-value|DEV_BPF
+name|NPFSYNC
+value|1
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NBPFILTER
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -111,40 +88,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_PFSYNC
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NPFSYNC
-value|DEV_PFSYNC
-end_define
-
 begin_else
 else|#
 directive|else
 end_else
 
-begin_define
-define|#
-directive|define
-name|NPFSYNC
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|/* !__FreeBSD__ */
+end_comment
 
 begin_include
 include|#
@@ -162,6 +113,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __FreeBSD__ */
+end_comment
 
 begin_include
 include|#
