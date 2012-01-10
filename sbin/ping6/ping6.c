@@ -9360,8 +9360,6 @@ name|socklen_t
 name|extlen
 decl_stmt|,
 name|len
-decl_stmt|,
-name|origextlen
 decl_stmt|;
 name|void
 modifier|*
@@ -9435,10 +9433,6 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|origextlen
-operator|=
-name|extlen
-expr_stmt|;
 name|extlen
 operator|=
 name|bufsize
