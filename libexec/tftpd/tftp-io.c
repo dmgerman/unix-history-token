@@ -1514,10 +1514,6 @@ name|int
 name|size
 decl_stmt|;
 name|char
-modifier|*
-name|bp
-decl_stmt|;
-name|char
 name|buf
 index|[
 name|MAXPKTSIZE
@@ -1553,12 +1549,6 @@ name|tftphdr
 operator|*
 operator|)
 name|buf
-expr_stmt|;
-name|bp
-operator|=
-name|buf
-operator|+
-literal|2
 expr_stmt|;
 name|size
 operator|=
