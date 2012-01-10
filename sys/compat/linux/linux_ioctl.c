@@ -11773,6 +11773,9 @@ expr_stmt|;
 comment|/* handle the 'request buffer size' case */
 if|if
 condition|(
+operator|(
+name|l_uintptr_t
+operator|)
 name|ifc
 operator|.
 name|ifc_buf
