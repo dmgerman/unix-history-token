@@ -302,6 +302,47 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|netmap_if_malloc
+parameter_list|(
+name|len
+parameter_list|)
+value|netmap_malloc(len, "nifp")
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_if_free
+parameter_list|(
+name|v
+parameter_list|)
+value|netmap_free((v), "nifp")
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_ring_malloc
+parameter_list|(
+name|len
+parameter_list|)
+value|netmap_malloc(len, "ring")
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_free_rings
+parameter_list|(
+name|na
+parameter_list|)
+define|\
+value|netmap_free((na)->tx_rings[0].ring, "shadow rings");
+end_define
+
 begin_comment
 comment|/*  * Allocator for a pool of packet buffers. For each buffer we have  * one entry in the bitmap to signal the state. Allocation scans  * the bitmap, but since this is done only on attach, we are not  * too worried about performance  * XXX if we need to allocate small blocks, a translation  * table is used both for kernel virtual address and physical  * addresses.  */
 end_comment
@@ -357,6 +398,10 @@ modifier|*
 name|netmap_buffer_base
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* address of an invalid buffer */
+end_comment
 
 begin_comment
 comment|/* user-controlled variables */
@@ -891,6 +936,36 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Shorthand to compute a netmap interface offset. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_if_offset
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|((char *) (v) - (char *) netmap_mem_d->nm_buffer)
+end_define
+
+begin_comment
+comment|/* .. and get a physical address given a memory offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_ofstophys
+parameter_list|(
+name|o
+parameter_list|)
+define|\
+value|(vtophys(netmap_mem_d->nm_buffer) + (o))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -1600,18 +1675,9 @@ block|}
 name|NMA_UNLOCK
 argument_list|()
 expr_stmt|;
-name|netmap_free
+name|netmap_free_rings
 argument_list|(
 name|na
-operator|->
-name|tx_rings
-index|[
-literal|0
-index|]
-operator|.
-name|ring
-argument_list|,
-literal|"shadow rings"
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1620,11 +1686,9 @@ name|na
 argument_list|)
 expr_stmt|;
 block|}
-name|netmap_free
+name|netmap_if_free
 argument_list|(
 name|nifp
-argument_list|,
-literal|"nifp"
 argument_list|)
 expr_stmt|;
 name|na
@@ -1739,11 +1803,9 @@ argument_list|)
 expr_stmt|;
 name|nifp
 operator|=
-name|netmap_malloc
+name|netmap_if_malloc
 argument_list|(
 name|len
-argument_list|,
-literal|"nifp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1838,11 +1900,9 @@ operator|)
 expr_stmt|;
 name|buff
 operator|=
-name|netmap_malloc
+name|netmap_ring_malloc
 argument_list|(
 name|len
-argument_list|,
-literal|"shadow rings"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1870,11 +1930,9 @@ name|refcount
 operator|)
 operator|--
 expr_stmt|;
-name|netmap_free
+name|netmap_if_free
 argument_list|(
 name|nifp
-argument_list|,
-literal|"nifp, rings failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -4144,29 +4202,13 @@ name|error
 condition|)
 block|{
 comment|/* 				 * do something similar to netmap_dtor(). 				 */
-name|netmap_free
+name|netmap_free_rings
 argument_list|(
 name|na
-operator|->
-name|tx_rings
-index|[
-literal|0
-index|]
-operator|.
-name|ring
-argument_list|,
-literal|"rings, reg.failed"
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|na
-operator|->
-name|tx_rings
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
+comment|// XXX tx_rings is inline, must not be freed.
+comment|// free(na->tx_rings, M_DEVBUF); // XXX wrong ?
 name|na
 operator|->
 name|tx_rings
@@ -4182,11 +4224,9 @@ operator|->
 name|refcount
 operator|--
 expr_stmt|;
-name|netmap_free
+name|netmap_if_free
 argument_list|(
 name|nifp
-argument_list|,
-literal|"nifp, rings failed"
 argument_list|)
 expr_stmt|;
 name|nifp
@@ -6333,14 +6373,8 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
-parameter_list|,
-name|bus_size_t
-name|buflen
 parameter_list|)
 block|{
-name|bus_addr_t
-name|paddr
-decl_stmt|;
 name|bus_dmamap_unload
 argument_list|(
 name|tag
@@ -6356,12 +6390,11 @@ name|map
 argument_list|,
 name|buf
 argument_list|,
-name|buflen
+name|NETMAP_BUF_SIZE
 argument_list|,
 name|ns_dmamap_cb
 argument_list|,
-operator|&
-name|paddr
+name|NULL
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)
@@ -6382,14 +6415,8 @@ parameter_list|,
 name|void
 modifier|*
 name|buf
-parameter_list|,
-name|bus_size_t
-name|buflen
 parameter_list|)
 block|{
-name|bus_addr_t
-name|paddr
-decl_stmt|;
 name|bus_dmamap_load
 argument_list|(
 name|tag
@@ -6398,12 +6425,11 @@ name|map
 argument_list|,
 name|buf
 argument_list|,
-name|buflen
+name|NETMAP_BUF_SIZE
 argument_list|,
 name|ns_dmamap_cb
 argument_list|,
-operator|&
-name|paddr
+name|NULL
 argument_list|,
 name|BUS_DMA_NOWAIT
 argument_list|)

@@ -15823,10 +15823,6 @@ name|slot
 operator|+
 name|si
 argument_list|)
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 block|}
@@ -19189,6 +19185,9 @@ index|]
 operator|.
 name|nkr_hwofs
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
@@ -19207,11 +19206,14 @@ name|num_rx_desc
 expr_stmt|;
 name|addr
 operator|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
 operator|+
 name|sj
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 expr_stmt|;
 name|netmap_load_map
@@ -19225,10 +19227,6 @@ operator|->
 name|pmap
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 comment|/* Update descriptor */
@@ -19245,10 +19243,7 @@ name|pkt_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 continue|continue;
