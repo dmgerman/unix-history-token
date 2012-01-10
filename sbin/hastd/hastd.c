@@ -219,6 +219,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Do we run in foreground? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|foreground
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* How often check for hooks running for too long. */
 end_comment
 
@@ -2653,6 +2664,9 @@ block|}
 comment|/* 	 * Check if pidfile's path has changed. 	 */
 if|if
 condition|(
+operator|!
+name|foreground
+operator|&&
 name|strcmp
 argument_list|(
 name|cfg
@@ -5737,9 +5751,6 @@ decl_stmt|;
 name|pid_t
 name|otherpid
 decl_stmt|;
-name|bool
-name|foreground
-decl_stmt|;
 name|int
 name|debuglevel
 decl_stmt|;
@@ -5957,6 +5968,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|foreground
+condition|)
+block|{
 name|pfh
 operator|=
 name|pidfile_open
@@ -6002,7 +6019,7 @@ name|otherpid
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we cannot create pidfile for other reasons, only warn. */
+comment|/* 			 * If we cannot create pidfile for other reasons, 			 * only warn. 			 */
 name|pjdlog_errno
 argument_list|(
 name|LOG_WARNING
@@ -6014,6 +6031,7 @@ operator|->
 name|hc_pidfile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Restore default actions for interesting signals in case parent 	 * process (like init(8)) decided to ignore some of them (like SIGHUP). 	 */
 name|PJDLOG_VERIFY
