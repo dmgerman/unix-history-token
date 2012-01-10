@@ -1692,10 +1692,6 @@ block|{
 name|int
 name|opt
 decl_stmt|,
-name|wdone
-init|=
-literal|0
-decl_stmt|,
 name|nargs
 init|=
 literal|0
@@ -1955,10 +1951,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|wdone
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|LO_USERS
@@ -1970,10 +1962,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|wdone
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1992,10 +1980,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|wdone
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|LO_VOLUMES
@@ -2007,10 +1991,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|wdone
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2033,10 +2013,6 @@ index|[
 literal|2
 index|]
 argument_list|)
-expr_stmt|;
-name|wdone
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 default|default:
