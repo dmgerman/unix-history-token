@@ -2850,6 +2850,26 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Switch to new pidfile. 	 */
+if|if
+condition|(
+name|newpfh
+operator|!=
+name|NULL
+condition|)
+block|{
+name|pjdlog_info
+argument_list|(
+literal|"Pidfile changed from %s to %s."
+argument_list|,
+name|cfg
+operator|->
+name|hc_pidfile
+argument_list|,
+name|newcfg
+operator|->
+name|hc_pidfile
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2883,6 +2903,7 @@ name|hc_pidfile
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Switch to new listen addresses. Close all that were removed. 	 */
 while|while
 condition|(
