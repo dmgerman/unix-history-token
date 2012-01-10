@@ -278,7 +278,15 @@ block|,
 block|{
 literal|0x432214e4
 block|,
-literal|"Broadcom 802.11g/GPRS CardBus (Serial)"
+literal|"Broadcom 802.11b/GPRS CardBus (Serial)"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x434414e4
+block|,
+literal|"Broadcom 802.11bg/EDGE/GPRS CardBus (Serial)"
 block|,
 literal|0x10
 block|}
