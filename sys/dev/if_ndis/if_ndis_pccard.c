@@ -835,7 +835,9 @@ name|ndis_rl
 argument_list|,
 name|SYS_RES_IOPORT
 argument_list|,
-name|rid
+name|sc
+operator|->
+name|ndis_io_rid
 argument_list|,
 name|rman_get_start
 argument_list|(
