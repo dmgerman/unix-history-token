@@ -9060,6 +9060,13 @@ decl_stmt|;
 name|int
 name|c
 decl_stmt|;
+name|assert
+argument_list|(
+name|zwork
+operator|!=
+name|NULL
+argument_list|)
+expr_stmt|;
 name|pgm_path
 operator|=
 name|NULL
@@ -9080,10 +9087,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zwork
-operator|!=
-name|NULL
-operator|&&
 name|zwork
 operator|->
 name|zw_conf
