@@ -2106,7 +2106,7 @@ literal|"%s: val[0] = 0x%08x\n"
 operator|,
 name|__func__
 operator|,
-name|val
+name|sig
 operator|)
 argument_list|)
 expr_stmt|;
