@@ -1093,7 +1093,7 @@ value|SCTP_PR_SCTP_RTX
 end_define
 
 begin_comment
-comment|/* The upper byte is used a a bit mask */
+comment|/* The upper byte is used as a bit mask */
 end_comment
 
 begin_define

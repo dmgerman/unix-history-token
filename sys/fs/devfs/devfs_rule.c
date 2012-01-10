@@ -2511,7 +2511,7 @@ operator|&
 name|DRA_INCSET
 condition|)
 block|{
-comment|/* 		 * XXX: we should tell the user if the depth is exceeded here 		 * XXX: but it is not obvious how to.  A return value will 		 * XXX: not work as this is called when devices are created 		 * XXX: long time after the rules were instantiated. 		 * XXX: a printf() would probably give too much noise, or 		 * XXX: DoS the machine.  I guess a a rate-limited message 		 * XXX: might work. 		 */
+comment|/* 		 * XXX: we should tell the user if the depth is exceeded here 		 * XXX: but it is not obvious how to.  A return value will 		 * XXX: not work as this is called when devices are created 		 * XXX: long time after the rules were instantiated. 		 * XXX: a printf() would probably give too much noise, or 		 * XXX: DoS the machine.  I guess a rate-limited message 		 * XXX: might work. 		 */
 if|if
 condition|(
 name|depth
