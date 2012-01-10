@@ -180,6 +180,10 @@ name|IEEE80211_RADIOTAP_XCHANNEL
 init|=
 literal|18
 block|,
+name|IEEE80211_RADIOTAP_VENDOREXT
+init|=
+literal|30
+block|,
 name|IEEE80211_RADIOTAP_EXT
 init|=
 literal|31
