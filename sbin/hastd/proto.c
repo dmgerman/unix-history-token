@@ -2019,8 +2019,9 @@ expr_stmt|;
 if|if
 condition|(
 name|fd
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -2058,8 +2059,9 @@ argument_list|(
 name|tv
 argument_list|)
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -2085,8 +2087,9 @@ argument_list|(
 name|tv
 argument_list|)
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
