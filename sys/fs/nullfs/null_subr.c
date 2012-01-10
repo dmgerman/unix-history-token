@@ -647,6 +647,28 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
+name|ASSERT_VOP_LOCKED
+argument_list|(
+name|lowervp
+argument_list|,
+literal|"lowervp"
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|lowervp
+operator|->
+name|v_usecount
+operator|>=
+literal|1
+argument_list|,
+operator|(
+literal|"Unreferenced vnode %p\n"
+operator|,
+name|lowervp
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* Lookup the hash firstly */
 operator|*
 name|vpp
