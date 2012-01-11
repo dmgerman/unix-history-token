@@ -10336,6 +10336,17 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_COMPBAR
 expr_stmt|;
+comment|/* 	 * Enable radar PHY errors if requested by the 	 * DFS module. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dodfs
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PHYRADAR
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
