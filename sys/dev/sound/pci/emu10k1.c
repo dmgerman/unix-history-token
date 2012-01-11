@@ -6662,7 +6662,7 @@ condition|)
 block|{
 name|val
 operator|=
-name|EMU_ADCCR_LCHANENABLE
+name|EMU_A_ADCCR_LCHANENABLE
 expr_stmt|;
 if|if
 condition|(
@@ -6677,7 +6677,7 @@ literal|1
 condition|)
 name|val
 operator||=
-name|EMU_ADCCR_RCHANENABLE
+name|EMU_A_ADCCR_RCHANENABLE
 expr_stmt|;
 name|val
 operator||=
