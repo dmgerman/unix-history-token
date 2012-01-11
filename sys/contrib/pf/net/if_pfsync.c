@@ -3783,12 +3783,12 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|PF_LOCK_ASSERT
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+name|PF_LOCK_ASSERT
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|sp
