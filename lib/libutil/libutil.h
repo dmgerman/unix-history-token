@@ -583,7 +583,7 @@ name|properties
 name|properties_read
 parameter_list|(
 name|int
-name|_fd
+name|fd
 parameter_list|)
 function_decl|;
 end_function_decl
