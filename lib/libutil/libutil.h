@@ -1163,6 +1163,7 @@ begin_function_decl
 name|int
 name|pidfile_fileno
 parameter_list|(
+specifier|const
 name|struct
 name|pidfh
 modifier|*

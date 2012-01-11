@@ -110,6 +110,7 @@ specifier|static
 name|int
 name|pidfile_verify
 parameter_list|(
+specifier|const
 name|struct
 name|pidfh
 modifier|*
@@ -1123,6 +1124,7 @@ begin_function
 name|int
 name|pidfile_fileno
 parameter_list|(
+specifier|const
 name|struct
 name|pidfh
 modifier|*
