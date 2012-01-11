@@ -113,13 +113,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<dev/sound/pci/emu10kx.h>
+file|<dev/sound/pci/emuxkireg.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|"emu10k1-alsa%diked.h"
+file|<dev/sound/pci/emu10kx.h>
 end_include
 
 begin_struct
@@ -773,18 +773,18 @@ name|inte_val
 operator|=
 literal|0
 expr_stmt|;
-comment|/* inte_val |= INTE_MIDITXENABLE;*/
+comment|/* inte_val |= EMU_INTE_MIDITXENABLE;*/
 name|inte_val
 operator||=
-name|INTE_MIDIRXENABLE
+name|EMU_INTE_MIDIRXENABLE
 expr_stmt|;
 name|ipr_val
 operator|=
-name|IPR_MIDITRANSBUFEMPTY
+name|EMU_IPR_MIDITRANSBUFE
 expr_stmt|;
 name|ipr_val
 operator||=
-name|IPR_MIDIRECVBUFEMPTY
+name|EMU_IPR_MIDIRECVBUFE
 expr_stmt|;
 block|}
 else|else
@@ -795,7 +795,7 @@ name|scp
 operator|->
 name|port
 operator|==
-name|A_MUDATA1
+name|EMU_A_MUDATA1
 condition|)
 block|{
 comment|/* EXTERNAL MIDI (AudigyDrive) */
@@ -803,18 +803,18 @@ name|inte_val
 operator|=
 literal|0
 expr_stmt|;
-comment|/* inte_val |= A_INTE_MIDITXENABLE1;*/
+comment|/* inte_val |= A_EMU_INTE_MIDITXENABLE1;*/
 name|inte_val
 operator||=
-name|INTE_MIDIRXENABLE
+name|EMU_INTE_MIDIRXENABLE
 expr_stmt|;
 name|ipr_val
 operator|=
-name|IPR_MIDITRANSBUFEMPTY
+name|EMU_IPR_MIDITRANSBUFE
 expr_stmt|;
 name|ipr_val
 operator||=
-name|IPR_MIDIRECVBUFEMPTY
+name|EMU_IPR_MIDIRECVBUFE
 expr_stmt|;
 block|}
 else|else
@@ -824,18 +824,18 @@ name|inte_val
 operator|=
 literal|0
 expr_stmt|;
-comment|/* inte_val |= A_INTE_MIDITXENABLE2;*/
+comment|/* inte_val |= A_EMU_INTE_MIDITXENABLE2;*/
 name|inte_val
 operator||=
-name|INTE_A_MIDIRXENABLE2
+name|EMU_INTE_A_MIDIRXENABLE2
 expr_stmt|;
 name|ipr_val
 operator|=
-name|IPR_A_MIDITRANSBUFEMPTY2
+name|EMU_IPR_A_MIDITRANSBUFE2
 expr_stmt|;
 name|ipr_val
 operator||=
-name|IPR_A_MIDIRECVBUFEMPTY2
+name|EMU_IPR_A_MIDIRECBUFE2
 expr_stmt|;
 block|}
 block|}
@@ -935,7 +935,7 @@ name|scp
 operator|->
 name|port
 operator|==
-name|A_MUDATA1
+name|EMU_A_MUDATA1
 condition|)
 name|emu_enable_ir
 argument_list|(
