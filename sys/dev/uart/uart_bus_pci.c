@@ -670,6 +670,20 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x3b67
+block|,
+literal|0xffff
+block|,
+literal|0
+block|,
+literal|"5 Series/3400 Series Chipset KT Controller"
+block|,
+literal|0x10
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x8811
 block|,
 literal|0xffff
