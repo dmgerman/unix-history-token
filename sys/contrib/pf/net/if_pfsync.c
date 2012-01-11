@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.170 - SIOCSIFMTU checks  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.128 - cleanups  * 1.170 - SIOCSIFMTU checks  */
 end_comment
 
 begin_ifdef
@@ -1736,19 +1736,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mbuf
-modifier|*
-name|pfsync_get_mbuf
-parameter_list|(
-name|struct
-name|pfsync_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pfsync_deferred
 parameter_list|(
@@ -1839,32 +1826,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|pfsync_tdb_sendout
-parameter_list|(
-name|struct
-name|pfsync_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pfsync_sendout_mbuf
-parameter_list|(
-name|struct
-name|pfsync_softc
-modifier|*
-parameter_list|,
-name|struct
-name|mbuf
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pfsync_timeout
 parameter_list|(
@@ -1880,19 +1841,6 @@ name|pfsync_tdb_timeout
 parameter_list|(
 name|void
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|pfsync_send_bus
-parameter_list|(
-name|struct
-name|pfsync_softc
-modifier|*
-parameter_list|,
-name|u_int8_t
 parameter_list|)
 function_decl|;
 end_function_decl
