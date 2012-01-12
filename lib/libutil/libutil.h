@@ -60,6 +60,30 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|_MODE_T_DECLARED
+end_ifndef
+
+begin_typedef
+typedef|typedef
+name|__mode_t
+name|mode_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|_MODE_T_DECLARED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|_PID_T_DECLARED
 end_ifndef
 
@@ -171,46 +195,6 @@ name|properties
 typedef|;
 end_typedef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_SYS_PARAM_H_
-end_ifdef
-
-begin_comment
-comment|/* for pidfile.c */
-end_comment
-
-begin_struct
-struct|struct
-name|pidfh
-block|{
-name|int
-name|pf_fd
-decl_stmt|;
-name|char
-name|pf_path
-index|[
-name|MAXPATHLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|__dev_t
-name|pf_dev
-decl_stmt|;
-name|ino_t
-name|pf_ino
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/* Avoid pulling in all the include files for no need */
 end_comment
@@ -236,6 +220,12 @@ end_struct_decl
 begin_struct_decl
 struct_decl|struct
 name|kinfo_vmentry
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|pidfh
 struct_decl|;
 end_struct_decl
 
@@ -1101,12 +1091,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_SYS_PARAM_H_
-end_ifdef
-
 begin_function_decl
 name|int
 name|pidfile_close
@@ -1176,11 +1160,6 @@ name|_pfh
 parameter_list|)
 function_decl|;
 end_function_decl
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
