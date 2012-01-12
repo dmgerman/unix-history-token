@@ -2291,6 +2291,12 @@ if|if
 condition|(
 name|tsp
 operator|->
+name|tv_sec
+operator|<
+literal|0
+operator|||
+name|tsp
+operator|->
 name|tv_nsec
 operator|<
 literal|0
