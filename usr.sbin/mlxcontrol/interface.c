@@ -1027,11 +1027,14 @@ name|opcode
 operator|=
 name|INQUIRY
 expr_stmt|;
+name|scsi_ulto2b
+argument_list|(
+name|SHORT_INQUIRY_LENGTH
+argument_list|,
 name|inq_cmd
 operator|->
 name|length
-operator|=
-name|SHORT_INQUIRY_LENGTH
+argument_list|)
 expr_stmt|;
 comment|/* hand it off for processing */
 name|mlx_perform

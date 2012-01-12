@@ -22382,22 +22382,14 @@ operator|=
 name|page_code
 expr_stmt|;
 block|}
-comment|/* 	 * A 'transfer units' count of 256 is coded as 	 * zero for all commands with a single byte count 	 * field.  	 */
-if|if
-condition|(
+name|scsi_ulto2b
+argument_list|(
 name|inq_len
-operator|==
-literal|256
-condition|)
-name|inq_len
-operator|=
-literal|0
-expr_stmt|;
+argument_list|,
 name|scsi_cmd
 operator|->
 name|length
-operator|=
-name|inq_len
+argument_list|)
 expr_stmt|;
 block|}
 end_function
