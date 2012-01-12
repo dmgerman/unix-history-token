@@ -19381,6 +19381,13 @@ operator|->
 name|m_head
 argument_list|)
 expr_stmt|;
+name|rxbuf
+operator|->
+name|m_head
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* mark as freed */
 block|}
 block|}
 comment|/* Now replenish the mbufs */
