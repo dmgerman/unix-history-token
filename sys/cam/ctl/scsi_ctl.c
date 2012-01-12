@@ -1161,6 +1161,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|CTLFEDEBUG
 name|printf
 argument_list|(
 literal|"%s: SIM %s%d doesn't support target mode\n"
@@ -1176,6 +1179,8 @@ operator|->
 name|unit_number
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 break|break;
 block|}
 ifdef|#
@@ -1650,6 +1655,9 @@ operator|->
 name|max_target
 expr_stmt|;
 comment|/* 		 * XXX KDM need to figure out whether we're the master or 		 * slave. 		 */
+ifdef|#
+directive|ifdef
+name|CTLFEDEBUG
 name|printf
 argument_list|(
 literal|"%s: calling ctl_frontend_register() for %s%d\n"
@@ -1665,6 +1673,8 @@ operator|->
 name|unit_number
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|retval
 operator|=
 name|ctl_frontend_register
