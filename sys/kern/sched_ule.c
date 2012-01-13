@@ -6418,11 +6418,16 @@ name|ts_ticks
 condition|)
 name|pri
 operator|+=
+name|min
+argument_list|(
 name|SCHED_PRI_TICKS
 argument_list|(
 name|td
 operator|->
 name|td_sched
+argument_list|)
+argument_list|,
+name|SCHED_PRI_RANGE
 argument_list|)
 expr_stmt|;
 name|pri
