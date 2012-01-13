@@ -14373,10 +14373,13 @@ name|v
 operator|&
 name|XHCI_PS_PP
 condition|)
+block|{
+comment|/* 			 * The USB 3.0 RH is using the 			 * USB 2.0's power bit 			 */
 name|i
 operator||=
-name|UPS_PORT_POWER_SS
+name|UPS_PORT_POWER
 expr_stmt|;
+block|}
 name|USETW
 argument_list|(
 name|sc
