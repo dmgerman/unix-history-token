@@ -128,6 +128,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysent.h>
 end_include
 
@@ -1244,6 +1250,34 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|static
+name|int
+name|unprivileged_idprio
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_security_bsd
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|unprivileged_idprio
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|unprivileged_idprio
+argument_list|,
+literal|0
+argument_list|,
+literal|"Allow non-root users to set an idle priority"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Set realtime priority for LWP.  */
 end_comment
@@ -1491,24 +1525,34 @@ operator|)
 condition|)
 break|break;
 comment|/* Disallow setting rtprio in most cases if not superuser. */
-comment|/*  * Realtime priority has to be restricted for reasons which should be  * obvious.  However, for idle priority, there is a potential for  * system deadlock if an idleprio process gains a lock on a resource  * that other processes need (and the idleprio process can't run  * due to a CPU-bound normal process).  Fix me!  XXX  */
-if|#
-directive|if
-literal|0
-block|if (RTP_PRIO_IS_REALTIME(rtp.type)) {
-else|#
-directive|else
+comment|/* 		 * Realtime priority has to be restricted for reasons which 		 * should be obvious.  However, for idleprio processes, there is 		 * a potential for system deadlock if an idleprio process gains 		 * a lock on a resource that other processes need (and the 		 * idleprio process can't run due to a CPU-bound normal 		 * process).  Fix me!  XXX 		 * 		 * This problem is not only related to idleprio process. 		 * A user level program can obtain a file lock and hold it 		 * indefinitely.  Additionally, without idleprio processes it is 		 * still conceivable that a program with low priority will never 		 * get to run.  In short, allowing this feature might make it 		 * easier to lock a resource indefinitely, but it is not the 		 * only thing that makes it possible. 		 */
 if|if
 condition|(
+name|RTP_PRIO_BASE
+argument_list|(
 name|rtp
 operator|.
 name|type
-operator|!=
-name|RTP_PRIO_NORMAL
+argument_list|)
+operator|==
+name|RTP_PRIO_REALTIME
+operator|||
+operator|(
+name|RTP_PRIO_BASE
+argument_list|(
+name|rtp
+operator|.
+name|type
+argument_list|)
+operator|==
+name|RTP_PRIO_IDLE
+operator|&&
+name|unprivileged_idprio
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
-endif|#
-directive|endif
 name|error
 operator|=
 name|priv_check
@@ -1876,25 +1920,33 @@ name|cierror
 operator|)
 condition|)
 break|break;
-comment|/* Disallow setting rtprio in most cases if not superuser. */
-comment|/*  * Realtime priority has to be restricted for reasons which should be  * obvious.  However, for idle priority, there is a potential for  * system deadlock if an idleprio process gains a lock on a resource  * that other processes need (and the idleprio process can't run  * due to a CPU-bound normal process).  Fix me!  XXX  */
-if|#
-directive|if
-literal|0
-block|if (RTP_PRIO_IS_REALTIME(rtp.type)) {
-else|#
-directive|else
+comment|/* 		 * Disallow setting rtprio in most cases if not superuser. 		 * See the comment in sys_rtprio_thread about idprio 		 * threads holding a lock. 		 */
 if|if
 condition|(
+name|RTP_PRIO_BASE
+argument_list|(
 name|rtp
 operator|.
 name|type
-operator|!=
-name|RTP_PRIO_NORMAL
+argument_list|)
+operator|==
+name|RTP_PRIO_REALTIME
+operator|||
+operator|(
+name|RTP_PRIO_BASE
+argument_list|(
+name|rtp
+operator|.
+name|type
+argument_list|)
+operator|==
+name|RTP_PRIO_IDLE
+operator|&&
+operator|!
+name|unprivileged_idprio
+operator|)
 condition|)
 block|{
-endif|#
-directive|endif
 name|error
 operator|=
 name|priv_check
