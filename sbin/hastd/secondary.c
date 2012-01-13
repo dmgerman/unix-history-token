@@ -3753,7 +3753,7 @@ name|secondary_exit
 argument_list|(
 name|EX_TEMPFAIL
 argument_list|,
-literal|"Unable to send reply."
+literal|"Unable to send reply"
 argument_list|)
 expr_stmt|;
 block|}
