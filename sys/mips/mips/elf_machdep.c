@@ -992,6 +992,13 @@ name|addend
 operator|&=
 literal|0x03ffffff
 expr_stmt|;
+comment|/* 		 * Addendum for .rela R_MIPS_26 is not shifted right 		 */
+if|if
+condition|(
+name|rela
+operator|==
+name|NULL
+condition|)
 name|addend
 operator|<<=
 literal|2
