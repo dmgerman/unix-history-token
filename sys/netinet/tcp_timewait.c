@@ -913,9 +913,9 @@ operator|=
 name|inp
 expr_stmt|;
 comment|/* 	 * Recover last window size sent. 	 */
-name|KASSERT
-argument_list|(
-name|SEQ_GEQ
+if|if
+condition|(
+name|SEQ_GT
 argument_list|(
 name|tp
 operator|->
@@ -925,22 +925,7 @@ name|tp
 operator|->
 name|rcv_nxt
 argument_list|)
-argument_list|,
-operator|(
-literal|"tcp_twstart negative window: tp %p rcv_nxt %u rcv_adv %u"
-operator|,
-name|tp
-operator|,
-name|tp
-operator|->
-name|rcv_adv
-operator|,
-name|tp
-operator|->
-name|rcv_nxt
-operator|)
-argument_list|)
-expr_stmt|;
+condition|)
 name|tw
 operator|->
 name|last_win
@@ -958,6 +943,13 @@ operator|>>
 name|tp
 operator|->
 name|rcv_scale
+expr_stmt|;
+else|else
+name|tw
+operator|->
+name|last_win
+operator|=
+literal|0
 expr_stmt|;
 comment|/* 	 * Set t_recent if timestamps are used on the connection. 	 */
 if|if
