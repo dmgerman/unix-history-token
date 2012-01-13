@@ -2224,7 +2224,7 @@ operator|||
 name|td
 operator|->
 name|td_user_pri
-operator|>=
+operator|<=
 name|PRI_MAX_REALTIME
 operator|)
 condition|)
