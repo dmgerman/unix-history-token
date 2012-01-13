@@ -10230,7 +10230,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|temp
-operator|=
+operator||=
 name|XHCI_SCTX_0_CTX_NUM_SET
 argument_list|(
 literal|1
