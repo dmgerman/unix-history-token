@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Luigi Rizzo. All rights reserved.  *  * Redistr
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_re_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap support for if_re  */
+comment|/*  * $FreeBSD$  * $Id: if_re_netmap.h 10075 2011-12-25 22:55:48Z luigi $  *  * netmap support for if_re  */
 end_comment
 
 begin_include
