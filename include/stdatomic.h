@@ -1581,7 +1581,7 @@ parameter_list|(
 name|object
 parameter_list|)
 define|\
-value|atomic_flag_clear_explicit(object, 0, memory_order_seq_cst)
+value|atomic_flag_clear_explicit(object, memory_order_seq_cst)
 end_define
 
 begin_define
@@ -1592,7 +1592,7 @@ parameter_list|(
 name|object
 parameter_list|)
 define|\
-value|atomic_flag_test_and_set_explicit(object, 0, 1,			\ 	    memory_order_seq_cst, memory_order_seq_cst)
+value|atomic_flag_test_and_set_explicit(object, memory_order_seq_cst)
 end_define
 
 begin_endif
