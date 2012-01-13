@@ -3255,7 +3255,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* copy args to in_aliasreq, perform ioctl(SIOCAIFADDR_IN6). */
+comment|/* copy args to in_aliasreq, perform ioctl(SIOCAIFADDR). */
 name|bzero
 argument_list|(
 operator|&
@@ -3548,6 +3548,11 @@ name|s_addr
 expr_stmt|;
 block|}
 block|}
+name|IF_ADDR_LOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -3565,7 +3570,7 @@ name|ifa_addr
 operator|->
 name|sa_family
 operator|!=
-name|AF_INET6
+name|AF_INET
 condition|)
 continue|continue;
 if|if
@@ -3617,6 +3622,22 @@ name|s_addr
 condition|)
 break|break;
 block|}
+if|if
+condition|(
+name|ifa
+operator|!=
+name|NULL
+condition|)
+name|ifa_ref
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ifa
@@ -3734,6 +3755,11 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/*XXX*/
+name|ifa_free
+argument_list|(
+name|ifa
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -3746,7 +3772,7 @@ name|struct
 name|in_aliasreq
 name|ifra
 decl_stmt|;
-comment|/* fill in_aliasreq and do ioctl(SIOCDIFADDR_IN6) */
+comment|/* fill in_aliasreq and do ioctl(SIOCDIFADDR) */
 name|bzero
 argument_list|(
 operator|&
@@ -3845,6 +3871,11 @@ operator|->
 name|ia_sockmask
 operator|.
 name|sin_len
+argument_list|)
+expr_stmt|;
+name|ifa_free
+argument_list|(
+name|ifa
 argument_list|)
 expr_stmt|;
 return|return
