@@ -59,7 +59,7 @@ parameter_list|,
 modifier|...
 parameter_list|)
 define|\
-value|do {						\ 		struct timeval __xxts;			\ 		microtime(&__xxts);				\ 		printf("%03d.%06d %s [%d] " format "\n",\ 		(int)__xxts.tv_sec % 1000, (int)__xxts.tv_usec,		\ 		__FUNCTION__, __LINE__, ##__VA_ARGS__);	\ 	} while (0)
+value|do {							\ 		struct timeval __xxts;				\ 		microtime(&__xxts);				\ 		printf("%03d.%06d %s [%d] " format "\n",	\ 		(int)__xxts.tv_sec % 1000, (int)__xxts.tv_usec,	\ 		__FUNCTION__, __LINE__, ##__VA_ARGS__);		\ 	} while (0)
 end_define
 
 begin_struct_decl
@@ -626,7 +626,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * NMB return the virtual address of a buffer (buffer 0 on bad index)  * PNMB also fills the physical address  * XXX this is a special version with hardwired 2k bufs  */
+comment|/*  * NMB return the virtual address of a buffer (buffer 0 on bad index)  * PNMB also fills the physical address  */
 end_comment
 
 begin_function

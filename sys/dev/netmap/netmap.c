@@ -4733,6 +4733,16 @@ name|void
 modifier|*
 name|adapter
 decl_stmt|;
+enum|enum
+block|{
+name|NO_CL
+block|,
+name|NEED_CL
+block|,
+name|LOCKED_CL
+block|}
+enum|;
+comment|/* see below */
 if|if
 condition|(
 name|devfs_get_cdevpriv
@@ -4944,15 +4954,6 @@ name|np_qlast
 operator|)
 expr_stmt|;
 comment|/* 	 * core_lock indicates what to do with the core lock. 	 * The core lock is used when either the card has no individual 	 * locks, or it has individual locks but we are cheking all 	 * rings so we need the core lock to avoid missing wakeup events. 	 * 	 * It has three possible states: 	 * NO_CL	we don't need to use the core lock, e.g. 	 *		because we are protected by individual locks. 	 * NEED_CL	we need the core lock. In this case, when we 	 *		call the lock routine, move to LOCKED_CL 	 *		to remember to release the lock once done. 	 * LOCKED_CL	core lock is set, so we need to release it. 	 */
-enum|enum
-block|{
-name|NO_CL
-block|,
-name|NEED_CL
-block|,
-name|LOCKED_CL
-block|}
-enum|;
 name|core_lock
 operator|=
 operator|(
