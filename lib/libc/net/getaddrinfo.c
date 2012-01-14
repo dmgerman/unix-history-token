@@ -7704,6 +7704,11 @@ name|IN6_IS_ADDR_MC_LINKLOCAL
 argument_list|(
 name|a6
 argument_list|)
+operator|||
+name|IN6_IS_ADDR_MC_NODELOCAL
+argument_list|(
+name|a6
+argument_list|)
 condition|)
 block|{
 comment|/* 		 * We currently assume a one-to-one mapping between links 		 * and interfaces, so we simply use interface indices for 		 * like-local scopes. 		 */
