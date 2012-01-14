@@ -810,11 +810,15 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-while|while
-condition|(
+for|for
+control|(
+init|;
 operator|*
 name|argv
-condition|)
+condition|;
+name|argv
+operator|++
+control|)
 block|{
 if|if
 condition|(
@@ -844,6 +848,7 @@ name|errors
 operator|=
 literal|1
 expr_stmt|;
+continue|continue;
 block|}
 name|INTOFF
 expr_stmt|;
@@ -892,9 +897,6 @@ name|signo
 argument_list|)
 expr_stmt|;
 name|INTON
-expr_stmt|;
-name|argv
-operator|++
 expr_stmt|;
 block|}
 return|return
