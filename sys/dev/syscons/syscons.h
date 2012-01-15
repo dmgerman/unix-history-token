@@ -2226,27 +2226,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|sc_puts
-parameter_list|(
-name|scr_stat
-modifier|*
-name|scp
-parameter_list|,
-name|u_char
-modifier|*
-name|buf
-parameter_list|,
-name|int
-name|len
-parameter_list|,
-name|int
-name|kernel
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sc_draw_cursor_image
 parameter_list|(
 name|scr_stat
