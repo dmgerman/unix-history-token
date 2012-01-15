@@ -791,7 +791,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/* Live! 5.1 Digital, non-standart 5.1 (center& sub) outputs */
+comment|/* Live! 5.1 Digital, non-standard 5.1 (center& sub) outputs */
 end_comment
 
 begin_define
@@ -4697,7 +4697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * emu_timer_ - HW timer managment  */
+comment|/*  * emu_timer_ - HW timer management  */
 end_comment
 
 begin_function
@@ -5303,7 +5303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * emu_intr_ - HW interrupt handler managment  */
+comment|/*  * emu_intr_ - HW interrupt handler management  */
 end_comment
 
 begin_function
@@ -5973,7 +5973,7 @@ name|stat
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* to avoid infinite loop. shoud be removed 				 * after completion of P16V interface. */
+comment|/* to avoid infinite loop. should be removed 				 * after completion of P16V interface. */
 block|}
 if|if
 condition|(
