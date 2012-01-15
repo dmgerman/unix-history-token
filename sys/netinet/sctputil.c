@@ -32019,13 +32019,6 @@ name|defined
 argument_list|(
 name|INET6
 argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|__Userspace__
-argument_list|)
-comment|/* TODO port in6_sin6_2_sin */
 if|if
 condition|(
 name|sa
