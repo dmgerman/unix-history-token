@@ -4779,6 +4779,10 @@ goto|;
 block|}
 endif|#
 directive|endif
+name|fullpath_disabled
+operator|=
+literal|0
+expr_stmt|;
 name|root
 operator|=
 name|NULL
