@@ -1105,6 +1105,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|sc_puts
+parameter_list|(
+name|scr_stat
+modifier|*
+name|scp
+parameter_list|,
+name|u_char
+modifier|*
+name|buf
+parameter_list|,
+name|int
+name|len
+parameter_list|,
+name|int
+name|kernel
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define
@@ -13984,6 +14006,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sc_puts
 parameter_list|(
