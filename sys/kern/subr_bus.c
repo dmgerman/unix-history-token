@@ -7675,15 +7675,39 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"driver bug: Unable to set "
-literal|"devclass (devname: %s)\n"
-argument_list|,
+name|char
+specifier|const
+modifier|*
+name|devname
+init|=
 name|device_get_name
 argument_list|(
 name|child
 argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|devname
+operator|==
+name|NULL
+condition|)
+name|devname
+operator|=
+literal|"(unknown)"
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"driver bug: Unable to set "
+literal|"devclass (class: %s "
+literal|"devname: %s)\n"
+argument_list|,
+name|dl
+operator|->
+name|driver
+operator|->
+name|name
+argument_list|,
+name|devname
 argument_list|)
 expr_stmt|;
 operator|(
