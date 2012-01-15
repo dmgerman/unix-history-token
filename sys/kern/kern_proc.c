@@ -8963,15 +8963,14 @@ parameter_list|,
 name|enum
 name|proc_vector_type
 name|type
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 block|{
 name|size_t
 name|done
 decl_stmt|,
 name|len
+decl_stmt|,
+name|nchr
 decl_stmt|,
 name|vsize
 decl_stmt|;
@@ -8999,19 +8998,7 @@ argument_list|(
 name|p
 argument_list|)
 expr_stmt|;
-comment|/* 	  * We are not going to read more than 2 * (PATH_MAX + ARG_MAX) bytes. 	  */
-if|if
-condition|(
-name|nchr
-operator|>
-literal|2
-operator|*
-operator|(
-name|PATH_MAX
-operator|+
-name|ARG_MAX
-operator|)
-condition|)
+comment|/* 	 * We are not going to read more than 2 * (PATH_MAX + ARG_MAX) bytes. 	 */
 name|nchr
 operator|=
 literal|2
@@ -9225,9 +9212,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 block|{
 return|return
@@ -9241,8 +9225,6 @@ argument_list|,
 name|sb
 argument_list|,
 name|PROC_ARG
-argument_list|,
-name|nchr
 argument_list|)
 operator|)
 return|;
@@ -9267,9 +9249,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 block|{
 return|return
@@ -9283,8 +9262,6 @@ argument_list|,
 name|sb
 argument_list|,
 name|PROC_ENV
-argument_list|,
-name|nchr
 argument_list|)
 operator|)
 return|;
@@ -9492,10 +9469,6 @@ name|p
 argument_list|,
 operator|&
 name|sb
-argument_list|,
-name|req
-operator|->
-name|oldlen
 argument_list|)
 expr_stmt|;
 name|error2
@@ -9780,10 +9753,6 @@ name|p
 argument_list|,
 operator|&
 name|sb
-argument_list|,
-name|req
-operator|->
-name|oldlen
 argument_list|)
 expr_stmt|;
 name|error2

@@ -4574,9 +4574,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4599,9 +4596,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 function_decl|;
 end_function_decl
