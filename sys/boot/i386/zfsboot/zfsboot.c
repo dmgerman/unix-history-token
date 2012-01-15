@@ -2473,15 +2473,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|parse
-argument_list|()
-condition|)
-name|autoboot
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 operator|!
 name|OPT_CHECK
 argument_list|(
@@ -2496,6 +2487,15 @@ name|PATH_CONFIG
 argument_list|,
 name|cmd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parse
+argument_list|()
+condition|)
+name|autoboot
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Do not process this command twice */
 operator|*
