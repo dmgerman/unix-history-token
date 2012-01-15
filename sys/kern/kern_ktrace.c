@@ -2239,7 +2239,17 @@ name|ktp
 operator|->
 name|ktr_retval
 operator|=
+operator|(
+operator|(
+name|error
+operator|==
+literal|0
+operator|)
+condition|?
 name|retval
+else|:
+literal|0
+operator|)
 expr_stmt|;
 comment|/* what about val2 ? */
 name|ktr_submitrequest
