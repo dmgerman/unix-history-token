@@ -1112,7 +1112,7 @@ name|char
 modifier|*
 name|__restrict
 parameter_list|,
-name|va_list
+name|__va_list
 parameter_list|)
 function_decl|__printflike
 parameter_list|(
@@ -1142,7 +1142,7 @@ name|char
 modifier|*
 name|__restrict
 parameter_list|,
-name|va_list
+name|__va_list
 parameter_list|)
 function_decl|__scanflike
 parameter_list|(
