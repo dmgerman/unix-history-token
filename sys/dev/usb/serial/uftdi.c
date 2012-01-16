@@ -1062,6 +1062,15 @@ name|UFTDI_DEV
 argument_list|(
 name|FTDI
 argument_list|,
+name|SERIAL_BEAGLEBONE
+argument_list|,
+literal|8U232AM
+argument_list|)
+block|,
+name|UFTDI_DEV
+argument_list|(
+name|FTDI
+argument_list|,
 name|SEMC_DSS20
 argument_list|,
 literal|8U232AM
