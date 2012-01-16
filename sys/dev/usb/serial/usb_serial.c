@@ -1054,6 +1054,7 @@ name|EINVAL
 operator|)
 return|;
 block|}
+comment|/* allocate a uniq unit number */
 name|ssc
 operator|->
 name|sc_unit
@@ -1075,6 +1076,29 @@ operator|(
 name|ENOMEM
 operator|)
 return|;
+comment|/* generate TTY name string */
+name|snprintf
+argument_list|(
+name|ssc
+operator|->
+name|sc_ttyname
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ssc
+operator|->
+name|sc_ttyname
+argument_list|)
+argument_list|,
+name|UCOM_TTY_PREFIX
+literal|"%d"
+argument_list|,
+name|ssc
+operator|->
+name|sc_unit
+argument_list|)
+expr_stmt|;
+comment|/* create USB request handling process */
 name|error
 operator|=
 name|usb_proc_create
@@ -1282,7 +1306,7 @@ if|if
 condition|(
 name|ssc
 operator|->
-name|sc_sysctl_ttyunit
+name|sc_sysctl_ttyname
 operator|!=
 name|NULL
 condition|)
@@ -1291,7 +1315,7 @@ name|sysctl_remove_oid
 argument_list|(
 name|ssc
 operator|->
-name|sc_sysctl_ttyunit
+name|sc_sysctl_ttyname
 argument_list|,
 literal|1
 argument_list|,
@@ -1300,7 +1324,7 @@ argument_list|)
 expr_stmt|;
 name|ssc
 operator|->
-name|sc_sysctl_ttyunit
+name|sc_sysctl_ttyname
 operator|=
 name|NULL
 expr_stmt|;
@@ -1996,9 +2020,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"ttyname=%s%d ttyports=%d"
-argument_list|,
+literal|"ttyname="
 name|UCOM_TTY_PREFIX
+literal|"%d ttyports=%d"
 argument_list|,
 name|ssc
 operator|->
@@ -2047,21 +2071,21 @@ argument_list|,
 literal|"Could not set PNP info\n"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The following information is also replicated in the pnp-info 	 * string which is registered above: 	 */
+comment|/* 	 * The following information is also replicated in the PNP-info 	 * string which is registered above: 	 */
 if|if
 condition|(
 name|ssc
 operator|->
-name|sc_sysctl_ttyunit
+name|sc_sysctl_ttyname
 operator|==
 name|NULL
 condition|)
 block|{
 name|ssc
 operator|->
-name|sc_sysctl_ttyunit
+name|sc_sysctl_ttyname
 operator|=
-name|SYSCTL_ADD_INT
+name|SYSCTL_ADD_STRING
 argument_list|(
 name|NULL
 argument_list|,
@@ -2075,17 +2099,17 @@ argument_list|)
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"ttyunit"
+literal|"ttyname"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
-name|NULL
-argument_list|,
 name|ssc
 operator|->
-name|sc_unit
+name|sc_ttyname
 argument_list|,
-literal|"TTY unit number"
+literal|0
+argument_list|,
+literal|"TTY device basename"
 argument_list|)
 expr_stmt|;
 block|}
