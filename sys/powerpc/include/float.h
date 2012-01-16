@@ -90,12 +90,8 @@ begin_define
 define|#
 directive|define
 name|FLT_EVAL_METHOD
-value|1
+value|0
 end_define
-
-begin_comment
-comment|/* operands promoted to double */
-end_comment
 
 begin_define
 define|#
