@@ -173,11 +173,76 @@ name|_ENABLE_MASK
 value|(FE_ALL_EXCEPT<< _FPUSW_SHIFT)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ARM_HARD_FLOAT
-end_ifdef
+end_ifndef
+
+begin_comment
+comment|/*  * The following macros map between the softfloat emulator's flags and  * the hardware's FPSR.  The hardware this file was written for doesn't  * have rounding control bits, so we stick those in the system ID byte.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__set_env
+parameter_list|(
+name|env
+parameter_list|,
+name|flags
+parameter_list|,
+name|mask
+parameter_list|,
+name|rnd
+parameter_list|)
+value|env = ((flags)			\ 						| (mask)<<_FPUSW_SHIFT	\ 						| (rnd)<< 24)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__env_flags
+parameter_list|(
+name|env
+parameter_list|)
+value|((env)& FE_ALL_EXCEPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__env_mask
+parameter_list|(
+name|env
+parameter_list|)
+value|(((env)>> _FPUSW_SHIFT)	\& FE_ALL_EXCEPT)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__env_round
+parameter_list|(
+name|env
+parameter_list|)
+value|(((env)>> 24)& _ROUND_MASK)
+end_define
+
+begin_include
+include|#
+directive|include
+file|<fenv-softfloat.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ARM_HARD_FLOAT */
+end_comment
 
 begin_define
 define|#
@@ -198,34 +263,6 @@ name|__fpsr
 parameter_list|)
 value|__asm __volatile("wfs %0" : : "r" (__fpsr))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__rfs
-parameter_list|(
-name|__fpsr
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__wfs
-parameter_list|(
-name|__fpsr
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function
 name|__fenv_static
@@ -745,6 +782,15 @@ end_endif
 
 begin_comment
 comment|/* __BSD_VISIBLE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ARM_HARD_FLOAT */
 end_comment
 
 begin_macro
