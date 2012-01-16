@@ -1937,7 +1937,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: m_getjcl: invalid cluster size"
+literal|"%s: invalid cluster size"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2011,7 +2011,7 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"%s: m_getjcl: invalid cluster type"
+literal|"%s: invalid cluster size"
 argument_list|,
 name|__func__
 argument_list|)
@@ -2895,7 +2895,9 @@ break|break;
 default|default:
 name|panic
 argument_list|(
-literal|"unknown cluster type"
+literal|"%s: unknown cluster type"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 break|break;
