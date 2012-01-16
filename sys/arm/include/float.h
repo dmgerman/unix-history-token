@@ -48,12 +48,35 @@ begin_comment
 comment|/* b */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_ARM_HARD_FLOAT
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|FLT_ROUNDS
-value|-1
+value|__flt_rounds()
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|FLT_ROUNDS
+value|(-1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
