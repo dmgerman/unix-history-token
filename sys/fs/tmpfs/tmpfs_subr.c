@@ -3371,6 +3371,9 @@ name|vp
 parameter_list|,
 name|off_t
 name|newsize
+parameter_list|,
+name|boolean_t
+name|ignerr
 parameter_list|)
 block|{
 name|struct
@@ -3729,6 +3732,16 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ignerr
+condition|)
+name|m
+operator|=
+name|NULL
+expr_stmt|;
+else|else
+block|{
 name|VM_OBJECT_UNLOCK
 argument_list|(
 name|uobj
@@ -3739,6 +3752,7 @@ operator|(
 name|EIO
 operator|)
 return|;
+block|}
 block|}
 block|}
 if|if
@@ -5319,6 +5333,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|length
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if

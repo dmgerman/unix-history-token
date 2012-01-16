@@ -3531,6 +3531,8 @@ operator|+
 name|uio
 operator|->
 name|uio_resid
+argument_list|,
+name|FALSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -3698,6 +3700,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|oldsize
+argument_list|,
+name|TRUE
 argument_list|)
 expr_stmt|;
 name|out
