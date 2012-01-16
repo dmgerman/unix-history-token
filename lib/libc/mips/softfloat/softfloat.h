@@ -30,7 +30,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<machine/ieeefp.h>
+file|<fenv.h>
 end_include
 
 begin_comment
@@ -152,7 +152,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|fp_rnd_t
+name|int
 name|float_rounding_mode
 decl_stmt|;
 end_decl_stmt
@@ -162,19 +162,19 @@ enum|enum
 block|{
 name|float_round_nearest_even
 init|=
-name|FP_RN
+name|FE_TONEAREST
 block|,
 name|float_round_to_zero
 init|=
-name|FP_RZ
+name|FE_TOWARDZERO
 block|,
 name|float_round_down
 init|=
-name|FP_RM
+name|FE_DOWNWARD
 block|,
 name|float_round_up
 init|=
-name|FP_RP
+name|FE_UPWARD
 block|}
 enum|;
 end_enum
@@ -185,14 +185,14 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|fp_except
+name|int
 name|float_exception_flags
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|fp_except
+name|int
 name|float_exception_mask
 decl_stmt|;
 end_decl_stmt
@@ -202,23 +202,23 @@ enum|enum
 block|{
 name|float_flag_inexact
 init|=
-name|FP_X_IMP
+name|FE_INEXACT
 block|,
 name|float_flag_underflow
 init|=
-name|FP_X_UFL
+name|FE_UNDERFLOW
 block|,
 name|float_flag_overflow
 init|=
-name|FP_X_OFL
+name|FE_OVERFLOW
 block|,
 name|float_flag_divbyzero
 init|=
-name|FP_X_DZ
+name|FE_DIVBYZERO
 block|,
 name|float_flag_invalid
 init|=
-name|FP_X_INV
+name|FE_INVALID
 block|}
 enum|;
 end_enum
@@ -231,7 +231,7 @@ begin_function_decl
 name|void
 name|float_raise
 parameter_list|(
-name|fp_except
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
