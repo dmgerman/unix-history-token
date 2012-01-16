@@ -501,7 +501,7 @@ block|}
 end_function
 
 begin_function
-name|void
+name|int
 name|checkpath
 parameter_list|(
 specifier|const
@@ -550,31 +550,29 @@ operator|.
 name|st_mode
 argument_list|)
 condition|)
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"%s: not a directory"
-argument_list|,
-name|resolved
-argument_list|)
+block|{
+name|errno
+operator|=
+name|ENOTDIR
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 block|}
 else|else
-name|errx
-argument_list|(
-name|EX_USAGE
-argument_list|,
-literal|"%s: %s"
-argument_list|,
-name|resolved
-argument_list|,
-name|strerror
-argument_list|(
-name|errno
-argument_list|)
-argument_list|)
-expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
