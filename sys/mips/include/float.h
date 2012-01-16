@@ -82,9 +82,13 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/*  * XXXMIPS: MIPS32 has both float and double type, so set FLT_EVAL_METHOD  *   to 0. Check it for 64-bits systems.  */
-end_comment
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|1999
+end_if
 
 begin_define
 define|#
@@ -99,6 +103,11 @@ directive|define
 name|DECIMAL_DIG
 value|17
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -273,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_EPSILON
-value|DBL_EPSILON
+value|(long double)DBL_EPSILON
 end_define
 
 begin_define
@@ -294,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MIN
-value|DBL_MIN
+value|(long double)DBL_MIN
 end_define
 
 begin_define
@@ -315,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MAX
-value|DBL_MAX
+value|(long double)DBL_MAX
 end_define
 
 begin_define
