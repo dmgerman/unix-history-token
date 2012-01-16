@@ -555,9 +555,25 @@ operator|&
 name|MNT_UPDATE
 condition|)
 block|{
-comment|/* XXX: There is no support yet to update file system 		 * settings.  Should be added. */
+if|if
+condition|(
+name|vfs_flagopt
+argument_list|(
+name|mp
+operator|->
+name|mnt_optnew
+argument_list|,
+literal|"export"
+argument_list|,
+name|NULL
+argument_list|,
+literal|0
+argument_list|)
+condition|)
 return|return
-name|EOPNOTSUPP
+operator|(
+literal|0
+operator|)
 return|;
 block|}
 name|vn_lock
