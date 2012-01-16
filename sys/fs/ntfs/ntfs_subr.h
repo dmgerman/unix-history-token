@@ -882,9 +882,14 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|wchar
+name|char
+modifier|*
 name|ntfs_u28
 parameter_list|(
+name|char
+modifier|*
+name|outbuf
+parameter_list|,
 name|struct
 name|ntfsmount
 modifier|*
@@ -905,8 +910,10 @@ name|ntfsmount
 modifier|*
 name|ntmp
 parameter_list|,
-name|wchar
-name|wc
+specifier|const
+name|char
+modifier|*
+name|c
 parameter_list|,
 name|int
 modifier|*
@@ -922,7 +929,7 @@ name|NTFS_U28
 parameter_list|(
 name|ch
 parameter_list|)
-value|ntfs_u28(ntmp, (ch))
+value|ntfs_u28(tmpbuf, ntmp, (ch))
 end_define
 
 begin_define
