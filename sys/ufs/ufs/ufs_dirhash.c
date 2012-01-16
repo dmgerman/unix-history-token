@@ -5485,7 +5485,7 @@ name|memfreed
 init|=
 literal|0
 decl_stmt|;
-comment|/* XXX: this 10% may need to be adjusted */
+comment|/*  	 * Will free a *minimum* of 10% of the dirhash, but possibly much 	 * more (depending on dirhashreclaimage). System with large dirhashes 	 * probably also need a much larger dirhashreclaimage. 	 * XXX: this percentage may need to be adjusted. 	 */
 name|int
 name|memwanted
 init|=
