@@ -1296,6 +1296,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ATA_PBG_R3
+value|0x28268086
+end_define
+
+begin_define
+define|#
+directive|define
 name|ATA_PBG_S2
 value|0x1d088086
 end_define
