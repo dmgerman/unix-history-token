@@ -1970,14 +1970,6 @@ name|size
 condition|)
 block|{
 case|case
-name|MSIZE
-case|:
-name|zone
-operator|=
-name|zone_mbuf
-expr_stmt|;
-break|break;
-case|case
 name|MCLBYTES
 case|:
 name|zone
