@@ -3308,7 +3308,7 @@ argument_list|(
 name|it
 argument_list|)
 expr_stmt|;
-comment|// XXX - do we really need this?!?!?
+comment|/* XXX - do we really need this?!?!? */
 block|}
 else|else
 block|{
