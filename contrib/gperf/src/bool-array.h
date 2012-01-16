@@ -4,11 +4,7 @@ comment|/* This may look like C code, but it is really -*- C++ -*- */
 end_comment
 
 begin_comment
-comment|/* Simple lookup table abstraction implemented as an Iteration Number Array.     Copyright (C) 1989-1998 Free Software Foundation, Inc.    written by Douglas C. Schmidt (schmidt@ics.uci.edu)  This file is part of GNU GPERF.  GNU GPERF is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 1, or (at your option) any later version.  GNU GPERF is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.  You should have received a copy of the GNU General Public License along with GNU GPERF; see the file COPYING.  If not, write to the Free Software Foundation, 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA. */
-end_comment
-
-begin_comment
-comment|/* Define and implement a simple boolean array abstraction,    uses an Iteration Numbering implementation to save on initialization time. */
+comment|/* Simple lookup table abstraction implemented as an Iteration Number Array.     Copyright (C) 1989-1998, 2002 Free Software Foundation, Inc.    Written by Douglas C. Schmidt<schmidt@ics.uci.edu>    and Bruno Haible<bruno@clisp.org>.     This file is part of GNU GPERF.     GNU GPERF is free software; you can redistribute it and/or modify    it under the terms of the GNU General Public License as published by    the Free Software Foundation; either version 2, or (at your option)    any later version.     GNU GPERF is distributed in the hope that it will be useful,    but WITHOUT ANY WARRANTY; without even the implied warranty of    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the    GNU General Public License for more details.     You should have received a copy of the GNU General Public License    along with this program; see the file COPYING.    If not, write to the Free Software Foundation, Inc.,    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
 end_comment
 
 begin_ifndef
@@ -24,112 +20,61 @@ name|bool_array_h
 value|1
 end_define
 
-begin_include
-include|#
-directive|include
-file|"trace.h"
-end_include
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|LO_CAL
-end_ifdef
-
 begin_comment
-comment|/* If we are on a memory diet then we'll only make these use a limited    amount of storage space. */
+comment|/* A Bool_Array instance is a bit array of fixed size, optimized for being    filled sparsely and cleared frequently.  For example, when processing    tests/chill.gperf, the array will be:      - of size 15391,      - clear will be called 3509 times,      - set_bit will be called 300394 times.    With a conventional bit array implementation, clear would be too slow.    With a tree/hash based bit array implementation, set_bit would be slower. */
 end_comment
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|short
-name|STORAGE_TYPE
-typedef|;
-end_typedef
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|STORAGE_TYPE
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 name|class
 name|Bool_Array
 block|{
-name|private
-label|:
-specifier|static
-name|STORAGE_TYPE
-modifier|*
-name|storage_array
-decl_stmt|;
-comment|/* Initialization of the index space. */
-specifier|static
-name|STORAGE_TYPE
-name|iteration_number
-decl_stmt|;
-comment|/* Keep track of the current iteration. */
-specifier|static
-name|unsigned
-name|int
-name|size
-decl_stmt|;
-comment|/* Keep track of array size. */
 name|public
 label|:
+comment|/* Initializes the bit array with room for SIZE bits, numbered from      0 to SIZE-1. */
 name|Bool_Array
 argument_list|(
-name|void
+argument|unsigned int size
 argument_list|)
-expr_stmt|;
+empty_stmt|;
+comment|/* Frees this object.  */
 operator|~
 name|Bool_Array
-argument_list|(
-name|void
-argument_list|)
+argument_list|()
 expr_stmt|;
-specifier|static
+comment|/* Resets all bits to zero.  */
 name|void
-name|init
+name|clear
+parameter_list|()
+function_decl|;
+comment|/* Sets the specified bit to true.      Returns its previous value (false or true).  */
+name|bool
+name|set_bit
 parameter_list|(
-name|STORAGE_TYPE
-modifier|*
-name|buffer
-parameter_list|,
 name|unsigned
 name|int
-name|s
+name|index
 parameter_list|)
 function_decl|;
-specifier|static
+name|private
+label|:
+comment|/* Size of array.  */
+name|unsigned
 name|int
-name|find
-parameter_list|(
+specifier|const
+name|_size
+decl_stmt|;
+comment|/* Current iteration number.  Always nonzero.  Starts out as 1, and is      incremented each time clear() is called.  */
+name|unsigned
 name|int
-name|hash_value
-parameter_list|)
-function_decl|;
-specifier|static
-name|void
-name|reset
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
+name|_iteration_number
+decl_stmt|;
+comment|/* For each index, we store in storage_array[index] the iteration_number at      the time set_bit(index) was last called.  */
+name|unsigned
+name|int
+modifier|*
+specifier|const
+name|_storage_array
+decl_stmt|;
 block|}
 end_decl_stmt
 
