@@ -15,28 +15,28 @@ begin_define
 define|#
 directive|define
 name|float_exception_flags
-value|_softfloat_float_exception_flags
+value|__softfloat_float_exception_flags
 end_define
 
 begin_define
 define|#
 directive|define
 name|float_exception_mask
-value|_softfloat_float_exception_mask
+value|__softfloat_float_exception_mask
 end_define
 
 begin_define
 define|#
 directive|define
 name|float_rounding_mode
-value|_softfloat_float_rounding_mode
+value|__softfloat_float_rounding_mode
 end_define
 
 begin_define
 define|#
 directive|define
 name|float_raise
-value|_softfloat_float_raise
+value|__softfloat_float_raise
 end_define
 
 begin_comment
@@ -47,42 +47,42 @@ begin_define
 define|#
 directive|define
 name|float32_eq
-value|_softfloat_float32_eq
+value|__softfloat_float32_eq
 end_define
 
 begin_define
 define|#
 directive|define
 name|float32_le
-value|_softfloat_float32_le
+value|__softfloat_float32_le
 end_define
 
 begin_define
 define|#
 directive|define
 name|float32_lt
-value|_softfloat_float32_lt
+value|__softfloat_float32_lt
 end_define
 
 begin_define
 define|#
 directive|define
 name|float64_eq
-value|_softfloat_float64_eq
+value|__softfloat_float64_eq
 end_define
 
 begin_define
 define|#
 directive|define
 name|float64_le
-value|_softfloat_float64_le
+value|__softfloat_float64_le
 end_define
 
 begin_define
 define|#
 directive|define
 name|float64_lt
-value|_softfloat_float64_lt
+value|__softfloat_float64_lt
 end_define
 
 begin_comment
