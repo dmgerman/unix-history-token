@@ -1295,6 +1295,12 @@ literal|3
 operator|,
 literal|1
 argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
 end_elif
 
 begin_define
