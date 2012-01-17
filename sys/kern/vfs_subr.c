@@ -12681,6 +12681,9 @@ index|[
 literal|512
 index|]
 decl_stmt|;
+name|uint64_t
+name|mflags
+decl_stmt|;
 name|u_int
 name|flags
 decl_stmt|;
@@ -12779,7 +12782,7 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-name|flags
+name|mflags
 operator|=
 name|mp
 operator|->
@@ -12791,7 +12794,7 @@ name|MNT_FLAG
 parameter_list|(
 name|flag
 parameter_list|)
-value|do {						\ 	if (flags& (flag)) {						\ 		if (buf[0] != '\0')					\ 			strlcat(buf, ", ", sizeof(buf));		\ 		strlcat(buf, (#flag) + 4, sizeof(buf));			\ 		flags&= ~(flag);					\ 	}								\ } while (0)
+value|do {						\ 	if (mflags& (flag)) {						\ 		if (buf[0] != '\0')					\ 			strlcat(buf, ", ", sizeof(buf));		\ 		strlcat(buf, (#flag) + 4, sizeof(buf));			\ 		mflags&= ~(flag);					\ 	}								\ } while (0)
 name|MNT_FLAG
 argument_list|(
 name|MNT_RDONLY
@@ -12967,7 +12970,7 @@ directive|undef
 name|MNT_FLAG
 if|if
 condition|(
-name|flags
+name|mflags
 operator|!=
 literal|0
 condition|)
@@ -13012,9 +13015,9 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"0x%08x"
+literal|"0x%016jx"
 argument_list|,
-name|flags
+name|mflags
 argument_list|)
 expr_stmt|;
 block|}

@@ -621,7 +621,7 @@ name|error
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|u_int
+name|uint64_t
 name|mntorflags
 decl_stmt|;
 name|accmode_t
@@ -2625,7 +2625,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 block|{
