@@ -6295,7 +6295,7 @@ name|winner
 decl_stmt|;
 name|children_dnodes
 operator|=
-name|kmem_alloc
+name|kmem_zalloc
 argument_list|(
 sizeof|sizeof
 argument_list|(
