@@ -4130,6 +4130,10 @@ index|]
 decl_stmt|;
 name|u_long
 name|physmem_tunable
+decl_stmt|,
+name|memtest
+decl_stmt|,
+name|tmpul
 decl_stmt|;
 name|pt_entry_t
 modifier|*
@@ -4372,6 +4376,25 @@ name|atop
 argument_list|(
 name|physmem_tunable
 argument_list|)
+expr_stmt|;
+comment|/* 	 * By default keep the memtest enabled.  Use a general name so that 	 * one could eventually do more with the code than just disable it. 	 */
+name|memtest
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|TUNABLE_ULONG_FETCH
+argument_list|(
+literal|"hw.memtest.tests"
+argument_list|,
+operator|&
+name|tmpul
+argument_list|)
+condition|)
+name|memtest
+operator|=
+name|tmpul
 expr_stmt|;
 comment|/* 	 * Don't allow MAXMEM or hw.physmem to extend the amount of memory 	 * in the system. 	 */
 if|if
@@ -4650,6 +4673,15 @@ name|page_bad
 operator|=
 name|FALSE
 expr_stmt|;
+if|if
+condition|(
+name|memtest
+operator|==
+literal|0
+condition|)
+goto|goto
+name|skip_memtest
+goto|;
 comment|/* 			 * map page into kernel: valid, read/write,non-cacheable 			 */
 operator|*
 name|pte
@@ -4792,6 +4824,8 @@ name|ptr
 operator|=
 name|tmp
 expr_stmt|;
+name|skip_memtest
+label|:
 comment|/* 			 * Adjust array of valid/good pages. 			 */
 if|if
 condition|(
