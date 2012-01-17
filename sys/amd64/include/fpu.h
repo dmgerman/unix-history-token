@@ -27,7 +27,7 @@ begin_struct
 struct|struct
 name|fpacc87
 block|{
-name|u_char
+name|uint8_t
 name|fp_bytes
 index|[
 literal|10
@@ -45,8 +45,26 @@ begin_struct
 struct|struct
 name|xmmacc
 block|{
-name|u_char
+name|uint8_t
 name|xmm_bytes
+index|[
+literal|16
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* Contents of the upper 16 bytes of each AVX extended accumulator */
+end_comment
+
+begin_struct
+struct|struct
+name|ymmacc
+block|{
+name|uint8_t
+name|ymm_bytes
 index|[
 literal|16
 index|]
@@ -59,38 +77,38 @@ begin_struct
 struct|struct
 name|envxmm
 block|{
-name|u_int16_t
+name|uint16_t
 name|en_cw
 decl_stmt|;
 comment|/* control word (16bits) */
-name|u_int16_t
+name|uint16_t
 name|en_sw
 decl_stmt|;
 comment|/* status word (16bits) */
-name|u_int8_t
+name|uint8_t
 name|en_tw
 decl_stmt|;
 comment|/* tag word (8bits) */
-name|u_int8_t
+name|uint8_t
 name|en_zero
 decl_stmt|;
-name|u_int16_t
+name|uint16_t
 name|en_opcode
 decl_stmt|;
 comment|/* opcode last executed (11 bits ) */
-name|u_int64_t
+name|uint64_t
 name|en_rip
 decl_stmt|;
 comment|/* floating point instruction pointer */
-name|u_int64_t
+name|uint64_t
 name|en_rdp
 decl_stmt|;
 comment|/* floating operand pointer */
-name|u_int32_t
+name|uint32_t
 name|en_mxcsr
 decl_stmt|;
 comment|/* SSE sontorol/status register */
-name|u_int32_t
+name|uint32_t
 name|en_mxcsr_mask
 decl_stmt|;
 comment|/* valid bits in mxcsr */
@@ -112,7 +130,7 @@ name|struct
 name|fpacc87
 name|fp_acc
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|fp_pad
 index|[
 literal|6
@@ -132,7 +150,7 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|sv_pad
 index|[
 literal|96
