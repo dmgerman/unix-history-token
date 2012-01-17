@@ -1961,18 +1961,7 @@ modifier|*
 modifier|*
 name|segbase
 decl_stmt|;
-name|Elf_Addr
-modifier|*
-name|dtv
-decl_stmt|;
 asm|__asm __volatile("movl %%gs:0, %0" : "=r" (segbase));
-name|dtv
-operator|=
-name|segbase
-index|[
-literal|1
-index|]
-expr_stmt|;
 return|return
 name|tls_get_addr_common
 argument_list|(
@@ -2013,18 +2002,7 @@ modifier|*
 modifier|*
 name|segbase
 decl_stmt|;
-name|Elf_Addr
-modifier|*
-name|dtv
-decl_stmt|;
 asm|__asm __volatile("movl %%gs:0, %0" : "=r" (segbase));
-name|dtv
-operator|=
-name|segbase
-index|[
-literal|1
-index|]
-expr_stmt|;
 return|return
 name|tls_get_addr_common
 argument_list|(
