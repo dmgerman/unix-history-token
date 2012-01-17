@@ -54,6 +54,17 @@ name|_Complex_I
 value|((float _Complex)1.0i)
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__generic
+end_ifdef
+
 begin_assert
 assert|_Static_assert
 argument_list|(
