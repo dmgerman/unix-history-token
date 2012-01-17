@@ -1175,6 +1175,33 @@ name|sn
 operator|=
 name|NULL
 expr_stmt|;
+comment|/* 	 * At the moment, journaled soft updates cannot support 	 * taking snapshots. 	 */
+if|if
+condition|(
+name|MOUNTEDSUJ
+argument_list|(
+name|mp
+argument_list|)
+condition|)
+block|{
+name|vfs_mount_error
+argument_list|(
+name|mp
+argument_list|,
+literal|"%s: Snapshots are not yet supported when "
+literal|"running with journaled soft updates"
+argument_list|,
+name|fs
+operator|->
+name|fs_fsmnt
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EOPNOTSUPP
+operator|)
+return|;
+block|}
 name|MNT_ILOCK
 argument_list|(
 name|mp
