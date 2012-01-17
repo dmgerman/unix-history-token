@@ -555,6 +555,7 @@ operator|&
 name|MNT_UPDATE
 condition|)
 block|{
+comment|/* 		 * Only support update mounts for NFS export. 		 */
 if|if
 condition|(
 name|vfs_flagopt
@@ -573,6 +574,11 @@ condition|)
 return|return
 operator|(
 literal|0
+operator|)
+return|;
+return|return
+operator|(
+name|EOPNOTSUPP
 operator|)
 return|;
 block|}
