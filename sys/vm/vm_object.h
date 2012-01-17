@@ -116,9 +116,9 @@ name|pg_color
 decl_stmt|;
 comment|/* (c) color of first page in obj */
 name|u_short
-name|paging_in_progress
+name|pad1
 decl_stmt|;
-comment|/* Paging (in or out) so don't collapse or destroy */
+comment|/* Old pip counter */
 name|int
 name|resident_page_count
 decl_stmt|;
@@ -218,6 +218,10 @@ decl_stmt|;
 name|vm_ooffset_t
 name|charge
 decl_stmt|;
+name|u_int
+name|paging_in_progress
+decl_stmt|;
+comment|/* Paging (in or out) so don't collapse or destroy */
 block|}
 struct|;
 end_struct
