@@ -408,7 +408,7 @@ parameter_list|(
 name|obj
 parameter_list|)
 define|\
-value|__atomic_is_lock_free(obj)
+value|__atomic_is_lock_free(sizeof(obj))
 end_define
 
 begin_elif
