@@ -3656,6 +3656,14 @@ argument_list|)
 condition|)
 block|{
 comment|/* log a ENOMEM failure msg here */
+name|mtx_unlock
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|q_lock
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|FAILURE
