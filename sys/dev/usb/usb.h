@@ -3358,6 +3358,11 @@ name|UPS_PORT_POWER
 value|0x0100
 define|#
 directive|define
+name|UPS_PORT_POWER_SS
+value|0x0200
+comment|/* super-speed only */
+define|#
+directive|define
 name|UPS_LOW_SPEED
 value|0x0200
 define|#
