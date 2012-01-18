@@ -4590,6 +4590,19 @@ expr_stmt|;
 comment|/* Save knowledge for later */
 if|if
 condition|(
+name|reallydoit
+operator|&&
+operator|(
+name|rv
+operator|&
+name|DITEM_FAILURE
+operator|)
+operator|==
+literal|0
+condition|)
+block|{
+if|if
+condition|(
 operator|(
 name|f
 operator|=
@@ -4618,6 +4631,7 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 return|return
 operator|(
