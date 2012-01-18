@@ -291,6 +291,62 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_NVIDIA_0BE2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0be2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_0BE3
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0be3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_0BE4
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0be4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GT100
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0be5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GT106
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0be9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GT108
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0bea)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GT104
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0beb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GT116
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0bee)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_NVIDIA_MCP89_1
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d94)
 end_define
@@ -314,6 +370,27 @@ define|#
 directive|define
 name|HDA_NVIDIA_MCP89_4
 value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0d97)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GF119
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0e08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GF110_1
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0e09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_NVIDIA_GF110_2
+value|HDA_MODEL_CONSTRUCT(NVIDIA, 0x0e0c)
 end_define
 
 begin_define

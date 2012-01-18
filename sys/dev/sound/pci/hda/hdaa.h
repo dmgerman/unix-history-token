@@ -328,6 +328,9 @@ decl_stmt|;
 name|uint32_t
 name|ossmask
 decl_stmt|;
+name|int
+name|unsol
+decl_stmt|;
 name|nid_t
 name|conns
 index|[
@@ -345,6 +348,13 @@ name|name
 index|[
 name|HDA_MAX_NAMELEN
 index|]
+decl_stmt|;
+name|uint8_t
+modifier|*
+name|eld
+decl_stmt|;
+name|int
+name|eld_len
 decl_stmt|;
 name|struct
 name|hdaa_devinfo
@@ -508,9 +518,6 @@ name|chans
 index|[
 literal|2
 index|]
-decl_stmt|;
-name|int
-name|unsol
 decl_stmt|;
 name|int
 name|location
@@ -725,7 +732,7 @@ name|fmt
 decl_stmt|,
 name|fmtlist
 index|[
-literal|16
+literal|32
 index|]
 decl_stmt|,
 name|pcmrates

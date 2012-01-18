@@ -642,6 +642,116 @@ literal|0
 block|}
 block|,
 block|{
+name|HDA_NVIDIA_0BE2
+block|,
+literal|"NVIDIA 0x0be2"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_0BE3
+block|,
+literal|"NVIDIA 0x0be3"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_0BE4
+block|,
+literal|"NVIDIA 0x0be4"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GT100
+block|,
+literal|"NVIDIA GT100"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GT104
+block|,
+literal|"NVIDIA GT104"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GT106
+block|,
+literal|"NVIDIA GT106"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GT108
+block|,
+literal|"NVIDIA GT108"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GT116
+block|,
+literal|"NVIDIA GT116"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GF119
+block|,
+literal|"NVIDIA GF119"
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GF110_1
+block|,
+literal|"NVIDIA GF110"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
+name|HDA_NVIDIA_GF110_2
+block|,
+literal|"NVIDIA GF110"
+block|,
+literal|0
+block|,
+name|HDAC_QUIRK_MSI
+block|}
+block|,
+block|{
 name|HDA_ATI_SB450
 block|,
 literal|"ATI SB450"
