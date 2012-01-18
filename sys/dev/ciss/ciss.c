@@ -2014,6 +2014,16 @@ literal|"HP Smart Array"
 block|}
 block|,
 block|{
+literal|0x103C
+block|,
+literal|0x3351
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P420"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
