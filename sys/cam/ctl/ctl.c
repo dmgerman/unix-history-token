@@ -37456,7 +37456,7 @@ decl_stmt|;
 name|int
 name|have_error
 decl_stmt|;
-name|ctl_sense_format
+name|scsi_sense_data_type
 name|sense_format
 decl_stmt|;
 name|cdb
@@ -37506,12 +37506,12 @@ name|SRS_DESC
 condition|)
 name|sense_format
 operator|=
-name|CTL_SENSE_DESCRIPTOR
+name|SSD_TYPE_DESC
 expr_stmt|;
 else|else
 name|sense_format
 operator|=
-name|CTL_SENSE_FIXED
+name|SSD_TYPE_FIXED
 expr_stmt|;
 name|ctsio
 operator|->
@@ -37676,13 +37676,13 @@ name|initidx
 argument_list|)
 condition|)
 block|{
-name|ctl_sense_format
+name|scsi_sense_data_type
 name|stored_format
 decl_stmt|;
 comment|/* 		 * Check to see which sense format was used for the stored 		 * sense data. 		 */
 name|stored_format
 operator|=
-name|ctl_get_sense_format
+name|scsi_sense_type
 argument_list|(
 operator|&
 name|lun
@@ -37695,19 +37695,19 @@ operator|.
 name|sense
 argument_list|)
 expr_stmt|;
-comment|/* 		 * If the user requested a different sense format than the 		 * one we stored, then we need to convert it to the other 		 * format.  If we're going from descriptor to fixed format 		 * sense data, we may lose things in translation, depending 		 * on what options were used. 		 */
+comment|/* 		 * If the user requested a different sense format than the 		 * one we stored, then we need to convert it to the other 		 * format.  If we're going from descriptor to fixed format 		 * sense data, we may lose things in translation, depending 		 * on what options were used. 		 * 		 * If the stored format is SSD_TYPE_NONE (i.e. invalid), 		 * for some reason we'll just copy it out as-is. 		 */
 if|if
 condition|(
 operator|(
 name|stored_format
 operator|==
-name|CTL_SENSE_FIXED
+name|SSD_TYPE_FIXED
 operator|)
 operator|&&
 operator|(
 name|sense_format
 operator|==
-name|CTL_SENSE_DESCRIPTOR
+name|SSD_TYPE_DESC
 operator|)
 condition|)
 name|ctl_sense_to_desc
@@ -37741,13 +37741,13 @@ condition|(
 operator|(
 name|stored_format
 operator|==
-name|CTL_SENSE_DESCRIPTOR
+name|SSD_TYPE_DESC
 operator|)
 operator|&&
 operator|(
 name|sense_format
 operator|==
-name|CTL_SENSE_FIXED
+name|SSD_TYPE_FIXED
 operator|)
 condition|)
 name|ctl_sense_to_fixed
@@ -44176,7 +44176,7 @@ operator|!=
 name|CTL_UA_NONE
 condition|)
 block|{
-name|ctl_sense_format
+name|scsi_sense_data_type
 name|sense_format
 decl_stmt|;
 if|if
@@ -44195,14 +44195,14 @@ operator|&
 name|CTL_LUN_SENSE_DESC
 operator|)
 condition|?
-name|CTL_SENSE_DESCRIPTOR
+name|SSD_TYPE_DESC
 else|:
-name|CTL_SENSE_FIXED
+name|SSD_TYPE_FIXED
 expr_stmt|;
 else|else
 name|sense_format
 operator|=
-name|CTL_SENSE_FIXED
+name|SSD_TYPE_FIXED
 expr_stmt|;
 name|ua_type
 operator|=

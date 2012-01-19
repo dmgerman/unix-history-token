@@ -25,20 +25,6 @@ directive|define
 name|_CTL_ERROR_H_
 end_define
 
-begin_typedef
-typedef|typedef
-enum|enum
-block|{
-name|CTL_SENSE_NOT_SPECIFIED
-block|,
-name|CTL_SENSE_FIXED
-block|,
-name|CTL_SENSE_DESCRIPTOR
-block|}
-name|ctl_sense_format
-typedef|;
-end_typedef
-
 begin_function_decl
 name|void
 name|ctl_set_sense_data_va
@@ -167,18 +153,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|ctl_sense_format
-name|ctl_get_sense_format
-parameter_list|(
-name|struct
-name|scsi_sense_data
-modifier|*
-name|sense_data
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|ctl_set_ua
 parameter_list|(
@@ -208,7 +182,7 @@ name|scsi_sense_data
 modifier|*
 name|sense
 parameter_list|,
-name|ctl_sense_format
+name|scsi_sense_data_type
 name|sense_format
 parameter_list|)
 function_decl|;
