@@ -15182,7 +15182,7 @@ name|int
 name|bge_forced_udpcsum
 decl_stmt|;
 name|int
-name|bge_msi_disable
+name|bge_msi
 decl_stmt|;
 name|int
 name|bge_csum_features

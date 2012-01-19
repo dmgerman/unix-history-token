@@ -13815,7 +13815,7 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bge_msi_disable
+name|bge_msi
 operator|!=
 literal|0
 condition|)
@@ -26636,9 +26636,9 @@ argument_list|)
 expr_stmt|;
 name|sc
 operator|->
-name|bge_msi_disable
+name|bge_msi
 operator|=
-literal|0
+literal|1
 expr_stmt|;
 name|snprintf
 argument_list|(
@@ -26649,7 +26649,7 @@ argument_list|(
 name|tn
 argument_list|)
 argument_list|,
-literal|"dev.bge.%d.msi_disable"
+literal|"dev.bge.%d.msi"
 argument_list|,
 name|unit
 argument_list|)
@@ -26661,7 +26661,7 @@ argument_list|,
 operator|&
 name|sc
 operator|->
-name|bge_msi_disable
+name|bge_msi
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
@@ -26672,18 +26672,18 @@ name|children
 argument_list|,
 name|OID_AUTO
 argument_list|,
-literal|"msi_disable"
+literal|"msi"
 argument_list|,
 name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|sc
 operator|->
-name|bge_msi_disable
+name|bge_msi
 argument_list|,
 literal|0
 argument_list|,
-literal|"Disable MSI"
+literal|"Enable MSI"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * It seems all Broadcom controllers have a bug that can generate UDP 	 * datagrams with checksum value 0 when TX UDP checksum offloading is 	 * enabled.  Generating UDP checksum value 0 is RFC 768 violation. 	 * Even though the probability of generating such UDP datagrams is 	 * low, I don't want to see FreeBSD boxes to inject such datagrams 	 * into network so disable UDP checksum offloading by default.  Users 	 * still override this behavior by setting a sysctl variable, 	 * dev.bge.0.forced_udpcsum. 	 */
