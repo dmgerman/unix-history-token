@@ -1736,7 +1736,7 @@ name|HDA_CODEC_ALCXXXX
 block|,
 literal|0
 block|,
-literal|"Realtek (Unknown)"
+literal|"Realtek"
 block|}
 block|,
 block|{
@@ -1744,7 +1744,7 @@ name|HDA_CODEC_ADXXXX
 block|,
 literal|0
 block|,
-literal|"Analog Devices (Unknown)"
+literal|"Analog Devices"
 block|}
 block|,
 block|{
@@ -1752,7 +1752,7 @@ name|HDA_CODEC_CSXXXX
 block|,
 literal|0
 block|,
-literal|"Cirrus Logic (Unknown)"
+literal|"Cirrus Logic"
 block|}
 block|,
 block|{
@@ -1760,7 +1760,7 @@ name|HDA_CODEC_CMIXXXX
 block|,
 literal|0
 block|,
-literal|"CMedia (Unknown)"
+literal|"CMedia"
 block|}
 block|,
 block|{
@@ -1768,7 +1768,7 @@ name|HDA_CODEC_STACXXXX
 block|,
 literal|0
 block|,
-literal|"Sigmatel (Unknown)"
+literal|"Sigmatel"
 block|}
 block|,
 block|{
@@ -1776,7 +1776,7 @@ name|HDA_CODEC_SIIXXXX
 block|,
 literal|0
 block|,
-literal|"Silicon Image (Unknown)"
+literal|"Silicon Image"
 block|}
 block|,
 block|{
@@ -1784,7 +1784,7 @@ name|HDA_CODEC_AGEREXXXX
 block|,
 literal|0
 block|,
-literal|"Lucent/Agere Systems (Unknown)"
+literal|"Lucent/Agere Systems"
 block|}
 block|,
 block|{
@@ -1792,7 +1792,7 @@ name|HDA_CODEC_CXXXXX
 block|,
 literal|0
 block|,
-literal|"Conexant (Unknown)"
+literal|"Conexant"
 block|}
 block|,
 block|{
@@ -1800,7 +1800,7 @@ name|HDA_CODEC_VTXXXX
 block|,
 literal|0
 block|,
-literal|"VIA (Unknown)"
+literal|"VIA"
 block|}
 block|,
 block|{
@@ -1808,7 +1808,7 @@ name|HDA_CODEC_ATIXXXX
 block|,
 literal|0
 block|,
-literal|"ATI (Unknown)"
+literal|"ATI"
 block|}
 block|,
 block|{
@@ -1816,7 +1816,7 @@ name|HDA_CODEC_NVIDIAXXXX
 block|,
 literal|0
 block|,
-literal|"NVIDIA (Unknown)"
+literal|"NVIDIA"
 block|}
 block|,
 block|{
@@ -1824,7 +1824,7 @@ name|HDA_CODEC_INTELXXXX
 block|,
 literal|0
 block|,
-literal|"Intel (Unknown)"
+literal|"Intel"
 block|}
 block|,
 block|{
@@ -1832,7 +1832,7 @@ name|HDA_CODEC_IDTXXXX
 block|,
 literal|0
 block|,
-literal|"IDT (Unknown)"
+literal|"IDT"
 block|}
 block|, }
 struct|;
@@ -1844,104 +1844,6 @@ directive|define
 name|HDACC_CODECS_LEN
 value|(sizeof(hdacc_codecs) / sizeof(hdacc_codecs[0]))
 end_define
-
-begin_comment
-comment|/****************************************************************************  * Function prototypes  ****************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|char
-modifier|*
-name|hdacc_codec_name
-parameter_list|(
-name|uint32_t
-name|id
-parameter_list|,
-name|uint16_t
-name|revid
-parameter_list|)
-block|{
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|HDACC_CODECS_LEN
-condition|;
-name|i
-operator|++
-control|)
-block|{
-if|if
-condition|(
-operator|!
-name|HDA_DEV_MATCH
-argument_list|(
-name|hdacc_codecs
-index|[
-name|i
-index|]
-operator|.
-name|id
-argument_list|,
-name|id
-argument_list|)
-condition|)
-continue|continue;
-if|if
-condition|(
-name|hdacc_codecs
-index|[
-name|i
-index|]
-operator|.
-name|revid
-operator|!=
-literal|0
-operator|&&
-name|hdacc_codecs
-index|[
-name|i
-index|]
-operator|.
-name|revid
-operator|!=
-name|revid
-condition|)
-continue|continue;
-return|return
-operator|(
-name|hdacc_codecs
-index|[
-name|i
-index|]
-operator|.
-name|name
-operator|)
-return|;
-block|}
-return|return
-operator|(
-operator|(
-name|id
-operator|==
-literal|0x00000000
-operator|)
-condition|?
-literal|"NULL CODEC"
-else|:
-literal|"Unknown CODEC"
-operator|)
-return|;
-block|}
-end_function
 
 begin_function
 specifier|static
@@ -2035,6 +1937,9 @@ index|[
 literal|128
 index|]
 decl_stmt|;
+name|int
+name|i
+decl_stmt|;
 name|id
 operator|=
 operator|(
@@ -2073,6 +1978,99 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|HDACC_CODECS_LEN
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|HDA_DEV_MATCH
+argument_list|(
+name|hdacc_codecs
+index|[
+name|i
+index|]
+operator|.
+name|id
+argument_list|,
+name|id
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
+name|hdacc_codecs
+index|[
+name|i
+index|]
+operator|.
+name|revid
+operator|!=
+literal|0
+operator|&&
+name|hdacc_codecs
+index|[
+name|i
+index|]
+operator|.
+name|revid
+operator|!=
+name|revid
+condition|)
+continue|continue;
+break|break;
+block|}
+if|if
+condition|(
+name|i
+operator|<
+name|HDACC_CODECS_LEN
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|hdacc_codecs
+index|[
+name|i
+index|]
+operator|.
+name|id
+operator|&
+literal|0xffff
+operator|)
+operator|!=
+literal|0xffff
+condition|)
+name|strlcpy
+argument_list|(
+name|buf
+argument_list|,
+name|hdacc_codecs
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+else|else
 name|snprintf
 argument_list|(
 name|buf
@@ -2082,13 +2080,46 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s HDA CODEC"
+literal|"%s (0x%04x)"
 argument_list|,
-name|hdacc_codec_name
+name|hdacc_codecs
+index|[
+name|i
+index|]
+operator|.
+name|name
+argument_list|,
+name|hda_get_device_id
 argument_list|(
-name|id
+name|dev
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|snprintf
+argument_list|(
+name|buf
 argument_list|,
-name|revid
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|,
+literal|"Generic (0x%04x)"
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+name|strlcat
+argument_list|(
+name|buf
+argument_list|,
+literal|" HDA CODEC"
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
 argument_list|)
 argument_list|)
 expr_stmt|;

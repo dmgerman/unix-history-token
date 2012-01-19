@@ -644,7 +644,7 @@ block|,
 block|{
 name|HDA_NVIDIA_0BE2
 block|,
-literal|"NVIDIA 0x0be2"
+literal|"NVIDIA (0x0be2)"
 block|,
 literal|0
 block|,
@@ -654,7 +654,7 @@ block|,
 block|{
 name|HDA_NVIDIA_0BE3
 block|,
-literal|"NVIDIA 0x0be3"
+literal|"NVIDIA (0x0be3)"
 block|,
 literal|0
 block|,
@@ -664,7 +664,7 @@ block|,
 block|{
 name|HDA_NVIDIA_0BE4
 block|,
-literal|"NVIDIA 0x0be4"
+literal|"NVIDIA (0x0be4)"
 block|,
 literal|0
 block|,
@@ -935,7 +935,7 @@ comment|/* Unknown */
 block|{
 name|HDA_INTEL_ALL
 block|,
-literal|"Intel (Unknown)"
+literal|"Intel"
 block|,
 literal|0
 block|,
@@ -945,7 +945,7 @@ block|,
 block|{
 name|HDA_NVIDIA_ALL
 block|,
-literal|"NVIDIA (Unknown)"
+literal|"NVIDIA"
 block|,
 literal|0
 block|,
@@ -955,7 +955,7 @@ block|,
 block|{
 name|HDA_ATI_ALL
 block|,
-literal|"ATI (Unknown)"
+literal|"ATI"
 block|,
 literal|0
 block|,
@@ -965,7 +965,7 @@ block|,
 block|{
 name|HDA_VIA_ALL
 block|,
-literal|"VIA (Unknown)"
+literal|"VIA"
 block|,
 literal|0
 block|,
@@ -975,7 +975,7 @@ block|,
 block|{
 name|HDA_SIS_ALL
 block|,
-literal|"SiS (Unknown)"
+literal|"SiS"
 block|,
 literal|0
 block|,
@@ -985,7 +985,7 @@ block|,
 block|{
 name|HDA_ULI_ALL
 block|,
-literal|"ULI (Unknown)"
+literal|"ULI"
 block|,
 literal|0
 block|,
@@ -5015,9 +5015,16 @@ operator|==
 name|PCIS_MULTIMEDIA_HDA
 condition|)
 block|{
-name|strlcpy
+name|snprintf
 argument_list|(
 name|desc
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|desc
+argument_list|)
+argument_list|,
+literal|"%s (0x%04x)"
 argument_list|,
 name|hdac_devices
 index|[
@@ -5026,9 +5033,9 @@ index|]
 operator|.
 name|desc
 argument_list|,
-sizeof|sizeof
+name|pci_get_device
 argument_list|(
-name|desc
+name|dev
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -5054,16 +5061,18 @@ operator|==
 name|PCIS_MULTIMEDIA_HDA
 condition|)
 block|{
-name|strlcpy
+name|snprintf
 argument_list|(
 name|desc
-argument_list|,
-literal|"Generic"
 argument_list|,
 sizeof|sizeof
 argument_list|(
 name|desc
 argument_list|)
+argument_list|,
+literal|"Generic (0x%08x)"
+argument_list|,
+name|model
 argument_list|)
 expr_stmt|;
 name|result
