@@ -13816,7 +13816,7 @@ condition|(
 name|sc
 operator|->
 name|bge_msi
-operator|!=
+operator|==
 literal|0
 condition|)
 return|return
