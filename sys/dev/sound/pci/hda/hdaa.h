@@ -406,6 +406,14 @@ decl_stmt|;
 block|}
 name|pin
 struct|;
+struct|struct
+block|{
+name|uint8_t
+name|stripecap
+decl_stmt|;
+block|}
+name|conv
+struct|;
 block|}
 name|wclass
 union|;
@@ -746,10 +754,6 @@ decl_stmt|,
 name|supp_pcm_size_rate
 decl_stmt|;
 name|uint32_t
-name|ptr
-decl_stmt|,
-name|prevptr
-decl_stmt|,
 name|blkcnt
 decl_stmt|,
 name|blksz
@@ -793,6 +797,14 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+name|uint8_t
+name|stripecap
+decl_stmt|;
+comment|/* AND of stripecap of all ios. */
+name|uint8_t
+name|stripectl
+decl_stmt|;
+comment|/* stripe to use to all ios. */
 block|}
 struct|;
 end_struct

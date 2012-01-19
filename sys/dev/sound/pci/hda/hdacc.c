@@ -2900,6 +2900,9 @@ parameter_list|,
 name|int
 name|format
 parameter_list|,
+name|int
+name|stripe
+parameter_list|,
 name|uint32_t
 modifier|*
 modifier|*
@@ -2933,6 +2936,8 @@ argument_list|,
 name|dir
 argument_list|,
 name|format
+argument_list|,
+name|stripe
 argument_list|,
 name|dmapos
 argument_list|)
