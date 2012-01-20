@@ -2659,24 +2659,6 @@ block|{
 name|time_t
 name|tim
 decl_stmt|;
-name|unsigned
-name|char
-modifier|*
-name|temp
-decl_stmt|;
-comment|/* Copy the root directory record */
-name|temp
-operator|=
-operator|(
-name|unsigned
-name|char
-operator|*
-operator|)
-operator|&
-name|diskStructure
-operator|.
-name|primaryDescriptor
-expr_stmt|;
 comment|/* root should be a fixed size of 34 bytes since it has no name */
 name|memcpy
 argument_list|(
