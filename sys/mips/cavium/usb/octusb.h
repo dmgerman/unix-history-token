@@ -210,7 +210,7 @@ name|uint8_t
 name|ep_toggle_next
 decl_stmt|;
 name|uint8_t
-name|port_index
+name|root_port_index
 decl_stmt|;
 name|uint8_t
 name|fixup_complete
