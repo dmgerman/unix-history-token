@@ -272,12 +272,35 @@ argument_list|)
 operator|)
 end_if
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_PROF_PROLOGUE
+value|mflr 0;					\ 				std 3,48(1);				\ 				std 4,56(1);				\ 				std 5,64(1);				\ 				std 0,16(1);				\ 				stdu 1,-112(1);				\ 				bl _mcount;				\ 				nop;					\ 				ld 0,112+16(1);				\ 				ld 3,112+48(1);				\ 				ld 4,112+56(1);				\ 				ld 5,112+64(1);				\ 				mtlr 0;					\ 				addi 1,1,112
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|_PROF_PROLOGUE
 value|mflr 0; stw 0,4(1); bl _mcount
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_else
 else|#
@@ -298,16 +321,6 @@ end_endif
 begin_define
 define|#
 directive|define
-name|ENTRY
-parameter_list|(
-name|y
-parameter_list|)
-value|_ENTRY(CNAME(y)); _PROF_PROLOGUE
-end_define
-
-begin_define
-define|#
-directive|define
 name|ASENTRY
 parameter_list|(
 name|y
@@ -318,11 +331,41 @@ end_define
 begin_define
 define|#
 directive|define
+name|ENTRY
+parameter_list|(
+name|y
+parameter_list|)
+value|_ENTRY(CNAME(y)); _PROF_PROLOGUE
+end_define
+
+begin_define
+define|#
+directive|define
 name|GLOBAL
 parameter_list|(
 name|y
 parameter_list|)
 value|_GLOBAL(CNAME(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ASENTRY_NOPROF
+parameter_list|(
+name|y
+parameter_list|)
+value|_ENTRY(ASMNAME(y))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ENTRY_NOPROF
+parameter_list|(
+name|y
+parameter_list|)
+value|_ENTRY(CNAME(y))
 end_define
 
 begin_define
