@@ -74,7 +74,7 @@ begin_define
 define|#
 directive|define
 name|FLT_ROUNDS
-value|-1
+value|(-1)
 end_define
 
 begin_endif
@@ -282,7 +282,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_EPSILON
-value|(long double)DBL_EPSILON
+value|((long double)DBL_EPSILON)
 end_define
 
 begin_define
@@ -303,7 +303,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MIN
-value|(long double)DBL_MIN
+value|((long double)DBL_MIN)
 end_define
 
 begin_define
@@ -324,7 +324,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MAX
-value|(long double)DBL_MAX
+value|((long double)DBL_MAX)
 end_define
 
 begin_define
