@@ -5099,19 +5099,6 @@ operator|->
 name|sctp_socket
 condition|)
 block|{
-name|sctp_ulp_notify
-argument_list|(
-name|SCTP_NOTIFY_ASSOC_DOWN
-argument_list|,
-name|stcb
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|SCTP_SO_NOT_LOCKED
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -5135,7 +5122,6 @@ name|SCTP_PCB_FLAGS_IN_TCPPOOL
 operator|)
 condition|)
 block|{
-comment|/* Set the connected flag to disconnected */
 name|stcb
 operator|->
 name|sctp_socket
@@ -5147,6 +5133,19 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+name|sctp_ulp_notify
+argument_list|(
+name|SCTP_NOTIFY_ASSOC_DOWN
+argument_list|,
+name|stcb
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
+argument_list|)
+expr_stmt|;
 block|}
 name|SCTP_STAT_INCR_COUNTER32
 argument_list|(
