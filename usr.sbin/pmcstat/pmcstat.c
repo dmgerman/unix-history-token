@@ -2205,8 +2205,6 @@ name|c
 decl_stmt|,
 name|check_driver_stats
 decl_stmt|,
-name|current_cpu
-decl_stmt|,
 name|current_sampling_count
 decl_stmt|;
 name|int
@@ -2298,10 +2296,6 @@ name|PATH_MAX
 index|]
 decl_stmt|;
 name|check_driver_stats
-operator|=
-literal|0
-expr_stmt|;
-name|current_cpu
 operator|=
 literal|0
 expr_stmt|;
