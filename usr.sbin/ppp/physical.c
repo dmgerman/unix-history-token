@@ -3682,8 +3682,6 @@ modifier|*
 name|p
 decl_stmt|;
 name|int
-name|len
-decl_stmt|,
 name|type
 decl_stmt|;
 name|unsigned
@@ -3778,13 +3776,6 @@ operator|->
 name|dl
 operator|=
 name|dl
-expr_stmt|;
-name|len
-operator|=
-name|strlen
-argument_list|(
-name|_PATH_DEV
-argument_list|)
 expr_stmt|;
 name|p
 operator|->
