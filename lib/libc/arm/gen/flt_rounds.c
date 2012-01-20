@@ -32,6 +32,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"softfloat-for-gcc.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"milieu.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"softfloat.h"
 end_include
 
