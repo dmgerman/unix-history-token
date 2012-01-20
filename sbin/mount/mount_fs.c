@@ -538,6 +538,13 @@ operator|-
 literal|1
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|errmsg
+operator|!=
+literal|'\0'
+condition|)
 name|warn
 argument_list|(
 literal|"%s: %s"
@@ -545,6 +552,14 @@ argument_list|,
 name|dev
 argument_list|,
 name|errmsg
+argument_list|)
+expr_stmt|;
+else|else
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|dev
 argument_list|)
 expr_stmt|;
 return|return
