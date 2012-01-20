@@ -3709,6 +3709,16 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOFTFLOAT_FOR_GCC
+end_ifndef
+
+begin_comment
+comment|/* __floatunsisf is in libgcc */
+end_comment
+
 begin_function
 name|float32
 name|uint32_to_float32
@@ -3759,6 +3769,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* ------------------------------------------------------------------------------- Returns the result of converting the 32-bit two's complement integer `a' to the double-precision floating-point format.  The conversion is performed according to the IEC/IEEE Standard for Binary Floating-Point Arithmetic. ------------------------------------------------------------------------------- */
@@ -3840,6 +3855,16 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|SOFTFLOAT_FOR_GCC
+end_ifndef
+
+begin_comment
+comment|/* __floatunsidf is in libgcc */
+end_comment
+
 begin_function
 name|float64
 name|uint32_to_float64
@@ -3890,6 +3915,11 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
