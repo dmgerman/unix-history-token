@@ -107,12 +107,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sysexits.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"mntopts.h"
 end_include
 
@@ -526,9 +520,9 @@ name|path
 argument_list|,
 name|resolved
 argument_list|)
-operator|!=
+operator|==
 name|NULL
-operator|&&
+operator|||
 name|stat
 argument_list|(
 name|resolved
@@ -536,10 +530,14 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-operator|==
+operator|!=
 literal|0
 condition|)
-block|{
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 if|if
 condition|(
 operator|!
@@ -561,13 +559,6 @@ literal|1
 operator|)
 return|;
 block|}
-block|}
-else|else
-return|return
-operator|(
-literal|1
-operator|)
-return|;
 return|return
 operator|(
 literal|0
