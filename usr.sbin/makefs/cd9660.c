@@ -6081,12 +6081,6 @@ init|=
 literal|1
 decl_stmt|;
 comment|/* root gets a count of 0 */
-name|int
-name|parentRecNum
-init|=
-literal|0
-decl_stmt|;
-comment|/* root's parent is '0' */
 name|TAILQ_HEAD
 argument_list|(
 argument|cd9660_pt_head
@@ -6228,26 +6222,6 @@ block|}
 name|last
 operator|=
 name|dirNode
-expr_stmt|;
-name|parentRecNum
-operator|=
-literal|1
-expr_stmt|;
-if|if
-condition|(
-name|dirNode
-operator|->
-name|parent
-operator|!=
-literal|0
-condition|)
-name|parentRecNum
-operator|=
-name|dirNode
-operator|->
-name|parent
-operator|->
-name|ptnumber
 expr_stmt|;
 comment|/* Push children onto queue */
 name|TAILQ_FOREACH
