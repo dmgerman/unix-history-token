@@ -4,16 +4,32 @@ comment|/* $FreeBSD$ */
 end_comment
 
 begin_comment
-comment|/*-  *      ESS Technology allegro audio driver.  *  *      Copyright (C) 1992-2000  Don Kim (don.kim@esstech.com)  *  *      This program is free software; you can redistribute it and/or modify  *      it under the terms of the GNU General Public License as published by  *      the Free Software Foundation; either version 2 of the License, or  *      (at your option) any later version.  *  *      This program is distributed in the hope that it will be useful,  *      but WITHOUT ANY WARRANTY; without even the implied warranty of  *      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the  *      GNU General Public License for more details.  *  *      You should have received a copy of the GNU General Public License  *      along with this program; if not, write to the Free Software  *      Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.  *  *      Hacked for the maestro3 driver by zab  */
+comment|/*-  * Copyright (C) 1996-2008, 4Front Technologies  * Copyright (C) 1997-1999 ESS Technology, Inc  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
-comment|/*  * DSP Code images  */
+comment|/*---------------------------------------------------------------------------  * This source code, its compiled object code, and its associated data sets  * are copyright (C) 1997-1999 ESS Technology, Inc. This source code and its  * associated data sets are trade secrets of ESS Technology, Inc.  *---------------------------------------------------------------------------  * DESCRIPTION: DSP binaries  *---------------------------------------------------------------------------  * AUTHOR:  Henry Tang / Hong Kim / Alger Yeung/Don Kim  *---------------------------------------------------------------------------  * For practical purposes we only include what is necessary for current  *  Maestro3 driver. Files used in this header include:  *    kernel.dat  *    400m_src.dat  *    mini_src_lpf from srcmgr.h  *---------------------------------------------------------------------------  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_DEV_SOUND_PCI_ALLEGRO_CODE_H
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|_DEV_SOUND_PCI_ALLEGRO_CODE_H
+end_define
+
+begin_comment
+comment|/*  * Kernel  */
 end_comment
 
 begin_decl_stmt
-name|u_int16_t
-name|assp_kernel_image
+name|uint16_t
+name|gaw_kernel_vect_code
 index|[]
 init|=
 block|{
@@ -1914,17 +1930,17 @@ block|,
 literal|0x056A
 block|,
 literal|0xBE3A
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Mini sample rate converter code image  * that is to be loaded at 0x400 on the DSP.  */
+comment|/*  * MINI Sample Rate Conversion  */
 end_comment
 
 begin_decl_stmt
-name|u_int16_t
-name|assp_minisrc_image
+name|uint16_t
+name|gaw_minisrc_code_0400
 index|[]
 init|=
 block|{
@@ -2713,14 +2729,16 @@ block|,
 literal|0x0000
 block|,
 literal|0x0000
-block|,  }
+block|, }
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|u_int16_t
-name|minisrc_lpf_image
-index|[]
+name|uint16_t
+name|minisrc_lpf
+index|[
+literal|10
+index|]
 init|=
 block|{
 literal|0X0743
@@ -2746,418 +2764,14 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * an arbitrary volume we set the internal volume settings to so that the  * ac97 volume range is a little less insane.  0x7fff is max.  */
+comment|/* !_DEV_SOUND_PCI_ALLEGRO_CODE_H */
 end_comment
-
-begin_define
-define|#
-directive|define
-name|ARB_VOLUME
-value|0x6800
-end_define
-
-begin_struct
-specifier|static
-struct|struct
-name|play_vals
-block|{
-name|u_int16_t
-name|addr
-decl_stmt|,
-name|val
-decl_stmt|;
-block|}
-name|pv
-index|[]
-init|=
-block|{
-block|{
-name|CDATA_LEFT_VOLUME
-block|,
-name|ARB_VOLUME
-block|}
-block|,
-block|{
-name|CDATA_RIGHT_VOLUME
-block|,
-name|ARB_VOLUME
-block|}
-block|,
-block|{
-name|SRC3_DIRECTION_OFFSET
-block|,
-literal|0
-block|}
-block|,
-comment|/* +1, +2 are stereo/16 bit */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|3
-block|,
-literal|0x0000
-block|}
-block|,
-comment|/* fraction? */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|4
-block|,
-literal|0
-block|}
-block|,
-comment|/* first l */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|5
-block|,
-literal|0
-block|}
-block|,
-comment|/* first r */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|6
-block|,
-literal|0
-block|}
-block|,
-comment|/* second l */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|7
-block|,
-literal|0
-block|}
-block|,
-comment|/* second r */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|8
-block|,
-literal|0
-block|}
-block|,
-comment|/* delta l */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|9
-block|,
-literal|0
-block|}
-block|,
-comment|/* delta r */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|10
-block|,
-literal|0x8000
-block|}
-block|,
-comment|/* round */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|11
-block|,
-literal|0xFF00
-block|}
-block|,
-comment|/* higher bute mark */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|13
-block|,
-literal|0
-block|}
-block|,
-comment|/* temp0 */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|14
-block|,
-literal|0
-block|}
-block|,
-comment|/* c fraction */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|15
-block|,
-literal|0
-block|}
-block|,
-comment|/* counter */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|16
-block|,
-literal|8
-block|}
-block|,
-comment|/* numin */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|17
-block|,
-literal|50
-operator|*
-literal|2
-block|}
-block|,
-comment|/* numout */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|18
-block|,
-name|MINISRC_BIQUAD_STAGE
-operator|-
-literal|1
-block|}
-block|,
-comment|/* numstage */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|20
-block|,
-literal|0
-block|}
-block|,
-comment|/* filtertap */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|21
-block|,
-literal|0
-block|}
-comment|/* booster */
-block|}
-struct|;
-end_struct
-
-begin_struct
-specifier|static
-struct|struct
-name|rec_vals
-block|{
-name|u_int16_t
-name|addr
-decl_stmt|,
-name|val
-decl_stmt|;
-block|}
-name|rv
-index|[]
-init|=
-block|{
-block|{
-name|CDATA_LEFT_VOLUME
-block|,
-name|ARB_VOLUME
-block|}
-block|,
-block|{
-name|CDATA_RIGHT_VOLUME
-block|,
-name|ARB_VOLUME
-block|}
-block|,
-block|{
-name|SRC3_DIRECTION_OFFSET
-block|,
-literal|1
-block|}
-block|,
-comment|/* +1, +2 are stereo/16 bit */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|3
-block|,
-literal|0x0000
-block|}
-block|,
-comment|/* fraction? */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|4
-block|,
-literal|0
-block|}
-block|,
-comment|/* first l */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|5
-block|,
-literal|0
-block|}
-block|,
-comment|/* first r */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|6
-block|,
-literal|0
-block|}
-block|,
-comment|/* second l */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|7
-block|,
-literal|0
-block|}
-block|,
-comment|/* second r */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|8
-block|,
-literal|0
-block|}
-block|,
-comment|/* delta l */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|9
-block|,
-literal|0
-block|}
-block|,
-comment|/* delta r */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|10
-block|,
-literal|0x8000
-block|}
-block|,
-comment|/* round */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|11
-block|,
-literal|0xFF00
-block|}
-block|,
-comment|/* higher bute mark */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|13
-block|,
-literal|0
-block|}
-block|,
-comment|/* temp0 */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|14
-block|,
-literal|0
-block|}
-block|,
-comment|/* c fraction */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|15
-block|,
-literal|0
-block|}
-block|,
-comment|/* counter */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|16
-block|,
-literal|50
-block|}
-block|,
-comment|/* numin */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|17
-block|,
-literal|8
-block|}
-block|,
-comment|/* numout */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|18
-block|,
-literal|0
-block|}
-block|,
-comment|/* numstage */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|19
-block|,
-literal|0
-block|}
-block|,
-comment|/* coef */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|20
-block|,
-literal|0
-block|}
-block|,
-comment|/* filtertap */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|21
-block|,
-literal|0
-block|}
-block|,
-comment|/* booster */
-block|{
-name|SRC3_DIRECTION_OFFSET
-operator|+
-literal|22
-block|,
-literal|0xff
-block|}
-comment|/* skip lpf */
-block|}
-struct|;
-end_struct
 
 end_unit
 
