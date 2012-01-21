@@ -29,7 +29,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * IEEE 802.11s Hybrid Wireless Mesh Protocol, HWMP.  *   * Based on March 2009, D3.0 802.11s draft spec.  */
+comment|/*  * IEEE 802.11s Hybrid Wireless Mesh Protocol, HWMP.  *  * Based on March 2009, D3.0 802.11s draft spec.  */
 end_comment
 
 begin_include
@@ -3818,14 +3818,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"received PREQ, source %s"
+literal|"received PREQ, source %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|preq
 operator|->
 name|preq_origaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Acceptance criteria: if the PREQ is not for us and 	 * forwarding is disabled, discard this PREQ. 	 */
@@ -3955,14 +3954,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"discard PREQ from %s, old seq no %u<= %u"
+literal|"discard PREQ from %6D, old seq no %u<= %u"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|preq
 operator|->
 name|preq_origaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|preq
 operator|->
@@ -4015,14 +4013,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"reply to %s"
+literal|"reply to %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|preq
 operator|->
 name|preq_origaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Build and send a PREP frame. 		 */
@@ -4260,12 +4257,11 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"unable to add root mesh path to %s"
+literal|"unable to add root mesh path to %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|rootmac
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|vap
@@ -4286,12 +4282,11 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"root mesh station @ %s"
+literal|"root mesh station @ %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|rootmac
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Reply with a PREP if we don't have a path to the root 		 * or if the root sent us a proactive PREQ. 		 */
@@ -4496,14 +4491,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"forward PREQ from %s"
+literal|"forward PREQ from %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|preq
 operator|->
 name|preq_origaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 comment|/* 				 * Propagate the original PREQ. 				 */
@@ -4597,14 +4591,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"intermediate reply for PREQ from %s"
+literal|"intermediate reply for PREQ from %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|preq
 operator|->
 name|preq_origaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|prep
@@ -4766,15 +4759,14 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"unable to add PREQ path to %s"
+literal|"unable to add PREQ path to %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|PREQ_TADDR
 argument_list|(
 literal|0
 argument_list|)
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|vap
@@ -4837,14 +4829,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"forward PREQ from %s"
+literal|"forward PREQ from %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|preq
 operator|->
 name|preq_origaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|ppreq
@@ -5141,14 +5132,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"received PREP from %s"
+literal|"received PREP from %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|rt
@@ -5205,14 +5195,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"unable to add PREP path to %s"
+literal|"unable to add PREP path to %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|vap
@@ -5328,14 +5317,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"discard PREP from %s, old seq no %u<= %u"
+literal|"discard PREP from %6D, old seq no %u<= %u"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|prep
 operator|->
@@ -5399,14 +5387,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"propagate PREP from %s"
+literal|"propagate PREP from %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -5502,14 +5489,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"discard PREP for %s, route is marked PROXY"
+literal|"discard PREP for %6D, route is marked PROXY"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|vap
@@ -5572,7 +5558,7 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"%s path to %s, hopcount %d:%d metric %d:%d"
+literal|"%s path to %6D, hopcount %d:%d metric %d:%d"
 argument_list|,
 name|rt
 operator|->
@@ -5584,12 +5570,11 @@ literal|"prefer"
 else|:
 literal|"update"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_origaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|rt
 operator|->
@@ -5660,14 +5645,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"ignore PREP for %s, hopcount %d:%d metric %d:%d"
+literal|"ignore PREP for %6D, hopcount %d:%d metric %d:%d"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|rt
 operator|->
@@ -6363,14 +6347,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"propagate PERR from %s"
+literal|"propagate PERR from %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|wh
 operator|->
 name|i_addr2
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|memcpy
@@ -7010,12 +6993,11 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"unable to add discovery path to %s"
+literal|"unable to add discovery path to %6D"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|dest
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|vap
