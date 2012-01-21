@@ -157,15 +157,25 @@ name|VT_CONSDEV_DECLARE
 argument_list|(
 name|vt_ofwfb_driver
 argument_list|,
+name|PIXEL_WIDTH
+argument_list|(
 literal|1600
+argument_list|)
 argument_list|,
+name|PIXEL_HEIGHT
+argument_list|(
 literal|1200
+argument_list|)
 argument_list|,
 operator|&
 name|ofwfb_conssoftc
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/* XXX: hardcoded max size */
+end_comment
 
 begin_decl_stmt
 specifier|static
