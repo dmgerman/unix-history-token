@@ -707,6 +707,18 @@ end_define
 begin_define
 define|#
 directive|define
+name|HWMP_SEQ_EQ
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((int32_t)((a)-(b)) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HWMP_SEQ_GT
 parameter_list|(
 name|a
@@ -726,6 +738,22 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((int32_t)((a)-(b))>= 0)
+end_define
+
+begin_comment
+comment|/* The longer one of the lifetime should be stored as new lifetime */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MESH_ROUTE_LIFETIME_MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(a> b ? a : b)
 end_define
 
 begin_comment
@@ -3763,9 +3791,25 @@ init|=
 name|NULL
 decl_stmt|;
 name|struct
+name|ieee80211_mesh_route
+modifier|*
+name|rttarg
+init|=
+name|NULL
+decl_stmt|;
+name|struct
 name|ieee80211_hwmp_route
 modifier|*
 name|hrorig
+init|=
+name|NULL
+decl_stmt|;
+name|struct
+name|ieee80211_hwmp_route
+modifier|*
+name|hrtarg
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|ieee80211_hwmp_state
@@ -3827,9 +3871,10 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Acceptance criteria: if the PREQ is not for us and 	 * forwarding is disabled, discard this PREQ. 	 */
+comment|/* 	 * Acceptance criteria: if the PREQ is not for us or not broadcast 	 * AND forwarding is disabled, discard this PREQ. 	 * XXX: need to check PROXY 	 */
 if|if
 condition|(
+operator|(
 operator|!
 name|IEEE80211_ADDR_EQ
 argument_list|(
@@ -3842,6 +3887,16 @@ argument_list|(
 literal|0
 argument_list|)
 argument_list|)
+operator|||
+operator|!
+name|IEEE80211_IS_MULTICAST
+argument_list|(
+name|PREQ_TADDR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+operator|)
 operator|&&
 operator|!
 operator|(
@@ -3872,6 +3927,91 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+comment|/* 	 * Acceptance criteria: if unicast addressed  	 * AND no valid forwarding for Target of PREQ, discard this PREQ. 	 */
+name|rttarg
+operator|=
+name|ieee80211_mesh_rt_find
+argument_list|(
+name|vap
+argument_list|,
+name|PREQ_TADDR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|rttarg
+operator|!=
+name|NULL
+condition|)
+name|hrtarg
+operator|=
+name|IEEE80211_MESH_ROUTE_PRIV
+argument_list|(
+name|rttarg
+argument_list|,
+expr|struct
+name|ieee80211_hwmp_route
+argument_list|)
+expr_stmt|;
+comment|/* Address mode: ucast */
+if|if
+condition|(
+operator|(
+name|preq
+operator|->
+name|preq_flags
+operator|&
+name|IEEE80211_MESHPREQ_FLAGS_AM
+operator|)
+operator|==
+literal|0
+operator|&&
+name|rttarg
+operator|==
+name|NULL
+operator|&&
+operator|!
+name|IEEE80211_ADDR_EQ
+argument_list|(
+name|vap
+operator|->
+name|iv_myaddr
+argument_list|,
+name|PREQ_TADDR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|IEEE80211_DISCARD_MAC
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|preq
+operator|->
+name|preq_origaddr
+argument_list|,
+name|NULL
+argument_list|,
+literal|"unicast addressed PREQ of unknown target %6D"
+argument_list|,
+name|PREQ_TADDR
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* PREQ ACCEPTED */
 name|rtorig
 operator|=
 name|ieee80211_mesh_rt_find
@@ -3889,6 +4029,7 @@ name|rtorig
 operator|==
 name|NULL
 condition|)
+block|{
 name|rtorig
 operator|=
 name|ieee80211_mesh_rt_add
@@ -3900,6 +4041,24 @@ operator|->
 name|preq_origaddr
 argument_list|)
 expr_stmt|;
+name|IEEE80211_NOTE
+argument_list|(
+name|vap
+argument_list|,
+name|IEEE80211_MSG_HWMP
+argument_list|,
+name|ni
+argument_list|,
+literal|"adding originator %6D"
+argument_list|,
+name|preq
+operator|->
+name|preq_origaddr
+argument_list|,
+literal|":"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|rtorig
@@ -3920,21 +4079,10 @@ expr|struct
 name|ieee80211_hwmp_route
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sequence number validation. 	 */
+comment|/* Data creation and update of forwarding information 	 * according to Table 11C-8 for originator mesh STA. 	 */
 if|if
 condition|(
-name|HWMP_SEQ_LEQ
-argument_list|(
-name|preq
-operator|->
-name|preq_id
-argument_list|,
-name|hrorig
-operator|->
-name|hr_preqid
-argument_list|)
-operator|&&
-name|HWMP_SEQ_LEQ
+name|HWMP_SEQ_GT
 argument_list|(
 name|preq
 operator|->
@@ -3944,6 +4092,126 @@ name|hrorig
 operator|->
 name|hr_seq
 argument_list|)
+operator|||
+operator|(
+name|HWMP_SEQ_EQ
+argument_list|(
+name|preq
+operator|->
+name|preq_origseq
+argument_list|,
+name|hrorig
+operator|->
+name|hr_seq
+argument_list|)
+operator|&&
+name|preq
+operator|->
+name|preq_metric
+operator|<
+name|rtorig
+operator|->
+name|rt_metric
+operator|)
+condition|)
+block|{
+name|hrorig
+operator|->
+name|hr_seq
+operator|=
+name|preq
+operator|->
+name|preq_origseq
+expr_stmt|;
+name|IEEE80211_ADDR_COPY
+argument_list|(
+name|rtorig
+operator|->
+name|rt_nexthop
+argument_list|,
+name|wh
+operator|->
+name|i_addr2
+argument_list|)
+expr_stmt|;
+name|rtorig
+operator|->
+name|rt_metric
+operator|=
+name|preq
+operator|->
+name|preq_metric
+operator|+
+name|ms
+operator|->
+name|ms_pmetric
+operator|->
+name|mpm_metric
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
+name|rtorig
+operator|->
+name|rt_nhops
+operator|=
+name|preq
+operator|->
+name|preq_hopcount
+operator|+
+literal|1
+expr_stmt|;
+name|rtorig
+operator|->
+name|rt_lifetime
+operator|=
+name|MESH_ROUTE_LIFETIME_MAX
+argument_list|(
+name|preq
+operator|->
+name|preq_lifetime
+argument_list|,
+name|rtorig
+operator|->
+name|rt_lifetime
+argument_list|)
+expr_stmt|;
+comment|/* path to orig is valid now */
+name|rtorig
+operator|->
+name|rt_flags
+operator||=
+name|IEEE80211_MESHRT_FLAGS_VALID
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|hrtarg
+operator|!=
+name|NULL
+operator|&&
+name|HWMP_SEQ_EQ
+argument_list|(
+name|hrtarg
+operator|->
+name|hr_seq
+argument_list|,
+name|PREQ_TSEQ
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+operator|&&
+operator|(
+name|rtorig
+operator|->
+name|rt_flags
+operator|&
+name|IEEE80211_MESHRT_FLAGS_VALID
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
 name|IEEE80211_NOTE
@@ -3973,22 +4241,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|hrorig
-operator|->
-name|hr_preqid
-operator|=
-name|preq
-operator|->
-name|preq_id
-expr_stmt|;
-name|hrorig
-operator|->
-name|hr_seq
-operator|=
-name|preq
-operator|->
-name|preq_origseq
-expr_stmt|;
+comment|/* 	 * Forwarding information for transmitter mesh STA 	 * [OPTIONAL: if metric improved] 	 */
 comment|/* 	 * Check if the PREQ is addressed to us. 	 */
 if|if
 condition|(
@@ -4500,7 +4753,14 @@ argument_list|,
 literal|":"
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Propagate the original PREQ. 				 */
+comment|/* 				 * Propagate the original PREQ. 				 * PREQ is unicast now to rt->rt_nexthop 				 */
+name|ppreq
+operator|.
+name|preq_flags
+operator|&=
+operator|~
+name|IEEE80211_MESHPREQ_FLAGS_AM
+expr_stmt|;
 name|ppreq
 operator|.
 name|preq_hopcount
@@ -4526,7 +4786,7 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-comment|/* 				 * Set TO and unset RF bits because we are going 				 * to send a PREP next. 				 */
+comment|/* 				 * Set TO and unset RF bits because we are 				 * going to send a PREP next. 				 */
 name|ppreq
 operator|.
 name|preq_targets
@@ -4558,7 +4818,9 @@ name|vap
 operator|->
 name|iv_myaddr
 argument_list|,
-name|broadcastaddr
+name|rt
+operator|->
+name|rt_nexthop
 argument_list|,
 operator|&
 name|ppreq
@@ -4968,7 +5230,7 @@ operator|->
 name|hs_lastpreq
 argument_list|)
 expr_stmt|;
-comment|/* 	 * mesh preq action frame format 	 *     [6] da 	 *     [6] sa  	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] mesh path request 	 */
+comment|/* 	 * mesh preq action frame format 	 *     [6] da 	 *     [6] sa 	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] mesh path request 	 */
 name|preq
 operator|->
 name|preq_ie
@@ -5084,6 +5346,11 @@ decl_stmt|,
 modifier|*
 name|next
 decl_stmt|;
+name|uint32_t
+name|metric
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * Acceptance criteria: if the corresponding PREQ was not generated 	 * by us and forwarding is disabled, discard this PREP. 	 */
 if|if
 condition|(
@@ -5159,7 +5426,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If we have no entry this could be a reply to a root PREQ. 		 */
+comment|/* 		 * If we have no entry this could be a reply to a root PREQ. 		 * XXX: not true anymore cause we dont create entry for target 		 *  when propagating PREQs like the old code did. 		 */
 if|if
 condition|(
 name|hs
@@ -5262,14 +5529,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"add root path to %s nhops %d metric %d (PREP)"
+literal|"add root path to %6D nhops %d metric %lu (PREP)"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|rt
 operator|->
@@ -5434,17 +5700,6 @@ argument_list|(
 name|ni
 argument_list|)
 expr_stmt|;
-name|IEEE80211_ADDR_COPY
-argument_list|(
-name|pprep
-operator|.
-name|prep_targetaddr
-argument_list|,
-name|vap
-operator|->
-name|iv_myaddr
-argument_list|)
-expr_stmt|;
 name|hwmp_send_prep
 argument_list|(
 name|ni
@@ -5505,10 +5760,17 @@ operator|.
 name|is_hwmp_proxy
 operator|++
 expr_stmt|;
+comment|/* NB: first path discovery always fails */
 block|}
 elseif|else
 if|if
 condition|(
+name|hr
+operator|->
+name|hr_origseq
+operator|==
+literal|0
+operator|||
 name|prep
 operator|->
 name|prep_origseq
@@ -5550,6 +5812,29 @@ name|rt_metric
 operator|)
 condition|)
 block|{
+name|hr
+operator|->
+name|hr_origseq
+operator|=
+name|prep
+operator|->
+name|prep_origseq
+expr_stmt|;
+name|metric
+operator|=
+name|prep
+operator|->
+name|prep_metric
+operator|+
+name|ms
+operator|->
+name|ms_pmetric
+operator|->
+name|mpm_metric
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|IEEE80211_NOTE
 argument_list|(
 name|vap
@@ -5611,6 +5896,8 @@ operator|=
 name|prep
 operator|->
 name|prep_hopcount
+operator|+
+literal|1
 expr_stmt|;
 name|rt
 operator|->
@@ -5624,9 +5911,7 @@ name|rt
 operator|->
 name|rt_metric
 operator|=
-name|prep
-operator|->
-name|prep_metric
+name|metric
 expr_stmt|;
 name|rt
 operator|->
@@ -5682,14 +5967,13 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|ni
 argument_list|,
-literal|"discard PREP for %s, wrong seqno %u != %u"
+literal|"discard PREP for %6D, wrong orig seqno %u != %u"
 argument_list|,
-name|ether_sprintf
-argument_list|(
 name|prep
 operator|->
 name|prep_targetaddr
-argument_list|)
+argument_list|,
+literal|":"
 argument_list|,
 name|prep
 operator|->
@@ -5697,7 +5981,7 @@ name|prep_origseq
 argument_list|,
 name|hr
 operator|->
-name|hr_seq
+name|hr_origseq
 argument_list|)
 expr_stmt|;
 name|vap
@@ -5823,7 +6107,7 @@ name|prep
 parameter_list|)
 block|{
 comment|/* NB: there's no PREP minimum interval. */
-comment|/* 	 * mesh prep action frame format 	 *     [6] da 	 *     [6] sa  	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] mesh path reply 	 */
+comment|/* 	 * mesh prep action frame format 	 *     [6] da 	 *     [6] sa 	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] mesh path reply 	 */
 name|prep
 operator|->
 name|prep_ie
@@ -6773,7 +7057,7 @@ modifier|*
 name|rann
 parameter_list|)
 block|{
-comment|/* 	 * mesh rann action frame format 	 *     [6] da 	 *     [6] sa  	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] root annoucement 	 */
+comment|/* 	 * mesh rann action frame format 	 *     [6] da 	 *     [6] sa 	 *     [6] addr3 = sa 	 *     [1] action 	 *     [1] category 	 *     [tlv] root annoucement 	 */
 name|rann
 operator|->
 name|rann_ie
@@ -7080,7 +7364,7 @@ name|IEEE80211_MSG_HWMP
 argument_list|,
 name|dest
 argument_list|,
-literal|"start path discovery (src %s)"
+literal|"start path discovery (src %s), target seq %u"
 argument_list|,
 name|m
 operator|==
@@ -7101,14 +7385,18 @@ argument_list|)
 operator|->
 name|ether_shost
 argument_list|)
+argument_list|,
+name|hr
+operator|->
+name|hr_seq
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Try to discover the path for this node. 			 */
+comment|/* 			 * Try to discover the path for this node. 			 * Group addressed PREQ Case A 			 */
 name|preq
 operator|.
 name|preq_flags
 operator|=
-literal|0
+name|IEEE80211_MESHPREQ_FLAGS_AM
 expr_stmt|;
 name|preq
 operator|.
@@ -7225,7 +7513,9 @@ argument_list|(
 literal|0
 argument_list|)
 operator|=
-literal|0
+name|hr
+operator|->
+name|hr_seq
 expr_stmt|;
 comment|/* XXX check return value */
 name|hwmp_send_preq
