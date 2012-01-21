@@ -1110,7 +1110,11 @@ name|max_free
 else|:
 name|kmem_map
 operator|->
-name|size
+name|max_offset
+operator|-
+name|kmem_map
+operator|->
+name|min_offset
 expr_stmt|;
 name|vm_map_unlock_read
 argument_list|(
@@ -2819,7 +2823,7 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes. 	 * On an X86, a VM_KMEM_SIZE_SCALE value of 4 is good, while 	 * a VM_KMEM_SIZE of 12MB is a fair compromise.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available, and on an X86 with a total KVA space of 256MB, 	 * try to keep VM_KMEM_SIZE_MAX at 80MB or below. 	 * 	 * Note that the kmem_map is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
+comment|/* 	 * Try to auto-tune the kernel memory size, so that it is 	 * more applicable for a wider range of machine sizes.  The 	 * VM_KMEM_SIZE_MAX is dependent on the maximum KVA space 	 * available. 	 * 	 * Note that the kmem_map is also used by the zone allocator, 	 * so make sure that there is enough space. 	 */
 name|vm_kmem_size
 operator|=
 name|VM_KMEM_SIZE
@@ -2961,30 +2965,22 @@ operator|&
 name|vm_kmem_size
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Limit kmem virtual size to twice the physical memory. 	 * This allows for kmem map sparseness, but limits the size 	 * to something sane. Be careful to not overflow the 32bit 	 * ints while doing the check. 	 */
+comment|/* 	 * Limit kmem virtual size to twice the physical memory. 	 * This allows for kmem map sparseness, but limits the size 	 * to something sane.  Be careful to not overflow the 32bit 	 * ints while doing the check or the adjustment. 	 */
 if|if
 condition|(
-operator|(
-operator|(
 name|vm_kmem_size
 operator|/
 literal|2
-operator|)
 operator|/
 name|PAGE_SIZE
-operator|)
 operator|>
-name|cnt
-operator|.
-name|v_page_count
+name|mem_size
 condition|)
 name|vm_kmem_size
 operator|=
 literal|2
 operator|*
-name|cnt
-operator|.
-name|v_page_count
+name|mem_size
 operator|*
 name|PAGE_SIZE
 expr_stmt|;
