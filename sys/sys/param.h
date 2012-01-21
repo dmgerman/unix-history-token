@@ -67,6 +67,22 @@ begin_comment
 comment|/* Master, propagated to newvers */
 end_comment
 
+begin_comment
+comment|/*  * __FreeBSD_kernel__ indicates that this system uses the kernel of FreeBSD,  * which by definition is always true on FreeBSD. This macro is also defined  * on other systems that use the kernel of FreeBSD, such as GNU/kFreeBSD.  *  * It is tempting to use this macro in userland code when we want to enable  * kernel-specific routines, and in fact it's fine to do this in code that  * is part of FreeBSD itself.  However, be aware that as presence of this  * macro is still not widespread (e.g. older FreeBSD versions, 3rd party  * compilers, etc), it is STRONGLY DISCOURAGED to check for this macro in  * external applications without also checking for __FreeBSD__ as an  * alternative.  */
+end_comment
+
+begin_undef
+undef|#
+directive|undef
+name|__FreeBSD_kernel__
+end_undef
+
+begin_define
+define|#
+directive|define
+name|__FreeBSD_kernel__
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
