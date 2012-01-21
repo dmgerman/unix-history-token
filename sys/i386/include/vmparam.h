@@ -539,7 +539,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * Ceiling on amount of kmem_map kva space.  */
+comment|/*  * Ceiling on the amount of kmem_map KVA space: 40% of the entire KVA space  * rounded to the nearest multiple of the superpage size.  */
 end_comment
 
 begin_ifndef
@@ -552,7 +552,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_MAX
-value|((VM_MAX_KERNEL_ADDRESS - \     VM_MIN_KERNEL_ADDRESS) * 2 / 5)
+value|(((((VM_MAX_KERNEL_ADDRESS - \     VM_MIN_KERNEL_ADDRESS)>> (PDRSHIFT - 2)) + 5) / 10)<< PDRSHIFT)
 end_define
 
 begin_endif
