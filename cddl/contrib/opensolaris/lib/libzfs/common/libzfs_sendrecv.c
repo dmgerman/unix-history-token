@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_include
@@ -3308,6 +3308,8 @@ operator|)
 name|zfs_iter_snapshots
 argument_list|(
 name|zhp
+argument_list|,
+name|B_FALSE
 argument_list|,
 name|send_iterate_snap
 argument_list|,

@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -8906,7 +8906,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * inputs:  * zc_name		name of filesystem  * zc_cookie		zap cursor  * zc_nvlist_dst_size	size of buffer for property nvlist  *  * outputs:  * zc_name		name of next snapshot  * zc_objset_stats	stats  * zc_nvlist_dst	property nvlist  * zc_nvlist_dst_size	size of property nvlist  */
+comment|/*  * inputs:  * zc_name		name of filesystem  * zc_cookie		zap cursor  * zc_nvlist_dst_size	size of buffer for property nvlist  * zc_simple		when set, only name is requested  *  * outputs:  * zc_name		name of next snapshot  * zc_objset_stats	stats  * zc_nvlist_dst	property nvlist  * zc_nvlist_dst_size	size of property nvlist  */
 end_comment
 
 begin_function
@@ -8937,6 +8937,11 @@ operator|->
 name|zc_cookie
 operator|==
 literal|0
+operator|&&
+operator|!
+name|zc
+operator|->
+name|zc_simple
 condition|)
 operator|(
 name|void
@@ -9067,6 +9072,11 @@ condition|(
 name|error
 operator|==
 literal|0
+operator|&&
+operator|!
+name|zc
+operator|->
+name|zc_simple
 condition|)
 block|{
 name|dsl_dataset_t
