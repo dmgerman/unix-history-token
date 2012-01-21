@@ -1674,7 +1674,7 @@ parameter_list|(
 name|pmap_t
 name|pmap
 parameter_list|,
-name|unsigned
+name|u_int
 name|ptepindex
 parameter_list|,
 name|int
@@ -1782,6 +1782,19 @@ name|void
 name|pmap_set_pg
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|__inline
+name|void
+name|pagezero
+parameter_list|(
+name|void
+modifier|*
+name|page
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -7362,7 +7375,6 @@ condition|;
 name|i
 operator|++
 control|)
-block|{
 if|if
 condition|(
 operator|(
@@ -7378,7 +7390,7 @@ operator|)
 operator|==
 literal|0
 condition|)
-name|bzero
+name|pagezero
 argument_list|(
 name|pmap
 operator|->
@@ -7389,11 +7401,8 @@ name|i
 operator|*
 name|NPDEPG
 operator|)
-argument_list|,
-name|PAGE_SIZE
 argument_list|)
 expr_stmt|;
-block|}
 name|mtx_lock_spin
 argument_list|(
 operator|&
@@ -7547,7 +7556,7 @@ parameter_list|(
 name|pmap_t
 name|pmap
 parameter_list|,
-name|unsigned
+name|u_int
 name|ptepindex
 parameter_list|,
 name|int
@@ -7726,7 +7735,7 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|unsigned
+name|u_int
 name|ptepindex
 decl_stmt|;
 name|pd_entry_t
@@ -12582,7 +12591,7 @@ operator|=
 name|pdnxt
 control|)
 block|{
-name|unsigned
+name|u_int
 name|pdirindex
 decl_stmt|;
 comment|/* 		 * Calculate index for next page table. 		 */
@@ -13521,7 +13530,7 @@ name|obits
 decl_stmt|,
 name|pbits
 decl_stmt|;
-name|unsigned
+name|u_int
 name|pdirindex
 decl_stmt|;
 name|pdnxt
@@ -15844,7 +15853,7 @@ operator|<
 name|VM_MAXUSER_ADDRESS
 condition|)
 block|{
-name|unsigned
+name|u_int
 name|ptepindex
 decl_stmt|;
 name|pd_entry_t
@@ -16871,7 +16880,7 @@ decl_stmt|;
 name|pd_entry_t
 name|srcptepaddr
 decl_stmt|;
-name|unsigned
+name|u_int
 name|ptepindex
 decl_stmt|;
 name|KASSERT
@@ -22872,7 +22881,7 @@ begin_function_decl
 name|void
 name|pmap_pvdump
 parameter_list|(
-name|vm_offset_t
+name|vm_paddr_t
 name|pa
 parameter_list|)
 function_decl|;
