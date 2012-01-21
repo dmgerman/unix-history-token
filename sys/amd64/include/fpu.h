@@ -264,32 +264,11 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_struct
-struct|struct
+begin_struct_decl
+struct_decl|struct
 name|fpu_kern_ctx
-block|{
-name|struct
-name|savefpu
-name|hwstate
-decl_stmt|;
-name|struct
-name|savefpu
-modifier|*
-name|prev
-decl_stmt|;
-name|uint32_t
-name|flags
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|FPU_KERN_CTX_FPUINITDONE
-value|0x01
-end_define
+struct_decl|;
+end_struct_decl
 
 begin_define
 define|#
@@ -299,6 +278,13 @@ parameter_list|(
 name|pcb
 parameter_list|)
 value|(((pcb)->pcb_flags& PCB_KERNFPU) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|XSAVE_AREA_ALIGN
+value|64
 end_define
 
 begin_endif
@@ -406,6 +392,17 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|fpusave
+parameter_list|(
+name|void
+modifier|*
+name|addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|fpusetregs
 parameter_list|(
 name|struct
@@ -417,6 +414,32 @@ name|struct
 name|savefpu
 modifier|*
 name|addr
+parameter_list|,
+name|char
+modifier|*
+name|xfpustate
+parameter_list|,
+name|size_t
+name|xfpustate_size
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fpusetxstate
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|char
+modifier|*
+name|xfpustate
+parameter_list|,
+name|size_t
+name|xfpustate_size
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -438,6 +461,30 @@ name|struct
 name|thread
 modifier|*
 name|td
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|fpu_kern_ctx
+modifier|*
+name|fpu_kern_alloc_ctx
+parameter_list|(
+name|u_int
+name|flags
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|fpu_kern_free_ctx
+parameter_list|(
+name|struct
+name|fpu_kern_ctx
+modifier|*
+name|ctx
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -500,7 +547,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * Flags for fpu_kern_enter() and fpu_kern_thread().  */
+comment|/*  * Flags for fpu_kern_alloc_ctx(), fpu_kern_enter() and fpu_kern_thread().  */
 end_comment
 
 begin_define
@@ -508,6 +555,13 @@ define|#
 directive|define
 name|FPU_KERN_NORMAL
 value|0x0000
+end_define
+
+begin_define
+define|#
+directive|define
+name|FPU_KERN_NOWAIT
+value|0x0001
 end_define
 
 begin_endif
