@@ -30,6 +30,12 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/nfs/nfsport.h>
 end_include
 
