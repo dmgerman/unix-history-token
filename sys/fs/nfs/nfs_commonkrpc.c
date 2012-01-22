@@ -24,12 +24,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_kdtrace.h"
 end_include
 
