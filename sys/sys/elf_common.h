@@ -3015,7 +3015,7 @@ value|28
 end_define
 
 begin_comment
-comment|/* Size in bytes of the array of 				   terminationfunctions. */
+comment|/* Size in bytes of the array of 				   termination functions. */
 end_comment
 
 begin_define
