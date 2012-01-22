@@ -3024,6 +3024,12 @@ name|VDF_DEAD
 expr_stmt|;
 return|return;
 block|}
+comment|/* Initialize any early-boot keyboard drivers */
+name|kbd_configure
+argument_list|(
+name|KB_CONF_PROBE_ONLY
+argument_list|)
+expr_stmt|;
 name|vd
 operator|->
 name|vd_unit
