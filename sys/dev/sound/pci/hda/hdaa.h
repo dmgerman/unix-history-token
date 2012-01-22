@@ -257,11 +257,26 @@ parameter_list|)
 value|(((v)& HDAA_AMP_MUTE_RIGHT)>> 1)
 end_define
 
+begin_comment
+comment|/* Widget in playback receiving signal from recording. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|HDAA_ADC_MONITOR
 value|(1<< 0)
+end_define
+
+begin_comment
+comment|/* Input mixer widget needs volume control as destination. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|HDAA_IMIX_AS_DST
+value|(2<< 0)
 end_define
 
 begin_define
@@ -291,6 +306,42 @@ directive|define
 name|HDA_MAX_NAMELEN
 value|32
 end_define
+
+begin_struct_decl
+struct_decl|struct
+name|hdaa_audio_as
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hdaa_audio_ctl
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hdaa_chan
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hdaa_devinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hdaa_pcm_devinfo
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
+name|hdaa_widget
+struct_decl|;
+end_struct_decl
 
 begin_struct
 struct|struct
@@ -464,9 +515,29 @@ name|muted
 decl_stmt|;
 name|uint32_t
 name|ossmask
-decl_stmt|,
-name|possmask
 decl_stmt|;
+comment|/* OSS devices that may affect control. */
+name|int
+name|devleft
+index|[
+name|SOUND_MIXER_NRDEVICES
+index|]
+decl_stmt|;
+comment|/* Left ampl in 1/4dB. */
+name|int
+name|devright
+index|[
+name|SOUND_MIXER_NRDEVICES
+index|]
+decl_stmt|;
+comment|/* Right ampl in 1/4dB. */
+name|int
+name|devmute
+index|[
+name|SOUND_MIXER_NRDEVICES
+index|]
+decl_stmt|;
+comment|/* Mutes per OSS device. */
 block|}
 struct|;
 end_struct
@@ -535,6 +606,11 @@ name|int
 name|mixed
 decl_stmt|;
 comment|/* Mixed/multiplexed recording, not multichannel. */
+name|struct
+name|hdaa_pcm_devinfo
+modifier|*
+name|pdevinfo
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -550,6 +626,11 @@ name|struct
 name|hdaa_devinfo
 modifier|*
 name|devinfo
+decl_stmt|;
+name|struct
+name|snd_mixer
+modifier|*
+name|mixer
 decl_stmt|;
 name|int
 name|index
@@ -575,6 +656,20 @@ name|SOUND_MIXER_NRDEVICES
 index|]
 decl_stmt|;
 name|int
+name|minamp
+index|[
+name|SOUND_MIXER_NRDEVICES
+index|]
+decl_stmt|;
+comment|/* Minimal amps in 1/4dB. */
+name|int
+name|maxamp
+index|[
+name|SOUND_MIXER_NRDEVICES
+index|]
+decl_stmt|;
+comment|/* Maximal amps in 1/4dB. */
+name|int
 name|chan_size
 decl_stmt|;
 name|int
@@ -583,6 +678,14 @@ decl_stmt|;
 name|u_char
 name|digital
 decl_stmt|;
+name|uint32_t
+name|ossmask
+decl_stmt|;
+comment|/* Mask of supported OSS devices. */
+name|uint32_t
+name|recsrc
+decl_stmt|;
+comment|/* Mask of supported OSS sources. */
 block|}
 struct|;
 end_struct
@@ -808,6 +911,65 @@ comment|/* stripe to use to all ios. */
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|MINQDB
+parameter_list|(
+name|ctl
+parameter_list|)
+define|\
+value|((0 - (ctl)->offset) * ((ctl)->size + 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|MAXQDB
+parameter_list|(
+name|ctl
+parameter_list|)
+define|\
+value|(((ctl)->step - (ctl)->offset) * ((ctl)->size + 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|RANGEQDB
+parameter_list|(
+name|ctl
+parameter_list|)
+define|\
+value|((ctl)->step * ((ctl)->size + 1))
+end_define
+
+begin_define
+define|#
+directive|define
+name|VAL2QDB
+parameter_list|(
+name|ctl
+parameter_list|,
+name|val
+parameter_list|)
+define|\
+value|(((ctl)->size + 1) * ((int)(val) - (ctl)->offset))
+end_define
+
+begin_define
+define|#
+directive|define
+name|QDB2VAL
+parameter_list|(
+name|ctl
+parameter_list|,
+name|qdb
+parameter_list|)
+define|\
+value|imax(imin((((qdb) + (ctl)->size / 2 * ((qdb)> 0 ? 1 : -1)) /	\ 	 ((ctl)->size + 1) + (ctl)->offset), (ctl)->step), 0)
+end_define
 
 begin_define
 define|#
