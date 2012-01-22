@@ -44,7 +44,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-literal|"IPDIVERT requires INET."
+literal|"IPDIVERT requires INET"
 end_error
 
 begin_endif

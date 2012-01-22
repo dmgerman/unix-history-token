@@ -195,7 +195,7 @@ end_else
 begin_error
 error|#
 directive|error
-error|ip_gre input without IP?
+literal|"ip_gre requires INET"
 end_error
 
 begin_endif
