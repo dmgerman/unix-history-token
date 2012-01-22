@@ -1937,10 +1937,6 @@ name|delay_func
 operator|=
 name|delay_boot
 expr_stmt|;
-comment|/* 	 * Initialize the console before printing anything. 	 * NB: the low-level console drivers require a working DELAY() at 	 * this point. 	 */
-name|cninit
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Panic if there is no metadata.  Most likely the kernel was booted 	 * directly, instead of through loader(8). 	 */
 if|if
 condition|(
@@ -1965,16 +1961,14 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|printf
+name|OF_printf
 argument_list|(
 literal|"sparc64_init: missing loader metadata.\n"
 literal|"This probably means you are not using loader(8).\n"
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"sparc64_init"
-argument_list|)
+name|OF_exit
+argument_list|()
 expr_stmt|;
 block|}
 comment|/* 	 * Work around the broken loader behavior of not demapping no 	 * longer used kernel TLB slots when unloading the kernel or 	 * modules. 	 */
@@ -2088,11 +2082,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+block|{
+name|OF_printf
 argument_list|(
 literal|"sparc64_init: cannot determine number of dTLB slots"
 argument_list|)
 expr_stmt|;
+name|OF_exit
+argument_list|()
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|OF_getprop
@@ -2115,11 +2114,16 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+block|{
+name|OF_printf
 argument_list|(
 literal|"sparc64_init: cannot determine number of iTLB slots"
 argument_list|)
 expr_stmt|;
+name|OF_exit
+argument_list|()
+expr_stmt|;
+block|}
 comment|/* 	 * Initialize and enable the caches.  Note that his may include 	 * applying workarounds. 	 */
 name|cache_init
 argument_list|(
@@ -2408,6 +2412,10 @@ argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize mutexes. 	 */
 name|mutex_init
+argument_list|()
+expr_stmt|;
+comment|/* 	 * Initialize console now that we have a reasonable set of system 	 * services. 	 */
+name|cninit
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Finish the interrupt initialization now that mutexes work and 	 * enable them. 	 */
