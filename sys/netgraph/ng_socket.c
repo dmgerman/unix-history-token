@@ -594,6 +594,62 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Per-node private data */
+end_comment
+
+begin_struct
+struct|struct
+name|ngsock
+block|{
+name|struct
+name|ng_node
+modifier|*
+name|node
+decl_stmt|;
+comment|/* the associated netgraph node */
+name|struct
+name|ngpcb
+modifier|*
+name|datasock
+decl_stmt|;
+comment|/* optional data socket */
+name|struct
+name|ngpcb
+modifier|*
+name|ctlsock
+decl_stmt|;
+comment|/* optional control socket */
+name|int
+name|flags
+decl_stmt|;
+name|int
+name|refs
+decl_stmt|;
+name|struct
+name|mtx
+name|mtx
+decl_stmt|;
+comment|/* mtx to wait on */
+name|int
+name|error
+decl_stmt|;
+comment|/* place to store error */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|NGS_FLAG_NOLINGER
+value|1
+end_define
+
+begin_comment
+comment|/* close with last hook */
+end_comment
+
+begin_comment
 comment|/*************************************************************** 	Control sockets ***************************************************************/
 end_comment
 
@@ -2311,17 +2367,15 @@ name|node
 operator|=
 name|node
 expr_stmt|;
-comment|/* Store a hint for netstat(1). */
-name|priv
+name|pcbp
 operator|->
 name|node_id
 operator|=
-name|priv
-operator|->
 name|node
 operator|->
 name|nd_ID
 expr_stmt|;
+comment|/* hint for netstat(1) */
 comment|/* Link the node and the private data. */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
@@ -2575,6 +2629,12 @@ operator|->
 name|sockdata
 operator|=
 name|NULL
+expr_stmt|;
+name|pcbp
+operator|->
+name|node_id
+operator|=
+literal|0
 expr_stmt|;
 name|ng_socket_free_priv
 argument_list|(
@@ -2921,6 +2981,17 @@ name|sockdata
 operator|=
 name|priv
 expr_stmt|;
+name|pcbp
+operator|->
+name|node_id
+operator|=
+name|priv
+operator|->
+name|node
+operator|->
+name|nd_ID
+expr_stmt|;
+comment|/* hint for netstat(1) */
 name|priv
 operator|->
 name|refs
