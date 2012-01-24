@@ -6206,7 +6206,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RADIX_MPATH
-comment|/* 			 * in case address alias finds the first address 			 * e.g. ifconfig bge0 192.103.54.246/24 			 * e.g. ifconfig bge0 192.103.54.247/24 			 * the address set in the route is 192.103.54.246 			 * so we need to replace it with 192.103.54.247 			 */
+comment|/* 			 * in case address alias finds the first address 			 * e.g. ifconfig bge0 192.0.2.246/24 			 * e.g. ifconfig bge0 192.0.2.247/24 			 * the address set in the route is 192.0.2.246 			 * so we need to replace it with 192.0.2.247 			 */
 if|if
 condition|(
 name|memcmp
