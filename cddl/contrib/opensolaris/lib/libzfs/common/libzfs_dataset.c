@@ -19711,9 +19711,11 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|zfs_ioctl
+name|ioctl
 argument_list|(
 name|hdl
+operator|->
+name|libzfs_fd
 argument_list|,
 name|ZFS_IOC_GET_FSACL
 argument_list|,
