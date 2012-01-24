@@ -4512,6 +4512,17 @@ define|\
 value|((*(_ah)->ah_radarWait)((_ah), (_chan)))
 end_define
 
+begin_define
+define|#
+directive|define
+name|ath_hal_get_chan_ext_busy
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_get11nExtBusy)((_ah)))
+end_define
+
 begin_endif
 endif|#
 directive|endif
