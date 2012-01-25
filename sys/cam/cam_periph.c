@@ -7863,9 +7863,35 @@ name|cam_path
 modifier|*
 name|newpath
 decl_stmt|;
+name|lun_id_t
+name|lun_id
+decl_stmt|;
 name|error
 operator|=
 name|ENXIO
+expr_stmt|;
+comment|/* 		 * For a selection timeout, we consider all of the LUNs on 		 * the target to be gone.  If the status is CAM_DEV_NOT_THERE, 		 * then we only get rid of the device(s) specified by the 		 * path in the original CCB. 		 */
+if|if
+condition|(
+name|status
+operator|==
+name|CAM_DEV_NOT_THERE
+condition|)
+name|lun_id
+operator|=
+name|xpt_path_lun_id
+argument_list|(
+name|ccb
+operator|->
+name|ccb_h
+operator|.
+name|path
+argument_list|)
+expr_stmt|;
+else|else
+name|lun_id
+operator|=
+name|CAM_LUN_WILDCARD
 expr_stmt|;
 comment|/* Should we do more if we can't create the path?? */
 if|if
@@ -7895,7 +7921,7 @@ operator|.
 name|path
 argument_list|)
 argument_list|,
-name|CAM_LUN_WILDCARD
+name|lun_id
 argument_list|)
 operator|!=
 name|CAM_REQ_CMP
