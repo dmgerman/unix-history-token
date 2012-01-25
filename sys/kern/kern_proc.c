@@ -13553,9 +13553,7 @@ name|KERN_PROC_ENV
 argument_list|,
 name|env
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_ANYBODY
+name|CTLFLAG_RD
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
@@ -13576,9 +13574,7 @@ name|KERN_PROC_AUXV
 argument_list|,
 name|auxv
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_ANYBODY
+name|CTLFLAG_RD
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
@@ -14003,9 +13999,7 @@ name|KERN_PROC_PS_STRINGS
 argument_list|,
 name|ps_strings
 argument_list|,
-name|CTLFLAG_RW
-operator||
-name|CTLFLAG_ANYBODY
+name|CTLFLAG_RD
 operator||
 name|CTLFLAG_MPSAFE
 argument_list|,
