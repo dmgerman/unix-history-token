@@ -454,6 +454,9 @@ decl_stmt|;
 name|uint32_t
 name|ctrl
 decl_stmt|;
+name|int
+name|connected
+decl_stmt|;
 block|}
 name|pin
 struct|;
@@ -686,6 +689,9 @@ name|uint32_t
 name|recsrc
 decl_stmt|;
 comment|/* Mask of supported OSS sources. */
+name|int
+name|autorecsrc
+decl_stmt|;
 block|}
 struct|;
 end_struct
