@@ -429,6 +429,16 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|pid_t
+name|getjobpgrp
+parameter_list|(
+name|char
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|static
 name|pid_t
 name|dowait

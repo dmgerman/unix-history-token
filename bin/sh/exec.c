@@ -2222,6 +2222,7 @@ specifier|const
 name|char
 modifier|*
 name|newval
+name|__unused
 parameter_list|)
 block|{
 name|clearcmdentry
