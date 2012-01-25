@@ -990,7 +990,7 @@ parameter_list|(
 name|devinfo
 parameter_list|)
 define|\
-value|(((uint32_t)hda_get_subvendor_id(devinfo->dev)<< 16) +	\ 		hda_get_subdevice_id(devinfo->dev))
+value|(((uint32_t)hda_get_subdevice_id(devinfo->dev)<< 16) +	\ 		hda_get_subvendor_id(devinfo->dev))
 end_define
 
 begin_function_decl
