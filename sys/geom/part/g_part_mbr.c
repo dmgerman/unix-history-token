@@ -664,6 +664,12 @@ name|DOSPTYP_LINRAID
 block|,
 name|G_PART_ALIAS_LINUX_RAID
 block|}
+block|,
+block|{
+name|DOSPTYP_PPCBOOT
+block|,
+name|G_PART_ALIAS_FREEBSD_BOOT
+block|}
 block|, }
 struct|;
 end_struct
