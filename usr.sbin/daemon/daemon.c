@@ -224,6 +224,17 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|user
+operator|!=
+name|NULL
+condition|)
+name|restrict_process
+argument_list|(
+name|user
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Try to open the pidfile before calling daemon(3), 	 * to be able to report the error intelligently 	 */
 if|if
 condition|(
@@ -277,17 +288,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-if|if
-condition|(
-name|user
-operator|!=
-name|NULL
-condition|)
-name|restrict_process
-argument_list|(
-name|user
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|daemon
