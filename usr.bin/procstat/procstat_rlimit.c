@@ -208,17 +208,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|rlimit
-name|rlimit
-index|[
-name|RLIM_NLIMITS
-index|]
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 specifier|const
@@ -354,6 +343,10 @@ modifier|*
 name|kipp
 parameter_list|)
 block|{
+name|struct
+name|rlimit
+name|rlimit
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -458,9 +451,6 @@ literal|5
 argument_list|,
 operator|&
 name|rlimit
-index|[
-name|i
-index|]
 argument_list|,
 operator|&
 name|len
@@ -536,9 +526,6 @@ argument_list|(
 name|i
 argument_list|,
 name|rlimit
-index|[
-name|i
-index|]
 operator|.
 name|rlim_cur
 argument_list|)
@@ -553,9 +540,6 @@ argument_list|(
 name|i
 argument_list|,
 name|rlimit
-index|[
-name|i
-index|]
 operator|.
 name|rlim_max
 argument_list|)
