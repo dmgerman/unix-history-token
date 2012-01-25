@@ -38776,7 +38776,7 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|"autosrc"
+literal|"rec.autosrc"
 argument_list|,
 operator|&
 name|pdevinfo
