@@ -4626,6 +4626,14 @@ operator|<
 name|maxlength
 condition|)
 block|{
+if|if
+condition|(
+operator|*
+name|naming
+operator|==
+literal|';'
+condition|)
+break|break;
 name|naming
 operator|++
 expr_stmt|;
