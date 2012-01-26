@@ -5405,7 +5405,7 @@ comment|/* original mouse action */
 name|mousestatus_t
 name|action
 decl_stmt|;
-comment|/* interrim buffer */
+comment|/* interim buffer */
 name|mousestatus_t
 name|action2
 decl_stmt|;
@@ -12152,7 +12152,7 @@ break|break;
 case|case
 name|MOUSE_MODEL_NETSCROLL
 case|:
-comment|/* three addtional bytes encode buttons and wheel events */
+comment|/* three additional bytes encode buttons and wheel events */
 name|act
 operator|->
 name|button
@@ -17050,8 +17050,6 @@ decl_stmt|;
 specifier|static
 name|struct
 name|timespec
-name|old
-decl_stmt|,
 name|now
 decl_stmt|;
 name|int
@@ -17292,10 +17290,6 @@ operator|=
 name|y
 expr_stmt|;
 block|}
-name|old
-operator|=
-name|now
-expr_stmt|;
 name|act
 operator|->
 name|dx

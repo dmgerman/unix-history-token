@@ -1389,6 +1389,11 @@ range|:
 literal|1
 decl_stmt|,
 comment|/* enable LED gpio status */
+name|sc_hardled
+range|:
+literal|1
+decl_stmt|,
+comment|/* enable MAC LED status */
 name|sc_splitmic
 range|:
 literal|1
@@ -1679,6 +1684,7 @@ name|ATH_KEYBYTES
 index|]
 decl_stmt|;
 comment|/* key use bit map */
+comment|/* 	 * Software based LED blinking 	 */
 name|u_int
 name|sc_ledpin
 decl_stmt|;
@@ -1708,6 +1714,15 @@ name|callout
 name|sc_ledtimer
 decl_stmt|;
 comment|/* led off timer */
+comment|/* 	 * Hardware based LED blinking 	 */
+name|int
+name|sc_led_pwr_pin
+decl_stmt|;
+comment|/* MAC power LED GPIO pin */
+name|int
+name|sc_led_net_pin
+decl_stmt|;
+comment|/* MAC network LED GPIO pin */
 name|u_int
 name|sc_rfsilentpin
 decl_stmt|;
@@ -3923,7 +3938,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_PRESENT, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_PRESENT, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3934,7 +3949,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -3947,7 +3962,7 @@ parameter_list|,
 name|_v
 parameter_list|)
 define|\
-value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, HAL_CAP_INTMIT_ENABLE, _v, NULL)
+value|ath_hal_setcapability(_ah, HAL_CAP_INTMIT, \ 	HAL_CAP_INTMIT_ENABLE, _v, NULL)
 end_define
 
 begin_define
@@ -3997,7 +4012,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_SPLIT_4KB_TRANS, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_SPLIT_4KB_TRANS, \ 	0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -4008,7 +4023,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_RXDESC_SELFLINK, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_RXDESC_SELFLINK, \ 	0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -4030,7 +4045,7 @@ parameter_list|(
 name|_ah
 parameter_list|)
 define|\
-value|(ath_hal_getcapability(_ah, HAL_CAP_LONG_RXDESC_TSF, 0, NULL) == HAL_OK)
+value|(ath_hal_getcapability(_ah, HAL_CAP_LONG_RXDESC_TSF, \ 	0, NULL) == HAL_OK)
 end_define
 
 begin_define
@@ -4366,66 +4381,6 @@ define|\
 value|((*(_ah)->ah_clr11nAggr)((_ah), (_ds)))
 end_define
 
-begin_comment
-comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|ath_hal_enabledfs
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_param
-parameter_list|)
-define|\
-value|((*(_ah)->ah_enableDfs)((_ah), (_param)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_getdfsthresh
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_param
-parameter_list|)
-define|\
-value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_procradarevent
-parameter_list|(
-name|_ah
-parameter_list|,
-name|_rxs
-parameter_list|,
-name|_fulltsf
-parameter_list|,
-name|_buf
-parameter_list|,
-name|_event
-parameter_list|)
-define|\
-value|((*(_ah)->ah_procRadarEvent)((_ah), (_rxs), (_fulltsf), (_buf), (_event)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|ath_hal_is_fast_clock_enabled
-parameter_list|(
-name|_ah
-parameter_list|)
-define|\
-value|((*(_ah)->ah_isFastClockEnabled)((_ah)))
-end_define
-
 begin_define
 define|#
 directive|define
@@ -4484,6 +4439,66 @@ define|\
 value|((*(_ah)->ah_gpioSetIntr)((_ah), (_gpio), (_b)))
 end_define
 
+begin_comment
+comment|/*  * This is badly-named; you need to set the correct parameters  * to begin to receive useful radar events; and even then  * it doesn't "enable" DFS. See the ath_dfs/null/ module for  * more information.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ath_hal_enabledfs
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_enableDfs)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_getdfsthresh
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_param
+parameter_list|)
+define|\
+value|((*(_ah)->ah_getDfsThresh)((_ah), (_param)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_procradarevent
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rxs
+parameter_list|,
+name|_fulltsf
+parameter_list|,
+name|_buf
+parameter_list|,
+name|_event
+parameter_list|)
+define|\
+value|((*(_ah)->ah_procRadarEvent)((_ah), (_rxs), (_fulltsf), \ 	(_buf), (_event)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_is_fast_clock_enabled
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_isFastClockEnabled)((_ah)))
+end_define
+
 begin_define
 define|#
 directive|define
@@ -4495,6 +4510,17 @@ name|_chan
 parameter_list|)
 define|\
 value|((*(_ah)->ah_radarWait)((_ah), (_chan)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_get_chan_ext_busy
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|((*(_ah)->ah_get11nExtBusy)((_ah)))
 end_define
 
 begin_endif

@@ -391,8 +391,9 @@ name|eb
 argument_list|,
 name|size
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -521,8 +522,9 @@ name|eb
 argument_list|,
 name|size
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(

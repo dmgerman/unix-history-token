@@ -215,7 +215,7 @@ argument_list|,
 name|stdin
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 break|break;
 for|for

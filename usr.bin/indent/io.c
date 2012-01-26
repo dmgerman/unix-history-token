@@ -1171,7 +1171,7 @@ operator|>
 name|target
 condition|)
 block|{
-comment|/* if comment cant fit on this line, 					 * put it on next line */
+comment|/* if comment can't fit on this line, 					 * put it on next line */
 name|putc
 argument_list|(
 literal|'\n'
@@ -2711,6 +2711,8 @@ name|fprintf
 argument_list|(
 name|stdout
 argument_list|,
+literal|"%s"
+argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
@@ -2744,6 +2746,8 @@ expr_stmt|;
 name|fprintf
 argument_list|(
 name|stderr
+argument_list|,
+literal|"%s"
 argument_list|,
 name|msg
 argument_list|)

@@ -325,6 +325,8 @@ name|char
 name|basebuf
 index|[
 name|BUFSIZ
+operator|+
+literal|1
 index|]
 decl_stmt|;
 end_decl_stmt
@@ -396,6 +398,16 @@ begin_function_decl
 specifier|static
 name|int
 name|preadfd
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|popstring
 parameter_list|(
 name|void
 parameter_list|)
@@ -672,14 +684,10 @@ condition|(
 name|nr
 operator|>
 name|BUFSIZ
-operator|-
-literal|1
 condition|)
 name|nr
 operator|=
 name|BUFSIZ
-operator|-
-literal|1
 expr_stmt|;
 name|memcpy
 argument_list|(
@@ -727,8 +735,6 @@ argument_list|,
 name|parsenextc
 argument_list|,
 name|BUFSIZ
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1345,6 +1351,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|popstring
 parameter_list|(
@@ -1570,6 +1577,8 @@ operator|=
 name|ckmalloc
 argument_list|(
 name|BUFSIZ
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 block|}
@@ -1609,6 +1618,8 @@ operator|=
 name|ckmalloc
 argument_list|(
 name|BUFSIZ
+operator|+
+literal|1
 argument_list|)
 expr_stmt|;
 name|parselleft

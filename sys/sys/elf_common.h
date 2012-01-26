@@ -3015,7 +3015,7 @@ value|28
 end_define
 
 begin_comment
-comment|/* Size in bytes of the array of 				   terminationfunctions. */
+comment|/* Size in bytes of the array of 				   termination functions. */
 end_comment
 
 begin_define
@@ -3869,6 +3869,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|STT_GNU_IFUNC
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|STT_HIOS
 value|12
 end_define
@@ -4655,6 +4662,17 @@ end_define
 
 begin_comment
 comment|/* GOT entry of -ve static TLS offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|R_386_IRELATIVE
+value|42
+end_define
+
+begin_comment
+comment|/* PLT entry resolved indirectly at runtime */
 end_comment
 
 begin_define
@@ -7492,6 +7510,13 @@ end_define
 begin_comment
 comment|/* Offset in static TLS block */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|R_X86_64_IRELATIVE
+value|37
+end_define
 
 begin_endif
 endif|#

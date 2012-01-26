@@ -1075,7 +1075,7 @@ block|,
 literal|0xff
 block|}
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1131,7 +1131,7 @@ goto|goto
 name|found
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1218,7 +1218,7 @@ operator|!=
 literal|6
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1243,7 +1243,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1267,7 +1267,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1409,7 +1409,7 @@ operator|!=
 literal|1
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1428,7 +1428,7 @@ literal|0
 index|]
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1498,7 +1498,7 @@ case|:
 endif|#
 directive|endif
 comment|/* 		 * RFC2893 says: "SHOULD use IPv4 address as ifid source". 		 * however, IPv4 address is not very suitable as unique 		 * identifier source (can be renumbered). 		 * we don't do this. 		 */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1508,7 +1508,7 @@ operator|-
 literal|1
 return|;
 default|default:
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1527,7 +1527,7 @@ name|in6
 argument_list|)
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1582,7 +1582,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1592,7 +1592,7 @@ operator|-
 literal|1
 return|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1706,24 +1706,14 @@ comment|/* next, try to get it from some other hardware interface */
 name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|ifp
-operator|=
-name|V_ifnet
-operator|.
-name|tqh_first
-init|;
-name|ifp
-condition|;
-name|ifp
-operator|=
-name|ifp
-operator|->
-name|if_list
-operator|.
-name|tqe_next
-control|)
+name|TAILQ_FOREACH
+argument_list|(
+argument|ifp
+argument_list|,
+argument|&V_ifnet
+argument_list|,
+argument|if_list
+argument_list|)
 block|{
 if|if
 condition|(
@@ -2242,24 +2232,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ia must not be NULL */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-operator|!
-name|ia
-condition|)
-block|{
-name|panic
+name|KASSERT
 argument_list|(
-literal|"ia == NULL in in6_ifattach_linklocal"
+name|ia
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: ia == NULL, ifp=%p"
+operator|,
+name|__func__
+operator|,
+name|ifp
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-endif|#
-directive|endif
 name|ifa_free
 argument_list|(
 operator|&
@@ -3075,9 +3062,6 @@ case|:
 case|case
 name|IFT_PFSYNC
 case|:
-case|case
-name|IFT_CARP
-case|:
 return|return;
 block|}
 comment|/* 	 * quirks based on interface type 	 */
@@ -3438,11 +3422,13 @@ condition|(
 operator|(
 name|imm
 operator|=
+name|LIST_FIRST
+argument_list|(
+operator|&
 name|ia
 operator|->
 name|ia6_memberships
-operator|.
-name|lh_first
+argument_list|)
 operator|)
 operator|!=
 name|NULL
@@ -3552,7 +3538,7 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* remove from the linked list */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3569,7 +3555,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3950,27 +3936,14 @@ name|nullbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
-for|for
-control|(
-name|ifp
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|V_ifnet
-argument_list|)
-init|;
-name|ifp
-condition|;
-name|ifp
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|ifp
+argument|ifp
 argument_list|,
-name|if_list
+argument|&V_ifnet
+argument_list|,
+argument|if_list
 argument_list|)
-control|)
 block|{
 name|ndi
 operator|=
@@ -4066,7 +4039,7 @@ name|IN6_MULTI_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Extract list of in6_multi associated with the detaching ifp 	 * which the PF_INET6 layer is about to release. 	 * We need to do this as IF_ADDR_LOCK() may be re-acquired 	 * by code further down. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4119,7 +4092,7 @@ name|in6m_entry
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

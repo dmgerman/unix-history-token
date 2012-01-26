@@ -1906,7 +1906,11 @@ operator|->
 name|td_flags
 operator|=
 name|TDF_INMEM
-operator||
+expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator|=
 name|TDP_KTHREAD
 expr_stmt|;
 name|td

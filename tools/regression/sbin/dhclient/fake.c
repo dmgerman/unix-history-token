@@ -133,9 +133,14 @@ argument_list|,
 literal|"\n"
 argument_list|)
 expr_stmt|;
-return|return
-name|ret
-return|;
+comment|/* 	 * The original warning() would return "ret" here. We do this to 	 * check warnings explicitely. 	 */
+name|longjmp
+argument_list|(
+name|env
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

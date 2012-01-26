@@ -1721,7 +1721,7 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning4, cant find symbole %d"
+literal|"Warning4, can't find symbole %d"
 argument_list|,
 name|i
 argument_list|)
@@ -2251,6 +2251,52 @@ name|jmpslots_done
 operator|=
 name|true
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|reloc_iresolve
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|reloc_gnu_ifunc
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
 return|return
 operator|(
 literal|0

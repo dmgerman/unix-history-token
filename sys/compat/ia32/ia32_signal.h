@@ -15,6 +15,35 @@ directive|define
 name|_COMPAT_IA32_IA32_SIGNAL_H
 end_define
 
+begin_define
+define|#
+directive|define
+name|_MC_IA32_HASSEGS
+value|0x1
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_IA32_HASBASES
+value|0x2
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_IA32_HASFPXSTATE
+value|0x4
+end_define
+
+begin_define
+define|#
+directive|define
+name|_MC_IA32_FLAG_MASK
+define|\
+value|(_MC_IA32_HASSEGS | _MC_IA32_HASBASES | _MC_IA32_HASFPXSTATE)
+end_define
+
 begin_struct
 struct|struct
 name|ia32_mcontext
@@ -93,12 +122,8 @@ name|u_int32_t
 name|mc_ownedfp
 decl_stmt|;
 name|u_int32_t
-name|mc_spare1
-index|[
-literal|1
-index|]
+name|mc_flags
 decl_stmt|;
-comment|/* align next field to 16 bytes */
 comment|/* 	 * See<i386/include/npx.h> for the internals of mc_fpstate[]. 	 */
 name|u_int32_t
 name|mc_fpstate
@@ -117,9 +142,15 @@ name|u_int32_t
 name|mc_gsbase
 decl_stmt|;
 name|u_int32_t
+name|mc_xfpustate
+decl_stmt|;
+name|u_int32_t
+name|mc_xfpustate_len
+decl_stmt|;
+name|u_int32_t
 name|mc_spare2
 index|[
-literal|6
+literal|4
 index|]
 decl_stmt|;
 block|}

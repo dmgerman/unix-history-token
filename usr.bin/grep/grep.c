@@ -777,18 +777,6 @@ literal|"%s"
 argument_list|,
 name|getstr
 argument_list|(
-literal|5
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s"
-argument_list|,
-name|getstr
-argument_list|(
 literal|6
 argument_list|)
 argument_list|)
@@ -825,6 +813,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|option
 name|long_options

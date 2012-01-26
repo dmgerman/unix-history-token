@@ -302,6 +302,47 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_define
+define|#
+directive|define
+name|netmap_if_malloc
+parameter_list|(
+name|len
+parameter_list|)
+value|netmap_malloc(len, "nifp")
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_if_free
+parameter_list|(
+name|v
+parameter_list|)
+value|netmap_free((v), "nifp")
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_ring_malloc
+parameter_list|(
+name|len
+parameter_list|)
+value|netmap_malloc(len, "ring")
+end_define
+
+begin_define
+define|#
+directive|define
+name|netmap_free_rings
+parameter_list|(
+name|na
+parameter_list|)
+define|\
+value|netmap_free((na)->tx_rings[0].ring, "shadow rings");
+end_define
+
 begin_comment
 comment|/*  * Allocator for a pool of packet buffers. For each buffer we have  * one entry in the bitmap to signal the state. Allocation scans  * the bitmap, but since this is done only on attach, we are not  * too worried about performance  * XXX if we need to allocate small blocks, a translation  * table is used both for kernel virtual address and physical  * addresses.  */
 end_comment
@@ -357,6 +398,10 @@ modifier|*
 name|netmap_buffer_base
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* address of an invalid buffer */
+end_comment
 
 begin_comment
 comment|/* user-controlled variables */
@@ -495,9 +540,10 @@ name|void
 name|netmap_new_bufs
 parameter_list|(
 name|struct
-name|netmap_buf_pool
+name|netmap_if
 modifier|*
-name|p
+name|nifp
+name|__unused
 parameter_list|,
 name|struct
 name|netmap_slot
@@ -508,6 +554,14 @@ name|u_int
 name|n
 parameter_list|)
 block|{
+name|struct
+name|netmap_buf_pool
+modifier|*
+name|p
+init|=
+operator|&
+name|nm_buf_pool
+decl_stmt|;
 name|uint32_t
 name|bi
 init|=
@@ -681,14 +735,23 @@ name|void
 name|netmap_free_buf
 parameter_list|(
 name|struct
-name|netmap_buf_pool
+name|netmap_if
 modifier|*
-name|p
+name|nifp
+name|__unused
 parameter_list|,
 name|uint32_t
 name|i
 parameter_list|)
 block|{
+name|struct
+name|netmap_buf_pool
+modifier|*
+name|p
+init|=
+operator|&
+name|nm_buf_pool
+decl_stmt|;
 name|uint32_t
 name|pos
 decl_stmt|,
@@ -891,6 +954,36 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_comment
+comment|/* Shorthand to compute a netmap interface offset. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_if_offset
+parameter_list|(
+name|v
+parameter_list|)
+define|\
+value|((char *) (v) - (char *) netmap_mem_d->nm_buffer)
+end_define
+
+begin_comment
+comment|/* .. and get a physical address given a memory offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|netmap_ofstophys
+parameter_list|(
+name|o
+parameter_list|)
+define|\
+value|(vtophys(netmap_mem_d->nm_buffer) + (o))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -1526,8 +1619,7 @@ operator|++
 control|)
 name|netmap_free_buf
 argument_list|(
-operator|&
-name|nm_buf_pool
+name|nifp
 argument_list|,
 name|ring
 operator|->
@@ -1583,8 +1675,7 @@ operator|++
 control|)
 name|netmap_free_buf
 argument_list|(
-operator|&
-name|nm_buf_pool
+name|nifp
 argument_list|,
 name|ring
 operator|->
@@ -1600,18 +1691,9 @@ block|}
 name|NMA_UNLOCK
 argument_list|()
 expr_stmt|;
-name|netmap_free
+name|netmap_free_rings
 argument_list|(
 name|na
-operator|->
-name|tx_rings
-index|[
-literal|0
-index|]
-operator|.
-name|ring
-argument_list|,
-literal|"shadow rings"
 argument_list|)
 expr_stmt|;
 name|wakeup
@@ -1620,11 +1702,9 @@ name|na
 argument_list|)
 expr_stmt|;
 block|}
-name|netmap_free
+name|netmap_if_free
 argument_list|(
 name|nifp
-argument_list|,
-literal|"nifp"
 argument_list|)
 expr_stmt|;
 name|na
@@ -1739,11 +1819,9 @@ argument_list|)
 expr_stmt|;
 name|nifp
 operator|=
-name|netmap_malloc
+name|netmap_if_malloc
 argument_list|(
 name|len
-argument_list|,
-literal|"nifp"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1838,11 +1916,9 @@ operator|)
 expr_stmt|;
 name|buff
 operator|=
-name|netmap_malloc
+name|netmap_ring_malloc
 argument_list|(
 name|len
-argument_list|,
-literal|"shadow rings"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1870,11 +1946,9 @@ name|refcount
 operator|)
 operator|--
 expr_stmt|;
-name|netmap_free
+name|netmap_if_free
 argument_list|(
 name|nifp
-argument_list|,
-literal|"nifp, rings failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2086,8 +2160,7 @@ literal|0
 expr_stmt|;
 name|netmap_new_bufs
 argument_list|(
-operator|&
-name|nm_buf_pool
+name|nifp
 argument_list|,
 name|ring
 operator|->
@@ -2245,8 +2318,7 @@ expr_stmt|;
 comment|/* empty */
 name|netmap_new_bufs
 argument_list|(
-operator|&
-name|nm_buf_pool
+name|nifp
 argument_list|,
 name|ring
 operator|->
@@ -2477,14 +2549,10 @@ expr_stmt|;
 operator|*
 name|paddr
 operator|=
-name|vtophys
+name|netmap_ofstophys
 argument_list|(
-name|netmap_mem_d
-operator|->
-name|nm_buffer
-argument_list|)
-operator|+
 name|offset
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -4144,29 +4212,13 @@ name|error
 condition|)
 block|{
 comment|/* 				 * do something similar to netmap_dtor(). 				 */
-name|netmap_free
+name|netmap_free_rings
 argument_list|(
 name|na
-operator|->
-name|tx_rings
-index|[
-literal|0
-index|]
-operator|.
-name|ring
-argument_list|,
-literal|"rings, reg.failed"
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|na
-operator|->
-name|tx_rings
-argument_list|,
-name|M_DEVBUF
-argument_list|)
-expr_stmt|;
+comment|// XXX tx_rings is inline, must not be freed.
+comment|// free(na->tx_rings, M_DEVBUF); // XXX wrong ?
 name|na
 operator|->
 name|tx_rings
@@ -4182,11 +4234,9 @@ operator|->
 name|refcount
 operator|--
 expr_stmt|;
-name|netmap_free
+name|netmap_if_free
 argument_list|(
 name|nifp
-argument_list|,
-literal|"nifp, rings failed"
 argument_list|)
 expr_stmt|;
 name|nifp
@@ -4293,21 +4343,10 @@ name|nmr
 operator|->
 name|nr_offset
 operator|=
-operator|(
-operator|(
-name|char
-operator|*
-operator|)
+name|netmap_if_offset
+argument_list|(
 name|nifp
-operator|-
-operator|(
-name|char
-operator|*
-operator|)
-name|netmap_mem_d
-operator|->
-name|nm_buffer
-operator|)
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
@@ -4676,6 +4715,8 @@ modifier|*
 name|kring
 decl_stmt|;
 name|u_int
+name|core_lock
+decl_stmt|,
 name|i
 decl_stmt|,
 name|check_all
@@ -4692,6 +4733,16 @@ name|void
 modifier|*
 name|adapter
 decl_stmt|;
+enum|enum
+block|{
+name|NO_CL
+block|,
+name|NEED_CL
+block|,
+name|LOCKED_CL
+block|}
+enum|;
+comment|/* see below */
 if|if
 condition|(
 name|devfs_get_cdevpriv
@@ -4903,18 +4954,8 @@ name|np_qlast
 operator|)
 expr_stmt|;
 comment|/* 	 * core_lock indicates what to do with the core lock. 	 * The core lock is used when either the card has no individual 	 * locks, or it has individual locks but we are cheking all 	 * rings so we need the core lock to avoid missing wakeup events. 	 * 	 * It has three possible states: 	 * NO_CL	we don't need to use the core lock, e.g. 	 *		because we are protected by individual locks. 	 * NEED_CL	we need the core lock. In this case, when we 	 *		call the lock routine, move to LOCKED_CL 	 *		to remember to release the lock once done. 	 * LOCKED_CL	core lock is set, so we need to release it. 	 */
-enum|enum
-block|{
-name|NO_CL
-block|,
-name|NEED_CL
-block|,
-name|LOCKED_CL
-block|}
-enum|;
-name|int
 name|core_lock
-init|=
+operator|=
 operator|(
 name|check_all
 operator|||
@@ -4927,7 +4968,7 @@ condition|?
 name|NEED_CL
 else|:
 name|NO_CL
-decl_stmt|;
+expr_stmt|;
 comment|/* 	 * We start with a lock free round which is good if we have 	 * data available. If this fails, then lock and call the sync 	 * routines. 	 */
 for|for
 control|(
@@ -5583,12 +5624,10 @@ condition|(
 name|buf
 condition|)
 block|{
+name|WNA
+argument_list|(
 name|ifp
-operator|->
-name|if_pspare
-index|[
-literal|0
-index|]
+argument_list|)
 operator|=
 name|buf
 expr_stmt|;
@@ -5764,12 +5803,10 @@ name|na
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|WNA
+argument_list|(
 name|ifp
-operator|->
-name|if_pspare
-index|[
-literal|0
-index|]
+argument_list|)
 operator|=
 name|NULL
 expr_stmt|;
@@ -6293,127 +6330,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|ns_dmamap_cb
-parameter_list|(
-name|__unused
-name|void
-modifier|*
-name|arg
-parameter_list|,
-name|__unused
-name|bus_dma_segment_t
-modifier|*
-name|segs
-parameter_list|,
-name|__unused
-name|int
-name|nseg
-parameter_list|,
-name|__unused
-name|int
-name|error
-parameter_list|)
-block|{ }
-end_function
-
-begin_comment
-comment|/* unload a bus_dmamap and create a new one. Used when the  * buffer in the slot is changed.  * XXX buflen is probably not needed, buffers have constant size.  */
-end_comment
-
-begin_function
-name|void
-name|netmap_reload_map
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|bus_dmamap_t
-name|map
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|bus_size_t
-name|buflen
-parameter_list|)
-block|{
-name|bus_addr_t
-name|paddr
-decl_stmt|;
-name|bus_dmamap_unload
-argument_list|(
-name|tag
-argument_list|,
-name|map
-argument_list|)
-expr_stmt|;
-name|bus_dmamap_load
-argument_list|(
-name|tag
-argument_list|,
-name|map
-argument_list|,
-name|buf
-argument_list|,
-name|buflen
-argument_list|,
-name|ns_dmamap_cb
-argument_list|,
-operator|&
-name|paddr
-argument_list|,
-name|BUS_DMA_NOWAIT
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|netmap_load_map
-parameter_list|(
-name|bus_dma_tag_t
-name|tag
-parameter_list|,
-name|bus_dmamap_t
-name|map
-parameter_list|,
-name|void
-modifier|*
-name|buf
-parameter_list|,
-name|bus_size_t
-name|buflen
-parameter_list|)
-block|{
-name|bus_addr_t
-name|paddr
-decl_stmt|;
-name|bus_dmamap_load
-argument_list|(
-name|tag
-argument_list|,
-name|map
-argument_list|,
-name|buf
-argument_list|,
-name|buflen
-argument_list|,
-name|ns_dmamap_cb
-argument_list|,
-operator|&
-name|paddr
-argument_list|,
-name|BUS_DMA_NOWAIT
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_comment
 comment|/*------ netmap memory allocator -------*/
 end_comment
@@ -6887,9 +6803,6 @@ comment|// space for rings and two spare buffers
 for|for
 control|(
 init|;
-operator|!
-name|buf
-operator|&&
 name|sz
 operator|>=
 literal|1
@@ -6954,6 +6867,11 @@ literal|0
 comment|/* boundary */
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|buf
+condition|)
+break|break;
 block|}
 if|if
 condition|(

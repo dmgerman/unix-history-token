@@ -69,6 +69,13 @@ name|SNMP_DEFAULT_LOCAL
 value|"/var/run/snmpd.sock"
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNMP_MAX_REPETITIONS
+value|10
+end_define
+
 begin_enum
 enum|enum
 name|snmp_access
@@ -528,7 +535,7 @@ value|0x00000008
 end_define
 
 begin_comment
-comment|/* bit 3 for retry on error responce */
+comment|/* bit 3 for retry on error response */
 end_comment
 
 begin_define
@@ -580,7 +587,7 @@ comment|/*	0x00000080 */
 end_comment
 
 begin_comment
-comment|/* bit 7 reserverd */
+comment|/* bit 7 reserved */
 end_comment
 
 begin_define
@@ -599,7 +606,7 @@ comment|/*	0x0000f000 */
 end_comment
 
 begin_comment
-comment|/* bit 12-15 reserverd */
+comment|/* bit 12-15 reserved */
 end_comment
 
 begin_define
@@ -1901,6 +1908,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|snmp_pdu
+modifier|*
+parameter_list|,
+name|struct
+name|asn_oid
 modifier|*
 parameter_list|)
 function_decl|;

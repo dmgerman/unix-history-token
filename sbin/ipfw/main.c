@@ -283,7 +283,7 @@ expr_stmt|;
 name|copy
 operator|=
 operator|!
-name|index
+name|strchr
 argument_list|(
 literal|","
 name|WHITESP
@@ -300,7 +300,7 @@ block|{
 name|copy
 operator|=
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|WHITESP
 argument_list|,
@@ -383,7 +383,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|WHITESP
 argument_list|,
@@ -467,7 +467,7 @@ control|)
 block|{
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|WHITESP
 argument_list|,
@@ -523,7 +523,7 @@ name|i
 operator|-
 name|j
 expr_stmt|;
-comment|/* the lenght of the string */
+comment|/* the length of the string */
 operator|*
 name|av_p
 operator|++
@@ -831,7 +831,7 @@ return|;
 block|}
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|av
 index|[
@@ -1104,6 +1104,7 @@ literal|"An absolute pathname must be used "
 literal|"with -p option."
 argument_list|)
 expr_stmt|;
+comment|/* NOTREACHED */
 case|case
 literal|'q'
 case|:

@@ -1351,17 +1351,6 @@ comment|/* unassigned cells */
 end_comment
 
 begin_comment
-comment|/*  * CARP Common Address Redundancy Protocol  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IFM_CARP
-value|0x000000c0
-end_define
-
-begin_comment
 comment|/*  * Shared media sub-types  */
 end_comment
 
@@ -1759,7 +1748,7 @@ begin_define
 define|#
 directive|define
 name|IFM_TYPE_DESCRIPTIONS
-value|{						\ 	{ IFM_ETHER,		"Ethernet" },				\ 	{ IFM_TOKEN,		"Token ring" },				\ 	{ IFM_FDDI,		"FDDI" },				\ 	{ IFM_IEEE80211,	"IEEE 802.11 Wireless Ethernet" },	\ 	{ IFM_ATM,		"ATM" },				\ 	{ IFM_CARP,		"Common Address Redundancy Protocol" }, \ 	{ 0, NULL },							\ }
+value|{						\ 	{ IFM_ETHER,		"Ethernet" },				\ 	{ IFM_TOKEN,		"Token ring" },				\ 	{ IFM_FDDI,		"FDDI" },				\ 	{ IFM_IEEE80211,	"IEEE 802.11 Wireless Ethernet" },	\ 	{ IFM_ATM,		"ATM" },				\ 	{ 0, NULL },							\ }
 end_define
 
 begin_define
@@ -1986,7 +1975,7 @@ begin_define
 define|#
 directive|define
 name|IFM_STATUS_DESCRIPTIONS
-value|{					\ 	{ IFM_ETHER,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no carrier", "active" } },				\ 	{ IFM_FDDI,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no ring", "inserted" } },				\ 	{ IFM_TOKEN,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no ring", "inserted" } },				\ 	{ IFM_IEEE80211,	IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no network", "active" } },				\ 	{ IFM_ATM,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no network", "active" } },				\ 	{ IFM_CARP,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "backup", "master" } },					\ 	{ 0,			0,		0,			\ 	    { NULL, NULL } }						\ }
+value|{					\ 	{ IFM_ETHER,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no carrier", "active" } },				\ 	{ IFM_FDDI,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no ring", "inserted" } },				\ 	{ IFM_TOKEN,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no ring", "inserted" } },				\ 	{ IFM_IEEE80211,	IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no network", "active" } },				\ 	{ IFM_ATM,		IFM_AVALID,	IFM_ACTIVE,		\ 	    { "no network", "active" } },				\ 	{ 0,			0,		0,			\ 	    { NULL, NULL } }						\ }
 end_define
 
 begin_endif

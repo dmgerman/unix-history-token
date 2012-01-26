@@ -132,6 +132,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/cpufunc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/md_var.h>
 end_include
 
@@ -4564,6 +4570,9 @@ operator|++
 expr_stmt|;
 block|}
 block|}
+name|powerpc_sync
+argument_list|()
+expr_stmt|;
 block|}
 end_function
 

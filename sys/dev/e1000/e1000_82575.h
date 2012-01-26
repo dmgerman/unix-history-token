@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,7 +23,7 @@ begin_define
 define|#
 directive|define
 name|ID_LED_DEFAULT_82575_SERDES
-value|((ID_LED_DEF1_DEF2<< 12) | \                                      (ID_LED_DEF1_DEF2<<  8) | \                                      (ID_LED_DEF1_DEF2<<  4) | \                                      (ID_LED_OFF1_ON2))
+value|((ID_LED_DEF1_DEF2<< 12) | \ 					 (ID_LED_DEF1_DEF2<<  8) | \ 					 (ID_LED_DEF1_DEF2<<  4) | \ 					 (ID_LED_OFF1_ON2))
 end_define
 
 begin_comment
@@ -612,7 +612,7 @@ begin_define
 define|#
 directive|define
 name|E1000_VMRCTL_MIRROR_DSTPORT_MASK
-value|(7<< E1000_VMRCTL_MIRROR_PORT_SHIFT)
+value|(7<< \ 						 E1000_VMRCTL_MIRROR_PORT_SHIFT)
 end_define
 
 begin_define
@@ -640,14 +640,14 @@ begin_define
 define|#
 directive|define
 name|E1000_EICR_TX_QUEUE
-value|( \     E1000_EICR_TX_QUEUE0 |    \     E1000_EICR_TX_QUEUE1 |    \     E1000_EICR_TX_QUEUE2 |    \     E1000_EICR_TX_QUEUE3)
+value|( \ 	E1000_EICR_TX_QUEUE0 |    \ 	E1000_EICR_TX_QUEUE1 |    \ 	E1000_EICR_TX_QUEUE2 |    \ 	E1000_EICR_TX_QUEUE3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|E1000_EICR_RX_QUEUE
-value|( \     E1000_EICR_RX_QUEUE0 |    \     E1000_EICR_RX_QUEUE1 |    \     E1000_EICR_RX_QUEUE2 |    \     E1000_EICR_RX_QUEUE3)
+value|( \ 	E1000_EICR_RX_QUEUE0 |    \ 	E1000_EICR_RX_QUEUE1 |    \ 	E1000_EICR_RX_QUEUE2 |    \ 	E1000_EICR_RX_QUEUE3)
 end_define
 
 begin_define
@@ -668,7 +668,7 @@ begin_define
 define|#
 directive|define
 name|EIMS_ENABLE_MASK
-value|( \     E1000_EIMS_RX_QUEUE  | \     E1000_EIMS_TX_QUEUE  | \     E1000_EIMS_TCP_TIMER | \     E1000_EIMS_OTHER)
+value|( \ 	E1000_EIMS_RX_QUEUE  | \ 	E1000_EIMS_TX_QUEUE  | \ 	E1000_EIMS_TCP_TIMER | \ 	E1000_EIMS_OTHER)
 end_define
 
 begin_comment
@@ -1422,7 +1422,7 @@ value|0x00040000
 end_define
 
 begin_comment
-comment|/* Apply LinkSec on packet */
+comment|/* Apply LinkSec on pkt */
 end_comment
 
 begin_define
@@ -1433,7 +1433,7 @@ value|0x00080000
 end_define
 
 begin_comment
-comment|/* IEEE1588 Timestamp packet */
+comment|/* IEEE1588 Timestamp pkt */
 end_comment
 
 begin_define
@@ -1444,7 +1444,7 @@ value|0x00000002
 end_define
 
 begin_comment
-comment|/* NXTSEQ/SEED present in WB */
+comment|/* NXTSEQ/SEED prsnt in WB */
 end_comment
 
 begin_define
@@ -1491,16 +1491,16 @@ begin_comment
 comment|/* Last TSO of iSCSI PDU */
 end_comment
 
+begin_comment
+comment|/* 1st& Last TSO-full iSCSI PDU*/
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_ADVTXD_POPTS_ISCO_FULL
 value|0x00001800
 end_define
-
-begin_comment
-comment|/* 1st&Last TSO-full iSCSI PDU*/
-end_comment
 
 begin_define
 define|#
@@ -1647,16 +1647,16 @@ name|E1000_ADVTXD_TUCMD_IPSEC_ENCRYPT_EN
 value|0x00004000
 end_define
 
+begin_comment
+comment|/* Req requires Markers and CRC */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|E1000_ADVTXD_TUCMD_MKRREQ
 value|0x00002000
 end_define
-
-begin_comment
-comment|/* Req requires Markers and CRC */
-end_comment
 
 begin_define
 define|#
@@ -1714,7 +1714,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* Enable specific Tx Queue */
+comment|/* Ena specific Tx Queue */
 end_comment
 
 begin_define
@@ -1725,7 +1725,7 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* Tx Desc. write-back flushing */
+comment|/* Tx Desc. wbk flushing */
 end_comment
 
 begin_comment
@@ -1751,7 +1751,7 @@ value|0x02000000
 end_define
 
 begin_comment
-comment|/* Enable specific Rx Queue */
+comment|/* Ena specific Rx Queue */
 end_comment
 
 begin_define
@@ -1762,7 +1762,7 @@ value|0x04000000
 end_define
 
 begin_comment
-comment|/* Rx Desc. write-back flushing */
+comment|/* Rx Desc. wbk flushing */
 end_comment
 
 begin_comment
@@ -1843,7 +1843,7 @@ value|(1<< 6)
 end_define
 
 begin_comment
-comment|/* DCA Rx Desc header enable */
+comment|/* DCA Rx Desc header ena */
 end_comment
 
 begin_define
@@ -1854,7 +1854,7 @@ value|(1<< 7)
 end_define
 
 begin_comment
-comment|/* DCA Rx Desc payload enable */
+comment|/* DCA Rx Desc payload ena */
 end_comment
 
 begin_define
@@ -2074,7 +2074,7 @@ begin_define
 define|#
 directive|define
 name|MAX_NUM_VFS
-value|8
+value|7
 end_define
 
 begin_define
@@ -2085,7 +2085,7 @@ value|0x000000FF
 end_define
 
 begin_comment
-comment|/* Per VF MAC spoof control */
+comment|/* Per VF MAC spoof cntrl */
 end_comment
 
 begin_define
@@ -2096,7 +2096,7 @@ value|0x0000FF00
 end_define
 
 begin_comment
-comment|/* Per VF VLAN spoof control */
+comment|/* Per VF VLAN spoof cntrl */
 end_comment
 
 begin_define
@@ -2524,6 +2524,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|E1000_EEPROM_PCS_AUTONEG_DISABLE_BIT
+value|(1<< 14)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ALL_QUEUES
 value|0xFFFF
 end_define
@@ -2688,6 +2695,147 @@ parameter_list|(
 name|struct
 name|e1000_hw
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* I2C SDA and SCL timing parameters for standard mode */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_HD_STA
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_LOW
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_HIGH
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_SU_STA
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_HD_DATA
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_SU_DATA
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_RISE
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_FALL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_SU_STO
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|E1000_I2C_T_BUF
+value|5
+end_define
+
+begin_function_decl
+name|s32
+name|e1000_set_i2c_bb
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_read_i2c_byte_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+name|dev_addr
+parameter_list|,
+name|u8
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|s32
+name|e1000_write_i2c_byte_generic
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
+parameter_list|,
+name|u8
+name|byte_offset
+parameter_list|,
+name|u8
+name|dev_addr
+parameter_list|,
+name|u8
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|e1000_i2c_bus_clear
+parameter_list|(
+name|struct
+name|e1000_hw
+modifier|*
+name|hw
 parameter_list|)
 function_decl|;
 end_function_decl

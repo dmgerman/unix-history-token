@@ -611,7 +611,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 block|{
@@ -1088,7 +1088,7 @@ literal|'/'
 expr_stmt|;
 name|pc
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|strncpy
 argument_list|(
@@ -1129,7 +1129,7 @@ literal|':'
 expr_stmt|;
 name|pc
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|strncpy
 argument_list|(

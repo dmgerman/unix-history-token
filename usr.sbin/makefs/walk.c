@@ -830,7 +830,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * free_fsnodes --  *	Removes node from tree and frees it and all of  *   its decendents.  */
+comment|/*  * free_fsnodes --  *	Removes node from tree and frees it and all of  *   its descendants.  */
 end_comment
 
 begin_function

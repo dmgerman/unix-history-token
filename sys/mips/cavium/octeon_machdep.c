@@ -2157,6 +2157,24 @@ name|octeon_bootinfo
 operator|->
 name|mac_addr_count
 expr_stmt|;
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|compact_flash_common_base_addr
+operator|=
+name|octeon_bootinfo
+operator|->
+name|compact_flash_common_base_addr
+expr_stmt|;
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|compact_flash_attribute_base_addr
+operator|=
+name|octeon_bootinfo
+operator|->
+name|compact_flash_attribute_base_addr
+expr_stmt|;
 block|}
 end_function
 

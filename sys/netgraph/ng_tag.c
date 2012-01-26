@@ -869,12 +869,22 @@ argument_list|)
 argument_list|,
 name|M_NETGRAPH_TAG
 argument_list|,
-name|M_WAITOK
+name|M_NOWAIT
 operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-comment|/* M_WAITOK can't return NULL. */
+if|if
+condition|(
+name|hip
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|ENOMEM
+operator|)
+return|;
 name|NG_HOOK_SET_PRIVATE
 argument_list|(
 name|hook

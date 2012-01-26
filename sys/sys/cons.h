@@ -65,6 +65,30 @@ end_typedef
 
 begin_typedef
 typedef|typedef
+name|void
+name|cn_grab_t
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+name|cn_ungrab_t
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
 name|int
 name|cn_getc_t
 parameter_list|(
@@ -118,6 +142,16 @@ modifier|*
 name|cn_putc
 decl_stmt|;
 comment|/* kernel putchar interface */
+name|cn_grab_t
+modifier|*
+name|cn_grab
+decl_stmt|;
+comment|/* grab console for exclusive kernel use */
+name|cn_ungrab_t
+modifier|*
+name|cn_ungrab
+decl_stmt|;
+comment|/* ungrab console */
 block|}
 struct|;
 end_struct
@@ -244,6 +278,43 @@ begin_comment
 comment|/* Temporarily not available. */
 end_comment
 
+begin_comment
+comment|/* Visibility of characters in cngets() */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETS_NOECHO
+value|0
+end_define
+
+begin_comment
+comment|/* Disable echoing of characters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETS_ECHO
+value|1
+end_define
+
+begin_comment
+comment|/* Enable echoing of characters. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GETS_ECHOPASS
+value|2
+end_define
+
+begin_comment
+comment|/* Print a * for every character. */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -298,7 +369,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static const struct consdev_ops name##_consdev_ops = {		\ 		.cn_probe = name##_cnprobe,				\ 		.cn_init = name##_cninit,				\ 		.cn_term = name##_cnterm,				\ 		.cn_getc = name##_cngetc,				\ 		.cn_putc = name##_cnputc,				\ 	};								\ 	CONSOLE_DEVICE(name##_consdev, name##_consdev_ops, NULL)
+value|static const struct consdev_ops name##_consdev_ops = {		\ 		.cn_probe = name##_cnprobe,				\ 		.cn_init = name##_cninit,				\ 		.cn_term = name##_cnterm,				\ 		.cn_getc = name##_cngetc,				\ 		.cn_putc = name##_cnputc,				\ 		.cn_grab = name##_cngrab,				\ 		.cn_ungrab = name##_cnungrab,				\ 	};								\ 	CONSOLE_DEVICE(name##_consdev, name##_consdev_ops, NULL)
 end_define
 
 begin_comment
@@ -370,6 +441,24 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|cngrab
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cnungrab
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|cncheckc
 parameter_list|(
@@ -383,6 +472,20 @@ name|int
 name|cngetc
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|cngets
+parameter_list|(
+name|char
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

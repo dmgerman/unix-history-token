@@ -3800,7 +3800,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"RA witn non-linklocal source address "
+literal|"RA with non-linklocal source address "
 literal|"received from %s on %s"
 argument_list|,
 name|inet_ntop
@@ -8175,7 +8175,7 @@ operator|->
 name|ifi_rainfo_trans
 condition|)
 block|{
-comment|/* Inital burst finished. */
+comment|/* Initial burst finished. */
 if|if
 condition|(
 name|ifi

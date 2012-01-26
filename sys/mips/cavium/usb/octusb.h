@@ -26,32 +26,6 @@ name|OCTUSB_MAX_DEVICES
 value|MIN(USB_MAX_DEVICES, 64)
 end_define
 
-begin_comment
-comment|/*  * The second port is on a different IRQ and so we disable it for now.  */
-end_comment
-
-begin_if
-if|#
-directive|if
-literal|1
-end_if
-
-begin_define
-define|#
-directive|define
-name|OCTUSB_MAX_PORTS
-value|1
-end_define
-
-begin_comment
-comment|/* hardcoded */
-end_comment
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
@@ -62,11 +36,6 @@ end_define
 begin_comment
 comment|/* hardcoded */
 end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -241,7 +210,7 @@ name|uint8_t
 name|ep_toggle_next
 decl_stmt|;
 name|uint8_t
-name|port_index
+name|root_port_index
 decl_stmt|;
 name|uint8_t
 name|fixup_complete
@@ -347,10 +316,16 @@ name|struct
 name|resource
 modifier|*
 name|sc_irq_res
+index|[
+name|OCTUSB_MAX_PORTS
+index|]
 decl_stmt|;
 name|void
 modifier|*
 name|sc_intr_hdl
+index|[
+name|OCTUSB_MAX_PORTS
+index|]
 decl_stmt|;
 name|struct
 name|octusb_port
@@ -412,28 +387,6 @@ end_function_decl
 begin_function_decl
 name|usb_error_t
 name|octusb_uninit
-parameter_list|(
-name|struct
-name|octusb_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|octusb_suspend
-parameter_list|(
-name|struct
-name|octusb_softc
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|octusb_resume
 parameter_list|(
 name|struct
 name|octusb_softc

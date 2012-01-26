@@ -129,6 +129,12 @@ directive|include
 file|"intel.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"via.h"
+end_include
+
 begin_decl_stmt
 name|int
 name|verbosity_level
@@ -300,6 +306,12 @@ block|{
 name|amd_probe
 block|,
 name|amd_update
+block|}
+block|,
+block|{
+name|via_probe
+block|,
+name|via_update
 block|}
 block|, }
 struct|;

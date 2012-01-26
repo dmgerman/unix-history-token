@@ -12670,8 +12670,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -17277,9 +17277,6 @@ block|{
 name|int
 name|prelim_sync_period
 decl_stmt|;
-name|u_int
-name|freq
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -17343,15 +17340,6 @@ operator|=
 name|scsi_calc_syncparam
 argument_list|(
 name|prelim_sync_period
-argument_list|)
-expr_stmt|;
-name|freq
-operator|=
-name|scsi_calc_syncsrate
-argument_list|(
-name|spi
-operator|->
-name|sync_period
 argument_list|)
 expr_stmt|;
 name|didsettings
@@ -19922,8 +19910,6 @@ name|RPL_LUNDATA_ATYP_EXTLUN
 case|:
 block|{
 name|int
-name|field_len
-decl_stmt|,
 name|field_len_code
 decl_stmt|,
 name|eam_code
@@ -19963,12 +19949,6 @@ name|RPL_LUNDATA_EXT_LEN_MASK
 operator|)
 operator|>>
 literal|4
-expr_stmt|;
-name|field_len
-operator|=
-name|field_len_code
-operator|*
-literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -21765,8 +21745,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -22322,8 +22302,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -23582,8 +23562,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -23923,8 +23903,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -25775,8 +25755,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -26175,8 +26155,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -27258,7 +27238,7 @@ literal|"-P pgctl          page control field 0-3\n"
 literal|"defects arguments:\n"
 literal|"-f format         specify defect list format (block, bfi or phys)\n"
 literal|"-G                get the grown defect list\n"
-literal|"-P                get the permanant defect list\n"
+literal|"-P                get the permanent defect list\n"
 literal|"inquiry arguments:\n"
 literal|"-D                get the standard inquiry data\n"
 literal|"-S                get the serial number\n"

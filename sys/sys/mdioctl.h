@@ -241,7 +241,7 @@ value|0x40
 end_define
 
 begin_comment
-comment|/* Don't try to prevent foot-shooting */
+comment|/* Asynchronous mode */
 end_comment
 
 begin_endif

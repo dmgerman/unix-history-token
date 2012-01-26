@@ -121,67 +121,6 @@ define|\
 value|do {								\ 	    if ((len)> sizeof *(ptr)) {				\ 		(len) -= sizeof *(ptr);					\ 		(ptr)++;						\ 	    } else {							\ 		if ((len) != sizeof *(ptr))				\ 			panic("%s: went past end of iovec.", __func__);	\ 		(idx)++;						\ 		(ptr) = (iov)[(idx)].iov_base;				\ 		(len) = (iov)[(idx)].iov_len;				\ 	    }								\ 	} while (0)
 end_define
 
-begin_function
-specifier|static
-specifier|inline
-name|unsigned
-name|long
-name|octeon_crypto_enable
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|register_t
-name|s
-decl_stmt|;
-name|s
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
-name|mips_wr_status
-argument_list|(
-name|mips_rd_status
-argument_list|()
-operator||
-name|MIPS_SR_COP_2_BIT
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|s
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-specifier|inline
-name|void
-name|octeon_crypto_disable
-parameter_list|(
-name|register_t
-name|s
-parameter_list|)
-block|{
-name|mips_wr_status
-argument_list|(
-name|mips_rd_status
-argument_list|()
-operator|&
-operator|~
-name|MIPS_SR_COP_2_BIT
-argument_list|)
-expr_stmt|;
-name|intr_restore
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
 begin_define
 define|#
 directive|define
@@ -331,9 +270,6 @@ name|xor2
 init|=
 literal|0x5c5c5c5c5c5c5c5cULL
 decl_stmt|;
-name|register_t
-name|s
-decl_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s()\n"
@@ -380,11 +316,6 @@ operator|*
 operator|)
 name|hash_key
 expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|auth
@@ -864,11 +795,6 @@ literal|2
 argument_list|)
 expr_stmt|;
 block|}
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 end_function
@@ -929,9 +855,6 @@ name|int
 name|data_i
 decl_stmt|,
 name|data_l
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -1030,11 +953,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load 3DES Key */
 name|CVMX_MT_3DES_KEY
@@ -1150,11 +1068,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -1239,11 +1152,6 @@ operator|-=
 literal|8
 expr_stmt|;
 block|}
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1298,9 +1206,6 @@ name|int
 name|data_i
 decl_stmt|,
 name|data_l
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -1399,11 +1304,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load 3DES Key */
 name|CVMX_MT_3DES_KEY
@@ -1519,11 +1419,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -1608,11 +1503,6 @@ operator|-=
 literal|8
 expr_stmt|;
 block|}
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1678,9 +1568,6 @@ name|int
 name|data_i
 decl_stmt|,
 name|data_l
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -1779,11 +1666,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load AES Key */
 name|CVMX_MT_AES_KEY
@@ -1931,11 +1813,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -2084,11 +1961,6 @@ operator|-=
 literal|16
 expr_stmt|;
 block|}
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2146,9 +2018,6 @@ name|int
 name|data_i
 decl_stmt|,
 name|data_l
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -2247,11 +2116,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load AES Key */
 name|CVMX_MT_AES_KEY
@@ -2399,11 +2263,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -2552,11 +2411,6 @@ operator|-=
 literal|16
 expr_stmt|;
 block|}
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2634,9 +2488,6 @@ decl_stmt|,
 name|alen
 init|=
 name|auth_len
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -2719,11 +2570,6 @@ name|data_i
 argument_list|,
 name|data_l
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* Load MD5 IV */
 name|CVMX_MT_HSH_IV
@@ -3048,11 +2894,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3132,9 +2973,6 @@ decl_stmt|,
 name|alen
 init|=
 name|auth_len
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -3217,11 +3055,6 @@ name|data_i
 argument_list|,
 name|data_l
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* Load SHA1 IV */
 name|CVMX_MT_HSH_IV
@@ -3577,11 +3410,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -3688,9 +3516,6 @@ decl_stmt|,
 name|alen
 init|=
 name|auth_len
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -3816,11 +3641,6 @@ operator|->
 name|octo_enckey
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
-expr_stmt|;
 comment|/* load 3DES Key */
 name|CVMX_MT_3DES_KEY
 argument_list|(
@@ -3935,11 +3755,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -4442,11 +4257,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -4545,9 +4355,6 @@ decl_stmt|,
 name|alen
 init|=
 name|auth_len
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -4673,11 +4480,6 @@ operator|->
 name|octo_enckey
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
-expr_stmt|;
 comment|/* load 3DES Key */
 name|CVMX_MT_3DES_KEY
 argument_list|(
@@ -4792,11 +4594,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -5297,11 +5094,6 @@ argument_list|(
 name|tmp1
 operator|>>
 literal|32
-argument_list|)
-expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -5413,9 +5205,6 @@ name|alen
 init|=
 name|auth_len
 decl_stmt|;
-name|register_t
-name|s
-decl_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s()\n"
@@ -5540,11 +5329,6 @@ operator|->
 name|octo_enckey
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
-expr_stmt|;
 comment|/* load 3DES Key */
 name|CVMX_MT_3DES_KEY
 argument_list|(
@@ -5659,11 +5443,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -6197,11 +5976,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -6302,9 +6076,6 @@ decl_stmt|,
 name|alen
 init|=
 name|auth_len
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -6430,11 +6201,6 @@ operator|->
 name|octo_enckey
 argument_list|)
 expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
-expr_stmt|;
 comment|/* load 3DES Key */
 name|CVMX_MT_3DES_KEY
 argument_list|(
@@ -6549,11 +6315,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -7085,11 +6846,6 @@ argument_list|(
 name|tmp1
 operator|>>
 literal|32
-argument_list|)
-expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -7220,9 +6976,6 @@ name|alen
 init|=
 name|auth_len
 decl_stmt|;
-name|register_t
-name|s
-decl_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s()\n"
@@ -7346,11 +7099,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load AES Key */
 name|CVMX_MT_AES_KEY
@@ -7498,11 +7246,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -8179,11 +7922,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -8303,9 +8041,6 @@ decl_stmt|,
 name|alen
 init|=
 name|auth_len
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -8430,11 +8165,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load AES Key */
 name|CVMX_MT_AES_KEY
@@ -8582,11 +8312,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -9261,11 +8986,6 @@ argument_list|(
 name|tmp1
 operator|>>
 literal|32
-argument_list|)
-expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return
@@ -9398,9 +9118,6 @@ name|alen
 init|=
 name|auth_len
 decl_stmt|;
-name|register_t
-name|s
-decl_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s()\n"
@@ -9524,11 +9241,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load AES Key */
 name|CVMX_MT_AES_KEY
@@ -9676,11 +9388,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -10411,11 +10118,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -10537,9 +10239,6 @@ decl_stmt|,
 name|alen
 init|=
 name|auth_len
-decl_stmt|;
-name|register_t
-name|s
 decl_stmt|;
 name|dprintf
 argument_list|(
@@ -10664,11 +10363,6 @@ name|od
 operator|->
 name|octo_enckey
 argument_list|)
-expr_stmt|;
-name|s
-operator|=
-name|octeon_crypto_enable
-argument_list|()
 expr_stmt|;
 comment|/* load AES Key */
 name|CVMX_MT_AES_KEY
@@ -10816,11 +10510,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|octeon_crypto_disable
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 name|dprintf
 argument_list|(
 literal|"%s: Bad key length %d\n"
@@ -11549,11 +11238,6 @@ argument_list|(
 name|tmp1
 operator|>>
 literal|32
-argument_list|)
-expr_stmt|;
-name|octeon_crypto_disable
-argument_list|(
-name|s
 argument_list|)
 expr_stmt|;
 return|return

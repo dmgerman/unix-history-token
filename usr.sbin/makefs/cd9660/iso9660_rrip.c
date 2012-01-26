@@ -1095,7 +1095,7 @@ name|ISO_SUSP_ATTRIBUTES
 modifier|*
 name|temp
 decl_stmt|;
-comment|/* 	 * Requirements/notes: 	 * CE: is added for us where needed 	 * ST: not sure if it is even required, but if so, should be 	 *     handled by the CE code 	 * PD: isnt needed (though might be added for testing) 	 * SP: is stored ONLY on the . record of the root directory 	 * ES: not sure 	 */
+comment|/* 	 * Requirements/notes: 	 * CE: is added for us where needed 	 * ST: not sure if it is even required, but if so, should be 	 *     handled by the CE code 	 * PD: isn't needed (though might be added for testing) 	 * SP: is stored ONLY on the . record of the root directory 	 * ES: not sure 	 */
 comment|/* Check for root directory, add SP and ER if needed. */
 if|if
 condition|(

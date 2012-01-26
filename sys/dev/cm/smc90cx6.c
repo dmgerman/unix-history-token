@@ -2215,8 +2215,8 @@ block|}
 end_function
 
 begin_function
-name|__inline
 specifier|static
+specifier|inline
 name|void
 name|cm_tint_locked
 parameter_list|(

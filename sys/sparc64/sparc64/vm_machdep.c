@@ -2194,10 +2194,6 @@ name|int
 name|wait
 parameter_list|)
 block|{
-specifier|static
-name|vm_pindex_t
-name|color
-decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
@@ -2270,8 +2266,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|pflags
 operator||

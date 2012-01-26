@@ -3401,7 +3401,7 @@ name|drv
 operator|->
 name|hapd
 decl_stmt|;
-comment|/* 	 * The expiry of the MAC address from RADIUS ACL cache doesn't mean  	 * that we should kick off the client.  Our current approach doesn't  	 * require adding/removing entries from an allow/deny list; so this 	 * function is likely unecessary 	 */
+comment|/* 	 * The expiry of the MAC address from RADIUS ACL cache doesn't mean 	 * that we should kick off the client.  Our current approach doesn't 	 * require adding/removing entries from an allow/deny list; so this 	 * function is likely unnecessary 	 */
 name|wpa_printf
 argument_list|(
 name|MSG_DEBUG

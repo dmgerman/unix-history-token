@@ -542,6 +542,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Code-points for some Latin1 chars in ISO-8859-1 encoding.  * UTF-8 encoded chars in the comments.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -552,65 +556,75 @@ index|[]
 init|=
 block|{
 block|{
-literal|'á'
+literal|'\340'
 block|,
 literal|".--.-"
 block|}
 block|,
+comment|/* Ã  */
 block|{
-literal|'à'
+literal|'\341'
 block|,
 literal|".--.-"
 block|}
 block|,
+comment|/* Ã¡ */
 block|{
-literal|'â'
+literal|'\342'
 block|,
 literal|".--.-"
 block|}
 block|,
+comment|/* Ã¢ */
 block|{
-literal|'ä'
+literal|'\344'
 block|,
 literal|".-.-"
 block|}
 block|,
+comment|/* Ã¤ */
 block|{
-literal|'ç'
+literal|'\347'
 block|,
 literal|"-.-.."
 block|}
 block|,
+comment|/* Ã§ */
 block|{
-literal|'é'
+literal|'\350'
 block|,
 literal|"..-.."
 block|}
 block|,
+comment|/* Ã¨ */
 block|{
-literal|'è'
+literal|'\351'
 block|,
 literal|"..-.."
 block|}
 block|,
+comment|/* Ã© */
 block|{
-literal|'ê'
+literal|'\352'
 block|,
 literal|"-..-."
 block|}
 block|,
+comment|/* Ãª */
 block|{
-literal|'ö'
+literal|'\366'
 block|,
 literal|"---."
 block|}
 block|,
+comment|/* Ã¶ */
 block|{
-literal|'ü'
+literal|'\374'
 block|,
 literal|"..--"
 block|}
 block|,
+comment|/* Ã¼ */
 block|{
 literal|'\0'
 block|,
@@ -619,6 +633,10 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Code-points for some Greek chars in ISO-8859-7 encoding.  * UTF-8 encoded chars in the comments.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -629,259 +647,259 @@ name|iso8859_7tab
 index|[]
 init|=
 block|{
-comment|/* 	 * The Greek alphabet; you'll need an ISO8859-7 font in order 	 * to see the actual characters. 	 * This table does not implement: 	 * - the special sequences for the seven diphthongs, 	 * - the punctuation differences. 	 * Implementing these features would introduce too many 	 * special-cases in the program's main loop. 	 * The diphthong sequences are: 	 * alpha iota		.-.- 	 * alpha upsilon	..-- 	 * epsilon upsilon	---. 	 * eta upsilon		...- 	 * omicron iota		---.. 	 * omicron upsilon	..- 	 * upsilon iota		.--- 	 * The different punctuation symbols are: 	 * ;	..-.- 	 * !	--..-- 	 */
+comment|/* 	 * This table does not implement: 	 * - the special sequences for the seven diphthongs, 	 * - the punctuation differences. 	 * Implementing these features would introduce too many 	 * special-cases in the program's main loop. 	 * The diphthong sequences are: 	 * alpha iota		.-.- 	 * alpha upsilon	..-- 	 * epsilon upsilon	---. 	 * eta upsilon		...- 	 * omicron iota		---.. 	 * omicron upsilon	..- 	 * upsilon iota		.--- 	 * The different punctuation symbols are: 	 * ;	..-.- 	 * !	--..-- 	 */
 block|{
-literal|'á'
+literal|'\341'
 block|,
 literal|".-"
 block|}
 block|,
-comment|/* alpha */
+comment|/* Î±, alpha */
 block|{
-literal|'Ü'
+literal|'\334'
 block|,
 literal|".-"
 block|}
 block|,
-comment|/* alpha with acute */
+comment|/* Î¬, alpha with acute */
 block|{
-literal|'â'
+literal|'\342'
 block|,
 literal|"-..."
 block|}
 block|,
-comment|/* beta */
+comment|/* Î², beta */
 block|{
-literal|'ã'
+literal|'\343'
 block|,
 literal|"--."
 block|}
 block|,
-comment|/* gamma */
+comment|/* Î³, gamma */
 block|{
-literal|'ä'
+literal|'\344'
 block|,
 literal|"-.."
 block|}
 block|,
-comment|/* delta */
+comment|/* Î´, delta */
 block|{
-literal|'å'
+literal|'\345'
 block|,
 literal|"."
 block|}
 block|,
-comment|/* epsilon */
+comment|/* Îµ, epsilon */
 block|{
-literal|'Ý'
+literal|'\335'
 block|,
 literal|"."
 block|}
 block|,
-comment|/* epsilon with acute */
+comment|/* Î­, epsilon with acute */
 block|{
-literal|'æ'
+literal|'\346'
 block|,
 literal|"--.."
 block|}
 block|,
-comment|/* zeta */
+comment|/* Î¶, zeta */
 block|{
-literal|'ç'
+literal|'\347'
 block|,
 literal|"...."
 block|}
 block|,
-comment|/* eta */
+comment|/* Î·, eta */
 block|{
-literal|'Þ'
+literal|'\336'
 block|,
 literal|"...."
 block|}
 block|,
-comment|/* eta with acute */
+comment|/* Î®, eta with acute */
 block|{
-literal|'è'
+literal|'\350'
 block|,
 literal|"-.-."
 block|}
 block|,
-comment|/* theta */
+comment|/* Î¸, theta */
 block|{
-literal|'é'
+literal|'\351'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota */
+comment|/* Î¹, iota */
 block|{
-literal|'ß'
+literal|'\337'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with acute */
+comment|/* Î¯, iota with acute */
 block|{
-literal|'ú'
+literal|'\372'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with diaeresis */
+comment|/* Ï, iota with diaeresis */
 block|{
-literal|'À'
+literal|'\300'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with acute and diaeresis */
+comment|/* Î, iota with acute and diaeresis */
 block|{
-literal|'ê'
+literal|'\352'
 block|,
 literal|"-.-"
 block|}
 block|,
-comment|/* kappa */
+comment|/* Îº, kappa */
 block|{
-literal|'ë'
+literal|'\353'
 block|,
 literal|".-.."
 block|}
 block|,
-comment|/* lambda */
+comment|/* Î», lambda */
 block|{
-literal|'ì'
+literal|'\354'
 block|,
 literal|"--"
 block|}
 block|,
-comment|/* mu */
+comment|/* Î¼, mu */
 block|{
-literal|'í'
+literal|'\355'
 block|,
 literal|"-."
 block|}
 block|,
-comment|/* nu */
+comment|/* Î½, nu */
 block|{
-literal|'î'
+literal|'\356'
 block|,
 literal|"-..-"
 block|}
 block|,
-comment|/* xi */
+comment|/* Î¾, xi */
 block|{
-literal|'ï'
+literal|'\357'
 block|,
 literal|"---"
 block|}
 block|,
-comment|/* omicron */
+comment|/* Î¿, omicron */
 block|{
-literal|'ü'
+literal|'\374'
 block|,
 literal|"---"
 block|}
 block|,
-comment|/* omicron with acute */
+comment|/* Ï, omicron with acute */
 block|{
-literal|'ð'
+literal|'\360'
 block|,
 literal|".--."
 block|}
 block|,
-comment|/* pi */
+comment|/* Ï, pi */
 block|{
-literal|'ñ'
+literal|'\361'
 block|,
 literal|".-."
 block|}
 block|,
-comment|/* rho */
+comment|/* Ï, rho */
 block|{
-literal|'ó'
+literal|'\363'
 block|,
 literal|"..."
 block|}
 block|,
-comment|/* sigma */
+comment|/* Ï, sigma */
 block|{
-literal|'ò'
+literal|'\362'
 block|,
 literal|"..."
 block|}
 block|,
-comment|/* final sigma */
+comment|/* Ï, final sigma */
 block|{
-literal|'ô'
+literal|'\364'
 block|,
 literal|"-"
 block|}
 block|,
-comment|/* tau */
+comment|/* Ï, tau */
 block|{
-literal|'õ'
+literal|'\365'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon */
+comment|/* Ï, upsilon */
 block|{
-literal|'ý'
+literal|'\375'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon with acute */
+comment|/* Ï, upsilon with acute */
 block|{
-literal|'û'
+literal|'\373'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon and diaeresis */
+comment|/* Ï, upsilon and diaeresis */
 block|{
-literal|'à'
+literal|'\340'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon with acute and diaeresis */
+comment|/* Î°, upsilon with acute and diaeresis */
 block|{
-literal|'ö'
+literal|'\366'
 block|,
 literal|"..-."
 block|}
 block|,
-comment|/* phi */
+comment|/* Ï, phi */
 block|{
-literal|'÷'
+literal|'\367'
 block|,
 literal|"----"
 block|}
 block|,
-comment|/* chi */
+comment|/* Ï, chi */
 block|{
-literal|'ø'
+literal|'\370'
 block|,
 literal|"--.-"
 block|}
 block|,
-comment|/* psi */
+comment|/* Ï, psi */
 block|{
-literal|'ù'
+literal|'\371'
 block|,
 literal|".--"
 block|}
 block|,
-comment|/* omega */
+comment|/* Ï, omega */
 block|{
-literal|'þ'
+literal|'\376'
 block|,
 literal|".--"
 block|}
 block|,
-comment|/* omega with acute */
+comment|/* Ï, omega with acute */
 block|{
 literal|'\0'
 block|,
@@ -890,6 +908,10 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Code-points for the Cyrillic alphabet in KOI8-R encoding.  * UTF-8 encoded chars in the comments.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -900,231 +922,230 @@ name|koi8rtab
 index|[]
 init|=
 block|{
-comment|/* 	 * The Cyrillic alphabet; you'll need a KOI8-R font in order 	 * to see the actual characters 	 */
 block|{
-literal|'Á'
+literal|'\301'
 block|,
 literal|".-"
 block|}
 block|,
-comment|/* a */
+comment|/* Ð°, a */
 block|{
-literal|'Â'
+literal|'\302'
 block|,
 literal|"-..."
 block|}
 block|,
-comment|/* be */
+comment|/* Ð±, be */
 block|{
-literal|'×'
+literal|'\327'
 block|,
 literal|".--"
 block|}
 block|,
-comment|/* ve */
+comment|/* Ð², ve */
 block|{
-literal|'Ç'
+literal|'\307'
 block|,
 literal|"--."
 block|}
 block|,
-comment|/* ge */
+comment|/* Ð³, ge */
 block|{
-literal|'Ä'
+literal|'\304'
 block|,
 literal|"-.."
 block|}
 block|,
-comment|/* de */
+comment|/* Ð´, de */
 block|{
-literal|'Å'
+literal|'\305'
 block|,
 literal|"."
 block|}
 block|,
-comment|/* ye */
+comment|/* Ðµ, ye */
 block|{
-literal|'£'
+literal|'\243'
 block|,
 literal|"."
 block|}
 block|,
-comment|/* yo, the same as ye */
+comment|/* Ñ, yo, the same as ye */
 block|{
-literal|'Ö'
+literal|'\326'
 block|,
 literal|"...-"
 block|}
 block|,
-comment|/* she */
+comment|/* Ð¶, she */
 block|{
-literal|'Ú'
+literal|'\332'
 block|,
 literal|"--.."
 block|}
 block|,
-comment|/* ze */
+comment|/* Ð·, ze */
 block|{
-literal|'É'
+literal|'\311'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* i */
+comment|/* Ð¸, i */
 block|{
-literal|'Ê'
+literal|'\312'
 block|,
 literal|".---"
 block|}
 block|,
-comment|/* i kratkoye */
+comment|/* Ð¹, i kratkoye */
 block|{
-literal|'Ë'
+literal|'\313'
 block|,
 literal|"-.-"
 block|}
 block|,
-comment|/* ka */
+comment|/* Ðº, ka */
 block|{
-literal|'Ì'
+literal|'\314'
 block|,
 literal|".-.."
 block|}
 block|,
-comment|/* el */
+comment|/* Ð», el */
 block|{
-literal|'Í'
+literal|'\315'
 block|,
 literal|"--"
 block|}
 block|,
-comment|/* em */
+comment|/* Ð¼, em */
 block|{
-literal|'Î'
+literal|'\316'
 block|,
 literal|"-."
 block|}
 block|,
-comment|/* en */
+comment|/* Ð½, en */
 block|{
-literal|'Ï'
+literal|'\317'
 block|,
 literal|"---"
 block|}
 block|,
-comment|/* o */
+comment|/* Ð¾, o */
 block|{
-literal|'Ð'
+literal|'\320'
 block|,
 literal|".--."
 block|}
 block|,
-comment|/* pe */
+comment|/* Ð¿, pe */
 block|{
-literal|'Ò'
+literal|'\322'
 block|,
 literal|".-."
 block|}
 block|,
-comment|/* er */
+comment|/* Ñ, er */
 block|{
-literal|'Ó'
+literal|'\323'
 block|,
 literal|"..."
 block|}
 block|,
-comment|/* es */
+comment|/* Ñ, es */
 block|{
-literal|'Ô'
+literal|'\324'
 block|,
 literal|"-"
 block|}
 block|,
-comment|/* te */
+comment|/* Ñ, te */
 block|{
-literal|'Õ'
+literal|'\325'
 block|,
 literal|"..-"
 block|}
 block|,
-comment|/* u */
+comment|/* Ñ, u */
 block|{
-literal|'Æ'
+literal|'\306'
 block|,
 literal|"..-."
 block|}
 block|,
-comment|/* ef */
+comment|/* Ñ, ef */
 block|{
-literal|'È'
+literal|'\310'
 block|,
 literal|"...."
 block|}
 block|,
-comment|/* kha */
+comment|/* Ñ, kha */
 block|{
-literal|'Ã'
+literal|'\303'
 block|,
 literal|"-.-."
 block|}
 block|,
-comment|/* ce */
+comment|/* Ñ, ce */
 block|{
-literal|'Þ'
+literal|'\336'
 block|,
 literal|"---."
 block|}
 block|,
-comment|/* che */
+comment|/* Ñ, che */
 block|{
-literal|'Û'
+literal|'\333'
 block|,
 literal|"----"
 block|}
 block|,
-comment|/* sha */
+comment|/* Ñ, sha */
 block|{
-literal|'Ý'
+literal|'\335'
 block|,
 literal|"--.-"
 block|}
 block|,
-comment|/* shcha */
+comment|/* Ñ, shcha */
 block|{
-literal|'Ù'
+literal|'\331'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* yi */
+comment|/* Ñ, yi */
 block|{
-literal|'Ø'
+literal|'\330'
 block|,
 literal|"-..-"
 block|}
 block|,
-comment|/* myakhkij znak */
+comment|/* Ñ, myakhkij znak */
 block|{
-literal|'Ü'
+literal|'\334'
 block|,
 literal|"..-.."
 block|}
 block|,
-comment|/* ae */
+comment|/* Ñ, ae */
 block|{
-literal|'À'
+literal|'\300'
 block|,
 literal|"..--"
 block|}
 block|,
-comment|/* yu */
+comment|/* Ñ, yu */
 block|{
-literal|'Ñ'
+literal|'\321'
 block|,
 literal|".-.-"
 block|}
 block|,
-comment|/* ya */
+comment|/* Ñ, ya */
 block|{
 literal|'\0'
 block|,

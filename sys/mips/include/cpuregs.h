@@ -765,6 +765,13 @@ name|MIPS_CR_EXC_CODE_SHIFT
 value|2
 end_define
 
+begin_define
+define|#
+directive|define
+name|MIPS_CR_COP_ERR_SHIFT
+value|28
+end_define
+
 begin_comment
 comment|/*  * The bits in the status register.  All bits are active when set to 1.  *  *	R3000 status register fields:  *	MIPS_SR_COP_USABILITY	Control the usability of the four coprocessors.  *	MIPS_SR_TS		TLB shutdown.  *  *	MIPS_SR_INT_IE		Master (current) interrupt enable bit.  *  * Differences:  *	r3k has cache control is via frobbing SR register bits, whereas the  *	r4k cache control is via explicit instructions.  *	r3k has a 3-entry stack of kernel/user bits, whereas the  *	r4k has kernel/supervisor/user.  */
 end_comment

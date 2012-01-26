@@ -2615,8 +2615,6 @@ name|td_frame
 operator|->
 name|sr
 operator||=
-name|MIPS_SR_COP_2_BIT
-operator||
 name|MIPS_SR_PX
 operator||
 name|MIPS_SR_UX

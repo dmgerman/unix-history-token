@@ -1934,6 +1934,27 @@ literal|1
 return|;
 block|}
 block|}
+comment|/* Make sure a CN56XX pass 1 isn't trying to do anything; errata for PASS 1 */
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN56XX_PASS1_X
+argument_list|)
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"PCIe port %d: CN56XX_PASS_1, skipping\n"
+argument_list|,
+name|pcie_port
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
 comment|/* PCIe switch arbitration mode. '0' == fixed priority NPEI, PCIe0, then PCIe1. '1' == round robin. */
 name|npei_ctl_status
 operator|.

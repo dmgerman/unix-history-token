@@ -431,12 +431,12 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* TODO */
+comment|/* XXX TODO */
 break|break;
 case|case
 literal|1
 case|:
-comment|/* TODO */
+comment|/* XXX TODO */
 break|break;
 default|default:
 name|printf
@@ -575,7 +575,7 @@ argument_list|(
 literal|1000
 argument_list|)
 expr_stmt|;
-comment|/* 			 * WAR for HW bug. Here it adjusts the duration 			 * between two SOFS. 			 */
+comment|/* 		 * WAR for HW bug. Here it adjusts the duration 		 * between two SOFS. 		 */
 name|ATH_WRITE_REG
 argument_list|(
 name|AR71XX_USB_CTRL_FLADJ
@@ -626,7 +626,6 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-comment|/* fallthrough */
 break|break;
 block|}
 block|}

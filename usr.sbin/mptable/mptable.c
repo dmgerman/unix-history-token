@@ -3287,6 +3287,8 @@ argument_list|,
 name|O_CREAT
 operator||
 name|O_RDWR
+argument_list|,
+literal|0666
 argument_list|)
 expr_stmt|;
 name|seekEntry

@@ -408,7 +408,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * Create a new entry into the storage table and, if neccessary, an  * entry into the storage map.  */
+comment|/**  * Create a new entry into the storage table and, if necessary, an  * entry into the storage map.  */
 end_comment
 
 begin_function

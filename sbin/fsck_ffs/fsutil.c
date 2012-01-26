@@ -3876,7 +3876,7 @@ file|<stdarg.h>
 end_include
 
 begin_comment
-comment|/*  * An unexpected inconsistency occured.  * Die if preening or file system is running with soft dependency protocol,  * otherwise just print message and continue.  */
+comment|/*  * An unexpected inconsistency occurred.  * Die if preening or file system is running with soft dependency protocol,  * otherwise just print message and continue.  */
 end_comment
 
 begin_function

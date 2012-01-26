@@ -43,7 +43,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * check_bound.c  * Checks to see whether the program is still bound to the  * claimed address and returns the univeral merged address  *  */
+comment|/*  * check_bound.c  * Checks to see whether the program is still bound to the  * claimed address and returns the universal merged address  *  */
 end_comment
 
 begin_include

@@ -177,7 +177,7 @@ operator|!
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -797,7 +797,7 @@ continue|continue;
 comment|/* 			 * skip any special chars -- save precision in 			 * case it's a %s format. 			 */
 while|while
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|spec
 operator|+
@@ -1161,7 +1161,7 @@ control|(
 operator|++
 name|p1
 init|;
-name|index
+name|strchr
 argument_list|(
 name|spec
 argument_list|,
@@ -1179,7 +1179,7 @@ block|{
 comment|/* Skip any special chars, field width. */
 while|while
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|spec
 operator|+
@@ -1236,11 +1236,16 @@ expr_stmt|;
 block|}
 name|p2
 operator|=
+operator|*
+name|p1
+condition|?
 name|p1
 operator|+
 literal|1
+else|:
+name|p1
 expr_stmt|;
-comment|/* Set end pointer. */
+comment|/* Set end pointer -- make sure 						 * that it's non-NUL/-NULL first 						 * though. */
 name|cs
 index|[
 literal|0
@@ -2163,29 +2168,17 @@ name|p2
 operator|=
 name|p1
 init|;
-condition|;
-operator|++
+operator|*
 name|p1
-operator|,
+condition|;
+name|p1
 operator|++
+operator|,
 name|p2
+operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|!
-operator|*
-name|p1
-condition|)
-block|{
-operator|*
-name|p2
-operator|=
-operator|*
-name|p1
-expr_stmt|;
-break|break;
-block|}
+comment|/*  		 * Let's take a peak at the next item and see whether or not 		 * we need to escape the value... 		 */
 if|if
 condition|(
 operator|*
@@ -2193,13 +2186,32 @@ name|p1
 operator|==
 literal|'\\'
 condition|)
+block|{
+name|p1
+operator|++
+expr_stmt|;
 switch|switch
 condition|(
 operator|*
-operator|++
 name|p1
 condition|)
 block|{
+comment|/* A standalone `\' */
+case|case
+literal|'\0'
+case|:
+operator|*
+name|p2
+operator|=
+literal|'\\'
+expr_stmt|;
+operator|*
+operator|++
+name|p2
+operator|=
+literal|'\0'
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -2273,6 +2285,14 @@ name|p1
 expr_stmt|;
 break|break;
 block|}
+block|}
+else|else
+operator|*
+name|p2
+operator|=
+operator|*
+name|p1
+expr_stmt|;
 block|}
 block|}
 end_function

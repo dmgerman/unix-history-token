@@ -6,18 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"int_lib.h"
 end_include
 
@@ -191,7 +179,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ppc__ */
+comment|/* __ppc__&& !defined(__powerpc64__) */
 end_comment
 
 end_unit

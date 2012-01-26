@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1994-1996 Søren Schmidt  * All rights reserved.  *  * Portions of this software are based in part on the work of  * Sascha Wildner<saw@online.de> contributed to The DragonFly Project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $DragonFly: src/usr.sbin/vidcontrol/vidcontrol.c,v 1.10 2005/03/02 06:08:29 joerg Exp $  */
+comment|/*-  * Copyright (c) 1994-1996 SÃ¸ren Schmidt  * All rights reserved.  *  * Portions of this software are based in part on the work of  * Sascha Wildner<saw@online.de> contributed to The DragonFly Project  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    in this position and unchanged.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote products  *    derived from this software without specific prior written permission  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  *  * $DragonFly: src/usr.sbin/vidcontrol/vidcontrol.c,v 1.10 2005/03/02 06:08:29 joerg Exp $  */
 end_comment
 
 begin_ifndef
@@ -171,11 +171,11 @@ value|1
 end_define
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
+modifier|*
 name|legal_colors
-index|[
-literal|16
-index|]
 index|[
 literal|16
 index|]
@@ -245,6 +245,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hex
 init|=
@@ -253,42 +254,42 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|int
-name|number
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|int
 name|vesa_cols
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vesa_rows
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|font_height
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|colors_changed
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|video_mode_changed
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|normal_fore_color
 decl_stmt|,
@@ -297,6 +298,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|revers_fore_color
 decl_stmt|,
@@ -305,12 +307,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|char
-name|letter
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|vid_info
 name|info
@@ -318,6 +315,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|video_info
 name|new_mode_info
@@ -2325,7 +2323,7 @@ name|set_cursor_type
 parameter_list|(
 name|char
 modifier|*
-name|appearence
+name|appearance
 parameter_list|)
 block|{
 name|int
@@ -2336,7 +2334,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|appearence
+name|appearance
 argument_list|,
 literal|"normal"
 argument_list|)
@@ -2351,7 +2349,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|appearence
+name|appearance
 argument_list|,
 literal|"blink"
 argument_list|)
@@ -2366,7 +2364,7 @@ condition|(
 operator|!
 name|strcmp
 argument_list|(
-name|appearence
+name|appearance
 argument_list|,
 literal|"destructive"
 argument_list|)

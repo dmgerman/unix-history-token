@@ -796,6 +796,8 @@ name|int
 name|offset
 decl_stmt|,
 name|expanded_len
+decl_stmt|,
+name|next_domain_len
 decl_stmt|;
 name|struct
 name|option_data
@@ -852,9 +854,8 @@ operator|->
 name|len
 condition|)
 block|{
-comment|/* We add 1 for the space between domain names. */
-name|expanded_len
-operator|+=
+name|next_domain_len
+operator|=
 name|find_search_domain_name_len
 argument_list|(
 name|option
@@ -862,6 +863,19 @@ argument_list|,
 operator|&
 name|offset
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|next_domain_len
+operator|<
+literal|0
+condition|)
+comment|/* The Domain Search option value is invalid. */
+return|return;
+comment|/* We add 1 for the space between domain names. */
+name|expanded_len
+operator|+=
+name|next_domain_len
 operator|+
 literal|1
 expr_stmt|;
@@ -1058,12 +1072,18 @@ name|len
 condition|)
 block|{
 comment|/* The pointer is truncated. */
-name|error
+name|warning
 argument_list|(
 literal|"Truncated pointer in DHCP Domain "
 literal|"Search option."
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|pointer
 operator|=
@@ -1097,13 +1117,19 @@ operator|*
 name|offset
 condition|)
 block|{
-comment|/* 				 * The pointer must indicates a prior 				 * occurance. 				 */
-name|error
+comment|/* 				 * The pointer must indicate a prior 				 * occurrence. 				 */
+name|warning
 argument_list|(
-literal|"Invalid forward pointer in DHCP Domain "
-literal|"Search option compression."
+literal|"Invalid forward pointer in DHCP "
+literal|"Domain Search option compression."
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 name|pointed_len
 operator|=
@@ -1143,11 +1169,18 @@ operator|->
 name|len
 condition|)
 block|{
-name|error
+name|warning
 argument_list|(
-literal|"Truncated label in DHCP Domain Search option."
+literal|"Truncated label in DHCP Domain Search "
+literal|"option."
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 comment|/* 		 * Update the domain name length with the length of the 		 * current label, plus a trailing dot ('.'). 		 */
 name|domain_name_len
@@ -1164,14 +1197,15 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-name|error
+name|warning
 argument_list|(
 literal|"Truncated DHCP Domain Search option."
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+operator|-
+literal|1
 operator|)
 return|;
 block|}

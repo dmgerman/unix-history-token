@@ -147,6 +147,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -3179,7 +3185,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Print a file.  * Set up the chain [ PR [ | {IF, OF} ] ] or {IF, RF, TF, NF, DF, CF, VF}.  * Return -1 if a non-recoverable error occured,  * 2 if the filter detected some errors (but printed the job anyway),  * 1 if we should try to reprint this job and  * 0 if all is well.  * Note: all filters take stdin as the file, stdout as the printer,  * stderr as the log file, and must not ignore SIGINT.  */
+comment|/*  * Print a file.  * Set up the chain [ PR [ | {IF, OF} ] ] or {IF, RF, TF, NF, DF, CF, VF}.  * Return -1 if a non-recoverable error occurred,  * 2 if the filter detected some errors (but printed the job anyway),  * 1 if we should try to reprint this job and  * 0 if all is well.  * Note: all filters take stdin as the file, stdout as the printer,  * stderr as the log file, and must not ignore SIGINT.  */
 end_comment
 
 begin_function
@@ -4803,7 +4809,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Send the daemon control file (cf) and any data files.  * Return -1 if a non-recoverable error occured, 1 if a recoverable error and  * 0 if all is well.  */
+comment|/*  * Send the daemon control file (cf) and any data files.  * Return -1 if a non-recoverable error occurred, 1 if a recoverable error and  * 0 if all is well.  */
 end_comment
 
 begin_function
@@ -5982,7 +5988,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%c%qd %s\n"
+literal|"%c%"
+name|PRId64
+literal|" %s\n"
 argument_list|,
 name|type
 argument_list|,
@@ -6001,7 +6009,9 @@ name|sprintf
 argument_list|(
 name|buf
 argument_list|,
-literal|"%c%qd %s_c%d\n"
+literal|"%c%"
+name|PRId64
+literal|" %s_c%d\n"
 argument_list|,
 name|type
 argument_list|,

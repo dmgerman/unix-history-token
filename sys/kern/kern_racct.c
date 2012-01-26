@@ -32,13 +32,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/eventhandler.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/param.h>
+file|<sys/eventhandler.h>
 end_include
 
 begin_include
@@ -135,12 +135,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysproto.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include

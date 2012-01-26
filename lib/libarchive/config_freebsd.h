@@ -284,6 +284,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_BZLIB_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_CHFLAGS
 value|1
 end_define

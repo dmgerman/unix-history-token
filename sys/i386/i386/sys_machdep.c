@@ -2824,10 +2824,7 @@ if|if
 condition|(
 name|td
 operator|==
-name|PCPU_GET
-argument_list|(
 name|curthread
-argument_list|)
 condition|)
 block|{
 ifdef|#

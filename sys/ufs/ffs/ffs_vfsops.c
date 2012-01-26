@@ -621,7 +621,7 @@ name|error
 decl_stmt|,
 name|flags
 decl_stmt|;
-name|u_int
+name|uint64_t
 name|mntorflags
 decl_stmt|;
 name|accmode_t
@@ -937,9 +937,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Checker enable: Must be read-only\n"
+name|mp
+argument_list|,
+literal|"Checker enable: Must be read-only"
 argument_list|)
 expr_stmt|;
 return|return
@@ -968,9 +970,11 @@ operator|==
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Checker enable: Must be read-only\n"
+name|mp
+argument_list|,
+literal|"Checker enable: Must be read-only"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1017,10 +1021,12 @@ operator|&
 name|MNT_ACLS
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"WARNING: \"acls\" and \"nfsv4acls\" "
-literal|"options are mutually exclusive\n"
+name|mp
+argument_list|,
+literal|"\"acls\" and \"nfsv4acls\" options "
+literal|"are mutually exclusive"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1389,13 +1395,12 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: %s: blocks %jd files %d\n"
+literal|"WARNING: %s Update error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|,
-literal|"update error"
 argument_list|,
 operator|(
 name|intmax_t
@@ -1613,9 +1618,11 @@ operator|>
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Active checker, cannot rw upgrade\n"
+name|mp
+argument_list|,
+literal|"Active checker, cannot upgrade to write"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1748,38 +1755,43 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s was not %s\n"
+literal|"WARNING: %s was not properly "
+literal|"dismounted\n"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|,
-literal|"properly dismounted"
 argument_list|)
 expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"WARNING: R/W mount of %s denied.  Filesystem is not clean - run fsck\n"
+name|mp
+argument_list|,
+literal|"R/W mount of %s denied. %s.%s"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+literal|"Filesystem is not clean - run fsck"
+argument_list|,
+operator|(
 name|fs
 operator|->
 name|fs_flags
 operator|&
 name|FS_SUJ
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: Forced mount will invalidate journal contents\n"
+operator|)
+operator|==
+literal|0
+condition|?
+literal|""
+else|:
+literal|" Forced mount will invalidate"
+literal|" journal contents"
 argument_list|)
 expr_stmt|;
 return|return
@@ -2083,9 +2095,11 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Active checker already running on %s\n"
+name|mp
+argument_list|,
+literal|"Active checker already running on %s"
 argument_list|,
 name|fs
 operator|->
@@ -2145,9 +2159,11 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"Checker activation failed on %s\n"
+name|mp
+argument_list|,
+literal|"Checker activation failed on %s"
 argument_list|,
 name|fs
 operator|->
@@ -2516,7 +2532,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Checker activation failed on %s\n"
+literal|"WARNING: %s: Checker activation "
+literal|"failed\n"
 argument_list|,
 name|fs
 operator|->
@@ -2608,7 +2625,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 block|{
@@ -3067,7 +3084,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: reload pending error: blocks %jd files %d\n"
+literal|"WARNING: %s: reload pending error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -3998,26 +4016,31 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|printf
+name|vfs_mount_error
 argument_list|(
-literal|"WARNING: R/W mount of %s denied.  Filesystem is not clean - run fsck\n"
+name|mp
+argument_list|,
+literal|"R/W mount of %s denied. %s%s"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
+argument_list|,
+literal|"Filesystem is not clean - run fsck."
+argument_list|,
+operator|(
 name|fs
 operator|->
 name|fs_flags
 operator|&
 name|FS_SUJ
-condition|)
-name|printf
-argument_list|(
-literal|"WARNING: Forced mount will invalidate journal contents\n"
+operator|)
+operator|==
+literal|0
+condition|?
+literal|""
+else|:
+literal|" Forced mount will invalidate journal contents"
 argument_list|)
 expr_stmt|;
 name|error
@@ -4055,7 +4078,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: lost blocks %jd files %d\n"
+literal|"WARNING: %s: lost blocks %jd files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -4104,7 +4127,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: mount pending error: blocks %jd files %d\n"
+literal|"WARNING: %s: mount pending error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -4226,7 +4250,8 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s: GJOURNAL flag on fs but no gjournal provider below\n"
+literal|"WARNING: %s: GJOURNAL flag on fs "
+literal|"but no gjournal provider below\n"
 argument_list|,
 name|mp
 operator|->
@@ -4255,7 +4280,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"WARNING: %s: GJOURNAL flag on fs but no UFS_GJOURNAL support\n"
+literal|"WARNING: %s: GJOURNAL flag on fs but no "
+literal|"UFS_GJOURNAL support\n"
 argument_list|,
 name|mp
 operator|->
@@ -4915,7 +4941,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"WARNING: %s: multilabel flag on fs but no MAC support\n"
+literal|"WARNING: %s: multilabel flag on fs but "
+literal|"no MAC support\n"
 argument_list|,
 name|mp
 operator|->
@@ -4958,8 +4985,14 @@ name|MNT_NFS4ACLS
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: ACLs flag on fs conflicts with "
+literal|"WARNING: %s: ACLs flag on fs conflicts with "
 literal|"\"nfsv4acls\" mount option; option ignored\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|)
 expr_stmt|;
 name|mp
@@ -5027,8 +5060,14 @@ name|MNT_ACLS
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: NFSv4 ACLs flag on fs conflicts with "
-literal|"\"acls\" mount option; option ignored\n"
+literal|"WARNING: %s: NFSv4 ACLs flag on fs conflicts "
+literal|"with \"acls\" mount option; option ignored\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|)
 expr_stmt|;
 name|mp
@@ -5053,7 +5092,8 @@ else|#
 directive|else
 name|printf
 argument_list|(
-literal|"WARNING: %s: NFSv4 ACLs flag on fs but no ACLs support\n"
+literal|"WARNING: %s: NFSv4 ACLs flag on fs but no "
+literal|"ACLs support\n"
 argument_list|,
 name|mp
 operator|->
@@ -5114,7 +5154,8 @@ name|um_candelete
 condition|)
 name|printf
 argument_list|(
-literal|"WARNING: %s: TRIM flag on fs but disk does not support TRIM\n"
+literal|"WARNING: %s: TRIM flag on fs but disk "
+literal|"does not support TRIM\n"
 argument_list|,
 name|mp
 operator|->
@@ -5128,7 +5169,8 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"WARNING: %s: TRIM flag on fs but cannot get whether disk supports TRIM\n"
+literal|"WARNING: %s: TRIM flag on fs but disk does "
+literal|"not confirm that it supports TRIM\n"
 argument_list|,
 name|mp
 operator|->
@@ -6089,6 +6131,10 @@ name|ump
 operator|->
 name|um_fs
 expr_stmt|;
+name|susp
+operator|=
+literal|0
+expr_stmt|;
 if|if
 condition|(
 name|mntflags
@@ -6109,11 +6155,6 @@ operator|!=
 literal|0
 expr_stmt|;
 block|}
-else|else
-name|susp
-operator|=
-literal|0
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|UFS_EXTATTR
@@ -6139,7 +6180,14 @@ name|EOPNOTSUPP
 condition|)
 name|printf
 argument_list|(
-literal|"ffs_unmount: ufs_extattr_stop returned %d\n"
+literal|"WARNING: unmount %s: ufs_extattr_stop "
+literal|"returned errno %d\n"
+argument_list|,
+name|mp
+operator|->
+name|mnt_stat
+operator|.
+name|f_mntonname
 argument_list|,
 name|error
 argument_list|)
@@ -6329,7 +6377,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: unmount pending error: blocks %jd files %d\n"
+literal|"WARNING: unmount %s: pending error: blocks %jd "
+literal|"files %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -7227,22 +7276,15 @@ name|um_fsckpid
 operator|==
 literal|0
 condition|)
-block|{
-name|printf
+name|panic
 argument_list|(
-literal|"fs = %s\n"
+literal|"%s: ffs_sync: modification on read-only filesystem"
 argument_list|,
 name|fs
 operator|->
 name|fs_fsmnt
 argument_list|)
 expr_stmt|;
-name|panic
-argument_list|(
-literal|"ffs_sync: rofs mod"
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* 	 * Write back each (modified) inode. 	 */
 name|wait
 operator|=
@@ -9073,7 +9115,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: correcting fs_sblockloc from %jd to %d\n"
+literal|"WARNING: %s: correcting fs_sblockloc from %jd to %d\n"
 argument_list|,
 name|fs
 operator|->
@@ -9120,7 +9162,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"%s: correcting fs_sblockloc from %jd to %d\n"
+literal|"WARNING: %s: correcting fs_sblockloc from %jd to %d\n"
 argument_list|,
 name|fs
 operator|->

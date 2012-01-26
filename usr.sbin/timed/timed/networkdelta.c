@@ -428,7 +428,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"median of %d values starting at %ld is "
+literal|"median of %td values starting at %ld is "
 argument_list|,
 name|xp
 operator|-

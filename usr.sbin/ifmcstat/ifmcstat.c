@@ -4019,7 +4019,7 @@ name|INET6
 end_ifdef
 
 begin_comment
-comment|/*  * Retrieve MLD per-group source filter mode and lists via sysctl.  *  * Note: The 128-bit IPv6 group addres needs to be segmented into  * 32-bit pieces for marshaling to sysctl. So the MIB name ends  * up looking like this:  *  a.b.c.d.e.ifindex.g[0].g[1].g[2].g[3]  * Assumes that pgroup originated from the kernel, so its components  * are already in network-byte order.  */
+comment|/*  * Retrieve MLD per-group source filter mode and lists via sysctl.  *  * Note: The 128-bit IPv6 group address needs to be segmented into  * 32-bit pieces for marshaling to sysctl. So the MIB name ends  * up looking like this:  *  a.b.c.d.e.ifindex.g[0].g[1].g[2].g[3]  * Assumes that pgroup originated from the kernel, so its components  * are already in network-byte order.  */
 end_comment
 
 begin_function

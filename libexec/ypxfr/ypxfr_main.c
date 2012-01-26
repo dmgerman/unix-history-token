@@ -331,6 +331,9 @@ name|ypxfr_resp
 operator|.
 name|status
 operator|=
+operator|(
+name|yppush_status
+operator|)
 name|retval
 expr_stmt|;
 if|if
@@ -1291,6 +1294,9 @@ name|ypxfr_source_domain
 argument_list|,
 name|ypxfrerr_string
 argument_list|(
+operator|(
+name|ypxfrstat
+operator|)
 name|yp_errno
 argument_list|)
 argument_list|)
@@ -1385,6 +1391,9 @@ literal|"map has order 0"
 else|:
 name|ypxfrerr_string
 argument_list|(
+operator|(
+name|ypxfrstat
+operator|)
 name|yp_errno
 argument_list|)
 argument_list|)
@@ -2261,6 +2270,9 @@ literal|"map has order 0"
 else|:
 name|ypxfrerr_string
 argument_list|(
+operator|(
+name|ypxfrstat
+operator|)
 name|yp_errno
 argument_list|)
 argument_list|)

@@ -675,7 +675,7 @@ literal|16
 index|]
 decl_stmt|;
 comment|/* 0x158 */
-comment|/* 	 * 4 times 16 bits for all 4 lanes. In case external PHY is present 	 * (not direct mode), those values will not take effect on the 4 XGXS 	 * lanes. For some external PHYs (such as 8706 and 8726) the values 	 * will be used to configure the external PHY  in those cases, not 	 * all 4 values are needed. 	 */
+comment|/* 	 * 4 times 16 bits for all 4 lanes. In case external PHY is present 	 * (not direct mode), those values will not take effect on the 4 XGXS 	 * lanes. For some external PHYs (such as 8706 and 8726) the values 	 * will be used to configure the external PHY -- in those cases, not 	 * all 4 values are needed. 	 */
 name|uint16_t
 name|xgxs_config_rx
 index|[

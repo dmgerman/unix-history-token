@@ -2249,7 +2249,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -2283,7 +2283,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -2315,7 +2315,7 @@ index|]
 expr_stmt|;
 name|targ
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|lcp
 argument_list|,
@@ -2496,7 +2496,7 @@ comment|/* this assumes the target is a directory */
 comment|/* on a remote unix system.  hmmmm.  */
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|targ
 argument_list|,
@@ -2796,7 +2796,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -2847,7 +2847,7 @@ control|)
 block|{
 name|src
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -3569,7 +3569,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|filename
 argument_list|,
@@ -3867,7 +3867,7 @@ argument_list|,
 name|stdin
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if

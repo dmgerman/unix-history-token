@@ -792,7 +792,7 @@ name|di
 operator|->
 name|baudrate
 operator|=
-literal|0
+name|br
 expr_stmt|;
 name|di
 operator|->

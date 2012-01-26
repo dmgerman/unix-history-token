@@ -280,6 +280,12 @@ directive|include
 file|<vm/uma.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/quota.h>
+end_include
+
 begin_expr_stmt
 specifier|static
 name|MALLOC_DEFINE
@@ -1040,6 +1046,19 @@ operator|->
 name|arg
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Since quota on operation typically needs to open quota 	 * file, the Q_QUOTAON handler needs to unbusy the mount point 	 * before calling into namei.  Otherwise, unmount might be 	 * started between two vfs_busy() invocations (first is our, 	 * second is from mount point cross-walk code in lookup()), 	 * causing deadlock. 	 * 	 * Require that Q_QUOTAON handles the vfs_busy() reference on 	 * its own, always returning with ubusied mount point. 	 */
+if|if
+condition|(
+operator|(
+name|uap
+operator|->
+name|cmd
+operator|>>
+name|SUBCMDSHIFT
+operator|)
+operator|!=
+name|Q_QUOTAON
+condition|)
 name|vfs_unbusy
 argument_list|(
 name|mp
@@ -4314,7 +4333,7 @@ name|chroot_allow_open_directories
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Allow a process to chroot(2) if it has a directory open"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10116,6 +10135,13 @@ operator|->
 name|f_offset
 operator|=
 name|offset
+expr_stmt|;
+name|VFS_KNOTE_UNLOCKED
+argument_list|(
+name|vp
+argument_list|,
+literal|0
+argument_list|)
 expr_stmt|;
 operator|*
 operator|(

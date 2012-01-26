@@ -1036,6 +1036,37 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|!
+name|__GNUC_PREREQ__
+argument_list|(
+literal|2
+operator|,
+literal|95
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__alignof
+parameter_list|(
+name|x
+parameter_list|)
+value|__offsetof(struct { char __a; x __b; }, __b)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Keywords added in C11.  */
+end_comment
+
+begin_if
+if|#
+directive|if
 name|defined
 argument_list|(
 name|__cplusplus
@@ -1049,8 +1080,47 @@ end_if
 begin_define
 define|#
 directive|define
+name|_Alignas
+parameter_list|(
+name|e
+parameter_list|)
+value|alignas(e)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Alignof
+parameter_list|(
+name|e
+parameter_list|)
+value|alignof(e)
+end_define
+
+begin_define
+define|#
+directive|define
 name|_Noreturn
 value|[[noreturn]]
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Static_assert
+parameter_list|(
+name|e
+parameter_list|,
+name|s
+parameter_list|)
+value|static_assert(e, s)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Thread_local
+value|thread_local
 end_define
 
 begin_elif
@@ -1062,28 +1132,97 @@ name|__STDC_VERSION__
 argument_list|)
 operator|&&
 name|__STDC_VERSION__
-operator|>
-literal|201000L
+operator|>=
+literal|201112L
 end_elif
 
 begin_comment
-comment|/* Do nothing - _Noreturn is a keyword */
+comment|/* Do nothing.  They are language keywords. */
 end_comment
 
-begin_elif
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|__GNUC__
-argument_list|)
-end_elif
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* Not supported.  Implement them using our versions. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_Alignas
+parameter_list|(
+name|x
+parameter_list|)
+value|__aligned(x)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Alignof
+parameter_list|(
+name|x
+parameter_list|)
+value|__alignof(x)
+end_define
 
 begin_define
 define|#
 directive|define
 name|_Noreturn
-value|__attribute__((__noreturn__))
+value|__dead2
+end_define
+
+begin_define
+define|#
+directive|define
+name|_Thread_local
+value|__thread
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__COUNTER__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_Static_assert
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|__Static_assert(x, __COUNTER__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__Static_assert
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|___Static_assert(x, y)
+end_define
+
+begin_define
+define|#
+directive|define
+name|___Static_assert
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|typedef char __assert_ ## y[(x) ? 1 : -1]
 end_define
 
 begin_else
@@ -1094,7 +1233,91 @@ end_else
 begin_define
 define|#
 directive|define
-name|_Noreturn
+name|_Static_assert
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|)
+value|struct __hack
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Emulation of C11 _Generic().  Unlike the previously defined C11  * keywords, it is not possible to implement this using exactly the same  * syntax.  Therefore implement something similar under the name  * __generic().  Unlike _Generic(), this macro can only distinguish  * between a single type, so it requires nested invocations to  * distinguish multiple cases.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|201112L
+end_if
+
+begin_define
+define|#
+directive|define
+name|__generic
+parameter_list|(
+name|expr
+parameter_list|,
+name|t
+parameter_list|,
+name|yes
+parameter_list|,
+name|no
+parameter_list|)
+define|\
+value|_Generic(expr, t: yes, default: no)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|__GNUC_PREREQ__
+argument_list|(
+literal|3
+operator|,
+literal|1
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|__generic
+parameter_list|(
+name|expr
+parameter_list|,
+name|t
+parameter_list|,
+name|yes
+parameter_list|,
+name|no
+parameter_list|)
+define|\
+value|__builtin_choose_expr(						\ 	    __builtin_types_compatible_p(__typeof(expr), t), yes, no)
 end_define
 
 begin_endif
@@ -1632,7 +1855,8 @@ name|type
 parameter_list|,
 name|field
 parameter_list|)
-value|((size_t)(&((type *)0)->field))
+define|\
+value|((__size_t)(__uintptr_t)((const volatile void *)&((type *)0)->field))
 end_define
 
 begin_else
@@ -1650,7 +1874,7 @@ parameter_list|,
 name|field
 parameter_list|)
 define|\
-value|(__offsetof__ (reinterpret_cast<size_t>			\                  (&reinterpret_cast<const volatile char&>	\                   (static_cast<type *> (0)->field))))
+value|(__offsetof__ (reinterpret_cast<__size_t>			\                  (&reinterpret_cast<const volatile char&>	\                   (static_cast<type *> (0)->field))))
 end_define
 
 begin_endif
@@ -2355,7 +2579,7 @@ name|type
 parameter_list|,
 name|var
 parameter_list|)
-value|((type)(uintptr_t)(const void *)(var))
+value|((type)(__uintptr_t)(const void *)(var))
 end_define
 
 begin_endif
@@ -2378,7 +2602,7 @@ name|type
 parameter_list|,
 name|var
 parameter_list|)
-value|((type)(uintptr_t)(volatile void *)(var))
+value|((type)(__uintptr_t)(volatile void *)(var))
 end_define
 
 begin_endif
@@ -2401,7 +2625,7 @@ name|type
 parameter_list|,
 name|var
 parameter_list|)
-value|((type)(uintptr_t)(const volatile void *)(var))
+value|((type)(__uintptr_t)(const volatile void *)(var))
 end_define
 
 begin_endif
@@ -2885,6 +3109,47 @@ name|__ISO_C_VISIBLE
 value|1999
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|_C11_SOURCE
+argument_list|)
+end_elif
+
+begin_comment
+comment|/* Localism to specify strict C11 env. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__POSIX_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__XSI_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__BSD_VISIBLE
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|__ISO_C_VISIBLE
+value|2011
+end_define
+
 begin_else
 else|#
 directive|else
@@ -2919,13 +3184,76 @@ begin_define
 define|#
 directive|define
 name|__ISO_C_VISIBLE
-value|1999
+value|2011
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_feature
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_feature
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_include
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_include
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__has_builtin
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__has_builtin
+parameter_list|(
+name|x
+parameter_list|)
+value|0
+end_define
 
 begin_endif
 endif|#

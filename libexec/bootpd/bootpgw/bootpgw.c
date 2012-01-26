@@ -1831,11 +1831,16 @@ name|LOG_INFO
 argument_list|,
 literal|"exiting after %ld minutes of inactivity"
 argument_list|,
+call|(
+name|long
+call|)
+argument_list|(
 name|actualtimeout
 operator|.
 name|tv_sec
 operator|/
 literal|60
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|exit
@@ -2123,7 +2128,7 @@ name|report
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"reqest from %s reached hop limit"
+literal|"request from %s reached hop limit"
 argument_list|,
 name|inet_ntoa
 argument_list|(

@@ -9131,6 +9131,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_BD_512
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|BGE_RDMA_LSO_CRPTEN_CTRL_BLEN_BD_4K
 value|0x00030000
 end_define
@@ -15173,6 +15180,9 @@ name|bge_forced_collapse
 decl_stmt|;
 name|int
 name|bge_forced_udpcsum
+decl_stmt|;
+name|int
+name|bge_msi
 decl_stmt|;
 name|int
 name|bge_csum_features

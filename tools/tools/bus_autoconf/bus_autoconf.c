@@ -8,7 +8,7 @@ comment|/*-  * Copyright (c) 2011 Hans Petter Selasky. All rights reserved.  *  
 end_comment
 
 begin_comment
-comment|/*  * Disclaimer: This utility and format is subject to change and not a  * comitted interface.  */
+comment|/*  * Disclaimer: This utility and format is subject to change and not a  * committed interface.  */
 end_comment
 
 begin_include

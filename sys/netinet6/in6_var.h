@@ -613,6 +613,46 @@ name|struct
 name|in6_addrlifetime
 name|ifra_lifetime
 decl_stmt|;
+name|int
+name|ifra_vhid
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* pre-10.x compat */
+end_comment
+
+begin_struct
+struct|struct
+name|oin6_aliasreq
+block|{
+name|char
+name|ifra_name
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+name|ifra_addr
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+name|ifra_dstaddr
+decl_stmt|;
+name|struct
+name|sockaddr_in6
+name|ifra_prefixmask
+decl_stmt|;
+name|int
+name|ifra_flags
+decl_stmt|;
+name|struct
+name|in6_addrlifetime
+name|ifra_lifetime
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1114,8 +1154,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|OSIOCAIFADDR_IN6
+value|_IOW('i', 26, struct oin6_aliasreq)
+end_define
+
+begin_define
+define|#
+directive|define
 name|SIOCAIFADDR_IN6
-value|_IOW('i', 26, struct in6_aliasreq)
+value|_IOW('i', 27, struct in6_aliasreq)
 end_define
 
 begin_define
@@ -2342,7 +2389,7 @@ decl_stmt|;
 name|IN6_MULTI_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2356,7 +2403,7 @@ argument_list|,
 name|mcaddr
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3096,12 +3143,6 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
-
-begin_struct_decl
-struct_decl|struct
-name|inpcb
-struct_decl|;
-end_struct_decl
 
 begin_decl_stmt
 name|int

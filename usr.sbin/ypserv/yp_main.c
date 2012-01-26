@@ -1562,6 +1562,11 @@ argument_list|(
 name|s
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|sname
+argument_list|)
+expr_stmt|;
 return|return
 operator|-
 literal|1
@@ -1611,6 +1616,11 @@ expr_stmt|;
 name|close
 argument_list|(
 name|s
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|sname
 argument_list|)
 expr_stmt|;
 return|return

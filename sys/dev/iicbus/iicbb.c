@@ -94,6 +94,10 @@ block|{
 name|device_t
 name|iicbus
 decl_stmt|;
+name|int
+name|udelay
+decl_stmt|;
+comment|/* signal toggle delay in usec */
 block|}
 struct|;
 end_struct
@@ -458,6 +462,13 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|sc
+operator|->
+name|udelay
+operator|=
+literal|10
+expr_stmt|;
+comment|/* 10 uS default */
 name|bus_generic_attach
 argument_list|(
 name|dev
@@ -688,20 +699,15 @@ end_function
 begin_define
 define|#
 directive|define
-name|IIC_DELAY
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
 name|I2C_SETSDA
 parameter_list|(
+name|sc
+parameter_list|,
 name|dev
 parameter_list|,
 name|val
 parameter_list|)
-value|do {			\ 	IICBB_SETSDA(device_get_parent(dev), val);	\ 	DELAY(IIC_DELAY);				\ 	} while (0)
+value|do {			\ 	IICBB_SETSDA(device_get_parent(dev), val);	\ 	DELAY(sc->udelay);				\ 	} while (0)
 end_define
 
 begin_define
@@ -721,13 +727,15 @@ define|#
 directive|define
 name|I2C_SET
 parameter_list|(
+name|sc
+parameter_list|,
 name|dev
 parameter_list|,
 name|ctrl
 parameter_list|,
 name|data
 parameter_list|)
-value|do {			\ 	I2C_SETSCL(dev, ctrl);				\ 	I2C_SETSDA(dev, data);				\ 	} while (0)
+value|do {			\ 	I2C_SETSCL(dev, ctrl);				\ 	I2C_SETSDA(sc, dev, data);			\ 	} while (0)
 end_define
 
 begin_define
@@ -797,6 +805,16 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|k
 init|=
@@ -814,7 +832,9 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-name|IIC_DELAY
+name|sc
+operator|->
+name|udelay
 argument_list|)
 expr_stmt|;
 while|while
@@ -845,7 +865,9 @@ argument_list|)
 expr_stmt|;
 name|DELAY
 argument_list|(
-name|IIC_DELAY
+name|sc
+operator|->
+name|udelay
 argument_list|)
 expr_stmt|;
 block|}
@@ -865,8 +887,20 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -876,6 +910,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -885,6 +921,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -908,8 +946,20 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -919,6 +969,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -928,6 +980,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -955,6 +1009,16 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|noack
 decl_stmt|;
@@ -965,6 +1029,8 @@ literal|0
 decl_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -974,6 +1040,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -998,12 +1066,11 @@ condition|)
 break|break;
 name|DELAY
 argument_list|(
-literal|10
+literal|1
 argument_list|)
 expr_stmt|;
 name|k
-operator|+=
-literal|10
+operator|++
 expr_stmt|;
 block|}
 do|while
@@ -1015,6 +1082,8 @@ condition|)
 do|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -1138,6 +1207,16 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -1149,6 +1228,8 @@ literal|0
 decl_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -1172,6 +1253,8 @@ control|)
 block|{
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -1196,6 +1279,8 @@ operator|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -1339,6 +1424,16 @@ name|int
 name|timeout
 parameter_list|)
 block|{
+name|struct
+name|iicbb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
@@ -1352,6 +1447,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -1361,6 +1458,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -1370,6 +1469,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -1435,8 +1536,20 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+name|struct
+name|iicbb_softc
+modifier|*
+name|sc
+init|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+decl_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|0
@@ -1446,6 +1559,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -1455,6 +1570,8 @@ argument_list|)
 expr_stmt|;
 name|I2C_SET
 argument_list|(
+name|sc
+argument_list|,
 name|dev
 argument_list|,
 literal|1
@@ -1467,6 +1584,14 @@ argument_list|(
 name|printf
 argument_list|(
 literal|">"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|I2C_DEBUG
+argument_list|(
+name|printf
+argument_list|(
+literal|"\n"
 argument_list|)
 argument_list|)
 expr_stmt|;

@@ -622,6 +622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_enum
+specifier|static
 enum|enum
 block|{
 name|UNSPEC
@@ -862,7 +863,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-comment|/* 				 * We accept and ignode -r for compatibility with 				 * historically disklabel usage. 				 */
+comment|/* 				 * We accept and ignore -r for compatibility with 				 * historical disklabel usage. 				 */
 break|break;
 case|case
 literal|'w'
@@ -1742,7 +1743,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"write to disk label supressed - label was as follows:"
+literal|"write to disk label suppressed - label was as follows:"
 argument_list|)
 expr_stmt|;
 name|display
@@ -1837,7 +1838,9 @@ name|labeloffset
 operator|+
 name|labelsoffset
 operator|*
-name|secsize
+name|lab
+operator|.
+name|d_secsize
 argument_list|,
 name|lp
 argument_list|)
@@ -1997,7 +2000,9 @@ name|labeloffset
 operator|+
 name|labelsoffset
 operator|*
-name|secsize
+name|lab
+operator|.
+name|d_secsize
 argument_list|)
 expr_stmt|;
 name|errstr
@@ -4039,7 +4044,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -4070,7 +4075,7 @@ condition|)
 continue|continue;
 name|tp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -7766,7 +7771,7 @@ name|mediasize
 operator|/
 name|secsize
 expr_stmt|;
-comment|/* 	 * Nobody in these enligthened days uses the CHS geometry for 	 * anything, but nontheless try to get it right.  If we fail 	 * to get any good ideas from the device, construct something 	 * which is IBM-PC friendly. 	 */
+comment|/* 	 * Nobody in these enlightened days uses the CHS geometry for 	 * anything, but nonetheless try to get it right.  If we fail 	 * to get any good ideas from the device, construct something 	 * which is IBM-PC friendly. 	 */
 if|if
 condition|(
 name|ioctl

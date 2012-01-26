@@ -746,7 +746,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* timeout isnt necessary */
+comment|/* timeout isn't necessary */
 name|nsel
 operator|=
 name|select

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.100 2011/01/09 22:16:46 jeremy Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.101 2011/06/21 17:31:07 mikeb Exp $ */
 end_comment
 
 begin_comment

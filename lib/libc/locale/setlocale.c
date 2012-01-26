@@ -173,11 +173,14 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|char
-modifier|*
 name|categories
 index|[
 name|_LC_LAST
+index|]
+index|[
+literal|12
 index|]
 init|=
 block|{

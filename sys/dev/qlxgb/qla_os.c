@@ -3140,12 +3140,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_baudrate
 operator|=
 operator|(
@@ -3637,7 +3631,7 @@ name|ha
 operator|->
 name|ifp
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|if_maddr_rlock
 argument_list|(
 name|ifp
 argument_list|)
@@ -3698,7 +3692,7 @@ name|mcnt
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|if_maddr_runlock
 argument_list|(
 name|ifp
 argument_list|)

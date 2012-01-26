@@ -1015,13 +1015,6 @@ name|uint32_t
 name|sc_eintrs
 decl_stmt|;
 comment|/* enabled interrupts */
-name|uint32_t
-name|sc_control
-decl_stmt|;
-comment|/* Preserved during suspend/standby */
-name|uint32_t
-name|sc_intre
-decl_stmt|;
 name|uint16_t
 name|sc_intr_stat
 index|[
@@ -1082,28 +1075,6 @@ name|ohci_detach
 parameter_list|(
 name|struct
 name|ohci_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ohci_suspend
-parameter_list|(
-name|ohci_softc_t
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|ohci_resume
-parameter_list|(
-name|ohci_softc_t
 modifier|*
 name|sc
 parameter_list|)

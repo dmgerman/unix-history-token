@@ -495,14 +495,14 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|uint64_t
+name|off_t
 name|volume_size
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|size_t
+name|u_int
 name|sector_size
 decl_stmt|;
 end_decl_stmt
@@ -1670,7 +1670,7 @@ name|ctio
 operator|->
 name|dxfer_len
 argument_list|,
-name|SCSI_CDB6_LEN
+name|scsi_2btoul
 argument_list|(
 name|inq
 operator|->
@@ -3211,7 +3211,7 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"read sync %lud @ block "
+literal|"read sync %lu @ block "
 name|OFF_FMT
 argument_list|,
 call|(
@@ -3315,7 +3315,7 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"read async %lud @ block "
+literal|"read async %lu @ block "
 name|OFF_FMT
 argument_list|,
 call|(
@@ -3852,7 +3852,7 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"write sync %lud @ block "
+literal|"write sync %lu @ block "
 name|OFF_FMT
 argument_list|,
 call|(
@@ -3965,7 +3965,7 @@ name|debug
 condition|)
 name|warnx
 argument_list|(
-literal|"write async %lud @ block "
+literal|"write async %lu @ block "
 name|OFF_FMT
 argument_list|,
 call|(

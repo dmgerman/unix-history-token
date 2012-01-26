@@ -781,7 +781,9 @@ argument_list|(
 literal|"getgroups"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 comment|/* Remove requested gid from supp. list if it exists. */
 if|if
@@ -886,7 +888,9 @@ argument_list|(
 literal|"setgroups"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 name|PRIV_END
 expr_stmt|;
@@ -910,7 +914,9 @@ argument_list|(
 literal|"setgid"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 name|PRIV_END
 expr_stmt|;
@@ -988,12 +994,16 @@ argument_list|(
 literal|"setgroups"
 argument_list|)
 expr_stmt|;
-return|return;
+goto|goto
+name|end
+goto|;
 block|}
 name|PRIV_END
 expr_stmt|;
 block|}
 block|}
+name|end
+label|:
 name|free
 argument_list|(
 name|grps

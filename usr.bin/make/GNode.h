@@ -197,7 +197,7 @@ comment|/* Was out-of-date and has been made */
 name|UPTODATE
 block|,
 comment|/* Was already up-to-date */
-comment|/* 		 * An error occured while it was being 		 * made (used only in compat mode) 		 */
+comment|/* 		 * An error occurred while it was being 		 * made (used only in compat mode) 		 */
 name|ERROR
 block|,
 comment|/* 		 * The target was aborted due to an 		 * error making an inferior (compat). 		 */

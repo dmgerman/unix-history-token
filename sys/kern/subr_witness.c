@@ -2423,10 +2423,10 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"if_addr_mtx"
+literal|"if_addr_lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{
@@ -2458,10 +2458,10 @@ name|lock_class_mtx_sleep
 block|}
 block|,
 block|{
-literal|"if_addr_mtx"
+literal|"if_addr_lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{
@@ -10240,6 +10240,13 @@ name|lock_class
 modifier|*
 name|class
 decl_stmt|;
+comment|/* 	 * This function is used independently in locking code to deal with 	 * Giant, SCHEDULER_STOPPED() check can be removed here after Giant 	 * is gone. 	 */
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|witness_cold
@@ -10387,6 +10394,13 @@ name|lock_class
 modifier|*
 name|class
 decl_stmt|;
+comment|/* 	 * This function is used independently in locking code to deal with 	 * Giant, SCHEDULER_STOPPED() check can be removed here after Giant 	 * is gone. 	 */
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|witness_cold

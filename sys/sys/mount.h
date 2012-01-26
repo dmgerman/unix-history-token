@@ -2384,7 +2384,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -3078,7 +3078,7 @@ name|mntarg
 modifier|*
 name|ma
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -3645,7 +3645,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|int
+name|uint64_t
 name|fsflags
 parameter_list|,
 name|struct

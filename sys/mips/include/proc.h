@@ -19,6 +19,23 @@ directive|define
 name|_MACHINE_PROC_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|CPU_CNMIPS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/octeon_cop2.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Machine-dependent part of the proc structure.  */
 end_comment
@@ -91,6 +108,36 @@ name|void
 modifier|*
 name|md_tls
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|CPU_CNMIPS
+name|struct
+name|octeon_cop2_state
+modifier|*
+name|md_cop2
+decl_stmt|;
+comment|/* kernel context */
+name|struct
+name|octeon_cop2_state
+modifier|*
+name|md_ucop2
+decl_stmt|;
+comment|/* userland context */
+define|#
+directive|define
+name|COP2_OWNER_USERLAND
+value|0x0000
+comment|/* Userland owns COP2 */
+define|#
+directive|define
+name|COP2_OWNER_KERNEL
+value|0x0001
+comment|/* Kernel owns COP2 */
+name|int
+name|md_cop2owner
+decl_stmt|;
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
@@ -108,6 +155,17 @@ end_define
 
 begin_comment
 comment|/* Process used the FPU */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MDTD_COP2USED
+value|0x0002
+end_define
+
+begin_comment
+comment|/* Process used the COP2 */
 end_comment
 
 begin_struct

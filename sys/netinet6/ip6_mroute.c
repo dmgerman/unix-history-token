@@ -975,7 +975,7 @@ name|PIM6CTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pim6stat

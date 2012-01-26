@@ -48,7 +48,7 @@ end_ifndef
 begin_error
 error|#
 directive|error
-error|IPFIREWALL requires INET.
+literal|"IPFIREWALL requires INET"
 end_error
 
 begin_endif

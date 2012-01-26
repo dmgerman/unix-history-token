@@ -1,7 +1,24 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2007 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_strerror.c 408 2007-12-21 11:36:24Z des $  */
+comment|/*-  * Copyright (c) 2002-2003 Networks Associates Technology, Inc.  * Copyright (c) 2004-2011 Dag-Erling SmÃ¸rgrav  * All rights reserved.  *  * This software was developed for the FreeBSD Project by ThinkSec AS and  * Network Associates Laboratories, the Security Research Division of  * Network Associates, Inc.  under DARPA/SPAWAR contract N66001-01-C-8035  * ("CBOSS"), as part of the DARPA CHATS research program.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. The name of the author may not be used to endorse or promote  *    products derived from this software without specific prior written  *    permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $Id: pam_strerror.c 491 2011-11-12 00:12:32Z des $  */
 end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|"config.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -20,79 +37,6 @@ include|#
 directive|include
 file|"openpam_impl.h"
 end_include
-
-begin_decl_stmt
-specifier|const
-name|char
-modifier|*
-name|_pam_err_name
-index|[
-name|PAM_NUM_ERRORS
-index|]
-init|=
-block|{
-literal|"PAM_SUCCESS"
-block|,
-literal|"PAM_OPEN_ERR"
-block|,
-literal|"PAM_SYMBOL_ERR"
-block|,
-literal|"PAM_SERVICE_ERR"
-block|,
-literal|"PAM_SYSTEM_ERR"
-block|,
-literal|"PAM_BUF_ERR"
-block|,
-literal|"PAM_CONV_ERR"
-block|,
-literal|"PAM_PERM_DENIED"
-block|,
-literal|"PAM_MAXTRIES"
-block|,
-literal|"PAM_AUTH_ERR"
-block|,
-literal|"PAM_NEW_AUTHTOK_REQD"
-block|,
-literal|"PAM_CRED_INSUFFICIENT"
-block|,
-literal|"PAM_AUTHINFO_UNAVAIL"
-block|,
-literal|"PAM_USER_UNKNOWN"
-block|,
-literal|"PAM_CRED_UNAVAIL"
-block|,
-literal|"PAM_CRED_EXPIRED"
-block|,
-literal|"PAM_CRED_ERR"
-block|,
-literal|"PAM_ACCT_EXPIRED"
-block|,
-literal|"PAM_AUTHTOK_EXPIRED"
-block|,
-literal|"PAM_SESSION_ERR"
-block|,
-literal|"PAM_AUTHTOK_ERR"
-block|,
-literal|"PAM_AUTHTOK_RECOVERY_ERR"
-block|,
-literal|"PAM_AUTHTOK_LOCK_BUSY"
-block|,
-literal|"PAM_AUTHTOK_DISABLE_AGING"
-block|,
-literal|"PAM_NO_MODULE_DATA"
-block|,
-literal|"PAM_IGNORE"
-block|,
-literal|"PAM_ABORT"
-block|,
-literal|"PAM_TRY_AGAIN"
-block|,
-literal|"PAM_MODULE_UNKNOWN"
-block|,
-literal|"PAM_DOMAIN_UNKNOWN"
-block|}
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * XSSO 4.2.1  * XSSO 6 page 92  *  * Get PAM standard error message string  */
@@ -393,7 +337,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * The =pam_strerror function returns a pointer to a string containing a  * textual description of the error indicated by the =error_number  * argument, in the context of the PAM transaction described by the =pamh  * argument.  */
+comment|/**  * The =pam_strerror function returns a pointer to a string containing a  * textual description of the error indicated by the =error_number  * argument.  * The =pamh argument is ignored.  * For compatibility with other implementations, it should be either a  * valid PAM handle returned by a previous call to =pam_start, or =NULL.  */
 end_comment
 
 end_unit

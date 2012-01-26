@@ -1864,6 +1864,12 @@ return|return;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|LOADER_NFS_SUPPORT
+end_ifdef
+
 begin_comment
 comment|/*  * Reach inside the libstand NFS code and dig out an NFS handle  * for the root filesystem.  */
 end_comment
@@ -2397,6 +2403,15 @@ end_endif
 
 begin_comment
 comment|/* OLD_NFSV2 */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* LOADER_NFS_SUPPORT */
 end_comment
 
 begin_function

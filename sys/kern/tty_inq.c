@@ -1178,7 +1178,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|breakc
 argument_list|,

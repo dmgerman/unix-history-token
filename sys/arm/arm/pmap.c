@@ -15251,6 +15251,11 @@ argument_list|,
 name|VM_PROT_WRITE
 argument_list|)
 expr_stmt|;
+name|PTE_SYNC
+argument_list|(
+name|cdst_pte
+argument_list|)
+expr_stmt|;
 name|cpu_tlb_flushD_SE
 argument_list|(
 name|cdstp

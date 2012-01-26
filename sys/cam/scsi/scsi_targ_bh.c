@@ -2675,7 +2675,7 @@ argument_list|(
 name|no_lun_inq_data
 argument_list|)
 argument_list|,
-name|SCSI_CDB6_LEN
+name|scsi_2btoul
 argument_list|(
 name|inq
 operator|->

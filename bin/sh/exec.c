@@ -353,6 +353,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|addcmdentry
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|cmdentry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Exec a program.  Never returns.  If you change this routine, you may  * have to change the find_command routine as well.  *  * The argv array may be changed and element argv[-1] should be writable.  */
 end_comment
@@ -2206,6 +2222,7 @@ specifier|const
 name|char
 modifier|*
 name|newval
+name|__unused
 parameter_list|)
 block|{
 name|clearcmdentry
@@ -2558,6 +2575,7 @@ comment|/*  * Add a new command entry, replacing any existing command entry for 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|addcmdentry
 parameter_list|(

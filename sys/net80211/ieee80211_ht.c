@@ -1963,7 +1963,8 @@ parameter_list|,
 name|int
 name|index
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_phymode
 name|mode
 parameter_list|,
 name|int
@@ -2212,7 +2213,8 @@ name|ieee80211com
 modifier|*
 name|ic
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_phymode
 name|mode
 parameter_list|,
 name|int
@@ -2428,7 +2430,8 @@ name|ieee80211com
 modifier|*
 name|ic
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_phymode
 name|mode
 parameter_list|)
 block|{
@@ -2752,7 +2755,7 @@ operator|)
 condition|)
 name|ADDRATE
 argument_list|(
-name|i
+literal|32
 argument_list|)
 expr_stmt|;
 if|if

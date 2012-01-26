@@ -828,7 +828,7 @@ argument_list|,
 name|stdin
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 name|quit
 argument_list|(

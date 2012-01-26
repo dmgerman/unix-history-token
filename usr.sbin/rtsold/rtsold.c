@@ -3770,9 +3770,6 @@ name|ifap
 decl_stmt|,
 modifier|*
 name|ifa
-decl_stmt|,
-modifier|*
-name|target
 decl_stmt|;
 name|struct
 name|in6_ndireq
@@ -3862,10 +3859,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-name|target
-operator|=
-name|NULL
-expr_stmt|;
 comment|/* find an ethernet */
 for|for
 control|(

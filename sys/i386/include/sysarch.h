@@ -97,6 +97,13 @@ name|I386_SET_GSBASE
 value|10
 end_define
 
+begin_define
+define|#
+directive|define
+name|I386_GET_XFPUSTATE
+value|11
+end_define
+
 begin_comment
 comment|/* These four only exist when running an i386 binary on amd64 */
 end_comment
@@ -182,6 +189,21 @@ modifier|*
 name|sub_args
 decl_stmt|;
 comment|/* args */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|i386_get_xfpustate
+block|{
+name|void
+modifier|*
+name|addr
+decl_stmt|;
+name|int
+name|len
+decl_stmt|;
 block|}
 struct|;
 end_struct

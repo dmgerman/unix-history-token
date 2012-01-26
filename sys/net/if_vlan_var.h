@@ -202,7 +202,7 @@ comment|/*  * Drivers that are capable of adding and removing the VLAN header  *
 end_comment
 
 begin_comment
-comment|/*  * VLAN tags are stored in host byte order.  Byte swapping may be  * necessary.  *  * Drivers that support hardware VLAN tag stripping fill in the  * received VLAN tag (containing both vlan and priority information)  * into the ether_vtag mbuf packet header field:  *   *	m->m_pkthdr.ether_vtag = vlan_id;	// ntohs()?  *	m->m_flags |= M_VLANTAG;  *  * to mark the packet m with the specified VLAN tag.  *  * On output the driver should check the mbuf for the M_VLANTAG  * flag to see if a VLAN tag is present and valid:  *  *	if (m->m_flags& M_VLANTAG) {  *		... = m->m_pkthdr.ether_vtag;	// htons()?  *		... pass tag to hardware ...  *	}  *  * Note that a driver must indicate it supports hardware VLAN  * stripping/insertion by marking IFCAP_VLAN_HWTAGGING in  * if_capabilities.  */
+comment|/*  * VLAN tags are stored in host byte order.  Byte swapping may be  * necessary.  *  * Drivers that support hardware VLAN tag stripping fill in the  * received VLAN tag (containing both vlan and priority information)  * into the ether_vtag mbuf packet header field:  *   *	m->m_pkthdr.ether_vtag = vtag;		// ntohs()?  *	m->m_flags |= M_VLANTAG;  *  * to mark the packet m with the specified VLAN tag.  *  * On output the driver should check the mbuf for the M_VLANTAG  * flag to see if a VLAN tag is present and valid:  *  *	if (m->m_flags& M_VLANTAG) {  *		... = m->m_pkthdr.ether_vtag;	// htons()?  *		... pass tag to hardware ...  *	}  *  * Note that a driver must indicate it supports hardware VLAN  * stripping/insertion by marking IFCAP_VLAN_HWTAGGING in  * if_capabilities.  */
 end_comment
 
 begin_define
@@ -233,10 +233,10 @@ name|VLAN_TAG
 parameter_list|(
 name|_ifp
 parameter_list|,
-name|_tag
+name|_vid
 parameter_list|)
 define|\
-value|(_ifp)->if_type == IFT_L2VLAN ? (*vlan_tag_p)((_ifp), (_tag)) : EINVAL
+value|(_ifp)->if_type == IFT_L2VLAN ? (*vlan_tag_p)((_ifp), (_vid)) : EINVAL
 end_define
 
 begin_define
@@ -270,10 +270,10 @@ name|VLAN_DEVAT
 parameter_list|(
 name|_ifp
 parameter_list|,
-name|_tag
+name|_vid
 parameter_list|)
 define|\
-value|(_ifp)->if_vlantrunk != NULL ? (*vlan_devat_p)((_ifp), (_tag)) : NULL
+value|(_ifp)->if_vlantrunk != NULL ? (*vlan_devat_p)((_ifp), (_vid)) : NULL
 end_define
 
 begin_function_decl

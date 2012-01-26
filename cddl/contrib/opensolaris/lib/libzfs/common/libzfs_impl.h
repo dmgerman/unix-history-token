@@ -542,6 +542,17 @@ name|zfs_cmd_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|zfs_handle_t
+modifier|*
+name|make_dataset_simple_handle_zc
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+name|zfs_cmd_t
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|zprop_parse_value
 parameter_list|(

@@ -2104,6 +2104,11 @@ decl_stmt|;
 name|char
 modifier|*
 name|c
+decl_stmt|,
+name|tmpbuf
+index|[
+literal|5
+index|]
 decl_stmt|;
 name|u_int32_t
 name|faked

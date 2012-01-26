@@ -219,6 +219,17 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Do we run in foreground? */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|bool
+name|foreground
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* How often check for hooks running for too long. */
 end_comment
 
@@ -320,19 +331,24 @@ name|struct
 name|hast_resource
 modifier|*
 name|tres
+decl_stmt|,
+modifier|*
+name|tmres
 decl_stmt|;
 name|struct
 name|hastd_listen
 modifier|*
 name|lst
 decl_stmt|;
-name|TAILQ_FOREACH
+name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|tres
 argument_list|,
 argument|&cfg->hc_resources
 argument_list|,
 argument|hr_next
+argument_list|,
+argument|tmres
 argument_list|)
 block|{
 if|if
@@ -442,6 +458,23 @@ operator|->
 name|hr_conn
 argument_list|)
 expr_stmt|;
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|cfg
+operator|->
+name|hc_resources
+argument_list|,
+name|tres
+argument_list|,
+name|hr_next
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|tres
+argument_list|)
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -465,15 +498,35 @@ operator|->
 name|hc_controlconn
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH
+while|while
+condition|(
+operator|(
+name|lst
+operator|=
+name|TAILQ_FIRST
 argument_list|(
-argument|lst
-argument_list|,
-argument|&cfg->hc_listen
-argument_list|,
-argument|hl_next
+operator|&
+name|cfg
+operator|->
+name|hc_listen
 argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|)
 block|{
+name|TAILQ_REMOVE
+argument_list|(
+operator|&
+name|cfg
+operator|->
+name|hc_listen
+argument_list|,
+name|lst
+argument_list|,
+name|hl_next
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|lst
@@ -487,6 +540,11 @@ argument_list|(
 name|lst
 operator|->
 name|hl_conn
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|lst
 argument_list|)
 expr_stmt|;
 block|}
@@ -684,8 +742,9 @@ expr_stmt|;
 if|if
 condition|(
 name|maxfd
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_init
@@ -2305,8 +2364,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -2340,8 +2400,9 @@ argument_list|,
 operator|&
 name|nvin
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -2494,8 +2555,9 @@ name|newcfg
 operator|->
 name|hc_controlconn
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -2653,6 +2715,9 @@ block|}
 comment|/* 	 * Check if pidfile's path has changed. 	 */
 if|if
 condition|(
+operator|!
+name|foreground
+operator|&&
 name|strcmp
 argument_list|(
 name|cfg
@@ -2734,8 +2799,9 @@ name|pidfile_write
 argument_list|(
 name|newpfh
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 comment|/* Write PID to a file. */
@@ -2831,6 +2897,26 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 	 * Switch to new pidfile. 	 */
+if|if
+condition|(
+name|newpfh
+operator|!=
+name|NULL
+condition|)
+block|{
+name|pjdlog_info
+argument_list|(
+literal|"Pidfile changed from %s to %s."
+argument_list|,
+name|cfg
+operator|->
+name|hc_pidfile
+argument_list|,
+name|newcfg
+operator|->
+name|hc_pidfile
+argument_list|)
+expr_stmt|;
 operator|(
 name|void
 operator|)
@@ -2864,6 +2950,7 @@ name|hc_pidfile
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * Switch to new listen addresses. Close all that were removed. 	 */
 while|while
 condition|(
@@ -3734,8 +3821,9 @@ argument_list|,
 operator|&
 name|conn
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -3791,8 +3879,9 @@ name|conn
 argument_list|,
 name|HAST_TIMEOUT
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|pjdlog_errno
 argument_list|(
@@ -3860,8 +3949,9 @@ argument_list|,
 operator|&
 name|nvin
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -3927,7 +4017,7 @@ argument_list|,
 literal|"token"
 argument_list|)
 expr_stmt|;
-comment|/* 	 * NULL token means that this is first conection. 	 */
+comment|/* 	 * NULL token means that this is first connection. 	 */
 if|if
 condition|(
 name|token
@@ -4266,8 +4356,9 @@ name|hr_workerpid
 argument_list|,
 name|SIGINT
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -4509,8 +4600,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|int
@@ -4655,8 +4747,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -4784,8 +4877,9 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -4823,8 +4917,9 @@ argument_list|,
 operator|&
 name|conn
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|val
@@ -4855,8 +4950,9 @@ argument_list|,
 operator|-
 literal|1
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|val
@@ -4905,8 +5001,9 @@ argument_list|(
 name|val
 argument_list|)
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -4931,8 +5028,9 @@ name|hr_conn
 argument_list|,
 name|conn
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|pjdlog_errno
 argument_list|(
@@ -5737,9 +5835,6 @@ decl_stmt|;
 name|pid_t
 name|otherpid
 decl_stmt|;
-name|bool
-name|foreground
-decl_stmt|;
 name|int
 name|debuglevel
 decl_stmt|;
@@ -5957,6 +6052,12 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+name|foreground
+condition|)
+block|{
 name|pfh
 operator|=
 name|pidfile_open
@@ -6002,7 +6103,7 @@ name|otherpid
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* If we cannot create pidfile for other reasons, only warn. */
+comment|/* 			 * If we cannot create pidfile for other reasons, 			 * only warn. 			 */
 name|pjdlog_errno
 argument_list|(
 name|LOG_WARNING
@@ -6014,6 +6115,7 @@ operator|->
 name|hc_pidfile
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Restore default actions for interesting signals in case parent 	 * process (like init(8)) decided to ignore some of them (like SIGHUP). 	 */
 name|PJDLOG_VERIFY
@@ -6157,8 +6259,9 @@ name|cfg
 operator|->
 name|hc_controlconn
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|KEEP_ERRNO
@@ -6207,8 +6310,9 @@ name|lst
 operator|->
 name|hl_conn
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|KEEP_ERRNO
@@ -6249,8 +6353,9 @@ literal|0
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|KEEP_ERRNO
@@ -6285,8 +6390,9 @@ name|pidfile_write
 argument_list|(
 name|pfh
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno

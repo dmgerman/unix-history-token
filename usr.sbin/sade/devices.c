@@ -705,8 +705,6 @@ name|int
 name|i
 decl_stmt|,
 name|j
-decl_stmt|,
-name|fd
 decl_stmt|;
 name|char
 modifier|*
@@ -774,8 +772,6 @@ block|{
 case|case
 name|DEVICE_TYPE_DISK
 case|:
-name|fd
-operator|=
 name|deviceTry
 argument_list|(
 name|device_names

@@ -185,6 +185,10 @@ operator|(
 name|program
 operator|==
 name|BSNMPGET
+operator|||
+name|program
+operator|==
+name|BSNMPWALK
 operator|)
 condition|?
 literal|" [-M max-repetitions] [-N non-repeaters]"
@@ -195,6 +199,10 @@ operator|(
 name|program
 operator|==
 name|BSNMPGET
+operator|||
+name|program
+operator|==
+name|BSNMPWALK
 operator|)
 condition|?
 literal|"[-p pdu] "
@@ -525,7 +533,7 @@ name|BSNMPWALK
 case|:
 name|opts
 operator|=
-literal|"dhnKA:b:C:I:i:l:o:P:r:s:t:U:v:"
+literal|"dhnKA:b:C:I:i:l:M:N:o:P:p:r:s:t:U:v:"
 expr_stmt|;
 break|break;
 case|case
@@ -887,7 +895,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read user input OID - one of following formats:  * 1) 1.2.1.1.2.1.0 - that is if option numeric was giveni;  * 2) string - in such case append .0 to the asn_oid subs;  * 3) string.1 - no additional proccessing required in such case.  */
+comment|/*  * Read user input OID - one of following formats:  * 1) 1.2.1.1.2.1.0 - that is if option numeric was given;  * 2) string - in such case append .0 to the asn_oid subs;  * 3) string.1 - no additional processing required in such case.  */
 end_comment
 
 begin_function
@@ -1679,6 +1687,8 @@ name|snmptoolctx
 argument_list|,
 operator|&
 name|resp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1932,18 +1942,39 @@ name|struct
 name|asn_oid
 name|root
 decl_stmt|;
-comment|/* Keep the inital oid. */
+comment|/* Keep the initial oid. */
 name|int32_t
 name|outputs
 decl_stmt|,
 name|rc
 decl_stmt|;
+name|uint32_t
+name|op
+decl_stmt|;
+if|if
+condition|(
+name|GET_PDUTYPE
+argument_list|(
+name|snmptoolctx
+argument_list|)
+operator|==
+name|SNMP_PDU_GETBULK
+condition|)
+name|op
+operator|=
+name|SNMP_PDU_GETBULK
+expr_stmt|;
+else|else
+name|op
+operator|=
+name|SNMP_PDU_GETNEXT
+expr_stmt|;
 name|snmp_pdu_create
 argument_list|(
 operator|&
 name|req
 argument_list|,
-name|SNMP_PDU_GETNEXT
+name|op
 argument_list|)
 expr_stmt|;
 while|while
@@ -2002,6 +2033,28 @@ name|var
 operator|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|op
+operator|==
+name|SNMP_PDU_GETBULK
+condition|)
+name|snmpget_fix_getbulk
+argument_list|(
+operator|&
+name|req
+argument_list|,
+name|GET_MAXREP
+argument_list|(
+name|snmptoolctx
+argument_list|)
+argument_list|,
+name|GET_NONREP
+argument_list|(
+name|snmptoolctx
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|outputs
 operator|=
 literal|0
@@ -2057,48 +2110,23 @@ literal|1
 expr_stmt|;
 break|break;
 block|}
-if|if
-condition|(
-operator|!
-operator|(
-name|asn_is_suboid
-argument_list|(
-operator|&
-name|root
-argument_list|,
-operator|&
-operator|(
-name|resp
-operator|.
-name|bindings
-index|[
-literal|0
-index|]
-operator|.
-name|var
-operator|)
-argument_list|)
-operator|)
-condition|)
-block|{
-name|snmp_pdu_free
-argument_list|(
-operator|&
-name|resp
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
+name|rc
+operator|=
 name|snmp_output_resp
 argument_list|(
 name|snmptoolctx
 argument_list|,
 operator|&
 name|resp
+argument_list|,
+operator|&
+name|root
 argument_list|)
-operator|!=
+expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|<
 literal|0
 condition|)
 block|{
@@ -2116,7 +2144,8 @@ expr_stmt|;
 break|break;
 block|}
 name|outputs
-operator|++
+operator|+=
+name|rc
 expr_stmt|;
 name|snmp_pdu_free
 argument_list|(
@@ -2124,9 +2153,18 @@ operator|&
 name|resp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|rc
+operator|<
+name|resp
+operator|.
+name|nbindings
+condition|)
+break|break;
 name|snmpwalk_nextpdu_create
 argument_list|(
-name|SNMP_PDU_GETNEXT
+name|op
 argument_list|,
 operator|&
 operator|(
@@ -2134,7 +2172,11 @@ name|resp
 operator|.
 name|bindings
 index|[
-literal|0
+name|resp
+operator|.
+name|nbindings
+operator|-
+literal|1
 index|]
 operator|.
 name|var
@@ -2142,6 +2184,28 @@ operator|)
 argument_list|,
 operator|&
 name|req
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|op
+operator|==
+name|SNMP_PDU_GETBULK
+condition|)
+name|snmpget_fix_getbulk
+argument_list|(
+operator|&
+name|req
+argument_list|,
+name|GET_MAXREP
+argument_list|(
+name|snmptoolctx
+argument_list|)
+argument_list|,
+name|GET_NONREP
+argument_list|(
+name|snmptoolctx
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2208,6 +2272,8 @@ operator|&
 operator|(
 name|resp
 operator|)
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|snmp_pdu_free
@@ -2254,7 +2320,7 @@ argument_list|(
 operator|&
 name|req
 argument_list|,
-name|SNMP_PDU_GETNEXT
+name|op
 argument_list|)
 expr_stmt|;
 block|}
@@ -5031,6 +5097,8 @@ name|snmptoolctx
 argument_list|,
 operator|&
 name|resp
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 break|break;
@@ -5127,11 +5195,11 @@ comment|/* *********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * According to command line options prepare SNMP Get | GetNext | GetBulk PDU.  * Wait for a responce and print it.  */
+comment|/*  * According to command line options prepare SNMP Get | GetNext | GetBulk PDU.  * Wait for a response and print it.  */
 end_comment
 
 begin_comment
-comment|/*  * Do a 'snmp walk' - according to command line options request for values  * lexicographically subsequent and subrooted at a common node. Send a GetNext  * PDU requesting the value for each next variable and print the responce. Stop  * when a Responce PDU is received that contains the value of a variable not  * subrooted at the variable the walk started.  */
+comment|/*  * Do a 'snmp walk' - according to command line options request for values  * lexicographically subsequent and subrooted at a common node. Send a GetNext  * PDU requesting the value for each next variable and print the response. Stop  * when a Response PDU is received that contains the value of a variable not  * subrooted at the variable the walk started.  */
 end_comment
 
 begin_function

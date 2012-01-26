@@ -108,6 +108,8 @@ comment|/*  * The code in optlist() depends on minus options following regular  
 end_comment
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|modes
 name|cmodes
@@ -462,6 +464,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|modes
 name|imodes
@@ -736,6 +740,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|modes
 name|lmodes
@@ -1159,6 +1165,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|modes
 name|omodes
@@ -1347,6 +1355,7 @@ modifier|*
 name|ip
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|modes
 modifier|*

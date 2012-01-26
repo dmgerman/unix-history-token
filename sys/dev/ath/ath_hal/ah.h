@@ -4920,6 +4920,30 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Read EEPROM data from ah_eepromdata  */
+end_comment
+
+begin_function_decl
+name|HAL_BOOL
+name|__ahdecl
+name|ath_hal_EepromDataRead
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|uint16_t
+modifier|*
+name|data
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

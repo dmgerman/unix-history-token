@@ -4416,8 +4416,6 @@ name|end
 decl_stmt|;
 name|off_t
 name|length
-decl_stmt|,
-name|secsz
 decl_stmt|;
 name|int
 name|error
@@ -4593,12 +4591,6 @@ name|lg_consumer
 argument_list|)
 operator|->
 name|lg_provider
-expr_stmt|;
-name|secsz
-operator|=
-name|pp
-operator|->
-name|lg_sectorsize
 expr_stmt|;
 name|s
 operator|=

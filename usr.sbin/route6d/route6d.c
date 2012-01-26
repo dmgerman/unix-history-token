@@ -616,7 +616,7 @@ comment|/* packet buffer for sending */
 end_comment
 
 begin_comment
-comment|/*  * Maintain the routes in a linked list.  When the number of the routes  * grows, somebody would like to introduce a hash based or a radix tree  * based structure.  I believe the number of routes handled by RIP is  * limited and I don't have to manage a complex data structure, however.  *  * One of the major drawbacks of the linear linked list is the difficulty  * of representing the relationship between a couple of routes.  This may  * be a significant problem when we have to support route aggregation with  * supressing the specifices covered by the aggregate.  */
+comment|/*  * Maintain the routes in a linked list.  When the number of the routes  * grows, somebody would like to introduce a hash based or a radix tree  * based structure.  I believe the number of routes handled by RIP is  * limited and I don't have to manage a complex data structure, however.  *  * One of the major drawbacks of the linear linked list is the difficulty  * of representing the relationship between a couple of routes.  This may  * be a significant problem when we have to support route aggregation with  * suppressing the specifics covered by the aggregate.  */
 end_comment
 
 begin_struct
@@ -6370,7 +6370,7 @@ name|tracet
 argument_list|(
 literal|1
 argument_list|,
-literal|"Recv(%s): from %s.%d info(%d)\n"
+literal|"Recv(%s): from %s.%d info(%zd)\n"
 argument_list|,
 name|ifcp
 operator|->

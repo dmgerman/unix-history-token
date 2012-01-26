@@ -804,38 +804,53 @@ comment|/* __ISO_C_VISIBLE>= 1999 */
 end_comment
 
 begin_comment
-comment|/*  * If we're in a mode greater than C99, expose C1x functions.  */
+comment|/*  * If we're in a mode greater than C99, expose C11 functions.  */
 end_comment
 
 begin_if
 if|#
 directive|if
 name|__ISO_C_VISIBLE
-operator|>
-literal|1999
+operator|>=
+literal|2011
 end_if
 
-begin_decl_stmt
+begin_function_decl
+name|void
+modifier|*
+name|aligned_alloc
+parameter_list|(
+name|size_t
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|at_quick_exit
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+function_decl|)
+parameter_list|(
+name|void
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 specifier|_Noreturn
 name|void
 name|quick_exit
-argument_list|(
+parameter_list|(
 name|int
-argument_list|)
-name|int
-name|at_quick_exit
-argument_list|(
-name|void
-argument_list|(
-operator|*
-name|func
-argument_list|)
-argument_list|(
-name|void
-argument_list|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#
@@ -843,7 +858,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __ISO_C_VISIBLE> 1999 */
+comment|/* __ISO_C_VISIBLE>= 2011 */
 end_comment
 
 begin_comment
@@ -1782,7 +1797,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__const
+specifier|const
 name|char
 modifier|*
 name|getprogname

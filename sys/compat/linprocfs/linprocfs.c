@@ -4426,8 +4426,6 @@ argument_list|,
 name|p
 argument_list|,
 name|sb
-argument_list|,
-name|ARG_MAX
 argument_list|)
 expr_stmt|;
 return|return
@@ -4545,8 +4543,6 @@ argument_list|,
 name|p
 argument_list|,
 name|sb
-argument_list|,
-name|ARG_MAX
 argument_list|)
 expr_stmt|;
 return|return

@@ -730,6 +730,7 @@ comment|/* Look up hook by name */
 end_comment
 
 begin_function
+specifier|static
 name|hook_p
 name|ng_ipfw_findhook
 parameter_list|(

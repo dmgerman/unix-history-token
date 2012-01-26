@@ -438,8 +438,9 @@ name|hr_workerpid
 argument_list|,
 name|SIGTERM
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -697,8 +698,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|error
@@ -728,8 +730,9 @@ argument_list|,
 operator|&
 name|cnvin
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|error
@@ -1376,8 +1379,9 @@ argument_list|,
 operator|&
 name|conn
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -1414,8 +1418,9 @@ argument_list|,
 operator|&
 name|nvin
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -1455,10 +1460,6 @@ argument_list|(
 literal|"Control header is missing 'cmd' field."
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
-name|EHAST_INVALID
-expr_stmt|;
 goto|goto
 name|close
 goto|;
@@ -1480,10 +1481,6 @@ name|pjdlog_error
 argument_list|(
 literal|"Unable to allocate header for control response."
 argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EHAST_NOMEMORY
 expr_stmt|;
 goto|goto
 name|close
@@ -1800,8 +1797,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 name|pjdlog_errno
 argument_list|(
@@ -1897,8 +1895,9 @@ argument_list|,
 operator|&
 name|nvin
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -2247,8 +2246,9 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno

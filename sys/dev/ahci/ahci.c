@@ -1297,6 +1297,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x28268086
+block|,
+literal|0x00
+block|,
+literal|"Intel Patsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x1e028086
 block|,
 literal|0x00

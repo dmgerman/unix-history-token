@@ -2935,10 +2935,6 @@ argument_list|)
 operator|*
 name|head
 expr_stmt|;
-specifier|static
-name|vm_pindex_t
-name|color
-decl_stmt|;
 name|vm_page_t
 name|m
 decl_stmt|;
@@ -3093,8 +3089,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|pflags
 operator||

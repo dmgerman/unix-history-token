@@ -34,6 +34,21 @@ end_else
 begin_if
 if|#
 directive|if
+name|__cplusplus
+operator|>=
+literal|201103L
+end_if
+
+begin_define
+define|#
+directive|define
+name|NULL
+value|nullptr
+end_define
+
+begin_elif
+elif|#
+directive|elif
 name|defined
 argument_list|(
 name|__GNUG__
@@ -47,7 +62,7 @@ operator|&&
 name|__GNUC__
 operator|>=
 literal|4
-end_if
+end_elif
 
 begin_define
 define|#

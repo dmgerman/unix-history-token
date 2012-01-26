@@ -4449,7 +4449,7 @@ name|sb_efficiency
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Socket buffer size waste factor"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

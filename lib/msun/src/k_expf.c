@@ -80,7 +80,7 @@ modifier|*
 name|expt
 parameter_list|)
 block|{
-name|double
+name|float
 name|exp_x
 decl_stmt|;
 name|uint32_t

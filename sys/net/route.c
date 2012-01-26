@@ -4689,12 +4689,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|ifa
-operator|!=
-name|NULL
-condition|)
 name|ifa_free
 argument_list|(
 name|ifa
@@ -4754,12 +4748,6 @@ argument_list|(
 name|rt
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ifa
-operator|!=
-name|NULL
-condition|)
 name|ifa_free
 argument_list|(
 name|ifa
@@ -4863,13 +4851,6 @@ name|netmask
 argument_list|)
 condition|)
 block|{
-if|if
-condition|(
-name|rt
-operator|->
-name|rt_ifa
-condition|)
-block|{
 name|ifa_free
 argument_list|(
 name|rt
@@ -4877,7 +4858,6 @@ operator|->
 name|rt_ifa
 argument_list|)
 expr_stmt|;
-block|}
 name|Free
 argument_list|(
 name|rt_key
@@ -5136,12 +5116,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-if|if
-condition|(
-name|rt
-operator|->
-name|rt_ifa
-condition|)
 name|ifa_free
 argument_list|(
 name|rt
@@ -6232,7 +6206,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|RADIX_MPATH
-comment|/* 			 * in case address alias finds the first address 			 * e.g. ifconfig bge0 192.103.54.246/24 			 * e.g. ifconfig bge0 192.103.54.247/24 			 * the address set in the route is 192.103.54.246 			 * so we need to replace it with 192.103.54.247 			 */
+comment|/* 			 * in case address alias finds the first address 			 * e.g. ifconfig bge0 192.0.2.246/24 			 * e.g. ifconfig bge0 192.0.2.247/24 			 * the address set in the route is 192.0.2.246 			 * so we need to replace it with 192.0.2.247 			 */
 if|if
 condition|(
 name|memcmp

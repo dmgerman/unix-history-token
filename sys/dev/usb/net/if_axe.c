@@ -391,6 +391,15 @@ argument_list|)
 block|,
 name|AXE_DEV
 argument_list|(
+name|ASIX
+argument_list|,
+name|AX88772B_1
+argument_list|,
+name|AXE_FLAG_772B
+argument_list|)
+block|,
+name|AXE_DEV
+argument_list|(
 name|ATEN
 argument_list|,
 name|UC210T

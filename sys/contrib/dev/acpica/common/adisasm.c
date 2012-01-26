@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -894,7 +894,8 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue\n */\n\n"
+literal|" * Format: [HexOffset DecimalOffset ByteLength]  "
+literal|"FieldName : FieldValue\n */\n\n"
 argument_list|)
 expr_stmt|;
 name|AcpiDmDumpDataTable
@@ -979,7 +980,7 @@ literal|"*****/\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Load namespace from names created within control methods          */
+comment|/* Load namespace from names created within control methods */
 name|AcpiDmFinishNamespaceLoad
 argument_list|(
 name|AcpiGbl_ParseOpRoot
@@ -989,7 +990,7 @@ argument_list|,
 name|OwnerId
 argument_list|)
 expr_stmt|;
-comment|/*          * Cross reference the namespace here, in order to generate External() statements          */
+comment|/*          * Cross reference the namespace here, in order to          * generate External() statements          */
 name|AcpiDmCrossReferenceNamespace
 argument_list|(
 name|AcpiGbl_ParseOpRoot
@@ -1016,15 +1017,7 @@ argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|)
 expr_stmt|;
-comment|/* Convert fixed-offset references to resource descriptors to symbolic references */
-name|AcpiDmConvertResourceIndexes
-argument_list|(
-name|AcpiGbl_ParseOpRoot
-argument_list|,
-name|AcpiGbl_RootNode
-argument_list|)
-expr_stmt|;
-comment|/*          * If we found any external control methods, we must reparse the entire          * tree with the new information (namely, the number of arguments per          * method)          */
+comment|/*          * If we found any external control methods, we must reparse          * the entire tree with the new information (namely, the          * number of arguments per method)          */
 if|if
 condition|(
 name|AcpiDmGetExternalMethodCount
@@ -1035,13 +1028,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nFound %u external control methods, reparsing with new information\n"
+literal|"\nFound %u external control methods, "
+literal|"reparsing with new information\n"
 argument_list|,
 name|AcpiDmGetExternalMethodCount
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/*              * Reparse, rebuild namespace. no need to xref namespace              */
+comment|/* Reparse, rebuild namespace. no need to xref namespace */
 name|AcpiPsDeleteParseTree
 argument_list|(
 name|AcpiGbl_ParseOpRoot
@@ -1114,7 +1108,7 @@ expr_stmt|;
 name|AcpiDmAddExternalsToNamespace
 argument_list|()
 expr_stmt|;
-comment|/* Parse table. No need to reload it, however (FALSE) */
+comment|/* Parse the table again. No need to reload it, however */
 name|Status
 operator|=
 name|AdParseTable
@@ -1180,6 +1174,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*          * Now that the namespace is finalized, we can perform namespace          * transforms.          *          * 1) Convert fixed-offset references to resource descriptors          *    to symbolic references (Note: modifies namespace)          */
+name|AcpiDmConvertResourceIndexes
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|)
+expr_stmt|;
 comment|/* Optional displays */
 if|if
 condition|(
@@ -1241,9 +1243,12 @@ operator|&&
 name|File
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ASL_DISASM_DEBUG
+if|if
+condition|(
+name|AslCompilerdebug
+condition|)
+comment|/* Display final namespace, with transforms */
+block|{
 name|LsSetupNsList
 argument_list|(
 name|File
@@ -1252,8 +1257,7 @@ expr_stmt|;
 name|LsDisplayNamespace
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|fclose
 argument_list|(
 name|File

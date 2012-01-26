@@ -250,7 +250,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* flags for cc(1), controled by sflag/tflag */
+comment|/* flags for cc(1), controlled by sflag/tflag */
 end_comment
 
 begin_decl_stmt

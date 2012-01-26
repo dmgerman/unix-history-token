@@ -357,7 +357,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* wtmp file */
+comment|/* utx.log file */
 end_comment
 
 begin_decl_stmt
@@ -930,7 +930,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * wtmp --  *	read through the wtmp file  */
+comment|/*  * wtmp --  *	read through the utx.log file  */
 end_comment
 
 begin_function
@@ -1137,14 +1137,26 @@ argument_list|(
 name|ct
 argument_list|)
 argument_list|,
-literal|"\nwtmp begins %+\n"
+literal|"%+"
 argument_list|,
 name|tm
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%s"
+literal|"\n%s begins %s\n"
+argument_list|,
+operator|(
+operator|(
+name|file
+operator|==
+name|NULL
+operator|)
+condition|?
+literal|"utx.log"
+else|:
+name|file
+operator|)
 argument_list|,
 name|ct
 argument_list|)
@@ -1153,7 +1165,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * doentry --  *	process a single wtmp entry  */
+comment|/*  * doentry --  *	process a single utx.log entry  */
 end_comment
 
 begin_function

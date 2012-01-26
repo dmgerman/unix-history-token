@@ -384,6 +384,10 @@ name|int
 name|type
 decl_stmt|;
 comment|/* Handle type */
+name|in_addr_t
+name|bindto
+decl_stmt|;
+comment|/* Bind to address */
 block|}
 struct|;
 end_struct

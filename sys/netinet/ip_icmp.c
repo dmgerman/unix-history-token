@@ -316,7 +316,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable rate limiting of ICMP responses"
+literal|"Enable logging of ICMP response rate limiting"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3422,7 +3422,7 @@ operator|&
 name|IFF_BROADCAST
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3482,7 +3482,7 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3492,7 +3492,7 @@ name|match
 goto|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3508,7 +3508,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3549,7 +3549,7 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3558,7 +3558,7 @@ goto|goto
 name|match
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3584,7 +3584,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3625,7 +3625,7 @@ argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3634,7 +3634,7 @@ goto|goto
 name|match
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

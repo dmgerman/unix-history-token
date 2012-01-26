@@ -176,13 +176,13 @@ name|ct
 operator|->
 name|dow
 operator|<
-literal|0
+literal|1
 operator|||
 name|ct
 operator|->
 name|dow
 operator|>
-literal|6
+literal|7
 argument_list|,
 literal|"day of week"
 argument_list|)
@@ -193,13 +193,13 @@ name|ct
 operator|->
 name|mon
 operator|<
-literal|0
+literal|1
 operator|||
 name|ct
 operator|->
 name|mon
 operator|>
-literal|11
+literal|12
 argument_list|,
 literal|"month"
 argument_list|)
@@ -209,14 +209,8 @@ argument_list|(
 name|ct
 operator|->
 name|year
-operator|<
-literal|0
-operator|||
-name|ct
-operator|->
-name|year
 operator|>
-literal|200
+literal|2037
 argument_list|,
 literal|"year"
 argument_list|)
@@ -456,10 +450,8 @@ index|]
 operator|&
 literal|0x7
 operator|)
-operator|-
-literal|1
 expr_stmt|;
-comment|/* Day of week field is 0..6 */
+comment|/* Day of week field is 1..7 */
 name|ct
 operator|.
 name|day
@@ -487,10 +479,31 @@ index|]
 operator|&
 literal|0x1f
 argument_list|)
-operator|-
-literal|1
 expr_stmt|;
-comment|/* Month field is 0..11 */
+comment|/* Month field is 1..12 */
+if|#
+directive|if
+name|defined
+argument_list|(
+name|OCTEON_BOARD_CAPK_0100ND
+argument_list|)
+comment|/*      * CAPK-0100ND uses DS1307 that does not have century bit      */
+name|ct
+operator|.
+name|year
+operator|=
+literal|2000
+operator|+
+name|bcd2bin
+argument_list|(
+name|reg
+index|[
+literal|6
+index|]
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|ct
 operator|.
 name|year
@@ -505,9 +518,9 @@ operator|&
 literal|0x80
 operator|)
 condition|?
-literal|100
+literal|2000
 else|:
-literal|0
+literal|1900
 operator|)
 operator|+
 name|bcd2bin
@@ -518,6 +531,8 @@ literal|6
 index|]
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|validate_ct_struct
@@ -684,8 +699,6 @@ argument_list|(
 name|ct
 operator|.
 name|dow
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 name|reg
@@ -710,8 +723,6 @@ argument_list|(
 name|ct
 operator|.
 name|mon
-operator|+
-literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -720,7 +731,7 @@ name|ct
 operator|.
 name|year
 operator|>=
-literal|100
+literal|2000
 condition|)
 comment|/* Set century bit*/
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -23,6 +23,12 @@ begin_include
 include|#
 directive|include
 file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_inet6.h"
 end_include
 
 begin_endif
@@ -267,7 +273,7 @@ name|char
 name|lem_driver_version
 index|[]
 init|=
-literal|"1.0.3"
+literal|"1.0.4"
 decl_stmt|;
 end_decl_stmt
 
@@ -2474,6 +2480,32 @@ argument_list|(
 literal|"lem_attach: begin"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|resource_disabled
+argument_list|(
+literal|"lem"
+argument_list|,
+name|device_get_unit
+argument_list|(
+name|dev
+argument_list|)
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"Disabled by device hint\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+block|}
 name|adapter
 operator|=
 name|device_get_softc
@@ -2803,7 +2835,7 @@ name|adapter
 argument_list|,
 literal|"flow_control"
 argument_list|,
-literal|"max number of rx packets to process"
+literal|"flow control setting"
 argument_list|,
 operator|&
 name|adapter
@@ -4521,9 +4553,17 @@ operator|*
 operator|)
 name|data
 decl_stmt|;
-ifdef|#
-directive|ifdef
+if|#
+directive|if
+name|defined
+argument_list|(
 name|INET
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
 name|struct
 name|ifaddr
 modifier|*
@@ -4538,6 +4578,11 @@ name|data
 decl_stmt|;
 endif|#
 directive|endif
+name|bool
+name|avoid_reset
+init|=
+name|FALSE
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -4575,8 +4620,37 @@ name|sa_family
 operator|==
 name|AF_INET
 condition|)
+name|avoid_reset
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|INET6
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_addr
+operator|->
+name|sa_family
+operator|==
+name|AF_INET6
+condition|)
+name|avoid_reset
+operator|=
+name|TRUE
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* 		** Calling init results in link renegotiation, 		** so we avoid doing it when possible. 		*/
+if|if
+condition|(
+name|avoid_reset
+condition|)
 block|{
-comment|/* 			 * XXX 			 * Since resetting hardware takes a very long time 			 * and results in link renegotiation we only 			 * initialize the hardware only when it is absolutely 			 * required. 			 */
 name|ifp
 operator|->
 name|if_flags
@@ -4594,23 +4668,25 @@ operator|&
 name|IFF_DRV_RUNNING
 operator|)
 condition|)
-block|{
-name|EM_CORE_LOCK
+name|lem_init
 argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-name|lem_init_locked
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-name|EM_CORE_UNLOCK
-argument_list|(
-name|adapter
-argument_list|)
-expr_stmt|;
-block|}
+ifdef|#
+directive|ifdef
+name|INET
+if|if
+condition|(
+operator|!
+operator|(
+name|ifp
+operator|->
+name|if_flags
+operator|&
+name|IFF_NOARP
+operator|)
+condition|)
 name|arp_ifinit
 argument_list|(
 name|ifp
@@ -4618,10 +4694,10 @@ argument_list|,
 name|ifa
 argument_list|)
 expr_stmt|;
-block|}
-else|else
 endif|#
 directive|endif
+block|}
+else|else
 name|error
 operator|=
 name|ether_ioctl
@@ -5790,17 +5866,6 @@ name|lem_get_hw_control
 argument_list|(
 name|adapter
 argument_list|)
-expr_stmt|;
-comment|/* Don't reset the phy next time init gets called */
-name|adapter
-operator|->
-name|hw
-operator|.
-name|phy
-operator|.
-name|reset_disable
-operator|=
-name|TRUE
 expr_stmt|;
 block|}
 end_function
@@ -7063,17 +7128,6 @@ literal|"Unsupported media type\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* As the speed/duplex settings my have changed we need to 	 * reset the PHY. 	 */
-name|adapter
-operator|->
-name|hw
-operator|.
-name|phy
-operator|.
-name|reset_disable
-operator|=
-name|FALSE
-expr_stmt|;
 name|lem_init_locked
 argument_list|(
 name|adapter
@@ -10909,12 +10963,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_init
 operator|=
 name|lem_init
@@ -12516,6 +12564,9 @@ index|]
 operator|.
 name|nkr_hwofs
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
@@ -12536,11 +12587,14 @@ name|num_tx_desc
 expr_stmt|;
 name|addr
 operator|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
 operator|+
 name|si
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 expr_stmt|;
 name|adapter
@@ -12554,10 +12608,7 @@ name|buffer_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 comment|/* reload the map for netmap mode */
@@ -12572,10 +12623,6 @@ operator|->
 name|map
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 block|}
@@ -15086,6 +15133,9 @@ index|]
 operator|.
 name|nkr_hwofs
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
@@ -15106,11 +15156,14 @@ name|num_rx_desc
 expr_stmt|;
 name|addr
 operator|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
 operator|+
 name|si
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 expr_stmt|;
 name|netmap_load_map
@@ -15124,10 +15177,6 @@ operator|->
 name|map
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 comment|/* Update descriptor */
@@ -15142,10 +15191,7 @@ name|buffer_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 continue|continue;
@@ -16667,16 +16713,12 @@ name|m_pkthdr
 operator|.
 name|ether_vtag
 operator|=
-operator|(
 name|le16toh
 argument_list|(
 name|current_desc
 operator|->
 name|special
 argument_list|)
-operator|&
-name|E1000_RXD_SPC_VLAN_MASK
-operator|)
 expr_stmt|;
 name|adapter
 operator|->

@@ -622,6 +622,9 @@ name|address_cells
 argument_list|)
 argument_list|)
 operator|<
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|address_cells
@@ -648,6 +651,9 @@ name|size_cells
 argument_list|)
 argument_list|)
 operator|<
+operator|(
+name|ssize_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|size_cells

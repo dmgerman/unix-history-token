@@ -714,7 +714,7 @@ operator|!=
 name|k
 condition|)
 block|{
-comment|/* 			 * Collect per-slot info. 			 * Note that txbuf and curr are indexed by l. 			 * 			 * In this driver we collect the buffer address 			 * (using the NMB() macro) because we always 			 * need to rewrite it into the NIC ring. 			 * Many other drivers preserve the address, so 			 * we only need to access it if NS_BUF_CHANGED 			 * is set. 			 */
+comment|/* 			 * Collect per-slot info. 			 * Note that txbuf and curr are indexed by l. 			 * 			 * In this driver we collect the buffer address 			 * (using the PNMB() macro) because we always 			 * need to rewrite it into the NIC ring. 			 * Many other drivers preserve the address, so 			 * we only need to access it if NS_BUF_CHANGED 			 * is set. 			 */
 name|struct
 name|netmap_slot
 modifier|*
@@ -754,13 +754,19 @@ index|[
 name|l
 index|]
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
 init|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 decl_stmt|;
 comment|// XXX type for flags and len ?
@@ -842,10 +848,7 @@ name|buffer_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 name|curr
@@ -903,10 +906,6 @@ operator|->
 name|map
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 name|slot
@@ -1538,7 +1537,7 @@ operator|!=
 name|k
 condition|)
 block|{
-comment|/* collect per-slot info, with similar validations 			 * and flag handling as in the txsync code. 			 * 			 * NOTE curr and rxbuf are indexed by l. 			 * Also, this driver needs to update the physical				 * address in the NIC ring, but other drivers 			 * may not have this requirement. 			 */
+comment|/* collect per-slot info, with similar validations 			 * and flag handling as in the txsync code. 			 * 			 * NOTE curr and rxbuf are indexed by l. 			 * Also, this driver needs to update the physical 			 * address in the NIC ring, but other drivers 			 * may not have this requirement. 			 */
 name|struct
 name|netmap_slot
 modifier|*
@@ -1578,13 +1577,19 @@ index|[
 name|l
 index|]
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
 init|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 decl_stmt|;
 if|if
@@ -1615,10 +1620,7 @@ name|pkt_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1641,10 +1643,6 @@ operator|->
 name|pmap
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 name|slot

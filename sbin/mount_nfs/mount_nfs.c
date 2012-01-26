@@ -2165,12 +2165,22 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* resolve the mountpoint with realpath(3) */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|checkpath
 argument_list|(
 name|name
+argument_list|,
+name|mntpath
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|mntpath
 argument_list|)
@@ -4768,7 +4778,7 @@ init|;
 condition|;
 control|)
 block|{
-comment|/* 		 * Try each entry returned by getaddrinfo(). Note the 		 * occurence of remote errors by setting `remoteerr'. 		 */
+comment|/* 		 * Try each entry returned by getaddrinfo(). Note the 		 * occurrence of remote errors by setting `remoteerr'. 		 */
 name|remoteerr
 operator|=
 literal|0

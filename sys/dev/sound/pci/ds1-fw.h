@@ -6244,7 +6244,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* --------------------------------------------    DS-1E Controller InstructionRAM Code 	1999/06/21 	Buf441 slot is Enabled.    --------------------------------------------    04/09@creat    04/12  stop nise fix    06/21@WorkingOff timming */
+comment|/* --------------------------------------------    DS-1E Controller InstructionRAM Code 	1999/06/21 	Buf441 slot is Enabled.    --------------------------------------------    04/09  @creat    04/12  stop nise fix    06/21  @WorkingOff timming */
 end_comment
 
 begin_decl_stmt

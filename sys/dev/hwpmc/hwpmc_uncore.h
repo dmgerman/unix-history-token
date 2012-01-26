@@ -249,6 +249,17 @@ name|UC_GLOBAL_CTRL_FLAG_ENPMICORE0
 value|(1ULL<< 48)
 end_define
 
+begin_comment
+comment|/*  * Model specific registers.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MSR_GQ_SNOOP_MESF
+value|0x301
+end_define
+
 begin_struct
 struct|struct
 name|pmc_md_ucf_pmc

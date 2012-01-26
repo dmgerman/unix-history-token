@@ -97,6 +97,36 @@ directive|define
 name|_ASSERT_H_
 end_define
 
+begin_comment
+comment|/*  * Static assertions.  In principle we could define static_assert for  * C++ older than C++11, but this breaks if _Static_assert is  * implemented as a macro.  *  * C++ template parameters may contain commas, even if not enclosed in  * parentheses, causing the _Static_assert macro to be invoked with more  * than two parameters.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__ISO_C_VISIBLE
+operator|>=
+literal|2011
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__cplusplus
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|static_assert
+value|_Static_assert
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|__BEGIN_DECLS
 name|void

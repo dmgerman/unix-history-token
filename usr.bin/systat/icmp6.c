@@ -133,7 +133,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00          ICMPv6 Input                       ICMPv6 Output 01999999999 total messages           999999999 total messages 02999999999 with bad code            999999999 errors generated 03999999999 with bad length          999999999 suppressed - original too short 04999999999 with bad checksum        999999999 suppressed - original was ICMP 05999999999 with insufficient data   999999999 responses sent 06 07          Input Histogram                    Output Histogram 08999999999 echo response            999999999 echo response 09999999999 echo request             999999999 echo request 10999999999 destination unreachable  999999999 destination unreachable 11999999999 redirect                 999999999 redirect 12999999999 time-to-live exceeded    999999999 time-to-line exceeded 13999999999 parameter problem        999999999 parameter problem 14999999999 neighbor solicitation    999999999 neighbor solicitation 15999999999 neighbor advertisment    999999999 neighbor advertisment 16999999999 router advertisement     999999999 router solicitation 17 18 --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
+comment|/*- --0         1         2         3         4         5         6         7 --0123456789012345678901234567890123456789012345678901234567890123456789012345 00          ICMPv6 Input                       ICMPv6 Output 01999999999 total messages           999999999 total messages 02999999999 with bad code            999999999 errors generated 03999999999 with bad length          999999999 suppressed - original too short 04999999999 with bad checksum        999999999 suppressed - original was ICMP 05999999999 with insufficient data   999999999 responses sent 06 07          Input Histogram                    Output Histogram 08999999999 echo response            999999999 echo response 09999999999 echo request             999999999 echo request 10999999999 destination unreachable  999999999 destination unreachable 11999999999 redirect                 999999999 redirect 12999999999 time-to-live exceeded    999999999 time-to-line exceeded 13999999999 parameter problem        999999999 parameter problem 14999999999 neighbor solicitation    999999999 neighbor solicitation 15999999999 neighbor advertisement   999999999 neighbor advertisement 16999999999 router advertisement     999999999 router solicitation 17 18 --0123456789012345678901234567890123456789012345678901234567890123456789012345 --0         1         2         3         4         5         6         7 */
 end_comment
 
 begin_function
@@ -400,7 +400,7 @@ name|B
 argument_list|(
 literal|15
 argument_list|,
-literal|"neighbor advertisment"
+literal|"neighbor advertisement"
 argument_list|)
 expr_stmt|;
 name|L

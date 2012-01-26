@@ -144,7 +144,7 @@ name|TT_USER
 init|=
 literal|0
 block|,
-comment|// tranform only the entries of the caller
+comment|// transform only the entries of the caller
 name|TT_ALL
 init|=
 literal|1

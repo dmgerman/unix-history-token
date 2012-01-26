@@ -1,9 +1,5 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * ng_base.c  */
-end_comment
-
-begin_comment
 comment|/*-  * Copyright (c) 1996-1999 Whistle Communications, Inc.  * All rights reserved.  *  * Subject to the following obligations and disclaimer of warranty, use and  * redistribution of this software, in source or object code forms, with or  * without modifications are expressly permitted by Whistle Communications;  * provided, however, that:  * 1. Any and all reproductions of the source or object code must include the  *    copyright notice above and the following disclaimer of warranties; and  * 2. No rights are granted, in any manner or form, to use Whistle  *    Communications, Inc. trademarks, including the mark "WHISTLE  *    COMMUNICATIONS" on advertising, endorsements, or otherwise except as  *    such appears in the above copyright notice or in the software.  *  * THIS SOFTWARE IS BEING PROVIDED BY WHISTLE COMMUNICATIONS "AS IS", AND  * TO THE MAXIMUM EXTENT PERMITTED BY LAW, WHISTLE COMMUNICATIONS MAKES NO  * REPRESENTATIONS OR WARRANTIES, EXPRESS OR IMPLIED, REGARDING THIS SOFTWARE,  * INCLUDING WITHOUT LIMITATION, ANY AND ALL IMPLIED WARRANTIES OF  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, OR NON-INFRINGEMENT.  * WHISTLE COMMUNICATIONS DOES NOT WARRANT, GUARANTEE, OR MAKE ANY  * REPRESENTATIONS REGARDING THE USE OF, OR THE RESULTS OF THE USE OF THIS  * SOFTWARE IN TERMS OF ITS CORRECTNESS, ACCURACY, RELIABILITY OR OTHERWISE.  * IN NO EVENT SHALL WHISTLE COMMUNICATIONS BE LIABLE FOR ANY DAMAGES  * RESULTING FROM OR ARISING OUT OF ANY USE OF THIS SOFTWARE, INCLUDING  * WITHOUT LIMITATION, ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,  * PUNITIVE, OR CONSEQUENTIAL DAMAGES, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES, LOSS OF USE, DATA OR PROFITS, HOWEVER CAUSED AND UNDER ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF WHISTLE COMMUNICATIONS IS ADVISED OF THE POSSIBILITY  * OF SUCH DAMAGE.  *  * Authors: Julian Elischer<julian@freebsd.org>  *          Archie Cobbs<archie@freebsd.org>  *  * $FreeBSD$  * $Whistle: ng_base.c,v 1.39 1999/01/28 23:54:53 julian Exp $  */
 end_comment
 
@@ -62,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/lock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -99,6 +101,12 @@ begin_include
 include|#
 directive|include
 file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
 end_include
 
 begin_include
@@ -538,10 +546,42 @@ end_expr_stmt
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
-name|ng_typelist_mtx
+name|rwlock
+name|ng_typelist_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|TYPELIST_RLOCK
+parameter_list|()
+value|rw_rlock(&ng_typelist_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPELIST_RUNLOCK
+parameter_list|()
+value|rw_runlock(&ng_typelist_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPELIST_WLOCK
+parameter_list|()
+value|rw_wlock(&ng_typelist_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPELIST_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&ng_typelist_lock)
+end_define
 
 begin_comment
 comment|/* Hash related definitions */
@@ -578,10 +618,42 @@ end_define
 begin_decl_stmt
 specifier|static
 name|struct
-name|mtx
-name|ng_idhash_mtx
+name|rwlock
+name|ng_idhash_lock
 decl_stmt|;
 end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IDHASH_RLOCK
+parameter_list|()
+value|rw_rlock(&ng_idhash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDHASH_RUNLOCK
+parameter_list|()
+value|rw_runlock(&ng_idhash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDHASH_WLOCK
+parameter_list|()
+value|rw_wlock(&ng_idhash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IDHASH_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&ng_idhash_lock)
+end_define
 
 begin_comment
 comment|/* Method to find a node.. used twice so do it here */
@@ -607,7 +679,7 @@ parameter_list|,
 name|node
 parameter_list|)
 define|\
-value|do { 								\ 		mtx_assert(&ng_idhash_mtx, MA_OWNED);			\ 		LIST_FOREACH(node,&V_ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
+value|do { 								\ 		rw_assert(&ng_idhash_lock, RA_LOCKED);			\ 		LIST_FOREACH(node,&V_ng_ID_hash[NG_IDHASH_FN(ID)],	\ 						nd_idnodes) {		\ 			if (NG_NODE_IS_VALID(node)			\&& (NG_NODE_ID(node) == ID)) {			\ 				break;					\ 			}						\ 		}							\ 	} while (0)
 end_define
 
 begin_expr_stmt
@@ -634,14 +706,6 @@ name|V_ng_name_hash
 value|VNET(ng_name_hash)
 end_define
 
-begin_decl_stmt
-specifier|static
-name|struct
-name|mtx
-name|ng_namehash_mtx
-decl_stmt|;
-end_decl_stmt
-
 begin_define
 define|#
 directive|define
@@ -653,6 +717,46 @@ name|HASH
 parameter_list|)
 define|\
 value|do {						\ 		u_char	h = 0;				\ 		const u_char	*c;			\ 		for (c = (const u_char*)(NAME); *c; c++)\ 			h += *c;			\ 		(HASH) = h % (NG_NAME_HASH_SIZE);	\ 	} while (0)
+end_define
+
+begin_decl_stmt
+specifier|static
+name|struct
+name|rwlock
+name|ng_namehash_lock
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|NAMEHASH_RLOCK
+parameter_list|()
+value|rw_rlock(&ng_namehash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAMEHASH_RUNLOCK
+parameter_list|()
+value|rw_runlock(&ng_namehash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAMEHASH_WLOCK
+parameter_list|()
+value|rw_wlock(&ng_namehash_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAMEHASH_WUNLOCK
+parameter_list|()
+value|rw_wunlock(&ng_namehash_lock)
 end_define
 
 begin_comment
@@ -1508,7 +1612,7 @@ parameter_list|(
 name|hook
 parameter_list|)
 define|\
-value|do {								\ 		mtx_lock(&ng_nodelist_mtx);			\ 		LIST_INSERT_HEAD(&ng_freehooks, hook, hk_hooks);	\ 		hook->hk_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);			\ 	} while (0)
+value|do {								\ 		mtx_lock(&ng_nodelist_mtx);				\ 		LIST_INSERT_HEAD(&ng_freehooks, hook, hk_hooks);	\ 		hook->hk_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);				\ 	} while (0)
 end_define
 
 begin_define
@@ -1519,7 +1623,7 @@ parameter_list|(
 name|node
 parameter_list|)
 define|\
-value|do {								\ 		mtx_lock(&ng_nodelist_mtx);			\ 		LIST_INSERT_HEAD(&ng_freenodes, node, nd_nodes);	\ 		node->nd_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);			\ 	} while (0)
+value|do {								\ 		mtx_lock(&ng_nodelist_mtx);				\ 		LIST_INSERT_HEAD(&ng_freenodes, node, nd_nodes);	\ 		node->nd_magic = 0;					\ 		mtx_unlock(&ng_nodelist_mtx);				\ 	} while (0)
 end_define
 
 begin_else
@@ -2522,11 +2626,8 @@ name|nd_hooks
 argument_list|)
 expr_stmt|;
 comment|/* Link us into the name hash. */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_WLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -2541,18 +2642,12 @@ argument_list|,
 name|nd_nodes
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_WUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* get an ID and put us in the hash chain */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_idhash_mtx
-argument_list|)
+name|IDHASH_WLOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -2623,11 +2718,8 @@ argument_list|,
 name|nd_idnodes
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_idhash_mtx
-argument_list|)
+name|IDHASH_WUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* Done */
 operator|*
@@ -2876,12 +2968,6 @@ argument_list|)
 condition|)
 block|{
 comment|/* we were the last */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
-expr_stmt|;
 name|node
 operator|->
 name|nd_type
@@ -2890,6 +2976,9 @@ name|refs
 operator|--
 expr_stmt|;
 comment|/* XXX maybe should get types lock? */
+name|NAMEHASH_WLOCK
+argument_list|()
+expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
 name|node
@@ -2897,17 +2986,11 @@ argument_list|,
 name|nd_nodes
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_WUNLOCK
+argument_list|()
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_idhash_mtx
-argument_list|)
+name|IDHASH_WLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
@@ -2916,11 +2999,8 @@ argument_list|,
 name|nd_idnodes
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_idhash_mtx
-argument_list|)
+name|IDHASH_WUNLOCK
+argument_list|()
 expr_stmt|;
 name|mtx_destroy
 argument_list|(
@@ -2957,11 +3037,8 @@ block|{
 name|node_p
 name|node
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_idhash_mtx
-argument_list|)
+name|IDHASH_RLOCK
+argument_list|()
 expr_stmt|;
 name|NG_IDHASH_FIND
 argument_list|(
@@ -2979,11 +3056,8 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_idhash_mtx
-argument_list|)
+name|IDHASH_RUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -3021,7 +3095,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Assign a node a name. Once assigned, the name cannot be changed.  */
+comment|/*  * Assign a node a name.  */
 end_comment
 
 begin_function
@@ -3180,11 +3254,8 @@ argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_WLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
@@ -3206,11 +3277,8 @@ argument_list|,
 name|nd_nodes
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_WUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -3302,11 +3370,8 @@ argument_list|,
 name|hash
 argument_list|)
 expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_RLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -3316,7 +3381,6 @@ argument|&V_ng_name_hash[hash]
 argument_list|,
 argument|nd_nodes
 argument_list|)
-block|{
 if|if
 condition|(
 name|NG_NODE_IS_VALID
@@ -3339,23 +3403,15 @@ literal|0
 operator|)
 condition|)
 block|{
-break|break;
-block|}
-block|}
-if|if
-condition|(
-name|node
-condition|)
 name|NG_NODE_REF
 argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+break|break;
+block|}
+name|NAMEHASH_RUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -3436,7 +3492,6 @@ index|]
 argument_list|)
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|(
@@ -3445,7 +3500,6 @@ operator|)
 literal|0
 operator|)
 return|;
-block|}
 comment|/* Decode number */
 name|val
 operator|=
@@ -3485,7 +3539,6 @@ operator|==
 literal|0
 operator|)
 condition|)
-block|{
 return|return
 operator|(
 operator|(
@@ -3494,18 +3547,19 @@ operator|)
 literal|0
 operator|)
 return|;
-block|}
 return|return
+operator|(
 operator|(
 name|ng_ID_t
 operator|)
 name|val
+operator|)
 return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  * IF we allow name changing this may be more resurrected.  */
+comment|/*  * Remove a name from a node. This should only be called  * when shutting down and removing the node.  */
 end_comment
 
 begin_function
@@ -4291,7 +4345,8 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Netgraph: Node type rejected. ABI mismatch. Suggest recompile\n"
+literal|"Netgraph: Node type rejected. ABI mismatch. "
+literal|"Suggest recompile\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4324,11 +4379,8 @@ operator|)
 return|;
 block|}
 comment|/* Link in new type */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_INSERT_HEAD
 argument_list|(
@@ -4347,11 +4399,8 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* first ref is linked list */
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4395,11 +4444,8 @@ operator|)
 return|;
 block|}
 comment|/* Unlink type */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
@@ -4408,11 +4454,8 @@ argument_list|,
 name|types
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -4443,11 +4486,8 @@ name|ng_type
 modifier|*
 name|type
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_RLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -4473,11 +4513,8 @@ literal|0
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_RUNLOCK
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -6769,8 +6806,8 @@ name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) queued reader "
-literal|"can't proceed; queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) queued "
+literal|"reader can't proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6849,8 +6886,8 @@ name|CTR4
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) queued writer "
-literal|"can't proceed; queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) queued writer can't "
+literal|"proceed; queue flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -6916,8 +6953,8 @@ name|CTR6
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"%20s: node [%x] (%p) returning item %p as %s; "
-literal|"queue flags 0x%lx"
+literal|"%20s: node [%x] (%p) returning item %p as %s; queue "
+literal|"flags 0x%lx"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7100,10 +7137,11 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Reader needs node without writer and pending items. */
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|long
 name|t
@@ -7301,11 +7339,11 @@ end_comment
 
 begin_comment
 unit|ng_apply_item(node, item, 0);
-comment|/* 		 * Having acted on the item, atomically  		 * down grade back to READER and finish up 	 	 */
+comment|/* 		 * Having acted on the item, atomically 		 * downgrade back to READER and finish up. 	 	 */
 end_comment
 
 begin_comment
-unit|atomic_add_int(&ngq->q_flags, 		    READER_INCREMENT - WRITER_ACTIVE);
+unit|atomic_add_int(&ngq->q_flags, READER_INCREMENT - WRITER_ACTIVE);
 comment|/* Our caller will call ng_leave_read() */
 end_comment
 
@@ -7880,12 +7918,10 @@ operator|)
 operator|)
 operator|)
 condition|)
-block|{
 name|queue
 operator|=
 literal|1
 expr_stmt|;
-block|}
 endif|#
 directive|endif
 block|}
@@ -8279,7 +8315,7 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * If no receive method, just silently drop it. 		 * Give preference to the hook over-ride method 		 */
+comment|/* 		 * If no receive method, just silently drop it. 		 * Give preference to the hook over-ride method. 		 */
 if|if
 condition|(
 operator|(
@@ -9652,11 +9688,8 @@ literal|0
 decl_stmt|,
 name|i
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_RLOCK
+argument_list|()
 expr_stmt|;
 comment|/* Count number of nodes */
 for|for
@@ -9705,12 +9738,6 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
-expr_stmt|;
 comment|/* Get response struct */
 name|NG_MKRESPONSE
 argument_list|(
@@ -9744,6 +9771,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|NAMEHASH_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
@@ -9767,12 +9797,6 @@ operator|->
 name|numnames
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -9837,26 +9861,6 @@ condition|)
 continue|continue;
 if|if
 condition|(
-name|nl
-operator|->
-name|numnames
-operator|>=
-name|num
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: number of nodes changed\n"
-argument_list|,
-name|__func__
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-if|if
-condition|(
 name|NG_NODE_HAS_NAME
 argument_list|(
 name|node
@@ -9904,6 +9908,21 @@ name|node
 operator|->
 name|nd_numhooks
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|nl
+operator|->
+name|numnames
+operator|<
+name|num
+argument_list|,
+operator|(
+literal|"%s: no space"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|nl
 operator|->
 name|numnames
@@ -9911,11 +9930,8 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_RUNLOCK
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -9938,11 +9954,8 @@ name|num
 init|=
 literal|0
 decl_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_RLOCK
+argument_list|()
 expr_stmt|;
 comment|/* Count number of types */
 name|LIST_FOREACH
@@ -9953,16 +9966,8 @@ argument|&ng_typelist
 argument_list|,
 argument|types
 argument_list|)
-block|{
 name|num
 operator|++
-expr_stmt|;
-block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
 expr_stmt|;
 comment|/* Get response struct */
 name|NG_MKRESPONSE
@@ -9997,6 +10002,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|TYPELIST_RUNLOCK
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|ENOMEM
@@ -10020,12 +10028,6 @@ operator|->
 name|numtypes
 operator|=
 literal|0
-expr_stmt|;
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -10052,28 +10054,6 @@ operator|->
 name|numtypes
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|tl
-operator|->
-name|numtypes
-operator|>=
-name|num
-condition|)
-block|{
-name|log
-argument_list|(
-name|LOG_ERR
-argument_list|,
-literal|"%s: number of %s changed\n"
-argument_list|,
-name|__func__
-argument_list|,
-literal|"types"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 name|strcpy
 argument_list|(
 name|tp
@@ -10096,17 +10076,29 @@ operator|-
 literal|1
 expr_stmt|;
 comment|/* don't count list */
+name|KASSERT
+argument_list|(
+name|tl
+operator|->
+name|numtypes
+operator|<
+name|num
+argument_list|,
+operator|(
+literal|"%s: no space"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|tl
 operator|->
 name|numtypes
 operator|++
 expr_stmt|;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_RUNLOCK
+argument_list|()
 expr_stmt|;
 break|break;
 block|}
@@ -10980,7 +10972,7 @@ operator|=
 name|EINVAL
 expr_stmt|;
 block|}
-comment|/* 	 * Sometimes a generic message may be statically allocated 	 * to avoid problems with allocating when in tight memeory situations. 	 * Don't free it if it is so. 	 * I break them appart here, because erros may cause a free if the item 	 * in which case we'd be doing it twice. 	 * they are kept together above, to simplify freeing. 	 */
+comment|/* 	 * Sometimes a generic message may be statically allocated 	 * to avoid problems with allocating when in tight memory situations. 	 * Don't free it if it is so. 	 * I break them appart here, because erros may cause a free if the item 	 * in which case we'd be doing it twice. 	 * they are kept together above, to simplify freeing. 	 */
 name|out
 label|:
 name|NG_RESPOND_MSG
@@ -11660,8 +11652,6 @@ init|=
 name|data
 decl_stmt|;
 name|int
-name|s
-decl_stmt|,
 name|error
 init|=
 literal|0
@@ -11675,11 +11665,6 @@ case|case
 name|MOD_LOAD
 case|:
 comment|/* Register new netgraph node type */
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -11693,14 +11678,7 @@ operator|)
 operator|!=
 literal|0
 condition|)
-block|{
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 comment|/* Call type specific code */
 if|if
 condition|(
@@ -11731,11 +11709,8 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WLOCK
+argument_list|()
 expr_stmt|;
 name|type
 operator|->
@@ -11750,27 +11725,14 @@ argument_list|,
 name|types
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-name|s
-operator|=
-name|splnet
-argument_list|()
-expr_stmt|;
 if|if
 condition|(
 name|type
@@ -11796,15 +11758,8 @@ name|refs
 operator|==
 literal|0
 condition|)
-block|{
 comment|/* failed load, nothing to undo */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
-block|}
 if|if
 condition|(
 name|type
@@ -11837,21 +11792,11 @@ name|error
 operator|!=
 literal|0
 condition|)
-block|{
 comment|/* type refuses.. */
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 block|}
-block|}
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WLOCK
+argument_list|()
 expr_stmt|;
 name|LIST_REMOVE
 argument_list|(
@@ -11860,18 +11805,10 @@ argument_list|,
 name|types
 argument_list|)
 expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_typelist_mtx
-argument_list|)
+name|TYPELIST_WUNLOCK
+argument_list|()
 expr_stmt|;
 block|}
-name|splx
-argument_list|(
-name|s
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 if|if
@@ -11947,11 +11884,8 @@ decl_stmt|;
 do|do
 block|{
 comment|/* Find a node to kill */
-name|mtx_lock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_RLOCK
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -12000,11 +11934,8 @@ name|NULL
 condition|)
 break|break;
 block|}
-name|mtx_unlock
-argument_list|(
-operator|&
-name|ng_namehash_mtx
-argument_list|)
+name|NAMEHASH_RUNLOCK
+argument_list|()
 expr_stmt|;
 comment|/* Attempt to kill it only if it is a regular node */
 if|if
@@ -12024,8 +11955,7 @@ block|{
 comment|/* This should never happen */
 name|printf
 argument_list|(
-literal|"ng node %s needs"
-literal|"NGF_REALLY_DIE\n"
+literal|"ng node %s needs NGF_REALLY_DIE\n"
 argument_list|,
 name|node
 operator|->
@@ -12162,40 +12092,28 @@ comment|/* Initialize everything. */
 name|NG_WORKLIST_LOCK_INIT
 argument_list|()
 expr_stmt|;
-name|mtx_init
+name|rw_init
 argument_list|(
 operator|&
-name|ng_typelist_mtx
+name|ng_typelist_lock
 argument_list|,
-literal|"netgraph types mutex"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
+literal|"netgraph types"
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|rw_init
 argument_list|(
 operator|&
-name|ng_idhash_mtx
+name|ng_idhash_lock
 argument_list|,
-literal|"netgraph idhash mutex"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
+literal|"netgraph idhash"
 argument_list|)
 expr_stmt|;
-name|mtx_init
+name|rw_init
 argument_list|(
 operator|&
-name|ng_namehash_mtx
+name|ng_namehash_lock
 argument_list|,
-literal|"netgraph namehash mutex"
-argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
+literal|"netgraph namehash"
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -13365,7 +13283,7 @@ argument_list|(
 name|node
 argument_list|)
 expr_stmt|;
-comment|/* XXX fafe in mutex? */
+comment|/* XXX safe in mutex? */
 name|NG_WORKLIST_LOCK
 argument_list|()
 expr_stmt|;

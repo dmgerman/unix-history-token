@@ -10,6 +10,8 @@ name|lint
 end_ifndef
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|char
 name|copyright
 index|[]
@@ -446,9 +448,8 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* resolve the mountpoint with realpath(3) */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|checkpath
 argument_list|(
 name|argv
@@ -457,6 +458,17 @@ name|optind
 operator|+
 literal|1
 index|]
+argument_list|,
+name|mountpt
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"%s"
 argument_list|,
 name|mountpt
 argument_list|)
