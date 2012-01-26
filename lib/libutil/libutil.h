@@ -1568,49 +1568,49 @@ begin_define
 define|#
 directive|define
 name|UU_LOCK_OPEN_ERR
-value|-1
+value|(-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_READ_ERR
-value|-2
+value|(-2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_CREAT_ERR
-value|-3
+value|(-3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_WRITE_ERR
-value|-4
+value|(-4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_LINK_ERR
-value|-5
+value|(-5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_TRY_ERR
-value|-6
+value|(-6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_OWNER_ERR
-value|-7
+value|(-7)
 end_define
 
 begin_endif
