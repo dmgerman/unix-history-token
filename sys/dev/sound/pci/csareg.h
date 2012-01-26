@@ -8792,55 +8792,6 @@ name|CS_AC97_POWER_CONTROL_MIXVOFF_ON
 value|0x0008
 end_define
 
-begin_comment
-comment|/* The following struct holds the initialization array. */
-end_comment
-
-begin_comment
-comment|/*  * this is 3*1024 for parameter, 3.5*1024 for sample and 2*3.5*1024 for code since   * each instruction is 40 bits and takes two dwords   */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|INKY_BA1_DWORD_SIZE
-value|(13 * 1024 + 512)
-end_define
-
-begin_define
-define|#
-directive|define
-name|INKY_MEMORY_COUNT
-value|3
-end_define
-
-begin_struct
-struct|struct
-name|BA1struct
-block|{
-struct|struct
-block|{
-name|u_long
-name|ulDestByteOffset
-decl_stmt|,
-name|ulSourceByteSize
-decl_stmt|;
-block|}
-name|MemoryStat
-index|[
-name|INKY_MEMORY_COUNT
-index|]
-struct|;
-name|u_long
-name|BA1Array
-index|[
-name|INKY_BA1_DWORD_SIZE
-index|]
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_endif
 endif|#
 directive|endif
