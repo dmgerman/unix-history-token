@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*-  * Copyright (c) 2011 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2009 LSI Corporation.  *  *  *           Name:  mpi2.h  *          Title:  MPI Message independent structures and definitions  *                  including System Interface Register Set and  *                  scatter/gather formats.  *  Creation Date:  June 21, 2006  *  *  mpi2.h Version:  02.00.14  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Bumped MPI2_HEADER_VERSION_UNIT.  *  06-26-07  02.00.02  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-31-07  02.00.03  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved ReplyPostHostIndex register to offset 0x6C of the  *                      MPI2_SYSTEM_INTERFACE_REGS and modified the define for  *                      MPI2_REPLY_POST_HOST_INDEX_OFFSET.  *                      Added union of request descriptors.  *                      Added union of reply descriptors.  *  10-31-07  02.00.04  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added define for MPI2_VERSION_02_00.  *                      Fixed the size of the FunctionDependent5 field in the  *                      MPI2_DEFAULT_REPLY structure.  *  12-18-07  02.00.05  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Removed the MPI-defined Fault Codes and extended the  *                      product specific codes up to 0xEFFF.  *                      Added a sixth key value for the WriteSequence register  *                      and changed the flush value to 0x0.  *                      Added message function codes for Diagnostic Buffer Post  *                      and Diagnsotic Release.  *                      New IOCStatus define: MPI2_IOCSTATUS_DIAGNOSTIC_RELEASED  *                      Moved MPI2_VERSION_UNION from mpi2_ioc.h.  *  02-29-08  02.00.06  Bumped MPI2_HEADER_VERSION_UNIT.  *  03-03-08  02.00.07  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-21-08  02.00.08  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added #defines for marking a reply descriptor as unused.  *  06-27-08  02.00.09  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-02-08  02.00.10  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved LUN field defines from mpi2_init.h.  *  01-19-09  02.00.11  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-06-09  02.00.12  Bumped MPI2_HEADER_VERSION_UNIT.  *                      In all request and reply descriptors, replaced VF_ID  *                      field with MSIxIndex field.  *                      Removed DevHandle field from  *                      MPI2_SCSI_IO_SUCCESS_REPLY_DESCRIPTOR and made those  *                      bytes reserved.  *                      Added RAID Accelerator functionality.  *  07-30-09  02.00.13  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-28-09  02.00.14  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MSI-x index mask and shift for Reply Post Host  *                      Index register.  *                      Added function code for Host Based Discovery Action.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2011 LSI Corporation.  *  *  *           Name:  mpi2.h  *          Title:  MPI Message independent structures and definitions  *                  including System Interface Register Set and  *                  scatter/gather formats.  *  Creation Date:  June 21, 2006  *  *  mpi2.h Version:  02.00.18  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Bumped MPI2_HEADER_VERSION_UNIT.  *  06-26-07  02.00.02  Bumped MPI2_HEADER_VERSION_UNIT.  *  08-31-07  02.00.03  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved ReplyPostHostIndex register to offset 0x6C of the  *                      MPI2_SYSTEM_INTERFACE_REGS and modified the define for  *                      MPI2_REPLY_POST_HOST_INDEX_OFFSET.  *                      Added union of request descriptors.  *                      Added union of reply descriptors.  *  10-31-07  02.00.04  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added define for MPI2_VERSION_02_00.  *                      Fixed the size of the FunctionDependent5 field in the  *                      MPI2_DEFAULT_REPLY structure.  *  12-18-07  02.00.05  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Removed the MPI-defined Fault Codes and extended the  *                      product specific codes up to 0xEFFF.  *                      Added a sixth key value for the WriteSequence register  *                      and changed the flush value to 0x0.  *                      Added message function codes for Diagnostic Buffer Post  *                      and Diagnsotic Release.  *                      New IOCStatus define: MPI2_IOCSTATUS_DIAGNOSTIC_RELEASED  *                      Moved MPI2_VERSION_UNION from mpi2_ioc.h.  *  02-29-08  02.00.06  Bumped MPI2_HEADER_VERSION_UNIT.  *  03-03-08  02.00.07  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-21-08  02.00.08  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added #defines for marking a reply descriptor as unused.  *  06-27-08  02.00.09  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-02-08  02.00.10  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Moved LUN field defines from mpi2_init.h.  *  01-19-09  02.00.11  Bumped MPI2_HEADER_VERSION_UNIT.  *  05-06-09  02.00.12  Bumped MPI2_HEADER_VERSION_UNIT.  *                      In all request and reply descriptors, replaced VF_ID  *                      field with MSIxIndex field.  *                      Removed DevHandle field from  *                      MPI2_SCSI_IO_SUCCESS_REPLY_DESCRIPTOR and made those  *                      bytes reserved.  *                      Added RAID Accelerator functionality.  *  07-30-09  02.00.13  Bumped MPI2_HEADER_VERSION_UNIT.  *  10-28-09  02.00.14  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MSI-x index mask and shift for Reply Post Host  *                      Index register.  *                      Added function code for Host Based Discovery Action.  *  02-10-10  02.00.15  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added define for MPI2_FUNCTION_PWR_MGMT_CONTROL.  *                      Added defines for product-specific range of message  *                      function codes, 0xF0 to 0xFF.  *  05-12-10  02.00.16  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added alternative defines for the SGE Direction bit.  *  08-11-10  02.00.17  Bumped MPI2_HEADER_VERSION_UNIT.  *  11-10-10  02.00.18  Bumped MPI2_HEADER_VERSION_UNIT.  *                      Added MPI2_IEEE_SGE_FLAGS_SYSTEMPLBCPI_ADDR define.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -87,7 +87,7 @@ begin_define
 define|#
 directive|define
 name|MPI2_HEADER_VERSION_UNIT
-value|(0x0E)
+value|(0x12)
 end_define
 
 begin_define
@@ -1512,7 +1512,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/***************************************************************************** * *        Message Functions *              0x80 -> 0x8F reserved for private message use per product * * *****************************************************************************/
+comment|/***************************************************************************** * *        Message Functions * *****************************************************************************/
 end_comment
 
 begin_define
@@ -1810,6 +1810,39 @@ end_define
 
 begin_comment
 comment|/* Host Based Discovery Action */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_FUNCTION_PWR_MGMT_CONTROL
+value|(0x30)
+end_define
+
+begin_comment
+comment|/* Power Management Control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_FUNCTION_MIN_PRODUCT_SPECIFIC
+value|(0xF0)
+end_define
+
+begin_comment
+comment|/* beginning of product-specific range */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_FUNCTION_MAX_PRODUCT_SPECIFIC
+value|(0xFF)
+end_define
+
+begin_comment
+comment|/* end of product-specific range */
 end_comment
 
 begin_comment
@@ -3155,6 +3188,20 @@ name|MPI2_SGE_FLAGS_HOST_TO_IOC
 value|(0x04)
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPI2_SGE_FLAGS_DEST
+value|(MPI2_SGE_FLAGS_IOC_TO_HOST)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SGE_FLAGS_SOURCE
+value|(MPI2_SGE_FLAGS_HOST_TO_IOC)
+end_define
+
 begin_comment
 comment|/* Address Size */
 end_comment
@@ -3580,12 +3627,20 @@ name|MPI2_IEEE_SGE_FLAGS_SYSTEM_ADDR
 value|(0x00)
 end_define
 
+begin_comment
+comment|/* IEEE Simple Element only */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|MPI2_IEEE_SGE_FLAGS_IOCDDR_ADDR
 value|(0x01)
 end_define
+
+begin_comment
+comment|/* IEEE Simple Element only */
+end_comment
 
 begin_define
 define|#
@@ -3600,6 +3655,21 @@ directive|define
 name|MPI2_IEEE_SGE_FLAGS_IOCPLBNTA_ADDR
 value|(0x03)
 end_define
+
+begin_comment
+comment|/* IEEE Simple Element only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_IEEE_SGE_FLAGS_SYSTEMPLBCPI_ADDR
+value|(0x03)
+end_define
+
+begin_comment
+comment|/* IEEE Chain Element only */
+end_comment
 
 begin_comment
 comment|/**************************************************************************** *  IEEE SGE operation Macros ****************************************************************************/
