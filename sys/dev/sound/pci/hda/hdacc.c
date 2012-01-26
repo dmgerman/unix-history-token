@@ -347,6 +347,22 @@ literal|"Realtek ALC665"
 block|}
 block|,
 block|{
+name|HDA_CODEC_ALC670
+block|,
+literal|0
+block|,
+literal|"Realtek ALC670"
+block|}
+block|,
+block|{
+name|HDA_CODEC_ALC680
+block|,
+literal|0
+block|,
+literal|"Realtek ALC680"
+block|}
+block|,
+block|{
 name|HDA_CODEC_ALC861
 block|,
 literal|0x0340
@@ -595,7 +611,47 @@ literal|"Analog Devices AD1989B"
 block|}
 block|,
 block|{
+name|HDA_CODEC_CA0110
+block|,
+literal|0
+block|,
+literal|"Creative CA0110-IBG"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CA0110_2
+block|,
+literal|0
+block|,
+literal|"Creative CA0110-IBG"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CA0132
+block|,
+literal|0
+block|,
+literal|"Creative CA0132"
+block|}
+block|,
+block|{
+name|HDA_CODEC_SB0880
+block|,
+literal|0
+block|,
+literal|"Creative SB0880 X-Fi"
+block|}
+block|,
+block|{
 name|HDA_CODEC_CMI9880
+block|,
+literal|0
+block|,
+literal|"CMedia CMI9880"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CMI98802
 block|,
 literal|0
 block|,
@@ -795,6 +851,38 @@ literal|"Sigmatel STAC9251"
 block|}
 block|,
 block|{
+name|HDA_CODEC_STAC9255
+block|,
+literal|0
+block|,
+literal|"Sigmatel STAC9255"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9255D
+block|,
+literal|0
+block|,
+literal|"Sigmatel STAC9255D"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9254
+block|,
+literal|0
+block|,
+literal|"Sigmatel STAC9254"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STAC9254D
+block|,
+literal|0
+block|,
+literal|"Sigmatel STAC9254D"
+block|}
+block|,
+block|{
 name|HDA_CODEC_STAC9271X
 block|,
 literal|0
@@ -915,6 +1003,102 @@ literal|"IDT 92HD206D"
 block|}
 block|,
 block|{
+name|HDA_CODEC_IDT92HD66B1X5
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66B1X5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66B2X5
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66B2X5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66B3X5
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66B3X5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66C1X5
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66C1X5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66C2X5
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66C2X5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66C3X5
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66C3X5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66B1X3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66B1X3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66B2X3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66B2X3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66B3X3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66B3X3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66C1X3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66C1X3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66C2X3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66C2X3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD66C3_65
+block|,
+literal|0
+block|,
+literal|"IDT 92HD66C3_65"
+block|}
+block|,
+block|{
 name|HDA_CODEC_IDT92HD700X
 block|,
 literal|0
@@ -939,6 +1123,30 @@ literal|"IDT 92HD71B5"
 block|}
 block|,
 block|{
+name|HDA_CODEC_IDT92HD71B5_2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD71B5"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD71B6
+block|,
+literal|0
+block|,
+literal|"IDT 92HD71B6"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD71B6_2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD71B6"
+block|}
+block|,
+block|{
 name|HDA_CODEC_IDT92HD71B7
 block|,
 literal|0
@@ -947,7 +1155,23 @@ literal|"IDT 92HD71B7"
 block|}
 block|,
 block|{
+name|HDA_CODEC_IDT92HD71B7_2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD71B7"
+block|}
+block|,
+block|{
 name|HDA_CODEC_IDT92HD71B8
+block|,
+literal|0
+block|,
+literal|"IDT 92HD71B8"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD71B8_2
 block|,
 literal|0
 block|,
@@ -1024,6 +1248,182 @@ block|,
 literal|0
 block|,
 literal|"IDT 92HD83C1X"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD87B1_3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD87B1/3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD87B2_4
+block|,
+literal|0
+block|,
+literal|"IDT 92HD87B2/4"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89C3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89C3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89C2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89C2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89C1
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89C1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89B3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89B3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89B2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89B2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89B1
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89B1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89E3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89E3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89E2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89E2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89E1
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89E1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89D3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89D3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89D2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89D2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89D1
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89D1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89F3
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89F3"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89F2
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89F2"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD89F1
+block|,
+literal|0
+block|,
+literal|"IDT 92HD89F1"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD90BXX
+block|,
+literal|0
+block|,
+literal|"IDT 92HD90BXX"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD91BXX
+block|,
+literal|0
+block|,
+literal|"IDT 92HD91BXX"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD93BXX
+block|,
+literal|0
+block|,
+literal|"IDT 92HD93BXX"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD98BXX
+block|,
+literal|0
+block|,
+literal|"IDT 92HD98BXX"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDT92HD99BXX
+block|,
+literal|0
+block|,
+literal|"IDT 92HD99BXX"
 block|}
 block|,
 block|{
@@ -1611,6 +2011,22 @@ literal|"NVIDIA MCP78"
 block|}
 block|,
 block|{
+name|HDA_CODEC_NVIDIAMCP78_3
+block|,
+literal|0
+block|,
+literal|"NVIDIA MCP78"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAMCP78_4
+block|,
+literal|0
+block|,
+literal|"NVIDIA MCP78"
+block|}
+block|,
+block|{
 name|HDA_CODEC_NVIDIAMCP7A
 block|,
 literal|0
@@ -1732,51 +2148,11 @@ block|}
 block|,
 comment|/* Unknown CODECs */
 block|{
-name|HDA_CODEC_ALCXXXX
-block|,
-literal|0
-block|,
-literal|"Realtek"
-block|}
-block|,
-block|{
 name|HDA_CODEC_ADXXXX
 block|,
 literal|0
 block|,
 literal|"Analog Devices"
-block|}
-block|,
-block|{
-name|HDA_CODEC_CSXXXX
-block|,
-literal|0
-block|,
-literal|"Cirrus Logic"
-block|}
-block|,
-block|{
-name|HDA_CODEC_CMIXXXX
-block|,
-literal|0
-block|,
-literal|"CMedia"
-block|}
-block|,
-block|{
-name|HDA_CODEC_STACXXXX
-block|,
-literal|0
-block|,
-literal|"Sigmatel"
-block|}
-block|,
-block|{
-name|HDA_CODEC_SIIXXXX
-block|,
-literal|0
-block|,
-literal|"Silicon Image"
 block|}
 block|,
 block|{
@@ -1788,19 +2164,11 @@ literal|"Lucent/Agere Systems"
 block|}
 block|,
 block|{
-name|HDA_CODEC_CXXXXX
+name|HDA_CODEC_ALCXXXX
 block|,
 literal|0
 block|,
-literal|"Conexant"
-block|}
-block|,
-block|{
-name|HDA_CODEC_VTXXXX
-block|,
-literal|0
-block|,
-literal|"VIA"
+literal|"Realtek"
 block|}
 block|,
 block|{
@@ -1812,11 +2180,59 @@ literal|"ATI"
 block|}
 block|,
 block|{
-name|HDA_CODEC_NVIDIAXXXX
+name|HDA_CODEC_CAXXXX
 block|,
 literal|0
 block|,
-literal|"NVIDIA"
+literal|"Creative"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CMIXXXX
+block|,
+literal|0
+block|,
+literal|"CMedia"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CMIXXXX2
+block|,
+literal|0
+block|,
+literal|"CMedia"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CSXXXX
+block|,
+literal|0
+block|,
+literal|"Cirrus Logic"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CXXXXX
+block|,
+literal|0
+block|,
+literal|"Conexant"
+block|}
+block|,
+block|{
+name|HDA_CODEC_CHXXXX
+block|,
+literal|0
+block|,
+literal|"Chrontel"
+block|}
+block|,
+block|{
+name|HDA_CODEC_IDTXXXX
+block|,
+literal|0
+block|,
+literal|"IDT"
 block|}
 block|,
 block|{
@@ -1828,11 +2244,43 @@ literal|"Intel"
 block|}
 block|,
 block|{
-name|HDA_CODEC_IDTXXXX
+name|HDA_CODEC_MOTOXXXX
 block|,
 literal|0
 block|,
-literal|"IDT"
+literal|"Motorolla"
+block|}
+block|,
+block|{
+name|HDA_CODEC_NVIDIAXXXX
+block|,
+literal|0
+block|,
+literal|"NVIDIA"
+block|}
+block|,
+block|{
+name|HDA_CODEC_SIIXXXX
+block|,
+literal|0
+block|,
+literal|"Silicon Image"
+block|}
+block|,
+block|{
+name|HDA_CODEC_STACXXXX
+block|,
+literal|0
+block|,
+literal|"Sigmatel"
+block|}
+block|,
+block|{
+name|HDA_CODEC_VTXXXX
+block|,
+literal|0
+block|,
+literal|"VIA"
 block|}
 block|, }
 struct|;
