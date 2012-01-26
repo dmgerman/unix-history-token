@@ -2248,7 +2248,7 @@ name|HDA_CODEC_MOTOXXXX
 block|,
 literal|0
 block|,
-literal|"Motorolla"
+literal|"Motorola"
 block|}
 block|,
 block|{
