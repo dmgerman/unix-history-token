@@ -12985,6 +12985,9 @@ return|;
 case|case
 name|DHO_DOMAIN_NAME
 case|:
+case|case
+name|DHO_DOMAIN_SEARCH
+case|:
 if|if
 condition|(
 operator|!
