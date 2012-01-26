@@ -461,7 +461,7 @@ specifier|static
 name|u_int
 name|check_integrity
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -490,7 +490,7 @@ argument_list|,
 operator|&
 name|check_integrity
 argument_list|,
-literal|1
+literal|0
 argument_list|,
 literal|"Enable integrity checking"
 argument_list|)
