@@ -2752,7 +2752,7 @@ operator|)
 condition|)
 name|ADDRATE
 argument_list|(
-name|i
+literal|32
 argument_list|)
 expr_stmt|;
 if|if
