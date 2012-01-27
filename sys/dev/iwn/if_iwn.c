@@ -12620,7 +12620,17 @@ name|IWN_RFLAG_SGI
 expr_stmt|;
 if|if
 condition|(
+name|RV
+argument_list|(
+name|ni
+operator|->
+name|ni_htrates
+operator|.
+name|rs_rates
+index|[
 name|i
+index|]
+argument_list|)
 operator|>
 literal|7
 condition|)
