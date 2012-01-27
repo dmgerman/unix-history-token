@@ -108,6 +108,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|M_NODUMP
+value|0x0800
+end_define
+
+begin_comment
+comment|/* don't dump pages in this allocation */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|M_MAGIC
 value|877983977
 end_define

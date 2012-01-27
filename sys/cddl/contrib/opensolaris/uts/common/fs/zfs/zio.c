@@ -992,6 +992,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_SLEEP
+operator||
+name|KM_NODEBUG
 argument_list|)
 operator|)
 return|;
