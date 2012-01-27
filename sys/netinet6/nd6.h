@@ -1919,6 +1919,26 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|void
+name|nd6_rtrequest
+name|__P
+argument_list|(
+operator|(
+name|int
+operator|,
+expr|struct
+name|rtentry
+operator|*
+operator|,
+expr|struct
+name|rt_addrinfo
+operator|*
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|nd6_ioctl
 name|__P
