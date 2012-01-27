@@ -4773,12 +4773,6 @@ name|mode
 operator||=
 name|REDIR_BACKQ
 expr_stmt|;
-name|cmdentry
-operator|.
-name|special
-operator|=
-literal|0
-expr_stmt|;
 block|}
 name|savecmdname
 operator|=
@@ -4867,13 +4861,6 @@ condition|(
 name|argc
 operator|==
 literal|0
-operator|&&
-operator|!
-operator|(
-name|flags
-operator|&
-name|EV_BACKCMD
-operator|)
 condition|)
 name|cmdentry
 operator|.
