@@ -7267,16 +7267,13 @@ block|}
 comment|/* XXX: aio_nbytes is later casted to signed types. */
 if|if
 condition|(
-operator|(
-name|int
-operator|)
 name|aiocbe
 operator|->
 name|uaiocb
 operator|.
 name|aio_nbytes
-operator|<
-literal|0
+operator|>
+name|INT_MAX
 condition|)
 block|{
 name|uma_zfree
