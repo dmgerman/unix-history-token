@@ -299,6 +299,15 @@ name|otime
 init|=
 name|NULL
 decl_stmt|;
+name|char
+modifier|*
+name|progname
+init|=
+name|argv
+index|[
+literal|0
+index|]
+decl_stmt|;
 while|while
 condition|(
 operator|(
@@ -349,10 +358,7 @@ break|break;
 default|default:
 name|usage
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|progname
 argument_list|)
 expr_stmt|;
 block|}
@@ -370,10 +376,7 @@ name|argc
 condition|)
 name|usage
 argument_list|(
-name|argv
-index|[
-literal|0
-index|]
+name|progname
 argument_list|)
 expr_stmt|;
 comment|/* Adjust based on users preferences */
