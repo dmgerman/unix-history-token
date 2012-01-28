@@ -9743,7 +9743,7 @@ operator|&&
 operator|(
 name|cchn
 operator|==
-literal|8
+literal|7
 operator|)
 condition|)
 name|wp
