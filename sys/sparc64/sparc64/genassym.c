@@ -83,22 +83,11 @@ directive|include
 file|<vm/vm_map.h>
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUN4U
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<machine/cache.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -186,12 +175,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUN4U
-end_ifdef
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -201,11 +184,6 @@ name|TLB_DEMAP_ALL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ASSYM
@@ -355,12 +333,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUN4U
-end_ifdef
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -446,17 +418,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUN4U
-end_ifdef
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -520,11 +481,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ASSYM
@@ -744,12 +700,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUN4U
-end_ifdef
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -932,11 +882,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -1089,12 +1034,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUN4U
-end_ifdef
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -1191,11 +1130,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -1276,19 +1210,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|SUN4U
-argument_list|)
-operator|&&
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|SMP
-argument_list|)
-end_if
+end_ifdef
 
 begin_expr_stmt
 name|ASSYM
@@ -2384,12 +2310,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SUN4U
-end_ifdef
-
 begin_expr_stmt
 name|ASSYM
 argument_list|(
@@ -2485,11 +2405,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_expr_stmt
 name|ASSYM
