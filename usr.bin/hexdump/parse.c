@@ -2168,8 +2168,6 @@ name|p2
 operator|=
 name|p1
 init|;
-operator|*
-name|p1
 condition|;
 name|p1
 operator|++
@@ -2178,7 +2176,6 @@ name|p2
 operator|++
 control|)
 block|{
-comment|/*  		 * Let's take a peak at the next item and see whether or not 		 * we need to escape the value... 		 */
 if|if
 condition|(
 operator|*
@@ -2196,7 +2193,6 @@ operator|*
 name|p1
 condition|)
 block|{
-comment|/* A standalone `\' */
 case|case
 literal|'\0'
 case|:
@@ -2211,7 +2207,7 @@ name|p2
 operator|=
 literal|'\0'
 expr_stmt|;
-break|break;
+return|return;
 case|case
 literal|'a'
 case|:
@@ -2287,12 +2283,22 @@ break|break;
 block|}
 block|}
 else|else
+block|{
 operator|*
 name|p2
 operator|=
 operator|*
 name|p1
 expr_stmt|;
+if|if
+condition|(
+operator|*
+name|p1
+operator|==
+literal|'\0'
+condition|)
+return|return;
+block|}
 block|}
 block|}
 end_function
