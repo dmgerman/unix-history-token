@@ -4642,6 +4642,7 @@ name|imgp
 operator|->
 name|entry_addr
 expr_stmt|;
+comment|/* 	 * While we could adhere to the memory model indicated in the ELF 	 * header, it turns out that just always using TSO performs best. 	 */
 name|tf
 operator|->
 name|tf_tstate
