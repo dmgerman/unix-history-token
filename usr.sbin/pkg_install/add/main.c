@@ -1647,7 +1647,7 @@ name|setenv
 argument_list|(
 literal|"PATH"
 argument_list|,
-literal|"/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:/usr/X11R6/bin"
+literal|"/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin"
 argument_list|,
 literal|1
 argument_list|)
