@@ -2445,7 +2445,7 @@ name|tc
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * Set up the IOMMU.  Schizo, Tomatillo and XMITS all have 	 * one per PBM.  Schizo and XMITS additionally have a streaming 	 * buffer, in Schizo version< 5 (i.e. revision< 2.3) it's 	 * affected by several errata and basically unusable though. 	 */
+comment|/* 	 * Set up the IOMMU.  Schizo, Tomatillo and XMITS all have 	 * one per PBM.  Schizo and XMITS additionally have a streaming 	 * buffer, in Schizo version< 5 (i.e. revision< 2.3) it's 	 * affected by several errata though.  However, except for context 	 * flushes, taking advantage of it should be okay even with those. 	 */
 name|memcpy
 argument_list|(
 operator|&
@@ -2529,21 +2529,6 @@ literal|"no-streaming-cache"
 argument_list|)
 operator|<
 literal|0
-operator|&&
-operator|!
-operator|(
-name|sc
-operator|->
-name|sc_mode
-operator|==
-name|SCHIZO_MODE_SCZ
-operator|&&
-name|sc
-operator|->
-name|sc_ver
-operator|<
-literal|5
-operator|)
 condition|)
 name|sc
 operator|->
