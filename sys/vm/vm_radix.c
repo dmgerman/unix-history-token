@@ -1063,10 +1063,16 @@ name|CTR3
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"insert: expanding %jd> %jd height %d"
+literal|"insert: expanding %ju> %ju height %d"
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|index
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|VM_RADIX_MAX
 argument_list|(
 name|level
@@ -1995,7 +2001,7 @@ name|CTR5
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"leaf: start %ju end %ju inc %d mask 0x%lX slot %d"
+literal|"leaf: start %ju end %ju inc %ju mask 0x%jX slot %d"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2007,8 +2013,14 @@ name|uintmax_t
 operator|)
 name|end
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inc
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 operator|~
 name|VM_RADIX_MAX
 argument_list|(
@@ -2669,15 +2681,21 @@ name|CTR4
 argument_list|(
 name|KTR_VM
 argument_list|,
-literal|"lookup_le: start %ju inc %ld mask 0x%lX slot %d"
+literal|"lookup_le: start %ju inc %ju mask 0x%jX slot %d"
 argument_list|,
 operator|(
 name|uintmax_t
 operator|)
 name|index
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|inc
 argument_list|,
+operator|(
+name|uintmax_t
+operator|)
 name|VM_RADIX_MAX
 argument_list|(
 name|level
