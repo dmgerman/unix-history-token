@@ -300,6 +300,7 @@ end_define
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|vr_type
 block|{
@@ -312,11 +313,13 @@ decl_stmt|;
 name|int
 name|vr_quirks
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|vr_name
 decl_stmt|;
 block|}
+decl|const
 name|vr_devs
 index|[]
 init|=
@@ -969,6 +972,7 @@ end_function_decl
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|vr_tx_threshold_table
 block|{
@@ -982,6 +986,7 @@ name|int
 name|value
 decl_stmt|;
 block|}
+decl|const
 name|vr_tx_threshold_tables
 index|[]
 init|=
@@ -2777,6 +2782,7 @@ end_comment
 
 begin_function
 specifier|static
+specifier|const
 name|struct
 name|vr_type
 modifier|*
@@ -2786,6 +2792,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|vr_type
 modifier|*
@@ -2858,6 +2865,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|vr_type
 modifier|*
@@ -2923,6 +2931,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+specifier|const
 name|struct
 name|vr_type
 modifier|*
