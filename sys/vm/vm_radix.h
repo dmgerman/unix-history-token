@@ -49,6 +49,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|VM_RADIX_MAXVAL
+value|((vm_pindex_t)-1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|VM_RADIX_LIMIT
 value|howmany((sizeof(vm_pindex_t) * NBBY), VM_RADIX_WIDTH)
 end_define
@@ -138,7 +145,7 @@ parameter_list|(
 name|h
 parameter_list|)
 define|\
-value|((h) == VM_RADIX_LIMIT ? ((vm_pindex_t)-1) :		\ 	    (((vm_pindex_t)1<< ((h) * VM_RADIX_WIDTH)) - 1))
+value|((h) == VM_RADIX_LIMIT ? VM_RADIX_MAXVAL :			\ 	    (((vm_pindex_t)1<< ((h) * VM_RADIX_WIDTH)) - 1))
 end_define
 
 begin_comment
