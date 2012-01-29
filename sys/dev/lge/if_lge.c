@@ -207,8 +207,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|lge_type
+specifier|const
 name|lge_devs
 index|[]
 init|=
@@ -1948,6 +1950,7 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+specifier|const
 name|struct
 name|lge_type
 modifier|*
