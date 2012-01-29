@@ -4461,7 +4461,7 @@ condition|(
 operator|(
 name|ret
 operator|=
-name|p_cansee
+name|p_candebug
 argument_list|(
 name|td
 argument_list|,
