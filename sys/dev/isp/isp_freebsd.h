@@ -1660,7 +1660,7 @@ parameter_list|,
 name|sense_len
 parameter_list|)
 define|\
-value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;	\ 	memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs), sense_len))
+value|(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;	\ 	memset(&(xs)->sense_data, 0, sizeof(&(xs)->sense_data)); \ 	memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs), sense_len))
 end_define
 
 begin_define
