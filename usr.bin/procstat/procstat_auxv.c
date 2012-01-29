@@ -305,8 +305,6 @@ name|pid
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|,
 name|name
 index|[
 literal|4
@@ -356,8 +354,8 @@ argument_list|(
 name|auxv32
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|name
@@ -373,13 +371,13 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 if|if
 condition|(
-name|error
-operator|<
-literal|0
-operator|&&
 name|errno
 operator|!=
 name|ESRCH
@@ -388,7 +386,6 @@ name|errno
 operator|!=
 name|EPERM
 condition|)
-block|{
 name|warn
 argument_list|(
 literal|"sysctl: kern.proc.auxv: %d: %d"
@@ -517,8 +514,6 @@ name|pid
 parameter_list|)
 block|{
 name|int
-name|error
-decl_stmt|,
 name|name
 index|[
 literal|4
@@ -584,8 +579,8 @@ argument_list|(
 name|auxv
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+if|if
+condition|(
 name|sysctl
 argument_list|(
 name|name
@@ -601,13 +596,13 @@ name|NULL
 argument_list|,
 literal|0
 argument_list|)
-expr_stmt|;
+operator|==
+operator|-
+literal|1
+condition|)
+block|{
 if|if
 condition|(
-name|error
-operator|<
-literal|0
-operator|&&
 name|errno
 operator|!=
 name|ESRCH
@@ -616,7 +611,6 @@ name|errno
 operator|!=
 name|EPERM
 condition|)
-block|{
 name|warn
 argument_list|(
 literal|"sysctl: kern.proc.auxv: %d: %d"
