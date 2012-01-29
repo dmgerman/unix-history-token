@@ -7787,22 +7787,19 @@ name|driver
 operator|->
 name|name
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|printf
 argument_list|(
-literal|"driver bug: Unable to set devclass (devname: %s)\n"
+literal|"driver bug: Unable to set "
+literal|"devclass (devname: %s)\n"
 argument_list|,
-operator|(
-name|child
-condition|?
 name|device_get_name
 argument_list|(
 name|child
 argument_list|)
-else|:
-literal|"no device"
-operator|)
 argument_list|)
 expr_stmt|;
 operator|(
