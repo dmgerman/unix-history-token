@@ -611,7 +611,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 block|{
