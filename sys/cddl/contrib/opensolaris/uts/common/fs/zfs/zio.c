@@ -668,6 +668,8 @@ argument_list|,
 name|cflags
 operator||
 name|KMC_NOTOUCH
+operator||
+name|KMC_NODEBUG
 argument_list|)
 expr_stmt|;
 block|}
