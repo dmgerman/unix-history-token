@@ -359,21 +359,6 @@ argument_list|,
 name|bus_generic_resume
 argument_list|)
 block|,
-comment|/* bus interface, for ADB root */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* ADB bus interface */
 name|DEVMETHOD
 argument_list|(
@@ -411,12 +396,8 @@ argument_list|,
 name|cuda_settime
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 

@@ -954,13 +954,6 @@ argument_list|)
 block|,
 name|DEVMETHOD
 argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_print_child
 argument_list|,
 name|iicbus_print_child
@@ -1009,11 +1002,7 @@ argument_list|,
 name|iicbus_transfer
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

@@ -989,21 +989,6 @@ argument_list|,
 name|nge_resume
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -1026,11 +1011,7 @@ argument_list|,
 name|nge_miibus_statchg
 argument_list|)
 block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
