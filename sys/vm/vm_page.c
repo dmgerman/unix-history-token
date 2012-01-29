@@ -2827,13 +2827,25 @@ block|{
 name|KASSERT
 argument_list|(
 name|pindex
-operator|!=
+operator|<
 name|neighbor
 operator|->
 name|pindex
 argument_list|,
 operator|(
-literal|"vm_page_insert: offset already allocated"
+literal|"vm_page_insert: offset %ju not minor than %ju"
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|pindex
+operator|,
+operator|(
+name|uintmax_t
+operator|)
+name|neighbor
+operator|->
+name|pindex
 operator|)
 argument_list|)
 expr_stmt|;
