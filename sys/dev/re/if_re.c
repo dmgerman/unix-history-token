@@ -377,8 +377,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|rl_type
+specifier|const
 name|re_devs
 index|[]
 init|=
@@ -488,8 +490,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|rl_hwrev
+specifier|const
 name|re_hwrevs
 index|[]
 init|=
@@ -4118,6 +4122,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|rl_type
 modifier|*
@@ -5575,6 +5580,7 @@ name|ifnet
 modifier|*
 name|ifp
 decl_stmt|;
+specifier|const
 name|struct
 name|rl_hwrev
 modifier|*
