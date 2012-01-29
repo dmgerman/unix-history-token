@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -20917,6 +20917,9 @@ condition|(
 name|argc
 operator|==
 literal|1
+operator|&&
+operator|!
+name|un
 condition|)
 block|{
 name|opts
@@ -23409,6 +23412,8 @@ operator|.
 name|dataset
 argument_list|,
 name|ZFS_TYPE_FILESYSTEM
+operator||
+name|ZFS_TYPE_VOLUME
 argument_list|)
 operator|)
 operator|==
@@ -23422,7 +23427,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Failed to open Dataset *%s*\n"
+literal|"Failed to open dataset: %s\n"
 argument_list|,
 name|opts
 operator|.
@@ -23477,7 +23482,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Failed to parse fsacl permissionsn"
+literal|"Failed to parse fsacl permissions\n"
 argument_list|)
 expr_stmt|;
 goto|goto
