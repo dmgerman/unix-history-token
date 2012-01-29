@@ -581,7 +581,7 @@ argument_list|,
 name|ofw_bus_gen_get_type
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -811,7 +811,7 @@ argument_list|,
 name|ofw_bus_gen_get_type
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

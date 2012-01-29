@@ -104791,7 +104791,7 @@ argument_list|,
 name|bwn_resume
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
