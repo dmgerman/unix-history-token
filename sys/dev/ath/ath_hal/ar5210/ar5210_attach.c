@@ -1610,6 +1610,13 @@ name|halChanQuarterRate
 operator|=
 name|AH_FALSE
 expr_stmt|;
+comment|/* 	 * RSSI uses the combined field; some 11n NICs may use 	 * the control chain RSSI. 	 */
+name|pCap
+operator|->
+name|halUseCombinedRadarRssi
+operator|=
+name|AH_TRUE
+expr_stmt|;
 if|if
 condition|(
 name|ath_hal_eepromGetFlag
