@@ -2537,6 +2537,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_GNU_RELRO
+value|0x6474e552
+end_define
+
+begin_define
+define|#
+directive|define
 name|PT_LOSUNW
 value|0x6ffffffa
 end_define
