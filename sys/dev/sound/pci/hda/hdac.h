@@ -1668,7 +1668,7 @@ value|HDA_CODEC_CONSTRUCT(REALTEK, 0xffff)
 end_define
 
 begin_comment
-comment|/* Motorolla */
+comment|/* Motorola */
 end_comment
 
 begin_define
