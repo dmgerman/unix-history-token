@@ -1351,6 +1351,17 @@ argument_list|(
 name|this_request
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|do_translate_sgl
+operator|==
+name|TRUE
+condition|)
+name|scic_sds_request_build_sgl
+argument_list|(
+name|this_request
+argument_list|)
+expr_stmt|;
 break|break;
 endif|#
 directive|endif

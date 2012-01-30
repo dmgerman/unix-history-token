@@ -458,12 +458,8 @@ operator|->
 name|user_request
 argument_list|)
 expr_stmt|;
-comment|// setup sgl
-name|scic_sds_request_build_sgl
-argument_list|(
-name|this_request
-argument_list|)
-expr_stmt|;
+comment|// sgls were already built when request was constructed, so don't need to
+comment|//  to do it here
 block|}
 else|else
 block|{
