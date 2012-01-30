@@ -1942,7 +1942,7 @@ name|g_part_ebr_entry
 modifier|*
 name|entry
 decl_stmt|;
-comment|/* Allow dumping to a FreeBSD partition only. */
+comment|/* Allow dumping to a FreeBSD partition or Linux swap partition only. */
 name|entry
 operator|=
 operator|(
@@ -1962,6 +1962,14 @@ operator|.
 name|dp_typ
 operator|==
 name|DOSPTYP_386BSD
+operator|||
+name|entry
+operator|->
+name|ent
+operator|.
+name|dp_typ
+operator|==
+name|DOSPTYP_LINSWP
 operator|)
 condition|?
 literal|1
