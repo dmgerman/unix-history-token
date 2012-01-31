@@ -2369,11 +2369,6 @@ decl_stmt|,
 modifier|*
 name|nia6
 decl_stmt|;
-name|struct
-name|in6_addrlifetime
-modifier|*
-name|lt6
-decl_stmt|;
 name|callout_reset
 argument_list|(
 operator|&
@@ -2480,13 +2475,6 @@ operator|->
 name|ia_next
 expr_stmt|;
 comment|/* check address lifetime */
-name|lt6
-operator|=
-operator|&
-name|ia6
-operator|->
-name|ia6_lifetime
-expr_stmt|;
 if|if
 condition|(
 name|IFA6_IS_INVALID
