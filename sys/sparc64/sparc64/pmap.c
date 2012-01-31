@@ -1397,9 +1397,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: finddevice /memory"
+literal|"%s: finddevice /memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1418,9 +1420,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: getproplen /memory/available"
+literal|"%s: getproplen /memory/available"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1432,9 +1436,11 @@ argument_list|)
 operator|<
 name|sz
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: phys_avail too small"
+literal|"%s: phys_avail too small"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -1446,9 +1452,11 @@ argument_list|)
 operator|<
 name|sz
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: mra too small"
+literal|"%s: mra too small"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -1474,9 +1482,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: getprop /memory/available"
+literal|"%s: getprop /memory/available"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sz
@@ -1890,9 +1900,11 @@ name|pa
 operator|&
 name|PAGE_MASK_4M
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: TSB unaligned\n"
+literal|"%s: TSB unaligned"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|tsb_kernel_phys
@@ -2054,7 +2066,7 @@ name|addr
 parameter_list|,
 name|asi
 parameter_list|)
-value|do {					\ 	if (addr[0] != WR_R_I(IF_F3_RD(addr[0]), 0x0,			\ 	    IF_F3_RS1(addr[0])))					\ 		panic("%s: patched instructions have changed",		\ 		    __func__);						\ 	addr[0] |= EIF_IMM((asi), 13);					\ 	flush(addr);							\ } while (0)
+value|do {					\ 	if (addr[0] != WR_R_I(IF_F3_RD(addr[0]), 0x0,			\ 	    IF_F3_RS1(addr[0])))					\ 		OF_panic("%s: patched instructions have changed",	\ 		    __func__);						\ 	addr[0] |= EIF_IMM((asi), 13);					\ 	flush(addr);							\ } while (0)
 define|#
 directive|define
 name|PATCH_LDD
@@ -2063,7 +2075,7 @@ name|addr
 parameter_list|,
 name|asi
 parameter_list|)
-value|do {					\ 	if (addr[0] != LDDA_R_I_R(IF_F3_RD(addr[0]), 0x0,		\ 	    IF_F3_RS1(addr[0]), IF_F3_RS2(addr[0])))			\ 		panic("%s: patched instructions have changed",		\ 		    __func__);						\ 	addr[0] |= EIF_F3_IMM_ASI(asi);					\ 	flush(addr);							\ } while (0)
+value|do {					\ 	if (addr[0] != LDDA_R_I_R(IF_F3_RD(addr[0]), 0x0,		\ 	    IF_F3_RS1(addr[0]), IF_F3_RS2(addr[0])))			\ 		OF_panic("%s: patched instructions have changed",	\ 		    __func__);						\ 	addr[0] |= EIF_F3_IMM_ASI(asi);					\ 	flush(addr);							\ } while (0)
 define|#
 directive|define
 name|PATCH_TSB
@@ -2072,7 +2084,7 @@ name|addr
 parameter_list|,
 name|val
 parameter_list|)
-value|do {					\ 	if (addr[0] != SETHI(IF_F2_RD(addr[0]), 0x0) ||			\ 	    addr[1] != OR_R_I_R(IF_F3_RD(addr[1]), 0x0,			\ 	    IF_F3_RS1(addr[1]))	||					\ 	    addr[3] != SETHI(IF_F2_RD(addr[3]), 0x0))			\ 		panic("%s: patched instructions have changed",		\ 		    __func__);						\ 	addr[0] |= EIF_IMM((val)>> 42, 22);				\ 	addr[1] |= EIF_IMM((val)>> 32, 10);				\ 	addr[3] |= EIF_IMM((val)>> 10, 22);				\ 	flush(addr);							\ 	flush(addr + 1);						\ 	flush(addr + 3);						\ } while (0)
+value|do {					\ 	if (addr[0] != SETHI(IF_F2_RD(addr[0]), 0x0) ||			\ 	    addr[1] != OR_R_I_R(IF_F3_RD(addr[1]), 0x0,			\ 	    IF_F3_RS1(addr[1]))	||					\ 	    addr[3] != SETHI(IF_F2_RD(addr[3]), 0x0))			\ 		OF_panic("%s: patched instructions have changed",	\ 		    __func__);						\ 	addr[0] |= EIF_IMM((val)>> 42, 22);				\ 	addr[1] |= EIF_IMM((val)>> 32, 10);				\ 	addr[3] |= EIF_IMM((val)>> 10, 22);				\ 	flush(addr);							\ 	flush(addr + 1);						\ 	flush(addr + 3);						\ } while (0)
 define|#
 directive|define
 name|PATCH_TSB_MASK
@@ -2081,7 +2093,7 @@ name|addr
 parameter_list|,
 name|val
 parameter_list|)
-value|do {					\ 	if (addr[0] != SETHI(IF_F2_RD(addr[0]), 0x0) ||			\ 	    addr[1] != OR_R_I_R(IF_F3_RD(addr[1]), 0x0,			\ 	    IF_F3_RS1(addr[1])))					\ 		panic("%s: patched instructions have changed",		\ 		    __func__);						\ 	addr[0] |= EIF_IMM((val)>> 10, 22);				\ 	addr[1] |= EIF_IMM((val), 10);					\ 	flush(addr);							\ 	flush(addr + 1);						\ } while (0)
+value|do {					\ 	if (addr[0] != SETHI(IF_F2_RD(addr[0]), 0x0) ||			\ 	    addr[1] != OR_R_I_R(IF_F3_RD(addr[1]), 0x0,			\ 	    IF_F3_RS1(addr[1])))					\ 		OF_panic("%s: patched instructions have changed",	\ 		    __func__);						\ 	addr[0] |= EIF_IMM((val)>> 10, 22);				\ 	addr[1] |= EIF_IMM((val), 10);					\ 	flush(addr);							\ 	flush(addr + 1);						\ } while (0)
 if|if
 condition|(
 name|tsb_kernel_ldd_phys
@@ -2611,9 +2623,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: finddevice /virtual-memory"
+literal|"%s: finddevice /virtual-memory"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2632,9 +2646,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: getproplen translations"
+literal|"%s: getproplen translations"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2646,9 +2662,11 @@ argument_list|)
 operator|<
 name|sz
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: translations too small"
+literal|"%s: translations too small"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|bzero
@@ -2674,9 +2692,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: getprop /virtual-memory/translations"
+literal|"%s: getprop /virtual-memory/translations"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sz
@@ -2921,9 +2941,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: getproplen /memory/reg"
+literal|"%s: getproplen /memory/reg"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2935,9 +2957,11 @@ argument_list|)
 operator|<
 name|sz
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: sparc64_memreg too small"
+literal|"%s: sparc64_memreg too small"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -2956,9 +2980,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap: getprop /memory/reg"
+literal|"%s: getprop /memory/reg"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|sparc64_nmemreg
@@ -3251,9 +3277,11 @@ name|pa
 operator|)
 return|;
 block|}
-name|panic
+name|OF_panic
 argument_list|(
-literal|"pmap_bootstrap_alloc"
+literal|"%s: no suitable region found"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

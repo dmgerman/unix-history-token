@@ -414,9 +414,11 @@ operator|==
 operator|-
 literal|1
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"cache_init: could not retrieve cache parameters"
+literal|"%s: could not retrieve cache parameters"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|set
@@ -455,9 +457,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"cache_init: I$ set size not a power of 2"
+literal|"%s: I$ set size not a power of 2"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -490,9 +494,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"cache_init: D$ size not a power of 2"
+literal|"%s: D$ size not a power of 2"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 comment|/* 	 * For CPUs which don't support unaliasing in hardware ensure that 	 * the data cache doesn't have too many virtual colors. 	 */
@@ -522,9 +528,11 @@ operator|)
 operator|!=
 name|DCACHE_COLORS
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"cache_init: too many D$ colors"
+literal|"%s: too many D$ colors"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|set
@@ -563,9 +571,11 @@ operator|)
 operator|!=
 literal|0
 condition|)
-name|panic
+name|OF_panic
 argument_list|(
-literal|"cache_init: E$ set size not a power of 2"
+literal|"%s: E$ set size not a power of 2"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 if|if
@@ -679,9 +689,11 @@ name|spitfire_tlb_flush_user
 expr_stmt|;
 block|}
 else|else
-name|panic
+name|OF_panic
 argument_list|(
-literal|"cache_init: unknown CPU"
+literal|"%s: unknown CPU"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}

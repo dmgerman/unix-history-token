@@ -438,6 +438,13 @@ name|pkts_dropped
 operator|)
 argument_list|)
 expr_stmt|;
+name|lle
+operator|->
+name|la_flags
+operator|&=
+operator|~
+name|LLE_VALID
+expr_stmt|;
 name|LLE_FREE_LOCKED
 argument_list|(
 name|lle

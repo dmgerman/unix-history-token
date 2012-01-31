@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*-  * Copyright (c) 2011 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2009 LSI Corporation.  *  *  *           Name:  mpi2_cnfg.h  *          Title:  MPI Configuration messages and pages  *  Creation Date:  November 10, 2006  *  *    mpi2_cnfg.h Version:  02.00.13  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Added defines for SAS IO Unit Page 2 PhyFlags.  *                      Added Manufacturing Page 11.  *                      Added MPI2_SAS_EXPANDER0_FLAGS_CONNECTOR_END_DEVICE  *                      define.  *  06-26-07  02.00.02  Adding generic structure for product-specific  *                      Manufacturing pages: MPI2_CONFIG_PAGE_MANUFACTURING_PS.  *                      Rework of BIOS Page 2 configuration page.  *                      Fixed MPI2_BIOSPAGE2_BOOT_DEVICE to be a union of the  *                      forms.  *                      Added configuration pages IOC Page 8 and Driver  *                      Persistent Mapping Page 0.  *  08-31-07  02.00.03  Modified configuration pages dealing with Integrated  *                      RAID (Manufacturing Page 4, RAID Volume Pages 0 and 1,  *                      RAID Physical Disk Pages 0 and 1, RAID Configuration  *                      Page 0).  *                      Added new value for AccessStatus field of SAS Device  *                      Page 0 (_SATA_NEEDS_INITIALIZATION).  *  10-31-07  02.00.04  Added missing SEPDevHandle field to  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *  12-18-07  02.00.05  Modified IO Unit Page 0 to use 32-bit version fields for  *                      NVDATA.  *                      Modified IOC Page 7 to use masks and added field for  *                      SASBroadcastPrimitiveMasks.  *                      Added MPI2_CONFIG_PAGE_BIOS_4.  *                      Added MPI2_CONFIG_PAGE_LOG_0.  *  02-29-08  02.00.06  Modified various names to make them 32-character unique.  *                      Added SAS Device IDs.  *                      Updated Integrated RAID configuration pages including  *                      Manufacturing Page 4, IOC Page 6, and RAID Configuration  *                      Page 0.  *  05-21-08  02.00.07  Added define MPI2_MANPAGE4_MIX_SSD_SAS_SATA.  *                      Added define MPI2_MANPAGE4_PHYSDISK_128MB_COERCION.  *                      Fixed define MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING.  *                      Added missing MaxNumRoutedSasAddresses field to  *                      MPI2_CONFIG_PAGE_EXPANDER_0.  *                      Added SAS Port Page 0.  *                      Modified structure layout for  *                      MPI2_CONFIG_PAGE_DRIVER_MAPPING_0.  *  06-27-08  02.00.08  Changed MPI2_CONFIG_PAGE_RD_PDISK_1 to use  *                      MPI2_RAID_PHYS_DISK1_PATH_MAX to size the array.  *  10-02-08  02.00.09  Changed MPI2_RAID_PGAD_CONFIGNUM_MASK from 0x0000FFFF  *                      to 0x000000FF.  *                      Added two new values for the Physical Disk Coercion Size  *                      bits in the Flags field of Manufacturing Page 4.  *                      Added product-specific Manufacturing pages 16 to 31.  *                      Modified Flags bits for controlling write cache on SATA  *                      drives in IO Unit Page 1.  *                      Added new bit to AdditionalControlFlags of SAS IO Unit  *                      Page 1 to control Invalid Topology Correction.  *                      Added additional defines for RAID Volume Page 0  *                      VolumeStatusFlags field.  *                      Modified meaning of RAID Volume Page 0 VolumeSettings  *                      define for auto-configure of hot-swap drives.  *                      Added SupportedPhysDisks field to RAID Volume Page 1 and  *                      added related defines.  *                      Added PhysDiskAttributes field (and related defines) to  *                      RAID Physical Disk Page 0.  *                      Added MPI2_SAS_PHYINFO_PHY_VACANT define.  *                      Added three new DiscoveryStatus bits for SAS IO Unit  *                      Page 0 and SAS Expander Page 0.  *                      Removed multiplexing information from SAS IO Unit pages.  *                      Added BootDeviceWaitTime field to SAS IO Unit Page 4.  *                      Removed Zone Address Resolved bit from PhyInfo and from  *                      Expander Page 0 Flags field.  *                      Added two new AccessStatus values to SAS Device Page 0  *                      for indicating routing problems. Added 3 reserved words  *                      to this page.  *  01-19-09  02.00.10  Fixed defines for GPIOVal field of IO Unit Page 3.  *                      Inserted missing reserved field into structure for IOC  *                      Page 6.  *                      Added more pending task bits to RAID Volume Page 0  *                      VolumeStatusFlags defines.  *                      Added MPI2_PHYSDISK0_STATUS_FLAG_NOT_CERTIFIED define.  *                      Added a new DiscoveryStatus bit for SAS IO Unit Page 0  *                      and SAS Expander Page 0 to flag a downstream initiator  *                      when in simplified routing mode.  *                      Removed SATA Init Failure defines for DiscoveryStatus  *                      fields of SAS IO Unit Page 0 and SAS Expander Page 0.  *                      Added MPI2_SAS_DEVICE0_ASTATUS_DEVICE_BLOCKED define.  *                      Added PortGroups, DmaGroup, and ControlGroup fields to  *                      SAS Device Page 0.  *  05-06-09  02.00.11  Added structures and defines for IO Unit Page 5 and IO  *                      Unit Page 6.  *                      Added expander reduced functionality data to SAS  *                      Expander Page 0.  *                      Added SAS PHY Page 2 and SAS PHY Page 3.  *  07-30-09  02.00.12  Added IO Unit Page 7.  *                      Added new device ids.  *                      Added SAS IO Unit Page 5.  *                      Added partial and slumber power management capable flags  *                      to SAS Device Page 0 Flags field.  *                      Added PhyInfo defines for power condition.  *                      Added Ethernet configuration pages.  *  10-28-09  02.00.13  Added MPI2_IOUNITPAGE1_ENABLE_HOST_BASED_DISCOVERY.  *                      Added SAS PHY Page 4 structure and defines.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2011 LSI Corporation.  *  *  *           Name:  mpi2_cnfg.h  *          Title:  MPI Configuration messages and pages  *  Creation Date:  November 10, 2006  *  *    mpi2_cnfg.h Version:  02.00.17  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  06-04-07  02.00.01  Added defines for SAS IO Unit Page 2 PhyFlags.  *                      Added Manufacturing Page 11.  *                      Added MPI2_SAS_EXPANDER0_FLAGS_CONNECTOR_END_DEVICE  *                      define.  *  06-26-07  02.00.02  Adding generic structure for product-specific  *                      Manufacturing pages: MPI2_CONFIG_PAGE_MANUFACTURING_PS.  *                      Rework of BIOS Page 2 configuration page.  *                      Fixed MPI2_BIOSPAGE2_BOOT_DEVICE to be a union of the  *                      forms.  *                      Added configuration pages IOC Page 8 and Driver  *                      Persistent Mapping Page 0.  *  08-31-07  02.00.03  Modified configuration pages dealing with Integrated  *                      RAID (Manufacturing Page 4, RAID Volume Pages 0 and 1,  *                      RAID Physical Disk Pages 0 and 1, RAID Configuration  *                      Page 0).  *                      Added new value for AccessStatus field of SAS Device  *                      Page 0 (_SATA_NEEDS_INITIALIZATION).  *  10-31-07  02.00.04  Added missing SEPDevHandle field to  *                      MPI2_CONFIG_PAGE_SAS_ENCLOSURE_0.  *  12-18-07  02.00.05  Modified IO Unit Page 0 to use 32-bit version fields for  *                      NVDATA.  *                      Modified IOC Page 7 to use masks and added field for  *                      SASBroadcastPrimitiveMasks.  *                      Added MPI2_CONFIG_PAGE_BIOS_4.  *                      Added MPI2_CONFIG_PAGE_LOG_0.  *  02-29-08  02.00.06  Modified various names to make them 32-character unique.  *                      Added SAS Device IDs.  *                      Updated Integrated RAID configuration pages including  *                      Manufacturing Page 4, IOC Page 6, and RAID Configuration  *                      Page 0.  *  05-21-08  02.00.07  Added define MPI2_MANPAGE4_MIX_SSD_SAS_SATA.  *                      Added define MPI2_MANPAGE4_PHYSDISK_128MB_COERCION.  *                      Fixed define MPI2_IOCPAGE8_FLAGS_ENCLOSURE_SLOT_MAPPING.  *                      Added missing MaxNumRoutedSasAddresses field to  *                      MPI2_CONFIG_PAGE_EXPANDER_0.  *                      Added SAS Port Page 0.  *                      Modified structure layout for  *                      MPI2_CONFIG_PAGE_DRIVER_MAPPING_0.  *  06-27-08  02.00.08  Changed MPI2_CONFIG_PAGE_RD_PDISK_1 to use  *                      MPI2_RAID_PHYS_DISK1_PATH_MAX to size the array.  *  10-02-08  02.00.09  Changed MPI2_RAID_PGAD_CONFIGNUM_MASK from 0x0000FFFF  *                      to 0x000000FF.  *                      Added two new values for the Physical Disk Coercion Size  *                      bits in the Flags field of Manufacturing Page 4.  *                      Added product-specific Manufacturing pages 16 to 31.  *                      Modified Flags bits for controlling write cache on SATA  *                      drives in IO Unit Page 1.  *                      Added new bit to AdditionalControlFlags of SAS IO Unit  *                      Page 1 to control Invalid Topology Correction.  *                      Added additional defines for RAID Volume Page 0  *                      VolumeStatusFlags field.  *                      Modified meaning of RAID Volume Page 0 VolumeSettings  *                      define for auto-configure of hot-swap drives.  *                      Added SupportedPhysDisks field to RAID Volume Page 1 and  *                      added related defines.  *                      Added PhysDiskAttributes field (and related defines) to  *                      RAID Physical Disk Page 0.  *                      Added MPI2_SAS_PHYINFO_PHY_VACANT define.  *                      Added three new DiscoveryStatus bits for SAS IO Unit  *                      Page 0 and SAS Expander Page 0.  *                      Removed multiplexing information from SAS IO Unit pages.  *                      Added BootDeviceWaitTime field to SAS IO Unit Page 4.  *                      Removed Zone Address Resolved bit from PhyInfo and from  *                      Expander Page 0 Flags field.  *                      Added two new AccessStatus values to SAS Device Page 0  *                      for indicating routing problems. Added 3 reserved words  *                      to this page.  *  01-19-09  02.00.10  Fixed defines for GPIOVal field of IO Unit Page 3.  *                      Inserted missing reserved field into structure for IOC  *                      Page 6.  *                      Added more pending task bits to RAID Volume Page 0  *                      VolumeStatusFlags defines.  *                      Added MPI2_PHYSDISK0_STATUS_FLAG_NOT_CERTIFIED define.  *                      Added a new DiscoveryStatus bit for SAS IO Unit Page 0  *                      and SAS Expander Page 0 to flag a downstream initiator  *                      when in simplified routing mode.  *                      Removed SATA Init Failure defines for DiscoveryStatus  *                      fields of SAS IO Unit Page 0 and SAS Expander Page 0.  *                      Added MPI2_SAS_DEVICE0_ASTATUS_DEVICE_BLOCKED define.  *                      Added PortGroups, DmaGroup, and ControlGroup fields to  *                      SAS Device Page 0.  *  05-06-09  02.00.11  Added structures and defines for IO Unit Page 5 and IO  *                      Unit Page 6.  *                      Added expander reduced functionality data to SAS  *                      Expander Page 0.  *                      Added SAS PHY Page 2 and SAS PHY Page 3.  *  07-30-09  02.00.12  Added IO Unit Page 7.  *                      Added new device ids.  *                      Added SAS IO Unit Page 5.  *                      Added partial and slumber power management capable flags  *                      to SAS Device Page 0 Flags field.  *                      Added PhyInfo defines for power condition.  *                      Added Ethernet configuration pages.  *  10-28-09  02.00.13  Added MPI2_IOUNITPAGE1_ENABLE_HOST_BASED_DISCOVERY.  *                      Added SAS PHY Page 4 structure and defines.  *  02-10-10  02.00.14  Modified the comments for the configuration page  *                      structures that contain an array of data. The host  *                      should use the "count" field in the page data (e.g. the  *                      NumPhys field) to determine the number of valid elements  *                      in the array.  *                      Added/modified some MPI2_MFGPAGE_DEVID_SAS defines.  *                      Added PowerManagementCapabilities to IO Unit Page 7.  *                      Added PortWidthModGroup field to  *                      MPI2_SAS_IO_UNIT5_PHY_PM_SETTINGS.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_6 and related defines.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_7 and related defines.  *                      Added MPI2_CONFIG_PAGE_SASIOUNIT_8 and related defines.  *  05-12-10  02.00.15  Added MPI2_RAIDVOL0_STATUS_FLAG_VOL_NOT_CONSISTENT  *                      define.  *                      Added MPI2_PHYSDISK0_INCOMPATIBLE_MEDIA_TYPE define.  *                      Added MPI2_SAS_NEG_LINK_RATE_UNSUPPORTED_PHY define.  *  08-11-10  02.00.16  Removed IO Unit Page 1 device path (multi-pathing)  *                      defines.  *  11-10-10  02.00.17  Added ReceptacleID field (replacing Reserved1) to  *                      MPI2_MANPAGE7_CONNECTOR_INFO and reworked defines for  *                      the Pinout field.  *                      Added BoardTemperature and BoardTemperatureUnits fields  *                      to MPI2_CONFIG_PAGE_IO_UNIT_7.  *                      Added MPI2_CONFIG_EXTPAGETYPE_EXT_MANUFACTURING define  *                      and MPI2_CONFIG_PAGE_EXT_MAN_PS structure.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -356,6 +356,13 @@ define|#
 directive|define
 name|MPI2_CONFIG_EXTPAGETYPE_ETHERNET
 value|(0x19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_CONFIG_EXTPAGETYPE_EXT_MANUFACTURING
+value|(0x1A)
 end_define
 
 begin_comment
@@ -878,7 +885,7 @@ value|(0x07)
 end_define
 
 begin_comment
-comment|/* values for SGLFlags field are in the SGL section of mpi2.h */
+comment|/* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
 end_comment
 
 begin_comment
@@ -1030,6 +1037,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI2_MFGPAGE_DEVID_SSS6200
+value|(0x007E)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_MFGPAGE_DEVID_SAS2208_1
 value|(0x0080)
 end_define
@@ -1072,15 +1086,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|MPI2_MFGPAGE_DEVID_SAS2208_7
+name|MPI2_MFGPAGE_DEVID_SAS2308_1
 value|(0x0086)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPI2_MFGPAGE_DEVID_SAS2208_8
+name|MPI2_MFGPAGE_DEVID_SAS2308_2
 value|(0x0087)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MFGPAGE_DEVID_SAS2308_3
+value|(0x006E)
 end_define
 
 begin_comment
@@ -1698,7 +1719,7 @@ comment|/* Manufacturing Page 5 */
 end_comment
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.PageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
 end_comment
 
 begin_ifndef
@@ -1863,7 +1884,7 @@ name|Location
 decl_stmt|;
 comment|/* 0x14 */
 name|U8
-name|Reserved1
+name|ReceptacleID
 decl_stmt|;
 comment|/* 0x15 */
 name|U16
@@ -1894,71 +1915,120 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8484_L4
-value|(0x00080000)
+name|MPI2_MANPAGE7_PINOUT_LANE_MASK
+value|(0x0000FF00)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8484_L3
-value|(0x00040000)
+name|MPI2_MANPAGE7_PINOUT_LANE_SHIFT
+value|(8)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8484_L2
-value|(0x00020000)
+name|MPI2_MANPAGE7_PINOUT_TYPE_MASK
+value|(0x000000FF)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8484_L1
-value|(0x00010000)
+name|MPI2_MANPAGE7_PINOUT_TYPE_UNKNOWN
+value|(0x00)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8470_L4
-value|(0x00000800)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8470_L3
-value|(0x00000400)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8470_L2
-value|(0x00000200)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPI2_MANPAGE7_PINOUT_SFF_8470_L1
-value|(0x00000100)
+name|MPI2_MANPAGE7_PINOUT_SATA_SINGLE
+value|(0x01)
 end_define
 
 begin_define
 define|#
 directive|define
 name|MPI2_MANPAGE7_PINOUT_SFF_8482
-value|(0x00000002)
+value|(0x02)
 end_define
 
 begin_define
 define|#
 directive|define
-name|MPI2_MANPAGE7_PINOUT_CONNECTION_UNKNOWN
-value|(0x00000001)
+name|MPI2_MANPAGE7_PINOUT_SFF_8486
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8484
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8087
+value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8643_4I
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8643_8I
+value|(0x07)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8470
+value|(0x08)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8088
+value|(0x09)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8644_4X
+value|(0x0A)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8644_8X
+value|(0x0B)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8644_16X
+value|(0x0C)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_MANPAGE7_PINOUT_SFF_8436
+value|(0x0D)
 end_define
 
 begin_comment
@@ -2015,7 +2085,7 @@ value|(0x80)
 end_define
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
 end_comment
 
 begin_ifndef
@@ -2100,7 +2170,7 @@ begin_define
 define|#
 directive|define
 name|MPI2_MANUFACTURING7_PAGEVERSION
-value|(0x00)
+value|(0x01)
 end_define
 
 begin_comment
@@ -2419,6 +2489,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI2_IOUNITPAGE1_SATA_WRITE_CACHE_SHIFT
+value|(9)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_IOUNITPAGE1_ENABLE_SATA_WRITE_CACHE
 value|(0x00000000)
 end_define
@@ -2465,26 +2542,12 @@ name|MPI2_IOUNITPAGE1_IR_USE_STATIC_VOLUME_ID
 value|(0x00000004)
 end_define
 
-begin_define
-define|#
-directive|define
-name|MPI2_IOUNITPAGE1_MULTI_PATHING
-value|(0x00000002)
-end_define
-
-begin_define
-define|#
-directive|define
-name|MPI2_IOUNITPAGE1_SINGLE_PATHING
-value|(0x00000000)
-end_define
-
 begin_comment
 comment|/* IO Unit Page 3 */
 end_comment
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.PageLength at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for GPIOCount at runtime.  */
 end_comment
 
 begin_ifndef
@@ -2590,7 +2653,7 @@ comment|/* IO Unit Page 5 */
 end_comment
 
 begin_comment
-comment|/*  * Upper layer code (drivers, utilities, etc.) should leave this define set to  * one and check Header.PageLength or NumDmaEngines at runtime.  */
+comment|/*  * Upper layer code (drivers, utilities, etc.) should leave this define set to  * one and check the value returned for NumDmaEngines at runtime.  */
 end_comment
 
 begin_ifndef
@@ -2835,7 +2898,7 @@ name|ProcessorState
 decl_stmt|;
 comment|/* 0x08 */
 name|U32
-name|Reserved2
+name|PowerManagementCapabilities
 decl_stmt|;
 comment|/* 0x0C */
 name|U16
@@ -2850,10 +2913,18 @@ name|U8
 name|IOCSpeed
 decl_stmt|;
 comment|/* 0x13 */
-name|U32
-name|Reserved3
+name|U16
+name|BoardTemperature
 decl_stmt|;
 comment|/* 0x14 */
+name|U8
+name|BoardTemperatureUnits
+decl_stmt|;
+comment|/* 0x16 */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x17 */
 block|}
 name|MPI2_CONFIG_PAGE_IO_UNIT_7
 operator|,
@@ -2871,7 +2942,7 @@ begin_define
 define|#
 directive|define
 name|MPI2_IOUNITPAGE7_PAGEVERSION
-value|(0x00)
+value|(0x02)
 end_define
 
 begin_comment
@@ -2971,6 +3042,45 @@ value|(0x02)
 end_define
 
 begin_comment
+comment|/* defines for IO Unit Page 7 PowerManagementCapabilities field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_PMCAP_12_5_PCT_IOCSPEED
+value|(0x00000400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_PMCAP_25_0_PCT_IOCSPEED
+value|(0x00000200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_PMCAP_50_0_PCT_IOCSPEED
+value|(0x00000100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_PMCAP_PCIE_WIDTH_CHANGE
+value|(0x00000008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_PMCAP_PCIE_SPEED_CHANGE
+value|(0x00000004)
+end_define
+
+begin_comment
 comment|/* defines for IO Unit Page 7 IOCTemperatureUnits field */
 end_comment
 
@@ -3025,6 +3135,31 @@ define|#
 directive|define
 name|MPI2_IOUNITPAGE7_IOC_SPEED_EIGHTH
 value|(0x08)
+end_define
+
+begin_comment
+comment|/* defines for IO Unit Page 7 BoardTemperatureUnits field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_BOARD_TEMP_NOT_PRESENT
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_BOARD_TEMP_FAHRENHEIT
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_IOUNITPAGE7_BOARD_TEMP_CELSIUS
+value|(0x02)
 end_define
 
 begin_comment
@@ -4303,7 +4438,7 @@ comment|/* BIOS Page 4 */
 end_comment
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.PageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
 end_comment
 
 begin_ifndef
@@ -4595,7 +4730,7 @@ value|(0x0002)
 end_define
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.PageLength at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhysDisks at runtime.  */
 end_comment
 
 begin_ifndef
@@ -4873,6 +5008,13 @@ define|#
 directive|define
 name|MPI2_RAIDVOL0_STATUS_FLAG_RESYNC_IN_PROGRESS
 value|(0x00010000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_RAIDVOL0_STATUS_FLAG_VOL_NOT_CONSISTENT
+value|(0x00000080)
 end_define
 
 begin_define
@@ -5434,6 +5576,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI2_PHYSDISK0_INCOMPATIBLE_MEDIA_TYPE
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_PHYSDISK0_INCOMPATIBLE_UNKNOWN
 value|(0xFF)
 end_define
@@ -5441,6 +5590,13 @@ end_define
 begin_comment
 comment|/* PhysDiskAttributes defines */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_PHYSDISK0_ATTRIB_MEDIA_MASK
+value|(0x0C)
+end_define
 
 begin_define
 define|#
@@ -5454,6 +5610,13 @@ define|#
 directive|define
 name|MPI2_PHYSDISK0_ATTRIB_HARD_DISK_DRIVE
 value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_PHYSDISK0_ATTRIB_PROTOCOL_MASK
+value|(0x03)
 end_define
 
 begin_define
@@ -5535,7 +5698,7 @@ comment|/* RAID Physical Disk Page 1 */
 end_comment
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.PageLength or NumPhysDiskPaths at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhysDiskPaths at runtime.  */
 end_comment
 
 begin_ifndef
@@ -5757,6 +5920,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|MPI2_SAS_NEG_LINK_RATE_UNSUPPORTED_PHY
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
 name|MPI2_SAS_NEG_LINK_RATE_1_5
 value|(0x08)
 end_define
@@ -5886,6 +6056,13 @@ define|#
 directive|define
 name|MPI2_SAS_PHYINFO_PHY_POWER_CONDITION_MASK
 value|(0x18000000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SAS_PHYINFO_SHIFT_PHY_POWER_CONDITION
+value|(27)
 end_define
 
 begin_define
@@ -6288,7 +6465,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.ExtPageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
 end_comment
 
 begin_ifndef
@@ -6600,7 +6777,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.ExtPageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
 end_comment
 
 begin_ifndef
@@ -7018,7 +7195,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * four and check Header.ExtPageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
 end_comment
 
 begin_ifndef
@@ -7158,7 +7335,7 @@ name|ControlFlags
 decl_stmt|;
 comment|/* 0x00 */
 name|U8
-name|Reserved1
+name|PortWidthModGroup
 decl_stmt|;
 comment|/* 0x01 */
 name|U16
@@ -7240,6 +7417,17 @@ define|#
 directive|define
 name|MPI2_SASIOUNIT5_CONTROL_SATA_PARTIAL_ENABLE
 value|(0x01)
+end_define
+
+begin_comment
+comment|/* defines for PortWidthModeGroup field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT5_PWMG_DISABLE
+value|(0xFF)
 end_define
 
 begin_comment
@@ -7359,7 +7547,7 @@ value|(0)
 end_define
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.ExtPageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhys at runtime.  */
 end_comment
 
 begin_ifndef
@@ -7429,7 +7617,489 @@ begin_define
 define|#
 directive|define
 name|MPI2_SASIOUNITPAGE5_PAGEVERSION
+value|(0x01)
+end_define
+
+begin_comment
+comment|/* SAS IO Unit Page 6 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_SAS_IO_UNIT6_PORT_WIDTH_MOD_GROUP_STATUS
+block|{
+name|U8
+name|CurrentStatus
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|CurrentModulation
+decl_stmt|;
+comment|/* 0x01 */
+name|U8
+name|CurrentUtilization
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x03 */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 0x04 */
+block|}
+name|MPI2_SAS_IO_UNIT6_PORT_WIDTH_MOD_GROUP_STATUS
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_SAS_IO_UNIT6_PORT_WIDTH_MOD_GROUP_STATUS
+operator|,
+name|Mpi2SasIOUnit6PortWidthModGroupStatus_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2SasIOUnit6PortWidthModGroupStatus_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* defines for CurrentStatus field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_UNAVAILABLE
 value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_UNCONFIGURED
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_INVALID_CONFIG
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_LINK_DOWN
+value|(0x03)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_OBSERVATION_ONLY
+value|(0x04)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_INACTIVE
+value|(0x05)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_ACTIVE_IOUNIT
+value|(0x06)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_STATUS_ACTIVE_HOST
+value|(0x07)
+end_define
+
+begin_comment
+comment|/* defines for CurrentModulation field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_MODULATION_25_PERCENT
+value|(0x00)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_MODULATION_50_PERCENT
+value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_MODULATION_75_PERCENT
+value|(0x02)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT6_MODULATION_100_PERCENT
+value|(0x03)
+end_define
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumGroups at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI2_SAS_IOUNIT6_GROUP_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI2_SAS_IOUNIT6_GROUP_MAX
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_CONFIG_PAGE_SASIOUNIT_6
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 0x08 */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|NumGroups
+decl_stmt|;
+comment|/* 0x10 */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x11 */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 0x12 */
+name|MPI2_SAS_IO_UNIT6_PORT_WIDTH_MOD_GROUP_STATUS
+name|PortWidthModulationGroupStatus
+index|[
+name|MPI2_SAS_IOUNIT6_GROUP_MAX
+index|]
+decl_stmt|;
+comment|/* 0x14 */
+block|}
+name|MPI2_CONFIG_PAGE_SASIOUNIT_6
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_CONFIG_PAGE_SASIOUNIT_6
+operator|,
+name|Mpi2SasIOUnitPage6_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2SasIOUnitPage6_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNITPAGE6_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* SAS IO Unit Page 7 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_SAS_IO_UNIT7_PORT_WIDTH_MOD_GROUP_SETTINGS
+block|{
+name|U8
+name|Flags
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x01 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|Threshold75Pct
+decl_stmt|;
+comment|/* 0x04 */
+name|U8
+name|Threshold50Pct
+decl_stmt|;
+comment|/* 0x05 */
+name|U8
+name|Threshold25Pct
+decl_stmt|;
+comment|/* 0x06 */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x07 */
+block|}
+name|MPI2_SAS_IO_UNIT7_PORT_WIDTH_MOD_GROUP_SETTINGS
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_SAS_IO_UNIT7_PORT_WIDTH_MOD_GROUP_SETTINGS
+operator|,
+name|Mpi2SasIOUnit7PortWidthModGroupSettings_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2SasIOUnit7PortWidthModGroupSettings_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* defines for Flags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT7_FLAGS_ENABLE_PORT_WIDTH_MODULATION
+value|(0x01)
+end_define
+
+begin_comment
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumGroups at runtime.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MPI2_SAS_IOUNIT7_GROUP_MAX
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI2_SAS_IOUNIT7_GROUP_MAX
+value|(1)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_CONFIG_PAGE_SASIOUNIT_7
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|SamplingInterval
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|WindowLength
+decl_stmt|;
+comment|/* 0x09 */
+name|U16
+name|Reserved1
+decl_stmt|;
+comment|/* 0x0A */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 0x0C */
+name|U32
+name|Reserved3
+decl_stmt|;
+comment|/* 0x10 */
+name|U8
+name|NumGroups
+decl_stmt|;
+comment|/* 0x14 */
+name|U8
+name|Reserved4
+decl_stmt|;
+comment|/* 0x15 */
+name|U16
+name|Reserved5
+decl_stmt|;
+comment|/* 0x16 */
+name|MPI2_SAS_IO_UNIT7_PORT_WIDTH_MOD_GROUP_SETTINGS
+name|PortWidthModulationGroupSettings
+index|[
+name|MPI2_SAS_IOUNIT7_GROUP_MAX
+index|]
+decl_stmt|;
+comment|/* 0x18 */
+block|}
+name|MPI2_CONFIG_PAGE_SASIOUNIT_7
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_CONFIG_PAGE_SASIOUNIT_7
+operator|,
+name|Mpi2SasIOUnitPage7_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2SasIOUnitPage7_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNITPAGE7_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* SAS IO Unit Page 8 */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_CONFIG_PAGE_SASIOUNIT_8
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U32
+name|Reserved1
+decl_stmt|;
+comment|/* 0x08 */
+name|U32
+name|PowerManagementCapabilities
+decl_stmt|;
+comment|/* 0x0C */
+name|U32
+name|Reserved2
+decl_stmt|;
+comment|/* 0x10 */
+block|}
+name|MPI2_CONFIG_PAGE_SASIOUNIT_8
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_CONFIG_PAGE_SASIOUNIT_8
+operator|,
+name|Mpi2SasIOUnitPage8_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2SasIOUnitPage8_t
+typedef|;
+end_typedef
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNITPAGE8_PAGEVERSION
+value|(0x00)
+end_define
+
+begin_comment
+comment|/* defines for PowerManagementCapabilities field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_HOST_PORT_WIDTH_MOD
+value|(0x000001000)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_HOST_SAS_SLUMBER_MODE
+value|(0x000000800)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_HOST_SAS_PARTIAL_MODE
+value|(0x000000400)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_HOST_SATA_SLUMBER_MODE
+value|(0x000000200)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_HOST_SATA_PARTIAL_MODE
+value|(0x000000100)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_IOUNIT_PORT_WIDTH_MOD
+value|(0x000000010)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_IOUNIT_SAS_SLUMBER_MODE
+value|(0x000000008)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_IOUNIT_SAS_PARTIAL_MODE
+value|(0x000000004)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_IOUNIT_SATA_SLUMBER_MODE
+value|(0x000000002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_SASIOUNIT8_PM_IOUNIT_SATA_PARTIAL_MODE
+value|(0x000000001)
 end_define
 
 begin_comment
@@ -8579,7 +9249,7 @@ comment|/* use MPI2_SASPHY3_EVENT_CODE_ for the PhyEventCode field */
 end_comment
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.ExtPageLength or NumPhyEvents at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhyEvents at runtime.  */
 end_comment
 
 begin_ifndef
@@ -9053,7 +9723,7 @@ value|(0x0001)
 end_define
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.ExtPageLength or NumPhyEvents at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumPhyEvents at runtime.  */
 end_comment
 
 begin_ifndef
@@ -9420,7 +10090,7 @@ comment|/* Log Page 0 */
 end_comment
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.ExtPageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumLogEntries at runtime.  */
 end_comment
 
 begin_ifndef
@@ -9601,7 +10271,7 @@ comment|/* RAID Page 0 */
 end_comment
 
 begin_comment
-comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check Header.ExtPageLength or NumPhys at runtime.  */
+comment|/*  * Host code (drivers, BIOS, utilities, etc.) should leave this define set to  * one and check the value returned for NumElements at runtime.  */
 end_comment
 
 begin_ifndef
@@ -10427,6 +11097,44 @@ directive|define
 name|MPI2_ETHPG1_MS_DATA_RATE_1GBIT
 value|(0x03)
 end_define
+
+begin_comment
+comment|/**************************************************************************** *   Extended Manufacturing Config Pages ****************************************************************************/
+end_comment
+
+begin_comment
+comment|/*  * Generic structure to use for product-specific extended manufacturing pages  * (currently Extended Manufacturing Page 40 through Extended Manufacturing  * Page 60).  */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_CONFIG_PAGE_EXT_MAN_PS
+block|{
+name|MPI2_CONFIG_EXTENDED_PAGE_HEADER
+name|Header
+decl_stmt|;
+comment|/* 0x00 */
+name|U32
+name|ProductSpecificInfo
+decl_stmt|;
+comment|/* 0x08 */
+block|}
+name|MPI2_CONFIG_PAGE_EXT_MAN_PS
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_CONFIG_PAGE_EXT_MAN_PS
+operator|,
+name|Mpi2ExtManufacturingPagePS_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2ExtManufacturingPagePS_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* PageVersion should be provided by product-specific code */
+end_comment
 
 begin_endif
 endif|#

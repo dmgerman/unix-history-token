@@ -90,6 +90,12 @@ decl_stmt|;
 name|u_int
 name|nr_kflags
 decl_stmt|;
+comment|/* private driver flags */
+define|#
+directive|define
+name|NKR_PENDINTR
+value|0x1
+comment|// Pending interrupt.
 name|u_int
 name|nkr_num_slots
 decl_stmt|;
@@ -109,6 +115,15 @@ name|si
 decl_stmt|;
 comment|/* poll/select wait queue */
 block|}
+name|__attribute__
+argument_list|(
+operator|(
+name|__aligned__
+argument_list|(
+literal|64
+argument_list|)
+operator|)
+argument_list|)
 struct|;
 end_struct
 
@@ -390,6 +405,22 @@ modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|netmap_mitigate
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|netmap_skip_txsync
+decl_stmt|,
+name|netmap_skip_rxsync
+decl_stmt|;
+end_decl_stmt
 
 begin_decl_stmt
 specifier|extern

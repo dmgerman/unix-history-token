@@ -43,7 +43,7 @@ end_function_decl
 
 begin_function_decl
 specifier|extern
-name|void
+name|int
 name|ath_dfs_radar_enable
 parameter_list|(
 name|struct

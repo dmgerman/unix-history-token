@@ -1572,6 +1572,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_ALC670
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0670)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_ALC680
+value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0680)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_ALC861
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0x0861)
 end_define
@@ -1651,6 +1665,70 @@ define|#
 directive|define
 name|HDA_CODEC_ALCXXXX
 value|HDA_CODEC_CONSTRUCT(REALTEK, 0xffff)
+end_define
+
+begin_comment
+comment|/* Motorola */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MOTO_VENDORID
+value|0x1057
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_MOTOXXXX
+value|HDA_CODEC_CONSTRUCT(MOTO, 0xffff)
+end_define
+
+begin_comment
+comment|/* Creative */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CREATIVE_VENDORID
+value|0x1102
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CA0110
+value|HDA_CODEC_CONSTRUCT(CREATIVE, 0x000a)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CA0110_2
+value|HDA_CODEC_CONSTRUCT(CREATIVE, 0x000b)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_SB0880
+value|HDA_CODEC_CONSTRUCT(CREATIVE, 0x000d)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CA0132
+value|HDA_CODEC_CONSTRUCT(CREATIVE, 0x0011)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CAXXXX
+value|HDA_CODEC_CONSTRUCT(CREATIVE, 0xffff)
 end_define
 
 begin_comment
@@ -1791,14 +1869,14 @@ begin_define
 define|#
 directive|define
 name|CMEDIA_VENDORID
-value|0x434d
+value|0x13f6
 end_define
 
 begin_define
 define|#
 directive|define
 name|HDA_CODEC_CMI9880
-value|HDA_CODEC_CONSTRUCT(CMEDIA, 0x4980)
+value|HDA_CODEC_CONSTRUCT(CMEDIA, 0x9880)
 end_define
 
 begin_define
@@ -1806,6 +1884,27 @@ define|#
 directive|define
 name|HDA_CODEC_CMIXXXX
 value|HDA_CODEC_CONSTRUCT(CMEDIA, 0xffff)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CMEDIA2_VENDORID
+value|0x434d
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CMI98802
+value|HDA_CODEC_CONSTRUCT(CMEDIA2, 0x4980)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CMIXXXX2
+value|HDA_CODEC_CONSTRUCT(CMEDIA2, 0xffff)
 end_define
 
 begin_comment
@@ -2095,6 +2194,34 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_STAC9255
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9255D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9254
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_STAC9254D
+value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x76a7)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_STAC9220_A2
 value|HDA_CODEC_CONSTRUCT(SIGMATEL, 0x7880)
 end_define
@@ -2183,6 +2310,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_IDT92HD71B8_2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b1)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_IDT92HD71B7
 value|HDA_CODEC_CONSTRUCT(IDT, 0x76b2)
 end_define
@@ -2190,8 +2324,148 @@ end_define
 begin_define
 define|#
 directive|define
+name|HDA_CODEC_IDT92HD71B7_2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD71B6
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD71B6_2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b5)
+end_define
+
+begin_define
+define|#
+directive|define
 name|HDA_CODEC_IDT92HD71B5
 value|HDA_CODEC_CONSTRUCT(IDT, 0x76b6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD71B5_2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76b7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89C3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89C2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89C1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89B3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89B2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89B1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89E3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c6)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89E2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89E1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89D3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76c9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89D2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76ca)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89D1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76cb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89F3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76cc)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89F2
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76cd)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD89F1
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76ce)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD87B1_3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76d1)
 end_define
 
 begin_define
@@ -2206,6 +2480,132 @@ define|#
 directive|define
 name|HDA_CODEC_IDT92HD81B1C
 value|HDA_CODEC_CONSTRUCT(IDT, 0x76d5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD87B2_4
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76d9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD93BXX
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76df)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD91BXX
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76e0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD98BXX
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76e3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD99BXX
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76e5)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD90BXX
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76e7)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66B1X5
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76e8)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66B2X5
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76e9)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66B3X5
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76ea)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66C1X5
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76eb)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66C2X5
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76ec)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66C3X5
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76ed)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66B1X3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76ee)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66B2X3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76ef)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66B3X3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76f0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66C1X3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76f1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66C2X3
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76f2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_IDT92HD66C3_65
+value|HDA_CODEC_CONSTRUCT(IDT, 0x76f3)
 end_define
 
 begin_define
@@ -2803,6 +3203,20 @@ begin_define
 define|#
 directive|define
 name|HDA_CODEC_NVIDIAMCP78_2
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0003)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP78_3
+value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0005)
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_NVIDIAMCP78_4
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0x0006)
 end_define
 
@@ -2860,6 +3274,24 @@ define|#
 directive|define
 name|HDA_CODEC_NVIDIAXXXX
 value|HDA_CODEC_CONSTRUCT(NVIDIA, 0xffff)
+end_define
+
+begin_comment
+comment|/* Chrontel */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHRONTEL_VENDORID
+value|0x17e8
+end_define
+
+begin_define
+define|#
+directive|define
+name|HDA_CODEC_CHXXXX
+value|HDA_CODEC_CONSTRUCT(CHRONTEL, 0xffff)
 end_define
 
 begin_comment

@@ -229,7 +229,7 @@ comment|/*  * Enable radar check  */
 end_comment
 
 begin_function
-name|void
+name|int
 name|ath_dfs_radar_enable
 parameter_list|(
 name|struct
@@ -252,7 +252,17 @@ argument_list|(
 name|chan
 argument_list|)
 condition|)
-return|return;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+comment|/* 	 * Enabling the radar parameters and setting sc->sc_dodfs = 1 	 * would occur here. 	 */
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 block|}
 end_function
 

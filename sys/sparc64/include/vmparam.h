@@ -451,7 +451,7 @@ begin_define
 define|#
 directive|define
 name|VM_KMEM_SIZE_SCALE
-value|(tsb_kernel_ldd_phys == 0 ? 3 : 1)
+value|(tsb_kernel_ldd_phys == 0 ? 3 : 2)
 end_define
 
 begin_endif

@@ -78,15 +78,37 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
+name|void
+name|OF_panic
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|fmt
+argument_list|,
+operator|...
+argument_list|)
+name|__dead2
+name|__printflike
+argument_list|(
+literal|1
+argument_list|,
+literal|2
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|void
 name|cpu_shutdown
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 name|int
@@ -98,15 +120,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
+begin_decl_stmt
 name|void
 name|ofw_exit
-parameter_list|(
+argument_list|(
 name|void
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
+operator|*
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_endif
 endif|#

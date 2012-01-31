@@ -168,7 +168,7 @@ value|512
 end_define
 
 begin_comment
-comment|/* for properties.c */
+comment|/* For properties.c. */
 end_comment
 
 begin_typedef
@@ -196,7 +196,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* Avoid pulling in all the include files for no need */
+comment|/* Avoid pulling in all the include files for no need. */
 end_comment
 
 begin_struct_decl
@@ -755,15 +755,15 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/*  * Conditionally prototype the following functions if the include  * files upon which they depend have been included.  */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|_STDIO_H_
 end_ifdef
-
-begin_comment
-comment|/* avoid adding new includes */
-end_comment
 
 begin_function_decl
 name|char
@@ -1440,7 +1440,7 @@ value|(1<< 18)
 end_define
 
 begin_comment
-comment|/* Flags for humanize_number(3) flags. */
+comment|/* Values for humanize_number(3)'s flags parameter. */
 end_comment
 
 begin_define
@@ -1479,7 +1479,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Flags for humanize_number(3) scale. */
+comment|/* Values for humanize_number(3)'s scale parameter. */
 end_comment
 
 begin_define
@@ -1497,7 +1497,7 @@ value|0x20
 end_define
 
 begin_comment
-comment|/* return values from realhostname(). */
+comment|/* Return values from realhostname(). */
 end_comment
 
 begin_define
@@ -1568,49 +1568,49 @@ begin_define
 define|#
 directive|define
 name|UU_LOCK_OPEN_ERR
-value|-1
+value|(-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_READ_ERR
-value|-2
+value|(-2)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_CREAT_ERR
-value|-3
+value|(-3)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_WRITE_ERR
-value|-4
+value|(-4)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_LINK_ERR
-value|-5
+value|(-5)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_TRY_ERR
-value|-6
+value|(-6)
 end_define
 
 begin_define
 define|#
 directive|define
 name|UU_LOCK_OWNER_ERR
-value|-7
+value|(-7)
 end_define
 
 begin_endif

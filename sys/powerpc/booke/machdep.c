@@ -682,6 +682,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|elf32_nxstack
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -836,6 +843,11 @@ argument_list|()
 expr_stmt|;
 name|vm_pager_bufferinit
 argument_list|()
+expr_stmt|;
+comment|/* Cpu supports execution permissions on the pages. */
+name|elf32_nxstack
+operator|=
+literal|1
 expr_stmt|;
 block|}
 end_function

@@ -2016,11 +2016,71 @@ block|,
 block|{
 literal|0x103C
 block|,
+literal|0x3350
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P222"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
 literal|0x3351
 block|,
 name|CISS_BOARD_SA5
 block|,
 literal|"HP Smart Array P420"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3352
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P421"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3353
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P822"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3354
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P420i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3355
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P220i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3356
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P721m"
 block|}
 block|,
 block|{
@@ -20508,7 +20568,18 @@ name|pis
 operator|->
 name|board_id
 operator|=
-name|pci_get_devid
+operator|(
+name|pci_get_subvendor
+argument_list|(
+name|sc
+operator|->
+name|ciss_dev
+argument_list|)
+operator|<<
+literal|16
+operator|)
+operator||
+name|pci_get_subdevice
 argument_list|(
 name|sc
 operator|->
