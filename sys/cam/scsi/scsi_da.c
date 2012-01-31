@@ -411,6 +411,9 @@ name|int
 name|minimum_cmd_size
 decl_stmt|;
 name|int
+name|error_inject
+decl_stmt|;
+name|int
 name|ordered_tag_count
 decl_stmt|;
 name|int
@@ -2323,7 +2326,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 name|cam_periph_lock
@@ -2359,7 +2362,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|error
+literal|0
 operator|)
 return|;
 block|}
@@ -3554,11 +3557,15 @@ name|periph
 operator|->
 name|path
 argument_list|,
-literal|"lost device - %d outstanding\n"
+literal|"lost device - %d outstanding, %d refs\n"
 argument_list|,
 name|softc
 operator|->
 name|outstanding_cmds
+argument_list|,
+name|periph
+operator|->
+name|refcount
 argument_list|)
 expr_stmt|;
 block|}
@@ -4148,6 +4155,36 @@ argument_list|,
 literal|"I"
 argument_list|,
 literal|"Minimum CDB size"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_INT
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|sysctl_ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|softc
+operator|->
+name|sysctl_tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"error_inject"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|softc
+operator|->
+name|error_inject
+argument_list|,
+literal|0
+argument_list|,
+literal|"error_inject leaf"
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Add some addressing info. 	 */
@@ -6626,6 +6663,44 @@ name|bio_flags
 operator||=
 name|BIO_ERROR
 expr_stmt|;
+if|if
+condition|(
+name|softc
+operator|->
+name|error_inject
+operator|!=
+literal|0
+condition|)
+block|{
+name|bp
+operator|->
+name|bio_error
+operator|=
+name|softc
+operator|->
+name|error_inject
+expr_stmt|;
+name|bp
+operator|->
+name|bio_resid
+operator|=
+name|bp
+operator|->
+name|bio_bcount
+expr_stmt|;
+name|bp
+operator|->
+name|bio_flags
+operator||=
+name|BIO_ERROR
+expr_stmt|;
+name|softc
+operator|->
+name|error_inject
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 comment|/* 		 * Block out any asyncronous callbacks 		 * while we touch the pending ccb list. 		 */
 name|LIST_REMOVE
@@ -7381,23 +7456,18 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|xpt_announce_periph
-argument_list|(
-name|periph
-argument_list|,
-name|announce_buf
-argument_list|)
-expr_stmt|;
 comment|/* 			 * Create our sysctl variables, now that we know 			 * we have successfully attached. 			 */
-operator|(
-name|void
-operator|)
+comment|/* increase the refcount */
+if|if
+condition|(
 name|cam_periph_acquire
 argument_list|(
 name|periph
 argument_list|)
-expr_stmt|;
-comment|/* increase the refcount */
+operator|==
+name|CAM_REQ_CMP
+condition|)
+block|{
 name|taskqueue_enqueue
 argument_list|(
 name|taskqueue_thread
@@ -7408,6 +7478,27 @@ operator|->
 name|sysctl_task
 argument_list|)
 expr_stmt|;
+name|xpt_announce_periph
+argument_list|(
+name|periph
+argument_list|,
+name|announce_buf
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|xpt_print
+argument_list|(
+name|periph
+operator|->
+name|path
+argument_list|,
+literal|"fatal error, "
+literal|"could not acquire reference count\n"
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 name|softc
 operator|->
