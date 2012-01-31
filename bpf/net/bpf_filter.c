@@ -1819,12 +1819,38 @@ name|BPF_JMP
 operator||
 name|BPF_JA
 case|:
+if|#
+directive|if
+name|defined
+argument_list|(
+name|KERNEL
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+comment|/* 			 * No backward jumps allowed. 			 */
 name|pc
 operator|+=
 name|pc
 operator|->
 name|k
 expr_stmt|;
+else|#
+directive|else
+comment|/* 			 * XXX - we currently implement "ip6 protochain" 			 * with backward jumps, so sign-extend pc->k. 			 */
+name|pc
+operator|+=
+operator|(
+name|bpf_int32
+operator|)
+name|pc
+operator|->
+name|k
+expr_stmt|;
+endif|#
+directive|endif
 continue|continue;
 case|case
 name|BPF_JMP
@@ -2520,7 +2546,7 @@ case|:
 comment|/* 				 * Check for constant division by 0. 				 */
 if|if
 condition|(
-name|BPF_RVAL
+name|BPF_SRC
 argument_list|(
 name|p
 operator|->

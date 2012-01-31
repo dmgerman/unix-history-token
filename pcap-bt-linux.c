@@ -205,21 +205,6 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|bt_setfilter_linux
-parameter_list|(
-name|pcap_t
-modifier|*
-parameter_list|,
-name|struct
-name|bpf_program
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
 name|bt_setdirection_linux
 parameter_list|(
 name|pcap_t
@@ -320,9 +305,7 @@ name|err_str
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't open raw Bluetooth socket %d:%s"
-argument_list|,
-name|errno
+literal|"Can't open raw Bluetooth socket: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -422,9 +405,7 @@ name|err_str
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't get Bluetooth device list via ioctl %d:%s"
-argument_list|,
-name|errno
+literal|"Can't get Bluetooth device list via ioctl: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -717,8 +698,9 @@ name|handle
 operator|->
 name|setfilter_op
 operator|=
-name|bt_setfilter_linux
+name|install_bpf_program
 expr_stmt|;
+comment|/* no kernel filtering */
 name|handle
 operator|->
 name|setdirection_op
@@ -789,9 +771,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't create raw socket %d:%s"
-argument_list|,
-name|errno
+literal|"Can't create raw socket: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -878,9 +858,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't enable data direction info %d:%s"
-argument_list|,
-name|errno
+literal|"Can't enable data direction info: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -928,9 +906,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't enable time stamp %d:%s"
-argument_list|,
-name|errno
+literal|"Can't enable time stamp: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1030,9 +1006,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't set filter %d:%s"
-argument_list|,
-name|errno
+literal|"Can't set filter: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1094,15 +1068,13 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't attach to device %d %d:%s"
+literal|"Can't attach to device %d: %s"
 argument_list|,
 name|handle
 operator|->
 name|md
 operator|.
 name|ifindex
-argument_list|,
-name|errno
 argument_list|,
 name|strerror
 argument_list|(
@@ -1139,7 +1111,7 @@ operator|->
 name|opt
 operator|.
 name|buffer_size
-operator|==
+operator|!=
 literal|0
 condition|)
 block|{
@@ -1255,6 +1227,9 @@ name|struct
 name|iovec
 name|iv
 decl_stmt|;
+name|ssize_t
+name|ret
+decl_stmt|;
 name|struct
 name|pcap_pkthdr
 name|pkth
@@ -1351,9 +1326,7 @@ expr_stmt|;
 comment|/* ignore interrupt system call error */
 do|do
 block|{
-name|pkth
-operator|.
-name|caplen
+name|ret
 operator|=
 name|recvmsg
 argument_list|(
@@ -1389,9 +1362,7 @@ block|}
 do|while
 condition|(
 operator|(
-name|pkth
-operator|.
-name|caplen
+name|ret
 operator|==
 operator|-
 literal|1
@@ -1406,9 +1377,7 @@ condition|)
 do|;
 if|if
 condition|(
-name|pkth
-operator|.
-name|caplen
+name|ret
 operator|<
 literal|0
 condition|)
@@ -1421,9 +1390,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"Can't receive packet %d:%s"
-argument_list|,
-name|errno
+literal|"Can't receive packet: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1436,6 +1403,12 @@ operator|-
 literal|1
 return|;
 block|}
+name|pkth
+operator|.
+name|caplen
+operator|=
+name|ret
+expr_stmt|;
 comment|/* get direction and timestamp*/
 name|cmsg
 operator|=
@@ -1465,40 +1438,41 @@ block|{
 case|case
 name|HCI_CMSG_DIR
 case|:
+name|memcpy
+argument_list|(
+operator|&
 name|in
-operator|=
-operator|*
-operator|(
-operator|(
-name|int
-operator|*
-operator|)
+argument_list|,
 name|CMSG_DATA
 argument_list|(
 name|cmsg
 argument_list|)
-operator|)
+argument_list|,
+sizeof|sizeof
+name|in
+argument_list|)
 expr_stmt|;
 break|break;
 case|case
 name|HCI_CMSG_TSTAMP
 case|:
+name|memcpy
+argument_list|(
+operator|&
 name|pkth
 operator|.
 name|ts
-operator|=
-operator|*
-operator|(
-operator|(
-expr|struct
-name|timeval
-operator|*
-operator|)
+argument_list|,
 name|CMSG_DATA
 argument_list|(
 name|cmsg
 argument_list|)
-operator|)
+argument_list|,
+sizeof|sizeof
+name|pkth
+operator|.
+name|ts
+argument_list|)
 expr_stmt|;
 break|break;
 block|}
@@ -1573,6 +1547,44 @@ name|pkth
 operator|.
 name|caplen
 expr_stmt|;
+if|if
+condition|(
+name|handle
+operator|->
+name|fcode
+operator|.
+name|bf_insns
+operator|==
+name|NULL
+operator|||
+name|bpf_filter
+argument_list|(
+name|handle
+operator|->
+name|fcode
+operator|.
+name|bf_insns
+argument_list|,
+operator|&
+name|handle
+operator|->
+name|buffer
+index|[
+name|handle
+operator|->
+name|offset
+index|]
+argument_list|,
+name|pkth
+operator|.
+name|len
+argument_list|,
+name|pkth
+operator|.
+name|caplen
+argument_list|)
+condition|)
+block|{
 name|callback
 argument_list|(
 name|user
@@ -1594,6 +1606,11 @@ expr_stmt|;
 return|return
 literal|1
 return|;
+block|}
+return|return
+literal|0
+return|;
+comment|/* didn't pass filter */
 block|}
 end_function
 
@@ -1678,7 +1695,7 @@ name|md
 operator|.
 name|ifindex
 expr_stmt|;
-comment|/* ingnore eintr */
+comment|/* ignore eintr */
 do|do
 block|{
 name|ret
@@ -1731,10 +1748,7 @@ name|errbuf
 argument_list|,
 name|PCAP_ERRBUF_SIZE
 argument_list|,
-literal|"can get stats"
-literal|" via ioctl %d:%s"
-argument_list|,
-name|errno
+literal|"Can't get stats via ioctl: %s"
 argument_list|,
 name|strerror
 argument_list|(
@@ -1796,27 +1810,6 @@ name|ps_ifdrop
 operator|=
 literal|0
 expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|int
-name|bt_setfilter_linux
-parameter_list|(
-name|pcap_t
-modifier|*
-name|p
-parameter_list|,
-name|struct
-name|bpf_program
-modifier|*
-name|fp
-parameter_list|)
-block|{
 return|return
 literal|0
 return|;

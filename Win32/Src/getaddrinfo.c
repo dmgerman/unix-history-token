@@ -7,6 +7,16 @@ begin_comment
 comment|/*  * "#ifdef FAITH" part is local hack for supporting IPv4-v6 translator.  *  * Issues to be discussed:  * - Thread safe-ness must be checked.  * - Return values.  There are nonstandard return values defined and used  *   in the source code.  This is because RFC2553 is silent about which error  *   code must be returned for which situation.  * Note:  * - We use getipnodebyname() just for thread-safeness.  There's no intent  *   to let it do PF_UNSPEC (actually we never pass PF_UNSPEC to  *   getipnodebyname().  * - The code filters out AFs that are not supported by the kernel,  *   when globbing NULL hostname (to loopback, or wildcard).  Is it the right  *   thing to do?  What is the relationship with post-RFC2553 AI_ADDRCONFIG  *   in ai_flags?  */
 end_comment
 
+begin_comment
+comment|/*  * Mingw64 has its own implementation of getaddrinfo, mingw32 no  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__MINGW64__
+end_ifndef
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -206,7 +216,7 @@ end_ifdef
 begin_include
 include|#
 directive|include
-file|"IP6_misc.h"
+file|"ip6_misc.h"
 end_include
 
 begin_endif
@@ -5024,6 +5034,15 @@ name|NULL
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*__MING64__*/
+end_comment
 
 end_unit
 

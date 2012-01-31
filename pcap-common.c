@@ -1,30 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * savefile.c - supports offline use of tcpdump  *	Extraction/creation by Jeffrey Mogul, DECWRL  *	Modified by Steve McCanne, LBL.  *  * Used to save the received packet headers, after filtering, to  * a file, and then read them later.  * The first record in the file contains saved values for the machine  * dependent values so we can print the dump file on any architecture.  */
+comment|/*  * Copyright (c) 1993, 1994, 1995, 1996, 1997  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that: (1) source code distributions  * retain the above copyright notice and this paragraph in its entirety, (2)  * distributions including binary code include the above copyright notice and  * this paragraph in its entirety in the documentation or other materials  * provided with the distribution, and (3) all advertising materials mentioning  * features or use of this software display the following acknowledgement:  * ``This product includes software developed by the University of California,  * Lawrence Berkeley Laboratory and its contributors.'' Neither the name of  * the University nor the names of its contributors may be used to endorse  * or promote products derived from this software without specific prior  * written permission.  * THIS SOFTWARE IS PROVIDED ``AS IS'' AND WITHOUT ANY EXPRESS OR IMPLIED  * WARRANTIES, INCLUDING, WITHOUT LIMITATION, THE IMPLIED WARRANTIES OF  * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  *  * pcap-common.c - common code for pcap and pcap-ng files  */
 end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|lint
-end_ifndef
-
-begin_decl_stmt
-specifier|static
-specifier|const
-name|char
-name|rcsid
-index|[]
-name|_U_
-init|=
-literal|"@(#) $Header: /tcpdump/master/libpcap/savefile.c,v 1.183 2008-12-23 20:13:29 guy Exp $ (LBL)"
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -144,7 +121,7 @@ file|"pcap-common.h"
 end_include
 
 begin_comment
-comment|/*  * We don't write DLT_* values to capture files, because they're not the  * same on all platforms.  *  * Unfortunately, the various flavors of BSD have not always used the same  * numerical values for the same data types, and various patches to  * libpcap for non-BSD OSes have added their own DLT_* codes for link  * layer encapsulation types seen on those OSes, and those codes have had,  * in some cases, values that were also used, on other platforms, for other  * link layer encapsulation types.  *  * This means that capture files of a type whose numerical DLT_* code  * means different things on different BSDs, or with different versions  * of libpcap, can't always be read on systems other than those like  * the one running on the machine on which the capture was made.  *  * Instead, we define here a set of LINKTYPE_* codes, and map DLT_* codes  * to LINKTYPE_* codes when writing a savefile header, and map LINKTYPE_*  * codes to DLT_* codes when reading a savefile header.  *  * For those DLT_* codes that have, as far as we know, the same values on  * all platforms (DLT_NULL through DLT_FDDI), we define LINKTYPE_xxx as  * DLT_xxx; that way, captures of those types can still be read by  * versions of libpcap that map LINKTYPE_* values to DLT_* values, and  * captures of those types written by versions of libpcap that map DLT_  * values to LINKTYPE_ values can still be read by older versions  * of libpcap.  *  * The other LINKTYPE_* codes are given values starting at 100, in the  * hopes that no DLT_* code will be given one of those values.  *  * In order to ensure that a given LINKTYPE_* code's value will refer to  * the same encapsulation type on all platforms, you should not allocate  * a new LINKTYPE_* value without consulting  * "tcpdump-workers@lists.tcpdump.org".  The tcpdump developers will  * allocate a value for you, and will not subsequently allocate it to  * anybody else; that value will be added to the "pcap.h" in the  * tcpdump.org Git repository, so that a future libpcap release will  * include it.  *  * You should, if possible, also contribute patches to libpcap and tcpdump  * to handle the new encapsulation type, so that they can also be checked  * into the tcpdump.org Git repository and so that they will appear in  * future libpcap and tcpdump releases.  *  * Do *NOT* assume that any values after the largest value in this file  * are available; you might not have the most up-to-date version of this  * file, and new values after that one might have been assigned.  Also,  * do *NOT* use any values below 100 - those might already have been  * taken by one (or more!) organizations.  */
+comment|/*  * We don't write DLT_* values to capture files, because they're not the  * same on all platforms.  *  * Unfortunately, the various flavors of BSD have not always used the same  * numerical values for the same data types, and various patches to  * libpcap for non-BSD OSes have added their own DLT_* codes for link  * layer encapsulation types seen on those OSes, and those codes have had,  * in some cases, values that were also used, on other platforms, for other  * link layer encapsulation types.  *  * This means that capture files of a type whose numerical DLT_* code  * means different things on different BSDs, or with different versions  * of libpcap, can't always be read on systems other than those like  * the one running on the machine on which the capture was made.  *  * Instead, we define here a set of LINKTYPE_* codes, and map DLT_* codes  * to LINKTYPE_* codes when writing a savefile header, and map LINKTYPE_*  * codes to DLT_* codes when reading a savefile header.  *  * For those DLT_* codes that have, as far as we know, the same values on  * all platforms (DLT_NULL through DLT_FDDI), we define LINKTYPE_xxx as  * DLT_xxx; that way, captures of those types can still be read by  * versions of libpcap that map LINKTYPE_* values to DLT_* values, and  * captures of those types written by versions of libpcap that map DLT_  * values to LINKTYPE_ values can still be read by older versions  * of libpcap.  *  * The other LINKTYPE_* codes are given values starting at 100, in the  * hopes that no DLT_* code will be given one of those values.  *  * In order to ensure that a given LINKTYPE_* code's value will refer to  * the same encapsulation type on all platforms, you should not allocate  * a new LINKTYPE_* value without consulting  * "tcpdump-workers@lists.tcpdump.org".  The tcpdump developers will  * allocate a value for you, and will not subsequently allocate it to  * anybody else; that value will be added to the "pcap.h" in the  * tcpdump.org Git repository, so that a future libpcap release will  * include it.  *  * You should, if possible, also contribute patches to libpcap and tcpdump  * to handle the new encapsulation type, so that they can also be checked  * into the tcpdump.org Git repository and so that they will appear in  * future libpcap and tcpdump releases.  *  * Do *NOT* assume that any values after the largest value in this file  * are available; you might not have the most up-to-date version of this  * file, and new values after that one might have been assigned.  Also,  * do *NOT* use any values below 100 - those might already have been  * taken by one (or more!) organizations.  *  * Any platform that defines additional DLT_* codes should:  *  *	request a LINKTYPE_* code and value from tcpdump.org,  *	as per the above;  *  *	add, in their version of libpcap, an entry to map  *	those DLT_* codes to the corresponding LINKTYPE_*  *	code;  *  *	redefine, in their "net/bpf.h", any DLT_* values  *	that collide with the values used by their additional  *	DLT_* codes, to remove those collisions (but without  *	making them collide with any of the LINKTYPE_*  *	values equal to 50 or above; they should also avoid  *	defining DLT_* values that collide with those  *	LINKTYPE_* values, either).  */
 end_comment
 
 begin_define
@@ -211,7 +188,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|LINKTYPE_ARCNET
+name|LINKTYPE_ARCNET_BSD
 value|DLT_ARCNET
 end_define
 
@@ -277,6 +254,10 @@ begin_comment
 comment|/* Symantec Enterprise Firewall */
 end_comment
 
+begin_comment
+comment|/*  * These correspond to DLT_s that have different values on different  * platforms; we map between these values in capture files and  * the DLT_ values as returned by pcap_datalink() and passed to  * pcap_open_dead().  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -319,6 +300,21 @@ end_define
 
 begin_comment
 comment|/* BSD/OS PPP BPF header */
+end_comment
+
+begin_comment
+comment|/*  * Values starting with 104 are used for newly-assigned link-layer  * header type values; for those link-layer header types, the DLT_  * value returned by pcap_datalink() and passed to pcap_open_dead(),  * and the LINKTYPE_ value that appears in capture files, are the  * same.  *  * LINKTYPE_MATCHING_MIN is the lowest such value; LINKTYPE_MATCHING_MAX  * is the highest such value.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_MATCHING_MIN
+value|104
+end_define
+
+begin_comment
+comment|/* lowest value in the "matching" range */
 end_comment
 
 begin_define
@@ -1588,6 +1584,152 @@ name|LINKTYPE_IPV6
 value|229
 end_define
 
+begin_comment
+comment|/*  * IEEE 802.15.4, exactly as it appears in the spec (no padding, no  * nothing), and with no FCS at the end of the frame; requested by  * Jon Smirl<jonsmirl@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_IEEE802_15_4_NOFCS
+value|230
+end_define
+
+begin_comment
+comment|/*  * Raw D-Bus:  *  *	http://www.freedesktop.org/wiki/Software/dbus  *  * messages:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#message-protocol-messages  *  * starting with the endianness flag, followed by the message type, etc.,  * but without the authentication handshake before the message sequence:  *  *	http://dbus.freedesktop.org/doc/dbus-specification.html#auth-protocol  *  * Requested by Martin Vidner<martin@vidner.net>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_DBUS
+value|231
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_VS
+value|232
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_SRX_E2E
+value|233
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_FIBRECHANNEL
+value|234
+end_define
+
+begin_comment
+comment|/*  * DVB-CI (DVB Common Interface for communication between a PC Card  * module and a DVB receiver).  See  *  *	http://www.kaiser.cx/pcap-dvbci.html  *  * for the specification.  *  * Requested by Martin Kaiser<martin@kaiser.cx>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_DVB_CI
+value|235
+end_define
+
+begin_comment
+comment|/*  * Variant of 3GPP TS 27.010 multiplexing protocol.  Requested  * by Hans-Christoph Schemmel<hans-christoph.schemmel@cinterion.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_MUX27010
+value|236
+end_define
+
+begin_comment
+comment|/*  * STANAG 5066 D_PDUs.  Requested by M. Baris Demiray  *<barisdemiray@gmail.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_STANAG_5066_D_PDU
+value|237
+end_define
+
+begin_comment
+comment|/*  * Juniper-private data link type, as per request from  * Hannes Gredler<hannes@juniper.net>.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_JUNIPER_ATM_CEMIC
+value|238
+end_define
+
+begin_comment
+comment|/*  * NetFilter LOG messages   * (payload of netlink NFNL_SUBSYS_ULOG/NFULNL_MSG_PACKET packets)  *  * Requested by Jakub Zawadzki<darkjames-ws@darkjames.pl>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_NFLOG
+value|239
+end_define
+
+begin_comment
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and always  * with the payload including the FCS, as supplied by their  * netANALYZER hardware and software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_NETANALYZER
+value|240
+end_define
+
+begin_comment
+comment|/*  * Hilscher Gesellschaft fuer Systemautomation mbH link-layer type  * for Ethernet packets with a 4-byte pseudo-header and FCS and  * 1 byte of SFD, as supplied by their netANALYZER hardware and  * software.  *  * Requested by Holger P. Frommer<HPfrommer@hilscher.com>  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_NETANALYZER_TRANSPARENT
+value|241
+end_define
+
+begin_comment
+comment|/*  * IP-over-Infiniband, as specified by RFC 4391.  *  * Requested by Petr Sumbera<petr.sumbera@oracle.com>.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_IPOIB
+value|242
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINKTYPE_MATCHING_MAX
+value|242
+end_define
+
+begin_comment
+comment|/* highest value in the "matching" range */
+end_comment
+
 begin_struct
 specifier|static
 struct|struct
@@ -1650,7 +1792,7 @@ block|,
 block|{
 name|DLT_ARCNET
 block|,
-name|LINKTYPE_ARCNET
+name|LINKTYPE_ARCNET_BSD
 block|}
 block|,
 block|{
@@ -1743,708 +1885,7 @@ block|,
 name|LINKTYPE_PPP_ETHER
 block|}
 block|,
-comment|/* IEEE 802.11 wireless */
-block|{
-name|DLT_IEEE802_11
-block|,
-name|LINKTYPE_IEEE802_11
-block|}
-block|,
-comment|/* Frame Relay */
-block|{
-name|DLT_FRELAY
-block|,
-name|LINKTYPE_FRELAY
-block|}
-block|,
-comment|/* OpenBSD loopback */
-block|{
-name|DLT_LOOP
-block|,
-name|LINKTYPE_LOOP
-block|}
-block|,
-comment|/* OpenBSD IPSEC enc */
-block|{
-name|DLT_ENC
-block|,
-name|LINKTYPE_ENC
-block|}
-block|,
-comment|/* Linux cooked socket capture */
-block|{
-name|DLT_LINUX_SLL
-block|,
-name|LINKTYPE_LINUX_SLL
-block|}
-block|,
-comment|/* Apple LocalTalk hardware */
-block|{
-name|DLT_LTALK
-block|,
-name|LINKTYPE_LTALK
-block|}
-block|,
-comment|/* Acorn Econet */
-block|{
-name|DLT_ECONET
-block|,
-name|LINKTYPE_ECONET
-block|}
-block|,
-comment|/* OpenBSD DLT_PFLOG */
-block|{
-name|DLT_PFLOG
-block|,
-name|LINKTYPE_PFLOG
-block|}
-block|,
-comment|/* For Cisco-internal use */
-block|{
-name|DLT_CISCO_IOS
-block|,
-name|LINKTYPE_CISCO_IOS
-block|}
-block|,
-comment|/* Prism II monitor-mode header plus 802.11 header */
-block|{
-name|DLT_PRISM_HEADER
-block|,
-name|LINKTYPE_PRISM_HEADER
-block|}
-block|,
-comment|/* FreeBSD Aironet driver stuff */
-block|{
-name|DLT_AIRONET_HEADER
-block|,
-name|LINKTYPE_AIRONET_HEADER
-block|}
-block|,
-comment|/* Siemens HiPath HDLC */
-block|{
-name|DLT_HHDLC
-block|,
-name|LINKTYPE_HHDLC
-block|}
-block|,
-comment|/* RFC 2625 IP-over-Fibre Channel */
-block|{
-name|DLT_IP_OVER_FC
-block|,
-name|LINKTYPE_IP_OVER_FC
-block|}
-block|,
-comment|/* Solaris+SunATM */
-block|{
-name|DLT_SUNATM
-block|,
-name|LINKTYPE_SUNATM
-block|}
-block|,
-comment|/* RapidIO */
-block|{
-name|DLT_RIO
-block|,
-name|LINKTYPE_RIO
-block|}
-block|,
-comment|/* PCI Express */
-block|{
-name|DLT_PCI_EXP
-block|,
-name|LINKTYPE_PCI_EXP
-block|}
-block|,
-comment|/* Xilinx Aurora link layer */
-block|{
-name|DLT_AURORA
-block|,
-name|LINKTYPE_AURORA
-block|}
-block|,
-comment|/* 802.11 plus BSD radio header */
-block|{
-name|DLT_IEEE802_11_RADIO
-block|,
-name|LINKTYPE_IEEE802_11_RADIO
-block|}
-block|,
-comment|/* Tazmen Sniffer Protocol */
-block|{
-name|DLT_TZSP
-block|,
-name|LINKTYPE_TZSP
-block|}
-block|,
-comment|/* Arcnet with Linux-style link-layer headers */
-block|{
-name|DLT_ARCNET_LINUX
-block|,
-name|LINKTYPE_ARCNET_LINUX
-block|}
-block|,
-comment|/* Juniper-internal chassis encapsulation */
-block|{
-name|DLT_JUNIPER_MLPPP
-block|,
-name|LINKTYPE_JUNIPER_MLPPP
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_MLFR
-block|,
-name|LINKTYPE_JUNIPER_MLFR
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_ES
-block|,
-name|LINKTYPE_JUNIPER_ES
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_GGSN
-block|,
-name|LINKTYPE_JUNIPER_GGSN
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_MFR
-block|,
-name|LINKTYPE_JUNIPER_MFR
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_ATM2
-block|,
-name|LINKTYPE_JUNIPER_ATM2
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_SERVICES
-block|,
-name|LINKTYPE_JUNIPER_SERVICES
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_ATM1
-block|,
-name|LINKTYPE_JUNIPER_ATM1
-block|}
-block|,
-comment|/* Apple IP-over-IEEE 1394 cooked header */
-block|{
-name|DLT_APPLE_IP_OVER_IEEE1394
-block|,
-name|LINKTYPE_APPLE_IP_OVER_IEEE1394
-block|}
-block|,
-comment|/* SS7 */
-block|{
-name|DLT_MTP2_WITH_PHDR
-block|,
-name|LINKTYPE_MTP2_WITH_PHDR
-block|}
-block|,
-block|{
-name|DLT_MTP2
-block|,
-name|LINKTYPE_MTP2
-block|}
-block|,
-block|{
-name|DLT_MTP3
-block|,
-name|LINKTYPE_MTP3
-block|}
-block|,
-block|{
-name|DLT_SCCP
-block|,
-name|LINKTYPE_SCCP
-block|}
-block|,
-comment|/* DOCSIS MAC frames */
-block|{
-name|DLT_DOCSIS
-block|,
-name|LINKTYPE_DOCSIS
-block|}
-block|,
-comment|/* IrDA IrLAP packets + Linux-cooked header */
-block|{
-name|DLT_LINUX_IRDA
-block|,
-name|LINKTYPE_LINUX_IRDA
-block|}
-block|,
-comment|/* IBM SP and Next Federation switches */
-block|{
-name|DLT_IBM_SP
-block|,
-name|LINKTYPE_IBM_SP
-block|}
-block|,
-block|{
-name|DLT_IBM_SN
-block|,
-name|LINKTYPE_IBM_SN
-block|}
-block|,
-comment|/* 802.11 plus AVS radio header */
-block|{
-name|DLT_IEEE802_11_RADIO_AVS
-block|,
-name|LINKTYPE_IEEE802_11_RADIO_AVS
-block|}
-block|,
-comment|/* 	 * Any platform that defines additional DLT_* codes should: 	 * 	 *	request a LINKTYPE_* code and value from tcpdump.org, 	 *	as per the above; 	 * 	 *	add, in their version of libpcap, an entry to map 	 *	those DLT_* codes to the corresponding LINKTYPE_* 	 *	code; 	 * 	 *	redefine, in their "net/bpf.h", any DLT_* values 	 *	that collide with the values used by their additional 	 *	DLT_* codes, to remove those collisions (but without 	 *	making them collide with any of the LINKTYPE_* 	 *	values equal to 50 or above; they should also avoid 	 *	defining DLT_* values that collide with those 	 *	LINKTYPE_* values, either). 	 */
-comment|/* Juniper-internal chassis encapsulation */
-block|{
-name|DLT_JUNIPER_MONITOR
-block|,
-name|LINKTYPE_JUNIPER_MONITOR
-block|}
-block|,
-comment|/* BACnet MS/TP */
-block|{
-name|DLT_BACNET_MS_TP
-block|,
-name|LINKTYPE_BACNET_MS_TP
-block|}
-block|,
-comment|/* PPP for pppd, with direction flag in the PPP header */
-block|{
-name|DLT_PPP_PPPD
-block|,
-name|LINKTYPE_PPP_PPPD
-block|}
-block|,
-comment|/* Juniper-internal chassis encapsulation */
-block|{
-name|DLT_JUNIPER_PPPOE
-block|,
-name|LINKTYPE_JUNIPER_PPPOE
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_PPPOE_ATM
-block|,
-name|LINKTYPE_JUNIPER_PPPOE_ATM
-block|}
-block|,
-comment|/* GPRS LLC */
-block|{
-name|DLT_GPRS_LLC
-block|,
-name|LINKTYPE_GPRS_LLC
-block|}
-block|,
-comment|/* Transparent Generic Framing Procedure (ITU-T G.7041/Y.1303) */
-block|{
-name|DLT_GPF_T
-block|,
-name|LINKTYPE_GPF_T
-block|}
-block|,
-comment|/* Framed Generic Framing Procedure (ITU-T G.7041/Y.1303) */
-block|{
-name|DLT_GPF_F
-block|,
-name|LINKTYPE_GPF_F
-block|}
-block|,
-block|{
-name|DLT_GCOM_T1E1
-block|,
-name|LINKTYPE_GCOM_T1E1
-block|}
-block|,
-block|{
-name|DLT_GCOM_SERIAL
-block|,
-name|LINKTYPE_GCOM_SERIAL
-block|}
-block|,
-comment|/* Juniper-internal chassis encapsulation */
-block|{
-name|DLT_JUNIPER_PIC_PEER
-block|,
-name|LINKTYPE_JUNIPER_PIC_PEER
-block|}
-block|,
-comment|/* Endace types */
-block|{
-name|DLT_ERF_ETH
-block|,
-name|LINKTYPE_ERF_ETH
-block|}
-block|,
-block|{
-name|DLT_ERF_POS
-block|,
-name|LINKTYPE_ERF_POS
-block|}
-block|,
-comment|/* viSDN LAPD */
-block|{
-name|DLT_LINUX_LAPD
-block|,
-name|LINKTYPE_LINUX_LAPD
-block|}
-block|,
-comment|/* Juniper meta-information before Ether, PPP, Frame Relay, C-HDLC Frames */
-block|{
-name|DLT_JUNIPER_ETHER
-block|,
-name|LINKTYPE_JUNIPER_ETHER
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_PPP
-block|,
-name|LINKTYPE_JUNIPER_PPP
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_FRELAY
-block|,
-name|LINKTYPE_JUNIPER_FRELAY
-block|}
-block|,
-block|{
-name|DLT_JUNIPER_CHDLC
-block|,
-name|LINKTYPE_JUNIPER_CHDLC
-block|}
-block|,
-comment|/* Multi Link Frame Relay (FRF.16) */
-block|{
-name|DLT_MFR
-block|,
-name|LINKTYPE_MFR
-block|}
-block|,
-comment|/* Juniper Voice PIC */
-block|{
-name|DLT_JUNIPER_VP
-block|,
-name|LINKTYPE_JUNIPER_VP
-block|}
-block|,
-comment|/* Controller Area Network (CAN) v2.0B */
-block|{
-name|DLT_A429
-block|,
-name|LINKTYPE_A429
-block|}
-block|,
-comment|/* Arinc 653 Interpartition Communication messages */
-block|{
-name|DLT_A653_ICM
-block|,
-name|LINKTYPE_A653_ICM
-block|}
-block|,
-comment|/* USB */
-block|{
-name|DLT_USB
-block|,
-name|LINKTYPE_USB
-block|}
-block|,
-comment|/* Bluetooth HCI UART transport layer */
-block|{
-name|DLT_BLUETOOTH_HCI_H4
-block|,
-name|LINKTYPE_BLUETOOTH_HCI_H4
-block|}
-block|,
-comment|/* IEEE 802.16 MAC Common Part Sublayer */
-block|{
-name|DLT_IEEE802_16_MAC_CPS
-block|,
-name|LINKTYPE_IEEE802_16_MAC_CPS
-block|}
-block|,
-comment|/* USB with Linux header */
-block|{
-name|DLT_USB_LINUX
-block|,
-name|LINKTYPE_USB_LINUX
-block|}
-block|,
-comment|/* Controller Area Network (CAN) v2.0B */
-block|{
-name|DLT_CAN20B
-block|,
-name|LINKTYPE_CAN20B
-block|}
-block|,
-comment|/* IEEE 802.15.4 with address fields padded */
-block|{
-name|DLT_IEEE802_15_4_LINUX
-block|,
-name|LINKTYPE_IEEE802_15_4_LINUX
-block|}
-block|,
-comment|/* Per Packet Information encapsulated packets */
-block|{
-name|DLT_PPI
-block|,
-name|LINKTYPE_PPI
-block|}
-block|,
-comment|/* IEEE 802.16 MAC Common Part Sublayer plus radiotap header */
-block|{
-name|DLT_IEEE802_16_MAC_CPS_RADIO
-block|,
-name|LINKTYPE_IEEE802_16_MAC_CPS_RADIO
-block|}
-block|,
-comment|/* Juniper Voice ISM */
-block|{
-name|DLT_JUNIPER_ISM
-block|,
-name|LINKTYPE_JUNIPER_ISM
-block|}
-block|,
-comment|/* IEEE 802.15.4 exactly as it appears in the spec */
-block|{
-name|DLT_IEEE802_15_4
-block|,
-name|LINKTYPE_IEEE802_15_4
-block|}
-block|,
-comment|/* Various link-layer types for SITA */
-block|{
-name|DLT_SITA
-block|,
-name|LINKTYPE_SITA
-block|}
-block|,
-comment|/* Various link-layer types for Endace */
-block|{
-name|DLT_ERF
-block|,
-name|LINKTYPE_ERF
-block|}
-block|,
-comment|/* Special header for u10 Networks boards */
-block|{
-name|DLT_RAIF1
-block|,
-name|LINKTYPE_RAIF1
-block|}
-block|,
-comment|/* IPMB */
-block|{
-name|DLT_IPMB
-block|,
-name|LINKTYPE_IPMB
-block|}
-block|,
-comment|/* Juniper Secure Tunnel */
-block|{
-name|DLT_JUNIPER_ST
-block|,
-name|LINKTYPE_JUNIPER_ST
-block|}
-block|,
-comment|/* Bluetooth HCI UART transport layer, with pseudo-header */
-block|{
-name|DLT_BLUETOOTH_HCI_H4_WITH_PHDR
-block|,
-name|LINKTYPE_BLUETOOTH_HCI_H4_WITH_PHDR
-block|}
-block|,
-comment|/* AX.25 with KISS header */
-block|{
-name|DLT_AX25_KISS
-block|,
-name|LINKTYPE_AX25_KISS
-block|}
-block|,
-comment|/* Raw LAPD, with no pseudo-header */
-block|{
-name|DLT_LAPD
-block|,
-name|LINKTYPE_LAPD
-block|}
-block|,
-comment|/* PPP with one-byte pseudo-header giving direction */
-block|{
-name|DLT_PPP_WITH_DIR
-block|,
-name|LINKTYPE_PPP_WITH_DIR
-block|}
-block|,
-comment|/* Cisco HDLC with one-byte pseudo-header giving direction */
-block|{
-name|DLT_C_HDLC_WITH_DIR
-block|,
-name|LINKTYPE_C_HDLC_WITH_DIR
-block|}
-block|,
-comment|/* Frame Relay with one-byte pseudo-header giving direction */
-block|{
-name|DLT_FRELAY_WITH_DIR
-block|,
-name|LINKTYPE_FRELAY_WITH_DIR
-block|}
-block|,
-comment|/* LAPB with one-byte pseudo-header giving direction */
-block|{
-name|DLT_LAPB_WITH_DIR
-block|,
-name|LINKTYPE_LAPB_WITH_DIR
-block|}
-block|,
-comment|/* IPMB with Linux pseudo-header */
-block|{
-name|DLT_IPMB_LINUX
-block|,
-name|LINKTYPE_IPMB_LINUX
-block|}
-block|,
-comment|/* FlexRay */
-block|{
-name|DLT_FLEXRAY
-block|,
-name|LINKTYPE_FLEXRAY
-block|}
-block|,
-comment|/* MOST */
-block|{
-name|DLT_MOST
-block|,
-name|LINKTYPE_MOST
-block|}
-block|,
-comment|/* LIN */
-block|{
-name|DLT_LIN
-block|,
-name|LINKTYPE_LIN
-block|}
-block|,
-comment|/* X2E-private serial line capture */
-block|{
-name|DLT_X2E_SERIAL
-block|,
-name|LINKTYPE_X2E_SERIAL
-block|}
-block|,
-comment|/* X2E-private for Xoraya data logger family */
-block|{
-name|DLT_X2E_XORAYA
-block|,
-name|LINKTYPE_X2E_XORAYA
-block|}
-block|,
-comment|/* IEEE 802.15.4 with PHY data for non-ASK PHYs */
-block|{
-name|DLT_IEEE802_15_4_NONASK_PHY
-block|,
-name|LINKTYPE_IEEE802_15_4_NONASK_PHY
-block|}
-block|,
-comment|/* Input device events from Linux /dev/input/eventN devices */
-block|{
-name|DLT_LINUX_EVDEV
-block|,
-name|LINKTYPE_LINUX_EVDEV
-block|}
-block|,
-comment|/* GSM types */
-block|{
-name|DLT_GSMTAP_UM
-block|,
-name|LINKTYPE_GSMTAP_UM
-block|}
-block|,
-block|{
-name|DLT_GSMTAP_ABIS
-block|,
-name|LINKTYPE_GSMTAP_ABIS
-block|}
-block|,
-comment|/* MPLS, with an MPLS label as the link-layer header */
-block|{
-name|DLT_MPLS
-block|,
-name|LINKTYPE_MPLS
-block|}
-block|,
-comment|/* USB with padded Linux header */
-block|{
-name|DLT_USB_LINUX_MMAPPED
-block|,
-name|LINKTYPE_USB_LINUX_MMAPPED
-block|}
-block|,
-comment|/* DECT packets with a pseudo-header */
-block|{
-name|DLT_DECT
-block|,
-name|LINKTYPE_DECT
-block|}
-block|,
-comment|/* AOS Space Data Link Protocol */
-block|{
-name|DLT_AOS
-block|,
-name|LINKTYPE_AOS
-block|}
-block|,
-comment|/* Wireless HART */
-block|{
-name|DLT_WIHART
-block|,
-name|LINKTYPE_WIHART
-block|}
-block|,
-comment|/* Fibre Channel FC-2 frames without SOF or EOF */
-block|{
-name|DLT_FC_2
-block|,
-name|LINKTYPE_FC_2
-block|}
-block|,
-comment|/* Fibre Channel FC-2 frames with SOF and EOF */
-block|{
-name|DLT_FC_2_WITH_FRAME_DELIMS
-block|,
-name|LINKTYPE_FC_2_WITH_FRAME_DELIMS
-block|}
-block|,
-comment|/* Solaris IPNET */
-block|{
-name|DLT_IPNET
-block|,
-name|LINKTYPE_IPNET
-block|}
-block|,
-comment|/* CAN frames with SocketCAN headers */
-block|{
-name|DLT_CAN_SOCKETCAN
-block|,
-name|LINKTYPE_CAN_SOCKETCAN
-block|}
-block|,
-comment|/* Raw IPv4/IPv6 */
-block|{
-name|DLT_IPV4
-block|,
-name|LINKTYPE_IPV4
-block|}
-block|,
-block|{
-name|DLT_IPV6
-block|,
-name|LINKTYPE_IPV6
-block|}
-block|,
+comment|/* 	 * All LINKTYPE_ values between LINKTYPE_MATCHING_MIN 	 * and LINKTYPE_MATCHING_MAX are mapped to identical 	 * DLT_ values. 	 */
 block|{
 operator|-
 literal|1
@@ -2467,6 +1908,23 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Map the values in the matching range. 	 */
+if|if
+condition|(
+name|dlt
+operator|>=
+name|DLT_MATCHING_MIN
+operator|&&
+name|dlt
+operator|<=
+name|DLT_MATCHING_MAX
+condition|)
+return|return
+operator|(
+name|dlt
+operator|)
+return|;
+comment|/* 	 * Map the values outside that range. 	 */
 for|for
 control|(
 name|i
@@ -2509,7 +1967,7 @@ name|linktype
 operator|)
 return|;
 block|}
-comment|/* 	 * If we don't have a mapping for this DLT_ code, return an 	 * error; that means that the table above needs to have an 	 * entry added. 	 */
+comment|/* 	 * If we don't have a mapping for this DLT_ code, return an 	 * error; that means that this is a value with no corresponding 	 * LINKTYPE_ code, and we need to assign one. 	 */
 return|return
 operator|(
 operator|-
@@ -2530,6 +1988,23 @@ block|{
 name|int
 name|i
 decl_stmt|;
+comment|/* 	 * Map the values in the matching range. 	 */
+if|if
+condition|(
+name|linktype
+operator|>=
+name|LINKTYPE_MATCHING_MIN
+operator|&&
+name|linktype
+operator|<=
+name|LINKTYPE_MATCHING_MAX
+condition|)
+return|return
+operator|(
+name|linktype
+operator|)
+return|;
+comment|/* 	 * Map the values outside that range. 	 */
 for|for
 control|(
 name|i
@@ -2611,14 +2086,34 @@ operator|*
 operator|)
 name|buf
 decl_stmt|;
+name|bpf_u_int32
+name|offset
+init|=
+literal|0
+decl_stmt|;
+name|usb_isodesc
+modifier|*
+name|pisodesc
+decl_stmt|;
+name|int32_t
+name|numdesc
+decl_stmt|,
+name|i
+decl_stmt|;
+comment|/* 	 * "offset" is the offset *past* the field we're swapping; 	 * we skip the field *before* checking to make sure 	 * the captured data length includes the entire field. 	 */
 comment|/* 	 * The URB id is a totally opaque value; do we really need to  	 * convert it to the reading host's byte order??? 	 */
+name|offset
+operator|+=
+literal|8
+expr_stmt|;
+comment|/* skip past id */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|8
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2632,13 +2127,23 @@ operator|->
 name|id
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past various 1-byte fields */
+name|offset
+operator|+=
+literal|2
+expr_stmt|;
+comment|/* skip past bus_id */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|14
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2652,13 +2157,23 @@ operator|->
 name|bus_id
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|2
+expr_stmt|;
+comment|/* skip past various 1-byte fields */
+name|offset
+operator|+=
+literal|8
+expr_stmt|;
+comment|/* skip past ts_sec */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|24
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2672,13 +2187,18 @@ operator|->
 name|ts_sec
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past ts_usec */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|28
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2692,13 +2212,18 @@ operator|->
 name|ts_usec
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past status */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|32
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2712,13 +2237,18 @@ operator|->
 name|status
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past urb_len */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|36
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2732,13 +2262,18 @@ operator|->
 name|urb_len
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past data_len */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|40
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2752,19 +2287,106 @@ operator|->
 name|data_len
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|uhdr
+operator|->
+name|transfer_type
+operator|==
+name|URB_ISOCHRONOUS
+condition|)
+block|{
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past s.iso.error_count */
+if|if
+condition|(
+name|hdr
+operator|->
+name|caplen
+operator|<
+name|offset
+condition|)
+return|return;
+name|uhdr
+operator|->
+name|s
+operator|.
+name|iso
+operator|.
+name|error_count
+operator|=
+name|SWAPLONG
+argument_list|(
+name|uhdr
+operator|->
+name|s
+operator|.
+name|iso
+operator|.
+name|error_count
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past s.iso.numdesc */
+if|if
+condition|(
+name|hdr
+operator|->
+name|caplen
+operator|<
+name|offset
+condition|)
+return|return;
+name|uhdr
+operator|->
+name|s
+operator|.
+name|iso
+operator|.
+name|numdesc
+operator|=
+name|SWAPLONG
+argument_list|(
+name|uhdr
+operator|->
+name|s
+operator|.
+name|iso
+operator|.
+name|numdesc
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+name|offset
+operator|+=
+literal|8
+expr_stmt|;
+comment|/* skip USB setup header */
 if|if
 condition|(
 name|header_len_64_bytes
 condition|)
 block|{
 comment|/* 		 * This is either the "version 1" header, with 		 * 16 bytes of additional fields at the end, or 		 * a "version 0" header from a memory-mapped 		 * capture, with 16 bytes of zeroed-out padding 		 * at the end.  Byte swap them as if this were 		 * a "version 1" header. 		 */
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past interval */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|52
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2778,13 +2400,18 @@ operator|->
 name|interval
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past start_frame */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|56
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2798,13 +2425,18 @@ operator|->
 name|start_frame
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past xfer_flags */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|60
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2818,13 +2450,18 @@ operator|->
 name|xfer_flags
 argument_list|)
 expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past ndesc */
 if|if
 condition|(
 name|hdr
 operator|->
 name|caplen
 operator|<
-literal|64
+name|offset
 condition|)
 return|return;
 name|uhdr
@@ -2838,6 +2475,141 @@ operator|->
 name|ndesc
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|uhdr
+operator|->
+name|transfer_type
+operator|==
+name|URB_ISOCHRONOUS
+condition|)
+block|{
+comment|/* swap the values in struct linux_usb_isodesc */
+name|pisodesc
+operator|=
+operator|(
+name|usb_isodesc
+operator|*
+operator|)
+operator|(
+name|void
+operator|*
+operator|)
+operator|(
+name|buf
+operator|+
+name|offset
+operator|)
+expr_stmt|;
+name|numdesc
+operator|=
+name|uhdr
+operator|->
+name|s
+operator|.
+name|iso
+operator|.
+name|numdesc
+expr_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|numdesc
+condition|;
+name|i
+operator|++
+control|)
+block|{
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past status */
+if|if
+condition|(
+name|hdr
+operator|->
+name|caplen
+operator|<
+name|offset
+condition|)
+return|return;
+name|pisodesc
+operator|->
+name|status
+operator|=
+name|SWAPLONG
+argument_list|(
+name|pisodesc
+operator|->
+name|status
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past offset */
+if|if
+condition|(
+name|hdr
+operator|->
+name|caplen
+operator|<
+name|offset
+condition|)
+return|return;
+name|pisodesc
+operator|->
+name|offset
+operator|=
+name|SWAPLONG
+argument_list|(
+name|pisodesc
+operator|->
+name|offset
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past len */
+if|if
+condition|(
+name|hdr
+operator|->
+name|caplen
+operator|<
+name|offset
+condition|)
+return|return;
+name|pisodesc
+operator|->
+name|len
+operator|=
+name|SWAPLONG
+argument_list|(
+name|pisodesc
+operator|->
+name|len
+argument_list|)
+expr_stmt|;
+name|offset
+operator|+=
+literal|4
+expr_stmt|;
+comment|/* skip past padding */
+name|pisodesc
+operator|++
+expr_stmt|;
+block|}
 block|}
 block|}
 end_function

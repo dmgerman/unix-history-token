@@ -527,5 +527,23 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ETHERTYPE_8021QINQ
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|ETHERTYPE_8021QINQ
+value|0x9100
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

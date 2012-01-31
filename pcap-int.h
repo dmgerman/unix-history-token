@@ -438,6 +438,9 @@ decl_stmt|;
 name|int
 name|rfmon
 decl_stmt|;
+name|int
+name|tstamp_type
+decl_stmt|;
 block|}
 struct|;
 comment|/*  * Ultrix, DEC OSF/1^H^H^H^H^H^H^H^H^HDigital UNIX^H^H^H^H^H^H^H^H^H^H^H^H  * Tru64 UNIX, and some versions of NetBSD pad FDDI packets to make everything  * line up on a nice boundary.  */
@@ -877,6 +880,13 @@ decl_stmt|;
 name|u_int
 modifier|*
 name|dlt_list
+decl_stmt|;
+name|int
+name|tstamp_type_count
+decl_stmt|;
+name|u_int
+modifier|*
+name|tstamp_type_list
 decl_stmt|;
 name|struct
 name|pcap_pkthdr
