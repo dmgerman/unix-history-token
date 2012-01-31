@@ -5968,6 +5968,32 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 		 * If a change from TCP->UDP is done and there are thread(s) 		 * that have I/O RPC(s) in progress with a tranfer size 		 * greater than NFS_MAXDGRAMDATA, those thread(s) will be 		 * hung, retrying the RPC(s) forever. Usually these threads 		 * will be seen doing an uninterruptible sleep on wait channel 		 * "newnfsreq" (truncated to "newnfsre" by procstat). 		 */
+if|if
+condition|(
+name|args
+operator|.
+name|sotype
+operator|==
+name|SOCK_DGRAM
+operator|&&
+name|nmp
+operator|->
+name|nm_sotype
+operator|==
+name|SOCK_STREAM
+condition|)
+name|tprintf
+argument_list|(
+name|td
+operator|->
+name|td_proc
+argument_list|,
+name|LOG_WARNING
+argument_list|,
+literal|"Warning: mount -u that changes TCP->UDP can result in hung threads\n"
+argument_list|)
+expr_stmt|;
 comment|/* 		 * When doing an update, we can't change version, 		 * security, switch lockd strategies or change cookie 		 * translation 		 */
 name|args
 operator|.
