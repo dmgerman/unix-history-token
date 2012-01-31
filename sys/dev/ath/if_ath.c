@@ -3613,7 +3613,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|rxs
+name|txs
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3628,7 +3628,7 @@ argument_list|,
 literal|1
 argument_list|,
 operator|&
-name|txs
+name|rxs
 argument_list|)
 expr_stmt|;
 name|ath_hal_getrxchainmask
