@@ -19,6 +19,26 @@ begin_comment
 comment|/*  * 802.11h/DFS definitions.  */
 end_comment
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|DFS_DBG_NONE
+init|=
+literal|0
+block|,
+name|DFS_DBG_NONOL
+init|=
+literal|1
+block|,
+name|DFS_DBG_NOCSANOL
+init|=
+literal|2
+block|}
+name|dfs_debug_t
+typedef|;
+end_typedef
+
 begin_struct
 struct|struct
 name|ieee80211_dfs_state
