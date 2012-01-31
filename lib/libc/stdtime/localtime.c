@@ -2427,6 +2427,11 @@ operator|-
 literal|1
 return|;
 block|}
+name|free
+argument_list|(
+name|fullname
+argument_list|)
+expr_stmt|;
 block|}
 name|u
 operator|=
