@@ -210,7 +210,7 @@ value|(MTX_CONTESTED | MTX_UNOWNED)
 end_define
 
 begin_comment
-comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp LOCK_FILE  *	 and LOCK_LINE. These functions should not be called directly by any  *	 code using the API. Their macros cover their functionality.  *  * [See below for descriptions]  *  */
+comment|/*  * Prototypes  *  * NOTE: Functions prepended with `_' (underscore) are exported to other parts  *	 of the kernel via macros, thus allowing us to use the cpp LOCK_FILE  *	 and LOCK_LINE. These functions should not be called directly by any  *	 code using the API. Their macros cover their functionality.  *	 Functions with a `_' suffix are the entrypoint for the common  *	 KPI covering both compat shims and fast path case.  These can be  *	 used by consumers willing to pass options, file and line  *	 informations, in an option-independent way.  *  * [See below for descriptions]  *  */
 end_comment
 
 begin_function_decl
@@ -554,6 +554,40 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_define
+define|#
+directive|define
+name|mtx_trylock_flags_
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|_mtx_trylock((m), (opts), (file), (line))
+end_define
+
+begin_define
+define|#
+directive|define
+name|thread_lock_flags_
+parameter_list|(
+name|tdp
+parameter_list|,
+name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|_thread_lock_flags((tdp), (opts), (file), (line))
+end_define
 
 begin_define
 define|#
@@ -1042,53 +1076,69 @@ end_if
 begin_define
 define|#
 directive|define
-name|mtx_lock_flags
+name|mtx_lock_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|_mtx_lock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_mtx_lock_flags((m), (opts), (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mtx_unlock_flags
+name|mtx_unlock_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|_mtx_unlock_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_mtx_unlock_flags((m), (opts), (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mtx_lock_spin_flags
+name|mtx_lock_spin_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|_mtx_lock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_mtx_lock_spin_flags((m), (opts), (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mtx_unlock_spin_flags
+name|mtx_unlock_spin_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|_mtx_unlock_spin_flags((m), (opts), LOCK_FILE, LOCK_LINE)
+value|_mtx_unlock_spin_flags((m), (opts), (file), (line))
 end_define
 
 begin_else
@@ -1103,50 +1153,66 @@ end_comment
 begin_define
 define|#
 directive|define
-name|mtx_lock_flags
+name|mtx_lock_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|__mtx_lock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
+value|__mtx_lock((m), curthread, (opts), (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mtx_unlock_flags
+name|mtx_unlock_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|__mtx_unlock((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
+value|__mtx_unlock((m), curthread, (opts), (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mtx_lock_spin_flags
+name|mtx_lock_spin_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
-value|__mtx_lock_spin((m), curthread, (opts), LOCK_FILE, LOCK_LINE)
+value|__mtx_lock_spin((m), curthread, (opts), (file), (line))
 end_define
 
 begin_define
 define|#
 directive|define
-name|mtx_unlock_spin_flags
+name|mtx_unlock_spin_flags_
 parameter_list|(
 name|m
 parameter_list|,
 name|opts
+parameter_list|,
+name|file
+parameter_list|,
+name|line
 parameter_list|)
 define|\
 value|__mtx_unlock_spin((m))
@@ -1161,6 +1227,128 @@ begin_comment
 comment|/* LOCK_DEBUG> 0 || MUTEX_NOINLINE */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INVARIANTS
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|mtx_assert_
+parameter_list|(
+name|m
+parameter_list|,
+name|what
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+define|\
+value|_mtx_assert((m), (what), (file), (line))
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIANT_REQUIRED
+value|mtx_assert_(&Giant, MA_OWNED, __FILE__, __LINE__)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* INVARIANTS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtx_assert_
+parameter_list|(
+name|m
+parameter_list|,
+name|what
+parameter_list|,
+name|file
+parameter_list|,
+name|line
+parameter_list|)
+value|(void)0
+end_define
+
+begin_define
+define|#
+directive|define
+name|GIANT_REQUIRED
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* INVARIANTS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|mtx_lock_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|mtx_lock_flags_((m), (opts), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_unlock_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|mtx_unlock_flags_((m), (opts), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_lock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|mtx_lock_spin_flags_((m), (opts), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_unlock_spin_flags
+parameter_list|(
+name|m
+parameter_list|,
+name|opts
+parameter_list|)
+define|\
+value|mtx_unlock_spin_flags_((m), (opts), LOCK_FILE, LOCK_LINE)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -1171,7 +1359,20 @@ parameter_list|,
 name|opts
 parameter_list|)
 define|\
-value|_mtx_trylock((m), (opts), LOCK_FILE, LOCK_LINE)
+value|mtx_trylock_flags_((m), (opts), LOCK_FILE, LOCK_LINE)
+end_define
+
+begin_define
+define|#
+directive|define
+name|mtx_assert
+parameter_list|(
+name|m
+parameter_list|,
+name|what
+parameter_list|)
+define|\
+value|mtx_assert_((m), (what), __FILE__, __LINE__)
 end_define
 
 begin_define
@@ -1393,68 +1594,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INVARIANTS
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|mtx_assert
-parameter_list|(
-name|m
-parameter_list|,
-name|what
-parameter_list|)
-define|\
-value|_mtx_assert((m), (what), __FILE__, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|GIANT_REQUIRED
-value|mtx_assert(&Giant, MA_OWNED)
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* INVARIANTS */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|mtx_assert
-parameter_list|(
-name|m
-parameter_list|,
-name|what
-parameter_list|)
-value|(void)0
-end_define
-
-begin_define
-define|#
-directive|define
-name|GIANT_REQUIRED
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* INVARIANTS */
-end_comment
 
 begin_comment
 comment|/*  * Common lock type names.  */
