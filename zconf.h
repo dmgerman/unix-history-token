@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2010 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* zconf.h -- configuration of the zlib compression library  * Copyright (C) 1995-2011 Jean-loup Gailly.  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_comment
@@ -32,6 +32,12 @@ end_ifdef
 begin_comment
 comment|/* may be set to #if 1 by ./configure */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_PREFIX_SET
+end_define
 
 begin_comment
 comment|/* all linked symbols */
@@ -107,6 +113,12 @@ name|adler32_combine64
 value|z_adler32_combine64
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -127,6 +139,11 @@ directive|define
 name|compressBound
 value|z_compressBound
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -201,6 +218,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|deflatePending
+value|z_deflatePending
+end_define
+
+begin_define
+define|#
+directive|define
 name|deflatePrime
 value|z_deflatePrime
 end_define
@@ -210,6 +234,13 @@ define|#
 directive|define
 name|deflateReset
 value|z_deflateReset
+end_define
+
+begin_define
+define|#
+directive|define
+name|deflateResetKeep
+value|z_deflateResetKeep
 end_define
 
 begin_define
@@ -246,6 +277,12 @@ directive|define
 name|get_crc_table
 value|z_get_crc_table
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
 
 begin_define
 define|#
@@ -334,6 +371,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|gzflags
+value|z_gzflags
+end_define
+
+begin_define
+define|#
+directive|define
 name|gzflush
 value|z_gzflush
 end_define
@@ -343,6 +387,13 @@ define|#
 directive|define
 name|gzgetc
 value|z_gzgetc
+end_define
+
+begin_define
+define|#
+directive|define
+name|gzgetc_
+value|z_gzgetc_
 end_define
 
 begin_define
@@ -463,6 +514,11 @@ directive|define
 name|gzwrite
 value|z_gzwrite
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -586,6 +642,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|inflateResetKeep
+value|z_inflateResetKeep
+end_define
+
+begin_define
+define|#
+directive|define
 name|inflate_copyright
 value|z_inflate_copyright
 end_define
@@ -604,6 +667,12 @@ name|inflate_table
 value|z_inflate_table
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -611,12 +680,23 @@ name|uncompress
 value|z_uncompress
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
 name|zError
 value|z_zError
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
 
 begin_define
 define|#
@@ -631,6 +711,11 @@ directive|define
 name|zcfree
 value|z_zcfree
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -685,6 +770,12 @@ name|free_func
 value|z_free_func
 end_define
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -705,6 +796,11 @@ directive|define
 name|gz_headerp
 value|z_gz_headerp
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -780,12 +876,23 @@ begin_comment
 comment|/* all zlib structs in zlib.h and zconf.h */
 end_comment
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
+
 begin_define
 define|#
 directive|define
 name|gz_header_s
 value|z_gz_header_s
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1300,6 +1407,44 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|ZLIB_CONST
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|z_const
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|z_const
+value|const
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|z_const
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Some Mac compilers merge all .h files incorrectly: */
 end_comment
@@ -1453,6 +1598,65 @@ begin_define
 define|#
 directive|define
 name|OF
+parameter_list|(
+name|args
+parameter_list|)
+value|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_ARG
+end_ifndef
+
+begin_comment
+comment|/* function prototypes for stdarg */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|STDC
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|Z_HAVE_STDARG_H
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_ARG
+parameter_list|(
+name|args
+parameter_list|)
+value|args
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|Z_ARG
 parameter_list|(
 name|args
 parameter_list|)
@@ -2107,14 +2311,14 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_UNISTD_H
-end_ifdef
+begin_if
+if|#
+directive|if
+literal|1
+end_if
 
 begin_comment
-comment|/* may be set to #if 1 by ./configure */
+comment|/* was set to #if 1 by ./configure */
 end_comment
 
 begin_define
@@ -2128,11 +2332,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+literal|1
+end_if
+
+begin_comment
+comment|/* was set to #if 1 by ./configure */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|Z_HAVE_STDARG_H
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifdef
 ifdef|#
 directive|ifdef
 name|STDC
 end_ifdef
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|Z_SOLO
+end_ifndef
 
 begin_include
 include|#
@@ -2143,6 +2374,11 @@ end_include
 begin_comment
 comment|/* for off_t */
 end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -2181,12 +2417,44 @@ if|#
 directive|if
 name|defined
 argument_list|(
+name|_LARGEFILE64_SOURCE
+argument_list|)
+operator|&&
+name|_LFS64_LARGEFILE
+operator|-
+literal|0
+end_if
+
+begin_define
+define|#
+directive|define
+name|Z_LARGE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|(
+name|defined
+argument_list|(
 name|Z_HAVE_UNISTD_H
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|_LARGEFILE64_SOURCE
+name|Z_LARGE
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|Z_SOLO
 argument_list|)
 end_if
 
@@ -2244,11 +2512,21 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|SEEK_SET
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|Z_SOLO
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -2309,6 +2587,13 @@ end_endif
 begin_if
 if|#
 directive|if
+operator|!
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|(
 name|defined
 argument_list|(
 name|_LARGEFILE64_SOURCE
@@ -2317,6 +2602,7 @@ operator|&&
 name|_LFS64_LARGEFILE
 operator|-
 literal|0
+operator|)
 end_if
 
 begin_define
@@ -2324,6 +2610,27 @@ define|#
 directive|define
 name|z_off64_t
 value|off64_t
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|z_off64_t
+value|__int64
 end_define
 
 begin_else
@@ -2342,41 +2649,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__OS400__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NO_vsnprintf
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|__MVS__
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|NO_vsnprintf
-end_define
 
 begin_endif
 endif|#

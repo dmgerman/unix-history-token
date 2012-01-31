@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004, 2010 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
+comment|/* gzlib.c -- zlib functions common to reading and writing gzip files  * Copyright (C) 2004, 2010, 2011 Mark Adler  * For conditions of distribution and use, see copyright notice in zlib.h  */
 end_comment
 
 begin_include
@@ -8,6 +8,33 @@ include|#
 directive|include
 file|"gzguts.h"
 end_include
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_WIN32
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|__BORLANDC__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|LSEEK
+value|_lseeki64
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
 
 begin_if
 if|#
@@ -40,6 +67,11 @@ directive|define
 name|LSEEK
 value|lseek
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -289,6 +321,15 @@ name|gz_statep
 name|state
 decl_stmt|;
 block|{
+name|state
+operator|->
+name|x
+operator|.
+name|have
+operator|=
+literal|0
+expr_stmt|;
+comment|/* no output data available */
 if|if
 condition|(
 name|state
@@ -301,13 +342,6 @@ block|{
 comment|/* for reading ... */
 name|state
 operator|->
-name|have
-operator|=
-literal|0
-expr_stmt|;
-comment|/* no output data available */
-name|state
-operator|->
 name|eof
 operator|=
 literal|0
@@ -315,18 +349,18 @@ expr_stmt|;
 comment|/* not at end of file */
 name|state
 operator|->
+name|past
+operator|=
+literal|0
+expr_stmt|;
+comment|/* have not read past end yet */
+name|state
+operator|->
 name|how
 operator|=
 name|LOOK
 expr_stmt|;
 comment|/* look for gzip header */
-name|state
-operator|->
-name|direct
-operator|=
-literal|1
-expr_stmt|;
-comment|/* default for empty file */
 block|}
 name|state
 operator|->
@@ -347,6 +381,8 @@ expr_stmt|;
 comment|/* clear error */
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|=
 literal|0
@@ -396,6 +432,16 @@ block|{
 name|gz_statep
 name|state
 decl_stmt|;
+comment|/* check input */
+if|if
+condition|(
+name|path
+operator|==
+name|NULL
+condition|)
+return|return
+name|NULL
+return|;
 comment|/* allocate gzFile structure to return */
 name|state
 operator|=
@@ -455,6 +501,12 @@ operator|->
 name|strategy
 operator|=
 name|Z_DEFAULT_STRATEGY
+expr_stmt|;
+name|state
+operator|->
+name|direct
+operator|=
+literal|0
 expr_stmt|;
 while|while
 condition|(
@@ -581,6 +633,15 @@ name|strategy
 operator|=
 name|Z_FIXED
 expr_stmt|;
+case|case
+literal|'T'
+case|:
+name|state
+operator|->
+name|direct
+operator|=
+literal|1
+expr_stmt|;
 default|default:
 comment|/* could consider as an error, but just ignore */
 empty_stmt|;
@@ -607,6 +668,40 @@ expr_stmt|;
 return|return
 name|NULL
 return|;
+block|}
+comment|/* can't force transparent read */
+if|if
+condition|(
+name|state
+operator|->
+name|mode
+operator|==
+name|GZ_READ
+condition|)
+block|{
+if|if
+condition|(
+name|state
+operator|->
+name|direct
+condition|)
+block|{
+name|free
+argument_list|(
+name|state
+argument_list|)
+expr_stmt|;
+return|return
+name|NULL
+return|;
+block|}
+name|state
+operator|->
+name|direct
+operator|=
+literal|1
+expr_stmt|;
+comment|/* for empty file */
 block|}
 comment|/* save the path name for error messages */
 name|state
@@ -1051,13 +1146,14 @@ comment|/* check and set requested size */
 if|if
 condition|(
 name|size
-operator|==
-literal|0
+operator|<
+literal|2
 condition|)
-return|return
-operator|-
-literal|1
-return|;
+name|size
+operator|=
+literal|2
+expr_stmt|;
+comment|/* need two bytes to check magic header */
 name|state
 operator|->
 name|want
@@ -1115,11 +1211,19 @@ name|mode
 operator|!=
 name|GZ_READ
 operator|||
+operator|(
 name|state
 operator|->
 name|err
 operator|!=
 name|Z_OK
+operator|&&
+name|state
+operator|->
+name|err
+operator|!=
+name|Z_BUF_ERROR
+operator|)
 condition|)
 return|return
 operator|-
@@ -1237,6 +1341,12 @@ operator|->
 name|err
 operator|!=
 name|Z_OK
+operator|&&
+name|state
+operator|->
+name|err
+operator|!=
+name|Z_BUF_ERROR
 condition|)
 return|return
 operator|-
@@ -1268,6 +1378,8 @@ name|offset
 operator|-=
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 expr_stmt|;
 elseif|else
@@ -1306,13 +1418,13 @@ name|COPY
 operator|&&
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+
 name|offset
 operator|>=
-name|state
-operator|->
-name|raw
+literal|0
 condition|)
 block|{
 name|ret
@@ -1327,6 +1439,8 @@ name|offset
 operator|-
 name|state
 operator|->
+name|x
+operator|.
 name|have
 argument_list|,
 name|SEEK_CUR
@@ -1345,6 +1459,8 @@ literal|1
 return|;
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|=
 literal|0
@@ -1352,6 +1468,12 @@ expr_stmt|;
 name|state
 operator|->
 name|eof
+operator|=
+literal|0
+expr_stmt|;
+name|state
+operator|->
+name|past
 operator|=
 literal|0
 expr_stmt|;
@@ -1380,6 +1502,8 @@ literal|0
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|offset
@@ -1387,6 +1511,8 @@ expr_stmt|;
 return|return
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 return|;
 block|}
@@ -1415,6 +1541,8 @@ name|offset
 operator|+=
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 expr_stmt|;
 if|if
@@ -1460,6 +1588,8 @@ name|GT_OFF
 argument_list|(
 name|state
 operator|->
+name|x
+operator|.
 name|have
 argument_list|)
 operator|||
@@ -1468,6 +1598,8 @@ name|z_off64_t
 operator|)
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|>
 name|offset
@@ -1479,22 +1611,30 @@ name|offset
 else|:
 name|state
 operator|->
+name|x
+operator|.
 name|have
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|have
 operator|-=
 name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|next
 operator|+=
 name|n
 expr_stmt|;
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+=
 name|n
@@ -1526,6 +1666,8 @@ block|}
 return|return
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+
 name|offset
@@ -1652,6 +1794,8 @@ comment|/* return position */
 return|return
 name|state
 operator|->
+name|x
+operator|.
 name|pos
 operator|+
 operator|(
@@ -1923,25 +2067,9 @@ name|mode
 operator|==
 name|GZ_READ
 condition|?
-operator|(
 name|state
 operator|->
-name|eof
-operator|&&
-name|state
-operator|->
-name|strm
-operator|.
-name|avail_in
-operator|==
-literal|0
-operator|&&
-name|state
-operator|->
-name|have
-operator|==
-literal|0
-operator|)
+name|past
 else|:
 literal|0
 return|;
@@ -2095,12 +2223,20 @@ name|mode
 operator|==
 name|GZ_READ
 condition|)
+block|{
 name|state
 operator|->
 name|eof
 operator|=
 literal|0
 expr_stmt|;
+name|state
+operator|->
+name|past
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|gz_error
 argument_list|(
 name|state
@@ -2172,6 +2308,25 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+comment|/* if fatal, set state->x.have to 0 so that the gzgetc() macro fails */
+if|if
+condition|(
+name|err
+operator|!=
+name|Z_OK
+operator|&&
+name|err
+operator|!=
+name|Z_BUF_ERROR
+condition|)
+name|state
+operator|->
+name|x
+operator|.
+name|have
+operator|=
+literal|0
+expr_stmt|;
 comment|/* set error code, and if no message, then done */
 name|state
 operator|->
