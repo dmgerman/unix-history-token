@@ -230,7 +230,7 @@ decl_stmt|;
 name|u32
 name|offset
 decl_stmt|;
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -302,7 +302,7 @@ decl_stmt|;
 name|u32
 name|offset
 decl_stmt|;
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,

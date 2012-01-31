@@ -320,25 +320,47 @@ name|IGB_EEPROM_APME
 value|0x400;
 end_define
 
-begin_define
-define|#
-directive|define
-name|IGB_QUEUE_IDLE
-value|0
-end_define
+begin_comment
+comment|/* Queue minimum free for use */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IGB_QUEUE_WORKING
+name|IGB_QUEUE_THRESHOLD
+value|(adapter->num_tx_desc / 8)
+end_define
+
+begin_comment
+comment|/* Queue bit defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_IDLE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_QUEUE_HUNG
+name|IGB_QUEUE_WORKING
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_HUNG
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_DEPLETED
+value|8
 end_define
 
 begin_comment
@@ -822,10 +844,6 @@ directive|endif
 name|bus_dma_tag_t
 name|txtag
 decl_stmt|;
-name|struct
-name|task
-name|txq_task
-decl_stmt|;
 name|u32
 name|bytes
 decl_stmt|;
@@ -1085,8 +1103,11 @@ name|IGB_VFTA_SIZE
 index|]
 decl_stmt|;
 comment|/* Info about the interface */
-name|u8
+name|u16
 name|link_active
+decl_stmt|;
+name|u16
+name|fc
 decl_stmt|;
 name|u16
 name|link_speed
@@ -1098,7 +1119,10 @@ name|u32
 name|smartspeed
 decl_stmt|;
 name|u32
-name|dma_coalesce
+name|dmac
+decl_stmt|;
+name|int
+name|enable_aim
 decl_stmt|;
 comment|/* Interface queues */
 name|struct

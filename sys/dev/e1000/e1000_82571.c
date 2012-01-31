@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1676,15 +1676,6 @@ name|id_led_init
 operator|=
 name|e1000_id_led_init_generic
 expr_stmt|;
-comment|/* blink LED */
-name|mac
-operator|->
-name|ops
-operator|.
-name|blink_led
-operator|=
-name|e1000_blink_led_generic
-expr_stmt|;
 comment|/* setup LED */
 name|mac
 operator|->
@@ -1757,6 +1748,14 @@ operator|.
 name|led_on
 operator|=
 name|e1000_led_on_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|blink_led
+operator|=
+name|e1000_blink_led_generic
 expr_stmt|;
 comment|/* FWSM register */
 name|mac
@@ -1833,6 +1832,14 @@ operator|.
 name|led_on
 operator|=
 name|e1000_led_on_generic
+expr_stmt|;
+name|mac
+operator|->
+name|ops
+operator|.
+name|blink_led
+operator|=
+name|e1000_blink_led_generic
 expr_stmt|;
 comment|/* FWSM register */
 name|mac
@@ -4765,6 +4772,21 @@ literal|26
 operator|)
 expr_stmt|;
 break|break;
+case|case
+name|e1000_82574
+case|:
+case|case
+name|e1000_82583
+case|:
+name|reg
+operator||=
+operator|(
+literal|1
+operator|<<
+literal|26
+operator|)
+expr_stmt|;
+break|break;
 default|default:
 break|break;
 block|}
@@ -5843,7 +5865,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_check_for_serdes_link_82571 - Check for link (Serdes)  *  @hw: pointer to the HW structure  *  *  Reports the link state as up or down.  *  *  If autonegotiation is supported by the link partner, the link state is  *  determined by the result of autonegotiation. This is the most likely case.  *  If autonegotiation is not supported by the link partner, and the link  *  has a valid signal, force the link up.  *  *  The link state is represented internally here by 4 states:  *  *  1) down  *  2) autoneg_progress  *  3) autoneg_complete (the link sucessfully autonegotiated)  *  4) forced_up (the link has been forced up, it did not autonegotiate)  *  **/
+comment|/**  *  e1000_check_for_serdes_link_82571 - Check for link (Serdes)  *  @hw: pointer to the HW structure  *  *  Reports the link state as up or down.  *  *  If autonegotiation is supported by the link partner, the link state is  *  determined by the result of autonegotiation. This is the most likely case.  *  If autonegotiation is not supported by the link partner, and the link  *  has a valid signal, force the link up.  *  *  The link state is represented internally here by 4 states:  *  *  1) down  *  2) autoneg_progress  *  3) autoneg_complete (the link successfully autonegotiated)  *  4) forced_up (the link has been forced up, it did not autonegotiate)  *  **/
 end_comment
 
 begin_function
