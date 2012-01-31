@@ -432,12 +432,51 @@ begin_comment
 comment|/*  * If the "xadd" operation is available on this architecture,  * ISC_PLATFORM_HAVEXADD will be defined.  */
 end_comment
 
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
 name|ISC_PLATFORM_HAVEXADD
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_HAVEXADD
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * If the "xaddq" operation (64bit xadd) is available on this architecture,  * ISC_PLATFORM_HAVEXADDQ will be defined.  */
@@ -480,6 +519,29 @@ begin_comment
 comment|/*  * If the "atomic swap" operation is available on this architecture,  * ISC_PLATFORM_HAVEATOMICSTORE" will be defined.  */
 end_comment
 
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
+
 begin_define
 define|#
 directive|define
@@ -487,9 +549,48 @@ name|ISC_PLATFORM_HAVEATOMICSTORE
 value|1
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_HAVEATOMICSTORE
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * If the "compare-and-exchange" operation is available on this architecture,  * ISC_PLATFORM_HAVECMPXCHG will be defined.  */
 end_comment
+
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -498,9 +599,48 @@ name|ISC_PLATFORM_HAVECMPXCHG
 value|1
 end_define
 
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_HAVECMPXCHG
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Define if gcc ASM extension is available  */
 end_comment
+
+begin_comment
+comment|/*  * FreeBSD local modification, preserve this over upgrades  */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__i386__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__ia64__
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -508,6 +648,22 @@ directive|define
 name|ISC_PLATFORM_USEGCCASM
 value|1
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_undef
+undef|#
+directive|undef
+name|ISC_PLATFORM_USEGCCASM
+end_undef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Define if Tru64 style ASM syntax must be used.  */
