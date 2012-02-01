@@ -422,6 +422,24 @@ name|NETRXF_extra_info
 value|(1U<<_NETRXF_extra_info)
 end_define
 
+begin_comment
+comment|/* GSO Prefix descriptor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_NETRXF_gso_prefix
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETRXF_gso_prefix
+value|(1U<<_NETRXF_gso_prefix)
+end_define
+
 begin_struct
 struct|struct
 name|netif_rx_response
