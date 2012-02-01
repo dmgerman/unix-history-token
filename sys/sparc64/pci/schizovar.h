@@ -91,7 +91,13 @@ directive|define
 name|SCHIZO_FLAGS_XMODE
 value|(1<< 1)
 name|bus_addr_t
+name|sc_cdma_map
+decl_stmt|;
+name|bus_addr_t
 name|sc_cdma_clr
+decl_stmt|;
+name|uint32_t
+name|sc_cdma_vec
 decl_stmt|;
 name|uint32_t
 name|sc_cdma_state
