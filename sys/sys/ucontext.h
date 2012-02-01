@@ -248,7 +248,7 @@ name|__BSD_VISIBLE
 end_if
 
 begin_function_decl
-name|size_t
+name|int
 name|__getcontextx_size
 parameter_list|(
 name|void

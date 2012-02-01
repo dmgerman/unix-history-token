@@ -82,7 +82,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|size_t
+name|int
 name|__getcontextx_size
 parameter_list|(
 name|void
