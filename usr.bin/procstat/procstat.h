@@ -61,6 +61,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|procstat_auxv
+parameter_list|(
+name|struct
+name|kinfo_proc
+modifier|*
+name|kipp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|procstat_basic
 parameter_list|(
 name|struct
@@ -86,6 +98,18 @@ end_function_decl
 begin_function_decl
 name|void
 name|procstat_cred
+parameter_list|(
+name|struct
+name|kinfo_proc
+modifier|*
+name|kipp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|procstat_env
 parameter_list|(
 name|struct
 name|kinfo_proc
