@@ -153,6 +153,18 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|procstat_rlimit
+parameter_list|(
+name|struct
+name|kinfo_proc
+modifier|*
+name|kipp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|procstat_sigs
 parameter_list|(
 name|struct

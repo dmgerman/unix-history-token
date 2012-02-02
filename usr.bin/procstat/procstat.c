@@ -82,15 +82,17 @@ name|jflag
 decl_stmt|,
 name|kflag
 decl_stmt|,
-name|sflag
+name|lflag
 decl_stmt|,
-name|tflag
+name|sflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
 specifier|static
 name|int
+name|tflag
+decl_stmt|,
 name|vflag
 decl_stmt|,
 name|xflag
@@ -128,7 +130,7 @@ argument_list|(
 name|stderr
 argument_list|,
 literal|"                [-b | -c | -e | -f | -i | -j | -k | "
-literal|"-s | -t | -v | -x] [-a | pid ...]\n"
+literal|"-l | -s | -t | -v | -x] [-a | pid ...]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -230,6 +232,16 @@ argument_list|(
 name|kipp
 argument_list|,
 name|kflag
+argument_list|)
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|lflag
+condition|)
+name|procstat_rlimit
+argument_list|(
+name|kipp
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -480,7 +492,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"CN:M:abcefijkhstvw:x"
+literal|"CN:M:abcefijklhstvw:x"
 argument_list|)
 operator|)
 operator|!=
@@ -569,6 +581,13 @@ case|case
 literal|'k'
 case|:
 name|kflag
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'l'
+case|:
+name|lflag
 operator|++
 expr_stmt|;
 break|break;
@@ -692,6 +711,8 @@ literal|1
 else|:
 literal|0
 operator|)
+operator|+
+name|lflag
 operator|+
 name|sflag
 operator|+
