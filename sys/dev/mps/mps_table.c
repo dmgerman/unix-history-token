@@ -21,6 +21,10 @@ begin_comment
 comment|/* Debugging tables for MPT2 */
 end_comment
 
+begin_comment
+comment|/* TODO Move headers to mpsvar */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -96,6 +100,24 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/taskqueue.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -145,6 +167,18 @@ begin_include
 include|#
 directive|include
 file|<dev/mps/mpi/mpi2_init.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mps/mpi/mpi2_tool.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<dev/mps/mps_ioctl.h>
 end_include
 
 begin_include
