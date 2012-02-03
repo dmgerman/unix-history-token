@@ -45,7 +45,7 @@ name|__BSD_VISIBLE
 end_if
 
 begin_comment
-comment|/*  *<net/if.h> does not depend on<sys/time.h> on most other systems.  This  * helps userland compatibility.  (struct timeval ifi_lastchange)  */
+comment|/*  *<net/if.h> does not depend on<sys/time.h> on most other systems.  This  * helps userland compatibility.  (struct timeval ifi_lastchange)  * The same holds for<sys/socket.h>.  (struct sockaddr ifru_addr)  */
 end_comment
 
 begin_ifndef
@@ -58,6 +58,12 @@ begin_include
 include|#
 directive|include
 file|<sys/time.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/socket.h>
 end_include
 
 begin_endif
