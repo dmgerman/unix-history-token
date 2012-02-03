@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  *  * Portions Copyright 2012 Sergey Kandaurov<pluknet@FreeBSD.org>  * Portions Copyright 2012 Martin Matuska<mm@FreeBSD.org>  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
 end_comment
 
 begin_include
@@ -5856,7 +5856,11 @@ argument_list|(
 name|dnode_children_t
 argument_list|)
 operator|+
+operator|(
 name|epb
+operator|-
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -6298,7 +6302,11 @@ argument_list|(
 name|dnode_children_t
 argument_list|)
 operator|+
+operator|(
 name|epb
+operator|-
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -6387,7 +6395,11 @@ argument_list|(
 name|dnode_children_t
 argument_list|)
 operator|+
+operator|(
 name|epb
+operator|-
+literal|1
+operator|)
 operator|*
 sizeof|sizeof
 argument_list|(
