@@ -333,7 +333,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DEFINE_CLASS_1
 argument_list|(
-name|pci
+name|pcib
 argument_list|,
 name|grackle_driver
 argument_list|,
