@@ -626,6 +626,12 @@ name|size_t
 name|tlsalign
 decl_stmt|;
 comment|/* Alignment of static TLS block */
+name|caddr_t
+name|relro_page
+decl_stmt|;
+name|size_t
+name|relro_size
+decl_stmt|;
 comment|/* Items from the dynamic section. */
 name|Elf_Addr
 modifier|*
@@ -952,7 +958,7 @@ name|void
 modifier|*
 name|priv
 decl_stmt|;
-comment|/* Platform-dependant */
+comment|/* Platform-dependent */
 block|}
 name|Obj_Entry
 typedef|;

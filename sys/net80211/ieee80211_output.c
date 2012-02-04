@@ -3513,7 +3513,7 @@ decl_stmt|;
 name|uint8_t
 name|tos
 decl_stmt|;
-comment|/* 		 * IPv6 frame, map the DSCP bits from the TOS field. 		 */
+comment|/* 		 * IPv6 frame, map the DSCP bits from the traffic class field. 		 */
 name|m_copydata
 argument_list|(
 name|m

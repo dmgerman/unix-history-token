@@ -553,7 +553,6 @@ name|ifa_rtrequest
 operator|=
 name|nd6_rtrequest
 expr_stmt|;
-comment|/* XXX QL 	 * we need to report rt_newaddrmsg 	 */
 name|ln
 operator|=
 name|lla_lookup
@@ -6500,6 +6499,17 @@ expr_stmt|;
 block|}
 name|cleanup
 label|:
+if|if
+condition|(
+name|ifa0
+operator|!=
+name|NULL
+condition|)
+name|ifa_free
+argument_list|(
+name|ifa0
+argument_list|)
+expr_stmt|;
 name|plen
 operator|=
 name|in6_mask2len
@@ -6631,17 +6641,6 @@ operator|~
 name|IFA_ROUTE
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ifa0
-operator|!=
-name|NULL
-condition|)
-name|ifa_free
-argument_list|(
-name|ifa0
-argument_list|)
-expr_stmt|;
 name|in6_unlink_ifa
 argument_list|(
 name|ia

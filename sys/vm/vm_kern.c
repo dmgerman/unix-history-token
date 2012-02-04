@@ -1180,6 +1180,16 @@ name|pflags
 operator||=
 name|VM_ALLOC_ZERO
 expr_stmt|;
+if|if
+condition|(
+name|flags
+operator|&
+name|M_NODUMP
+condition|)
+name|pflags
+operator||=
+name|VM_ALLOC_NODUMP
+expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|kmem_object

@@ -311,7 +311,7 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"ParseConfig: line %d: cant parse<%s>"
+literal|"ParseConfig: line %d: can't parse<%s>"
 argument_list|,
 name|linecnt
 argument_list|,
@@ -480,7 +480,7 @@ operator|!=
 name|cp
 condition|)
 do|;
-comment|/* 			 *  Restricted list of boot files were spec'd, 			 *  however, none of them were found.  Since we 			 *  apparently cant let them boot "just anything", 			 *  the entire record is invalidated. 			 */
+comment|/* 			 *  Restricted list of boot files were spec'd, 			 *  however, none of them were found.  Since we 			 *  apparently can't let them boot "just anything", 			 *  the entire record is invalidated. 			 */
 if|if
 condition|(
 name|i
@@ -959,7 +959,7 @@ name|i
 operator|==
 literal|0
 condition|)
-comment|/* cant find any boot files */
+comment|/* can't find any boot files */
 name|syslog
 argument_list|(
 name|LOG_ERR

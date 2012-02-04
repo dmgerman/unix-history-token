@@ -330,36 +330,12 @@ name|defined
 argument_list|(
 name|__CLANG_ATOMICS
 argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|atomic_thread_fence
-parameter_list|(
-name|order
-parameter_list|)
-value|__atomic_thread_fence(order)
-end_define
-
-begin_define
-define|#
-directive|define
-name|atomic_signal_fence
-parameter_list|(
-name|order
-parameter_list|)
-value|__asm volatile ("" : : : "memory")
-end_define
-
-begin_elif
-elif|#
-directive|elif
+operator|||
 name|defined
 argument_list|(
 name|__GNUC_ATOMICS
 argument_list|)
-end_elif
+end_if
 
 begin_define
 define|#
@@ -432,7 +408,7 @@ parameter_list|(
 name|obj
 parameter_list|)
 define|\
-value|__atomic_is_lock_free(obj)
+value|__atomic_is_lock_free(sizeof(obj))
 end_define
 
 begin_elif
@@ -1581,7 +1557,7 @@ parameter_list|(
 name|object
 parameter_list|)
 define|\
-value|atomic_flag_clear_explicit(object, 0, memory_order_seq_cst)
+value|atomic_flag_clear_explicit(object, memory_order_seq_cst)
 end_define
 
 begin_define
@@ -1592,7 +1568,7 @@ parameter_list|(
 name|object
 parameter_list|)
 define|\
-value|atomic_flag_test_and_set_explicit(object, 0, 1,			\ 	    memory_order_seq_cst, memory_order_seq_cst)
+value|atomic_flag_test_and_set_explicit(object, memory_order_seq_cst)
 end_define
 
 begin_endif

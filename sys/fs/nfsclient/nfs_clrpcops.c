@@ -30,6 +30,12 @@ end_ifndef
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/nfs/nfsport.h>
 end_include
 
@@ -20948,17 +20954,7 @@ operator|<=
 name|NCHNAMLEN
 condition|)
 block|{
-name|np
-operator|->
-name|n_ctime
-operator|=
-name|np
-operator|->
-name|n_vattr
-operator|.
-name|na_ctime
-expr_stmt|;
-name|cache_enter
+name|cache_enter_time
 argument_list|(
 name|ndp
 operator|->
@@ -20969,6 +20965,11 @@ operator|->
 name|ni_vp
 argument_list|,
 name|cnp
+argument_list|,
+operator|&
+name|nfsva
+operator|.
+name|na_ctime
 argument_list|)
 expr_stmt|;
 block|}

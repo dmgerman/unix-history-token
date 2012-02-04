@@ -1160,12 +1160,6 @@ name|fwe_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_flags
 operator|=
 operator|(

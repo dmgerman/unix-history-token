@@ -2935,7 +2935,7 @@ argument_list|,
 name|ks_next
 argument_list|)
 expr_stmt|;
-comment|/* Truncate rightmost column if neccessary.  */
+comment|/* Truncate rightmost column if necessary.  */
 if|if
 condition|(
 name|STAILQ_NEXT

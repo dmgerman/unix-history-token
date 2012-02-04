@@ -2225,9 +2225,6 @@ modifier|*
 name|skip_addr
 decl_stmt|,
 modifier|*
-name|err_msg
-decl_stmt|,
-modifier|*
 name|i2c_buf
 decl_stmt|;
 name|int
@@ -2257,10 +2254,6 @@ expr_stmt|;
 name|dev
 operator|=
 name|I2C_DEV
-expr_stmt|;
-name|err_msg
-operator|=
-name|NULL
 expr_stmt|;
 comment|/* Default values */
 name|i2c_opt

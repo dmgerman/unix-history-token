@@ -2128,7 +2128,7 @@ name|report
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"reqest from %s reached hop limit"
+literal|"request from %s reached hop limit"
 argument_list|,
 name|inet_ntoa
 argument_list|(

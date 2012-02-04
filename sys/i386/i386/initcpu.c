@@ -2552,6 +2552,13 @@ directive|endif
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|elf32_nxstack
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|initializecpu
@@ -2825,6 +2832,10 @@ expr_stmt|;
 name|pg_nx
 operator|=
 name|PG_NX
+expr_stmt|;
+name|elf32_nxstack
+operator|=
+literal|1
 expr_stmt|;
 block|}
 endif|#

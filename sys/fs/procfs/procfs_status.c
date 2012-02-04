@@ -822,8 +822,6 @@ argument_list|,
 name|p
 argument_list|,
 name|sb
-argument_list|,
-name|ARG_MAX
 argument_list|)
 operator|)
 return|;

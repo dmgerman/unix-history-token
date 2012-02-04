@@ -3865,11 +3865,6 @@ name|MAX_COMMAND_SIZE
 index|]
 decl_stmt|;
 comment|/* Buffer to hold sense data. */
-name|u_int8_t
-modifier|*
-name|mode_pars
-decl_stmt|;
-comment|/* Pointer to modepage params. */
 name|struct
 name|scsi_mode_header_6
 modifier|*
@@ -4009,13 +4004,6 @@ argument_list|)
 operator|+
 name|len
 operator|)
-expr_stmt|;
-name|mode_pars
-operator|=
-name|MODE_PAGE_DATA
-argument_list|(
-name|mph
-argument_list|)
 expr_stmt|;
 name|mph
 operator|->

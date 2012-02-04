@@ -2069,12 +2069,6 @@ literal|0
 expr_stmt|;
 name|newnfsstats
 operator|.
-name|srvcache_size
-operator|=
-literal|0
-expr_stmt|;
-name|newnfsstats
-operator|.
 name|srvclients
 operator|=
 literal|0

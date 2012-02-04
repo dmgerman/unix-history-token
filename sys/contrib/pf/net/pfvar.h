@@ -1187,7 +1187,7 @@ define|#
 directive|define
 name|PF_LOCK
 parameter_list|()
-value|do {				\ 	PF_UNLOCK_ASSERT();				\ 	mtx_lock(&pf_task_mtx);				\ } while(0)
+value|mtx_lock(&pf_task_mtx)
 end_define
 
 begin_define
@@ -1195,7 +1195,7 @@ define|#
 directive|define
 name|PF_UNLOCK
 parameter_list|()
-value|do {				\ 	PF_LOCK_ASSERT();				\ 	mtx_unlock(&pf_task_mtx);			\ } while(0)
+value|mtx_unlock(&pf_task_mtx)
 end_define
 
 begin_else

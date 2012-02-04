@@ -297,6 +297,8 @@ decl_stmt|;
 name|int
 name|ch
 decl_stmt|,
+name|i
+decl_stmt|,
 name|len
 decl_stmt|;
 name|char
@@ -997,7 +999,7 @@ expr_stmt|;
 if|if
 condition|(
 name|argc
-operator|!=
+operator|<
 literal|2
 condition|)
 name|usage
@@ -1106,6 +1108,10 @@ name|walk_dir
 argument_list|(
 name|subtree
 argument_list|,
+literal|"."
+argument_list|,
+name|NULL
+argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
@@ -1165,6 +1171,100 @@ argument_list|)
 expr_stmt|;
 comment|/* NOTREACHED */
 block|}
+comment|/* append extra directory */
+for|for
+control|(
+name|i
+operator|=
+literal|2
+init|;
+name|i
+operator|<
+name|argc
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|stat
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+operator|&
+name|sb
+argument_list|)
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"Can't stat `%s'"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|S_ISDIR
+argument_list|(
+name|sb
+operator|.
+name|st_mode
+argument_list|)
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: not a directory"
+argument_list|,
+name|argv
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
+name|TIMER_START
+argument_list|(
+name|start
+argument_list|)
+expr_stmt|;
+name|root
+operator|=
+name|walk_dir
+argument_list|(
+name|argv
+index|[
+name|i
+index|]
+argument_list|,
+literal|"."
+argument_list|,
+name|NULL
+argument_list|,
+name|root
+argument_list|)
+expr_stmt|;
+name|TIMER_RESULTS
+argument_list|(
+name|start
+argument_list|,
+literal|"walk_dir2"
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|specfile
@@ -1213,8 +1313,6 @@ argument_list|)
 expr_stmt|;
 name|dump_fsnodes
 argument_list|(
-literal|"."
-argument_list|,
 name|root
 argument_list|)
 expr_stmt|;
@@ -1475,7 +1573,7 @@ argument_list|,
 literal|"usage: %s [-t fs-type] [-o fs-options] [-d debug-mask] [-B endian]\n"
 literal|"\t[-S sector-size] [-M minimum-size] [-m maximum-size] [-s image-size]\n"
 literal|"\t[-b free-blocks] [-f free-files] [-F mtree-specfile] [-x]\n"
-literal|"\t[-N userdb-dir] image-file directory | manifest\n"
+literal|"\t[-N userdb-dir] image-file directory | manifest [extra-directory ...]\n"
 argument_list|,
 name|prog
 argument_list|)

@@ -2814,7 +2814,7 @@ argument_list|,
 literal|"DEBUG: running:"
 argument_list|)
 expr_stmt|;
-comment|/* Should be equivilent to 'cmd' (before strsep, of course). */
+comment|/* Should be equivalent to 'cmd' (before strsep, of course). */
 for|for
 control|(
 name|i

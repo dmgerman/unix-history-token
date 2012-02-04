@@ -364,6 +364,21 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|sndbuf_fillsilence_rl
+parameter_list|(
+name|struct
+name|snd_dbuf
+modifier|*
+name|b
+parameter_list|,
+name|u_int
+name|rl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|sndbuf_softreset
 parameter_list|(
 name|struct

@@ -643,6 +643,10 @@ name|short
 name|td_lk_slocks
 decl_stmt|;
 comment|/* (k) Count of lockmgr shared locks. */
+name|short
+name|td_stopsched
+decl_stmt|;
+comment|/* (k) Scheduler stopped. */
 name|struct
 name|turnstile
 modifier|*
@@ -4574,9 +4578,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -4599,9 +4600,6 @@ name|struct
 name|sbuf
 modifier|*
 name|sb
-parameter_list|,
-name|size_t
-name|nchr
 parameter_list|)
 function_decl|;
 end_function_decl

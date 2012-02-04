@@ -2806,12 +2806,6 @@ name|stge_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_snd
 operator|.
 name|ifq_drv_maxlen

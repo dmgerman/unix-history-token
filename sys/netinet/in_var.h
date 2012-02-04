@@ -209,6 +209,16 @@ end_define
 begin_define
 define|#
 directive|define
+name|IA_MASKSIN
+parameter_list|(
+name|ia
+parameter_list|)
+value|(&(((struct in_ifaddr *)(ia))->ia_sockmask))
+end_define
+
+begin_define
+define|#
+directive|define
 name|IN_LNAOF
 parameter_list|(
 name|in

@@ -258,6 +258,17 @@ begin_comment
 comment|/* enable SIMD/MMX2 to use except 16 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CR4_XSAVE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* XSETBV/XGETBV */
+end_comment
+
 begin_comment
 comment|/*  * Bits in AMD64 special registers.  EFER is 64 bits wide.  */
 end_comment

@@ -1507,6 +1507,9 @@ modifier|*
 name|sem
 parameter_list|)
 block|{
+name|rmb
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|!

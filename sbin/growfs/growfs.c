@@ -1690,11 +1690,16 @@ name|cbase
 decl_stmt|,
 name|dmax
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|FSIRAND
 name|struct
 name|ufs1_dinode
 modifier|*
 name|dp1
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|csum
 modifier|*
@@ -2265,6 +2270,9 @@ operator|.
 name|fs_frag
 control|)
 block|{
+ifdef|#
+directive|ifdef
+name|FSIRAND
 name|dp1
 operator|=
 operator|(
@@ -2278,9 +2286,6 @@ operator|*
 operator|)
 name|iobuf
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|FSIRAND
 for|for
 control|(
 name|j

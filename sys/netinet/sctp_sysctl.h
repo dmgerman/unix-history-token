@@ -79,9 +79,6 @@ decl_stmt|;
 endif|#
 directive|endif
 name|uint32_t
-name|sctp_strict_init
-decl_stmt|;
-name|uint32_t
 name|sctp_peer_chunk_oh
 decl_stmt|;
 name|uint32_t
@@ -269,6 +266,9 @@ name|sctp_buffer_splitting
 decl_stmt|;
 name|uint32_t
 name|sctp_initial_cwnd
+decl_stmt|;
+name|uint32_t
+name|sctp_blackhole
 decl_stmt|;
 if|#
 directive|if
@@ -534,38 +534,6 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_LOOPBACK_NOCSUM_DEFAULT
-value|1
-end_define
-
-begin_comment
-comment|/* strict_init: Enable strict INIT/INIT-ACK singleton enforcement */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_INIT_DESC
-value|"Enable strict INIT/INIT-ACK singleton enforcement"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_INIT_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_INIT_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_STRICT_INIT_DEFAULT
 value|1
 end_define
 
@@ -2452,6 +2420,34 @@ end_define
 begin_comment
 comment|/* 0 means disable feature */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_DESC
+value|"Enable SCTP blackholing"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_MAX
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_BLACKHOLE_DEFAULT
+value|SCTPCTL_BLACKHOLE_MIN
+end_define
 
 begin_if
 if|#

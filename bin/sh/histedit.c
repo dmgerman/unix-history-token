@@ -628,13 +628,11 @@ begin_function
 name|void
 name|sethistsize
 parameter_list|(
-name|hs
-parameter_list|)
 specifier|const
 name|char
 modifier|*
 name|hs
-decl_stmt|;
+parameter_list|)
 block|{
 name|int
 name|histsize

@@ -809,7 +809,9 @@ endif|#
 directive|endif
 argument|extern void	*trapcode
 argument_list|,
-argument|*trapsize; extern void	*alitrap
+argument|*trapsize; extern void	*slbtrap
+argument_list|,
+argument|*slbtrapsize; extern void	*alitrap
 argument_list|,
 argument|*alisize; extern void	*dsitrap
 argument_list|,
@@ -1400,7 +1402,8 @@ directive|ifdef
 name|__powerpc64__
 name|bcopy
 argument_list|(
-name|generictrap
+operator|&
+name|slbtrap
 argument_list|,
 operator|(
 name|void
@@ -1412,12 +1415,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|trapsize
+name|slbtrapsize
 argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|generictrap
+operator|&
+name|slbtrap
 argument_list|,
 operator|(
 name|void
@@ -1429,7 +1433,7 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|trapsize
+name|slbtrapsize
 argument_list|)
 expr_stmt|;
 endif|#

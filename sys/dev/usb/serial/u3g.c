@@ -2450,6 +2450,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|QUALCOMM2
+argument_list|,
+name|VW110L
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|QUALCOMMINC
 argument_list|,
 name|AC2726

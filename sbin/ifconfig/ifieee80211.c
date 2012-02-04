@@ -4360,7 +4360,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This function is purely a NetBSD compatability interface.  The NetBSD  * interface is too inflexible, but it's there so we'll support it since  * it's not all that hard.  */
+comment|/*  * This function is purely a NetBSD compatibility interface.  The NetBSD  * interface is too inflexible, but it's there so we'll support it since  * it's not all that hard.  */
 end_comment
 
 begin_function
@@ -22561,9 +22561,6 @@ operator|!=
 name|IEEE80211_WEP_NOSUP
 condition|)
 block|{
-name|int
-name|firstkey
-decl_stmt|;
 switch|switch
 condition|(
 name|wepmode
@@ -22685,10 +22682,6 @@ goto|goto
 name|end
 goto|;
 block|}
-name|firstkey
-operator|=
-literal|1
-expr_stmt|;
 for|for
 control|(
 name|i
@@ -22776,10 +22769,6 @@ argument_list|(
 operator|&
 name|ik
 argument_list|)
-expr_stmt|;
-name|firstkey
-operator|=
-literal|0
 expr_stmt|;
 block|}
 block|}

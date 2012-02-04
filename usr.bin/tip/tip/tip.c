@@ -2557,6 +2557,10 @@ condition|(
 name|errno
 operator|==
 name|EIO
+operator|||
+name|errno
+operator|==
+name|ENXIO
 condition|)
 name|tipabort
 argument_list|(

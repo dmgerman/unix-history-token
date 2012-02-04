@@ -1514,7 +1514,7 @@ literal|1
 argument_list|,
 name|PI_NET
 argument_list|,
-literal|"%s taskq"
+literal|"%s net80211 taskq"
 argument_list|,
 name|ifp
 operator|->

@@ -141,6 +141,12 @@ end_define
 begin_define
 define|#
 directive|define
+name|LDBL_IMPLICIT_NBIT
+end_define
+
+begin_define
+define|#
+directive|define
 name|mask_nbit_l
 parameter_list|(
 name|u
@@ -152,7 +158,7 @@ begin_define
 define|#
 directive|define
 name|LDBL_MANH_SIZE
-value|32
+value|20
 end_define
 
 begin_define

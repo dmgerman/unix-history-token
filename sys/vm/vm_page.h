@@ -773,6 +773,17 @@ begin_comment
 comment|/* flush dirty page on inactive q */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PG_NODUMP
+value|0x80
+end_define
+
+begin_comment
+comment|/* don't include this page in the dump */
+end_comment
+
 begin_comment
 comment|/*  * Misc constants.  */
 end_comment
@@ -1113,6 +1124,17 @@ end_define
 
 begin_comment
 comment|/* vm_page_grab() only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_ALLOC_NODUMP
+value|0x2000
+end_define
+
+begin_comment
+comment|/* don't include in dump */
 end_comment
 
 begin_define

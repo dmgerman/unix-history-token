@@ -7,6 +7,10 @@ begin_comment
 comment|/*  * Copyright 2009 Sun Microsystems, Inc.  All rights reserved.  * Use is subject to license terms.  */
 end_comment
 
+begin_comment
+comment|/*  * Copyright (c) 2012 by Delphix. All rights reserved.  */
+end_comment
+
 begin_include
 include|#
 directive|include
@@ -2653,6 +2657,31 @@ operator|->
 name|zcr_cbinfo
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|report
+operator|->
+name|zcr_ckinfo
+operator|!=
+name|NULL
+condition|)
+block|{
+name|kmem_free
+argument_list|(
+name|report
+operator|->
+name|zcr_ckinfo
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|report
+operator|->
+name|zcr_ckinfo
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 name|kmem_free
 argument_list|(
 name|report

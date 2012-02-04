@@ -122,7 +122,7 @@ name|u_short
 name|pg_color
 decl_stmt|;
 comment|/* (c) color of first page in obj */
-name|u_short
+name|u_int
 name|paging_in_progress
 decl_stmt|;
 comment|/* Paging (in or out) so don't collapse or destroy */

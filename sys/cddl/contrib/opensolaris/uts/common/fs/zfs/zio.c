@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -142,6 +142,47 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Use uma(9) for ZIO allocations"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|zio_exclude_metadata
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"vfs.zfs.zio.exclude_metadata"
+argument_list|,
+operator|&
+name|zio_exclude_metadata
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_zfs_zio
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|exclude_metadata
+argument_list|,
+name|CTLFLAG_RDTUN
+argument_list|,
+operator|&
+name|zio_exclude_metadata
+argument_list|,
+literal|0
+argument_list|,
+literal|"Exclude metadata buffers from dumps as well"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -627,6 +668,8 @@ argument_list|,
 name|cflags
 operator||
 name|KMC_NOTOUCH
+operator||
+name|KMC_NODEBUG
 argument_list|)
 expr_stmt|;
 block|}
@@ -894,6 +937,15 @@ operator|)
 operator|>>
 name|SPA_MINBLOCKSHIFT
 decl_stmt|;
+name|int
+name|flags
+init|=
+name|zio_exclude_metadata
+condition|?
+name|KM_NODEBUG
+else|:
+literal|0
+decl_stmt|;
 name|ASSERT
 argument_list|(
 name|c
@@ -928,6 +980,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_SLEEP
+operator||
+name|flags
 argument_list|)
 operator|)
 return|;
@@ -992,6 +1046,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_SLEEP
+operator||
+name|KM_NODEBUG
 argument_list|)
 operator|)
 return|;
@@ -11078,10 +11134,12 @@ name|spa
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * ZIL blocks are always contiguous (i.e. not gang blocks) so we 	 * set the METASLAB_GANG_AVOID flag so that they don't "fast gang" 	 * when allocating them. 	 */
 if|if
 condition|(
 name|use_slog
 condition|)
+block|{
 name|error
 operator|=
 name|metaslab_alloc
@@ -11104,12 +11162,16 @@ argument_list|,
 name|old_bp
 argument_list|,
 name|METASLAB_HINTBP_AVOID
+operator||
+name|METASLAB_GANG_AVOID
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
 condition|)
+block|{
 name|error
 operator|=
 name|metaslab_alloc
@@ -11132,8 +11194,11 @@ argument_list|,
 name|old_bp
 argument_list|,
 name|METASLAB_HINTBP_AVOID
+operator||
+name|METASLAB_GANG_AVOID
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error

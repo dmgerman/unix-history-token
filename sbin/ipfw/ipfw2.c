@@ -1994,7 +1994,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * _substrcmp2 takes three strings and returns 1 if the first two do not match,  * and 0 if they match exactly or the second string is a sub-string  * of the first.  A warning is printed to stderr in the case that the  * first string does not match the third.  *  * This function exists to warn about the bizzare construction  * strncmp(str, "by", 2) which is used to allow people to use a shotcut  * for "bytes".  The problem is that in addition to accepting "by",  * "byt", "byte", and "bytes", it also excepts "by_rabid_dogs" and any  * other string beginning with "by".  *  * This function will be removed in the future through the usual  * deprecation process.  */
+comment|/*  * _substrcmp2 takes three strings and returns 1 if the first two do not match,  * and 0 if they match exactly or the second string is a sub-string  * of the first.  A warning is printed to stderr in the case that the  * first string does not match the third.  *  * This function exists to warn about the bizarre construction  * strncmp(str, "by", 2) which is used to allow people to use a shortcut  * for "bytes".  The problem is that in addition to accepting "by",  * "byt", "byte", and "bytes", it also excepts "by_rabid_dogs" and any  * other string beginning with "by".  *  * This function will be removed in the future through the usual  * deprecation process.  */
 end_comment
 
 begin_function
@@ -14940,7 +14940,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  			 * Resolve the host name or address to a family and a 			 * network representation of the addres. 			 */
+comment|/* 			 * Resolve the host name or address to a family and a 			 * network representation of the address. 			 */
 if|if
 condition|(
 name|getaddrinfo

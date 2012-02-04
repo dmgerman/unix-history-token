@@ -741,13 +741,19 @@ index|[
 name|l
 index|]
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
 init|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 decl_stmt|;
 name|int
@@ -860,10 +866,7 @@ name|buffer_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 comment|/* buffer has changed, reload map */
@@ -878,10 +881,6 @@ operator|->
 name|map
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 name|slot
@@ -1499,13 +1498,19 @@ index|[
 name|l
 index|]
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
 init|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 decl_stmt|;
 if|if
@@ -1553,10 +1558,7 @@ name|buffer_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 comment|/* buffer has changed, and reload map */
@@ -1571,10 +1573,6 @@ operator|->
 name|map
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 name|slot

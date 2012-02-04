@@ -14409,19 +14409,25 @@ name|uio
 modifier|*
 name|auio
 decl_stmt|;
+name|uint64_t
+name|flags
+decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|AUDIT_ARG_FFLAGS
-argument_list|(
+comment|/* 	 * Mount flags are now 64-bits. On 32-bit archtectures only 	 * 32-bits are passed in, but from here on everything handles 	 * 64-bit flags correctly. 	 */
+name|flags
+operator|=
 name|uap
 operator|->
+name|flags
+expr_stmt|;
+name|AUDIT_ARG_FFLAGS
+argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Filter out MNT_ROOTFS.  We do not want clients of nmount() in 	 * userspace to set this flag, but we must filter it out if we want 	 * MNT_UPDATE on the root file system to work. 	 * MNT_ROOTFS should only be set by the kernel when mounting its 	 * root file system. 	 */
-name|uap
-operator|->
 name|flags
 operator|&=
 operator|~
@@ -14482,8 +14488,6 @@ name|vfs_donmount
 argument_list|(
 name|td
 argument_list|,
-name|uap
-operator|->
 name|flags
 argument_list|,
 name|auio

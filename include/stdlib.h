@@ -804,7 +804,7 @@ comment|/* __ISO_C_VISIBLE>= 1999 */
 end_comment
 
 begin_comment
-comment|/*  * If we're in a mode greater than C99, expose C1x functions.  */
+comment|/*  * If we're in a mode greater than C99, expose C11 functions.  */
 end_comment
 
 begin_if
@@ -816,11 +816,13 @@ literal|2011
 end_if
 
 begin_function_decl
-specifier|_Noreturn
 name|void
-name|quick_exit
+modifier|*
+name|aligned_alloc
 parameter_list|(
-name|int
+name|size_t
+parameter_list|,
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -836,6 +838,16 @@ function_decl|)
 parameter_list|(
 name|void
 parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|_Noreturn
+name|void
+name|quick_exit
+parameter_list|(
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl

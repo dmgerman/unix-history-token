@@ -214,19 +214,6 @@ begin_comment
 comment|/* core address, pointer to const */
 end_comment
 
-begin_typedef
-typedef|typedef
-name|__volatile
-name|char
-modifier|*
-name|v_caddr_t
-typedef|;
-end_typedef
-
-begin_comment
-comment|/* core address, pointer to volatile */
-end_comment
-
 begin_ifndef
 ifndef|#
 directive|ifndef

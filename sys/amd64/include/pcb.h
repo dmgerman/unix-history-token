@@ -174,9 +174,11 @@ name|savefpu
 modifier|*
 name|pcb_save
 decl_stmt|;
-name|struct
-name|savefpu
-name|pcb_user_save
+name|uint64_t
+name|pcb_pad
+index|[
+literal|2
+index|]
 decl_stmt|;
 block|}
 struct|;

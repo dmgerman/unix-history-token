@@ -1531,6 +1531,30 @@ argument_list|(
 name|uint32_t
 argument_list|)
 block|, 		}
+block|,
+index|[
+name|IEEE80211_RADIOTAP_MCS
+index|]
+operator|=
+block|{
+operator|.
+name|align
+operator|=
+sizeof|sizeof
+argument_list|(
+name|uint8_t
+argument_list|)
+block|,
+operator|.
+name|width
+operator|=
+literal|3
+operator|*
+sizeof|sizeof
+argument_list|(
+name|uint8_t
+argument_list|)
+block|, 		}
 block|, 	}
 struct|;
 name|uint32_t

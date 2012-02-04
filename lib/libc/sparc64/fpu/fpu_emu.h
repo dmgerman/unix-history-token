@@ -339,7 +339,7 @@ name|__fpu_sub
 parameter_list|(
 name|fe
 parameter_list|)
-value|((fe)->fe_f2.fp_sign ^= 1, __fpu_add(fe))
+value|(ISNAN(&(fe)->fe_f2) ? 0 : ((fe)->fe_f2.fp_sign ^= 1), \ 			    __fpu_add(fe))
 end_define
 
 begin_ifdef

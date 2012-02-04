@@ -336,17 +336,13 @@ decl_stmt|;
 comment|/* Register access is 32-bit aligned */
 name|shift
 operator|=
-literal|8
-operator|*
 operator|(
 name|offset
 operator|&
-operator|(
-name|bytes
-operator|%
-literal|4
+literal|3
 operator|)
-operator|)
+operator|*
+literal|8
 expr_stmt|;
 if|if
 condition|(

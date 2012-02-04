@@ -2537,6 +2537,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|PT_GNU_RELRO
+value|0x6474e552
+end_define
+
+begin_define
+define|#
+directive|define
 name|PT_LOSUNW
 value|0x6ffffffa
 end_define
@@ -3015,7 +3022,7 @@ value|28
 end_define
 
 begin_comment
-comment|/* Size in bytes of the array of 				   terminationfunctions. */
+comment|/* Size in bytes of the array of 				   termination functions. */
 end_comment
 
 begin_define

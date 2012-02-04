@@ -2201,6 +2201,10 @@ name|len
 operator|=
 literal|0
 expr_stmt|;
+name|pos
+operator|=
+literal|0
+expr_stmt|;
 name|lastscan
 operator|=
 literal|0

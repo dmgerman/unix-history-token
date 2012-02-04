@@ -28,25 +28,114 @@ file|<math.h>
 end_include
 
 begin_comment
-comment|/*  * This implementation of<tgmath.h> uses the two following macros,  * which are based on the macros described in C11 proposal N1404:  * __tg_impl_simple(x, y, z, fnl, fn, fnf, ...)  *	Invokes fnl() if the corresponding real type of x, y or z is long  *	double, fn() if it is double or any has an integer type, and fnf()  *	otherwise.  * __tg_impl_full(x, y, cfnl, cfn, cfnf, fnl, fn, fnf, ...)  *	Invokes [c]fnl() if the corresponding real type of x or y is long  *	double, [c]fn() if it is double or any has an integer type, and  *	[c]fnf() otherwise.  The function with the 'c' prefix is called if  *	any of x or y is a complex number.  * Both macros call the chosen function with all additional arguments passed  * to them, as given by __VA_ARGS__.  *  * Note that these macros cannot be implemented with C's ?: operator,  * because the return type of the whole expression would incorrectly be long  * double complex regardless of the argument types.  */
+comment|/*  * This implementation of<tgmath.h> uses the two following macros,  * which are based on the macros described in C11 proposal N1404:  * __tg_impl_simple(x, y, z, fnl, fn, fnf, ...)  *	Invokes fnl() if the corresponding real type of x, y or z is long  *	double, fn() if it is double or any has an integer type, and fnf()  *	otherwise.  * __tg_impl_full(x, y, cfnl, cfn, cfnf, fnl, fn, fnf, ...)  *	Invokes [c]fnl() if the corresponding real type of x or y is long  *	double, [c]fn() if it is double or any has an integer type, and  *	[c]fnf() otherwise.  The function with the 'c' prefix is called if  *	any of x or y is a complex number.  * Both macros call the chosen function with all additional arguments passed  * to them, as given by __VA_ARGS__.  *  * Note that these macros cannot be implemented with C's ?: operator,  * because the return type of the whole expression would incorrectly be long  * double complex regardless of the argument types.  *  * The structure of the C11 implementation of these macros can in  * principle be reused for non-C11 compilers, but due to an integer  * promotion bug for complex types in GCC 4.2, simply let non-C11  * compilers use an inefficient yet reliable version.  */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
+name|__STDC_VERSION__
+operator|>=
+literal|201112L
+end_if
+
+begin_define
+define|#
+directive|define
+name|__tg_generic
+parameter_list|(
+name|x
+parameter_list|,
+name|cfnl
+parameter_list|,
+name|cfn
+parameter_list|,
+name|cfnf
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|)
+define|\
+value|_Generic(x,							\ 		long double _Complex: cfnl,				\ 		double _Complex: cfn,					\ 		float _Complex: cfnf,					\ 		long double: fnl,					\ 		default: fn,						\ 		float: fnf						\ 	)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_type
+parameter_list|(
+name|x
+parameter_list|)
+define|\
+value|__tg_generic(x, (long double _Complex)0, (double _Complex)0,	\ 	    (float _Complex)0, (long double)0, (double)0, (float)0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_impl_simple
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|z
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__tg_generic(							\ 	    __tg_type(x) + __tg_type(y) + __tg_type(z),			\ 	    fnl, fn, fnf, fnl, fn, fnf)(__VA_ARGS__)
+end_define
+
+begin_define
+define|#
+directive|define
+name|__tg_impl_full
+parameter_list|(
+name|x
+parameter_list|,
+name|y
+parameter_list|,
+name|cfnl
+parameter_list|,
+name|cfn
+parameter_list|,
+name|cfnf
+parameter_list|,
+name|fnl
+parameter_list|,
+name|fn
+parameter_list|,
+name|fnf
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|__tg_generic(							\ 	    __tg_type(x) + __tg_type(y),				\ 	    cfnl, cfn, cfnf, fnl, fn, fnf)(__VA_ARGS__)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
 name|__generic
-end_ifndef
-
-begin_error
-error|#
-directive|error
-literal|"<tgmath.h> not implemented for this compiler"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
+argument_list|)
+end_elif
 
 begin_define
 define|#
@@ -137,6 +226,22 @@ parameter_list|)
 define|\
 value|__tg_generic_full(x,						\ 	    __tg_generic_full(y, cfnl, cfnl, cfnl, cfnl, cfnl, cfnl),	\ 	    __tg_generic_full(y, cfnl, cfn , cfn , cfnl, cfn , cfn ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfnf, cfnl, cfn , cfnf),	\ 	    __tg_generic_full(y, cfnl, cfnl, cfnl, fnl , fnl , fnl ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfn , fnl , fn  , fn  ),	\ 	    __tg_generic_full(y, cfnl, cfn , cfnf, fnl , fn  , fnf ))	\ 	    (__VA_ARGS__)
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+literal|"<tgmath.h> not implemented for this compiler"
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Macros to save lots of repetition below */

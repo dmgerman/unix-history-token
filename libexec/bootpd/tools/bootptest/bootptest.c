@@ -693,7 +693,7 @@ block|{
 case|case
 literal|'f'
 case|:
-comment|/* File name to reqest. */
+comment|/* File name to request. */
 if|if
 condition|(
 name|argc

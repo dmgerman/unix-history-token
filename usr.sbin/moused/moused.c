@@ -17050,8 +17050,6 @@ decl_stmt|;
 specifier|static
 name|struct
 name|timespec
-name|old
-decl_stmt|,
 name|now
 decl_stmt|;
 name|int
@@ -17292,10 +17290,6 @@ operator|=
 name|y
 expr_stmt|;
 block|}
-name|old
-operator|=
-name|now
-expr_stmt|;
 name|act
 operator|->
 name|dx

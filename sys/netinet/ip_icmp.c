@@ -316,7 +316,7 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable rate limiting of ICMP responses"
+literal|"Enable logging of ICMP response rate limiting"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

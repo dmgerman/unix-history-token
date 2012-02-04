@@ -2662,7 +2662,9 @@ condition|)
 block|{
 comment|/* 			 * This can happen when the key is yanked after the 			 * frame was queued.  Just discard the frame; the 			 * 802.11 layer counts failures and provides 			 * debugging/diagnostics. 			 */
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 comment|/* 		 * Adjust the packet + header lengths for the crypto 		 * additions and calculate the h/w key index.  When 		 * a s/w mic is done the frame will have had any mic 		 * added to it prior to entry so m0->m_pkthdr.len will 		 * account for it. Otherwise we need to add it to the 		 * packet length. 		 */
@@ -2780,7 +2782,9 @@ operator|=
 name|HAL_TXKEYIX_INVALID
 expr_stmt|;
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -2851,7 +2855,9 @@ operator|.
 name|shortPreamble
 expr_stmt|;
 return|return
+operator|(
 name|ctsrate
+operator|)
 return|;
 block|}
 end_function
@@ -2928,8 +2934,10 @@ name|rateCode
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* 	 * Compute the transmit duration based on the frame 	 * size and the size of an ACK frame.  We call into the 	 * HAL to do the computation since it depends on the 	 * characteristics of the actual PHY being used. 	 * 	 * NB: CTS is assumed the same size as an ACK so we can 	 *     use the precalculated ACK durations. 	 */
@@ -3053,7 +3061,9 @@ name|lpAckDuration
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|ctsduration
+operator|)
 return|;
 block|}
 end_function
@@ -7697,7 +7707,8 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: re-added? tid=%d, seqno %d; window %d:%d; baw head=%d tail=%d\n"
+literal|"%s: re-added? tid=%d, seqno %d; window %d:%d; "
+literal|"baw head=%d tail=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -7772,7 +7783,8 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
-literal|"%s: tid=%d, seqno %d; window %d:%d; index=%d cindex=%d baw head=%d tail=%d\n"
+literal|"%s: tid=%d, seqno %d; window %d:%d; index=%d cindex=%d "
+literal|"baw head=%d tail=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -8267,7 +8279,8 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_BAW
 argument_list|,
-literal|"%s: tid=%d, baw=%d:%d, seqno=%d, index=%d, cindex=%d, baw head=%d, tail=%d\n"
+literal|"%s: tid=%d, baw=%d:%d, seqno=%d, index=%d, cindex=%d, "
+literal|"baw head=%d, tail=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -9214,6 +9227,17 @@ name|paused
 condition|)
 block|{
 comment|/* TID is paused, queue */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: paused\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ATH_TXQ_INSERT_TAIL
 argument_list|(
 name|atid
@@ -9238,6 +9262,17 @@ argument_list|)
 condition|)
 block|{
 comment|/* AMPDU pending; queue */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: pending\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ATH_TXQ_INSERT_TAIL
 argument_list|(
 name|atid
@@ -9273,6 +9308,7 @@ name|sc
 operator|->
 name|sc_hwq_limit
 condition|)
+block|{
 name|ath_tx_xmit_aggr
 argument_list|(
 name|sc
@@ -9282,8 +9318,31 @@ argument_list|,
 name|bf
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: xmit_aggr\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
 else|else
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: ampdu; swq'ing\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ATH_TXQ_INSERT_TAIL
 argument_list|(
 name|atid
@@ -9315,6 +9374,17 @@ name|sc_hwq_limit
 condition|)
 block|{
 comment|/* AMPDU not running, attempt direct dispatch */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: xmit_normal\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ath_tx_xmit_normal
 argument_list|(
 name|sc
@@ -9328,6 +9398,17 @@ block|}
 else|else
 block|{
 comment|/* Busy; queue */
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: swq'ing\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ATH_TXQ_INSERT_TAIL
 argument_list|(
 name|atid
@@ -9803,8 +9884,8 @@ name|sc_dev
 argument_list|,
 literal|"%s: node %p: tid %d: txq_depth=%d, "
 literal|"txq_aggr_depth=%d, sched=%d, paused=%d, "
-literal|"hwq_depth=%d, incomp=%d, baw_head=%d, baw_tail=%d "
-literal|"txa_start=%d, ni_txseqs=%d\n"
+literal|"hwq_depth=%d, incomp=%d, baw_head=%d, "
+literal|"baw_tail=%d txa_start=%d, ni_txseqs=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12897,7 +12978,8 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
-literal|"%s: txa_start=%d, tx_ok=%d, status=%.8x, flags=%.8x, isaggr=%d, seq_st=%d, hasba=%d, ba=%.8x, %.8x\n"
+literal|"%s: txa_start=%d, tx_ok=%d, status=%.8x, flags=%.8x, "
+literal|"isaggr=%d, seq_st=%d, hasba=%d, ba=%.8x, %.8x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -12983,7 +13065,8 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: AR5416 bug: hasba=%d; txok=%d, isaggr=%d, seq_st=%d\n"
+literal|"%s: AR5416 bug: hasba=%d; txok=%d, isaggr=%d, "
+literal|"seq_st=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13600,7 +13683,7 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX
 argument_list|,
-literal|"%s: bf=%p: tid=%d, hwq_depth=%d\n"
+literal|"%s: bf=%p: tid=%d, hwq_depth=%d, seqno=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -13615,6 +13698,15 @@ argument_list|,
 name|atid
 operator|->
 name|hwq_depth
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|atid
@@ -13665,6 +13757,17 @@ name|ac
 index|]
 argument_list|)
 expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: cleanup_unaggr\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ath_tx_comp_cleanup_unaggr
 argument_list|(
 name|sc
@@ -13698,6 +13801,17 @@ name|atid
 operator|->
 name|ac
 index|]
+argument_list|)
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_SW_TX
+argument_list|,
+literal|"%s: retry_unaggr\n"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
 name|ath_tx_aggr_retry_unaggr
@@ -14315,7 +14429,8 @@ name|sc
 argument_list|,
 name|ATH_DEBUG_SW_TX_AGGR
 argument_list|,
-literal|"%s: multi-frame aggregate: %d frames, length %d\n"
+literal|"%s: multi-frame aggregate: %d frames, "
+literal|"length %d\n"
 argument_list|,
 name|__func__
 argument_list|,

@@ -69,6 +69,13 @@ name|SNMP_DEFAULT_LOCAL
 value|"/var/run/snmpd.sock"
 end_define
 
+begin_define
+define|#
+directive|define
+name|SNMP_MAX_REPETITIONS
+value|10
+end_define
+
 begin_enum
 enum|enum
 name|snmp_access
@@ -1901,6 +1908,10 @@ modifier|*
 parameter_list|,
 name|struct
 name|snmp_pdu
+modifier|*
+parameter_list|,
+name|struct
+name|asn_oid
 modifier|*
 parameter_list|)
 function_decl|;

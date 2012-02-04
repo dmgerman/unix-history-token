@@ -207,10 +207,6 @@ name|change
 init|=
 literal|0
 decl_stmt|,
-name|verbose
-init|=
-literal|0
-decl_stmt|,
 name|force
 init|=
 literal|0
@@ -308,10 +304,7 @@ break|break;
 case|case
 literal|'v'
 case|:
-name|verbose
-operator|=
-literal|1
-expr_stmt|;
+comment|/* does nothing */
 break|break;
 case|case
 literal|'t'

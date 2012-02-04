@@ -708,12 +708,6 @@ expr_stmt|;
 block|}
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_snd
 operator|.
 name|ifq_maxlen

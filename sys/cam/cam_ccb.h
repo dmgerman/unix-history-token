@@ -3700,6 +3700,10 @@ define|#
 directive|define
 name|CDAI_TYPE_PHYS_PATH
 value|3
+define|#
+directive|define
+name|CDAI_TYPE_RCAPLONG
+value|4
 name|off_t
 name|bufsiz
 decl_stmt|;

@@ -664,6 +664,12 @@ name|DOSPTYP_LINRAID
 block|,
 name|G_PART_ALIAS_LINUX_RAID
 block|}
+block|,
+block|{
+name|DOSPTYP_PPCBOOT
+block|,
+name|G_PART_ALIAS_FREEBSD_BOOT
+block|}
 block|, }
 struct|;
 end_struct
@@ -1737,7 +1743,7 @@ name|g_part_mbr_entry
 modifier|*
 name|entry
 decl_stmt|;
-comment|/* Allow dumping to a FreeBSD partition only. */
+comment|/* Allow dumping to a FreeBSD partition or Linux swap partition only. */
 name|entry
 operator|=
 operator|(
@@ -1757,6 +1763,14 @@ operator|.
 name|dp_typ
 operator|==
 name|DOSPTYP_386BSD
+operator|||
+name|entry
+operator|->
+name|ent
+operator|.
+name|dp_typ
+operator|==
+name|DOSPTYP_LINSWP
 operator|)
 condition|?
 literal|1

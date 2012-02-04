@@ -256,11 +256,13 @@ operator|&
 name|null_hashmtx
 argument_list|)
 expr_stmt|;
-name|free
+name|hashdestroy
 argument_list|(
 name|null_node_hashtbl
 argument_list|,
 name|M_NULLFSHASH
+argument_list|,
+name|null_node_hash
 argument_list|)
 expr_stmt|;
 return|return

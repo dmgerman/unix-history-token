@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -949,6 +955,21 @@ block|}
 name|vp
 operator|=
 name|nvp
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_bsize
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"nfscl_nget: bo_bsize == 0"
+operator|)
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->

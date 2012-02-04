@@ -2099,6 +2099,15 @@ name|v_vflag
 operator|&
 name|VV_TEXT
 expr_stmt|;
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|"vv_text"
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
@@ -2237,6 +2246,16 @@ name|textset
 operator|==
 literal|0
 condition|)
+block|{
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|"vv_text"
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
@@ -2246,6 +2265,7 @@ operator|&=
 operator|~
 name|VV_TEXT
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|ENOEXEC
@@ -2622,7 +2642,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3023,7 +3043,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3342,7 +3362,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3573,7 +3593,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)

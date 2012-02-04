@@ -10337,12 +10337,6 @@ name|bxe_init
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_hwassist
 operator|=
 name|BXE_IF_HWASSIST

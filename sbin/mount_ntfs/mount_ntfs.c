@@ -674,13 +674,23 @@ operator||=
 name|MNT_RDONLY
 expr_stmt|;
 block|}
-comment|/* 	 * Resolve the mountpoint with realpath(3) and remove unnecessary  	 * slashes from the devicename if there are any. 	 */
-operator|(
-name|void
-operator|)
+comment|/* 	 * Resolve the mountpoint with realpath(3) and remove unnecessary 	 * slashes from the devicename if there are any. 	 */
+if|if
+condition|(
 name|checkpath
 argument_list|(
 name|dir
+argument_list|,
+name|mntpath
+argument_list|)
+operator|!=
+literal|0
+condition|)
+name|err
+argument_list|(
+name|EX_USAGE
+argument_list|,
+literal|"%s"
 argument_list|,
 name|mntpath
 argument_list|)

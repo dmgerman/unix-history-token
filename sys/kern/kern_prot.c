@@ -182,7 +182,7 @@ name|FEATURE
 argument_list|(
 name|regression
 argument_list|,
-literal|"Kernel support for interfaces nessesary for regression testing (SECURITY RISK!)"
+literal|"Kernel support for interfaces necessary for regression testing (SECURITY RISK!)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

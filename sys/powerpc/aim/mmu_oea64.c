@@ -32,6 +32,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kstack_pages.h"
 end_include
 
@@ -6588,6 +6594,13 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|elf32_nxstack
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 name|void
 name|moea64_init
@@ -6682,6 +6695,15 @@ name|moea64_uma_page_alloc
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|COMPAT_FREEBSD32
+name|elf32_nxstack
+operator|=
+literal|1
+expr_stmt|;
+endif|#
+directive|endif
 name|moea64_initialized
 operator|=
 name|TRUE

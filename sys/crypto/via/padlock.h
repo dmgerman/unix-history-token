@@ -289,6 +289,7 @@ name|ses_next
 expr_stmt|;
 name|struct
 name|fpu_kern_ctx
+modifier|*
 name|ses_fpu_ctx
 decl_stmt|;
 block|}

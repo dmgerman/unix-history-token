@@ -314,6 +314,7 @@ begin_decl_stmt
 specifier|static
 name|struct
 name|fpu_kern_ctx
+modifier|*
 name|fpu_ctx_save
 decl_stmt|;
 end_decl_stmt
@@ -531,6 +532,13 @@ argument_list|,
 name|MTX_DEF
 argument_list|)
 expr_stmt|;
+name|fpu_ctx_save
+operator|=
+name|fpu_kern_alloc_ctx
+argument_list|(
+name|FPU_KERN_NORMAL
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -541,6 +549,11 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|fpu_kern_free_ctx
+argument_list|(
+name|fpu_ctx_save
+argument_list|)
+expr_stmt|;
 name|mtx_destroy
 argument_list|(
 operator|&
@@ -589,7 +602,6 @@ name|fpu_kern_enter
 argument_list|(
 name|curthread
 argument_list|,
-operator|&
 name|fpu_ctx_save
 argument_list|,
 name|FPU_KERN_NORMAL
@@ -783,7 +795,6 @@ name|fpu_kern_leave
 argument_list|(
 name|curthread
 argument_list|,
-operator|&
 name|fpu_ctx_save
 argument_list|)
 expr_stmt|;

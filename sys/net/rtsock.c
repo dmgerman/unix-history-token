@@ -8294,6 +8294,14 @@ name|info
 operator|.
 name|rti_addrs
 expr_stmt|;
+name|ifam
+operator|->
+name|ifam_data
+operator|=
+name|ifa
+operator|->
+name|if_data
+expr_stmt|;
 if|if
 condition|(
 name|carp_get_vhid_p

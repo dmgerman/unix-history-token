@@ -3613,7 +3613,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|&
-name|rxs
+name|txs
 argument_list|)
 expr_stmt|;
 operator|(
@@ -3628,7 +3628,7 @@ argument_list|,
 literal|1
 argument_list|,
 operator|&
-name|txs
+name|rxs
 argument_list|)
 expr_stmt|;
 name|ath_hal_getrxchainmask
@@ -10336,6 +10336,17 @@ name|rfilt
 operator||=
 name|HAL_RX_FILTER_COMPBAR
 expr_stmt|;
+comment|/* 	 * Enable radar PHY errors if requested by the 	 * DFS module. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_dodfs
+condition|)
+name|rfilt
+operator||=
+name|HAL_RX_FILTER_PHYRADAR
+expr_stmt|;
 name|DPRINTF
 argument_list|(
 name|sc
@@ -11276,6 +11287,25 @@ operator|=
 name|avp
 operator|->
 name|av_bcbuf
+expr_stmt|;
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_NODE
+argument_list|,
+literal|"%s: bf_m=%p, bf_node=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|bf
+operator|->
+name|bf_m
+argument_list|,
+name|bf
+operator|->
+name|bf_node
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -13363,6 +13393,27 @@ modifier|*
 name|bf
 parameter_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_NODE
+argument_list|,
+literal|"%s: free bf=%p, bf_m=%p, bf_node=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|bf
+argument_list|,
+name|bf
+operator|->
+name|bf_m
+argument_list|,
+name|bf
+operator|->
+name|bf_node
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bf
@@ -13464,6 +13515,27 @@ argument_list|,
 argument|bf_list
 argument_list|)
 block|{
+name|DPRINTF
+argument_list|(
+name|sc
+argument_list|,
+name|ATH_DEBUG_NODE
+argument_list|,
+literal|"%s: free bf=%p, bf_m=%p, bf_node=%p\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|bf
+argument_list|,
+name|bf
+operator|->
+name|bf_m
+argument_list|,
+name|bf
+operator|->
+name|bf_node
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bf
@@ -17261,6 +17333,8 @@ name|nf
 decl_stmt|;
 name|u_int64_t
 name|tsf
+decl_stmt|,
+name|rstamp
 decl_stmt|;
 name|int
 name|npkts
@@ -17538,6 +17612,20 @@ expr_stmt|;
 name|npkts
 operator|++
 expr_stmt|;
+comment|/* 		 * Calculate the correct 64 bit TSF given 		 * the TSF64 register value and rs_tstamp. 		 */
+name|rstamp
+operator|=
+name|ath_extend_tsf
+argument_list|(
+name|sc
+argument_list|,
+name|rs
+operator|->
+name|rs_tstamp
+argument_list|,
+name|tsf
+argument_list|)
+expr_stmt|;
 comment|/* These aren't specifically errors */
 ifdef|#
 directive|ifdef
@@ -17737,7 +17825,7 @@ name|char
 operator|*
 argument_list|)
 argument_list|,
-name|tsf
+name|rstamp
 argument_list|,
 name|rs
 argument_list|)
@@ -17972,7 +18060,7 @@ name|m
 argument_list|,
 name|rs
 argument_list|,
-name|tsf
+name|rstamp
 argument_list|,
 name|nf
 argument_list|)
@@ -18246,7 +18334,7 @@ name|m
 argument_list|,
 name|rs
 argument_list|,
-name|tsf
+name|rstamp
 argument_list|,
 name|nf
 argument_list|)
@@ -29083,6 +29171,12 @@ argument_list|)
 condition|)
 block|{
 comment|/* DFS event found, initiate channel change */
+comment|/* 		 * XXX doesn't currently tell us whether the event 		 * XXX was found in the primary or extension 		 * XXX channel! 		 */
+name|IEEE80211_LOCK
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 name|ieee80211_dfs_notify_radar
 argument_list|(
 name|ic
@@ -29090,6 +29184,11 @@ argument_list|,
 name|sc
 operator|->
 name|sc_curchan
+argument_list|)
+expr_stmt|;
+name|IEEE80211_UNLOCK
+argument_list|(
+name|ic
 argument_list|)
 expr_stmt|;
 block|}

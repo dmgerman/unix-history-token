@@ -75,15 +75,17 @@ expr_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|elements
-operator|<=
-literal|0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"hashinit: bad elements"
+name|elements
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"%s: bad elements"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
 comment|/* Exactly one of HASH_WAITOK and HASH_NOWAIT must be set. */
@@ -308,17 +310,18 @@ condition|;
 name|hp
 operator|++
 control|)
-if|if
-condition|(
-operator|!
+name|KASSERT
+argument_list|(
 name|LIST_EMPTY
 argument_list|(
 name|hp
 argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"hashdestroy: hash not empty"
+argument_list|,
+operator|(
+literal|"%s: hash not empty"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -440,15 +443,17 @@ expr_stmt|;
 name|int
 name|i
 decl_stmt|;
-if|if
-condition|(
-name|elements
-operator|<=
-literal|0
-condition|)
-name|panic
+name|KASSERT
 argument_list|(
-literal|"phashinit: bad elements"
+name|elements
+operator|>
+literal|0
+argument_list|,
+operator|(
+literal|"%s: bad elements"
+operator|,
+name|__func__
+operator|)
 argument_list|)
 expr_stmt|;
 for|for

@@ -258,6 +258,17 @@ begin_comment
 comment|/* enable SIMD/MMX2 to use except 16 */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|CR4_XSAVE
+value|0x00040000
+end_define
+
+begin_comment
+comment|/* XSETBV/XGETBV */
+end_comment
+
 begin_comment
 comment|/*  * Bits in AMD64 special registers.  EFER is 64 bits wide.  */
 end_comment
@@ -305,6 +316,50 @@ end_define
 begin_comment
 comment|/* PTE No-Execute bit enable (R/W) */
 end_comment
+
+begin_comment
+comment|/*  * Intel Extended Features registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XCR0
+value|0
+end_define
+
+begin_comment
+comment|/* XFEATURE_ENABLED_MASK register */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_X87
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_SSE
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_ENABLED_AVX
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|XFEATURE_AVX
+define|\
+value|(XFEATURE_ENABLED_X87 | XFEATURE_ENABLED_SSE | XFEATURE_ENABLED_AVX)
+end_define
 
 begin_comment
 comment|/*  * CPUID instruction features register  */

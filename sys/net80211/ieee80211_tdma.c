@@ -50,6 +50,12 @@ directive|include
 file|"opt_wlan.h"
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_TDMA
+end_ifdef
+
 begin_include
 include|#
 directive|include
@@ -3674,6 +3680,15 @@ name|tdma_ioctl_set80211
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IEEE80211_SUPPORT_TDMA */
+end_comment
 
 end_unit
 

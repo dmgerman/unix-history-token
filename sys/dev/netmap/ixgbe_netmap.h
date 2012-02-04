@@ -486,7 +486,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  * This routine might be called frequently so it must be efficient.  *  * Userspace has filled tx slots up to ring->cur (excluded).  * The last unused slot previously known to the kernel was kring->nkr_hwcur,  * and the last interrupt reported kring->nr_hwavail slots available.  *  * This function runs under lock (acquired from the caller or internally).  * It must first update ring->avail to what the kernel knows,  * subtract the newly used slots (ring->cur - kring->nkr_hwcur)  * from both avail and nr_hwavail, and set ring->nkr_hwcur = ring->cur  * issuing a dmamap_sync on all slots.  *  * Since ring comes from userspace, its content must be read only once,  * and validated before being used to update the kernel's structures.  * (this is also true for every use of ring in the kernel).  *  * ring->avail is never used, only checked for bogus values.  */
+comment|/*  * Reconcile kernel and user view of the transmit ring.  * This routine might be called frequently so it must be efficient.  *  * Userspace has filled tx slots up to ring->cur (excluded).  * The last unused slot previously known to the kernel was kring->nkr_hwcur,  * and the last interrupt reported kring->nr_hwavail slots available.  *  * This function runs under lock (acquired from the caller or internally).  * It must first update ring->avail to what the kernel knows,  * subtract the newly used slots (ring->cur - kring->nkr_hwcur)  * from both avail and nr_hwavail, and set ring->nkr_hwcur = ring->cur  * issuing a dmamap_sync on all slots.  *  * Since ring comes from userspace, its content must be read only once,  * and validated before being used to update the kernel's structures.  * (this is also true for every use of ring in the kernel).  *  * ring->avail is never used, only checked for bogus values.  *  * do_lock is set iff the function is called from the ioctl handler.  * In this case, grab a lock around the body, and also reclaim transmitted  * buffers irrespective of interrupt mitigation.  */
 end_comment
 
 begin_function
@@ -714,7 +714,7 @@ operator|!=
 name|k
 condition|)
 block|{
-comment|/* 			 * Collect per-slot info. 			 * Note that txbuf and curr are indexed by l. 			 * 			 * In this driver we collect the buffer address 			 * (using the NMB() macro) because we always 			 * need to rewrite it into the NIC ring. 			 * Many other drivers preserve the address, so 			 * we only need to access it if NS_BUF_CHANGED 			 * is set. 			 */
+comment|/* 			 * Collect per-slot info. 			 * Note that txbuf and curr are indexed by l. 			 * 			 * In this driver we collect the buffer address 			 * (using the PNMB() macro) because we always 			 * need to rewrite it into the NIC ring. 			 * Many other drivers preserve the address, so 			 * we only need to access it if NS_BUF_CHANGED 			 * is set. 			 */
 name|struct
 name|netmap_slot
 modifier|*
@@ -754,13 +754,19 @@ index|[
 name|l
 index|]
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
 init|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 decl_stmt|;
 comment|// XXX type for flags and len ?
@@ -842,10 +848,7 @@ name|buffer_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 name|curr
@@ -854,7 +857,12 @@ name|read
 operator|.
 name|olinfo_status
 operator|=
-literal|0
+name|htole32
+argument_list|(
+name|len
+operator|<<
+name|IXGBE_ADVTXD_PAYLEN_SHIFT
+argument_list|)
 expr_stmt|;
 name|curr
 operator|->
@@ -872,6 +880,8 @@ name|len
 operator||
 operator|(
 name|IXGBE_ADVTXD_DTYP_DATA
+operator||
+name|IXGBE_ADVTXD_DCMD_DEXT
 operator||
 name|IXGBE_ADVTXD_DCMD_IFCS
 operator||
@@ -903,10 +913,6 @@ operator|->
 name|map
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 name|slot
@@ -1016,19 +1022,154 @@ name|l
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * If no packets are sent, or there is no room in the tx ring, 	 * Check whether there are completed transmissions. 	 * Because this is expensive (we need a register etc.) 	 * we only do it if absolutely necessary, i.e. there is no room 	 * in the tx ring, or where were no completed transmissions 	 * (meaning that probably the caller really wanted to check 	 * for completed transmissions). 	 */
+comment|/* 	 * Reclaim buffers for completed transmissions. 	 * Because this is expensive (we read a NIC register etc.) 	 * we only do it in specific cases (see below). 	 * In all cases kring->nr_kflags indicates which slot will be 	 * checked upon a tx interrupt (nkr_num_slots means none). 	 */
 if|if
 condition|(
-name|n
-operator|==
-literal|0
-operator|||
+name|do_lock
+condition|)
+block|{
+name|j
+operator|=
+literal|1
+expr_stmt|;
+comment|/* forced reclaim, ignore interrupts */
+name|kring
+operator|->
+name|nr_kflags
+operator|=
+name|kring
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
 name|kring
 operator|->
 name|nr_hwavail
-operator|<
-literal|1
+operator|>
+literal|0
 condition|)
+block|{
+name|j
+operator|=
+literal|0
+expr_stmt|;
+comment|/* buffers still available: no reclaim, ignore intr. */
+name|kring
+operator|->
+name|nr_kflags
+operator|=
+name|kring
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * no buffers available, locate a slot for which we request 		 * ReportStatus (approximately half ring after next_to_clean) 		 * and record it in kring->nr_kflags. 		 * If the slot has DD set, do the reclaim looking at TDH, 		 * otherwise we go to sleep (in netmap_poll()) and will be 		 * woken up when slot nr_kflags will be ready. 		 */
+name|struct
+name|ixgbe_legacy_tx_desc
+modifier|*
+name|txd
+init|=
+operator|(
+expr|struct
+name|ixgbe_legacy_tx_desc
+operator|*
+operator|)
+name|txr
+operator|->
+name|tx_base
+decl_stmt|;
+name|j
+operator|=
+name|txr
+operator|->
+name|next_to_clean
+operator|+
+name|kring
+operator|->
+name|nkr_num_slots
+operator|/
+literal|2
+expr_stmt|;
+if|if
+condition|(
+name|j
+operator|>=
+name|kring
+operator|->
+name|nkr_num_slots
+condition|)
+name|j
+operator|-=
+name|kring
+operator|->
+name|nkr_num_slots
+expr_stmt|;
+comment|// round to the closest with dd set
+name|j
+operator|=
+operator|(
+name|j
+operator|<
+name|kring
+operator|->
+name|nkr_num_slots
+operator|/
+literal|4
+operator|||
+name|j
+operator|>=
+name|kring
+operator|->
+name|nkr_num_slots
+operator|*
+literal|3
+operator|/
+literal|4
+operator|)
+condition|?
+literal|0
+else|:
+name|report_frequency
+expr_stmt|;
+name|kring
+operator|->
+name|nr_kflags
+operator|=
+name|j
+expr_stmt|;
+comment|/* the slot to check */
+name|j
+operator|=
+name|txd
+index|[
+name|j
+index|]
+operator|.
+name|upper
+operator|.
+name|fields
+operator|.
+name|status
+operator|&
+name|IXGBE_TXD_STAT_DD
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|j
+condition|)
+block|{
+name|netmap_skip_txsync
+operator|++
+expr_stmt|;
+block|}
+else|else
 block|{
 name|int
 name|delta
@@ -1149,7 +1290,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the receive ring.  * Same as for the txsync, this routine must be efficient and  * avoid races in accessing the shared regions.  *  * When called, userspace has read data from slots kring->nr_hwcur  * up to ring->cur (excluded).  *  * The last interrupt reported kring->nr_hwavail slots available  * after kring->nr_hwcur.  * We must subtract the newly consumed slots (cur - nr_hwcur)  * from nr_hwavail, make the descriptors available for the next reads,  * and set kring->nr_hwcur = ring->cur and ring->avail = kring->nr_hwavail.  */
+comment|/*  * Reconcile kernel and user view of the receive ring.  * Same as for the txsync, this routine must be efficient and  * avoid races in accessing the shared regions.  *  * When called, userspace has read data from slots kring->nr_hwcur  * up to ring->cur (excluded).  *  * The last interrupt reported kring->nr_hwavail slots available  * after kring->nr_hwcur.  * We must subtract the newly consumed slots (cur - nr_hwcur)  * from nr_hwavail, make the descriptors available for the next reads,  * and set kring->nr_hwcur = ring->cur and ring->avail = kring->nr_hwavail.  *  * do_lock has a special meaning: please refer to txsync.  */
 end_comment
 
 begin_function
@@ -1238,6 +1379,17 @@ operator|->
 name|nkr_num_slots
 operator|-
 literal|1
+decl_stmt|;
+name|int
+name|force_update
+init|=
+name|do_lock
+operator|||
+name|kring
+operator|->
+name|nr_kflags
+operator|&
+name|NKR_PENDINTR
 decl_stmt|;
 name|k
 operator|=
@@ -1355,6 +1507,11 @@ name|lim
 operator|+
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|force_update
+condition|)
+block|{
 for|for
 control|(
 name|n
@@ -1490,6 +1647,14 @@ operator|+=
 name|n
 expr_stmt|;
 block|}
+name|kring
+operator|->
+name|nr_kflags
+operator|&=
+operator|~
+name|NKR_PENDINTR
+expr_stmt|;
+block|}
 comment|/* 	 * Skip past packets that userspace has already processed 	 * (from kring->nr_hwcur to ring->cur excluded), and make 	 * the buffers available for reception. 	 * As usual j is the index in the netmap ring, l is the index 	 * in the NIC ring, and j == (l + kring->nkr_hwofs) % ring_size 	 */
 name|j
 operator|=
@@ -1578,13 +1743,19 @@ index|[
 name|l
 index|]
 decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
 name|void
 modifier|*
 name|addr
 init|=
-name|NMB
+name|PNMB
 argument_list|(
 name|slot
+argument_list|,
+operator|&
+name|paddr
 argument_list|)
 decl_stmt|;
 if|if
@@ -1615,10 +1786,7 @@ name|pkt_addr
 operator|=
 name|htole64
 argument_list|(
-name|vtophys
-argument_list|(
-name|addr
-argument_list|)
+name|paddr
 argument_list|)
 expr_stmt|;
 if|if
@@ -1641,10 +1809,6 @@ operator|->
 name|pmap
 argument_list|,
 name|addr
-argument_list|,
-name|na
-operator|->
-name|buff_size
 argument_list|)
 expr_stmt|;
 name|slot
