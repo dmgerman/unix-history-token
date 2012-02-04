@@ -3428,7 +3428,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|sc
+name|ps3fb
 argument_list|,
 name|nexus
 argument_list|,
