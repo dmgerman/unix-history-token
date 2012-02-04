@@ -781,6 +781,17 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+if|if
+condition|(
+name|OF_getproplen
+argument_list|(
+name|node
+argument_list|,
+literal|"ranges"
+argument_list|)
+operator|<=
+literal|0
+condition|)
 name|sc
 operator|->
 name|pci_sc
@@ -959,6 +970,8 @@ decl_stmt|,
 name|irq
 decl_stmt|;
 name|u_int
+name|b
+decl_stmt|,
 name|f
 decl_stmt|,
 name|s
@@ -991,6 +1004,15 @@ operator|-
 literal|1
 condition|)
 return|return;
+name|b
+operator|=
+name|OFW_PCI_PHYS_HI_BUS
+argument_list|(
+name|pcir
+operator|.
+name|phys_hi
+argument_list|)
+expr_stmt|;
 name|s
 operator|=
 name|OFW_PCI_PHYS_HI_DEVICE
@@ -1030,7 +1052,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1051,7 +1073,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1079,7 +1101,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1099,7 +1121,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1121,7 +1143,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1150,7 +1172,7 @@ name|PCIB_WRITE_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1171,7 +1193,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1229,7 +1251,7 @@ name|PCIB_WRITE_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1256,7 +1278,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1274,7 +1296,7 @@ name|PCIB_WRITE_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1368,7 +1390,7 @@ name|PCIB_WRITE_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1402,7 +1424,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
@@ -1424,7 +1446,7 @@ name|PCIB_READ_CONFIG
 argument_list|(
 name|dev
 argument_list|,
-literal|0
+name|b
 argument_list|,
 name|s
 argument_list|,
