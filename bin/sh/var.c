@@ -2623,7 +2623,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|INTON
+name|INTOFF
 expr_stmt|;
 name|vars
 operator|=
@@ -2787,7 +2787,7 @@ argument_list|(
 name|vars
 argument_list|)
 expr_stmt|;
-name|INTOFF
+name|INTON
 expr_stmt|;
 return|return
 literal|0
