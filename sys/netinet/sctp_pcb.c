@@ -31582,25 +31582,6 @@ return|;
 block|}
 end_function
 
-begin_decl_stmt
-specifier|static
-name|sctp_assoc_t
-name|reneged_asoc_ids
-index|[
-literal|256
-index|]
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|static
-name|uint8_t
-name|reneged_at
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
 begin_function
 specifier|static
 name|void
@@ -32106,19 +32087,6 @@ name|SCTP_OUTPUT_FROM_DRAIN
 argument_list|,
 name|SCTP_SO_NOT_LOCKED
 argument_list|)
-expr_stmt|;
-name|reneged_asoc_ids
-index|[
-name|reneged_at
-index|]
-operator|=
-name|sctp_get_associd
-argument_list|(
-name|stcb
-argument_list|)
-expr_stmt|;
-name|reneged_at
-operator|++
 expr_stmt|;
 block|}
 comment|/* 	 * Another issue, in un-setting the TSN's in the mapping array we 	 * DID NOT adjust the highest_tsn marker.  This will cause one of 	 * two things to occur. It may cause us to do extra work in checking 	 * for our mapping array movement. More importantly it may cause us 	 * to SACK every datagram. This may not be a bad thing though since 	 * we will recover once we get our cum-ack above and all this stuff 	 * we dumped recovered. 	 */
