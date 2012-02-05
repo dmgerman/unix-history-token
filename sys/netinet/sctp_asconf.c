@@ -374,7 +374,9 @@ literal|"asconf_success_response: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|aph
@@ -444,7 +446,9 @@ name|param_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -535,7 +539,9 @@ literal|"asconf_error_response: couldn't get mbuf!\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|aph
@@ -643,7 +649,9 @@ argument_list|)
 expr_stmt|;
 comment|/* discard */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 if|if
@@ -713,7 +721,9 @@ name|param_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -898,7 +908,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v4addr
@@ -1045,7 +1057,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v6addr
@@ -1191,7 +1205,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* end switch */
@@ -1385,7 +1401,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -1433,8 +1451,10 @@ condition|)
 block|{
 comment|/* not found */
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 comment|/* delete all destination addresses except the source */
@@ -1513,7 +1533,9 @@ expr_stmt|;
 block|}
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1702,7 +1724,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v4addr
@@ -1819,7 +1843,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v6addr
@@ -1946,7 +1972,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* make sure the source address is not being deleted */
@@ -1994,7 +2022,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* if deleting 0.0.0.0/::0, delete all addresses except src addr */
@@ -2074,7 +2104,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* delete the address */
@@ -2157,7 +2189,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -2329,7 +2363,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v4addr
@@ -2438,7 +2474,9 @@ condition|)
 block|{
 comment|/* invalid param size */
 return|return
+operator|(
 name|NULL
+operator|)
 return|;
 block|}
 name|v6addr
@@ -2560,7 +2598,9 @@ name|aparam_length
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 comment|/* if 0.0.0.0/::0, use the source address instead */
@@ -2874,7 +2914,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|m_reply
+operator|)
 return|;
 block|}
 end_function
@@ -11113,11 +11155,15 @@ operator|)
 condition|)
 block|{
 return|return
+operator|(
 literal|1
+operator|)
 return|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

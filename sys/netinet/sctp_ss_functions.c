@@ -1323,9 +1323,11 @@ name|asoc
 parameter_list|)
 block|{
 return|return
+operator|(
 name|asoc
 operator|->
 name|last_out_stream
+operator|)
 return|;
 block|}
 end_function

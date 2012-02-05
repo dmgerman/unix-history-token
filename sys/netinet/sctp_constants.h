@@ -1694,7 +1694,7 @@ name|SCTP_SIZE32
 parameter_list|(
 name|x
 parameter_list|)
-value|((((x)+3)>> 2)<< 2)
+value|((((x) + 3)>> 2)<< 2)
 end_define
 
 begin_define
@@ -4306,7 +4306,7 @@ name|tsn
 parameter_list|,
 name|mapping_tsn
 parameter_list|)
-value|do { \ 	                if (tsn>= mapping_tsn) { \ 						gap = tsn - mapping_tsn; \ 					} else { \ 						gap = (MAX_TSN - mapping_tsn) + tsn + 1; \ 					} \                   } while(0)
+value|do { \ 	                if (tsn>= mapping_tsn) { \ 						gap = tsn - mapping_tsn; \ 					} else { \ 						gap = (MAX_TSN - mapping_tsn) + tsn + 1; \ 					} \                   } while (0)
 end_define
 
 begin_define

@@ -1814,7 +1814,9 @@ literal|8
 operator|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 if|if
@@ -1843,7 +1845,9 @@ name|EPERM
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EPERM
+operator|)
 return|;
 block|}
 name|LIST_FOREACH
@@ -2034,7 +2038,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|SCTP_INP_INFO_RLOCK
@@ -2067,7 +2073,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|LIST_FOREACH
@@ -2488,7 +2496,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|SCTP_INP_INFO_RLOCK
@@ -2533,7 +2543,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|TAILQ_FOREACH
@@ -2776,7 +2788,9 @@ literal|1
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|SCTP_INP_INFO_RLOCK
@@ -2859,7 +2873,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|SCTP_INP_INFO_RLOCK
@@ -2930,7 +2946,9 @@ name|error
 condition|)
 block|{
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|skip
@@ -2983,7 +3001,9 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

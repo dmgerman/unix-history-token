@@ -6638,15 +6638,6 @@ block|{
 name|uint8_t
 name|net_was_pf
 decl_stmt|;
-name|net_was_pf
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
-name|net
-condition|)
-block|{
 if|if
 condition|(
 name|net
@@ -6659,6 +6650,13 @@ block|{
 name|net_was_pf
 operator|=
 literal|1
+expr_stmt|;
+block|}
+else|else
+block|{
+name|net_was_pf
+operator|=
+literal|0
 expr_stmt|;
 block|}
 if|if
@@ -6679,7 +6677,7 @@ operator|.
 name|_s_addr
 condition|)
 block|{
-comment|/* 				 * Invalidate the src address if we did not 				 * get a response last time. 				 */
+comment|/* 			 * Invalidate the src address if we did not get a 			 * response last time. 			 */
 name|sctp_free_ifa
 argument_list|(
 name|net
@@ -6757,7 +6755,6 @@ name|partial_bytes_acked
 operator|=
 literal|0
 expr_stmt|;
-block|}
 block|}
 if|if
 condition|(
