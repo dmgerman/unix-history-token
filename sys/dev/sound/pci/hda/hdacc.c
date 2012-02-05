@@ -3711,7 +3711,6 @@ operator|)
 operator|!=
 name|NULL
 condition|)
-empty_stmt|;
 name|HDAC_STREAM_INTR
 argument_list|(
 name|child
