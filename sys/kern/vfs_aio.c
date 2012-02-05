@@ -13297,6 +13297,17 @@ argument_list|,
 name|sigev_notify_kqueue
 argument_list|)
 expr_stmt|;
+name|CP
+argument_list|(
+operator|*
+name|sig32
+argument_list|,
+operator|*
+name|sig
+argument_list|,
+name|sigev_notify_kevent_flags
+argument_list|)
+expr_stmt|;
 name|PTRIN_CP
 argument_list|(
 operator|*
