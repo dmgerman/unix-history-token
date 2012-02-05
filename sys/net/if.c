@@ -6184,7 +6184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reference count functions for ifaddrs.  */
+comment|/*  * Initialization, desctruction and refcounting functions for ifaddrs.  */
 end_comment
 
 begin_function
