@@ -14675,7 +14675,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SCTP_INP_RUNLOCK
+name|SCTP_INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
@@ -14761,7 +14761,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|SCTP_INP_RUNLOCK
+name|SCTP_INP_RLOCK
 argument_list|(
 name|inp
 argument_list|)
