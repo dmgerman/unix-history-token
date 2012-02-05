@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -8139,9 +8139,6 @@ modifier|*
 name|m
 parameter_list|,
 name|int
-name|iphlen
-parameter_list|,
-name|int
 name|offset
 parameter_list|,
 name|struct
@@ -8796,6 +8793,26 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|stcb
+operator|->
+name|sctp_ep
+operator|->
+name|def_vrf_id
+operator|!=
+name|vrf_id
+condition|)
+block|{
+name|SCTP_INP_RUNLOCK
+argument_list|(
+name|stcb
+operator|->
+name|sctp_ep
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 name|SCTP_TCB_LOCK
 argument_list|(
 name|stcb
@@ -9049,9 +9066,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|int
-name|iphlen
 parameter_list|,
 name|int
 name|offset
@@ -9754,8 +9768,6 @@ name|sctp_findassociation_special_addr
 argument_list|(
 name|m
 argument_list|,
-name|iphlen
-argument_list|,
 name|offset
 argument_list|,
 name|sh
@@ -9814,9 +9826,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|int
-name|iphlen
 parameter_list|,
 name|int
 name|offset
@@ -25869,10 +25878,11 @@ name|wkq
 argument_list|)
 expr_stmt|;
 comment|/* Now grab lock and go */
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|SCTP_MCORE_QLOCK
 argument_list|(
@@ -27687,9 +27697,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|int
-name|iphlen
 parameter_list|,
 name|int
 name|offset
@@ -31230,11 +31237,6 @@ begin_function
 name|int
 name|sctp_is_vtag_good
 parameter_list|(
-name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-parameter_list|,
 name|uint32_t
 name|tag
 parameter_list|,
@@ -31248,9 +31250,6 @@ name|struct
 name|timeval
 modifier|*
 name|now
-parameter_list|,
-name|int
-name|save_in_twait
 parameter_list|)
 block|{
 comment|/* 	 * This function serves two purposes. It will see if a TAG can be 	 * re-used and return 1 for yes it is ok and 0 for don't use that 	 * tag. A secondary function it will do is purge out old tags that 	 * can be removed. 	 */
@@ -31587,11 +31586,6 @@ specifier|static
 name|void
 name|sctp_drain_mbufs
 parameter_list|(
-name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-parameter_list|,
 name|struct
 name|sctp_tcb
 modifier|*
@@ -32187,8 +32181,6 @@ argument_list|)
 expr_stmt|;
 name|sctp_drain_mbufs
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
 argument_list|)
 expr_stmt|;
