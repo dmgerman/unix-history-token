@@ -117,6 +117,7 @@ begin_function_decl
 name|int
 name|drop_privs
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*

@@ -306,8 +306,9 @@ condition|(
 name|res
 operator|->
 name|hr_localfd
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -340,8 +341,9 @@ argument_list|,
 operator|&
 name|sb
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -388,8 +390,9 @@ name|res
 operator|->
 name|hr_local_mediasize
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -425,8 +428,9 @@ name|res
 operator|->
 name|hr_local_sectorsize
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|pjdlog_errno
@@ -558,6 +562,7 @@ begin_function
 name|int
 name|drop_privs
 parameter_list|(
+specifier|const
 name|struct
 name|hast_resource
 modifier|*
