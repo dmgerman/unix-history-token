@@ -1471,7 +1471,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|int
 name|vm_page_insert
 parameter_list|(
 name|vm_page_t
