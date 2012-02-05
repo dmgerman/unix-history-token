@@ -3006,6 +3006,12 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|errno
+operator|!=
+name|ENOENT
+condition|)
 name|warn
 argument_list|(
 literal|"sysctl: net.inet.sctp.stats"
