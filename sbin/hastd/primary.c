@@ -5701,6 +5701,8 @@ name|ncomp
 init|;
 name|ii
 operator|<
+name|ncomp
+operator|+
 name|ncomps
 condition|;
 name|ii
