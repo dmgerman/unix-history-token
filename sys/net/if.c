@@ -6221,6 +6221,19 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|ifa
+operator|->
+name|if_data
+operator|.
+name|ifi_datalen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ifa
+operator|->
+name|if_data
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
