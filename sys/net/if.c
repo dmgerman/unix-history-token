@@ -6184,7 +6184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialization, desctruction and refcounting functions for ifaddrs.  */
+comment|/*  * Initialization, destruction and refcounting functions for ifaddrs.  */
 end_comment
 
 begin_function
