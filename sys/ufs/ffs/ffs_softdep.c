@@ -56653,6 +56653,9 @@ case|:
 case|case
 name|D_JSEGDEP
 case|:
+case|case
+name|D_JNEWBLK
+case|:
 continue|continue;
 default|default:
 name|panic
