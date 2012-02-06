@@ -63,6 +63,12 @@ comment|/* delete a filter */
 name|T4_GET_SGE_CONTEXT
 block|,
 comment|/* get SGE context for a queue */
+name|T4_LOAD_FW
+block|,
+comment|/* flash firmware */
+name|T4_GET_MEM
+block|,
+comment|/* read memory */
 block|}
 enum|;
 end_enum
@@ -103,6 +109,21 @@ name|len
 decl_stmt|;
 comment|/* bytes */
 name|uint32_t
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|t4_data
+block|{
+name|uint32_t
+name|len
+decl_stmt|;
+name|uint8_t
 modifier|*
 name|data
 decl_stmt|;
@@ -205,23 +226,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|T4_FILTER_OVLAN
+name|T4_FILTER_VNIC
 value|0x100
 end_define
 
 begin_comment
-comment|/* Outer VLAN ID */
+comment|/* VNIC id or outer VLAN */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|T4_FILTER_IVLAN
+name|T4_FILTER_VLAN
 value|0x200
 end_define
 
 begin_comment
-comment|/* Inner VLAN ID */
+comment|/* VLAN ID */
 end_comment
 
 begin_define
@@ -427,13 +448,13 @@ decl_stmt|;
 comment|/* destination port */
 comment|/* 	 * A combination of these (upto 36 bits) is available.  TP_VLAN_PRI_MAP 	 * is used to select the global mode and all filters are limited to the 	 * set of fields allowed by the global mode. 	 */
 name|uint16_t
-name|ovlan
+name|vnic
 decl_stmt|;
-comment|/* outer VLAN */
+comment|/* VNIC id or outer VLAN tag */
 name|uint16_t
-name|ivlan
+name|vlan
 decl_stmt|;
-comment|/* inner VLAN */
+comment|/* VLAN tag */
 name|uint16_t
 name|ethtype
 decl_stmt|;
@@ -477,17 +498,17 @@ literal|9
 decl_stmt|;
 comment|/* exact match MAC index */
 name|uint32_t
-name|ivlan_vld
+name|vlan_vld
 range|:
 literal|1
 decl_stmt|;
-comment|/* inner VLAN valid */
+comment|/* VLAN valid */
 name|uint32_t
-name|ovlan_vld
+name|vnic_vld
 range|:
 literal|1
 decl_stmt|;
-comment|/* outer VLAN valid */
+comment|/* VNIC id/outer VLAN tag valid */
 block|}
 struct|;
 end_struct
@@ -674,6 +695,24 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|t4_mem_range
+block|{
+name|uint32_t
+name|addr
+decl_stmt|;
+name|uint32_t
+name|len
+decl_stmt|;
+name|uint32_t
+modifier|*
+name|data
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
@@ -735,6 +774,20 @@ define|#
 directive|define
 name|CHELSIO_T4_GET_SGE_CONTEXT
 value|_IOWR('f', T4_GET_SGE_CONTEXT, \     struct t4_sge_context)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_LOAD_FW
+value|_IOW('f', T4_LOAD_FW, struct t4_data)
+end_define
+
+begin_define
+define|#
+directive|define
+name|CHELSIO_T4_GET_MEM
+value|_IOW('f', T4_GET_MEM, struct t4_mem_range)
 end_define
 
 begin_endif
