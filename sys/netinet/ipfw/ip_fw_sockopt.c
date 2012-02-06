@@ -2433,9 +2433,6 @@ case|case
 name|O_SOCKARG
 case|:
 case|case
-name|O_TCPWIN
-case|:
-case|case
 name|O_TCPFLAGS
 case|:
 case|case
@@ -2842,6 +2839,9 @@ name|O_IPLEN
 case|:
 case|case
 name|O_TCPDATALEN
+case|:
+case|case
+name|O_TCPWIN
 case|:
 case|case
 name|O_TAGGED
