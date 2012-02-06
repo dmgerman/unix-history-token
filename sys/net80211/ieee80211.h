@@ -4422,65 +4422,79 @@ init|=
 literal|39
 block|,
 comment|/* 11e */
-comment|/* values not yet allocated by ANA */
 name|IEEE80211_REASON_PEER_LINK_CANCELED
 init|=
-literal|2
+literal|52
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_MAX_PEERS
 init|=
-literal|3
+literal|53
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_CPVIOLATION
 init|=
-literal|4
+literal|54
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_CLOSE_RCVD
 init|=
-literal|5
+literal|55
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_MAX_RETRIES
 init|=
-literal|6
+literal|56
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_CONFIRM_TIMEOUT
 init|=
-literal|7
+literal|57
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_INVALID_GTK
 init|=
-literal|8
+literal|58
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_INCONS_PARAMS
 init|=
-literal|9
+literal|59
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_INVALID_SECURITY
 init|=
-literal|10
+literal|60
 block|,
 comment|/* 11s */
-name|IEEE80211_REASON_MESH_PERR_UNSPEC
+name|IEEE80211_REASON_MESH_PERR_NO_PROXY
 init|=
-literal|11
+literal|61
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_PERR_NO_FI
 init|=
-literal|12
+literal|62
 block|,
 comment|/* 11s */
 name|IEEE80211_REASON_MESH_PERR_DEST_UNREACH
 init|=
-literal|13
+literal|63
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_MAC_ALRDY_EXISTS_MBSS
+init|=
+literal|64
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CHAN_SWITCH_REG
+init|=
+literal|65
+block|,
+comment|/* 11s */
+name|IEEE80211_REASON_MESH_CHAN_SWITCH_UNSPEC
+init|=
+literal|66
 block|,
 comment|/* 11s */
 name|IEEE80211_STATUS_SUCCESS
