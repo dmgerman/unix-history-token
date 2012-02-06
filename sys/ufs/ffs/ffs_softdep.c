@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_quota.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -31071,7 +31077,10 @@ name|QUOTA
 comment|/* Reference the quotas in case the block count is wrong in the end. */
 name|quotaref
 argument_list|(
-name|vp
+name|ITOV
+argument_list|(
+name|ip
+argument_list|)
 argument_list|,
 name|freeblks
 operator|->
