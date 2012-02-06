@@ -1640,12 +1640,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED800
+name|TDP_SYNCIO
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* available. */
+comment|/* Local override, disable async i/o. */
 end_comment
 
 begin_define
