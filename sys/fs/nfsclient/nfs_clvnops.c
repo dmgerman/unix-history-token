@@ -5154,7 +5154,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|cache_lookup_times
+name|cache_lookup
 argument_list|(
 name|dvp
 argument_list|,

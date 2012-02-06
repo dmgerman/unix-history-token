@@ -4057,6 +4057,10 @@ argument_list|,
 name|vpp
 argument_list|,
 name|cnp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|NCPVNDEBUG

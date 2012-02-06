@@ -2499,24 +2499,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|cache_lookup
-parameter_list|(
-name|dvp
-parameter_list|,
-name|vpp
-parameter_list|,
-name|cnp
-parameter_list|)
-define|\
-value|cache_lookup_times(dvp, vpp, cnp, NULL, NULL)
-end_define
-
 begin_function_decl
 name|int
-name|cache_lookup_times
+name|cache_lookup
 parameter_list|(
 name|struct
 name|vnode
