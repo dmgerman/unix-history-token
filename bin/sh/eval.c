@@ -236,7 +236,6 @@ comment|/* set if we are skipping commands */
 end_comment
 
 begin_decl_stmt
-specifier|static
 name|int
 name|skipcount
 decl_stmt|;
