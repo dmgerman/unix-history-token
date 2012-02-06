@@ -4875,7 +4875,7 @@ operator|-
 literal|1
 init|;
 name|i
-operator|>
+operator|>=
 name|place
 condition|;
 name|i
