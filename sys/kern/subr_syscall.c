@@ -812,7 +812,11 @@ name|td
 operator|->
 name|td_dbgflags
 operator|&
+operator|(
+name|TDB_FORK
+operator||
 name|TDB_EXEC
+operator|)
 operator|)
 operator|!=
 literal|0
