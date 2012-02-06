@@ -253,9 +253,6 @@ decl_stmt|;
 endif|#
 directive|endif
 name|uint32_t
-name|sctp_udp_tunneling_for_client_enable
-decl_stmt|;
-name|uint32_t
 name|sctp_udp_tunneling_port
 decl_stmt|;
 name|uint32_t
@@ -2074,38 +2071,6 @@ define|#
 directive|define
 name|SCTPCTL_MOBILITY_FASTHANDOFF_DEFAULT
 value|SCTP_DEFAULT_MOBILITY_FASTHANDOFF
-end_define
-
-begin_comment
-comment|/* Enable SCTP/UDP tunneling for clients*/
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_DESC
-value|"Enable SCTP/UDP tunneling for client"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_DEFAULT
-value|SCTPCTL_UDP_TUNNELING_FOR_CLIENT_ENABLE_MIN
 end_define
 
 begin_comment

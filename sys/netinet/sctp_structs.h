@@ -1093,7 +1093,7 @@ value|SCTP_PR_SCTP_RTX
 end_define
 
 begin_comment
-comment|/* The upper byte is used as a bit mask */
+comment|/* The upper byte is used a a bit mask */
 end_comment
 
 begin_define
@@ -3371,6 +3371,10 @@ decl_stmt|;
 name|uint32_t
 name|sctp_features
 decl_stmt|;
+name|uint16_t
+name|port
+decl_stmt|;
+comment|/* remote UDP encapsulation port */
 comment|/* 	 * The mapping array is used to track out of order sequences above 	 * last_acked_seq. 0 indicates packet missing 1 indicates packet 	 * rec'd. We slide it up every time we raise last_acked_seq and 0 	 * trailing locactions out.  If I get a TSN above the array 	 * mappingArraySz, I discard the datagram and let retransmit happen. 	 */
 name|uint32_t
 name|marked_retrans
