@@ -2907,6 +2907,12 @@ condition|)
 block|{
 if|if
 condition|(
+name|j
+operator|->
+name|name
+operator|!=
+name|NULL
+operator|&&
 name|path
 index|[
 literal|0
