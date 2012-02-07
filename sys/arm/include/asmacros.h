@@ -58,7 +58,7 @@ value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
 value|\ 	mrs	r0, spsr_all;
 comment|/* Put the SPSR on the stack */
-value|\ 	str	r0, [sp, #-4]!;						   \ 	ldr	r0, =ARM_RAS_START;					   \ 	mov	r1, #0;							   \ 	str	r1, [r0];						   \ 	ldr	r0, =ARM_RAS_END;					   \ 	mov	r1, #0xffffffff;					   \ 	str	r1, [r0];
+value|\ 	str	r0, [sp, #-4]!;						   \ 	ldr	r0, =ARM_RAS_START;					   \ 	mov	r1, #0;							   \ 	str	r1, [r0];						   \ 	mov	r1, #0xffffffff;					   \ 	str	r1, [r0, #4];
 end_define
 
 begin_comment
@@ -132,19 +132,29 @@ value|\         mov     r0, r0;
 comment|/* NOP for previous instruction */
 value|\ 	ldr	r5, =ARM_RAS_START;
 comment|/* Check if there's any RAS */
-value|\ 	ldr	r3, [r5];						   \ 	cmp	r3, #0;
-comment|/* Is the update needed ? */
-value|\ 	ldrgt	lr, [r0, #16];						   \ 	ldrgt	r1, =ARM_RAS_END;					   \ 	ldrgt	r4, [r1];
-comment|/* Get the end of the RAS */
-value|\ 	movgt	r2, #0;
-comment|/* Reset the magic addresses */
-value|\ 	strgt	r2, [r5];						   \ 	movgt	r2, #0xffffffff;					   \ 	strgt	r2, [r1];						   \ 	cmpgt	lr, r3;
-comment|/* Were we in the RAS ? */
-value|\ 	cmpgt	r4, lr;							   \ 	strgt	r3, [r0, #16];
-comment|/* Yes, update the pc */
-value|\ 	mrs	r0, spsr_all;
-comment|/* Put the SPSR on the stack */
-value|\ 	str	r0, [sp, #-4]!
+value|\ 	ldr     r4, [r5, #4];
+comment|/* reset it to point at the     */
+value|\ 	cmp     r4, #0xffffffff;
+comment|/* end of memory if necessary;  */
+value|\ 	movne   r1, #0xffffffff;
+comment|/* leave value in r4 for later  */
+value|\ 	strne   r1, [r5, #4];
+comment|/* comparision against PC.      */
+value|\ 	ldr     r3, [r5];
+comment|/* Retrieve global RAS_START    */
+value|\ 	cmp     r3, #0;
+comment|/* and reset it if non-zero.    */
+value|\ 	movne   r1, #0;
+comment|/* If non-zero RAS_START and    */
+value|\ 	strne   r1, [r5];
+comment|/* PC was lower than RAS_END,   */
+value|\ 	ldrne   r1, [r0, #16];
+comment|/* adjust the saved PC so that  */
+value|\ 	cmpne   r4, r1;
+comment|/* execution later resumes at   */
+value|\ 	strhi   r3, [r0, #16];
+comment|/* the RAS_START location.      */
+value|\ 	mrs     r0, spsr_all;                                              \ 	str     r0, [sp, #-4]!
 end_define
 
 begin_comment
