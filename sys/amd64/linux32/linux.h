@@ -2466,6 +2466,52 @@ value|2
 end_define
 
 begin_comment
+comment|/*  * posix_fadvise advice  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LINUX_POSIX_FADV_NORMAL
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_POSIX_FADV_RANDOM
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_POSIX_FADV_SEQUENTIAL
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_POSIX_FADV_WILLNEED
+value|3
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_POSIX_FADV_DONTNEED
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|LINUX_POSIX_FADV_NOREUSE
+value|5
+end_define
+
+begin_comment
 comment|/*  * mount flags  */
 end_comment
 
