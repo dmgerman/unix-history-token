@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -11078,10 +11078,12 @@ name|spa
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * ZIL blocks are always contiguous (i.e. not gang blocks) so we 	 * set the METASLAB_GANG_AVOID flag so that they don't "fast gang" 	 * when allocating them. 	 */
 if|if
 condition|(
 name|use_slog
 condition|)
+block|{
 name|error
 operator|=
 name|metaslab_alloc
@@ -11104,12 +11106,16 @@ argument_list|,
 name|old_bp
 argument_list|,
 name|METASLAB_HINTBP_AVOID
+operator||
+name|METASLAB_GANG_AVOID
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
 condition|)
+block|{
 name|error
 operator|=
 name|metaslab_alloc
@@ -11132,8 +11138,11 @@ argument_list|,
 name|old_bp
 argument_list|,
 name|METASLAB_HINTBP_AVOID
+operator||
+name|METASLAB_GANG_AVOID
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|error
