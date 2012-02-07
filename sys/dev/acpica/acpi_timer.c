@@ -471,7 +471,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|2
 argument_list|,
 literal|"acpi_timer"
 argument_list|,

@@ -8506,7 +8506,7 @@ block|{
 name|ACPI_OBJECT_TYPE
 name|type
 decl_stmt|;
-comment|/*      * 1. CPUs      * 2. I/O port and memory system resource holders      * 3. Embedded controllers (to handle early accesses)      * 4. PCI Link Devices      */
+comment|/* 	 * 0. CPUs 	 * 1. I/O port and memory system resource holders 	 * 2. Clocks and timers (to handle early accesses) 	 * 3. Embedded controllers (to handle early accesses) 	 * 4. PCI Link Devices 	 */
 name|AcpiGetType
 argument_list|(
 name|handle
@@ -8524,7 +8524,7 @@ condition|)
 operator|*
 name|order
 operator|=
-literal|1
+literal|0
 expr_stmt|;
 elseif|else
 if|if
@@ -8541,6 +8541,35 @@ argument_list|(
 name|handle
 argument_list|,
 literal|"PNP0C02"
+argument_list|)
+condition|)
+operator|*
+name|order
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0100"
+argument_list|)
+operator|||
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0103"
+argument_list|)
+operator|||
+name|acpi_MatchHid
+argument_list|(
+name|handle
+argument_list|,
+literal|"PNP0B00"
 argument_list|)
 condition|)
 operator|*
@@ -8786,7 +8815,7 @@ name|level
 operator|*
 literal|10
 operator|+
-literal|100
+name|ACPI_DEV_BASE_ORDER
 expr_stmt|;
 name|acpi_probe_order
 argument_list|(

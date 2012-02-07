@@ -1843,7 +1843,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-name|ACPI_DEV_BASE_ORDER
+literal|2
 argument_list|,
 literal|"hpet"
 argument_list|,
