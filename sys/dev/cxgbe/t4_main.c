@@ -1857,6 +1857,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -2006,6 +2012,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -16021,6 +16032,9 @@ argument_list|,
 literal|"interrupt holdoff packet counter values"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
 comment|/* 	 * dev.t4nex.X.misc.  Marked CTLFLAG_SKIP to avoid information overload. 	 */
 name|oid
 operator|=
@@ -16450,6 +16464,8 @@ argument_list|,
 literal|"Tx rate"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|TCP_OFFLOAD_DISABLE
@@ -18890,6 +18906,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
+end_ifdef
 
 begin_function
 specifier|static
@@ -24194,6 +24216,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
