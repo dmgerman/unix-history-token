@@ -2158,7 +2158,9 @@ directive|endif
 comment|/* FICL_HAVE_FTRUNCATE */
 else|#
 directive|else
-operator|&
+operator|(
+name|void
+operator|)
 name|pSys
 expr_stmt|;
 endif|#

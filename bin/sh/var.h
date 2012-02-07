@@ -258,6 +258,14 @@ name|vps4
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|var
+name|vdisvfork
+decl_stmt|;
+end_decl_stmt
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -412,6 +420,14 @@ directive|define
 name|mpathset
 parameter_list|()
 value|((vmpath.flags& VUNSET) == 0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|disvforkset
+parameter_list|()
+value|((vdisvfork.flags& VUNSET) == 0)
 end_define
 
 begin_function_decl

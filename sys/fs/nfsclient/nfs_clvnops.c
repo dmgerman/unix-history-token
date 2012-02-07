@@ -5154,7 +5154,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|cache_lookup_times
+name|cache_lookup
 argument_list|(
 name|dvp
 argument_list|,
@@ -6969,13 +6969,10 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+name|DOINGASYNC
+argument_list|(
 name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_ASYNC
+argument_list|)
 condition|)
 operator|*
 name|iomode

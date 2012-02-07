@@ -157,7 +157,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -274,7 +276,9 @@ operator|=
 name|NULL
 expr_stmt|;
 return|return
+operator|(
 name|m
+operator|)
 return|;
 block|}
 end_function
@@ -290,6 +294,7 @@ name|mbp
 parameter_list|)
 block|{
 return|return
+operator|(
 name|mbp
 operator|->
 name|mb_top
@@ -304,6 +309,7 @@ name|mbp
 operator|->
 name|mb_top
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -435,7 +441,9 @@ operator|+=
 name|size
 expr_stmt|;
 return|return
+operator|(
 name|bpos
+operator|)
 return|;
 block|}
 end_function
@@ -453,7 +461,7 @@ block|{
 name|caddr_t
 name|dst
 decl_stmt|;
-name|char
+name|uint8_t
 name|x
 init|=
 literal|0
@@ -475,7 +483,7 @@ name|mb_cur
 operator|->
 name|m_len
 expr_stmt|;
-comment|/* only add padding if address is odd */
+comment|/* Only add padding if address is odd */
 if|if
 condition|(
 operator|(
@@ -487,6 +495,7 @@ operator|&
 literal|1
 condition|)
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -497,14 +506,20 @@ operator|)
 operator|&
 name|x
 argument_list|,
-literal|1
+sizeof|sizeof
+argument_list|(
+name|x
+argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 else|else
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -523,6 +538,7 @@ name|x
 parameter_list|)
 block|{
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -540,6 +556,7 @@ argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -565,6 +582,7 @@ name|x
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -582,6 +600,7 @@ argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -607,6 +626,7 @@ name|x
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -624,6 +644,7 @@ argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -649,6 +670,7 @@ name|x
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -666,6 +688,7 @@ argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -691,6 +714,7 @@ name|x
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -708,6 +732,7 @@ argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -733,6 +758,7 @@ name|x
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -750,6 +776,7 @@ argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -775,6 +802,7 @@ name|x
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|mb_put_mem
 argument_list|(
 name|mbp
@@ -792,6 +820,7 @@ argument_list|)
 argument_list|,
 name|MB_MSYSTEM
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -972,7 +1001,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 break|break;
 case|case
@@ -1034,7 +1065,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 break|break;
 case|case
@@ -1087,7 +1120,9 @@ operator|=
 name|mleft
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1160,7 +1195,9 @@ operator|=
 name|m
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1235,7 +1272,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EFBIG
+operator|)
 return|;
 name|left
 operator|=
@@ -1296,7 +1335,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|uiop
 operator|->
@@ -1342,7 +1383,9 @@ name|left
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1389,7 +1432,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1583,7 +1628,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 name|m
 operator|=
@@ -1605,7 +1652,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 name|md_initm
 argument_list|(
@@ -1615,7 +1664,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1635,6 +1686,7 @@ name|x
 parameter_list|)
 block|{
 return|return
+operator|(
 name|md_get_mem
 argument_list|(
 name|mdp
@@ -1645,6 +1697,7 @@ literal|1
 argument_list|,
 name|MB_MINLINE
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1664,6 +1717,7 @@ name|x
 parameter_list|)
 block|{
 return|return
+operator|(
 name|md_get_mem
 argument_list|(
 name|mdp
@@ -1677,6 +1731,7 @@ literal|2
 argument_list|,
 name|MB_MINLINE
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1724,7 +1779,9 @@ name|v
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1772,7 +1829,9 @@ name|v
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1792,6 +1851,7 @@ name|x
 parameter_list|)
 block|{
 return|return
+operator|(
 name|md_get_mem
 argument_list|(
 name|mdp
@@ -1805,6 +1865,7 @@ literal|4
 argument_list|,
 name|MB_MINLINE
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1854,7 +1915,9 @@ name|v
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1904,7 +1967,9 @@ name|v
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -1924,6 +1989,7 @@ name|x
 parameter_list|)
 block|{
 return|return
+operator|(
 name|md_get_mem
 argument_list|(
 name|mdp
@@ -1937,6 +2003,7 @@ literal|8
 argument_list|,
 name|MB_MINLINE
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1986,7 +2053,9 @@ name|v
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2036,7 +2105,9 @@ name|v
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -2099,7 +2170,9 @@ literal|"incomplete copy\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EBADRPC
+operator|)
 return|;
 block|}
 name|s
@@ -2251,7 +2324,9 @@ name|count
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2327,7 +2402,9 @@ operator|=
 name|rm
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -2402,7 +2479,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|EFBIG
+operator|)
 return|;
 name|left
 operator|=
@@ -2467,7 +2546,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|uiop
 operator|->
@@ -2513,7 +2594,9 @@ name|left
 expr_stmt|;
 block|}
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function

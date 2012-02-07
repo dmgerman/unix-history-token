@@ -557,6 +557,50 @@ end_comment
 begin_define
 define|#
 directive|define
+name|TCP_KEEPINIT
+value|0x80
+end_define
+
+begin_comment
+comment|/* N, time to establish connection */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_KEEPIDLE
+value|0x100
+end_define
+
+begin_comment
+comment|/* L,N,X start keeplives after this period */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_KEEPINTVL
+value|0x200
+end_define
+
+begin_comment
+comment|/* L,N interval between keepalives */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_KEEPCNT
+value|0x400
+end_define
+
+begin_comment
+comment|/* L,N number of keepalives before close */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|TCP_CA_NAME_MAX
 value|16
 end_define

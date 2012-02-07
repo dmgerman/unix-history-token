@@ -2281,6 +2281,17 @@ parameter_list|)
 value|((c)->a_desc->vdesc_call(c))
 end_define
 
+begin_define
+define|#
+directive|define
+name|DOINGASYNC
+parameter_list|(
+name|vp
+parameter_list|)
+define|\
+value|(((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC) != 0&&	\ 	 ((curthread->td_pflags& TDP_SYNCIO) == 0))
+end_define
+
 begin_comment
 comment|/*  * VMIO support inline  */
 end_comment
@@ -2488,24 +2499,9 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_define
-define|#
-directive|define
-name|cache_lookup
-parameter_list|(
-name|dvp
-parameter_list|,
-name|vpp
-parameter_list|,
-name|cnp
-parameter_list|)
-define|\
-value|cache_lookup_times(dvp, vpp, cnp, NULL, NULL)
-end_define
-
 begin_function_decl
 name|int
-name|cache_lookup_times
+name|cache_lookup
 parameter_list|(
 name|struct
 name|vnode

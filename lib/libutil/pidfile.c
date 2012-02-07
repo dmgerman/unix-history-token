@@ -517,8 +517,6 @@ name|O_CREAT
 operator||
 name|O_TRUNC
 operator||
-name|O_CLOEXEC
-operator||
 name|O_NONBLOCK
 argument_list|,
 name|mode

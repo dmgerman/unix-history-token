@@ -474,18 +474,6 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
-name|cxgbe_start
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
 name|int
 name|cxgbe_transmit
 parameter_list|(
@@ -1857,6 +1845,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
+end_ifdef
+
 begin_function_decl
 specifier|static
 name|int
@@ -2006,6 +2000,11 @@ name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -4885,12 +4884,6 @@ name|cxgbe_ioctl
 expr_stmt|;
 name|ifp
 operator|->
-name|if_start
-operator|=
-name|cxgbe_start
-expr_stmt|;
-name|ifp
-operator|->
 name|if_transmit
 operator|=
 name|cxgbe_transmit
@@ -4900,36 +4893,6 @@ operator|->
 name|if_qflush
 operator|=
 name|cxgbe_qflush
-expr_stmt|;
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_drv_maxlen
-operator|=
-literal|1024
-expr_stmt|;
-name|IFQ_SET_MAXLEN
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|,
-name|ifp
-operator|->
-name|if_snd
-operator|.
-name|ifq_drv_maxlen
-argument_list|)
-expr_stmt|;
-name|IFQ_SET_READY
-argument_list|(
-operator|&
-name|ifp
-operator|->
-name|if_snd
-argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
@@ -6170,68 +6133,6 @@ operator|(
 name|rc
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|cxgbe_start
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|)
-block|{
-name|struct
-name|port_info
-modifier|*
-name|pi
-init|=
-name|ifp
-operator|->
-name|if_softc
-decl_stmt|;
-name|struct
-name|sge_txq
-modifier|*
-name|txq
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-name|for_each_txq
-argument_list|(
-argument|pi
-argument_list|,
-argument|i
-argument_list|,
-argument|txq
-argument_list|)
-block|{
-if|if
-condition|(
-name|TXQ_TRYLOCK
-argument_list|(
-name|txq
-argument_list|)
-condition|)
-block|{
-name|txq_start
-argument_list|(
-name|ifp
-argument_list|,
-name|txq
-argument_list|)
-expr_stmt|;
-name|TXQ_UNLOCK
-argument_list|(
-name|txq
-argument_list|)
-expr_stmt|;
-block|}
-block|}
 block|}
 end_function
 
@@ -16021,6 +15922,9 @@ argument_list|,
 literal|"interrupt holdoff packet counter values"
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
 comment|/* 	 * dev.t4nex.X.misc.  Marked CTLFLAG_SKIP to avoid information overload. 	 */
 name|oid
 operator|=
@@ -16450,6 +16354,8 @@ argument_list|,
 literal|"Tx rate"
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 ifndef|#
 directive|ifndef
 name|TCP_OFFLOAD_DISABLE
@@ -18890,6 +18796,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
+end_ifdef
 
 begin_function
 specifier|static
@@ -24195,6 +24107,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 specifier|inline
@@ -27358,6 +27275,11 @@ index|[
 name|idx
 index|]
 decl_stmt|;
+name|ADAPTER_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rc
@@ -27395,12 +27317,9 @@ name|valid
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|rc
@@ -27408,12 +27327,10 @@ operator|!=
 name|FW_FILTER_WR_FLT_DELETED
 condition|)
 block|{
-comment|/* Add or delete failed, need to display an error */
-name|device_printf
+comment|/* Add or delete failed, display an error */
+name|log
 argument_list|(
-name|sc
-operator|->
-name|dev
+name|LOG_ERR
 argument_list|,
 literal|"filter %u setup failed with error %u\n"
 argument_list|,
@@ -27428,11 +27345,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|ADAPTER_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|tids
@@ -27440,6 +27352,7 @@ operator|.
 name|ftids_in_use
 operator|--
 expr_stmt|;
+block|}
 name|ADAPTER_UNLOCK
 argument_list|(
 name|sc

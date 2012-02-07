@@ -488,16 +488,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|DOINGASYNC
-parameter_list|(
-name|vp
-parameter_list|)
-value|((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DOINGSUJ
 parameter_list|(
 name|vp

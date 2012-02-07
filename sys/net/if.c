@@ -6184,7 +6184,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reference count functions for ifaddrs.  */
+comment|/*  * Initialization, destruction and refcounting functions for ifaddrs.  */
 end_comment
 
 begin_function
@@ -6219,6 +6219,19 @@ operator|->
 name|ifa_refcnt
 argument_list|,
 literal|1
+argument_list|)
+expr_stmt|;
+name|ifa
+operator|->
+name|if_data
+operator|.
+name|ifi_datalen
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ifa
+operator|->
+name|if_data
 argument_list|)
 expr_stmt|;
 block|}

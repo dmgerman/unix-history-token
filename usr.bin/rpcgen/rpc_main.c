@@ -398,33 +398,6 @@ begin_comment
 comment|/* alias for FALSE */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SVR4_CPP
-value|"/usr/ccs/lib/cpp"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SUNOS_CPP
-value|"/usr/bin/cpp"
-end_define
-
-begin_decl_stmt
-specifier|static
-name|int
-name|cppDefined
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* explicit path for C preprocessor */
-end_comment
-
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -443,7 +416,7 @@ name|char
 modifier|*
 name|CPP
 init|=
-name|SVR4_CPP
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -573,7 +546,7 @@ end_comment
 begin_function_decl
 specifier|static
 name|void
-name|putarg
+name|insarg
 parameter_list|(
 name|int
 parameter_list|,
@@ -585,7 +558,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* put argument at specified location */
+comment|/* insert arg at specified location */
 end_comment
 
 begin_function_decl
@@ -633,7 +606,7 @@ begin_define
 define|#
 directive|define
 name|FIXEDARGS
-value|2
+value|0
 end_define
 
 begin_decl_stmt
@@ -1685,85 +1658,136 @@ block|}
 end_function
 
 begin_comment
-comment|/* make sure that a CPP exists */
+comment|/* prepend C-preprocessor and flags before arguments */
 end_comment
 
 begin_function
 specifier|static
 name|void
-name|find_cpp
+name|prepend_cpp
 parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|stat
-name|buf
+name|int
+name|idx
+init|=
+literal|1
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|var
+decl_stmt|;
+name|char
+modifier|*
+name|dupvar
+decl_stmt|,
+modifier|*
+name|s
+decl_stmt|,
+modifier|*
+name|t
 decl_stmt|;
 if|if
 condition|(
-name|stat
-argument_list|(
 name|CPP
-argument_list|,
-operator|&
-name|buf
-argument_list|)
-operator|<
-literal|0
+operator|!=
+name|NULL
 condition|)
-block|{
-comment|/* SVR4 or explicit cpp does not exist */
+name|insarg
+argument_list|(
+literal|0
+argument_list|,
+name|CPP
+argument_list|)
+expr_stmt|;
+elseif|else
 if|if
 condition|(
-name|cppDefined
-condition|)
-block|{
-name|warnx
+operator|(
+name|var
+operator|=
+name|getenv
 argument_list|(
-literal|"cannot find C preprocessor: %s"
+literal|"RPCGEN_CPP"
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+name|insarg
+argument_list|(
+literal|0
 argument_list|,
-name|CPP
+literal|"/usr/bin/cpp"
 argument_list|)
 expr_stmt|;
-name|crash
-argument_list|()
-expr_stmt|;
-block|}
 else|else
 block|{
-comment|/* try the other one */
-name|CPP
+comment|/* Parse command line in a rudimentary way */
+name|dupvar
 operator|=
-name|SUNOS_CPP
+name|xstrdup
+argument_list|(
+name|var
+argument_list|)
 expr_stmt|;
+for|for
+control|(
+name|s
+operator|=
+name|dupvar
+operator|,
+name|idx
+operator|=
+literal|0
+init|;
+operator|(
+name|t
+operator|=
+name|strsep
+argument_list|(
+operator|&
+name|s
+argument_list|,
+literal|" \t"
+argument_list|)
+operator|)
+operator|!=
+name|NULL
+condition|;
+control|)
+block|{
 if|if
 condition|(
-name|stat
-argument_list|(
-name|CPP
-argument_list|,
-operator|&
-name|buf
-argument_list|)
-operator|<
+name|t
+index|[
 literal|0
+index|]
 condition|)
-block|{
-comment|/* can't find any cpp */
-name|warnx
+name|insarg
 argument_list|(
-literal|"cannot find C preprocessor: %s"
+name|idx
+operator|++
 argument_list|,
-name|CPP
+name|t
 argument_list|)
 expr_stmt|;
-name|crash
-argument_list|()
+block|}
+name|free
+argument_list|(
+name|dupvar
+argument_list|)
 expr_stmt|;
 block|}
-block|}
-block|}
+name|insarg
+argument_list|(
+name|idx
+argument_list|,
+name|CPPFLAGS
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -1824,22 +1848,8 @@ block|{
 case|case
 literal|0
 case|:
-name|find_cpp
+name|prepend_cpp
 argument_list|()
-expr_stmt|;
-name|putarg
-argument_list|(
-literal|0
-argument_list|,
-name|CPP
-argument_list|)
-expr_stmt|;
-name|putarg
-argument_list|(
-literal|1
-argument_list|,
-name|CPPFLAGS
-argument_list|)
 expr_stmt|;
 name|addarg
 argument_list|(
@@ -1896,7 +1906,7 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|execv
+name|execvp
 argument_list|(
 name|arglist
 index|[
@@ -1910,7 +1920,12 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"execv"
+literal|"execvp %s"
+argument_list|,
+name|arglist
+index|[
+literal|0
+index|]
 argument_list|)
 expr_stmt|;
 case|case
@@ -4783,10 +4798,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Insert an argument at the specified location  */
+end_comment
+
 begin_function
 specifier|static
 name|void
-name|putarg
+name|insarg
 parameter_list|(
 name|int
 name|place
@@ -4797,16 +4816,19 @@ modifier|*
 name|cp
 parameter_list|)
 block|{
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
-name|place
+name|argcount
 operator|>=
 name|ARGLISTLEN
 condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"arglist coding error"
+literal|"too many defines"
 argument_list|)
 expr_stmt|;
 name|crash
@@ -4814,12 +4836,34 @@ argument_list|()
 expr_stmt|;
 comment|/*NOTREACHED*/
 block|}
-if|if
-condition|(
-name|cp
-operator|!=
-name|NULL
-condition|)
+comment|/* Move up existing arguments */
+for|for
+control|(
+name|i
+operator|=
+name|argcount
+operator|-
+literal|1
+init|;
+name|i
+operator|>=
+name|place
+condition|;
+name|i
+operator|--
+control|)
+name|arglist
+index|[
+name|i
+operator|+
+literal|1
+index|]
+operator|=
+name|arglist
+index|[
+name|i
+index|]
+expr_stmt|;
 name|arglist
 index|[
 name|place
@@ -4830,13 +4874,8 @@ argument_list|(
 name|cp
 argument_list|)
 expr_stmt|;
-else|else
-name|arglist
-index|[
-name|place
-index|]
-operator|=
-name|NULL
+name|argcount
+operator|++
 expr_stmt|;
 block|}
 end_function
@@ -5610,9 +5649,8 @@ literal|0
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|strlcpy
 argument_list|(
 name|pathbuf
@@ -5627,9 +5665,12 @@ argument_list|(
 name|pathbuf
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|pathbuf
+argument_list|)
+operator|||
 name|strlcat
 argument_list|(
 name|pathbuf
@@ -5662,10 +5703,6 @@ block|}
 name|CPP
 operator|=
 name|pathbuf
-expr_stmt|;
-name|cppDefined
-operator|=
-literal|1
 expr_stmt|;
 goto|goto
 name|nextarg

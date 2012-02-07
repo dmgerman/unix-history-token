@@ -2489,10 +2489,7 @@ operator|~
 name|mask
 condition|)
 name|mask
-operator|=
-operator|(
-name|long
-operator|)
+operator||=
 name|mask
 operator|>>
 name|subnetshift

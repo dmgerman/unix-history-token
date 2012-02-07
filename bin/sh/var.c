@@ -329,6 +329,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+name|struct
+name|var
+name|vdisvfork
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|forcelocal
 decl_stmt|;
@@ -463,6 +470,17 @@ block|,
 literal|"OPTIND=1"
 block|,
 name|getoptsreset
+block|}
+block|,
+block|{
+operator|&
+name|vdisvfork
+block|,
+name|VUNSET
+block|,
+literal|"SH_DISABLE_VFORK="
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -2605,7 +2623,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|INTON
+name|INTOFF
 expr_stmt|;
 name|vars
 operator|=
@@ -2769,7 +2787,7 @@ argument_list|(
 name|vars
 argument_list|)
 expr_stmt|;
-name|INTOFF
+name|INTON
 expr_stmt|;
 return|return
 literal|0

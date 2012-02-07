@@ -250,7 +250,7 @@ operator|(
 literal|1
 operator|)
 return|;
-comment|/* 	 * Fetch running stats, pctcpu usage, and interruptable flag.  	 */
+comment|/* 	 * Fetch running stats, pctcpu usage, and interruptable flag. 	 */
 name|thread_lock
 argument_list|(
 name|td

@@ -447,14 +447,14 @@ end_comment
 begin_define
 define|#
 directive|define
-name|WEAK_ALIAS
+name|WEAK_REFERENCE
 parameter_list|(
-name|alias
-parameter_list|,
 name|sym
+parameter_list|,
+name|alias
 parameter_list|)
 define|\
-value|.weak alias;						\ 	alias = sym
+value|.weak alias;						\ 	.equ alias,sym
 end_define
 
 begin_ifdef

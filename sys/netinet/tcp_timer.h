@@ -356,6 +356,56 @@ name|TT_2MSL
 value|0x10
 end_define
 
+begin_define
+define|#
+directive|define
+name|TP_KEEPINIT
+parameter_list|(
+name|tp
+parameter_list|)
+value|((tp)->t_keepinit ? (tp)->t_keepinit : tcp_keepinit)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_KEEPIDLE
+parameter_list|(
+name|tp
+parameter_list|)
+value|((tp)->t_keepidle ? (tp)->t_keepidle : tcp_keepidle)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_KEEPINTVL
+parameter_list|(
+name|tp
+parameter_list|)
+value|((tp)->t_keepintvl ? (tp)->t_keepintvl : tcp_keepintvl)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_KEEPCNT
+parameter_list|(
+name|tp
+parameter_list|)
+value|((tp)->t_keepcnt ? (tp)->t_keepcnt : tcp_keepcnt)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TP_MAXIDLE
+parameter_list|(
+name|tp
+parameter_list|)
+value|(TP_KEEPCNT(tp) * TP_KEEPINTVL(tp))
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -392,12 +442,12 @@ end_comment
 begin_decl_stmt
 specifier|extern
 name|int
-name|tcp_maxidle
+name|tcp_keepcnt
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* time to drop after starting probes */
+comment|/* number of keepalives */
 end_comment
 
 begin_decl_stmt
