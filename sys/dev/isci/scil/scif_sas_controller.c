@@ -127,6 +127,24 @@ operator|*
 operator|)
 name|controller
 decl_stmt|;
+comment|// Validate the user supplied parameters.
+if|if
+condition|(
+operator|(
+name|library
+operator|==
+name|SCI_INVALID_HANDLE
+operator|)
+operator|||
+operator|(
+name|controller
+operator|==
+name|SCI_INVALID_HANDLE
+operator|)
+condition|)
+return|return
+name|SCI_FAILURE_INVALID_PARAMETER_VALUE
+return|;
 name|SCIF_LOG_TRACE
 argument_list|(
 operator|(
@@ -147,24 +165,6 @@ name|controller
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Validate the user supplied parameters.
-if|if
-condition|(
-operator|(
-name|library
-operator|==
-name|SCI_INVALID_HANDLE
-operator|)
-operator|||
-operator|(
-name|controller
-operator|==
-name|SCI_INVALID_HANDLE
-operator|)
-condition|)
-return|return
-name|SCI_FAILURE_INVALID_PARAMETER_VALUE
-return|;
 comment|// Construct the base controller.  As part of constructing the base
 comment|// controller we ask it to also manage the MDL iteration for the Core.
 name|sci_base_controller_construct
@@ -286,6 +286,16 @@ operator|*
 operator|)
 name|controller
 decl_stmt|;
+comment|// Validate the user supplied parameters.
+if|if
+condition|(
+name|controller
+operator|==
+name|SCI_INVALID_HANDLE
+condition|)
+return|return
+name|SCI_FAILURE_INVALID_PARAMETER_VALUE
+return|;
 name|SCIF_LOG_TRACE
 argument_list|(
 operator|(
@@ -304,16 +314,6 @@ name|controller
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Validate the user supplied parameters.
-if|if
-condition|(
-name|controller
-operator|==
-name|SCI_INVALID_HANDLE
-condition|)
-return|return
-name|SCI_FAILURE_INVALID_PARAMETER_VALUE
-return|;
 return|return
 name|fw_controller
 operator|->
@@ -401,6 +401,16 @@ operator|*
 operator|)
 name|controller
 decl_stmt|;
+comment|// Validate the user supplied parameters.
+if|if
+condition|(
+name|controller
+operator|==
+name|SCI_INVALID_HANDLE
+condition|)
+return|return
+name|SCI_FAILURE_INVALID_PARAMETER_VALUE
+return|;
 name|SCIF_LOG_TRACE
 argument_list|(
 operator|(
@@ -421,16 +431,6 @@ name|timeout
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Validate the user supplied parameters.
-if|if
-condition|(
-name|controller
-operator|==
-name|SCI_INVALID_HANDLE
-condition|)
-return|return
-name|SCI_FAILURE_INVALID_PARAMETER_VALUE
-return|;
 return|return
 name|fw_controller
 operator|->
@@ -474,6 +474,16 @@ operator|*
 operator|)
 name|controller
 decl_stmt|;
+comment|// Validate the user supplied parameters.
+if|if
+condition|(
+name|controller
+operator|==
+name|SCI_INVALID_HANDLE
+condition|)
+return|return
+name|SCI_FAILURE_INVALID_PARAMETER_VALUE
+return|;
 name|SCIF_LOG_TRACE
 argument_list|(
 operator|(
@@ -494,16 +504,6 @@ name|timeout
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Validate the user supplied parameters.
-if|if
-condition|(
-name|controller
-operator|==
-name|SCI_INVALID_HANDLE
-condition|)
-return|return
-name|SCI_FAILURE_INVALID_PARAMETER_VALUE
-return|;
 return|return
 name|fw_controller
 operator|->
@@ -544,6 +544,16 @@ operator|*
 operator|)
 name|controller
 decl_stmt|;
+comment|// Validate the user supplied parameters.
+if|if
+condition|(
+name|controller
+operator|==
+name|SCI_INVALID_HANDLE
+condition|)
+return|return
+name|SCI_FAILURE_INVALID_PARAMETER_VALUE
+return|;
 name|SCIF_LOG_TRACE
 argument_list|(
 operator|(
@@ -562,16 +572,6 @@ name|controller
 operator|)
 argument_list|)
 expr_stmt|;
-comment|// Validate the user supplied parameters.
-if|if
-condition|(
-name|controller
-operator|==
-name|SCI_INVALID_HANDLE
-condition|)
-return|return
-name|SCI_FAILURE_INVALID_PARAMETER_VALUE
-return|;
 return|return
 name|fw_controller
 operator|->
@@ -757,30 +757,6 @@ operator|*
 operator|)
 name|controller
 decl_stmt|;
-name|SCIF_LOG_TRACE
-argument_list|(
-operator|(
-name|sci_base_object_get_logger
-argument_list|(
-name|controller
-argument_list|)
-operator|,
-name|SCIF_LOG_OBJECT_CONTROLLER
-operator||
-name|SCIF_LOG_OBJECT_TASK_MANAGEMENT
-operator|,
-literal|"scif_controller_start_task(0x%x, 0x%x, 0x%x, 0x%x) enter\n"
-operator|,
-name|controller
-operator|,
-name|remote_device
-operator|,
-name|task_request
-operator|,
-name|io_tag
-operator|)
-argument_list|)
-expr_stmt|;
 comment|// Validate the user supplied parameters.
 if|if
 condition|(
@@ -807,6 +783,30 @@ return|return
 name|SCI_FAILURE_INVALID_PARAMETER_VALUE
 return|;
 block|}
+name|SCIF_LOG_TRACE
+argument_list|(
+operator|(
+name|sci_base_object_get_logger
+argument_list|(
+name|controller
+argument_list|)
+operator|,
+name|SCIF_LOG_OBJECT_CONTROLLER
+operator||
+name|SCIF_LOG_OBJECT_TASK_MANAGEMENT
+operator|,
+literal|"scif_controller_start_task(0x%x, 0x%x, 0x%x, 0x%x) enter\n"
+operator|,
+name|controller
+operator|,
+name|remote_device
+operator|,
+name|task_request
+operator|,
+name|io_tag
+operator|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|scif_sas_controller_sufficient_resource
@@ -958,28 +958,6 @@ operator|*
 operator|)
 name|controller
 decl_stmt|;
-name|SCIF_LOG_TRACE
-argument_list|(
-operator|(
-name|sci_base_object_get_logger
-argument_list|(
-name|controller
-argument_list|)
-operator|,
-name|SCIF_LOG_OBJECT_CONTROLLER
-operator||
-name|SCIF_LOG_OBJECT_TASK_MANAGEMENT
-operator|,
-literal|"scif_controller_complete_task(0x%x, 0x%x, 0x%x) enter\n"
-operator|,
-name|controller
-operator|,
-name|remote_device
-operator|,
-name|task_request
-operator|)
-argument_list|)
-expr_stmt|;
 comment|// Validate the user supplied parameters.
 if|if
 condition|(
@@ -1006,6 +984,28 @@ return|return
 name|SCI_FAILURE_INVALID_PARAMETER_VALUE
 return|;
 block|}
+name|SCIF_LOG_TRACE
+argument_list|(
+operator|(
+name|sci_base_object_get_logger
+argument_list|(
+name|controller
+argument_list|)
+operator|,
+name|SCIF_LOG_OBJECT_CONTROLLER
+operator||
+name|SCIF_LOG_OBJECT_TASK_MANAGEMENT
+operator|,
+literal|"scif_controller_complete_task(0x%x, 0x%x, 0x%x) enter\n"
+operator|,
+name|controller
+operator|,
+name|remote_device
+operator|,
+name|task_request
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 name|fw_controller
 operator|->
