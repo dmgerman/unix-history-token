@@ -2589,6 +2589,12 @@ name|jailparam
 modifier|*
 name|param
 decl_stmt|;
+name|char
+name|path
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -2638,7 +2644,26 @@ name|name
 argument_list|,
 literal|"path"
 argument_list|)
-operator|&&
+condition|)
+block|{
+comment|/* resolve the path with realpath(3) */
+if|if
+condition|(
+name|realpath
+argument_list|(
+name|value
+argument_list|,
+name|path
+argument_list|)
+operator|!=
+name|NULL
+condition|)
+name|value
+operator|=
+name|path
+expr_stmt|;
+if|if
+condition|(
 name|chdir
 argument_list|(
 name|value
@@ -2655,6 +2680,7 @@ argument_list|,
 name|value
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Check for repeat parameters */
 for|for
 control|(
