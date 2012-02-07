@@ -16352,6 +16352,13 @@ index|[
 name|qid
 index|]
 expr_stmt|;
+if|if
+condition|(
+name|tap
+operator|!=
+name|NULL
+condition|)
+block|{
 name|tid
 operator|=
 name|WME_AC_TO_TID
@@ -16404,6 +16411,7 @@ name|nframes
 operator|=
 name|nframes
 expr_stmt|;
+block|}
 name|seqno
 operator|=
 name|le32toh
