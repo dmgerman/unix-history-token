@@ -1073,7 +1073,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_1((sc)->tco_bst, (sc)->tco_bsh, (off))
+value|bus_read_1((sc)->tco_res, (off))
 end_define
 
 begin_define
@@ -1086,7 +1086,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_2((sc)->tco_bst, (sc)->tco_bsh, (off))
+value|bus_read_2((sc)->tco_res, (off))
 end_define
 
 begin_define
@@ -1099,7 +1099,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->tco_bst, (sc)->tco_bsh, (off))
+value|bus_read_4((sc)->tco_res, (off))
 end_define
 
 begin_define
@@ -1112,7 +1112,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->smi_bst, (sc)->smi_bsh, (off))
+value|bus_read_4((sc)->smi_res, (off))
 end_define
 
 begin_define
@@ -1125,7 +1125,7 @@ parameter_list|,
 name|off
 parameter_list|)
 define|\
-value|bus_space_read_4((sc)->gcs_bst, (sc)->gcs_bsh, (off))
+value|bus_read_4((sc)->gcs_res, (off))
 end_define
 
 begin_define
@@ -1140,7 +1140,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_1((sc)->tco_bst, (sc)->tco_bsh, (off), (val))
+value|bus_write_1((sc)->tco_res, (off), (val))
 end_define
 
 begin_define
@@ -1155,7 +1155,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_2((sc)->tco_bst, (sc)->tco_bsh, (off), (val))
+value|bus_write_2((sc)->tco_res, (off), (val))
 end_define
 
 begin_define
@@ -1170,7 +1170,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->tco_bst, (sc)->tco_bsh, (off), (val))
+value|bus_write_4((sc)->tco_res, (off), (val))
 end_define
 
 begin_define
@@ -1185,7 +1185,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->smi_bst, (sc)->smi_bsh, (off), (val))
+value|bus_write_4((sc)->smi_res, (off), (val))
 end_define
 
 begin_define
@@ -1200,7 +1200,7 @@ parameter_list|,
 name|val
 parameter_list|)
 define|\
-value|bus_space_write_4((sc)->gcs_bst, (sc)->gcs_bsh, (off), (val))
+value|bus_write_4((sc)->gcs_res, (off), (val))
 end_define
 
 begin_define
@@ -2421,28 +2421,6 @@ goto|;
 block|}
 name|sc
 operator|->
-name|smi_bst
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|sc
-operator|->
-name|smi_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|smi_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|sc
-operator|->
-name|smi_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
 name|tco_rid
 operator|=
 literal|1
@@ -2503,28 +2481,6 @@ goto|;
 block|}
 name|sc
 operator|->
-name|tco_bst
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|sc
-operator|->
-name|tco_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|tco_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|sc
-operator|->
-name|tco_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
 name|gcs_rid
 operator|=
 literal|0
@@ -2578,49 +2534,6 @@ goto|goto
 name|fail
 goto|;
 block|}
-name|sc
-operator|->
-name|gcs_bst
-operator|=
-name|rman_get_bustag
-argument_list|(
-name|sc
-operator|->
-name|gcs_res
-argument_list|)
-expr_stmt|;
-name|sc
-operator|->
-name|gcs_bsh
-operator|=
-name|rman_get_bushandle
-argument_list|(
-name|sc
-operator|->
-name|gcs_res
-argument_list|)
-expr_stmt|;
-block|}
-else|else
-block|{
-name|sc
-operator|->
-name|gcs_res
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|gcs_bst
-operator|=
-literal|0
-expr_stmt|;
-name|sc
-operator|->
-name|gcs_bsh
-operator|=
-literal|0
-expr_stmt|;
 block|}
 if|if
 condition|(
