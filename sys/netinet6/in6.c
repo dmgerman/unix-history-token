@@ -9589,14 +9589,6 @@ name|besta
 operator|)
 return|;
 block|}
-name|IF_ADDR_UNLOCK
-argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|IN6_IFADDR_RLOCK
-argument_list|()
-expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -9712,8 +9704,10 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IN6_IFADDR_RUNLOCK
-argument_list|()
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 return|return
 operator|(
@@ -9724,8 +9718,10 @@ operator|)
 name|ifa
 return|;
 block|}
-name|IN6_IFADDR_RUNLOCK
-argument_list|()
+name|IF_ADDR_UNLOCK
+argument_list|(
+name|ifp
+argument_list|)
 expr_stmt|;
 comment|/* use the last-resort values, that are, deprecated addresses */
 if|if
