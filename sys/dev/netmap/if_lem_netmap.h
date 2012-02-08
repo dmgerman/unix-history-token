@@ -199,12 +199,6 @@ name|nm_register
 operator|=
 name|lem_netmap_reg
 expr_stmt|;
-name|na
-operator|.
-name|buff_size
-operator|=
-name|NETMAP_BUF_SIZE
-expr_stmt|;
 name|netmap_attach
 argument_list|(
 operator|&
@@ -1713,6 +1707,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

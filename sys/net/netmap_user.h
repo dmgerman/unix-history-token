@@ -57,20 +57,6 @@ define|\
 value|((struct netmap_ring *)((char *)(nifp) +	\ 	    (nifp)->ring_ofs[index + (nifp)->ni_num_queues+1] ) )
 end_define
 
-begin_if
-if|#
-directive|if
-name|NETMAP_BUF_SIZE
-operator|!=
-literal|2048
-end_if
-
-begin_error
-error|#
-directive|error
-error|cannot handle odd size
-end_error
-
 begin_define
 define|#
 directive|define
@@ -81,31 +67,8 @@ parameter_list|,
 name|index
 parameter_list|)
 define|\
-value|((char *)(ring) + (ring)->buf_ofs + ((index)*NETMAP_BUF_SIZE))
+value|((char *)(ring) + (ring)->buf_ofs + ((index)*(ring)->nr_buf_size))
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NETMAP_BUF
-parameter_list|(
-name|ring
-parameter_list|,
-name|index
-parameter_list|)
-define|\
-value|((char *)(ring) + (ring)->buf_ofs + ((index)<<11))
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
