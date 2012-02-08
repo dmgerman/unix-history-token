@@ -3977,6 +3977,10 @@ name|path_localtime
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
 name|snprintf
@@ -4358,6 +4362,10 @@ name|path_localtime
 argument_list|)
 operator|<
 literal|0
+operator|&&
+name|errno
+operator|!=
+name|ENOENT
 condition|)
 block|{
 name|snprintf
