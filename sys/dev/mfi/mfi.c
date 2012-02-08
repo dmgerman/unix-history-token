@@ -11260,14 +11260,7 @@ comment|/* get user-space sense ptr then copy out sense */
 name|bcopy
 argument_list|(
 operator|&
-operator|(
-operator|(
-expr|struct
-name|mfi_ioc_packet
-operator|*
-operator|)
-name|arg
-operator|)
+name|ioc
 operator|->
 name|mfi_frame
 operator|.
