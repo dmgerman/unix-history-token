@@ -287,28 +287,6 @@ begin_comment
 comment|/* number fo usable routing tables */
 end_comment
 
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|tunnel_fib
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* tunnels use these */
-end_comment
-
-begin_decl_stmt
-specifier|extern
-name|u_int
-name|fwd_fib
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* packets being forwarded use these routes */
-end_comment
-
 begin_comment
 comment|/*  * XXX kernel function pointer `rt_output' is visible to applications.  */
 end_comment
