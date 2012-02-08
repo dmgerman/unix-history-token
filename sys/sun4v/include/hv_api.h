@@ -128,26 +128,28 @@ begin_comment
 comment|/*  * Section 10 Domain Services  */
 end_comment
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|hv_mach_sir
-parameter_list|(
+argument_list|(
 name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
-begin_function_decl
+begin_decl_stmt
 specifier|extern
 name|void
 name|hv_mach_exit
-parameter_list|(
+argument_list|(
 name|uint64_t
 name|exit_code
-parameter_list|)
-function_decl|;
-end_function_decl
+argument_list|)
+name|__dead2
+decl_stmt|;
+end_decl_stmt
 
 begin_function_decl
 specifier|extern
