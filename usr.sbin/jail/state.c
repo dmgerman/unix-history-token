@@ -603,6 +603,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 while|while
@@ -1516,6 +1518,9 @@ name|char
 modifier|*
 name|target
 parameter_list|,
+name|int
+name|docf
+parameter_list|,
 name|unsigned
 name|state
 parameter_list|,
@@ -1554,6 +1559,15 @@ name|target
 operator|||
 operator|(
 operator|!
+name|docf
+operator|&&
+name|state
+operator|!=
+name|JF_STOP
+operator|)
+operator|||
+operator|(
+operator|!
 name|running
 operator|&&
 operator|!
@@ -1566,7 +1580,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-comment|/* 		 * If there's no target specified, set the state on all jails, 		 * and start with those that have no dependencies. 		 */
+comment|/* 		 * For a global wildcard (including no target specified), 		 * set the state on all jails and start with those that 		 * have no dependencies. 		 */
 name|TAILQ_FOREACH_SAFE
 argument_list|(
 argument|j
@@ -1592,7 +1606,13 @@ operator|)
 operator||
 name|state
 operator||
+operator|(
+name|docf
+condition|?
 name|JF_WILD
+else|:
+literal|0
+operator|)
 expr_stmt|;
 name|dep_reset
 argument_list|(

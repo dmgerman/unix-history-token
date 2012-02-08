@@ -1128,6 +1128,9 @@ name|char
 modifier|*
 name|target
 parameter_list|,
+name|int
+name|docf
+parameter_list|,
 name|unsigned
 name|state
 parameter_list|,
