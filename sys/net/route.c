@@ -411,22 +411,6 @@ begin_comment
 comment|/* Routing table UMA zone. */
 end_comment
 
-begin_if
-if|#
-directive|if
-literal|0
-end_if
-
-begin_comment
-comment|/* default fib for tunnels to use */
-end_comment
-
-begin_endif
-unit|u_int tunnel_fib = 0; SYSCTL_INT(_net, OID_AUTO, tunnelfib, CTLFLAG_RD,&tunnel_fib, 0, "");
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * handler for net.my_fibnum  */
 end_comment
