@@ -156,7 +156,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|ina
 argument_list|)
@@ -479,7 +479,7 @@ expr_stmt|;
 comment|/* Close the archives.  */
 if|if
 condition|(
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|ina
 argument_list|)
@@ -493,7 +493,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|outa
 argument_list|)

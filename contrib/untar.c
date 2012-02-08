@@ -64,6 +64,7 @@ literal|0
 decl_stmt|;
 while|while
 condition|(
+operator|(
 operator|*
 name|p
 operator|<
@@ -73,6 +74,11 @@ operator|*
 name|p
 operator|>
 literal|'7'
+operator|)
+operator|&&
+name|n
+operator|>
+literal|0
 condition|)
 block|{
 operator|++
@@ -564,6 +570,9 @@ literal|"Short read on %s: expected 512, got %d\n"
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|int
+operator|)
 name|bytes_read
 argument_list|)
 expr_stmt|;
@@ -768,6 +777,9 @@ literal|"Short read on %s: Expected 512, got %d\n"
 argument_list|,
 name|path
 argument_list|,
+operator|(
+name|int
+operator|)
 name|bytes_read
 argument_list|)
 expr_stmt|;

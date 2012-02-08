@@ -94,8 +94,10 @@ name|entry
 operator|->
 name|stat
 operator|=
-name|malloc
+name|calloc
 argument_list|(
+literal|1
+argument_list|,
 sizeof|sizeof
 argument_list|(
 operator|*
@@ -450,7 +452,7 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * TODO: On Linux, store 32 or 64 here depending on whether 	 * the cached stat structure is a stat32 or a stat64.  This 	 * will allow us to support both variants interchangably. 	 */
+comment|/* 	 * TODO: On Linux, store 32 or 64 here depending on whether 	 * the cached stat structure is a stat32 or a stat64.  This 	 * will allow us to support both variants interchangeably. 	 */
 name|entry
 operator|->
 name|stat_valid

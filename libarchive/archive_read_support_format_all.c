@@ -23,6 +23,12 @@ directive|include
 file|"archive.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"archive_private.h"
+end_include
+
 begin_function
 name|int
 name|archive_read_support_format_all
@@ -33,6 +39,19 @@ modifier|*
 name|a
 parameter_list|)
 block|{
+name|archive_check_magic
+argument_list|(
+name|a
+argument_list|,
+name|ARCHIVE_READ_MAGIC
+argument_list|,
+name|ARCHIVE_STATE_NEW
+argument_list|,
+literal|"archive_read_support_format_all"
+argument_list|)
+expr_stmt|;
+comment|/* TODO: It would be nice to compute the ordering 	 * here automatically so that people who enable just 	 * a few formats can still get the benefits.  That 	 * may just require the format registration to include 	 * a "maximum read-ahead" value (anything that uses seek 	 * would be essentially infinite read-ahead).  The core 	 * bid management can then sort the bidders before calling 	 * them. 	 * 	 * If you implement the above, please return the list below 	 * to alphabetic order. 	 */
+comment|/* 	 * These bidders are all pretty cheap; they just examine a 	 * small initial part of the archive.  If one of these bids 	 * high, we can maybe avoid running any of the more expensive 	 * bidders below. 	 */
 name|archive_read_support_format_ar
 argument_list|(
 name|a
@@ -48,7 +67,7 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|archive_read_support_format_iso9660
+name|archive_read_support_format_lha
 argument_list|(
 name|a
 argument_list|)
@@ -68,6 +87,29 @@ argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Install expensive bidders last.  By doing them last, we 	 * increase the chance that a high bid from someone else will 	 * make it unnecessary for these to do anything at all. 	 */
+comment|/* These three have potentially large look-ahead. */
+name|archive_read_support_format_7zip
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|archive_read_support_format_cab
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|archive_read_support_format_rar
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+name|archive_read_support_format_iso9660
+argument_list|(
+name|a
+argument_list|)
+expr_stmt|;
+comment|/* Seek is really bad, since it forces the read-ahead 	 * logic to discard buffered data. */
 name|archive_read_support_format_zip
 argument_list|(
 name|a

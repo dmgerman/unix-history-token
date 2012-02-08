@@ -140,6 +140,23 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
+name|HAVE_LOCALE_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<locale.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|HAVE_PWD_H
 end_ifdef
 
@@ -147,6 +164,23 @@ begin_include
 include|#
 directive|include
 file|<pwd.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_SIGNAL_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<signal.h>
 end_include
 
 begin_endif
@@ -238,23 +272,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_SYS_TIME_H
-end_ifdef
-
-begin_include
-include|#
-directive|include
-file|<sys/time.h>
 end_include
 
 begin_endif
@@ -724,6 +741,56 @@ argument_list|(
 name|buff
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|HAVE_SIGACTION
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|SIGPIPE
+argument_list|)
+block|{
+comment|/* Ignore SIGPIPE signals. */
+name|struct
+name|sigaction
+name|sa
+decl_stmt|;
+name|sigemptyset
+argument_list|(
+operator|&
+name|sa
+operator|.
+name|sa_mask
+argument_list|)
+expr_stmt|;
+name|sa
+operator|.
+name|sa_flags
+operator|=
+literal|0
+expr_stmt|;
+name|sa
+operator|.
+name|sa_handler
+operator|=
+name|SIG_IGN
+expr_stmt|;
+name|sigaction
+argument_list|(
+name|SIGPIPE
+argument_list|,
+operator|&
+name|sa
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 comment|/* Need lafe_progname before calling lafe_warnc. */
 if|if
 condition|(
@@ -790,6 +857,29 @@ operator|*
 name|argv
 expr_stmt|;
 block|}
+if|#
+directive|if
+name|HAVE_SETLOCALE
+if|if
+condition|(
+name|setlocale
+argument_list|(
+name|LC_ALL
+argument_list|,
+literal|""
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|lafe_warnc
+argument_list|(
+literal|0
+argument_list|,
+literal|"Failed to set default locale"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|cpio
 operator|->
 name|uid_override
@@ -992,7 +1082,7 @@ name|atoi
 argument_list|(
 name|cpio
 operator|->
-name|optarg
+name|argument
 argument_list|)
 expr_stmt|;
 if|if
@@ -1013,7 +1103,7 @@ literal|"Invalid blocksize %s"
 argument_list|,
 name|cpio
 operator|->
-name|optarg
+name|argument
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1053,7 +1143,7 @@ name|matching
 argument_list|,
 name|cpio
 operator|->
-name|optarg
+name|argument
 argument_list|,
 name|cpio
 operator|->
@@ -1071,7 +1161,7 @@ name|filename
 operator|=
 name|cpio
 operator|->
-name|optarg
+name|argument
 expr_stmt|;
 break|break;
 case|case
@@ -1087,7 +1177,7 @@ name|matching
 argument_list|,
 name|cpio
 operator|->
-name|optarg
+name|argument
 argument_list|)
 expr_stmt|;
 break|break;
@@ -1101,7 +1191,7 @@ name|format
 operator|=
 name|cpio
 operator|->
-name|optarg
+name|argument
 expr_stmt|;
 break|break;
 case|case
@@ -1121,7 +1211,7 @@ name|filename
 operator|=
 name|cpio
 operator|->
-name|optarg
+name|argument
 expr_stmt|;
 break|break;
 case|case
@@ -1273,7 +1363,7 @@ name|filename
 operator|=
 name|cpio
 operator|->
-name|optarg
+name|argument
 expr_stmt|;
 break|break;
 case|case
@@ -1379,7 +1469,7 @@ name|owner_parse
 argument_list|(
 name|cpio
 operator|->
-name|optarg
+name|argument
 argument_list|,
 operator|&
 name|uid
@@ -1491,6 +1581,16 @@ comment|/* POSIX 1997 */
 name|cpio
 operator|->
 name|verbose
+operator|++
+expr_stmt|;
+break|break;
+case|case
+literal|'V'
+case|:
+comment|/* GNU cpio */
+name|cpio
+operator|->
+name|dot
 operator|++
 expr_stmt|;
 break|break;
@@ -1658,6 +1758,40 @@ literal|0
 argument_list|,
 literal|"Option -l requires -p"
 argument_list|)
+expr_stmt|;
+comment|/* -v overrides -V */
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+operator|&&
+name|cpio
+operator|->
+name|verbose
+condition|)
+name|cpio
+operator|->
+name|dot
+operator|=
+literal|0
+expr_stmt|;
+comment|/* -v overrides -V */
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+operator|&&
+name|cpio
+operator|->
+name|verbose
+condition|)
+name|cpio
+operator|->
+name|dot
+operator|=
+literal|0
 expr_stmt|;
 comment|/* TODO: Flag other nonsensical combinations. */
 switch|switch
@@ -1900,7 +2034,7 @@ init|=
 literal|"First option must be a mode specifier:\n"
 literal|"  -i Input  -o Output  -p Pass\n"
 literal|"Common Options:\n"
-literal|"  -v    Verbose\n"
+literal|"  -v Verbose filenames     -V  one dot per file\n"
 literal|"Create: %p -o [options]< [list of files]> [archive]\n"
 literal|"  -J,-y,-z,--lzma  Compress archive with xz/bzip2/gzip/lzma\n"
 literal|"  --format {odc|newc|ustar}  Select archive format\n"
@@ -2047,7 +2181,7 @@ literal|"bsdcpio %s -- %s\n"
 argument_list|,
 name|BSDCPIO_VERSION_STRING
 argument_list|,
-name|archive_version
+name|archive_version_string
 argument_list|()
 argument_list|)
 expr_stmt|;
@@ -2489,6 +2623,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|r
 operator|!=
 name|ARCHIVE_OK
@@ -2555,7 +2702,7 @@ literal|"blocks"
 argument_list|)
 expr_stmt|;
 block|}
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|cpio
 operator|->
@@ -3096,6 +3243,19 @@ argument_list|,
 name|destpath
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"."
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Option_link only makes sense in pass mode and for 	 * regular files.  Also note: if a link operation fails 	 * because of cross-device restrictions, we'll fall back 	 * to copy mode for that entry. 	 * 	 * TODO: Test other cpio implementations to see if they 	 * hard-link anything other than regular files here. 	 */
 if|if
 condition|(
@@ -3362,6 +3522,13 @@ condition|(
 name|r
 operator|>=
 name|ARCHIVE_WARN
+operator|&&
+name|archive_entry_size
+argument_list|(
+name|entry
+argument_list|)
+operator|>
+literal|0
 operator|&&
 name|fd
 operator|>=
@@ -3894,7 +4061,7 @@ argument_list|,
 literal|"Couldn't allocate archive object"
 argument_list|)
 expr_stmt|;
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -4047,11 +4214,24 @@ name|verbose
 condition|)
 name|fprintf
 argument_list|(
-name|stdout
+name|stderr
 argument_list|,
 literal|"%s\n"
 argument_list|,
 name|destpath
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"."
 argument_list|)
 expr_stmt|;
 if|if
@@ -4125,6 +4305,12 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|!
+name|archive_entry_size_is_set
+argument_list|(
+name|entry
+argument_list|)
+operator|||
 name|archive_entry_size
 argument_list|(
 name|entry
@@ -4161,6 +4347,19 @@ operator|=
 name|archive_read_close
 argument_list|(
 name|a
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4254,12 +4453,12 @@ literal|"blocks"
 argument_list|)
 expr_stmt|;
 block|}
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
 expr_stmt|;
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|ext
 argument_list|)
@@ -4305,7 +4504,7 @@ name|void
 modifier|*
 name|block
 decl_stmt|;
-name|off_t
+name|int64_t
 name|offset
 decl_stmt|;
 for|for
@@ -4458,7 +4657,7 @@ argument_list|,
 literal|"Couldn't allocate archive object"
 argument_list|)
 expr_stmt|;
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -4661,7 +4860,7 @@ literal|"blocks"
 argument_list|)
 expr_stmt|;
 block|}
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -4819,6 +5018,9 @@ name|lookup_uname
 argument_list|(
 name|cpio
 argument_list|,
+operator|(
+name|uid_t
+operator|)
 name|archive_entry_uid
 argument_list|(
 name|entry
@@ -4845,6 +5047,9 @@ name|lookup_gname
 argument_list|(
 name|cpio
 argument_list|,
+operator|(
+name|uid_t
+operator|)
 name|archive_entry_gid
 argument_list|(
 name|entry
@@ -5379,6 +5584,19 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|cpio
+operator|->
+name|dot
+condition|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"\n"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|r
 operator|!=
 name|ARCHIVE_OK
@@ -5445,7 +5663,7 @@ literal|"blocks"
 argument_list|)
 expr_stmt|;
 block|}
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|cpio
 operator|->
@@ -6308,8 +6526,7 @@ name|int64_t
 name|n0
 parameter_list|)
 block|{
-comment|// 2^64 =~ 1.8 * 10^19, so 20 decimal digits suffice.
-comment|// We also need 1 byte for '-' and 1 for '\0'.
+comment|/* 2^64 =~ 1.8 * 10^19, so 20 decimal digits suffice. 	 * We also need 1 byte for '-' and 1 for '\0'. 	 */
 specifier|static
 name|char
 name|buff

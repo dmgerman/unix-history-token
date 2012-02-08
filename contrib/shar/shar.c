@@ -1197,7 +1197,7 @@ block|}
 block|}
 if|if
 condition|(
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)

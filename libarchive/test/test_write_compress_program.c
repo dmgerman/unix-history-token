@@ -44,18 +44,6 @@ end_macro
 
 begin_block
 block|{
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|1009000
-name|skipping
-argument_list|(
-literal|"archive_write_set_compress_program()"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|struct
 name|archive_entry
 modifier|*
@@ -137,7 +125,7 @@ literal|"Write compression via external "
 literal|"program unsupported on this platform"
 argument_list|)
 expr_stmt|;
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
@@ -285,21 +273,23 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Close out the archive. */
-name|assertA
+name|assertEqualIntA
 argument_list|(
-literal|0
-operator|==
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
 name|archive_write_close
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertA
+name|assertEqualInt
 argument_list|(
-literal|0
-operator|==
-name|archive_write_finish
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)
@@ -336,7 +326,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -344,7 +334,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|archive_read_support_compression_gzip
+name|archive_read_support_filter_gzip
 argument_list|(
 name|a
 argument_list|)
@@ -371,7 +361,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -414,7 +404,7 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -542,14 +532,12 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

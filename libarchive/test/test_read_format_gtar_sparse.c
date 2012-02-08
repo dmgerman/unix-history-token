@@ -21,7 +21,7 @@ begin_struct
 struct|struct
 name|contents
 block|{
-name|off_t
+name|int64_t
 name|o
 decl_stmt|;
 name|size_t
@@ -1021,7 +1021,7 @@ name|assert
 argument_list|(
 literal|0
 operator|==
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -1095,11 +1095,11 @@ argument_list|)
 argument_list|)
 condition|)
 block|{
-name|assert
+name|assertEqualInt
 argument_list|(
-literal|0
-operator|==
-name|archive_read_finish
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -1289,7 +1289,7 @@ operator|.
 name|o
 argument_list|)
 expr_stmt|;
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -1348,19 +1348,6 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|1009000
-comment|/* libarchive< 1.9 doesn't get this right */
-name|skipping
-argument_list|(
-literal|"offset of final sparse chunk"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 name|failure
 argument_list|(
 literal|"%s: Offset of final empty chunk must be same as file size"
@@ -1379,8 +1366,6 @@ operator|.
 name|o
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* Step to next file description. */
 operator|++
 name|ac
@@ -1405,40 +1390,28 @@ argument_list|,
 name|err
 argument_list|)
 expr_stmt|;
-name|assert
+name|assertEqualIntA
 argument_list|(
-literal|0
-operator|==
+name|a
+argument_list|,
+name|ARCHIVE_OK
+argument_list|,
 name|archive_read_close
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|2000000
-name|archive_read_finish
+name|assertEqualInt
 argument_list|(
-name|a
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|assert
-argument_list|(
-literal|0
-operator|==
-name|archive_read_finish
+name|ARCHIVE_OK
+argument_list|,
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -1467,18 +1440,6 @@ name|files
 argument_list|)
 expr_stmt|;
 comment|/* 	 * libarchive< 1.9 doesn't support the newer --posix sparse formats 	 * from GNU tar 1.15 and later. 	 */
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|1009000
-name|skipping
-argument_list|(
-literal|"read support for GNUtar --posix sparse formats"
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
 comment|/* 	 * An archive created by GNU tar 1.17 using --posix --sparse-format=0.1 	 */
 name|verify_archive_file
 argument_list|(
@@ -1511,8 +1472,6 @@ argument_list|,
 name|files
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 end_block
 

@@ -208,7 +208,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -216,7 +216,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|archive_read_support_compression_gzip
+name|archive_read_support_filter_gzip
 argument_list|(
 name|a
 argument_list|)
@@ -237,7 +237,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -247,7 +247,7 @@ return|return;
 block|}
 name|failure
 argument_list|(
-literal|"archive_read_support_compression_gzip"
+literal|"archive_read_support_filter_gzip"
 argument_list|)
 expr_stmt|;
 name|assertEqualInt
@@ -331,7 +331,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

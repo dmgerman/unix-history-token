@@ -1008,7 +1008,7 @@ argument_list|)
 expr_stmt|;
 name|skipping
 argument_list|(
-literal|"POSIX.1e ACL tests require that POSIX.1e ACL support be enabled on the filesystem"
+literal|"This filesystem does not support POSIX.1e ACLs"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1140,7 +1140,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)

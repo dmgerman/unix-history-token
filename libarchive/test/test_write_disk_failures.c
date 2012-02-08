@@ -17,26 +17,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_if
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|>=
-literal|1009000
-end_if
-
-begin_define
-define|#
-directive|define
-name|UMASK
-value|022
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_macro
 name|DEFINE_TEST
 argument_list|(
@@ -48,11 +28,6 @@ begin_block
 block|{
 if|#
 directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|<
-literal|1009000
-operator|||
-operator|(
 name|defined
 argument_list|(
 name|_WIN32
@@ -63,7 +38,6 @@ name|defined
 argument_list|(
 name|__CYGWIN__
 argument_list|)
-operator|)
 name|skipping
 argument_list|(
 literal|"archive_write_disk interface"
@@ -87,7 +61,7 @@ decl_stmt|;
 comment|/* Force the umask to something predictable. */
 name|assertUmask
 argument_list|(
-name|UMASK
+literal|022
 argument_list|)
 expr_stmt|;
 comment|/* A directory that we can't write to. */
@@ -226,9 +200,9 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-literal|0
+name|ARCHIVE_OK
 argument_list|,
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|a
 argument_list|)

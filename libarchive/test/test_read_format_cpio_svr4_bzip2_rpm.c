@@ -56,7 +56,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|archive_read_support_compression_bzip2
+name|archive_read_support_filter_bzip2
 argument_list|(
 name|a
 argument_list|)
@@ -77,7 +77,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -100,7 +100,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_rpm
+name|archive_read_support_filter_rpm
 argument_list|(
 name|a
 argument_list|)
@@ -305,7 +305,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

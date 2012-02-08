@@ -349,7 +349,21 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_GETGRGID_R
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_GETPID
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_GETPWUID_R
 value|1
 end_define
 
@@ -657,6 +671,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|HAVE_STRUCT_TM_TM_GMTOFF
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
 name|HAVE_SYMLINK
 value|1
 end_define
@@ -672,6 +693,20 @@ begin_define
 define|#
 directive|define
 name|HAVE_SYS_IOCTL_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_MOUNT_H
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_PARAM_H
 value|1
 end_define
 
@@ -708,6 +743,13 @@ undef|#
 directive|undef
 name|HAVE_SYS_UTIME_H
 end_undef
+
+begin_define
+define|#
+directive|define
+name|HAVE_SYS_UTSNAME_H
+value|1
+end_define
 
 begin_define
 define|#

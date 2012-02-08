@@ -243,6 +243,15 @@ argument_list|,
 name|nsecs
 argument_list|)
 expr_stmt|;
+name|archive_entry_set_ctime
+argument_list|(
+name|entry
+argument_list|,
+name|secs
+argument_list|,
+name|nsecs
+argument_list|)
+expr_stmt|;
 name|archive_entry_set_dev
 argument_list|(
 name|entry
@@ -305,7 +314,7 @@ operator|->
 name|nFileSizeLow
 argument_list|)
 expr_stmt|;
-comment|//	archive_entry_set_mode(entry, st->st_mode);
+comment|/* archive_entry_set_mode(entry, st->st_mode); */
 block|}
 end_function
 
