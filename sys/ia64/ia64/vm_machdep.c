@@ -610,7 +610,7 @@ name|pcb_current_pmap
 operator|=
 name|vmspace_pmap
 argument_list|(
-name|td
+name|td0
 operator|->
 name|td_proc
 operator|->
