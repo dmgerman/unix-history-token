@@ -1894,6 +1894,7 @@ argument_list|(
 name|bus
 argument_list|)
 expr_stmt|;
+comment|/* restore USB configuration to index 0 */
 name|err
 operator|=
 name|usbd_set_config_index
@@ -1916,6 +1917,32 @@ argument_list|,
 literal|"Could not configure root HUB\n"
 argument_list|)
 expr_stmt|;
+comment|/* probe and attach */
+name|err
+operator|=
+name|usb_probe_and_attach
+argument_list|(
+name|udev
+argument_list|,
+name|USB_IFACE_INDEX_ANY
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|err
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|bus
+operator|->
+name|bdev
+argument_list|,
+literal|"Could not probe and "
+literal|"attach root HUB\n"
+argument_list|)
+expr_stmt|;
+block|}
 name|usbd_enum_unlock
 argument_list|(
 name|udev
