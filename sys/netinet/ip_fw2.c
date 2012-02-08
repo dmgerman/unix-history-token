@@ -4111,6 +4111,9 @@ name|icmp6_hdr
 modifier|*
 name|icmp6
 decl_stmt|;
+name|u_short
+name|ip6f_mf
+decl_stmt|;
 endif|#
 directive|endif
 name|src
@@ -4130,6 +4133,16 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|INET6
+name|ip6f_mf
+operator|=
+name|offset
+operator|&
+name|IP6F_MORE_FRAG
+expr_stmt|;
+name|offset
+operator|&=
+name|IP6F_OFF_MASK
+expr_stmt|;
 if|if
 condition|(
 name|IS_IP6_FLOW_ID
@@ -4717,17 +4730,11 @@ argument_list|,
 name|ntohs
 argument_list|(
 name|offset
-operator|&
-name|IP6F_OFF_MASK
 argument_list|)
 operator|<<
 literal|3
 argument_list|,
-operator|(
-name|offset
-operator|&
-name|IP6F_MORE_FRAG
-operator|)
+name|ip6f_mf
 condition|?
 literal|"+"
 else|:
@@ -9928,9 +9935,14 @@ init|=
 literal|0
 decl_stmt|;
 comment|/* hlen>0 means we have an IP pkt */
-comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset == 0 means there is no Fragment Header or there 	 *	is a single packet fragement (fragement header added without 	 *	needed).  We will treat a single packet fragment as if there 	 *	was no fragment header (or log/block depending on the 	 *	fw_permit_single_frag6 sysctl setting). 	 *	If offset != 0 for IPv6 always use correct mask to 	 *	get the correct offset because we add IP6F_MORE_FRAG to be able 	 *	to dectect the first of multiple fragments which would 	 *	otherwise have offset = 0. 	 */
+comment|/* 	 * offset	The offset of a fragment. offset != 0 means that 	 *	we have a fragment at this offset of an IPv4 packet. 	 *	offset == 0 means that (if this is an IPv4 packet) 	 *	this is the first or only fragment. 	 *	For IPv6 offset|ip6f_mf == 0 means there is no Fragment Header 	 *	or there is a single packet fragement (fragement header added 	 *	without needed).  We will treat a single packet fragment as if 	 *	there was no fragment header (or log/block depending on the 	 *	fw_permit_single_frag6 sysctl setting). 	 */
 name|u_short
 name|offset
+init|=
+literal|0
+decl_stmt|;
+name|u_short
+name|ip6f_mf
 init|=
 literal|0
 decl_stmt|;
@@ -10551,9 +10563,8 @@ name|ip6f_offlg
 operator|&
 name|IP6F_OFF_MASK
 expr_stmt|;
-comment|/* Add IP6F_MORE_FRAG for offset of first 				 * fragment to be != 0 if there shall be more. */
-name|offset
-operator||=
+name|ip6f_mf
+operator|=
 operator|(
 operator|(
 expr|struct
@@ -10574,6 +10585,10 @@ operator|==
 literal|0
 operator|&&
 name|offset
+operator|==
+literal|0
+operator|&&
+name|ip6f_mf
 operator|==
 literal|0
 condition|)
@@ -13247,6 +13262,8 @@ argument_list|,
 name|oif
 argument_list|,
 name|offset
+operator||
+name|ip6f_mf
 argument_list|,
 name|tablearg
 argument_list|,
