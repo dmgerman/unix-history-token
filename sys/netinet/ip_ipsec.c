@@ -217,7 +217,7 @@ name|defined
 argument_list|(
 name|IPSEC_FILTERTUNNEL
 argument_list|)
-comment|/* 	 * Bypass packet filtering for packets from a tunnel. 	 */
+comment|/* 	 * Bypass packet filtering for packets previously handled by IPsec. 	 */
 if|if
 condition|(
 name|m_tag_find
