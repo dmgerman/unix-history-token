@@ -4703,6 +4703,20 @@ operator|.
 name|shmall
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|TUNABLE_ULONG_FETCH
+argument_list|(
+literal|"kern.ipc.shmmax"
+argument_list|,
+operator|&
+name|shminfo
+operator|.
+name|shmmax
+argument_list|)
+condition|)
+block|{
 comment|/* Initialize shmmax dealing with possible overflow. */
 for|for
 control|(
@@ -4739,6 +4753,7 @@ operator|.
 name|shmall
 condition|)
 break|break;
+block|}
 block|}
 name|TUNABLE_ULONG_FETCH
 argument_list|(
