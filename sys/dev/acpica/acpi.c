@@ -997,6 +997,19 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|void
+name|acpi_resync_clock
+parameter_list|(
+name|struct
+name|acpi_softc
+modifier|*
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|int
 name|acpi_wake_sleep_prep
 parameter_list|(
@@ -1820,6 +1833,12 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__amd64__
+end_ifdef
+
 begin_comment
 comment|/* Reset system clock while resuming.  XXX Remove once tested. */
 end_comment
@@ -1864,6 +1883,11 @@ literal|"Reset system clock while resuming."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* Allow users to override quirks. */
@@ -12116,11 +12140,18 @@ name|slp_state
 operator|>=
 name|ACPI_SS_SLEPT
 condition|)
+block|{
+name|acpi_resync_clock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|acpi_enable_fixed_events
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+block|}
 name|sc
 operator|->
 name|acpi_next_sstate
@@ -12195,6 +12226,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|acpi_resync_clock
 parameter_list|(
@@ -12204,6 +12236,9 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|__amd64__
 if|if
 condition|(
 operator|!
@@ -12240,6 +12275,8 @@ operator|->
 name|acpi_sleep_delay
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
