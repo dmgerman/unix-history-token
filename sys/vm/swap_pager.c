@@ -8826,9 +8826,9 @@ name|cp
 condition|)
 name|sp
 operator|->
-name|sw_id
-operator|=
-name|NULL
+name|sw_flags
+operator||=
+name|SW_CLOSING
 expr_stmt|;
 name|mtx_unlock
 argument_list|(
