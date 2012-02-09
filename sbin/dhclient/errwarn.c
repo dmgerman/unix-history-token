@@ -207,6 +207,17 @@ name|stderr
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|pidfile
+operator|!=
+name|NULL
+condition|)
+name|pidfile_remove
+argument_list|(
+name|pidfile
+argument_list|)
+expr_stmt|;
 name|exit
 argument_list|(
 literal|1
