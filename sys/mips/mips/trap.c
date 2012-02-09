@@ -3166,6 +3166,9 @@ operator|(
 name|InstFmt
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|trapframe
 operator|->
 name|pc
@@ -3226,6 +3229,9 @@ index|]
 operator|=
 operator|(
 name|register_t
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|td
 operator|->
