@@ -11131,6 +11131,9 @@ name|te
 operator|->
 name|dev
 operator|==
+operator|(
+name|int64_t
+operator|)
 name|st
 operator|->
 name|st_dev
@@ -11139,6 +11142,9 @@ name|te
 operator|->
 name|ino
 operator|==
+operator|(
+name|int64_t
+operator|)
 name|st
 operator|->
 name|st_ino
@@ -11196,6 +11202,9 @@ name|st
 operator|!=
 name|NULL
 operator|&&
+operator|(
+name|int64_t
+operator|)
 name|st
 operator|->
 name|st_dev

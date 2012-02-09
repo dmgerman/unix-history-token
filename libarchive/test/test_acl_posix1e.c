@@ -986,11 +986,14 @@ argument_list|)
 expr_stmt|;
 name|assert
 argument_list|(
-operator|(
+call|(
+name|mode_t
+call|)
+argument_list|(
 name|mode
 operator|&
 literal|0777
-operator|)
+argument_list|)
 operator|==
 operator|(
 name|archive_entry_mode

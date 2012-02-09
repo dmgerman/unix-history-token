@@ -1237,7 +1237,6 @@ name|time_t
 name|get_time
 parameter_list|(
 name|int
-name|time
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5468,6 +5467,9 @@ if|if
 condition|(
 name|header_size
 operator|<
+operator|(
+name|int64_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|file_header

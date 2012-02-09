@@ -7636,6 +7636,9 @@ if|if
 condition|(
 name|l
 operator|==
+operator|(
+name|size_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -8835,6 +8838,12 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|mode
+expr_stmt|;
+comment|/* UNUSED */
 name|ts
 index|[
 literal|0
@@ -9095,6 +9104,36 @@ return|;
 else|#
 directive|else
 comment|/* 	 * We don't know how to set the time on this platform. 	 */
+operator|(
+name|void
+operator|)
+name|fd
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|mode
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|name
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|atime_nsec
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|mtime_nsec
+expr_stmt|;
+comment|/* UNUSED */
 return|return
 operator|(
 name|ARCHIVE_WARN
@@ -9428,6 +9467,20 @@ argument_list|,
 name|birthtime_nanos
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+operator|(
+name|void
+operator|)
+name|birthtime
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|birthtime_nanos
+expr_stmt|;
+comment|/* UNUSED */
 endif|#
 directive|endif
 name|r2
@@ -11262,7 +11315,7 @@ parameter_list|,
 name|struct
 name|archive_acl
 modifier|*
-name|acl
+name|aacl
 parameter_list|)
 block|{
 operator|(
@@ -11286,7 +11339,7 @@ comment|/* UNUSED */
 operator|(
 name|void
 operator|)
-name|acl
+name|aacl
 expr_stmt|;
 comment|/* UNUSED */
 return|return

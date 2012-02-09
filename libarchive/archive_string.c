@@ -8173,7 +8173,9 @@ begin_function
 specifier|static
 name|unsigned
 name|get_current_codepage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 modifier|*
@@ -8648,7 +8650,9 @@ begin_function
 specifier|static
 name|unsigned
 name|get_current_oemcp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|int
 name|i
@@ -8800,7 +8804,9 @@ begin_function
 specifier|static
 name|unsigned
 name|get_current_codepage
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(
@@ -8843,7 +8849,9 @@ begin_function
 specifier|static
 name|unsigned
 name|get_current_oemcp
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 return|return
 operator|(

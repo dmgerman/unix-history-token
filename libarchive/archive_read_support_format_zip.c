@@ -1082,6 +1082,9 @@ name|zip
 operator|->
 name|central_directory_offset
 operator|+
+operator|(
+name|int64_t
+operator|)
 name|zip
 operator|->
 name|central_directory_size

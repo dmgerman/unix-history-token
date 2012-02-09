@@ -391,7 +391,6 @@ expr_stmt|;
 operator|*
 operator|(
 operator|(
-specifier|const
 expr|struct
 name|archive_rb_node
 operator|*
@@ -2205,6 +2204,10 @@ if|if
 condition|(
 name|other
 operator|==
+operator|(
+name|unsigned
+name|int
+operator|)
 name|RB_POSITION
 argument_list|(
 name|self

@@ -7495,6 +7495,9 @@ name|r
 operator|==
 literal|0
 operator|&&
+operator|(
+name|int
+operator|)
 name|st
 operator|.
 name|st_nlink
@@ -7847,6 +7850,9 @@ name|mode
 operator|>=
 literal|0
 operator|&&
+operator|(
+name|mode_t
+operator|)
 name|mode
 operator|!=
 operator|(
@@ -8034,6 +8040,9 @@ name|mode
 operator|>=
 literal|0
 operator|&&
+operator|(
+name|mode_t
+operator|)
 name|mode
 operator|!=
 operator|(

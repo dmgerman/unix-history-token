@@ -17342,6 +17342,9 @@ while|while
 condition|(
 name|ext_bytes
 operator|>=
+operator|(
+name|int64_t
+operator|)
 name|iso9660
 operator|->
 name|wbuff_remaining
@@ -33044,17 +33047,14 @@ parameter_list|(
 name|struct
 name|archive_write
 modifier|*
-name|a
 parameter_list|,
 name|struct
 name|isoent
 modifier|*
-name|isoent
 parameter_list|,
 name|struct
 name|idr
 modifier|*
-name|idr
 parameter_list|)
 function_decl|;
 name|idr_init
@@ -36987,6 +36987,9 @@ if|if
 condition|(
 name|size
 operator|>
+operator|(
+name|int64_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buff
@@ -37939,6 +37942,9 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int64_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|iso9660
@@ -38195,6 +38201,9 @@ if|if
 condition|(
 name|entry_size
 operator|<
+operator|(
+name|int64_t
+operator|)
 name|doff
 condition|)
 return|return;

@@ -802,6 +802,12 @@ name|testfile
 init|=
 literal|"can_sparse"
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|path
+expr_stmt|;
+comment|/* UNUSED */
 name|memset
 argument_list|(
 operator|&
@@ -1080,6 +1086,12 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+operator|(
+name|void
+operator|)
+name|path
+expr_stmt|;
+comment|/* UNUSED */
 return|return
 operator|(
 literal|0

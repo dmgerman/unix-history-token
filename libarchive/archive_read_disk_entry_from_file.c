@@ -911,9 +911,8 @@ name|unsigned
 name|long
 name|stflags
 decl_stmt|;
-name|int
 name|r
-init|=
+operator|=
 name|ioctl
 argument_list|(
 name|fd
@@ -923,7 +922,7 @@ argument_list|,
 operator|&
 name|stflags
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|r
@@ -4291,6 +4290,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 name|fm
 operator|->
 name|fm_mapped_extents
@@ -4330,6 +4332,9 @@ name|fe_logical
 operator|+
 name|length
 operator|>
+operator|(
+name|uint64_t
+operator|)
 name|size
 condition|)
 name|length
