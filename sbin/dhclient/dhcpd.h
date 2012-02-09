@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -95,6 +95,12 @@ begin_include
 include|#
 directive|include
 file|<fcntl.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<libutil.h>
 end_include
 
 begin_include
@@ -1874,6 +1880,15 @@ specifier|extern
 name|struct
 name|client_config
 name|top_level_config
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|pidfh
+modifier|*
+name|pidfile
 decl_stmt|;
 end_decl_stmt
 
