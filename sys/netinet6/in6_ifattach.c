@@ -2239,24 +2239,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ia must not be NULL */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-operator|!
-name|ia
-condition|)
-block|{
-name|panic
+name|KASSERT
 argument_list|(
-literal|"ia == NULL in in6_ifattach_linklocal"
+name|ia
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: ia == NULL, ifp=%p"
+operator|,
+name|__func__
+operator|,
+name|ifp
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-endif|#
-directive|endif
 name|ifa_free
 argument_list|(
 operator|&
