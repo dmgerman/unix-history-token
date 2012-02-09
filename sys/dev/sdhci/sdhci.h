@@ -60,6 +60,45 @@ value|((x)& 7)
 end_define
 
 begin_comment
+comment|/*  * RICOH specific PCI registers  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SDHC_PCI_MODE_KEY
+value|0xf9
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PCI_MODE
+value|0x150
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PCI_MODE_SD20
+value|0x10
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PCI_BASE_FREQ_KEY
+value|0xfc
+end_define
+
+begin_define
+define|#
+directive|define
+name|SDHC_PCI_BASE_FREQ
+value|0xe1
+end_define
+
+begin_comment
 comment|/*  * Controller registers  */
 end_comment
 
