@@ -166,11 +166,6 @@ name|defined
 argument_list|(
 name|INET
 argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
 end_if
 
 begin_include
