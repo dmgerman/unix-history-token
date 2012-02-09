@@ -6221,6 +6221,9 @@ name|sc
 operator|->
 name|from_cp
 operator|!=
+operator|(
+name|unsigned
+operator|)
 operator|-
 literal|1
 operator|&&

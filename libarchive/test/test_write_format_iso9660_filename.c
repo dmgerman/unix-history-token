@@ -412,7 +412,7 @@ decl_stmt|;
 specifier|const
 name|char
 modifier|*
-name|symlink
+name|symlinkname
 init|=
 name|archive_entry_symlink
 argument_list|(
@@ -424,7 +424,7 @@ name|length
 decl_stmt|;
 if|if
 condition|(
-name|symlink
+name|symlinkname
 operator|!=
 name|NULL
 condition|)
@@ -433,7 +433,7 @@ name|length
 operator|=
 name|strlen
 argument_list|(
-name|symlink
+name|symlinkname
 argument_list|)
 expr_stmt|;
 name|assert
@@ -453,7 +453,7 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
-name|symlink
+name|symlinkname
 index|[
 name|length
 operator|-
@@ -1320,6 +1320,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sym128
@@ -1369,6 +1372,9 @@ literal|0
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sym255

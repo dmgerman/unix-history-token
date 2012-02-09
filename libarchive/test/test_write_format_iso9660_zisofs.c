@@ -2453,6 +2453,9 @@ literal|0
 init|;
 name|j
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|data
@@ -2485,6 +2488,9 @@ literal|0
 init|;
 name|j
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|data

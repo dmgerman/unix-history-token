@@ -9313,7 +9313,7 @@ name|long
 name|mtime_nanos
 parameter_list|,
 name|time_t
-name|ctime
+name|cctime
 parameter_list|,
 name|long
 name|ctime_nanos
@@ -9357,7 +9357,7 @@ name|mtime
 argument_list|,
 name|mtime_nanos
 argument_list|,
-name|ctime
+name|cctime
 argument_list|,
 name|ctime_nanos
 argument_list|)
@@ -9371,6 +9371,21 @@ name|ARCHIVE_OK
 operator|)
 return|;
 block|}
+else|#
+directive|else
+comment|/* Tru64 */
+operator|(
+name|void
+operator|)
+name|cctime
+expr_stmt|;
+comment|/* UNUSED */
+operator|(
+name|void
+operator|)
+name|ctime_nanos
+expr_stmt|;
+comment|/* UNUSED */
 endif|#
 directive|endif
 comment|/* Tru64 */
@@ -9489,7 +9504,7 @@ name|birthtime
 decl_stmt|,
 name|mtime
 decl_stmt|,
-name|ctime
+name|cctime
 decl_stmt|;
 name|long
 name|atime_nsec
@@ -9507,7 +9522,7 @@ name|birthtime
 operator|=
 name|mtime
 operator|=
-name|ctime
+name|cctime
 operator|=
 name|a
 operator|->
@@ -9657,7 +9672,7 @@ name|entry
 argument_list|)
 condition|)
 block|{
-name|ctime
+name|cctime
 operator|=
 name|archive_entry_ctime
 argument_list|(
@@ -9705,7 +9720,7 @@ name|mtime
 argument_list|,
 name|mtime_nsec
 argument_list|,
-name|ctime
+name|cctime
 argument_list|,
 name|ctime_nsec
 argument_list|)

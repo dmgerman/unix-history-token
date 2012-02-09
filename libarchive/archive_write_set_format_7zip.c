@@ -2615,6 +2615,7 @@ name|_7zip
 modifier|*
 name|zip
 decl_stmt|;
+specifier|const
 name|unsigned
 name|char
 modifier|*
@@ -2691,6 +2692,7 @@ block|}
 name|p
 operator|=
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -4525,6 +4527,9 @@ literal|1
 init|;
 name|i
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|numdata
@@ -5841,7 +5846,7 @@ name|uint64_t
 name|utcToFiletime
 parameter_list|(
 name|time_t
-name|time
+name|t
 parameter_list|,
 name|long
 name|ns
@@ -5852,7 +5857,7 @@ name|fileTime
 decl_stmt|;
 name|fileTime
 operator|=
-name|time
+name|t
 expr_stmt|;
 name|fileTime
 operator|*=
@@ -7435,24 +7440,28 @@ modifier|*
 name|n2
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|file
 modifier|*
 name|f1
 init|=
 operator|(
+specifier|const
 expr|struct
 name|file
 operator|*
 operator|)
 name|n1
 decl_stmt|;
+specifier|const
 name|struct
 name|file
 modifier|*
 name|f2
 init|=
 operator|(
+specifier|const
 expr|struct
 name|file
 operator|*
@@ -7523,12 +7532,14 @@ modifier|*
 name|key
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|file
 modifier|*
 name|f
 init|=
 operator|(
+specifier|const
 expr|struct
 name|file
 operator|*
@@ -11434,6 +11445,12 @@ name|ppmd_stream
 modifier|*
 name|strm
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+comment|/* UNUSED */
 name|strm
 operator|=
 operator|(
@@ -11657,6 +11674,12 @@ name|ppmd_stream
 modifier|*
 name|strm
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+comment|/* UNUSED */
 name|strm
 operator|=
 operator|(

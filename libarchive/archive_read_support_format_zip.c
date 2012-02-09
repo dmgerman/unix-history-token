@@ -573,6 +573,28 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|archive_read_support_format_zip_streamable
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|archive_read_support_format_zip_seekable
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 name|int
 name|archive_read_support_format_zip_streamable
@@ -3382,8 +3404,16 @@ block|}
 decl_stmt|;
 if|if
 condition|(
+literal|0
+operator|<=
+name|compression
+operator|&&
 name|compression
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|compression_names
@@ -3395,6 +3425,7 @@ name|compression_names
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 return|return
@@ -4071,6 +4102,12 @@ decl_stmt|;
 name|ssize_t
 name|bytes_avail
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|offset
+expr_stmt|;
+comment|/* UNUSED */
 name|zip
 operator|=
 operator|(
@@ -4545,6 +4582,12 @@ decl_stmt|;
 name|int
 name|r
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|offset
+expr_stmt|;
+comment|/* UNUSED */
 name|zip
 operator|=
 operator|(

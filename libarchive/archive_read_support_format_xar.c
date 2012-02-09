@@ -14420,6 +14420,12 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|xar
+expr_stmt|;
+comment|/* UNUSED */
 name|len
 operator|=
 literal|0

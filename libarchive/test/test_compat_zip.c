@@ -2288,16 +2288,9 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|1327314468
-argument_list|,
-name|archive_entry_mtime
-argument_list|(
-name|ae
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* Zip timestamps are local time, so vary by time zone. */
+comment|/* TODO: A more complex assert would work here; we could 	   verify that it's within +/- 24 hours of a particular value. */
+comment|/* assertEqualInt(1327314468, archive_entry_mtime(ae)); */
 name|assertEqualInt
 argument_list|(
 literal|0
@@ -2343,16 +2336,8 @@ name|ae
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
-argument_list|(
-literal|1327314476
-argument_list|,
-name|archive_entry_mtime
-argument_list|(
-name|ae
-argument_list|)
-argument_list|)
-expr_stmt|;
+comment|/* Zip timestamps are local time, so vary by time zone. */
+comment|/* assertEqualInt(1327314476, archive_entry_mtime(ae)); */
 name|assertEqualInt
 argument_list|(
 literal|11

@@ -2184,6 +2184,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -2944,6 +2945,9 @@ name|zip_entry
 operator|->
 name|ssIndex
 operator|!=
+operator|(
+name|uint32_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -3030,9 +3034,6 @@ name|size_t
 name|symsize
 init|=
 literal|0
-decl_stmt|;
-name|int
-name|r
 decl_stmt|;
 comment|/* 		 * Symbolic-name is recorded as its contents. We have to 		 * read the contents at this time. 		 */
 while|while
@@ -9913,6 +9914,9 @@ index|]
 operator|.
 name|outIndex
 operator|==
+operator|(
+name|uint64_t
+operator|)
 name|n
 condition|)
 break|break;
@@ -13033,7 +13037,7 @@ name|fileTime
 parameter_list|,
 name|time_t
 modifier|*
-name|time
+name|timep
 parameter_list|,
 name|long
 modifier|*
@@ -13053,7 +13057,7 @@ name|EPOC_TIME
 expr_stmt|;
 comment|/* milli seconds base */
 operator|*
-name|time
+name|timep
 operator|=
 call|(
 name|time_t
@@ -13083,7 +13087,7 @@ block|}
 else|else
 block|{
 operator|*
-name|time
+name|timep
 operator|=
 literal|0
 expr_stmt|;
@@ -14086,6 +14090,7 @@ argument_list|(
 literal|0
 argument_list|,
 operator|(
+specifier|const
 name|unsigned
 name|char
 operator|*
@@ -14212,6 +14217,9 @@ if|if
 condition|(
 name|bytes_avail
 operator|>=
+operator|(
+name|ssize_t
+operator|)
 name|next_header_offset
 condition|)
 name|__archive_read_consume
@@ -14791,6 +14799,10 @@ name|zip
 operator|->
 name|codec2
 operator|==
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|-
 literal|1
 condition|)
@@ -15040,6 +15052,10 @@ name|zip
 operator|->
 name|codec2
 operator|==
+operator|(
+name|unsigned
+name|long
+operator|)
 operator|-
 literal|1
 condition|)
@@ -15095,6 +15111,9 @@ if|if
 condition|(
 name|bytes_avail
 operator|>
+operator|(
+name|ssize_t
+operator|)
 name|zip
 operator|->
 name|pack_stream_inbytes_remaining
@@ -15115,6 +15134,9 @@ if|if
 condition|(
 name|bytes_avail
 operator|>
+operator|(
+name|ssize_t
+operator|)
 name|zip
 operator|->
 name|folder_outbytes_remaining
@@ -15727,7 +15749,7 @@ name|format
 operator|->
 name|data
 decl_stmt|;
-name|uint64_t
+name|int64_t
 name|pack_offset
 decl_stmt|;
 if|if
@@ -17236,6 +17258,9 @@ index|[
 name|i
 index|]
 operator|==
+operator|(
+name|uint64_t
+operator|)
 operator|-
 literal|1
 condition|)
@@ -18189,7 +18214,7 @@ name|uint8_t
 name|b
 decl_stmt|;
 name|int
-name|index
+name|b_index
 decl_stmt|;
 name|dest
 operator|=
@@ -18211,7 +18236,7 @@ operator|==
 literal|0
 condition|)
 break|break;
-name|index
+name|b_index
 operator|=
 name|kMaskToBitNumber
 index|[
@@ -18231,7 +18256,7 @@ operator|>>
 operator|(
 literal|24
 operator|-
-name|index
+name|b_index
 operator|)
 argument_list|)
 expr_stmt|;
@@ -18255,7 +18280,7 @@ operator|<<
 operator|(
 literal|32
 operator|-
-name|index
+name|b_index
 operator|)
 operator|)
 operator|-
@@ -18466,7 +18491,7 @@ begin_define
 define|#
 directive|define
 name|RC_INIT2
-value|zip->bcj2_code = 0; zip->bcj2_range = 0xFFFFFFFF; \   { int i; for (i = 0; i< 5; i++) { RC_TEST; zip->bcj2_code = (zip->bcj2_code<< 8) | RC_READ_BYTE; }}
+value|zip->bcj2_code = 0; zip->bcj2_range = 0xFFFFFFFF; \   { int ii; for (ii = 0; ii< 5; ii++) { RC_TEST; zip->bcj2_code = (zip->bcj2_code<< 8) | RC_READ_BYTE; }}
 end_define
 
 begin_define
@@ -18859,7 +18884,7 @@ literal|0
 condition|)
 block|{
 name|uint8_t
-name|b
+name|bb
 init|=
 name|buf0
 index|[
@@ -18872,7 +18897,7 @@ name|outPos
 operator|++
 index|]
 operator|=
-name|b
+name|bb
 expr_stmt|;
 if|if
 condition|(
@@ -18882,7 +18907,7 @@ name|zip
 operator|->
 name|bcj2_prevByte
 argument_list|,
-name|b
+name|bb
 argument_list|)
 condition|)
 block|{
@@ -18901,7 +18926,7 @@ name|zip
 operator|->
 name|bcj2_prevByte
 operator|=
-name|b
+name|bb
 expr_stmt|;
 name|limit
 operator|--

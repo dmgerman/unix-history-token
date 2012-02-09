@@ -22199,11 +22199,8 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|struct
-name|isofile
-modifier|*
 name|file
-init|=
+operator|=
 name|iso9660
 operator|->
 name|el_torito
@@ -22211,7 +22208,7 @@ operator|.
 name|boot
 operator|->
 name|file
-decl_stmt|;
+expr_stmt|;
 name|blocks
 operator|=
 name|file

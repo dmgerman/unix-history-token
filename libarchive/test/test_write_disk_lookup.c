@@ -73,6 +73,12 @@ name|mp
 init|=
 name|d
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|g
+expr_stmt|;
+comment|/* UNUSED */
 name|assertEqualInt
 argument_list|(
 operator|*
@@ -159,6 +165,12 @@ name|mp
 init|=
 name|d
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|u
+expr_stmt|;
+comment|/* UNUSED */
 name|assertEqualInt
 argument_list|(
 operator|*

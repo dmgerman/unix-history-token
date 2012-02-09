@@ -28,14 +28,37 @@ name|TESTPATH
 value|"abcdefghijklmnopqrstuvwxyz/"	\ 	"abcdefghijklmnopqrstuvwxyz/"	\ 	"abcdefghijklmnopqrstuvwxyz/"	\ 	"abcdefghijklmnopqrstuvwxyz/"	\ 	"abcdefghijklmnopqrstuvwxyz/"	\ 	"abcdefghijklmnopqrstuvwxyz/"	\ 	"abcdefghijklmnopqrstuvwxyz/"
 end_define
 
+begin_function_decl
+specifier|static
+name|void
+name|test_compat_mac_1
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|test_compat_mac_2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Apple shipped an extended version of GNU tar with Mac OS X 10.5  * and earlier.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_compat_mac_1
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|name
@@ -748,9 +771,12 @@ comment|/*  * Apple shipped a customized version of bsdtar starting with MacOS 1
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|test_compat_mac_2
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|char
 name|name

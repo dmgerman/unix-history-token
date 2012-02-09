@@ -355,6 +355,24 @@ end_struct
 begin_function_decl
 specifier|static
 name|int
+name|bid_keycmp
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|ssize_t
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|cleanup
 parameter_list|(
 name|struct
@@ -1460,6 +1478,7 @@ comment|/*  * Compare characters with a mtree keyword.  * Returns the length of 
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|bid_keycmp
 parameter_list|(

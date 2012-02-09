@@ -621,6 +621,12 @@ operator|*
 operator|)
 name|client_data
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|a
+expr_stmt|;
+comment|/* UNUSED */
 switch|switch
 condition|(
 name|whence

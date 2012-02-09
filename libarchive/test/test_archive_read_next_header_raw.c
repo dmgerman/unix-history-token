@@ -104,6 +104,9 @@ operator|(
 name|void
 operator|*
 operator|)
+operator|(
+name|uintptr_t
+operator|)
 name|data
 argument_list|,
 sizeof|sizeof

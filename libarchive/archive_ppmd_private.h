@@ -655,7 +655,7 @@ parameter_list|(
 name|p
 parameter_list|)
 define|\
-value|{ unsigned i; for (i = 0; i< 256 / sizeof(p[0]); i += 8) { \   p[i+7] = p[i+6] = p[i+5] = p[i+4] = p[i+3] = p[i+2] = p[i+1] = p[i+0] = ~(size_t)0; }}
+value|{ unsigned j; for (j = 0; j< 256 / sizeof(p[0]); j += 8) { \   p[j+7] = p[j+6] = p[j+5] = p[j+4] = p[j+3] = p[j+2] = p[j+1] = p[j+0] = ~(size_t)0; }}
 end_define
 
 begin_endif

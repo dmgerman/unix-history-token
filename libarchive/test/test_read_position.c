@@ -69,7 +69,21 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|verify_read_positions
+parameter_list|(
+name|struct
+name|archive
+modifier|*
+name|a
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|void
 name|verify_read_positions
 parameter_list|(

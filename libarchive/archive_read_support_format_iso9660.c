@@ -8607,6 +8607,9 @@ name|logical_block_size
 operator|)
 operator|)
 operator|>
+operator|(
+name|uint32_t
+operator|)
 name|iso9660
 operator|->
 name|volume_block
@@ -10866,6 +10869,9 @@ operator|->
 name|ce_size
 operator|)
 operator|>
+operator|(
+name|uint64_t
+operator|)
 name|iso9660
 operator|->
 name|logical_block_size

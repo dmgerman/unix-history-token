@@ -5317,7 +5317,7 @@ literal|8
 index|]
 decl_stmt|;
 name|int
-name|time
+name|ttime
 decl_stmt|;
 name|struct
 name|archive_string_conv
@@ -5781,7 +5781,7 @@ name|file_header
 operator|.
 name|method
 expr_stmt|;
-name|time
+name|ttime
 operator|=
 name|archive_le32dec
 argument_list|(
@@ -5796,7 +5796,7 @@ name|mtime
 operator|=
 name|get_time
 argument_list|(
-name|time
+name|ttime
 argument_list|)
 expr_stmt|;
 name|rar
@@ -7226,7 +7226,7 @@ name|time_t
 name|get_time
 parameter_list|(
 name|int
-name|time
+name|ttime
 parameter_list|)
 block|{
 name|struct
@@ -7240,7 +7240,7 @@ operator|=
 literal|2
 operator|*
 operator|(
-name|time
+name|ttime
 operator|&
 literal|0x1f
 operator|)
@@ -7250,7 +7250,7 @@ operator|.
 name|tm_min
 operator|=
 operator|(
-name|time
+name|ttime
 operator|>>
 literal|5
 operator|)
@@ -7262,7 +7262,7 @@ operator|.
 name|tm_hour
 operator|=
 operator|(
-name|time
+name|ttime
 operator|>>
 literal|11
 operator|)
@@ -7274,7 +7274,7 @@ operator|.
 name|tm_mday
 operator|=
 operator|(
-name|time
+name|ttime
 operator|>>
 literal|16
 operator|)
@@ -7287,7 +7287,7 @@ name|tm_mon
 operator|=
 operator|(
 operator|(
-name|time
+name|ttime
 operator|>>
 literal|21
 operator|)
@@ -7303,7 +7303,7 @@ name|tm_year
 operator|=
 operator|(
 operator|(
-name|time
+name|ttime
 operator|>>
 literal|25
 operator|)
@@ -7363,7 +7363,7 @@ decl_stmt|,
 name|count
 decl_stmt|;
 name|int
-name|time
+name|ttime
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -7468,7 +7468,7 @@ operator|-
 literal|1
 operator|)
 return|;
-name|time
+name|ttime
 operator|=
 name|archive_le32dec
 argument_list|(
@@ -7479,7 +7479,7 @@ name|t
 operator|=
 name|get_time
 argument_list|(
-name|time
+name|ttime
 argument_list|)
 expr_stmt|;
 name|p
@@ -13284,6 +13284,10 @@ if|if
 condition|(
 name|lensymbol
 operator|>
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|lengthbases
@@ -13295,6 +13299,7 @@ name|lengthbases
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -13304,6 +13309,10 @@ if|if
 condition|(
 name|lensymbol
 operator|>
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|lengthbits
@@ -13315,6 +13324,7 @@ name|lengthbits
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -13548,6 +13558,10 @@ name|symbol
 operator|-
 literal|271
 operator|>
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|lengthbases
@@ -13559,6 +13573,7 @@ name|lengthbases
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -13570,6 +13585,10 @@ name|symbol
 operator|-
 literal|271
 operator|>
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|lengthbits
@@ -13581,6 +13600,7 @@ name|lengthbits
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -13681,6 +13701,10 @@ if|if
 condition|(
 name|offssymbol
 operator|>
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|offsetbases
@@ -13692,6 +13716,7 @@ name|offsetbases
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 goto|goto
@@ -13701,6 +13726,10 @@ if|if
 condition|(
 name|offssymbol
 operator|>
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|offsetbits
@@ -13712,6 +13741,7 @@ name|offsetbits
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|)
 goto|goto

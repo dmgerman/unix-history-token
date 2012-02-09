@@ -11485,6 +11485,12 @@ name|hole
 init|=
 literal|1
 decl_stmt|;
+operator|(
+name|void
+operator|)
+name|entry
+expr_stmt|;
+comment|/* UNUSED */
 name|end
 operator|=
 literal|0

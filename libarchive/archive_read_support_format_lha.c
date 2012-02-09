@@ -1579,8 +1579,8 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
 specifier|inline
+name|int
 name|lzh_decode_huffman
 parameter_list|(
 name|struct

@@ -1435,6 +1435,10 @@ literal|0
 init|;
 name|i
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|acls_bad
@@ -1446,6 +1450,7 @@ name|acls_bad
 index|[
 literal|0
 index|]
+argument_list|)
 argument_list|)
 condition|;
 operator|++

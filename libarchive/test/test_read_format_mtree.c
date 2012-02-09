@@ -53,8 +53,8 @@ modifier|*
 name|f
 decl_stmt|;
 comment|/* Compute max 64-bit signed twos-complement value 	 * without relying on overflow.  This assumes that long long 	 * is at least 64 bits. */
-specifier|const
 specifier|static
+specifier|const
 name|long
 name|long
 name|max_int64

@@ -17,7 +17,31 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+specifier|static
+name|void
+name|read_test
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|write_test
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
+specifier|static
 name|void
 name|read_test
 parameter_list|(
@@ -105,6 +129,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|write_test
 parameter_list|(

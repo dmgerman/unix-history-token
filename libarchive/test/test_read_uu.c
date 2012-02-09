@@ -249,19 +249,18 @@ operator|*
 literal|2
 control|)
 block|{
-name|size_t
-name|size
-init|=
-name|extra
-operator|*
-literal|1024
-decl_stmt|;
 name|char
 modifier|*
 name|p
 init|=
 name|buff
 decl_stmt|;
+name|size
+operator|=
+name|extra
+operator|*
+literal|1024
+expr_stmt|;
 comment|/* Add extra text size of which is from 1K bytes to 		 * 64Kbytes before uuencoded data. */
 while|while
 condition|(
