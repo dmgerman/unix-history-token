@@ -4881,7 +4881,7 @@ operator|->
 name|sendordered_c
 argument_list|,
 operator|(
-name|ADA_DEFAULT_TIMEOUT
+name|ada_default_timeout
 operator|*
 name|hz
 operator|)
@@ -7601,7 +7601,7 @@ operator|->
 name|sendordered_c
 argument_list|,
 operator|(
-name|ADA_DEFAULT_TIMEOUT
+name|ada_default_timeout
 operator|*
 name|hz
 operator|)
