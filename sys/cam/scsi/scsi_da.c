@@ -3831,7 +3831,7 @@ argument_list|,
 comment|/*sense_len*/
 name|SSD_FULL_SIZE
 argument_list|,
-name|DA_DEFAULT_TIMEOUT
+name|da_default_timeout
 operator|*
 literal|1000
 argument_list|)
@@ -5673,7 +5673,7 @@ operator|->
 name|sendordered_c
 argument_list|,
 operator|(
-name|DA_DEFAULT_TIMEOUT
+name|da_default_timeout
 operator|*
 name|hz
 operator|)
@@ -9599,7 +9599,7 @@ operator|->
 name|sendordered_c
 argument_list|,
 operator|(
-name|DA_DEFAULT_TIMEOUT
+name|da_default_timeout
 operator|*
 name|hz
 operator|)
