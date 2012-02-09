@@ -437,12 +437,6 @@ name|verbose_limit
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|INET6
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -451,11 +445,6 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
