@@ -447,8 +447,6 @@ name|TRUE
 expr_stmt|;
 block|}
 block|}
-name|status
-operator|=
 name|scif_controller_start_task
 argument_list|(
 name|fw_controller

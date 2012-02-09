@@ -2364,6 +2364,9 @@ argument_list|)
 expr_stmt|;
 comment|//start the new constructed IO.
 return|return
+operator|(
+name|SCI_STATUS
+operator|)
 name|scif_controller_start_io
 argument_list|(
 operator|(

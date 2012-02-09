@@ -4841,7 +4841,7 @@ name|fw_request
 argument_list|,
 name|NULL
 argument_list|,
-name|SCI_FAILURE_RETRY_REQUIRED
+name|SCI_IO_FAILURE_RETRY_REQUIRED
 argument_list|)
 expr_stmt|;
 block|}

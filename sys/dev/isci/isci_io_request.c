@@ -1754,8 +1754,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-name|io_request
-operator|->
 name|status
 operator|=
 name|scif_io_request_construct
@@ -1806,8 +1804,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|io_request
-operator|->
 name|status
 operator|!=
 name|SCI_SUCCESS
@@ -1825,8 +1821,9 @@ name|device
 argument_list|,
 name|io_request
 argument_list|,
-name|io_request
-operator|->
+operator|(
+name|SCI_IO_STATUS
+operator|)
 name|status
 argument_list|)
 expr_stmt|;
@@ -1901,6 +1898,9 @@ name|device
 argument_list|,
 name|io_request
 argument_list|,
+operator|(
+name|SCI_IO_STATUS
+operator|)
 name|status
 argument_list|)
 expr_stmt|;
@@ -2933,6 +2933,9 @@ name|smp_device_handle
 argument_list|,
 name|io_request
 argument_list|,
+operator|(
+name|SCI_IO_STATUS
+operator|)
 name|status
 argument_list|)
 expr_stmt|;
@@ -2984,6 +2987,9 @@ name|smp_device_handle
 argument_list|,
 name|io_request
 argument_list|,
+operator|(
+name|SCI_IO_STATUS
+operator|)
 name|status
 argument_list|)
 expr_stmt|;

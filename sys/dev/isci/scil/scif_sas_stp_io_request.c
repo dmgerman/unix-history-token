@@ -974,7 +974,7 @@ expr_stmt|;
 comment|// Done with translation
 name|sci_status
 operator|=
-name|SATI_SUCCESS
+name|SCI_SUCCESS
 expr_stmt|;
 block|}
 elseif|else

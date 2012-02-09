@@ -543,7 +543,7 @@ name|fw_device
 argument_list|,
 name|pending_request
 argument_list|,
-name|SCI_FAILURE_IO_TERMINATED
+name|SCI_IO_FAILURE_TERMINATED
 argument_list|)
 expr_stmt|;
 block|}

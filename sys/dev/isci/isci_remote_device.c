@@ -478,6 +478,9 @@ name|task_request
 operator|->
 name|sci_object
 argument_list|,
+operator|(
+name|SCI_TASK_STATUS
+operator|)
 name|status
 argument_list|)
 expr_stmt|;
@@ -526,6 +529,9 @@ name|task_request
 operator|->
 name|sci_object
 argument_list|,
+operator|(
+name|SCI_TASK_STATUS
+operator|)
 name|status
 argument_list|)
 expr_stmt|;
