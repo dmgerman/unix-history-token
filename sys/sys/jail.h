@@ -624,9 +624,13 @@ name|pr_enforce_statfs
 decl_stmt|;
 comment|/* (p) statfs permission */
 name|int
+name|pr_devfs_rsnum
+decl_stmt|;
+comment|/* (p) devfs ruleset */
+name|int
 name|pr_spare
 index|[
-literal|5
+literal|4
 index|]
 decl_stmt|;
 name|unsigned
