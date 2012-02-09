@@ -216,10 +216,12 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|int
-name|acpi_timer_suspend
+name|void
+name|acpi_timer_resume_handler
 parameter_list|(
-name|device_t
+name|struct
+name|timecounter
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -227,7 +229,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|void
-name|acpi_timer_resume_handler
+name|acpi_timer_suspend_handler
 parameter_list|(
 name|struct
 name|timecounter
@@ -318,13 +320,6 @@ argument_list|(
 name|device_attach
 argument_list|,
 name|acpi_timer_attach
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|device_suspend
-argument_list|,
-name|acpi_timer_suspend
 argument_list|)
 block|,
 block|{
@@ -1066,6 +1061,30 @@ argument_list|(
 name|acpi_timer_reg
 argument_list|)
 expr_stmt|;
+comment|/* Register suspend event handler. */
+if|if
+condition|(
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|power_suspend
+argument_list|,
+name|acpi_timer_suspend_handler
+argument_list|,
+operator|&
+name|acpi_timer_timecounter
+argument_list|,
+name|EVENTHANDLER_PRI_LAST
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|device_printf
+argument_list|(
+name|dev
+argument_list|,
+literal|"failed to register suspend event handler\n"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1150,31 +1169,21 @@ end_function
 
 begin_function
 specifier|static
-name|int
-name|acpi_timer_suspend
+name|void
+name|acpi_timer_suspend_handler
 parameter_list|(
-name|device_t
-name|dev
+name|struct
+name|timecounter
+modifier|*
+name|newtc
 parameter_list|)
 block|{
 name|struct
 name|timecounter
 modifier|*
-name|newtc
-decl_stmt|,
-modifier|*
 name|tc
 decl_stmt|;
-name|int
-name|error
-decl_stmt|;
-name|error
-operator|=
-name|bus_generic_suspend
-argument_list|(
-name|dev
-argument_list|)
-expr_stmt|;
+comment|/* Deregister existing resume event handler. */
 if|if
 condition|(
 name|acpi_timer_eh
@@ -1194,14 +1203,21 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|KASSERT
+argument_list|(
+name|newtc
+operator|==
+operator|&
+name|acpi_timer_timecounter
+argument_list|,
+operator|(
+literal|"acpi_timer_suspend_handler: wrong timecounter"
+operator|)
+argument_list|)
+expr_stmt|;
 name|tc
 operator|=
 name|timecounter
-expr_stmt|;
-name|newtc
-operator|=
-operator|&
-name|acpi_timer_timecounter
 expr_stmt|;
 if|if
 condition|(
@@ -1216,7 +1232,7 @@ name|bootverbose
 condition|)
 name|device_printf
 argument_list|(
-name|dev
+name|acpi_timer_dev
 argument_list|,
 literal|"switching timecounter, %s -> %s\n"
 argument_list|,
@@ -1259,11 +1275,6 @@ name|EVENTHANDLER_PRI_LAST
 argument_list|)
 expr_stmt|;
 block|}
-return|return
-operator|(
-name|error
-operator|)
-return|;
 block|}
 end_function
 
