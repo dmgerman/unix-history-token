@@ -1383,6 +1383,8 @@ argument_list|,
 name|nullfs
 argument_list|,
 name|VFCF_LOOPBACK
+operator||
+name|VFCF_JAIL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
