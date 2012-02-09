@@ -2070,24 +2070,21 @@ literal|0
 argument_list|)
 expr_stmt|;
 comment|/* ia must not be NULL */
-ifdef|#
-directive|ifdef
-name|DIAGNOSTIC
-if|if
-condition|(
-operator|!
-name|ia
-condition|)
-block|{
-name|panic
+name|KASSERT
 argument_list|(
-literal|"ia == NULL in in6_ifattach_linklocal"
+name|ia
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: ia == NULL, ifp=%p"
+operator|,
+name|__func__
+operator|,
+name|ifp
+operator|)
 argument_list|)
 expr_stmt|;
-comment|/* NOTREACHED */
-block|}
-endif|#
-directive|endif
 comment|/* 	 * Make the link-local prefix (fe80::%link/64) as on-link. 	 * Since we'd like to manage prefixes separately from addresses, 	 * we make an ND6 prefix structure for the link-local prefix, 	 * and add it to the prefix list as a never-expire prefix. 	 * XXX: this change might affect some existing code base... 	 */
 name|bzero
 argument_list|(
