@@ -45,7 +45,7 @@ begin_define
 define|#
 directive|define
 name|_Complex_I
-value|1.0fi
+value|((float _Complex)1.0i)
 end_define
 
 begin_endif
