@@ -12271,6 +12271,26 @@ operator|->
 name|laddr_count
 operator|++
 expr_stmt|;
+if|if
+condition|(
+name|oladdr
+operator|==
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|last_used_address
+condition|)
+block|{
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|last_used_address
+operator|=
+name|laddr
+expr_stmt|;
+block|}
 block|}
 block|}
 comment|/* 	 * Now any running timers need to be adjusted since we really don't 	 * care if they are running or not just blast in the new_inp into 	 * all of them. 	 */
