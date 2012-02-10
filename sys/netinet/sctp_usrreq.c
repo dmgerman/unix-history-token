@@ -11566,6 +11566,14 @@ argument_list|(
 name|stcb
 argument_list|)
 expr_stmt|;
+name|paddri
+operator|->
+name|spinfo_mtu
+operator|=
+name|net
+operator|->
+name|mtu
+expr_stmt|;
 name|SCTP_TCB_UNLOCK
 argument_list|(
 name|stcb
