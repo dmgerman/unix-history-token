@@ -431,6 +431,13 @@ name|SCTP_DEFAULT_PRINFO
 value|0x00000022
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_PEER_ADDR_THLDS
+value|0x00000023
+end_define
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment
@@ -2225,13 +2232,6 @@ define|#
 directive|define
 name|SCTP_CWND_LOGGING_ENABLE
 value|0x00000004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_EARLYFR_LOGGING_ENABLE
-value|0x00000010
 end_define
 
 begin_define

@@ -1995,21 +1995,6 @@ name|SCTP_ADDR_REACHABLE
 condition|)
 block|{
 comment|/* Ok that destination is NOT reachable */
-name|SCTP_PRINTF
-argument_list|(
-literal|"ICMP (thresh %d/%d) takes interface %p down\n"
-argument_list|,
-name|net
-operator|->
-name|error_count
-argument_list|,
-name|net
-operator|->
-name|failure_threshold
-argument_list|,
-name|net
-argument_list|)
-expr_stmt|;
 name|net
 operator|->
 name|dest_state
@@ -2020,61 +2005,9 @@ expr_stmt|;
 name|net
 operator|->
 name|dest_state
-operator||=
-name|SCTP_ADDR_NOT_REACHABLE
-expr_stmt|;
-comment|/* 			 * JRS 5/14/07 - If a destination is unreachable, 			 * the PF bit is turned off.  This allows an 			 * unambiguous use of the PF bit for destinations 			 * that are reachable but potentially failed. If the 			 * destination is set to the unreachable state, also 			 * set the destination to the PF state. 			 */
-comment|/* 			 * Add debug message here if destination is not in 			 * PF state. 			 */
-comment|/* Stop any running T3 timers here? */
-if|if
-condition|(
-operator|(
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|sctp_cmt_on_off
-operator|>
-literal|0
-operator|)
-operator|&&
-operator|(
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|sctp_cmt_pf
-operator|>
-literal|0
-operator|)
-condition|)
-block|{
-name|net
-operator|->
-name|dest_state
 operator|&=
 operator|~
 name|SCTP_ADDR_PF
-expr_stmt|;
-name|SCTPDBG
-argument_list|(
-name|SCTP_DEBUG_TIMER4
-argument_list|,
-literal|"Destination %p moved from PF to unreachable.\n"
-argument_list|,
-name|net
-argument_list|)
-expr_stmt|;
-block|}
-name|net
-operator|->
-name|error_count
-operator|=
-name|net
-operator|->
-name|failure_threshold
-operator|+
-literal|1
 expr_stmt|;
 name|sctp_ulp_notify
 argument_list|(
