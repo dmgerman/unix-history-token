@@ -247,7 +247,7 @@ end_comment
 begin_typedef
 typedef|typedef
 struct|struct
-name|sctp_authinfo
+name|sctp_authinformation
 block|{
 name|sctp_key_t
 modifier|*
