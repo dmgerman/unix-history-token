@@ -588,6 +588,18 @@ name|uint32_t
 name|ssthresh
 decl_stmt|;
 comment|/* not sure about this one for split */
+name|uint32_t
+name|last_cwr_tsn
+decl_stmt|;
+name|uint32_t
+name|cwr_window_tsn
+decl_stmt|;
+name|uint32_t
+name|ecn_ce_pkt_cnt
+decl_stmt|;
+name|uint32_t
+name|lost_cnt
+decl_stmt|;
 comment|/* smoothed average things for RTT and RTO itself */
 name|int
 name|lastsa
@@ -2436,9 +2448,6 @@ name|highest_tsn_inside_nr_map
 decl_stmt|;
 name|uint32_t
 name|last_echo_tsn
-decl_stmt|;
-name|uint32_t
-name|last_cwr_tsn
 decl_stmt|;
 name|uint32_t
 name|fast_recovery_tsn

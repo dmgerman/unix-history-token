@@ -1075,6 +1075,22 @@ end_comment
 
 begin_struct
 struct|struct
+name|old_sctp_ecne_chunk
+block|{
+name|struct
+name|sctp_chunkhdr
+name|ch
+decl_stmt|;
+name|uint32_t
+name|tsn
+decl_stmt|;
+block|}
+name|SCTP_PACKED
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_ecne_chunk
 block|{
 name|struct
@@ -1083,6 +1099,9 @@ name|ch
 decl_stmt|;
 name|uint32_t
 name|tsn
+decl_stmt|;
+name|uint32_t
+name|num_pkts_since_cwr
 decl_stmt|;
 block|}
 name|SCTP_PACKED

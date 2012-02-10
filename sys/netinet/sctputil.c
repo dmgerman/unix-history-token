@@ -5454,16 +5454,6 @@ expr_stmt|;
 comment|/* This will need to be adjusted */
 name|asoc
 operator|->
-name|last_cwr_tsn
-operator|=
-name|asoc
-operator|->
-name|init_seq_number
-operator|-
-literal|1
-expr_stmt|;
-name|asoc
-operator|->
 name|last_acked_seq
 operator|=
 name|asoc
