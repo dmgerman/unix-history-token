@@ -10552,6 +10552,15 @@ argument_list|(
 name|sctp_cmt_on_off
 argument_list|)
 expr_stmt|;
+name|inp
+operator|->
+name|sctp_ecn_enable
+operator|=
+name|SCTP_BASE_SYSCTL
+argument_list|(
+name|sctp_ecn_enable
+argument_list|)
+expr_stmt|;
 comment|/* init the small hash table we use to track asocid<-> tcb */
 name|inp
 operator|->
@@ -27219,6 +27228,9 @@ name|got_chklist
 init|=
 literal|0
 decl_stmt|;
+name|uint8_t
+name|ecn_allowed
+decl_stmt|;
 comment|/* First get the destination address setup too. */
 name|memset
 argument_list|(
@@ -27525,10 +27537,6 @@ name|altsa
 expr_stmt|;
 block|}
 comment|/* Turn off ECN until we get through all params */
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|ecn_allowed
 operator|=
 literal|0
@@ -28599,10 +28607,6 @@ operator|==
 name|SCTP_ECN_CAPABLE
 condition|)
 block|{
-name|stcb
-operator|->
-name|asoc
-operator|.
 name|ecn_allowed
 operator|=
 literal|1
@@ -29947,6 +29951,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+block|}
+if|if
+condition|(
+name|ecn_allowed
+operator|==
+literal|0
+condition|)
+block|{
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|ecn_allowed
+operator|=
+literal|0
+expr_stmt|;
 block|}
 comment|/* validate authentication required parameters */
 if|if
