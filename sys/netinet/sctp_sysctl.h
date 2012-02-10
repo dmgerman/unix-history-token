@@ -2334,7 +2334,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_INITIAL_CWND_MIN
-value|1
+value|0
 end_define
 
 begin_define
