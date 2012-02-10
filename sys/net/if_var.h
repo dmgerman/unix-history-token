@@ -711,9 +711,13 @@ decl_stmt|;
 name|int
 name|if_ispare
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
+name|u_int
+name|if_fib
+decl_stmt|;
+comment|/* interface FIB */
 block|}
 struct|;
 end_struct

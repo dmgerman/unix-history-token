@@ -381,6 +381,13 @@ operator|.
 name|altq_flags
 argument_list|)
 expr_stmt|;
+name|IF_DB_PRINTF
+argument_list|(
+literal|"%u"
+argument_list|,
+name|if_fib
+argument_list|)
+expr_stmt|;
 undef|#
 directive|undef
 name|IF_DB_PRINTF
