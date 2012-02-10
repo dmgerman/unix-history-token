@@ -1376,13 +1376,6 @@ name|MAX_TSN
 value|0xffffffff
 end_define
 
-begin_define
-define|#
-directive|define
-name|MAX_SEQ
-value|0xffff
-end_define
-
 begin_comment
 comment|/* how many executions every N tick's */
 end_comment
@@ -4215,21 +4208,55 @@ comment|/* modular comparison */
 end_comment
 
 begin_comment
-comment|/* True if a> b (mod = M) */
+comment|/* See RFC 1982 for details. */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|compare_with_wrap
+name|SCTP_SSN_GT
 parameter_list|(
 name|a
 parameter_list|,
 name|b
-parameter_list|,
-name|M
 parameter_list|)
-value|(((a> b)&& ((a - b)< ((M>> 1) + 1))) || \               ((b> a)&& ((b - a)> ((M>> 1) + 1))))
+value|(((a< b)&& ((b - a)> (1<<15))) || \                            ((a> b)&& ((a - b)< (1<<15))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_SSN_GE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(SCTP_SSN_GT(a, b) || (a == b))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_TSN_GT
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(((a< b)&& ((b - a)> (1<<31))) || \                            ((a> b)&& ((a - b)< (1<<31))))
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_TSN_GE
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|(SCTP_TSN_GT(a, b) || (a == b))
 end_define
 
 begin_comment

@@ -2922,22 +2922,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
 name|asconf_seq_in
 argument_list|,
 name|serial_num
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-name|serial_num
-operator|==
-name|asoc
-operator|->
-name|asconf_seq_in
 condition|)
 block|{
 comment|/* got a duplicate ASCONF */

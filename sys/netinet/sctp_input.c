@@ -14530,7 +14530,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|lchk
 operator|->
@@ -14541,11 +14541,11 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
+block|{
 break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -14564,7 +14564,7 @@ name|primary_destination
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tsn
 argument_list|,
@@ -14573,8 +14573,6 @@ operator|->
 name|asoc
 operator|.
 name|last_cwr_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -14686,7 +14684,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|ntohl
 argument_list|(
@@ -14701,19 +14699,7 @@ name|ecne
 operator|->
 name|tsn
 argument_list|)
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|||
-operator|(
-name|cp
-operator|->
-name|tsn
-operator|==
-name|ecne
-operator|->
-name|tsn
-operator|)
 condition|)
 block|{
 comment|/* this covers this ECNE, we can remove it */
@@ -15149,7 +15135,7 @@ break|break;
 block|}
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|tp1
 operator|->
@@ -15160,8 +15146,6 @@ operator|.
 name|TSN_seq
 argument_list|,
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -18455,26 +18439,14 @@ block|}
 elseif|else
 if|if
 condition|(
-operator|(
-name|tsn
-operator|==
-name|asoc
-operator|->
-name|cumulative_tsn
-operator|)
-operator|||
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|asoc
 operator|->
 name|cumulative_tsn
 argument_list|,
 name|tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
 condition|)
 block|{
 comment|/* we can do it now */
@@ -23225,9 +23197,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
-operator|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|cum_ack
 argument_list|,
@@ -23236,21 +23206,7 @@ operator|->
 name|asoc
 operator|.
 name|last_acked_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|cum_ack
-operator|==
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|last_acked_seq
-operator|)
-operator|)
 operator|&&
 operator|(
 name|stcb
@@ -23722,9 +23678,7 @@ operator|==
 literal|0
 operator|)
 operator|&&
-operator|(
-operator|(
-name|compare_with_wrap
+name|SCTP_TSN_GE
 argument_list|(
 name|cum_ack
 argument_list|,
@@ -23733,21 +23687,7 @@ operator|->
 name|asoc
 operator|.
 name|last_acked_seq
-argument_list|,
-name|MAX_TSN
 argument_list|)
-operator|)
-operator|||
-operator|(
-name|cum_ack
-operator|==
-name|stcb
-operator|->
-name|asoc
-operator|.
-name|last_acked_seq
-operator|)
-operator|)
 operator|&&
 operator|(
 name|stcb
@@ -26773,7 +26713,7 @@ expr_stmt|;
 comment|/* 		 * Drag up the last_echo point if cumack is larger since we 		 * don't want the point falling way behind by more than 		 * 2^^31 and then having it be incorrect. 		 */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|stcb
 operator|->
@@ -26786,8 +26726,6 @@ operator|->
 name|asoc
 operator|.
 name|last_echo_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -26820,7 +26758,7 @@ block|{
 comment|/* 		 * Drag up the last_echo point if cumack is larger since we 		 * don't want the point falling way behind by more than 		 * 2^^31 and then having it be incorrect. 		 */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|stcb
 operator|->
@@ -26833,8 +26771,6 @@ operator|->
 name|asoc
 operator|.
 name|last_echo_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -26891,7 +26827,7 @@ block|{
 comment|/* 		 * we possibly must notify the sender that a congestion 		 * window reduction is in order. We do this by adding a ECNE 		 * chunk to the output chunk queue. The incoming CWR will 		 * remove this chunk. 		 */
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|high_tsn
 argument_list|,
@@ -26900,8 +26836,6 @@ operator|->
 name|asoc
 operator|.
 name|last_echo_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -27819,7 +27753,7 @@ name|highest_tsn
 decl_stmt|;
 if|if
 condition|(
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|stcb
 operator|->
@@ -27832,8 +27766,6 @@ operator|->
 name|asoc
 operator|.
 name|highest_tsn_inside_map
-argument_list|,
-name|MAX_TSN
 argument_list|)
 condition|)
 block|{
@@ -27859,7 +27791,7 @@ expr_stmt|;
 block|}
 name|was_a_gap
 operator|=
-name|compare_with_wrap
+name|SCTP_TSN_GT
 argument_list|(
 name|highest_tsn
 argument_list|,
@@ -27868,8 +27800,6 @@ operator|->
 name|asoc
 operator|.
 name|cumulative_tsn
-argument_list|,
-name|MAX_TSN
 argument_list|)
 expr_stmt|;
 name|stcb
