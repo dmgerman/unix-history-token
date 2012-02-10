@@ -777,27 +777,6 @@ name|SCTP_ADDR_CONFIRMED
 value|0x0006
 end_define
 
-begin_comment
-comment|/*  * CAUTION: these are user exposed SCTP addr reachability states must be  * compatible with SCTP_ADDR states in sctp_constants.h  */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_ACTIVE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_ACTIVE
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -808,23 +787,6 @@ end_define
 begin_comment
 comment|/* SCTP_ADDR_REACHABLE */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_INACTIVE
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_INACTIVE
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_define
 define|#
@@ -837,23 +799,6 @@ begin_comment
 comment|/* SCTP_ADDR_NOT_REACHABLE */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_UNCONFIRMED
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_UNCONFIRMED
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_define
 define|#
 directive|define
@@ -863,34 +808,6 @@ end_define
 
 begin_comment
 comment|/* SCTP_ADDR_UNCONFIRMED */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|SCTP_NOHEARTBEAT
-end_ifdef
-
-begin_undef
-undef|#
-directive|undef
-name|SCTP_NOHEARTBEAT
-end_undef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_define
-define|#
-directive|define
-name|SCTP_NOHEARTBEAT
-value|0x0040
-end_define
-
-begin_comment
-comment|/* SCTP_ADDR_NOHB */
 end_comment
 
 begin_comment

@@ -2300,13 +2300,6 @@ name|SCTP_ADDR_PF
 value|0x800
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_REACHABLE_MASK
-value|0x203
-end_define
-
 begin_comment
 comment|/* bound address types (e.g. valid address types to allow) */
 end_comment
