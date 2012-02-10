@@ -2576,7 +2576,7 @@ name|error
 decl_stmt|;
 ifdef|#
 directive|ifdef
-name|INET6
+name|INET
 if|if
 condition|(
 name|addr
