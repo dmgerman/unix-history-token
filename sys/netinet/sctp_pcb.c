@@ -25475,7 +25475,7 @@ name|i
 decl_stmt|;
 if|if
 condition|(
-name|mp_ncpus
+name|mp_maxid
 operator|==
 literal|1
 condition|)
@@ -25489,7 +25489,7 @@ name|sctp_mcore_ctrl
 operator|*
 argument_list|,
 operator|(
-name|mp_ncpus
+name|mp_maxid
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -25518,7 +25518,7 @@ argument_list|,
 literal|0
 argument_list|,
 operator|(
-name|mp_ncpus
+name|mp_maxid
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -25537,7 +25537,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|mp_ncpus
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -25591,7 +25591,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|mp_ncpus
+name|mp_maxid
 condition|;
 name|i
 operator|++
@@ -25719,7 +25719,7 @@ name|sctpstat
 operator|*
 argument_list|,
 operator|(
-name|mp_ncpus
+name|mp_maxid
 operator|*
 sizeof|sizeof
 argument_list|(
@@ -25769,7 +25769,7 @@ expr|struct
 name|sctpstat
 argument_list|)
 operator|*
-name|mp_ncpus
+name|mp_maxid
 operator|)
 argument_list|)
 expr_stmt|;
