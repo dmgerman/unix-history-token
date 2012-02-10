@@ -249,16 +249,6 @@ end_comment
 begin_expr_stmt
 name|TAILQ_HEAD
 argument_list|(
-name|ifprefixhead
-argument_list|,
-name|ifprefix
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
 name|ifmultihead
 argument_list|,
 name|ifmultiaddr
@@ -625,11 +615,13 @@ name|if_label
 decl_stmt|;
 comment|/* interface MAC label */
 comment|/* these are only used by IPv6 */
-name|struct
-name|ifprefixhead
-name|if_prefixhead
+name|void
+modifier|*
+name|if_unused
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* list of prefixes per if */
 name|void
 modifier|*
 name|if_afdata
@@ -2958,45 +2950,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * The prefix structure contains information about one prefix  * of an interface.  They are maintained by the different address families,  * are allocated and attached when a prefix or an address is set,  * and are linked together so all prefixes for an interface can be located.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ifprefix
-block|{
-name|struct
-name|sockaddr
-modifier|*
-name|ifpr_prefix
-decl_stmt|;
-comment|/* prefix of interface */
-name|struct
-name|ifnet
-modifier|*
-name|ifpr_ifp
-decl_stmt|;
-comment|/* back-pointer to interface */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ifprefix
-argument_list|)
-name|ifpr_list
-expr_stmt|;
-comment|/* queue macro glue */
-name|u_char
-name|ifpr_plen
-decl_stmt|;
-comment|/* prefix length in bits */
-name|u_char
-name|ifpr_type
-decl_stmt|;
-comment|/* protocol dependent prefix type */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Multicast address structure.  This is analogous to the ifaddr  * structure except that it keeps track of multicast addresses.  */

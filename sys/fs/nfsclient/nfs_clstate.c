@@ -2868,7 +2868,13 @@ name|ENOENT
 operator|)
 return|;
 block|}
-comment|/* for read aheads or write behinds, use the open cred */
+comment|/* 		 * For read aheads or write behinds, use the open cred. 		 * A read ahead or write behind is indicated by p == NULL. 		 */
+if|if
+condition|(
+name|p
+operator|==
+name|NULL
+condition|)
 name|newnfs_copycred
 argument_list|(
 operator|&

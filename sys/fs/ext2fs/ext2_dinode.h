@@ -208,7 +208,7 @@ comment|/*	 8: Access time */
 name|uint32_t
 name|e2di_ctime
 decl_stmt|;
-comment|/*	12: Create time */
+comment|/*	12: Change time */
 name|uint32_t
 name|e2di_mtime
 decl_stmt|;
@@ -284,6 +284,12 @@ name|uint32_t
 name|e2di_linux_reserved3
 decl_stmt|;
 comment|/* 124 */
+name|uint16_t
+name|e2di_extra_isize
+decl_stmt|;
+name|uint16_t
+name|e2di_pad1
+decl_stmt|;
 block|}
 struct|;
 end_struct

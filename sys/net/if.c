@@ -2275,14 +2275,6 @@ argument_list|(
 operator|&
 name|ifp
 operator|->
-name|if_prefixhead
-argument_list|)
-expr_stmt|;
-name|TAILQ_INIT
-argument_list|(
-operator|&
-name|ifp
-operator|->
 name|if_multiaddrs
 argument_list|)
 expr_stmt|;

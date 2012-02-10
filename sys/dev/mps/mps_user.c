@@ -3440,7 +3440,7 @@ name|sc
 argument_list|,
 name|cm
 argument_list|,
-literal|0
+literal|30
 argument_list|)
 expr_stmt|;
 if|if
@@ -4040,7 +4040,7 @@ name|sc
 argument_list|,
 name|cm
 argument_list|,
-literal|0
+literal|30
 argument_list|)
 expr_stmt|;
 if|if
@@ -4579,7 +4579,7 @@ name|sc
 argument_list|,
 name|cm
 argument_list|,
-literal|0
+literal|30
 argument_list|)
 expr_stmt|;
 if|if
@@ -5138,6 +5138,11 @@ name|BiosVersion
 operator|=
 literal|0
 expr_stmt|;
+name|mps_lock
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|mps_config_get_bios_pg3
@@ -5166,6 +5171,11 @@ operator|=
 name|config_page
 operator|.
 name|BiosVersion
+expr_stmt|;
+name|mps_unlock
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -5564,7 +5574,7 @@ name|sc
 argument_list|,
 name|cm
 argument_list|,
-literal|0
+literal|30
 argument_list|)
 expr_stmt|;
 if|if
@@ -5866,7 +5876,7 @@ name|sc
 argument_list|,
 name|cm
 argument_list|,
-literal|0
+literal|30
 argument_list|)
 expr_stmt|;
 if|if

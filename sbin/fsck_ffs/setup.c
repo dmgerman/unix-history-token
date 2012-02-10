@@ -910,7 +910,7 @@ literal|"LOCATION OF AN ALTERNATE"
 argument_list|,
 literal|"SUPER-BLOCK TO SUPPLY NEEDED"
 argument_list|,
-literal|"INFORMATION; SEE fsck(8)."
+literal|"INFORMATION; SEE fsck_ffs(8)."
 argument_list|)
 expr_stmt|;
 name|bflag

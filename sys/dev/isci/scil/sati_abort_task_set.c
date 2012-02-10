@@ -219,7 +219,7 @@ name|void
 modifier|*
 name|matching_command
 decl_stmt|;
-name|SCI_STATUS
+name|SCI_IO_STATUS
 name|completion_status
 decl_stmt|;
 name|sati_cb_device_get_request_by_ncq_tag
@@ -272,7 +272,7 @@ argument_list|)
 expr_stmt|;
 name|completion_status
 operator|=
-name|SCI_FAILURE_IO_RESPONSE_VALID
+name|SCI_IO_FAILURE_RESPONSE_VALID
 expr_stmt|;
 if|if
 condition|(
@@ -307,7 +307,7 @@ else|else
 block|{
 name|completion_status
 operator|=
-name|SCI_FAILURE_IO_TERMINATED
+name|SCI_IO_FAILURE_TERMINATED
 expr_stmt|;
 block|}
 name|sati_cb_io_request_complete

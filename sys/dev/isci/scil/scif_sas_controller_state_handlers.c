@@ -1238,6 +1238,9 @@ block|{
 comment|// Ask the core to start processing for this IO request.
 name|status
 operator|=
+operator|(
+name|SCI_STATUS
+operator|)
 name|scic_controller_start_io
 argument_list|(
 name|fw_controller
@@ -1998,6 +2001,9 @@ block|}
 comment|// Ask the core to start processing for this task request.
 name|status
 operator|=
+operator|(
+name|SCI_STATUS
+operator|)
 name|scic_controller_start_task
 argument_list|(
 name|fw_controller
@@ -2421,6 +2427,9 @@ block|{
 comment|// Ask the core to start processing for this IO request.
 name|status
 operator|=
+operator|(
+name|SCI_STATUS
+operator|)
 name|scic_controller_start_io
 argument_list|(
 name|fw_controller
@@ -3618,7 +3627,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 return|return
-name|SCI_IO_FAILURE
+name|SCI_FAILURE
 return|;
 block|}
 end_function

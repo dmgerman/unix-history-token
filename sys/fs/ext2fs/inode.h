@@ -147,15 +147,7 @@ name|i_atime
 decl_stmt|;
 comment|/* Last access time. */
 name|int32_t
-name|i_atimensec
-decl_stmt|;
-comment|/* Last access time. */
-name|int32_t
 name|i_mtime
-decl_stmt|;
-comment|/* Last modified time. */
-name|int32_t
-name|i_mtimensec
 decl_stmt|;
 comment|/* Last modified time. */
 name|int32_t
@@ -163,9 +155,25 @@ name|i_ctime
 decl_stmt|;
 comment|/* Last inode change time. */
 name|int32_t
+name|i_birthtime
+decl_stmt|;
+comment|/* Inode creation time. */
+name|int32_t
+name|i_mtimensec
+decl_stmt|;
+comment|/* Last modified time. */
+name|int32_t
+name|i_atimensec
+decl_stmt|;
+comment|/* Last access time. */
+name|int32_t
 name|i_ctimensec
 decl_stmt|;
 comment|/* Last inode change time. */
+name|int32_t
+name|i_birthnsec
+decl_stmt|;
+comment|/* Inode creation time. */
 name|int32_t
 name|i_db
 index|[

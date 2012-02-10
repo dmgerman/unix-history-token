@@ -11365,7 +11365,7 @@ name|U16
 name|io_tag
 parameter_list|)
 block|{
-name|SCI_IO_STATUS
+name|SCI_STATUS
 name|status
 decl_stmt|;
 name|SCIC_SDS_CONTROLLER_T
@@ -11433,6 +11433,9 @@ name|io_tag
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
+name|SCI_IO_STATUS
+operator|)
 name|status
 return|;
 block|}
@@ -11641,7 +11644,7 @@ name|U16
 name|task_tag
 parameter_list|)
 block|{
-name|SCI_TASK_STATUS
+name|SCI_STATUS
 name|status
 init|=
 name|SCI_FAILURE_INVALID_STATE
@@ -11742,6 +11745,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
+name|SCI_TASK_STATUS
+operator|)
 name|status
 return|;
 block|}

@@ -1887,10 +1887,6 @@ decl_stmt|;
 name|SCI_SAS_ADDRESS_T
 name|attached_device_address
 decl_stmt|;
-name|SCIF_SAS_REMOTE_DEVICE_T
-modifier|*
-name|attached_remote_device
-decl_stmt|;
 name|SMP_RESPONSE_DISCOVER_T
 modifier|*
 name|discover_response
@@ -1993,12 +1989,9 @@ name|discover_response
 operator|->
 name|attached_sas_address
 expr_stmt|;
-name|attached_remote_device
-operator|=
-operator|(
-name|SCIF_SAS_REMOTE_DEVICE_T
-operator|*
-operator|)
+comment|// the device should have already existed in the domian.
+name|ASSERT
+argument_list|(
 name|scif_domain_get_device_by_sas_address
 argument_list|(
 name|fw_domain
@@ -2006,11 +1999,6 @@ argument_list|,
 operator|&
 name|attached_device_address
 argument_list|)
-expr_stmt|;
-comment|// the device should have already existed in the domian.
-name|ASSERT
-argument_list|(
-name|attached_remote_device
 operator|!=
 name|SCI_INVALID_HANDLE
 argument_list|)
@@ -4605,6 +4593,17 @@ name|curr_smp_phy
 init|=
 name|NULL
 decl_stmt|;
+name|ASSERT
+argument_list|(
+name|phy_identifier
+operator|<
+name|smp_remote_device
+operator|->
+name|smp_phy_list
+operator|.
+name|number_of_phys
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|element
@@ -4842,7 +4841,7 @@ name|fw_request
 argument_list|,
 name|NULL
 argument_list|,
-name|SCI_FAILURE_RETRY_REQUIRED
+name|SCI_IO_FAILURE_RETRY_REQUIRED
 argument_list|)
 expr_stmt|;
 block|}
@@ -5043,13 +5042,6 @@ operator|->
 name|attached_sas_address
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|smp_phy
-operator|!=
-name|NULL
-condition|)
-block|{
 name|scif_sas_smp_phy_save_information
 argument_list|(
 name|smp_phy
@@ -5059,7 +5051,6 @@ argument_list|,
 name|discover_response
 argument_list|)
 expr_stmt|;
-block|}
 comment|//handle the special case of smp phys between expanders.
 if|if
 condition|(
@@ -6305,26 +6296,6 @@ block|{
 name|SCIF_SAS_SMP_PHY_T
 modifier|*
 name|smp_phy_being_config
-init|=
-name|scif_sas_smp_remote_device_find_smp_phy_by_id
-argument_list|(
-name|fw_device
-operator|->
-name|protocol_device
-operator|.
-name|smp_device
-operator|.
-name|current_activity_phy_index
-argument_list|,
-operator|&
-operator|(
-name|fw_device
-operator|->
-name|protocol_device
-operator|.
-name|smp_device
-operator|)
-argument_list|)
 decl_stmt|;
 name|SCIF_LOG_TRACE
 argument_list|(

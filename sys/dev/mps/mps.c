@@ -2139,6 +2139,15 @@ operator|->
 name|mps_flags
 operator|&
 name|MPS_FLAGS_ATTACH_DONE
+operator|&&
+operator|!
+operator|(
+name|sc
+operator|->
+name|mps_flags
+operator|&
+name|MPS_FLAGS_SHUTDOWN
+operator|)
 condition|)
 name|mtx_assert
 argument_list|(
@@ -6276,6 +6285,11 @@ operator|(
 name|error
 operator|)
 return|;
+name|mps_detach_user
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Put the IOC back in the READY state. */
 name|mps_lock
 argument_list|(
@@ -9880,6 +9894,8 @@ argument_list|,
 literal|"mpswait"
 argument_list|,
 name|timeout
+operator|*
+name|hz
 argument_list|)
 expr_stmt|;
 if|if

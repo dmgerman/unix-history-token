@@ -1337,7 +1337,9 @@ expr_stmt|;
 break|break;
 default|default:
 comment|//unsupported case, TBD
-break|break;
+return|return
+name|SCI_FAILURE
+return|;
 block|}
 comment|//end of switch
 comment|//set the retry count to new built smp request.

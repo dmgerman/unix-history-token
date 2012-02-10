@@ -609,6 +609,12 @@ name|ar5416GetCapability
 expr_stmt|;
 name|ah
 operator|->
+name|ah_setCapability
+operator|=
+name|ar5416SetCapability
+expr_stmt|;
+name|ah
+operator|->
 name|ah_getDiagState
 operator|=
 name|ar5416GetDiagState

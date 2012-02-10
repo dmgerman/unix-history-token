@@ -3479,10 +3479,22 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|sc
+operator|->
+name|sc_carpdev
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|carp_send_ad_locked
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|CARP_UNLOCK
 argument_list|(
@@ -3498,6 +3510,10 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|/* Send a periodic advertisement, executed in callout context. */
+end_comment
 
 begin_function
 specifier|static
@@ -3521,10 +3537,22 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|sc
+operator|->
+name|sc_carpdev
+operator|->
+name|if_vnet
+argument_list|)
+expr_stmt|;
 name|carp_send_ad_locked
 argument_list|(
 name|sc
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 name|CARP_UNLOCK
 argument_list|(
@@ -5476,6 +5504,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/* Master down timeout event, executed in callout context. */
+end_comment
+
 begin_function
 specifier|static
 name|void
@@ -5496,6 +5528,15 @@ decl_stmt|;
 name|CARP_LOCK_ASSERT
 argument_list|(
 name|sc
+argument_list|)
+expr_stmt|;
+name|CURVNET_SET
+argument_list|(
+name|sc
+operator|->
+name|sc_carpdev
+operator|->
+name|if_vnet
 argument_list|)
 expr_stmt|;
 if|if
@@ -5528,6 +5569,9 @@ name|sc
 argument_list|)
 expr_stmt|;
 block|}
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 name|CARP_UNLOCK
 argument_list|(
 name|sc

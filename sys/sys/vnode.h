@@ -304,11 +304,11 @@ name|int
 name|v_usecount
 decl_stmt|;
 comment|/* i ref count of users */
-name|u_long
+name|u_int
 name|v_iflag
 decl_stmt|;
 comment|/* i vnode flags (see below) */
-name|u_long
+name|u_int
 name|v_vflag
 decl_stmt|;
 comment|/* v vnode flags */

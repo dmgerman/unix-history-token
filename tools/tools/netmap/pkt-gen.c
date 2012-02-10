@@ -483,9 +483,10 @@ decl_stmt|;
 name|uint8_t
 name|body
 index|[
-name|NETMAP_BUF_SIZE
+literal|2048
 index|]
 decl_stmt|;
+comment|// XXX hardwired
 block|}
 name|__attribute__
 argument_list|(

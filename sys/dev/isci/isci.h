@@ -488,9 +488,6 @@ name|struct
 name|ISCI_REQUEST
 name|parent
 decl_stmt|;
-name|SCI_STATUS
-name|status
-decl_stmt|;
 name|SCI_IO_REQUEST_HANDLE_T
 name|sci_object
 decl_stmt|;

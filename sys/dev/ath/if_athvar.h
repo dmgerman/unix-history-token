@@ -4007,6 +4007,32 @@ end_define
 begin_define
 define|#
 directive|define
+name|ath_hal_setrxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_rx
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_RX_CHAINMASK, 1, _rx, NULL))
+end_define
+
+begin_define
+define|#
+directive|define
+name|ath_hal_settxchainmask
+parameter_list|(
+name|_ah
+parameter_list|,
+name|_tx
+parameter_list|)
+define|\
+value|(ath_hal_setcapability(_ah, HAL_CAP_TX_CHAINMASK, 1, _tx, NULL))
+end_define
+
+begin_define
+define|#
+directive|define
 name|ath_hal_split4ktrans
 parameter_list|(
 name|_ah

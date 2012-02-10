@@ -54,6 +54,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"debug.h"
 end_include
 
@@ -61,6 +73,12 @@ begin_include
 include|#
 directive|include
 file|"rtld.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"rtld_printf.h"
 end_include
 
 begin_ifdef
@@ -1148,12 +1166,15 @@ argument_list|)
 expr_stmt|;
 name|dbg
 argument_list|(
-literal|"bind now/fixup at %s sym # %d in %s --> was=%p new=%p"
+literal|"bind now/fixup at %s sym # %jd in %s --> was=%p new=%p"
 argument_list|,
 name|obj
 operator|->
 name|path
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|reloff
 argument_list|,
 name|defobj
@@ -1364,7 +1385,7 @@ name|i
 expr_stmt|;
 name|dbg
 argument_list|(
-literal|"got:%p for %d entries adding %x"
+literal|"got:%p for %d entries adding %p"
 argument_list|,
 name|got
 argument_list|,
@@ -1372,9 +1393,6 @@ name|obj
 operator|->
 name|local_gotno
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -1603,13 +1621,10 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning2, i:%d maps to relocbase address:%x"
+literal|"Warning2, i:%d maps to relocbase address:%p"
 argument_list|,
 name|i
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -1676,13 +1691,10 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning3, i:%d maps to relocbase address:%x"
+literal|"Warning3, i:%d maps to relocbase address:%p"
 argument_list|,
 name|i
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -1765,13 +1777,10 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning4, i:%d maps to relocbase address:%x"
+literal|"Warning4, i:%d maps to relocbase address:%p"
 argument_list|,
 name|i
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -2215,7 +2224,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|const Elf_Rel *rellim; 	const Elf_Rel *rel; 		 	dbg("reloc_plt obj:%p pltrel:%p sz:%d", obj, obj->pltrel, (int)obj->pltrelsize); 	dbg("gottable %p num syms:%d", obj->pltgot, obj->symtabno ); 	dbg("*****************************************************"); 	rellim = (const Elf_Rel *)((char *)obj->pltrel + 	    obj->pltrelsize); 	for (rel = obj->pltrel;  rel< rellim;  rel++) { 		Elf_Addr *where; 		where = (Elf_Addr *)(obj->relocbase + rel->r_offset); 		*where += (Elf_Addr )obj->relocbase; 	}
+block|const Elf_Rel *rellim; 	const Elf_Rel *rel; 		 	dbg("reloc_plt obj:%p pltrel:%p sz:%s", obj, obj->pltrel, (int)obj->pltrelsize); 	dbg("gottable %p num syms:%s", obj->pltgot, obj->symtabno ); 	dbg("*****************************************************"); 	rellim = (const Elf_Rel *)((char *)obj->pltrel + 	    obj->pltrelsize); 	for (rel = obj->pltrel;  rel< rellim;  rel++) { 		Elf_Addr *where; 		where = (Elf_Addr *)(obj->relocbase + rel->r_offset); 		*where += (Elf_Addr )obj->relocbase; 	}
 endif|#
 directive|endif
 comment|/* PLT fixups were done above in the GOT relocation. */
@@ -2347,7 +2356,64 @@ name|Obj_Entry
 modifier|*
 name|objs
 parameter_list|)
-block|{ 	 }
+block|{
+name|char
+modifier|*
+name|tls
+decl_stmt|;
+comment|/* 	 * Fix the size of the static TLS block by using the maximum 	 * offset allocated so far and adding a bit for dynamic modules to 	 * use. 	 */
+name|tls_static_space
+operator|=
+name|tls_last_offset
+operator|+
+name|tls_last_size
+operator|+
+name|RTLD_STATIC_TLS_EXTRA
+expr_stmt|;
+name|tls
+operator|=
+operator|(
+operator|(
+name|char
+operator|*
+operator|)
+name|allocate_tls
+argument_list|(
+name|objs
+argument_list|,
+name|NULL
+argument_list|,
+name|TLS_TCB_SIZE
+argument_list|,
+literal|8
+argument_list|)
+operator|+
+name|TLS_TP_OFFSET
+operator|+
+name|TLS_TCB_SIZE
+operator|)
+expr_stmt|;
+name|sysarch
+argument_list|(
+name|MIPS_SET_TLS
+argument_list|,
+name|tls
+argument_list|)
+expr_stmt|;
+name|rtld_printf
+argument_list|(
+literal|"allocate_initial_tls -> %p(%p)\n"
+argument_list|,
+name|tls
+argument_list|,
+name|tls
+operator|-
+name|TLS_TP_OFFSET
+operator|-
+name|TLS_TCB_SIZE
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 begin_function
@@ -2360,9 +2426,57 @@ modifier|*
 name|ti
 parameter_list|)
 block|{
+name|Elf_Addr
+modifier|*
+modifier|*
+name|tls
+decl_stmt|;
+name|char
+modifier|*
+name|p
+decl_stmt|;
+name|sysarch
+argument_list|(
+name|MIPS_GET_TLS
+argument_list|,
+operator|&
+name|tls
+argument_list|)
+expr_stmt|;
+name|p
+operator|=
+name|tls_get_addr_common
+argument_list|(
+operator|(
+name|Elf_Addr
+operator|*
+operator|*
+operator|)
+operator|(
+operator|(
+name|Elf_Addr
+operator|)
+name|tls
+operator|-
+name|TLS_TP_OFFSET
+operator|-
+name|TLS_TCB_SIZE
+operator|)
+argument_list|,
+name|ti
+operator|->
+name|ti_module
+argument_list|,
+name|ti
+operator|->
+name|ti_offset
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|NULL
+name|p
+operator|+
+name|TLS_DTV_OFFSET
 operator|)
 return|;
 block|}

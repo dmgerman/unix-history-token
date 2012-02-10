@@ -105,6 +105,54 @@ define|\
 value|(((InitFunc)(target))())
 end_define
 
+begin_comment
+comment|/*  * TLS  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TLS_TP_OFFSET
+value|0x7000
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_DTV_OFFSET
+value|0x8000
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TLS_TCB_SIZE
+value|16
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TLS_TCB_SIZE
+value|8
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -145,7 +193,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|round(size, align)
+value|round(TLS_TCB_SIZE, align)
 end_define
 
 begin_define

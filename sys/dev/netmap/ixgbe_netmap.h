@@ -178,13 +178,6 @@ name|nm_register
 operator|=
 name|ixgbe_netmap_reg
 expr_stmt|;
-comment|/* 	 * XXX where do we put this comment ? 	 * adapter->rx_mbuf_sz is set by SIOCSETMTU, but in netmap mode 	 * we allocate the buffers on the first register. So we must 	 * disallow a SIOCSETMTU when if_capenable& IFCAP_NETMAP is set. 	 */
-name|na
-operator|.
-name|buff_size
-operator|=
-name|NETMAP_BUF_SIZE
-expr_stmt|;
 name|netmap_attach
 argument_list|(
 operator|&
@@ -1161,15 +1154,8 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-operator|!
 name|j
 condition|)
-block|{
-name|netmap_skip_txsync
-operator|++
-expr_stmt|;
-block|}
-else|else
 block|{
 name|int
 name|delta
@@ -1509,6 +1495,8 @@ literal|1
 expr_stmt|;
 if|if
 condition|(
+name|netmap_no_pendintr
+operator|||
 name|force_update
 condition|)
 block|{

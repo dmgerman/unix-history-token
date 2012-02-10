@@ -4800,6 +4800,7 @@ operator|&
 name|ffclock_boottime
 argument_list|)
 expr_stmt|;
+break|break;
 endif|#
 directive|endif
 default|default:

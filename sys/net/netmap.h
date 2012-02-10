@@ -244,17 +244,6 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|/*  * default buf size is 2048, but it may make sense to have  * it shorter for better cache usage.  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NETMAP_BUF_SIZE
-value|(2048)
-end_define
-
 begin_define
 define|#
 directive|define

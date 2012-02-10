@@ -376,7 +376,7 @@ operator|<=
 name|MPT_MAX_PERSONALITIES
 argument_list|,
 operator|(
-literal|"mpt_pers_find: starting position out of range\n"
+literal|"mpt_pers_find: starting position out of range"
 operator|)
 argument_list|)
 block|;
@@ -4394,10 +4394,9 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"mpt_free_request bad req ptr\n"
+literal|"mpt_free_request: bad req ptr"
 argument_list|)
 expr_stmt|;
-return|return;
 block|}
 if|if
 condition|(
@@ -4796,7 +4795,7 @@ name|index
 index|]
 argument_list|,
 operator|(
-literal|"mpt_get_request: corrupted request free list\n"
+literal|"mpt_get_request: corrupted request free list"
 operator|)
 argument_list|)
 expr_stmt|;

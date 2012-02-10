@@ -191,9 +191,9 @@ name|cdev
 modifier|*
 name|si_parent
 decl_stmt|;
-name|char
+name|void
 modifier|*
-name|si_name
+name|si_spare0
 decl_stmt|;
 name|void
 modifier|*
@@ -228,7 +228,7 @@ block|}
 name|__si_u
 union|;
 name|char
-name|__si_namebuf
+name|si_name
 index|[
 name|SPECNAMELEN
 operator|+

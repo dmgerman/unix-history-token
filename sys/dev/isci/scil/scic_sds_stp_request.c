@@ -2891,14 +2891,6 @@ name|pio_transfer_bytes
 operator|-=
 name|remaining_bytes_in_current_sgl
 expr_stmt|;
-comment|//update the current sgl, sgl_offset and save for future
-name|current_sgl
-operator|=
-name|scic_sds_stp_request_pio_get_next_sgl
-argument_list|(
-name|this_sds_stp_request
-argument_list|)
-expr_stmt|;
 name|sgl_offset
 operator|=
 literal|0
