@@ -75,12 +75,6 @@ directive|include
 file|"rtld.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"rtld_printf.h"
-end_include
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -2398,19 +2392,6 @@ argument_list|(
 name|MIPS_SET_TLS
 argument_list|,
 name|tls
-argument_list|)
-expr_stmt|;
-name|rtld_printf
-argument_list|(
-literal|"allocate_initial_tls -> %p(%p)\n"
-argument_list|,
-name|tls
-argument_list|,
-name|tls
-operator|-
-name|TLS_TP_OFFSET
-operator|-
-name|TLS_TCB_SIZE
 argument_list|)
 expr_stmt|;
 block|}
