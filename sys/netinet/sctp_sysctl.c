@@ -5172,7 +5172,7 @@ name|OID_AUTO
 argument_list|,
 name|sendspace
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5202,7 +5202,7 @@ name|OID_AUTO
 argument_list|,
 name|recvspace
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5232,7 +5232,7 @@ name|OID_AUTO
 argument_list|,
 name|auto_asconf
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5262,7 +5262,7 @@ name|OID_AUTO
 argument_list|,
 name|ecn_enable
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5292,7 +5292,7 @@ name|OID_AUTO
 argument_list|,
 name|ecn_nonce
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5322,7 +5322,7 @@ name|OID_AUTO
 argument_list|,
 name|strict_sacks
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5362,7 +5362,7 @@ name|OID_AUTO
 argument_list|,
 name|loopback_nocsum
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5397,7 +5397,7 @@ name|OID_AUTO
 argument_list|,
 name|strict_init
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5427,7 +5427,7 @@ name|OID_AUTO
 argument_list|,
 name|peer_chkoh
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5457,7 +5457,7 @@ name|OID_AUTO
 argument_list|,
 name|maxburst
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5487,7 +5487,7 @@ name|OID_AUTO
 argument_list|,
 name|maxchunks
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5517,7 +5517,7 @@ name|OID_AUTO
 argument_list|,
 name|tcbhashsize
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5547,7 +5547,7 @@ name|OID_AUTO
 argument_list|,
 name|pcbhashsize
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5577,7 +5577,7 @@ name|OID_AUTO
 argument_list|,
 name|min_split_point
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5607,7 +5607,7 @@ name|OID_AUTO
 argument_list|,
 name|chunkscale
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5637,7 +5637,7 @@ name|OID_AUTO
 argument_list|,
 name|delayed_sack_time
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5667,7 +5667,7 @@ name|OID_AUTO
 argument_list|,
 name|sack_freq
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5697,7 +5697,7 @@ name|OID_AUTO
 argument_list|,
 name|sys_resource
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5727,7 +5727,7 @@ name|OID_AUTO
 argument_list|,
 name|asoc_resource
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5757,7 +5757,7 @@ name|OID_AUTO
 argument_list|,
 name|heartbeat_interval
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5787,7 +5787,7 @@ name|OID_AUTO
 argument_list|,
 name|pmtu_raise_time
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5817,7 +5817,7 @@ name|OID_AUTO
 argument_list|,
 name|shutdown_guard_time
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5847,7 +5847,7 @@ name|OID_AUTO
 argument_list|,
 name|secret_lifetime
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5877,7 +5877,7 @@ name|OID_AUTO
 argument_list|,
 name|rto_max
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5907,7 +5907,7 @@ name|OID_AUTO
 argument_list|,
 name|rto_min
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5937,7 +5937,7 @@ name|OID_AUTO
 argument_list|,
 name|rto_initial
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5967,7 +5967,7 @@ name|OID_AUTO
 argument_list|,
 name|init_rto_max
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -5997,7 +5997,7 @@ name|OID_AUTO
 argument_list|,
 name|valid_cookie_life
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6027,7 +6027,7 @@ name|OID_AUTO
 argument_list|,
 name|init_rtx_max
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6057,7 +6057,7 @@ name|OID_AUTO
 argument_list|,
 name|assoc_rtx_max
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6087,7 +6087,7 @@ name|OID_AUTO
 argument_list|,
 name|path_rtx_max
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6117,7 +6117,7 @@ name|OID_AUTO
 argument_list|,
 name|add_more_on_output
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6147,7 +6147,7 @@ name|OID_AUTO
 argument_list|,
 name|outgoing_streams
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6177,7 +6177,7 @@ name|OID_AUTO
 argument_list|,
 name|cmt_on_off
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6211,7 +6211,7 @@ name|OID_AUTO
 argument_list|,
 name|nr_sack_on_off
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6241,7 +6241,7 @@ name|OID_AUTO
 argument_list|,
 name|cmt_use_dac
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6271,7 +6271,7 @@ name|OID_AUTO
 argument_list|,
 name|cmt_pf
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6301,7 +6301,7 @@ name|OID_AUTO
 argument_list|,
 name|cwnd_maxburst
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6331,7 +6331,7 @@ name|OID_AUTO
 argument_list|,
 name|early_fast_retran
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6361,7 +6361,7 @@ name|OID_AUTO
 argument_list|,
 name|early_fast_retran_msec
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6391,7 +6391,7 @@ name|OID_AUTO
 argument_list|,
 name|asconf_auth_nochk
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6421,7 +6421,7 @@ name|OID_AUTO
 argument_list|,
 name|auth_disable
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6451,7 +6451,7 @@ name|OID_AUTO
 argument_list|,
 name|nat_friendly
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6481,7 +6481,7 @@ name|OID_AUTO
 argument_list|,
 name|abc_l_var
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6511,7 +6511,7 @@ name|OID_AUTO
 argument_list|,
 name|max_chained_mbufs
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6541,7 +6541,7 @@ name|OID_AUTO
 argument_list|,
 name|do_sctp_drain
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6571,7 +6571,7 @@ name|OID_AUTO
 argument_list|,
 name|hb_max_burst
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6601,7 +6601,7 @@ name|OID_AUTO
 argument_list|,
 name|abort_at_limit
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6631,7 +6631,7 @@ name|OID_AUTO
 argument_list|,
 name|strict_data_order
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6661,7 +6661,7 @@ name|OID_AUTO
 argument_list|,
 name|min_residual
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6691,7 +6691,7 @@ name|OID_AUTO
 argument_list|,
 name|max_retran_chunk
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6721,7 +6721,7 @@ name|OID_AUTO
 argument_list|,
 name|log_level
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6751,7 +6751,7 @@ name|OID_AUTO
 argument_list|,
 name|default_cc_module
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6781,7 +6781,7 @@ name|OID_AUTO
 argument_list|,
 name|default_frag_interleave
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6811,7 +6811,7 @@ name|OID_AUTO
 argument_list|,
 name|mobility_base
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6841,7 +6841,7 @@ name|OID_AUTO
 argument_list|,
 name|mobility_fasthandoff
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6904,7 +6904,7 @@ name|OID_AUTO
 argument_list|,
 name|clear_trace
 argument_list|,
-name|CTLTYPE_OPAQUE
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6939,7 +6939,7 @@ name|OID_AUTO
 argument_list|,
 name|udp_tunneling_for_client_enable
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6969,7 +6969,7 @@ name|OID_AUTO
 argument_list|,
 name|udp_tunneling_port
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -6999,7 +6999,7 @@ name|OID_AUTO
 argument_list|,
 name|enable_sack_immediately
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -7029,7 +7029,7 @@ name|OID_AUTO
 argument_list|,
 name|nat_friendly_init
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -7059,7 +7059,7 @@ name|OID_AUTO
 argument_list|,
 name|vtag_time_wait
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -7089,7 +7089,7 @@ name|OID_AUTO
 argument_list|,
 name|buffer_splitting
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -7119,7 +7119,7 @@ name|OID_AUTO
 argument_list|,
 name|initial_cwnd
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -7155,7 +7155,7 @@ name|OID_AUTO
 argument_list|,
 name|debug
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -7208,7 +7208,7 @@ name|OID_AUTO
 argument_list|,
 name|output_unlocked
 argument_list|,
-name|CTLTYPE_INT
+name|CTLTYPE_UINT
 operator||
 name|CTLFLAG_RW
 argument_list|,
@@ -7319,6 +7319,8 @@ name|OID_AUTO
 argument_list|,
 name|assoclist
 argument_list|,
+name|CTLTYPE_OPAQUE
+operator||
 name|CTLFLAG_RD
 argument_list|,
 literal|0
