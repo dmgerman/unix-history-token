@@ -8837,14 +8837,6 @@ operator|=
 literal|1
 expr_stmt|;
 break|break;
-case|case
-name|SCTP_AUTHENTICATION
-case|:
-name|peer_supports_auth
-operator|=
-literal|1
-expr_stmt|;
-break|break;
 default|default:
 comment|/* one we don't care about */
 break|break;
