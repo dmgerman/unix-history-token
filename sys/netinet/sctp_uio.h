@@ -587,6 +587,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_SENDV_NOINFO
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_SENDV_SNDINFO
 value|1
 end_define
