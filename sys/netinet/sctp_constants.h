@@ -2250,6 +2250,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|SCTP_ADDR_NO_PMTUD
+value|0x002
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_ADDR_NOHB
 value|0x004
 end_define

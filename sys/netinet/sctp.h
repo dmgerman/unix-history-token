@@ -1921,6 +1921,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCTP_PCB_FLAGS_DO_NOT_PMTUD
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
 name|SCTP_PCB_FLAGS_EXT_RCVINFO
 value|0x00000002
 end_define

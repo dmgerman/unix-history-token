@@ -10776,6 +10776,17 @@ condition|)
 block|{
 return|return;
 block|}
+if|if
+condition|(
+name|net
+operator|->
+name|dest_state
+operator|&
+name|SCTP_ADDR_NO_PMTUD
+condition|)
+block|{
+return|return;
+block|}
 name|to_ticks
 operator|=
 name|inp
