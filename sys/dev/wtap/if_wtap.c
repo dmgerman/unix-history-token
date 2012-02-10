@@ -257,9 +257,10 @@ name|uprintf
 argument_list|(
 literal|"write device %s \"echo.\"\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
-operator|->
-name|si_name
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|buf_len
@@ -361,9 +362,10 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
+name|devtoname
+argument_list|(
 name|dev
-operator|->
-name|si_name
+argument_list|)
 argument_list|,
 name|ifp
 operator|->

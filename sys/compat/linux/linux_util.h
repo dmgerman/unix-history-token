@@ -322,6 +322,7 @@ begin_function_decl
 name|int
 name|linux_driver_get_major_minor
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 name|node

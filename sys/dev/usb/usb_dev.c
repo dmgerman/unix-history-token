@@ -3621,9 +3621,10 @@ literal|2
 argument_list|,
 literal|"%s fflags=0x%08x\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
-operator|->
-name|si_name
+argument_list|)
 argument_list|,
 name|fflags
 argument_list|)
