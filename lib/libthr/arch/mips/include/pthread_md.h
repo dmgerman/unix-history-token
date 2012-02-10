@@ -50,37 +50,52 @@ name|DTV_OFFSET
 value|offsetof(struct tcb, tcb_dtv)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|TP_OFFSET
+value|0x7010
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|TP_OFFSET
+value|0x7008
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
-comment|/*  * Variant II tcb, first two members are required by rtld.  */
+comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it!  */
 end_comment
 
 begin_struct
 struct|struct
 name|tcb
 block|{
-name|struct
-name|tcb
-modifier|*
-name|tcb_self
-decl_stmt|;
-comment|/* required by rtld */
 name|void
 modifier|*
 name|tcb_dtv
 decl_stmt|;
-comment|/* required by rtld */
 name|struct
 name|pthread
 modifier|*
 name|tcb_thread
-decl_stmt|;
-comment|/* our hook */
-name|void
-modifier|*
-name|tcb_spare
-index|[
-literal|1
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -136,7 +151,15 @@ name|sysarch
 argument_list|(
 name|MIPS_SET_TLS
 argument_list|,
+operator|(
+operator|(
+name|uint8_t
+operator|*
+operator|)
 name|tcb
+operator|+
+name|TP_OFFSET
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -157,7 +180,7 @@ argument_list|(
 argument|void
 argument_list|)
 block|{
-name|void
+name|uint8_t
 operator|*
 name|tcb
 block|;
@@ -170,7 +193,18 @@ name|tcb
 argument_list|)
 block|;
 return|return
+operator|(
+operator|(
+expr|struct
 name|tcb
+operator|*
+operator|)
+operator|(
+name|tcb
+operator|-
+name|TP_OFFSET
+operator|)
+operator|)
 return|;
 block|}
 end_expr_stmt
