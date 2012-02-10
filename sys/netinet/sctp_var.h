@@ -109,6 +109,64 @@ parameter_list|)
 value|((inp->sctp_features& feature) == 0)
 end_define
 
+begin_define
+define|#
+directive|define
+name|sctp_stcb_feature_on
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features |= feature; \ 	} else { \ 		inp->sctp_features |= feature; \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_stcb_feature_off
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features&= ~feature; \ 	} else { \ 		inp->sctp_features&= ~feature; \ 	} \ }
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_stcb_is_feature_on
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+define|\
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == feature)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == feature)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|sctp_stcb_is_feature_off
+parameter_list|(
+name|inp
+parameter_list|,
+name|stcb
+parameter_list|,
+name|feature
+parameter_list|)
+define|\
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == 0)))
+end_define
+
 begin_comment
 comment|/* managing mobility_feature in inpcb (by micchie) */
 end_comment

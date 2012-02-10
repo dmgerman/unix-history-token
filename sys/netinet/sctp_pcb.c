@@ -18783,20 +18783,23 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 	 * We don't allow assoc id to be 0, this is needed otherwise if the 	 * id were to wrap we would have issues with some socket options. 	 */
+comment|/* 	 * We don't allow assoc id to be one of SCTP_FUTURE_ASSOC, 	 * SCTP_CURRENT_ASSOC and SCTP_ALL_ASSOC. 	 */
 if|if
 condition|(
 name|inp
 operator|->
 name|sctp_associd_counter
-operator|==
-literal|0
+operator|<=
+name|SCTP_ALL_ASSOC
 condition|)
 block|{
 name|inp
 operator|->
 name|sctp_associd_counter
-operator|++
+operator|=
+name|SCTP_ALL_ASSOC
+operator|+
+literal|1
 expr_stmt|;
 block|}
 name|id
@@ -21823,9 +21826,11 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
-name|sctp_is_feature_on
+name|sctp_stcb_is_feature_on
 argument_list|(
 name|inp
+argument_list|,
+name|stcb
 argument_list|,
 name|SCTP_PCB_FLAGS_PDAPIEVNT
 argument_list|)
