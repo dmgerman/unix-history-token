@@ -3087,6 +3087,28 @@ block|{
 name|int
 name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|VIMAGE
+name|error
+operator|=
+name|vnet_sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+name|oidp
+operator|->
+name|oid_arg1
+argument_list|,
+name|oidp
+operator|->
+name|oid_arg2
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
 name|error
 operator|=
 name|sysctl_handle_int
@@ -3104,6 +3126,8 @@ argument_list|,
 name|req
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|error
@@ -5257,7 +5281,7 @@ comment|/*  * sysctl definitions  */
 end_comment
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5287,7 +5311,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5317,7 +5341,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5347,7 +5371,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5377,7 +5401,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5417,7 +5441,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5452,7 +5476,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5482,7 +5506,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5512,7 +5536,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5542,7 +5566,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5572,7 +5596,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5602,7 +5626,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5632,7 +5656,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5662,7 +5686,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5692,7 +5716,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5722,7 +5746,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5752,7 +5776,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5782,7 +5806,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5812,7 +5836,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5842,7 +5866,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5872,7 +5896,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5902,7 +5926,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5932,7 +5956,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5962,7 +5986,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -5992,7 +6016,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6022,7 +6046,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6052,7 +6076,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6082,7 +6106,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6112,7 +6136,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6142,7 +6166,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6172,7 +6196,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6202,7 +6226,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6232,7 +6256,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6262,7 +6286,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6291,12 +6315,8 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|/* EY */
-end_comment
-
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6326,7 +6346,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6356,7 +6376,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6386,7 +6406,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6416,7 +6436,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6446,7 +6466,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6476,7 +6496,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6506,7 +6526,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6536,7 +6556,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6566,7 +6586,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6596,7 +6616,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6626,7 +6646,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6656,7 +6676,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6686,7 +6706,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6716,7 +6736,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6746,7 +6766,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6776,7 +6796,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6806,7 +6826,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6836,7 +6856,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6866,7 +6886,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6896,7 +6916,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6926,7 +6946,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6956,7 +6976,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -6995,7 +7015,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7019,7 +7039,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7054,7 +7074,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7084,7 +7104,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7114,7 +7134,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7144,7 +7164,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7174,7 +7194,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7204,7 +7224,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7234,7 +7254,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7270,7 +7290,7 @@ name|SCTP_DEBUG
 end_ifdef
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7304,10 +7324,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* SCTP_DEBUG */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -7323,7 +7339,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7377,7 +7393,7 @@ argument_list|)
 end_if
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7408,7 +7424,7 @@ directive|else
 end_else
 
 begin_expr_stmt
-name|SYSCTL_STRUCT
+name|SYSCTL_VNET_STRUCT
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
@@ -7434,7 +7450,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_sctp
 argument_list|,
