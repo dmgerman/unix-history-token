@@ -48278,8 +48278,6 @@ literal|0
 decl_stmt|;
 name|int
 name|nagle_on
-init|=
-literal|0
 decl_stmt|;
 name|int
 name|frag_point
@@ -48315,6 +48313,7 @@ name|stcb
 operator|->
 name|asoc
 expr_stmt|;
+comment|/* The Nagle algorithm is only applied when handling a send call. */
 if|if
 condition|(
 name|from_where
@@ -48344,6 +48343,13 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+block|}
+else|else
+block|{
+name|nagle_on
+operator|=
+literal|0
+expr_stmt|;
 block|}
 name|SCTP_TCB_LOCK_ASSERT
 argument_list|(
@@ -49104,7 +49110,7 @@ condition|(
 name|nagle_on
 condition|)
 block|{
-comment|/*- 			 * When nagle is on, we look at how much is un_sent, then 			 * if its smaller than an MTU and we have data in 			 * flight we stop. 			 */
+comment|/* 			 * When the Nagle algorithm is used, look at how 			 * much is unsent, then if its smaller than an MTU 			 * and we have data in flight we stop, except if we 			 * are handling a fragmented user message. 			 */
 name|un_sent
 operator|=
 operator|(
@@ -49164,6 +49170,25 @@ operator|.
 name|total_flight
 operator|>
 literal|0
+operator|)
+operator|&&
+operator|(
+operator|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|locked_on_sending
+operator|==
+name|NULL
+operator|)
+operator|||
+name|sctp_is_feature_on
+argument_list|(
+name|inp
+argument_list|,
+name|SCTP_PCB_FLAGS_EXPLICIT_EOR
+argument_list|)
 operator|)
 condition|)
 block|{
