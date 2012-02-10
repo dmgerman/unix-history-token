@@ -1421,14 +1421,14 @@ value|1
 end_define
 
 begin_comment
-comment|/* default max I can burst out after a fast retransmit */
+comment|/* default max I can burst out after a fast retransmit, 0 disables it */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTP_DEF_MAX_BURST
-value|4
+value|0
 end_define
 
 begin_comment
@@ -2810,23 +2810,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_RTO_UPPER_BOUND_SEC
-value|60
-end_define
-
-begin_comment
-comment|/* for the init timer */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|SCTP_RTO_LOWER_BOUND
-value|(1000)
+value|(300)
 end_define
 
 begin_comment
-comment|/* 1 sec in ms */
+comment|/* 0.3 sec is ms */
 end_comment
 
 begin_define
