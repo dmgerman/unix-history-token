@@ -792,6 +792,9 @@ decl_stmt|;
 name|uint32_t
 name|sctp_default_cc_module
 decl_stmt|;
+name|uint32_t
+name|sctp_default_ss_module
+decl_stmt|;
 comment|/* authentication related fields */
 name|struct
 name|sctp_keyhead

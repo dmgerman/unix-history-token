@@ -1823,6 +1823,23 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_stream_value
+block|{
+name|sctp_assoc_t
+name|assoc_id
+decl_stmt|;
+name|uint16_t
+name|stream_id
+decl_stmt|;
+name|uint16_t
+name|stream_value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_assoc_ids
 block|{
 name|uint32_t
