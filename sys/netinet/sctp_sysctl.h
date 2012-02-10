@@ -61,7 +61,7 @@ name|uint32_t
 name|sctp_ecn_enable
 decl_stmt|;
 name|uint32_t
-name|sctp_ecn_nonce
+name|sctp_not_used
 decl_stmt|;
 name|uint32_t
 name|sctp_strict_sacks
@@ -465,38 +465,6 @@ define|#
 directive|define
 name|SCTPCTL_ECN_ENABLE_DEFAULT
 value|1
-end_define
-
-begin_comment
-comment|/* ecn_nonce: Enable SCTP ECN Nonce */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_DESC
-value|"Enable SCTP ECN Nonce"
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_MIN
-value|0
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_MAX
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTPCTL_ECN_NONCE_DEFAULT
-value|0
 end_define
 
 begin_comment

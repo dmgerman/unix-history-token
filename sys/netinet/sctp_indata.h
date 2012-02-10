@@ -208,9 +208,6 @@ name|uint32_t
 name|rwnd
 parameter_list|,
 name|int
-name|nonce_sum_flag
-parameter_list|,
-name|int
 modifier|*
 name|abort_now
 parameter_list|)
