@@ -2790,6 +2790,8 @@ name|props
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -4810,6 +4812,8 @@ parameter_list|)
 block|{
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|assert
 argument_list|(
@@ -5209,6 +5213,8 @@ name|cb_defer_destroy
 decl_stmt|;
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 comment|/* 			 * We can't defer destroy non-snapshots, so set it to 			 * false while destroying the clones. 			 */
 name|cb
@@ -5518,6 +5524,8 @@ condition|)
 block|{
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 comment|/* Build the list of snaps to destroy in cb_nvl. */
 if|if
@@ -6805,6 +6813,8 @@ name|fields
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|limit
@@ -7752,6 +7762,8 @@ name|propname
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|flags
@@ -8735,6 +8747,8 @@ name|B_FALSE
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|upgrade_cbdata_t
 name|cb
@@ -10204,6 +10218,8 @@ directive|ifdef
 name|sun
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|directory_error_t
 name|e
@@ -11899,6 +11915,8 @@ name|B_FALSE
 decl_stmt|;
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -13609,6 +13627,8 @@ literal|0
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|zfs_sort_column_t
 modifier|*
@@ -14111,9 +14131,13 @@ block|}
 decl_stmt|;
 name|int
 name|c
-decl_stmt|,
+decl_stmt|;
+name|int
 name|ret
-decl_stmt|,
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|types
 decl_stmt|;
 name|boolean_t
@@ -14538,6 +14562,8 @@ name|zhp
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 comment|/* check options */
 if|if
@@ -15041,6 +15067,8 @@ parameter_list|)
 block|{
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -15565,6 +15593,8 @@ name|cb
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 comment|/* check for options */
 if|if
@@ -15830,6 +15860,8 @@ name|B_FALSE
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|char
 name|c
@@ -24764,6 +24796,8 @@ literal|0
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|flags
@@ -27322,6 +27356,8 @@ name|zhp
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|stat64
@@ -29509,6 +29545,8 @@ block|}
 decl_stmt|;
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -30251,6 +30289,8 @@ name|copy
 decl_stmt|;
 name|int
 name|err
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|c
@@ -30546,6 +30586,8 @@ parameter_list|)
 block|{
 name|int
 name|ret
+init|=
+literal|0
 decl_stmt|;
 name|int
 name|i
