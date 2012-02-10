@@ -2444,8 +2444,8 @@ name|tls_base
 parameter_list|)
 block|{
 comment|/*  	 * tls_base passed to this function           * from thr_new call and points to actual TCB struct,  	 * so we should add TP_OFFSET + sizeof(struct tcb) 	 * to make it the same way TLS base is passed to  	 * MIPS_SET_TLS/MIPS_GET_TLS API  	 */
-ifndef|#
-directive|ifndef
+ifdef|#
+directive|ifdef
 name|__mips_n64
 name|td
 operator|->
