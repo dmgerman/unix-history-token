@@ -3584,7 +3584,7 @@ name|sc
 operator|->
 name|sc_ah
 argument_list|,
-name|rx_chainmask
+name|tx_chainmask
 argument_list|)
 expr_stmt|;
 block|}
