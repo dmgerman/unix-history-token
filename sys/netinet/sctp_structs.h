@@ -879,9 +879,14 @@ decl_stmt|;
 name|uint32_t
 name|heartbeat_random2
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|uint32_t
 name|flowlabel
 decl_stmt|;
+endif|#
+directive|endif
 name|uint8_t
 name|dscp
 decl_stmt|;
@@ -2914,9 +2919,14 @@ name|uint32_t
 name|my_rwnd_control_len
 decl_stmt|;
 comment|/* shadow of sb_mbcnt used for rwnd 					 * control */
+ifdef|#
+directive|ifdef
+name|INET6
 name|uint32_t
 name|default_flowlabel
 decl_stmt|;
+endif|#
+directive|endif
 name|uint32_t
 name|pr_sctp_cnt
 decl_stmt|;
