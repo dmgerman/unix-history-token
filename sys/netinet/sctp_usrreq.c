@@ -11422,8 +11422,8 @@ operator|=
 name|net
 operator|->
 name|dscp
-operator|>>
-literal|2
+operator|&
+literal|0xfc
 expr_stmt|;
 name|paddrp
 operator|->
@@ -11527,8 +11527,8 @@ operator|->
 name|asoc
 operator|.
 name|default_dscp
-operator|>>
-literal|2
+operator|&
+literal|0xfc
 expr_stmt|;
 name|paddrp
 operator|->
@@ -11743,8 +11743,8 @@ operator|->
 name|sctp_ep
 operator|.
 name|default_dscp
-operator|>>
-literal|2
+operator|&
+literal|0xfc
 expr_stmt|;
 name|paddrp
 operator|->
@@ -23373,8 +23373,8 @@ operator|=
 name|paddrp
 operator|->
 name|spp_dscp
-operator|<<
-literal|2
+operator|&
+literal|0xfc
 expr_stmt|;
 name|net
 operator|->
@@ -24074,8 +24074,8 @@ operator|=
 name|paddrp
 operator|->
 name|spp_dscp
-operator|<<
-literal|2
+operator|&
+literal|0xfc
 expr_stmt|;
 name|net
 operator|->
@@ -24093,8 +24093,8 @@ operator|=
 name|paddrp
 operator|->
 name|spp_dscp
-operator|<<
-literal|2
+operator|&
+literal|0xfc
 expr_stmt|;
 name|stcb
 operator|->
@@ -24435,8 +24435,8 @@ operator|=
 name|paddrp
 operator|->
 name|spp_dscp
-operator|<<
-literal|2
+operator|&
+literal|0xfc
 expr_stmt|;
 name|inp
 operator|->
