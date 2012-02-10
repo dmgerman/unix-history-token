@@ -1399,7 +1399,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_DESC
-value|"CMT on/off flag"
+value|"CMT settings"
 end_define
 
 begin_define
@@ -1413,7 +1413,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_CMT_ON_OFF_MAX
-value|1
+value|2
 end_define
 
 begin_define

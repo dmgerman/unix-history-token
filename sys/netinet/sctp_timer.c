@@ -851,8 +851,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -3929,8 +3929,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 condition|)
 block|{
 name|chk
@@ -4668,8 +4668,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
@@ -4739,8 +4739,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 condition|)
 block|{
 comment|/* 		 * CMT: Using RTX_SSTHRESH policy for CMT. If CMT is being 		 * used, then pick dest with largest ssthresh for any 		 * retransmission. 		 */
@@ -5169,8 +5169,8 @@ operator|->
 name|asoc
 operator|.
 name|sctp_cmt_on_off
-operator|==
-literal|1
+operator|>
+literal|0
 operator|)
 operator|&&
 operator|(
