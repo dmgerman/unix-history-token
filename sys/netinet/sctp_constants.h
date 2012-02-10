@@ -1431,6 +1431,38 @@ name|SCTP_DEF_MAX_BURST
 value|0
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_DEF_HBMAX_BURST
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DEF_FRMAX_BURST
+value|4
+end_define
+
+begin_comment
+comment|/* RTO calculation flag to say if it  * is safe to determine local lan or not.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_DETERMINE_LL_NOTOK
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_DETERMINE_LL_OK
+value|1
+end_define
+
 begin_comment
 comment|/* IP hdr (20/40) + 12+2+2 (enet) + sctp common 12 */
 end_comment
@@ -4331,6 +4363,42 @@ name|SCTP_TIME_WAIT
 value|60
 end_define
 
+begin_comment
+comment|/* How many micro seconds is the cutoff from  * local lan type rtt's  */
+end_comment
+
+begin_comment
+comment|/*   * We allow 500us for the rtt and another 500us for the cookie processing   * since we measure this on the first rtt.   */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_LOCAL_LAN_RTT
+value|1100
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LAN_UNKNOWN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LAN_LOCAL
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_LAN_INTERNET
+value|2
+end_define
+
 begin_define
 define|#
 directive|define
@@ -4443,6 +4511,16 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
+
+begin_define
+define|#
+directive|define
+name|SCTP_GETTIME_TIMESPEC
+parameter_list|(
+name|x
+parameter_list|)
+value|(getnanouptime(x))
+end_define
 
 begin_define
 define|#

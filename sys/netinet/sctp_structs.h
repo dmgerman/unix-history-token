@@ -647,6 +647,10 @@ name|prev_cwnd
 decl_stmt|;
 comment|/* cwnd before any processing */
 name|uint32_t
+name|ecn_prev_cwnd
+decl_stmt|;
+comment|/* ECN prev cwnd at first ecn_echo seen in new 				 * window */
+name|uint32_t
 name|partial_bytes_acked
 decl_stmt|;
 comment|/* in CA tracks when to incr a MTU */
@@ -778,6 +782,9 @@ name|uint8_t
 name|last_hs_used
 decl_stmt|;
 comment|/* index into the last HS table entry we used */
+name|uint8_t
+name|lan_type
+decl_stmt|;
 comment|/* JRS - struct used in HTCP algorithm */
 name|struct
 name|htcp
@@ -810,8 +817,8 @@ name|uint32_t
 name|context
 decl_stmt|;
 comment|/* from send */
-name|uint8_t
-name|fwd_tsn_cnt
+name|uint32_t
+name|cwnd_at_send
 decl_stmt|;
 comment|/* 	 * part of the Highest sacked algorithm to be able to stroke counts 	 * on ones that are FR'd. 	 */
 name|uint32_t
@@ -835,6 +842,9 @@ name|state_flags
 decl_stmt|;
 name|uint8_t
 name|chunk_was_revoked
+decl_stmt|;
+name|uint8_t
+name|fwd_tsn_cnt
 decl_stmt|;
 block|}
 struct|;
@@ -2846,9 +2856,13 @@ comment|/* 	 * This flag indicates that a SACK need to be sent. Initially this 	
 name|uint8_t
 name|send_sack
 decl_stmt|;
-comment|/* max burst after fast retransmit completes */
+comment|/* max burst of new packets into the network */
 name|uint32_t
 name|max_burst
+decl_stmt|;
+comment|/* max burst of fast retransmit packets */
+name|uint32_t
+name|fr_max_burst
 decl_stmt|;
 name|uint8_t
 name|sat_network

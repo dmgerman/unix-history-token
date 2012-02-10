@@ -880,6 +880,9 @@ decl_stmt|;
 name|uint32_t
 name|max_burst
 decl_stmt|;
+name|uint32_t
+name|fr_max_burst
+decl_stmt|;
 name|char
 name|current_secret_number
 decl_stmt|;

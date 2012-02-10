@@ -210,6 +210,9 @@ parameter_list|,
 name|int
 modifier|*
 name|abort_now
+parameter_list|,
+name|int
+name|ecne_seen
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -260,6 +263,9 @@ name|cum_ack
 parameter_list|,
 name|uint32_t
 name|rwnd
+parameter_list|,
+name|int
+name|ecne_seen
 parameter_list|)
 function_decl|;
 end_function_decl

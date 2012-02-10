@@ -2287,6 +2287,8 @@ operator|->
 name|time_entered
 argument_list|,
 name|sctp_align_safe_nocopy
+argument_list|,
+name|SCTP_DETERMINE_LL_NOTOK
 argument_list|)
 expr_stmt|;
 name|retval
@@ -3130,6 +3132,8 @@ operator|&
 name|tv
 argument_list|,
 name|sctp_align_safe_nocopy
+argument_list|,
+name|SCTP_DETERMINE_LL_OK
 argument_list|)
 expr_stmt|;
 comment|/* Mobility adaptation */
@@ -7489,6 +7493,8 @@ operator|->
 name|time_entered
 argument_list|,
 name|sctp_align_unsafe_makecopy
+argument_list|,
+name|SCTP_DETERMINE_LL_NOTOK
 argument_list|)
 expr_stmt|;
 if|if
@@ -11195,6 +11201,8 @@ operator|->
 name|time_entered
 argument_list|,
 name|sctp_align_unsafe_makecopy
+argument_list|,
+name|SCTP_DETERMINE_LL_NOTOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -14046,6 +14054,8 @@ operator|->
 name|time_entered
 argument_list|,
 name|sctp_align_safe_nocopy
+argument_list|,
+name|SCTP_DETERMINE_LL_NOTOK
 argument_list|)
 expr_stmt|;
 block|}
@@ -14638,6 +14648,18 @@ operator|=
 name|lchk
 operator|->
 name|whoTo
+expr_stmt|;
+name|net
+operator|->
+name|ecn_prev_cwnd
+operator|=
+name|lchk
+operator|->
+name|rec
+operator|.
+name|data
+operator|.
+name|cwnd_at_send
 expr_stmt|;
 break|break;
 block|}
@@ -21275,6 +21297,11 @@ name|abort_no_unlock
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|ecne_seen
+init|=
+literal|0
+decl_stmt|;
 comment|/* 	 * How big should this be, and should it be alloc'd? Lets try the 	 * d-mtu-ceiling for now (2k) and that should hopefully work ... 	 * until we get into jumbo grams and such.. 	 */
 name|uint8_t
 name|chunk_buf
@@ -23570,6 +23597,8 @@ name|a_rwnd
 argument_list|,
 operator|&
 name|abort_now
+argument_list|,
+name|ecne_seen
 argument_list|)
 expr_stmt|;
 block|}
@@ -23609,6 +23638,8 @@ argument_list|,
 name|cum_ack
 argument_list|,
 name|a_rwnd
+argument_list|,
+name|ecne_seen
 argument_list|)
 expr_stmt|;
 block|}
@@ -24040,6 +24071,8 @@ name|a_rwnd
 argument_list|,
 operator|&
 name|abort_now
+argument_list|,
+name|ecne_seen
 argument_list|)
 expr_stmt|;
 block|}
@@ -24079,6 +24112,8 @@ argument_list|,
 name|cum_ack
 argument_list|,
 name|a_rwnd
+argument_list|,
+name|ecne_seen
 argument_list|)
 expr_stmt|;
 block|}
@@ -25412,6 +25447,10 @@ name|ch
 argument_list|,
 name|stcb
 argument_list|)
+expr_stmt|;
+name|ecne_seen
+operator|=
+literal|1
 expr_stmt|;
 block|}
 break|break;
