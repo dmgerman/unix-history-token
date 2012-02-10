@@ -609,10 +609,14 @@ comment|/* multiq/TOE 3; vimage 3; general use 4 */
 name|int
 name|if_ispare
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
-comment|/* general use 2 */
+comment|/* general use */
+name|u_int
+name|if_fib
+decl_stmt|;
+comment|/* interface FIB */
 block|}
 struct|;
 end_struct
