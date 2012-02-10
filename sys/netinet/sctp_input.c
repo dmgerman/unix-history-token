@@ -14256,8 +14256,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
+operator|(
 name|stcb
 operator|->
 name|asoc
@@ -14265,19 +14268,11 @@ operator|.
 name|state
 operator|&
 name|SCTP_STATE_CLOSED_SOCKET
+operator|)
+operator|==
+literal|0
 condition|)
 block|{
-name|SCTP_SOCKET_UNLOCK
-argument_list|(
-name|so
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-return|return;
-block|}
-endif|#
-directive|endif
 name|soisconnected
 argument_list|(
 name|stcb
@@ -14285,6 +14280,7 @@ operator|->
 name|sctp_socket
 argument_list|)
 expr_stmt|;
+block|}
 if|#
 directive|if
 name|defined
@@ -14306,6 +14302,29 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
+comment|/* 		 * since we did not send a HB make sure we don't double 		 * things 		 */
+name|net
+operator|->
+name|hb_responded
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|state
+operator|&
+name|SCTP_STATE_CLOSED_SOCKET
+condition|)
+block|{
+comment|/* 			 * We don't need to do the asconf thing, nor hb or 			 * autoclose if the socket is closed. 			 */
+goto|goto
+name|closed_socket
+goto|;
+block|}
 name|sctp_timer_start
 argument_list|(
 name|SCTP_TIMER_TYPE_HEARTBEAT
@@ -14318,13 +14337,6 @@ name|stcb
 argument_list|,
 name|net
 argument_list|)
-expr_stmt|;
-comment|/* 		 * since we did not send a HB make sure we don't double 		 * things 		 */
-name|net
-operator|->
-name|hb_responded
-operator|=
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -14433,6 +14445,8 @@ endif|#
 directive|endif
 block|}
 block|}
+name|closed_socket
+label|:
 comment|/* Toss the cookie if I can */
 name|sctp_toss_old_cookies
 argument_list|(
