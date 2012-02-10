@@ -1081,8 +1081,8 @@ name|Prefix
 argument_list|,
 name|resolved_prefix
 argument_list|)
-operator|!=
-literal|0
+operator|==
+name|NULL
 condition|)
 name|err
 argument_list|(
