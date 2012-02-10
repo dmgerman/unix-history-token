@@ -11262,27 +11262,6 @@ argument_list|(
 name|sctp_max_burst_default
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_default_cc_module
-argument_list|)
-operator|>=
-name|SCTP_CC_RFC2581
-operator|)
-operator|&&
-operator|(
-name|SCTP_BASE_SYSCTL
-argument_list|(
-name|sctp_default_cc_module
-argument_list|)
-operator|<=
-name|SCTP_CC_HTCP
-operator|)
-condition|)
-block|{
 name|m
 operator|->
 name|sctp_default_cc_module
@@ -11292,17 +11271,6 @@ argument_list|(
 name|sctp_default_cc_module
 argument_list|)
 expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* sysctl done with invalid value, set to 2581 */
-name|m
-operator|->
-name|sctp_default_cc_module
-operator|=
-name|SCTP_CC_RFC2581
-expr_stmt|;
-block|}
 comment|/* number of streams to pre-open on a association */
 name|m
 operator|->

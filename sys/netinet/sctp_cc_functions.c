@@ -84,12 +84,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<netinet/sctp_cc_functions.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<netinet/sctp_dtrace_declare.h>
 end_include
 
@@ -108,6 +102,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_function
+specifier|static
 name|void
 name|sctp_set_initial_cc_param
 parameter_list|(
@@ -363,6 +358,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_cwnd_update_after_fr
 parameter_list|(
@@ -876,6 +872,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_cwnd_update_after_sack
 parameter_list|(
@@ -2058,6 +2055,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_cwnd_update_after_timeout
 parameter_list|(
@@ -2336,6 +2334,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_cwnd_update_after_ecn_echo
 parameter_list|(
@@ -2482,6 +2481,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_cwnd_update_after_packet_dropped
 parameter_list|(
@@ -2930,6 +2930,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_cwnd_update_after_output
 parameter_list|(
@@ -3065,6 +3066,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_cwnd_update_after_fr_timer
 parameter_list|(
@@ -4388,6 +4390,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_hs_cwnd_update_after_fr
 parameter_list|(
@@ -4632,6 +4635,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_hs_cwnd_update_after_sack
 parameter_list|(
@@ -6965,6 +6969,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_htcp_set_initial_cc_param
 parameter_list|(
@@ -7055,6 +7060,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_htcp_cwnd_update_after_sack
 parameter_list|(
@@ -7658,6 +7664,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_htcp_cwnd_update_after_fr
 parameter_list|(
@@ -7958,6 +7965,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_htcp_cwnd_update_after_timeout
 parameter_list|(
@@ -8043,6 +8051,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_htcp_cwnd_update_after_fr_timer
 parameter_list|(
@@ -8164,6 +8173,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sctp_htcp_cwnd_update_after_ecn_echo
 parameter_list|(
@@ -8277,6 +8287,142 @@ expr_stmt|;
 block|}
 block|}
 end_function
+
+begin_decl_stmt
+name|struct
+name|sctp_cc_functions
+name|sctp_cc_functions
+index|[]
+init|=
+block|{
+block|{
+operator|.
+name|sctp_set_initial_cc_param
+operator|=
+name|sctp_set_initial_cc_param
+block|,
+operator|.
+name|sctp_cwnd_update_after_sack
+operator|=
+name|sctp_cwnd_update_after_sack
+block|,
+operator|.
+name|sctp_cwnd_update_after_fr
+operator|=
+name|sctp_cwnd_update_after_fr
+block|,
+operator|.
+name|sctp_cwnd_update_after_timeout
+operator|=
+name|sctp_cwnd_update_after_timeout
+block|,
+operator|.
+name|sctp_cwnd_update_after_ecn_echo
+operator|=
+name|sctp_cwnd_update_after_ecn_echo
+block|,
+operator|.
+name|sctp_cwnd_update_after_packet_dropped
+operator|=
+name|sctp_cwnd_update_after_packet_dropped
+block|,
+operator|.
+name|sctp_cwnd_update_after_output
+operator|=
+name|sctp_cwnd_update_after_output
+block|,
+operator|.
+name|sctp_cwnd_update_after_fr_timer
+operator|=
+name|sctp_cwnd_update_after_fr_timer
+block|}
+block|,
+block|{
+operator|.
+name|sctp_set_initial_cc_param
+operator|=
+name|sctp_set_initial_cc_param
+block|,
+operator|.
+name|sctp_cwnd_update_after_sack
+operator|=
+name|sctp_hs_cwnd_update_after_sack
+block|,
+operator|.
+name|sctp_cwnd_update_after_fr
+operator|=
+name|sctp_hs_cwnd_update_after_fr
+block|,
+operator|.
+name|sctp_cwnd_update_after_timeout
+operator|=
+name|sctp_cwnd_update_after_timeout
+block|,
+operator|.
+name|sctp_cwnd_update_after_ecn_echo
+operator|=
+name|sctp_cwnd_update_after_ecn_echo
+block|,
+operator|.
+name|sctp_cwnd_update_after_packet_dropped
+operator|=
+name|sctp_cwnd_update_after_packet_dropped
+block|,
+operator|.
+name|sctp_cwnd_update_after_output
+operator|=
+name|sctp_cwnd_update_after_output
+block|,
+operator|.
+name|sctp_cwnd_update_after_fr_timer
+operator|=
+name|sctp_cwnd_update_after_fr_timer
+block|}
+block|,
+block|{
+operator|.
+name|sctp_set_initial_cc_param
+operator|=
+name|sctp_htcp_set_initial_cc_param
+block|,
+operator|.
+name|sctp_cwnd_update_after_sack
+operator|=
+name|sctp_htcp_cwnd_update_after_sack
+block|,
+operator|.
+name|sctp_cwnd_update_after_fr
+operator|=
+name|sctp_htcp_cwnd_update_after_fr
+block|,
+operator|.
+name|sctp_cwnd_update_after_timeout
+operator|=
+name|sctp_htcp_cwnd_update_after_timeout
+block|,
+operator|.
+name|sctp_cwnd_update_after_ecn_echo
+operator|=
+name|sctp_htcp_cwnd_update_after_ecn_echo
+block|,
+operator|.
+name|sctp_cwnd_update_after_packet_dropped
+operator|=
+name|sctp_cwnd_update_after_packet_dropped
+block|,
+operator|.
+name|sctp_cwnd_update_after_output
+operator|=
+name|sctp_cwnd_update_after_output
+block|,
+operator|.
+name|sctp_cwnd_update_after_fr_timer
+operator|=
+name|sctp_htcp_cwnd_update_after_fr_timer
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 
