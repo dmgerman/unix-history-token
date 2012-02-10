@@ -3075,9 +3075,13 @@ name|sctps_fwdtsn_map_over
 decl_stmt|;
 comment|/* number of map array over-runs via 					 * fwd-tsn's */
 name|uint32_t
+name|sctps_queue_upd_ecne
+decl_stmt|;
+comment|/* Number of times we queued or 					 * updated an ECN chunk on send queue */
+name|uint32_t
 name|sctps_reserved
 index|[
-literal|32
+literal|31
 index|]
 decl_stmt|;
 comment|/* Future ABI compat - remove int's 					 * from here when adding new */
