@@ -2842,7 +2842,7 @@ name|uint8_t
 name|send_sack
 decl_stmt|;
 comment|/* max burst after fast retransmit completes */
-name|uint8_t
+name|uint32_t
 name|max_burst
 decl_stmt|;
 name|uint8_t

@@ -877,7 +877,7 @@ decl_stmt|;
 name|uint32_t
 name|store_at
 decl_stmt|;
-name|uint8_t
+name|uint32_t
 name|max_burst
 decl_stmt|;
 name|char
