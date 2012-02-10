@@ -1449,7 +1449,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SCTP__NOTIFICATIONS_STOPPED_EVENT
+name|SCTP_NOTIFICATIONS_STOPPED_EVENT
 value|0x000b
 end_define
 
