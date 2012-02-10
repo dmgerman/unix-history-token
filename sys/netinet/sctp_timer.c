@@ -2609,6 +2609,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -4843,6 +4845,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 operator|<
 literal|0
@@ -5060,6 +5064,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 operator|<
 literal|0
@@ -7391,6 +7397,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 operator|<
 literal|0
@@ -7495,6 +7503,8 @@ argument_list|,
 literal|1
 argument_list|,
 name|net
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 if|if

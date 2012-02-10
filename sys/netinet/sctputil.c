@@ -8918,6 +8918,8 @@ expr_stmt|;
 name|sctp_send_sack
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_NOT_LOCKED
 argument_list|)
 expr_stmt|;
 block|}
@@ -18664,6 +18666,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore FREED_MEMORY */
@@ -18757,6 +18761,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|chk
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore FREED_MEMORY */
@@ -18905,6 +18911,8 @@ argument_list|(
 name|stcb
 argument_list|,
 name|sp
+argument_list|,
+name|so_locked
 argument_list|)
 expr_stmt|;
 comment|/* sa_ignore FREED_MEMORY */
@@ -25458,6 +25466,8 @@ expr_stmt|;
 name|sctp_send_sack
 argument_list|(
 name|stcb
+argument_list|,
+name|SCTP_SO_LOCKED
 argument_list|)
 expr_stmt|;
 name|sctp_chunk_output

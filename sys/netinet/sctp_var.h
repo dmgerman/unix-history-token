@@ -241,8 +241,10 @@ parameter_list|(
 name|_stcb
 parameter_list|,
 name|_strmoq
+parameter_list|,
+name|_so_locked
 parameter_list|)
-value|{ \ 	if ((_strmoq)->holds_key_ref) { \ 		sctp_auth_key_release(stcb, sp->auth_keyid); \ 		(_strmoq)->holds_key_ref = 0; \ 	} \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_strmoq), (_strmoq)); \ 	SCTP_DECR_STRMOQ_COUNT(); \ }
+value|{ \ 	if ((_strmoq)->holds_key_ref) { \ 		sctp_auth_key_release(stcb, sp->auth_keyid, _so_locked); \ 		(_strmoq)->holds_key_ref = 0; \ 	} \ 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_strmoq), (_strmoq)); \ 	SCTP_DECR_STRMOQ_COUNT(); \ }
 end_define
 
 begin_define
@@ -265,8 +267,10 @@ parameter_list|(
 name|_stcb
 parameter_list|,
 name|_chk
+parameter_list|,
+name|_so_locked
 parameter_list|)
-value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if (_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
+value|{ \ 	if ((_chk)->holds_key_ref) {\ 		sctp_auth_key_release((_stcb), (_chk)->auth_keyid, _so_locked); \ 		(_chk)->holds_key_ref = 0; \ 	} \         if (_stcb) { \           SCTP_TCB_LOCK_ASSERT((_stcb)); \           if ((_chk)->whoTo) { \                   sctp_free_remote_addr((_chk)->whoTo); \                   (_chk)->whoTo = NULL; \           } \           if (((_stcb)->asoc.free_chunk_cnt> SCTP_BASE_SYSCTL(sctp_asoc_free_resc_limit)) || \                (SCTP_BASE_INFO(ipi_free_chunks)> SCTP_BASE_SYSCTL(sctp_system_free_resc_limit))) { \ 	 	SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 	 	SCTP_DECR_CHK_COUNT(); \ 	  } else { \ 	 	TAILQ_INSERT_TAIL(&(_stcb)->asoc.free_chunks, (_chk), sctp_next); \ 	 	(_stcb)->asoc.free_chunk_cnt++; \ 	 	atomic_add_int(&SCTP_BASE_INFO(ipi_free_chunks), 1); \           } \         } else { \ 		SCTP_ZONE_FREE(SCTP_BASE_INFO(ipi_zone_chunk), (_chk)); \ 		SCTP_DECR_CHK_COUNT(); \ 	} \ }
 end_define
 
 begin_define
