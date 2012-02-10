@@ -8200,6 +8200,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+break|break;
 comment|/* RS - Get socket option for pluggable stream scheduling */
 case|case
 name|SCTP_PLUGGABLE_SS
@@ -14190,6 +14191,9 @@ case|:
 case|case
 name|SCTP_CC_HTCP
 case|:
+case|case
+name|SCTP_CC_RTCC
+case|:
 name|stcb
 operator|->
 name|asoc
@@ -14295,6 +14299,9 @@ case|:
 case|case
 name|SCTP_CC_HTCP
 case|:
+case|case
+name|SCTP_CC_RTCC
+case|:
 name|SCTP_INP_WLOCK
 argument_list|(
 name|inp
@@ -14338,6 +14345,7 @@ break|break;
 block|}
 block|}
 block|}
+break|break;
 case|case
 name|SCTP_CC_OPTION
 case|:

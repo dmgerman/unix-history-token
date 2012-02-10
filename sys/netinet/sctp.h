@@ -822,6 +822,31 @@ value|0x00000002
 end_define
 
 begin_comment
+comment|/* RTCC Congestion Control - RFC2581 plus */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_RTCC
+value|0x00000003
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPT_RTCC_SETMODE
+value|0x00002000
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPT_USE_DCCC_ECN
+value|0x00002001
+end_define
+
+begin_comment
 comment|/* RS - Supported stream scheduling modules for pluggable  * stream scheduling  */
 end_comment
 

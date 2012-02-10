@@ -4375,14 +4375,14 @@ comment|/* How many micro seconds is the cutoff from  * local lan type rtt's  */
 end_comment
 
 begin_comment
-comment|/*   * We allow 500us for the rtt and another 500us for the cookie processing   * since we measure this on the first rtt.   */
+comment|/*   * We allow 900us for the rtt.   */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTP_LOCAL_LAN_RTT
-value|1100
+value|900
 end_define
 
 begin_define
