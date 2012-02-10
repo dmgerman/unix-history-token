@@ -96,6 +96,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<netinet/sctp_dtrace_define.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<netinet/udp.h>
 end_include
 
