@@ -19054,9 +19054,7 @@ name|tos_value
 operator|=
 name|net
 operator|->
-name|tos_flowlabel
-operator|&
-literal|0x000000ff
+name|dscp
 expr_stmt|;
 block|}
 else|else
@@ -20434,7 +20432,7 @@ name|flowlabel
 operator|=
 name|net
 operator|->
-name|tos_flowlabel
+name|flowlabel
 expr_stmt|;
 block|}
 else|else

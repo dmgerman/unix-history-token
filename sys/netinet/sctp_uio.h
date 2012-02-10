@@ -1777,11 +1777,18 @@ name|uint16_t
 name|spp_pathmaxrxt
 decl_stmt|;
 name|uint8_t
-name|spp_ipv4_tos
+name|spp_dscp
 decl_stmt|;
 block|}
 struct|;
 end_struct
+
+begin_define
+define|#
+directive|define
+name|spp_ipv4_tos
+value|spp_dscp
+end_define
 
 begin_define
 define|#
@@ -1835,8 +1842,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|SPP_IPV4_TOS
+name|SPP_DSCP
 value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|SPP_IPV4_TOS
+value|SPP_DSCP
 end_define
 
 begin_struct
