@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010, by Randall Stewart& Michael Tuexen,  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2010-2011, by Randall Stewart, rrs@lakerest.net and  *                          Michael Tuexen, tuexen@fh-muenster.de  *                          All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -111,6 +111,7 @@ operator|.
 name|out_wheel
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If there is data in the stream queues already, the scheduler of 	 * an existing association has been changed. We need to add all 	 * stream queues to the wheel. 	 */
 for|for
 control|(
 name|i
@@ -279,6 +280,11 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+parameter_list|,
+name|struct
+name|sctp_stream_out
+modifier|*
+name|with_strq
 parameter_list|)
 block|{
 name|strq
@@ -1913,6 +1919,11 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+parameter_list|,
+name|struct
+name|sctp_stream_out
+modifier|*
+name|with_strq
 parameter_list|)
 block|{
 name|strq
@@ -1939,6 +1950,32 @@ name|tqe_prev
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|with_strq
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strq
+operator|->
+name|ss_params
+operator|.
+name|prio
+operator|.
+name|priority
+operator|=
+name|with_strq
+operator|->
+name|ss_params
+operator|.
+name|prio
+operator|.
+name|priority
+expr_stmt|;
+block|}
+else|else
+block|{
 name|strq
 operator|->
 name|ss_params
@@ -1949,6 +1986,7 @@ name|priority
 operator|=
 literal|0
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -2849,6 +2887,11 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+parameter_list|,
+name|struct
+name|sctp_stream_out
+modifier|*
+name|with_strq
 parameter_list|)
 block|{
 name|strq
@@ -2875,6 +2918,32 @@ name|tqe_prev
 operator|=
 name|NULL
 expr_stmt|;
+if|if
+condition|(
+name|with_strq
+operator|!=
+name|NULL
+condition|)
+block|{
+name|strq
+operator|->
+name|ss_params
+operator|.
+name|fb
+operator|.
+name|rounds
+operator|=
+name|with_strq
+operator|->
+name|ss_params
+operator|.
+name|fb
+operator|.
+name|rounds
+expr_stmt|;
+block|}
+else|else
+block|{
 name|strq
 operator|->
 name|ss_params
@@ -2886,6 +2955,7 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
+block|}
 return|return;
 block|}
 end_function
@@ -3650,6 +3720,37 @@ begin_comment
 comment|/*  * First-come, first-serve algorithm.  * Maintains the order provided by the application.  */
 end_comment
 
+begin_function_decl
+specifier|static
+name|void
+name|sctp_ss_fcfs_add
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
+name|sctp_association
+modifier|*
+name|asoc
+parameter_list|,
+name|struct
+name|sctp_stream_out
+modifier|*
+name|strq
+parameter_list|,
+name|struct
+name|sctp_stream_queue_pending
+modifier|*
+name|sp
+parameter_list|,
+name|int
+name|holds_lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function
 specifier|static
 name|void
@@ -3669,10 +3770,10 @@ name|int
 name|holds_lock
 parameter_list|)
 block|{
-name|int
+name|uint32_t
 name|x
 decl_stmt|,
-name|element
+name|n
 init|=
 literal|0
 decl_stmt|,
@@ -3698,6 +3799,7 @@ operator|.
 name|out_list
 argument_list|)
 expr_stmt|;
+comment|/* 	 * If there is data in the stream queues already, the scheduler of 	 * an existing association has been changed. We can only cycle 	 * through the stream queues and add everything to the FCFS queue. 	 */
 while|while
 condition|(
 name|add_more
@@ -3730,17 +3832,23 @@ operator|=
 name|TAILQ_FIRST
 argument_list|(
 operator|&
-name|asoc
+name|stcb
 operator|->
-name|ss_data
+name|asoc
 operator|.
-name|out_list
+name|strmout
+index|[
+name|i
+index|]
+operator|.
+name|outqueue
 argument_list|)
 expr_stmt|;
 name|x
 operator|=
-name|element
+literal|0
 expr_stmt|;
+comment|/* Find n. message in current stream queue */
 while|while
 condition|(
 name|sp
@@ -3748,8 +3856,8 @@ operator|!=
 name|NULL
 operator|&&
 name|x
-operator|>
-literal|0
+operator|<
+name|n
 condition|)
 block|{
 name|sp
@@ -3761,6 +3869,9 @@ argument_list|,
 name|next
 argument_list|)
 expr_stmt|;
+name|x
+operator|++
+expr_stmt|;
 block|}
 if|if
 condition|(
@@ -3769,7 +3880,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|sctp_ss_default_add
+name|sctp_ss_fcfs_add
 argument_list|(
 name|stcb
 argument_list|,
@@ -3788,7 +3899,7 @@ index|[
 name|i
 index|]
 argument_list|,
-name|NULL
+name|sp
 argument_list|,
 name|holds_lock
 argument_list|)
@@ -3799,7 +3910,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|element
+name|n
 operator|++
 expr_stmt|;
 block|}
@@ -3867,7 +3978,7 @@ operator|.
 name|out_list
 argument_list|)
 argument_list|,
-name|next
+name|ss_next
 argument_list|)
 expr_stmt|;
 block|}
@@ -3885,6 +3996,11 @@ name|struct
 name|sctp_stream_out
 modifier|*
 name|strq
+parameter_list|,
+name|struct
+name|sctp_stream_out
+modifier|*
+name|with_strq
 parameter_list|)
 block|{
 comment|/* Nothing to be done here */
@@ -3941,7 +4057,7 @@ operator|&&
 operator|(
 name|sp
 operator|->
-name|next
+name|ss_next
 operator|.
 name|tqe_next
 operator|==
@@ -3951,7 +4067,7 @@ operator|&&
 operator|(
 name|sp
 operator|->
-name|next
+name|ss_next
 operator|.
 name|tqe_prev
 operator|==
@@ -3970,7 +4086,7 @@ name|out_list
 argument_list|,
 name|sp
 argument_list|,
-name|next
+name|ss_next
 argument_list|)
 expr_stmt|;
 block|}
@@ -4087,7 +4203,7 @@ operator|(
 operator|(
 name|sp
 operator|->
-name|next
+name|ss_next
 operator|.
 name|tqe_next
 operator|!=
@@ -4097,7 +4213,7 @@ operator|||
 operator|(
 name|sp
 operator|->
-name|next
+name|ss_next
 operator|.
 name|tqe_prev
 operator|!=
@@ -4117,7 +4233,7 @@ name|out_list
 argument_list|,
 name|sp
 argument_list|,
-name|next
+name|ss_next
 argument_list|)
 expr_stmt|;
 block|}
@@ -4272,7 +4388,7 @@ name|TAILQ_NEXT
 argument_list|(
 name|sp
 argument_list|,
-name|next
+name|ss_next
 argument_list|)
 expr_stmt|;
 goto|goto
