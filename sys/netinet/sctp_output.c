@@ -14722,14 +14722,14 @@ endif|#
 directive|endif
 name|out
 label|:
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|sifa
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|INET
 if|if
 condition|(
 name|retried
