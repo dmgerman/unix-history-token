@@ -24542,6 +24542,9 @@ operator|.
 name|sa_family
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|addr
@@ -24603,6 +24606,8 @@ return|;
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -25042,6 +25047,9 @@ operator|.
 name|sa_family
 condition|)
 continue|continue;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|addr
@@ -25095,6 +25103,8 @@ return|;
 break|break;
 block|}
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6
@@ -33494,8 +33504,6 @@ name|uint16_t
 name|port
 init|=
 literal|0
-decl_stmt|,
-name|len
 decl_stmt|;
 name|int
 name|header_size
@@ -33720,10 +33728,16 @@ operator|->
 name|ip_v
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 case|case
 name|IPVERSION
 case|:
 block|{
+name|uint16_t
+name|len
+decl_stmt|;
 comment|/* its IPv4 */
 name|len
 operator|=
@@ -33758,6 +33772,8 @@ argument_list|)
 expr_stmt|;
 break|break;
 block|}
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET6

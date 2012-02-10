@@ -520,6 +520,12 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|void
 name|sctp_input_with_port
@@ -538,6 +544,17 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|INET
+end_ifdef
+
 begin_decl_stmt
 name|void
 name|sctp_input
@@ -553,6 +570,11 @@ operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|void
