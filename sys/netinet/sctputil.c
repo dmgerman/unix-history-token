@@ -12600,6 +12600,23 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Record the real time of the last RTT for use in DC-CC. 	 */
+name|net
+operator|->
+name|last_measured_rtt
+operator|=
+name|now
+expr_stmt|;
+name|timevalsub
+argument_list|(
+operator|&
+name|net
+operator|->
+name|last_measured_rtt
+argument_list|,
+name|old
+argument_list|)
+expr_stmt|;
 comment|/* compute the RTT value */
 if|if
 condition|(
