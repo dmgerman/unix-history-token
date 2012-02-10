@@ -31855,7 +31855,7 @@ name|asoc
 operator|.
 name|asconf_seq_out_acked
 argument_list|,
-name|MAX_SEQ
+name|MAX_TSN
 argument_list|)
 condition|)
 block|{

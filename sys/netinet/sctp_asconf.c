@@ -2930,7 +2930,7 @@ name|asconf_seq_in
 argument_list|,
 name|serial_num
 argument_list|,
-name|MAX_SEQ
+name|MAX_TSN
 argument_list|)
 operator|||
 name|serial_num
