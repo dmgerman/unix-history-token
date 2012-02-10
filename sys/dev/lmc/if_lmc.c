@@ -13109,6 +13109,15 @@ argument_list|(
 name|ifp
 argument_list|)
 decl_stmt|;
+name|M_SETFIB
+argument_list|(
+name|mbuf
+argument_list|,
+name|ifp
+operator|->
+name|if_fib
+argument_list|)
+expr_stmt|;
 if|#
 directive|if
 name|INET
