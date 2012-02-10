@@ -28484,6 +28484,13 @@ name|laddr_type
 operator|=
 name|SCTP_IPV4_ADDRESS
 expr_stmt|;
+comment|/* scope_id is only for v6 */
+name|stc
+operator|.
+name|scope_id
+operator|=
+literal|0
+expr_stmt|;
 break|break;
 endif|#
 directive|endif
@@ -28526,6 +28533,14 @@ operator|.
 name|addr_type
 operator|=
 name|SCTP_IPV6_ADDRESS
+expr_stmt|;
+name|stc
+operator|.
+name|scope_id
+operator|=
+name|sin6
+operator|->
+name|sin6_scope_id
 expr_stmt|;
 if|if
 condition|(
@@ -28667,6 +28682,17 @@ operator|.
 name|identification
 argument_list|)
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|memset
+argument_list|(
+name|stc
+operator|.
+name|reserved
+argument_list|,
+literal|0
+argument_list|,
+name|SCTP_RESERVE_SPACE
 argument_list|)
 expr_stmt|;
 comment|/* now the chunk header */
