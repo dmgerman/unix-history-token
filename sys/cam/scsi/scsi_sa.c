@@ -1284,6 +1284,26 @@ name|T_SEQUENTIAL
 block|,
 name|SIP_MEDIA_REMOVABLE
 block|,
+literal|"SEAGATE"
+block|,
+literal|"DAT    06241-XXX"
+block|,
+literal|"*"
+block|}
+block|,
+name|SA_QUIRK_VARIABLE
+operator||
+name|SA_QUIRK_2FM
+block|,
+literal|0
+block|}
+block|,
+block|{
+block|{
+name|T_SEQUENTIAL
+block|,
+name|SIP_MEDIA_REMOVABLE
+block|,
 literal|"TANDBERG"
 block|,
 literal|" TDC 3600"
