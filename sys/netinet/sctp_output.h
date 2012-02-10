@@ -65,6 +65,11 @@ modifier|*
 name|inp
 parameter_list|,
 name|struct
+name|sctp_tcb
+modifier|*
+name|stcb
+parameter_list|,
+name|struct
 name|sctp_scoping
 modifier|*
 name|scope
