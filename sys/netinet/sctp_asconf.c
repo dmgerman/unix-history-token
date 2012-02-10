@@ -994,7 +994,6 @@ name|bad_address
 operator|=
 literal|1
 expr_stmt|;
-empty_stmt|;
 block|}
 if|if
 condition|(
