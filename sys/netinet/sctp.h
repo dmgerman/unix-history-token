@@ -545,6 +545,17 @@ name|SCTP_SS_VALUE
 value|0x00001204
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_CC_OPTION
+value|0x00001205
+end_define
+
+begin_comment
+comment|/* Options for CC 							 * modules */
+end_comment
+
 begin_comment
 comment|/* read only */
 end_comment

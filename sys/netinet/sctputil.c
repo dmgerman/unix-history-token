@@ -12557,6 +12557,27 @@ comment|/************************/
 comment|/* 1. calculate new RTT */
 comment|/************************/
 comment|/* get the current time */
+if|if
+condition|(
+name|stcb
+operator|->
+name|asoc
+operator|.
+name|use_precise_time
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|SCTP_GETPTIME_TIMEVAL
+argument_list|(
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 operator|(
 name|void
 operator|)
@@ -12566,6 +12587,7 @@ operator|&
 name|now
 argument_list|)
 expr_stmt|;
+block|}
 name|timevalsub
 argument_list|(
 operator|&

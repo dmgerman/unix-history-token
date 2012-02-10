@@ -1823,6 +1823,21 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_cc_option
+block|{
+name|int
+name|option
+decl_stmt|;
+name|struct
+name|sctp_assoc_value
+name|aid_value
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_stream_value
 block|{
 name|sctp_assoc_t
