@@ -830,6 +830,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SCTP_PR_SCTP_NONE
+value|0x0000
+end_define
+
+begin_comment
+comment|/* Reliable transfer */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|SCTP_PR_SCTP_TTL
 value|0x0001
 end_define
@@ -877,7 +888,7 @@ name|PR_SCTP_ENABLED
 parameter_list|(
 name|x
 parameter_list|)
-value|(PR_SCTP_POLICY(x) != 0)
+value|(PR_SCTP_POLICY(x) != SCTP_PR_SCTP_NONE)
 end_define
 
 begin_define
