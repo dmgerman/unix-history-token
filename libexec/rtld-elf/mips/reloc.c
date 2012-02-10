@@ -54,6 +54,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"debug.h"
 end_include
 
@@ -1148,12 +1154,15 @@ argument_list|)
 expr_stmt|;
 name|dbg
 argument_list|(
-literal|"bind now/fixup at %s sym # %d in %s --> was=%p new=%p"
+literal|"bind now/fixup at %s sym # %jd in %s --> was=%p new=%p"
 argument_list|,
 name|obj
 operator|->
 name|path
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|reloff
 argument_list|,
 name|defobj
@@ -1364,7 +1373,7 @@ name|i
 expr_stmt|;
 name|dbg
 argument_list|(
-literal|"got:%p for %d entries adding %x"
+literal|"got:%p for %d entries adding %p"
 argument_list|,
 name|got
 argument_list|,
@@ -1372,9 +1381,6 @@ name|obj
 operator|->
 name|local_gotno
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -1603,13 +1609,10 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning2, i:%d maps to relocbase address:%x"
+literal|"Warning2, i:%d maps to relocbase address:%p"
 argument_list|,
 name|i
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -1676,13 +1679,10 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning3, i:%d maps to relocbase address:%x"
+literal|"Warning3, i:%d maps to relocbase address:%p"
 argument_list|,
 name|i
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -1765,13 +1765,10 @@ condition|)
 block|{
 name|dbg
 argument_list|(
-literal|"Warning4, i:%d maps to relocbase address:%x"
+literal|"Warning4, i:%d maps to relocbase address:%p"
 argument_list|,
 name|i
 argument_list|,
-operator|(
-name|uint32_t
-operator|)
 name|obj
 operator|->
 name|relocbase
@@ -2215,7 +2212,7 @@ block|{
 if|#
 directive|if
 literal|0
-block|const Elf_Rel *rellim; 	const Elf_Rel *rel; 		 	dbg("reloc_plt obj:%p pltrel:%p sz:%d", obj, obj->pltrel, (int)obj->pltrelsize); 	dbg("gottable %p num syms:%d", obj->pltgot, obj->symtabno ); 	dbg("*****************************************************"); 	rellim = (const Elf_Rel *)((char *)obj->pltrel + 	    obj->pltrelsize); 	for (rel = obj->pltrel;  rel< rellim;  rel++) { 		Elf_Addr *where; 		where = (Elf_Addr *)(obj->relocbase + rel->r_offset); 		*where += (Elf_Addr )obj->relocbase; 	}
+block|const Elf_Rel *rellim; 	const Elf_Rel *rel; 		 	dbg("reloc_plt obj:%p pltrel:%p sz:%s", obj, obj->pltrel, (int)obj->pltrelsize); 	dbg("gottable %p num syms:%s", obj->pltgot, obj->symtabno ); 	dbg("*****************************************************"); 	rellim = (const Elf_Rel *)((char *)obj->pltrel + 	    obj->pltrelsize); 	for (rel = obj->pltrel;  rel< rellim;  rel++) { 		Elf_Addr *where; 		where = (Elf_Addr *)(obj->relocbase + rel->r_offset); 		*where += (Elf_Addr )obj->relocbase; 	}
 endif|#
 directive|endif
 comment|/* PLT fixups were done above in the GOT relocation. */
