@@ -2294,7 +2294,7 @@ name|time_entered
 argument_list|,
 name|sctp_align_safe_nocopy
 argument_list|,
-name|SCTP_DETERMINE_LL_NOTOK
+name|SCTP_RTT_FROM_NON_DATA
 argument_list|)
 expr_stmt|;
 name|retval
@@ -3139,7 +3139,7 @@ name|tv
 argument_list|,
 name|sctp_align_safe_nocopy
 argument_list|,
-name|SCTP_DETERMINE_LL_OK
+name|SCTP_RTT_FROM_NON_DATA
 argument_list|)
 expr_stmt|;
 comment|/* Mobility adaptation */
@@ -7500,7 +7500,7 @@ name|time_entered
 argument_list|,
 name|sctp_align_unsafe_makecopy
 argument_list|,
-name|SCTP_DETERMINE_LL_NOTOK
+name|SCTP_RTT_FROM_NON_DATA
 argument_list|)
 expr_stmt|;
 if|if
@@ -11208,7 +11208,7 @@ name|time_entered
 argument_list|,
 name|sctp_align_unsafe_makecopy
 argument_list|,
-name|SCTP_DETERMINE_LL_NOTOK
+name|SCTP_RTT_FROM_NON_DATA
 argument_list|)
 expr_stmt|;
 block|}
@@ -14118,7 +14118,7 @@ name|time_entered
 argument_list|,
 name|sctp_align_safe_nocopy
 argument_list|,
-name|SCTP_DETERMINE_LL_NOTOK
+name|SCTP_RTT_FROM_NON_DATA
 argument_list|)
 expr_stmt|;
 block|}
@@ -15841,6 +15841,26 @@ name|do_rtt
 condition|)
 block|{
 comment|/* 					 * this guy had a RTO calculation 					 * pending on it, cancel it 					 */
+if|if
+condition|(
+name|tp1
+operator|->
+name|whoTo
+operator|->
+name|rto_needed
+operator|==
+literal|0
+condition|)
+block|{
+name|tp1
+operator|->
+name|whoTo
+operator|->
+name|rto_needed
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|tp1
 operator|->
 name|do_rtt

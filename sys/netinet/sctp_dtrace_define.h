@@ -386,7 +386,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* newrtt */
+comment|/* bwrtt | newrtt */
 end_comment
 
 begin_expr_stmt
@@ -408,7 +408,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/* bwrtt  */
+comment|/* flight */
 end_comment
 
 begin_expr_stmt
@@ -443,6 +443,132 @@ argument_list|,
 name|net
 argument_list|,
 name|rttvar
+argument_list|,
+literal|4
+argument_list|,
+literal|"uint64_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SDT_PROBE_DEFINE
+argument_list|(
+name|sctp
+argument_list|,
+name|cwnd
+argument_list|,
+name|net
+argument_list|,
+name|rttstep
+argument_list|,
+name|rttstep
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* The Vtag<< 32 | localport<< 16 | remoteport */
+end_comment
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|sctp
+argument_list|,
+name|cwnd
+argument_list|,
+name|net
+argument_list|,
+name|rttstep
+argument_list|,
+literal|0
+argument_list|,
+literal|"uint64_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* obw | nbw */
+end_comment
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|sctp
+argument_list|,
+name|cwnd
+argument_list|,
+name|net
+argument_list|,
+name|rttstep
+argument_list|,
+literal|1
+argument_list|,
+literal|"uint64_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* bwrtt | nrtt */
+end_comment
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|sctp
+argument_list|,
+name|cwnd
+argument_list|,
+name|net
+argument_list|,
+name|rttstep
+argument_list|,
+literal|2
+argument_list|,
+literal|"uint64_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* cwnd_saved | stepcnt<< 16 | oldstep  */
+end_comment
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|sctp
+argument_list|,
+name|cwnd
+argument_list|,
+name|net
+argument_list|,
+name|rttstep
+argument_list|,
+literal|3
+argument_list|,
+literal|"uint64_t"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* (cwnd<< 32) | point<< 16 | retval(0/1) */
+end_comment
+
+begin_expr_stmt
+name|SDT_PROBE_ARGTYPE
+argument_list|(
+name|sctp
+argument_list|,
+name|cwnd
+argument_list|,
+name|net
+argument_list|,
+name|rttstep
 argument_list|,
 literal|4
 argument_list|,

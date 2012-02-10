@@ -685,19 +685,50 @@ name|uint64_t
 name|new_tot_time
 decl_stmt|;
 comment|/* temp holding the new value */
+name|uint64_t
+name|bw_bytes_at_last_rttc
+decl_stmt|;
+comment|/* What bw_bytes was at last rtt calc */
 name|uint32_t
 name|cwnd_at_bw_set
 decl_stmt|;
+comment|/* Cwnd at last bw saved - lbw */
+name|uint32_t
+name|vol_reduce
+decl_stmt|;
+comment|/* cnt of voluntary reductions */
+name|uint16_t
+name|steady_step
+decl_stmt|;
+comment|/* The number required to be in steady state */
+name|uint16_t
+name|step_cnt
+decl_stmt|;
+comment|/* The current number */
 name|uint8_t
 name|ret_from_eq
 decl_stmt|;
+comment|/* When all things are equal what do I return 				 * 0/1 - 1 no cc advance */
 name|uint8_t
 name|use_dccc_ecn
 decl_stmt|;
+comment|/* Flag to enable DCCC ECN */
 name|uint8_t
 name|tls_needs_set
 decl_stmt|;
 comment|/* Flag to indicate we need to set tls 0 or 1 				 * means set at send 2 not */
+name|uint8_t
+name|last_step_state
+decl_stmt|;
+comment|/* Last state if steady state stepdown is on */
+name|uint8_t
+name|rtt_set_this_sack
+decl_stmt|;
+comment|/* Flag saying this sack had RTT calc 					 * on it */
+name|uint8_t
+name|last_inst_ind
+decl_stmt|;
+comment|/* Last saved inst indication */
 block|}
 struct|;
 end_struct
@@ -936,6 +967,9 @@ decl_stmt|;
 comment|/* index into the last HS table entry we used */
 name|uint8_t
 name|lan_type
+decl_stmt|;
+name|uint8_t
+name|rto_needed
 decl_stmt|;
 name|uint32_t
 name|flowid
@@ -2019,6 +2053,25 @@ name|set
 parameter_list|,
 name|struct
 name|sctp_cc_option
+modifier|*
+parameter_list|)
+function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|sctp_rtt_calculated
+function_decl|)
+parameter_list|(
+name|struct
+name|sctp_tcb
+modifier|*
+parameter_list|,
+name|struct
+name|sctp_nets
+modifier|*
+parameter_list|,
+name|struct
+name|timeval
 modifier|*
 parameter_list|)
 function_decl|;

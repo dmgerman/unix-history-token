@@ -7736,6 +7736,12 @@ argument_list|(
 name|it
 argument_list|)
 expr_stmt|;
+name|sctp_it_ctl
+operator|.
+name|cur_it
+operator|=
+name|NULL
+expr_stmt|;
 name|CURVNET_RESTORE
 argument_list|()
 expr_stmt|;
@@ -7751,12 +7757,6 @@ operator|&
 name|SCTP_ITERATOR_MUST_EXIT
 condition|)
 block|{
-name|sctp_it_ctl
-operator|.
-name|cur_it
-operator|=
-name|NULL
-expr_stmt|;
 break|break;
 block|}
 comment|/* sa_ignore FREED_MEMORY */
@@ -12473,7 +12473,7 @@ name|int
 name|safe
 parameter_list|,
 name|int
-name|local_lan_determine
+name|rtt_from_sack
 parameter_list|)
 block|{
 comment|/*- 	 * given an association and the starting time of the current RTT 	 * period (in value1/value2) return RTO in number of msecs. 	 */
@@ -12629,13 +12629,49 @@ name|rtt
 operator|/
 literal|1000
 expr_stmt|;
-comment|/* Do we need to determine the lan type? */
 if|if
 condition|(
 operator|(
-name|local_lan_determine
+name|asoc
+operator|->
+name|cc_functions
+operator|.
+name|sctp_rtt_calculated
+operator|)
+operator|&&
+operator|(
+name|rtt_from_sack
 operator|==
-name|SCTP_DETERMINE_LL_OK
+name|SCTP_RTT_FROM_DATA
+operator|)
+condition|)
+block|{
+comment|/* 		 * Tell the CC module that a new update has just occurred 		 * from a sack 		 */
+call|(
+modifier|*
+name|asoc
+operator|->
+name|cc_functions
+operator|.
+name|sctp_rtt_calculated
+call|)
+argument_list|(
+name|stcb
+argument_list|,
+name|net
+argument_list|,
+operator|&
+name|now
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 	 * Do we need to determine the lan? We do this only on sacks i.e. 	 * RTT being determined from data not non-data (HB/INIT->INITACK). 	 */
+if|if
+condition|(
+operator|(
+name|rtt_from_sack
+operator|==
+name|SCTP_RTT_FROM_DATA
 operator|)
 operator|&&
 operator|(

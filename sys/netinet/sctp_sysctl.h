@@ -243,6 +243,12 @@ decl_stmt|;
 name|uint32_t
 name|sctp_rttvar_eqret
 decl_stmt|;
+name|uint32_t
+name|sctp_steady_step
+decl_stmt|;
+name|uint32_t
+name|sctp_use_dccc_ecn
+decl_stmt|;
 if|#
 directive|if
 name|defined
@@ -829,14 +835,14 @@ value|SCTP_CHUNKQUEUE_SCALE
 end_define
 
 begin_comment
-comment|/* delayed_sack_time: Default delayed SACK timer in msec */
+comment|/* delayed_sack_time: Default delayed SACK timer in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_DELAYED_SACK_TIME_DESC
-value|"Default delayed SACK timer in msec"
+value|"Default delayed SACK timer in ms"
 end_define
 
 begin_define
@@ -957,14 +963,14 @@ value|SCTP_DEF_ASOC_RESC_LIMIT
 end_define
 
 begin_comment
-comment|/* heartbeat_interval: Default heartbeat interval in msec */
+comment|/* heartbeat_interval: Default heartbeat interval in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_HEARTBEAT_INTERVAL_DESC
-value|"Default heartbeat interval in msec"
+value|"Default heartbeat interval in ms"
 end_define
 
 begin_define
@@ -989,14 +995,14 @@ value|SCTP_HB_DEFAULT_MSEC
 end_define
 
 begin_comment
-comment|/* pmtu_raise_time: Default PMTU raise timer in sec */
+comment|/* pmtu_raise_time: Default PMTU raise timer in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_PMTU_RAISE_TIME_DESC
-value|"Default PMTU raise timer in sec"
+value|"Default PMTU raise timer in seconds"
 end_define
 
 begin_define
@@ -1021,14 +1027,14 @@ value|SCTP_DEF_PMTU_RAISE_SEC
 end_define
 
 begin_comment
-comment|/* shutdown_guard_time: Default shutdown guard timer in sec */
+comment|/* shutdown_guard_time: Default shutdown guard timer in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_SHUTDOWN_GUARD_TIME_DESC
-value|"Default shutdown guard timer in sec"
+value|"Default shutdown guard timer in seconds"
 end_define
 
 begin_define
@@ -1053,14 +1059,14 @@ value|SCTP_DEF_MAX_SHUTDOWN_SEC
 end_define
 
 begin_comment
-comment|/* secret_lifetime: Default secret lifetime in sec */
+comment|/* secret_lifetime: Default secret lifetime in seconds */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_SECRET_LIFETIME_DESC
-value|"Default secret lifetime in sec"
+value|"Default secret lifetime in seconds"
 end_define
 
 begin_define
@@ -1085,14 +1091,14 @@ value|SCTP_DEFAULT_SECRET_LIFE_SEC
 end_define
 
 begin_comment
-comment|/* rto_max: Default maximum retransmission timeout in msec */
+comment|/* rto_max: Default maximum retransmission timeout in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_RTO_MAX_DESC
-value|"Default maximum retransmission timeout in msec"
+value|"Default maximum retransmission timeout in ms"
 end_define
 
 begin_define
@@ -1117,14 +1123,14 @@ value|SCTP_RTO_UPPER_BOUND
 end_define
 
 begin_comment
-comment|/* rto_min: Default minimum retransmission timeout in msec */
+comment|/* rto_min: Default minimum retransmission timeout in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_RTO_MIN_DESC
-value|"Default minimum retransmission timeout in msec"
+value|"Default minimum retransmission timeout in ms"
 end_define
 
 begin_define
@@ -1149,14 +1155,14 @@ value|SCTP_RTO_LOWER_BOUND
 end_define
 
 begin_comment
-comment|/* rto_initial: Default initial retransmission timeout in msec */
+comment|/* rto_initial: Default initial retransmission timeout in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_RTO_INITIAL_DESC
-value|"Default initial retransmission timeout in msec"
+value|"Default initial retransmission timeout in ms"
 end_define
 
 begin_define
@@ -1181,14 +1187,14 @@ value|SCTP_RTO_INITIAL
 end_define
 
 begin_comment
-comment|/* init_rto_max: Default maximum retransmission timeout during association setup in msec */
+comment|/* init_rto_max: Default maximum retransmission timeout during association setup in ms */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_INIT_RTO_MAX_DESC
-value|"Default maximum retransmission timeout during association setup in msec"
+value|"Default maximum retransmission timeout during association setup in ms"
 end_define
 
 begin_define
@@ -1220,7 +1226,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_VALID_COOKIE_LIFE_DESC
-value|"Default cookie lifetime in sec"
+value|"Default cookie lifetime in seconds"
 end_define
 
 begin_define
@@ -1341,14 +1347,14 @@ value|SCTP_DEF_MAX_PATH_RTX
 end_define
 
 begin_comment
-comment|/* add_more_on_output: When space wise is it worthwhile to try to add more to a socket send buffer */
+comment|/* add_more_on_output: When space-wise is it worthwhile to try to add more to a socket send buffer */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTPCTL_ADD_MORE_ON_OUTPUT_DESC
-value|"When space wise is it worthwhile to try to add more to a socket send buffer"
+value|"When space-wise is it worthwhile to try to add more to a socket send buffer"
 end_define
 
 begin_define
@@ -2404,7 +2410,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_RTTVAR_BW_DESC
-value|"Shift amount for bw smothing on rtt calc"
+value|"Shift amount for bw smoothing on rtt calc"
 end_define
 
 begin_define
@@ -2436,7 +2442,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_RTTVAR_RTT_DESC
-value|"Shift amount for rtt smothing on rtt calc"
+value|"Shift amount for rtt smoothing on rtt calc"
 end_define
 
 begin_define
@@ -2464,7 +2470,7 @@ begin_define
 define|#
 directive|define
 name|SCTPCTL_RTTVAR_EQRET_DESC
-value|"When rtt and bw are unchanged return what"
+value|"What to return when rtt and bw are unchanged"
 end_define
 
 begin_define
@@ -2487,6 +2493,70 @@ directive|define
 name|SCTPCTL_RTTVAR_EQRET_DEFAULT
 value|0
 end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_DESC
+value|"How many the sames it takes to try step down of cwnd"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_MAX
+value|0xFFFF
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_STEADYS_DEFAULT
+value|20
+end_define
+
+begin_comment
+comment|/* 0 means disable feature */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_DESC
+value|"Enable for RTCC CC datacenter ECN"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_MIN
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_MAX
+value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTPCTL_RTTVAR_DCCCECN_DEFAULT
+value|1
+end_define
+
+begin_comment
+comment|/* 0 means disable feature */
+end_comment
 
 begin_if
 if|#

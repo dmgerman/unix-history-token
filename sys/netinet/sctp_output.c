@@ -39969,6 +39969,13 @@ operator|*
 name|now
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|net
+operator|->
+name|rto_needed
+condition|)
+block|{
 name|data_list
 index|[
 literal|0
@@ -39978,6 +39985,13 @@ name|do_rtt
 operator|=
 literal|1
 expr_stmt|;
+name|net
+operator|->
+name|rto_needed
+operator|=
+literal|0
+expr_stmt|;
+block|}
 name|SCTP_STAT_INCR_BY
 argument_list|(
 name|sctps_senddata
