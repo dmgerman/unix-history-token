@@ -1269,6 +1269,17 @@ if|if
 condition|(
 name|top
 condition|)
+name|M_SETFIB
+argument_list|(
+name|top
+argument_list|,
+name|sc
+operator|->
+name|ic_ifp
+operator|->
+name|if_fib
+argument_list|)
+expr_stmt|;
 name|netisr_dispatch
 argument_list|(
 name|NETISR_IP

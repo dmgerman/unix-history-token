@@ -1341,6 +1341,15 @@ condition|)
 goto|goto
 name|drop
 goto|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|ifp
+operator|->
+name|if_fib
+argument_list|)
+expr_stmt|;
 comment|/* Check queue. */
 if|if
 condition|(
