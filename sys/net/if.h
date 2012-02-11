@@ -1014,11 +1014,6 @@ name|int
 name|ifam_metric
 decl_stmt|;
 comment|/* value of ifa_metric */
-name|struct
-name|if_data
-name|ifam_data
-decl_stmt|;
-comment|/* statistics and other data about if or 				 * address */
 block|}
 struct|;
 end_struct
