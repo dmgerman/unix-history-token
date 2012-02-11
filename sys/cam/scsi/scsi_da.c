@@ -3847,6 +3847,11 @@ operator|&
 name|csio
 argument_list|)
 expr_stmt|;
+name|cam_periph_unlock
+argument_list|(
+name|periph
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -3909,11 +3914,6 @@ name|EIO
 operator|)
 return|;
 block|}
-name|cam_periph_unlock
-argument_list|(
-name|periph
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 literal|0
