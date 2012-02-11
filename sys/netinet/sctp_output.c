@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -9678,7 +9678,9 @@ name|ipv4_local_scope
 parameter_list|,
 name|int
 name|local_scope
+name|SCTP_UNUSED
 parameter_list|,
+comment|/* XXX */
 name|int
 name|site_scope
 parameter_list|,
@@ -12226,11 +12228,6 @@ name|sctp_tcb
 modifier|*
 name|stcb
 parameter_list|,
-name|struct
-name|sctp_nets
-modifier|*
-name|net
-parameter_list|,
 name|sctp_route_t
 modifier|*
 name|ro
@@ -13648,11 +13645,6 @@ name|sctp_ifa
 modifier|*
 name|sctp_choose_boundall
 parameter_list|(
-name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-parameter_list|,
 name|struct
 name|sctp_tcb
 modifier|*
@@ -15295,8 +15287,6 @@ name|answer
 operator|=
 name|sctp_choose_boundall
 argument_list|(
-name|inp
-argument_list|,
 name|stcb
 argument_list|,
 name|net
@@ -15336,8 +15326,6 @@ argument_list|(
 name|inp
 argument_list|,
 name|stcb
-argument_list|,
-name|net
 argument_list|,
 name|ro
 argument_list|,
@@ -17643,11 +17631,6 @@ modifier|*
 name|sctp_add_cookie
 parameter_list|(
 name|struct
-name|sctp_inpcb
-modifier|*
-name|inp
-parameter_list|,
-name|struct
 name|mbuf
 modifier|*
 name|init
@@ -18260,11 +18243,6 @@ name|struct
 name|sctp_tcb
 modifier|*
 name|stcb
-parameter_list|,
-name|struct
-name|sctp_tmit_chunk
-modifier|*
-name|chk
 parameter_list|)
 block|{
 if|if
@@ -18588,11 +18566,6 @@ parameter_list|,
 name|int
 name|ecn_ok
 parameter_list|,
-name|struct
-name|sctp_tmit_chunk
-modifier|*
-name|chk
-parameter_list|,
 name|int
 name|out_of_asoc_ok
 parameter_list|,
@@ -18608,9 +18581,6 @@ parameter_list|,
 name|uint16_t
 name|port
 parameter_list|,
-name|int
-name|so_locked
-parameter_list|,
 if|#
 directive|if
 operator|!
@@ -18624,7 +18594,15 @@ name|defined
 argument_list|(
 name|SCTP_SO_LOCK_TESTING
 argument_list|)
+name|int
+name|so_locked
 name|SCTP_UNUSED
+parameter_list|,
+else|#
+directive|else
+name|int
+name|so_locked
+parameter_list|,
 endif|#
 directive|endif
 name|union
@@ -19113,8 +19091,6 @@ operator||=
 name|sctp_get_ect
 argument_list|(
 name|stcb
-argument_list|,
-name|chk
 argument_list|)
 expr_stmt|;
 block|}
@@ -20917,8 +20893,6 @@ operator||=
 name|sctp_get_ect
 argument_list|(
 name|stcb
-argument_list|,
-name|chk
 argument_list|)
 expr_stmt|;
 block|}
@@ -24383,8 +24357,6 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
-argument_list|,
 literal|0
 argument_list|,
 name|inp
@@ -26164,9 +26136,6 @@ modifier|*
 name|in_initpkt
 parameter_list|,
 name|int
-name|iphlen
-parameter_list|,
-name|int
 name|offset
 parameter_list|)
 block|{
@@ -27219,8 +27188,6 @@ argument_list|(
 name|asoc
 argument_list|,
 name|init_pkt
-argument_list|,
-name|iphlen
 argument_list|,
 name|offset
 argument_list|)
@@ -30299,8 +30266,6 @@ name|m_cookie
 operator|=
 name|sctp_add_cookie
 argument_list|(
-name|inp
-argument_list|,
 name|init_pkt
 argument_list|,
 name|offset
@@ -30538,8 +30503,6 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
-argument_list|,
-name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -32547,6 +32510,7 @@ name|ptr
 parameter_list|,
 name|uint32_t
 name|val
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -33469,6 +33433,7 @@ name|ptr
 parameter_list|,
 name|uint32_t
 name|val
+name|SCTP_UNUSED
 parameter_list|)
 block|{
 name|struct
@@ -40481,8 +40446,6 @@ name|no_fragmentflg
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
-argument_list|,
 name|asconf
 argument_list|,
 name|inp
@@ -41562,8 +41525,6 @@ argument_list|,
 name|no_fragmentflg
 argument_list|,
 literal|0
-argument_list|,
-name|NULL
 argument_list|,
 name|asconf
 argument_list|,
@@ -42975,11 +42936,6 @@ argument_list|,
 name|no_fragmentflg
 argument_list|,
 name|bundle_at
-argument_list|,
-name|data_list
-index|[
-literal|0
-index|]
 argument_list|,
 name|asconf
 argument_list|,
@@ -46567,8 +46523,6 @@ name|no_fragmentflg
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
-argument_list|,
 literal|0
 argument_list|,
 name|inp
@@ -47749,8 +47703,6 @@ argument_list|,
 name|no_fragmentflg
 argument_list|,
 literal|0
-argument_list|,
-name|NULL
 argument_list|,
 literal|0
 argument_list|,
@@ -49710,46 +49662,34 @@ begin_function
 name|int
 name|sctp_output
 parameter_list|(
-name|inp
-parameter_list|,
-name|m
-parameter_list|,
-name|addr
-parameter_list|,
-name|control
-parameter_list|,
-name|p
-parameter_list|,
-name|flags
-parameter_list|)
 name|struct
 name|sctp_inpcb
 modifier|*
 name|inp
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|m
-decl_stmt|;
+parameter_list|,
 name|struct
 name|sockaddr
 modifier|*
 name|addr
-decl_stmt|;
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*
 name|control
-decl_stmt|;
+parameter_list|,
 name|struct
 name|thread
 modifier|*
 name|p
-decl_stmt|;
+parameter_list|,
 name|int
 name|flags
-decl_stmt|;
+parameter_list|)
 block|{
 if|if
 condition|(
@@ -53188,8 +53128,6 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
-argument_list|,
 literal|0
 argument_list|,
 name|stcb
@@ -53421,8 +53359,6 @@ literal|1
 argument_list|,
 literal|0
 argument_list|,
-name|NULL
-argument_list|,
 literal|0
 argument_list|,
 name|stcb
@@ -53468,9 +53404,6 @@ name|struct
 name|mbuf
 modifier|*
 name|m
-parameter_list|,
-name|int
-name|iphlen
 parameter_list|,
 name|struct
 name|sctphdr
@@ -61680,19 +61613,9 @@ modifier|*
 name|sctp_copy_resume
 parameter_list|(
 name|struct
-name|sctp_stream_queue_pending
-modifier|*
-name|sp
-parameter_list|,
-name|struct
 name|uio
 modifier|*
 name|uio
-parameter_list|,
-name|struct
-name|sctp_sndrcvinfo
-modifier|*
-name|srcv
 parameter_list|,
 name|int
 name|max_send_len
@@ -61935,9 +61858,6 @@ parameter_list|,
 name|int
 modifier|*
 name|error
-parameter_list|,
-name|int
-name|non_blocking
 parameter_list|)
 block|{
 comment|/*- 	 * This routine must be very careful in its work. Protocol 	 * processing is up and running so care must be taken to spl...() 	 * when you need to do something that may effect the stcb/asoc. The 	 * sb is locked however. When data is copied the protocol processing 	 * should be enabled since this is a slower operation... 	 */
@@ -65503,8 +65423,6 @@ name|sctp_log_block
 argument_list|(
 name|SCTP_BLOCK_LOG_INTO_BLKA
 argument_list|,
-name|so
-argument_list|,
 name|asoc
 argument_list|,
 name|sndlen
@@ -65612,8 +65530,6 @@ block|{
 name|sctp_log_block
 argument_list|(
 name|SCTP_BLOCK_LOG_OUTOF_BLK
-argument_list|,
-name|so
 argument_list|,
 name|asoc
 argument_list|,
@@ -65885,8 +65801,6 @@ name|user_marks_eor
 argument_list|,
 operator|&
 name|error
-argument_list|,
-name|non_blocking
 argument_list|)
 expr_stmt|;
 if|if
@@ -66277,11 +66191,7 @@ name|mm
 operator|=
 name|sctp_copy_resume
 argument_list|(
-name|sp
-argument_list|,
 name|uio
-argument_list|,
-name|srcv
 argument_list|,
 name|max_len
 argument_list|,
@@ -67124,8 +67034,6 @@ name|sctp_log_block
 argument_list|(
 name|SCTP_BLOCK_LOG_INTO_BLK
 argument_list|,
-name|so
-argument_list|,
 name|asoc
 argument_list|,
 name|uio
@@ -67235,8 +67143,6 @@ block|{
 name|sctp_log_block
 argument_list|(
 name|SCTP_BLOCK_LOG_OUTOF_BLK
-argument_list|,
-name|so
 argument_list|,
 name|asoc
 argument_list|,
