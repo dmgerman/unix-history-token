@@ -119,7 +119,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|TLS_DTV_OFFSET
+name|TLS_DTP_OFFSET
 value|0x8000
 end_define
 
