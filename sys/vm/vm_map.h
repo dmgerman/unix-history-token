@@ -1100,7 +1100,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|MAP_UNUSED_01
+name|MAP_INHERIT_SHARE
 value|0x0001
 end_define
 
