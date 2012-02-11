@@ -64066,7 +64066,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
 name|SCTP_SO_IS_NBIO
 argument_list|(
 name|so
@@ -64076,7 +64075,6 @@ operator|(
 name|flags
 operator|&
 name|MSG_NBIO
-operator|)
 operator|)
 condition|)
 block|{
