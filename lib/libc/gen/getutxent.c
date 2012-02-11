@@ -202,13 +202,16 @@ operator|-
 literal|1
 operator|)
 return|;
-comment|/* Safety check: never use broken files. */
 if|if
 condition|(
 name|db
 operator|!=
 name|UTXDB_LOG
-operator|&&
+condition|)
+block|{
+comment|/* Safety check: never use broken files. */
+if|if
+condition|(
 name|_fstat
 argument_list|(
 name|fileno
@@ -255,6 +258,31 @@ operator|-
 literal|1
 operator|)
 return|;
+block|}
+comment|/* Prevent reading of partial records. */
+operator|(
+name|void
+operator|)
+name|setvbuf
+argument_list|(
+name|uf
+argument_list|,
+name|NULL
+argument_list|,
+name|_IOFBF
+argument_list|,
+name|rounddown
+argument_list|(
+name|BUFSIZ
+argument_list|,
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|futx
+argument_list|)
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 name|udb
 operator|=
