@@ -8434,9 +8434,9 @@ name|ifp
 operator|->
 name|if_baudrate
 operator|=
-name|IF_Mbps
+name|IF_Gbps
 argument_list|(
-literal|10000ULL
+literal|10UL
 argument_list|)
 expr_stmt|;
 name|ether_ifattach
