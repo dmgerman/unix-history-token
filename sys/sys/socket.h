@@ -2045,7 +2045,7 @@ begin_define
 define|#
 directive|define
 name|CTL_NET_RT_NAMES
-value|{ \ 	{ 0, 0 }, \ 	{ "dump", CTLTYPE_STRUCT }, \ 	{ "flags", CTLTYPE_STRUCT }, \ 	{ "iflist", CTLTYPE_STRUCT }, \ 	{ "ifmalist", CTLTYPE_STRUCT }, \ 	{ "iflist2", CTLTYPE_STRUCT }, \ }
+value|{ \ 	{ 0, 0 }, \ 	{ "dump", CTLTYPE_STRUCT }, \ 	{ "flags", CTLTYPE_STRUCT }, \ 	{ "iflist", CTLTYPE_STRUCT }, \ 	{ "ifmalist", CTLTYPE_STRUCT }, \ 	{ "iflistl", CTLTYPE_STRUCT }, \ }
 end_define
 
 begin_endif
