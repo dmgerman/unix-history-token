@@ -8183,7 +8183,7 @@ name|inp
 operator|->
 name|sctp_socket
 operator|==
-literal|0
+name|NULL
 operator|)
 operator|&&
 operator|(
