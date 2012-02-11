@@ -430,7 +430,9 @@ name|sctps_hdrops
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 name|ch
@@ -1342,7 +1344,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 name|bad
 label|:
@@ -1393,7 +1397,9 @@ name|m
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|IPPROTO_DONE
+operator|)
 return|;
 block|}
 end_function
@@ -3225,7 +3231,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -3269,7 +3277,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 name|error
@@ -3286,7 +3296,9 @@ condition|(
 name|error
 condition|)
 return|return
+operator|(
 name|error
+operator|)
 return|;
 name|inp
 operator|=
@@ -3364,7 +3376,9 @@ name|inp
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -3435,7 +3449,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -3483,7 +3499,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 break|break;
@@ -3522,7 +3540,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 break|break;
@@ -3543,7 +3563,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -3715,7 +3737,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 endif|#
@@ -3769,7 +3793,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 endif|#
@@ -3810,7 +3836,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -3828,7 +3856,9 @@ name|p
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -4021,7 +4051,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 name|inp6
@@ -4145,7 +4177,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -4173,7 +4207,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -4211,6 +4247,7 @@ name|sin6
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|sctp_sendm
 argument_list|(
 name|so
@@ -4231,6 +4268,7 @@ name|control
 argument_list|,
 name|p
 argument_list|)
+operator|)
 return|;
 block|}
 else|else
@@ -4250,7 +4288,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -4816,7 +4856,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 if|if
@@ -4854,7 +4896,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -4930,7 +4974,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 block|}
@@ -5181,7 +5227,9 @@ name|stcb
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function
@@ -5247,7 +5295,9 @@ operator|==
 name|NULL
 condition|)
 return|return
+operator|(
 name|ENOMEM
+operator|)
 return|;
 name|sin6
 operator|->
@@ -5302,7 +5352,9 @@ name|ECONNRESET
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ECONNRESET
+operator|)
 return|;
 block|}
 name|SCTP_INP_RLOCK
@@ -5626,7 +5678,9 @@ name|ENOENT
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 block|}
@@ -5737,51 +5791,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-comment|/* 	 * Do the malloc first in case it blocks. 	 */
-name|inp
-operator|=
-operator|(
-expr|struct
-name|sctp_inpcb
-operator|*
-operator|)
-name|so
-operator|->
-name|so_pcb
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|inp
-operator|->
-name|sctp_flags
-operator|&
-name|SCTP_PCB_FLAGS_CONNECTED
-operator|)
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* UDP type and listeners will drop out here */
-name|SCTP_LTRACE_ERR_RET
-argument_list|(
-name|inp
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|SCTP_FROM_SCTP6_USRREQ
-argument_list|,
-name|ENOTCONN
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ENOTCONN
-operator|)
-return|;
-block|}
+comment|/* Do the malloc first in case it blocks. */
 name|SCTP_MALLOC_SONAME
 argument_list|(
 name|sin6
@@ -5822,7 +5832,6 @@ operator|*
 name|sin6
 argument_list|)
 expr_stmt|;
-comment|/* We must recapture incase we blocked */
 name|inp
 operator|=
 operator|(
@@ -5836,11 +5845,26 @@ name|so_pcb
 expr_stmt|;
 if|if
 condition|(
+operator|(
 name|inp
 operator|==
 name|NULL
+operator|)
+operator|||
+operator|(
+operator|(
+name|inp
+operator|->
+name|sctp_flags
+operator|&
+name|SCTP_PCB_FLAGS_CONNECTED
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
+comment|/* UDP type and listeners will drop out here */
 name|SCTP_FREE_SONAME
 argument_list|(
 name|sin6
@@ -5856,11 +5880,13 @@ name|NULL
 argument_list|,
 name|SCTP_FROM_SCTP6_USRREQ
 argument_list|,
-name|ECONNRESET
+name|ENOTCONN
 argument_list|)
 expr_stmt|;
 return|return
-name|ECONNRESET
+operator|(
+name|ENOTCONN
+operator|)
 return|;
 block|}
 name|SCTP_INP_RLOCK
@@ -5920,7 +5946,9 @@ name|ECONNRESET
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ECONNRESET
+operator|)
 return|;
 block|}
 name|fnd
@@ -6013,7 +6041,9 @@ name|ENOENT
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ENOENT
+operator|)
 return|;
 block|}
 if|if
@@ -6113,7 +6143,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* allow v6 addresses precedence */
@@ -6273,7 +6305,9 @@ name|EINVAL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|EINVAL
+operator|)
 return|;
 block|}
 comment|/* allow v6 addresses precedence */
@@ -6365,7 +6399,9 @@ block|}
 endif|#
 directive|endif
 return|return
+operator|(
 name|error
+operator|)
 return|;
 block|}
 end_function

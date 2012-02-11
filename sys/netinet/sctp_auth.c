@@ -1872,12 +1872,6 @@ operator|->
 name|keylen
 argument_list|)
 expr_stmt|;
-name|key_ptr
-operator|+=
-name|key2
-operator|->
-name|keylen
-expr_stmt|;
 block|}
 block|}
 else|else
@@ -1959,12 +1953,6 @@ name|key1
 operator|->
 name|keylen
 argument_list|)
-expr_stmt|;
-name|key_ptr
-operator|+=
-name|key1
-operator|->
-name|keylen
 expr_stmt|;
 block|}
 block|}
