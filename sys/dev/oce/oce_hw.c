@@ -2077,7 +2077,7 @@ directive|if
 name|__FreeBSD_version
 operator|>
 literal|800000
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2189,7 +2189,7 @@ directive|if
 name|__FreeBSD_version
 operator|>
 literal|800000
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
