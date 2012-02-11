@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the University of  *	California, Berkeley and its contributors.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1983, 1993  *	The Regents of the University of California.  All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 4. Neither the name of the University nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE REGENTS AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE REGENTS OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifndef
@@ -98,12 +98,6 @@ begin_include
 include|#
 directive|include
 file|<sys/file.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/param.h>
 end_include
 
 begin_include
@@ -232,13 +226,13 @@ begin_comment
 comment|/* secs between rexmt's */
 end_comment
 
-begin_decl_stmt
-specifier|static
+begin_typedef
+typedef|typedef
 name|struct
 name|sockaddr_storage
 name|peeraddr
-decl_stmt|;
-end_decl_stmt
+typedef|;
+end_typedef
 
 begin_decl_stmt
 specifier|static
@@ -895,7 +889,7 @@ literal|"packetdrop"
 block|,
 name|setpacketdrop
 block|,
-literal|"artifical packetloss feature"
+literal|"artificial packetloss feature"
 block|}
 block|,
 block|{
@@ -2255,7 +2249,7 @@ index|]
 expr_stmt|;
 if|if
 condition|(
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -2289,7 +2283,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|argv
 index|[
@@ -2321,7 +2315,7 @@ index|]
 expr_stmt|;
 name|targ
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|lcp
 argument_list|,
@@ -2502,7 +2496,7 @@ comment|/* this assumes the target is a directory */
 comment|/* on a remote unix system.  hmmmm.  */
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|targ
 argument_list|,
@@ -2802,7 +2796,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -2853,7 +2847,7 @@ control|)
 block|{
 name|src
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[
@@ -3575,7 +3569,7 @@ condition|)
 block|{
 name|s
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|filename
 argument_list|,
@@ -3873,7 +3867,7 @@ argument_list|,
 name|stdin
 argument_list|)
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -4396,12 +4390,12 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[*] : RFC2834 options support required.\n"
+literal|"[*] : RFC2347 options support required.\n"
 argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"[**] : Non-standard RFC2834 option.\n"
+literal|"[**] : Non-standard RFC2347 option.\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -4987,7 +4981,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"RFC2347 style options are not enabled "
-literal|"(but proceding anyway)\n"
+literal|"(but proceeding anyway)\n"
 argument_list|)
 expr_stmt|;
 if|if
@@ -5170,7 +5164,7 @@ condition|)
 name|printf
 argument_list|(
 literal|"RFC2347 style or non-RFC defined options are not enabled "
-literal|"(but proceding anyway)\n"
+literal|"(but proceeding anyway)\n"
 argument_list|)
 expr_stmt|;
 if|if
