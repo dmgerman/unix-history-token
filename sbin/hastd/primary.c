@@ -5701,6 +5701,8 @@ name|ncomp
 init|;
 name|ii
 operator|<
+name|ncomp
+operator|+
 name|ncomps
 condition|;
 name|ii
@@ -6067,6 +6069,12 @@ operator|->
 name|hio_replication
 operator|==
 name|HAST_REPLICATION_ASYNC
+operator|&&
+operator|!
+name|ISSYNCREQ
+argument_list|(
+name|hio
+argument_list|)
 condition|)
 block|{
 name|ggio
