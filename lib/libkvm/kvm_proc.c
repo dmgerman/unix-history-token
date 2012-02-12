@@ -2379,6 +2379,8 @@ name|nprocs
 decl_stmt|;
 name|size_t
 name|size
+decl_stmt|,
+name|osize
 decl_stmt|;
 name|int
 name|temp_op
@@ -2576,6 +2578,10 @@ operator|(
 literal|0
 operator|)
 return|;
+name|osize
+operator|=
+name|size
+expr_stmt|;
 name|st
 operator|=
 name|sysctl
@@ -2617,6 +2623,10 @@ operator|&&
 name|errno
 operator|==
 name|ENOMEM
+operator|&&
+name|size
+operator|==
+name|osize
 condition|)
 do|;
 if|if
