@@ -5643,9 +5643,8 @@ literal|0
 operator|)
 return|;
 block|}
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|strlcpy
 argument_list|(
 name|pathbuf
@@ -5660,9 +5659,12 @@ argument_list|(
 name|pathbuf
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|pathbuf
+argument_list|)
+operator|||
 name|strlcat
 argument_list|(
 name|pathbuf
