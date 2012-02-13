@@ -7427,6 +7427,7 @@ operator|->
 name|sc_ah
 argument_list|)
 decl_stmt|;
+comment|/* XXX should take a locked ref to iv_bss */
 name|u_int
 name|bmisstimeout
 init|=
@@ -13793,9 +13794,12 @@ expr_stmt|;
 comment|/* XXX */
 name|ni
 operator|=
+name|ieee80211_ref_node
+argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
 expr_stmt|;
 comment|/* extract tstamp from last beacon and convert to TU */
 name|nexttbtt
@@ -14482,6 +14486,11 @@ operator|->
 name|sc_syncbeacon
 operator|=
 literal|0
+expr_stmt|;
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
 expr_stmt|;
 undef|#
 directive|undef
@@ -16676,6 +16685,7 @@ case|case
 name|IEEE80211_FC0_SUBTYPE_BEACON
 case|:
 comment|/* update rssi statistics for use by the hal */
+comment|/* XXX unlocked check against vap->iv_bss? */
 name|ATH_RSSI_LPF
 argument_list|(
 name|sc
@@ -24684,9 +24694,12 @@ expr_stmt|;
 block|}
 name|ni
 operator|=
+name|ieee80211_ref_node
+argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
 expr_stmt|;
 name|rfilt
 operator|=
@@ -24873,11 +24886,19 @@ name|IEEE80211_S_RUN
 condition|)
 block|{
 comment|/* NB: collect bss node again, it may have changed */
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 name|ni
 operator|=
+name|ieee80211_ref_node
+argument_list|(
 name|vap
 operator|->
 name|iv_bss
+argument_list|)
 expr_stmt|;
 name|DPRINTF
 argument_list|(
@@ -25246,6 +25267,11 @@ directive|endif
 block|}
 name|bad
 label|:
+name|ieee80211_free_node
+argument_list|(
+name|ni
+argument_list|)
+expr_stmt|;
 return|return
 name|error
 return|;
@@ -25294,6 +25320,7 @@ name|keyix
 decl_stmt|,
 name|rxkeyix
 decl_stmt|;
+comment|/* XXX should take a locked ref to vap->iv_bss */
 if|if
 condition|(
 operator|!
@@ -28167,6 +28194,7 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+comment|/* XXX should take a locked ref to iv_bss */
 name|tp
 operator|=
 name|vap
@@ -29196,6 +29224,7 @@ operator|++
 expr_stmt|;
 comment|/* XXX per-vap? */
 comment|/* 		 * Record local TSF for our last send for use 		 * in arbitrating slot collisions. 		 */
+comment|/* XXX should take a locked ref to iv_bss */
 name|vap
 operator|->
 name|iv_bss
