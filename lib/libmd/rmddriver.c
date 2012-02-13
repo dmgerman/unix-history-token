@@ -1,6 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RIPEMD160DRIVER.C - test driver for RIPEMD160  */
+comment|/* RIPEMD160DRIVER.C - test driver for RIPEMD160 */
+end_comment
+
+begin_comment
+comment|/* Copyright (C) 1990-2, RSA Data Security, Inc. Created 1990. All rights  * reserved.  *   * RSA Data Security, Inc. makes no representations concerning either the  * merchantability of this software or the suitability of this software for  * any particular purpose. It is provided "as is" without express or implied  * warranty of any kind.  *   * These notices must be retained in any copies of any part of this  * documentation and/or software. */
 end_comment
 
 begin_include
@@ -16,10 +20,6 @@ literal|"$FreeBSD$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|/* Copyright (C) 1990-2, RSA Data Security, Inc. Created 1990. All    rights reserved.     RSA Data Security, Inc. makes no representations concerning either    the merchantability of this software or the suitability of this    software for any particular purpose. It is provided "as is"    without express or implied warranty of any kind.     These notices must be retained in any copies of any part of this    documentation and/or software.  */
-end_comment
 
 begin_include
 include|#
@@ -52,7 +52,7 @@ file|"ripemd.h"
 end_include
 
 begin_comment
-comment|/* Digests a string and prints the result.  */
+comment|/* Digests a string and prints the result. */
 end_comment
 
 begin_function
@@ -60,12 +60,10 @@ specifier|static
 name|void
 name|RIPEMD160String
 parameter_list|(
-name|string
-parameter_list|)
 name|char
 modifier|*
 name|string
-decl_stmt|;
+parameter_list|)
 block|{
 name|char
 name|buf
@@ -100,12 +98,15 @@ block|}
 end_function
 
 begin_comment
-comment|/* Digests a reference suite of strings and prints the results.  */
+comment|/* Digests a reference suite of strings and prints the results. */
 end_comment
 
 begin_function
+name|int
 name|main
-parameter_list|()
+parameter_list|(
+name|void
+parameter_list|)
 block|{
 name|printf
 argument_list|(
@@ -134,12 +135,14 @@ argument_list|)
 expr_stmt|;
 name|RIPEMD160String
 argument_list|(
-literal|"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
+literal|"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+literal|"abcdefghijklmnopqrstuvwxyz0123456789"
 argument_list|)
 expr_stmt|;
 name|RIPEMD160String
 argument_list|(
-literal|"1234567890123456789012345678901234567890\ 1234567890123456789012345678901234567890"
+literal|"1234567890123456789012345678901234567890"
+literal|"1234567890123456789012345678901234567890"
 argument_list|)
 expr_stmt|;
 return|return
