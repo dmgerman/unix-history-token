@@ -572,6 +572,14 @@ literal|4
 argument_list|)
 condition|)
 block|{
+name|callout_drain
+argument_list|(
+operator|&
+name|request
+operator|->
+name|callout
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|request
