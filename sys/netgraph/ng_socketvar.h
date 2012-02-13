@@ -54,6 +54,44 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_struct
+struct|struct
+name|hookpriv
+block|{
+name|LIST_ENTRY
+argument_list|(
+argument|hookpriv
+argument_list|)
+name|next
+expr_stmt|;
+name|hook_p
+name|hook
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_expr_stmt
+name|LIST_HEAD
+argument_list|(
+name|ngshash
+argument_list|,
+name|hookpriv
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Per-node private data */
 end_comment
@@ -99,6 +137,21 @@ name|ng_ID_t
 name|node_id
 decl_stmt|;
 comment|/* a hint for netstat(1) to find the node */
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|struct
+name|ngshash
+modifier|*
+name|hash
+decl_stmt|;
+comment|/* hash for hook names */
+name|u_long
+name|hmask
+decl_stmt|;
+comment|/* hash mask */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct
