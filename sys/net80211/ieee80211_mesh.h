@@ -34,6 +34,13 @@ begin_comment
 comment|/* Mesh Configuration */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESH_CONF_SZ
+value|(7)
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_meshconf_ie
@@ -69,7 +76,7 @@ name|uint8_t
 name|conf_form
 decl_stmt|;
 comment|/* Formation Information */
-name|uint16_t
+name|uint8_t
 name|conf_cap
 decl_stmt|;
 block|}
@@ -81,70 +88,117 @@ begin_comment
 comment|/* Hybrid Wireless Mesh Protocol */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
+comment|/* 0 reserved */
 name|IEEE80211_MESHCONF_PATH_HWMP
-value|0x00
-end_define
+init|=
+literal|1
+block|,
+comment|/* 2-254 reserved */
+name|IEEE80211_MESHCONF_PATH_VENDOR
+init|=
+literal|255
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/* Airtime Link Metric */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
+comment|/* 0 reserved */
 name|IEEE80211_MESHCONF_METRIC_AIRTIME
-value|0x00
-end_define
+init|=
+literal|1
+block|,
+comment|/* 2-254 reserved */
+name|IEEE80211_MESHCONF_METRIC_VENDOR
+init|=
+literal|255
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/* Congestion Control */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
 name|IEEE80211_MESHCONF_CC_DISABLED
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
+init|=
+literal|0
+block|,
 name|IEEE80211_MESHCONF_CC_SIG
-value|0x01
-end_define
+init|=
+literal|1
+block|,
+comment|/* 2-254 reserved */
+name|IEEE80211_MESHCONF_CC_VENDOR
+init|=
+literal|255
+block|, }
+enum|;
+end_enum
 
 begin_comment
 comment|/* Neighbour Offset */
 end_comment
 
-begin_define
-define|#
-directive|define
+begin_enum
+enum|enum
+block|{
+comment|/* 0 reserved */
 name|IEEE80211_MESHCONF_SYNC_NEIGHOFF
-value|0x00
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_AUTH_DISABLED
-value|0x00
-end_define
+init|=
+literal|1
+block|,
+comment|/* 2-254 rserved */
+name|IEEE80211_MESHCONF_SYNC_VENDOR
+init|=
+literal|255
+block|, }
+enum|;
+end_enum
 
 begin_comment
-comment|/* Simultaneous Authenticaction of Equals */
+comment|/* Authentication Protocol Identifier */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_MESHCONF_AUTH_SAE
-value|0x01
-end_define
+begin_enum
+enum|enum
+block|{
+name|IEEE80211_MESHCONF_AUTH_DISABLED
+init|=
+literal|0
+block|,
+comment|/* Simultaneous Authenticaction of Equals */
+name|IEEE80211_MESHCONF_AUTH_SEA
+init|=
+literal|1
+block|,
+name|IEEE80211_MESHCONF_AUTH_8021X
+init|=
+literal|2
+block|,
+comment|/* IEEE 802.1X */
+comment|/* 3-254 reserved */
+name|IEEE80211_MESHCONF_AUTH_VENDOR
+init|=
+literal|255
+block|, }
+enum|;
+end_enum
+
+begin_comment
+comment|/* Mesh Formation Info */
+end_comment
 
 begin_define
 define|#
@@ -161,11 +215,26 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_MESHCONF_FORM_NNEIGH_MASK
-value|0x04
+value|0x7E
 end_define
 
 begin_comment
 comment|/* Number of Neighbours */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHCONF_FORM_SA
+value|0xF0
+end_define
+
+begin_comment
+comment|/* indicating 802.1X auth */
+end_comment
+
+begin_comment
+comment|/* Mesh Capability */
 end_comment
 
 begin_define
@@ -226,19 +295,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IEEE80211_MESHCONF_CAP_TBTTA
-value|0x20
-end_define
-
-begin_comment
-comment|/* TBTT Adj. Enabled */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IEEE80211_MESHCONF_CAP_TBTT
-value|0x40
+value|0x20
 end_define
 
 begin_comment
@@ -249,11 +307,15 @@ begin_define
 define|#
 directive|define
 name|IEEE80211_MESHCONF_CAP_PSL
-value|0x80
+value|0x40
 end_define
 
 begin_comment
 comment|/* Power Save Level */
+end_comment
+
+begin_comment
+comment|/* 0x80 reserved */
 end_comment
 
 begin_comment
