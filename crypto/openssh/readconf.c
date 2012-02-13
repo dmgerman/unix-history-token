@@ -5372,7 +5372,7 @@ expr_stmt|;
 goto|goto
 name|parse_flag
 goto|;
-comment|/*          * We check to see if the command comes from the command line or not. 	 * If it does then enable it otherwise fail.  NONE must never be a 	 * default configuration. 	 */
+comment|/* 	 * We check to see if the command comes from the command line or not. 	 * If it does then enable it otherwise fail.  NONE must never be a 	 * default configuration. 	 */
 case|case
 name|oNoneSwitch
 case|:

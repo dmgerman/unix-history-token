@@ -8442,7 +8442,7 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-comment|/* 	 * Initialize the resolver.  This may not happen automatically 	 * before privsep chroot().                                    	 */
+comment|/* 	 * Initialize the resolver.  This may not happen automatically 	 * before privsep chroot(). 	 */
 if|if
 condition|(
 operator|(
