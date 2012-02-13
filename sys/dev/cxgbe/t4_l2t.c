@@ -1159,6 +1159,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SBUF_DRAIN
+end_ifdef
+
 begin_function
 specifier|static
 specifier|inline
@@ -1597,6 +1603,11 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -3223,6 +3234,24 @@ operator|(
 name|NULL
 operator|)
 return|;
+ifndef|#
+directive|ifndef
+name|VLAN_TAG
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_type
+operator|==
+name|IFT_L2VLAN
+condition|)
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+endif|#
+directive|endif
 name|hash
 operator|=
 name|addr_hash
@@ -3417,6 +3446,9 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|VLAN_TAG
 if|if
 condition|(
 name|ifp
@@ -3442,6 +3474,8 @@ name|vlan
 operator|=
 name|VLAN_NONE
 expr_stmt|;
+endif|#
+directive|endif
 name|e
 operator|->
 name|next
