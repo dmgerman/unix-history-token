@@ -53,7 +53,8 @@ specifier|static
 name|int
 name|ixgbe_netmap_txsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|u_int
@@ -68,7 +69,8 @@ specifier|static
 name|int
 name|ixgbe_netmap_rxsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|u_int
@@ -83,7 +85,8 @@ specifier|static
 name|void
 name|ixgbe_netmap_lock_wrapper
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|int
@@ -200,7 +203,8 @@ specifier|static
 name|void
 name|ixgbe_netmap_lock_wrapper
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 name|_a
 parameter_list|,
@@ -217,6 +221,8 @@ modifier|*
 name|adapter
 init|=
 name|_a
+operator|->
+name|if_softc
 decl_stmt|;
 name|ASSERT
 argument_list|(
@@ -487,9 +493,10 @@ specifier|static
 name|int
 name|ixgbe_netmap_txsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|a
+name|ifp
 parameter_list|,
 name|u_int
 name|ring_nr
@@ -503,7 +510,9 @@ name|adapter
 modifier|*
 name|adapter
 init|=
-name|a
+name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|tx_ring
@@ -1284,9 +1293,10 @@ specifier|static
 name|int
 name|ixgbe_netmap_rxsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|a
+name|ifp
 parameter_list|,
 name|u_int
 name|ring_nr
@@ -1300,7 +1310,9 @@ name|adapter
 modifier|*
 name|adapter
 init|=
-name|a
+name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|rx_ring

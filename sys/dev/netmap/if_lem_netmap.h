@@ -61,7 +61,8 @@ specifier|static
 name|int
 name|lem_netmap_txsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|u_int
@@ -76,7 +77,8 @@ specifier|static
 name|int
 name|lem_netmap_rxsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|u_int
@@ -91,7 +93,8 @@ specifier|static
 name|void
 name|lem_netmap_lock_wrapper
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|int
@@ -215,9 +218,10 @@ specifier|static
 name|void
 name|lem_netmap_lock_wrapper
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|_a
+name|ifp
 parameter_list|,
 name|int
 name|what
@@ -231,7 +235,9 @@ name|adapter
 modifier|*
 name|adapter
 init|=
-name|_a
+name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 comment|/* only one ring here so ignore the ringid */
 switch|switch
@@ -519,9 +525,10 @@ specifier|static
 name|int
 name|lem_netmap_txsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|a
+name|ifp
 parameter_list|,
 name|u_int
 name|ring_nr
@@ -535,7 +542,9 @@ name|adapter
 modifier|*
 name|adapter
 init|=
-name|a
+name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|netmap_adapter
@@ -1113,9 +1122,10 @@ specifier|static
 name|int
 name|lem_netmap_rxsync
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
-name|a
+name|ifp
 parameter_list|,
 name|u_int
 name|ring_nr
@@ -1129,7 +1139,9 @@ name|adapter
 modifier|*
 name|adapter
 init|=
-name|a
+name|ifp
+operator|->
+name|if_softc
 decl_stmt|;
 name|struct
 name|netmap_adapter
