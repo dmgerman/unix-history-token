@@ -27275,6 +27275,11 @@ index|[
 name|idx
 index|]
 decl_stmt|;
+name|ADAPTER_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|rc
@@ -27312,12 +27317,9 @@ name|valid
 operator|=
 literal|1
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
+else|else
+block|{
 if|if
 condition|(
 name|rc
@@ -27325,12 +27327,10 @@ operator|!=
 name|FW_FILTER_WR_FLT_DELETED
 condition|)
 block|{
-comment|/* Add or delete failed, need to display an error */
-name|device_printf
+comment|/* Add or delete failed, display an error */
+name|log
 argument_list|(
-name|sc
-operator|->
-name|dev
+name|LOG_ERR
 argument_list|,
 literal|"filter %u setup failed with error %u\n"
 argument_list|,
@@ -27345,11 +27345,6 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|ADAPTER_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|tids
@@ -27357,6 +27352,7 @@ operator|.
 name|ftids_in_use
 operator|--
 expr_stmt|;
+block|}
 name|ADAPTER_UNLOCK
 argument_list|(
 name|sc
