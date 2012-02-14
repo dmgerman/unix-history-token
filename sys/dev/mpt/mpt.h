@@ -2405,7 +2405,7 @@ name|mpt_pers_mask
 decl_stmt|;
 name|uint32_t
 label|:
-literal|8
+literal|7
 operator|,
 name|unit
 operator|:
@@ -2472,6 +2472,10 @@ operator|:
 literal|1
 operator|,
 name|is_fc
+operator|:
+literal|1
+operator|,
+name|is_1078
 operator|:
 literal|1
 expr_stmt|;
@@ -3957,6 +3961,19 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|mpt
+operator|->
+name|pci_pio_reg
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no PIO resource"
+operator|)
+argument_list|)
+expr_stmt|;
 name|bus_space_write_4
 argument_list|(
 name|mpt
@@ -3990,6 +4007,19 @@ name|int
 name|offset
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|mpt
+operator|->
+name|pci_pio_reg
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no PIO resource"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bus_space_read_4

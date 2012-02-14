@@ -107,6 +107,13 @@ name|MPT_OFFSET_FUBAR
 value|0x90
 end_define
 
+begin_define
+define|#
+directive|define
+name|MPT_OFFSET_RESET_1078
+value|0x10fc
+end_define
+
 begin_comment
 comment|/* Bit Maps for DOORBELL register */
 end_comment
