@@ -17455,13 +17455,14 @@ return|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX not sure what variants to use for arm. */
-end_comment
-
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__arm__
+argument_list|)
+operator|||
 name|defined
 argument_list|(
 name|__ia64__
@@ -17469,12 +17470,12 @@ argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__powerpc__
+name|__mips__
 argument_list|)
 operator|||
 name|defined
 argument_list|(
-name|__mips__
+name|__powerpc__
 argument_list|)
 end_if
 
@@ -17995,12 +17996,6 @@ operator|||
 name|defined
 argument_list|(
 name|__sparc64__
-argument_list|)
-operator|||
-expr|\
-name|defined
-argument_list|(
-name|__arm__
 argument_list|)
 end_if
 
