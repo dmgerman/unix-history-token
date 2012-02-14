@@ -1148,6 +1148,10 @@ begin_struct
 struct|struct
 name|pthread
 block|{
+define|#
+directive|define
+name|_pthread_startzero
+value|tid
 comment|/* Kernel thread id. */
 name|long
 name|tid
@@ -1426,24 +1430,6 @@ comment|/* Event */
 name|td_event_msg_t
 name|event_buf
 decl_stmt|;
-name|struct
-name|wake_addr
-modifier|*
-name|wake_addr
-decl_stmt|;
-define|#
-directive|define
-name|WAKE_ADDR
-parameter_list|(
-name|td
-parameter_list|)
-value|((td)->wake_addr)
-comment|/* Sleep queue */
-name|struct
-name|sleepqueue
-modifier|*
-name|sleepqueue
-decl_stmt|;
 comment|/* Wait channel */
 name|void
 modifier|*
@@ -1471,6 +1457,28 @@ name|defer_waiters
 index|[
 name|MAX_DEFER_WAITERS
 index|]
+decl_stmt|;
+define|#
+directive|define
+name|_pthread_endzero
+value|wake_addr
+name|struct
+name|wake_addr
+modifier|*
+name|wake_addr
+decl_stmt|;
+define|#
+directive|define
+name|WAKE_ADDR
+parameter_list|(
+name|td
+parameter_list|)
+value|((td)->wake_addr)
+comment|/* Sleep queue */
+name|struct
+name|sleepqueue
+modifier|*
+name|sleepqueue
 decl_stmt|;
 block|}
 struct|;
