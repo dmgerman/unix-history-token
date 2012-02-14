@@ -870,6 +870,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IFCAP_NETMAP
+value|0x100000
+end_define
+
+begin_comment
+comment|/* netmap mode supported/enabled */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IFCAP_HWCSUM
 value|(IFCAP_RXCSUM | IFCAP_TXCSUM)
 end_define

@@ -708,6 +708,7 @@ index|[
 literal|7
 index|]
 decl_stmt|;
+comment|/* 1 netmap, 6 TBD */
 name|int
 name|if_ispare
 index|[
