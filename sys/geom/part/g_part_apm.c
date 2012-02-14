@@ -518,7 +518,7 @@ block|,
 operator|.
 name|gps_maxent
 operator|=
-name|INT_MAX
+literal|4096
 block|, }
 decl_stmt|;
 end_decl_stmt
