@@ -1708,6 +1708,19 @@ literal|1
 expr_stmt|;
 break|break;
 case|case
+name|PCI_PRODUCT_LSI_SAS1078
+case|:
+case|case
+name|PCI_PRODUCT_LSI_SAS1078DE
+case|:
+name|mpt
+operator|->
+name|is_1078
+operator|=
+literal|1
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|PCI_PRODUCT_LSI_SAS1064
 case|:
 case|case
@@ -1727,12 +1740,6 @@ name|PCI_PRODUCT_LSI_SAS1068
 case|:
 case|case
 name|PCI_PRODUCT_LSI_SAS1068E
-case|:
-case|case
-name|PCI_PRODUCT_LSI_SAS1078
-case|:
-case|case
-name|PCI_PRODUCT_LSI_SAS1078DE
 case|:
 name|mpt
 operator|->
@@ -2079,6 +2086,11 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -2086,10 +2098,10 @@ argument_list|,
 literal|"unable to map registers in PIO mode\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|bad
-goto|;
 block|}
+block|}
+else|else
+block|{
 name|mpt
 operator|->
 name|pci_pio_st
@@ -2112,6 +2124,7 @@ operator|->
 name|pci_pio_reg
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Allocate kernel virtual memory for the 9x9's Mem0 region */
 name|mpt_mem_bar
 operator|=
@@ -2145,6 +2158,21 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|bootverbose
+operator|||
+name|mpt
+operator|->
+name|is_sas
+operator|||
+name|mpt
+operator|->
+name|pci_pio_reg
+operator|==
+name|NULL
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -2152,11 +2180,18 @@ argument_list|,
 literal|"Unable to memory map registers.\n"
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|mpt
 operator|->
 name|is_sas
+operator|||
+name|mpt
+operator|->
+name|pci_pio_reg
+operator|==
+name|NULL
 condition|)
 block|{
 name|device_printf
@@ -2170,6 +2205,11 @@ goto|goto
 name|bad
 goto|;
 block|}
+if|if
+condition|(
+name|bootverbose
+condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -2177,6 +2217,7 @@ argument_list|,
 literal|"Falling back to PIO mode.\n"
 argument_list|)
 expr_stmt|;
+block|}
 name|mpt
 operator|->
 name|pci_st
