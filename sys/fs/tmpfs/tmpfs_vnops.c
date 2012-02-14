@@ -124,12 +124,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/_inttypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/fifofs/fifo.h>
 end_include
 
@@ -6660,9 +6654,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"\tmode 0%o, owner %d, group %d, size %"
-name|PRIdMAX
-literal|", status 0x%x\n"
+literal|"\tmode 0%o, owner %d, group %d, size %jd, status 0x%x\n"
 argument_list|,
 name|node
 operator|->
@@ -6677,7 +6669,7 @@ operator|->
 name|tn_gid
 argument_list|,
 operator|(
-name|uintmax_t
+name|intmax_t
 operator|)
 name|node
 operator|->
