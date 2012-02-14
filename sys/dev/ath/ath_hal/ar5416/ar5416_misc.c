@@ -3408,7 +3408,6 @@ argument_list|,
 name|AR_PHY_RADAR_0_ENA
 argument_list|)
 expr_stmt|;
-comment|/* XXX is this around the correct way?! */
 if|if
 condition|(
 name|pe
@@ -3417,7 +3416,7 @@ name|pe_usefir128
 operator|==
 literal|1
 condition|)
-name|OS_REG_CLR_BIT
+name|OS_REG_SET_BIT
 argument_list|(
 name|ah
 argument_list|,
@@ -3435,7 +3434,7 @@ name|pe_usefir128
 operator|==
 literal|0
 condition|)
-name|OS_REG_SET_BIT
+name|OS_REG_CLR_BIT
 argument_list|(
 name|ah
 argument_list|,
