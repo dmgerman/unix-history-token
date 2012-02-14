@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by David Chisnall under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions * are met:  * 1.  Redistributions of source code must retain the above copyright notice,  *     this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by David Chisnall under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
 
 begin_include
@@ -19,6 +19,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<runetype.h>
 end_include
 
 begin_include
@@ -102,6 +108,38 @@ specifier|extern
 name|struct
 name|xlocale_component
 name|__xlocale_C_ctype
+decl_stmt|;
+end_decl_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NO_TLS
+end_ifndef
+
+begin_comment
+comment|/*  * The locale for this thread.  */
+end_comment
+
+begin_decl_stmt
+specifier|_Thread_local
+name|locale_t
+name|__thread_locale
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/*  * Flag indicating that one or more per-thread locales exist.  */
+end_comment
+
+begin_decl_stmt
+name|int
+name|__has_thread_locale
 decl_stmt|;
 end_decl_stmt
 
@@ -317,6 +355,11 @@ operator|=
 literal|1
 expr_stmt|;
 block|}
+comment|/* At least one per-thread locale has now been set. */
+name|__has_thread_locale
+operator|=
+literal|1
+expr_stmt|;
 name|__detect_path_locale
 argument_list|()
 expr_stmt|;
@@ -363,6 +406,12 @@ return|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__NO_TLS
+end_ifdef
+
 begin_function
 name|locale_t
 name|__get_locale
@@ -389,6 +438,11 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 specifier|static
 name|void
@@ -398,7 +452,7 @@ name|locale_t
 name|loc
 parameter_list|)
 block|{
-name|pthread_once
+name|_once
 argument_list|(
 operator|&
 name|once_control
@@ -478,6 +532,20 @@ name|loc
 argument_list|)
 expr_stmt|;
 block|}
+ifndef|#
+directive|ifndef
+name|__NO_TLS
+name|__thread_locale
+operator|=
+name|loc
+expr_stmt|;
+name|__set_thread_rune_locale
+argument_list|(
+name|loc
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 
@@ -676,7 +744,7 @@ name|locale_t
 name|new
 parameter_list|)
 block|{
-comment|/* Always copy from the global locale, since it has mutable components. */
+comment|/* Always copy from the global locale, since it has mutable components. 	 */
 name|struct
 name|xlocale_component
 modifier|*
@@ -777,7 +845,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* If the component was NULL, return success - if base is a valid 		 * locale then the flag indicating that this isn't present should be 		 * set.  If it isn't a valid locale, then we're stuck anyway. */
+comment|/* If the component was NULL, return success - if base is a 		 * valid locale then the flag indicating that this isn't 		 * present should be set.  If it isn't a valid locale, then 		 * we're stuck anyway. */
 return|return
 literal|1
 return|;
@@ -1253,7 +1321,9 @@ name|locale
 operator|)
 return|;
 return|return
+operator|(
 literal|"C"
+operator|)
 return|;
 block|}
 end_function
