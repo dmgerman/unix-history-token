@@ -223,16 +223,6 @@ name|_CurrentRuneLocale
 decl_stmt|;
 end_decl_stmt
 
-begin_decl_stmt
-specifier|extern
-specifier|const
-specifier|_Thread_local
-name|_RuneLocale
-modifier|*
-name|_ThreadRuneLocale
-decl_stmt|;
-end_decl_stmt
-
 begin_if
 if|#
 directive|if
@@ -263,6 +253,16 @@ begin_else
 else|#
 directive|else
 end_else
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+specifier|_Thread_local
+name|_RuneLocale
+modifier|*
+name|_ThreadRuneLocale
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

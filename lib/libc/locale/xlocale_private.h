@@ -500,7 +500,7 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|__thread
+specifier|_Thread_local
 name|locale_t
 name|__thread_locale
 decl_stmt|;

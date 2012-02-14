@@ -896,6 +896,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__NO_TLS
+end_ifndef
+
 begin_function
 name|void
 name|__set_thread_rune_locale
@@ -932,6 +938,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|void
 modifier|*
@@ -946,9 +957,6 @@ name|locale_t
 name|unused
 parameter_list|)
 block|{
-ifndef|#
-directive|ifndef
-name|__NO_TLS
 name|struct
 name|xlocale_ctype
 modifier|*
@@ -997,8 +1005,6 @@ block|}
 return|return
 name|l
 return|;
-endif|#
-directive|endif
 block|}
 end_function
 
