@@ -3667,20 +3667,7 @@ decl_stmt|;
 name|uint32_t
 name|h
 decl_stmt|;
-comment|/* 	 * Microoptimisations for a ng_socket with no 	 * hooks, or with a single hook, which is a 	 * common case. 	 */
-if|if
-condition|(
-name|node
-operator|->
-name|nd_numhooks
-operator|==
-literal|0
-condition|)
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+comment|/* 	 * Microoptimisation for an ng_socket with 	 * a single hook, which is a common case. 	 */
 if|if
 condition|(
 name|node

@@ -1742,6 +1742,44 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Add sysctls. 	 */
+name|SYSCTL_ADD_INT
+argument_list|(
+name|device_get_sysctl_ctx
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|)
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|device_get_sysctl_tree
+argument_list|(
+name|sc
+operator|->
+name|aac_dev
+argument_list|)
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"firmware_build"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|aac_revision
+operator|.
+name|buildNumber
+argument_list|,
+literal|0
+argument_list|,
+literal|"firmware build number"
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Register to probe our containers later. 	 */
 name|sc
 operator|->

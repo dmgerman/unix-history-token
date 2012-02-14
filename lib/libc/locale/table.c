@@ -1987,14 +1987,11 @@ name|_CurrentRuneLocale
 end_undef
 
 begin_decl_stmt
+specifier|const
 name|_RuneLocale
 modifier|*
 name|_CurrentRuneLocale
 init|=
-operator|(
-name|_RuneLocale
-operator|*
-operator|)
 operator|&
 name|_DefaultRuneLocale
 decl_stmt|;

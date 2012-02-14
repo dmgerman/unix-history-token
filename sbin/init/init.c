@@ -196,12 +196,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utmpx.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/reboot.h>
 end_include
 
@@ -991,17 +985,6 @@ name|int
 name|clang
 decl_stmt|;
 end_decl_stmt
-
-begin_function_decl
-specifier|static
-name|void
-name|clear_session_logs
-parameter_list|(
-name|session_t
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 specifier|static
@@ -2553,25 +2536,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close out the accounting files for a login session.  * NB: should send a message to the session logger to avoid blocking.  */
-end_comment
-
-begin_function
-specifier|static
-name|void
-name|clear_session_logs
-parameter_list|(
-name|session_t
-modifier|*
-name|sp
-name|__unused
-parameter_list|)
-block|{
-comment|/* 	 * XXX: Use getutxline() and call pututxline() for each entry. 	 * Is this safe to do this here?  Is it really required anyway? 	 */
-block|}
-end_function
-
-begin_comment
 comment|/*  * Start a session and allocate a controlling terminal.  * Only called by children of init after forking.  */
 end_comment
 
@@ -3369,10 +3333,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|utmpx
-name|utx
-decl_stmt|;
 name|state_func_t
 name|next_transition
 decl_stmt|;
@@ -3397,29 +3357,6 @@ operator|=
 name|AUTOBOOT
 expr_stmt|;
 comment|/* the default */
-comment|/* NB: should send a message to the session logger to avoid blocking. */
-name|utx
-operator|.
-name|ut_type
-operator|=
-name|BOOT_TIME
-expr_stmt|;
-name|gettimeofday
-argument_list|(
-operator|&
-name|utx
-operator|.
-name|ut_tv
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|pututxline
-argument_list|(
-operator|&
-name|utx
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|state_func_t
@@ -5044,17 +4981,6 @@ operator|=
 name|snext
 control|)
 block|{
-if|if
-condition|(
-name|sp
-operator|->
-name|se_process
-condition|)
-name|clear_session_logs
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
 name|snext
 operator|=
 name|sp
@@ -5719,11 +5645,6 @@ argument_list|)
 operator|)
 condition|)
 return|return;
-name|clear_session_logs
-argument_list|(
-name|sp
-argument_list|)
-expr_stmt|;
 name|del_session
 argument_list|(
 name|sp
@@ -6718,37 +6639,10 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|struct
-name|utmpx
-name|utx
-decl_stmt|;
 name|session_t
 modifier|*
 name|sp
 decl_stmt|;
-comment|/* NB: should send a message to the session logger to avoid blocking. */
-name|utx
-operator|.
-name|ut_type
-operator|=
-name|SHUTDOWN_TIME
-expr_stmt|;
-name|gettimeofday
-argument_list|(
-operator|&
-name|utx
-operator|.
-name|ut_tv
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|pututxline
-argument_list|(
-operator|&
-name|utx
-argument_list|)
-expr_stmt|;
 comment|/* 	 * Also revoke the TTY here.  Because runshutdown() may reopen 	 * the TTY whose getty we're killing here, there is no guarantee 	 * runshutdown() will perform the initial open() call, causing 	 * the terminal attributes to be misconfigured. 	 */
 for|for
 control|(

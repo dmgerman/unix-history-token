@@ -107,7 +107,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|unix
+name|__unix__
 argument_list|)
 operator|||
 name|defined

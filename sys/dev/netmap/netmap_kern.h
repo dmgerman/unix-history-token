@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (C) 2011-2012 Matteo Landi, Luigi Rizzo. All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   1. Redistributions of source code must retain the above copyright  *      notice, this list of conditions and the following disclaimer.  *   2. Redistributions in binary form must reproduce the above copyright  *      notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -18,6 +18,112 @@ define|#
 directive|define
 name|_NET_NETMAP_KERN_H_
 end_define
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|NM_LOCK_T
+value|struct mtx
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SELINFO_T
+value|struct selinfo
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_LEN
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->m_pkthdr.len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SEND_UP
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|)
+value|((ifp)->if_input)(ifp, m)
+end_define
+
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|NM_LOCK_T
+value|spinlock_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SELINFO_T
+value|wait_queue_head_t
+end_define
+
+begin_define
+define|#
+directive|define
+name|MBUF_LEN
+parameter_list|(
+name|m
+parameter_list|)
+value|((m)->len)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NM_SEND_UP
+parameter_list|(
+name|ifp
+parameter_list|,
+name|m
+parameter_list|)
+value|netif_rx(m)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_error
+error|#
+directive|error
+error|unsupported platform
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -69,7 +175,7 @@ struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * private, kernel view of a ring.  *  * XXX 20110627-todo  * The index in the NIC and netmap ring is offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwcur + hwavail + hwofs) coincides  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  */
+comment|/*  * private, kernel view of a ring.  *  * The indexes in the NIC and netmap rings are offset by nkr_hwofs slots.  * This is so that, on a reset, buffers owned by userspace are not  * modified by the kernel. In particular:  * RX rings: the next empty buffer (hwcur + hwavail + hwofs) coincides with  * 	the next empty buffer as known by the hardware (next_to_check or so).  * TX rings: hwcur + hwofs coincides with next_to_send  */
 end_comment
 
 begin_struct
@@ -108,12 +214,14 @@ name|netmap_adapter
 modifier|*
 name|na
 decl_stmt|;
-comment|// debugging
-name|struct
-name|selinfo
+name|NM_SELINFO_T
 name|si
 decl_stmt|;
 comment|/* poll/select wait queue */
+name|NM_LOCK_T
+name|q_lock
+decl_stmt|;
+comment|/* used if no device lock available */
 block|}
 name|__attribute__
 argument_list|(
@@ -128,7 +236,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * This struct is part of and extends the 'struct adapter' (or  * equivalent) device descriptor. It contains all fields needed to  * support netmap operation.  */
+comment|/*  * This struct extends the 'struct adapter' (or  * equivalent) device descriptor. It contains all fields needed to  * support netmap operation.  */
 end_comment
 
 begin_struct
@@ -157,9 +265,7 @@ decl_stmt|;
 name|u_int
 name|buff_size
 decl_stmt|;
-name|u_int
-name|flags
-decl_stmt|;
+comment|//u_int	flags;	// XXX unused
 comment|/* tx_rings and rx_rings are private but allocated 	 * as a contiguous chunk of memory. Each array has 	 * N+1 entries, for the adapter queues and for the host queue. 	 */
 name|struct
 name|netmap_kring
@@ -174,17 +280,7 @@ name|rx_rings
 decl_stmt|;
 comment|/* array of RX rings. */
 comment|/* copy of if_qflush and if_transmit pointers, to intercept 	 * packets from the network stack when netmap is active. 	 * XXX probably if_qflush is not necessary. 	 */
-name|void
-function_decl|(
-modifier|*
-name|if_qflush
-function_decl|)
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|)
-function_decl|;
+comment|//void    (*if_qflush)(struct ifnet *);	// XXX unused
 name|int
 function_decl|(
 modifier|*
@@ -207,6 +303,10 @@ modifier|*
 name|ifp
 decl_stmt|;
 comment|/* adapter is ifp->if_softc */
+name|NM_LOCK_T
+name|core_lock
+decl_stmt|;
+comment|/* used if no device lock available */
 name|int
 function_decl|(
 modifier|*
@@ -227,7 +327,8 @@ modifier|*
 name|nm_lock
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|int
@@ -243,7 +344,8 @@ modifier|*
 name|nm_txsync
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|u_int
@@ -259,7 +361,8 @@ modifier|*
 name|nm_rxsync
 function_decl|)
 parameter_list|(
-name|void
+name|struct
+name|ifnet
 modifier|*
 parameter_list|,
 name|u_int
@@ -309,7 +412,26 @@ block|,
 name|NETMAP_RX_LOCK
 block|,
 name|NETMAP_RX_UNLOCK
-block|, }
+block|,
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+define|#
+directive|define
+name|NETMAP_REG_LOCK
+value|NETMAP_CORE_LOCK
+define|#
+directive|define
+name|NETMAP_REG_UNLOCK
+value|NETMAP_CORE_UNLOCK
+else|#
+directive|else
+name|NETMAP_REG_LOCK
+block|,
+name|NETMAP_REG_UNLOCK
+endif|#
+directive|endif
+block|}
 enum|;
 end_enum
 
@@ -769,6 +891,83 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* default functions to handle rx/tx interrupts */
+end_comment
+
+begin_function_decl
+name|int
+name|netmap_rx_irq
+parameter_list|(
+name|struct
+name|ifnet
+modifier|*
+parameter_list|,
+name|int
+parameter_list|,
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_define
+define|#
+directive|define
+name|netmap_tx_irq
+parameter_list|(
+name|_n
+parameter_list|,
+name|_q
+parameter_list|)
+value|netmap_rx_irq(_n, _q, NULL)
+end_define
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__linux__
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|bus_dmamap_sync
+parameter_list|(
+name|_a
+parameter_list|,
+name|_b
+parameter_list|,
+name|_c
+parameter_list|)
+end_define
+
+begin_comment
+comment|// wmb() or rmb() ?
+end_comment
+
+begin_function_decl
+name|netdev_tx_t
+name|netmap_start_linux
+parameter_list|(
+name|struct
+name|sk_buff
+modifier|*
+name|skb
+parameter_list|,
+name|struct
+name|net_device
+modifier|*
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#

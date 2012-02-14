@@ -9559,11 +9559,6 @@ name|sc
 operator|->
 name|vge_ifp
 decl_stmt|;
-name|struct
-name|mii_data
-modifier|*
-name|mii
-decl_stmt|;
 name|int
 name|error
 decl_stmt|,
@@ -9572,15 +9567,6 @@ decl_stmt|;
 name|VGE_LOCK_ASSERT
 argument_list|(
 name|sc
-argument_list|)
-expr_stmt|;
-name|mii
-operator|=
-name|device_get_softc
-argument_list|(
-name|sc
-operator|->
-name|vge_miibus
 argument_list|)
 expr_stmt|;
 if|if

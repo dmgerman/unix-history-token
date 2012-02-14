@@ -457,6 +457,8 @@ sizeof|sizeof
 argument_list|(
 name|lnk
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|!=
