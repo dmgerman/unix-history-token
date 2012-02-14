@@ -387,6 +387,30 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|int
+name|nd6_prefix_onlink
+parameter_list|(
+name|struct
+name|nd_prefix
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
+name|nd6_prefix_offlink
+parameter_list|(
+name|struct
+name|nd_prefix
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|rt6_deleteroute
 parameter_list|(
 name|struct
@@ -2239,6 +2263,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|defrouter_addreq
 parameter_list|(
@@ -6252,6 +6277,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|nd6_prefix_onlink
 parameter_list|(
@@ -6879,6 +6905,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|nd6_prefix_offlink
 parameter_list|(
