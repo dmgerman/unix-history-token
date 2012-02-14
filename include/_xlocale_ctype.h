@@ -1,88 +1,19 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by David Chisnall under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
+comment|/*-  * Copyright (c) 2011 The FreeBSD Foundation  * All rights reserved.  *  * This software was developed by David Chisnall under sponsorship from  * the FreeBSD Foundation.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions * are met:  * 1.  Redistributions of source code must retain the above copyright notice,  *     this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright notice,  *    this list of conditions and the following disclaimer in the documentation  *    and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * $FreeBSD$  */
 end_comment
-
-begin_if
-if|#
-directive|if
-operator|(
-name|defined
-argument_list|(
-name|_XLOCALE_WCTYPES
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_XLOCALE_WCTYPE_H
-argument_list|)
-operator|)
-operator|||
-expr|\
-operator|(
-operator|!
-name|defined
-argument_list|(
-name|_XLOCALE_WCTYPES
-argument_list|)
-operator|&&
-operator|!
-name|defined
-argument_list|(
-name|_XLOCALE_CTYPE_H
-argument_list|)
-operator|)
-end_if
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|_XLOCALE_WCTYPES
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_XLOCALE_WCTYPE_H
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|_XLOCALE_CTYPE_H
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_LOCALE_T_DEFINED
+name|_XLOCALE_H_
 end_ifndef
 
-begin_define
-define|#
-directive|define
-name|_LOCALE_T_DEFINED
-end_define
-
-begin_typedef
-typedef|typedef
-name|struct
-name|_xlocale
-modifier|*
-name|locale_t
-typedef|;
-end_typedef
+begin_error
+error|#
+directive|error
+error|This header should only be included by<xlocale.h>, never directly.
+end_error
 
 begin_endif
 endif|#
@@ -96,6 +27,7 @@ name|_XLOCALE_CTYPE_H_
 end_ifndef
 
 begin_decl_stmt
+name|__BEGIN_DECLS
 name|unsigned
 name|long
 name|___runetype_l
@@ -145,101 +77,36 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_endif
+begin_function
+name|__END_DECLS
 endif|#
 directive|endif
-end_endif
-
-begin_ifndef
 ifndef|#
 directive|ifndef
 name|_XLOCALE_INLINE
-end_ifndef
-
-begin_if
 if|#
 directive|if
 name|__GNUC__
 operator|&&
 operator|!
 name|__GNUC_STDC_INLINE__
-end_if
-
-begin_comment
-comment|/* GNU89 inline has nonstandard semantics. */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_XLOCALE_INLINE
 value|extern inline
-end_define
-
-begin_else
 else|#
 directive|else
-end_else
-
-begin_comment
-comment|/* Hack to work around people who define inline away */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|inline
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|_XLOCALE_INLINE
-value|__inline static
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_comment
-comment|/* Define with C++ / C99 compatible semantics */
-end_comment
-
-begin_define
 define|#
 directive|define
 name|_XLOCALE_INLINE
 value|inline
-end_define
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
 endif|#
 directive|endif
-end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* _XLOCALE_INLINE */
-end_comment
-
-begin_ifdef
 ifdef|#
 directive|ifdef
-name|_XLOCALE_WCTYPES
-end_ifdef
-
-begin_function
+name|XLOCALE_WCTYPES
 specifier|static
 name|__inline
 name|int
@@ -633,7 +500,7 @@ end_undef
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|_XLOCALE_WCTYPES
+name|XLOCALE_WCTYPES
 end_ifdef
 
 begin_function
@@ -911,7 +778,7 @@ end_function_decl
 begin_undef
 undef|#
 directive|undef
-name|_XLOCALE_WCTYPES
+name|XLOCALE_WCTYPES
 end_undef
 
 begin_else
@@ -1050,15 +917,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* (defined(_XLOCALE_WCTYPES)&& !defined(_XLOCALE_WCTYPE_H)) || \ 	(!defined(_XLOCALE_WCTYPES)&& !defined(_XLOCALE_CTYPE_H)) */
-end_comment
 
 end_unit
 
