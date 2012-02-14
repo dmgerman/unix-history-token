@@ -3176,7 +3176,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"Recursed lock with mask: 0x%x\n"
+literal|"Recursed lock with mask: 0x%x"
 argument_list|,
 name|s
 argument_list|)
@@ -3226,7 +3226,7 @@ block|}
 else|else
 name|panic
 argument_list|(
-literal|"Negative lock count\n"
+literal|"Negative lock count"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4733,7 +4733,7 @@ operator|->
 name|tgt_cmds_allocated
 argument_list|,
 operator|(
-literal|"bad tag %d\n"
+literal|"bad tag %d"
 operator|,
 name|tag
 operator|)
@@ -5069,7 +5069,7 @@ block|}
 block|}
 name|panic
 argument_list|(
-literal|"%s(%d): req %p:%u function %x not in els or tgt ptrs\n"
+literal|"%s(%d): req %p:%u function %x not in els or tgt ptrs"
 argument_list|,
 name|s
 argument_list|,
@@ -5155,7 +5155,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-literal|"%s(%d): req %p:%u func %x in els ptrs at ioindex %d\n"
+literal|"%s(%d): req %p:%u func %x in els ptrs at ioindex %d"
 operator|,
 name|s
 operator|,
@@ -5211,7 +5211,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-literal|"%s(%d): req %p:%u func %x in tgt ptrs at ioindex %d\n"
+literal|"%s(%d): req %p:%u func %x in tgt ptrs at ioindex %d"
 operator|,
 name|s
 operator|,

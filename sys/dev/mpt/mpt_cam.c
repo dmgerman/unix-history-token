@@ -6530,7 +6530,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -7761,7 +7761,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -8449,7 +8449,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -9491,7 +9491,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -12822,7 +12822,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -17040,7 +17040,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -21338,7 +21338,7 @@ operator|!=
 name|CAM_DIR_NONE
 argument_list|,
 operator|(
-literal|"dxfer_len %u but direction is NONE\n"
+literal|"dxfer_len %u but direction is NONE"
 operator|,
 name|csio
 operator|->
@@ -25931,7 +25931,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"zero ccb sts at %d\n"
+literal|"zero ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -26228,7 +26228,7 @@ operator|.
 name|status
 argument_list|,
 operator|(
-literal|"ZERO ccb sts at %d\n"
+literal|"ZERO ccb sts at %d"
 operator|,
 name|__LINE__
 operator|)
@@ -26523,7 +26523,7 @@ operator|==
 name|TGT_STATE_LOADING
 argument_list|,
 operator|(
-literal|"bad state 0x%x on reply to buffer post\n"
+literal|"bad state 0x%x on reply to buffer post"
 operator|,
 name|tgt
 operator|->
