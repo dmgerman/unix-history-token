@@ -10723,6 +10723,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Before unlocking mutex, set this flag to prevent other threads from 	 * getting into this function 	 */
 name|xbb
 operator|->
 name|flags
