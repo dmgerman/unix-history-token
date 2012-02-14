@@ -2142,6 +2142,12 @@ name|int32_t
 name|pe_enabled
 decl_stmt|;
 comment|/* Whether radar detection is enabled */
+name|int32_t
+name|pe_enrelpwr
+decl_stmt|;
+name|int32_t
+name|pe_en_relstep_check
+decl_stmt|;
 block|}
 name|HAL_PHYERR_PARAM
 typedef|;
@@ -2153,17 +2159,6 @@ directive|define
 name|HAL_PHYERR_PARAM_NOVAL
 value|65535
 end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_PHYERR_PARAM_ENABLE
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Enable/Disable if applicable */
-end_comment
 
 begin_comment
 comment|/*  * DFS operating mode flags.  */
