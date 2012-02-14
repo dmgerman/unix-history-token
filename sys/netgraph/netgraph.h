@@ -66,6 +66,12 @@ directive|include
 file|<sys/mutex.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/refcount.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -76,6 +82,12 @@ begin_include
 include|#
 directive|include
 file|"opt_netgraph.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"opt_kdb.h"
 end_include
 
 begin_endif
@@ -538,7 +550,7 @@ name|_NG_HOOK_REF
 parameter_list|(
 name|hook
 parameter_list|)
-value|atomic_add_int(&(hook)->hk_refs, 1)
+value|refcount_acquire(&(hook)->hk_refs)
 end_define
 
 begin_define
@@ -1092,7 +1104,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Accessing freed hook "
+literal|"Accessing freed "
 argument_list|)
 expr_stmt|;
 name|dumphook
@@ -2352,7 +2364,7 @@ name|_NG_NODE_REF
 parameter_list|(
 name|node
 parameter_list|)
-value|atomic_add_int(&(node)->nd_refs, 1)
+value|refcount_acquire(&(node)->nd_refs)
 end_define
 
 begin_define
@@ -2836,7 +2848,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Accessing freed node "
+literal|"Accessing freed "
 argument_list|)
 expr_stmt|;
 name|dumpnode
