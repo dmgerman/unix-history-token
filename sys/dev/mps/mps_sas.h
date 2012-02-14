@@ -75,6 +75,14 @@ name|MPSSAS_TARGET_INREMOVAL
 value|(1<< 3)
 define|#
 directive|define
+name|MPS_TARGET_FLAGS_RAID_COMPONENT
+value|(1<< 4)
+define|#
+directive|define
+name|MPS_TARGET_FLAGS_VOLUME
+value|(1<< 5)
+define|#
+directive|define
 name|MPSSAS_TARGET_INRECOVERY
 value|(MPSSAS_TARGET_INABORT | \     MPSSAS_TARGET_INRESET | MPSSAS_TARGET_INCHIPRESET)
 define|#
