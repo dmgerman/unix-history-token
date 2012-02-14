@@ -58,12 +58,6 @@ begin_struct
 struct|struct
 name|tcb
 block|{
-name|struct
-name|tcb
-modifier|*
-name|tcb_self
-decl_stmt|;
-comment|/* required by rtld */
 name|void
 modifier|*
 name|tcb_dtv
@@ -75,13 +69,6 @@ modifier|*
 name|tcb_thread
 decl_stmt|;
 comment|/* our hook */
-name|void
-modifier|*
-name|tcb_spare
-index|[
-literal|1
-index|]
-decl_stmt|;
 block|}
 struct|;
 end_struct
