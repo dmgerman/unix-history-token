@@ -7354,6 +7354,9 @@ name|struct
 name|vfs_state
 modifier|*
 name|vs
+parameter_list|,
+name|accmode_t
+name|accmode
 parameter_list|)
 block|{
 name|int
@@ -7370,6 +7373,8 @@ name|NULL
 decl_stmt|,
 modifier|*
 name|credanon
+init|=
+name|NULL
 decl_stmt|;
 name|memset
 argument_list|(
@@ -7421,6 +7426,14 @@ operator|->
 name|vs_mp
 argument_list|)
 expr_stmt|;
+comment|/* accmode == 0 means don't check, since it is an unlock. */
+if|if
+condition|(
+name|accmode
+operator|!=
+literal|0
+condition|)
+block|{
 name|error
 operator|=
 name|VFS_CHECKEXP
@@ -7482,6 +7495,7 @@ goto|goto
 name|out
 goto|;
 block|}
+block|}
 name|error
 operator|=
 name|VFS_FHTOVP
@@ -7516,6 +7530,13 @@ name|vs_vnlocked
 operator|=
 name|TRUE
 expr_stmt|;
+if|if
+condition|(
+name|accmode
+operator|!=
+literal|0
+condition|)
+block|{
 if|if
 condition|(
 operator|!
@@ -7567,7 +7588,33 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-comment|/* 	 * Check cred. 	 */
+comment|/* 		 * Check cred. 		 */
+name|error
+operator|=
+name|VOP_ACCESS
+argument_list|(
+name|vs
+operator|->
+name|vs_vp
+argument_list|,
+name|accmode
+argument_list|,
+name|cred
+argument_list|,
+name|curthread
+argument_list|)
+expr_stmt|;
+comment|/* 		 * If this failed and accmode != VWRITE, try again with 		 * VWRITE to maintain backwards compatibility with the 		 * old code that always used VWRITE. 		 */
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+operator|&&
+name|accmode
+operator|!=
+name|VWRITE
+condition|)
 name|error
 operator|=
 name|VOP_ACCESS
@@ -7590,6 +7637,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+block|}
 if|#
 directive|if
 name|__FreeBSD_version
@@ -7798,6 +7846,9 @@ name|struct
 name|flock
 name|fl
 decl_stmt|;
+name|accmode_t
+name|accmode
+decl_stmt|;
 name|memset
 argument_list|(
 name|result
@@ -7937,6 +7988,16 @@ goto|goto
 name|out
 goto|;
 block|}
+name|accmode
+operator|=
+name|argp
+operator|->
+name|exclusive
+condition|?
+name|VWRITE
+else|:
+name|VREAD
+expr_stmt|;
 name|error
 operator|=
 name|nlm_get_vfs_state
@@ -7950,6 +8011,8 @@ name|fh
 argument_list|,
 operator|&
 name|vs
+argument_list|,
+name|accmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -8260,6 +8323,9 @@ name|struct
 name|flock
 name|fl
 decl_stmt|;
+name|accmode_t
+name|accmode
+decl_stmt|;
 name|memset
 argument_list|(
 name|result
@@ -8436,6 +8502,16 @@ goto|goto
 name|out
 goto|;
 block|}
+name|accmode
+operator|=
+name|argp
+operator|->
+name|exclusive
+condition|?
+name|VWRITE
+else|:
+name|VREAD
+expr_stmt|;
 name|error
 operator|=
 name|nlm_get_vfs_state
@@ -8449,6 +8525,8 @@ name|fh
 argument_list|,
 operator|&
 name|vs
+argument_list|,
+name|accmode
 argument_list|)
 expr_stmt|;
 if|if
@@ -9388,6 +9466,11 @@ name|fh
 argument_list|,
 operator|&
 name|vs
+argument_list|,
+operator|(
+name|accmode_t
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -9832,6 +9915,11 @@ name|fh
 argument_list|,
 operator|&
 name|vs
+argument_list|,
+operator|(
+name|accmode_t
+operator|)
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
