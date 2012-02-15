@@ -18051,7 +18051,7 @@ name|if_capenable
 operator|&
 name|IFCAP_WOL
 operator|)
-operator|!=
+operator|==
 literal|0
 operator|&&
 operator|(
