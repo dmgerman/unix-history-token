@@ -16,12 +16,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/systm.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/ctype.h>
 end_include
 
@@ -41,6 +35,12 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/kthread.h>
 end_include
 
 begin_include
@@ -76,7 +76,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/queue.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/refcount.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/smp.h>
 end_include
 
 begin_include
@@ -94,37 +118,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/refcount.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/proc.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rwlock.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<sys/unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/kthread.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/smp.h>
 end_include
 
 begin_include
