@@ -553,6 +553,24 @@ end_function_decl
 
 begin_function_decl
 specifier|static
+name|int
+name|patmatch
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|cvtnum
@@ -6712,6 +6730,7 @@ comment|/*  * Returns true if the pattern matches the string.  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|patmatch
 parameter_list|(
