@@ -52,7 +52,7 @@ name|XenbusStateClosing
 init|=
 literal|5
 block|,
-comment|/*      * Closed: No connection exists between front and back end.      */
+comment|/*      * Closed: No connection exists between front and back end.      *      * For backend devices with the "online" attribute, the front can      * request a reconnect at any time.  To handle this transition      * gracefully, backend devices must reinitialize any XenStore data      * used to negotiate features with a peer before transitioning to      * the closed state.  When a reconnect request occurs, the      * XenBus backend support code will automatically transition the      * backend device from Closed to InitWait, kicking off the ring      * and feature negotiation process.      */
 name|XenbusStateClosed
 init|=
 literal|6

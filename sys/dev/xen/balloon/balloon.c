@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenfunc.h>
+file|<machine/xen/xenvar.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<machine/xen/xenvar.h>
+file|<machine/xen/xenfunc.h>
 end_include
 
 begin_include
@@ -578,24 +578,6 @@ expr_stmt|;
 return|return
 name|page
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|balloon_alarm
-parameter_list|(
-name|void
-modifier|*
-name|unused
-parameter_list|)
-block|{
-name|wakeup
-argument_list|(
-name|balloon_process
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1483,6 +1465,9 @@ init|;
 condition|;
 control|)
 block|{
+name|int
+name|sleep_time
+decl_stmt|;
 do|do
 block|{
 name|credit
@@ -1552,16 +1537,14 @@ name|bs
 operator|.
 name|current_pages
 condition|)
-name|timeout
-argument_list|(
-name|balloon_alarm
-argument_list|,
-name|NULL
-argument_list|,
-name|ticks
-operator|+
+name|sleep_time
+operator|=
 name|hz
-argument_list|)
+expr_stmt|;
+else|else
+name|sleep_time
+operator|=
+literal|0
 expr_stmt|;
 name|msleep
 argument_list|(
@@ -1574,8 +1557,7 @@ literal|0
 argument_list|,
 literal|"balloon"
 argument_list|,
-operator|-
-literal|1
+name|sleep_time
 argument_list|)
 expr_stmt|;
 block|}
@@ -1899,9 +1881,6 @@ argument_list|,
 literal|"balloon"
 argument_list|)
 expr_stmt|;
-comment|//	init_timer(&balloon_timer);
-comment|//	balloon_timer.data = 0;
-comment|//	balloon_timer.function = balloon_alarm;
 ifndef|#
 directive|ifndef
 name|XENHVM

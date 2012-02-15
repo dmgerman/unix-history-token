@@ -394,6 +394,15 @@ argument_list|,
 name|M_XENBUS
 argument_list|)
 expr_stmt|;
+name|ivars
+operator|->
+name|xd_otherend_path_len
+operator|=
+name|strlen
+argument_list|(
+name|otherend_path
+argument_list|)
+expr_stmt|;
 name|free
 argument_list|(
 name|otherend_path
@@ -468,7 +477,7 @@ name|DEVMETHOD
 argument_list|(
 name|device_resume
 argument_list|,
-name|bus_generic_resume
+name|xenbusb_resume
 argument_list|)
 block|,
 comment|/* Bus Interface */

@@ -19,12 +19,6 @@ begin_comment
 comment|/**  * \file xenbusb.h  *  * Datastructures and function declarations for use in implementing  * bus attachements (e.g. frontend and backend device busses) for XenBus.  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"xenbusb_if.h"
-end_include
-
 begin_comment
 comment|/**  * Enumeration of state flag values for the xbs_flags field of  * the xenbusb_softc structure.  */
 end_comment
@@ -50,7 +44,7 @@ begin_struct
 struct|struct
 name|xenbusb_softc
 block|{
-comment|/** 	 * XenStore watch used to monitor the subtree of the 	 * XenStore where devices for this bus attachment arrive	 	 * and depart. 	 * 	 * \note This field must be the first in the softc structure 	 *       so that a simple cast can be used to retrieve the 	 *	 softc from within a XenStore watch event callback. 	 */
+comment|/** 	 * XenStore watch used to monitor the subtree of the 	 * XenStore where devices for this bus attachment arrive	 	 * and depart. 	 */
 name|struct
 name|xs_watch
 name|xbs_device_watch
@@ -121,10 +115,15 @@ begin_struct
 struct|struct
 name|xenbus_device_ivars
 block|{
-comment|/** 	 * XenStore watch used to monitor the subtree of the 	 * XenStore where information about the otherend of 	 * the split Xen device this device instance represents. 	 * 	 * \note This field must be the first in the instance 	 *	 variable structure so that a simple cast can be 	 *	 used to retrieve ivar data from within a XenStore 	 *	 watch event callback. 	 */
+comment|/** 	 * XenStore watch used to monitor the subtree of the 	 * XenStore where information about the otherend of 	 * the split Xen device this device instance represents. 	 */
 name|struct
 name|xs_watch
 name|xd_otherend_watch
+decl_stmt|;
+comment|/** 	 * XenStore watch used to monitor the XenStore sub-tree 	 * associated with this device.  This watch will fire 	 * for modifications that we make from our domain as 	 * well as for those made by the control domain. 	 */
+name|struct
+name|xs_watch
+name|xd_local_watch
 decl_stmt|;
 comment|/** Sleepable lock used to protect instance data. */
 name|struct
@@ -144,6 +143,10 @@ name|char
 modifier|*
 name|xd_node
 decl_stmt|;
+comment|/** The length of xd_node.  */
+name|int
+name|xd_node_len
+decl_stmt|;
 comment|/** XenBus device type ("vbd", "vif", etc.). */
 name|char
 modifier|*
@@ -162,6 +165,10 @@ comment|/** 	 * The path to the subtree of the XenStore where information 	 * ab
 name|char
 modifier|*
 name|xd_otherend_path
+decl_stmt|;
+comment|/** The length of xd_otherend_path.  */
+name|int
+name|xd_otherend_path_len
 decl_stmt|;
 block|}
 struct|;
@@ -286,6 +293,49 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/**  * \brief Common XenBus method implementing responses to peer state changes.  *   * \param bus       The XenBus bus parent of child.  * \param child     The XenBus child whose peer stat has changed.  * \param state     The current state of the peer.  */
+end_comment
+
+begin_function_decl
+name|void
+name|xenbusb_otherend_changed
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+name|enum
+name|xenbus_state
+name|state
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/**  * \brief Common XenBus method implementing responses to local XenStore changes.  *   * \param bus    The XenBus bus parent of child.  * \param child  The XenBus child whose peer stat has changed.  * \param path   The tree relative sub-path to the modified node.  The empty  *               string indicates the root of the tree was destroyed.  */
+end_comment
+
+begin_function_decl
+name|void
+name|xenbusb_localend_changed
+parameter_list|(
+name|device_t
+name|bus
+parameter_list|,
+name|device_t
+name|child
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/**  * \brief Attempt to add a XenBus device instance to this XenBus bus.  *  * \param dev   The NewBus device representing this XenBus bus.  * \param type  The device type being added (e.g. "vbd", "vif").  * \param id	The device ID for this device.  *  * \return  On success, 0. Otherwise an errno value indicating the  *          type of failure.  Failure indicates that either the  *          path to this device no longer exists or insufficient  *          information exists in the XenStore to create a new  *          device.  *  * If successful, this routine will add a device_t with instance  * variable storage to the NewBus device topology.  Probe/Attach  * processing is not performed by this routine, but must be scheduled  * via the xbs_probe_children task.  This separation of responsibilities  * is required to avoid hanging up the XenStore event delivery thread  * with our probe/attach work in the event a device is added via  * a callback from the XenStore.  */
 end_comment
 
@@ -308,6 +358,12 @@ name|id
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_include
+include|#
+directive|include
+file|"xenbusb_if.h"
+end_include
 
 begin_endif
 endif|#

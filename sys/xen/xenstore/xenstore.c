@@ -1246,7 +1246,7 @@ name|PDROP
 argument_list|,
 literal|"xbread"
 argument_list|,
-comment|/*timout*/
+comment|/*timeout*/
 literal|0
 argument_list|)
 expr_stmt|;
@@ -1845,7 +1845,7 @@ name|int
 name|request_reply_error
 parameter_list|)
 block|{
-comment|/* 	 * The count of transactions drops if we attempted 	 * to end a transaction (even if that attempt fails 	 * in error), we receive a transaction end acknowledgement 	 * or if our attempt to begin a transactionfails. 	 */
+comment|/* 	 * The count of transactions drops if we attempted 	 * to end a transaction (even if that attempt fails 	 * in error), we receive a transaction end acknowledgement, 	 * or if our attempt to begin a transaction fails. 	 */
 if|if
 condition|(
 name|request_msg_type
@@ -3324,17 +3324,12 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-comment|/* 	 * We are either operating within a PV kernel or being probed 	 * as the child of the successfully attached xenpci device. 	 * Thus we are in a Xen environment and there will be a XenStore. 	 * Uncontitionally return success. 	 */
+comment|/* 	 * We are either operating within a PV kernel or being probed 	 * as the child of the successfully attached xenpci device. 	 * Thus we are in a Xen environment and there will be a XenStore. 	 * Unconditionally return success. 	 */
 name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
 literal|"XenStore"
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|"xs_probe: Probe retuns 0\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3712,9 +3707,30 @@ name|xs_suspend
 parameter_list|(
 name|device_t
 name|dev
-name|__unused
 parameter_list|)
 block|{
+name|int
+name|error
+decl_stmt|;
+comment|/* Suspend child Xen devices. */
+name|error
+operator|=
+name|bus_generic_suspend
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|sx_xlock
 argument_list|(
 operator|&
@@ -3820,6 +3836,12 @@ operator|&
 name|xs
 operator|.
 name|suspend_mutex
+argument_list|)
+expr_stmt|;
+comment|/* Resume child Xen devices. */
+name|bus_generic_resume
+argument_list|(
+name|dev
 argument_list|)
 expr_stmt|;
 return|return

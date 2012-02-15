@@ -7289,6 +7289,22 @@ decl_stmt|;
 if|if
 condition|(
 name|m
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"mbuf: %p\n"
+argument_list|,
+name|m
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|m
 operator|->
 name|m_flags
 operator|&

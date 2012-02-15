@@ -340,6 +340,9 @@ parameter_list|,
 name|xs_watch_cb_t
 modifier|*
 name|callback
+parameter_list|,
+name|uintptr_t
+name|callback_data
 parameter_list|)
 block|{
 name|int
@@ -356,6 +359,12 @@ operator|->
 name|callback
 operator|=
 name|callback
+expr_stmt|;
+name|watch
+operator|->
+name|callback_data
+operator|=
+name|callback_data
 expr_stmt|;
 name|error
 operator|=
@@ -426,6 +435,9 @@ parameter_list|,
 name|xs_watch_cb_t
 modifier|*
 name|callback
+parameter_list|,
+name|uintptr_t
+name|callback_data
 parameter_list|)
 block|{
 name|int
@@ -488,6 +500,8 @@ argument_list|,
 name|watch
 argument_list|,
 name|callback
+argument_list|,
+name|callback_data
 argument_list|)
 expr_stmt|;
 if|if
@@ -1168,6 +1182,21 @@ name|value
 operator|)
 return|;
 block|}
+end_function
+
+begin_function
+name|void
+name|xenbus_localend_changed
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|path
+parameter_list|)
+block|{ }
 end_function
 
 end_unit

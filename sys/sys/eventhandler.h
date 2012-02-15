@@ -515,6 +515,44 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/* Power state change events */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|power_change_fn
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|power_resume
+argument_list|,
+name|power_change_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|EVENTHANDLER_DECLARE
+argument_list|(
+name|power_suspend
+argument_list|,
+name|power_change_fn
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/* Low memory event */
 end_comment
 

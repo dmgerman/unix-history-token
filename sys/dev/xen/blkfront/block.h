@@ -332,9 +332,6 @@ comment|/* Waiting for resources */
 name|int
 name|vdevice
 decl_stmt|;
-name|blkif_vdev_t
-name|handle
-decl_stmt|;
 name|int
 name|connected
 decl_stmt|;

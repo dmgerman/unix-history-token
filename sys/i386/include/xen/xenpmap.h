@@ -15,6 +15,15 @@ directive|define
 name|_XEN_XENPMAP_H_
 end_define
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|XEN
+argument_list|)
+end_if
+
 begin_function_decl
 name|void
 name|_xen_queue_pt_update
@@ -898,6 +907,15 @@ name|INVALID_P2M_ENTRY
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !XEN */
+end_comment
 
 begin_endif
 endif|#
