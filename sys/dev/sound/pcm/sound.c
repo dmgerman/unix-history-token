@@ -6698,9 +6698,6 @@ break|break;
 case|case
 name|MOD_UNLOAD
 case|:
-case|case
-name|MOD_SHUTDOWN
-case|:
 name|ret
 operator|=
 name|sndstat_acquire
@@ -6732,6 +6729,10 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+break|break;
+case|case
+name|MOD_SHUTDOWN
+case|:
 break|break;
 default|default:
 name|ret
