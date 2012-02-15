@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap support for if_em.  *  * For structure and details on the individual functions please see  * ixgbe_netmap.h  */
+comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap support for if_em.c  *  * For structure and details on the individual functions please see  * ixgbe_netmap.h  */
 end_comment
 
 begin_include
@@ -220,10 +220,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * wrapper to export locks to the generic code  */
-end_comment
 
 begin_function
 specifier|static
@@ -917,23 +913,14 @@ block|{
 comment|/* we have packets to send */
 name|l
 operator|=
+name|netmap_tidx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|j
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-if|if
-condition|(
-name|l
-operator|<
-literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
+argument_list|)
 expr_stmt|;
 while|while
 condition|(
@@ -1496,37 +1483,14 @@ name|next_to_check
 expr_stmt|;
 name|j
 operator|=
+name|netmap_ridx_n2k
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|l
-operator|+
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-comment|/* XXX here nkr_hwofs can be negative so must check for j< 0 */
-if|if
-condition|(
-name|j
-operator|<
-literal|0
-condition|)
-name|j
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|j
-operator|>
-name|lim
-condition|)
-name|j
-operator|-=
-name|lim
-operator|+
-literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1661,6 +1625,7 @@ name|kring
 operator|->
 name|nr_hwcur
 expr_stmt|;
+comment|/* netmap ring index */
 if|if
 condition|(
 name|j
@@ -1675,39 +1640,16 @@ literal|0
 expr_stmt|;
 name|l
 operator|=
+name|netmap_ridx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|j
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
+argument_list|)
 expr_stmt|;
 comment|/* NIC ring index */
-comment|/* here nkr_hwofs can be negative so check for l> lim */
-if|if
-condition|(
-name|l
-operator|<
-literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|l
-operator|>
-name|lim
-condition|)
-name|l
-operator|-=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
 while|while
 condition|(
 name|j
