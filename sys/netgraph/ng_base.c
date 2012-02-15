@@ -16,13 +16,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<sys/ctype.h>
+file|<sys/systm.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<sys/errno.h>
+file|<sys/ctype.h>
 end_include
 
 begin_include
@@ -113,12 +113,6 @@ begin_include
 include|#
 directive|include
 file|<sys/syslog.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_include
