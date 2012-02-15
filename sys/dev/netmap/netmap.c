@@ -486,7 +486,7 @@ begin_define
 define|#
 directive|define
 name|NETMAP_MEMORY_SIZE
-value|(64 * 1024 * PAGE_SIZE)
+value|(64 * 1024 * 4096)
 end_define
 
 begin_function_decl
