@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap changes for if_em.  *  * For structure and details on the individual functions please see  * ixgbe_netmap.h  */
+comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap support for if_em.  *  * For structure and details on the individual functions please see  * ixgbe_netmap.h  */
 end_comment
 
 begin_include
@@ -714,7 +714,7 @@ else|else
 block|{
 name|fail
 label|:
-comment|/* restore if_transmit */
+comment|/* return to non-netmap mode */
 name|ifp
 operator|->
 name|if_transmit
@@ -1242,7 +1242,7 @@ block|{
 name|int
 name|delta
 decl_stmt|;
-comment|/* record completed transmissions using THD. */
+comment|/* record completed transmissions using TDH */
 name|l
 operator|=
 name|E1000_READ_REG
@@ -1267,7 +1267,7 @@ operator|->
 name|nkr_num_slots
 condition|)
 block|{
-comment|/* XXX can happen */
+comment|/* XXX can it happen ? */
 name|D
 argument_list|(
 literal|"TDH wrap %d"
@@ -1502,7 +1502,7 @@ name|kring
 operator|->
 name|nkr_hwofs
 expr_stmt|;
-comment|/* here nkr_hwofs can be negative so must check for j< 0 */
+comment|/* XXX here nkr_hwofs can be negative so must check for j< 0 */
 if|if
 condition|(
 name|j
@@ -1971,6 +1971,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 
