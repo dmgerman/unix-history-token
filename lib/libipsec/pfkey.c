@@ -2766,7 +2766,7 @@ if|if
 condition|(
 name|satype
 operator|==
-name|PF_UNSPEC
+name|SADB_SATYPE_UNSPEC
 condition|)
 block|{
 for|for
