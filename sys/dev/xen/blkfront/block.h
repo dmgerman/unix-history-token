@@ -53,7 +53,7 @@ define|#
 directive|define
 name|XBF_MAX_SEGMENTS_PER_REQUEST
 define|\
-value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,	\ 	     (XBF_MAX_REQUEST_SIZE / PAGE_SIZE) + 1))
+value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,				\ 	     (XBF_MAX_REQUEST_SIZE / PAGE_SIZE) + 1))
 end_define
 
 begin_comment
