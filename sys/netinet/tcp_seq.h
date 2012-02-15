@@ -157,15 +157,93 @@ define|\
 value|(tp)->snd_una = (tp)->snd_nxt = (tp)->snd_max = (tp)->snd_up = \ 	    (tp)->snd_recover = (tp)->iss
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_comment
+comment|/*  * Clock macros for RFC 1323 timestamps.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TCP_TS_TO_TICKS
+parameter_list|(
+name|_t
+parameter_list|)
+value|((_t) * hz / 1000)
+end_define
+
+begin_comment
+comment|/* Timestamp wrap-around time, 24 days. */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|TCP_PAWS_IDLE
-value|(24 * 24 * 60 * 60 * hz)
+value|(24 * 24 * 60 * 60 * 1000)
 end_define
 
 begin_comment
-comment|/* timestamp wrap-around time */
+comment|/*  * tcp_ts_getticks() in ms, should be 1ms< x< 1000ms according to RFC 1323.  * We always use 1ms granularity independent of hz.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline
+name|u_int
+name|tcp_ts_getticks
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+name|struct
+name|timeval
+name|tv
+decl_stmt|;
+name|u_long
+name|ms
+decl_stmt|;
+comment|/* 	 * getmicrouptime() should be good enough for any 1-1000ms granularity. 	 * Do not use getmicrotime() here as it might break nfsroot/tcp. 	 */
+name|getmicrouptime
+argument_list|(
+operator|&
+name|tv
+argument_list|)
+expr_stmt|;
+name|ms
+operator|=
+name|tv
+operator|.
+name|tv_sec
+operator|*
+literal|1000
+operator|+
+name|tv
+operator|.
+name|tv_usec
+operator|/
+literal|1000
+expr_stmt|;
+return|return
+operator|(
+name|ms
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
 end_comment
 
 begin_endif
