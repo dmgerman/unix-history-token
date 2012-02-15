@@ -252,6 +252,7 @@ specifier|static
 name|int
 name|doselect
 parameter_list|(
+specifier|const
 name|struct
 name|dirent
 modifier|*
@@ -1524,10 +1525,6 @@ if|if
 condition|(
 name|msg
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 operator|(
@@ -1832,6 +1829,7 @@ specifier|static
 name|int
 name|doselect
 parameter_list|(
+specifier|const
 name|struct
 name|dirent
 modifier|*
