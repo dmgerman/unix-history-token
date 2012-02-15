@@ -5049,7 +5049,7 @@ name|p
 operator|=
 name|ia
 operator|->
-name|ia_addr
+name|ia_dstaddr
 operator|.
 name|sin_addr
 expr_stmt|;
