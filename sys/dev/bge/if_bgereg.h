@@ -15182,6 +15182,9 @@ name|int
 name|bge_forced_udpcsum
 decl_stmt|;
 name|int
+name|bge_msi
+decl_stmt|;
+name|int
 name|bge_csum_features
 decl_stmt|;
 name|struct
