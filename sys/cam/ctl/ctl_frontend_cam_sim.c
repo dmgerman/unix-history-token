@@ -1024,6 +1024,14 @@ operator|!=
 name|CAM_SUCCESS
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: error registering SIM\n"
@@ -1066,6 +1074,14 @@ operator|!=
 name|CAM_REQ_CMP
 condition|)
 block|{
+name|mtx_unlock
+argument_list|(
+operator|&
+name|softc
+operator|->
+name|lock
+argument_list|)
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"%s: error creating path\n"
@@ -1188,14 +1204,6 @@ argument_list|(
 name|softc
 operator|->
 name|devq
-argument_list|)
-expr_stmt|;
-name|mtx_unlock
-argument_list|(
-operator|&
-name|softc
-operator|->
-name|lock
 argument_list|)
 expr_stmt|;
 return|return
