@@ -17292,9 +17292,6 @@ block|{
 name|int
 name|prelim_sync_period
 decl_stmt|;
-name|u_int
-name|freq
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -17358,15 +17355,6 @@ operator|=
 name|scsi_calc_syncparam
 argument_list|(
 name|prelim_sync_period
-argument_list|)
-expr_stmt|;
-name|freq
-operator|=
-name|scsi_calc_syncsrate
-argument_list|(
-name|spi
-operator|->
-name|sync_period
 argument_list|)
 expr_stmt|;
 name|didsettings
@@ -20031,8 +20019,6 @@ name|RPL_LUNDATA_ATYP_EXTLUN
 case|:
 block|{
 name|int
-name|field_len
-decl_stmt|,
 name|field_len_code
 decl_stmt|,
 name|eam_code
@@ -20072,12 +20058,6 @@ name|RPL_LUNDATA_EXT_LEN_MASK
 operator|)
 operator|>>
 literal|4
-expr_stmt|;
-name|field_len
-operator|=
-name|field_len_code
-operator|*
-literal|2
 expr_stmt|;
 if|if
 condition|(
