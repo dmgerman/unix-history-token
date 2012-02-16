@@ -12042,9 +12042,9 @@ name|VNET_SYSUNINIT
 argument_list|(
 name|vnet_netgraph_uninit
 argument_list|,
-name|SI_SUB_PROTO_IFATTACHDOMAIN
+name|SI_SUB_NETGRAPH
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_FIRST
 argument_list|,
 name|vnet_netgraph_uninit
 argument_list|,
@@ -12355,7 +12355,7 @@ name|netgraph_mod
 argument_list|,
 name|SI_SUB_NETGRAPH
 argument_list|,
-name|SI_ORDER_MIDDLE
+name|SI_ORDER_FIRST
 argument_list|)
 expr_stmt|;
 end_expr_stmt
