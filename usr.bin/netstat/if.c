@@ -805,9 +805,6 @@ name|u_long
 name|ifaddrfound
 decl_stmt|;
 name|u_long
-name|ifnetfound
-decl_stmt|;
-name|u_long
 name|opackets
 decl_stmt|;
 name|u_long
@@ -1094,10 +1091,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ifnetfound
-operator|=
-name|ifnetaddr
-expr_stmt|;
 if|if
 condition|(
 name|kread

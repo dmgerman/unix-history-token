@@ -1414,10 +1414,6 @@ name|long
 name|fnum
 decl_stmt|;
 specifier|static
-name|int
-name|defname
-decl_stmt|;
-specifier|static
 name|char
 modifier|*
 name|fpnt
@@ -1453,10 +1449,6 @@ name|fname
 operator|+
 literal|1
 expr_stmt|;
-name|defname
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1468,10 +1460,6 @@ name|strlen
 argument_list|(
 name|fname
 argument_list|)
-expr_stmt|;
-name|defname
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|ofd
