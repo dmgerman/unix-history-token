@@ -1983,28 +1983,6 @@ block|}
 block|}
 block|}
 block|}
-name|void
-name|MCReadCat
-parameter_list|(
-name|int
-name|fd
-parameter_list|)
-block|{
-name|fd
-operator|=
-literal|0
-expr_stmt|;
-if|#
-directive|if
-literal|0
-block|MCHeaderT mcHead; 	MCMsgT  mcMsg; 	MCSetT  mcSet; 	msgT   *msg; 	setT   *set; 	int     i; 	char   *data;
-comment|/* XXX init sethead? */
-block|if (read(fd,&mcHead, sizeof(mcHead)) != sizeof(mcHead)) 		CORRUPT(); 	if (strncmp(mcHead.magic, MCMagic, MCMagicLen) != 0) 		CORRUPT(); 	if (mcHead.majorVer != MCMajorVer) 		error("unrecognized catalog version"); 	if ((mcHead.flags& MCGetByteOrder()) == 0) 		error("wrong byte order");  	if (lseek(fd, mcHead.firstSet, SEEK_SET) == -1) 		CORRUPT();  	for (;;) { 		if (read(fd,&mcSet, sizeof(mcSet)) != sizeof(mcSet)) 			CORRUPT(); 		if (mcSet.invalid) 			continue;  		set = xmalloc(sizeof(setT)); 		memset(set, '\0', sizeof(*set)); 		if (cat->first) { 			cat->last->next = set; 			set->prev = cat->last; 			cat->last = set; 		} else 			cat->first = cat->last = set;  		set->setId = mcSet.setId;
-comment|/* Get the data */
-block|if (mcSet.dataLen) { 			data = xmalloc(mcSet.dataLen); 			if (lseek(fd, mcSet.data.off, SEEK_SET) == -1) 				CORRUPT(); 			if (read(fd, data, mcSet.dataLen) != mcSet.dataLen) 				CORRUPT(); 			if (lseek(fd, mcSet.u.firstMsg, SEEK_SET) == -1) 				CORRUPT();  			for (i = 0; i< mcSet.numMsgs; ++i) { 				if (read(fd,&mcMsg, sizeof(mcMsg)) != sizeof(mcMsg)) 					CORRUPT(); 				if (mcMsg.invalid) { 					--i; 					continue; 				} 				msg = xmalloc(sizeof(msgT)); 				memset(msg, '\0', sizeof(*msg)); 				if (set->first) { 					set->last->next = msg; 					msg->prev = set->last; 					set->last = msg; 				} else 					set->first = set->last = msg;  				msg->msgId = mcMsg.msgId; 				msg->str = xstrdup((char *) (data + mcMsg.msg.off)); 			} 			free(data); 		} 		if (!mcSet.nextSet) 			break; 		if (lseek(fd, mcSet.nextSet, SEEK_SET) == -1) 			CORRUPT(); 	}
-endif|#
-directive|endif
-block|}
 comment|/*  * Write message catalog.  *  * The message catalog is first converted from its internal to its  * external representation in a chunk of memory allocated for this  * purpose.  Then the completed catalog is written.  This approach  * avoids additional housekeeping variables and/or a lot of seeks  * that would otherwise be required.  */
 name|void
 name|MCWriteCat
