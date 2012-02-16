@@ -1411,11 +1411,33 @@ begin_define
 define|#
 directive|define
 name|ND_OPT_ROUTE_INFO
-value|200
+value|24
 end_define
 
 begin_comment
-comment|/* draft-ietf-ipngwg-router-preference, not officially assigned yet */
+comment|/* RFC 4191 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_OPT_RDNSS
+value|25
+end_define
+
+begin_comment
+comment|/* RFC 6016 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ND_OPT_DNSSL
+value|31
+end_define
+
+begin_comment
+comment|/* RFC 6016 */
 end_comment
 
 begin_struct
@@ -1533,6 +1555,52 @@ name|u_int32_t
 name|nd_opt_rti_lifetime
 decl_stmt|;
 comment|/* prefix follows */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nd_opt_rdnss
+block|{
+comment|/* RDNSS option (RFC 6106) */
+name|u_int8_t
+name|nd_opt_rdnss_type
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_rdnss_len
+decl_stmt|;
+name|u_int16_t
+name|nd_opt_rdnss_reserved
+decl_stmt|;
+name|u_int32_t
+name|nd_opt_rdnss_lifetime
+decl_stmt|;
+comment|/* followed by list of recursive DNS servers */
+block|}
+name|__packed
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|nd_opt_dnssl
+block|{
+comment|/* DNSSL option (RFC 6106) */
+name|u_int8_t
+name|nd_opt_dnssl_type
+decl_stmt|;
+name|u_int8_t
+name|nd_opt_dnssl_len
+decl_stmt|;
+name|u_int16_t
+name|nd_opt_dnssl_reserved
+decl_stmt|;
+name|u_int32_t
+name|nd_opt_dnssl_lifetime
+decl_stmt|;
+comment|/* followed by list of DNS search domains */
 block|}
 name|__packed
 struct|;
