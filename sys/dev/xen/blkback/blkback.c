@@ -9805,7 +9805,7 @@ name|dev
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Front-end specificed ring-pages of %u "
+literal|"Front-end specified ring-pages of %u "
 literal|"exceeds backend limit of %zu.  "
 literal|"Unable to connect."
 argument_list|,
@@ -9842,7 +9842,7 @@ name|dev
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Front-end specificed max_requests of %u "
+literal|"Front-end specified max_requests of %u "
 literal|"exceeds backend limit of %u.  "
 literal|"Unable to connect."
 argument_list|,
@@ -9877,7 +9877,7 @@ name|dev
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Front-end specificed max_requests_segments "
+literal|"Front-end specified max_requests_segments "
 literal|"of %u exceeds backend limit of %u.  "
 literal|"Unable to connect."
 argument_list|,
@@ -9912,7 +9912,7 @@ name|dev
 argument_list|,
 name|EINVAL
 argument_list|,
-literal|"Front-end specificed max_request_size "
+literal|"Front-end specified max_request_size "
 literal|"of %u exceeds backend limit of %u.  "
 literal|"Unable to connect."
 argument_list|,
