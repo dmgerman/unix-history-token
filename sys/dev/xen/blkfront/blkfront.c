@@ -1333,8 +1333,6 @@ operator|=
 name|sc
 operator|->
 name|max_request_size
-operator|-
-name|PAGE_SIZE
 expr_stmt|;
 name|sc
 operator|->
@@ -2660,15 +2658,12 @@ name|sc
 operator|->
 name|max_request_size
 operator|=
-operator|(
+name|XBF_SEGS_TO_SIZE
+argument_list|(
 name|sc
 operator|->
 name|max_request_segments
-operator|-
-literal|1
-operator|)
-operator|*
-name|PAGE_SIZE
+argument_list|)
 expr_stmt|;
 name|sc
 operator|->
@@ -2976,8 +2971,8 @@ name|sc
 operator|->
 name|xb_dev
 argument_list|,
-literal|"Back-end specificed "
-literal|"max_requests_segments of %u limited to "
+literal|"Back-end specified "
+literal|"max_request_segments of %u limited to "
 literal|"front-end limit of %u.\n"
 argument_list|,
 name|sc
@@ -3009,7 +3004,7 @@ name|sc
 operator|->
 name|xb_dev
 argument_list|,
-literal|"Back-end specificed "
+literal|"Back-end specified "
 literal|"max_request_size of %u limited to front-end "
 literal|"limit of %u.\n"
 argument_list|,
@@ -3025,6 +3020,54 @@ operator|->
 name|max_request_size
 operator|=
 name|XBF_MAX_REQUEST_SIZE
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|max_request_size
+operator|>
+name|XBF_SEGS_TO_SIZE
+argument_list|(
+name|sc
+operator|->
+name|max_request_segments
+argument_list|)
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|xb_dev
+argument_list|,
+literal|"Back-end specified "
+literal|"max_request_size of %u limited to front-end "
+literal|"limit of %u.  (Too few segments.)\n"
+argument_list|,
+name|sc
+operator|->
+name|max_request_size
+argument_list|,
+name|XBF_SEGS_TO_SIZE
+argument_list|(
+name|sc
+operator|->
+name|max_request_segments
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|sc
+operator|->
+name|max_request_size
+operator|=
+name|XBF_SEGS_TO_SIZE
+argument_list|(
+name|sc
+operator|->
+name|max_request_segments
+argument_list|)
 expr_stmt|;
 block|}
 name|sc
