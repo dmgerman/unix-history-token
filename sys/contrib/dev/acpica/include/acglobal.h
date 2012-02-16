@@ -260,6 +260,10 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* DEFINE_ACPI_GLOBALS */
+end_comment
+
+begin_comment
 comment|/* Do not disassemble buffers to resource descriptors */
 end_comment
 
@@ -290,6 +294,15 @@ name|AcpiGbl_RootTableList
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
 begin_decl_stmt
 name|ACPI_EXTERN
 name|ACPI_TABLE_FACS
@@ -297,6 +310,15 @@ modifier|*
 name|AcpiGbl_FACS
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_REDUCED_HARDWARE */
+end_comment
 
 begin_comment
 comment|/* These addresses are calculated from the FADT Event Block addresses */
@@ -1129,6 +1151,15 @@ begin_comment
 comment|/*****************************************************************************  *  * Event and GPE globals  *  ****************************************************************************/
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
 begin_decl_stmt
 name|ACPI_EXTERN
 name|UINT8
@@ -1189,6 +1220,15 @@ name|ACPI_NUM_FIXED_EVENTS
 index|]
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_REDUCED_HARDWARE */
+end_comment
 
 begin_comment
 comment|/*****************************************************************************  *  * Debug support  *  ****************************************************************************/

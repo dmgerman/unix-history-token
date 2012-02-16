@@ -1653,8 +1653,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_NOTIFY_SHUTDOWN_REQUEST
+value|(UINT8) 0x0C
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_NOTIFY_MAX
-value|0x0B
+value|0x0C
 end_define
 
 begin_comment
@@ -2271,7 +2278,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_MAX_SYS_NOTIFY
-value|0x7f
+value|0x7F
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MAX_DEVICE_SPECIFIC_NOTIFY
+value|0xBF
 end_define
 
 begin_comment
@@ -2604,6 +2618,40 @@ directive|define
 name|ACPI_DISABLE_EVENT
 value|0
 end_define
+
+begin_comment
+comment|/* Sleep function dispatch */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|ACPI_STATUS
+function_decl|(
+modifier|*
+name|ACPI_SLEEP_FUNCTION
+function_decl|)
+parameter_list|(
+name|UINT8
+name|SleepState
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_sleep_functions
+block|{
+name|ACPI_SLEEP_FUNCTION
+name|LegacyFunction
+decl_stmt|;
+name|ACPI_SLEEP_FUNCTION
+name|ExtendedFunction
+decl_stmt|;
+block|}
+name|ACPI_SLEEP_FUNCTIONS
+typedef|;
+end_typedef
 
 begin_comment
 comment|/*  * External ACPI object definition  */

@@ -233,23 +233,6 @@ end_function
 
 begin_function
 name|ACPI_STATUS
-name|AcpiEvDeleteGpeBlock
-parameter_list|(
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-parameter_list|)
-block|{
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
-end_function
-
-begin_function
-name|ACPI_STATUS
 name|AcpiEvQueueNotifyRequest
 parameter_list|(
 name|ACPI_NAMESPACE_NODE
@@ -285,6 +268,32 @@ return|;
 block|}
 end_function
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
+begin_function
+name|ACPI_STATUS
+name|AcpiEvDeleteGpeBlock
+parameter_list|(
+name|ACPI_GPE_BLOCK_INFO
+modifier|*
+name|GpeBlock
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
+block|}
+end_function
+
 begin_function
 name|ACPI_STATUS
 name|AcpiEvAcquireGlobalLock
@@ -315,6 +324,15 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_REDUCED_HARDWARE */
+end_comment
 
 begin_function
 name|ACPI_STATUS

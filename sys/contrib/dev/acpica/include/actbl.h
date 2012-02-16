@@ -1142,6 +1142,38 @@ enum|;
 end_enum
 
 begin_comment
+comment|/* Values for SleepStatus and SleepControl registers (V5 FADT) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_WAKE_STATUS
+value|0x80
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_SLEEP_TYPE_MASK
+value|0x1C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_SLEEP_TYPE_POSITION
+value|0x02
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_X_SLEEP_ENABLE
+value|0x20
+end_define
+
+begin_comment
 comment|/* Reset to default packing */
 end_comment
 

@@ -173,6 +173,25 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|ACPI_STATUS
+name|AcpiOsPhysicalTableOverride
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|ExistingTable
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+modifier|*
+name|NewAddress
+parameter_list|,
+name|UINT32
+modifier|*
+name|NewTableLength
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Spinlock primitives  */
 end_comment
@@ -631,7 +650,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|UINT32
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -648,7 +667,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|UINT32
+name|UINT64
 name|Value
 parameter_list|,
 name|UINT32

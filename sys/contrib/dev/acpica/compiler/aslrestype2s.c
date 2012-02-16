@@ -282,7 +282,7 @@ name|ActualLength
 init|=
 literal|0
 decl_stmt|;
-comment|/* VendorData field is always optional */
+comment|/* Vendor Data field is always optional */
 if|if
 condition|(
 name|InitializerOp
@@ -966,7 +966,7 @@ break|break;
 case|case
 literal|4
 case|:
-comment|/* DebounceTimeout [WORD] (_DBT) */
+comment|/* Debounce Timeout [WORD] (_DBT) */
 name|Descriptor
 operator|->
 name|Gpio
@@ -1084,7 +1084,7 @@ break|break;
 case|case
 literal|8
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -1589,7 +1589,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* DebounceTimeout [WORD] (_DBT) */
+comment|/* Debounce Timeout [WORD] (_DBT) */
 name|Descriptor
 operator|->
 name|Gpio
@@ -1786,7 +1786,7 @@ break|break;
 case|case
 literal|8
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -2251,7 +2251,7 @@ break|break;
 case|case
 literal|2
 case|:
-comment|/* ConnectionSpeed [DWORD] (_SPE) */
+comment|/* Connection Speed [DWORD] (_SPE) */
 name|Descriptor
 operator|->
 name|I2cSerialBus
@@ -2289,7 +2289,7 @@ break|break;
 case|case
 literal|3
 case|:
-comment|/* Addresssing Mode [Flag] (_MOD) */
+comment|/* Addressing Mode [Flag] (_MOD) */
 name|RsSetFlagBits16
 argument_list|(
 operator|&
@@ -2408,7 +2408,7 @@ break|break;
 case|case
 literal|7
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -2885,7 +2885,7 @@ break|break;
 case|case
 literal|5
 case|:
-comment|/* ConnectionSpeed [DWORD] (_SPE) */
+comment|/* Connection Speed [DWORD] (_SPE) */
 name|Descriptor
 operator|->
 name|SpiSerialBus
@@ -3079,7 +3079,7 @@ break|break;
 case|case
 literal|11
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op
@@ -3363,7 +3363,7 @@ block|{
 case|case
 literal|0
 case|:
-comment|/* ConnectionSpeed (Baud Rate) [DWORD] (_SPE) */
+comment|/* Connection Speed (Baud Rate) [DWORD] (_SPE) */
 name|Descriptor
 operator|->
 name|UartSerialBus
@@ -3814,7 +3814,7 @@ break|break;
 case|case
 literal|12
 case|:
-comment|/* ResourceTag (Descriptor Name) */
+comment|/* Resource Tag (Descriptor Name) */
 name|UtAttachNamepathToOwner
 argument_list|(
 name|Op

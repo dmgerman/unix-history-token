@@ -288,8 +288,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|AE_NOT_CONFIGURED
+value|(ACPI_STATUS) (0x001C | AE_CODE_ENVIRONMENTAL)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AE_CODE_ENV_MAX
-value|0x001B
+value|0x001C
 end_define
 
 begin_comment
@@ -833,6 +840,8 @@ block|,
 literal|"AE_NO_HANDLER"
 block|,
 literal|"AE_OWNER_ID_LIMIT"
+block|,
+literal|"AE_NOT_CONFIGURED"
 block|}
 decl_stmt|;
 end_decl_stmt

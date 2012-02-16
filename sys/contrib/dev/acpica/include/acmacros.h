@@ -2115,6 +2115,45 @@ begin_comment
 comment|/* ACPI_DEBUG_OUTPUT */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_OPTIONAL_FUNCTION
+parameter_list|(
+name|addr
+parameter_list|)
+value|addr
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_OPTIONAL_FUNCTION
+parameter_list|(
+name|addr
+parameter_list|)
+value|NULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Some code only gets executed when the debugger is built in.  * Note that this is entirely independent of whether the  * DEBUG_PRINT stuff (set by ACPI_DEBUG_OUTPUT) is on, or not.  */
 end_comment
