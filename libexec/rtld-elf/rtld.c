@@ -4452,6 +4452,13 @@ argument_list|,
 name|msg
 argument_list|)
 expr_stmt|;
+name|rtld_fdputchar
+argument_list|(
+name|STDERR_FILENO
+argument_list|,
+literal|'\n'
+argument_list|)
+expr_stmt|;
 name|_exit
 argument_list|(
 literal|1
