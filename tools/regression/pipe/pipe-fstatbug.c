@@ -53,6 +53,8 @@ name|int
 name|error
 decl_stmt|,
 name|successes
+init|=
+literal|0
 decl_stmt|;
 name|struct
 name|stat
