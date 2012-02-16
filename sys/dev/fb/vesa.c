@@ -6596,11 +6596,6 @@ name|V_INFO_LINEAR
 expr_stmt|;
 if|if
 condition|(
-name|vesa_bios_set_mode
-argument_list|(
-name|mode
-operator||
-operator|(
 operator|(
 name|info
 operator|.
@@ -6608,11 +6603,18 @@ name|vi_flags
 operator|&
 name|V_INFO_LINEAR
 operator|)
-condition|?
-literal|0x4000
-else|:
+operator|!=
 literal|0
-operator|)
+condition|)
+name|mode
+operator||=
+literal|0x4000
+expr_stmt|;
+if|if
+condition|(
+name|vesa_bios_set_mode
+argument_list|(
+name|mode
 argument_list|)
 condition|)
 return|return
@@ -6705,7 +6707,10 @@ operator|->
 name|va_mode
 operator|=
 name|mode
+operator|&
+literal|0x1ff
 expr_stmt|;
+comment|/* Mode number is 9-bit. */
 name|vesa_adp
 operator|->
 name|va_flags
