@@ -690,10 +690,6 @@ name|k
 condition|)
 block|{
 comment|/* we have new packets to send */
-name|n
-operator|=
-literal|0
-expr_stmt|;
 name|l
 operator|=
 name|sc
@@ -702,12 +698,19 @@ name|rl_ldata
 operator|.
 name|rl_tx_prodidx
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -932,9 +935,6 @@ else|:
 name|l
 operator|+
 literal|1
-expr_stmt|;
-name|n
-operator|++
 expr_stmt|;
 block|}
 name|sc
@@ -1364,10 +1364,6 @@ name|k
 condition|)
 block|{
 comment|/* userspace has read some packets. */
-name|n
-operator|=
-literal|0
-expr_stmt|;
 name|l
 operator|=
 name|netmap_ridx_k2n
@@ -1380,12 +1376,19 @@ name|j
 argument_list|)
 expr_stmt|;
 comment|/* the NIC index */
-while|while
-condition|(
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -1593,9 +1596,6 @@ name|l
 operator|+
 literal|1
 expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
 block|}
 name|kring
 operator|->
@@ -1759,10 +1759,6 @@ name|i
 operator|++
 control|)
 block|{
-name|void
-modifier|*
-name|addr
-decl_stmt|;
 name|uint64_t
 name|paddr
 decl_stmt|;
@@ -1778,8 +1774,10 @@ argument_list|,
 name|i
 argument_list|)
 decl_stmt|;
+name|void
+modifier|*
 name|addr
-operator|=
+init|=
 name|PNMB
 argument_list|(
 name|slot
@@ -1789,7 +1787,7 @@ argument_list|,
 operator|&
 name|paddr
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 name|desc
 index|[
 name|i

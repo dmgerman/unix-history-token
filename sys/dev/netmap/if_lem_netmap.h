@@ -660,12 +660,19 @@ argument_list|,
 name|j
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -896,9 +903,6 @@ else|:
 name|l
 operator|+
 literal|1
-expr_stmt|;
-name|n
-operator|++
 expr_stmt|;
 block|}
 name|kring
@@ -1378,10 +1382,6 @@ name|k
 condition|)
 block|{
 comment|/* userspace has read some packets. */
-name|n
-operator|=
-literal|0
-expr_stmt|;
 name|l
 operator|=
 name|netmap_ridx_k2n
@@ -1394,12 +1394,19 @@ name|j
 argument_list|)
 expr_stmt|;
 comment|/* NIC ring index */
-while|while
-condition|(
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -1565,9 +1572,6 @@ else|:
 name|l
 operator|+
 literal|1
-expr_stmt|;
-name|n
-operator|++
 expr_stmt|;
 block|}
 name|kring
