@@ -8478,44 +8478,17 @@ directive|undef
 name|MAX_TXRX_ITERATIONS
 end_undef
 
-begin_function
-specifier|static
-name|void
-name|ath_txrx_stop
-parameter_list|(
-name|struct
-name|ath_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-name|ATH_UNLOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ATH_PCU_UNLOCK_ASSERT
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ATH_PCU_LOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ath_txrx_stop_locked
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ATH_PCU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-block|}
-end_function
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void ath_txrx_stop(struct ath_softc *sc) { 	ATH_UNLOCK_ASSERT(sc); 	ATH_PCU_UNLOCK_ASSERT(sc);  	ATH_PCU_LOCK(sc); 	ath_txrx_stop_locked(sc); 	ATH_PCU_UNLOCK(sc); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -8809,6 +8782,20 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* disable interrupts */
+name|ath_txrx_stop_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Ensure TX/RX is stopped */
 if|if
 condition|(
 name|ath_reset_grablock
@@ -8833,25 +8820,12 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-name|ath_hal_intrset
-argument_list|(
-name|ah
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* disable interrupts */
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Should now wait for pending TX/RX to complete 	 * and block future ones from occuring. This needs to be 	 * done before the TX queue is drained. 	 */
-name|ath_txrx_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ath_draintxq
 argument_list|(
 name|sc
@@ -23258,17 +23232,26 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|dointr
-init|=
-literal|0
-decl_stmt|;
 comment|/* Treat this as an interface reset */
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Stop new RX/TX completion */
+name|ath_txrx_stop_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Stop pending RX/TX completion */
 if|if
 condition|(
 name|ath_reset_grablock
@@ -23293,34 +23276,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|chan
-operator|!=
-name|sc
-operator|->
-name|sc_curchan
-condition|)
-block|{
-name|dointr
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XXX only do this if inreset_cnt is 1? */
-name|ath_hal_intrset
-argument_list|(
-name|ah
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 name|ATH_PCU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ath_txrx_stop
 argument_list|(
 name|sc
 argument_list|)
@@ -23549,10 +23505,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Re-enable interrupts. 		 */
 if|#
 directive|if
 literal|0
-comment|/* 		 * Re-enable interrupts. 		 */
 block|ath_hal_intrset(ah, sc->sc_imask);
 endif|#
 directive|endif
@@ -23570,10 +23526,6 @@ name|sc_inreset_cnt
 operator|--
 expr_stmt|;
 comment|/* XXX only do this if sc_inreset_cnt == 0? */
-if|if
-condition|(
-name|dointr
-condition|)
 name|ath_hal_intrset
 argument_list|(
 name|ah
