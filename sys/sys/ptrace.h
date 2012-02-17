@@ -513,6 +513,11 @@ directive|define
 name|PL_FLAG_FORKED
 value|0x40
 comment|/* new child */
+define|#
+directive|define
+name|PL_FLAG_CHILD
+value|0x80
+comment|/* I am from child */
 name|sigset_t
 name|pl_sigmask
 decl_stmt|;

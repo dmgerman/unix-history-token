@@ -1508,6 +1508,17 @@ begin_comment
 comment|/* Stop at the return from fork (child 				      only) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_CHILD
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* New child indicator for ptrace() */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
