@@ -1797,6 +1797,13 @@ name|td
 operator|->
 name|td_pcb
 expr_stmt|;
+name|set_pcb_flags
+argument_list|(
+name|pcb
+argument_list|,
+name|PCB_FULL_IRET
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|COMPAT_FREEBSD32
@@ -1837,13 +1844,6 @@ operator|(
 name|register_t
 operator|)
 name|tls_base
-expr_stmt|;
-name|set_pcb_flags
-argument_list|(
-name|pcb
-argument_list|,
-name|PCB_FULL_IRET
-argument_list|)
 expr_stmt|;
 return|return
 operator|(
