@@ -1649,7 +1649,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-name|HAL_OK
+name|AH_TRUE
 return|;
 case|case
 name|HAL_CAP_TX_CHAINMASK
@@ -1694,7 +1694,7 @@ operator|=
 literal|1
 expr_stmt|;
 return|return
-name|HAL_OK
+name|AH_TRUE
 return|;
 default|default:
 break|break;
