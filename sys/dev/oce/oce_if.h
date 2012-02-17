@@ -259,11 +259,15 @@ directive|include
 file|"oce_hw.h"
 end_include
 
+begin_comment
+comment|/* OCE device driver module component revision informaiton */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|COMPONENT_REVISION
-value|"4.2.116.0"
+value|"4.2.127.0"
 end_define
 
 begin_comment
@@ -409,15 +413,19 @@ name|OCE_NCPUS
 value|mp_ncpus
 end_define
 
+begin_comment
+comment|/* This should be powers of 2. Like 2,4,8& 16 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|OCE_MAX_RSS
-value|8
+value|4
 end_define
 
 begin_comment
-comment|/* This should be powers of 2. Like 2,4,8& 16 */
+comment|/* TODO: 8*/
 end_comment
 
 begin_define
@@ -676,7 +684,7 @@ begin_define
 define|#
 directive|define
 name|OCE_IF_CAPABILITIES
-value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 					IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | \ 					IFCAP_VLAN_HWTSO | IFCAP_JUMBO_MTU | \ 					IFCAP_VLAN_MTU)
+value|(IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | \ 					IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | \ 					IFCAP_JUMBO_MTU | IFCAP_VLAN_MTU)
 end_define
 
 begin_define
@@ -3110,6 +3118,9 @@ decl_stmt|;
 name|int8_t
 name|be3_native
 decl_stmt|;
+name|uint32_t
+name|pvid
+decl_stmt|;
 block|}
 name|OCE_SOFTC
 operator|,
@@ -3624,16 +3635,6 @@ end_comment
 
 begin_function_decl
 name|void
-name|oce_free_lro
-parameter_list|(
-name|POCE_SOFTC
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|oce_stop_rx
 parameter_list|(
 name|POCE_SOFTC
@@ -3663,6 +3664,35 @@ name|rq
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
+end_if
+
+begin_function_decl
+name|void
+name|oce_free_lro
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/************************************************************  * Mailbox functions  ************************************************************/
@@ -3714,6 +3744,16 @@ end_function_decl
 begin_function_decl
 name|int
 name|oce_get_fw_version
+parameter_list|(
+name|POCE_SOFTC
+name|sc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|oce_first_mcc_cmd
 parameter_list|(
 name|POCE_SOFTC
 name|sc

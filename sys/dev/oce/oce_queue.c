@@ -2744,7 +2744,7 @@ name|oce_mbx
 name|mbx
 decl_stmt|;
 name|struct
-name|mbx_create_common_mq
+name|mbx_create_common_mq_ex
 modifier|*
 name|fwcmd
 init|=
@@ -2767,7 +2767,7 @@ name|oce_cq
 modifier|*
 name|cq
 decl_stmt|;
-name|oce_mq_ctx_t
+name|oce_mq_ext_ctx_t
 modifier|*
 name|ctx
 decl_stmt|;
@@ -2897,7 +2897,7 @@ name|fwcmd
 operator|=
 operator|(
 expr|struct
-name|mbx_create_common_mq
+name|mbx_create_common_mq_ex
 operator|*
 operator|)
 operator|&
@@ -2922,14 +2922,14 @@ literal|0
 argument_list|,
 name|MBX_SUBSYSTEM_COMMON
 argument_list|,
-name|OPCODE_COMMON_CREATE_MQ
+name|OPCODE_COMMON_CREATE_MQ_EXT
 argument_list|,
 name|MBX_TIMEOUT_SEC
 argument_list|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mbx_create_common_mq
+name|mbx_create_common_mq_ex
 argument_list|)
 argument_list|,
 name|version
@@ -3020,6 +3020,15 @@ name|valid
 operator|=
 literal|1
 expr_stmt|;
+comment|/* Subscribe to Link State and Group 5 Events(bits 1 and 5 set) */
+name|ctx
+operator|->
+name|v0
+operator|.
+name|async_evt_bitmap
+operator|=
+literal|0xffffffff
+expr_stmt|;
 name|mbx
 operator|.
 name|u0
@@ -3037,7 +3046,7 @@ operator|=
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|mbx_create_common_mq
+name|mbx_create_common_mq_ex
 argument_list|)
 expr_stmt|;
 name|DW_SWAP
