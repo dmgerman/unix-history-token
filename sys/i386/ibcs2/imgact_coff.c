@@ -565,9 +565,7 @@ argument_list|,
 name|copy_len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|vm_map_remove
+name|kmem_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,
@@ -576,17 +574,7 @@ name|vm_offset_t
 operator|)
 name|data_buf
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|data_buf
-operator|+
 name|PAGE_SIZE
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"load_coff_section vm_map_remove failed"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1260,9 +1248,7 @@ literal|0
 expr_stmt|;
 name|dealloc_and_fail
 label|:
-if|if
-condition|(
-name|vm_map_remove
+name|kmem_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,
@@ -1271,19 +1257,7 @@ name|vm_offset_t
 operator|)
 name|ptr
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|ptr
-operator|+
 name|PAGE_SIZE
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"%s vm_map_remove failed"
-argument_list|,
-name|__func__
 argument_list|)
 expr_stmt|;
 name|fail
@@ -2065,9 +2039,7 @@ name|M_TEMP
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|vm_map_remove
+name|kmem_free_wakeup
 argument_list|(
 name|exec_map
 argument_list|,
@@ -2076,17 +2048,7 @@ name|vm_offset_t
 operator|)
 name|buf
 argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|buf
-operator|+
 name|len
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"exec_coff_imgact vm_map_remove failed"
 argument_list|)
 expr_stmt|;
 if|if
