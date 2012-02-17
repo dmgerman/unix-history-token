@@ -1734,7 +1734,7 @@ end_ifndef
 begin_function
 specifier|static
 name|void
-name|in_rtalloc_ign_wrapper
+name|rtalloc_ign_wrapper
 parameter_list|(
 name|struct
 name|route
@@ -6918,7 +6918,7 @@ name|ft
 operator|->
 name|ft_rtalloc
 operator|=
-name|in_rtalloc_ign_wrapper
+name|rtalloc_ign_wrapper
 expr_stmt|;
 endif|#
 directive|endif

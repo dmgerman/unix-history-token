@@ -1349,6 +1349,11 @@ operator|->
 name|neg
 argument_list|,
 name|kif
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 condition|)
 name|r
@@ -1447,6 +1452,11 @@ operator|->
 name|neg
 argument_list|,
 name|NULL
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 condition|)
 name|r
@@ -1480,6 +1490,11 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 condition|)
 name|r

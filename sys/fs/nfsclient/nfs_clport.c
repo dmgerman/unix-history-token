@@ -5165,7 +5165,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|(
 expr|struct
@@ -5178,6 +5178,12 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -5356,7 +5362,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|(
 expr|struct
@@ -5369,6 +5375,12 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
 argument_list|)
 expr_stmt|;
 if|if
