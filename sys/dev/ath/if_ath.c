@@ -24594,6 +24594,12 @@ name|nstate
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * net80211 _should_ have the comlock asserted at this point. 	 * There are some comments around the calls to vap->iv_newstate 	 * which indicate that it (newstate) may end up dropping the 	 * lock.  This and the subsequent lock assert check after newstate 	 * are an attempt to catch these and figure out how/why. 	 */
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -24864,6 +24870,12 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 	 * See above: ensure av_newstate() doesn't drop the lock 	 * on us. 	 */
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nstate
