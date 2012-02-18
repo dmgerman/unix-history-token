@@ -607,21 +607,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_define
-define|#
-directive|define
-name|PTRACESTOP_SC
-parameter_list|(
-name|p
-parameter_list|,
-name|td
-parameter_list|,
-name|flag
-parameter_list|)
-define|\
-value|if ((p)->p_flag& P_TRACED&& (p)->p_stops& (flag)) {	\ 		PROC_LOCK(p);					\ 		ptracestop((td), SIGTRAP);			\ 		PROC_UNLOCK(p);					\ 	}
-end_define
-
 begin_comment
 comment|/*  * The flags below are used for ptrace(2) tracing and have no relation  * to procfs.  They are stored in struct proc's p_stops member.  */
 end_comment
