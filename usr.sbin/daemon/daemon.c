@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/mman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/wait.h>
 end_include
 
@@ -455,6 +461,19 @@ argument_list|(
 literal|1
 argument_list|,
 literal|"sigprocmask"
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Try to protect against pageout kill. Ignore the 		 * error, madvise(2) will fail only if a process does 		 * not have superuser privileges. 		 */
+operator|(
+name|void
+operator|)
+name|madvise
+argument_list|(
+name|NULL
+argument_list|,
+literal|0
+argument_list|,
+name|MADV_PROTECT
 argument_list|)
 expr_stmt|;
 name|restart
