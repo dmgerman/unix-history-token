@@ -26,7 +26,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * driver for National Semiconductor's DP83843 `PHYTER' ethernet 10/100 PHY  * Data Sheet available from www.national.com  *  * We also support the DP83815 `MacPHYTER' internal PHY since, for our  * purposes, they are compatible.  */
+comment|/*  * Driver for the National Semiconductor's DP83843, DP83847 and DP83849  * `PHYTER' Ethernet 10/100 PHYs  * Data Sheets are available from http://www.national.com  *  * We also support the DP83815 `MacPHYTER' internal PHY since, for our  * purposes, they are compatible.  */
 end_comment
 
 begin_include
@@ -282,6 +282,13 @@ argument_list|(
 name|xxNATSEMI
 argument_list|,
 name|DP83847
+argument_list|)
+block|,
+name|MII_PHY_DESC
+argument_list|(
+name|xxNATSEMI
+argument_list|,
+name|DP83849
 argument_list|)
 block|,
 name|MII_PHY_END
