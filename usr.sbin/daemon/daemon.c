@@ -107,7 +107,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|void
+name|int
 name|wait_child
 parameter_list|(
 name|pid_t
@@ -161,6 +161,8 @@ decl_stmt|,
 name|nochdir
 decl_stmt|,
 name|noclose
+decl_stmt|,
+name|restart
 decl_stmt|;
 specifier|const
 name|char
@@ -181,6 +183,10 @@ name|noclose
 operator|=
 literal|1
 expr_stmt|;
+name|restart
+operator|=
+literal|0
+expr_stmt|;
 name|pidfile
 operator|=
 name|user
@@ -198,7 +204,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"-cfp:u:"
+literal|"-cfp:ru:"
 argument_list|)
 operator|)
 operator|!=
@@ -233,6 +239,14 @@ case|:
 name|pidfile
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'r'
+case|:
+name|restart
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -344,7 +358,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
-comment|/* 	 * If the pidfile option is specified the daemon executes the 	 * command in a forked process and wait on child exit to 	 * remove the pidfile. Normally we don't want the monitoring 	 * daemon to be terminated leaving the running process and the 	 * stale pidfile, so we catch SIGTERM and pass it to the 	 * children expecting to get SIGCHLD eventually. 	 */
+comment|/* 	 * If the pidfile or restart option is specified the daemon 	 * executes the command in a forked process and wait on child 	 * exit to remove the pidfile or restart the command. Normally 	 * we don't want the monitoring daemon to be terminated 	 * leaving the running process and the stale pidfile, so we 	 * catch SIGTERM and forward it to the children expecting to 	 * get SIGCHLD eventually. 	 */
 name|pid
 operator|=
 operator|-
@@ -355,6 +369,8 @@ condition|(
 name|pidfile
 operator|!=
 name|NULL
+operator|||
+name|restart
 condition|)
 block|{
 comment|/* 		 * Restore default action for SIGTERM in case the 		 * parent process decided to ignore it. 		 */
@@ -441,6 +457,8 @@ argument_list|,
 literal|"sigprocmask"
 argument_list|)
 expr_stmt|;
+name|restart
+label|:
 comment|/* 		 * Spawn a child to exec the command, so in the parent 		 * we could wait for it to exit and remove pidfile. 		 */
 name|pid
 operator|=
@@ -560,6 +578,8 @@ argument_list|,
 name|pid
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|wait_child
 argument_list|(
 name|pid
@@ -567,7 +587,21 @@ argument_list|,
 operator|&
 name|mask
 argument_list|)
+operator|==
+literal|0
+operator|&&
+name|restart
+condition|)
+block|{
+name|sleep
+argument_list|(
+literal|1
+argument_list|)
 expr_stmt|;
+goto|goto
+name|restart
+goto|;
+block|}
 name|pidfile_remove
 argument_list|(
 name|pfh
@@ -665,7 +699,7 @@ end_function
 
 begin_function
 specifier|static
-name|void
+name|int
 name|wait_child
 parameter_list|(
 name|pid_t
@@ -677,8 +711,14 @@ name|mask
 parameter_list|)
 block|{
 name|int
+name|terminate
+decl_stmt|,
 name|signo
 decl_stmt|;
+name|terminate
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -704,7 +744,12 @@ argument_list|(
 literal|"sigwaitinfo"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 switch|switch
 condition|(
@@ -714,10 +759,18 @@ block|{
 case|case
 name|SIGCHLD
 case|:
-return|return;
+return|return
+operator|(
+name|terminate
+operator|)
+return|;
 case|case
 name|SIGTERM
 case|:
+name|terminate
+operator|=
+literal|1
+expr_stmt|;
 if|if
 condition|(
 name|kill
@@ -736,7 +789,12 @@ argument_list|(
 literal|"kill"
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 continue|continue;
 default|default:
@@ -747,7 +805,12 @@ argument_list|,
 name|signo
 argument_list|)
 expr_stmt|;
-return|return;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
 block|}
 block|}
 block|}
