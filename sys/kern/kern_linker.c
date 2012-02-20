@@ -9706,7 +9706,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|printf
+name|uprintf
 argument_list|(
 literal|"KLD %s: depends on %s - not available or"
 literal|" version mismatch\n"
