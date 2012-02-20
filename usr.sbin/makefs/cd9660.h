@@ -928,11 +928,6 @@ name|cd9660node
 modifier|*
 name|rootNode
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|rootFilesystemPath
-decl_stmt|;
 comment|/* Important sector numbers here */
 comment|/* primaryDescriptor.type_l_path_table*/
 name|int64_t
@@ -1374,8 +1369,6 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl
