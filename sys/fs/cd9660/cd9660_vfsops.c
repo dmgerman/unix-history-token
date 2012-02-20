@@ -930,12 +930,7 @@ name|iso_mnt
 modifier|*
 name|isomp
 init|=
-operator|(
-expr|struct
-name|iso_mnt
-operator|*
-operator|)
-literal|0
+name|NULL
 decl_stmt|;
 name|struct
 name|buf
