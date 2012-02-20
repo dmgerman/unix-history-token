@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $Header: /p/tcsh/cvsroot/tcsh/pathnames.h,v 3.18 2002/03/08 17:36:46 christos Exp $ */
+comment|/* $Header: /p/tcsh/cvsroot/tcsh/pathnames.h,v 3.22 2011/02/05 20:34:55 christos Exp $ */
 end_comment
 
 begin_comment
@@ -26,7 +26,7 @@ end_define
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|BSD4_4
+name|HAVE_PATHS_H
 end_ifdef
 
 begin_include
@@ -484,6 +484,37 @@ end_endif
 
 begin_comment
 comment|/* _MINIX&& !_PATH_TCSHELL */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|_PATH_TCSHELL
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|_PATH_TCSHELL
+value|"/bin/tcsh"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __linux__&& !_PATH_TCSHELL */
 end_comment
 
 begin_if
