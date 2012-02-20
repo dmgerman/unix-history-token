@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2012 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011-2012 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -13229,6 +13229,48 @@ condition|(
 name|pl
 operator|->
 name|pl_prop
+operator|==
+name|ZFS_PROP_NAME
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|strlcpy
+argument_list|(
+name|property
+argument_list|,
+name|zfs_get_name
+argument_list|(
+name|zhp
+argument_list|)
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|property
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|propstr
+operator|=
+name|property
+expr_stmt|;
+name|right_justify
+operator|=
+name|zfs_prop_align_right
+argument_list|(
+name|pl
+operator|->
+name|pl_prop
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|pl
+operator|->
+name|pl_prop
 operator|!=
 name|ZPROP_INVAL
 condition|)
@@ -13965,6 +14007,27 @@ condition|)
 name|fields
 operator|=
 name|default_fields
+expr_stmt|;
+comment|/* 	 * If we are only going to list snapshot names and sort by name, 	 * then we can use faster version. 	 */
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|fields
+argument_list|,
+literal|"name"
+argument_list|)
+operator|==
+literal|0
+operator|&&
+name|zfs_sort_only_by_name
+argument_list|(
+name|sortcol
+argument_list|)
+condition|)
+name|flags
+operator||=
+name|ZFS_ITER_SIMPLE
 expr_stmt|;
 comment|/* 	 * If "-o space" and no types were specified, don't display snapshots. 	 */
 if|if

@@ -78,6 +78,10 @@ define|#
 directive|define
 name|ZFS_ITER_RECVD_PROPS
 value|(1<< 4)
+define|#
+directive|define
+name|ZFS_ITER_SIMPLE
+value|(1<< 5)
 name|int
 name|zfs_for_each
 parameter_list|(
@@ -124,6 +128,14 @@ function_decl|;
 name|void
 name|zfs_free_sort_columns
 parameter_list|(
+name|zfs_sort_column_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|boolean_t
+name|zfs_sort_only_by_name
+parameter_list|(
+specifier|const
 name|zfs_sort_column_t
 modifier|*
 parameter_list|)
