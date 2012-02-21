@@ -2384,7 +2384,7 @@ decl_stmt|;
 name|int
 name|isadir
 decl_stmt|;
-name|int
+name|ssize_t
 name|orig_resid
 decl_stmt|;
 name|u_int
@@ -2906,7 +2906,7 @@ decl_stmt|;
 name|int
 name|croffset
 decl_stmt|;
-name|int
+name|ssize_t
 name|resid
 decl_stmt|;
 name|u_long

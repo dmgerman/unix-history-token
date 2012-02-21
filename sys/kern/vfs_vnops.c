@@ -1679,7 +1679,7 @@ name|ucred
 modifier|*
 name|file_cred
 decl_stmt|;
-name|int
+name|ssize_t
 modifier|*
 name|aresid
 decl_stmt|;
@@ -2147,7 +2147,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|iaresid
 decl_stmt|;
 name|VFS_ASSERT_GIANT

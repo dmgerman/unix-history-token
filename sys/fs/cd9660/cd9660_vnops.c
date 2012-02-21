@@ -1326,7 +1326,7 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 call|(
 name|u_int
@@ -1552,7 +1552,7 @@ expr_stmt|;
 block|}
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|n
 argument_list|,

@@ -8651,7 +8651,8 @@ name|int
 name|error
 decl_stmt|,
 name|length
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|total
 decl_stmt|;
 name|int
