@@ -2294,6 +2294,17 @@ parameter_list|)
 value|((c)->a_desc->vdesc_call(c))
 end_define
 
+begin_define
+define|#
+directive|define
+name|DOINGASYNC
+parameter_list|(
+name|vp
+parameter_list|)
+define|\
+value|(((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC) != 0&&	\ 	 ((curthread->td_pflags& TDP_SYNCIO) == 0))
+end_define
+
 begin_comment
 comment|/*  * VMIO support inline  */
 end_comment

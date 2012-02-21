@@ -2602,13 +2602,10 @@ condition|)
 block|{
 name|async
 operator|=
+name|DOINGASYNC
+argument_list|(
 name|vp
-operator|->
-name|v_mount
-operator|->
-name|mnt_kern_flag
-operator|&
-name|MNTK_ASYNC
+argument_list|)
 expr_stmt|;
 name|lblocksize
 operator|=

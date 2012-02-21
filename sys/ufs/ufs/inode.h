@@ -475,16 +475,6 @@ parameter_list|)
 value|((vp)->v_mount->mnt_flag& MNT_SOFTDEP)
 end_define
 
-begin_define
-define|#
-directive|define
-name|DOINGASYNC
-parameter_list|(
-name|vp
-parameter_list|)
-value|((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC)
-end_define
-
 begin_comment
 comment|/* This overlays the fid structure (see mount.h). */
 end_comment
