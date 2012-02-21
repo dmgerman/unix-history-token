@@ -1293,12 +1293,10 @@ name|ASSYM
 argument_list|(
 name|PCB_USERFPU
 argument_list|,
-name|offsetof
+sizeof|sizeof
 argument_list|(
 expr|struct
 name|pcb
-argument_list|,
-name|pcb_user_save
 argument_list|)
 argument_list|)
 expr_stmt|;
