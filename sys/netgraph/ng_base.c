@@ -12798,7 +12798,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_CACHE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
@@ -12830,7 +12830,7 @@ name|NULL
 argument_list|,
 name|UMA_ALIGN_CACHE
 argument_list|,
-name|M_WAITOK
+literal|0
 argument_list|)
 expr_stmt|;
 name|uma_zone_set_max
