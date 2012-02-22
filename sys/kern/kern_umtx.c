@@ -16003,7 +16003,7 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|uint32_
+name|uint32_t
 name|flags
 decl_stmt|;
 if|if
