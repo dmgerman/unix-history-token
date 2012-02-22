@@ -19,6 +19,12 @@ directive|define
 name|_NET_LAGG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_comment
 comment|/*  * Global definitions  */
 end_comment
@@ -863,6 +869,15 @@ name|vlan_detach
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|sysctl_ctx_list
+name|ctx
+decl_stmt|;
+comment|/* sysctl variables */
+name|int
+name|use_flowid
+decl_stmt|;
+comment|/* use M_FLOWID */
 block|}
 struct|;
 end_struct
