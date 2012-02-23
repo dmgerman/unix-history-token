@@ -245,11 +245,9 @@ begin_function_decl
 name|int
 name|acpi_restorecpu
 parameter_list|(
-name|vm_offset_t
+name|uint64_t
 parameter_list|,
-name|struct
-name|pcb
-modifier|*
+name|vm_offset_t
 parameter_list|)
 function_decl|;
 end_function_decl
