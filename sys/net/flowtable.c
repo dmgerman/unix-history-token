@@ -6281,6 +6281,10 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
+name|lle
+operator|!=
+name|NULL
+operator|&&
 name|fle
 operator|->
 name|f_fhash
@@ -6324,6 +6328,14 @@ operator|->
 name|rt_ifp
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|lle
+operator|->
+name|la_flags
+operator|&
+name|LLE_VALID
 operator|)
 condition|)
 block|{
