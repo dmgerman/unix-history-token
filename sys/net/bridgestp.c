@@ -8778,7 +8778,7 @@ operator|->
 name|bs_vnet
 argument_list|)
 expr_stmt|;
-comment|/* slow timer to catch missed link events */
+comment|/* poll link events on interfaces that do not support linkstate */
 if|if
 condition|(
 name|bstp_timer_expired
@@ -8798,6 +8798,20 @@ argument|&bs->bs_bplist
 argument_list|,
 argument|bp_next
 argument_list|)
+block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|bp
+operator|->
+name|bp_ifp
+operator|->
+name|if_capabilities
+operator|&
+name|IFCAP_LINKSTATE
+operator|)
+condition|)
 name|bstp_ifupdstatus
 argument_list|(
 name|bs
@@ -8805,6 +8819,7 @@ argument_list|,
 name|bp
 argument_list|)
 expr_stmt|;
+block|}
 name|bstp_timer_start
 argument_list|(
 operator|&
