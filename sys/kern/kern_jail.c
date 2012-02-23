@@ -1017,6 +1017,10 @@ block|,
 literal|"allow.quotas"
 block|,
 literal|"allow.socket_af"
+block|,
+literal|"allow.mount.devfs"
+block|,
+literal|"allow.mount.nullfs"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1054,6 +1058,10 @@ block|,
 literal|"allow.noquotas"
 block|,
 literal|"allow.nosocket_af"
+block|,
+literal|"allow.mount.nodevfs"
+block|,
+literal|"allow.mount.nonullfs"
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -1088,7 +1096,7 @@ begin_define
 define|#
 directive|define
 name|JAIL_DEFAULT_DEVFS_RSNUM
-value|-1
+value|0
 end_define
 
 begin_decl_stmt
@@ -6712,7 +6720,9 @@ name|pr
 operator|->
 name|pr_devfs_rsnum
 operator|=
-name|JAIL_DEFAULT_DEVFS_RSNUM
+name|ppr
+operator|->
+name|pr_devfs_rsnum
 expr_stmt|;
 name|LIST_INIT
 argument_list|(
@@ -7014,13 +7024,12 @@ condition|(
 name|gotrsnum
 condition|)
 block|{
-comment|/* 		 * devfs_rsnum is a uint16_t 		 * value of -1 disables devfs mounts 		 */
+comment|/* 		 * devfs_rsnum is a uint16_t 		 */
 if|if
 condition|(
 name|rsnum
 operator|<
-operator|-
-literal|1
+literal|0
 operator|||
 name|rsnum
 operator|>
@@ -7035,7 +7044,7 @@ goto|goto
 name|done_deref_locked
 goto|;
 block|}
-comment|/* 		 * Nested jails may inherit parent's devfs ruleset 		 * or disable devfs 		 */
+comment|/* 		 * Nested jails always inherit parent's devfs ruleset 		 */
 if|if
 condition|(
 name|jailed
@@ -7067,13 +7076,7 @@ goto|goto
 name|done_deref_locked
 goto|;
 block|}
-elseif|else
-if|if
-condition|(
-name|rsnum
-operator|==
-literal|0
-condition|)
+else|else
 name|rsnum
 operator|=
 name|ppr
@@ -8285,15 +8288,6 @@ argument|tpr
 argument_list|,
 argument|descend
 argument_list|)
-if|if
-condition|(
-name|tpr
-operator|->
-name|pr_devfs_rsnum
-operator|!=
-operator|-
-literal|1
-condition|)
 name|tpr
 operator|->
 name|pr_devfs_rsnum
@@ -20037,6 +20031,62 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_security_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mount_devfs_allowed
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|NULL
+argument_list|,
+name|PR_ALLOW_MOUNT_DEVFS
+argument_list|,
+name|sysctl_jail_default_allow
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Processes in jail can mount/unmount the devfs file system"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_PROC
+argument_list|(
+name|_security_jail
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|mount_nullfs_allowed
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_MPSAFE
+argument_list|,
+name|NULL
+argument_list|,
+name|PR_ALLOW_MOUNT_NULLFS
+argument_list|,
+name|sysctl_jail_default_allow
+argument_list|,
+literal|"I"
+argument_list|,
+literal|"Processes in jail can mount/unmount the nullfs file system"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -20938,24 +20988,6 @@ name|SYSCTL_JAIL_PARAM
 argument_list|(
 name|_allow
 argument_list|,
-name|mount
-argument_list|,
-name|CTLTYPE_INT
-operator||
-name|CTLFLAG_RW
-argument_list|,
-literal|"B"
-argument_list|,
-literal|"Jail may mount/unmount jail-friendly file systems"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|SYSCTL_JAIL_PARAM
-argument_list|(
-name|_allow
-argument_list|,
 name|quotas
 argument_list|,
 name|CTLTYPE_INT
@@ -20983,6 +21015,70 @@ argument_list|,
 literal|"B"
 argument_list|,
 literal|"Jail may create sockets other than just UNIX/IPv4/IPv6/route"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_JAIL_PARAM_SUBNODE
+argument_list|(
+name|allow
+argument_list|,
+name|mount
+argument_list|,
+literal|"Jail mount/unmount permission flags"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_JAIL_PARAM
+argument_list|(
+name|_allow_mount
+argument_list|, ,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+literal|"B"
+argument_list|,
+literal|"Jail may mount/unmount jail-friendly file systems in general"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_JAIL_PARAM
+argument_list|(
+name|_allow_mount
+argument_list|,
+name|devfs
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+literal|"B"
+argument_list|,
+literal|"Jail may mount/unmount the devfs file system"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_JAIL_PARAM
+argument_list|(
+name|_allow_mount
+argument_list|,
+name|nullfs
+argument_list|,
+name|CTLTYPE_INT
+operator||
+name|CTLFLAG_RW
+argument_list|,
+literal|"B"
+argument_list|,
+literal|"Jail may mount/unmount the nullfs file system"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
