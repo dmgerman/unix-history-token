@@ -3301,6 +3301,18 @@ operator|&=
 operator|~
 name|M_ZERO
 expr_stmt|;
+if|if
+condition|(
+name|keg
+operator|->
+name|uk_flags
+operator|&
+name|UMA_ZONE_NODUMP
+condition|)
+name|wait
+operator||=
+name|M_NODUMP
+expr_stmt|;
 comment|/* zone is passed for legacy reasons. */
 name|mem
 operator|=

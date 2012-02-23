@@ -5313,6 +5313,16 @@ literal|0
 expr_stmt|;
 if|if
 condition|(
+name|req
+operator|&
+name|VM_ALLOC_NODUMP
+condition|)
+name|flags
+operator||=
+name|PG_NODUMP
+expr_stmt|;
+if|if
+condition|(
 name|m
 operator|->
 name|flags

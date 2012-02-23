@@ -457,7 +457,11 @@ operator|>
 name|zio_buf_debug_limit
 operator|)
 condition|?
+operator|(
 name|KMC_NODEBUG
+operator||
+name|KMC_NOTOUCH
+operator|)
 else|:
 literal|0
 decl_stmt|;
@@ -992,6 +996,8 @@ argument_list|(
 name|size
 argument_list|,
 name|KM_SLEEP
+operator||
+name|KM_NODEBUG
 argument_list|)
 operator|)
 return|;

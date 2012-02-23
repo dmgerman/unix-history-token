@@ -437,6 +437,17 @@ begin_comment
 comment|/* Zone uses vtoslab for lookup. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|UMA_ZONE_NODUMP
+value|0x4000
+end_define
+
+begin_comment
+comment|/* 					 * Zone's pages will not be included in 					 * mini-dumps. 					 */
+end_comment
+
 begin_comment
 comment|/*  * These flags are shared between the keg and zone.  In zones wishing to add  * new kegs these flags must be compatible.  Some are determined based on  * physical parameters of the request and may not be provided by the consumer.  */
 end_comment

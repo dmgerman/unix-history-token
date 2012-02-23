@@ -1198,6 +1198,10 @@ name|KM_NOSLEEP
 value|UMEM_DEFAULT
 define|#
 directive|define
+name|KM_NODEBUG
+value|0
+define|#
+directive|define
 name|KMC_NODEBUG
 value|UMC_NODEBUG
 define|#
