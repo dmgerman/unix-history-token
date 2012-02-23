@@ -23428,9 +23428,7 @@ name|ath_dfs_radar_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ic
-operator|->
-name|ic_curchan
+name|chan
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Re-enable rx framework. 		 */
