@@ -1259,11 +1259,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|acpi_resync_clock
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 literal|0
