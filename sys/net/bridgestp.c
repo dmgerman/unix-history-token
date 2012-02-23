@@ -871,7 +871,7 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|bstp_timer_expired
+name|bstp_timer_dectest
 parameter_list|(
 name|struct
 name|bstp_timer
@@ -8781,7 +8781,7 @@ expr_stmt|;
 comment|/* poll link events on interfaces that do not support linkstate */
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bs
@@ -8841,7 +8841,7 @@ argument|bp_next
 argument_list|)
 block|{
 comment|/* no events need to happen for these */
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8849,7 +8849,7 @@ operator|->
 name|bp_tc_timer
 argument_list|)
 expr_stmt|;
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8857,7 +8857,7 @@ operator|->
 name|bp_recent_root_timer
 argument_list|)
 expr_stmt|;
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8865,7 +8865,7 @@ operator|->
 name|bp_forward_delay_timer
 argument_list|)
 expr_stmt|;
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8875,7 +8875,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8892,7 +8892,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8909,7 +8909,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -8926,7 +8926,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|bstp_timer_expired
+name|bstp_timer_dectest
 argument_list|(
 operator|&
 name|bp
@@ -9079,7 +9079,7 @@ end_function
 begin_function
 specifier|static
 name|int
-name|bstp_timer_expired
+name|bstp_timer_dectest
 parameter_list|(
 name|struct
 name|bstp_timer
