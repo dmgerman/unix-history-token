@@ -2431,7 +2431,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEV_BASE_ORDER
-value|10
+value|100
 end_define
 
 begin_comment

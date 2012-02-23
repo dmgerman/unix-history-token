@@ -1172,7 +1172,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|3
 argument_list|,
 literal|"acpi_ec"
 argument_list|,
