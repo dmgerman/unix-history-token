@@ -1649,9 +1649,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|struct
-name|mbuf
-modifier|*
+name|void
 name|bstp_input
 parameter_list|(
 name|struct

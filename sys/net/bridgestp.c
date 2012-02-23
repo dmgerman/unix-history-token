@@ -2558,9 +2558,7 @@ block|}
 end_function
 
 begin_function
-name|struct
-name|mbuf
-modifier|*
+name|void
 name|bstp_input
 parameter_list|(
 name|struct
@@ -2614,11 +2612,7 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
+return|return;
 block|}
 name|BSTP_LOCK
 argument_list|(
@@ -2894,11 +2888,6 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-name|NULL
-operator|)
-return|;
 block|}
 end_function
 
