@@ -7640,7 +7640,6 @@ name|adp
 operator|->
 name|va_initial_mode
 condition|)
-empty_stmt|;
 operator|(
 name|void
 operator|)
