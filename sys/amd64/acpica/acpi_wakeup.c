@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/eventhandler.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kernel.h>
 end_include
 
@@ -63,6 +69,12 @@ begin_include
 include|#
 directive|include
 file|<vm/pmap.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/clock.h>
 end_include
 
 begin_include
@@ -349,10 +361,6 @@ parameter_list|)
 value|do	{	\ 	type	*addr;					\ 	addr = (type *)(WAKECODE_VADDR(sc) + offset);	\ 	*addr = val;					\ } while (0)
 end_define
 
-begin_comment
-comment|/* Turn off bits 1&2 of the PIT, stopping the beep. */
-end_comment
-
 begin_function
 specifier|static
 name|void
@@ -363,18 +371,14 @@ modifier|*
 name|arg
 parameter_list|)
 block|{
-name|outb
-argument_list|(
-literal|0x61
-argument_list|,
-name|inb
-argument_list|(
-literal|0x61
-argument_list|)
-operator|&
-operator|~
-literal|0x3
-argument_list|)
+if|if
+condition|(
+name|acpi_resume_beep
+operator|!=
+literal|0
+condition|)
+name|timer_spkr_release
+argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -970,6 +974,15 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|acpi_resume_beep
+operator|!=
+literal|0
+condition|)
+name|timer_spkr_acquire
+argument_list|()
+expr_stmt|;
 name|AcpiSetFirmwareWakingVector
 argument_list|(
 name|WAKECODE_PADDR
@@ -1328,22 +1341,6 @@ operator|&
 name|mem_range_softc
 argument_list|)
 expr_stmt|;
-comment|/* If we beeped, turn it off after a delay. */
-if|if
-condition|(
-name|acpi_resume_beep
-condition|)
-name|timeout
-argument_list|(
-name|acpi_stop_beep
-argument_list|,
-name|NULL
-argument_list|,
-literal|3
-operator|*
-name|hz
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
@@ -1402,6 +1399,46 @@ argument_list|(
 literal|"%s: can't alloc wake memory\n"
 argument_list|,
 name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
+if|if
+condition|(
+name|EVENTHANDLER_REGISTER
+argument_list|(
+name|power_resume
+argument_list|,
+name|acpi_stop_beep
+argument_list|,
+name|NULL
+argument_list|,
+name|EVENTHANDLER_PRI_LAST
+argument_list|)
+operator|==
+name|NULL
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: can't register event handler\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+name|contigfree
+argument_list|(
+name|wakeaddr
+argument_list|,
+literal|4
+operator|*
+name|PAGE_SIZE
+argument_list|,
+name|M_DEVBUF
 argument_list|)
 expr_stmt|;
 return|return
