@@ -9780,6 +9780,11 @@ argument_list|,
 literal|"initialization failed: no memory for rx buffers\n"
 argument_list|)
 expr_stmt|;
+name|sf_stop
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 return|return;
 block|}
 name|sf_init_tx_ring
