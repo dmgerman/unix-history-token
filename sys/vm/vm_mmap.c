@@ -5218,6 +5218,7 @@ name|error
 operator|)
 return|;
 block|}
+block|}
 if|if
 condition|(
 name|locktype
@@ -5239,7 +5240,6 @@ argument_list|,
 name|objsize
 argument_list|)
 expr_stmt|;
-block|}
 block|}
 block|}
 elseif|else
