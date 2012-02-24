@@ -3535,6 +3535,11 @@ name|status
 operator|=
 name|SIGCONT
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 name|PROC_UNLOCK
 argument_list|(
