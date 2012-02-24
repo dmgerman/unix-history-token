@@ -421,7 +421,7 @@ operator|*
 operator|,
 name|int
 operator|,
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -460,7 +460,7 @@ expr|struct
 name|ifnet
 operator|*
 operator|,
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -2166,7 +2166,7 @@ parameter_list|,
 name|int
 name|norouteok
 parameter_list|,
-name|int
+name|u_int
 name|fibnum
 parameter_list|)
 block|{
@@ -2490,7 +2490,7 @@ block|}
 if|#
 directive|if
 literal|0
-block|if ((ron->ro_rt&& 		     (ron->ro_rt->rt_flags& (RTF_UP | RTF_LLINFO)) != 		     (RTF_UP | RTF_LLINFO)) || 		    !IN6_ARE_ADDR_EQUAL(&satosin6(&ron->ro_dst)->sin6_addr,&sin6_next->sin6_addr)) { 			if (ron->ro_rt) { 				RTFREE(ron->ro_rt); 				ron->ro_rt = NULL; 			} 			*satosin6(&ron->ro_dst) = *sin6_next; 		} 		if (ron->ro_rt == NULL) { 			in6_rtalloc(ron);
+block|if ((ron->ro_rt&& 		     (ron->ro_rt->rt_flags& (RTF_UP | RTF_LLINFO)) != 		     (RTF_UP | RTF_LLINFO)) || 		    !IN6_ARE_ADDR_EQUAL(&satosin6(&ron->ro_dst)->sin6_addr,&sin6_next->sin6_addr)) { 			if (ron->ro_rt) { 				RTFREE(ron->ro_rt); 				ron->ro_rt = NULL; 			} 			*satosin6(&ron->ro_dst) = *sin6_next; 		} 		if (ron->ro_rt == NULL) { 			in6_rtalloc(ron, fibnum);
 comment|/* multi path case? */
 block|if (ron->ro_rt == NULL || 			    !(ron->ro_rt->rt_flags& RTF_LLINFO)) { 				if (ron->ro_rt) { 					RTFREE(ron->ro_rt); 					ron->ro_rt = NULL; 				} 				error = EHOSTUNREACH; 				goto done; 			} 		}
 endif|#
@@ -2971,7 +2971,7 @@ name|ifnet
 modifier|*
 name|oifp
 parameter_list|,
-name|int
+name|u_int
 name|fibnum
 parameter_list|)
 block|{
@@ -3298,7 +3298,7 @@ modifier|*
 modifier|*
 name|retrt
 parameter_list|,
-name|int
+name|u_int
 name|fibnum
 parameter_list|)
 block|{
@@ -3454,14 +3454,10 @@ operator|&
 name|ro6
 argument_list|,
 name|in6p
-condition|?
-name|in6p
 operator|->
 name|inp_inc
 operator|.
 name|inc_fibnum
-else|:
-name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if

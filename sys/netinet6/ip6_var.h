@@ -2311,7 +2311,7 @@ name|rtentry
 modifier|*
 modifier|*
 parameter_list|,
-name|int
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

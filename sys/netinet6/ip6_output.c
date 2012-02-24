@@ -559,7 +559,7 @@ operator|,
 name|int
 operator|*
 operator|,
-name|int
+name|u_int
 operator|)
 argument_list|)
 decl_stmt|;
@@ -5393,7 +5393,7 @@ name|int
 modifier|*
 name|alwaysfragp
 parameter_list|,
-name|int
+name|u_int
 name|fibnum
 parameter_list|)
 block|{
