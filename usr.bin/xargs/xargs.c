@@ -1229,7 +1229,7 @@ block|{
 name|waitchildren
 argument_list|(
 operator|*
-name|argv
+name|av
 argument_list|,
 literal|1
 argument_list|)
@@ -1547,7 +1547,7 @@ block|{
 name|waitchildren
 argument_list|(
 operator|*
-name|argv
+name|av
 argument_list|,
 literal|1
 argument_list|)
@@ -2447,7 +2447,23 @@ name|WIFSIGNALED
 argument_list|(
 name|status
 argument_list|)
-operator|||
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"%s: terminated with signal %d, aborting"
+argument_list|,
+name|name
+argument_list|,
+name|WTERMSIG
+argument_list|(
+name|status
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|WEXITSTATUS
 argument_list|(
 name|status
@@ -2455,9 +2471,13 @@ argument_list|)
 operator|==
 literal|255
 condition|)
-name|exit
+name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s: exited with status 255, aborting"
+argument_list|,
+name|name
 argument_list|)
 expr_stmt|;
 if|if
