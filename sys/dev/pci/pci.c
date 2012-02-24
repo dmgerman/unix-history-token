@@ -1018,11 +1018,7 @@ argument_list|,
 name|pci_msix_count_method
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1128,8 +1124,11 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|pci_quirk
+specifier|const
 name|pci_quirks
 index|[]
 init|=
@@ -1261,6 +1260,17 @@ block|,
 comment|/* 	 * MSI doesn't work with devices behind the AMD 8131 HT-PCIX 	 * bridge. 	 */
 block|{
 literal|0x74501022
+block|,
+name|PCI_QUIRK_DISABLE_MSI
+block|,
+literal|0
+block|,
+literal|0
+block|}
+block|,
+comment|/* 	 * MSI-X doesn't work with at least LSI SAS1068E passed through by 	 * VMware. 	 */
+block|{
+literal|0x079015ad
 block|,
 name|PCI_QUIRK_DISABLE_MSI
 block|,
@@ -9467,6 +9477,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|pci_quirk
 modifier|*
@@ -9544,6 +9555,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|pci_quirk
 modifier|*
@@ -14056,6 +14068,7 @@ name|dinfo
 operator|->
 name|resources
 decl_stmt|;
+specifier|const
 name|struct
 name|pci_quirk
 modifier|*
