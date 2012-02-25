@@ -2038,11 +2038,13 @@ operator|(
 name|used
 operator|*
 literal|100
-operator|*
-literal|100
 operator|)
 operator|/
+operator|(
 name|n_nchash
+operator|/
+literal|100
+operator|)
 expr_stmt|;
 name|error
 operator|=
@@ -2171,7 +2173,7 @@ name|sysctl_debug_hashstat_nchash
 argument_list|,
 literal|"I"
 argument_list|,
-literal|"nchash chain lengths"
+literal|"nchash statistics (number of total/used buckets, maximum chain length, usage percentage)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

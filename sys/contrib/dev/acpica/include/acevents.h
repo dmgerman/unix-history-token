@@ -102,24 +102,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvAcquireGlobalLock
-parameter_list|(
-name|UINT16
-name|Timeout
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_OK
+argument_list|(
+argument|ACPI_STATUS AcpiEvAcquireGlobalLock(     UINT16                  Timeout)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvReleaseGlobalLock
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_OK
+argument_list|(
+argument|ACPI_STATUS AcpiEvReleaseGlobalLock(     void)
+argument_list|)
+end_macro
 
 begin_function_decl
 name|ACPI_STATUS
@@ -281,16 +276,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEvDeleteGpeBlock
-parameter_list|(
-name|ACPI_GPE_BLOCK_INFO
-modifier|*
-name|GpeBlock
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_OK
+argument_list|(
+argument|ACPI_STATUS AcpiEvDeleteGpeBlock (     ACPI_GPE_BLOCK_INFO     *GpeBlock)
+argument_list|)
+end_macro
 
 begin_function_decl
 name|UINT32
@@ -323,15 +314,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|AcpiEvUpdateGpes
-parameter_list|(
-name|ACPI_OWNER_ID
-name|TableOwnerId
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiEvUpdateGpes (     ACPI_OWNER_ID           TableOwnerId)
+argument_list|)
+end_macro
 
 begin_function_decl
 name|ACPI_STATUS
@@ -772,14 +760,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|AcpiEvTerminate
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiEvTerminate (     void)
+argument_list|)
+end_macro
 
 begin_endif
 endif|#

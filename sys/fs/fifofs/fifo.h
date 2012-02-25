@@ -9,6 +9,17 @@ end_comment
 
 begin_function_decl
 name|int
+name|fifo_iseof
+parameter_list|(
+name|struct
+name|file
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|fifo_vnoperate
 parameter_list|(
 name|struct

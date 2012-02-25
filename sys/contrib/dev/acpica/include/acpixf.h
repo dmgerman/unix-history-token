@@ -27,8 +27,14 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20120111
+value|0x20120215
 end_define
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acconfig.h>
+end_include
 
 begin_include
 include|#
@@ -171,6 +177,99 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Hardware-reduced prototypes. All interfaces that use these macros will  * be configured out of the ACPICA build if the ACPI_REDUCED_HARDWARE flag  * is set to TRUE.  */
+end_comment
+
+begin_if
+if|#
+directive|if
+operator|(
+operator|!
+name|ACPI_REDUCED_HARDWARE
+operator|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|Prototype;
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_DEPENDENT_RETURN_OK
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|Prototype;
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|Prototype;
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(AE_NOT_CONFIGURED);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_DEPENDENT_RETURN_OK
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {return(AE_OK);}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_HW_DEPENDENT_RETURN_VOID
+parameter_list|(
+name|Prototype
+parameter_list|)
+define|\
+value|static ACPI_INLINE Prototype {}
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !ACPI_REDUCED_HARDWARE */
+end_comment
+
+begin_comment
 comment|/*  * Initialization  */
 end_comment
 
@@ -233,23 +332,19 @@ begin_comment
 comment|/*  * Miscellaneous global interfaces  */
 end_comment
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEnable
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiEnable (     void)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDisable
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiDisable (     void)
+argument_list|)
+end_macro
 
 begin_function_decl
 name|ACPI_STATUS
@@ -786,88 +881,40 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiInstallGlobalEventHandler
-parameter_list|(
-name|ACPI_GBL_EVENT_HANDLER
-name|Handler
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiInstallGlobalEventHandler (     ACPI_GBL_EVENT_HANDLER  Handler,     void                    *Context)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiInstallFixedEventHandler
-parameter_list|(
-name|UINT32
-name|AcpiEvent
-parameter_list|,
-name|ACPI_EVENT_HANDLER
-name|Handler
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiInstallFixedEventHandler (     UINT32                  AcpiEvent,     ACPI_EVENT_HANDLER      Handler,     void                    *Context)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiRemoveFixedEventHandler
-parameter_list|(
-name|UINT32
-name|AcpiEvent
-parameter_list|,
-name|ACPI_EVENT_HANDLER
-name|Handler
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiRemoveFixedEventHandler (     UINT32                  AcpiEvent,     ACPI_EVENT_HANDLER      Handler)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiInstallGpeHandler
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|UINT32
-name|Type
-parameter_list|,
-name|ACPI_GPE_HANDLER
-name|Address
-parameter_list|,
-name|void
-modifier|*
-name|Context
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiInstallGpeHandler (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber,     UINT32                  Type,     ACPI_GPE_HANDLER        Address,     void                    *Context)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiRemoveGpeHandler
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|ACPI_GPE_HANDLER
-name|Address
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiRemoveGpeHandler (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber,     ACPI_GPE_HANDLER        Address)
+argument_list|)
+end_macro
 
 begin_function_decl
 name|ACPI_STATUS
@@ -968,29 +1015,19 @@ begin_comment
 comment|/*  * Global Lock interfaces  */
 end_comment
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiAcquireGlobalLock
-parameter_list|(
-name|UINT16
-name|Timeout
-parameter_list|,
-name|UINT32
-modifier|*
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiAcquireGlobalLock (     UINT16                  Timeout,     UINT32                  *Handle)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiReleaseGlobalLock
-parameter_list|(
-name|UINT32
-name|Handle
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiReleaseGlobalLock (     UINT32                  Handle)
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Interfaces to AML mutex objects  */
@@ -1029,247 +1066,135 @@ begin_comment
 comment|/*  * Fixed Event interfaces  */
 end_comment
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEnableEvent
-parameter_list|(
-name|UINT32
-name|Event
-parameter_list|,
-name|UINT32
-name|Flags
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiEnableEvent (     UINT32                  Event,     UINT32                  Flags)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDisableEvent
-parameter_list|(
-name|UINT32
-name|Event
-parameter_list|,
-name|UINT32
-name|Flags
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiDisableEvent (     UINT32                  Event,     UINT32                  Flags)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiClearEvent
-parameter_list|(
-name|UINT32
-name|Event
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiClearEvent (     UINT32                  Event)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiGetEventStatus
-parameter_list|(
-name|UINT32
-name|Event
-parameter_list|,
-name|ACPI_EVENT_STATUS
-modifier|*
-name|EventStatus
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiGetEventStatus (     UINT32                  Event,     ACPI_EVENT_STATUS       *EventStatus)
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * General Purpose Event (GPE) Interfaces  */
 end_comment
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiUpdateAllGpes
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiUpdateAllGpes (     void)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEnableGpe
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiEnableGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDisableGpe
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiDisableGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiClearGpe
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiClearGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiSetGpe
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|UINT8
-name|Action
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiSetGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber,     UINT8                   Action)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiFinishGpe
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiFinishGpe (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiSetupGpeForWake
-parameter_list|(
-name|ACPI_HANDLE
-name|ParentDevice
-parameter_list|,
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiSetupGpeForWake (     ACPI_HANDLE             ParentDevice,     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiSetGpeWakeMask
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|UINT8
-name|Action
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiSetGpeWakeMask (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber,     UINT8                   Action)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiGetGpeStatus
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|UINT32
-name|GpeNumber
-parameter_list|,
-name|ACPI_EVENT_STATUS
-modifier|*
-name|EventStatus
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiGetGpeStatus (     ACPI_HANDLE             GpeDevice,     UINT32                  GpeNumber,     ACPI_EVENT_STATUS       *EventStatus)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiDisableAllGpes
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiDisableAllGpes (     void)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiEnableAllRuntimeGpes
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiEnableAllRuntimeGpes (     void)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiGetGpeDevice
-parameter_list|(
-name|UINT32
-name|GpeIndex
-parameter_list|,
-name|ACPI_HANDLE
-modifier|*
-name|GpeDevice
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiGetGpeDevice (     UINT32                  GpeIndex,     ACPI_HANDLE             *GpeDevice)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiInstallGpeBlock
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|,
-name|ACPI_GENERIC_ADDRESS
-modifier|*
-name|GpeBlockAddress
-parameter_list|,
-name|UINT32
-name|RegisterCount
-parameter_list|,
-name|UINT32
-name|InterruptNumber
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiInstallGpeBlock (     ACPI_HANDLE             GpeDevice,     ACPI_GENERIC_ADDRESS    *GpeBlockAddress,     UINT32                  RegisterCount,     UINT32                  InterruptNumber)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiRemoveGpeBlock
-parameter_list|(
-name|ACPI_HANDLE
-name|GpeDevice
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiRemoveGpeBlock (     ACPI_HANDLE             GpeDevice)
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Resource interfaces  */
@@ -1483,32 +1408,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiReadBitRegister
-parameter_list|(
-name|UINT32
-name|RegisterId
-parameter_list|,
-name|UINT32
-modifier|*
-name|ReturnValue
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiReadBitRegister (     UINT32                  RegisterId,     UINT32                  *ReturnValue)
+argument_list|)
+end_macro
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiWriteBitRegister
-parameter_list|(
-name|UINT32
-name|RegisterId
-parameter_list|,
-name|UINT32
-name|Value
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiWriteBitRegister (     UINT32                  RegisterId,     UINT32                  Value)
+argument_list|)
+end_macro
+
+begin_comment
+comment|/*  * Sleep/Wake interfaces  */
+end_comment
 
 begin_function_decl
 name|ACPI_STATUS
@@ -1548,11 +1464,19 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiEnterSleepStateS4bios (     void)
+argument_list|)
+end_macro
+
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiEnterSleepStateS4bios
+name|AcpiLeaveSleepStatePrep
 parameter_list|(
-name|void
+name|UINT8
+name|SleepState
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1567,15 +1491,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiSetFirmwareWakingVector
-parameter_list|(
-name|UINT32
-name|PhysicalAddress
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiSetFirmwareWakingVector (     UINT32                  PhysicalAddress)
+argument_list|)
+end_macro
 
 begin_if
 if|#
@@ -1585,20 +1506,42 @@ operator|==
 literal|64
 end_if
 
-begin_function_decl
-name|ACPI_STATUS
-name|AcpiSetFirmwareWakingVector64
-parameter_list|(
-name|UINT64
-name|PhysicalAddress
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiSetFirmwareWakingVector64 (     UINT64                  PhysicalAddress)
+argument_list|)
+end_macro
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/*  * ACPI Timer interfaces  */
+end_comment
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiGetTimerResolution (     UINT32                  *Resolution)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiGetTimer (     UINT32                  *Ticks)
+argument_list|)
+end_macro
+
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_STATUS
+argument_list|(
+argument|ACPI_STATUS AcpiGetTimerDuration (     UINT32                  StartTicks,     UINT32                  EndTicks,     UINT32                  *TimeElapsed)
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * Error/Warning output  */

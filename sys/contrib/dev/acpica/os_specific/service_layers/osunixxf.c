@@ -354,6 +354,35 @@ block|}
 end_function
 
 begin_comment
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsPhysicalTableOverride  *  * PARAMETERS:  ExistingTable       - Header of current table (probably firmware)  *              NewAddress          - Where new table address is returned  *                                    (Physical address)  *              NewTableLength      - Where new table length is returned  *  * RETURN:      Status, address/length of new table. Null pointer returned  *              if no table is available to override.  *  * DESCRIPTION: Returns AE_SUPPORT, function not used in user space.  *  *****************************************************************************/
+end_comment
+
+begin_function
+name|ACPI_STATUS
+name|AcpiOsPhysicalTableOverride
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|ExistingTable
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+modifier|*
+name|NewAddress
+parameter_list|,
+name|UINT32
+modifier|*
+name|NewTableLength
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_SUPPORT
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/******************************************************************************  *  * FUNCTION:    AcpiOsRedirectOutput  *  * PARAMETERS:  Destination         - An open file handle/pointer  *  * RETURN:      None  *  * DESCRIPTION: Causes redirect of AcpiOsPrintf and AcpiOsVprintf  *  *****************************************************************************/
 end_comment
 
@@ -1698,7 +1727,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadMemory  *  * PARAMETERS:  Address             - Physical Memory Address to read  *              Value               - Where value is placed  *              Width               - Number of bits  *  * RETURN:      Value read from physical memory address  *  * DESCRIPTION: Read data from a physical memory address  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsReadMemory  *  * PARAMETERS:  Address             - Physical Memory Address to read  *              Value               - Where value is placed  *              Width               - Number of bits (8,16,32, or 64)  *  * RETURN:      Value read from physical memory address. Always returned  *              as a 64-bit integer, regardless of the read width.  *  * DESCRIPTION: Read data from a physical memory address  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1708,7 +1737,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|UINT32
+name|UINT64
 modifier|*
 name|Value
 parameter_list|,
@@ -1729,6 +1758,9 @@ literal|16
 case|:
 case|case
 literal|32
+case|:
+case|case
+literal|64
 case|:
 operator|*
 name|Value
@@ -1752,7 +1784,7 @@ block|}
 end_function
 
 begin_comment
-comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWriteMemory  *  * PARAMETERS:  Address             - Physical Memory Address to write  *              Value               - Value to write  *              Width               - Number of bits  *  * RETURN:      None  *  * DESCRIPTION: Write data to a physical memory address  *  *****************************************************************************/
+comment|/******************************************************************************  *  * FUNCTION:    AcpiOsWriteMemory  *  * PARAMETERS:  Address             - Physical Memory Address to write  *              Value               - Value to write  *              Width               - Number of bits (8,16,32, or 64)  *  * RETURN:      None  *  * DESCRIPTION: Write data to a physical memory address  *  *****************************************************************************/
 end_comment
 
 begin_function
@@ -1762,7 +1794,7 @@ parameter_list|(
 name|ACPI_PHYSICAL_ADDRESS
 name|Address
 parameter_list|,
-name|UINT32
+name|UINT64
 name|Value
 parameter_list|,
 name|UINT32

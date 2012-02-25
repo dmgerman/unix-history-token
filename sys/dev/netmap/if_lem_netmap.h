@@ -104,24 +104,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_expr_stmt
-name|SYSCTL_NODE
-argument_list|(
-name|_dev
-argument_list|,
-name|OID_AUTO
-argument_list|,
-name|lem
-argument_list|,
-name|CTLFLAG_RW
-argument_list|,
-literal|0
-argument_list|,
-literal|"lem card"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 specifier|static
 name|void
@@ -304,7 +286,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Register/unregister routine  */
+comment|/*  * register-unregister routine  */
 end_comment
 
 begin_function
@@ -354,6 +336,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* no netmap support here */
 name|lem_disable_intr
 argument_list|(
 name|adapter
@@ -371,7 +354,6 @@ operator||
 name|IFF_DRV_OACTIVE
 operator|)
 expr_stmt|;
-comment|/* lem_netmap_block_tasks(adapter); */
 ifndef|#
 directive|ifndef
 name|EM_LEGACY_IRQ
@@ -421,7 +403,6 @@ name|if_capenable
 operator||=
 name|IFCAP_NETMAP
 expr_stmt|;
-comment|/* save if_transmit to restore it when exiting. 		 * XXX what about if_start and if_qflush ? 		 */
 name|na
 operator|->
 name|if_transmit
@@ -471,7 +452,7 @@ else|else
 block|{
 name|fail
 label|:
-comment|/* restore non-netmap mode */
+comment|/* return to non-netmap mode */
 name|ifp
 operator|->
 name|if_transmit
@@ -492,7 +473,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* also enables intr */
+comment|/* also enable intr */
 block|}
 ifndef|#
 directive|ifndef
@@ -517,7 +498,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  */
+comment|/*  * Reconcile hardware and user view of the transmit ring.  */
 end_comment
 
 begin_function
@@ -568,7 +549,7 @@ name|na
 operator|->
 name|tx_rings
 index|[
-literal|0
+name|ring_nr
 index|]
 decl_stmt|;
 name|struct
@@ -653,22 +634,13 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* update avail to what the hardware knows */
-name|ring
-operator|->
-name|avail
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
-expr_stmt|;
+comment|/* check for new packets to send. 	 * j indexes the netmap ring, l indexes the nic ring, and 	 *      j = kring->nr_hwcur, l = E1000_TDT (not tracked), 	 *      j == (l + kring->nkr_hwofs) % ring_size 	 */
 name|j
 operator|=
 name|kring
 operator|->
 name|nr_hwcur
 expr_stmt|;
-comment|/* points into the netmap ring */
 if|if
 condition|(
 name|j
@@ -676,34 +648,31 @@ operator|!=
 name|k
 condition|)
 block|{
-comment|/* we have new packets to send */
+comment|/* we have packets to send */
 name|l
 operator|=
+name|netmap_tidx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|j
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
+argument_list|)
 expr_stmt|;
-comment|/* points into the NIC ring */
-if|if
-condition|(
-name|l
-operator|<
+for|for
+control|(
+name|n
+operator|=
 literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -744,21 +713,6 @@ index|[
 name|l
 index|]
 decl_stmt|;
-name|uint64_t
-name|paddr
-decl_stmt|;
-name|void
-modifier|*
-name|addr
-init|=
-name|PNMB
-argument_list|(
-name|slot
-argument_list|,
-operator|&
-name|paddr
-argument_list|)
-decl_stmt|;
 name|int
 name|flags
 init|=
@@ -783,6 +737,21 @@ condition|?
 name|E1000_TXD_CMD_RS
 else|:
 literal|0
+decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
+name|void
+modifier|*
+name|addr
+init|=
+name|PNMB
+argument_list|(
+name|slot
+argument_list|,
+operator|&
+name|paddr
+argument_list|)
 decl_stmt|;
 name|int
 name|len
@@ -935,9 +904,6 @@ name|l
 operator|+
 literal|1
 expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
 block|}
 name|kring
 operator|->
@@ -951,14 +917,6 @@ operator|->
 name|nr_hwavail
 operator|-=
 name|n
-expr_stmt|;
-name|ring
-operator|->
-name|avail
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1036,7 +994,7 @@ operator|->
 name|nkr_num_slots
 condition|)
 block|{
-comment|/* can it happen ? */
+comment|/* XXX can it happen ? */
 name|D
 argument_list|(
 literal|"bad TDH %d"
@@ -1064,6 +1022,7 @@ condition|(
 name|delta
 condition|)
 block|{
+comment|/* some completed, increment hwavail. */
 if|if
 condition|(
 name|delta
@@ -1088,6 +1047,9 @@ name|nr_hwavail
 operator|+=
 name|delta
 expr_stmt|;
+block|}
+block|}
+comment|/* update avail to what the hardware knows */
 name|ring
 operator|->
 name|avail
@@ -1096,8 +1058,6 @@ name|kring
 operator|->
 name|nr_hwavail
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|do_lock
@@ -1165,7 +1125,7 @@ name|na
 operator|->
 name|rx_rings
 index|[
-literal|0
+name|ring_nr
 index|]
 decl_stmt|;
 name|struct
@@ -1241,34 +1201,23 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
-comment|/* import newly received packets into the netmap ring */
+comment|/* import newly received packets into the netmap ring 	 * j is an index in the netmap ring, l in the NIC ring, and 	 *      j = (kring->nr_hwcur + kring->nr_hwavail) % ring_size 	 *      l = rxr->next_to_check; 	 * and 	 *      j == (l + kring->nkr_hwofs) % ring_size 	 */
 name|l
 operator|=
 name|adapter
 operator|->
 name|next_rx_desc_to_check
 expr_stmt|;
-comment|/* points into the NIC ring */
 name|j
 operator|=
+name|netmap_ridx_n2k
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|l
-operator|+
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-comment|/* points into the netmap ring */
-if|if
-condition|(
-name|j
-operator|>
-name|lim
-condition|)
-name|j
-operator|-=
-name|lim
-operator|+
-literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1433,37 +1382,31 @@ name|k
 condition|)
 block|{
 comment|/* userspace has read some packets. */
+name|l
+operator|=
+name|netmap_ridx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+comment|/* NIC ring index */
+for|for
+control|(
 name|n
 operator|=
 literal|0
-expr_stmt|;
-name|l
-operator|=
-name|j
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-comment|/* NIC ring index */
-if|if
-condition|(
-name|l
-operator|<
-literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -1567,7 +1510,7 @@ argument_list|(
 name|paddr
 argument_list|)
 expr_stmt|;
-comment|/* buffer has changed, and reload map */
+comment|/* buffer has changed, reload map */
 name|netmap_reload_map
 argument_list|(
 name|adapter
@@ -1629,9 +1572,6 @@ else|:
 name|l
 operator|+
 literal|1
-expr_stmt|;
-name|n
-operator|++
 expr_stmt|;
 block|}
 name|kring

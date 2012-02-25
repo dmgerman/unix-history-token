@@ -90,7 +90,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"echo f | %s -pd copy>copy.out 2>copy.err"
+literal|"echo f| %s -pd copy>copy.out 2>copy.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -183,7 +183,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"echo f | %s -pd copy>copy.out 2>copy.err"
+literal|"echo f| %s -pd copy>copy.out 2>copy.err"
 argument_list|,
 name|testprog
 argument_list|)
@@ -227,7 +227,7 @@ name|r
 operator|=
 name|systemf
 argument_list|(
-literal|"echo f | %s -pud copy>copy.out 2>copy.err"
+literal|"echo f| %s -pud copy>copy.out 2>copy.err"
 argument_list|,
 name|testprog
 argument_list|)

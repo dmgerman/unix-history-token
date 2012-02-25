@@ -2702,11 +2702,11 @@ name|error
 decl_stmt|,
 name|locked
 decl_stmt|;
-name|unsigned
-name|int
-name|buflen
-decl_stmt|,
+name|off_t
 name|offset
+decl_stmt|;
+name|ssize_t
+name|buflen
 decl_stmt|,
 name|resid
 decl_stmt|;

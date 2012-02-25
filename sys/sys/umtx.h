@@ -352,6 +352,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UMTX_ABSTIME
+value|0x01
+end_define
+
+begin_define
+define|#
+directive|define
 name|UMTX_CHECK_UNPARKING
 value|CVWAIT_CHECK_UNPARKING
 end_define

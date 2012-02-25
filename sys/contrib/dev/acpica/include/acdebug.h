@@ -277,14 +277,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|AcpiDbDisplayGpes
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiDbDisplayGpes (     void)
+argument_list|)
+end_macro
 
 begin_function_decl
 name|void
@@ -295,20 +293,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|void
-name|AcpiDbGenerateGpe
-parameter_list|(
-name|char
-modifier|*
-name|GpeArg
-parameter_list|,
-name|char
-modifier|*
-name|BlockArg
-parameter_list|)
-function_decl|;
-end_function_decl
+begin_macro
+name|ACPI_HW_DEPENDENT_RETURN_VOID
+argument_list|(
+argument|void AcpiDbGenerateGpe (     char                    *GpeArg,     char                    *BlockArg)
+argument_list|)
+end_macro
 
 begin_comment
 comment|/*  * dbmethod - control method commands  */

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Matteo Landi, Luigi Rizzo. All rights reserved.
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap changes for if_em.  *  * For structure and details on the individual functions please see  * ixgbe_netmap.h  */
+comment|/*  * $FreeBSD$  * $Id: if_em_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap support for if_em.c  *  * For structure and details on the individual functions please see  * ixgbe_netmap.h  */
 end_comment
 
 begin_include
@@ -220,10 +220,6 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
-
-begin_comment
-comment|/*  * wrapper to export locks to the generic code  */
-end_comment
 
 begin_function
 specifier|static
@@ -714,7 +710,7 @@ else|else
 block|{
 name|fail
 label|:
-comment|/* restore if_transmit */
+comment|/* return to non-netmap mode */
 name|ifp
 operator|->
 name|if_transmit
@@ -917,30 +913,28 @@ block|{
 comment|/* we have packets to send */
 name|l
 operator|=
+name|netmap_tidx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|j
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
+argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|l
-operator|<
+for|for
+control|(
+name|n
+operator|=
 literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -1172,9 +1166,6 @@ name|l
 operator|+
 literal|1
 expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
 block|}
 name|kring
 operator|->
@@ -1242,7 +1233,7 @@ block|{
 name|int
 name|delta
 decl_stmt|;
-comment|/* record completed transmissions using THD. */
+comment|/* record completed transmissions using TDH */
 name|l
 operator|=
 name|E1000_READ_REG
@@ -1267,7 +1258,7 @@ operator|->
 name|nkr_num_slots
 condition|)
 block|{
-comment|/* XXX can happen */
+comment|/* XXX can it happen ? */
 name|D
 argument_list|(
 literal|"TDH wrap %d"
@@ -1496,37 +1487,14 @@ name|next_to_check
 expr_stmt|;
 name|j
 operator|=
+name|netmap_ridx_n2k
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|l
-operator|+
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-comment|/* here nkr_hwofs can be negative so must check for j< 0 */
-if|if
-condition|(
-name|j
-operator|<
-literal|0
-condition|)
-name|j
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|j
-operator|>
-name|lim
-condition|)
-name|j
-operator|-=
-name|lim
-operator|+
-literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1661,6 +1629,7 @@ name|kring
 operator|->
 name|nr_hwcur
 expr_stmt|;
+comment|/* netmap ring index */
 if|if
 condition|(
 name|j
@@ -1669,51 +1638,31 @@ name|k
 condition|)
 block|{
 comment|/* userspace has read some packets. */
+name|l
+operator|=
+name|netmap_ridx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+comment|/* NIC ring index */
+for|for
+control|(
 name|n
 operator|=
 literal|0
-expr_stmt|;
-name|l
-operator|=
-name|j
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-comment|/* NIC ring index */
-comment|/* here nkr_hwofs can be negative so check for l> lim */
-if|if
-condition|(
-name|l
-operator|<
-literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|l
-operator|>
-name|lim
-condition|)
-name|l
-operator|-=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -1880,9 +1829,6 @@ name|l
 operator|+
 literal|1
 expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
 block|}
 name|kring
 operator|->
@@ -1971,6 +1917,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

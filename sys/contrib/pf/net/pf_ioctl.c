@@ -9103,7 +9103,7 @@ operator|&&
 name|rule
 operator|->
 name|rtableid
-operator|>
+operator|>=
 name|rt_numfibs
 condition|)
 else|#
@@ -10774,7 +10774,7 @@ comment|/* ROUTING */
 name|newrule
 operator|->
 name|rtableid
-operator|>
+operator|>=
 name|rt_numfibs
 condition|)
 else|#

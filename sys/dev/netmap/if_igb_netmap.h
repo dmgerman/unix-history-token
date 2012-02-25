@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2011 Universita` di Pisa. All rights reserved.  *  *
 end_comment
 
 begin_comment
-comment|/*  * $FreeBSD$  * $Id: if_igb_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap modifications for igb  * contribured by Ahmed Kooli  */
+comment|/*  * $FreeBSD$  * $Id: if_igb_netmap.h 9802 2011-12-02 18:42:37Z luigi $  *  * netmap modifications for igb contributed by Ahmed Kooli  */
 end_comment
 
 begin_include
@@ -324,7 +324,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * support for netmap register/unregisted. We are already under core lock.  * only called on the first init or the last unregister.  */
+comment|/*  * register-unregister routine  */
 end_comment
 
 begin_function
@@ -374,6 +374,7 @@ condition|)
 return|return
 name|EINVAL
 return|;
+comment|/* no netmap support here */
 name|igb_disable_intr
 argument_list|(
 name|adapter
@@ -402,7 +403,6 @@ name|if_capenable
 operator||=
 name|IFCAP_NETMAP
 expr_stmt|;
-comment|/* save if_transmit to restore it later */
 name|na
 operator|->
 name|if_transmit
@@ -473,7 +473,7 @@ argument_list|(
 name|adapter
 argument_list|)
 expr_stmt|;
-comment|/* also enables intr */
+comment|/* also enable intr */
 block|}
 return|return
 operator|(
@@ -484,7 +484,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Reconcile kernel and user view of the transmit ring.  */
+comment|/*  * Reconcile hardware and user view of the transmit ring.  */
 end_comment
 
 begin_function
@@ -633,22 +633,13 @@ argument_list|,
 name|BUS_DMASYNC_POSTREAD
 argument_list|)
 expr_stmt|;
-comment|/* update avail to what the hardware knows */
-name|ring
-operator|->
-name|avail
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
-expr_stmt|;
+comment|/* check for new packets to send. 	 * j indexes the netmap ring, l indexes the nic ring, and 	 *      j = kring->nr_hwcur, l = E1000_TDT (not tracked), 	 *      j == (l + kring->nkr_hwofs) % ring_size 	 */
 name|j
 operator|=
 name|kring
 operator|->
 name|nr_hwcur
 expr_stmt|;
-comment|/* netmap ring index */
 if|if
 condition|(
 name|j
@@ -656,36 +647,12 @@ operator|!=
 name|k
 condition|)
 block|{
-comment|/* we have new packets to send */
+comment|/* we have packets to send */
+comment|/* 82575 needs the queue index added */
 name|u32
 name|olinfo_status
 init|=
-literal|0
-decl_stmt|;
-name|l
-operator|=
-name|j
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-comment|/* NIC ring index */
-if|if
-condition|(
-name|l
-operator|<
-literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
-expr_stmt|;
-comment|/* 82575 needs the queue index added */
-if|if
-condition|(
+operator|(
 name|adapter
 operator|->
 name|hw
@@ -695,21 +662,42 @@ operator|.
 name|type
 operator|==
 name|e1000_82575
-condition|)
-name|olinfo_status
-operator||=
+operator|)
+condition|?
+operator|(
 name|txr
 operator|->
 name|me
 operator|<<
 literal|4
+operator|)
+else|:
+literal|0
+decl_stmt|;
+name|l
+operator|=
+name|netmap_tidx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
+name|j
+argument_list|)
 expr_stmt|;
-while|while
-condition|(
+for|for
+control|(
+name|n
+operator|=
+literal|0
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -722,19 +710,6 @@ operator|->
 name|slot
 index|[
 name|j
-index|]
-decl_stmt|;
-name|struct
-name|igb_tx_buffer
-modifier|*
-name|txbuf
-init|=
-operator|&
-name|txr
-operator|->
-name|tx_buffers
-index|[
-name|l
 index|]
 decl_stmt|;
 name|union
@@ -755,20 +730,18 @@ index|[
 name|l
 index|]
 decl_stmt|;
-name|uint64_t
-name|paddr
-decl_stmt|;
-name|void
+name|struct
+name|igb_tx_buffer
 modifier|*
-name|addr
+name|txbuf
 init|=
-name|PNMB
-argument_list|(
-name|slot
-argument_list|,
 operator|&
-name|paddr
-argument_list|)
+name|txr
+operator|->
+name|tx_buffers
+index|[
+name|l
+index|]
 decl_stmt|;
 name|int
 name|flags
@@ -794,6 +767,21 @@ condition|?
 name|E1000_ADVTXD_DCMD_RS
 else|:
 literal|0
+decl_stmt|;
+name|uint64_t
+name|paddr
+decl_stmt|;
+name|void
+modifier|*
+name|addr
+init|=
+name|PNMB
+argument_list|(
+name|slot
+argument_list|,
+operator|&
+name|paddr
+argument_list|)
 decl_stmt|;
 name|int
 name|len
@@ -836,7 +824,7 @@ operator|&=
 operator|~
 name|NS_REPORT
 expr_stmt|;
-comment|// XXX do we need to set the address ?
+comment|// XXX set the address unconditionally
 name|curr
 operator|->
 name|read
@@ -958,9 +946,6 @@ name|l
 operator|+
 literal|1
 expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
 block|}
 name|kring
 operator|->
@@ -974,14 +959,6 @@ operator|->
 name|nr_hwavail
 operator|-=
 name|n
-expr_stmt|;
-name|ring
-operator|->
-name|avail
-operator|=
-name|kring
-operator|->
-name|nr_hwavail
 expr_stmt|;
 comment|/* Set the watchdog XXX ? */
 name|txr
@@ -1049,7 +1026,7 @@ block|{
 name|int
 name|delta
 decl_stmt|;
-comment|/* record completed transmission using TDH */
+comment|/* record completed transmissions using TDH */
 name|l
 operator|=
 name|E1000_READ_REG
@@ -1073,13 +1050,22 @@ name|kring
 operator|->
 name|nkr_num_slots
 condition|)
+block|{
 comment|/* XXX can it happen ? */
+name|D
+argument_list|(
+literal|"TDH wrap %d"
+argument_list|,
+name|l
+argument_list|)
+expr_stmt|;
 name|l
 operator|-=
 name|kring
 operator|->
 name|nkr_num_slots
 expr_stmt|;
+block|}
 name|delta
 operator|=
 name|l
@@ -1093,7 +1079,7 @@ condition|(
 name|delta
 condition|)
 block|{
-comment|/* new tx were completed */
+comment|/* some completed, increment hwavail. */
 if|if
 condition|(
 name|delta
@@ -1118,6 +1104,9 @@ name|nr_hwavail
 operator|+=
 name|delta
 expr_stmt|;
+block|}
+block|}
+comment|/* update avail to what the hardware knows */
 name|ring
 operator|->
 name|avail
@@ -1126,8 +1115,6 @@ name|kring
 operator|->
 name|nr_hwavail
 expr_stmt|;
-block|}
-block|}
 if|if
 condition|(
 name|do_lock
@@ -1264,7 +1251,7 @@ argument_list|(
 name|rxr
 argument_list|)
 expr_stmt|;
-comment|/* Sync the ring. */
+comment|/* XXX check sync modes */
 name|bus_dmamap_sync
 argument_list|(
 name|rxr
@@ -1284,6 +1271,7 @@ operator||
 name|BUS_DMASYNC_POSTWRITE
 argument_list|)
 expr_stmt|;
+comment|/* import newly received packets into the netmap ring. 	 * j is an index in the netmap ring, l in the NIC ring, and 	 *      j = (kring->nr_hwcur + kring->nr_hwavail) % ring_size 	 *      l = rxr->next_to_check; 	 * and 	 *      j == (l + kring->nkr_hwofs) % ring_size 	 */
 name|l
 operator|=
 name|rxr
@@ -1292,23 +1280,14 @@ name|next_to_check
 expr_stmt|;
 name|j
 operator|=
+name|netmap_ridx_n2k
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
 name|l
-operator|+
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-if|if
-condition|(
-name|j
-operator|>
-name|lim
-condition|)
-name|j
-operator|-=
-name|lim
-operator|+
-literal|1
+argument_list|)
 expr_stmt|;
 for|for
 control|(
@@ -1444,34 +1423,12 @@ operator|+=
 name|n
 expr_stmt|;
 block|}
-comment|/* skip past packets that userspace has already processed, 	 * making them available for reception. 	 * advance nr_hwcur and issue a bus_dmamap_sync on the 	 * buffers so it is safe to write to them. 	 * Also increase nr_hwavail 	 */
+comment|/* skip past packets that userspace has already processed */
 name|j
 operator|=
 name|kring
 operator|->
 name|nr_hwcur
-expr_stmt|;
-name|l
-operator|=
-name|kring
-operator|->
-name|nr_hwcur
-operator|-
-name|kring
-operator|->
-name|nkr_hwofs
-expr_stmt|;
-if|if
-condition|(
-name|l
-operator|<
-literal|0
-condition|)
-name|l
-operator|+=
-name|lim
-operator|+
-literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -1481,16 +1438,30 @@ name|k
 condition|)
 block|{
 comment|/* userspace has read some packets. */
+name|l
+operator|=
+name|netmap_ridx_k2n
+argument_list|(
+name|na
+argument_list|,
+name|ring_nr
+argument_list|,
+name|j
+argument_list|)
+expr_stmt|;
+for|for
+control|(
 name|n
 operator|=
 literal|0
-expr_stmt|;
-while|while
-condition|(
+init|;
 name|j
 operator|!=
 name|k
-condition|)
+condition|;
+name|n
+operator|++
+control|)
 block|{
 name|struct
 name|netmap_slot
@@ -1658,9 +1629,6 @@ name|l
 operator|+
 literal|1
 expr_stmt|;
-name|n
-operator|++
-expr_stmt|;
 block|}
 name|kring
 operator|->
@@ -1672,9 +1640,7 @@ name|kring
 operator|->
 name|nr_hwcur
 operator|=
-name|ring
-operator|->
-name|cur
+name|k
 expr_stmt|;
 name|bus_dmamap_sync
 argument_list|(
@@ -1695,7 +1661,7 @@ operator||
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/* IMPORTANT: we must leave one free slot in the ring, 		 * so move l back by one unit 		 */
+comment|/* 		 * IMPORTANT: we must leave one free slot in the ring, 		 * so move l back by one unit 		 */
 name|l
 operator|=
 operator|(
@@ -1751,6 +1717,10 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/* end of file */
+end_comment
 
 end_unit
 

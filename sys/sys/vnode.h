@@ -3455,7 +3455,7 @@ name|ucred
 modifier|*
 name|file_cred
 parameter_list|,
-name|int
+name|ssize_t
 modifier|*
 name|aresid
 parameter_list|,
@@ -4787,6 +4787,18 @@ parameter_list|(
 name|accmode_t
 modifier|*
 name|accmode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vfs_unp_reclaim
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
 parameter_list|)
 function_decl|;
 end_function_decl

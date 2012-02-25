@@ -3263,14 +3263,6 @@ operator|->
 name|td_proc
 condition|)
 block|{
-comment|/* Remember that a child is being debugged(traced). */
-name|p
-operator|->
-name|p_pptr
-operator|->
-name|p_dbg_child
-operator|++
-expr_stmt|;
 name|proc_reparent
 argument_list|(
 name|p
@@ -3598,13 +3590,6 @@ name|p
 argument_list|,
 name|pp
 argument_list|)
-expr_stmt|;
-name|p
-operator|->
-name|p_pptr
-operator|->
-name|p_dbg_child
-operator|--
 expr_stmt|;
 if|if
 condition|(

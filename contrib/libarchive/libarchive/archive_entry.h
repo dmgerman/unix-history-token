@@ -16,6 +16,17 @@ name|ARCHIVE_ENTRY_H_INCLUDED
 end_define
 
 begin_comment
+comment|/* Note: Compiler will complain if this does not match archive.h! */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ARCHIVE_VERSION_NUMBER
+value|3000003
+end_define
+
+begin_comment
 comment|/*  * Note: archive_entry.h is for use outside of libarchive; the  * configuration headers (config.h, archive_platform.h, etc.) are  * purely internal.  Do NOT use HAVE_XXX configuration macros to  * control the behavior of this header!  If you must conditionalize,  * use predefined compiler and/or platform macros.  */
 end_comment
 
@@ -113,12 +124,20 @@ name|__LA_UID_T
 value|uid_t
 end_define
 
+begin_comment
+comment|/* Remove in libarchive 3.2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|__LA_GID_T
 value|gid_t
 end_define
+
+begin_comment
+comment|/* Remove in libarchive 3.2 */
+end_comment
 
 begin_define
 define|#
@@ -146,12 +165,20 @@ name|__LA_UID_T
 value|short
 end_define
 
+begin_comment
+comment|/* Remove in libarchive 3.2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|__LA_GID_T
 value|short
 end_define
+
+begin_comment
+comment|/* Remove in libarchive 3.2 */
+end_comment
 
 begin_define
 define|#
@@ -183,12 +210,38 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|_SCO_DS
+argument_list|)
+end_if
+
+begin_define
+define|#
+directive|define
+name|__LA_INT64_T
+value|long long
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_define
 define|#
 directive|define
 name|__LA_INT64_T
 value|int64_t
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -197,12 +250,20 @@ name|__LA_UID_T
 value|uid_t
 end_define
 
+begin_comment
+comment|/* Remove in libarchive 3.2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|__LA_GID_T
 value|gid_t
 end_define
+
+begin_comment
+comment|/* Remove in libarchive 3.2 */
+end_comment
 
 begin_define
 define|#
@@ -224,7 +285,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/*  * XXX Is this defined for all Windows compilers?  If so, in what  * header?  It would be nice to remove the __LA_INO_T indirection and  * just use plain ino_t everywhere.  Likewise for the other types just  * above.  */
+comment|/*  * Remove this for libarchive 3.2, since ino_t is no longer used.  */
 end_comment
 
 begin_define
@@ -316,7 +377,6 @@ begin_define
 define|#
 directive|define
 name|__LA_DECL
-value|__attribute__((dllimport)) extern
 end_define
 
 begin_else
@@ -374,6 +434,9 @@ block|{
 endif|#
 directive|endif
 comment|/*  * Description of an archive entry.  *  * You can think of this as "struct stat" with some text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries that are  * supported by "pax interchange" format.  However, GNU, ustar, cpio,  * and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  */
+struct_decl|struct
+name|archive
+struct_decl|;
 struct_decl|struct
 name|archive_entry
 struct_decl|;
@@ -450,6 +513,18 @@ modifier|*
 name|archive_entry_new
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+comment|/*  * This form of archive_entry_new2() will pull character-set  * conversion information from the specified archive handle.  The  * older archive_entry_new(void) form is equivalent to calling  * archive_entry_new2(NULL) and will result in the use of an internal  * default character-set conversion.  */
+name|__LA_DECL
+name|struct
+name|archive_entry
+modifier|*
+name|archive_entry_new2
+parameter_list|(
+name|struct
+name|archive
+modifier|*
 parameter_list|)
 function_decl|;
 comment|/*  * Retrieve fields from an archive_entry.  *  * There are a number of implicit conversions among these fields.  For  * example, if a regular string field is set and you read the _w wide  * character field, the entry will implicitly convert narrow-to-wide  * using the current locale.  Similarly, dev values are automatically  * updated when you write devmajor or devminor and vice versa.  *  * In addition, fields can be "set" or "unset."  Unset string fields  * return NULL, non-string fields have _is_set() functions to test  * whether they've been set.  You can "unset" a string field by  * assigning NULL; non-string fields have _unset() functions to  * unset them.  *  * Note: There is one ambiguity in the above; string fields will  * also return NULL when implicit character set conversions fail.  * This is usually what you want.  */
@@ -544,6 +619,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
+name|int
+name|archive_entry_dev_is_set
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_devmajor
 parameter_list|(
@@ -601,7 +685,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|__LA_GID_T
+name|__LA_INT64_T
 name|archive_entry_gid
 parameter_list|(
 name|struct
@@ -654,7 +738,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|__LA_INO_T
+name|__LA_INT64_T
 name|archive_entry_ino
 parameter_list|(
 name|struct
@@ -665,6 +749,15 @@ function_decl|;
 name|__LA_DECL
 name|__LA_INT64_T
 name|archive_entry_ino64
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_ino_is_set
 parameter_list|(
 name|struct
 name|archive_entry
@@ -740,6 +833,15 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
+name|__LA_MODE_T
+name|archive_entry_perm
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
 name|dev_t
 name|archive_entry_rdev
 parameter_list|(
@@ -771,6 +873,17 @@ specifier|const
 name|char
 modifier|*
 name|archive_entry_sourcepath
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+specifier|const
+name|wchar_t
+modifier|*
+name|archive_entry_sourcepath_w
 parameter_list|(
 name|struct
 name|archive_entry
@@ -829,7 +942,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|__LA_UID_T
+name|__LA_INT64_T
 name|archive_entry_uid
 parameter_list|(
 name|struct
@@ -859,7 +972,7 @@ name|archive_entry
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Set fields in an archive_entry.  *  * Note that string 'set' functions do not copy the string, only the pointer.  * In contrast, 'copy' functions do copy the object pointed to.  *  * Note: As of libarchive 2.4, 'set' functions do copy the string and  * are therefore exact synonyms for the 'copy' versions.  The 'copy'  * names will be retired in libarchive 3.0.  */
+comment|/*  * Set fields in an archive_entry.  *  * Note: Before libarchive 2.4, there were 'set' and 'copy' versions  * of the string setters.  'copy' copied the actual string, 'set' just  * stored the pointer.  In libarchive 2.4 and later, strings are  * always copied.  */
 name|__LA_DECL
 name|void
 name|archive_entry_set_atime
@@ -1054,7 +1167,7 @@ name|struct
 name|archive_entry
 modifier|*
 parameter_list|,
-name|__LA_GID_T
+name|__LA_INT64_T
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -1161,12 +1274,6 @@ name|char
 modifier|*
 parameter_list|)
 function_decl|;
-if|#
-directive|if
-name|ARCHIVE_VERSION_NUMBER
-operator|>=
-literal|3000000
-comment|/* Starting with libarchive 3.0, this will be synonym for ino64. */
 name|__LA_DECL
 name|void
 name|archive_entry_set_ino
@@ -1178,22 +1285,6 @@ parameter_list|,
 name|__LA_INT64_T
 parameter_list|)
 function_decl|;
-else|#
-directive|else
-name|__LA_DECL
-name|void
-name|archive_entry_set_ino
-parameter_list|(
-name|struct
-name|archive_entry
-modifier|*
-parameter_list|,
-name|unsigned
-name|long
-parameter_list|)
-function_decl|;
-endif|#
-directive|endif
 name|__LA_DECL
 name|void
 name|archive_entry_set_ino64
@@ -1433,6 +1524,19 @@ parameter_list|)
 function_decl|;
 name|__LA_DECL
 name|void
+name|archive_entry_copy_sourcepath_w
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|wchar_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|void
 name|archive_entry_set_symlink
 parameter_list|(
 name|struct
@@ -1491,7 +1595,7 @@ name|struct
 name|archive_entry
 modifier|*
 parameter_list|,
-name|__LA_UID_T
+name|__LA_INT64_T
 parameter_list|)
 function_decl|;
 name|__LA_DECL
@@ -1573,29 +1677,193 @@ name|stat
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * ACL routines.  This used to simply store and return text-format ACL  * strings, but that proved insufficient for a number of reasons:  *   = clients need control over uname/uid and gname/gid mappings  *   = there are many different ACL text formats  *   = would like to be able to read/convert archives containing ACLs  *     on platforms that lack ACL libraries  *  *  This last point, in particular, forces me to implement a reasonably  *  complete set of ACL support routines.  *  *  TODO: Extend this to support NFSv4/NTFS permissions.  That should  *  allow full ACL support on Mac OS, in particular, which uses  *  POSIX.1e-style interfaces to manipulate NFSv4/NTFS permissions.  */
-comment|/*  * Permission bits mimic POSIX.1e.  Note that I've not followed POSIX.1e's  * "permset"/"perm" abstract type nonsense.  A permset is just a simple  * bitmap, following long-standing Unix tradition.  */
+comment|/*  * Storage for Mac OS-specific AppleDouble metadata information.  * Apple-format tar files store a separate binary blob containing  * encoded metadata with ACL, extended attributes, etc.  * This provides a place to store that blob.  */
+name|__LA_DECL
+specifier|const
+name|void
+modifier|*
+name|archive_entry_mac_metadata
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|size_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|void
+name|archive_entry_copy_mac_metadata
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|size_t
+parameter_list|)
+function_decl|;
+comment|/*  * ACL routines.  This used to simply store and return text-format ACL  * strings, but that proved insufficient for a number of reasons:  *   = clients need control over uname/uid and gname/gid mappings  *   = there are many different ACL text formats  *   = would like to be able to read/convert archives containing ACLs  *     on platforms that lack ACL libraries  *  *  This last point, in particular, forces me to implement a reasonably  *  complete set of ACL support routines.  */
+comment|/*  * Permission bits.  */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_EXECUTE
-value|1
+value|0x00000001
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_WRITE
-value|2
+value|0x00000002
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_READ
-value|4
-comment|/* We need to be able to specify either or both of these. */
+value|0x00000004
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_READ_DATA
+value|0x00000008
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_LIST_DIRECTORY
+value|0x00000008
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_WRITE_DATA
+value|0x00000010
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ADD_FILE
+value|0x00000010
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_APPEND_DATA
+value|0x00000020
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ADD_SUBDIRECTORY
+value|0x00000020
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_READ_NAMED_ATTRS
+value|0x00000040
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_WRITE_NAMED_ATTRS
+value|0x00000080
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_DELETE_CHILD
+value|0x00000100
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_READ_ATTRIBUTES
+value|0x00000200
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_WRITE_ATTRIBUTES
+value|0x00000400
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_DELETE
+value|0x00000800
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_READ_ACL
+value|0x00001000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_WRITE_ACL
+value|0x00002000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_WRITE_OWNER
+value|0x00004000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_SYNCHRONIZE
+value|0x00008000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_PERMS_POSIX1E
+define|\
+value|(ARCHIVE_ENTRY_ACL_EXECUTE			\ 	    | ARCHIVE_ENTRY_ACL_WRITE			\ 	    | ARCHIVE_ENTRY_ACL_READ)
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_PERMS_NFS4
+define|\
+value|(ARCHIVE_ENTRY_ACL_EXECUTE			\ 	    | ARCHIVE_ENTRY_ACL_READ_DATA		\ 	    | ARCHIVE_ENTRY_ACL_LIST_DIRECTORY 		\ 	    | ARCHIVE_ENTRY_ACL_WRITE_DATA		\ 	    | ARCHIVE_ENTRY_ACL_ADD_FILE		\ 	    | ARCHIVE_ENTRY_ACL_APPEND_DATA		\ 	    | ARCHIVE_ENTRY_ACL_ADD_SUBDIRECTORY	\ 	    | ARCHIVE_ENTRY_ACL_READ_NAMED_ATTRS	\ 	    | ARCHIVE_ENTRY_ACL_WRITE_NAMED_ATTRS	\ 	    | ARCHIVE_ENTRY_ACL_DELETE_CHILD		\ 	    | ARCHIVE_ENTRY_ACL_READ_ATTRIBUTES		\ 	    | ARCHIVE_ENTRY_ACL_WRITE_ATTRIBUTES	\ 	    | ARCHIVE_ENTRY_ACL_DELETE			\ 	    | ARCHIVE_ENTRY_ACL_READ_ACL		\ 	    | ARCHIVE_ENTRY_ACL_WRITE_ACL		\ 	    | ARCHIVE_ENTRY_ACL_WRITE_OWNER		\ 	    | ARCHIVE_ENTRY_ACL_SYNCHRONIZE)
+comment|/*  * Inheritance values (NFS4 ACLs only); included in permset.  */
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT
+value|0x02000000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_DIRECTORY_INHERIT
+value|0x04000000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_NO_PROPAGATE_INHERIT
+value|0x08000000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_INHERIT_ONLY
+value|0x10000000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_SUCCESSFUL_ACCESS
+value|0x20000000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS
+value|0x40000000
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_INHERITANCE_NFS4
+define|\
+value|(ARCHIVE_ENTRY_ACL_ENTRY_FILE_INHERIT			\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_DIRECTORY_INHERIT		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_NO_PROPAGATE_INHERIT	\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_INHERIT_ONLY		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_SUCCESSFUL_ACCESS		\ 	    | ARCHIVE_ENTRY_ACL_ENTRY_FAILED_ACCESS)
+comment|/* We need to be able to specify combinations of these. */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_ACCESS
 value|256
+comment|/* POSIX.1e only */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_TYPE_DEFAULT
 value|512
+comment|/* POSIX.1e only */
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_TYPE_ALLOW
+value|1024
+comment|/* NFS4 only */
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_TYPE_DENY
+value|2048
+comment|/* NFS4 only */
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_TYPE_AUDIT
+value|4096
+comment|/* NFS4 only */
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_TYPE_ALARM
+value|8192
+comment|/* NFS4 only */
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_TYPE_POSIX1E
+value|(ARCHIVE_ENTRY_ACL_TYPE_ACCESS \ 	    | ARCHIVE_ENTRY_ACL_TYPE_DEFAULT)
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_TYPE_NFS4
+value|(ARCHIVE_ENTRY_ACL_TYPE_ALLOW \ 	    | ARCHIVE_ENTRY_ACL_TYPE_DENY \ 	    | ARCHIVE_ENTRY_ACL_TYPE_AUDIT \ 	    | ARCHIVE_ENTRY_ACL_TYPE_ALARM)
 comment|/* Tag values mimic POSIX.1e */
 define|#
 directive|define
@@ -1621,12 +1889,17 @@ define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_MASK
 value|10005
-comment|/* Modify group access. */
+comment|/* Modify group access (POSIX.1e only) */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_OTHER
 value|10006
-comment|/* Public. */
+comment|/* Public (POSIX.1e only) */
+define|#
+directive|define
+name|ARCHIVE_ENTRY_ACL_EVERYONE
+value|10107
+comment|/* Everyone (NFS4 only) */
 comment|/*  * Set the ACL by clearing it and adding entries one at a time.  * Unlike the POSIX.1e ACL routines, you must specify the type  * (access/default) for each entry.  Internally, the ACL data is just  * a soup of entries.  API calls here allow you to retrieve just the  * entries of interest.  This design (which goes against the spirit of  * POSIX.1e) is useful for handling archive formats that combine  * default and access information in a single ACL list.  */
 name|__LA_DECL
 name|void
@@ -1638,7 +1911,7 @@ modifier|*
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|void
+name|int
 name|archive_entry_acl_add_entry
 parameter_list|(
 name|struct
@@ -1664,7 +1937,7 @@ comment|/* name */
 parameter_list|)
 function_decl|;
 name|__LA_DECL
-name|void
+name|int
 name|archive_entry_acl_add_entry_w
 parameter_list|(
 name|struct
@@ -1689,7 +1962,7 @@ modifier|*
 comment|/* name */
 parameter_list|)
 function_decl|;
-comment|/*  * To retrieve the ACL, first "reset", then repeatedly ask for the  * "next" entry.  The want_type parameter allows you to request only  * access entries or only default entries.  */
+comment|/*  * To retrieve the ACL, first "reset", then repeatedly ask for the  * "next" entry.  The want_type parameter allows you to request only  * certain types of entries.  */
 name|__LA_DECL
 name|int
 name|archive_entry_acl_reset
@@ -1770,7 +2043,7 @@ modifier|*
 comment|/* name */
 parameter_list|)
 function_decl|;
-comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include access entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include default entries.  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  (As used by 'star'.)  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry.  */
+comment|/*  * Construct a text-format ACL.  The flags argument is a bitmask that  * can include any of the following:  *  * ARCHIVE_ENTRY_ACL_TYPE_ACCESS - Include POSIX.1e "access" entries.  * ARCHIVE_ENTRY_ACL_TYPE_DEFAULT - Include POSIX.1e "default" entries.  * ARCHIVE_ENTRY_ACL_TYPE_NFS4 - Include NFS4 entries.  * ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID - Include extra numeric ID field in  *    each ACL entry.  ('star' introduced this for POSIX.1e, this flag  *    also applies to NFS4.)  * ARCHIVE_ENTRY_ACL_STYLE_MARK_DEFAULT - Include "default:" before each  *    default ACL entry, as used in old Solaris ACLs.  */
 define|#
 directive|define
 name|ARCHIVE_ENTRY_ACL_STYLE_EXTRA_ID
@@ -1793,6 +2066,20 @@ name|int
 comment|/* flags */
 parameter_list|)
 function_decl|;
+name|__LA_DECL
+specifier|const
+name|char
+modifier|*
+name|archive_entry_acl_text
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|int
+comment|/* flags */
+parameter_list|)
+function_decl|;
 comment|/* Return a count of entries matching 'want_type' */
 name|__LA_DECL
 name|int
@@ -1806,21 +2093,20 @@ name|int
 comment|/* want_type */
 parameter_list|)
 function_decl|;
-comment|/*  * Private ACL parser.  This is private because it handles some  * very weird formats that clients should not be messing with.  * Clients should only deal with their platform-native formats.  * Because of the need to support many formats cleanly, new arguments  * are likely to get added on a regular basis.  Clients who try to use  * this interface are likely to be surprised when it changes.  *  * You were warned!  *  * TODO: Move this declaration out of the public header and into  * a private header.  Warnings above are silly.  */
+comment|/* Return an opaque ACL object. */
+comment|/* There's not yet anything clients can actually do with this... */
+struct_decl|struct
+name|archive_acl
+struct_decl|;
 name|__LA_DECL
-name|int
-name|__archive_entry_acl_parse_w
+name|struct
+name|archive_acl
+modifier|*
+name|archive_entry_acl
 parameter_list|(
 name|struct
 name|archive_entry
 modifier|*
-parameter_list|,
-specifier|const
-name|wchar_t
-modifier|*
-parameter_list|,
-name|int
-comment|/* type */
 parameter_list|)
 function_decl|;
 comment|/*  * extended attributes  */
@@ -1898,11 +2184,72 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
-comment|/*  * Utility to match up hardlinks.  *  * The 'struct archive_entry_linkresolver' is a cache of archive entries  * for files with multiple links.  Here's how to use it:  *   1. Create a lookup object with archive_entry_linkresolver_new()  *   2. Tell it the archive format you're using.  *   3. Hand each archive_entry to archive_entry_linkify().  *      That function will return 0, 1, or 2 entries that should  *      be written.  *   4. Call archive_entry_linkify(resolver, NULL) until  *      no more entries are returned.  *   5. Call archive_entry_link_resolver_free(resolver) to free resources.  *  * The entries returned have their hardlink and size fields updated  * appropriately.  If an entry is passed in that does not refer to  * a file with multiple links, it is returned unchanged.  The intention  * is that you should be able to simply filter all entries through  * this machine.  *  * To make things more efficient, be sure that each entry has a valid  * nlinks value.  The hardlink cache uses this to track when all links  * have been found.  If the nlinks value is zero, it will keep every  * name in the cache indefinitely, which can use a lot of memory.  *  * Note that archive_entry_size() is reset to zero if the file  * body should not be written to the archive.  Pay attention!  */
+comment|/*  * sparse  */
+name|__LA_DECL
+name|void
+name|archive_entry_sparse_clear
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|void
+name|archive_entry_sparse_add_entry
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|__LA_INT64_T
+comment|/* offset */
+parameter_list|,
+name|__LA_INT64_T
+comment|/* length */
+parameter_list|)
+function_decl|;
+comment|/*  * To retrieve the xattr list, first "reset", then repeatedly ask for the  * "next" entry.  */
+name|__LA_DECL
+name|int
+name|archive_entry_sparse_count
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_sparse_reset
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|int
+name|archive_entry_sparse_next
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|,
+name|__LA_INT64_T
+modifier|*
+comment|/* offset */
+parameter_list|,
+name|__LA_INT64_T
+modifier|*
+comment|/* length */
+parameter_list|)
+function_decl|;
+comment|/*  * Utility to match up hardlinks.  *  * The 'struct archive_entry_linkresolver' is a cache of archive entries  * for files with multiple links.  Here's how to use it:  *   1. Create a lookup object with archive_entry_linkresolver_new()  *   2. Tell it the archive format you're using.  *   3. Hand each archive_entry to archive_entry_linkify().  *      That function will return 0, 1, or 2 entries that should  *      be written.  *   4. Call archive_entry_linkify(resolver, NULL) until  *      no more entries are returned.  *   5. Call archive_entry_linkresolver_free(resolver) to free resources.  *  * The entries returned have their hardlink and size fields updated  * appropriately.  If an entry is passed in that does not refer to  * a file with multiple links, it is returned unchanged.  The intention  * is that you should be able to simply filter all entries through  * this machine.  *  * To make things more efficient, be sure that each entry has a valid  * nlinks value.  The hardlink cache uses this to track when all links  * have been found.  If the nlinks value is zero, it will keep every  * name in the cache indefinitely, which can use a lot of memory.  *  * Note that archive_entry_size() is reset to zero if the file  * body should not be written to the archive.  Pay attention!  */
 struct_decl|struct
 name|archive_entry_linkresolver
 struct_decl|;
-comment|/*  * There are three different strategies for marking hardlinks.  * The descriptions below name them after the best-known  * formats that rely on each strategy:  *  * "Old cpio" is the simplest, it always returns any entry unmodified.  *    As far as I know, only cpio formats use this.  Old cpio archives  *    store every link with the full body; the onus is on the dearchiver  *    to detect and properly link the files as they are restored.  * "tar" is also pretty simple; it caches a copy the first time it sees  *    any link.  Subsequent appearances are modified to be hardlink  *    references to the first one without any body.  Used by all tar  *    formats, although the newest tar formats permit the "old cpio" strategy  *    as well.  This strategy is very simple for the dearchiver,  *    and reasonably straightforward for the archiver.  * "new cpio" is trickier.  It stores the body only with the last  *    occurrence.  The complication is that we might not  *    see every link to a particular file in a single session, so  *    there's no easy way to know when we've seen the last occurrence.  *    The solution here is to queue one link until we see the next.  *    At the end of the session, you can enumerate any remaining  *    entries by calling archive_entry_linkify(NULL) and store those  *    bodies.  If you have a file with three links l1, l2, and l3,  *    you'll get the following behavior if you see all three links:  *           linkify(l1) => NULL   (the resolver stores l1 internally)  *           linkify(l2) => l1     (resolver stores l2, you write l1)  *           linkify(l3) => l2, l3 (all links seen, you can write both).  *    If you only see l1 and l2, you'll get this behavior:  *           linkify(l1) => NULL  *           linkify(l2) => l1  *           linkify(NULL) => l2   (at end, you retrieve remaining links)  *    As the name suggests, this strategy is used by newer cpio variants.  *    It's noticably more complex for the archiver, slightly more complex  *    for the dearchiver than the tar strategy, but makes it straightforward  *    to restore a file using any link by simply continuing to scan until  *    you see a link that is stored with a body.  In contrast, the tar  *    strategy requires you to rescan the archive from the beginning to  *    correctly extract an arbitrary link.  */
+comment|/*  * There are three different strategies for marking hardlinks.  * The descriptions below name them after the best-known  * formats that rely on each strategy:  *  * "Old cpio" is the simplest, it always returns any entry unmodified.  *    As far as I know, only cpio formats use this.  Old cpio archives  *    store every link with the full body; the onus is on the dearchiver  *    to detect and properly link the files as they are restored.  * "tar" is also pretty simple; it caches a copy the first time it sees  *    any link.  Subsequent appearances are modified to be hardlink  *    references to the first one without any body.  Used by all tar  *    formats, although the newest tar formats permit the "old cpio" strategy  *    as well.  This strategy is very simple for the dearchiver,  *    and reasonably straightforward for the archiver.  * "new cpio" is trickier.  It stores the body only with the last  *    occurrence.  The complication is that we might not  *    see every link to a particular file in a single session, so  *    there's no easy way to know when we've seen the last occurrence.  *    The solution here is to queue one link until we see the next.  *    At the end of the session, you can enumerate any remaining  *    entries by calling archive_entry_linkify(NULL) and store those  *    bodies.  If you have a file with three links l1, l2, and l3,  *    you'll get the following behavior if you see all three links:  *           linkify(l1) => NULL   (the resolver stores l1 internally)  *           linkify(l2) => l1     (resolver stores l2, you write l1)  *           linkify(l3) => l2, l3 (all links seen, you can write both).  *    If you only see l1 and l2, you'll get this behavior:  *           linkify(l1) => NULL  *           linkify(l2) => l1  *           linkify(NULL) => l2   (at end, you retrieve remaining links)  *    As the name suggests, this strategy is used by newer cpio variants.  *    It's noticeably more complex for the archiver, slightly more complex  *    for the dearchiver than the tar strategy, but makes it straightforward  *    to restore a file using any link by simply continuing to scan until  *    you see a link that is stored with a body.  In contrast, the tar  *    strategy requires you to rescan the archive from the beginning to  *    correctly extract an arbitrary link.  */
 name|__LA_DECL
 name|struct
 name|archive_entry_linkresolver
@@ -1950,6 +2297,23 @@ name|struct
 name|archive_entry
 modifier|*
 modifier|*
+parameter_list|)
+function_decl|;
+name|__LA_DECL
+name|struct
+name|archive_entry
+modifier|*
+name|archive_entry_partial_links
+parameter_list|(
+name|struct
+name|archive_entry_linkresolver
+modifier|*
+name|res
+parameter_list|,
+name|unsigned
+name|int
+modifier|*
+name|links
 parameter_list|)
 function_decl|;
 ifdef|#

@@ -1307,7 +1307,7 @@ name|in6
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|in6_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -1320,6 +1320,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if

@@ -2543,6 +2543,14 @@ operator|->
 name|p_children
 argument_list|)
 expr_stmt|;
+name|LIST_INIT
+argument_list|(
+operator|&
+name|p2
+operator|->
+name|p_orphans
+argument_list|)
+expr_stmt|;
 name|callout_init
 argument_list|(
 operator|&

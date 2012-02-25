@@ -1323,12 +1323,25 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|INET6
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|INET
+argument_list|)
 comment|/* Free LRO resources */
 name|oce_free_lro
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Release queue*/
 name|oce_queue_release_all
 argument_list|(
@@ -1866,7 +1879,7 @@ operator|->
 name|mq
 argument_list|)
 expr_stmt|;
-comment|/* we need to get MCC aync events. 	   So enable intrs and also arm first EQ 	*/
+comment|/* we need to get MCC aync events. So enable intrs and arm 	   first EQ, Other EQs will be armed after interface is UP  	*/
 name|oce_hw_intr_enable
 argument_list|(
 name|sc
@@ -1890,6 +1903,12 @@ argument_list|,
 name|TRUE
 argument_list|,
 name|FALSE
+argument_list|)
+expr_stmt|;
+comment|/* Send first mcc cmd and after that we get gracious 	   MCC notifications from FW 	*/
+name|oce_first_mcc_cmd
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 return|return
@@ -1988,7 +2007,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @brief               Function for hardware update multicast filter  * @param sc            software handle to the device  */
+comment|/**  * @brief		Function for hardware update multicast filter  * @param sc		software handle to the device  */
 end_comment
 
 begin_function

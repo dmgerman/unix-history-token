@@ -8372,7 +8372,7 @@ end_define
 begin_function
 specifier|static
 name|void
-name|ath_txrx_stop
+name|ath_txrx_stop_locked
 parameter_list|(
 name|struct
 name|ath_softc
@@ -8390,17 +8390,17 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ATH_PCU_LOCK_ASSERT
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 comment|/* Stop any new TX/RX from occuring */
 name|taskqueue_block
 argument_list|(
 name|sc
 operator|->
 name|sc_tq
-argument_list|)
-expr_stmt|;
-name|ATH_PCU_LOCK
-argument_list|(
-name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Sleep until all the pending operations have completed. 	 * 	 * The caller must ensure that reset has been incremented 	 * or the pending operations may continue being queued. 	 */
@@ -8450,11 +8450,6 @@ name|i
 operator|--
 expr_stmt|;
 block|}
-name|ATH_PCU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|i
@@ -8482,6 +8477,18 @@ undef|#
 directive|undef
 name|MAX_TXRX_ITERATIONS
 end_undef
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static void ath_txrx_stop(struct ath_softc *sc) { 	ATH_UNLOCK_ASSERT(sc); 	ATH_PCU_UNLOCK_ASSERT(sc);  	ATH_PCU_LOCK(sc); 	ath_txrx_stop_locked(sc); 	ATH_PCU_UNLOCK(sc); }
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -8775,6 +8782,20 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* disable interrupts */
+name|ath_txrx_stop_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Ensure TX/RX is stopped */
 if|if
 condition|(
 name|ath_reset_grablock
@@ -8799,25 +8820,12 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-name|ath_hal_intrset
-argument_list|(
-name|ah
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* disable interrupts */
 name|ATH_PCU_UNLOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Should now wait for pending TX/RX to complete 	 * and block future ones from occuring. This needs to be 	 * done before the TX queue is drained. 	 */
-name|ath_txrx_stop
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ath_draintxq
 argument_list|(
 name|sc
@@ -23224,17 +23232,26 @@ name|ret
 init|=
 literal|0
 decl_stmt|;
-name|int
-name|dointr
-init|=
-literal|0
-decl_stmt|;
 comment|/* Treat this as an interface reset */
 name|ATH_PCU_LOCK
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+name|ath_hal_intrset
+argument_list|(
+name|ah
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+comment|/* Stop new RX/TX completion */
+name|ath_txrx_stop_locked
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+comment|/* Stop pending RX/TX completion */
 if|if
 condition|(
 name|ath_reset_grablock
@@ -23259,34 +23276,7 @@ name|__func__
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|chan
-operator|!=
-name|sc
-operator|->
-name|sc_curchan
-condition|)
-block|{
-name|dointr
-operator|=
-literal|1
-expr_stmt|;
-comment|/* XXX only do this if inreset_cnt is 1? */
-name|ath_hal_intrset
-argument_list|(
-name|ah
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-block|}
 name|ATH_PCU_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
-name|ath_txrx_stop
 argument_list|(
 name|sc
 argument_list|)
@@ -23438,9 +23428,7 @@ name|ath_dfs_radar_enable
 argument_list|(
 name|sc
 argument_list|,
-name|ic
-operator|->
-name|ic_curchan
+name|chan
 argument_list|)
 expr_stmt|;
 comment|/* 		 * Re-enable rx framework. 		 */
@@ -23515,10 +23503,10 @@ name|NULL
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* 		 * Re-enable interrupts. 		 */
 if|#
 directive|if
 literal|0
-comment|/* 		 * Re-enable interrupts. 		 */
 block|ath_hal_intrset(ah, sc->sc_imask);
 endif|#
 directive|endif
@@ -23536,10 +23524,6 @@ name|sc_inreset_cnt
 operator|--
 expr_stmt|;
 comment|/* XXX only do this if sc_inreset_cnt == 0? */
-if|if
-condition|(
-name|dointr
-condition|)
 name|ath_hal_intrset
 argument_list|(
 name|ah
@@ -24608,6 +24592,12 @@ name|nstate
 index|]
 argument_list|)
 expr_stmt|;
+comment|/* 	 * net80211 _should_ have the comlock asserted at this point. 	 * There are some comments around the calls to vap->iv_newstate 	 * which indicate that it (newstate) may end up dropping the 	 * lock.  This and the subsequent lock assert check after newstate 	 * are an attempt to catch these and figure out how/why. 	 */
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|vap
@@ -24878,6 +24868,12 @@ condition|)
 goto|goto
 name|bad
 goto|;
+comment|/* 	 * See above: ensure av_newstate() doesn't drop the lock 	 * on us. 	 */
+name|IEEE80211_LOCK_ASSERT
+argument_list|(
+name|ic
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|nstate

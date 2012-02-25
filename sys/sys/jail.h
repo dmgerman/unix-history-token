@@ -932,8 +932,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_MOUNT_DEVFS
+value|0x0080
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_MOUNT_NULLFS
+value|0x0100
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x007f
+value|0x01ff
 end_define
 
 begin_comment
@@ -1228,6 +1242,21 @@ name|descr
 parameter_list|)
 define|\
 value|SYSCTL_NODE(_security_jail_param, OID_AUTO, module, 0, 0, descr)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SYSCTL_JAIL_PARAM_SUBNODE
+parameter_list|(
+name|parent
+parameter_list|,
+name|module
+parameter_list|,
+name|descr
+parameter_list|)
+define|\
+value|SYSCTL_NODE(_security_jail_param_##parent, OID_AUTO, module, 0, 0, descr)
 end_define
 
 begin_define

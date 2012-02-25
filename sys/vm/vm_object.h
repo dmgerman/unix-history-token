@@ -171,6 +171,9 @@ block|{
 name|off_t
 name|vnp_size
 decl_stmt|;
+name|vm_ooffset_t
+name|writemappings
+decl_stmt|;
 block|}
 name|vnp
 struct|;
