@@ -45,7 +45,7 @@ comment|/* Option parsing */
 specifier|const
 name|char
 modifier|*
-name|optarg
+name|argument
 decl_stmt|;
 comment|/* Options */
 specifier|const
@@ -53,11 +53,11 @@ name|char
 modifier|*
 name|filename
 decl_stmt|;
-name|char
+name|int
 name|mode
 decl_stmt|;
 comment|/* -i -o -p */
-name|char
+name|int
 name|compress
 decl_stmt|;
 comment|/* -j, -y, or -z */
@@ -76,6 +76,10 @@ name|verbose
 decl_stmt|;
 comment|/* -v */
 name|int
+name|dot
+decl_stmt|;
+comment|/* -V */
+name|int
 name|quiet
 decl_stmt|;
 comment|/* --quiet */
@@ -83,10 +87,6 @@ name|int
 name|extract_flags
 decl_stmt|;
 comment|/* Flags for extract operation */
-name|char
-name|symlink_mode
-decl_stmt|;
-comment|/* H or L, per BSD conventions */
 specifier|const
 name|char
 modifier|*

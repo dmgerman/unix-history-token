@@ -186,7 +186,7 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|gid_t
+name|int64_t
 name|lookup_gid
 parameter_list|(
 name|void
@@ -197,14 +197,14 @@ name|char
 modifier|*
 name|uname
 parameter_list|,
-name|gid_t
+name|int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 specifier|static
-name|uid_t
+name|int64_t
 name|lookup_uid
 parameter_list|(
 name|void
@@ -215,7 +215,7 @@ name|char
 modifier|*
 name|uname
 parameter_list|,
-name|uid_t
+name|int64_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -339,7 +339,7 @@ end_function
 
 begin_function
 specifier|static
-name|gid_t
+name|int64_t
 name|lookup_gid
 parameter_list|(
 name|void
@@ -351,7 +351,7 @@ name|char
 modifier|*
 name|gname
 parameter_list|,
-name|gid_t
+name|int64_t
 name|gid
 parameter_list|)
 block|{
@@ -676,7 +676,7 @@ end_function
 
 begin_function
 specifier|static
-name|uid_t
+name|int64_t
 name|lookup_uid
 parameter_list|(
 name|void
@@ -688,7 +688,7 @@ name|char
 modifier|*
 name|uname
 parameter_list|,
-name|uid_t
+name|int64_t
 name|uid
 parameter_list|)
 block|{

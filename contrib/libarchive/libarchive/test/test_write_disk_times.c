@@ -778,9 +778,14 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|archive_write_finish
+name|assertEqualInt
+argument_list|(
+name|ARCHIVE_OK
+argument_list|,
+name|archive_write_free
 argument_list|(
 name|a
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

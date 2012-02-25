@@ -251,7 +251,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|archive_read_support_compression_program
+name|archive_read_support_filter_program
 argument_list|(
 name|a
 argument_list|,
@@ -267,7 +267,7 @@ condition|)
 block|{
 name|skipping
 argument_list|(
-literal|"archive_read_support_compression_program() "
+literal|"archive_read_support_filter_program() "
 literal|"unsupported on this platform"
 argument_list|)
 expr_stmt|;
@@ -329,7 +329,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -368,7 +368,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_none
+name|archive_read_support_filter_none
 argument_list|(
 name|a
 argument_list|)
@@ -380,7 +380,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_program
+name|archive_read_support_filter_program
 argument_list|(
 name|a
 argument_list|,
@@ -470,7 +470,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

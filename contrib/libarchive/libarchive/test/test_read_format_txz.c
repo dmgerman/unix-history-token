@@ -348,7 +348,7 @@ name|a
 argument_list|,
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_support_compression_all
+name|archive_read_support_filter_all
 argument_list|(
 name|a
 argument_list|)
@@ -356,7 +356,7 @@ argument_list|)
 expr_stmt|;
 name|r
 operator|=
-name|archive_read_support_compression_xz
+name|archive_read_support_filter_xz
 argument_list|(
 name|a
 argument_list|)
@@ -377,7 +377,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)
@@ -433,6 +433,16 @@ argument_list|)
 expr_stmt|;
 name|assertEqualInt
 argument_list|(
+literal|1
+argument_list|,
+name|archive_file_count
+argument_list|(
+name|a
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|assertEqualInt
+argument_list|(
 name|archive_compression
 argument_list|(
 name|a
@@ -467,7 +477,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

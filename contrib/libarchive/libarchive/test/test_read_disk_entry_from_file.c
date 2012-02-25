@@ -28,7 +28,7 @@ name|void
 modifier|*
 name|d
 parameter_list|,
-name|gid_t
+name|int64_t
 name|g
 parameter_list|)
 block|{
@@ -63,7 +63,7 @@ name|void
 modifier|*
 name|d
 parameter_list|,
-name|uid_t
+name|int64_t
 name|u
 parameter_list|)
 block|{
@@ -238,8 +238,10 @@ argument_list|,
 literal|"foo"
 argument_list|)
 expr_stmt|;
-name|assertEqualInt
+name|assertEqualIntA
 argument_list|(
+name|a
+argument_list|,
 name|ARCHIVE_OK
 argument_list|,
 name|archive_read_disk_entry_from_file
@@ -296,7 +298,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_read_finish
+name|archive_read_free
 argument_list|(
 name|a
 argument_list|)

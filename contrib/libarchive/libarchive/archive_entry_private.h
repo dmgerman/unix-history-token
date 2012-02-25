@@ -35,83 +35,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|"archive_string.h"
+file|"archive_acl_private.h"
 end_include
 
-begin_comment
-comment|/*  * Handle wide character (i.e., Unicode) and non-wide character  * strings transparently.  */
-end_comment
-
-begin_struct
-struct|struct
-name|aes
-block|{
-name|struct
-name|archive_string
-name|aes_mbs
-decl_stmt|;
-name|struct
-name|archive_string
-name|aes_utf8
-decl_stmt|;
-specifier|const
-name|wchar_t
-modifier|*
-name|aes_wcs
-decl_stmt|;
-comment|/* Bitmap of which of the above are valid.  Because we're lazy 	 * about malloc-ing and reusing the underlying storage, we 	 * can't rely on NULL pointers to indicate whether a string 	 * has been set. */
-name|int
-name|aes_set
-decl_stmt|;
-define|#
-directive|define
-name|AES_SET_MBS
-value|1
-define|#
-directive|define
-name|AES_SET_UTF8
-value|2
-define|#
-directive|define
-name|AES_SET_WCS
-value|4
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|ae_acl
-block|{
-name|struct
-name|ae_acl
-modifier|*
-name|next
-decl_stmt|;
-name|int
-name|type
-decl_stmt|;
-comment|/* E.g., access or default */
-name|int
-name|tag
-decl_stmt|;
-comment|/* E.g., user/group/other/mask */
-name|int
-name|permset
-decl_stmt|;
-comment|/* r/w/x bits */
-name|int
-name|id
-decl_stmt|;
-comment|/* uid/gid for user/group */
-name|struct
-name|aes
-name|name
-decl_stmt|;
-comment|/* uname/gname */
-block|}
-struct|;
-end_struct
+begin_include
+include|#
+directive|include
+file|"archive_string.h"
+end_include
 
 begin_struct
 struct|struct
@@ -137,6 +68,25 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|ae_sparse
+block|{
+name|struct
+name|ae_sparse
+modifier|*
+name|next
+decl_stmt|;
+name|int64_t
+name|offset
+decl_stmt|;
+name|int64_t
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * Description of an archive entry.  *  * Basically, this is a "struct stat" with a few text fields added in.  *  * TODO: Add "comment", "charset", and possibly other entries  * that are supported by "pax interchange" format.  However, GNU, ustar,  * cpio, and other variants don't support these features, so they're not an  * excruciatingly high priority right now.  *  * TODO: "pax interchange" format allows essentially arbitrary  * key/value attributes to be attached to any entry.  Supporting  * such extensions may make this library useful for special  * applications (e.g., a package manager could attach special  * package-management attributes to each entry).  There are tricky  * API issues involved, so this is not going to happen until  * there's a real demand for it.  *  * TODO: Design a good API for handling sparse files.  */
 end_comment
@@ -145,8 +95,13 @@ begin_struct
 struct|struct
 name|archive_entry
 block|{
+name|struct
+name|archive
+modifier|*
+name|archive
+decl_stmt|;
 comment|/* 	 * Note that ae_stat.st_mode& AE_IFMT  can be  0! 	 * 	 * This occurs when the actual file type of the object is not 	 * in the archive.  For example, 'tar' archives store 	 * hardlinks without marking the type of the underlying 	 * object. 	 */
-comment|/* 	 * Read archive_entry_copy_stat.c for an explanation of why I 	 * don't just use "struct stat" instead of "struct aest" here 	 * and why I have this odd pointer to a separately-allocated 	 * struct stat. 	 */
+comment|/* 	 * We have a "struct aest" for holding file metadata rather than just 	 * a "struct stat" because on some platforms the "struct stat" has 	 * fields which are too narrow to hold the range of possible values; 	 * we don't want to lose information if we read an archive and write 	 * out another (e.g., in "tar -cf new.tar @old.tar"). 	 * 	 * The "stat" pointer points to some form of platform-specific struct 	 * stat; it is declared as a void * rather than a struct stat * as 	 * some platforms have multiple varieties of stat structures. 	 */
 name|void
 modifier|*
 name|stat
@@ -182,14 +137,11 @@ decl_stmt|;
 name|uint32_t
 name|aest_birthtime_nsec
 decl_stmt|;
-name|gid_t
+name|int64_t
 name|aest_gid
 decl_stmt|;
 name|int64_t
 name|aest_ino
-decl_stmt|;
-name|mode_t
-name|aest_mode
 decl_stmt|;
 name|uint32_t
 name|aest_nlink
@@ -197,7 +149,7 @@ decl_stmt|;
 name|uint64_t
 name|aest_size
 decl_stmt|;
-name|uid_t
+name|int64_t
 name|aest_uid
 decl_stmt|;
 comment|/* 		 * Because converting between device codes and 		 * major/minor values is platform-specific and 		 * inherently a bit risky, we only do that conversion 		 * lazily.  That way, we will do a better job of 		 * preserving information in those cases where no 		 * conversion is actually required. 		 */
@@ -260,9 +212,17 @@ define|#
 directive|define
 name|AE_SET_SIZE
 value|64
+define|#
+directive|define
+name|AE_SET_INO
+value|128
+define|#
+directive|define
+name|AE_SET_DEV
+value|256
 comment|/* 	 * Use aes here so that we get transparent mbs<->wcs conversions. 	 */
 name|struct
-name|aes
+name|archive_mstring
 name|ae_fflags_text
 decl_stmt|;
 comment|/* Text fflags per fflagstostr(3) */
@@ -276,54 +236,47 @@ name|long
 name|ae_fflags_clear
 decl_stmt|;
 name|struct
-name|aes
+name|archive_mstring
 name|ae_gname
 decl_stmt|;
 comment|/* Name of owning group */
 name|struct
-name|aes
+name|archive_mstring
 name|ae_hardlink
 decl_stmt|;
 comment|/* Name of target for hardlink */
 name|struct
-name|aes
+name|archive_mstring
 name|ae_pathname
 decl_stmt|;
 comment|/* Name of entry */
 name|struct
-name|aes
+name|archive_mstring
 name|ae_symlink
 decl_stmt|;
 comment|/* symlink contents */
 name|struct
-name|aes
+name|archive_mstring
 name|ae_uname
 decl_stmt|;
 comment|/* Name of owner */
 comment|/* Not used within libarchive; useful for some clients. */
 name|struct
-name|aes
+name|archive_mstring
 name|ae_sourcepath
 decl_stmt|;
 comment|/* Path this entry is sourced from. */
+name|void
+modifier|*
+name|mac_metadata
+decl_stmt|;
+name|size_t
+name|mac_metadata_size
+decl_stmt|;
 comment|/* ACL support. */
 name|struct
-name|ae_acl
-modifier|*
-name|acl_head
-decl_stmt|;
-name|struct
-name|ae_acl
-modifier|*
-name|acl_p
-decl_stmt|;
-name|int
-name|acl_state
-decl_stmt|;
-comment|/* See acl_next for details. */
-name|wchar_t
-modifier|*
-name|acl_text_w
+name|archive_acl
+name|acl
 decl_stmt|;
 comment|/* extattr support. */
 name|struct
@@ -335,6 +288,22 @@ name|struct
 name|ae_xattr
 modifier|*
 name|xattr_p
+decl_stmt|;
+comment|/* sparse support. */
+name|struct
+name|ae_sparse
+modifier|*
+name|sparse_head
+decl_stmt|;
+name|struct
+name|ae_sparse
+modifier|*
+name|sparse_tail
+decl_stmt|;
+name|struct
+name|ae_sparse
+modifier|*
+name|sparse_p
 decl_stmt|;
 comment|/* Miscellaneous. */
 name|char

@@ -445,7 +445,7 @@ name|assertEqualInt
 argument_list|(
 name|ARCHIVE_OK
 argument_list|,
-name|archive_write_finish
+name|archive_write_free
 argument_list|(
 name|ad
 argument_list|)
