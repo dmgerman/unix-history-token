@@ -151,9 +151,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - -s /foo/bar/ in/d1/foo | %s -xf - -C test1"
+literal|"%s -cf test1_1.tar -s /foo/bar/ in/d1/foo"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test1_1.tar -C test1"
 argument_list|,
 name|testprog
 argument_list|)
@@ -169,9 +174,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - -s /d1/d2/ in/d1/foo | %s -xf - -C test1"
+literal|"%s -cf test1_2.tar -s /d1/d2/ in/d1/foo"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test1_2.tar -C test1"
 argument_list|,
 name|testprog
 argument_list|)
@@ -195,9 +205,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - in/d1/foo | %s -xf - -s /foo/bar/ -C test2"
+literal|"%s -cf test2.tar in/d1/foo"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test2.tar -s /foo/bar/ -C test2"
 argument_list|,
 name|testprog
 argument_list|)
@@ -214,9 +229,14 @@ expr_stmt|;
 comment|/* 	 * Test 3: Files with empty names shouldn't be archived. 	 */
 name|systemf
 argument_list|(
-literal|"%s -cf - -s ,in/d1/foo,, in/d1/foo | %s -tvf -> in.lst"
+literal|"%s -cf test3.tar -s ,in/d1/foo,, in/d1/foo"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -tvf test3.tar> in.lst"
 argument_list|,
 name|testprog
 argument_list|)
@@ -236,7 +256,16 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - in/d1/foo in/d1/bar | %s -xf - -s /foo/bar/ -s }bar}baz} -C test4"
+literal|"%s -cf test4.tar in/d1/foo in/d1/bar"
+argument_list|,
+name|testprog
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test4.tar -s /foo/bar/ -s }bar}baz} -C test4"
 argument_list|,
 name|testprog
 argument_list|,
@@ -271,7 +300,16 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - in/d1/foo in/d1/bar | %s -xf - -s /foo/bar/ -s }bar}foo} -C test5"
+literal|"%s -cf test5.tar in/d1/foo in/d1/bar"
+argument_list|,
+name|testprog
+argument_list|,
+name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test5.tar -s /foo/bar/ -s }bar}foo} -C test5"
 argument_list|,
 name|testprog
 argument_list|,
@@ -491,9 +529,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - in/d1 | %s -xf - -s /d1/d2/ -C test8a"
+literal|"%s -cf test8a.tar in/d1"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test8a.tar -s /d1/d2/ -C test8a"
 argument_list|,
 name|testprog
 argument_list|)
@@ -515,9 +558,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - -s /d1/d2/ in/d1 | %s -xf - -C test8b"
+literal|"%s -cf test8b.tar -s /d1/d2/ in/d1"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test8b.tar -C test8b"
 argument_list|,
 name|testprog
 argument_list|)
@@ -540,9 +588,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - in/d1 | %s -xf - -s /hardlink1/hardlink1-renamed/ -C test9a"
+literal|"%s -cf test9a.tar in/d1"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test9a.tar -s /hardlink1/hardlink1-renamed/ -C test9a"
 argument_list|,
 name|testprog
 argument_list|)
@@ -564,9 +617,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - in/d1 | %s -xf - -s /hardlink2/hardlink2-renamed/ -C test9b"
+literal|"%s -cf test9b.tar in/d1"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test9b.tar -s /hardlink2/hardlink2-renamed/ -C test9b"
 argument_list|,
 name|testprog
 argument_list|)
@@ -588,9 +646,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - -s /hardlink1/hardlink1-renamed/ in/d1 | %s -xf - -C test9c"
+literal|"%s -cf test9c.tar -s /hardlink1/hardlink1-renamed/ in/d1"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test9c.tar -C test9c"
 argument_list|,
 name|testprog
 argument_list|)
@@ -612,9 +675,14 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -cf - -s /hardlink2/hardlink2-renamed/ in/d1 | %s -xf - -C test9d"
+literal|"%s -cf test9d.tar -s /hardlink2/hardlink2-renamed/ in/d1"
 argument_list|,
 name|testprog
+argument_list|)
+expr_stmt|;
+name|systemf
+argument_list|(
+literal|"%s -xf test9d.tar -C test9d"
 argument_list|,
 name|testprog
 argument_list|)
@@ -861,9 +929,16 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -xf test_option_s.tar.Z -s /hardlink1/foo/H -s /foo/hardlink1/ -C test12a"
+literal|"%s -xf test_option_s.tar.Z -s /hardlink1/foo/H -s /foo/hardlink1/ %s -C test12a"
 argument_list|,
 name|testprog
+argument_list|,
+name|canSymlink
+argument_list|()
+condition|?
+literal|""
+else|:
+literal|"--exclude in/d1/symlink"
 argument_list|)
 expr_stmt|;
 name|assertFileContents
@@ -916,9 +991,16 @@ argument_list|)
 expr_stmt|;
 name|systemf
 argument_list|(
-literal|"%s -xf test_option_s.tar.Z -s /hardlink1/foo/Rh -s /foo/hardlink1/Rh -C test13a"
+literal|"%s -xf test_option_s.tar.Z -s /hardlink1/foo/Rh -s /foo/hardlink1/Rh %s -C test13a"
 argument_list|,
 name|testprog
+argument_list|,
+name|canSymlink
+argument_list|()
+condition|?
+literal|""
+else|:
+literal|"--exclude in/d1/symlink"
 argument_list|)
 expr_stmt|;
 name|assertFileContents

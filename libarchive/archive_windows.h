@@ -1629,6 +1629,20 @@ parameter_list|)
 value|__la_dosmaperr(e)
 end_define
 
+begin_function_decl
+specifier|extern
+name|struct
+name|archive_entry
+modifier|*
+name|__la_win_entry_in_posix_pathseparator
+parameter_list|(
+name|struct
+name|archive_entry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

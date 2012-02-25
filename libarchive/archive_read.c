@@ -2891,6 +2891,9 @@ name|a
 operator|->
 name|read_data_output_offset
 operator|+
+operator|(
+name|int64_t
+operator|)
 name|s
 operator|<
 name|a

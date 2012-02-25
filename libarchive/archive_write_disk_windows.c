@@ -6990,7 +6990,7 @@ name|archive
 argument_list|,
 name|en
 argument_list|,
-literal|"Can't create '%s'"
+literal|"Can't create '%ls'"
 argument_list|,
 name|a
 operator|->
@@ -8742,7 +8742,7 @@ name|archive
 argument_list|,
 name|errno
 argument_list|,
-literal|"Could not remove symlink %s"
+literal|"Could not remove symlink %ls"
 argument_list|,
 name|a
 operator|->
@@ -8789,7 +8789,7 @@ name|archive
 argument_list|,
 literal|0
 argument_list|,
-literal|"Removing symlink %s"
+literal|"Removing symlink %ls"
 argument_list|,
 name|a
 operator|->
@@ -8843,7 +8843,8 @@ name|archive
 argument_list|,
 literal|0
 argument_list|,
-literal|"Cannot remove intervening symlink %s"
+literal|"Cannot remove intervening "
+literal|"symlink %ls"
 argument_list|,
 name|a
 operator|->
@@ -8881,7 +8882,7 @@ name|archive
 argument_list|,
 literal|0
 argument_list|,
-literal|"Cannot extract through symlink %s"
+literal|"Cannot extract through symlink %ls"
 argument_list|,
 name|a
 operator|->
@@ -10517,7 +10518,7 @@ name|archive
 argument_list|,
 name|EEXIST
 argument_list|,
-literal|"Can't create directory '%s'"
+literal|"Can't create directory '%ls'"
 argument_list|,
 name|path
 argument_list|)
@@ -10547,7 +10548,7 @@ name|archive
 argument_list|,
 name|errno
 argument_list|,
-literal|"Can't create directory '%s': "
+literal|"Can't create directory '%ls': "
 literal|"Conflicting file cannot be removed"
 argument_list|,
 name|path
@@ -10582,7 +10583,7 @@ name|archive
 argument_list|,
 name|errno
 argument_list|,
-literal|"Can't test directory '%s'"
+literal|"Can't test directory '%ls'"
 argument_list|,
 name|path
 argument_list|)
@@ -10779,7 +10780,7 @@ name|archive
 argument_list|,
 name|errno
 argument_list|,
-literal|"Failed to create dir '%s'"
+literal|"Failed to create dir '%ls'"
 argument_list|,
 name|path
 argument_list|)
@@ -10860,7 +10861,7 @@ name|archive
 argument_list|,
 name|errno
 argument_list|,
-literal|"Can't set user=%jd/group=%jd for %s"
+literal|"Can't set user=%jd/group=%jd for %ls"
 argument_list|,
 operator|(
 name|intmax_t

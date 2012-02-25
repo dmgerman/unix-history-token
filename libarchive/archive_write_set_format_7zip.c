@@ -2148,9 +2148,10 @@ name|ARCHIVE_OK
 operator|)
 return|;
 block|}
+comment|/* Note: The "warn" return is just to inform the options 	 * supervisor that we didn't handle it.  It will generate 	 * a suitable error if no one used this option. */
 return|return
 operator|(
-name|ARCHIVE_FAILED
+name|ARCHIVE_WARN
 operator|)
 return|;
 block|}
@@ -8270,9 +8271,16 @@ directive|if
 operator|!
 name|defined
 argument_list|(
+name|HAVE_ZLIB_H
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
 name|HAVE_BZLIB_H
 argument_list|)
 operator|||
+expr|\
 operator|!
 name|defined
 argument_list|(

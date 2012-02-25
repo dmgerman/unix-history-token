@@ -195,6 +195,9 @@ name|target_offset
 operator|<
 name|actual_offset
 operator|+
+operator|(
+name|int64_t
+operator|)
 name|nulls_size
 condition|)
 name|to_write

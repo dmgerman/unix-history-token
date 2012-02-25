@@ -3934,25 +3934,16 @@ operator|=
 name|ARCHIVE_FATAL
 expr_stmt|;
 block|}
-block|}
-else|else
-name|archive_set_error
-argument_list|(
-operator|&
-name|a
-operator|->
-name|archive
-argument_list|,
-name|ARCHIVE_ERRNO_MISC
-argument_list|,
-literal|"rar: unknown keyword ``%s''"
-argument_list|,
-name|key
-argument_list|)
-expr_stmt|;
 return|return
 operator|(
 name|ret
+operator|)
+return|;
+block|}
+comment|/* Note: The "warn" return is just to inform the options    * supervisor that we didn't handle it.  It will generate    * a suitable error if no one used this option. */
+return|return
+operator|(
+name|ARCHIVE_WARN
 operator|)
 return|;
 block|}

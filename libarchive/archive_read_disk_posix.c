@@ -3179,6 +3179,9 @@ name|entry_buff_size
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|int64_t
+operator|)
 name|buffbytes
 operator|>
 name|t
