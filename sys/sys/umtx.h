@@ -352,7 +352,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_WAIT_ABSTIME
+name|UMTX_ABSTIME
 value|0x01
 end_define
 

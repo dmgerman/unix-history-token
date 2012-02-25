@@ -21,6 +21,12 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<sys/_timespec.h>
+end_include
+
 begin_struct
 struct|struct
 name|umtx
@@ -134,6 +140,24 @@ name|_count
 decl_stmt|;
 name|__uint32_t
 name|_flags
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|_umtx_time
+block|{
+name|struct
+name|timespec
+name|_timeout
+decl_stmt|;
+name|__uint32_t
+name|_flags
+decl_stmt|;
+name|__uint32_t
+name|_clockid
 decl_stmt|;
 block|}
 struct|;
