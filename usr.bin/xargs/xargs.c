@@ -2440,7 +2440,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If utility signaled or exited with a value of 255, 		 * exit 1-125. 		 */
 if|if
 condition|(
 name|WIFSIGNALED
