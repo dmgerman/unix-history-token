@@ -1110,6 +1110,10 @@ if|if
 condition|(
 name|type
 operator|!=
+name|T_NMI
+operator|&&
+name|type
+operator|!=
 name|T_BPTFLT
 operator|&&
 name|type
@@ -1134,13 +1138,9 @@ argument_list|,
 name|type
 argument_list|)
 expr_stmt|;
-comment|/* 			 * Page faults need interrupts disabled until later, 			 * and we shouldn't enable interrupts while holding 			 * a spin lock or if servicing an NMI. 			 */
+comment|/* 			 * Page faults need interrupts disabled until later, 			 * and we shouldn't enable interrupts while holding 			 * a spin lock. 			 */
 if|if
 condition|(
-name|type
-operator|!=
-name|T_NMI
-operator|&&
 name|type
 operator|!=
 name|T_PAGEFLT
