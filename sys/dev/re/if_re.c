@@ -10531,6 +10531,17 @@ operator|&
 name|IFCAP_NETMAP
 condition|)
 block|{
+name|NA
+argument_list|(
+name|ifp
+argument_list|)
+operator|->
+name|rx_rings
+operator|->
+name|nr_kflags
+operator||=
+name|NKR_PENDINTR
+expr_stmt|;
 name|selwakeuppri
 argument_list|(
 operator|&
