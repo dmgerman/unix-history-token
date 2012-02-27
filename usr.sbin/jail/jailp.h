@@ -415,9 +415,6 @@ comment|/* Mount points in fstab(5) form */
 name|IP_MOUNT_DEVFS
 block|,
 comment|/* Mount /dev under prison root */
-name|IP_MOUNT_DEVFS_RULESET
-block|,
-comment|/* Ruleset for the devfs mount */
 name|IP_MOUNT_FSTAB
 block|,
 comment|/* A standard fstab(5) file */
@@ -460,6 +457,8 @@ block|,
 name|KP_ALLOW_SOCKET_AF
 block|,
 name|KP_ALLOW_SYSVIPC
+block|,
+name|KP_DEVFS_RULESET
 block|,
 name|KP_ENFORCE_STATFS
 block|,
