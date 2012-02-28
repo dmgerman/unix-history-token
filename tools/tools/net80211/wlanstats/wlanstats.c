@@ -2268,6 +2268,20 @@ literal|"sig"
 block|,
 literal|"current signal (dBm)"
 block|}
+block|,
+define|#
+directive|define
+name|S_BEACON_BAD
+value|AFTER(S_SIGNAL)
+block|{
+literal|9
+block|,
+literal|"beacon_bad"
+block|,
+literal|"beaconbad"
+block|,
+literal|"bad beacons received"
+block|}
 block|, }
 decl_stmt|;
 end_decl_stmt
@@ -5194,6 +5208,14 @@ argument_list|(
 name|tx_mcast
 argument_list|)
 expr_stmt|;
+case|case
+name|S_BEACON_BAD
+case|:
+name|STAT
+argument_list|(
+name|beacon_bad
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|wlan_getinfo
@@ -6404,6 +6426,14 @@ case|:
 name|NSTAT
 argument_list|(
 name|tx_mcast
+argument_list|)
+expr_stmt|;
+case|case
+name|S_BEACON_BAD
+case|:
+name|STAT
+argument_list|(
+name|beacon_bad
 argument_list|)
 expr_stmt|;
 block|}
