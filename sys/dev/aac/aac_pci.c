@@ -2389,9 +2389,22 @@ argument_list|,
 comment|/* parent */
 name|PAGE_SIZE
 argument_list|,
-literal|0
+comment|/* alignment */
+operator|(
+call|(
+name|bus_size_t
+call|)
+argument_list|(
+operator|(
+name|uint64_t
+operator|)
+literal|1
+operator|<<
+literal|32
+argument_list|)
+operator|)
 argument_list|,
-comment|/* algnmnt, boundary */
+comment|/* boundary*/
 name|BUS_SPACE_MAXADDR
 argument_list|,
 comment|/* lowaddr */
