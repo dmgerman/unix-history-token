@@ -805,9 +805,13 @@ name|is_hwmp_proxy
 decl_stmt|;
 comment|/* PREP for proxy route */
 name|uint32_t
+name|is_beacon_bad
+decl_stmt|;
+comment|/* Number of bad beacons */
+name|uint32_t
 name|is_spare
 index|[
-literal|11
+literal|10
 index|]
 decl_stmt|;
 block|}

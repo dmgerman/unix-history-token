@@ -5376,7 +5376,16 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
+block|{
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_beacon_bad
+operator|++
+expr_stmt|;
 return|return;
+block|}
 comment|/* 		 * Count frame now that we know it's to be processed. 		 */
 if|if
 condition|(
