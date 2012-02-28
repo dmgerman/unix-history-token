@@ -1572,7 +1572,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * lookup a dynamic rule, locked version  */
+comment|/*  * Lookup a dynamic rule, locked version.  */
 end_comment
 
 begin_function
@@ -1596,7 +1596,7 @@ modifier|*
 name|tcp
 parameter_list|)
 block|{
-comment|/* 	 * stateful ipfw extensions. 	 * Lookup into dynamic session queue 	 */
+comment|/* 	 * Stateful ipfw extensions. 	 * Lookup into dynamic session queue. 	 */
 define|#
 directive|define
 name|MATCH_REVERSE
@@ -1715,20 +1715,22 @@ condition|(
 name|pkt
 operator|->
 name|proto
-operator|==
+operator|!=
 name|q
 operator|->
 name|id
 operator|.
 name|proto
-operator|&&
+operator|||
 name|q
 operator|->
 name|dyn_type
-operator|!=
+operator|==
 name|O_LIMIT_PARENT
 condition|)
-block|{
+goto|goto
+name|next
+goto|;
 if|if
 condition|(
 name|IS_IP6_FLOW_ID
@@ -1742,39 +1744,31 @@ condition|(
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-operator|(
 name|pkt
 operator|->
 name|src_ip6
-operator|)
 argument_list|,
 operator|&
-operator|(
 name|q
 operator|->
 name|id
 operator|.
 name|src_ip6
-operator|)
 argument_list|)
 operator|&&
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-operator|(
 name|pkt
 operator|->
 name|dst_ip6
-operator|)
 argument_list|,
 operator|&
-operator|(
 name|q
 operator|->
 name|id
 operator|.
 name|dst_ip6
-operator|)
 argument_list|)
 operator|&&
 name|pkt
@@ -1809,39 +1803,31 @@ condition|(
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-operator|(
 name|pkt
 operator|->
 name|src_ip6
-operator|)
 argument_list|,
 operator|&
-operator|(
 name|q
 operator|->
 name|id
 operator|.
 name|dst_ip6
-operator|)
 argument_list|)
 operator|&&
 name|IN6_ARE_ADDR_EQUAL
 argument_list|(
 operator|&
-operator|(
 name|pkt
 operator|->
 name|dst_ip6
-operator|)
 argument_list|,
 operator|&
-operator|(
 name|q
 operator|->
 name|id
 operator|.
 name|src_ip6
-operator|)
 argument_list|)
 operator|&&
 name|pkt
@@ -1973,7 +1959,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-block|}
 name|next
 label|:
 name|prev
@@ -2040,6 +2025,9 @@ name|IPPROTO_TCP
 condition|)
 block|{
 comment|/* update state according to flags */
+name|uint32_t
+name|ack
+decl_stmt|;
 name|u_char
 name|flags
 init|=
@@ -2120,11 +2108,6 @@ operator|<<
 literal|8
 operator|)
 case|:
-if|if
-condition|(
-name|tcp
-condition|)
-block|{
 define|#
 directive|define
 name|_SEQ_GE
@@ -2134,16 +2117,32 @@ parameter_list|,
 name|b
 parameter_list|)
 value|((int)(a) - (int)(b)>= 0)
-name|u_int32_t
+if|if
+condition|(
+name|tcp
+operator|==
+name|NULL
+condition|)
+block|{
+name|q
+operator|->
+name|expire
+operator|=
+name|time_uptime
+operator|+
+name|V_dyn_ack_lifetime
+expr_stmt|;
+break|break;
+block|}
 name|ack
-init|=
+operator|=
 name|ntohl
 argument_list|(
 name|tcp
 operator|->
 name|th_ack
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|dir
@@ -2175,10 +2174,8 @@ operator|=
 name|ack
 expr_stmt|;
 else|else
-block|{
 comment|/* ignore out-of-sequence */
 break|break;
-block|}
 block|}
 else|else
 block|{
@@ -2206,11 +2203,8 @@ operator|=
 name|ack
 expr_stmt|;
 else|else
-block|{
 comment|/* ignore out-of-sequence */
 break|break;
-block|}
-block|}
 block|}
 name|q
 operator|->
@@ -2315,6 +2309,8 @@ label|:
 if|if
 condition|(
 name|match_direction
+operator|!=
+name|NULL
 condition|)
 operator|*
 name|match_direction
@@ -2322,7 +2318,9 @@ operator|=
 name|dir
 expr_stmt|;
 return|return
+operator|(
 name|q
+operator|)
 return|;
 block|}
 end_function
