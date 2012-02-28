@@ -5377,6 +5377,17 @@ operator|!=
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+operator|!
+operator|(
+name|ic
+operator|->
+name|ic_flags
+operator|&
+name|IEEE80211_F_SCAN
+operator|)
+condition|)
 name|vap
 operator|->
 name|iv_stats
