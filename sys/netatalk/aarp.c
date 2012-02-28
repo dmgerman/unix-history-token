@@ -2127,7 +2127,7 @@ operator|==
 name|AARPOP_PROBE
 condition|)
 block|{
-comment|/* 			 * Someone's probing for spa, dealocate the one we've 			 * got, so that if the prober keeps the address, 			 * we'll be able to arp for him. 			 */
+comment|/* 			 * Someone's probing for spa, deallocate the one we've 			 * got, so that if the prober keeps the address, 			 * we'll be able to arp for him. 			 */
 name|aarptfree
 argument_list|(
 name|aat
