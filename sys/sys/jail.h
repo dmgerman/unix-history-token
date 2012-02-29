@@ -953,8 +953,15 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_MOUNT_PROCFS
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x03ff
+value|0x07ff
 end_define
 
 begin_comment

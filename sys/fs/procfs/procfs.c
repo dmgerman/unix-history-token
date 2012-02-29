@@ -855,6 +855,8 @@ argument_list|(
 name|procfs
 argument_list|,
 literal|1
+argument_list|,
+name|PR_ALLOW_MOUNT_PROCFS
 argument_list|)
 expr_stmt|;
 end_expr_stmt
