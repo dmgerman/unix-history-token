@@ -2500,14 +2500,14 @@ block|{
 comment|/* got the right answer */
 return|return
 operator|(
-literal|0
+literal|1
 operator|)
 return|;
 block|}
 block|}
 return|return
 operator|(
-literal|1
+literal|0
 operator|)
 return|;
 block|}
