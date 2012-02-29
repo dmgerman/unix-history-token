@@ -698,7 +698,8 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|;
-name|ASSERT_VOP_LOCKED
+comment|/* 	 * The insmntque1() call below requires the exclusive lock on 	 * the nullfs vnode. 	 */
+name|ASSERT_VOP_ELOCKED
 argument_list|(
 name|lowervp
 argument_list|,
