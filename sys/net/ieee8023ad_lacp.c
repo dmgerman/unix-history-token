@@ -4612,11 +4612,17 @@ return|;
 block|}
 if|if
 condition|(
+name|sc
+operator|->
+name|use_flowid
+operator|&&
+operator|(
 name|m
 operator|->
 name|m_flags
 operator|&
 name|M_FLOWID
+operator|)
 condition|)
 name|hash
 operator|=
