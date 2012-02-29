@@ -4390,25 +4390,11 @@ operator|=
 operator|-
 literal|1
 expr_stmt|;
-name|printf
+name|pci_printf
 argument_list|(
-literal|"pci%d:%d:%d:%d: invalid VPD data, remain %#x\n"
-argument_list|,
 name|cfg
-operator|->
-name|domain
 argument_list|,
-name|cfg
-operator|->
-name|bus
-argument_list|,
-name|cfg
-operator|->
-name|slot
-argument_list|,
-name|cfg
-operator|->
-name|func
+literal|"invalid VPD data, remain %#x\n"
 argument_list|,
 name|remain
 argument_list|)
@@ -4777,25 +4763,11 @@ literal|0
 condition|)
 block|{
 comment|/* 				 * if this happens, we can't trust the rest 				 * of the VPD. 				 */
-name|printf
+name|pci_printf
 argument_list|(
-literal|"pci%d:%d:%d:%d: bad keyword length: %d\n"
-argument_list|,
 name|cfg
-operator|->
-name|domain
 argument_list|,
-name|cfg
-operator|->
-name|bus
-argument_list|,
-name|cfg
-operator|->
-name|slot
-argument_list|,
-name|cfg
-operator|->
-name|func
+literal|"bad keyword length: %d\n"
 argument_list|,
 name|dflen
 argument_list|)
@@ -5018,25 +4990,11 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|pci_printf
 argument_list|(
-literal|"pci%d:%d:%d:%d: bad VPD cksum, remain %hhu\n"
-argument_list|,
 name|cfg
-operator|->
-name|domain
 argument_list|,
-name|cfg
-operator|->
-name|bus
-argument_list|,
-name|cfg
-operator|->
-name|slot
-argument_list|,
-name|cfg
-operator|->
-name|func
+literal|"bad VPD cksum, remain %hhu\n"
 argument_list|,
 name|vrs
 operator|.
@@ -5526,25 +5484,11 @@ literal|5
 expr_stmt|;
 break|break;
 default|default:
-name|printf
+name|pci_printf
 argument_list|(
-literal|"pci%d:%d:%d:%d: invalid state: %d\n"
-argument_list|,
 name|cfg
-operator|->
-name|domain
 argument_list|,
-name|cfg
-operator|->
-name|bus
-argument_list|,
-name|cfg
-operator|->
-name|slot
-argument_list|,
-name|cfg
-operator|->
-name|func
+literal|"invalid state: %d\n"
 argument_list|,
 name|state
 argument_list|)
@@ -5647,25 +5591,11 @@ literal|1
 condition|)
 block|{
 comment|/* I/O error, clean up */
-name|printf
+name|pci_printf
 argument_list|(
-literal|"pci%d:%d:%d:%d: failed to read VPD data.\n"
-argument_list|,
 name|cfg
-operator|->
-name|domain
 argument_list|,
-name|cfg
-operator|->
-name|bus
-argument_list|,
-name|cfg
-operator|->
-name|slot
-argument_list|,
-name|cfg
-operator|->
-name|func
+literal|"failed to read VPD data.\n"
 argument_list|)
 expr_stmt|;
 if|if
