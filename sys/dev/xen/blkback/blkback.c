@@ -12966,8 +12966,6 @@ break|break;
 case|case
 name|XenbusStateClosing
 case|:
-comment|/* 		 * Frontend has acknowledged Closing request. 		 * Wait for Closed state. 		 */
-break|break;
 case|case
 name|XenbusStateClosed
 case|:
@@ -12992,6 +12990,12 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|frontend_state
+operator|==
+name|XenbusStateClosed
+condition|)
 name|xenbus_set_state
 argument_list|(
 name|xbb
