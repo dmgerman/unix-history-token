@@ -5316,7 +5316,7 @@ operator|)
 argument_list|,
 name|NULL
 argument_list|,
-literal|0
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if
