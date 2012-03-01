@@ -946,8 +946,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|PR_ALLOW_MOUNT_ZFS
+value|0x0200
+end_define
+
+begin_define
+define|#
+directive|define
+name|PR_ALLOW_MOUNT_PROCFS
+value|0x0400
+end_define
+
+begin_define
+define|#
+directive|define
 name|PR_ALLOW_ALL
-value|0x01ff
+value|0x07ff
 end_define
 
 begin_comment

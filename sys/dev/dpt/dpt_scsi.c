@@ -4749,8 +4749,6 @@ name|CTS_SPI_VALID_SYNC_RATE
 operator||
 name|CTS_SPI_VALID_SYNC_OFFSET
 operator||
-name|CTS_SPI_VALID_SYNC_RATE
-operator||
 name|CTS_SPI_VALID_BUS_WIDTH
 operator||
 name|CTS_SPI_VALID_DISC

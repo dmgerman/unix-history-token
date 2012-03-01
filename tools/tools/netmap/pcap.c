@@ -1236,7 +1236,7 @@ name|begin
 operator|=
 name|req
 operator|.
-name|nr_numrings
+name|nr_rx_rings
 expr_stmt|;
 name|me
 operator|->
@@ -1290,7 +1290,7 @@ name|end
 operator|=
 name|req
 operator|.
-name|nr_numrings
+name|nr_rx_rings
 expr_stmt|;
 block|}
 comment|/* request timestamps for packets */

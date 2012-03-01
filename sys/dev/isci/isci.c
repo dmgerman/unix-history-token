@@ -359,6 +359,30 @@ literal|"Intel(R) C600 Series Chipset SAS Controller (SATA mode)"
 block|}
 block|,
 block|{
+literal|0x1d6c8086
+block|,
+literal|"Intel(R) C600 Series Chipset SAS Controller"
+block|}
+block|,
+block|{
+literal|0x1d6d8086
+block|,
+literal|"Intel(R) C600 Series Chipset SAS Controller"
+block|}
+block|,
+block|{
+literal|0x1d6e8086
+block|,
+literal|"Intel(R) C600 Series Chipset SAS Controller"
+block|}
+block|,
+block|{
+literal|0x1d6f8086
+block|,
+literal|"Intel(R) C600 Series Chipset SAS Controller (SATA mode)"
+block|}
+block|,
+block|{
 literal|0x00000000
 block|,
 name|NULL
@@ -424,7 +448,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|BUS_PROBE_DEFAULT
 operator|)
 return|;
 block|}

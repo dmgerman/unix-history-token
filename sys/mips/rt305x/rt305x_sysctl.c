@@ -315,7 +315,7 @@ name|SYSCTL_SYSCFG_CPU_CLK_SEL_384MHZ
 condition|)
 name|printf
 argument_list|(
-literal|"\tClock is 384Mhz\n"
+literal|"\tClock is 384MHz\n"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -446,7 +446,7 @@ operator|)
 condition|?
 literal|"external"
 else|:
-literal|"internal 15.625Mhz"
+literal|"internal 15.625MHz"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -487,7 +487,7 @@ operator|)
 condition|?
 literal|"external"
 else|:
-literal|"internal 15.625Mhz"
+literal|"internal 15.625MHz"
 argument_list|)
 expr_stmt|;
 name|printf

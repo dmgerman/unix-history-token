@@ -1540,7 +1540,7 @@ name|i
 operator|++
 index|]
 operator|=
-literal|0x00000000
+literal|0x00001000
 expr_stmt|;
 name|phys_avail
 index|[
@@ -1548,7 +1548,7 @@ name|i
 operator|++
 index|]
 operator|=
-literal|0x00001000
+literal|0x00002000
 expr_stmt|;
 comment|/* 					 *XXX: Gross hack to get our 					 * pages in the vm_page_array 					 . */
 endif|#

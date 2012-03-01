@@ -342,6 +342,7 @@ argument_list|,
 name|int
 name|flags
 argument_list|,
+specifier|const
 expr|struct
 name|timespec
 operator|*
@@ -360,6 +361,7 @@ name|urwlock
 operator|*
 name|rwlock
 argument_list|,
+specifier|const
 expr|struct
 name|timespec
 operator|*

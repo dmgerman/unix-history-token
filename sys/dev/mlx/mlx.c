@@ -9950,8 +9950,6 @@ name|nc
 decl_stmt|;
 name|int
 name|s
-decl_stmt|,
-name|count
 decl_stmt|;
 name|debug_called
 argument_list|(
@@ -9973,10 +9971,6 @@ name|s
 operator|=
 name|splbio
 argument_list|()
-expr_stmt|;
-name|count
-operator|=
-literal|0
 expr_stmt|;
 comment|/* scan the list of busy/done commands */
 name|mc

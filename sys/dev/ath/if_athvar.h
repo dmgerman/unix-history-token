@@ -1891,6 +1891,11 @@ name|task
 name|sc_bstucktask
 decl_stmt|;
 comment|/* stuck beacon processing */
+name|struct
+name|task
+name|sc_resettask
+decl_stmt|;
+comment|/* interface reset task */
 enum|enum
 block|{
 name|OK

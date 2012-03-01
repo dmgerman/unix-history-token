@@ -1437,10 +1437,16 @@ expr_stmt|;
 comment|/*      * Build the scatter/gather buffers.      */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|amr_sglist_map
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -1454,10 +1460,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|amr_ccb_map
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out

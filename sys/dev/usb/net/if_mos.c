@@ -30,7 +30,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Moschip MCS7730/MCS7830 USB to Ethernet controller  * The datasheet is available at the following URL:  * http://www.moschip.com/data/products/MCS7830/Data%20Sheet_7830.pdf  */
+comment|/*  * Moschip MCS7730/MCS7830/MCS7832 USB to Ethernet controller  * The datasheet is available at the following URL:  * http://www.moschip.com/data/products/MCS7830/Data%20Sheet_7830.pdf  */
 end_comment
 
 begin_comment
@@ -322,6 +322,17 @@ argument_list|,
 argument|USB_PRODUCT_MOSCHIP_MCS7830
 argument_list|,
 argument|MCS7830
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_MOSCHIP
+argument_list|,
+argument|USB_PRODUCT_MOSCHIP_MCS7832
+argument_list|,
+argument|MCS7832
 argument_list|)
 block|}
 block|,
@@ -3295,6 +3306,22 @@ block|{
 name|MOS_DPRINTFN
 argument_list|(
 literal|"model: MCS7830"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|mos_flags
+operator|&
+name|MCS7832
+condition|)
+block|{
+name|MOS_DPRINTFN
+argument_list|(
+literal|"model: MCS7832"
 argument_list|)
 expr_stmt|;
 block|}

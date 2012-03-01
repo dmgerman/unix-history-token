@@ -2440,7 +2440,6 @@ name|name
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * If utility signaled or exited with a value of 255, 		 * exit 1-125. 		 */
 if|if
 condition|(
 name|WIFSIGNALED
@@ -2452,7 +2451,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: terminated with signal %d, aborting"
+literal|"%s: terminated with signal %d; aborting"
 argument_list|,
 name|name
 argument_list|,
@@ -2475,7 +2474,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"%s: exited with status 255, aborting"
+literal|"%s: exited with status 255; aborting"
 argument_list|,
 name|name
 argument_list|)

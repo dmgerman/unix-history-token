@@ -2618,6 +2618,17 @@ begin_comment
 comment|/* get ps_strings location */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_UMASK
+value|39
+end_define
+
+begin_comment
+comment|/* process umask */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment

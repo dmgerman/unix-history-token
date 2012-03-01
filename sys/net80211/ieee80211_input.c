@@ -3013,8 +3013,11 @@ name|wh
 argument_list|,
 name|NULL
 argument_list|,
-literal|"bogus beacon interval"
+literal|"bogus beacon interval (%d TU)"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|scan
 operator|->
 name|bintval
