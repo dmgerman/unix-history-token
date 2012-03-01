@@ -22,6 +22,36 @@ file|<xen/blkif.h>
 end_include
 
 begin_comment
+comment|/**  * Given a number of blkif segments, compute the maximum I/O size supported.  *  * \note This calculation assumes that all but the first and last segments   *       of the I/O are fully utilized.  *  * \note We reserve a segement from the maximum supported by the transport to  *       guarantee we can handle an unaligned transfer without the need to  *       use a bounce buffer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBF_SEGS_TO_SIZE
+parameter_list|(
+name|segs
+parameter_list|)
+define|\
+value|(((segs) - 1) * PAGE_SIZE)
+end_define
+
+begin_comment
+comment|/**  * Compute the maximum number of blkif segments requried to represent  * an I/O of the given size.  *  * \note This calculation assumes that all but the first and last segments  *       of the I/O are fully utilized.  *  * \note We reserve a segement to guarantee we can handle an unaligned  *       transfer without the need to use a bounce buffer.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XBF_SIZE_TO_SEGS
+parameter_list|(
+name|size
+parameter_list|)
+define|\
+value|((size / PAGE_SIZE) + 1)
+end_define
+
+begin_comment
 comment|/**  * The maximum number of outstanding requests blocks (request headers plus  * additional segment blocks) we will allow in a negotiated block-front/back  * communication channel.  */
 end_comment
 
@@ -33,7 +63,7 @@ value|256
 end_define
 
 begin_comment
-comment|/**  * The maximum mapped region size per request we will allow in a negotiated  * block-front/back communication channel.  *  * \note We reserve a segement from the maximum supported by the transport to  *       guarantee we can handle an unaligned transfer without the need to  *       use a bounce buffer..  */
+comment|/**  * The maximum mapped region size per request we will allow in a negotiated  * block-front/back communication channel.  */
 end_comment
 
 begin_define
@@ -41,7 +71,7 @@ define|#
 directive|define
 name|XBF_MAX_REQUEST_SIZE
 define|\
-value|MIN(MAXPHYS, (BLKIF_MAX_SEGMENTS_PER_REQUEST - 1) * PAGE_SIZE)
+value|MIN(MAXPHYS, XBF_SEGS_TO_SIZE(BLKIF_MAX_SEGMENTS_PER_REQUEST))
 end_define
 
 begin_comment
@@ -53,7 +83,7 @@ define|#
 directive|define
 name|XBF_MAX_SEGMENTS_PER_REQUEST
 define|\
-value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,	\ 	     (XBF_MAX_REQUEST_SIZE / PAGE_SIZE) + 1))
+value|(MIN(BLKIF_MAX_SEGMENTS_PER_REQUEST,				\ 	     XBF_SIZE_TO_SEGS(XBF_MAX_REQUEST_SIZE)))
 end_define
 
 begin_comment
