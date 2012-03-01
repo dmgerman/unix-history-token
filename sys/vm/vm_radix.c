@@ -127,6 +127,88 @@ directive|include
 file|<sys/kdb.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|VM_RADIX_WIDTH
+value|5
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RADIX_COUNT
+value|(1<< VM_RADIX_WIDTH)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RADIX_MASK
+value|(VM_RADIX_COUNT - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RADIX_MAXVAL
+value|((vm_pindex_t)-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|VM_RADIX_LIMIT
+value|howmany((sizeof(vm_pindex_t) * NBBY), VM_RADIX_WIDTH)
+end_define
+
+begin_comment
+comment|/* Flag bits stored in node pointers. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_RADIX_FLAGS
+value|0x3
+end_define
+
+begin_comment
+comment|/* Bits of height in root. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_RADIX_HEIGHT
+value|0xf
+end_define
+
+begin_comment
+comment|/* Calculates maximum value for a tree of height h. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|VM_RADIX_MAX
+parameter_list|(
+name|h
+parameter_list|)
+define|\
+value|((h) == VM_RADIX_LIMIT ? VM_RADIX_MAXVAL :			\ 	    (((vm_pindex_t)1<< ((h) * VM_RADIX_WIDTH)) - 1))
+end_define
+
+begin_expr_stmt
+name|CTASSERT
+argument_list|(
+name|VM_RADIX_HEIGHT
+operator|>=
+name|VM_RADIX_LIMIT
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_expr_stmt
 name|CTASSERT
 argument_list|(
@@ -157,6 +239,27 @@ name|VM_RADIX_LIMIT
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_struct
+struct|struct
+name|vm_radix_node
+block|{
+name|void
+modifier|*
+name|rn_child
+index|[
+name|VM_RADIX_COUNT
+index|]
+decl_stmt|;
+comment|/* Child nodes. */
+specifier|volatile
+name|uint32_t
+name|rn_count
+decl_stmt|;
+comment|/* Valid children. */
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|static
@@ -3632,6 +3735,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|notyet
+end_ifdef
+
 begin_comment
 comment|/*  * Attempts to reduce the height of the tree.  */
 end_comment
@@ -3756,6 +3865,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
