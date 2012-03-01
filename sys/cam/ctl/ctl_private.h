@@ -761,6 +761,7 @@ end_define
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|ctl_page_index
 name|page_index_template
