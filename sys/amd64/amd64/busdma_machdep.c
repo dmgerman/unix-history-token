@@ -855,6 +855,33 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+comment|/* Always enforce at least a 4GB boundary. */
+if|if
+condition|(
+name|boundary
+operator|==
+literal|0
+operator|||
+name|boundary
+operator|>
+operator|(
+operator|(
+name|bus_addr_t
+operator|)
+literal|1
+operator|<<
+literal|32
+operator|)
+condition|)
+name|boundary
+operator|=
+operator|(
+name|bus_size_t
+operator|)
+literal|1
+operator|<<
+literal|32
+expr_stmt|;
 comment|/* Basic sanity checking */
 if|if
 condition|(
