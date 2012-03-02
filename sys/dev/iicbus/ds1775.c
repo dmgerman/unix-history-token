@@ -314,7 +314,7 @@ end_decl_stmt
 begin_expr_stmt
 name|DRIVER_MODULE
 argument_list|(
-name|ds1755
+name|ds1775
 argument_list|,
 name|iicbus
 argument_list|,
