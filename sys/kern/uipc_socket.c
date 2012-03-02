@@ -11625,7 +11625,7 @@ operator|<
 literal|0
 operator|||
 name|optval
-operator|>
+operator|>=
 name|rt_numfibs
 condition|)
 block|{
