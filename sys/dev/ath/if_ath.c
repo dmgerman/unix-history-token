@@ -24496,6 +24496,11 @@ name|ic_curchan
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are returning to our bss channel then mark state 	 * so the next recv'd beacon's tsf will be used to sync the 	 * beacon timers.  Note that since we only hear beacons in 	 * sta/ibss mode this has no effect in other operating modes. 	 */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -24516,6 +24521,11 @@ operator|->
 name|sc_syncbeacon
 operator|=
 literal|1
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
