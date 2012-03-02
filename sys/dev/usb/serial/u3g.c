@@ -3153,6 +3153,15 @@ name|U3G_DEV
 argument_list|(
 name|SIERRA
 argument_list|,
+name|AC313U
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|SIERRA
+argument_list|,
 name|AC597E
 argument_list|,
 literal|0
