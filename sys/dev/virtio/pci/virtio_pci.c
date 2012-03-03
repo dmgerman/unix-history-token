@@ -1255,7 +1255,7 @@ return|;
 block|}
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
@@ -1274,7 +1274,7 @@ name|VIRTIO_PCI_FLAG_NO_MSI
 expr_stmt|;
 if|if
 condition|(
-name|pci_find_extcap
+name|pci_find_cap
 argument_list|(
 name|dev
 argument_list|,
