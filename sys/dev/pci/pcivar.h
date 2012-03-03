@@ -367,6 +367,26 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Interesting values for PCI-express */
+end_comment
+
+begin_struct
+struct|struct
+name|pcicfg_pcie
+block|{
+name|uint8_t
+name|pcie_location
+decl_stmt|;
+comment|/* Offset of PCI-e capability registers. */
+name|uint8_t
+name|pcie_type
+decl_stmt|;
+comment|/* Device type. */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* config header information common to all header types */
 end_comment
 
@@ -506,6 +526,11 @@ name|pcicfg_ht
 name|ht
 decl_stmt|;
 comment|/* HyperTransport */
+name|struct
+name|pcicfg_pcie
+name|pcie
+decl_stmt|;
+comment|/* PCI Express */
 block|}
 name|pcicfgregs
 typedef|;
@@ -1586,7 +1611,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PCI_FIND_EXTCAP
+name|PCI_FIND_CAP
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -1624,6 +1649,43 @@ block|{
 return|return
 operator|(
 name|PCI_FIND_EXTCAP
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|capability
+argument_list|,
+name|capreg
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|pci_find_htcap
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|capability
+parameter_list|,
+name|int
+modifier|*
+name|capreg
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PCI_FIND_HTCAP
 argument_list|(
 name|device_get_parent
 argument_list|(
