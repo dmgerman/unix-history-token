@@ -1370,7 +1370,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-name|identptr
+name|vptr
 parameter_list|)
 block|{
 return|return
@@ -1386,7 +1386,7 @@ name|dev
 argument_list|,
 name|kw
 argument_list|,
-name|identptr
+name|vptr
 argument_list|)
 operator|)
 return|;
