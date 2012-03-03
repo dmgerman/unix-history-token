@@ -471,6 +471,19 @@ name|defined
 argument_list|(
 name|__powerpc64__
 argument_list|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|)
 end_if
 
 begin_define

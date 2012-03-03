@@ -268,6 +268,24 @@ name|USRSTACK
 value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__mips_n64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|FREEBSD32_USRSTACK
+value|(((vm_offset_t)0x80000000) - PAGE_SIZE)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Only one memory domain.  */
 end_comment
