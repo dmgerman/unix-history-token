@@ -1132,7 +1132,7 @@ name|acpi_tz_polling_rate
 argument_list|,
 literal|0
 argument_list|,
-literal|"monitor polling rate"
+literal|"monitor polling interval in seconds"
 argument_list|)
 expr_stmt|;
 name|SYSCTL_ADD_INT
