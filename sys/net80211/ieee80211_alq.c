@@ -602,6 +602,17 @@ name|r_op
 operator|=
 name|op
 expr_stmt|;
+name|r
+operator|->
+name|r_threadid
+operator|=
+operator|(
+name|uint32_t
+operator|)
+name|curthread
+operator|->
+name|td_ucred
+expr_stmt|;
 name|memcpy
 argument_list|(
 operator|&
