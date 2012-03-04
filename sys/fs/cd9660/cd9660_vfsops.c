@@ -2369,9 +2369,6 @@ condition|)
 block|{
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|isomp
 argument_list|,
 name|M_ISOFSMNT
@@ -2545,9 +2542,6 @@ argument_list|)
 expr_stmt|;
 name|free
 argument_list|(
-operator|(
-name|caddr_t
-operator|)
 name|isomp
 argument_list|,
 name|M_ISOFSMNT
