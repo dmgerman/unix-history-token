@@ -3434,6 +3434,9 @@ empty_stmt|;
 break|break;
 block|}
 break|break;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_MESH
 case|case
 name|IEEE80211_ACTION_CAT_MESH
 case|:
@@ -3515,6 +3518,8 @@ name|EINVAL
 return|;
 block|}
 break|break;
+endif|#
+directive|endif
 block|}
 return|return
 literal|0
