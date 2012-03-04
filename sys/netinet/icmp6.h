@@ -1426,7 +1426,7 @@ value|25
 end_define
 
 begin_comment
-comment|/* RFC 6016 */
+comment|/* RFC 6106 */
 end_comment
 
 begin_define
@@ -1437,7 +1437,7 @@ value|31
 end_define
 
 begin_comment
-comment|/* RFC 6016 */
+comment|/* RFC 6106 */
 end_comment
 
 begin_struct
