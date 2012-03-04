@@ -953,6 +953,47 @@ value|0x0f
 end_define
 
 begin_comment
+comment|/* qos[1] byte used for all frames sent by mesh STAs in a mesh BSS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_QOS_MC
+value|0x10
+end_define
+
+begin_comment
+comment|/* Mesh control */
+end_comment
+
+begin_comment
+comment|/* Mesh power save level*/
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_QOS_MESH_PSL
+value|0x20
+end_define
+
+begin_comment
+comment|/* Mesh Receiver Service Period Initiated */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_QOS_RSPI
+value|0x40
+end_define
+
+begin_comment
+comment|/* bits 11 to 15 reserved */
+end_comment
+
+begin_comment
 comment|/* does frame have QoS sequence control data */
 end_comment
 
