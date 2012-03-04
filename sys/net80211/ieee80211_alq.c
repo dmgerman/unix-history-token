@@ -271,7 +271,8 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"net80211: logging to %s enabled; struct size %d bytes\n"
+literal|"net80211: logging to %s enabled; "
+literal|"struct size %d bytes\n"
 argument_list|,
 name|ieee80211_alq_logfile
 argument_list|,
