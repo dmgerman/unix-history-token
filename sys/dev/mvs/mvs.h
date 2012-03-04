@@ -328,6 +328,20 @@ comment|/* SoC LED Configuration */
 end_comment
 
 begin_comment
+comment|/* Additional mask for SoC devices with less than 4 channels */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CHIP_SOC_HC0_MASK
+parameter_list|(
+name|num
+parameter_list|)
+value|(0xff>> ((4 - (num)) * 2))
+end_define
+
+begin_comment
 comment|/* Chip CCC registers */
 end_comment
 
