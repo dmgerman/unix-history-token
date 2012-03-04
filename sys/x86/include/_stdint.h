@@ -194,10 +194,6 @@ begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.1 Limits of exact-width integer types  */
 end_comment
 
-begin_comment
-comment|/* Minimum values of exact-width signed integer types. */
-end_comment
-
 begin_define
 define|#
 directive|define
@@ -218,17 +214,6 @@ directive|define
 name|INT32_MIN
 value|(-0x7fffffff-1)
 end_define
-
-begin_define
-define|#
-directive|define
-name|INT64_MIN
-value|(-INT64_C(0x7fffffffffffffff)-1)
-end_define
-
-begin_comment
-comment|/* Maximum values of exact-width signed integer types. */
-end_comment
 
 begin_define
 define|#
@@ -254,17 +239,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|INT64_MAX
-value|INT64_C(0x7fffffffffffffff)
-end_define
-
-begin_comment
-comment|/* Maximum values of exact-width unsigned integer types. */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|UINT8_MAX
 value|0xff
 end_define
@@ -283,12 +257,63 @@ name|UINT32_MAX
 value|0xffffffffU
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_LP64
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|INT64_MIN
+value|(-0x7fffffffffffffff-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT64_MAX
+value|0x7fffffffffffffff
+end_define
+
 begin_define
 define|#
 directive|define
 name|UINT64_MAX
-value|UINT64_C(0xffffffffffffffff)
+value|0xffffffffffffffff
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|INT64_MIN
+value|(-0x7fffffffffffffffLL-1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|INT64_MAX
+value|0x7fffffffffffffffLL
+end_define
+
+begin_define
+define|#
+directive|define
+name|UINT64_MAX
+value|0xffffffffffffffffULL
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * ISO/IEC 9899:1999  * 7.18.2.2  Limits of minimum-width integer types  */
