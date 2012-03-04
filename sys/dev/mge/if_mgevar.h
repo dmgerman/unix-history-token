@@ -264,6 +264,11 @@ decl_stmt|;
 name|int
 name|mge_ver
 decl_stmt|;
+name|struct
+name|mge_softc
+modifier|*
+name|phy_sc
+decl_stmt|;
 block|}
 struct|;
 end_struct
