@@ -349,10 +349,19 @@ block|{
 name|uint8_t
 name|lm_ie
 decl_stmt|;
-comment|/* IEEE80211_ELEMID_MESHLINK */
+comment|/* IEEE80211_ACTION_MESH_LMETRIC */
 name|uint8_t
 name|lm_len
 decl_stmt|;
+name|uint8_t
+name|lm_flags
+decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_MESH_LMETRIC_FLAGS_REQ
+value|0x01
+comment|/* Request */
+comment|/* 	 * XXX: this field should be variable in size and depend on 	 * the active active path selection metric identifier 	 */
 name|uint32_t
 name|lm_metric
 decl_stmt|;
@@ -1044,22 +1053,8 @@ begin_comment
 comment|/* XXX Linux */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|IEEE80211_ACTION_CAT_MESHLMETRIC
-value|13
-end_define
-
-begin_define
-define|#
-directive|define
-name|IEEE80211_ACTION_CAT_MESHPATH
-value|32
-end_define
-
 begin_comment
-comment|/* XXX Linux */
+comment|/* XXX: these need to be looked into */
 end_comment
 
 begin_define
@@ -1108,39 +1103,68 @@ enum|;
 end_enum
 
 begin_comment
-comment|/*  * Mesh Path Selection Action code.  */
+comment|/*  * Mesh Action code.  */
 end_comment
 
 begin_enum
 enum|enum
 block|{
-name|IEEE80211_ACTION_MESHPATH_SEL
+name|IEEE80211_ACTION_MESH_LMETRIC
 init|=
 literal|0
 block|,
-comment|/* 1-255 reserved */
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/*  * Mesh Link Metric Action codes.  */
-end_comment
-
-begin_enum
-enum|enum
-block|{
-name|IEEE80211_ACTION_MESHLMETRIC_REQ
-init|=
-literal|0
-block|,
-comment|/* Link Metric Request */
-name|IEEE80211_ACTION_MESHLMETRIC_REP
+comment|/* Mesh Link Metric Report */
+name|IEEE80211_ACTION_MESH_HWMP
 init|=
 literal|1
 block|,
-comment|/* Link Metric Report */
-comment|/* 2-255 reserved */
+comment|/* HWMP Mesh Path Selection */
+name|IEEE80211_ACTION_MESH_GANN
+init|=
+literal|2
+block|,
+comment|/* Gate Announcement */
+name|IEEE80211_ACTION_MESH_CC
+init|=
+literal|3
+block|,
+comment|/* Congestion Control */
+name|IEEE80211_ACTION_MESH_MCCA_SREQ
+init|=
+literal|4
+block|,
+comment|/* MCCA Setup Request */
+name|IEEE80211_ACTION_MESH_MCCA_SREP
+init|=
+literal|5
+block|,
+comment|/* MCCA Setup Reply */
+name|IEEE80211_ACTION_MESH_MCCA_AREQ
+init|=
+literal|6
+block|,
+comment|/* MCCA Advertisement Req. */
+name|IEEE80211_ACTION_MESH_MCCA_ADVER
+init|=
+literal|7
+block|,
+comment|/* MCCA Advertisement */
+name|IEEE80211_ACTION_MESH_MCCA_TRDOWN
+init|=
+literal|8
+block|,
+comment|/* MCCA Teardown */
+name|IEEE80211_ACTION_MESH_TBTT_REQ
+init|=
+literal|9
+block|,
+comment|/* TBTT Adjustment Request */
+name|IEEE80211_ACTION_MESH_TBTT_RES
+init|=
+literal|10
+block|,
+comment|/* TBTT Adjustment Response */
+comment|/* 11-255 reserved */
 block|}
 enum|;
 end_enum
@@ -1891,6 +1915,8 @@ name|ieee80211_add_meshlmetric
 parameter_list|(
 name|uint8_t
 modifier|*
+parameter_list|,
+name|uint8_t
 parameter_list|,
 name|uint32_t
 parameter_list|)

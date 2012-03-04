@@ -1494,6 +1494,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|IEEE80211_ACTION_CAT_MESH
+value|13
+end_define
+
+begin_comment
+comment|/* Mesh */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|IEEE80211_ACTION_CAT_VENDOR
 value|127
 end_define

@@ -1196,9 +1196,9 @@ expr_stmt|;
 comment|/* 	 * Register action frame handler. 	 */
 name|ieee80211_recv_action_register
 argument_list|(
-name|IEEE80211_ACTION_CAT_MESHPATH
+name|IEEE80211_ACTION_CAT_MESH
 argument_list|,
-name|IEEE80211_ACTION_MESHPATH_SEL
+name|IEEE80211_ACTION_MESH_HWMP
 argument_list|,
 name|hwmp_recv_action_meshpath
 argument_list|)
@@ -2336,13 +2336,13 @@ operator|*
 name|frm
 operator|++
 operator|=
-name|IEEE80211_ACTION_CAT_MESHPATH
+name|IEEE80211_ACTION_CAT_MESH
 expr_stmt|;
 operator|*
 name|frm
 operator|++
 operator|=
-name|IEEE80211_ACTION_MESHPATH_SEL
+name|IEEE80211_ACTION_MESH_HWMP
 expr_stmt|;
 switch|switch
 condition|(
