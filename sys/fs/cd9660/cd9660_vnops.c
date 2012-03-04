@@ -1328,16 +1328,11 @@ name|n
 operator|=
 name|MIN
 argument_list|(
-call|(
-name|u_int
-call|)
-argument_list|(
 name|imp
 operator|->
 name|logical_block_size
 operator|-
 name|on
-argument_list|)
 argument_list|,
 name|uio
 operator|->
