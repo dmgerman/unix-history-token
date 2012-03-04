@@ -2954,7 +2954,7 @@ name|nread
 init|=
 literal|0
 decl_stmt|;
-name|u_int
+name|int
 name|size
 decl_stmt|;
 name|rpipe
@@ -3143,9 +3143,6 @@ name|uio_resid
 condition|)
 name|size
 operator|=
-operator|(
-name|u_int
-operator|)
 name|uio
 operator|->
 name|uio_resid
@@ -4606,10 +4603,13 @@ decl_stmt|;
 block|{
 name|int
 name|error
+init|=
+literal|0
 decl_stmt|;
-name|size_t
+name|int
 name|desiredsize
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|orig_resid
 decl_stmt|;
 name|struct
