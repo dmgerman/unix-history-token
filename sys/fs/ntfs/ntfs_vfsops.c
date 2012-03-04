@@ -1430,8 +1430,6 @@ name|devvp
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|==
 name|vfs_scanopt
 argument_list|(
 name|mp
@@ -1445,6 +1443,8 @@ argument_list|,
 operator|&
 name|v
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|ntmp
 operator|->
@@ -1454,8 +1454,6 @@ name|v
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|==
 name|vfs_scanopt
 argument_list|(
 name|mp
@@ -1469,6 +1467,8 @@ argument_list|,
 operator|&
 name|v
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|ntmp
 operator|->
@@ -1478,8 +1478,6 @@ name|v
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|==
 name|vfs_scanopt
 argument_list|(
 name|mp
@@ -1493,6 +1491,8 @@ argument_list|,
 operator|&
 name|v
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|ntmp
 operator|->
