@@ -642,6 +642,12 @@ name|G_PART_ALIAS_MS_FAT32
 block|}
 block|,
 block|{
+name|DOSPTYP_EXTLBA
+block|,
+name|G_PART_ALIAS_EBR
+block|}
+block|,
+block|{
 name|DOSPTYP_LDM
 block|,
 name|G_PART_ALIAS_MS_LDM_DATA
