@@ -5307,7 +5307,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lock type %s: EXCL by thread %p (pid %d)\n"
+literal|"lock type %s: EXCL by thread %p "
+literal|"(pid %d, %s, tid %d)\n"
 argument_list|,
 name|lk
 operator|->
@@ -5322,6 +5323,16 @@ operator|->
 name|td_proc
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|,
+name|td
+operator|->
+name|td_tid
 argument_list|)
 expr_stmt|;
 block|}
