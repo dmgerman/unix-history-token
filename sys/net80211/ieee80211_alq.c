@@ -611,7 +611,7 @@ name|uint32_t
 operator|)
 name|curthread
 operator|->
-name|td_ucred
+name|td_tid
 expr_stmt|;
 name|memcpy
 argument_list|(
