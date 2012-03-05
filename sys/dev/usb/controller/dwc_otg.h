@@ -777,6 +777,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|DWC_OTG_MSK_GHWCFG2_DYN_FIFO
+value|(1U<< 19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|DWC_OTG_MSK_GHWCFG2_MPI
+value|(1U<< 20)
+end_define
+
+begin_define
+define|#
+directive|define
 name|DWC_OTG_REG_GHWCFG3
 value|0x004C
 end_define
@@ -1454,32 +1468,11 @@ end_define
 begin_define
 define|#
 directive|define
-name|DWC_OTG_MSK_DIEPEACH_XFER_COMPLETE
-value|(1U<< 0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|DWC_OTG_REG_DOEPEACHMSK
 parameter_list|(
 name|n
 parameter_list|)
 value|(0x0880 + (4*(n)))
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWC_OTG_MSK_DOEPEACH_SETUP
-value|(1U<< 3)
-end_define
-
-begin_define
-define|#
-directive|define
-name|DWC_OTG_MSK_DOEPEACH_XFER_COMPLETE
-value|(1U<< 0)
 end_define
 
 begin_define

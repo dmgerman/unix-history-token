@@ -249,7 +249,7 @@ define|#
 directive|define
 name|DWC_OTG_MSK_GINT_ENABLED
 define|\
-value|(DWC_OTG_MSK_GINT_ENUM_DONE |	\    DWC_OTG_MSK_GINT_USB_SUSPEND |	\    DWC_OTG_MSK_GINT_INEP |		\    DWC_OTG_MSK_GINT_RXFLVL |		\    DWC_OTG_MSK_GINT_SESSREQINT)
+value|(DWC_OTG_MSK_GINT_ENUM_DONE |	\    DWC_OTG_MSK_GINT_USB_RESET |		\    DWC_OTG_MSK_GINT_USB_SUSPEND |	\    DWC_OTG_MSK_GINT_INEP |		\    DWC_OTG_MSK_GINT_RXFLVL |		\    DWC_OTG_MSK_GINT_SESSREQINT)
 end_define
 
 begin_define
@@ -2804,7 +2804,16 @@ comment|/* complete */
 comment|/* else we need to transmit a short packet */
 block|}
 block|}
-comment|/* check if no packets have been transferred */
+if|if
+condition|(
+operator|!
+name|to
+operator|--
+condition|)
+goto|goto
+name|not_complete
+goto|;
+comment|/* check if not all packets have been transferred */
 name|temp
 operator|=
 name|DWC_OTG_READ_4
@@ -3156,11 +3165,6 @@ return|;
 comment|/* complete */
 comment|/* else we need to transmit a short packet */
 block|}
-if|if
-condition|(
-operator|--
-name|to
-condition|)
 goto|goto
 name|repeat
 goto|;
@@ -3538,9 +3542,6 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|uint32_t
-name|temp
-decl_stmt|;
 name|uint8_t
 name|ep_no
 decl_stmt|;
@@ -3989,6 +3990,53 @@ argument_list|,
 name|status
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|status
+operator|&
+name|DWC_OTG_MSK_GINT_USB_RESET
+condition|)
+block|{
+comment|/* set correct state */
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|status_bus_reset
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|status_suspend
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|change_suspend
+operator|=
+literal|0
+expr_stmt|;
+name|sc
+operator|->
+name|sc_flags
+operator|.
+name|change_connect
+operator|=
+literal|1
+expr_stmt|;
+comment|/* complete root HUB interrupt endpoint */
+name|dwc_otg_root_intr
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* check for any bus state change interrupts */
 if|if
 condition|(
@@ -4233,6 +4281,8 @@ operator|&
 operator|(
 name|DWC_OTG_MSK_GINT_USB_SUSPEND
 operator||
+name|DWC_OTG_MSK_GINT_USB_RESET
+operator||
 name|DWC_OTG_MSK_GINT_SESSREQINT
 operator|)
 condition|)
@@ -4319,10 +4369,10 @@ expr_stmt|;
 if|if
 condition|(
 name|temp
-operator|==
-literal|0
+operator|&
+name|DWC_OTG_MSK_DIEP_XFER_COMPLETE
 condition|)
-continue|continue;
+block|{
 name|DWC_OTG_WRITE_4
 argument_list|(
 name|sc
@@ -4332,9 +4382,10 @@ argument_list|(
 name|x
 argument_list|)
 argument_list|,
-name|temp
+name|DWC_OTG_MSK_DIEP_XFER_COMPLETE
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|#
@@ -6818,15 +6869,90 @@ operator|->
 name|sc_irq_mask
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Disable all endpoint interrupts, 	 * we use the SOF IRQ for transmit: 	 */
 comment|/* enable all endpoint interrupts */
+name|temp
+operator|=
+name|DWC_OTG_READ_4
+argument_list|(
+name|sc
+argument_list|,
+name|DWC_OTG_REG_GHWCFG2
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|temp
+operator|&
+name|DWC_OTG_MSK_GHWCFG2_MPI
+condition|)
+block|{
+name|uint8_t
+name|x
+decl_stmt|;
+name|DPRINTF
+argument_list|(
+literal|"Multi Process Interrupts\n"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|x
+operator|=
+literal|0
+init|;
+name|x
+operator|!=
+name|sc
+operator|->
+name|sc_dev_in_ep_max
+condition|;
+name|x
+operator|++
+control|)
+block|{
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DWC_OTG_REG_DIEPEACHMSK
+argument_list|(
+name|x
+argument_list|)
+argument_list|,
+name|DWC_OTG_MSK_DIEP_XFER_COMPLETE
+argument_list|)
+expr_stmt|;
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DWC_OTG_REG_DOEPEACHMSK
+argument_list|(
+name|x
+argument_list|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
+name|DWC_OTG_WRITE_4
+argument_list|(
+name|sc
+argument_list|,
+name|DWC_OTG_REG_DEACHINTMSK
+argument_list|,
+literal|0xFFFF
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|DWC_OTG_WRITE_4
 argument_list|(
 name|sc
 argument_list|,
 name|DWC_OTG_REG_DIEPMSK
 argument_list|,
-comment|/* DWC_OTG_MSK_DIEP_FIFO_EMPTY | */
 name|DWC_OTG_MSK_DIEP_XFER_COMPLETE
 argument_list|)
 expr_stmt|;
@@ -6848,6 +6974,7 @@ argument_list|,
 literal|0xFFFF
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* enable global IRQ */
 name|DWC_OTG_WRITE_4
 argument_list|(
