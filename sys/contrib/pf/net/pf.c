@@ -9367,20 +9367,9 @@ argument|case AF_INET: 		hlen = sizeof(struct ip); 		bzero(&ro, sizeof(ro)); 		d
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|RTF_PRCLONING
-argument|rtalloc_ign(&ro, (RTF_CLONING | RTF_PRCLONING));
-else|#
-directive|else
-comment|/* !RTF_PRCLONING */
 argument|in_rtalloc_ign(&ro,
 literal|0
-argument|,
-literal|0
-argument|);
-endif|#
-directive|endif
+argument|, RT_DEFAULT_FIB);
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -9398,18 +9387,9 @@ argument|case AF_INET6: 		hlen = sizeof(struct ip6_hdr); 		bzero(&ro6, sizeof(ro
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|RTF_PRCLONING
-argument|rtalloc_ign((struct route *)&ro6, 		    (RTF_CLONING | RTF_PRCLONING));
-else|#
-directive|else
-comment|/* !RTF_PRCLONING */
-argument|rtalloc_ign((struct route *)&ro6,
+argument|in6_rtalloc_ign(&ro6,
 literal|0
-argument|);
-endif|#
-directive|endif
+argument|, RT_DEFAULT_FIB);
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -19929,11 +19909,15 @@ comment|/* XXX MRT not always INET */
 comment|/* stick with table 0 though */
 argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
-argument|,
+argument|, RT_DEFAULT_FIB);
+ifdef|#
+directive|ifdef
+name|INET6
+argument|else 		in6_rtalloc_ign(&ro,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro,
-literal|0
-argument|);
+argument|, RT_DEFAULT_FIB);
+endif|#
+directive|endif
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -20001,20 +19985,15 @@ argument|); 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|RTF_PRCLONING
-argument|rtalloc_ign((struct route *)&ro, (RTF_CLONING|RTF_PRCLONING));
-else|#
-directive|else
-comment|/* !RTF_PRCLONING */
 argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
 literal|0
-argument|,
+argument|, RT_DEFAULT_FIB);
+ifdef|#
+directive|ifdef
+name|INET6
+argument|else 		in6_rtalloc_ign(&ro,
 literal|0
-argument|); 	else 		rtalloc_ign((struct route *)&ro,
-literal|0
-argument|);
+argument|, RT_DEFAULT_FIB);
 endif|#
 directive|endif
 else|#

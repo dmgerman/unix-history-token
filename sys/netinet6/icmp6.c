@@ -1396,6 +1396,7 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
+comment|/* FIB is also copied over. */
 if|if
 condition|(
 name|m
@@ -2262,6 +2263,7 @@ argument_list|,
 name|n0
 argument_list|)
 expr_stmt|;
+comment|/* FIB copied. */
 if|if
 condition|(
 name|n
@@ -5840,7 +5842,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* just for recvif */
+comment|/* just for recvif and FIB */
 if|if
 condition|(
 name|replylen
@@ -10073,7 +10075,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|in6_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -10086,6 +10088,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if
@@ -10564,6 +10568,9 @@ name|struct
 name|sockaddr_in6
 name|ssrc
 decl_stmt|;
+name|u_int
+name|fibnum
+decl_stmt|;
 name|bzero
 argument_list|(
 operator|&
@@ -10680,7 +10687,20 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rtredirect
+for|for
+control|(
+name|fibnum
+operator|=
+literal|0
+init|;
+name|fibnum
+operator|<
+name|rt_numfibs
+condition|;
+name|fibnum
+operator|++
+control|)
+name|in6_rtredirect
 argument_list|(
 operator|(
 expr|struct
@@ -10716,6 +10736,8 @@ operator|*
 operator|)
 operator|&
 name|ssrc
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -11091,6 +11113,15 @@ condition|)
 goto|goto
 name|fail
 goto|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|rt
+operator|->
+name|rt_fibnum
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr

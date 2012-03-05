@@ -2779,7 +2779,7 @@ argument_list|)
 expr_stmt|;
 name|error
 operator|=
-name|rtrequest
+name|rtrequest_fib
 argument_list|(
 name|RTM_ADD
 argument_list|,
@@ -2814,6 +2814,8 @@ operator||
 name|RTF_GATEWAY
 argument_list|,
 name|NULL
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 name|CURVNET_RESTORE

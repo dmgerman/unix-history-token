@@ -276,6 +276,17 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|RT_DEFAULT_FIB
+value|0
+end_define
+
+begin_comment
+comment|/* Explicitly mark fib=0 restricted cases */
+end_comment
+
 begin_decl_stmt
 specifier|extern
 name|u_int
@@ -1893,6 +1904,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|BURN_BRIDGES
+end_ifndef
+
 begin_comment
 comment|/* defaults to "all" FIBs */
 end_comment
@@ -1911,6 +1928,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* XXX MRT NEW VERSIONS THAT USE FIBs  * For now the protocol indepedent versions are the same as the AF_INET ones  * but this will change..   */
