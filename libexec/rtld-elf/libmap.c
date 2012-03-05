@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<string.h>
 end_include
 
@@ -333,6 +327,20 @@ parameter_list|)
 value|(((c) == '#') || ((c) == '\0') || \ 			 ((c) == '\n') || ((c) == '\r'))
 end_define
 
+begin_comment
+comment|/*  * Do not use ctype.h macros, which rely on working TLS.  It is  * too early to have thread-local variables functional.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|isspace1
+parameter_list|(
+name|c
+parameter_list|)
+value|((c) == ' ' || (c) == '\t')
+end_define
+
 begin_function
 name|int
 name|lm_init
@@ -569,7 +577,7 @@ expr_stmt|;
 comment|/* Skip over leading space */
 while|while
 condition|(
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -603,7 +611,7 @@ expr_stmt|;
 comment|/* Skip leading space */
 while|while
 condition|(
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -636,7 +644,7 @@ comment|/* Skip to end of word */
 while|while
 condition|(
 operator|!
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -660,7 +668,7 @@ expr_stmt|;
 comment|/* Skip and zero out trailing space */
 while|while
 condition|(
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -691,7 +699,7 @@ expr_stmt|;
 comment|/* 			 * There should be nothing except whitespace or comment 			  from this point to the end of the line. 			 */
 while|while
 condition|(
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -732,7 +740,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -751,7 +759,7 @@ expr_stmt|;
 comment|/* Skip and zero out the trailing whitespace */
 while|while
 condition|(
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -782,7 +790,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
@@ -801,7 +809,7 @@ expr_stmt|;
 comment|/* Skip and zero out the trailing whitespace */
 while|while
 condition|(
-name|isspace
+name|isspace1
 argument_list|(
 operator|*
 name|cp
