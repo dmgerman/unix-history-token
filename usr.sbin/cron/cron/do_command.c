@@ -134,24 +134,18 @@ begin_decl_stmt
 specifier|static
 name|void
 name|child_process
-name|__P
 argument_list|(
-operator|(
 name|entry
 operator|*
-operator|,
+argument_list|,
 name|user
 operator|*
-operator|)
 argument_list|)
 decl_stmt|,
 name|do_univ
-name|__P
 argument_list|(
-operator|(
 name|user
 operator|*
-operator|)
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -525,7 +519,7 @@ directive|endif
 ifdef|#
 directive|ifdef
 name|USE_SIGCHLD
-comment|/* our parent is watching for our death by catching SIGCHLD.  we 	 * do not care to watch for our children's deaths this way -- we 	 * use wait() explictly.  so we have to disable the signal (which 	 * was inherited from the parent). 	 */
+comment|/* our parent is watching for our death by catching SIGCHLD.  we 	 * do not care to watch for our children's deaths this way -- we 	 * use wait() explicitly.  so we have to disable the signal (which 	 * was inherited from the parent). 	 */
 operator|(
 name|void
 operator|)
