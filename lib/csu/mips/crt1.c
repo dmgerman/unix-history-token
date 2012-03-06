@@ -386,14 +386,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-ifndef|#
-directive|ifndef
-name|NOGPREL
 name|_init
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
 name|exit
 argument_list|(
 name|main
