@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|_XLOCALE_INLINE
-value|extern inline
+value|extern __inline
 end_define
 
 begin_else
@@ -202,7 +202,7 @@ begin_define
 define|#
 directive|define
 name|_XLOCALE_INLINE
-value|__inline static
+value|static __inline
 end_define
 
 begin_else

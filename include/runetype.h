@@ -266,7 +266,7 @@ end_decl_stmt
 
 begin_function
 specifier|static
-specifier|inline
+name|__inline
 specifier|const
 name|_RuneLocale
 modifier|*
