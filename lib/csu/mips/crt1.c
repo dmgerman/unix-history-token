@@ -64,12 +64,6 @@ name|ps_strings
 struct_decl|;
 end_struct_decl
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|NOSHARED
-end_ifndef
-
 begin_decl_stmt
 specifier|extern
 name|int
@@ -83,11 +77,6 @@ directive|pragma
 name|weak
 name|_DYNAMIC
 end_pragma
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_function_decl
 specifier|extern
@@ -352,9 +341,6 @@ operator|+
 literal|1
 expr_stmt|;
 block|}
-ifndef|#
-directive|ifndef
-name|NOSHARED
 if|if
 condition|(
 operator|&
@@ -367,8 +353,10 @@ argument_list|(
 name|cleanup
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
+else|else
+name|_init_tls
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|GCRT
