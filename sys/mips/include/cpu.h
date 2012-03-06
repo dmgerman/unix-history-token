@@ -32,34 +32,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SR_KSU_MASK
-value|0x00000018
-end_define
-
-begin_define
-define|#
-directive|define
-name|SR_KSU_USER
-value|0x00000010
-end_define
-
-begin_define
-define|#
-directive|define
-name|SR_KSU_SUPER
-value|0x00000008
-end_define
-
-begin_define
-define|#
-directive|define
-name|SR_KSU_KERNEL
-value|0x00000000
-end_define
-
-begin_define
-define|#
-directive|define
 name|soft_int_mask
 parameter_list|(
 name|softintr
@@ -110,7 +82,7 @@ name|TRAPF_USERMODE
 parameter_list|(
 name|framep
 parameter_list|)
-value|(((framep)->sr& SR_KSU_USER) != 0)
+value|(((framep)->sr& MIPS_SR_KSU_USER) != 0)
 end_define
 
 begin_define
