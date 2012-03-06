@@ -180,8 +180,7 @@ decl_stmt|;
 name|int32_t
 name|mc_fpc_eir
 decl_stmt|;
-name|void
-modifier|*
+name|int32_t
 name|mc_tls
 decl_stmt|;
 name|int
