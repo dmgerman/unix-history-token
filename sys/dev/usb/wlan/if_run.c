@@ -1173,7 +1173,7 @@ argument_list|)
 block|,
 name|RUN_DEV
 argument_list|(
-name|LOGITECH
+name|LOGITEC
 argument_list|,
 name|LANW300NU2
 argument_list|)
