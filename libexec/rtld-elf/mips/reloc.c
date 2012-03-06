@@ -66,6 +66,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tls.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"debug.h"
 end_include
 
@@ -2801,7 +2807,6 @@ expr_stmt|;
 name|tls
 operator|=
 operator|(
-operator|(
 name|char
 operator|*
 operator|)
@@ -2815,11 +2820,6 @@ name|TLS_TCB_SIZE
 argument_list|,
 literal|8
 argument_list|)
-operator|+
-name|TLS_TP_OFFSET
-operator|+
-name|TLS_TCB_SIZE
-operator|)
 expr_stmt|;
 name|sysarch
 argument_list|(
@@ -2862,21 +2862,7 @@ name|p
 operator|=
 name|tls_get_addr_common
 argument_list|(
-operator|(
-name|Elf_Addr
-operator|*
-operator|*
-operator|)
-operator|(
-operator|(
-name|Elf_Addr
-operator|)
 name|tls
-operator|-
-name|TLS_TP_OFFSET
-operator|-
-name|TLS_TCB_SIZE
-operator|)
 argument_list|,
 name|ti
 operator|->
