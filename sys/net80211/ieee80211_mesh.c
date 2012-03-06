@@ -842,6 +842,42 @@ end_define
 begin_expr_stmt
 name|MALLOC_DEFINE
 argument_list|(
+name|M_80211_MESH_PREQ
+argument_list|,
+literal|"80211preq"
+argument_list|,
+literal|"802.11 MESH Path Request frame"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_80211_MESH_PREP
+argument_list|,
+literal|"80211prep"
+argument_list|,
+literal|"802.11 MESH Path Reply frame"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
+name|M_80211_MESH_PERR
+argument_list|,
+literal|"80211perr"
+argument_list|,
+literal|"802.11 MESH Path Error frame"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DEFINE
+argument_list|(
 name|M_80211_MESH_RT
 argument_list|,
 literal|"80211mesh"

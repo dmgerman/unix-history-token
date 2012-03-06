@@ -674,6 +674,13 @@ begin_comment
 comment|/* Root (MP) Annoucement */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHRANN_BASE_SZ
+value|(21)
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_meshrann_ie
@@ -710,6 +717,9 @@ name|rann_seq
 decl_stmt|;
 comment|/* HWMP Sequence Number */
 name|uint32_t
+name|rann_interval
+decl_stmt|;
+name|uint32_t
 name|rann_metric
 decl_stmt|;
 block|}
@@ -720,6 +730,41 @@ end_struct
 begin_comment
 comment|/* Mesh Path Request */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPREQ_BASE_SZ
+value|(26)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPREQ_BASE_SZ_AE
+value|(32)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPREQ_TRGT_SZ
+value|(11)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPREQ_TCNT_OFFSET
+value|(27)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPREQ_TCNT_OFFSET_AE
+value|(33)
+end_define
 
 begin_struct
 struct|struct
@@ -774,7 +819,13 @@ name|uint32_t
 name|preq_origseq
 decl_stmt|;
 comment|/* HWMP Sequence Number */
-comment|/* NB: may have Originator Proxied Address */
+comment|/* NB: may have Originator External Address */
+name|uint8_t
+name|preq_orig_ext_addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|uint32_t
 name|preq_lifetime
 decl_stmt|;
@@ -832,6 +883,20 @@ begin_comment
 comment|/* Mesh Path Reply */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPREP_BASE_SZ
+value|(31)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPREP_BASE_SZ_AE
+value|(37)
+end_define
+
 begin_struct
 struct|struct
 name|ieee80211_meshprep_ie
@@ -846,6 +911,11 @@ decl_stmt|;
 name|uint8_t
 name|prep_flags
 decl_stmt|;
+define|#
+directive|define
+name|IEEE80211_MESHPREP_FLAGS_AE
+value|0x40
+comment|/* Address Extension */
 name|uint8_t
 name|prep_hopcount
 decl_stmt|;
@@ -861,7 +931,13 @@ decl_stmt|;
 name|uint32_t
 name|prep_targetseq
 decl_stmt|;
-comment|/* NB: May have Target Proxied Address */
+comment|/* NB: May have Target External Address */
+name|uint8_t
+name|prep_target_ext_addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|uint32_t
 name|prep_lifetime
 decl_stmt|;
@@ -886,6 +962,41 @@ end_struct
 begin_comment
 comment|/* Mesh Path Error */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPERR_MAXDEST
+value|(19)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPERR_NDEST_OFFSET
+value|(3)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPERR_BASE_SZ
+value|(2)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPERR_DEST_SZ
+value|(13)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_MESHPERR_DEST_SZ_AE
+value|(19)
+end_define
 
 begin_struct
 struct|struct
@@ -914,10 +1025,17 @@ define|#
 directive|define
 name|IEEE80211_MESHPERR_DFLAGS_USN
 value|0x01
+comment|/* XXX: not part of standard */
 define|#
 directive|define
 name|IEEE80211_MESHPERR_DFLAGS_RC
 value|0x02
+comment|/* XXX: not part of standard */
+define|#
+directive|define
+name|IEEE80211_MESHPERR_FLAGS_AE
+value|0x40
+comment|/* Address Extension */
 name|uint8_t
 name|dest_addr
 index|[
@@ -928,6 +1046,13 @@ name|uint32_t
 name|dest_seq
 decl_stmt|;
 comment|/* HWMP Sequence Number */
+comment|/* NB: May have Destination External Address */
+name|uint8_t
+name|dest_ext_addr
+index|[
+name|IEEE80211_ADDR_LEN
+index|]
+decl_stmt|;
 name|uint16_t
 name|dest_rcode
 decl_stmt|;
@@ -1327,6 +1452,30 @@ ifdef|#
 directive|ifdef
 name|_KERNEL
 end_ifdef
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_80211_MESH_PREQ
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_80211_MESH_PREP
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|MALLOC_DECLARE
+argument_list|(
+name|M_80211_MESH_PERR
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_expr_stmt
 name|MALLOC_DECLARE
