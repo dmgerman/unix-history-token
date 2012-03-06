@@ -334,7 +334,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|isspace1
+name|rtld_isspace
 parameter_list|(
 name|c
 parameter_list|)
@@ -577,7 +577,7 @@ expr_stmt|;
 comment|/* Skip over leading space */
 while|while
 condition|(
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -611,7 +611,7 @@ expr_stmt|;
 comment|/* Skip leading space */
 while|while
 condition|(
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -644,7 +644,7 @@ comment|/* Skip to end of word */
 while|while
 condition|(
 operator|!
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -668,7 +668,7 @@ expr_stmt|;
 comment|/* Skip and zero out trailing space */
 while|while
 condition|(
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -699,7 +699,7 @@ expr_stmt|;
 comment|/* 			 * There should be nothing except whitespace or comment 			  from this point to the end of the line. 			 */
 while|while
 condition|(
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -740,7 +740,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -759,7 +759,7 @@ expr_stmt|;
 comment|/* Skip and zero out the trailing whitespace */
 while|while
 condition|(
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -790,7 +790,7 @@ expr_stmt|;
 while|while
 condition|(
 operator|!
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
@@ -809,7 +809,7 @@ expr_stmt|;
 comment|/* Skip and zero out the trailing whitespace */
 while|while
 condition|(
-name|isspace1
+name|rtld_isspace
 argument_list|(
 operator|*
 name|cp
