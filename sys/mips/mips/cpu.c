@@ -299,7 +299,7 @@ operator|!
 operator|(
 name|cfg0
 operator|&
-name|MIPS3_CONFIG_CM
+name|MIPS_CONFIG_CM
 operator|)
 condition|)
 return|return;
@@ -1161,7 +1161,7 @@ operator|!
 operator|(
 name|cfg0
 operator|&
-name|MIPS3_CONFIG_CM
+name|MIPS_CONFIG_CM
 operator|)
 condition|)
 return|return;
@@ -1186,7 +1186,7 @@ operator|!
 operator|(
 name|cfg1
 operator|&
-name|MIPS3_CONFIG_CM
+name|MIPS_CONFIG_CM
 operator|)
 condition|)
 return|return;
@@ -1203,7 +1203,7 @@ operator|!
 operator|(
 name|cfg2
 operator|&
-name|MIPS3_CONFIG_CM
+name|MIPS_CONFIG_CM
 operator|)
 condition|)
 return|return;

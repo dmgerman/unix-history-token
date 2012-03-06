@@ -1950,7 +1950,7 @@ name|trapframe
 operator|->
 name|cause
 operator|&
-name|MIPS3_CR_EXC_CODE
+name|MIPS_CR_EXC_CODE
 operator|)
 operator|>>
 name|MIPS_CR_EXC_CODE_SHIFT
@@ -4627,7 +4627,7 @@ name|trp
 operator|->
 name|cause
 operator|&
-name|MIPS3_CR_EXC_CODE
+name|MIPS_CR_EXC_CODE
 operator|)
 operator|>>
 name|MIPS_CR_EXC_CODE_SHIFT

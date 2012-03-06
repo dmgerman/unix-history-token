@@ -1323,7 +1323,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|MIPS3_XTLB_MISS_EXC_VEC
+name|MIPS_XTLB_MISS_EXC_VEC
 argument_list|,
 name|MipsTLBMissEnd
 operator|-
@@ -1340,7 +1340,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|MIPS3_GEN_EXC_VEC
+name|MIPS_GEN_EXC_VEC
 argument_list|,
 name|MipsExceptionEnd
 operator|-
@@ -1355,7 +1355,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|MIPS3_CACHE_ERR_EXC_VEC
+name|MIPS_CACHE_ERR_EXC_VEC
 argument_list|,
 name|MipsCacheEnd
 operator|-
@@ -1482,10 +1482,7 @@ argument_list|(
 name|void
 argument_list|)
 operator|)
-operator|(
-name|intptr_t
-operator|)
-name|MIPS_VEC_RESET
+name|MIPS_RESET_EXC_VEC
 operator|)
 operator|(
 operator|)

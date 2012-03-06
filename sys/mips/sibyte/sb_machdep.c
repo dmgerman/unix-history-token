@@ -882,7 +882,7 @@ operator|(
 name|void
 operator|*
 operator|)
-name|MIPS3_XTLB_MISS_EXC_VEC
+name|MIPS_XTLB_MISS_EXC_VEC
 argument_list|,
 name|MipsTLBMissEnd
 operator|-
@@ -1004,7 +1004,7 @@ expr_stmt|;
 name|config
 operator|&=
 operator|~
-name|MIPS3_CONFIG_K0_MASK
+name|MIPS_CONFIG_K0_MASK
 expr_stmt|;
 name|config
 operator||=
