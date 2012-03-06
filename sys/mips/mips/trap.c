@@ -272,6 +272,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tls.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/asm.h>
 end_include
 
@@ -3459,6 +3465,19 @@ operator|->
 name|td_md
 operator|.
 name|md_tls
+expr_stmt|;
+name|frame_regs
+index|[
+name|inst
+operator|.
+name|RType
+operator|.
+name|rt
+index|]
+operator|+=
+name|TLS_TP_OFFSET
+operator|+
+name|TLS_TCB_SIZE
 expr_stmt|;
 name|trapframe
 operator|->
