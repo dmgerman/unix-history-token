@@ -6325,10 +6325,11 @@ name|FREAD
 operator|&&
 name|levents
 operator|&&
-name|fifo_iseof
-argument_list|(
-name|fp
-argument_list|)
+name|rpipe
+operator|->
+name|pipe_state
+operator|&
+name|PIPE_SAMEWGEN
 condition|)
 name|events
 operator||=
