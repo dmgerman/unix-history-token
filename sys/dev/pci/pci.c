@@ -231,6 +231,16 @@ begin_comment
 comment|/*  * XXX: Due to a limitation of the bus_dma_tag_create() API, we cannot  * specify a 4GB boundary on 32-bit targets.  Usually this does not  * matter as it is ok to use a boundary of 0 on these systems.  * However, in the case of PAE, DMA addresses can cross a 4GB  * boundary, so as a workaround use a 2GB boundary.  */
 end_comment
 
+begin_if
+if|#
+directive|if
+operator|(
+name|BUS_SPACE_MAXADDR
+operator|>
+literal|0xFFFFFFFF
+operator|)
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -241,7 +251,7 @@ begin_define
 define|#
 directive|define
 name|PCI_DMA_BOUNDARY
-value|(1u<< 31)
+value|0x80000000
 end_define
 
 begin_else
@@ -253,8 +263,13 @@ begin_define
 define|#
 directive|define
 name|PCI_DMA_BOUNDARY
-value|((bus_size_t)((uint64_t)1<< 32))
+value|0x100000000
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -16264,9 +16279,17 @@ name|int
 name|busno
 decl_stmt|,
 name|domain
-decl_stmt|,
-name|error
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_DMA_BOUNDARY
+name|int
+name|error
+decl_stmt|,
+name|tag_valid
+decl_stmt|;
+endif|#
+directive|endif
 name|sc
 operator|=
 name|device_get_softc
@@ -16302,6 +16325,13 @@ name|domain
 argument_list|,
 name|busno
 argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|PCI_DMA_BOUNDARY
+name|tag_valid
+operator|=
+literal|0
 expr_stmt|;
 if|if
 condition|(
@@ -16375,13 +16405,27 @@ name|error
 argument_list|)
 expr_stmt|;
 else|else
-name|sc
-operator|->
-name|sc_dma_tag_valid
+name|tag_valid
 operator|=
 literal|1
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|!
+name|tag_valid
+condition|)
+endif|#
+directive|endif
+name|sc
+operator|->
+name|sc_dma_tag
+operator|=
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -21879,27 +21923,11 @@ argument_list|(
 name|bus
 argument_list|)
 decl_stmt|;
-if|if
-condition|(
-name|sc
-operator|->
-name|sc_dma_tag_valid
-condition|)
 return|return
 operator|(
 name|sc
 operator|->
 name|sc_dma_tag
-operator|)
-return|;
-return|return
-operator|(
-name|bus_generic_get_dma_tag
-argument_list|(
-name|bus
-argument_list|,
-name|dev
-argument_list|)
 operator|)
 return|;
 block|}
