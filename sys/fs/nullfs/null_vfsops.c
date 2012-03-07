@@ -493,11 +493,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|vrele
-argument_list|(
-name|lowerrootvp
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|xmp
@@ -505,7 +500,6 @@ argument_list|,
 name|M_NULLFSMNT
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|error
@@ -583,7 +577,11 @@ name|v_mount
 operator|->
 name|mnt_kern_flag
 operator|&
+operator|(
 name|MNTK_MPSAFE
+operator||
+name|MNTK_SHARED_WRITES
+operator|)
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -1135,6 +1133,30 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|flags
+operator|&
+name|LK_TYPE_MASK
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"nullfs_vget: no lock requested"
+operator|)
+argument_list|)
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|LK_TYPE_MASK
+expr_stmt|;
+name|flags
+operator||=
+name|LK_EXCLUSIVE
+expr_stmt|;
 name|error
 operator|=
 name|VFS_VGET
