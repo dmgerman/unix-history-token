@@ -7337,10 +7337,6 @@ name|ether_header
 modifier|*
 name|eh
 decl_stmt|;
-name|struct
-name|ether_vlan_header
-name|vlanbuf
-decl_stmt|;
 specifier|const
 name|struct
 name|ether_vlan_header
@@ -7400,6 +7396,10 @@ name|ip6
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|ether_vlan_header
+name|vlan
+decl_stmt|;
 name|uint32_t
 name|port
 decl_stmt|;
@@ -7550,7 +7550,7 @@ name|vlan
 argument_list|)
 argument_list|,
 operator|&
-name|vlanbuf
+name|buf
 argument_list|)
 expr_stmt|;
 if|if
