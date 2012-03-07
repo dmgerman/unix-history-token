@@ -577,7 +577,11 @@ name|v_mount
 operator|->
 name|mnt_kern_flag
 operator|&
+operator|(
 name|MNTK_MPSAFE
+operator||
+name|MNTK_SHARED_WRITES
+operator|)
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
