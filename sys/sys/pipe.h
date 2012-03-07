@@ -326,6 +326,17 @@ begin_comment
 comment|/* Is a named pipe. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PIPE_SAMEWGEN
+value|0x2000
+end_define
+
+begin_comment
+comment|/* same write generation for named pipes. */
+end_comment
+
 begin_comment
 comment|/*  * Per-pipe data structure.  * Two of these are linked together to produce bi-directional pipes.  */
 end_comment

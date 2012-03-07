@@ -167,6 +167,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UCF_OFFSET_SB
+value|29
+end_define
+
+begin_define
+define|#
+directive|define
 name|UCF_CTRL
 value|0x395
 end_define
@@ -194,6 +201,13 @@ define|#
 directive|define
 name|UCP_OPCODE_MATCH
 value|0x396
+end_define
+
+begin_define
+define|#
+directive|define
+name|UCP_CB0_EVSEL0
+value|0x700
 end_define
 
 begin_comment

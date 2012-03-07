@@ -966,7 +966,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * RedBoot passes MAC address to entry point as environment   * variable. platfrom_start parses it and stores in this variable  */
+comment|/*  * RedBoot passes MAC address to entry point as environment  * variable. platfrom_start parses it and stores in this variable  */
 end_comment
 
 begin_decl_stmt
@@ -1003,7 +1003,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Flushes all   */
+comment|/*  * Flushes all  */
 end_comment
 
 begin_function
@@ -1469,7 +1469,7 @@ operator|!=
 literal|0
 condition|)
 block|{
-comment|/* 		 * Use port 4 (WAN) for GE0. For any other port use  		 * its PHY the same as its unit number  		 */
+comment|/* 		 * Use port 4 (WAN) for GE0. For any other port use 		 * its PHY the same as its unit number 		 */
 if|if
 condition|(
 name|sc
@@ -1508,7 +1508,7 @@ name|phymask
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 *  Get default media& duplex mode, by default its Base100T  	 *  and full duplex 	 */
+comment|/* 	 *  Get default media& duplex mode, by default its Base100T 	 *  and full duplex 	 */
 if|if
 condition|(
 name|resource_int_value
@@ -2170,7 +2170,7 @@ argument_list|(
 literal|100
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Set all Ethernet address registers to the same initial values 	 * set all four addresses to 66-88-aa-cc-dd-ee  	 */
+comment|/* 	 * Set all Ethernet address registers to the same initial values 	 * set all four addresses to 66-88-aa-cc-dd-ee 	 */
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -2313,7 +2313,7 @@ argument_list|,
 name|FIFO_RX_FILTMASK_DEFAULT
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Check if we have single-PHY MAC or multi-PHY 	 */
+comment|/* 	 * Check if we have single-PHY MAC or multi-PHY 	 */
 name|phys_total
 operator|=
 literal|0
@@ -3716,7 +3716,7 @@ argument_list|,
 name|DMA_RX_STATUS_PKT_RECVD
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Clear all possible TX interrupts 	 */
+comment|/* 	 * Clear all possible TX interrupts 	 */
 while|while
 condition|(
 name|ARGE_READ
@@ -3737,7 +3737,7 @@ argument_list|,
 name|DMA_TX_STATUS_PKT_SENT
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Now Rx/Tx errors 	 */
+comment|/* 	 * Now Rx/Tx errors 	 */
 name|ARGE_WRITE
 argument_list|(
 name|sc
@@ -4358,7 +4358,7 @@ argument_list|,
 name|BUS_DMASYNC_PREWRITE
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Make a list of descriptors for this packet. DMA controller will 	 * walk through it while arge_link is not zero. 	 */
+comment|/* 	 * Make a list of descriptors for this packet. DMA controller will 	 * walk through it while arge_link is not zero. 	 */
 name|prev_prod
 operator|=
 name|prod
@@ -8427,7 +8427,7 @@ literal|"\20\10\7RX_OVERFLOW\5RX_PKT_RCVD"
 literal|"\4TX_BUS_ERROR\2TX_UNDERRUN\1TX_PKT_SENT"
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Is it our interrupt at all?  	 */
+comment|/* 	 * Is it our interrupt at all? 	 */
 if|if
 condition|(
 name|status
@@ -8505,7 +8505,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * RX overrun disables the receiver.  	 * Clear indication and re-enable rx.  	 */
+comment|/* 	 * RX overrun disables the receiver. 	 * Clear indication and re-enable rx. 	 */
 if|if
 condition|(
 name|status
@@ -8550,7 +8550,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/*  	 * Underrun turns off TX. Clear underrun indication.  	 * If there's anything left in the ring, reactivate the tx.  	 */
+comment|/* 	 * Underrun turns off TX. Clear underrun indication. 	 * If there's anything left in the ring, reactivate the tx. 	 */
 if|if
 condition|(
 name|status
@@ -8664,7 +8664,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * re-enable all interrupts  	 */
+comment|/* 	 * re-enable all interrupts 	 */
 name|ARGE_WRITE
 argument_list|(
 name|sc

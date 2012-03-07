@@ -202,15 +202,99 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|DOT_LABEL
+parameter_list|(
+name|name
+parameter_list|)
+value|__CONCAT(.,name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_ENTRY
+parameter_list|(
+name|name
+parameter_list|)
+value|.size	name,24; \ 				.type	DOT_LABEL(name),@function; \ 				.globl	DOT_LABEL(name);
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_SIZE
+parameter_list|(
+name|name
+parameter_list|)
+value|.size	DOT_LABEL(name),.-DOT_LABEL(name);
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* !_KERNEL */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOT_LABEL
+parameter_list|(
+name|name
+parameter_list|)
+value|__CONCAT(.L.,name)
+end_define
+
+begin_define
+define|#
+directive|define
+name|TYPE_ENTRY
+parameter_list|(
+name|name
+parameter_list|)
+value|.type	name,@function;
+end_define
+
+begin_define
+define|#
+directive|define
+name|END_SIZE
+parameter_list|(
+name|name
+parameter_list|)
+value|.size	name,.-DOT_LABEL(name);
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* _KERNEL */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_GLOBAL
 parameter_list|(
-name|x
+name|name
 parameter_list|)
 define|\
-value|.data; .align 2; .globl x; x:
+value|.data; \ 	.p2align 2; \ 	.globl	name; \ 	name:
 end_define
 
 begin_ifdef
@@ -224,10 +308,21 @@ define|#
 directive|define
 name|_ENTRY
 parameter_list|(
-name|x
+name|name
 parameter_list|)
 define|\
-value|.text; .align 2; .globl x; .section ".opd","aw"; \ 	.align 3; x: \ 	    .quad .L.x,.TOC.@tocbase,0; .size x,24; .previous; \ 	.align 4; .type x,@function; .L.x:
+value|.section ".text"; \ 	.p2align 2; \ 	.globl	name; \ 	.section ".opd","aw"; \ 	.p2align 3; \ 	name: \ 	.quad	DOT_LABEL(name),.TOC.@tocbase,0; \ 	.previous; \ 	.p2align 4; \ 	TYPE_ENTRY(name) \ DOT_LABEL(name):
+end_define
+
+begin_define
+define|#
+directive|define
+name|_END
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|.long	0; \ 	.byte	0,0,0,0,0,0,0,0; \ 	END_SIZE(name)
 end_define
 
 begin_else
@@ -235,21 +330,38 @@ else|#
 directive|else
 end_else
 
+begin_comment
+comment|/* !__powerpc64__ */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|_ENTRY
 parameter_list|(
-name|x
+name|name
 parameter_list|)
 define|\
-value|.text; .align 4; .globl x; .type x,@function; x:
+value|.text; \ 	.p2align 4; \ 	.globl	name; \ 	.type	name,@function; \ 	name:
+end_define
+
+begin_define
+define|#
+directive|define
+name|_END
+parameter_list|(
+name|name
+parameter_list|)
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __powerpc64__ */
+end_comment
 
 begin_if
 if|#
@@ -326,6 +438,16 @@ parameter_list|(
 name|y
 parameter_list|)
 value|_ENTRY(ASMNAME(y)); _PROF_PROLOGUE
+end_define
+
+begin_define
+define|#
+directive|define
+name|END
+parameter_list|(
+name|y
+parameter_list|)
+value|_END(CNAME(y))
 end_define
 
 begin_define

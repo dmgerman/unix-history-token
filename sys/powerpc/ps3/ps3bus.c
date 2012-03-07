@@ -304,7 +304,7 @@ parameter_list|,
 name|bus_size_t
 name|alignment
 parameter_list|,
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 parameter_list|,
 name|void
@@ -3455,7 +3455,7 @@ parameter_list|,
 name|bus_size_t
 name|alignment
 parameter_list|,
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 parameter_list|,
 name|void

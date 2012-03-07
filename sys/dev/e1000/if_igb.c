@@ -12876,7 +12876,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|ENXIO
+literal|0
 operator|)
 return|;
 block|}
@@ -12945,18 +12945,25 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|adapter
 operator|->
 name|dev
 argument_list|,
-literal|"Using MSI interrupt\n"
+literal|" Using MSI interrupt\n"
 argument_list|)
 expr_stmt|;
 return|return
 operator|(
 name|msgs
+operator|)
+return|;
+block|}
+return|return
+operator|(
+literal|0
 operator|)
 return|;
 block|}

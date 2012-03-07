@@ -1579,6 +1579,13 @@ block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
+name|bus_get_dma_tag
+argument_list|,
+name|bus_generic_get_dma_tag
+argument_list|)
+block|,
+name|DEVMETHOD
+argument_list|(
 name|bus_read_ivar
 argument_list|,
 name|cardbus_read_ivar

@@ -1720,6 +1720,17 @@ operator|)
 name|nd_opt
 expr_stmt|;
 break|break;
+comment|/* What about ND_OPT_ROUTE_INFO? RFC 4191 */
+case|case
+name|ND_OPT_RDNSS
+case|:
+comment|/* RFC 6106 */
+case|case
+name|ND_OPT_DNSSL
+case|:
+comment|/* RFC 6106 */
+comment|/* 			 * Silently ignore options we know and do not care about 			 * in the kernel. 			 */
+break|break;
 default|default:
 comment|/* 			 * Unknown options must be silently ignored, 			 * to accomodate future extension to the protocol. 			 */
 name|nd6log
@@ -5227,48 +5238,6 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-comment|/* 		 * Try to clear ifdisabled flag when enabling 		 * accept_rtadv or auto_linklocal. 		 */
-if|if
-condition|(
-operator|(
-name|ND_IFINFO
-argument_list|(
-name|ifp
-argument_list|)
-operator|->
-name|flags
-operator|&
-name|ND6_IFF_IFDISABLED
-operator|)
-operator|&&
-operator|!
-operator|(
-name|ND
-operator|.
-name|flags
-operator|&
-name|ND6_IFF_IFDISABLED
-operator|)
-operator|&&
-operator|(
-name|ND
-operator|.
-name|flags
-operator|&
-operator|(
-name|ND6_IFF_ACCEPT_RTADV
-operator||
-name|ND6_IFF_AUTO_LINKLOCAL
-operator|)
-operator|)
-condition|)
-name|ND
-operator|.
-name|flags
-operator|&=
-operator|~
-name|ND6_IFF_IFDISABLED
-expr_stmt|;
 if|if
 condition|(
 operator|(

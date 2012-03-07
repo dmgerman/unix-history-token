@@ -1511,6 +1511,17 @@ name|FLUSH_BLOCKS_WAIT
 value|4
 end_define
 
+begin_comment
+comment|/*  * Flag to ffs_syncinode() to request flushing of data only,  * but skip the ffs_update() on the inode itself. Used to avoid  * deadlock when flushing snapshot inodes while holding snaplk.  * Avoid bit conflicts with MNT_WAIT values in sys/mount.h  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NO_INO_UPDT
+value|0x10
+end_define
+
 begin_function_decl
 name|int
 name|ffs_rdonly

@@ -2469,7 +2469,7 @@ parameter_list|,
 name|cnp
 parameter_list|)
 define|\
-value|cache_enter_time(dvp, vp, cnp, NULL)
+value|cache_enter_time(dvp, vp, cnp, NULL, NULL)
 end_define
 
 begin_function_decl
@@ -2495,6 +2495,11 @@ name|struct
 name|timespec
 modifier|*
 name|tsp
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+name|dtsp
 parameter_list|)
 function_decl|;
 end_function_decl

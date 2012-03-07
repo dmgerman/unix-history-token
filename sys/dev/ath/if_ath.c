@@ -24248,6 +24248,11 @@ name|u_int32_t
 name|rfilt
 decl_stmt|;
 comment|/* XXX calibration timer? */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_scanning
@@ -24263,6 +24268,16 @@ expr_stmt|;
 name|rfilt
 operator|=
 name|ath_calcrxfilter
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_PCU_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -24283,6 +24298,11 @@ operator|->
 name|if_broadcastaddr
 argument_list|,
 literal|0
+argument_list|)
+expr_stmt|;
+name|ATH_PCU_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -24349,6 +24369,11 @@ decl_stmt|;
 name|u_int32_t
 name|rfilt
 decl_stmt|;
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|sc_scanning
@@ -24358,6 +24383,16 @@ expr_stmt|;
 name|rfilt
 operator|=
 name|ath_calcrxfilter
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+name|ATH_PCU_LOCK
 argument_list|(
 name|sc
 argument_list|)
@@ -24385,6 +24420,11 @@ expr_stmt|;
 name|ath_hal_process_noisefloor
 argument_list|(
 name|ah
+argument_list|)
+expr_stmt|;
+name|ATH_PCU_UNLOCK
+argument_list|(
+name|sc
 argument_list|)
 expr_stmt|;
 name|DPRINTF
@@ -24456,6 +24496,11 @@ name|ic_curchan
 argument_list|)
 expr_stmt|;
 comment|/* 	 * If we are returning to our bss channel then mark state 	 * so the next recv'd beacon's tsf will be used to sync the 	 * beacon timers.  Note that since we only hear beacons in 	 * sta/ibss mode this has no effect in other operating modes. 	 */
+name|ATH_LOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|!
@@ -24476,6 +24521,11 @@ operator|->
 name|sc_syncbeacon
 operator|=
 literal|1
+expr_stmt|;
+name|ATH_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function

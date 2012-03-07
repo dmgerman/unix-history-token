@@ -108,6 +108,26 @@ name|ELF_ARCH
 value|EM_MIPS
 end_define
 
+begin_if
+if|#
+directive|if
+name|__ELF_WORD_SIZE
+operator|==
+literal|32
+end_if
+
+begin_define
+define|#
+directive|define
+name|ELF_ARCH32
+value|EM_MIPS
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define

@@ -3229,11 +3229,16 @@ condition|)
 block|{
 if|if
 condition|(
+name|lgroup
+operator|.
+name|cs_load
+operator|!=
+name|INT_MAX
+operator|&&
 operator|(
 name|load
 operator|<
 name|lload
-operator|)
 operator|||
 operator|(
 name|load
@@ -3247,6 +3252,7 @@ operator|<
 name|low
 operator|->
 name|cs_load
+operator|)
 operator|)
 condition|)
 block|{
@@ -3280,11 +3286,17 @@ name|CPU_SEARCH_HIGHEST
 condition|)
 if|if
 condition|(
+name|hgroup
+operator|.
+name|cs_load
+operator|!=
+operator|-
+literal|1
+operator|&&
 operator|(
 name|load
 operator|>
 name|hload
-operator|)
 operator|||
 operator|(
 name|load
@@ -3298,6 +3310,7 @@ operator|>
 name|high
 operator|->
 name|cs_load
+operator|)
 operator|)
 condition|)
 block|{
@@ -5798,6 +5811,18 @@ operator|->
 name|ts_cpu
 argument_list|)
 expr_stmt|;
+name|KASSERT
+argument_list|(
+name|cpu
+operator|!=
+operator|-
+literal|1
+argument_list|,
+operator|(
+literal|"sched_pickcpu: Failed to find a cpu."
+operator|)
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Compare the lowest loaded cpu to current cpu. 	 */
 if|if
 condition|(
@@ -5870,18 +5895,6 @@ condition|)
 name|SCHED_STAT_INC
 argument_list|(
 name|pickcpu_migration
-argument_list|)
-expr_stmt|;
-name|KASSERT
-argument_list|(
-name|cpu
-operator|!=
-operator|-
-literal|1
-argument_list|,
-operator|(
-literal|"sched_pickcpu: Failed to find a cpu."
-operator|)
 argument_list|)
 expr_stmt|;
 return|return

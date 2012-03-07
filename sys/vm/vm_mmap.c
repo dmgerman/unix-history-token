@@ -499,10 +499,6 @@ endif|#
 directive|endif
 end_endif
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|ogetpagesize
@@ -2799,10 +2795,6 @@ begin_comment
 comment|/*  * MPSAFE  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sys_madvise
@@ -3077,10 +3069,6 @@ end_endif
 
 begin_comment
 comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function

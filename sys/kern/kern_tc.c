@@ -842,6 +842,9 @@ parameter_list|(
 name|SYSCTL_HANDLER_ARGS
 parameter_list|)
 block|{
+ifndef|#
+directive|ifndef
+name|__mips__
 ifdef|#
 directive|ifdef
 name|SCTL_MASK32
@@ -893,6 +896,8 @@ argument_list|)
 return|;
 block|}
 else|else
+endif|#
+directive|endif
 endif|#
 directive|endif
 return|return

@@ -2175,6 +2175,15 @@ name|octeon_bootinfo
 operator|->
 name|compact_flash_attribute_base_addr
 expr_stmt|;
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|core_mask
+operator|=
+name|octeon_bootinfo
+operator|->
+name|core_mask
+expr_stmt|;
 block|}
 end_function
 

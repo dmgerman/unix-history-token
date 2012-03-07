@@ -511,8 +511,7 @@ name|unsigned
 name|long
 name|alignment
 argument_list|,
-name|unsigned
-name|long
+name|vm_paddr_t
 name|boundary
 argument_list|)
 name|__malloc_like

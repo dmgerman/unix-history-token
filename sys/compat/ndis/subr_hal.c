@@ -1123,6 +1123,9 @@ block|{
 name|uint8_t
 name|oldirql
 decl_stmt|;
+name|sched_pin
+argument_list|()
+expr_stmt|;
 name|oldirql
 operator|=
 name|KeGetCurrentIrql
@@ -1137,7 +1140,7 @@ name|irql
 condition|)
 name|panic
 argument_list|(
-literal|"IRQL_NOT_LESS_THAN"
+literal|"IRQL_NOT_LESS_THAN_OR_EQUAL"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1146,10 +1149,6 @@ name|oldirql
 operator|!=
 name|DISPATCH_LEVEL
 condition|)
-block|{
-name|sched_pin
-argument_list|()
-expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&
@@ -1161,7 +1160,10 @@ name|td_oncpu
 index|]
 argument_list|)
 expr_stmt|;
-block|}
+else|else
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 comment|/*printf("RAISE IRQL: %d %d\n", irql, oldirql);*/
 return|return
 operator|(

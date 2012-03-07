@@ -3524,12 +3524,6 @@ name|char
 modifier|*
 name|end
 decl_stmt|;
-name|void
-modifier|*
-name|par
-init|=
-name|NULL
-decl_stmt|;
 name|struct
 name|dn_id
 modifier|*
@@ -4291,10 +4285,6 @@ literal|"mask needs mask specifier\n"
 argument_list|)
 expr_stmt|;
 comment|/* 			 * per-flow queue, mask is dst_ip, dst_port, 			 * src_ip, src_port, proto measured in bits 			 */
-name|par
-operator|=
-name|NULL
-expr_stmt|;
 name|bzero
 argument_list|(
 name|mask
@@ -5765,9 +5755,6 @@ name|lookup_depth
 decl_stmt|,
 name|avg_pkt_size
 decl_stmt|;
-name|double
-name|w_q
-decl_stmt|;
 if|if
 condition|(
 name|fs
@@ -5898,40 +5885,19 @@ literal|"net.inet.ip.dummynet.red_avg_pkt_size must"
 literal|" be greater than zero"
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Ticks needed for sending a medium-sized packet. 		 * Unfortunately, when we are configuring a WF2Q+ queue, we 		 * do not have bandwidth information, because that is stored 		 * in the parent pipe, and also we have multiple queues 		 * competing for it. So we set s=0, which is not very 		 * correct. But on the other hand, why do we want RED with 		 * WF2Q+ ? 		 */
 if|#
 directive|if
 literal|0
+comment|/* the following computation is now done in the kernel */
+comment|/* 		 * Ticks needed for sending a medium-sized packet. 		 * Unfortunately, when we are configuring a WF2Q+ queue, we 		 * do not have bandwidth information, because that is stored 		 * in the parent pipe, and also we have multiple queues 		 * competing for it. So we set s=0, which is not very 		 * correct. But on the other hand, why do we want RED with 		 * WF2Q+ ? 		 */
 block|if (p.bandwidth==0)
 comment|/* this is a WF2Q+ queue */
 block|s = 0; 		else 			s = (double)ck.hz * avg_pkt_size * 8 / p.bandwidth;
-endif|#
-directive|endif
 comment|/* 		 * max idle time (in ticks) before avg queue size becomes 0. 		 * NOTA:  (3/w_q) is approx the value x so that 		 * (1-w_q)^x< 10^-3. 		 */
-name|w_q
-operator|=
-operator|(
-operator|(
-name|double
-operator|)
-name|fs
-operator|->
-name|w_q
-operator|)
-operator|/
-operator|(
-literal|1
-operator|<<
-name|SCALE_RED
-operator|)
-expr_stmt|;
-if|#
-directive|if
-literal|0
-comment|// go in kernel
-block|idle = s * 3. / w_q; 		fs->lookup_step = (int)idle / lookup_depth; 		if (!fs->lookup_step) 			fs->lookup_step = 1; 		weight = 1 - w_q; 		for (t = fs->lookup_step; t> 1; --t) 			weight *= 1 - w_q; 		fs->lookup_weight = (int)(weight * (1<< SCALE_RED));
+block|w_q = ((double)fs->w_q) / (1<< SCALE_RED); 		idle = s * 3. / w_q; 		fs->lookup_step = (int)idle / lookup_depth; 		if (!fs->lookup_step) 			fs->lookup_step = 1; 		weight = 1 - w_q; 		for (t = fs->lookup_step; t> 1; --t) 			weight *= 1 - w_q; 		fs->lookup_weight = (int)(weight * (1<< SCALE_RED));
 endif|#
 directive|endif
+comment|/* code moved in the kernel */
 block|}
 block|}
 name|i

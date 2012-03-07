@@ -271,6 +271,13 @@ name|KINFO_PROC_SIZE
 value|1088
 end_define
 
+begin_define
+define|#
+directive|define
+name|KINFO_PROC32_SIZE
+value|816
+end_define
+
 begin_else
 else|#
 directive|else
