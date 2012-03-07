@@ -227,10 +227,6 @@ directive|include
 file|"pci_if.h"
 end_include
 
-begin_comment
-comment|/*  * XXX: Due to a limitation of the bus_dma_tag_create() API, we cannot  * specify a 4GB boundary on 32-bit targets.  Usually this does not  * matter as it is ok to use a boundary of 0 on these systems.  * However, in the case of PAE, DMA addresses can cross a 4GB  * boundary, so as a workaround use a 2GB boundary.  */
-end_comment
-
 begin_if
 if|#
 directive|if
@@ -241,35 +237,12 @@ literal|0xFFFFFFFF
 operator|)
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|PAE
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|PCI_DMA_BOUNDARY
-value|0x80000000
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
 begin_define
 define|#
 directive|define
 name|PCI_DMA_BOUNDARY
 value|0x100000000
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#
