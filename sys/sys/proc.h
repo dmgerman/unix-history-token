@@ -2298,9 +2298,8 @@ name|p_oppid
 decl_stmt|;
 comment|/* (c + e) Save ppid in ptrace. XXX */
 name|int
-name|p_dbg_child
+name|p_pad_dbg_child
 decl_stmt|;
-comment|/* (c + e) # of debugged children in 							ptrace. */
 name|struct
 name|vmspace
 modifier|*
@@ -2608,6 +2607,22 @@ modifier|*
 name|p_racct
 decl_stmt|;
 comment|/* (b) Resource accounting. */
+comment|/* 	 * An orphan is the child that has beed re-parented to the 	 * debugger as a result of attaching to it.  Need to keep 	 * track of them for parent to be able to collect the exit 	 * status of what used to be children. 	 */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_orphan
+expr_stmt|;
+comment|/* (e) List of orphan processes. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|p_orphans
+expr_stmt|;
+comment|/* (e) Pointer to list of orphans. */
 block|}
 struct|;
 end_struct
@@ -2946,6 +2961,17 @@ end_define
 
 begin_comment
 comment|/* Process is in jail. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_ORPHAN
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* Orphaned. */
 end_comment
 
 begin_define
