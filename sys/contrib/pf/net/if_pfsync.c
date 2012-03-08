@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.128 - cleanups  * 1.170 - SIOCSIFMTU checks  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  */
 end_comment
 
 begin_ifdef
@@ -10562,6 +10562,17 @@ operator|+
 name|offset
 operator|)
 decl_stmt|;
+name|bzero
+argument_list|(
+name|up
+argument_list|,
+sizeof|sizeof
+argument_list|(
+operator|*
+name|up
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|up
 operator|->
 name|id
@@ -10652,21 +10663,6 @@ name|st
 operator|->
 name|timeout
 expr_stmt|;
-name|bzero
-argument_list|(
-name|up
-operator|->
-name|_pad
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|up
-operator|->
-name|_pad
-argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 sizeof|sizeof
