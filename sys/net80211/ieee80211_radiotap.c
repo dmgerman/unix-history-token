@@ -244,7 +244,7 @@ name|ic
 operator|->
 name|ic_ifp
 argument_list|,
-literal|"%s: no tx channel, radiotap 0x%x"
+literal|"%s: no tx channel, radiotap 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -357,7 +357,7 @@ name|ic
 operator|->
 name|ic_ifp
 argument_list|,
-literal|"%s: no rx channel, radiotap 0x%x"
+literal|"%s: no rx channel, radiotap 0x%x\n"
 argument_list|,
 name|__func__
 argument_list|,
