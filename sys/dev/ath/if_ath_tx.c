@@ -2461,6 +2461,9 @@ name|struct
 name|ath_buf
 modifier|*
 name|bf
+decl_stmt|,
+modifier|*
+name|bf_last
 decl_stmt|;
 name|ATH_TXQ_LOCK_ASSERT
 argument_list|(
@@ -2475,6 +2478,7 @@ operator|&=
 operator|~
 name|ATH_TXQ_PUTPENDING
 expr_stmt|;
+comment|/* XXX make this ATH_TXQ_FIRST */
 name|bf
 operator|=
 name|TAILQ_FIRST
@@ -2483,6 +2487,15 @@ operator|&
 name|txq
 operator|->
 name|axq_q
+argument_list|)
+expr_stmt|;
+name|bf_last
+operator|=
+name|ATH_TXQ_LAST
+argument_list|(
+name|txq
+argument_list|,
+name|axq_q_s
 argument_list|)
 expr_stmt|;
 if|if
@@ -2510,7 +2523,7 @@ operator|->
 name|axq_link
 operator|=
 operator|&
-name|bf
+name|bf_last
 operator|->
 name|bf_lastds
 operator|->
