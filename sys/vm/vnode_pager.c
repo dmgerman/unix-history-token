@@ -1041,6 +1041,21 @@ operator|->
 name|v_writecount
 operator|--
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p v_writecount decreased to %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_writecount
+argument_list|)
+expr_stmt|;
 block|}
 name|vp
 operator|->
@@ -5342,6 +5357,21 @@ operator|->
 name|v_writecount
 operator|++
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p v_writecount increased to %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_writecount
+argument_list|)
+expr_stmt|;
 block|}
 elseif|else
 if|if
@@ -5372,6 +5402,21 @@ name|vp
 operator|->
 name|v_writecount
 operator|--
+expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p v_writecount decreased to %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_writecount
+argument_list|)
 expr_stmt|;
 block|}
 name|VM_OBJECT_UNLOCK
