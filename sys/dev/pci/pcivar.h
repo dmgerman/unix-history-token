@@ -382,6 +382,53 @@ name|uint8_t
 name|pcie_type
 decl_stmt|;
 comment|/* Device type. */
+name|uint16_t
+name|pcie_flags
+decl_stmt|;
+comment|/* Device capabilities register. */
+name|uint16_t
+name|pcie_device_ctl
+decl_stmt|;
+comment|/* Device control register. */
+name|uint16_t
+name|pcie_link_ctl
+decl_stmt|;
+comment|/* Link control register. */
+name|uint16_t
+name|pcie_slot_ctl
+decl_stmt|;
+comment|/* Slot control register. */
+name|uint16_t
+name|pcie_root_ctl
+decl_stmt|;
+comment|/* Root control register. */
+name|uint16_t
+name|pcie_device_ctl2
+decl_stmt|;
+comment|/* Second device control register. */
+name|uint16_t
+name|pcie_link_ctl2
+decl_stmt|;
+comment|/* Second link control register. */
+name|uint16_t
+name|pcie_slot_ctl2
+decl_stmt|;
+comment|/* Second slot control register. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pcicfg_pcix
+block|{
+name|uint16_t
+name|pcix_command
+decl_stmt|;
+name|uint8_t
+name|pcix_location
+decl_stmt|;
+comment|/* Offset of PCI-X capability registers. */
 block|}
 struct|;
 end_struct
@@ -531,6 +578,11 @@ name|pcicfg_pcie
 name|pcie
 decl_stmt|;
 comment|/* PCI Express */
+name|struct
+name|pcicfg_pcix
+name|pcix
+decl_stmt|;
+comment|/* PCI-X */
 block|}
 name|pcicfgregs
 typedef|;
