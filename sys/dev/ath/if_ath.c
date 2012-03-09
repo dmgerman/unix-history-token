@@ -12900,6 +12900,7 @@ name|bf
 operator|->
 name|bf_m
 expr_stmt|;
+comment|/* XXX lock mcastq? */
 name|nmcastq
 operator|=
 name|avp
