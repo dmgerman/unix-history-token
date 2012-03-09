@@ -4679,7 +4679,7 @@ index|[
 name|pri
 index|]
 expr_stmt|;
-comment|/* 	 * When servicing one or more stations in power-save mode 	 * (or) if there is some mcast data waiting on the mcast 	 * queue (to prevent out of order delivery) multicast 	 * frames must be buffered until after the beacon. 	 */
+comment|/* 	 * When servicing one or more stations in power-save mode 	 * (or) if there is some mcast data waiting on the mcast 	 * queue (to prevent out of order delivery) multicast 	 * frames must be buffered until after the beacon. 	 * 	 * XXX This likely means that if there's a station in power 	 * save mode, we won't be doing any kind of aggregation towards 	 * anyone.  This is likely a very suboptimal way of dealing 	 * with things. 	 */
 if|if
 condition|(
 name|ismcast
@@ -5640,6 +5640,7 @@ name|avp
 operator|->
 name|av_mcastq
 expr_stmt|;
+comment|/* 	 * XXX This likely means that if there's a station in power 	 * save mode, we won't be doing any kind of aggregation towards 	 * anyone.  This is likely a very suboptimal way of dealing 	 * with things. 	 */
 if|if
 condition|(
 operator|(
