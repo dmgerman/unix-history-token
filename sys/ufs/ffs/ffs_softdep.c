@@ -12461,11 +12461,8 @@ name|MNTK_ASYNC
 operator|)
 operator||
 name|MNTK_SOFTDEP
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_noasync
-operator|++
+operator||
+name|MNTK_NOASYNC
 expr_stmt|;
 block|}
 name|MNT_IUNLOCK
