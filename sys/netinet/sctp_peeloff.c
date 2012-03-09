@@ -122,7 +122,7 @@ condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
-name|inp
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -162,7 +162,7 @@ condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
-name|inp
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
@@ -199,7 +199,7 @@ condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
 argument_list|(
-name|inp
+name|NULL
 argument_list|,
 name|NULL
 argument_list|,
