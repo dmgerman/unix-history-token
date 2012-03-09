@@ -12192,6 +12192,16 @@ modifier|*
 name|src
 parameter_list|)
 block|{
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|dst
+argument_list|)
+expr_stmt|;
+name|ATH_TXQ_LOCK_ASSERT
+argument_list|(
+name|src
+argument_list|)
+expr_stmt|;
 name|TAILQ_CONCAT
 argument_list|(
 operator|&
