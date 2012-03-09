@@ -408,7 +408,7 @@ name|__bswap16
 parameter_list|(
 name|x
 parameter_list|)
-value|(__is_constant(x) ? __bswap16_const(x) : \ 	__bswap16_var(x))
+value|((__uint16_t)(__is_constant(x) ? __bswap16_const(x) : \ 	__bswap16_var(x)))
 end_define
 
 begin_define
