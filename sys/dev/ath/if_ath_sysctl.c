@@ -3198,6 +3198,37 @@ argument_list|,
 literal|""
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+literal|0
+block|SYSCTL_ADD_INT(ctx, SYSCTL_CHILDREN(tree), OID_AUTO, 		"txq_data_minfree", CTLFLAG_RW,&sc->sc_txq_data_minfree, 		0, "Minimum free buffers before adding a data frame" 		" to the TX queue");
+endif|#
+directive|endif
+name|SYSCTL_ADD_INT
+argument_list|(
+name|ctx
+argument_list|,
+name|SYSCTL_CHILDREN
+argument_list|(
+name|tree
+argument_list|)
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"txq_mcastq_maxdepth"
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_txq_mcastq_maxdepth
+argument_list|,
+literal|0
+argument_list|,
+literal|"Maximum buffer depth for multicast/broadcast frames"
+argument_list|)
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|IEEE80211_SUPPORT_TDMA
@@ -6055,6 +6086,30 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"TX interrupts"
+argument_list|)
+expr_stmt|;
+name|SYSCTL_ADD_UINT
+argument_list|(
+name|ctx
+argument_list|,
+name|child
+argument_list|,
+name|OID_AUTO
+argument_list|,
+literal|"ast_tx_mcastq_overflow"
+argument_list|,
+name|CTLFLAG_RD
+argument_list|,
+operator|&
+name|sc
+operator|->
+name|sc_stats
+operator|.
+name|ast_tx_mcastq_overflow
+argument_list|,
+literal|0
+argument_list|,
+literal|"Number of multicast frames exceeding maximum mcast queue depth"
 argument_list|)
 expr_stmt|;
 comment|/* Attach the RX phy error array */

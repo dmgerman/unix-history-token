@@ -2000,6 +2000,14 @@ name|int
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
+comment|/* Queue limits */
+comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowe dof the avp+cabq 	 *   queue.  The avp is included in each comparison just to be 	 *   a little overly conservative and this may end up being 	 *   unhelpful with multiple VAPs. 	 */
+name|int
+name|sc_txq_data_minfree
+decl_stmt|;
+name|int
+name|sc_txq_mcastq_maxdepth
+decl_stmt|;
 comment|/* 	 * Aggregation twiddles 	 * 	 * hwq_limit:	how busy to keep the hardware queue - don't schedule 	 *		further packets to the hardware, regardless of the TID 	 * tid_hwq_lo:	how low the per-TID hwq count has to be before the 	 *		TID will be scheduled again 	 * tid_hwq_hi:	how many frames to queue to the HWQ before the TID 	 *		stops being scheduled. 	 */
 name|int
 name|sc_hwq_limit

@@ -3512,6 +3512,20 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
+comment|/* 	 * TODO: enforce that at least this many frames are available 	 * in the txbuf list before allowing data frames (raw or 	 * otherwise) to be transmitted. 	 */
+name|sc
+operator|->
+name|sc_txq_data_minfree
+operator|=
+literal|10
+expr_stmt|;
+comment|/* 	 * Leave this as default to maintain legacy behaviour. 	 * Shortening the cabq/mcastq may end up causing some 	 * undesirable behaviour. 	 */
+name|sc
+operator|->
+name|sc_txq_mcastq_maxdepth
+operator|=
+name|ath_txbuf
+expr_stmt|;
 comment|/* 	 * Allow the TX and RX chainmasks to be overridden by 	 * environment variables and/or device.hints. 	 * 	 * This must be done early - before the hardware is 	 * calibrated or before the 802.11n stream calculation 	 * is done. 	 */
 if|if
 condition|(
