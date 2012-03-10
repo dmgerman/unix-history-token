@@ -312,6 +312,7 @@ literal|1
 operator|)
 return|;
 return|return
+operator|(
 name|send_wakeup
 argument_list|(
 name|bpf
@@ -319,6 +320,7 @@ argument_list|,
 operator|&
 name|macaddr
 argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -479,7 +481,9 @@ operator|==
 literal|0
 condition|)
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 if|if
 condition|(
@@ -492,8 +496,10 @@ operator|!=
 literal|0
 condition|)
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 comment|/* XXX also check the link state */
 for|for
@@ -579,6 +585,7 @@ name|ifap
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|nifs
 operator|==
 literal|1
@@ -587,6 +594,7 @@ literal|0
 else|:
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 end_function
