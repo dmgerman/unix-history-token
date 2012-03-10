@@ -1860,12 +1860,13 @@ name|void
 modifier|*
 name|vaddr
 decl_stmt|;
-name|u_int32_t
+name|vm_paddr_t
 name|paddr
-decl_stmt|,
+decl_stmt|;
+name|vm_size_t
 name|psize
 decl_stmt|;
-comment|/* 	 * If this is a memory resource, track the direct mapping 	 * in the uncached MIPS KSEG1 segment. 	 */
+comment|/* 	 * If this is a memory resource, use pmap_mapdev to map it. 	 */
 if|if
 condition|(
 name|type
