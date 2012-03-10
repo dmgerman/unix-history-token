@@ -28,18 +28,16 @@ end_include
 begin_if
 if|#
 directive|if
-operator|!
-operator|(
 name|defined
 argument_list|(
 name|CPU_CNMIPS
 argument_list|)
 operator|&&
+operator|!
 name|defined
 argument_list|(
-name|ISA_MIPS32
+name|__mips_n64
 argument_list|)
-operator|)
 end_if
 
 begin_typedef
