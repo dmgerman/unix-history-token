@@ -3398,7 +3398,6 @@ argument|p
 argument_list|,
 argument|td
 argument_list|)
-block|{
 name|ruxagg
 argument_list|(
 name|p
@@ -3406,17 +3405,6 @@ argument_list|,
 name|td
 argument_list|)
 expr_stmt|;
-name|thread_lock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-name|thread_unlock
-argument_list|(
-name|td
-argument_list|)
-expr_stmt|;
-block|}
 name|runtime
 operator|=
 name|cputick2usec
