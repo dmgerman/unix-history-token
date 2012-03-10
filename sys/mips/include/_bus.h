@@ -42,7 +42,7 @@ end_if
 
 begin_typedef
 typedef|typedef
-name|uintptr_t
+name|uint64_t
 name|bus_addr_t
 typedef|;
 end_typedef
@@ -54,7 +54,7 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|uint64_t
+name|uintptr_t
 name|bus_addr_t
 typedef|;
 end_typedef
