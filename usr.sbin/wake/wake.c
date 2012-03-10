@@ -900,6 +900,8 @@ name|int
 name|bpf
 decl_stmt|,
 name|n
+decl_stmt|,
+name|rval
 decl_stmt|;
 name|char
 name|ifname
@@ -1028,6 +1030,10 @@ condition|)
 name|usage
 argument_list|()
 expr_stmt|;
+name|rval
+operator|=
+literal|0
+expr_stmt|;
 for|for
 control|(
 init|;
@@ -1038,6 +1044,7 @@ condition|;
 name|n
 operator|++
 control|)
+block|{
 if|if
 condition|(
 name|wake
@@ -1049,7 +1056,14 @@ index|[
 name|n
 index|]
 argument_list|)
+operator|!=
+literal|0
 condition|)
+block|{
+name|rval
+operator|=
+literal|1
+expr_stmt|;
 name|warn
 argument_list|(
 literal|"Cannot send Wake on LAN frame over `%s' to `%s'"
@@ -1062,11 +1076,13 @@ name|n
 index|]
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+block|}
+block|}
+name|exit
+argument_list|(
+name|rval
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
