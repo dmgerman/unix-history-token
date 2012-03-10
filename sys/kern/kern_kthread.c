@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kthread.h>
 end_include
 
@@ -429,6 +435,16 @@ argument_list|,
 name|func
 argument_list|,
 name|arg
+argument_list|)
+expr_stmt|;
+comment|/* Avoid inheriting affinity from a random parent. */
+name|cpuset_setthread
+argument_list|(
+name|td
+operator|->
+name|td_tid
+argument_list|,
+name|cpuset_root
 argument_list|)
 expr_stmt|;
 name|thread_lock
@@ -1180,6 +1196,16 @@ expr_stmt|;
 name|PROC_UNLOCK
 argument_list|(
 name|p
+argument_list|)
+expr_stmt|;
+comment|/* Avoid inheriting affinity from a random parent. */
+name|cpuset_setthread
+argument_list|(
+name|newtd
+operator|->
+name|td_tid
+argument_list|,
+name|cpuset_root
 argument_list|)
 expr_stmt|;
 comment|/* Delay putting it on the run queue until now. */
