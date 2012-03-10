@@ -6421,7 +6421,7 @@ name|siba
 argument_list|,
 name|SIBA_DEBUG_PLL
 argument_list|,
-literal|"change PLL value to %u.%03u mhz\n"
+literal|"change PLL value to %u.%03u MHz\n"
 argument_list|,
 operator|(
 name|xtalfreq
