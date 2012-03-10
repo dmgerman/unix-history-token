@@ -1629,10 +1629,11 @@ operator|&
 name|fd_s
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(
