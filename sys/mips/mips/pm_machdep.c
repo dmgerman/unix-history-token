@@ -2370,25 +2370,6 @@ name|MIPS_SR_KX
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|CPU_CNMIPS
-name|td
-operator|->
-name|td_frame
-operator|->
-name|sr
-operator||=
-name|MIPS_SR_PX
-operator||
-name|MIPS_SR_UX
-operator||
-name|MIPS_SR_KX
-operator||
-name|MIPS_SR_SX
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * FREEBSD_DEVELOPERS_FIXME: 	 * Setup any other CPU-Specific registers (Not MIPS Standard) 	 * and/or bits in other standard MIPS registers (if CPU-Specific) 	 *  that are needed. 	 */
 comment|/* 	 * Set up arguments for the rtld-capable crt0: 	 *	a0	stack pointer 	 *	a1	rtld cleanup (filled in by dynamic loader) 	 *	a2	rtld object (filled in by dynamic loader) 	 *	a3	ps_strings 	 */
 name|td
