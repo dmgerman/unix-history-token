@@ -5312,7 +5312,7 @@ name|ah_ar5416_biasadj
 argument_list|,
 literal|0
 argument_list|,
-literal|"Enable 2ghz AR5416 direction sensitivity bias adjust"
+literal|"Enable 2GHz AR5416 direction sensitivity bias adjust"
 argument_list|)
 expr_stmt|;
 name|sc
