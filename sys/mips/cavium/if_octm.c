@@ -171,7 +171,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
+file|<mips/cavium/octeon_irq.h>
 end_include
 
 begin_include
@@ -640,7 +640,7 @@ literal|0
 case|:
 name|irq
 operator|=
-name|CVMX_IRQ_MII
+name|OCTEON_IRQ_MII
 expr_stmt|;
 break|break;
 case|case
@@ -648,7 +648,7 @@ literal|1
 case|:
 name|irq
 operator|=
-name|CVMX_IRQ_MII1
+name|OCTEON_IRQ_MII1
 expr_stmt|;
 break|break;
 default|default:

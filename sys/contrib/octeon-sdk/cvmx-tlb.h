@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_ifndef
@@ -31,63 +31,6 @@ literal|"C"
 block|{
 endif|#
 directive|endif
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_4K
-value|(0x3<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_16K
-value|(0xF<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_64K
-value|(0x3F<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_256K
-value|(0xFF<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_1M
-value|(0x3FF<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_4M
-value|(0xFFF<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_16M
-value|(0x3FFF<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_64M
-value|(0xFFFF<< 11)
-define|#
-directive|define
-name|CVMX_TLB_PAGEMASK_256M
-value|(0x3FFFF<< 11)
-define|#
-directive|define
-name|PAGE_MASK
-value|( ~(( 1<< 12 ) -1))
-comment|/**  *  Set up a wired entry. This function is designed to be used by Simple  *  Executive to set up its virtual to physical address mapping at start up  *  time. After the mapping is set up, the remaining unused TLB entries can  *  be use for run time shared memory mapping.  *  *  Calling this function causes the C0 wired index register to increase.  *  Wired index register points to the separation between fixed TLB mapping  *  and run time shared memory mapping.  *  *  @param  hi		Entry Hi  *  @param  lo0		Entry Low0  *  @param  lo1		Entry Low1  *  @pagam  pagemask    Pagemask  *  *  @return 0: the entry is added  *  @return -1: out of TLB entry  */
-name|int
-name|cvmx_tlb_add_wired_entry
-parameter_list|(
-name|uint64_t
-name|hi
-parameter_list|,
-name|uint64_t
-name|lo0
-parameter_list|,
-name|uint64_t
-name|lo1
-parameter_list|,
-name|uint64_t
-name|pagemask
-parameter_list|)
-function_decl|;
 comment|/**  *  Find a free entry that can be used for share memory mapping.  *  *  @return -1: no free entry found  *  @return :  a free entry  */
 name|int
 name|cvmx_tlb_allocate_runtime_entry
@@ -182,59 +125,6 @@ parameter_list|(
 name|void
 parameter_list|)
 function_decl|;
-comment|/**  *  Query for total number of TLBs of the core  *  *  @return Total number of TLB entries available on the core  */
-specifier|static
-specifier|inline
-name|uint32_t
-name|cvmx_tlb_size_limit
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|uint32_t
-name|tlb_size_limit
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN63XX
-argument_list|)
-condition|)
-name|tlb_size_limit
-operator|=
-literal|128
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN5XXX
-argument_list|)
-condition|)
-name|tlb_size_limit
-operator|=
-literal|64
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN3XXX
-argument_list|)
-condition|)
-name|tlb_size_limit
-operator|=
-literal|32
-expr_stmt|;
-return|return
-name|tlb_size_limit
-return|;
-block|}
 comment|/*  * @INTERNAL  * return the next power of two value for the given input<v>  *  * @param v input value  * @return next power of two value for v  */
 specifier|static
 specifier|inline
@@ -319,68 +209,6 @@ name|num_of_1s
 operator|==
 literal|1
 operator|)
-return|;
-block|}
-comment|/**  * @INTERNAL  *  * Find last bit set 64bit version  *  * @param x the integer to find leading 1  *  * @return>=0 the bit position (0..63) of the most significant 1 bit in a word  *   	   -1 if no 1 bit exists  */
-specifier|static
-specifier|inline
-name|uint64_t
-name|__fls64
-parameter_list|(
-name|uint64_t
-name|x
-parameter_list|)
-block|{
-name|int
-name|lz
-decl_stmt|;
-if|if
-condition|(
-sizeof|sizeof
-argument_list|(
-name|x
-argument_list|)
-operator|!=
-literal|8
-condition|)
-return|return
-literal|0
-return|;
-asm|__asm__( 	"	.set	push						\n" 	"	.set	mips64						\n" 	"	dclz	%0, %1						\n" 	"	.set	pop						\n" 	: "=r" (lz) 	: "r" (x));
-return|return
-literal|63
-operator|-
-name|lz
-return|;
-block|}
-comment|/**  * @INTERNAL  * Compute  log2(v), only works if v is power of two.  *  * @param v  the input value  * @return  log2(v)  */
-specifier|static
-specifier|inline
-name|uint32_t
-name|__log2
-parameter_list|(
-name|uint64_t
-name|v
-parameter_list|)
-block|{
-name|uint32_t
-name|log2
-init|=
-literal|0
-decl_stmt|;
-if|if
-condition|(
-name|v
-condition|)
-name|log2
-operator|=
-name|__fls64
-argument_list|(
-name|v
-argument_list|)
-expr_stmt|;
-return|return
-name|log2
 return|;
 block|}
 ifdef|#

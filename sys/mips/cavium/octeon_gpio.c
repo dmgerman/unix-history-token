@@ -102,7 +102,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
+file|<mips/cavium/octeon_irq.h>
 end_include
 
 begin_include
@@ -1796,11 +1796,11 @@ index|[
 name|i
 index|]
 argument_list|,
-name|CVMX_IRQ_GPIO0
+name|OCTEON_IRQ_GPIO0
 operator|+
 name|i
 argument_list|,
-name|CVMX_IRQ_GPIO0
+name|OCTEON_IRQ_GPIO0
 operator|+
 name|i
 argument_list|,

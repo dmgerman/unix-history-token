@@ -843,11 +843,11 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|CVMX_IRQ_WORKQ0
+name|OCTEON_IRQ_WORKQ0
 operator|+
 name|pow_receive_group
 argument_list|,
-name|CVMX_IRQ_WORKQ0
+name|OCTEON_IRQ_WORKQ0
 operator|+
 name|pow_receive_group
 argument_list|,

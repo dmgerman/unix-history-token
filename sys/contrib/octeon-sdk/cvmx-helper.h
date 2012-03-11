@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Helper functions for common, but complicated tasks.  *  *<hr>$Revision: 49448 $<hr>  */
+comment|/**  * @file  *  * Helper functions for common, but complicated tasks.  *  *<hr>$Revision: 70030 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -88,6 +88,73 @@ literal|"C"
 block|{
 endif|#
 directive|endif
+comment|/* Max number of GMXX */
+define|#
+directive|define
+name|CVMX_HELPER_MAX_GMX
+value|(OCTEON_IS_MODEL(OCTEON_CN68XX) ? 5 : 2)
+define|#
+directive|define
+name|CVMX_HELPER_CSR_INIT0
+value|0
+comment|/* Do not change as                                                     CVMX_HELPER_WRITE_CSR()                                                    assumes it */
+define|#
+directive|define
+name|CVMX_HELPER_CSR_INIT_READ
+value|-1
+comment|/*  * CVMX_HELPER_WRITE_CSR--set a field in a CSR with a value.  *  * @param chcsr_init    intial value of the csr (CVMX_HELPER_CSR_INIT_READ  *                      means to use the existing csr value as the  *                      initial value.)  * @param chcsr_csr     the name of the csr  * @param chcsr_type    the type of the csr (see the -defs.h)  * @param chcsr_chip    the chip for the csr/field  * @param chcsr_fld     the field in the csr  * @param chcsr_val     the value for field  */
+define|#
+directive|define
+name|CVMX_HELPER_WRITE_CSR
+parameter_list|(
+name|chcsr_init
+parameter_list|,
+name|chcsr_csr
+parameter_list|,
+name|chcsr_type
+parameter_list|,        \
+name|chcsr_chip
+parameter_list|,
+name|chcsr_fld
+parameter_list|,
+name|chcsr_val
+parameter_list|)
+define|\
+value|do {                                                            \                 chcsr_type csr;                                         \                 if ((chcsr_init) == CVMX_HELPER_CSR_INIT_READ)          \                         csr.u64 = cvmx_read_csr(chcsr_csr);             \                 else                                                    \                         csr.u64 = (chcsr_init);                         \                 csr.chcsr_chip.chcsr_fld = (chcsr_val);                 \                 cvmx_write_csr((chcsr_csr), csr.u64);                   \         } while(0)
+comment|/*  * CVMX_HELPER_WRITE_CSR0--set a field in a CSR with the initial value of 0  */
+define|#
+directive|define
+name|CVMX_HELPER_WRITE_CSR0
+parameter_list|(
+name|chcsr_csr
+parameter_list|,
+name|chcsr_type
+parameter_list|,
+name|chcsr_chip
+parameter_list|,       \
+name|chcsr_fld
+parameter_list|,
+name|chcsr_val
+parameter_list|)
+define|\
+value|CVMX_HELPER_WRITE_CSR(CVMX_HELPER_CSR_INIT0, chcsr_csr,         \             chcsr_type, chcsr_chip, chcsr_fld, chcsr_val)
+comment|/*  * CVMX_HELPER_WRITE_CSR1--set a field in a CSR with the initial value of  *                      the CSR's current value.  */
+define|#
+directive|define
+name|CVMX_HELPER_WRITE_CSR1
+parameter_list|(
+name|chcsr_csr
+parameter_list|,
+name|chcsr_type
+parameter_list|,
+name|chcsr_chip
+parameter_list|,       \
+name|chcsr_fld
+parameter_list|,
+name|chcsr_val
+parameter_list|)
+define|\
+value|CVMX_HELPER_WRITE_CSR(CVMX_HELPER_CSR_INIT_READ, chcsr_csr,     \             chcsr_type, chcsr_chip, chcsr_fld, chcsr_val)
 typedef|typedef
 enum|enum
 block|{
@@ -112,6 +179,10 @@ block|,
 name|CVMX_HELPER_INTERFACE_MODE_LOOP
 block|,
 name|CVMX_HELPER_INTERFACE_MODE_SRIO
+block|,
+name|CVMX_HELPER_INTERFACE_MODE_ILK
+block|,
+name|CVMX_HELPER_INTERFACE_MODE_RXAUI
 block|, }
 name|cvmx_helper_interface_mode_t
 typedef|;
@@ -163,6 +234,9 @@ directive|include
 file|"cvmx-helper-errata.h"
 include|#
 directive|include
+file|"cvmx-helper-ilk.h"
+include|#
+directive|include
 file|"cvmx-helper-loop.h"
 include|#
 directive|include
@@ -184,6 +258,7 @@ directive|include
 file|"cvmx-helper-xaui.h"
 comment|/**  * cvmx_override_pko_queue_priority(int ipd_port, uint64_t  * priorities[16]) is a function pointer. It is meant to allow  * customization of the PKO queue priorities based on the port  * number. Users should set this pointer to a function before  * calling any cvmx-helper operations.  */
 specifier|extern
+name|CVMX_SHARED
 name|void
 function_decl|(
 modifier|*
@@ -191,17 +266,16 @@ name|cvmx_override_pko_queue_priority
 function_decl|)
 parameter_list|(
 name|int
-name|pko_port
+name|ipd_port
 parameter_list|,
 name|uint64_t
+modifier|*
 name|priorities
-index|[
-literal|16
-index|]
 parameter_list|)
 function_decl|;
-comment|/**  * cvmx_override_ipd_port_setup(int ipd_port) is a function  * pointer. It is meant to allow customization of the IPD port  * setup before packet input/output comes online. It is called  * after cvmx-helper does the default IPD configuration, but  * before IPD is enabled. Users should set this pointer to a  * function before calling any cvmx-helper operations.  */
+comment|/**  * cvmx_override_ipd_port_setup(int ipd_port) is a function  * pointer. It is meant to allow customization of the IPD port/port kind  * setup before packet input/output comes online. It is called  * after cvmx-helper does the default IPD configuration, but  * before IPD is enabled. Users should set this pointer to a  * function before calling any cvmx-helper operations.  */
 specifier|extern
+name|CVMX_SHARED
 name|void
 function_decl|(
 modifier|*
@@ -216,6 +290,23 @@ comment|/**  * This function enables the IPD and also enables the packet interfa
 specifier|extern
 name|int
 name|cvmx_helper_ipd_and_packet_input_enable
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+comment|/**  * Initialize and allocate memory for the SSO.  *  * @param wqe_entries The maximum number of work queue entries to be  * supported.  *  * @return Zero on success, non-zero on failure.  */
+specifier|extern
+name|int
+name|cvmx_helper_initialize_sso
+parameter_list|(
+name|int
+name|wqe_entries
+parameter_list|)
+function_decl|;
+comment|/**  * Undo the effect of cvmx_helper_initialize_sso().  *  * Warning: since cvmx_bootmem_alloc() memory cannot be freed, the  * memory allocated by cvmx_helper_initialize_sso() will be leaked.  *  * @return Zero on success, non-zero on failure.  */
+specifier|extern
+name|int
+name|cvmx_helper_uninitialize_sso
 parameter_list|(
 name|void
 parameter_list|)
@@ -308,10 +399,19 @@ name|cvmx_helper_link_info_t
 name|link_info
 parameter_list|)
 function_decl|;
-comment|/**  * This function probes an interface to determine the actual  * number of hardware ports connected to it. It doesn't setup the  * ports or enable them. The main goal here is to set the global  * interface_port_count[interface] correctly. Hardware setup of the  * ports will be performed later.  *  * @param interface Interface to probe  *  * @return Zero on success, negative on failure  */
+comment|/**  * This function probes an interface to determine the actual number of  * hardware ports connected to it. It does some setup the ports but  * doesn't enable them. The main goal here is to set the global  * interface_port_count[interface] correctly. Final hardware setup of  * the ports will be performed later.  *  * @param interface Interface to probe  *  * @return Zero on success, negative on failure  */
 specifier|extern
 name|int
 name|cvmx_helper_interface_probe
+parameter_list|(
+name|int
+name|interface
+parameter_list|)
+function_decl|;
+comment|/**  * Determine the actual number of hardware ports connected to an  * interface. It doesn't setup the ports or enable them.  *  * @param interface Interface to enumerate  *  * @return Zero on success, negative on failure  */
+specifier|extern
+name|int
+name|cvmx_helper_interface_enumerate
 parameter_list|(
 name|int
 name|interface

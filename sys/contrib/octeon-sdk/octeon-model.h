@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * File defining different Octeon model IDs and macros to  * compare them.  *  *<hr>$Revision: 52119 $<hr>  */
+comment|/**  * @file  *  * File defining different Octeon model IDs and macros to  * compare them.  *  *<hr>$Revision: 70338 $<hr>  */
 end_comment
 
 begin_ifndef
@@ -35,6 +35,10 @@ comment|/* NOTE: These must match what is checked in common-config.mk */
 comment|/* Defines to represent the different versions of Octeon.  */
 comment|/* IMPORTANT: When the default pass is updated for an Octeon Model, ** the corresponding change must also be made in the oct-sim script. */
 comment|/* The defines below should be used with the OCTEON_IS_MODEL() macro to ** determine what model of chip the software is running on.  Models ending ** in 'XX' match multiple models (families), while specific models match only ** that model.  If a pass (revision) is specified, then only that revision ** will be matched.  Care should be taken when checking for both specific ** models and families that the specific models are checked for first. ** While these defines are similar to the processor ID, they are not intended ** to be used by anything other that the OCTEON_IS_MODEL framework, and ** the values are subject to change at anytime without notice. ** ** NOTE: only the OCTEON_IS_MODEL() macro/function and the OCTEON_CN* macros ** should be used outside of this file.  All other macros are for internal ** use only, and may change without notice. */
+define|#
+directive|define
+name|OCTEON_FAMILY_MASK
+value|0x00ffff00
 comment|/* Flag bits in top byte */
 define|#
 directive|define
@@ -70,7 +74,77 @@ directive|define
 name|OM_MATCH_6XXX_FAMILY_MODELS
 value|0x40000000
 comment|/* Match all cn6XXX Octeon models. */
+define|#
+directive|define
+name|OM_MATCH_F7XXX_FAMILY_MODELS
+value|0x80000000
+comment|/* Match all cnf7XXX Octeon models. */
+comment|/*  * CNF7XXX models with new revision encoding  */
+define|#
+directive|define
+name|OCTEON_CNF71XX_PASS1_0
+value|0x000d9400
+define|#
+directive|define
+name|OCTEON_CNF71XX
+value|(OCTEON_CNF71XX_PASS1_0 | OM_IGNORE_REVISION)
+define|#
+directive|define
+name|OCTEON_CNF71XX_PASS1_X
+value|(OCTEON_CNF71XX_PASS1_0 | OM_IGNORE_MINOR_REVISION)
 comment|/*  * CN6XXX models with new revision encoding  */
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS1_0
+value|0x000d9100
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS1_1
+value|0x000d9101
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS1_2
+value|0x000d9102
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS2_0
+value|0x000d9108
+define|#
+directive|define
+name|OCTEON_CN68XX
+value|(OCTEON_CN68XX_PASS2_0 | OM_IGNORE_REVISION)
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS1_X
+value|(OCTEON_CN68XX_PASS1_0 | OM_IGNORE_MINOR_REVISION)
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS2_X
+value|(OCTEON_CN68XX_PASS2_0 | OM_IGNORE_MINOR_REVISION)
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS1
+value|OCTEON_CN68XX_PASS1_X
+define|#
+directive|define
+name|OCTEON_CN68XX_PASS2
+value|OCTEON_CN68XX_PASS2_X
+define|#
+directive|define
+name|OCTEON_CN66XX_PASS1_0
+value|0x000d9200
+define|#
+directive|define
+name|OCTEON_CN66XX_PASS1_2
+value|0x000d9202
+define|#
+directive|define
+name|OCTEON_CN66XX
+value|(OCTEON_CN66XX_PASS1_0 | OM_IGNORE_REVISION)
+define|#
+directive|define
+name|OCTEON_CN66XX_PASS1_X
+value|(OCTEON_CN66XX_PASS1_0 | OM_IGNORE_MINOR_REVISION)
 define|#
 directive|define
 name|OCTEON_CN63XX_PASS1_0
@@ -89,8 +163,16 @@ name|OCTEON_CN63XX_PASS2_0
 value|0x000d9008
 define|#
 directive|define
+name|OCTEON_CN63XX_PASS2_1
+value|0x000d9009
+define|#
+directive|define
+name|OCTEON_CN63XX_PASS2_2
+value|0x000d900a
+define|#
+directive|define
 name|OCTEON_CN63XX
-value|(OCTEON_CN63XX_PASS1_0 | OM_IGNORE_REVISION)
+value|(OCTEON_CN63XX_PASS2_0 | OM_IGNORE_REVISION)
 define|#
 directive|define
 name|OCTEON_CN63XX_PASS1_X
@@ -99,6 +181,18 @@ define|#
 directive|define
 name|OCTEON_CN63XX_PASS2_X
 value|(OCTEON_CN63XX_PASS2_0 | OM_IGNORE_MINOR_REVISION)
+define|#
+directive|define
+name|OCTEON_CN61XX_PASS1_0
+value|0x000d9300
+define|#
+directive|define
+name|OCTEON_CN61XX
+value|(OCTEON_CN61XX_PASS1_0 | OM_IGNORE_REVISION)
+define|#
+directive|define
+name|OCTEON_CN61XX_PASS1_X
+value|(OCTEON_CN61XX_PASS1_0 | OM_IGNORE_MINOR_REVISION)
 comment|/*  * CN5XXX models with new revision encoding  */
 define|#
 directive|define
@@ -378,6 +472,10 @@ define|#
 directive|define
 name|OCTEON_CN6XXX
 value|(OCTEON_CN63XX_PASS1_0 | OM_MATCH_6XXX_FAMILY_MODELS)
+define|#
+directive|define
+name|OCTEON_CNF7XXX
+value|(OCTEON_CNF71XX_PASS1_0 | OM_MATCH_F7XXX_FAMILY_MODELS)
 comment|/* The revision byte (low byte) has two different encodings. ** CN3XXX: ** **     bits **<7:5>: reserved (0) **<4>:   alternate package **<3:0>: revision ** ** CN5XXX: ** **     bits **<7>:   reserved (0) **<6>:   alternate package **<5:3>: major revision **<2:0>: minor revision ** */
 comment|/* Masks used for the various types of model/family/revision matching */
 define|#
@@ -442,7 +540,10 @@ parameter_list|,
 name|chip_model
 parameter_list|)
 define|\
-value|((((arg_model& OCTEON_38XX_FAMILY_MASK)< OCTEON_CN58XX_PASS1_0)&& (\      ((((arg_model)& (OM_FLAG_MASK)) == (OM_IGNORE_REVISION | OM_CHECK_SUBMODEL)) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_MODEL_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == 0) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_FAMILY_REV_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_IGNORE_REVISION) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_FAMILY_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_CHECK_SUBMODEL) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_MODEL_REV_MASK)) || \      ((((arg_model)& (OM_MATCH_PREVIOUS_MODELS)) == OM_MATCH_PREVIOUS_MODELS) \&& (((chip_model)& OCTEON_38XX_MODEL_MASK)< ((arg_model)& OCTEON_38XX_MODEL_MASK))) \     )) || \     (((arg_model& OCTEON_38XX_FAMILY_MASK)>= OCTEON_CN58XX_PASS1_0)&& (\      ((((arg_model)& (OM_FLAG_MASK)) == (OM_IGNORE_REVISION | OM_CHECK_SUBMODEL)) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_MODEL_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == 0) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_FAMILY_REV_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_IGNORE_MINOR_REVISION) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_MODEL_MINOR_REV_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_IGNORE_REVISION) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_FAMILY_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_CHECK_SUBMODEL) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_MODEL_REV_MASK)) || \      ((((arg_model)& (OM_MATCH_5XXX_FAMILY_MODELS)) == OM_MATCH_5XXX_FAMILY_MODELS) \&& ((chip_model)>= OCTEON_CN58XX_PASS1_0)&& ((chip_model)< OCTEON_CN63XX_PASS1_0)) || \      ((((arg_model)& (OM_MATCH_6XXX_FAMILY_MODELS)) == OM_MATCH_6XXX_FAMILY_MODELS) \&& ((chip_model)>= OCTEON_CN63XX_PASS1_0)) || \      ((((arg_model)& (OM_MATCH_PREVIOUS_MODELS)) == OM_MATCH_PREVIOUS_MODELS) \&& (((chip_model)& OCTEON_58XX_MODEL_MASK)< ((arg_model)& OCTEON_58XX_MODEL_MASK))) \     )))
+value|((((arg_model& OCTEON_38XX_FAMILY_MASK)< OCTEON_CN58XX_PASS1_0)&& (\      ((((arg_model)& (OM_FLAG_MASK)) == (OM_IGNORE_REVISION | OM_CHECK_SUBMODEL)) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_MODEL_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == 0) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_FAMILY_REV_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_IGNORE_REVISION) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_FAMILY_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_CHECK_SUBMODEL) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_38XX_MODEL_REV_MASK)) || \      ((((arg_model)& (OM_MATCH_PREVIOUS_MODELS)) == OM_MATCH_PREVIOUS_MODELS) \&& (((chip_model)& OCTEON_38XX_MODEL_MASK)< ((arg_model)& OCTEON_38XX_MODEL_MASK))) \     )) || \     (((arg_model& OCTEON_38XX_FAMILY_MASK)>= OCTEON_CN58XX_PASS1_0)&& (\      ((((arg_model)& (OM_FLAG_MASK)) == (OM_IGNORE_REVISION | OM_CHECK_SUBMODEL)) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_MODEL_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == 0) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_FAMILY_REV_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_IGNORE_MINOR_REVISION) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_MODEL_MINOR_REV_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_IGNORE_REVISION) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_FAMILY_MASK)) || \      ((((arg_model)& (OM_FLAG_MASK)) == OM_CHECK_SUBMODEL) \&& __OCTEON_MATCH_MASK__((chip_model), (arg_model), OCTEON_58XX_MODEL_REV_MASK)) || \      ((((arg_model)& (OM_MATCH_5XXX_FAMILY_MODELS)) == OM_MATCH_5XXX_FAMILY_MODELS) \&& ((chip_model)>= OCTEON_CN58XX_PASS1_0)&& ((chip_model)< OCTEON_CN63XX_PASS1_0)) || \      ((((arg_model)& (OM_MATCH_6XXX_FAMILY_MODELS)) == OM_MATCH_6XXX_FAMILY_MODELS) \&& ((chip_model)>= OCTEON_CN63XX_PASS1_0)&& ((chip_model)< OCTEON_CNF71XX_PASS1_0)) || \      ((((arg_model)& (OM_MATCH_F7XXX_FAMILY_MODELS)) == OM_MATCH_F7XXX_FAMILY_MODELS) \&& ((chip_model)>= OCTEON_CNF71XX_PASS1_0)) || \      ((((arg_model)& (OM_MATCH_PREVIOUS_MODELS)) == OM_MATCH_PREVIOUS_MODELS) \&& (((chip_model)& OCTEON_58XX_MODEL_MASK)< ((arg_model)& OCTEON_58XX_MODEL_MASK))) \     )))
+ifndef|#
+directive|ifndef
+name|OCTEON_IS_MODEL
 if|#
 directive|if
 name|defined
@@ -469,7 +570,7 @@ operator|)
 operator|||
 name|defined
 argument_list|(
-name|__OCTEON_NEWLIB__
+name|CVMX_BUILD_FOR_TOOLCHAIN
 argument_list|)
 operator|||
 operator|(
@@ -586,6 +687,8 @@ parameter_list|()
 value|0
 endif|#
 directive|endif
+endif|#
+directive|endif
 specifier|const
 name|char
 modifier|*
@@ -608,6 +711,75 @@ modifier|*
 name|buffer
 parameter_list|)
 function_decl|;
+comment|/**                                                                            * Return the octeon family, i.e., ProcessorID of the PrID register.  *  * @return the octeon family on success, ((unint32_t)-1) on error.  */
+specifier|static
+specifier|inline
+name|uint32_t
+name|cvmx_get_octeon_family
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|#
+directive|if
+name|defined
+argument_list|(
+name|USE_RUNTIME_MODEL_CHECKS
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__U_BOOT__
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__linux__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__KERNEL__
+argument_list|)
+operator|)
+operator|||
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_TOOLCHAIN
+argument_list|)
+operator|||
+operator|(
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+operator|)
+return|return
+operator|(
+name|cvmx_get_proc_id
+argument_list|()
+operator|&
+name|OCTEON_FAMILY_MASK
+operator|)
+return|;
+else|#
+directive|else
+return|return
+operator|(
+name|OCTEON_MODEL
+operator|&
+name|OCTEON_FAMILY_MASK
+operator|)
+return|;
+endif|#
+directive|endif
+block|}
 ifdef|#
 directive|ifdef
 name|__cplusplus
