@@ -229,12 +229,6 @@ directive|include
 file|<vm/uma.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<fs/fifofs/fifo.h>
-end_include
-
 begin_comment
 comment|/*  * Use this define if you want to disable *fancy* VM things.  Expect an  * approx 30% decrease in transfer rate.  This could be useful for  * NetBSD or OpenBSD.  */
 end_comment
