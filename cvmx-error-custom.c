@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -77,6 +77,12 @@ begin_include
 include|#
 directive|include
 file|<asm/octeon/cvmx-pemx-defs.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<asm/octeon/cvmx-sriox-defs.h>
 end_include
 
 begin_define
@@ -169,6 +175,44 @@ name|info
 operator|->
 name|group_index
 decl_stmt|;
+switch|switch
+condition|(
+name|ipd_port
+condition|)
+block|{
+case|case
+literal|0x800
+case|:
+name|ipd_port
+operator|=
+literal|0x840
+expr_stmt|;
+break|break;
+case|case
+literal|0xa00
+case|:
+name|ipd_port
+operator|=
+literal|0xa40
+expr_stmt|;
+break|break;
+case|case
+literal|0xb00
+case|:
+name|ipd_port
+operator|=
+literal|0xb40
+expr_stmt|;
+break|break;
+case|case
+literal|0xc00
+case|:
+name|ipd_port
+operator|=
+literal|0xc40
+expr_stmt|;
+break|break;
+block|}
 name|cvmx_helper_link_autoconf
 argument_list|(
 name|ipd_port
@@ -335,6 +379,1518 @@ return|;
 block|}
 end_function
 
+begin_define
+define|#
+directive|define
+name|DECODE_FAILING_ADDRESS
+end_define
+
+begin_comment
+comment|//#define DECODE_FAILING_BIT
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_BIT
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|_Db
+parameter_list|(
+name|x
+parameter_list|)
+value|(x)
+end_define
+
+begin_comment
+comment|/* Data Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_Ec
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x100+x)
+end_define
+
+begin_comment
+comment|/* ECC Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_Ad
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x200+x)
+end_define
+
+begin_comment
+comment|/* Address Bit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_Bu
+parameter_list|(
+name|x
+parameter_list|)
+value|(0x400+x)
+end_define
+
+begin_comment
+comment|/* Burst */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_Un
+parameter_list|()
+value|(-1)
+end_define
+
+begin_comment
+comment|/* Unused */
+end_comment
+
+begin_comment
+comment|/* Use ECC Code as index to lookup corrected bit */
+end_comment
+
+begin_decl_stmt
+specifier|const
+specifier|static
+name|short
+name|lmc_syndrome_bits
+index|[
+literal|256
+index|]
+init|=
+block|{
+comment|/*        __ 0 __  __ 1 __  __ 2 __  __ 3 __  __ 4 __  __ 5 __  __ 6 __  __ 7 __  __ 8 __  __ 9 __  __ A __  __ B __  __ C __  __ D __  __ E __  __ F __ */
+comment|/* 00: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Ec
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_Ec
+argument_list|(
+literal|1
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ec
+argument_list|(
+literal|2
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ec
+argument_list|(
+literal|3
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|17
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|16
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* 10: */
+name|_Ec
+argument_list|(
+literal|4
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|18
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|19
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|20
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|21
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|22
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|23
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* 20: */
+name|_Ec
+argument_list|(
+literal|5
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|8
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|9
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|10
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|11
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|12
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|13
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* 30: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|14
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|15
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|34
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* 40: */
+name|_Ec
+argument_list|(
+literal|6
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|7
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|8
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|9
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|33
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|10
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|32
+argument_list|)
+block|,
+comment|/* 50: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|11
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|34
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|35
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|36
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|37
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|38
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|39
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|12
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* 60: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|13
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|56
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|57
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|58
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|59
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|60
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|61
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|14
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* 70: */
+name|_Db
+argument_list|(
+literal|62
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|15
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|63
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|16
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|17
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|18
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|19
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|20
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* 80: */
+name|_Ec
+argument_list|(
+literal|7
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|21
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|22
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|23
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|24
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|49
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|25
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|48
+argument_list|)
+block|,
+comment|/* 90: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|26
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|50
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|51
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|52
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|53
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|54
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|55
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|27
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* A0: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|28
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|40
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|41
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|42
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|43
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|44
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|45
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|29
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* B0: */
+name|_Db
+argument_list|(
+literal|46
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|30
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|47
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|31
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Ad
+argument_list|(
+literal|32
+argument_list|)
+block|,
+name|_Ad
+argument_list|(
+literal|33
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* C0: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|1
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* D0: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|2
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|3
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|4
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|5
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|6
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|7
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* E0: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|24
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|25
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|26
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|27
+argument_list|)
+block|,
+name|_Db
+argument_list|(
+literal|28
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|29
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+comment|/* F0: */
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|30
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Db
+argument_list|(
+literal|31
+argument_list|)
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|,
+name|_Un
+argument_list|(  )
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/**  * @INTERNAL  * This error bit handler clears the status and prints failure infomation.  *  * @param info   Error register to check  *  * @return  */
+end_comment
+
+begin_function
+specifier|static
+name|int
+name|__cvmx_cn6xxx_lmc_ecc_error_display
+parameter_list|(
+specifier|const
+name|cvmx_error_info_t
+modifier|*
+name|info
+parameter_list|)
+block|{
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_ADDRESS
+name|cvmx_lmcx_config_t
+name|lmc_config
+decl_stmt|;
+name|uint64_t
+name|fadr_physical
+decl_stmt|,
+name|fadr_data
+decl_stmt|;
+endif|#
+directive|endif
+name|int
+name|ddr_controller
+init|=
+name|info
+operator|->
+name|group_index
+decl_stmt|;
+name|cvmx_lmcx_int_t
+name|lmc_int
+decl_stmt|;
+name|cvmx_lmcx_fadr_t
+name|fadr
+decl_stmt|;
+name|cvmx_lmcx_ecc_synd_t
+name|ecc_synd
+decl_stmt|;
+name|int
+name|sec_err
+decl_stmt|;
+name|int
+name|ded_err
+decl_stmt|;
+name|int
+name|syndrome
+init|=
+operator|-
+literal|1
+decl_stmt|;
+name|int
+name|phase
+decl_stmt|;
+name|lmc_int
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_LMCX_INT
+argument_list|(
+name|ddr_controller
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|fadr
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_LMCX_FADR
+argument_list|(
+name|ddr_controller
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|ecc_synd
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_LMCX_ECC_SYND
+argument_list|(
+name|ddr_controller
+argument_list|)
+argument_list|)
+expr_stmt|;
+comment|/* This assumes that all bits in the status register are RO or R/W1C */
+name|cvmx_write_csr
+argument_list|(
+name|info
+operator|->
+name|status_addr
+argument_list|,
+name|info
+operator|->
+name|status_mask
+argument_list|)
+expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_ADDRESS
+name|lmc_config
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_LMCX_CONFIG
+argument_list|(
+name|ddr_controller
+argument_list|)
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|sec_err
+operator|=
+name|lmc_int
+operator|.
+name|s
+operator|.
+name|sec_err
+expr_stmt|;
+name|ded_err
+operator|=
+name|lmc_int
+operator|.
+name|s
+operator|.
+name|ded_err
+expr_stmt|;
+name|phase
+operator|=
+name|ded_err
+condition|?
+name|ded_err
+else|:
+name|sec_err
+expr_stmt|;
+comment|/* Double bit errors take precedence. */
+switch|switch
+condition|(
+name|phase
+condition|)
+block|{
+case|case
+literal|1
+case|:
+name|syndrome
+operator|=
+name|ecc_synd
+operator|.
+name|cn63xx
+operator|.
+name|mrdsyn0
+expr_stmt|;
+break|break;
+case|case
+literal|2
+case|:
+name|syndrome
+operator|=
+name|ecc_synd
+operator|.
+name|cn63xx
+operator|.
+name|mrdsyn1
+expr_stmt|;
+break|break;
+case|case
+literal|4
+case|:
+name|syndrome
+operator|=
+name|ecc_synd
+operator|.
+name|cn63xx
+operator|.
+name|mrdsyn2
+expr_stmt|;
+break|break;
+case|case
+literal|8
+case|:
+name|syndrome
+operator|=
+name|ecc_synd
+operator|.
+name|cn63xx
+operator|.
+name|mrdsyn3
+expr_stmt|;
+break|break;
+block|}
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_ADDRESS
+name|fadr_physical
+operator|=
+operator|(
+name|uint64_t
+operator|)
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fdimm
+operator|<<
+operator|(
+name|lmc_config
+operator|.
+name|s
+operator|.
+name|pbank_lsb
+operator|+
+literal|28
+operator|)
+expr_stmt|;
+name|fadr_physical
+operator||=
+operator|(
+name|uint64_t
+operator|)
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|frow
+operator|<<
+operator|(
+name|lmc_config
+operator|.
+name|s
+operator|.
+name|row_lsb
+operator|+
+literal|14
+operator|)
+expr_stmt|;
+name|fadr_physical
+operator||=
+operator|(
+name|uint64_t
+operator|)
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fbank
+operator|<<
+literal|7
+expr_stmt|;
+name|fadr_physical
+operator||=
+call|(
+name|uint64_t
+call|)
+argument_list|(
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fcol
+operator|&
+literal|0xf
+argument_list|)
+operator|<<
+literal|3
+expr_stmt|;
+name|fadr_physical
+operator||=
+call|(
+name|uint64_t
+call|)
+argument_list|(
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fcol
+operator|>>
+literal|4
+argument_list|)
+operator|<<
+literal|10
+expr_stmt|;
+name|fadr_data
+operator|=
+operator|*
+operator|(
+name|uint64_t
+operator|*
+operator|)
+name|cvmx_phys_to_ptr
+argument_list|(
+name|fadr_physical
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
+name|PRINT_ERROR
+argument_list|(
+literal|"LMC%d ECC: sec_err:%d ded_err:%d\n"
+literal|"LMC%d ECC:\tFailing dimm:   %u\n"
+literal|"LMC%d ECC:\tFailing rank:   %u\n"
+literal|"LMC%d ECC:\tFailing bank:   %u\n"
+literal|"LMC%d ECC:\tFailing row:    0x%x\n"
+literal|"LMC%d ECC:\tFailing column: 0x%x\n"
+literal|"LMC%d ECC:\tsyndrome: 0x%x"
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_BIT
+literal|", bit: %d"
+endif|#
+directive|endif
+literal|"\n"
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_ADDRESS
+literal|"Failing  Address: 0x%016llx, Data: 0x%016llx\n"
+endif|#
+directive|endif
+argument_list|,
+comment|/* Comma */
+name|ddr_controller
+argument_list|,
+name|sec_err
+argument_list|,
+name|ded_err
+argument_list|,
+name|ddr_controller
+argument_list|,
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fdimm
+argument_list|,
+name|ddr_controller
+argument_list|,
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fbunk
+argument_list|,
+name|ddr_controller
+argument_list|,
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fbank
+argument_list|,
+name|ddr_controller
+argument_list|,
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|frow
+argument_list|,
+name|ddr_controller
+argument_list|,
+name|fadr
+operator|.
+name|cn63xx
+operator|.
+name|fcol
+argument_list|,
+name|ddr_controller
+argument_list|,
+name|syndrome
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_BIT
+argument_list|,
+comment|/* Comma */
+name|lmc_syndrome_bits
+index|[
+name|syndrome
+index|]
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|DECODE_FAILING_ADDRESS
+argument_list|,
+comment|/* Comma */
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|fadr_physical
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|fadr_data
+endif|#
+directive|endif
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * @INTERNAL  * Some errors require more complicated error handing functions than the  * automatically generated functions in cvmx-error-init-*.c. This function  * replaces these handers with hand coded functions for these special cases.  *  * @return Zero on success, negative on failure.  */
 end_comment
@@ -350,6 +1906,169 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
+argument_list|)
+condition|)
+block|{
+name|int
+name|lmc
+decl_stmt|;
+for|for
+control|(
+name|lmc
+operator|=
+literal|0
+init|;
+name|lmc
+operator|<
+name|CVMX_L2C_TADS
+condition|;
+name|lmc
+operator|++
+control|)
+block|{
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN68XX
+argument_list|)
+condition|)
+block|{
+name|cvmx_lmcx_dll_ctl2_t
+name|ctl
+decl_stmt|;
+name|ctl
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_LMCX_DLL_CTL2
+argument_list|(
+name|lmc
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ctl
+operator|.
+name|s
+operator|.
+name|intf_en
+operator|==
+literal|0
+condition|)
+continue|continue;
+block|}
+name|cvmx_error_change_handler
+argument_list|(
+name|CVMX_ERROR_REGISTER_IO64
+argument_list|,
+name|CVMX_LMCX_INT
+argument_list|(
+name|lmc
+argument_list|)
+argument_list|,
+literal|0xfull
+operator|<<
+literal|1
+comment|/* sec_err */
+argument_list|,
+name|__cvmx_cn6xxx_lmc_ecc_error_display
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+name|cvmx_error_change_handler
+argument_list|(
+name|CVMX_ERROR_REGISTER_IO64
+argument_list|,
+name|CVMX_LMCX_INT
+argument_list|(
+name|lmc
+argument_list|)
+argument_list|,
+literal|0xfull
+operator|<<
+literal|5
+comment|/* ded_err */
+argument_list|,
+name|__cvmx_cn6xxx_lmc_ecc_error_display
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX_PASS1_X
+argument_list|)
+condition|)
+block|{
+name|int
+name|i
+decl_stmt|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+literal|6
+condition|;
+name|i
+operator|++
+control|)
+name|cvmx_error_change_handler
+argument_list|(
+name|CVMX_ERROR_REGISTER_IO64
+argument_list|,
+name|CVMX_L2C_TADX_INT
+argument_list|(
+name|lmc
+argument_list|)
+argument_list|,
+operator|(
+literal|1ull
+operator|<<
+name|i
+operator|)
+argument_list|,
+name|__cvmx_error_handle_63XX_l2_ecc
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+block|}
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
 name|OCTEON_CN52XX
 argument_list|)
 operator|||
@@ -360,10 +2079,57 @@ argument_list|)
 operator|||
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
+name|int
+name|i
+decl_stmt|;
+comment|/* Install special handler for all the interfaces, these are            specific to XAUI interface */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|CVMX_HELPER_MAX_GMX
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN52XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF71XX
+argument_list|)
+operator|)
+operator|&&
+name|i
+operator|==
+literal|1
+condition|)
+continue|continue;
 name|cvmx_error_change_handler
 argument_list|(
 name|CVMX_ERROR_REGISTER_IO64
@@ -372,7 +2138,7 @@ name|CVMX_GMXX_RXX_INT_REG
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|i
 argument_list|)
 argument_list|,
 literal|1ull
@@ -397,7 +2163,7 @@ name|CVMX_GMXX_RXX_INT_REG
 argument_list|(
 literal|0
 argument_list|,
-literal|0
+name|i
 argument_list|)
 argument_list|,
 literal|1ull
@@ -414,71 +2180,13 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN56XX
-argument_list|)
-condition|)
-block|{
-name|cvmx_error_change_handler
-argument_list|(
-name|CVMX_ERROR_REGISTER_IO64
-argument_list|,
-name|CVMX_GMXX_RXX_INT_REG
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-literal|1ull
-operator|<<
-literal|21
-comment|/* rem_fault */
-argument_list|,
-name|__cvmx_error_handle_gmxx_rxx_int_reg
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|cvmx_error_change_handler
-argument_list|(
-name|CVMX_ERROR_REGISTER_IO64
-argument_list|,
-name|CVMX_GMXX_RXX_INT_REG
-argument_list|(
-literal|0
-argument_list|,
-literal|1
-argument_list|)
-argument_list|,
-literal|1ull
-operator|<<
-literal|20
-comment|/* loc_fault */
-argument_list|,
-name|__cvmx_error_handle_gmxx_rxx_int_reg
-argument_list|,
-literal|0
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-block|}
-if|if
-condition|(
-name|octeon_has_feature
-argument_list|(
-name|OCTEON_FEATURE_NPEI
 argument_list|)
 condition|)
 block|{
@@ -586,6 +2294,49 @@ argument_list|,
 literal|1ull
 operator|<<
 literal|13
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* According to the workaround for errata SRIO-15282, clearing        SRIOx_INT_ENABLE[MAC_BUF]. */
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX_PASS2_0
+argument_list|)
+operator|&&
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX_PASS2_1
+argument_list|)
+condition|)
+block|{
+name|cvmx_error_disable
+argument_list|(
+name|CVMX_ERROR_REGISTER_IO64
+argument_list|,
+name|CVMX_SRIOX_INT_ENABLE
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+literal|1ull
+operator|<<
+literal|22
+argument_list|)
+expr_stmt|;
+name|cvmx_error_disable
+argument_list|(
+name|CVMX_ERROR_REGISTER_IO64
+argument_list|,
+name|CVMX_SRIOX_INT_ENABLE
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|1ull
+operator|<<
+literal|22
 argument_list|)
 expr_stmt|;
 block|}
@@ -2005,6 +3756,371 @@ argument_list|(
 literal|"POW_ECC_ERR[SBE]: POW single bit error\n"
 argument_list|)
 expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * @INTERNAL  *  * @param info  *  * @return  */
+end_comment
+
+begin_function
+name|int
+name|__cvmx_error_handle_63XX_l2_ecc
+parameter_list|(
+specifier|const
+name|struct
+name|cvmx_error_info
+modifier|*
+name|info
+parameter_list|)
+block|{
+name|cvmx_l2c_err_tdtx_t
+name|l2c_err_tdt
+decl_stmt|;
+name|cvmx_l2c_err_ttgx_t
+name|l2c_err_ttg
+decl_stmt|;
+name|cvmx_l2c_err_vbfx_t
+name|l2c_err_vbf
+decl_stmt|;
+name|cvmx_l2c_tadx_int_t
+name|tadx_int
+decl_stmt|;
+name|tadx_int
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_L2C_TADX_INT
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|l2c_err_tdt
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_L2C_ERR_TDTX
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|l2c_err_ttg
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_L2C_ERR_TTGX
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|l2c_err_vbf
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_L2C_ERR_VBFX
+argument_list|(
+literal|0
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|cvmx_write_csr
+argument_list|(
+name|CVMX_L2C_TADX_INT
+argument_list|(
+literal|0
+argument_list|)
+argument_list|,
+name|tadx_int
+operator|.
+name|u64
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|l2ddbe
+operator|||
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|l2dsbe
+condition|)
+block|{
+comment|/* L2 Data error */
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|l2dsbe
+condition|)
+block|{
+comment|/* l2c_err_tdt.cn63xx.wayidx formated same as CACHE instruction arg */
+name|CVMX_CACHE_WBIL2I
+argument_list|(
+operator|(
+name|l2c_err_tdt
+operator|.
+name|u64
+operator|&
+literal|0x1fff80
+operator|)
+operator||
+operator|(
+literal|1ULL
+operator|<<
+literal|63
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|CVMX_SYNC
+expr_stmt|;
+name|PRINT_ERROR
+argument_list|(
+literal|"L2C_TADX_INT(0)[L2DSBE]: Data Single-Bit Error\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|l2ddbe
+condition|)
+block|{
+comment|/* TODO - fatal error, for now, flush so error cleared..... */
+name|CVMX_CACHE_WBIL2I
+argument_list|(
+operator|(
+name|l2c_err_tdt
+operator|.
+name|u64
+operator|&
+literal|0x1fff80
+operator|)
+operator||
+operator|(
+literal|1ULL
+operator|<<
+literal|63
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|CVMX_SYNC
+expr_stmt|;
+name|PRINT_ERROR
+argument_list|(
+literal|"L2C_TADX_INT(0)[L2DDBE]: Data Double-Bit Error\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|PRINT_ERROR
+argument_list|(
+literal|"CVMX_L2C_ERR_TDT: 0x%llx\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|l2c_err_tdt
+operator|.
+name|u64
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|tagdbe
+operator|||
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|tagsbe
+condition|)
+block|{
+comment|/* L2 Tag error */
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|tagsbe
+condition|)
+block|{
+name|CVMX_CACHE_WBIL2I
+argument_list|(
+operator|(
+name|l2c_err_ttg
+operator|.
+name|u64
+operator|&
+literal|0x1fff80
+operator|)
+operator||
+operator|(
+literal|1ULL
+operator|<<
+literal|63
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|CVMX_SYNC
+expr_stmt|;
+name|PRINT_ERROR
+argument_list|(
+literal|"L2C_TADX_INT(0)[TAGSBE]: Tag Single-Bit Error\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|tagdbe
+condition|)
+block|{
+comment|/* TODO - fatal error, for now, flush so error cleared..... */
+name|CVMX_CACHE_WBIL2I
+argument_list|(
+operator|(
+name|l2c_err_ttg
+operator|.
+name|u64
+operator|&
+literal|0x1fff80
+operator|)
+operator||
+operator|(
+literal|1ULL
+operator|<<
+literal|63
+operator|)
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|CVMX_SYNC
+expr_stmt|;
+name|PRINT_ERROR
+argument_list|(
+literal|"L2C_TADX_INT(0)[TAGDBE]: Tag Double-Bit Error\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|PRINT_ERROR
+argument_list|(
+literal|"CVMX_L2C_ERR_TTG: 0x%llx\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|l2c_err_ttg
+operator|.
+name|u64
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|vbfdbe
+operator|||
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|vbfsbe
+condition|)
+block|{
+comment|/* L2 Victim buffer error */
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|vbfsbe
+condition|)
+block|{
+comment|/* No action here, hardware fixed up on write to DRAM */
+name|PRINT_ERROR
+argument_list|(
+literal|"L2C_TADX_INT(0)[VBFSBE]: VBF Single-Bit Error\n"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|tadx_int
+operator|.
+name|cn63xx
+operator|.
+name|vbfdbe
+condition|)
+block|{
+comment|/* TODO - fatal error.  Bad data written to DRAM. */
+name|PRINT_ERROR
+argument_list|(
+literal|"L2C_TADX_INT(0)[VBFDBE]: VBF Double-Bit Error\n"
+argument_list|)
+expr_stmt|;
+block|}
+name|PRINT_ERROR
+argument_list|(
+literal|"CVMX_L2C_ERR_VBF: 0x%llx\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|l2c_err_vbf
+operator|.
+name|u64
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 literal|1
 return|;

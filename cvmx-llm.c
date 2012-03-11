@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Configuration functions for low latency memory.  *  *<hr>$Revision: 52372 $<hr>  */
+comment|/**  * @file  *  * Configuration functions for low latency memory.  *  *<hr>$Revision: 70030 $<hr>  */
 end_comment
 
 begin_include
@@ -493,157 +493,6 @@ name|rld1_mbytes
 operator|=
 literal|128
 expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|sys_ptr
-operator|->
-name|board_type
-operator|==
-name|CVMX_BOARD_TYPE_NAC38
-condition|)
-block|{
-if|if
-condition|(
-name|sys_ptr
-operator|->
-name|board_rev_major
-operator|==
-literal|1
-operator|&&
-name|sys_ptr
-operator|->
-name|board_rev_minor
-operator|==
-literal|0
-condition|)
-block|{
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld0_fb_str
-argument_list|,
-literal|"22 21 20 00 08 07 06 05 04 13 02 01 03 09 18 17 16 15 14 10 12 11 19"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld0_bb_str
-argument_list|,
-literal|"22 21 20 00 08 07 06 05 04 13 02 01 03 09 18 17 16 15 14 10 12 11 19"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld1_fb_str
-argument_list|,
-literal|"22 21 20 00 08 07 06 05 04 13 02 01 03 09 18 17 16 15 14 10 12 11 19"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld1_bb_str
-argument_list|,
-literal|"22 21 20 00 08 07 06 05 04 13 02 01 03 09 18 17 16 15 14 10 12 11 19"
-argument_list|)
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld0_bunks
-operator|=
-literal|2
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld1_bunks
-operator|=
-literal|2
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld0_mbytes
-operator|=
-literal|128
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld1_mbytes
-operator|=
-literal|128
-expr_stmt|;
-block|}
-else|else
-block|{
-comment|/* Asus new recommendation  */
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld0_fb_str
-argument_list|,
-literal|"22 21 09 11 04 06 05 08 15 20 16 18 12 13 00 01 07 02 19 17 10 14 03"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld0_bb_str
-argument_list|,
-literal|"22 21 11 09 00 01 07 02 19 17 10 14 03 13 04 06 05 08 15 20 16 18 12"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld1_fb_str
-argument_list|,
-literal|"22 21 08 13 14 00 04 12 16 11 19 10 07 02 01 05 03 06 17 18 20 09 15"
-argument_list|)
-expr_stmt|;
-name|strcpy
-argument_list|(
-name|llm_desc_ptr
-operator|->
-name|addr_rld1_bb_str
-argument_list|,
-literal|"22 21 13 08 01 05 03 06 17 18 20 09 15 02 14 00 04 12 16 11 19 10 07"
-argument_list|)
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld0_bunks
-operator|=
-literal|2
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld1_bunks
-operator|=
-literal|2
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld0_mbytes
-operator|=
-literal|128
-expr_stmt|;
-name|llm_desc_ptr
-operator|->
-name|rld1_mbytes
-operator|=
-literal|128
-expr_stmt|;
-block|}
 block|}
 elseif|else
 if|if

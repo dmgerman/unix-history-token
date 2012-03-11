@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2012  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CVMX_PCM_TYPEDEFS_H__
+name|__CVMX_PCM_DEFS_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CVMX_PCM_TYPEDEFS_H__
+name|__CVMX_PCM_DEFS_H__
 end_define
 
 begin_if
@@ -74,6 +74,36 @@ operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN50XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN61XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF71XX
 argument_list|)
 operator|&&
 operator|(
@@ -197,6 +227,36 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN61XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF71XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|1
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -310,6 +370,36 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN61XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF71XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|1
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -372,17 +462,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_pcm_clkx_cfg_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|fsyncgood
 range|:
 literal|1
 decl_stmt|;
-comment|/**< FSYNC status                                                          If 1, the last frame had a correctly positioned                                                                fsync pulse                                                          If 0, none/extra fsync pulse seen on most recent                                                                frame                                                          NOTE: this is intended for startup. the FSYNCEXTRA                                                          and FSYNCMISSING interrupts are intended for                                                          detecting loss of sync during normal operation. */
+comment|/**< FSYNC status                                      |         NS                                                          If 1, the last frame had a correctly positioned                                                                fsync pulse                                                          If 0, none/extra fsync pulse seen on most recent                                                                frame                                                          NOTE: this is intended for startup. the FSYNCEXTRA                                                          and FSYNCMISSING interrupts are intended for                                                          detecting loss of sync during normal operation. */
 name|uint64_t
 name|reserved_48_62
 range|:
@@ -393,7 +481,7 @@ name|fsyncsamp
 range|:
 literal|16
 decl_stmt|;
-comment|/**< Number of ECLKs from internal BCLK edge to                                                          sample FSYNC                                                          NOTE: used to sync to the start of a frame and to                                                          check for FSYNC errors. */
+comment|/**< Number of ECLKs from internal BCLK edge to        |          NS                                                          sample FSYNC                                                          NOTE: used to sync to the start of a frame and to                                                          check for FSYNC errors. */
 name|uint64_t
 name|reserved_26_31
 range|:
@@ -404,49 +492,49 @@ name|fsynclen
 range|:
 literal|5
 decl_stmt|;
-comment|/**< Number of 1/2 BCLKs FSYNC is asserted for                                                          NOTE: only used when GEN==1 */
+comment|/**< Number of 1/2 BCLKs FSYNC is asserted for         |          NS                                                          NOTE: only used when GEN==1 */
 name|uint64_t
 name|fsyncloc
 range|:
 literal|5
 decl_stmt|;
-comment|/**< FSYNC location, in 1/2 BCLKS before timeslot 0,                                                          bit 0.                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
+comment|/**< FSYNC location, in 1/2 BCLKS before timeslot 0,   |          NS                                                          bit 0.                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
 name|uint64_t
 name|numslots
 range|:
 literal|10
 decl_stmt|;
-comment|/**< Number of 8-bit slots in a frame                                                          NOTE: this, along with EXTRABIT and Fbclk                                                          determines FSYNC frequency when GEN == 1                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
+comment|/**< Number of 8-bit slots in a frame                  |          NS                                                          NOTE: this, along with EXTRABIT and Fbclk                                                          determines FSYNC frequency when GEN == 1                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
 name|uint64_t
 name|extrabit
 range|:
 literal|1
 decl_stmt|;
-comment|/**< If 0, no frame bit                                                          If 1, add one extra bit time for frame bit                                                          NOTE: if GEN == 1, then FSYNC will be delayed one                                                          extra bit time.                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0                                                          NOTE: the extra bit comes from the LSB/MSB of the                                                          first byte of the frame in the transmit memory                                                          region.  LSB vs MSB is determined from the setting                                                          of PCMn_TDM_CFG[LSBFIRST]. */
+comment|/**< If 0, no frame bit                                |          NS                                                          If 1, add one extra bit time for frame bit                                                          NOTE: if GEN == 1, then FSYNC will be delayed one                                                          extra bit time.                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0                                                          NOTE: the extra bit comes from the LSB/MSB of the                                                          first byte of the frame in the transmit memory                                                          region.  LSB vs MSB is determined from the setting                                                          of PCMn_TDM_CFG[LSBFIRST]. */
 name|uint64_t
 name|bitlen
 range|:
 literal|2
 decl_stmt|;
-comment|/**< Number of BCLKs in a bit time.                                                          0 : 1 BCLK                                                          1 : 2 BCLKs                                                          2 : 4 BCLKs                                                          3 : operation undefined */
+comment|/**< Number of BCLKs in a bit time.                    |          NS                                                          0 : 1 BCLK                                                          1 : 2 BCLKs                                                          2 : 4 BCLKs                                                          3 : operation undefined */
 name|uint64_t
 name|bclkpol
 range|:
 literal|1
 decl_stmt|;
-comment|/**< If 0, BCLK rise edge is start of bit time                                                          If 1, BCLK fall edge is start of bit time                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
+comment|/**< If 0, BCLK rise edge is start of bit time         |          NS                                                          If 1, BCLK fall edge is start of bit time                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
 name|uint64_t
 name|fsyncpol
 range|:
 literal|1
 decl_stmt|;
-comment|/**< If 0, FSYNC idles low, asserts high                                                          If 1, FSYNC idles high, asserts low                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
+comment|/**< If 0, FSYNC idles low, asserts high               |          NS                                                          If 1, FSYNC idles high, asserts low                                                          NOTE: also used to detect framing errors and                                                          therefore must have a correct value even if GEN==0 */
 name|uint64_t
 name|ena
 range|:
 literal|1
 decl_stmt|;
-comment|/**< If 0, Clock receiving logic is doing nothing                                                          1, Clock receiving logic is looking for sync */
+comment|/**< If 0, Clock receiving logic is doing nothing      |          NS                                                          1, Clock receiving logic is looking for sync */
 else|#
 directive|else
 name|uint64_t
@@ -525,6 +613,14 @@ decl_stmt|;
 name|struct
 name|cvmx_pcm_clkx_cfg_s
 name|cn50xx
+decl_stmt|;
+name|struct
+name|cvmx_pcm_clkx_cfg_s
+name|cn61xx
+decl_stmt|;
+name|struct
+name|cvmx_pcm_clkx_cfg_s
+name|cnf71xx
 decl_stmt|;
 block|}
 union|;
@@ -552,17 +648,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_pcm_clkx_dbg_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|debuginfo
 range|:
 literal|64
 decl_stmt|;
-comment|/**< Miscellaneous debug information */
+comment|/**< Miscellaneous debug information                   |           NS */
 else|#
 directive|else
 name|uint64_t
@@ -586,6 +680,14 @@ decl_stmt|;
 name|struct
 name|cvmx_pcm_clkx_dbg_s
 name|cn50xx
+decl_stmt|;
+name|struct
+name|cvmx_pcm_clkx_dbg_s
+name|cn61xx
+decl_stmt|;
+name|struct
+name|cvmx_pcm_clkx_dbg_s
+name|cnf71xx
 decl_stmt|;
 block|}
 union|;
@@ -613,29 +715,27 @@ decl_stmt|;
 struct|struct
 name|cvmx_pcm_clkx_gen_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|deltasamp
 range|:
 literal|16
 decl_stmt|;
-comment|/**< Signed number of ECLKs to move sampled BCLK edge                                                          NOTE: the complete number of ECLKs to move is:                                                                    NUMSAMP + 2 + 1 + DELTASAMP                                                                NUMSAMP to compensate for sampling delay                                                                + 2 to compensate for dual-rank synchronizer                                                                + 1 for uncertainity                                                                + DELTASAMP to CMA/debugging */
+comment|/**< Signed number of ECLKs to move sampled BCLK edge   |          NS                                                          NOTE: the complete number of ECLKs to move is:                                                                    NUMSAMP + 2 + 1 + DELTASAMP                                                                NUMSAMP to compensate for sampling delay                                                                + 2 to compensate for dual-rank synchronizer                                                                + 1 for uncertainity                                                                + DELTASAMP to CMA/debugging */
 name|uint64_t
 name|numsamp
 range|:
 literal|16
 decl_stmt|;
-comment|/**< Number of ECLK samples to detect BCLK change when                                                          receiving clock. */
+comment|/**< Number of ECLK samples to detect BCLK change when  |          NS                                                          receiving clock. */
 name|uint64_t
 name|n
 range|:
 literal|32
 decl_stmt|;
-comment|/**< Determines BCLK frequency when generating clock                                                          NOTE: Fbclk = Feclk * N / 2^32                                                                N = (Fbclk / Feclk) * 2^32                                                          NOTE: writing N == 0 stops the clock generator, and                                                                causes bclk and fsync to be RECEIVED */
+comment|/**< Determines BCLK frequency when generating clock    |          NS                                                          NOTE: Fbclk = Feclk * N / 2^32                                                                N = (Fbclk / Feclk) * 2^32                                                          NOTE: writing N == 0 stops the clock generator, and                                                                causes bclk and fsync to be RECEIVED */
 else|#
 directive|else
 name|uint64_t
@@ -669,6 +769,14 @@ decl_stmt|;
 name|struct
 name|cvmx_pcm_clkx_gen_s
 name|cn50xx
+decl_stmt|;
+name|struct
+name|cvmx_pcm_clkx_gen_s
+name|cn61xx
+decl_stmt|;
+name|struct
+name|cvmx_pcm_clkx_gen_s
+name|cnf71xx
 decl_stmt|;
 block|}
 union|;

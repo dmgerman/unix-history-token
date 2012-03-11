@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  * Simple allocate only memory allocator.  Used to allocate memory at application  * start time.  *  *<hr>$Revision: 49448 $<hr>  *  */
+comment|/**  * @file  * Simple allocate only memory allocator.  Used to allocate memory at application  * start time.  *  *<hr>$Revision: 70030 $<hr>  *  */
 end_comment
 
 begin_ifndef
@@ -57,6 +57,35 @@ directive|define
 name|CVMX_BOOTMEM_FLAG_NO_LOCKING
 value|(1<< 1)
 comment|/* Don't do any locking. */
+comment|/* Real physical addresses of memory regions */
+define|#
+directive|define
+name|OCTEON_DDR0_BASE
+value|(0x0ULL)
+define|#
+directive|define
+name|OCTEON_DDR0_SIZE
+value|(0x010000000ULL)
+define|#
+directive|define
+name|OCTEON_DDR1_BASE
+value|((OCTEON_IS_MODEL(OCTEON_CN6XXX) || OCTEON_IS_MODEL(OCTEON_CNF7XXX)) ? 0x20000000ULL : 0x410000000ULL)
+define|#
+directive|define
+name|OCTEON_DDR1_SIZE
+value|(0x010000000ULL)
+define|#
+directive|define
+name|OCTEON_DDR2_BASE
+value|((OCTEON_IS_MODEL(OCTEON_CN6XXX) || OCTEON_IS_MODEL(OCTEON_CNF7XXX)) ? 0x30000000ULL : 0x20000000ULL)
+define|#
+directive|define
+name|OCTEON_DDR2_SIZE
+value|((OCTEON_IS_MODEL(OCTEON_CN6XXX) || OCTEON_IS_MODEL(OCTEON_CNF7XXX)) ? 0x7d0000000ULL : 0x3e0000000ULL)
+define|#
+directive|define
+name|OCTEON_MAX_PHY_MEM_SIZE
+value|((OCTEON_IS_MODEL(OCTEON_CN68XX)) ? 128*1024*1024*1024ULL : (OCTEON_IS_MODEL(OCTEON_CN6XXX) || OCTEON_IS_MODEL(OCTEON_CNF7XXX)) ? 32*1024*1024*1024ull : 16*1024*1024*1024ULL)
 comment|/* First bytes of each free physical block of memory contain this structure,  * which is used to maintain the free memory list.  Since the bootloader is  * only 32 bits, there is a union providing 64 and 32 bit versions.  The  * application init code converts addresses to 64 bit addresses before the  * application starts.  */
 typedef|typedef
 struct|struct
@@ -190,6 +219,28 @@ name|uint64_t
 name|alignment
 parameter_list|)
 function_decl|;
+comment|/**  * Allocate a block of memory from the free list that was  * passed to the application by the bootloader within a specified  * address range. This is an allocate-only algorithm, so  * freeing memory is not possible. Allocation will fail if  * memory cannot be allocated in the requested range.  *  * @param size      Size in bytes of block to allocate  * @param min_addr  defines the minimum address of the range  * @param max_addr  defines the maximum address of the range  * @param alignment Alignment required - must be power of 2  * @param flags     Flags to control options for the allocation.  * @return pointer to block of memory, NULL on error  */
+specifier|extern
+name|void
+modifier|*
+name|cvmx_bootmem_alloc_range_flags
+parameter_list|(
+name|uint64_t
+name|size
+parameter_list|,
+name|uint64_t
+name|alignment
+parameter_list|,
+name|uint64_t
+name|min_addr
+parameter_list|,
+name|uint64_t
+name|max_addr
+parameter_list|,
+name|uint32_t
+name|flags
+parameter_list|)
+function_decl|;
 comment|/**  * Allocate a block of memory from the free list that was  * passed to the application by the bootloader within a specified  * address range. This is an allocate-only algorithm, so  * freeing memory is not possible. Allocation will fail if  * memory cannot be allocated in the requested range.  *  * @param size      Size in bytes of block to allocate  * @param min_addr  defines the minimum address of the range  * @param max_addr  defines the maximum address of the range  * @param alignment Alignment required - must be power of 2  * @return pointer to block of memory, NULL on error  */
 specifier|extern
 name|void
@@ -225,6 +276,27 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+comment|/**  * Allocate a block of memory from the free list that was passed  * to the application by the bootloader, and assign it a name in the  * global named block table.  (part of the cvmx_bootmem_descriptor_t structure)  * Named blocks can later be freed.  *  * @param size      Size in bytes of block to allocate  * @param alignment Alignment required - must be power of 2  * @param name      name of block - must be less than CVMX_BOOTMEM_NAME_LEN bytes  * @param flags     Flags to control options for the allocation.  *  * @return pointer to block of memory, NULL on error  */
+specifier|extern
+name|void
+modifier|*
+name|cvmx_bootmem_alloc_named_flags
+parameter_list|(
+name|uint64_t
+name|size
+parameter_list|,
+name|uint64_t
+name|alignment
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|uint32_t
+name|flags
 parameter_list|)
 function_decl|;
 comment|/**  * Allocate a block of memory from the free list that was passed  * to the application by the bootloader, and assign it a name in the  * global named block table.  (part of the cvmx_bootmem_descriptor_t structure)  * Named blocks can later be freed.  *  * @param size      Size in bytes of block to allocate  * @param address   Physical address to allocate memory at.  If this memory is not  *                  available, the allocation fails.  * @param name      name of block - must be less than CVMX_BOOTMEM_NAME_LEN bytes  *  * @return pointer to block of memory, NULL on error  */
@@ -267,6 +339,40 @@ specifier|const
 name|char
 modifier|*
 name|name
+parameter_list|)
+function_decl|;
+comment|/**  * Allocate if needed a block of memory from a specific range of the free list that was passed  * to the application by the bootloader, and assign it a name in the  * global named block table.  (part of the cvmx_bootmem_descriptor_t structure)  * Named blocks can later be freed.  * If the requested name block is already allocated, return the pointer to block of memory.  * If request cannot be satisfied within the address range specified, NULL is returned  *  * @param size      Size in bytes of block to allocate  * @param min_addr  minimum address of range  * @param max_addr  maximum address of range  * @param align     Alignment of memory to be allocated. (must be a power of 2)  * @param name      name of block - must be less than CVMX_BOOTMEM_NAME_LEN bytes  * @param init      Initialization function  *  * @return pointer to block of memory, NULL on error  */
+specifier|extern
+name|void
+modifier|*
+name|cvmx_bootmem_alloc_named_range_once
+parameter_list|(
+name|uint64_t
+name|size
+parameter_list|,
+name|uint64_t
+name|min_addr
+parameter_list|,
+name|uint64_t
+name|max_addr
+parameter_list|,
+name|uint64_t
+name|align
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|void
+function_decl|(
+modifier|*
+name|init
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+parameter_list|)
 parameter_list|)
 function_decl|;
 comment|/**  * Frees a previously allocated named bootmem block.  *  * @param name   name of block to free  *  * @return 0 on failure,  *         !0 on success  */

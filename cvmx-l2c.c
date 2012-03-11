@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Implementation of the Level 2 Cache (L2C) control,  * measurement, and debugging facilities.  *  *<hr>$Revision: 52004 $<hr>  *  */
+comment|/**  * @file  *  * Implementation of the Level 2 Cache (L2C) control,  * measurement, and debugging facilities.  *  *<hr>$Revision: 70215 $<hr>  *  */
 end_comment
 
 begin_ifdef
@@ -78,7 +78,7 @@ name|CVMX_BUILD_FOR_LINUX_HOST
 end_ifndef
 
 begin_comment
-comment|/* This spinlock is used internally to ensure that only one core is performing ** certain L2 operations at a time. ** ** NOTE: This only protects calls from within a single application - if multiple applications ** or operating systems are running, then it is up to the user program to coordinate between them. */
+comment|/*  * This spinlock is used internally to ensure that only one core is  * performing certain L2 operations at a time.  *  * NOTE: This only protects calls from within a single application -  * if multiple applications or operating systems are running, then it  * is up to the user program to coordinate between them.  */
 end_comment
 
 begin_decl_stmt
@@ -92,13 +92,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_decl_stmt
-name|CVMX_SHARED
-name|cvmx_spinlock_t
-name|cvmx_l2c_vrt_spinlock
-decl_stmt|;
-end_decl_stmt
 
 begin_function
 name|int
@@ -127,7 +120,12 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 return|return
@@ -143,7 +141,7 @@ operator|&
 literal|0xffff
 operator|)
 return|;
-comment|/* Use the lower two bits of the coreNumber to determine the bit offset      * of the UMSK[] field in the L2C_SPAR register.      */
+comment|/*      * Use the lower two bits of the coreNumber to determine the      * bit offset of the UMSK[] field in the L2C_SPAR register.      */
 name|field
 operator|=
 operator|(
@@ -154,7 +152,7 @@ operator|)
 operator|*
 literal|8
 expr_stmt|;
-comment|/* Return the UMSK[] field from the appropriate L2C_SPAR register based      * on the coreNumber.      */
+comment|/*      * Return the UMSK[] field from the appropriate L2C_SPAR      * register based on the coreNumber.      */
 switch|switch
 condition|(
 name|core
@@ -166,7 +164,6 @@ case|case
 literal|0x0
 case|:
 return|return
-operator|(
 operator|(
 name|cvmx_read_csr
 argument_list|(
@@ -181,13 +178,11 @@ operator|)
 operator|)
 operator|>>
 name|field
-operator|)
 return|;
 case|case
 literal|0x4
 case|:
 return|return
-operator|(
 operator|(
 name|cvmx_read_csr
 argument_list|(
@@ -202,13 +197,11 @@ operator|)
 operator|)
 operator|>>
 name|field
-operator|)
 return|;
 case|case
 literal|0x8
 case|:
 return|return
-operator|(
 operator|(
 name|cvmx_read_csr
 argument_list|(
@@ -223,13 +216,11 @@ operator|)
 operator|)
 operator|>>
 name|field
-operator|)
 return|;
 case|case
 literal|0xC
 case|:
 return|return
-operator|(
 operator|(
 name|cvmx_read_csr
 argument_list|(
@@ -244,13 +235,10 @@ operator|)
 operator|)
 operator|>>
 name|field
-operator|)
 return|;
 block|}
 return|return
-operator|(
 literal|0
-operator|)
 return|;
 block|}
 end_function
@@ -294,11 +282,17 @@ name|mask
 operator|==
 name|valid_mask
 operator|&&
-operator|!
+operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN3XXX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
+argument_list|)
+operator|)
 condition|)
 return|return
 operator|-
@@ -320,7 +314,12 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
@@ -338,7 +337,7 @@ return|return
 literal|0
 return|;
 block|}
-comment|/* Use the lower two bits of core to determine the bit offset of the      * UMSK[] field in the L2C_SPAR register.      */
+comment|/*      * Use the lower two bits of core to determine the bit offset of the      * UMSK[] field in the L2C_SPAR register.      */
 name|field
 operator|=
 operator|(
@@ -349,7 +348,7 @@ operator|)
 operator|*
 literal|8
 expr_stmt|;
-comment|/* Assign the new mask setting to the UMSK[] field in the appropriate      * L2C_SPAR register based on the core_num.      *      */
+comment|/*      * Assign the new mask setting to the UMSK[] field in the appropriate      * L2C_SPAR register based on the core_num.      *      */
 switch|switch
 condition|(
 name|core
@@ -505,11 +504,17 @@ name|mask
 operator|==
 name|valid_mask
 operator|&&
-operator|!
+operator|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN3XXX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
+argument_list|)
+operator|)
 condition|)
 return|return
 operator|-
@@ -519,7 +524,12 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 name|cvmx_write_csr
@@ -567,11 +577,15 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 return|return
-operator|(
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_WPAR_IOBX
@@ -581,11 +595,9 @@ argument_list|)
 argument_list|)
 operator|&
 literal|0xffff
-operator|)
 return|;
 else|else
 return|return
-operator|(
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_SPAR4
@@ -594,7 +606,100 @@ operator|&
 operator|(
 literal|0xFF
 operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|cvmx_l2c_set_hw_way_partition2
+parameter_list|(
+name|uint32_t
+name|mask
+parameter_list|)
+block|{
+name|uint32_t
+name|valid_mask
+decl_stmt|;
+if|if
+condition|(
+operator|!
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN68XX
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|valid_mask
+operator|=
+operator|(
+literal|0x1
+operator|<<
+name|cvmx_l2c_get_num_assoc
+argument_list|()
 operator|)
+operator|-
+literal|1
+expr_stmt|;
+name|mask
+operator|&=
+name|valid_mask
+expr_stmt|;
+name|cvmx_write_csr
+argument_list|(
+name|CVMX_L2C_WPAR_IOBX
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+name|mask
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|cvmx_l2c_get_hw_way_partition2
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN68XX
+argument_list|)
+condition|)
+block|{
+name|cvmx_warn
+argument_list|(
+literal|"only one IOB on this chip"
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+return|return
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_L2C_WPAR_IOBX
+argument_list|(
+literal|1
+argument_list|)
+argument_list|)
+operator|&
+literal|0xffff
 return|;
 block|}
 end_function
@@ -606,7 +711,8 @@ parameter_list|(
 name|uint32_t
 name|counter
 parameter_list|,
-name|cvmx_l2c_event_t
+name|enum
+name|cvmx_l2c_event
 name|event
 parameter_list|,
 name|uint32_t
@@ -626,7 +732,8 @@ name|OCTEON_CN3XXX
 argument_list|)
 condition|)
 block|{
-name|cvmx_l2c_pfctl_t
+name|union
+name|cvmx_l2c_pfctl
 name|pfctl
 decl_stmt|;
 name|pfctl
@@ -769,7 +876,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cvmx_l2c_tadx_prf_t
+name|union
+name|cvmx_l2c_tadx_prf
 name|l2c_tadx_prf
 decl_stmt|;
 name|int
@@ -912,12 +1020,10 @@ name|OCTEON_CN3XXX
 argument_list|)
 condition|)
 return|return
-operator|(
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_PFC0
 argument_list|)
-operator|)
 return|;
 else|else
 block|{
@@ -972,12 +1078,10 @@ name|OCTEON_CN3XXX
 argument_list|)
 condition|)
 return|return
-operator|(
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_PFC1
 argument_list|)
-operator|)
 return|;
 else|else
 block|{
@@ -1032,12 +1136,10 @@ name|OCTEON_CN3XXX
 argument_list|)
 condition|)
 return|return
-operator|(
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_PFC2
 argument_list|)
-operator|)
 return|;
 else|else
 block|{
@@ -1093,12 +1195,10 @@ name|OCTEON_CN3XXX
 argument_list|)
 condition|)
 return|return
-operator|(
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_PFC3
 argument_list|)
-operator|)
 return|;
 else|else
 block|{
@@ -1172,7 +1272,7 @@ specifier|volatile
 name|char
 name|dummy
 decl_stmt|;
-comment|/* Adjust addr and length so we get all cache lines even for     ** small ranges spanning two cache lines */
+comment|/*      * Adjust addr and length so we get all cache lines even for      * small ranges spanning two cache lines.      */
 name|len
 operator|+=
 name|addr
@@ -1196,9 +1296,9 @@ argument_list|(
 name|addr
 argument_list|)
 expr_stmt|;
+comment|/*      * Invalidate L1 cache to make sure all loads result in data      * being in L2.      */
 name|CVMX_DCACHE_INVALIDATE
 expr_stmt|;
-comment|/* Invalidate L1 cache to make sure all loads result in data being in L2 */
 while|while
 condition|(
 name|len
@@ -1235,7 +1335,12 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
@@ -1250,12 +1355,23 @@ init|=
 name|cvmx_l2c_get_num_assoc
 argument_list|()
 decl_stmt|;
-name|uint64_t
+name|uint32_t
 name|tag
 init|=
+name|cvmx_l2c_v2_address_to_tag
+argument_list|(
 name|addr
-operator|>>
-name|shift
+argument_list|)
+decl_stmt|;
+name|uint64_t
+name|indext
+init|=
+name|cvmx_l2c_address_to_index
+argument_list|(
+name|addr
+argument_list|)
+operator|<<
+name|CVMX_L2C_IDX_ADDR_SHIFT
 decl_stmt|;
 name|uint64_t
 name|index
@@ -1264,20 +1380,52 @@ name|CVMX_ADD_SEG
 argument_list|(
 name|CVMX_MIPS_SPACE_XKPHYS
 argument_list|,
-name|cvmx_l2c_address_to_index
-argument_list|(
-name|addr
-argument_list|)
-operator|<<
-name|CVMX_L2C_IDX_ADDR_SHIFT
+name|indext
 argument_list|)
 decl_stmt|;
 name|uint64_t
 name|way
 decl_stmt|;
-name|cvmx_l2c_tadx_tag_t
+name|uint32_t
+name|tad
+decl_stmt|;
+name|union
+name|cvmx_l2c_tadx_tag
 name|l2c_tadx_tag
 decl_stmt|;
+if|if
+condition|(
+name|tag
+operator|==
+literal|0xFFFFFFFF
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"ERROR: cvmx_l2c_lock_line: addr 0x%llx in LMC hole."
+literal|"\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|addr
+argument_list|)
+expr_stmt|;
+return|return
+operator|-
+literal|1
+return|;
+block|}
+name|tad
+operator|=
+name|cvmx_l2c_address_to_tad
+argument_list|(
+name|addr
+argument_list|)
+expr_stmt|;
+comment|/* cvmx_dprintf("shift=%d index=%lx tag=%x\n",shift, index, tag); */
 name|CVMX_CACHE_LCKL2
 argument_list|(
 name|CVMX_ADD_SEG
@@ -1289,6 +1437,8 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|CVMX_SYNCW
 expr_stmt|;
 comment|/* Make sure we were able to lock the line */
 for|for
@@ -1305,8 +1455,9 @@ name|way
 operator|++
 control|)
 block|{
-name|CVMX_CACHE_LTGL2I
-argument_list|(
+name|uint64_t
+name|caddr
+init|=
 name|index
 operator||
 operator|(
@@ -1314,13 +1465,17 @@ name|way
 operator|<<
 name|shift
 operator|)
+decl_stmt|;
+name|CVMX_CACHE_LTGL2I
+argument_list|(
+name|caddr
 argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* make sure CVMX_L2C_TADX_TAG is updated */
 name|CVMX_SYNC
 expr_stmt|;
-comment|// make sure CVMX_L2C_TADX_TAG is updated
 name|l2c_tadx_tag
 operator|.
 name|u64
@@ -1329,7 +1484,7 @@ name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_TADX_TAG
 argument_list|(
-literal|0
+name|tad
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -1350,6 +1505,7 @@ operator|==
 name|tag
 condition|)
 break|break;
+comment|/* cvmx_printf("caddr=%lx tad=%d tagu64=%lx valid=%x tag=%x \n", caddr,                tad, l2c_tadx_tag.u64, l2c_tadx_tag.s.valid, l2c_tadx_tag.s.tag); */
 block|}
 comment|/* Check if a valid line is found */
 if|if
@@ -1359,7 +1515,7 @@ operator|>=
 name|assoc
 condition|)
 block|{
-comment|//cvmx_dprintf("ERROR: cvmx_l2c_lock_line: line not found for locking at 0x%llx address\n", (unsigned long long)addr);
+comment|/* cvmx_dprintf("ERROR: cvmx_l2c_lock_line: line not found for locking at"                          " 0x%llx address\n", (unsigned long long)addr); */
 return|return
 operator|-
 literal|1
@@ -1376,14 +1532,14 @@ operator|.
 name|lock
 condition|)
 block|{
-comment|//cvmx_dprintf("ERROR: cvmx_l2c_lock_line: Not able to lock at 0x%llx address\n", (unsigned long long)addr);
+comment|/* cvmx_dprintf("ERROR: cvmx_l2c_lock_line: Not able to lock at "                "0x%llx address\n", (unsigned long long)addr); */
 return|return
 operator|-
 literal|1
 return|;
 block|}
 return|return
-name|way
+literal|0
 return|;
 block|}
 else|else
@@ -1393,16 +1549,20 @@ name|retval
 init|=
 literal|0
 decl_stmt|;
-name|cvmx_l2c_dbg_t
+name|union
+name|cvmx_l2c_dbg
 name|l2cdbg
 decl_stmt|;
-name|cvmx_l2c_lckbase_t
+name|union
+name|cvmx_l2c_lckbase
 name|lckbase
 decl_stmt|;
-name|cvmx_l2c_lckoff_t
+name|union
+name|cvmx_l2c_lckoff
 name|lckoff
 decl_stmt|;
-name|cvmx_l2t_err_t
+name|union
+name|cvmx_l2t_err
 name|l2t_err
 decl_stmt|;
 name|cvmx_spinlock_lock
@@ -1521,15 +1681,16 @@ expr_stmt|;
 if|if
 condition|(
 operator|(
-call|(
-name|cvmx_l2c_cfg_t
-call|)
-argument_list|(
+operator|(
+expr|union
+name|cvmx_l2c_cfg
+operator|)
+operator|(
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_CFG
 argument_list|)
-argument_list|)
+operator|)
 operator|)
 operator|.
 name|s
@@ -1544,7 +1705,8 @@ name|CVMX_L2C_IDX_ADDR_SHIFT
 operator|+
 literal|2
 operator|*
-name|CVMX_L2_SET_BITS
+name|cvmx_l2c_get_set_bits
+argument_list|()
 operator|-
 literal|1
 decl_stmt|;
@@ -1567,7 +1729,8 @@ literal|1
 operator|)
 operator|)
 operator|>>
-name|CVMX_L2_SET_BITS
+name|cvmx_l2c_get_set_bits
+argument_list|()
 decl_stmt|;
 name|lckbase
 operator|.
@@ -1610,12 +1773,12 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
+comment|/* Make sure it gets there */
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_LCKBASE
 argument_list|)
 expr_stmt|;
-comment|// Make sure it gets there
 name|fault_in
 argument_list|(
 name|addr
@@ -1640,12 +1803,12 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
+comment|/* Make sure it gets there */
 name|cvmx_read_csr
 argument_list|(
 name|CVMX_L2C_LCKBASE
 argument_list|)
 expr_stmt|;
-comment|// Make sure it gets there
 comment|/* Stop being debug core */
 name|cvmx_write_csr
 argument_list|(
@@ -1694,9 +1857,7 @@ name|cvmx_l2c_spinlock
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|retval
-operator|)
 return|;
 block|}
 block|}
@@ -1746,12 +1907,17 @@ condition|(
 name|len
 condition|)
 block|{
-name|retval
-operator|+=
+if|if
+condition|(
 name|cvmx_l2c_lock_line
 argument_list|(
 name|start
 argument_list|)
+operator|!=
+literal|0
+condition|)
+name|retval
+operator|--
 expr_stmt|;
 name|start
 operator|+=
@@ -1763,9 +1929,7 @@ name|CVMX_CACHE_LINE_SIZE
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|retval
-operator|)
 return|;
 block|}
 end_function
@@ -1802,6 +1966,11 @@ condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
@@ -1923,18 +2092,32 @@ name|uint64_t
 name|address
 parameter_list|)
 block|{
+name|uint32_t
+name|tad
+init|=
+name|cvmx_l2c_address_to_tad
+argument_list|(
+name|address
+argument_list|)
+decl_stmt|;
 if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
 name|int
 name|assoc
 decl_stmt|;
-name|cvmx_l2c_tag_t
+name|union
+name|cvmx_l2c_tag
 name|tag
 decl_stmt|;
 name|uint32_t
@@ -1968,7 +2151,7 @@ literal|1
 operator|)
 operator|)
 expr_stmt|;
-comment|/* For 63XX, we can flush a line by using the physical address directly,         ** so finding the cache line used by the address is only required to provide         ** the proper return value for the function.         */
+comment|/*          * For OcteonII, we can flush a line by using the physical          * address directly, so finding the cache line used by          * the address is only required to provide the proper          * return value for the function.          */
 for|for
 control|(
 name|assoc
@@ -1977,7 +2160,8 @@ literal|0
 init|;
 name|assoc
 operator|<
-name|CVMX_L2_ASSOC
+name|cvmx_l2c_get_num_assoc
+argument_list|()
 condition|;
 name|assoc
 operator|++
@@ -1985,11 +2169,13 @@ control|)
 block|{
 name|tag
 operator|=
-name|cvmx_l2c_get_tag
+name|cvmx_l2c_get_tag_v2
 argument_list|(
 name|assoc
 argument_list|,
 name|index
+argument_list|,
+name|tad
 argument_list|)
 expr_stmt|;
 if|if
@@ -2038,7 +2224,8 @@ block|{
 name|int
 name|assoc
 decl_stmt|;
-name|cvmx_l2c_tag_t
+name|union
+name|cvmx_l2c_tag
 name|tag
 decl_stmt|;
 name|uint32_t
@@ -2081,7 +2268,8 @@ literal|0
 init|;
 name|assoc
 operator|<
-name|CVMX_L2_ASSOC
+name|cvmx_l2c_get_num_assoc
+argument_list|()
 condition|;
 name|assoc
 operator|++
@@ -2089,11 +2277,13 @@ control|)
 block|{
 name|tag
 operator|=
-name|cvmx_l2c_get_tag
+name|cvmx_l2c_get_tag_v2
 argument_list|(
 name|assoc
 argument_list|,
 name|index
+argument_list|,
+name|tad
 argument_list|)
 expr_stmt|;
 if|if
@@ -2207,21 +2397,19 @@ block|}
 end_function
 
 begin_comment
-comment|/* Internal l2c tag types.  These are converted to a generic structure ** that can be used on all chips */
+comment|/*  * Internal l2c tag types.  These are converted to a generic structure  * that can be used on all chips.  */
 end_comment
 
-begin_typedef
-typedef|typedef
+begin_union
 union|union
+name|__cvmx_l2c_tag
 block|{
 name|uint64_t
 name|u64
 decl_stmt|;
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 struct|struct
 name|cvmx_l2c_tag_cn50xx
 block|{
@@ -2235,31 +2423,31 @@ name|V
 range|:
 literal|1
 decl_stmt|;
-comment|// Line valid
+comment|/* Line valid */
 name|uint64_t
 name|D
 range|:
 literal|1
 decl_stmt|;
-comment|// Line dirty
+comment|/* Line dirty */
 name|uint64_t
 name|L
 range|:
 literal|1
 decl_stmt|;
-comment|// Line locked
+comment|/* Line locked */
 name|uint64_t
 name|U
 range|:
 literal|1
 decl_stmt|;
-comment|// Use, LRU eviction
+comment|/* Use, LRU eviction */
 name|uint64_t
 name|addr
 range|:
 literal|20
 decl_stmt|;
-comment|// Phys mem addr (33..14)
+comment|/* Phys mem addr (33..14) */
 block|}
 name|cn50xx
 struct|;
@@ -2276,31 +2464,31 @@ name|V
 range|:
 literal|1
 decl_stmt|;
-comment|// Line valid
+comment|/* Line valid */
 name|uint64_t
 name|D
 range|:
 literal|1
 decl_stmt|;
-comment|// Line dirty
+comment|/* Line dirty */
 name|uint64_t
 name|L
 range|:
 literal|1
 decl_stmt|;
-comment|// Line locked
+comment|/* Line locked */
 name|uint64_t
 name|U
 range|:
 literal|1
 decl_stmt|;
-comment|// Use, LRU eviction
+comment|/* Use, LRU eviction */
 name|uint64_t
 name|addr
 range|:
 literal|19
 decl_stmt|;
-comment|// Phys mem addr (33..15)
+comment|/* Phys mem addr (33..15) */
 block|}
 name|cn30xx
 struct|;
@@ -2317,31 +2505,31 @@ name|V
 range|:
 literal|1
 decl_stmt|;
-comment|// Line valid
+comment|/* Line valid */
 name|uint64_t
 name|D
 range|:
 literal|1
 decl_stmt|;
-comment|// Line dirty
+comment|/* Line dirty */
 name|uint64_t
 name|L
 range|:
 literal|1
 decl_stmt|;
-comment|// Line locked
+comment|/* Line locked */
 name|uint64_t
 name|U
 range|:
 literal|1
 decl_stmt|;
-comment|// Use, LRU eviction
+comment|/* Use, LRU eviction */
 name|uint64_t
 name|addr
 range|:
 literal|18
 decl_stmt|;
-comment|// Phys mem addr (33..16)
+comment|/* Phys mem addr (33..16) */
 block|}
 name|cn31xx
 struct|;
@@ -2358,31 +2546,31 @@ name|V
 range|:
 literal|1
 decl_stmt|;
-comment|// Line valid
+comment|/* Line valid */
 name|uint64_t
 name|D
 range|:
 literal|1
 decl_stmt|;
-comment|// Line dirty
+comment|/* Line dirty */
 name|uint64_t
 name|L
 range|:
 literal|1
 decl_stmt|;
-comment|// Line locked
+comment|/* Line locked */
 name|uint64_t
 name|U
 range|:
 literal|1
 decl_stmt|;
-comment|// Use, LRU eviction
+comment|/* Use, LRU eviction */
 name|uint64_t
 name|addr
 range|:
 literal|17
 decl_stmt|;
-comment|// Phys mem addr (33..17)
+comment|/* Phys mem addr (33..17) */
 block|}
 name|cn38xx
 struct|;
@@ -2399,34 +2587,243 @@ name|V
 range|:
 literal|1
 decl_stmt|;
-comment|// Line valid
+comment|/* Line valid */
 name|uint64_t
 name|D
 range|:
 literal|1
 decl_stmt|;
-comment|// Line dirty
+comment|/* Line dirty */
 name|uint64_t
 name|L
 range|:
 literal|1
 decl_stmt|;
-comment|// Line locked
+comment|/* Line locked */
 name|uint64_t
 name|U
 range|:
 literal|1
 decl_stmt|;
-comment|// Use, LRU eviction
+comment|/* Use, LRU eviction */
 name|uint64_t
 name|addr
 range|:
 literal|16
 decl_stmt|;
-comment|// Phys mem addr (33..18)
+comment|/* Phys mem addr (33..18) */
 block|}
 name|cn58xx
 struct|;
+else|#
+directive|else
+struct|struct
+name|cvmx_l2c_tag_cn50xx
+block|{
+name|uint64_t
+name|addr
+range|:
+literal|20
+decl_stmt|;
+comment|/* Phys mem addr (33..14) */
+name|uint64_t
+name|U
+range|:
+literal|1
+decl_stmt|;
+comment|/* Use, LRU eviction */
+name|uint64_t
+name|L
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line locked */
+name|uint64_t
+name|D
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line dirty */
+name|uint64_t
+name|V
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line valid */
+name|uint64_t
+name|reserved
+range|:
+literal|40
+decl_stmt|;
+block|}
+name|cn50xx
+struct|;
+struct|struct
+name|cvmx_l2c_tag_cn30xx
+block|{
+name|uint64_t
+name|addr
+range|:
+literal|19
+decl_stmt|;
+comment|/* Phys mem addr (33..15) */
+name|uint64_t
+name|U
+range|:
+literal|1
+decl_stmt|;
+comment|/* Use, LRU eviction */
+name|uint64_t
+name|L
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line locked */
+name|uint64_t
+name|D
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line dirty */
+name|uint64_t
+name|V
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line valid */
+name|uint64_t
+name|reserved
+range|:
+literal|41
+decl_stmt|;
+block|}
+name|cn30xx
+struct|;
+struct|struct
+name|cvmx_l2c_tag_cn31xx
+block|{
+name|uint64_t
+name|addr
+range|:
+literal|18
+decl_stmt|;
+comment|/* Phys mem addr (33..16) */
+name|uint64_t
+name|U
+range|:
+literal|1
+decl_stmt|;
+comment|/* Use, LRU eviction */
+name|uint64_t
+name|L
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line locked */
+name|uint64_t
+name|D
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line dirty */
+name|uint64_t
+name|V
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line valid */
+name|uint64_t
+name|reserved
+range|:
+literal|42
+decl_stmt|;
+block|}
+name|cn31xx
+struct|;
+struct|struct
+name|cvmx_l2c_tag_cn38xx
+block|{
+name|uint64_t
+name|addr
+range|:
+literal|17
+decl_stmt|;
+comment|/* Phys mem addr (33..17) */
+name|uint64_t
+name|U
+range|:
+literal|1
+decl_stmt|;
+comment|/* Use, LRU eviction */
+name|uint64_t
+name|L
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line locked */
+name|uint64_t
+name|D
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line dirty */
+name|uint64_t
+name|V
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line valid */
+name|uint64_t
+name|reserved
+range|:
+literal|43
+decl_stmt|;
+block|}
+name|cn38xx
+struct|;
+struct|struct
+name|cvmx_l2c_tag_cn58xx
+block|{
+name|uint64_t
+name|addr
+range|:
+literal|16
+decl_stmt|;
+comment|/* Phys mem addr (33..18) */
+name|uint64_t
+name|U
+range|:
+literal|1
+decl_stmt|;
+comment|/* Use, LRU eviction */
+name|uint64_t
+name|L
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line locked */
+name|uint64_t
+name|D
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line dirty */
+name|uint64_t
+name|V
+range|:
+literal|1
+decl_stmt|;
+comment|/* Line valid */
+name|uint64_t
+name|reserved
+range|:
+literal|44
+decl_stmt|;
+block|}
+name|cn58xx
+struct|;
+endif|#
+directive|endif
 name|struct
 name|cvmx_l2c_tag_cn58xx
 name|cn56xx
@@ -2437,20 +2834,18 @@ name|cvmx_l2c_tag_cn31xx
 name|cn52xx
 decl_stmt|;
 comment|/* 512 sets */
-endif|#
-directive|endif
 block|}
-name|__cvmx_l2c_tag_t
-typedef|;
-end_typedef
+union|;
+end_union
 
 begin_comment
-comment|/**  * @INTERNAL  * Function to read a L2C tag.  This code make the current core  * the 'debug core' for the L2.  This code must only be executed by  * 1 core at a time.  *  * @param assoc  Association (way) of the tag to dump  * @param index  Index of the cacheline  *  * @return The Octeon model specific tag structure.  This is translated by a wrapper  *         function to a generic form that is easier for applications to use.  */
+comment|/**  * @INTERNAL  * Function to read a L2C tag.  This code make the current core  * the 'debug core' for the L2.  This code must only be executed by  * 1 core at a time.  *  * @param assoc  Association (way) of the tag to dump  * @param index  Index of the cacheline  *  * @return The Octeon model specific tag structure.  This is  *         translated by a wrapper function to a generic form that is  *         easier for applications to use.  */
 end_comment
 
 begin_function
 specifier|static
-name|__cvmx_l2c_tag_t
+name|union
+name|__cvmx_l2c_tag
 name|__read_l2_tag
 parameter_list|(
 name|uint64_t
@@ -2482,7 +2877,8 @@ init|=
 name|cvmx_get_core_num
 argument_list|()
 decl_stmt|;
-name|__cvmx_l2c_tag_t
+name|union
+name|__cvmx_l2c_tag
 name|tag_val
 decl_stmt|;
 name|uint64_t
@@ -2494,7 +2890,8 @@ name|unsigned
 name|long
 name|flags
 decl_stmt|;
-name|cvmx_l2c_dbg_t
+name|union
+name|cvmx_l2c_dbg
 name|debug_val
 decl_stmt|;
 name|debug_val
@@ -2503,7 +2900,7 @@ name|u64
 operator|=
 literal|0
 expr_stmt|;
-comment|/* For low core count parts, the core number is always small enough     ** to stay in the correct field and not set any reserved bits */
+comment|/*      * For low core count parts, the core number is always small      * enough to stay in the correct field and not set any      * reserved bits.      */
 name|debug_val
 operator|.
 name|s
@@ -2528,54 +2925,57 @@ name|set
 operator|=
 name|assoc
 expr_stmt|;
-name|CVMX_SYNC
-expr_stmt|;
-comment|/* Make sure core is quiet (no prefetches, etc.) before entering debug mode */
-name|CVMX_DCACHE_INVALIDATE
-expr_stmt|;
-comment|/* Flush L1 to make sure debug load misses L1 */
 name|cvmx_local_irq_save
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
-comment|/* The following must be done in assembly as when in debug mode all data loads from     ** L2 return special debug data, not normal memory contents.  Also, interrupts must be disabled,     ** since if an interrupt occurs while in debug mode the ISR will get debug data from all its memory     ** reads instead of the contents of memory */
+comment|/*      * Make sure core is quiet (no prefetches, etc.) before      * entering debug mode.      */
+name|CVMX_SYNC
+expr_stmt|;
+comment|/* Flush L1 to make sure debug load misses L1 */
+name|CVMX_DCACHE_INVALIDATE
+expr_stmt|;
+comment|/*      * The following must be done in assembly as when in debug      * mode all data loads from L2 return special debug data, not      * normal memory contents.  Also, interrupts must be disabled,      * since if an interrupt occurs while in debug mode the ISR      * will get debug data from all its memory * reads instead of      * the contents of memory.      */
 asm|asm
 specifier|volatile
-asm|(     "        .set push              \n"     "        .set mips64              \n"     "        .set noreorder           \n"     "        sd    %[dbg_val], 0(%[dbg_addr])  \n"
+asm|(         ".set push\n\t"         ".set mips64\n\t"         ".set noreorder\n\t"         "sd    %[dbg_val], 0(%[dbg_addr])\n\t"
 comment|/* Enter debug mode, wait for store */
-asm|"        ld    $0, 0(%[dbg_addr]) \n"     "        ld    %[tag_val], 0(%[tag_addr]) \n"
+asm|"ld    $0, 0(%[dbg_addr])\n\t"         "ld    %[tag_val], 0(%[tag_addr])\n\t"
 comment|/* Read L2C tag data */
-asm|"        sd    $0, 0(%[dbg_addr])  \n"
+asm|"sd    $0, 0(%[dbg_addr])\n\t"
 comment|/* Exit debug mode, wait for store */
-asm|"        ld    $0, 0(%[dbg_addr]) \n"     "        cache 9, 0($0) \n"
+asm|"ld    $0, 0(%[dbg_addr])\n\t"         "cache 9, 0($0)\n\t"
 comment|/* Invalidate dcache to discard debug data */
-asm|"        .set pop             \n"     :[tag_val] "=r" (tag_val):  [dbg_addr] "r" (dbg_addr), [dbg_val] "r" (debug_val), [tag_addr] "r" (debug_tag_addr) : "memory");
+asm|".set pop"         : [tag_val] "=r" (tag_val)         : [dbg_addr] "r" (dbg_addr), [dbg_val] "r" (debug_val), [tag_addr] "r" (debug_tag_addr)         : "memory");
 name|cvmx_local_irq_restore
 argument_list|(
 name|flags
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|tag_val
-operator|)
 return|;
 block|}
 end_function
 
 begin_function
-name|cvmx_l2c_tag_t
-name|cvmx_l2c_get_tag
+name|union
+name|cvmx_l2c_tag
+name|cvmx_l2c_get_tag_v2
 parameter_list|(
 name|uint32_t
 name|association
 parameter_list|,
 name|uint32_t
 name|index
+parameter_list|,
+name|uint32_t
+name|tad
 parameter_list|)
 block|{
-name|cvmx_l2c_tag_t
+name|union
+name|cvmx_l2c_tag
 name|tag
 decl_stmt|;
 name|tag
@@ -2601,9 +3001,7 @@ literal|"ERROR: cvmx_l2c_get_tag association out of range\n"
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|tag
-operator|)
 return|;
 block|}
 if|if
@@ -2631,20 +3029,24 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|tag
-operator|)
 return|;
 block|}
 if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
-name|cvmx_l2c_tadx_tag_t
+name|union
+name|cvmx_l2c_tadx_tag
 name|l2c_tadx_tag
 decl_stmt|;
 name|uint64_t
@@ -2667,7 +3069,29 @@ name|CVMX_L2C_IDX_ADDR_SHIFT
 operator|)
 argument_list|)
 decl_stmt|;
-comment|/* Use L2 cache Index load tag cache instruction, as hardware loads            the virtual tag for the L2 cache block with the contents of            L2C_TAD0_TAG register. */
+comment|/*          * Use L2 cache Index load tag cache instruction, as          * hardware loads the virtual tag for the L2 cache          * block with the contents of L2C_TAD0_TAG          * register.          */
+if|if
+condition|(
+name|tad
+operator|>
+name|CVMX_L2C_TADS
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"ERROR: cvmx_l2c_get_tag_v2: TAD#%d out of range\n"
+argument_list|,
+operator|(
+name|unsigned
+name|int
+operator|)
+name|tad
+argument_list|)
+expr_stmt|;
+return|return
+name|tag
+return|;
+block|}
 name|CVMX_CACHE_LTGL2I
 argument_list|(
 name|address
@@ -2677,7 +3101,610 @@ argument_list|)
 expr_stmt|;
 name|CVMX_SYNC
 expr_stmt|;
-comment|// make sure CVMX_L2C_TADX_TAG is updated
+comment|/* make sure CVMX_L2C_TADX_TAG is updated */
+name|l2c_tadx_tag
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_L2C_TADX_TAG
+argument_list|(
+name|tad
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|V
+operator|=
+name|l2c_tadx_tag
+operator|.
+name|s
+operator|.
+name|valid
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|D
+operator|=
+name|l2c_tadx_tag
+operator|.
+name|s
+operator|.
+name|dirty
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|L
+operator|=
+name|l2c_tadx_tag
+operator|.
+name|s
+operator|.
+name|lock
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|U
+operator|=
+name|l2c_tadx_tag
+operator|.
+name|s
+operator|.
+name|use
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|addr
+operator|=
+name|l2c_tadx_tag
+operator|.
+name|s
+operator|.
+name|tag
+expr_stmt|;
+block|}
+else|else
+block|{
+name|union
+name|__cvmx_l2c_tag
+name|tmp_tag
+decl_stmt|;
+comment|/* __read_l2_tag is intended for internal use only */
+name|tmp_tag
+operator|=
+name|__read_l2_tag
+argument_list|(
+name|association
+argument_list|,
+name|index
+argument_list|)
+expr_stmt|;
+comment|/*          * Convert all tag structure types to generic version,          * as it can represent all models.          */
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN58XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN56XX
+argument_list|)
+condition|)
+block|{
+name|tag
+operator|.
+name|s
+operator|.
+name|V
+operator|=
+name|tmp_tag
+operator|.
+name|cn58xx
+operator|.
+name|V
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|D
+operator|=
+name|tmp_tag
+operator|.
+name|cn58xx
+operator|.
+name|D
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|L
+operator|=
+name|tmp_tag
+operator|.
+name|cn58xx
+operator|.
+name|L
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|U
+operator|=
+name|tmp_tag
+operator|.
+name|cn58xx
+operator|.
+name|U
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|addr
+operator|=
+name|tmp_tag
+operator|.
+name|cn58xx
+operator|.
+name|addr
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN38XX
+argument_list|)
+condition|)
+block|{
+name|tag
+operator|.
+name|s
+operator|.
+name|V
+operator|=
+name|tmp_tag
+operator|.
+name|cn38xx
+operator|.
+name|V
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|D
+operator|=
+name|tmp_tag
+operator|.
+name|cn38xx
+operator|.
+name|D
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|L
+operator|=
+name|tmp_tag
+operator|.
+name|cn38xx
+operator|.
+name|L
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|U
+operator|=
+name|tmp_tag
+operator|.
+name|cn38xx
+operator|.
+name|U
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|addr
+operator|=
+name|tmp_tag
+operator|.
+name|cn38xx
+operator|.
+name|addr
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN31XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN52XX
+argument_list|)
+condition|)
+block|{
+name|tag
+operator|.
+name|s
+operator|.
+name|V
+operator|=
+name|tmp_tag
+operator|.
+name|cn31xx
+operator|.
+name|V
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|D
+operator|=
+name|tmp_tag
+operator|.
+name|cn31xx
+operator|.
+name|D
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|L
+operator|=
+name|tmp_tag
+operator|.
+name|cn31xx
+operator|.
+name|L
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|U
+operator|=
+name|tmp_tag
+operator|.
+name|cn31xx
+operator|.
+name|U
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|addr
+operator|=
+name|tmp_tag
+operator|.
+name|cn31xx
+operator|.
+name|addr
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN30XX
+argument_list|)
+condition|)
+block|{
+name|tag
+operator|.
+name|s
+operator|.
+name|V
+operator|=
+name|tmp_tag
+operator|.
+name|cn30xx
+operator|.
+name|V
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|D
+operator|=
+name|tmp_tag
+operator|.
+name|cn30xx
+operator|.
+name|D
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|L
+operator|=
+name|tmp_tag
+operator|.
+name|cn30xx
+operator|.
+name|L
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|U
+operator|=
+name|tmp_tag
+operator|.
+name|cn30xx
+operator|.
+name|U
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|addr
+operator|=
+name|tmp_tag
+operator|.
+name|cn30xx
+operator|.
+name|addr
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN50XX
+argument_list|)
+condition|)
+block|{
+name|tag
+operator|.
+name|s
+operator|.
+name|V
+operator|=
+name|tmp_tag
+operator|.
+name|cn50xx
+operator|.
+name|V
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|D
+operator|=
+name|tmp_tag
+operator|.
+name|cn50xx
+operator|.
+name|D
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|L
+operator|=
+name|tmp_tag
+operator|.
+name|cn50xx
+operator|.
+name|L
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|U
+operator|=
+name|tmp_tag
+operator|.
+name|cn50xx
+operator|.
+name|U
+expr_stmt|;
+name|tag
+operator|.
+name|s
+operator|.
+name|addr
+operator|=
+name|tmp_tag
+operator|.
+name|cn50xx
+operator|.
+name|addr
+expr_stmt|;
+block|}
+else|else
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"Unsupported OCTEON Model in %s\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+return|return
+name|tag
+return|;
+block|}
+end_function
+
+begin_function
+name|union
+name|cvmx_l2c_tag
+name|cvmx_l2c_get_tag
+parameter_list|(
+name|uint32_t
+name|association
+parameter_list|,
+name|uint32_t
+name|index
+parameter_list|)
+block|{
+name|union
+name|cvmx_l2c_tag
+name|tag
+decl_stmt|;
+name|tag
+operator|.
+name|u64
+operator|=
+literal|0
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|association
+operator|>=
+name|cvmx_l2c_get_num_assoc
+argument_list|()
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"ERROR: cvmx_l2c_get_tag association out of range\n"
+argument_list|)
+expr_stmt|;
+return|return
+name|tag
+return|;
+block|}
+if|if
+condition|(
+operator|(
+name|int
+operator|)
+name|index
+operator|>=
+name|cvmx_l2c_get_num_sets
+argument_list|()
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"ERROR: cvmx_l2c_get_tag index out of range (arg: %d, max: %d)\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|index
+argument_list|,
+name|cvmx_l2c_get_num_sets
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|tag
+return|;
+block|}
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
+argument_list|)
+condition|)
+block|{
+name|union
+name|cvmx_l2c_tadx_tag
+name|l2c_tadx_tag
+decl_stmt|;
+name|uint64_t
+name|address
+init|=
+name|CVMX_ADD_SEG
+argument_list|(
+name|CVMX_MIPS_SPACE_XKPHYS
+argument_list|,
+operator|(
+name|association
+operator|<<
+name|CVMX_L2C_TAG_ADDR_ALIAS_SHIFT
+operator|)
+operator||
+operator|(
+name|index
+operator|<<
+name|CVMX_L2C_IDX_ADDR_SHIFT
+operator|)
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN68XX
+argument_list|)
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"ERROR: Cannot use %s on OCTEON CN68XX, use cvmx_l2c_get_tag_v2 instead!\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+return|return
+name|tag
+return|;
+block|}
+comment|/*          * Use L2 cache Index load tag cache instruction, as          * hardware loads the virtual tag for the L2 cache          * block with the contents of L2C_TAD0_TAG          * register.          */
+name|CVMX_CACHE_LTGL2I
+argument_list|(
+name|address
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|CVMX_SYNC
+expr_stmt|;
+comment|/* make sure CVMX_L2C_TADX_TAG is updated */
 name|l2c_tadx_tag
 operator|.
 name|u64
@@ -2753,7 +3780,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|__cvmx_l2c_tag_t
+name|union
+name|__cvmx_l2c_tag
 name|tmp_tag
 decl_stmt|;
 comment|/* __read_l2_tag is intended for internal use only */
@@ -2766,7 +3794,7 @@ argument_list|,
 name|index
 argument_list|)
 expr_stmt|;
-comment|/* Convert all tag structure types to generic version, as it can represent all models */
+comment|/*          * Convert all tag structure types to generic version,          * as it can represent all models.          */
 if|if
 condition|(
 name|OCTEON_IS_MODEL
@@ -3132,7 +4160,7 @@ name|cvmx_dprintf
 argument_list|(
 literal|"Unsupported OCTEON Model in %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 block|}
@@ -3147,6 +4175,173 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_function
+name|int
+name|cvmx_l2c_address_to_tad
+parameter_list|(
+name|uint64_t
+name|addr
+parameter_list|)
+block|{
+name|uint32_t
+name|tad
+decl_stmt|;
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN68XX
+argument_list|)
+condition|)
+block|{
+name|cvmx_l2c_ctl_t
+name|l2c_ctl
+decl_stmt|;
+name|l2c_ctl
+operator|.
+name|u64
+operator|=
+name|cvmx_read_csr
+argument_list|(
+name|CVMX_L2C_CTL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|l2c_ctl
+operator|.
+name|s
+operator|.
+name|disidxalias
+condition|)
+block|{
+name|tad
+operator|=
+operator|(
+operator|(
+name|addr
+operator|>>
+literal|7
+operator|)
+operator|^
+operator|(
+name|addr
+operator|>>
+literal|12
+operator|)
+operator|^
+operator|(
+name|addr
+operator|>>
+literal|18
+operator|)
+operator|)
+operator|&
+literal|3
+expr_stmt|;
+block|}
+else|else
+block|{
+name|tad
+operator|=
+operator|(
+name|addr
+operator|>>
+literal|7
+operator|)
+operator|&
+literal|3
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+name|tad
+operator|=
+literal|0
+expr_stmt|;
+block|}
+return|return
+name|tad
+return|;
+block|}
+end_function
+
+begin_function
+name|uint32_t
+name|cvmx_l2c_v2_address_to_tag
+parameter_list|(
+name|uint64_t
+name|addr
+parameter_list|)
+block|{
+define|#
+directive|define
+name|DR0_END
+value|( (256 * 1024 * 1024) -1)
+define|#
+directive|define
+name|DR1_START
+value|(512 * 1024 * 1024)
+define|#
+directive|define
+name|L2_HOLE
+value|(256 * 1024 * 1024)
+if|if
+condition|(
+operator|(
+name|addr
+operator|>
+name|DR0_END
+operator|)
+operator|&&
+operator|(
+name|addr
+operator|<
+name|DR1_START
+operator|)
+condition|)
+return|return
+call|(
+name|uint32_t
+call|)
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+return|;
+if|if
+condition|(
+name|addr
+operator|>
+name|DR1_START
+condition|)
+name|addr
+operator|=
+name|addr
+operator|-
+name|L2_HOLE
+expr_stmt|;
+name|addr
+operator|=
+name|addr
+operator|&
+literal|0x7FFFFFFFFULL
+expr_stmt|;
+return|return
+call|(
+name|uint32_t
+call|)
+argument_list|(
+name|addr
+operator|>>
+name|CVMX_L2C_TAG_ADDR_ALIAS_SHIFT
+argument_list|)
+return|;
+block|}
+end_function
 
 begin_function
 name|uint32_t
@@ -3174,9 +4369,15 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN6XXX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
+argument_list|)
 condition|)
 block|{
-name|cvmx_l2c_ctl_t
+name|union
+name|cvmx_l2c_ctl
 name|l2c_ctl
 decl_stmt|;
 name|l2c_ctl
@@ -3200,7 +4401,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cvmx_l2c_cfg_t
+name|union
+name|cvmx_l2c_cfg
 name|l2c_cfg
 decl_stmt|;
 name|l2c_cfg
@@ -3230,7 +4432,64 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN68XX
+argument_list|)
+condition|)
+block|{
+name|uint32_t
+name|a_14_12
+init|=
+operator|(
+name|idx
+operator|/
+operator|(
+name|CVMX_L2C_MEMBANK_SELECT_SIZE
+operator|/
+operator|(
+literal|1
+operator|<<
+name|CVMX_L2C_IDX_ADDR_SHIFT
+operator|)
+operator|)
+operator|)
+operator|&
+literal|0x7
+decl_stmt|;
+name|idx
+operator|^=
+operator|(
+name|idx
+operator|/
+name|cvmx_l2c_get_num_sets
+argument_list|()
+operator|)
+operator|&
+literal|0x3ff
+expr_stmt|;
+name|idx
+operator|^=
+name|a_14_12
+operator|&
+literal|0x3
+expr_stmt|;
+name|idx
+operator|^=
+name|a_14_12
+operator|<<
+literal|2
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
@@ -3286,9 +4545,7 @@ operator|&=
 name|CVMX_L2C_IDX_MASK
 expr_stmt|;
 return|return
-operator|(
 name|idx
-operator|)
 return|;
 block|}
 end_function
@@ -3301,7 +4558,6 @@ name|void
 parameter_list|)
 block|{
 return|return
-operator|(
 name|cvmx_l2c_get_num_sets
 argument_list|()
 operator|*
@@ -3309,7 +4565,6 @@ name|cvmx_l2c_get_num_assoc
 argument_list|()
 operator|*
 name|CVMX_CACHE_LINE_SIZE
-operator|)
 return|;
 block|}
 end_function
@@ -3339,6 +4594,11 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN58XX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN68XX
+argument_list|)
 condition|)
 name|l2_set_bits
 operator|=
@@ -3357,6 +4617,11 @@ name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN63XX
 argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
 condition|)
 name|l2_set_bits
 operator|=
@@ -3374,6 +4639,16 @@ operator|||
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN52XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN61XX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF71XX
 argument_list|)
 condition|)
 name|l2_set_bits
@@ -3413,7 +4688,7 @@ name|cvmx_dprintf
 argument_list|(
 literal|"Unsupported OCTEON Model in %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|l2_set_bits
@@ -3423,9 +4698,7 @@ expr_stmt|;
 comment|/* 2048 sets */
 block|}
 return|return
-operator|(
 name|l2_set_bits
-operator|)
 return|;
 block|}
 end_function
@@ -3442,12 +4715,10 @@ name|void
 parameter_list|)
 block|{
 return|return
-operator|(
 literal|1
 operator|<<
 name|cvmx_l2c_get_set_bits
 argument_list|()
-operator|)
 return|;
 block|}
 end_function
@@ -3502,7 +4773,12 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 name|l2_assoc
@@ -3532,7 +4808,7 @@ name|cvmx_dprintf
 argument_list|(
 literal|"Unsupported OCTEON Model in %s\n"
 argument_list|,
-name|__FUNCTION__
+name|__func__
 argument_list|)
 expr_stmt|;
 name|l2_assoc
@@ -3545,11 +4821,17 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
-name|cvmx_mio_fus_dat3_t
+name|union
+name|cvmx_mio_fus_dat3
 name|mio_fus_dat3
 decl_stmt|;
 name|mio_fus_dat3
@@ -3561,12 +4843,12 @@ argument_list|(
 name|CVMX_MIO_FUS_DAT3
 argument_list|)
 expr_stmt|;
-comment|/* cvmx_mio_fus_dat3.s.l2c_crip fuses map as follows<2> will be not used for 63xx<1> disables 1/2 ways<0> disables 1/4 ways            They are cumulative, so for 63xx:<1><0>            0 0 16-way 2MB cache            0 1 12-way 1.5MB cache            1 0 8-way 1MB cache            1 1 4-way 512KB cache */
+comment|/*          * cvmx_mio_fus_dat3.s.l2c_crip fuses map as follows          *<2> will be not used for 63xx          *<1> disables 1/2 ways          *<0> disables 1/4 ways          * They are cumulative, so for 63xx:          *<1><0>          * 0 0 16-way 2MB cache          * 0 1 12-way 1.5MB cache          * 1 0 8-way 1MB cache          * 1 1 4-way 512KB cache          */
 if|if
 condition|(
 name|mio_fus_dat3
 operator|.
-name|s
+name|cn63xx
 operator|.
 name|l2c_crip
 operator|==
@@ -3581,7 +4863,7 @@ if|if
 condition|(
 name|mio_fus_dat3
 operator|.
-name|s
+name|cn63xx
 operator|.
 name|l2c_crip
 operator|==
@@ -3596,7 +4878,7 @@ if|if
 condition|(
 name|mio_fus_dat3
 operator|.
-name|s
+name|cn63xx
 operator|.
 name|l2c_crip
 operator|==
@@ -3609,7 +4891,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cvmx_l2d_fus3_t
+name|union
+name|cvmx_l2d_fus3
 name|val
 decl_stmt|;
 name|val
@@ -3621,7 +4904,7 @@ argument_list|(
 name|CVMX_L2D_FUS3
 argument_list|)
 expr_stmt|;
-comment|/* Using shifts here, as bit position names are different for            each model but they all mean the same. */
+comment|/*          * Using shifts here, as bit position names are          * different for each model but they all mean the          * same.          */
 if|if
 condition|(
 operator|(
@@ -3661,9 +4944,7 @@ literal|1
 expr_stmt|;
 block|}
 return|return
-operator|(
 name|l2_assoc
-operator|)
 return|;
 block|}
 end_function
@@ -3731,14 +5012,19 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
 name|uint64_t
 name|address
 decl_stmt|;
-comment|/* Create the address based on index and association.            Bits<20:17> select the way of the cache block involved in                        the operation            Bits<16:7> of the effect address select the index */
+comment|/* Create the address based on index and association.          * Bits<20:17> select the way of the cache block involved in          *             the operation          * Bits<16:7> of the effect address select the index          */
 name|address
 operator|=
 name|CVMX_ADD_SEG
@@ -3768,7 +5054,8 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|cvmx_l2c_dbg_t
+name|union
+name|cvmx_l2c_dbg
 name|l2cdbg
 decl_stmt|;
 name|l2cdbg
@@ -3816,7 +5103,7 @@ operator|&
 name|cvmx_l2c_spinlock
 argument_list|)
 expr_stmt|;
-comment|/* Enter debug mode, and make sure all other writes complete before we         ** enter debug mode */
+comment|/*          * Enter debug mode, and make sure all other writes          * complete before we enter debug mode          */
 name|CVMX_SYNC
 expr_stmt|;
 name|cvmx_write_csr
@@ -3877,18 +5164,222 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_comment
+comment|/**  * Initialize the BIG address in L2C+DRAM to generate proper error  * on reading/writing to an non-existant memory location.   *  * @param mem_size  Amount of DRAM configured in MB.  * @param mode      Allow/Disallow reporting errors L2C_INT_SUM[BIGRD,BIGWR].  */
+end_comment
+
+begin_function
+name|void
+name|cvmx_l2c_set_big_size
+parameter_list|(
+name|uint64_t
+name|mem_size
+parameter_list|,
+name|int
+name|mode
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
+argument_list|)
+operator|)
+operator|&&
+operator|!
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX_PASS1_X
+argument_list|)
+condition|)
+block|{
+name|cvmx_l2c_big_ctl_t
+name|big_ctl
+decl_stmt|;
+name|int
+name|bits
+init|=
+literal|0
+decl_stmt|,
+name|zero_bits
+init|=
+literal|0
+decl_stmt|;
+name|uint64_t
+name|mem
+decl_stmt|;
+if|if
+condition|(
+name|mem_size
+operator|>
+operator|(
+name|CVMX_L2C_MAX_MEMSZ_ALLOWED
+operator|*
+literal|1024
+operator|)
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"WARNING: Invalid memory size(%lld) requested, should be<= %lld\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|mem_size
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|CVMX_L2C_MAX_MEMSZ_ALLOWED
+operator|*
+literal|1024
+argument_list|)
+expr_stmt|;
+name|mem_size
+operator|=
+name|CVMX_L2C_MAX_MEMSZ_ALLOWED
+operator|*
+literal|1024
+expr_stmt|;
+block|}
+name|mem
+operator|=
+name|mem_size
+expr_stmt|;
+while|while
+condition|(
+name|mem
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|mem
+operator|&
+literal|1
+operator|)
+operator|==
+literal|0
+condition|)
+name|zero_bits
+operator|++
+expr_stmt|;
+name|bits
+operator|++
+expr_stmt|;
+name|mem
+operator|>>=
+literal|1
+expr_stmt|;
+block|}
+if|if
+condition|(
+operator|(
+name|bits
+operator|-
+name|zero_bits
+operator|)
+operator|!=
+literal|1
+operator|||
+operator|(
+name|bits
+operator|-
+literal|9
+operator|)
+operator|<=
+literal|0
+condition|)
+block|{
+name|cvmx_dprintf
+argument_list|(
+literal|"ERROR: Invalid DRAM size (%lld) requested, refer to L2C_BIG_CTL[maxdram] for valid options.\n"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+name|long
+operator|)
+name|mem_size
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+name|big_ctl
+operator|.
+name|u64
+operator|=
+literal|0
+expr_stmt|;
+name|big_ctl
+operator|.
+name|s
+operator|.
+name|maxdram
+operator|=
+name|bits
+operator|-
+literal|9
+expr_stmt|;
+name|big_ctl
+operator|.
+name|s
+operator|.
+name|disable
+operator|=
+name|mode
+expr_stmt|;
+name|cvmx_write_csr
+argument_list|(
+name|CVMX_L2C_BIG_CTL
+argument_list|,
+name|big_ctl
+operator|.
+name|u64
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+end_function
+
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|CVMX_BUILD_FOR_LINUX_HOST
-end_ifndef
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_LINUX_KERNEL
+argument_list|)
+end_if
 
 begin_comment
 comment|/* L2C Virtualization APIs. These APIs are based on Octeon II documentation. */
 end_comment
 
 begin_comment
-comment|/**  * @INTERNAL  * Helper function to decode VALUE to number of allowed virtualization IDS.  * Returns L2C_VRT_CTL[NUMID].  *   * @param nvid     Number of virtual Ids.  * @return         On success decode to NUMID, or to -1 on failure.  */
+comment|/*  * These could be used by the Linux kernel, but currently are not, so  * disable them to save space.  */
+end_comment
+
+begin_comment
+comment|/**  * @INTERNAL  * Helper function to decode VALUE to number of allowed virtualization IDS.  * Returns L2C_VRT_CTL[NUMID].  *  * @param nvid     Number of virtual Ids.  * @return         On success decode to NUMID, or to -1 on failure.  */
 end_comment
 
 begin_function
@@ -3917,10 +5408,18 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
 argument_list|)
 condition|)
-block|{
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|nvid
@@ -3992,7 +5491,6 @@ condition|)
 return|return
 name|zero_bits
 return|;
-block|}
 return|return
 operator|-
 literal|1
@@ -4001,7 +5499,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Set maxium number of Virtual IDs allowed in a machine.   *  * @param nvid   Number of virtial ids allowed in a machine.  * @return       Return 0 on success or -1 on failure.  */
+comment|/**  * Set maxium number of Virtual IDs allowed in a machine.  *  * @param nvid   Number of virtial ids allowed in a machine.  * @return       Return 0 on success or -1 on failure.  */
 end_comment
 
 begin_function
@@ -4012,17 +5510,25 @@ name|int
 name|nvid
 parameter_list|)
 block|{
+name|cvmx_l2c_vrt_ctl_t
+name|l2c_vrt_ctl
+decl_stmt|;
 if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN63XX
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
 argument_list|)
 condition|)
-block|{
-name|cvmx_l2c_vrt_ctl_t
-name|l2c_vrt_ctl
-decl_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 name|l2c_vrt_ctl
 operator|.
 name|u64
@@ -4097,7 +5603,6 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -4117,21 +5622,26 @@ parameter_list|)
 block|{
 name|int
 name|virtids
-init|=
-operator|-
-literal|1
+decl_stmt|;
+name|cvmx_l2c_vrt_ctl_t
+name|l2c_vrt_ctl
 decl_stmt|;
 if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN6XXX
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
 argument_list|)
 condition|)
-block|{
-name|cvmx_l2c_vrt_ctl_t
-name|l2c_vrt_ctl
-decl_stmt|;
+return|return
+operator|-
+literal|1
+return|;
 name|l2c_vrt_ctl
 operator|.
 name|u64
@@ -4174,7 +5684,6 @@ operator|-
 literal|1
 return|;
 block|}
-block|}
 return|return
 name|virtids
 return|;
@@ -4182,7 +5691,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @INTERNAL  * Helper function to decode VALUE to memory space coverage of L2C_VRT_MEM.  * Returns L2C_VRT_CTL[MEMSZ].  *   * @param memsz    Memory in GB.  * @return         On success, decode to MEMSZ, or on failure return -1.  */
+comment|/**  * @INTERNAL  * Helper function to decode VALUE to memory space coverage of L2C_VRT_MEM.  * Returns L2C_VRT_CTL[MEMSZ].  *  * @param memsz    Memory in GB.  * @return         On success, decode to MEMSZ, or on failure return -1.  */
 end_comment
 
 begin_function
@@ -4209,10 +5718,18 @@ if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN6XXX
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
 argument_list|)
 condition|)
-block|{
+return|return
+operator|-
+literal|1
+return|;
 if|if
 condition|(
 name|memsz
@@ -4221,7 +5738,7 @@ literal|0
 operator|||
 name|memsz
 operator|>
-name|CVMX_L2C_VRT_MAX_MEMSZ_ALLOWED
+name|CVMX_L2C_MAX_MEMSZ_ALLOWED
 condition|)
 block|{
 name|cvmx_dprintf
@@ -4230,7 +5747,7 @@ literal|"WARNING: Invalid virtual memory size(%d) requested, should be<= %d\n"
 argument_list|,
 name|memsz
 argument_list|,
-name|CVMX_L2C_VRT_MAX_MEMSZ_ALLOWED
+name|CVMX_L2C_MAX_MEMSZ_ALLOWED
 argument_list|)
 expr_stmt|;
 return|return
@@ -4281,7 +5798,6 @@ condition|)
 return|return
 name|zero_bits
 return|;
-block|}
 return|return
 operator|-
 literal|1
@@ -4301,14 +5817,6 @@ name|int
 name|memsz
 parameter_list|)
 block|{
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN6XXX
-argument_list|)
-condition|)
-block|{
 name|cvmx_l2c_vrt_ctl_t
 name|l2c_vrt_ctl
 decl_stmt|;
@@ -4317,6 +5825,22 @@ name|decode
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 name|l2c_vrt_ctl
 operator|.
 name|u64
@@ -4418,7 +5942,6 @@ operator|.
 name|u64
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
@@ -4445,14 +5968,6 @@ name|core
 init|=
 literal|0
 decl_stmt|;
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN6XXX
-argument_list|)
-condition|)
-block|{
 name|int
 name|found
 init|=
@@ -4460,10 +5975,28 @@ literal|0
 decl_stmt|;
 name|int
 name|max_virtid
-init|=
+decl_stmt|;
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|max_virtid
+operator|=
 name|cvmx_l2c_vrt_get_max_virtids
 argument_list|()
-decl_stmt|;
+expr_stmt|;
 if|if
 condition|(
 name|virtid
@@ -4641,7 +6174,6 @@ operator|-
 literal|1
 return|;
 block|}
-block|}
 return|return
 literal|0
 return|;
@@ -4649,7 +6181,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Remove a virt id assigned to a set of cores. Update the virtid mask and  * virtid stored for each core.   *  * @param virtid  Remove the specified Virtualization machine ID.  */
+comment|/**  * Remove a virt id assigned to a set of cores. Update the virtid mask and  * virtid stored for each core.  *  * @param virtid  Remove the specified Virtualization machine ID.  */
 end_comment
 
 begin_function
@@ -4660,20 +6192,25 @@ name|int
 name|virtid
 parameter_list|)
 block|{
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN6XXX
-argument_list|)
-condition|)
-block|{
 name|uint32_t
 name|core
 decl_stmt|;
 name|cvmx_l2c_virtid_ppx_t
 name|l2c_virtid_ppx
 decl_stmt|;
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
+argument_list|)
+condition|)
+return|return;
 for|for
 control|(
 name|core
@@ -4723,7 +6260,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-block|}
 end_function
 
 begin_comment
@@ -4747,6 +6283,11 @@ condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
 name|OCTEON_CN6XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CNF7XXX
 argument_list|)
 condition|)
 block|{
@@ -4817,6 +6358,13 @@ return|;
 block|}
 end_function
 
+begin_decl_stmt
+name|CVMX_SHARED
+name|cvmx_spinlock_t
+name|cvmx_l2c_vrt_spinlock
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/**  * Block a memory region to be updated for a given virtual id.  *  * @param start_addr   Starting address of memory region  * @param size         Size of the memory to protect  * @param virtid       Virtual ID to use  * @param mode         Allow/Disallow write access  *                        = 0,  Allow write access by virtid  *                        = 1,  Disallow write access by virtid  */
 end_comment
@@ -4838,27 +6386,11 @@ name|int
 name|mode
 parameter_list|)
 block|{
-if|if
-condition|(
-name|OCTEON_IS_MODEL
-argument_list|(
-name|OCTEON_CN6XXX
-argument_list|)
-condition|)
-block|{
-comment|/* Check the alignment of start address, should be aligned to the            granularity. */
 name|uint64_t
 name|gran
-init|=
-name|__cvmx_l2c_vrt_get_granularity
-argument_list|()
 decl_stmt|;
 name|uint64_t
 name|end_addr
-init|=
-name|start_addr
-operator|+
-name|size
 decl_stmt|;
 name|int
 name|byte_offset
@@ -4871,6 +6403,43 @@ decl_stmt|;
 name|cvmx_l2c_vrt_memx_t
 name|l2c_vrt_mem
 decl_stmt|;
+name|cvmx_l2c_virtid_ppx_t
+name|l2c_virtid_ppx
+decl_stmt|;
+name|int
+name|found
+decl_stmt|;
+name|uint32_t
+name|core
+decl_stmt|;
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+comment|/*      * Check the alignment of start address, should be aligned to the      * granularity.      */
+name|gran
+operator|=
+name|__cvmx_l2c_vrt_get_granularity
+argument_list|()
+expr_stmt|;
+name|end_addr
+operator|=
+name|start_addr
+operator|+
+name|size
+expr_stmt|;
 name|l2c_vrt_ctl
 operator|.
 name|u64
@@ -4920,18 +6489,10 @@ literal|1
 return|;
 block|}
 comment|/* No need to protect if virtid is not assigned to a core */
-block|{
-name|cvmx_l2c_virtid_ppx_t
-name|l2c_virtid_ppx
-decl_stmt|;
-name|int
 name|found
-init|=
+operator|=
 literal|0
-decl_stmt|;
-name|uint32_t
-name|core
-decl_stmt|;
+expr_stmt|;
 for|for
 control|(
 name|core
@@ -4996,11 +6557,10 @@ operator|-
 literal|1
 return|;
 block|}
-block|}
-comment|/* Make sure previous stores are through before protecting the memory. */
+comment|/*      * Make sure previous stores are through before protecting the      * memory.      */
 name|CVMX_SYNCW
 expr_stmt|;
-comment|/* If the L2/DRAM physical address is>= 512 MB, subtract 256 MB            to get the address to use. This is because L2C removes the 256MB             "hole" between DR0 and DR1. */
+comment|/*      * If the L2/DRAM physical address is>= 512 MB, subtract 256      * MB to get the address to use. This is because L2C removes      * the 256MB "hole" between DR0 and DR1.      */
 if|if
 condition|(
 name|start_addr
@@ -5055,7 +6615,7 @@ operator|-
 literal|1
 return|;
 block|}
-comment|/* Check the size of the memory to protect, should be aligned to the            granularity. */
+comment|/*      * Check the size of the memory to protect, should be aligned      * to the granularity.      */
 if|if
 condition|(
 name|end_addr
@@ -5146,7 +6706,7 @@ operator|<
 name|end_addr
 condition|)
 block|{
-comment|/* When L2C virtualization is enabled and a bit is set in                 L2C_VRT_MEM(0..1023), then L2C prevents the selected virtual                 machine from storing to the selected L2C/DRAM region. */
+comment|/*          * When L2C virtualization is enabled and a bit is set          * in L2C_VRT_MEM(0..1023), then L2C prevents the          * selected virtual machine from storing to the          * selected L2C/DRAM region.          */
 name|int
 name|offset
 decl_stmt|,
@@ -5232,7 +6792,7 @@ name|parity
 operator|=
 literal|0
 expr_stmt|;
-comment|/* PARITY<i> is the even parity of DATA<i*8+7:i*8>, which means                that each bit<i> in PARITY[0..3], is the XOR of all the bits                in the corresponding byte in DATA. */
+comment|/* PARITY<i> is the even parity of DATA<i*8+7:i*8>, which means          * that each bit<i> in PARITY[0..3], is the XOR of all the bits          * in the corresponding byte in DATA.          */
 for|for
 control|(
 name|i
@@ -5311,17 +6871,11 @@ operator|&
 name|cvmx_l2c_vrt_spinlock
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 literal|0
 return|;
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/**  * Enable virtualization.  *  * @param mode   Whether out of bound writes are an error.  */
@@ -5335,17 +6889,22 @@ name|int
 name|mode
 parameter_list|)
 block|{
+name|cvmx_l2c_vrt_ctl_t
+name|l2c_vrt_ctl
+decl_stmt|;
 if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN6XXX
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
 argument_list|)
 condition|)
-block|{
-name|cvmx_l2c_vrt_ctl_t
-name|l2c_vrt_ctl
-decl_stmt|;
+return|return;
 comment|/* Enable global virtualization */
 name|l2c_vrt_ctl
 operator|.
@@ -5382,7 +6941,6 @@ name|u64
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
 
 begin_comment
@@ -5396,17 +6954,22 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|cvmx_l2c_vrt_ctl_t
+name|l2c_vrt_ctl
+decl_stmt|;
 if|if
 condition|(
 name|OCTEON_IS_MODEL
 argument_list|(
-name|OCTEON_CN6XXX
+name|OCTEON_CN3XXX
+argument_list|)
+operator|||
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN5XXX
 argument_list|)
 condition|)
-block|{
-name|cvmx_l2c_vrt_ctl_t
-name|l2c_vrt_ctl
-decl_stmt|;
+return|return;
 comment|/* Disable global virtualization */
 name|l2c_vrt_ctl
 operator|.
@@ -5435,8 +6998,12 @@ name|u64
 argument_list|)
 expr_stmt|;
 block|}
-block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  *  * Utility functions for working with the CSR database  *  *<hr>$Revision: 49507 $<hr>  */
+comment|/**  * @file  *  * Utility functions for working with the CSR database  *  *<hr>$Revision: 70030 $<hr>  */
 end_comment
 
 begin_ifdef
@@ -131,11 +131,39 @@ return|return
 literal|10
 return|;
 case|case
+literal|0x000d9300
+case|:
+comment|/* CN61XX */
+return|return
+literal|11
+return|;
+case|case
 literal|0x000d9000
 case|:
 comment|/* CN63XX */
 return|return
-literal|11
+literal|13
+return|;
+case|case
+literal|0x000d9200
+case|:
+comment|/* CN66XX */
+return|return
+literal|14
+return|;
+case|case
+literal|0x000d9100
+case|:
+comment|/* CN68XX */
+return|return
+literal|16
+return|;
+case|case
+literal|0x000d9400
+case|:
+comment|/* CNF71XX */
+return|return
+literal|17
 return|;
 block|}
 comment|/* Next try PCI device IDs */
@@ -215,11 +243,39 @@ return|return
 literal|10
 return|;
 case|case
-literal|0x0090177d
+literal|0x0093177d
 case|:
-comment|/* CN63XX Pass 1 */
+comment|/* CN61XX Pass 2 */
 return|return
 literal|11
+return|;
+case|case
+literal|0x0090177d
+case|:
+comment|/* CN63XX Pass 2 */
+return|return
+literal|13
+return|;
+case|case
+literal|0x0092177d
+case|:
+comment|/* CN66XX Pass 1 */
+return|return
+literal|14
+return|;
+case|case
+literal|0x0091177d
+case|:
+comment|/* CN68XX Pass 2 */
+return|return
+literal|16
+return|;
+case|case
+literal|0x0094177d
+case|:
+comment|/* CNF71XX Pass 1 */
+return|return
+literal|17
 return|;
 block|}
 comment|/* Default to Pass 3 if we don't know */
