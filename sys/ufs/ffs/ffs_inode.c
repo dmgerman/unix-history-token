@@ -550,7 +550,6 @@ name|i_din2
 expr_stmt|;
 if|if
 condition|(
-operator|(
 name|waitfor
 operator|&&
 operator|!
@@ -558,7 +557,6 @@ name|DOINGASYNC
 argument_list|(
 name|vp
 argument_list|)
-operator|)
 condition|)
 name|error
 operator|=
