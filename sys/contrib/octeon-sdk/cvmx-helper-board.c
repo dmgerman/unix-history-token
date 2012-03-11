@@ -138,6 +138,22 @@ directive|include
 file|"cvmx-gpio.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|__FreeBSD__
+argument_list|)
+operator|||
+operator|!
+name|defined
+argument_list|(
+name|_KERNEL
+argument_list|)
+end_if
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -160,6 +176,11 @@ include|#
 directive|include
 file|"libfdt/libfdt.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
