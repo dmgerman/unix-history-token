@@ -43,11 +43,26 @@ directive|include
 file|"cvmx-sysinfo.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|"cvmx-error.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/**  * Enum of MIX interface modes  */
@@ -1590,6 +1605,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
 name|cvmx_error_enable_group
 argument_list|(
 name|CVMX_ERROR_GROUP_MGMT_PORT
@@ -1597,6 +1619,8 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 return|return
 name|CVMX_MGMT_PORT_SUCCESS
 return|;
@@ -1633,6 +1657,13 @@ condition|)
 return|return
 name|CVMX_MGMT_PORT_INVALID_PARAM
 return|;
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
 name|cvmx_error_disable_group
 argument_list|(
 name|CVMX_ERROR_GROUP_MGMT_PORT
@@ -1640,6 +1671,8 @@ argument_list|,
 name|port
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* Stop packets from comming in */
 name|cvmx_mgmt_port_disable
 argument_list|(

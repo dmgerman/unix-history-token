@@ -153,12 +153,6 @@ directive|include
 file|"cvmx-helper-check-defines.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"cvmx-error.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -174,6 +168,12 @@ argument_list|(
 name|_KERNEL
 argument_list|)
 end_if
+
+begin_include
+include|#
+directive|include
+file|"cvmx-error.h"
+end_include
 
 begin_include
 include|#

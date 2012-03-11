@@ -137,11 +137,26 @@ directive|include
 file|"cvmx-atomic.h"
 end_include
 
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
+argument_list|)
+end_if
+
 begin_include
 include|#
 directive|include
 file|"cvmx-error.h"
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -3460,6 +3475,12 @@ operator|!
 name|defined
 argument_list|(
 name|CVMX_BUILD_FOR_LINUX_KERNEL
+argument_list|)
+operator|&&
+operator|!
+name|defined
+argument_list|(
+name|CVMX_BUILD_FOR_FREEBSD_KERNEL
 argument_list|)
 operator|)
 operator|||
