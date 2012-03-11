@@ -118,7 +118,7 @@ file|<sys/vnode.h>
 end_include
 
 begin_comment
-comment|/*  * This structure is associated with the FIFO vnode and stores  * the state associated with the FIFO.  * Notes about locking:  *   - fi_pipe is invariant since init time.  *   - fi_readers and fi_writers are protected by the vnode lock.  *   - fi_wgen is protected by the pipe mutex.  */
+comment|/*  * This structure is associated with the FIFO vnode and stores  * the state associated with the FIFO.  * Notes about locking:  *   - fi_pipe is invariant since init time.  *   - fi_readers and fi_writers are protected by the vnode lock.  *   - fi_wgen and fi_seqcount are protected by the pipe mutex.  */
 end_comment
 
 begin_struct
