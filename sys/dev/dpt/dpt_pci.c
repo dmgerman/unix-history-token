@@ -503,7 +503,6 @@ name|dev
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a dmatag representing the capabilities of this attachment */
-comment|/* XXX Should be a child of the PCI bus dma tag */
 if|if
 condition|(
 name|bus_dma_tag_create

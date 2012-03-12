@@ -591,7 +591,6 @@ name|error
 return|;
 block|}
 comment|/* Allocate a dmatag for our CCB DMA maps */
-comment|/* XXX Should be a child of the PCI bus dma tag */
 if|if
 condition|(
 name|bus_dma_tag_create

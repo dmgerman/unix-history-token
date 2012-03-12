@@ -568,7 +568,6 @@ name|ENXIO
 return|;
 block|}
 comment|/* Allocate a dmatag for our transfer DMA maps */
-comment|/* XXX Should be a child of the PCI bus dma tag */
 name|error
 operator|=
 name|bus_dma_tag_create
