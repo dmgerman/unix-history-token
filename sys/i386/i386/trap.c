@@ -2648,8 +2648,6 @@ name|struct
 name|vmspace
 modifier|*
 name|vm
-init|=
-name|NULL
 decl_stmt|;
 name|vm_map_t
 name|map
@@ -2724,8 +2722,10 @@ operator|&&
 name|has_f00f_bug
 condition|)
 return|return
+operator|(
 operator|-
 literal|2
+operator|)
 return|;
 endif|#
 directive|endif
@@ -2743,22 +2743,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * This is a fault on non-kernel virtual memory. 		 * vm is initialized above to NULL. If curproc is NULL 		 * or curproc->p_vmspace is NULL the fault is fatal. 		 */
+comment|/* 		 * This is a fault on non-kernel virtual memory.  If either 		 * p or p->p_vmspace is NULL, then the fault is fatal. 		 */
 if|if
 condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
-condition|)
+operator|||
+operator|(
 name|vm
 operator|=
 name|p
 operator|->
 name|p_vmspace
-expr_stmt|;
-if|if
-condition|(
-name|vm
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -2772,6 +2770,7 @@ name|vm
 operator|->
 name|vm_map
 expr_stmt|;
+comment|/* 		 * When accessing a user-space address, kernel must be 		 * ready to accept the page fault, and provide a 		 * handling routine.  Since accessing the address 		 * without the handler is a bug, do not try to handle 		 * it normally, and panic immediately. 		 */
 if|if
 condition|(
 operator|!
