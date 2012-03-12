@@ -1449,33 +1449,6 @@ directive|endif
 block|}
 end_function
 
-begin_comment
-comment|/*  * Many SoCs have a means to reset the core itself.  Others do not, or  * the method is unknown to us.  For those cases, we jump to the mips  * reset vector and hope for the best.  This works well in practice.  */
-end_comment
-
-begin_function
-name|void
-name|mips_generic_reset
-parameter_list|()
-block|{
-operator|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-argument_list|)
-operator|)
-name|MIPS_RESET_EXC_VEC
-operator|)
-operator|(
-operator|)
-expr_stmt|;
-block|}
-end_function
-
 begin_ifdef
 ifdef|#
 directive|ifdef

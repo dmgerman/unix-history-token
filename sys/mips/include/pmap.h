@@ -643,15 +643,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|pmap_compute_pages_to_dump
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|void
 name|pmap_flush_pvcache
 parameter_list|(

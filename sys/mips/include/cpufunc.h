@@ -1848,18 +1848,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-name|u_int
-name|loadandclear
-parameter_list|(
-specifier|volatile
-name|u_int
-modifier|*
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_endif
 endif|#
 directive|endif

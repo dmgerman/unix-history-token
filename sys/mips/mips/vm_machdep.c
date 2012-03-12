@@ -1925,54 +1925,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Convert kernel VA to physical address  */
-end_comment
-
-begin_function
-name|u_long
-name|kvtop
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|)
-block|{
-name|vm_offset_t
-name|va
-decl_stmt|;
-name|va
-operator|=
-name|pmap_kextract
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|va
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"kvtop: zero page frame"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|(
-name|intptr_t
-operator|)
-name|va
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*  * Implement the pre-zeroed page mechanism.  * This routine is called from the idle loop.  */
 end_comment
 
