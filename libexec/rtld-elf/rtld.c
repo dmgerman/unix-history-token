@@ -9782,6 +9782,7 @@ name|preinit_addr
 operator|==
 operator|(
 name|Elf_Addr
+operator|*
 operator|)
 name|NULL
 condition|)
@@ -10436,6 +10437,7 @@ name|init_addr
 operator|!=
 operator|(
 name|Elf_Addr
+operator|*
 operator|)
 name|NULL
 condition|)
