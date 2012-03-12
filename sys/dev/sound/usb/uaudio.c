@@ -3134,7 +3134,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Play: %d Hz, %d ch, %s format\n"
+literal|"Play: %d Hz, %d ch, %s format.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3166,7 +3166,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No playback!\n"
+literal|"No playback.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3183,7 +3183,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Record: %d Hz, %d ch, %s format\n"
+literal|"Record: %d Hz, %d ch, %s format.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3215,7 +3215,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No recording!\n"
+literal|"No recording.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3244,7 +3244,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MIDI sequencer\n"
+literal|"MIDI sequencer.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3254,7 +3254,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No midi sequencer\n"
+literal|"No midi sequencer.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3272,6 +3272,26 @@ name|func
 operator|=
 name|SCF_PCM
 expr_stmt|;
+comment|/* 	 * Only attach a PCM device if we have a playback, recording 	 * or mixer device present: 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_play_chan
+operator|.
+name|valid
+operator|||
+name|sc
+operator|->
+name|sc_rec_chan
+operator|.
+name|valid
+operator|||
+name|sc
+operator|->
+name|sc_mix_info
+condition|)
+block|{
 name|child
 operator|=
 name|device_add_child
@@ -3310,6 +3330,7 @@ operator|->
 name|sc_sndcard_func
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bus_generic_attach
