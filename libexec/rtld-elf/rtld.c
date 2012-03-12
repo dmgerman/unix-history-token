@@ -9780,10 +9780,6 @@ if|if
 condition|(
 name|preinit_addr
 operator|==
-operator|(
-name|Elf_Addr
-operator|*
-operator|)
 name|NULL
 condition|)
 return|return;
@@ -10435,10 +10431,6 @@ if|if
 condition|(
 name|init_addr
 operator|!=
-operator|(
-name|Elf_Addr
-operator|*
-operator|)
 name|NULL
 condition|)
 block|{
