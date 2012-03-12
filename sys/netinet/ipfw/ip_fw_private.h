@@ -757,21 +757,18 @@ name|V_autoinc_step
 value|VNET(autoinc_step)
 end_define
 
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
+begin_decl_stmt
+specifier|extern
 name|int
-argument_list|,
 name|fw_tables_max
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_define
 define|#
 directive|define
 name|V_fw_tables_max
-value|VNET(fw_tables_max)
+value|fw_tables_max
 end_define
 
 begin_struct

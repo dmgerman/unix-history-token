@@ -490,17 +490,13 @@ begin_comment
 comment|/* Use 128 tables by default */
 end_comment
 
-begin_expr_stmt
-name|VNET_DEFINE
-argument_list|(
+begin_decl_stmt
 name|int
-argument_list|,
 name|fw_tables_max
-argument_list|)
-operator|=
+init|=
 name|IPFW_TABLES_MAX
-expr_stmt|;
-end_expr_stmt
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/*  * Each rule belongs to one of 32 different sets (0..31).  * The variable set_disable contains one bit per set.  * If the bit is set, all rules in the corresponding set  * are disabled. Set RESVD_SET(31) is reserved for the default rule  * and rules that are not deleted by the flush command,  * and CANNOT be disabled.  * Rules in set RESVD_SET can only be deleted individually.  */
