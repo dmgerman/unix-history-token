@@ -740,6 +740,10 @@ case|case
 name|IFT_IPOVERCLAW
 case|:
 case|case
+name|IFT_PROPVIRTUAL
+case|:
+comment|/* NetGraph Virtual too */
+case|case
 name|IFT_VIRTUALIPADDRESS
 case|:
 name|result
