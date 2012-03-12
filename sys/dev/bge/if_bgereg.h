@@ -15156,6 +15156,12 @@ name|uint32_t
 name|bge_rx_discards
 decl_stmt|;
 name|uint32_t
+name|bge_rx_inerrs
+decl_stmt|;
+name|uint32_t
+name|bge_rx_nobds
+decl_stmt|;
+name|uint32_t
 name|bge_tx_discards
 decl_stmt|;
 name|uint32_t
