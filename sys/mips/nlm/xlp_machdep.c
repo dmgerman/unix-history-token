@@ -2420,34 +2420,6 @@ end_function
 
 begin_function
 name|void
-name|platform_identify
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"XLP Eval Board\n"
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_comment
-comment|/*  * XXX Maybe return the state of the watchdog in enter, and pass it to  * exit?  Like spl().  */
-end_comment
-
-begin_function
-name|void
-name|platform_trap_enter
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|platform_reset
 parameter_list|(
 name|void
@@ -2477,15 +2449,6 @@ condition|;
 control|)
 asm|__asm __volatile("wait");
 block|}
-end_function
-
-begin_function
-name|void
-name|platform_trap_exit
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
 end_function
 
 begin_ifdef

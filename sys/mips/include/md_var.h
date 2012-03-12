@@ -305,19 +305,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/* Platform call-downs. */
-end_comment
-
-begin_function_decl
-name|void
-name|platform_identify
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_decl_stmt
 specifier|extern
 name|int

@@ -526,24 +526,6 @@ end_function
 
 begin_function
 name|void
-name|platform_halt
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|platform_identify
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
 name|platform_reset
 parameter_list|(
 name|void
@@ -582,24 +564,6 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-end_function
-
-begin_function
-name|void
-name|platform_trap_enter
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|platform_trap_exit
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
 end_function
 
 begin_function

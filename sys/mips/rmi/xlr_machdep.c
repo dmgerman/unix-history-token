@@ -2230,47 +2230,6 @@ end_function
 
 begin_function
 name|void
-name|platform_identify
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-name|printf
-argument_list|(
-literal|"Board [%d:%d], processor 0x%08x\n"
-argument_list|,
-operator|(
-name|int
-operator|)
-name|xlr_boot1_info
-operator|.
-name|board_major_version
-argument_list|,
-operator|(
-name|int
-operator|)
-name|xlr_boot1_info
-operator|.
-name|board_minor_version
-argument_list|,
-name|mips_rd_prid
-argument_list|()
-argument_list|)
-expr_stmt|;
-block|}
-end_function
-
-begin_function
-name|void
-name|platform_trap_enter
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
-end_function
-
-begin_function
-name|void
 name|platform_reset
 parameter_list|(
 name|void
@@ -2296,15 +2255,6 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
-end_function
-
-begin_function
-name|void
-name|platform_trap_exit
-parameter_list|(
-name|void
-parameter_list|)
-block|{ }
 end_function
 
 begin_ifdef
