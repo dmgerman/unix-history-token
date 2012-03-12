@@ -949,6 +949,19 @@ argument_list|,
 name|UQ_ASSUME_CM_OVER_DATA
 argument_list|)
 block|,
+name|USB_QUIRK
+argument_list|(
+name|VERTEX
+argument_list|,
+name|VW110L
+argument_list|,
+literal|0x0000
+argument_list|,
+literal|0xffff
+argument_list|,
+name|UQ_ASSUME_CM_OVER_DATA
+argument_list|)
+block|,
 comment|/* USB Mass Storage Class Quirks */
 name|USB_QUIRK_VP
 argument_list|(
