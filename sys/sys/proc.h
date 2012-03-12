@@ -960,6 +960,12 @@ modifier|*
 name|td_intr_frame
 decl_stmt|;
 comment|/* (k) Frame of the current irq */
+name|struct
+name|proc
+modifier|*
+name|td_rfppwait_p
+decl_stmt|;
+comment|/* (k) The vforked child */
 block|}
 struct|;
 end_struct
@@ -1796,6 +1802,17 @@ end_define
 
 begin_comment
 comment|/* Audit record pending on thread */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_RFPPWAIT
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Handle RFPPWAIT on syscall exit */
 end_comment
 
 begin_comment
