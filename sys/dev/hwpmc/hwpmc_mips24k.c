@@ -56,12 +56,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/cputypes.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pmc_mdep.h>
 end_include
 
