@@ -13,12 +13,6 @@ directive|include
 file|"opt_compat.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|"opt_cputype.h"
-end_include
-
 begin_define
 define|#
 directive|define
