@@ -266,7 +266,6 @@ end_function_decl
 
 begin_function_decl
 name|_XLOCALE_INLINE
-name|__inline
 name|int
 name|__istype_l
 parameter_list|(
@@ -346,7 +345,6 @@ end_function
 
 begin_function
 name|_XLOCALE_INLINE
-name|__inline
 name|int
 name|__istype_l
 parameter_list|(
