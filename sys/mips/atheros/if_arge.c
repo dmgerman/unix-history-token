@@ -3384,11 +3384,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|ARGE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 return|return;
 block|}
 if|if
