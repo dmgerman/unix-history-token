@@ -714,7 +714,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * MIPSFBSD Offsets  * 0x7fff0000    User high mem -> USRSTACK [64K]  *   * 0x7ffefff0    ps_strings    -> 16 bytes  *  * 0x7ffeffec    sigcode       -> 44 bytes  *  * 0x7ffeffc4    sigcode end   env strings etc start  */
+comment|/*  * MIPSFBSD Offsets  * 0x7fff0000    User high mem -> USRSTACK [64K]  *   * 0x7ffefff0    ps_strings    -> 16 bytes  *  * 0x7ffeffec    sigcode       -> 44 bytes  *  * 0x7ffeffc4    sigcode end   env strings etc start  *  * XXX This is out-of-date and varies by ABI.  */
 end_comment
 
 begin_define
