@@ -2708,6 +2708,11 @@ argument_list|,
 name|p_sibling
 argument_list|)
 expr_stmt|;
+name|PROC_LOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|p
@@ -2732,6 +2737,11 @@ operator|~
 name|P_ORPHAN
 expr_stmt|;
 block|}
+name|PROC_UNLOCK
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
 name|leavepgrp
 argument_list|(
 name|p
