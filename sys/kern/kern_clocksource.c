@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2010 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2010-2012 Alexander Motin<mav@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -426,6 +426,18 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+name|struct
+name|bintime
+name|nexthard
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Next global hardlock() event. */
+end_comment
+
+begin_decl_stmt
+specifier|static
 name|u_int
 name|busy
 init|=
@@ -534,7 +546,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* Idle mode allowed. */
+comment|/* Run periodic events when idle. */
 end_comment
 
 begin_expr_stmt
@@ -565,6 +577,51 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Run periodic events when idle"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_decl_stmt
+specifier|static
+name|u_int
+name|activetick
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Run all periodic events when active. */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.eventtimer.activetick"
+argument_list|,
+operator|&
+name|activetick
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_UINT
+argument_list|(
+name|_kern_eventtimer
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|activetick
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|activetick
+argument_list|,
+literal|0
+argument_list|,
+literal|"Run all periodic events when active"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -986,6 +1043,37 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+operator|(
+name|timer
+operator|->
+name|et_flags
+operator|&
+name|ET_FLAGS_PERCPU
+operator|)
+operator|==
+literal|0
+operator|&&
+name|bintime_cmp
+argument_list|(
+operator|&
+name|state
+operator|->
+name|nexthard
+argument_list|,
+operator|&
+name|nexthard
+argument_list|,
+operator|>
+argument_list|)
+condition|)
+name|nexthard
+operator|=
+name|state
+operator|->
+name|nexthard
+expr_stmt|;
+if|if
+condition|(
 name|runs
 operator|&&
 name|fake
@@ -1294,6 +1382,7 @@ argument_list|(
 name|timerstate
 argument_list|)
 expr_stmt|;
+comment|/* Handle hardclock() events. */
 operator|*
 name|event
 operator|=
@@ -1304,12 +1393,37 @@ expr_stmt|;
 if|if
 condition|(
 name|idle
+operator|||
+operator|(
+operator|!
+name|activetick
+operator|&&
+operator|!
+name|profiling
+operator|&&
+operator|(
+name|timer
+operator|->
+name|et_flags
+operator|&
+name|ET_FLAGS_PERCPU
+operator|)
+operator|==
+literal|0
+operator|)
 condition|)
 block|{
-comment|/* If CPU is idle - ask callouts for how long. */
 name|skip
 operator|=
+name|idle
+condition|?
 literal|4
+else|:
+operator|(
+name|stathz
+operator|/
+literal|2
+operator|)
 expr_stmt|;
 if|if
 condition|(
@@ -1369,9 +1483,13 @@ name|tmp
 argument_list|)
 expr_stmt|;
 block|}
-else|else
+if|if
+condition|(
+operator|!
+name|idle
+condition|)
 block|{
-comment|/* If CPU is active - handle all types of events. */
+comment|/* If CPU is active - handle other types of events. */
 if|if
 condition|(
 name|bintime_cmp
@@ -1485,6 +1603,8 @@ endif|#
 directive|endif
 name|int
 name|c
+decl_stmt|,
+name|nonidle
 decl_stmt|;
 name|state
 operator|=
@@ -1504,9 +1624,13 @@ name|c
 operator|=
 name|curcpu
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|SMP
+name|nonidle
+operator|=
+operator|!
+name|state
+operator|->
+name|idle
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1520,6 +1644,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|SMP
 name|CPU_FOREACH
 argument_list|(
 argument|cpu
@@ -1540,6 +1667,13 @@ name|cpu
 argument_list|,
 name|timerstate
 argument_list|)
+expr_stmt|;
+name|nonidle
+operator|+=
+operator|!
+name|state
+operator|->
+name|idle
 expr_stmt|;
 if|if
 condition|(
@@ -1569,9 +1703,30 @@ name|cpu
 expr_stmt|;
 block|}
 block|}
-block|}
 endif|#
 directive|endif
+if|if
+condition|(
+name|nonidle
+operator|!=
+literal|0
+operator|&&
+name|bintime_cmp
+argument_list|(
+name|event
+argument_list|,
+operator|&
+name|nexthard
+argument_list|,
+operator|>
+argument_list|)
+condition|)
+operator|*
+name|event
+operator|=
+name|nexthard
+expr_stmt|;
+block|}
 name|CTR5
 argument_list|(
 name|KTR_SPARE2
