@@ -748,6 +748,35 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
+comment|/* Initialize fib data */
+name|priv
+operator|->
+name|maxfibs
+operator|=
+name|rt_numfibs
+expr_stmt|;
+name|priv
+operator|->
+name|fib_data
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+name|fib_export_p
+argument_list|)
+operator|*
+name|priv
+operator|->
+name|maxfibs
+argument_list|,
+name|M_NETGRAPH
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
 comment|/* Make node and its data point at each other */
 name|NG_NODE_SET_PRIVATE
 argument_list|(
@@ -3804,18 +3833,23 @@ if|if
 condition|(
 name|fib
 operator|>=
-name|RT_NUMFIBS
+name|priv
+operator|->
+name|maxfibs
 condition|)
 block|{
 name|CTR2
 argument_list|(
 name|KTR_NET
 argument_list|,
-literal|"ng_netflow_rcvdata(): packet fib %d is out of range of available fibs: 0 .. %d"
+literal|"ng_netflow_rcvdata(): packet fib %d is out of "
+literal|"range of available fibs: 0 .. %d"
 argument_list|,
 name|fib
 argument_list|,
-name|RT_NUMFIBS
+name|priv
+operator|->
+name|maxfibs
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4138,6 +4172,15 @@ argument_list|(
 name|priv
 operator|->
 name|node
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|priv
+operator|->
+name|fib_data
+argument_list|,
+name|M_NETGRAPH
 argument_list|)
 expr_stmt|;
 name|free
