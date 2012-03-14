@@ -64,6 +64,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/vnode.h>
 end_include
 
@@ -126,6 +132,24 @@ include|#
 directive|include
 file|<fs/tmpfs/tmpfs_vnops.h>
 end_include
+
+begin_expr_stmt
+name|SYSCTL_NODE
+argument_list|(
+name|_vfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|tmpfs
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+literal|0
+argument_list|,
+literal|"tmpfs file system"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/* --------------------------------------------------------------------- */
