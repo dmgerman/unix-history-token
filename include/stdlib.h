@@ -813,6 +813,10 @@ directive|if
 name|__ISO_C_VISIBLE
 operator|>=
 literal|2011
+operator|||
+name|__cplusplus
+operator|>=
+literal|201103L
 end_if
 
 begin_function_decl
