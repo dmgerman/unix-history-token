@@ -3685,7 +3685,7 @@ name|sc
 operator|->
 name|stats_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3837,7 +3837,7 @@ name|fxp_desc
 operator|.
 name|cbl_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3995,7 +3995,7 @@ name|sc
 operator|->
 name|mcs_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
