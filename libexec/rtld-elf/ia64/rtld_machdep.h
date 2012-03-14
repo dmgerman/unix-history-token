@@ -143,6 +143,20 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|call_init_pointer
+parameter_list|(
+specifier|const
+name|struct
+name|Struct_Obj_Entry
+modifier|*
+parameter_list|,
+name|Elf_Addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_define
 define|#
 directive|define

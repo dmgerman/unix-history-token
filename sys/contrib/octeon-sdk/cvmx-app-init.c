@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_include
@@ -25,6 +25,12 @@ begin_include
 include|#
 directive|include
 file|<string.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"executive-config.h"
 end_include
 
 begin_include
@@ -108,7 +114,37 @@ end_include
 begin_include
 include|#
 directive|include
-file|"../../bootloader/u-boot/include/octeon_mem_map.h"
+file|"cvmx-qlm.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-scratch.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-helper-cfg.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-helper-jtag.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<octeon_mem_map.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"libfdt.h"
 end_include
 
 begin_decl_stmt
@@ -609,6 +645,78 @@ literal|1
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|cvmx_bootinfo_ptr
+operator|->
+name|minor_version
+operator|>=
+literal|3
+operator|)
+operator|&&
+operator|(
+name|cvmx_bootinfo_ptr
+operator|->
+name|fdt_addr
+operator|!=
+literal|0
+operator|)
+condition|)
+block|{
+name|sys_info_ptr
+operator|->
+name|fdt_addr
+operator|=
+name|UNMAPPED_PTR
+argument_list|(
+name|cvmx_bootinfo_ptr
+operator|->
+name|fdt_addr
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|fdt_check_header
+argument_list|(
+operator|(
+specifier|const
+name|void
+operator|*
+operator|)
+name|sys_info_ptr
+operator|->
+name|fdt_addr
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"ERROR : Corrupt Device Tree.\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+operator|-
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|"Using device tree\n"
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|sys_info_ptr
+operator|->
+name|fdt_addr
+operator|=
+literal|0
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -695,7 +803,7 @@ specifier|register
 name|uint64_t
 name|tmp
 decl_stmt|;
-comment|/* Wait for an another Control-C if right now we have no 	       access to the console.  After this point we hold the 	       lock and use a different lock to synchronize between 	       the memfile dumps from different cores.  As a 	       consequence regular printfs *don't* work after this 	       point! */
+comment|/* Wait for an another Control-C if right now we have no                access to the console.  After this point we hold the                lock and use a different lock to synchronize between                the memfile dumps from different cores.  As a                consequence regular printfs *don't* work after this                point! */
 if|if
 condition|(
 name|__octeon_uart_trylock
@@ -704,7 +812,7 @@ operator|==
 literal|1
 condition|)
 return|return;
-comment|/* Pulse MCD0 signal on Ctrl-C to stop all the cores. Also 	       set the MCD0 to be not masked by this core so we know 	       the signal is received by someone */
+comment|/* Pulse MCD0 signal on Ctrl-C to stop all the cores. Also                set the MCD0 to be not masked by this core so we know                the signal is received by someone */
 asm|asm
 specifier|volatile
 asm|(                 "dmfc0 %0, $22\n"                 "ori   %0, %0, 0x1110\n"                 "dmtc0 %0, $22\n"                 : "=r" (tmp));
@@ -847,6 +955,13 @@ endif|#
 directive|endif
 end_endif
 
+begin_define
+define|#
+directive|define
+name|OCTEON_BL_FLAG_HPLUG_CORES
+value|(1<< 6)
+end_define
+
 begin_function
 name|void
 name|__cvmx_app_init
@@ -880,6 +995,7 @@ name|breakflag
 init|=
 literal|0
 decl_stmt|;
+comment|//printf("coremask=%08x flags=%08x \n", app_desc_ptr->core_mask, app_desc_ptr->flags);
 if|if
 condition|(
 name|cvmx_coremask_first_core
@@ -890,6 +1006,21 @@ name|core_mask
 argument_list|)
 condition|)
 block|{
+comment|/* Intialize the bootmem allocator with the descriptor that was provided by         * the bootloader         * IMPORTANT:  All printfs must happen after this since PCI console uses named         * blocks.         */
+name|cvmx_bootmem_init
+argument_list|(
+name|CASTPTR
+argument_list|(
+name|cvmx_bootinfo_t
+argument_list|,
+name|app_desc_ptr
+operator|->
+name|cvmx_desc_vaddr
+argument_list|)
+operator|->
+name|phy_mem_desc_addr
+argument_list|)
+expr_stmt|;
 comment|/* do once per application setup  */
 if|if
 condition|(
@@ -938,7 +1069,26 @@ name|sys_info_ptr
 argument_list|)
 expr_stmt|;
 block|}
+comment|/*          * set up the feature map and config.          */
+name|octeon_feature_init
+argument_list|()
+expr_stmt|;
+name|__cvmx_helper_cfg_init
+argument_list|()
+expr_stmt|;
 block|}
+comment|/* The flags varibale get copied over at some places and tracing the origins        found that        ** In octeon_setup_boot_desc_block          . cvmx_bootinfo_array[core].flags is initialized and the various bits are set          . cvmx_bootinfo_array[core].flags gets copied to  boot_desc[core].flags          . Then boot_desc then get copied over to the end of the application heap and             boot_info_block_array[core].boot_descr_addr is set to point to the boot_desc             in heap.        ** In start_app boot_vect->boot_info_addr->boot_desc_addr is referenced and passed on        to octeon_setup_crt0_tlb() and this puts it into r16        ** In ctr0.S of the toolchain r16 is picked up and passed on as a parameter to        __cvmx_app_init         Note : boot_vect->boot_info_addr points to  boot_info_block_array[core] and this        pointer is setup in octeon_setup_boot_vector()     */
+if|if
+condition|(
+operator|!
+operator|(
+name|app_desc_ptr
+operator|->
+name|flags
+operator|&
+name|OCTEON_BL_FLAG_HPLUG_CORES
+operator|)
+condition|)
 name|cvmx_coremask_barrier_sync
 argument_list|(
 name|app_desc_ptr
@@ -1001,14 +1151,6 @@ name|unsigned
 name|int
 name|i
 decl_stmt|;
-comment|/* Intialize the bootmem allocator with the descriptor that was provided by          * the bootloader          * IMPORTANT:  All printfs must happen after this since PCI console uses named          * blocks.          */
-name|cvmx_bootmem_init
-argument_list|(
-name|sys_info_ptr
-operator|->
-name|phy_mem_desc_addr
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
 name|breakflag
@@ -1157,6 +1299,17 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+if|if
+condition|(
+operator|!
+operator|(
+name|app_desc_ptr
+operator|->
+name|flags
+operator|&
+name|OCTEON_BL_FLAG_HPLUG_CORES
+operator|)
+condition|)
 name|cvmx_coremask_barrier_sync
 argument_list|(
 name|app_desc_ptr
@@ -1180,13 +1333,37 @@ expr_stmt|;
 comment|/* Now intialize the debug exception handler as BEV is cleared. */
 if|if
 condition|(
+operator|(
 operator|!
 name|breakflag
+operator|)
+operator|&&
+operator|(
+operator|!
+operator|(
+name|app_desc_ptr
+operator|->
+name|flags
+operator|&
+name|OCTEON_BL_FLAG_HPLUG_CORES
+operator|)
+operator|)
 condition|)
 name|cvmx_debug_init
 argument_list|()
 expr_stmt|;
 comment|/* Synchronise all cores at this point */
+if|if
+condition|(
+operator|!
+operator|(
+name|app_desc_ptr
+operator|->
+name|flags
+operator|&
+name|OCTEON_BL_FLAG_HPLUG_CORES
+operator|)
+condition|)
 name|cvmx_coremask_barrier_sync
 argument_list|(
 name|app_desc_ptr
@@ -1245,35 +1422,12 @@ expr_stmt|;
 name|mask
 operator|=
 operator|(
-literal|1ULL
+literal|0x3fULL
 operator|<<
 literal|32
 operator|)
-operator||
-operator|(
-literal|1ULL
-operator|<<
-literal|33
-operator|)
-operator||
-operator|(
-literal|1ULL
-operator|<<
-literal|34
-operator|)
-operator||
-operator|(
-literal|1ULL
-operator|<<
-literal|35
-operator|)
-operator||
-operator|(
-literal|1ULL
-operator|<<
-literal|36
-operator|)
 expr_stmt|;
+comment|// Icache;BHT;AES;HSH/GFM;LRU;register file
 name|bist_val
 operator|&=
 name|mask
@@ -1378,6 +1532,56 @@ argument_list|(
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN63XX_PASS2_X
+argument_list|)
+condition|)
+block|{
+comment|/* Clear the lines of scratch memory configured, for         ** 63XX pass 2 errata Core-15169. */
+name|uint64_t
+name|addr
+decl_stmt|;
+name|unsigned
+name|num_lines
+decl_stmt|;
+name|CVMX_MF_CVM_MEM_CTL
+argument_list|(
+name|tmp
+argument_list|)
+expr_stmt|;
+name|num_lines
+operator|=
+name|tmp
+operator|&
+literal|0x3f
+expr_stmt|;
+for|for
+control|(
+name|addr
+operator|=
+literal|0
+init|;
+name|addr
+operator|<
+name|CVMX_CACHE_LINE_SIZE
+operator|*
+name|num_lines
+condition|;
+name|addr
+operator|+=
+literal|8
+control|)
+name|cvmx_scratch_write64
+argument_list|(
+name|addr
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 if|#
 directive|if
 name|CVMX_USE_1_TO_1_TLB_MAPPINGS
@@ -1736,6 +1940,20 @@ name|sys_info_ptr
 operator|->
 name|phy_mem_desc_addr
 argument_list|)
+expr_stmt|;
+comment|/* Initialize QLM and JTAG settings. Also apply any erratas. */
+if|if
+condition|(
+name|cvmx_coremask_first_core
+argument_list|(
+name|cvmx_sysinfo_get
+argument_list|()
+operator|->
+name|core_mask
+argument_list|)
+condition|)
+name|cvmx_qlm_init
+argument_list|()
 expr_stmt|;
 return|return
 operator|(

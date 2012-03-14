@@ -19,32 +19,24 @@ begin_comment
 comment|/*  * Bus address and size types  */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_cputype.h"
-end_include
-
 begin_if
 if|#
 directive|if
-operator|!
-operator|(
 name|defined
 argument_list|(
 name|CPU_CNMIPS
 argument_list|)
 operator|&&
+operator|!
 name|defined
 argument_list|(
-name|ISA_MIPS32
+name|__mips_n64
 argument_list|)
-operator|)
 end_if
 
 begin_typedef
 typedef|typedef
-name|uintptr_t
+name|uint64_t
 name|bus_addr_t
 typedef|;
 end_typedef
@@ -56,7 +48,7 @@ end_else
 
 begin_typedef
 typedef|typedef
-name|uint64_t
+name|uintptr_t
 name|bus_addr_t
 typedef|;
 end_typedef

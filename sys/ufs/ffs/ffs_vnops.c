@@ -1216,7 +1216,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|waitfor
+literal|0
 argument_list|)
 operator|)
 return|;
@@ -1267,7 +1267,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 name|BO_LOCK
@@ -1342,7 +1342,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -1619,10 +1619,6 @@ end_function
 
 begin_comment
 comment|/*  * Vnode op for reading.  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function

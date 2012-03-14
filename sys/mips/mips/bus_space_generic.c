@@ -268,12 +268,6 @@ begin_comment
 comment|/* Ultra-gross kludge */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_cputype.h"
-end_include
-
 begin_if
 if|#
 directive|if

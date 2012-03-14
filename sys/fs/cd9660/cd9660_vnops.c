@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/fifofs/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 

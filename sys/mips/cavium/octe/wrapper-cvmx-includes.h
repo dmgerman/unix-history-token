@@ -100,7 +100,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
+file|<mips/cavium/octeon_irq.h>
 end_include
 
 begin_include

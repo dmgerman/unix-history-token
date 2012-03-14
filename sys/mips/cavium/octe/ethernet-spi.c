@@ -1362,9 +1362,9 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|CVMX_IRQ_RML
+name|OCTEON_IRQ_RML
 argument_list|,
-name|CVMX_IRQ_RML
+name|OCTEON_IRQ_RML
 argument_list|,
 literal|1
 argument_list|,

@@ -407,11 +407,16 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| CapFlags: 0x%.2x  | eepMisc: 0x%.2x | RegDomain: 0x%.4x 0x%.4x | \n"
+literal|"| CapFlags: 0x%.2x\n"
 argument_list|,
 name|eh
 operator|->
 name|opCapFlags
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"| eepMisc: 0x%.2x | RegDomain: 0x%.4x 0x%.4x | \n"
 argument_list|,
 name|eh
 operator|->
@@ -552,7 +557,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"| dacHiPwrMode_5G: 0x%.2x | openLoopPwrCntl: 0x%.2x | dacLpMode: 0x%.2x "
+literal|"| dacHiPwrMode_5G: 0x%.2x | openLoopPwrCntl: 0x%.2x | dacLpMode: 0x%.2x\n"
 argument_list|,
 operator|(
 name|int

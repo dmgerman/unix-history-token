@@ -180,12 +180,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/fifofs/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<ufs/ufs/acl.h>
 end_include
 

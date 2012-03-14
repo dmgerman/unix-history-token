@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
-comment|/**  * @file  * Simple executive application initialization for Linux user space. This  * file should be used instead of cvmx-app-init.c for running simple executive  * applications under Linux in userspace. The following are some of the key  * points to remember when writing applications to run both under the  * standalone simple executive and userspace under Linux.  *  * -# Application main must be called "appmain" under Linux. Use and ifdef  *      based on __linux__ to determine the proper name.  * -# Be careful to use cvmx_ptr_to_phys() and cvmx_phys_to_ptr. The simple  *      executive 1-1 TLB mappings allow you to be sloppy and interchange  *      hardware addresses with virtual address. This isn't true under Linux.  * -# If you're talking directly to hardware, be careful. The normal Linux  *      protections are circumvented. If you do something bad, Linux won't  *      save you.  * -# Most hardware can only be initialized once. Unless you're very careful,  *      this also means you Linux application can only run once.  *  *<hr>$Revision: 49448 $<hr>  *  */
+comment|/**  * @file  * Simple executive application initialization for Linux user space. This  * file should be used instead of cvmx-app-init.c for running simple executive  * applications under Linux in userspace. The following are some of the key  * points to remember when writing applications to run both under the  * standalone simple executive and userspace under Linux.  *  * -# Application main must be called "appmain" under Linux. Use and ifdef  *      based on __linux__ to determine the proper name.  * -# Be careful to use cvmx_ptr_to_phys() and cvmx_phys_to_ptr. The simple  *      executive 1-1 TLB mappings allow you to be sloppy and interchange  *      hardware addresses with virtual address. This isn't true under Linux.  * -# If you're talking directly to hardware, be careful. The normal Linux  *      protections are circumvented. If you do something bad, Linux won't  *      save you.  * -# Most hardware can only be initialized once. Unless you're very careful,  *      this also means you Linux application can only run once.  *  *<hr>$Revision: 70129 $<hr>  *  */
 end_comment
 
 begin_define
@@ -143,6 +143,12 @@ begin_include
 include|#
 directive|include
 file|"cvmx-bootmem.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"cvmx-helper-cfg.h"
 end_include
 
 begin_function_decl
@@ -945,6 +951,10 @@ name|cvmx_get_proc_id
 argument_list|()
 argument_list|)
 expr_stmt|;
+comment|/* Initialize configuration to set bpid, pkind, pko_port for all the         available ports connected. */
+name|__cvmx_helper_cfg_init
+argument_list|()
+expr_stmt|;
 comment|/* Get the list of logical cpus we should run on */
 if|if
 condition|(
@@ -1005,7 +1015,7 @@ expr_stmt|;
 name|cpumask
 operator|^=
 operator|(
-literal|1
+literal|1ull
 operator|<<
 operator|(
 name|firstcore
@@ -1047,7 +1057,7 @@ comment|/* Turn off the bit for this CPU number. We've counted him */
 name|cpumask
 operator|^=
 operator|(
-literal|1
+literal|1ull
 operator|<<
 name|cpu
 operator|)
@@ -1178,6 +1188,7 @@ argument_list|)
 operator|==
 literal|0
 condition|)
+block|{
 name|cvmx_dprintf
 argument_list|(
 literal|"Active coremask = 0x%x\n"
@@ -1187,6 +1198,7 @@ operator|->
 name|core_mask
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|firstcpu

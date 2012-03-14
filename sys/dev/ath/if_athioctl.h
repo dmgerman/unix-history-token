@@ -494,9 +494,13 @@ name|ast_tx_aggr_fail
 decl_stmt|;
 comment|/* aggregate TX failed */
 name|u_int32_t
+name|ast_tx_mcastq_overflow
+decl_stmt|;
+comment|/* multicast queue overflow */
+name|u_int32_t
 name|ast_pad
 index|[
-literal|2
+literal|1
 index|]
 decl_stmt|;
 block|}

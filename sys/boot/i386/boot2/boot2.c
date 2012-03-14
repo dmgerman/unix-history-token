@@ -616,6 +616,8 @@ specifier|const
 name|char
 modifier|*
 name|kname
+init|=
+name|NULL
 decl_stmt|;
 end_decl_stmt
 
@@ -623,6 +625,8 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|opts
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1134,14 +1138,6 @@ decl_stmt|;
 name|size_t
 name|nbyte
 decl_stmt|;
-name|opts
-operator|=
-literal|0
-expr_stmt|;
-name|kname
-operator|=
-name|NULL
-expr_stmt|;
 name|dmadat
 operator|=
 operator|(

@@ -92,7 +92,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
+file|<mips/cavium/octeon_irq.h>
 end_include
 
 begin_comment
@@ -110,14 +110,14 @@ begin_define
 define|#
 directive|define
 name|CIU_IRQ_EN0_BEGIN
-value|CVMX_IRQ_WORKQ0
+value|OCTEON_IRQ_WORKQ0
 end_define
 
 begin_define
 define|#
 directive|define
 name|CIU_IRQ_EN0_END
-value|CVMX_IRQ_BOOTDMA
+value|OCTEON_IRQ_BOOTDMA
 end_define
 
 begin_define
@@ -131,14 +131,14 @@ begin_define
 define|#
 directive|define
 name|CIU_IRQ_EN1_BEGIN
-value|CVMX_IRQ_WDOG0
+value|OCTEON_IRQ_WDOG0
 end_define
 
 begin_define
 define|#
 directive|define
 name|CIU_IRQ_EN1_END
-value|CVMX_IRQ_DFM
+value|OCTEON_IRQ_DFM
 end_define
 
 begin_define

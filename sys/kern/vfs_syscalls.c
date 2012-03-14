@@ -287,7 +287,6 @@ file|<ufs/ufs/quota.h>
 end_include
 
 begin_expr_stmt
-specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_FADVISE
@@ -20623,17 +20622,9 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-name|auio
-operator|.
-name|uio_resid
-operator|=
-name|count
-expr_stmt|;
 if|if
 condition|(
-name|auio
-operator|.
-name|uio_resid
+name|count
 operator|>
 name|IOSIZE_MAX
 condition|)
@@ -20642,6 +20633,12 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|auio
+operator|.
+name|uio_resid
+operator|=
+name|count
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -22738,11 +22735,28 @@ name|fmode
 operator|&
 name|FWRITE
 condition|)
+block|{
 name|vp
 operator|->
 name|v_writecount
 operator|++
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p v_writecount increased to %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_writecount
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* 	 * end of vn_open code 	 */
 if|if
 condition|(
@@ -22772,11 +22786,28 @@ name|fmode
 operator|&
 name|FWRITE
 condition|)
+block|{
 name|vp
 operator|->
 name|v_writecount
 operator|--
 expr_stmt|;
+name|CTR3
+argument_list|(
+name|KTR_VFS
+argument_list|,
+literal|"%s: vp %p v_writecount decreased to %d"
+argument_list|,
+name|__func__
+argument_list|,
+name|vp
+argument_list|,
+name|vp
+operator|->
+name|v_writecount
+argument_list|)
+expr_stmt|;
+block|}
 goto|goto
 name|bad
 goto|;

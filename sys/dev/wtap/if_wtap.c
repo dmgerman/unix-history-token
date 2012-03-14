@@ -50,6 +50,31 @@ file|"if_medium.h"
 end_include
 
 begin_comment
+comment|/*  * This _requires_ vimage to be useful.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|VIMAGE
+end_ifndef
+
+begin_error
+error|#
+directive|error
+error|if_wtap requires VIMAGE.
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VIMAGE */
+end_comment
+
+begin_comment
 comment|/* device for IOCTL and read/write for debuggin purposes */
 end_comment
 

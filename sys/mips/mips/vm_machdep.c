@@ -26,12 +26,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"opt_cputype.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -1700,6 +1694,8 @@ name|mips_rd_status
 argument_list|()
 operator|&
 operator|(
+name|MIPS_SR_PX
+operator||
 name|MIPS_SR_KX
 operator||
 name|MIPS_SR_UX
@@ -1707,28 +1703,6 @@ operator||
 name|MIPS_SR_INT_MASK
 operator|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|CPU_CNMIPS
-name|pcb2
-operator|->
-name|pcb_context
-index|[
-name|PCB_REG_SR
-index|]
-operator||=
-name|MIPS_SR_COP_0_BIT
-operator||
-name|MIPS_SR_PX
-operator||
-name|MIPS_SR_UX
-operator||
-name|MIPS_SR_KX
-operator||
-name|MIPS_SR_SX
-expr_stmt|;
-endif|#
-directive|endif
 comment|/* 	 * FREEBSD_DEVELOPERS_FIXME: 	 * Setup any other CPU-Specific registers (Not MIPS Standard) 	 * that are needed. 	 */
 comment|/* SMP Setup to release sched_lock in fork_exit(). */
 name|td
@@ -1938,76 +1912,9 @@ name|MIPS_SR_KX
 expr_stmt|;
 endif|#
 directive|endif
-ifdef|#
-directive|ifdef
-name|CPU_CNMIPS
-name|tf
-operator|->
-name|sr
-operator||=
-name|MIPS_SR_INT_IE
-operator||
-name|MIPS_SR_COP_0_BIT
-operator||
-name|MIPS_SR_PX
-operator||
-name|MIPS_SR_UX
-operator||
-name|MIPS_SR_KX
-expr_stmt|;
-endif|#
-directive|endif
 comment|/*	tf->sr |= (ALL_INT_MASK& idle_mask) | SR_INT_ENAB; */
 comment|/**XXX the above may now be wrong -- mips2 implements this as panic */
 comment|/* 	 * FREEBSD_DEVELOPERS_FIXME: 	 * Setup any other CPU-Specific registers (Not MIPS Standard) 	 * that are needed. 	 */
-block|}
-end_function
-
-begin_comment
-comment|/*  * Convert kernel VA to physical address  */
-end_comment
-
-begin_function
-name|u_long
-name|kvtop
-parameter_list|(
-name|void
-modifier|*
-name|addr
-parameter_list|)
-block|{
-name|vm_offset_t
-name|va
-decl_stmt|;
-name|va
-operator|=
-name|pmap_kextract
-argument_list|(
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|va
-operator|==
-literal|0
-condition|)
-name|panic
-argument_list|(
-literal|"kvtop: zero page frame"
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-operator|(
-name|intptr_t
-operator|)
-name|va
-operator|)
-return|;
 block|}
 end_function
 

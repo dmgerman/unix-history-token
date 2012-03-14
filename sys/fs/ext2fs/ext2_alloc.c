@@ -1584,6 +1584,10 @@ name|vpp
 decl_stmt|;
 block|{
 name|struct
+name|timespec
+name|ts
+decl_stmt|;
+name|struct
 name|inode
 modifier|*
 name|pip
@@ -1814,13 +1818,7 @@ operator|*
 name|vpp
 argument_list|)
 expr_stmt|;
-comment|/*  	  the question is whether using VGET was such good idea at all - 	  Linux doesn't read the old inode in when it's allocating a 	  new one. I will set at least i_size& i_blocks the zero.  	*/
-name|ip
-operator|->
-name|i_mode
-operator|=
-literal|0
-expr_stmt|;
+comment|/* 	 * The question is whether using VGET was such good idea at all: 	 * Linux doesn't read the old inode in when it is allocating a 	 * new one. I will set at least i_size and i_blocks to zero. 	 */
 name|ip
 operator|->
 name|i_size
@@ -1830,6 +1828,12 @@ expr_stmt|;
 name|ip
 operator|->
 name|i_blocks
+operator|=
+literal|0
+expr_stmt|;
+name|ip
+operator|->
+name|i_mode
 operator|=
 literal|0
 expr_stmt|;
@@ -1910,6 +1914,28 @@ operator|/
 literal|2
 operator|+
 literal|1
+expr_stmt|;
+name|vfs_timestamp
+argument_list|(
+operator|&
+name|ts
+argument_list|)
+expr_stmt|;
+name|ip
+operator|->
+name|i_birthtime
+operator|=
+name|ts
+operator|.
+name|tv_sec
+expr_stmt|;
+name|ip
+operator|->
+name|i_birthnsec
+operator|=
+name|ts
+operator|.
+name|tv_nsec
 expr_stmt|;
 comment|/* printf("ext2_valloc: allocated inode %d\n", ino); */
 return|return

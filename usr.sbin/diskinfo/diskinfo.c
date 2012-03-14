@@ -395,7 +395,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
 literal|"%s: ioctl(DIOCGMEDIASIZE) failed, probably not a disk."
 argument_list|,
@@ -430,9 +430,9 @@ condition|(
 name|error
 condition|)
 block|{
-name|warn
+name|warnx
 argument_list|(
-literal|"%s: DIOCGSECTORSIZE failed, probably not a disk."
+literal|"%s: ioctl(DIOCGSECTORSIZE) failed, probably not a disk."
 argument_list|,
 name|argv
 index|[
@@ -917,17 +917,31 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"read"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 operator|(
 name|int
 operator|)
 name|sectorsize
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"read error or disk too small for test."
+literal|"disk too small for test."
 argument_list|)
 expr_stmt|;
 block|}
@@ -962,17 +976,31 @@ expr_stmt|;
 if|if
 condition|(
 name|error
+operator|==
+operator|-
+literal|1
+condition|)
+name|err
+argument_list|(
+literal|1
+argument_list|,
+literal|"read"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
 operator|!=
 sizeof|sizeof
 argument_list|(
 name|mega
 argument_list|)
 condition|)
-name|err
+name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"read error or disk too small for test."
+literal|"disk too small for test."
 argument_list|)
 expr_stmt|;
 block|}

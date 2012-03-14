@@ -1144,12 +1144,14 @@ endif|#
 directive|endif
 comment|/* Multiple FIB support */
 name|fib_export_p
+modifier|*
 name|fib_data
-index|[
-name|RT_NUMFIBS
-index|]
 decl_stmt|;
-comment|/* array of pointers to fib-specific data */
+comment|/* array of pointers to per-fib data */
+name|uint16_t
+name|maxfibs
+decl_stmt|;
+comment|/* number of allocated fibs */
 comment|/* 	 * RFC 3954 clause 7.3 	 * "Both options MUST be configurable by the user on the Exporter." 	 */
 name|uint16_t
 name|templ_time

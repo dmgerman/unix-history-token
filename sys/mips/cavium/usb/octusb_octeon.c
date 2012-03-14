@@ -188,7 +188,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<contrib/octeon-sdk/cvmx-interrupt.h>
+file|<mips/cavium/octeon_irq.h>
 end_include
 
 begin_include
@@ -457,11 +457,11 @@ argument_list|,
 operator|&
 name|rid
 argument_list|,
-name|CVMX_IRQ_USB0
+name|OCTEON_IRQ_USB0
 operator|+
 name|i
 argument_list|,
-name|CVMX_IRQ_USB0
+name|OCTEON_IRQ_USB0
 operator|+
 name|i
 argument_list|,

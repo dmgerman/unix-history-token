@@ -732,24 +732,6 @@ directive|endif
 block|}
 end_function
 
-begin_function
-name|void
-name|platform_halt
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|platform_identify
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
 begin_comment
 comment|/*  * Perform a board-level soft-reset.  * Note that this is not emulated by gxemul.  */
 end_comment
@@ -782,24 +764,6 @@ operator|=
 name|MALTA_GORESET
 expr_stmt|;
 block|}
-end_function
-
-begin_function
-name|void
-name|platform_trap_enter
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
-end_function
-
-begin_function
-name|void
-name|platform_trap_exit
-parameter_list|(
-name|void
-parameter_list|)
-block|{  }
 end_function
 
 begin_function

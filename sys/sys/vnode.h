@@ -4645,6 +4645,21 @@ value|((void*)(uintptr_t)vop_eopnotsupp)
 end_define
 
 begin_comment
+comment|/* fifo_vnops.c */
+end_comment
+
+begin_function_decl
+name|int
+name|fifo_printinfo
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* vfs_hash.c */
 end_comment
 

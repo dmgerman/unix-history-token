@@ -959,13 +959,15 @@ literal|1
 argument_list|)
 expr_stmt|;
 comment|/* Allocate a dmatag for our transfer DMA maps */
-comment|/* XXX Should be a child of the PCI bus dma tag */
 name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent	*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* alignment	*/
 literal|1

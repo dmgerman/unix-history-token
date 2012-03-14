@@ -3073,6 +3073,15 @@ name|U3G_DEV
 argument_list|(
 name|QUALCOMMINC
 argument_list|,
+name|K3772_Z
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
 name|MF626
 argument_list|,
 literal|0

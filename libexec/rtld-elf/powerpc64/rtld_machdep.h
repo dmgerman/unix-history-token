@@ -105,6 +105,19 @@ define|\
 value|(((InitFunc)(target))())
 end_define
 
+begin_define
+define|#
+directive|define
+name|call_init_pointer
+parameter_list|(
+name|obj
+parameter_list|,
+name|target
+parameter_list|)
+define|\
+value|(((InitArrFunc)(target))(main_argc, main_argv, environ))
+end_define
+
 begin_comment
 comment|/*  * Lazy binding entry point, called via PLT.  */
 end_comment

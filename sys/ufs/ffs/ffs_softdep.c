@@ -12461,11 +12461,8 @@ name|MNTK_ASYNC
 operator|)
 operator||
 name|MNTK_SOFTDEP
-expr_stmt|;
-name|mp
-operator|->
-name|mnt_noasync
-operator|++
+operator||
+name|MNTK_NOASYNC
 expr_stmt|;
 block|}
 name|MNT_IUNLOCK
@@ -30497,7 +30494,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_NOWAIT
+literal|0
 argument_list|)
 expr_stmt|;
 name|bawrite
@@ -57646,7 +57643,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
@@ -57786,7 +57783,7 @@ name|ffs_update
 argument_list|(
 name|pvp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -57964,7 +57961,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 name|vput
@@ -58189,7 +58186,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 name|vput

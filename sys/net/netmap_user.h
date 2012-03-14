@@ -80,7 +80,7 @@ parameter_list|,
 name|buf
 parameter_list|)
 define|\
-value|( ((char *)(buf) - ((char *)(ring) + (ring)->buf_ofs) ) / \ 		(ring)->nr_buf_size) )
+value|( ((char *)(buf) - ((char *)(ring) + (ring)->buf_ofs) ) / \ 		(ring)->nr_buf_size )
 end_define
 
 begin_define
@@ -94,6 +94,17 @@ name|i
 parameter_list|)
 define|\
 value|((i)+1 == (r)->num_slots ? 0 : (i) + 1 )
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETMAP_RING_FIRST_RESERVED
+parameter_list|(
+name|r
+parameter_list|)
+define|\
+value|( (r)->cur< (r)->reserved ?			\ 	  (r)->cur + (r)->num_slots - (r)->reserved :	\ 	  (r)->cur - (r)->reserved )
 end_define
 
 begin_comment

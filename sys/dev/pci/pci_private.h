@@ -34,9 +34,6 @@ block|{
 name|bus_dma_tag_t
 name|sc_dma_tag
 decl_stmt|;
-name|int
-name|sc_dma_tag_valid
-decl_stmt|;
 block|}
 struct|;
 end_struct

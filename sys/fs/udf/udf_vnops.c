@@ -116,12 +116,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/fifofs/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<fs/udf/ecma167-udf.h>
 end_include
 

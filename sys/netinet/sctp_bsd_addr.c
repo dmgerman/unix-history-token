@@ -728,6 +728,9 @@ case|case
 name|IFT_L2VLAN
 case|:
 case|case
+name|IFT_STF
+case|:
+case|case
 name|IFT_IP
 case|:
 case|case
@@ -736,6 +739,10 @@ case|:
 case|case
 name|IFT_IPOVERCLAW
 case|:
+case|case
+name|IFT_PROPVIRTUAL
+case|:
+comment|/* NetGraph Virtual too */
 case|case
 name|IFT_VIRTUALIPADDRESS
 case|:

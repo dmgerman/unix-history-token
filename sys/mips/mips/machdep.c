@@ -28,12 +28,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_cputype.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_ddb.h"
 end_include
 
@@ -1298,23 +1292,9 @@ operator|-
 name|MipsTLBMiss
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-name|defined
-argument_list|(
-name|CPU_CNMIPS
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_RMI
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|CPU_NLM
-argument_list|)
-comment|/* Fake, but sufficient, for the 32-bit with 64-bit hardware addresses  */
+ifdef|#
+directive|ifdef
+name|__mips_n64
 name|bcopy
 argument_list|(
 name|MipsTLBMiss
@@ -1460,33 +1440,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-block|}
-end_function
-
-begin_comment
-comment|/*  * Many SoCs have a means to reset the core itself.  Others do not, or  * the method is unknown to us.  For those cases, we jump to the mips  * reset vector and hope for the best.  This works well in practice.  */
-end_comment
-
-begin_function
-name|void
-name|mips_generic_reset
-parameter_list|()
-block|{
-operator|(
-operator|(
-name|void
-argument_list|(
-operator|*
-argument_list|)
-argument_list|(
-name|void
-argument_list|)
-operator|)
-name|MIPS_RESET_EXC_VEC
-operator|)
-operator|(
-operator|)
-expr_stmt|;
 block|}
 end_function
 

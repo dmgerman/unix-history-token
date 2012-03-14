@@ -2133,8 +2133,6 @@ name|struct
 name|vmspace
 modifier|*
 name|vm
-init|=
-name|NULL
 decl_stmt|;
 name|vm_map_t
 name|map
@@ -2199,22 +2197,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * This is a fault on non-kernel virtual memory. 		 * vm is initialized above to NULL. If curproc is NULL 		 * or curproc->p_vmspace is NULL the fault is fatal. 		 */
+comment|/* 		 * This is a fault on non-kernel virtual memory.  If either 		 * p or p->p_vmspace is NULL, then the fault is fatal. 		 */
 if|if
 condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
-condition|)
+operator|||
+operator|(
 name|vm
 operator|=
 name|p
 operator|->
 name|p_vmspace
-expr_stmt|;
-if|if
-condition|(
-name|vm
+operator|)
 operator|==
 name|NULL
 condition|)
