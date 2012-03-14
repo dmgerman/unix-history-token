@@ -1091,7 +1091,7 @@ decl_stmt|;
 ifdef|#
 directive|ifdef
 name|VM_PHYSSEG_SPARSE
-name|long
+name|vm_pindex_t
 name|pages
 decl_stmt|;
 name|int
