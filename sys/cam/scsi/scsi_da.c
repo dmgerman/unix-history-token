@@ -7631,6 +7631,17 @@ name|ascq
 argument_list|)
 expr_stmt|;
 block|}
+else|else
+name|error_code
+operator|=
+name|sense_key
+operator|=
+name|asc
+operator|=
+name|ascq
+operator|=
+literal|0
+expr_stmt|;
 comment|/* 				 * If we tried READ CAPACITY(16) and failed, 				 * fallback to READ CAPACITY(10). 				 */
 if|if
 condition|(
