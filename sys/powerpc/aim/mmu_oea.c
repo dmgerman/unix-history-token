@@ -8308,6 +8308,9 @@ name|struct
 name|pvo_entry
 modifier|*
 name|pvo
+decl_stmt|,
+modifier|*
+name|tpvo
 decl_stmt|;
 name|int
 name|pteidx
@@ -8374,13 +8377,15 @@ block|}
 block|}
 else|else
 block|{
-name|LIST_FOREACH
+name|LIST_FOREACH_SAFE
 argument_list|(
 argument|pvo
 argument_list|,
 argument|&pm->pmap_pvo
 argument_list|,
 argument|pvo_plink
+argument_list|,
+argument|tpvo
 argument_list|)
 block|{
 if|if
