@@ -1584,10 +1584,6 @@ begin_comment
 comment|/*  * Vnode op for reading.  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 specifier|static
 name|int
