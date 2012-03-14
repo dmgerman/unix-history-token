@@ -389,6 +389,7 @@ block|{
 name|int
 name|s
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1138,6 +1139,17 @@ end_comment
 begin_decl_stmt
 specifier|static
 name|int
+name|NoBind
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* don't bind() as suggested by RFC 3164 */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
 name|SecureMode
 decl_stmt|;
 end_decl_stmt
@@ -1286,6 +1298,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* Number of entries in AllowedPeers */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|RemoteAddDate
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Always set the date on remote messages */
 end_comment
 
 begin_decl_stmt
@@ -1614,6 +1637,8 @@ modifier|*
 parameter_list|,
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1859,7 +1884,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"468Aa:b:cCdf:kl:m:nop:P:sS:uv"
+literal|"468Aa:b:cCdf:kl:m:nNop:P:sS:Tuv"
 argument_list|)
 operator|)
 operator|!=
@@ -2223,6 +2248,18 @@ literal|60
 expr_stmt|;
 break|break;
 case|case
+literal|'N'
+case|:
+name|NoBind
+operator|=
+literal|1
+expr_stmt|;
+name|SecureMode
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
 literal|'n'
 case|:
 name|resolve
@@ -2321,6 +2358,14 @@ operator|.
 name|name
 operator|=
 name|optarg
+expr_stmt|;
+break|break;
+case|case
+literal|'T'
+case|:
+name|RemoteAddDate
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -3520,6 +3565,12 @@ argument_list|(
 name|hname
 argument_list|,
 name|line
+argument_list|,
+name|RemoteAddDate
+condition|?
+name|ADDDATE
+else|:
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3615,6 +3666,8 @@ argument_list|(
 name|LocalHostName
 argument_list|,
 name|line
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -3812,7 +3865,7 @@ name|stderr
 argument_list|,
 literal|"%s\n%s\n%s\n%s\n"
 argument_list|,
-literal|"usage: syslogd [-468ACcdknosuv] [-a allowed_peer]"
+literal|"usage: syslogd [-468ACcdknosTuv] [-a allowed_peer]"
 argument_list|,
 literal|"               [-b bind_address] [-f config_file]"
 argument_list|,
@@ -3846,6 +3899,9 @@ parameter_list|,
 name|char
 modifier|*
 name|msg
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|char
@@ -4128,7 +4184,7 @@ name|line
 argument_list|,
 name|hname
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -11511,8 +11567,6 @@ name|masklen
 init|=
 operator|-
 literal|1
-decl_stmt|,
-name|i
 decl_stmt|;
 name|struct
 name|addrinfo
@@ -11529,6 +11583,12 @@ decl_stmt|,
 modifier|*
 name|maskp
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
+name|i
+decl_stmt|;
 name|u_int32_t
 modifier|*
 name|addr6p
@@ -11536,6 +11596,8 @@ decl_stmt|,
 modifier|*
 name|mask6p
 decl_stmt|;
+endif|#
+directive|endif
 name|char
 name|ip
 index|[
@@ -12565,10 +12627,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|j
-decl_stmt|,
-name|reject
 decl_stmt|;
 name|size_t
 name|l1
@@ -12614,6 +12672,14 @@ name|m4p
 init|=
 name|NULL
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
+name|int
+name|j
+decl_stmt|,
+name|reject
+decl_stmt|;
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -12629,6 +12695,8 @@ name|m6p
 init|=
 name|NULL
 decl_stmt|;
+endif|#
+directive|endif
 name|struct
 name|addrinfo
 name|hints
@@ -14295,6 +14363,13 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+comment|/* 		 * RFC 3164 recommends that client side message 		 * should come from the privileged syslogd port. 		 * 		 * If the system administrator choose not to obey 		 * this, we can skip the bind() step so that the 		 * system will choose a port for us. 		 */
+if|if
+condition|(
+operator|!
+name|NoBind
+condition|)
+block|{
 if|if
 condition|(
 name|bind
@@ -14327,12 +14402,18 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+operator|!
+name|SecureMode
+condition|)
 name|double_rbuf
 argument_list|(
 operator|*
 name|s
 argument_list|)
 expr_stmt|;
+block|}
 operator|(
 operator|*
 name|socks
