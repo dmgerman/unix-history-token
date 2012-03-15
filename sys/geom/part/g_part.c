@@ -654,6 +654,16 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|MODULE_VERSION
+argument_list|(
+name|g_part
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * Support functions.  */
 end_comment
