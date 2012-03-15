@@ -231,6 +231,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kld_debug"
+argument_list|,
+operator|&
+name|kld_debug
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
