@@ -220,6 +220,8 @@ argument_list|,
 name|kld_debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kld_debug
