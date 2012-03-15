@@ -337,9 +337,14 @@ name|int
 name|fdt_get_phyaddr
 parameter_list|(
 name|phandle_t
-name|node
+parameter_list|,
+name|device_t
 parameter_list|,
 name|int
+modifier|*
+parameter_list|,
+name|void
+modifier|*
 modifier|*
 parameter_list|)
 function_decl|;
