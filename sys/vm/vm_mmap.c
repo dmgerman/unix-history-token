@@ -231,6 +231,12 @@ directive|include
 file|<vm/vm_page.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vnode_pager.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -297,6 +303,9 @@ name|vm_ooffset_t
 modifier|*
 parameter_list|,
 name|vm_object_t
+modifier|*
+parameter_list|,
+name|boolean_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -4967,7 +4976,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_mmap_vnode()  *  * MPSAFE  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on vnodes.  */
+comment|/*  * vm_mmap_vnode()  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on vnodes.  *  * For VCHR vnodes, the vnode lock is held over the call to  * vm_mmap_cdev() to keep vp->v_rdev valid.  */
 end_comment
 
 begin_function
@@ -5005,6 +5014,10 @@ parameter_list|,
 name|vm_object_t
 modifier|*
 name|objp
+parameter_list|,
+name|boolean_t
+modifier|*
+name|writecounted
 parameter_list|)
 block|{
 name|struct
@@ -5031,8 +5044,9 @@ name|int
 name|error
 decl_stmt|,
 name|flags
-decl_stmt|;
-name|int
+decl_stmt|,
+name|locktype
+decl_stmt|,
 name|vfslocked
 decl_stmt|;
 name|mp
@@ -5046,6 +5060,31 @@ operator|=
 name|td
 operator|->
 name|td_ucred
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|maxprotp
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|&&
+operator|(
+operator|*
+name|flagsp
+operator|&
+name|MAP_SHARED
+operator|)
+condition|)
+name|locktype
+operator|=
+name|LK_EXCLUSIVE
+expr_stmt|;
+else|else
+name|locktype
+operator|=
+name|LK_SHARED
 expr_stmt|;
 name|vfslocked
 operator|=
@@ -5063,7 +5102,7 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-name|LK_SHARED
+name|locktype
 argument_list|,
 name|td
 argument_list|)
@@ -5149,13 +5188,56 @@ name|obj
 operator|->
 name|handle
 expr_stmt|;
+comment|/* 			 * Bypass filesystems obey the mpsafety of the 			 * underlying fs. 			 */
+name|error
+operator|=
 name|vget
 argument_list|(
 name|vp
 argument_list|,
-name|LK_SHARED
+name|locktype
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
+if|if
+condition|(
+name|locktype
+operator|==
+name|LK_EXCLUSIVE
+condition|)
+block|{
+operator|*
+name|writecounted
+operator|=
+name|TRUE
+expr_stmt|;
+name|vnode_pager_update_writecount
+argument_list|(
+name|obj
+argument_list|,
+literal|0
+argument_list|,
+name|objsize
 argument_list|)
 expr_stmt|;
 block|}
@@ -5351,9 +5433,7 @@ name|prot
 argument_list|,
 name|foff
 argument_list|,
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|)
 expr_stmt|;
 if|if
@@ -5914,6 +5994,9 @@ name|td
 init|=
 name|curthread
 decl_stmt|;
+name|boolean_t
+name|writecounted
+decl_stmt|;
 if|if
 condition|(
 name|size
@@ -6080,6 +6163,10 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+name|writecounted
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 	 * Lookup/allocate object. 	 */
 switch|switch
 condition|(
@@ -6141,6 +6228,9 @@ name|foff
 argument_list|,
 operator|&
 name|object
+argument_list|,
+operator|&
+name|writecounted
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6299,6 +6389,14 @@ name|MAP_INHERIT_SHARE
 expr_stmt|;
 if|if
 condition|(
+name|writecounted
+condition|)
+name|docow
+operator||=
+name|MAP_VN_WRITECOUNT
+expr_stmt|;
+if|if
+condition|(
 name|flags
 operator|&
 name|MAP_STACK
@@ -6393,7 +6491,20 @@ operator|!=
 name|KERN_SUCCESS
 condition|)
 block|{
-comment|/* 		 * Lose the object reference. Will destroy the 		 * object if it's an unnamed anonymous mapping 		 * or named anonymous without other references. 		 */
+comment|/* 		 * Lose the object reference. Will destroy the 		 * object if it's an unnamed anonymous mapping 		 * or named anonymous without other references. 		 * 		 * If this mapping was accounted for in the vnode's 		 * writecount, then undo that now. 		 */
+if|if
+condition|(
+name|writecounted
+condition|)
+name|vnode_pager_release_writecount
+argument_list|(
+name|object
+argument_list|,
+literal|0
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
 name|vm_object_deallocate
 argument_list|(
 name|object
