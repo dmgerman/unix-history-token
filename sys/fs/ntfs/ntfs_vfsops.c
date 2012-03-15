@@ -228,12 +228,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_struct_decl
-struct_decl|struct
-name|sockaddr
-struct_decl|;
-end_struct_decl
-
 begin_function_decl
 specifier|static
 name|int

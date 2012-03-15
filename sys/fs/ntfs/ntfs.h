@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|BBLOCK
-value|((daddr_t)(0))
+value|0
 end_define
 
 begin_define
