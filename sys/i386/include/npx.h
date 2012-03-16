@@ -27,38 +27,38 @@ begin_struct
 struct|struct
 name|env87
 block|{
-name|long
+name|int32_t
 name|en_cw
 decl_stmt|;
 comment|/* control word (16bits) */
-name|long
+name|int32_t
 name|en_sw
 decl_stmt|;
 comment|/* status word (16bits) */
-name|long
+name|int32_t
 name|en_tw
 decl_stmt|;
 comment|/* tag word (16bits) */
-name|long
+name|int32_t
 name|en_fip
 decl_stmt|;
-comment|/* floating point instruction pointer */
-name|u_short
+comment|/* fp instruction pointer */
+name|uint16_t
 name|en_fcs
 decl_stmt|;
-comment|/* floating code segment selector */
-name|u_short
+comment|/* fp code segment selector */
+name|uint16_t
 name|en_opcode
 decl_stmt|;
 comment|/* opcode last executed (11 bits ) */
-name|long
+name|int32_t
 name|en_foo
 decl_stmt|;
-comment|/* floating operand offset */
-name|long
+comment|/* fp operand offset */
+name|int32_t
 name|en_fos
 decl_stmt|;
-comment|/* floating operand segment selector */
+comment|/* fp operand segment selector */
 block|}
 struct|;
 end_struct
