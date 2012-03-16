@@ -1003,13 +1003,6 @@ end_struct
 begin_define
 define|#
 directive|define
-name|ndpr_next
-value|ndpr_entry.le_next
-end_define
-
-begin_define
-define|#
-directive|define
 name|ndpr_raf
 value|ndpr_flags
 end_define
@@ -1132,10 +1125,6 @@ argument|nd_pfxrouter
 argument_list|)
 name|pfr_entry
 expr_stmt|;
-define|#
-directive|define
-name|pfr_next
-value|pfr_entry.le_next
 name|struct
 name|nd_defrouter
 modifier|*
