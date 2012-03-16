@@ -12,12 +12,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<ctype.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<inttypes.h>
 end_include
 
@@ -250,10 +244,21 @@ begin_decl_stmt
 specifier|static
 name|char
 specifier|const
-name|hex2ascii_data
+name|hex2ascii_lower
 index|[]
 init|=
 literal|"0123456789abcdefghijklmnopqrstuvwxyz"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+specifier|const
+name|hex2ascii_upper
+index|[]
+init|=
+literal|"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 decl_stmt|;
 end_decl_stmt
 
@@ -264,7 +269,17 @@ name|hex2ascii
 parameter_list|(
 name|hex
 parameter_list|)
-value|(hex2ascii_data[hex])
+value|(hex2ascii_lower[hex])
+end_define
+
+begin_define
+define|#
+directive|define
+name|hex2ascii_upper
+parameter_list|(
+name|hex
+parameter_list|)
+value|(hex2ascii_upper[hex])
 end_define
 
 begin_function
@@ -337,6 +352,15 @@ do|do
 block|{
 name|c
 operator|=
+name|upper
+condition|?
+name|hex2ascii_upper
+argument_list|(
+name|num
+operator|%
+name|base
+argument_list|)
+else|:
 name|hex2ascii
 argument_list|(
 name|num
@@ -348,13 +372,6 @@ operator|*
 operator|++
 name|p
 operator|=
-name|upper
-condition|?
-name|toupper
-argument_list|(
-name|c
-argument_list|)
-else|:
 name|c
 expr_stmt|;
 block|}
