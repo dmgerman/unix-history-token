@@ -220,6 +220,8 @@ argument_list|,
 name|kld_debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kld_debug
@@ -227,6 +229,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Set various levels of KLD debug"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kld_debug"
+argument_list|,
+operator|&
+name|kld_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt

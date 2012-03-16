@@ -686,7 +686,8 @@ name|dev
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(

@@ -389,7 +389,7 @@ literal|"lm_init: open(\"%s\") failed, %s"
 argument_list|,
 name|_PATH_LIBMAP_CONF
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -424,7 +424,7 @@ literal|"lm_init: fstat(\"%s\") failed, %s"
 argument_list|,
 name|_PATH_LIBMAP_CONF
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -476,7 +476,7 @@ literal|"lm_init: mmap(\"%s\") failed, %s"
 argument_list|,
 name|_PATH_LIBMAP_CONF
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)

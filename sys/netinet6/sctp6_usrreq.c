@@ -3037,7 +3037,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -3466,7 +3466,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -4561,7 +4561,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET

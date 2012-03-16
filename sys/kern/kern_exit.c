@@ -3007,6 +3007,14 @@ name|proc
 modifier|*
 name|q
 decl_stmt|;
+name|sx_assert
+argument_list|(
+operator|&
+name|proctree_lock
+argument_list|,
+name|SA_XLOCKED
+argument_list|)
+expr_stmt|;
 name|q
 operator|=
 name|td
