@@ -6620,6 +6620,8 @@ condition|(
 name|vesa_bios_set_mode
 argument_list|(
 name|mode
+operator||
+literal|0x8000
 argument_list|)
 condition|)
 return|return
