@@ -6029,7 +6029,12 @@ name|r
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 name|PAGE_SIZE
@@ -6405,7 +6410,12 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 name|PAGE_SIZE
@@ -7773,7 +7783,12 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|adapter
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 name|PAGE_SIZE

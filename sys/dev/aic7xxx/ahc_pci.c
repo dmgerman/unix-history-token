@@ -329,7 +329,6 @@ operator||=
 name|AHC_39BIT_ADDRESSING
 expr_stmt|;
 comment|/* Allocate a dmatag for our SCB DMA maps */
-comment|/* XXX Should be a child of the PCI bus dma tag */
 name|error
 operator|=
 name|aic_dma_tag_create
