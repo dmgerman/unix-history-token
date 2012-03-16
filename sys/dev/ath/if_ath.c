@@ -20622,9 +20622,20 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: dobaw should've been cleared!\n"
+literal|"%s: bf %p: seqno %d: dobaw should've been cleared!\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|bf
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -20641,9 +20652,20 @@ name|sc
 operator|->
 name|sc_dev
 argument_list|,
-literal|"%s: bf_next not NULL!\n"
+literal|"%s: bf %p: seqno %d: bf_next not NULL!\n"
 argument_list|,
 name|__func__
+argument_list|,
+name|bf
+argument_list|,
+name|SEQNO
+argument_list|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Do any tx complete callback.  Note this must 	 * be done before releasing the node reference. 	 * This will free the mbuf, release the net80211 	 * node and recycle the ath_buf. 	 */
@@ -23052,8 +23074,12 @@ decl_stmt|;
 name|u_int
 name|ix
 decl_stmt|;
-name|printf
+name|device_printf
 argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
 literal|"%s: rx queue %p, link %p\n"
 argument_list|,
 name|__func__
