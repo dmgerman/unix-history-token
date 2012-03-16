@@ -540,9 +540,8 @@ name|mnt_flag
 decl_stmt|;
 comment|/* (i) flags shared with user */
 name|u_int
-name|mnt_noasync
+name|mnt_pad_noasync
 decl_stmt|;
-comment|/* (i) # noasync overrides */
 name|struct
 name|vfsoptlist
 modifier|*
@@ -1312,6 +1311,17 @@ end_define
 
 begin_comment
 comment|/* Allow shared locking for writes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_NOASYNC
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* disable async */
 end_comment
 
 begin_define

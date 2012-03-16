@@ -13170,6 +13170,11 @@ argument_list|)
 expr_stmt|;
 name|MNT_KERN_FLAG
 argument_list|(
+name|MNTK_NOASYNC
+argument_list|)
+expr_stmt|;
+name|MNT_KERN_FLAG
+argument_list|(
 name|MNTK_UNMOUNT
 argument_list|)
 expr_stmt|;
@@ -13577,15 +13582,6 @@ argument_list|,
 name|mp
 operator|->
 name|mnt_writeopcount
-argument_list|)
-expr_stmt|;
-name|db_printf
-argument_list|(
-literal|"    mnt_noasync = %u\n"
-argument_list|,
-name|mp
-operator|->
-name|mnt_noasync
 argument_list|)
 expr_stmt|;
 name|db_printf
