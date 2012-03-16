@@ -34,7 +34,7 @@ file|"opt_ath.h"
 end_include
 
 begin_comment
-comment|/*  * This is needed for register operations which are performed  * by the driver - eg, calls to ath_hal_gettsf32().  */
+comment|/*  * This is needed for register operations which are performed  * by the driver - eg, calls to ath_hal_gettsf32().  *  * It's also required for any AH_DEBUG checks in here, eg the  * module dependencies.  */
 end_comment
 
 begin_include
@@ -29634,6 +29634,41 @@ end_expr_stmt
 begin_comment
 comment|/* 802.11 media layer */
 end_comment
+
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|IEEE80211_ALQ
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|AH_DEBUG_ALQ
+argument_list|)
+end_if
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|if_ath
+argument_list|,
+name|alq
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 
