@@ -2717,6 +2717,13 @@ block|}
 block|,
 comment|/* 	 * VM 	 *  	 */
 block|{
+literal|"system map"
+block|,
+operator|&
+name|lock_class_mtx_sleep
+block|}
+block|,
+block|{
 literal|"vm object"
 block|,
 operator|&
