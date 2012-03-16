@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_apic.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_atalk.h"
 end_include
 
@@ -539,6 +545,23 @@ begin_include
 include|#
 directive|include
 file|<machine/smp.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEV_APIC
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<machine/apicvar.h>
 end_include
 
 begin_endif

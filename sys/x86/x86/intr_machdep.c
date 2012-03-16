@@ -150,11 +150,33 @@ directive|include
 file|<x86/isa/icu.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/cbus/cbus.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<x86/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1723,9 +1745,10 @@ name|IO_ICU1
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-literal|1
-operator|<<
-literal|2
+name|IRQ_MASK
+argument_list|(
+name|ICU_SLAVEID
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1734,7 +1757,7 @@ name|IO_ICU1
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-name|ICW4_8086
+name|MASTER_MODE
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1781,7 +1804,7 @@ name|IO_ICU2
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-literal|2
+name|ICU_SLAVEID
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1790,7 +1813,7 @@ name|IO_ICU2
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-name|ICW4_8086
+name|SLAVE_MODE
 argument_list|)
 expr_stmt|;
 name|outb
