@@ -179,6 +179,9 @@ name|int
 parameter_list|,
 name|int
 modifier|*
+parameter_list|,
+name|boolean_t
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
