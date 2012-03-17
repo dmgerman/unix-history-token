@@ -393,7 +393,7 @@ value|(BRIDGE_RTHASH_SIZE - 1)
 end_define
 
 begin_comment
-comment|/*  * Maximum number of addresses to cache.  */
+comment|/*  * Default maximum number of addresses to cache.  */
 end_comment
 
 begin_ifndef
@@ -406,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|BRIDGE_RTABLE_MAX
-value|100
+value|2000
 end_define
 
 begin_endif
