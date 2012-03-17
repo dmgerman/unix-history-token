@@ -1192,6 +1192,33 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+name|int
+name|nfs_keep_dirty_on_error
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_vfs_nfs
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|nfs_keep_dirty_on_error
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|nfs_keep_dirty_on_error
+argument_list|,
+literal|0
+argument_list|,
+literal|"Retry pageout if error returned"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * This sysctl allows other processes to mmap a file that has been opened  * O_DIRECT by a process.  In general, having processes mmap the file while  * Direct IO is in progress can lead to Data Inconsistencies.  But, we allow  * this by default to prevent DoS attacks - to prevent a malicious user from  * opening up files O_DIRECT preventing other users from mmap'ing these  * files.  "Protected" environments where stricter consistency guarantees are  * required can disable this knob.  The process that opened the file O_DIRECT  * cannot mmap() the file, because mmap'ed IO on an O_DIRECT open() is not  * meaningful.  */
 end_comment
