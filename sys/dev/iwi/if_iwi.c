@@ -7616,9 +7616,11 @@ name|NULL
 expr_stmt|;
 while|while
 condition|(
-name|frm
-operator|<
 name|efrm
+operator|-
+name|frm
+operator|>
+literal|1
 condition|)
 block|{
 name|IEEE80211_VERIFY_LENGTH
@@ -7627,7 +7629,8 @@ argument|efrm - frm
 argument_list|,
 argument|frm[
 literal|1
-argument|]
+argument|] +
+literal|2
 argument_list|,
 argument|return
 argument_list|)
