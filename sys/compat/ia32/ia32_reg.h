@@ -15,6 +15,12 @@ directive|define
 name|_COMPAT_IA32_IA32_REG_H_
 end_define
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__ia64__
+end_ifdef
+
 begin_comment
 comment|/*  * Register set accessible via /proc/$pid/regs and PT_{SET,GET}REGS.  */
 end_comment
@@ -162,6 +168,11 @@ comment|/* debug registers */
 block|}
 struct|;
 end_struct
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Wrappers and converters.  */
