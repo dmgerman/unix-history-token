@@ -1172,6 +1172,9 @@ case|case
 name|IFT_ETHER
 case|:
 case|case
+name|IFT_L2VLAN
+case|:
+case|case
 name|IFT_FDDI
 case|:
 case|case
