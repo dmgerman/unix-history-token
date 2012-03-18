@@ -15,6 +15,12 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
+end_include
+
 begin_function
 name|void
 name|_set_tp
@@ -23,7 +29,21 @@ name|void
 modifier|*
 name|tp
 parameter_list|)
-block|{ }
+block|{
+operator|*
+operator|(
+operator|(
+expr|struct
+name|tcb
+operator|*
+operator|*
+operator|)
+name|ARM_TP_ADDRESS
+operator|)
+operator|=
+name|tp
+expr_stmt|;
+block|}
 end_function
 
 end_unit
