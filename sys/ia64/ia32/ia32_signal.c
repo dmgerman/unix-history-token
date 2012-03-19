@@ -267,7 +267,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/segments.h>
+file|<x86/include/segments.h>
 end_include
 
 begin_include
