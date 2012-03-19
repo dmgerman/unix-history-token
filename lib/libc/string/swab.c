@@ -90,6 +90,13 @@ decl_stmt|,
 modifier|*
 name|tp
 decl_stmt|;
+if|if
+condition|(
+name|len
+operator|<=
+literal|0
+condition|)
+return|return;
 name|n
 operator|=
 name|len
