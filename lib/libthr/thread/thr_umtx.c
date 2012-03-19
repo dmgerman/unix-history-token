@@ -922,7 +922,7 @@ name|timeout
 operator|.
 name|_clockid
 operator|=
-name|CLOCK_REALTIME
+name|clockid
 expr_stmt|;
 name|timeout
 operator|.
