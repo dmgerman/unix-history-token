@@ -13526,10 +13526,9 @@ name|pt_entry_t
 modifier|*
 name|pte
 decl_stmt|;
-name|int
-name|anychanged
-decl_stmt|;
 name|boolean_t
+name|anychanged
+decl_stmt|,
 name|pv_lists_locked
 decl_stmt|;
 if|if
@@ -13581,7 +13580,7 @@ name|resume
 label|:
 name|anychanged
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -13773,7 +13772,7 @@ argument_list|)
 condition|)
 name|anychanged
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 continue|continue;
 block|}
@@ -14011,7 +14010,7 @@ expr_stmt|;
 else|else
 name|anychanged
 operator|=
-literal|1
+name|TRUE
 expr_stmt|;
 block|}
 block|}
