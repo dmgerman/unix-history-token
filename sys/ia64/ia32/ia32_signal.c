@@ -273,7 +273,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<i386/include/specialreg.h>
+file|<x86/include/specialreg.h>
 end_include
 
 begin_decl_stmt
