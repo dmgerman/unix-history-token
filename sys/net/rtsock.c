@@ -2094,7 +2094,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Try to find an address on the given outgoing interface 		 * that belongs to the jail. 		 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2161,7 +2161,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2299,7 +2299,7 @@ operator|=
 literal|0
 expr_stmt|;
 comment|/* 		 * Try to find an address on the given outgoing interface 		 * that belongs to the jail. 		 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2377,7 +2377,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8786,7 +8786,7 @@ operator|->
 name|if_index
 condition|)
 continue|continue;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9040,7 +9040,7 @@ name|done
 goto|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9077,7 +9077,7 @@ name|ifp
 operator|!=
 name|NULL
 condition|)
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9195,7 +9195,7 @@ name|ifa_addr
 else|:
 name|NULL
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9361,7 +9361,7 @@ condition|(
 name|error
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9372,7 +9372,7 @@ goto|;
 block|}
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

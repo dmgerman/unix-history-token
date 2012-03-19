@@ -2886,7 +2886,7 @@ name|ia_ifa
 operator|.
 name|ifa_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3011,7 +3011,7 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5299,7 +5299,7 @@ name|duplicated_linklocal
 init|=
 literal|0
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5359,7 +5359,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5447,7 +5447,7 @@ name|flags
 operator||=
 name|ND6_IFF_IFDISABLED
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5488,7 +5488,7 @@ operator||=
 name|IN6_IFF_TENTATIVE
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5562,7 +5562,7 @@ name|haslinklocal
 init|=
 literal|0
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5614,7 +5614,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

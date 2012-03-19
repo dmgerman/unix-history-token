@@ -2530,7 +2530,7 @@ operator|==
 name|IGMP_VERSION_3
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2606,7 +2606,7 @@ name|inm
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2995,7 +2995,7 @@ name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the timers in all of our group records 	 * for the interface on which the query arrived, 	 * except those which are already running. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3109,7 +3109,7 @@ case|:
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3351,7 +3351,7 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3401,7 +3401,7 @@ name|timer
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6302,7 +6302,7 @@ name|IGMP_MAX_STATE_CHANGE_PACKETS
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6388,7 +6388,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7286,7 +7286,7 @@ name|igi
 operator|->
 name|igi_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7417,7 +7417,7 @@ name|inm_scq
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -12646,7 +12646,7 @@ name|igi
 operator|->
 name|igi_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -12780,7 +12780,7 @@ case|:
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

@@ -4927,7 +4927,7 @@ name|ia_ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4947,7 +4947,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6404,7 +6404,7 @@ modifier|*
 name|ifa0
 decl_stmt|;
 comment|/* 	 * find another IPv6 address as the gateway for the 	 * link-local and node-local all-nodes multicast 	 * address routes 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6473,7 +6473,7 @@ argument_list|(
 name|ifa0
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6679,7 +6679,7 @@ init|=
 name|splnet
 argument_list|()
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6699,7 +6699,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7701,7 +7701,7 @@ literal|1
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7835,7 +7835,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8251,7 +8251,7 @@ modifier|*
 name|ifa
 decl_stmt|;
 comment|/* 	 * Give the interface a chance to initialize 	 * if this is its first address, 	 * and to validate the address if necessary. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8280,7 +8280,7 @@ name|ifacount
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8548,7 +8548,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8612,7 +8612,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8656,7 +8656,7 @@ name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8702,7 +8702,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9819,7 +9819,7 @@ operator|=
 name|NULL
 expr_stmt|;
 comment|/* 	 * We first look for addresses in the same scope. 	 * If there is one, return it. 	 * If two or more, return one which matches the dst longest. 	 * If none, return one of global addresses assigned other ifs. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10027,7 +10027,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10153,7 +10153,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10167,7 +10167,7 @@ operator|)
 name|ifa
 return|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10229,7 +10229,7 @@ name|in6_ifaddr
 modifier|*
 name|ia
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10289,7 +10289,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

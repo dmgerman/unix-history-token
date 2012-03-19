@@ -1929,7 +1929,7 @@ comment|/* 	 * XXX: Accesses to ifma_protospec must be covered by IF_ADDR_LOCK; 
 name|IN6_MULTI_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2021,7 +2021,7 @@ operator|*
 name|group
 expr_stmt|;
 comment|/* 	 * Check if a link-layer group is already associated 	 * with this network-layer group on the given ifnet. 	 */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2055,7 +2055,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2183,7 +2183,7 @@ goto|goto
 name|out_locked
 goto|;
 block|}
-name|IF_ADDR_LOCK_ASSERT
+name|IF_ADDR_WLOCK_ASSERT
 argument_list|(
 name|ifp
 argument_list|)
@@ -2319,7 +2319,7 @@ name|inm
 expr_stmt|;
 name|out_locked
 label|:
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -11732,7 +11732,7 @@ return|;
 name|IN6_MULTI_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -11899,7 +11899,7 @@ condition|)
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

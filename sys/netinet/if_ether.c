@@ -3037,7 +3037,7 @@ name|IN_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * No match, use the first inet address on the receive interface 	 * as a dummy address for the rest of the function. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3073,7 +3073,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3082,7 +3082,7 @@ goto|goto
 name|match
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
