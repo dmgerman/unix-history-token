@@ -1909,7 +1909,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|hardclock_anycpu
+name|hardclock_cnt
 parameter_list|(
 name|int
 name|cnt
@@ -1962,8 +1962,37 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|statclock_cnt
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
+name|int
+name|usermode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|profclock
 parameter_list|(
+name|int
+name|usermode
+parameter_list|,
+name|uintfptr_t
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|profclock_cnt
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
 name|int
 name|usermode
 parameter_list|,
