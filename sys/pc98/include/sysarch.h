@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/sysarch.h>
+file|<x86/sysarch.h>
 end_include
 
 end_unit
