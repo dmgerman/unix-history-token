@@ -511,6 +511,7 @@ comment|/**  * Returns the current locale for this thread, or the global locale 
 end_comment
 
 begin_function
+specifier|static
 specifier|inline
 name|locale_t
 name|__get_locale
