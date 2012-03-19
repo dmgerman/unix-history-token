@@ -986,10 +986,10 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|spinlock_enter
+name|intr_suspend
 argument_list|()
 expr_stmt|;
-name|intr_suspend
+name|spinlock_enter
 argument_list|()
 expr_stmt|;
 if|if
@@ -1280,10 +1280,10 @@ directive|endif
 name|mca_resume
 argument_list|()
 expr_stmt|;
-name|intr_resume
+name|spinlock_exit
 argument_list|()
 expr_stmt|;
-name|spinlock_exit
+name|intr_resume
 argument_list|()
 expr_stmt|;
 name|AcpiSetFirmwareWakingVector
