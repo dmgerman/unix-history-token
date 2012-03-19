@@ -303,6 +303,15 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|fadvisebehavname
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|madvisebehavname
 parameter_list|(
 name|int
