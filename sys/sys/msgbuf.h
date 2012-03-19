@@ -75,10 +75,6 @@ directive|define
 name|MSGBUF_NEEDNL
 value|0x01
 comment|/* set when newline needed */
-define|#
-directive|define
-name|MSGBUF_NEXT_NEW_LINE
-value|0x02
 name|struct
 name|mtx
 name|msg_lock

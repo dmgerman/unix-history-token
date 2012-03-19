@@ -363,6 +363,22 @@ end_function
 begin_function
 specifier|static
 name|void
+name|ar91xx_chip_set_mii_speed
+parameter_list|(
+name|uint32_t
+name|unit
+parameter_list|,
+name|uint32_t
+name|speed
+parameter_list|)
+block|{
+comment|/* XXX TODO */
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|ar91xx_chip_set_pll_ge
 parameter_list|(
 name|int
@@ -635,6 +651,9 @@ name|ar91xx_chip_device_stopped
 block|,
 operator|&
 name|ar91xx_chip_set_pll_ge
+block|,
+operator|&
+name|ar91xx_chip_set_mii_speed
 block|,
 operator|&
 name|ar91xx_chip_ddr_flush_ge

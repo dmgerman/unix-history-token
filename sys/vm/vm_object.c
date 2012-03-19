@@ -238,9 +238,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
+name|boolean_t
 modifier|*
 name|clearobjflags
+parameter_list|,
+name|boolean_t
+modifier|*
+name|eio
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -256,7 +260,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
+name|boolean_t
 modifier|*
 name|clearobjflags
 parameter_list|)
@@ -2863,7 +2867,7 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
+name|boolean_t
 modifier|*
 name|clearobjflags
 parameter_list|)
@@ -2893,7 +2897,7 @@ block|{
 operator|*
 name|clearobjflags
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 return|return
 operator|(
@@ -2922,11 +2926,11 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  Leaves page   * 	on whatever queue it is currently on.   If NOSYNC is set then do not  *	write out pages with VPO_NOSYNC set (originally comes from MAP_NOSYNC),  *	leaving the object dirty.  *  *	When stuffing pages asynchronously, allow clustering.  XXX we need a  *	synchronous clustering mode implementation.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  */
+comment|/*  *	vm_object_page_clean  *  *	Clean all dirty pages in the specified range of object.  Leaves page   * 	on whatever queue it is currently on.   If NOSYNC is set then do not  *	write out pages with VPO_NOSYNC set (originally comes from MAP_NOSYNC),  *	leaving the object dirty.  *  *	When stuffing pages asynchronously, allow clustering.  XXX we need a  *	synchronous clustering mode implementation.  *  *	Odd semantics: if start == end, we clean everything.  *  *	The object must be locked.  *  *	Returns FALSE if some page from the range was not written, as  *	reported by the pager, and TRUE otherwise.  */
 end_comment
 
 begin_function
-name|void
+name|boolean_t
 name|vm_object_page_clean
 parameter_list|(
 name|vm_object_t
@@ -2955,13 +2959,18 @@ decl_stmt|,
 name|tstart
 decl_stmt|;
 name|int
-name|clearobjflags
-decl_stmt|,
 name|curgeneration
 decl_stmt|,
 name|n
 decl_stmt|,
 name|pagerflags
+decl_stmt|;
+name|boolean_t
+name|clearobjflags
+decl_stmt|,
+name|eio
+decl_stmt|,
+name|res
 decl_stmt|;
 name|mtx_assert
 argument_list|(
@@ -3009,7 +3018,11 @@ name|resident_page_count
 operator|==
 literal|0
 condition|)
-return|return;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
 name|pagerflags
 operator|=
 operator|(
@@ -3079,6 +3092,10 @@ operator|>=
 name|object
 operator|->
 name|size
+expr_stmt|;
+name|res
+operator|=
+name|TRUE
 expr_stmt|;
 name|rescan
 label|:
@@ -3176,7 +3193,7 @@ goto|;
 else|else
 name|clearobjflags
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 block|}
 name|np
@@ -3218,8 +3235,25 @@ name|flags
 argument_list|,
 operator|&
 name|clearobjflags
+argument_list|,
+operator|&
+name|eio
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|eio
+condition|)
+block|{
+name|res
+operator|=
+name|FALSE
+expr_stmt|;
+name|clearobjflags
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|object
@@ -3245,7 +3279,7 @@ goto|;
 else|else
 name|clearobjflags
 operator|=
-literal|0
+name|FALSE
 expr_stmt|;
 block|}
 comment|/* 		 * If the VOP_PUTPAGES() did a truncated write, so 		 * that even the first page of the run is not fully 		 * written, vm_pageout_flush() returns 0 as the run 		 * length.  Since the condition that caused truncated 		 * write may be permanent, e.g. exhausted free space, 		 * accepting n == 0 would cause an infinite loop. 		 * 		 * Forwarding the iterator leaves the unwritten page 		 * behind, but there is not much we can do there if 		 * filesystem refuses to write it. 		 */
@@ -3255,10 +3289,16 @@ name|n
 operator|==
 literal|0
 condition|)
+block|{
 name|n
 operator|=
 literal|1
 expr_stmt|;
+name|clearobjflags
+operator|=
+name|FALSE
+expr_stmt|;
+block|}
 name|np
 operator|=
 name|vm_page_find_least
@@ -3288,6 +3328,11 @@ argument_list|,
 name|OBJ_MIGHTBEDIRTY
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
 block|}
 end_function
 
@@ -3308,9 +3353,13 @@ parameter_list|,
 name|int
 name|flags
 parameter_list|,
-name|int
+name|boolean_t
 modifier|*
 name|clearobjflags
+parameter_list|,
+name|boolean_t
+modifier|*
+name|eio
 parameter_list|)
 block|{
 name|vm_page_t
@@ -3530,6 +3579,8 @@ name|mreq
 argument_list|,
 operator|&
 name|runlen
+argument_list|,
+name|eio
 argument_list|)
 expr_stmt|;
 return|return
@@ -3545,7 +3596,7 @@ comment|/*  * Note that there is absolutely no sense in writing out  * anonymous
 end_comment
 
 begin_function
-name|void
+name|boolean_t
 name|vm_object_sync
 parameter_list|(
 name|vm_object_t
@@ -3578,9 +3629,14 @@ modifier|*
 name|mp
 decl_stmt|;
 name|int
+name|error
+decl_stmt|,
 name|flags
 decl_stmt|,
 name|fsync_after
+decl_stmt|;
+name|boolean_t
+name|res
 decl_stmt|;
 if|if
 condition|(
@@ -3588,7 +3644,19 @@ name|object
 operator|==
 name|NULL
 condition|)
-return|return;
+return|return
+operator|(
+name|TRUE
+operator|)
+return|;
+name|res
+operator|=
+name|TRUE
+expr_stmt|;
+name|error
+operator|=
+literal|0
+expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
 name|object
@@ -3784,6 +3852,8 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+name|res
+operator|=
 name|vm_object_page_clean
 argument_list|(
 name|object
@@ -3806,9 +3876,8 @@ if|if
 condition|(
 name|fsync_after
 condition|)
-operator|(
-name|void
-operator|)
+name|error
+operator|=
 name|VOP_FSYNC
 argument_list|(
 name|vp
@@ -3834,6 +3903,16 @@ name|vn_finished_write
 argument_list|(
 name|mp
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+name|res
+operator|=
+name|FALSE
 expr_stmt|;
 name|VM_OBJECT_LOCK
 argument_list|(
@@ -3914,6 +3993,11 @@ argument_list|(
 name|object
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|res
+operator|)
+return|;
 block|}
 end_function
 
@@ -3931,16 +4015,14 @@ parameter_list|,
 name|vm_pindex_t
 name|pindex
 parameter_list|,
-name|int
-name|count
+name|vm_pindex_t
+name|end
 parameter_list|,
 name|int
 name|advise
 parameter_list|)
 block|{
 name|vm_pindex_t
-name|end
-decl_stmt|,
 name|tpindex
 decl_stmt|;
 name|vm_object_t
@@ -3962,12 +4044,6 @@ name|VM_OBJECT_LOCK
 argument_list|(
 name|object
 argument_list|)
-expr_stmt|;
-name|end
-operator|=
-name|pindex
-operator|+
-name|count
 expr_stmt|;
 comment|/* 	 * Locate and adjust resident pages 	 */
 for|for

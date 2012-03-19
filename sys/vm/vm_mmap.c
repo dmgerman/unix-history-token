@@ -2057,6 +2057,14 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+case|case
+name|KERN_FAILURE
+case|:
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 default|default:
 return|return
 operator|(

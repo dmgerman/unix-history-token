@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<x86/reg.h>
+file|<x86/fpu.h>
 end_include
 
 end_unit

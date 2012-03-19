@@ -6412,10 +6412,15 @@ decl_stmt|;
 name|__be32
 name|ip4_addr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|in6_addr
 name|ip6_addr
 decl_stmt|;
+endif|#
+directive|endif
 name|memset
 argument_list|(
 name|compare
@@ -15728,6 +15733,9 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 name|struct
 name|sockaddr_in6
 modifier|*
@@ -15740,6 +15748,8 @@ operator|*
 operator|)
 name|addr
 decl_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|cma_any_addr
@@ -15759,6 +15769,9 @@ expr|*
 name|mgid
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET6
 block|}
 elseif|else
 if|if
@@ -15867,6 +15880,8 @@ operator|+
 literal|4
 operator|)
 expr_stmt|;
+endif|#
+directive|endif
 block|}
 else|else
 block|{

@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_compat.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -39,12 +45,6 @@ begin_include
 include|#
 directive|include
 file|<sys/procfs.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<compat/ia32/ia32_reg.h>
 end_include
 
 begin_function

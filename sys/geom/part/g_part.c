@@ -439,7 +439,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern_geom
@@ -487,6 +486,8 @@ argument_list|,
 name|check_integrity
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|check_integrity

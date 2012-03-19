@@ -175,9 +175,6 @@ decl_stmt|;
 name|size_t
 name|mapsize
 decl_stmt|;
-name|Elf_Off
-name|base_offset
-decl_stmt|;
 name|Elf_Addr
 name|base_vaddr
 decl_stmt|;
@@ -587,18 +584,6 @@ name|NULL
 return|;
 block|}
 comment|/*      * Map the entire address space of the object, to stake out our      * contiguous region, and to establish the base address for relocation.      */
-name|base_offset
-operator|=
-name|trunc_page
-argument_list|(
-name|segs
-index|[
-literal|0
-index|]
-operator|->
-name|p_offset
-argument_list|)
-expr_stmt|;
 name|base_vaddr
 operator|=
 name|trunc_page

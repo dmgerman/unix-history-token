@@ -4217,5 +4217,36 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_ALQ
+end_ifdef
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|wlan
+argument_list|,
+name|alq
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IEEE80211_ALQ */
+end_comment
+
 end_unit
 

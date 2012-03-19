@@ -4817,7 +4817,7 @@ name|fxp_init_body
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|fxp_stop
@@ -13498,7 +13498,7 @@ name|fxp_init_body
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -14140,7 +14140,7 @@ name|fxp_init_body
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|FXP_UNLOCK
