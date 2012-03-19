@@ -1240,20 +1240,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_comment
-comment|/* XXX */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|msecs_to_ticks
-parameter_list|(
-name|ms
-parameter_list|)
-value|(((ms) * hz) / 1000)
-end_define
-
 begin_function
 specifier|static
 name|struct
@@ -1522,12 +1508,6 @@ name|vap
 return|;
 block|}
 end_function
-
-begin_undef
-undef|#
-directive|undef
-name|msecs_to_ticks
-end_undef
 
 begin_function
 specifier|static
