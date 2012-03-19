@@ -968,26 +968,6 @@ define|if) rw_assert(&(if)->if_addr_lock, RA_WLOCKED)
 end_define
 
 begin_comment
-comment|/* XXX: Compat. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|IF_ADDR_LOCK
-parameter_list|(
-define|if)	IF_ADDR_WLOCK(if)
-end_define
-
-begin_define
-define|#
-directive|define
-name|IF_ADDR_UNLOCK
-parameter_list|(
-define|if)	IF_ADDR_WUNLOCK(if)
-end_define
-
-begin_comment
 comment|/*  * Function variations on locking macros intended to be used by loadable  * kernel modules in order to divorce them from the internals of address list  * locking.  */
 end_comment
 
