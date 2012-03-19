@@ -4939,6 +4939,7 @@ if|if
 condition|(
 name|__comp
 condition|)
+block|{
 if|if
 condition|(
 name|__j
@@ -4970,6 +4971,7 @@ else|else
 operator|--
 name|__j
 expr_stmt|;
+block|}
 end_if
 
 begin_if
