@@ -2051,8 +2051,12 @@ argument_list|,
 literal|"rtprio '%s' (%s): %m"
 argument_list|,
 name|pwd
+condition|?
+name|pwd
 operator|->
 name|pw_name
+else|:
+literal|"-"
 argument_list|,
 name|lc
 condition|?
@@ -2124,8 +2128,12 @@ argument_list|,
 literal|"rtprio '%s' (%s): %m"
 argument_list|,
 name|pwd
+condition|?
+name|pwd
 operator|->
 name|pw_name
+else|:
+literal|"-"
 argument_list|,
 name|lc
 condition|?
@@ -2162,8 +2170,12 @@ argument_list|,
 literal|"setpriority '%s' (%s): %m"
 argument_list|,
 name|pwd
+condition|?
+name|pwd
 operator|->
 name|pw_name
+else|:
+literal|"-"
 argument_list|,
 name|lc
 condition|?
