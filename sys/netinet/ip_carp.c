@@ -1669,7 +1669,7 @@ name|s_addr
 operator|=
 literal|0xffffffff
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -1753,7 +1753,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -1833,7 +1833,7 @@ name|cur6
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -1930,7 +1930,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6287,7 +6287,7 @@ name|MASTER
 operator|)
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6337,7 +6337,7 @@ name|count
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6502,7 +6502,7 @@ name|IFF_DRV_RUNNING
 operator|)
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6575,7 +6575,7 @@ operator|->
 name|sc_ifp
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6596,7 +6596,7 @@ return|;
 block|}
 else|else
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6621,7 +6621,7 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6777,7 +6777,7 @@ argument_list|,
 argument|sc_list
 argument_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6845,7 +6845,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6865,7 +6865,7 @@ operator|)
 return|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -6948,7 +6948,7 @@ argument_list|,
 argument|sc_list
 argument_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -7039,7 +7039,7 @@ name|NULL
 condition|)
 block|{
 comment|/* better a bit than nothing */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -7092,7 +7092,7 @@ argument_list|,
 name|mtag
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(
@@ -7117,7 +7117,7 @@ operator|)
 return|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|SC2IFP
 argument_list|(

@@ -1526,7 +1526,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1602,7 +1602,7 @@ operator|->
 name|ia_ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1957,7 +1957,7 @@ name|ifa
 argument_list|)
 expr_stmt|;
 comment|/* if_addrhead */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1974,7 +1974,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2880,7 +2880,7 @@ literal|"in_control: unsupported ioctl"
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2914,7 +2914,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * If we lost the race with another thread, there is no need to 		 * try it again for the next loop as there is no other exit 		 * path between here and out. 		 */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2942,7 +2942,7 @@ argument_list|,
 name|ifa_link
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3635,7 +3635,7 @@ name|s_addr
 expr_stmt|;
 block|}
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3720,7 +3720,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6242,7 +6242,7 @@ name|IN_MULTI_LOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * Extract list of in_multi associated with the detaching ifp 	 * which the PF_INET layer is about to release. 	 * We need to do this as IF_ADDR_LOCK() may be re-acquired 	 * by code further down. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6301,7 +6301,7 @@ name|inm_link
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

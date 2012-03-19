@@ -1814,7 +1814,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * Since we don't know the net, we just look for the first 		 * phase 1 address on the interface. 		 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1886,7 +1886,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1906,7 +1906,7 @@ operator|->
 name|aa_ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

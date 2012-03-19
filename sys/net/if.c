@@ -3803,7 +3803,7 @@ name|ifmultiaddr
 modifier|*
 name|next
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3827,7 +3827,7 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5158,7 +5158,7 @@ name|ifgm_ifp
 operator|=
 name|ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5187,7 +5187,7 @@ argument_list|,
 name|ifgl_next
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5281,7 +5281,7 @@ name|ENOENT
 operator|)
 return|;
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5298,7 +5298,7 @@ argument_list|,
 name|ifgl_next
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5486,7 +5486,7 @@ argument_list|,
 name|IFNAMSIZ
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5503,7 +5503,7 @@ argument_list|,
 name|ifgl_next
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5677,7 +5677,7 @@ operator|==
 literal|0
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5700,7 +5700,7 @@ expr|struct
 name|ifg_req
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5724,7 +5724,7 @@ operator|->
 name|ifgr_groups
 expr_stmt|;
 comment|/* XXX: wire */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5748,7 +5748,7 @@ name|ifgrq
 argument_list|)
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5809,7 +5809,7 @@ argument_list|)
 operator|)
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5831,7 +5831,7 @@ name|ifgp
 operator|++
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6231,7 +6231,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6249,7 +6249,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6267,7 +6267,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6285,7 +6285,7 @@ modifier|*
 name|ifp
 parameter_list|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6827,7 +6827,7 @@ argument_list|,
 argument|if_link
 argument_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6875,7 +6875,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6926,7 +6926,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6936,7 +6936,7 @@ name|done
 goto|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7051,7 +7051,7 @@ argument_list|,
 argument|if_link
 argument_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7115,7 +7115,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7125,7 +7125,7 @@ name|done
 goto|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7203,7 +7203,7 @@ operator|==
 literal|0
 condition|)
 continue|continue;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7253,7 +7253,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7263,7 +7263,7 @@ name|done
 goto|;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7383,7 +7383,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-comment|/* 	 * Scan though each interface, looking for ones that have addresses 	 * in this address family.  Maintain a reference on ifa_maybe once 	 * we find one, as we release the IF_ADDR_LOCK() that kept it stable 	 * when we move onto the next interface. 	 */
+comment|/* 	 * Scan though each interface, looking for ones that have addresses 	 * in this address family.  Maintain a reference on ifa_maybe once 	 * we find one, as we release the IF_ADDR_RLOCK() that kept it stable 	 * when we move onto the next interface. 	 */
 name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
@@ -7396,7 +7396,7 @@ argument_list|,
 argument|if_link
 argument_list|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7473,7 +7473,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7513,7 +7513,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7644,7 +7644,7 @@ expr_stmt|;
 block|}
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7747,7 +7747,7 @@ operator|(
 name|NULL
 operator|)
 return|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7940,7 +7940,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10555,7 +10555,7 @@ modifier|*
 name|ifma
 decl_stmt|;
 comment|/* 			 * Userland is only permitted to join groups once 			 * via the if_addmulti() KPI, because it cannot hold 			 * struct ifmultiaddr * between calls. It may also 			 * lose a race while we check if the membership 			 * already exists. 			 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -10572,7 +10572,7 @@ operator|->
 name|ifr_addr
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -12408,7 +12408,7 @@ name|addrs
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -12615,7 +12615,7 @@ name|sb
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13209,7 +13209,7 @@ name|int
 name|error
 decl_stmt|;
 comment|/* 	 * If the address is already present, return a new reference to it; 	 * otherwise, allocate storage and set up a new address. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13246,7 +13246,7 @@ name|retifma
 operator|=
 name|ifma
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13446,7 +13446,7 @@ argument_list|,
 name|ifma
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13514,7 +13514,7 @@ argument_list|)
 expr_stmt|;
 name|unlock_out
 label|:
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13619,7 +13619,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13654,7 +13654,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13731,7 +13731,7 @@ name|ifmultiaddr
 modifier|*
 name|next
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13755,7 +13755,7 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13868,7 +13868,7 @@ name|ifp
 operator|!=
 name|NULL
 condition|)
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13892,7 +13892,7 @@ name|NULL
 condition|)
 block|{
 comment|/* 		 * If and only if the ifnet instance exists: 		 *  Release the address lock. 		 *  If the group was left: update the hardware hash filter. 		 */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -13988,7 +13988,7 @@ name|ifp
 operator|)
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK_ASSERT
+name|IF_ADDR_WLOCK_ASSERT
 argument_list|(
 name|ifp
 argument_list|)
@@ -14198,7 +14198,7 @@ name|struct
 name|ifreq
 name|ifr
 decl_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -14216,7 +14216,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -14232,7 +14232,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

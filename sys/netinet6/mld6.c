@@ -2012,7 +2012,7 @@ operator|==
 name|MLD_VERSION_2
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2082,7 +2082,7 @@ name|inm
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2550,7 +2550,7 @@ name|timer
 operator|=
 literal|1
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2683,7 +2683,7 @@ name|mld_addr
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3406,7 +3406,7 @@ block|}
 else|else
 block|{
 comment|/* 		 * MLDv2 Group-specific or Group-and-source-specific Query. 		 * 		 * Group-source-specific queries are throttled on 		 * a per-group basis to defeat denial-of-service attempts. 		 * Queries for groups we are not a member of on this 		 * link are simply ignored. 		 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3430,7 +3430,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3470,7 +3470,7 @@ argument_list|,
 name|__func__
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3530,7 +3530,7 @@ operator|->
 name|mld_addr
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4323,7 +4323,7 @@ expr_stmt|;
 name|MLD_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -4465,13 +4465,13 @@ block|}
 block|}
 name|out_locked
 label|:
-name|MLD_UNLOCK
-argument_list|()
-expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
+expr_stmt|;
+name|MLD_UNLOCK
+argument_list|()
 expr_stmt|;
 name|IN6_MULTI_UNLOCK
 argument_list|()
@@ -5086,7 +5086,7 @@ name|MLD_MAX_STATE_CHANGE_PACKETS
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5167,7 +5167,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -5959,7 +5959,7 @@ name|mli
 operator|->
 name|mli_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6083,7 +6083,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -11239,7 +11239,7 @@ name|mli
 operator|->
 name|mli_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -11375,7 +11375,7 @@ case|:
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

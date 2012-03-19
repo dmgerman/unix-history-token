@@ -2140,7 +2140,7 @@ name|a2
 parameter_list|)
 define|\
 value|(bcmp((a1), (a2), ((a1))->sin6_len) == 0)
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2301,7 +2301,7 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
