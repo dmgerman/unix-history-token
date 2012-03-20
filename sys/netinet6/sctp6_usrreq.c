@@ -5790,14 +5790,6 @@ name|struct
 name|sockaddr_in6
 modifier|*
 name|sin6
-init|=
-operator|(
-expr|struct
-name|sockaddr_in6
-operator|*
-operator|)
-operator|*
-name|addr
 decl_stmt|;
 name|int
 name|fnd
