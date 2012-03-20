@@ -153,6 +153,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|ASL_PREPROCESSOR
+value|0x00020000
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_ALL_COMPONENTS
 value|0x0001FFFF
 end_define

@@ -1211,8 +1211,9 @@ name|Pointer
 argument_list|)
 expr_stmt|;
 break|break;
+comment|/* Not mapped or allocated, there is nothing we can do */
 default|default:
-break|break;
+return|return;
 block|}
 name|TableDesc
 operator|->

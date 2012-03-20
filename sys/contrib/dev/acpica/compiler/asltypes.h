@@ -352,9 +352,12 @@ name|ASL_FILE_STDERR
 block|,
 name|ASL_FILE_INPUT
 block|,
+comment|/* Don't move these first 3 file types */
 name|ASL_FILE_AML_OUTPUT
 block|,
 name|ASL_FILE_SOURCE_OUTPUT
+block|,
+name|ASL_FILE_PREPROCESSOR
 block|,
 name|ASL_FILE_LISTING_OUTPUT
 block|,
@@ -380,7 +383,7 @@ begin_define
 define|#
 directive|define
 name|ASL_MAX_FILE_TYPE
-value|12
+value|13
 end_define
 
 begin_define
@@ -442,6 +445,10 @@ decl_stmt|;
 name|char
 modifier|*
 name|Filename
+decl_stmt|;
+name|char
+modifier|*
+name|SourceLine
 decl_stmt|;
 name|UINT32
 name|FilenameLength

@@ -123,6 +123,8 @@ literal|"Binary Output:"
 block|,
 literal|"Source Output:"
 block|,
+literal|"Preprocessor: "
+block|,
 literal|"Listing File: "
 block|,
 literal|"Hex Dump:     "
@@ -1168,6 +1170,23 @@ operator|&&
 operator|(
 operator|!
 name|Gbl_SourceOutputFlag
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/* .I is a temp file unless specifically requested */
+if|if
+condition|(
+operator|(
+name|i
+operator|==
+name|ASL_FILE_PREPROCESSOR
+operator|)
+operator|&&
+operator|(
+operator|!
+name|Gbl_PreprocessorOutputFlag
 operator|)
 condition|)
 block|{

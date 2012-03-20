@@ -254,7 +254,7 @@ name|AcpiGetHandle
 argument_list|(
 name|NULL
 argument_list|,
-name|ACPI_NS_SYSTEM_BUS
+name|METHOD_NAME__SB_
 argument_list|,
 operator|&
 name|SysBusHandle

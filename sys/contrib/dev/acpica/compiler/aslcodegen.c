@@ -580,9 +580,9 @@ argument_list|(
 literal|"Found a node with an unassigned AML opcode\n"
 argument_list|)
 expr_stmt|;
-name|fprintf
+name|FlPrintFile
 argument_list|(
-name|stderr
+name|ASL_FILE_STDERR
 argument_list|,
 literal|"Found a node with an unassigned AML opcode\n"
 argument_list|)

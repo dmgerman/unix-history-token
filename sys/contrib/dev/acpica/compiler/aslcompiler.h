@@ -158,12 +158,18 @@ directive|include
 file|<contrib/dev/acpica/compiler/aslglobal.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/compiler/preprocess.h>
+end_include
+
 begin_comment
 comment|/*******************************************************************************  *  * Compiler prototypes  *  ******************************************************************************/
 end_comment
 
 begin_comment
-comment|/*  * parser - generated from flex/bison, lex/yacc, etc.  */
+comment|/*  * Main ASL parser - generated from flex/bison, lex/yacc, etc.  */
 end_comment
 
 begin_function_decl
@@ -720,6 +726,37 @@ name|LogicalByteOffset
 parameter_list|,
 name|UINT32
 name|Column
+parameter_list|,
+name|char
+modifier|*
+name|Filename
+parameter_list|,
+name|char
+modifier|*
+name|ExtraMessage
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|AslCommonError2
+parameter_list|(
+name|UINT8
+name|Level
+parameter_list|,
+name|UINT8
+name|MessageId
+parameter_list|,
+name|UINT32
+name|LineNumber
+parameter_list|,
+name|UINT32
+name|Column
+parameter_list|,
+name|char
+modifier|*
+name|SourceLine
 parameter_list|,
 name|char
 modifier|*
