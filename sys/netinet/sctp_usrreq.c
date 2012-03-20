@@ -2037,7 +2037,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 return|return;
@@ -2660,7 +2660,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -2741,7 +2741,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 return|return;
 comment|/* 	 * Inform all the lower layer assoc that we are done. 	 */
@@ -3034,7 +3034,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 if|if
@@ -4638,7 +4638,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -7546,7 +7546,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
@@ -16153,7 +16153,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_PRINTF
@@ -29403,44 +29403,6 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|inp
-operator|=
-operator|(
-expr|struct
-name|sctp_inpcb
-operator|*
-operator|)
-name|so
-operator|->
-name|so_pcb
-expr_stmt|;
-if|if
-condition|(
-name|inp
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* I made the same as TCP since we are not setup? */
-name|SCTP_LTRACE_ERR_RET
-argument_list|(
-name|inp
-argument_list|,
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|SCTP_FROM_SCTP_USRREQ
-argument_list|,
-name|EINVAL
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|ECONNRESET
-operator|)
-return|;
-block|}
 if|if
 condition|(
 name|sopt
@@ -29509,6 +29471,17 @@ name|error
 operator|)
 return|;
 block|}
+name|inp
+operator|=
+operator|(
+expr|struct
+name|sctp_inpcb
+operator|*
+operator|)
+name|so
+operator|->
+name|so_pcb
+expr_stmt|;
 name|optsize
 operator|=
 name|sopt
@@ -29801,7 +29774,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* I made the same as TCP since we are not setup? */
@@ -30590,7 +30563,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 comment|/* I made the same as TCP since we are not setup? */
@@ -31372,7 +31345,7 @@ if|if
 condition|(
 name|inp
 operator|==
-literal|0
+name|NULL
 condition|)
 block|{
 name|SCTP_LTRACE_ERR_RET
