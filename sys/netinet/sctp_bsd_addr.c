@@ -728,6 +728,9 @@ case|case
 name|IFT_L2VLAN
 case|:
 case|case
+name|IFT_STF
+case|:
+case|case
 name|IFT_IP
 case|:
 case|case
