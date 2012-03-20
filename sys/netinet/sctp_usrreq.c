@@ -32485,14 +32485,6 @@ name|struct
 name|sockaddr_in
 modifier|*
 name|sin
-init|=
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-operator|*
-name|addr
 decl_stmt|;
 name|int
 name|fnd
