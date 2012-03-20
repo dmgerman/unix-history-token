@@ -26,6 +26,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|METHOD_NAME__SB_
+value|"_SB_"
+end_define
+
+begin_define
+define|#
+directive|define
 name|METHOD_NAME__HID
 value|"_HID"
 end_define
@@ -135,35 +142,35 @@ end_comment
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__BFS
+name|METHOD_PATHNAME__BFS
 value|"\\_BFS"
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__GTS
+name|METHOD_PATHNAME__GTS
 value|"\\_GTS"
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__PTS
+name|METHOD_PATHNAME__PTS
 value|"\\_PTS"
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__SST
+name|METHOD_PATHNAME__SST
 value|"\\_SI._SST"
 end_define
 
 begin_define
 define|#
 directive|define
-name|METHOD_NAME__WAK
+name|METHOD_PATHNAME__WAK
 value|"\\_WAK"
 end_define
 
@@ -220,13 +227,6 @@ define|#
 directive|define
 name|ACPI_NS_ROOT_PATH
 value|"\\"
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_NS_SYSTEM_BUS
-value|"_SB_"
 end_define
 
 begin_endif

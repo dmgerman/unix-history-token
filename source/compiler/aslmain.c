@@ -180,7 +180,7 @@ begin_define
 define|#
 directive|define
 name|ASL_SUPPORTED_OPTIONS
-value|"@:2b:c:d^e:fgh^i^I:l^mno:p:r:s:t:T:G^v:w:x:z"
+value|"@:2b|c|d^D:e:fgh^i|I:l^mno|p:Pr:s|t|T:G^v|w|x:z"
 end_define
 
 begin_comment
@@ -212,6 +212,32 @@ argument_list|(
 literal|"-I<dir>"
 argument_list|,
 literal|"Specify additional include directory"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"\nPreprocessor:\n"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-D<symbol>"
+argument_list|,
+literal|"Define symbol for preprocessor use"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-li"
+argument_list|,
+literal|"Create preprocessed output file (*.i)"
+argument_list|)
+expr_stmt|;
+name|ACPI_OPTION
+argument_list|(
+literal|"-P"
+argument_list|,
+literal|"Preprocess only and create preprocessor output file (*.i)"
 argument_list|)
 expr_stmt|;
 name|printf
@@ -263,7 +289,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-w<1|2|3>"
+literal|"-w1 -w2 -w3"
 argument_list|,
 literal|"Set warning reporting level"
 argument_list|)
@@ -275,21 +301,21 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-s<a|c>"
+literal|"-sa -sc"
 argument_list|,
 literal|"Create AML in assembler or C source file (*.asm or *.c)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-i<a|c>"
+literal|"-ia -ic"
 argument_list|,
 literal|"Create assembler or C include file (*.inc or *.h)"
 argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-t<a|c|s>"
+literal|"-ta -tc -ts"
 argument_list|,
 literal|"Create AML in assembler, C, or ASL hex table (*.hex)"
 argument_list|)
@@ -552,7 +578,7 @@ argument_list|)
 expr_stmt|;
 name|ACPI_OPTION
 argument_list|(
-literal|"-b<p|t|b>"
+literal|"-bb -bp -bt"
 argument_list|,
 literal|"Create compiler debug/trace file (*.txt)"
 argument_list|)
@@ -1021,8 +1047,10 @@ literal|"Nested command files are not supported\n"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1034,14 +1062,17 @@ argument_list|)
 condition|)
 block|{
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 break|break;
 case|case
 literal|'2'
 case|:
+comment|/* ACPI 2.0 compatibility mode */
 name|Gbl_Acpi2
 operator|=
 name|TRUE
@@ -1050,6 +1081,7 @@ break|break;
 case|case
 literal|'b'
 case|:
+comment|/* Debug output options */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1070,6 +1102,10 @@ name|DtParserdebug
 operator|=
 literal|1
 expr_stmt|;
+name|PrParserdebug
+operator|=
+literal|1
+expr_stmt|;
 break|break;
 case|case
 literal|'p'
@@ -1080,6 +1116,10 @@ literal|1
 expr_stmt|;
 comment|/* same as yydebug */
 name|DtParserdebug
+operator|=
+literal|1
+expr_stmt|;
+name|PrParserdebug
 operator|=
 literal|1
 expr_stmt|;
@@ -1147,6 +1187,7 @@ break|break;
 case|case
 literal|'d'
 case|:
+comment|/* Disassembler */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1200,8 +1241,23 @@ name|TRUE
 expr_stmt|;
 break|break;
 case|case
+literal|'D'
+case|:
+comment|/* Define a symbol */
+name|PrAddDefine
+argument_list|(
+name|AcpiGbl_Optarg
+argument_list|,
+name|NULL
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 literal|'e'
 case|:
+comment|/* External files for disassembler */
 name|Status
 operator|=
 name|AcpiDmAddToExternalFileList
@@ -1237,6 +1293,14 @@ literal|'f'
 case|:
 comment|/* Ignore errors and force creation of aml file */
 name|Gbl_IgnoreErrors
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'G'
+case|:
+name|Gbl_CompileGeneric
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1338,6 +1402,7 @@ break|break;
 case|case
 literal|'i'
 case|:
+comment|/* Output AML as an include file */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1367,7 +1432,7 @@ break|break;
 default|default:
 name|printf
 argument_list|(
-literal|"Unknown option: -s%s\n"
+literal|"Unknown option: -i%s\n"
 argument_list|,
 name|AcpiGbl_Optarg
 argument_list|)
@@ -1383,6 +1448,7 @@ break|break;
 case|case
 literal|'l'
 case|:
+comment|/* Listing files */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1396,6 +1462,15 @@ literal|'^'
 case|:
 comment|/* Produce listing file (Mixed source/aml) */
 name|Gbl_ListingFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'i'
+case|:
+comment|/* Produce preprocessor output file */
+name|Gbl_PreprocessorOutputFlag
 operator|=
 name|TRUE
 expr_stmt|;
@@ -1437,6 +1512,7 @@ break|break;
 case|case
 literal|'m'
 case|:
+comment|/* Do not convert buffers to resource descriptors */
 name|AcpiGbl_NoResourceDisassembly
 operator|=
 name|TRUE
@@ -1454,6 +1530,7 @@ break|break;
 case|case
 literal|'o'
 case|:
+comment|/* Control compiler AML optimizations */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1532,6 +1609,19 @@ return|;
 block|}
 break|break;
 case|case
+literal|'P'
+case|:
+comment|/* Preprocess (plus .i file) only */
+name|Gbl_PreprocessOnly
+operator|=
+name|TRUE
+expr_stmt|;
+name|Gbl_PreprocessorOutputFlag
+operator|=
+name|TRUE
+expr_stmt|;
+break|break;
+case|case
 literal|'p'
 case|:
 comment|/* Override default AML output filename */
@@ -1547,6 +1637,7 @@ break|break;
 case|case
 literal|'r'
 case|:
+comment|/* Override revision found in table header */
 name|Gbl_RevisionOverride
 operator|=
 operator|(
@@ -1565,6 +1656,7 @@ break|break;
 case|case
 literal|'s'
 case|:
+comment|/* Create AML in a source code file */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1660,16 +1752,9 @@ return|;
 block|}
 break|break;
 case|case
-literal|'G'
-case|:
-name|Gbl_CompileGeneric
-operator|=
-name|TRUE
-expr_stmt|;
-break|break;
-case|case
 literal|'T'
 case|:
+comment|/* Create a ACPI table template file */
 name|Gbl_DoTemplates
 operator|=
 name|TRUE
@@ -1682,6 +1767,7 @@ break|break;
 case|case
 literal|'v'
 case|:
+comment|/* Verbosity settings */
 switch|switch
 condition|(
 name|AcpiGbl_Optarg
@@ -1811,6 +1897,7 @@ break|break;
 case|case
 literal|'x'
 case|:
+comment|/* Set debug print output level */
 name|AcpiDbgLevel
 operator|=
 name|strtoul
@@ -2072,6 +2159,9 @@ endif|#
 directive|endif
 comment|/* Init and command line */
 name|AslInitialize
+argument_list|()
+expr_stmt|;
+name|PrInitializePreprocessor
 argument_list|()
 expr_stmt|;
 name|Index1

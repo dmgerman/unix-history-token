@@ -126,6 +126,18 @@ end_comment
 
 begin_function_decl
 specifier|static
+name|UINT32
+name|AdGetFileSize
+parameter_list|(
+name|FILE
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
 name|void
 name|AdCreateTableHeader
 parameter_list|(
@@ -350,6 +362,70 @@ modifier|*
 name|AcpiGbl_ParseOpRoot
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AdGetFileSize  *  * PARAMETERS:  File                - Open file handle  *  * RETURN:      File Size  *  * DESCRIPTION: Get current file size. Uses seek-to-EOF. File must be open.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|UINT32
+name|AdGetFileSize
+parameter_list|(
+name|FILE
+modifier|*
+name|File
+parameter_list|)
+block|{
+name|UINT32
+name|FileSize
+decl_stmt|;
+name|long
+name|Offset
+decl_stmt|;
+name|Offset
+operator|=
+name|ftell
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+name|fseek
+argument_list|(
+name|File
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
+name|FileSize
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ftell
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+comment|/* Restore file pointer */
+name|fseek
+argument_list|(
+name|File
+argument_list|,
+name|Offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FileSize
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AdInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: ACPICA and local initialization  *  ******************************************************************************/
@@ -907,13 +983,25 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Acpi Data Table [%4.4s] decoded, written to \"%s\"\n"
+literal|"Acpi Data Table [%4.4s] decoded\n"
 argument_list|,
 name|Table
 operator|->
 name|Signature
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Formatted output:  %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
+argument_list|,
+name|AdGetFileSize
+argument_list|(
+name|File
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1199,9 +1287,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Disassembly completed, written to \"%s\"\n"
+literal|"Disassembly completed\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ASL Output:    %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
+argument_list|,
+name|AdGetFileSize
+argument_list|(
+name|File
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}

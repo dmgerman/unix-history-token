@@ -1184,6 +1184,13 @@ name|ACPI_OBJECT_REPAIRED
 value|1
 end_define
 
+begin_define
+define|#
+directive|define
+name|ACPI_OBJECT_WRAPPED
+value|2
+end_define
+
 begin_comment
 comment|/*  * Bitmapped return value types  * Note: the actual data types must be contiguous, a loop in nspredef.c  * depends on this.  */
 end_comment

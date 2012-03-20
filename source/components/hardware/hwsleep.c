@@ -47,7 +47,7 @@ comment|/* Entire module */
 end_comment
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacySleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the legacy FADT PM registers  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacySleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *              Flags               - ACPI_EXECUTE_GTS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the legacy FADT PM registers  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -56,6 +56,9 @@ name|AcpiHwLegacySleep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_BIT_REGISTER_INFO
@@ -222,14 +225,22 @@ name|Status
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* Execute the _GTS method (Going To Sleep) */
+comment|/* Optionally execute _GTS (Going To Sleep) */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EXECUTE_GTS
+condition|)
+block|{
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__GTS
+name|METHOD_PATHNAME__GTS
 argument_list|,
 name|SleepState
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Get current value of PM1A control */
 name|Status
 operator|=
@@ -453,7 +464,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep.  *              Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - ACPI_EXECUTE_BFS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep.  *              Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -462,6 +473,9 @@ name|AcpiHwLegacyWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -593,13 +607,22 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Optionally execute _BFS (Back From Sleep) */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EXECUTE_BFS
+condition|)
+block|{
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__BFS
+name|METHOD_PATHNAME__BFS
 argument_list|,
 name|SleepState
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|Status
@@ -609,7 +632,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwLegacyWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - Reserved, set to zero  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -618,6 +641,9 @@ name|AcpiHwLegacyWake
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -635,7 +661,7 @@ name|ACPI_SLEEP_TYPE_INVALID
 expr_stmt|;
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__SST
+name|METHOD_PATHNAME__SST
 argument_list|,
 name|ACPI_SST_WAKING
 argument_list|)
@@ -682,7 +708,7 @@ block|}
 comment|/*      * Now we can execute _WAK, etc. Some machines require that the GPEs      * are enabled before the wake methods are executed.      */
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__WAK
+name|METHOD_PATHNAME__WAK
 argument_list|,
 name|SleepState
 argument_list|)
@@ -765,7 +791,7 @@ expr_stmt|;
 block|}
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__SST
+name|METHOD_PATHNAME__SST
 argument_list|,
 name|ACPI_SST_WORKING
 argument_list|)

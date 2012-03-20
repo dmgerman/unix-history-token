@@ -202,6 +202,9 @@ name|AcpiHwLegacySleep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -212,6 +215,9 @@ name|AcpiHwLegacyWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -222,6 +228,9 @@ name|AcpiHwLegacyWake
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -250,6 +259,9 @@ name|AcpiHwExtendedSleep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -260,6 +272,9 @@ name|AcpiHwExtendedWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -270,6 +285,9 @@ name|AcpiHwExtendedWake
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

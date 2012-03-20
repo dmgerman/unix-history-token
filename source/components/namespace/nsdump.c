@@ -598,7 +598,36 @@ operator|!
 name|ObjDesc
 condition|)
 block|{
-comment|/* No attached object, we are done */
+comment|/* No attached object. Some types should always have an object */
+switch|switch
+condition|(
+name|Type
+condition|)
+block|{
+case|case
+name|ACPI_TYPE_INTEGER
+case|:
+case|case
+name|ACPI_TYPE_PACKAGE
+case|:
+case|case
+name|ACPI_TYPE_BUFFER
+case|:
+case|case
+name|ACPI_TYPE_STRING
+case|:
+case|case
+name|ACPI_TYPE_METHOD
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"<No attached object>"
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
