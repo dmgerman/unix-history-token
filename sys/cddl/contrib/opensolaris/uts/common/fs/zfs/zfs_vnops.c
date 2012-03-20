@@ -1198,11 +1198,6 @@ name|NULL
 expr_stmt|;
 block|}
 block|}
-else|else
-name|pp
-operator|=
-name|NULL
-expr_stmt|;
 break|break;
 block|}
 return|return
