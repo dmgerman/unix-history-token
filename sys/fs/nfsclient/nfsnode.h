@@ -183,18 +183,15 @@ decl_stmt|;
 comment|/* Prev modify time. */
 name|struct
 name|timespec
-name|n_ctime
+name|n_unused0
 decl_stmt|;
-comment|/* Prev create time. */
 name|struct
 name|timespec
-name|n_dmtime
+name|n_unused1
 decl_stmt|;
-comment|/* Prev dir modify time. */
 name|int
-name|n_dmtime_ticks
+name|n_unused2
 decl_stmt|;
-comment|/* Tick of -ve cache entry */
 name|struct
 name|nfsfh
 modifier|*
