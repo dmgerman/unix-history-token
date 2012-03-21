@@ -172,6 +172,9 @@ parameter_list|(
 name|device_t
 parameter_list|)
 function_decl|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|int
 function_decl|(
 modifier|*
@@ -183,6 +186,8 @@ parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
+endif|#
+directive|endif
 name|void
 function_decl|(
 modifier|*

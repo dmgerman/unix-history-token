@@ -3602,6 +3602,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -3661,6 +3667,11 @@ name|unit
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -3942,6 +3953,9 @@ argument_list|,
 name|ata_pcichannel_getrev
 argument_list|)
 block|,
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|DEVMETHOD
 argument_list|(
 name|ata_locking
@@ -3949,6 +3963,8 @@ argument_list|,
 name|ata_pcichannel_locking
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|DEVMETHOD
 argument_list|(
 name|ata_reset
