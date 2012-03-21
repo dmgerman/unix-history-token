@@ -2194,7 +2194,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"arp: runt packet -- m_pullup failed\n"
 argument_list|)
@@ -2262,9 +2262,10 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"arp: unknown hardware address format (0x%2D)\n"
+literal|"arp: unknown hardware address format (0x%2D)"
+literal|" (from %*D to %*D)\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -2277,6 +2278,32 @@ operator|->
 name|ar_hrd
 argument_list|,
 literal|""
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_sha
+argument_list|(
+name|ar
+argument_list|)
+argument_list|,
+literal|":"
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_tha
+argument_list|(
+name|ar
+argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2319,7 +2346,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"arp: runt packet\n"
 argument_list|)
@@ -2659,7 +2686,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"in_arp: runt packet -- m_pullup failed\n"
 argument_list|)
@@ -2693,7 +2720,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"in_arp: requested protocol length != %zu\n"
 argument_list|,
@@ -2719,9 +2746,24 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"in_arp: source hardware address is multicast."
+literal|"in_arp: %*D is multicast\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_addrlen
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_sha
+argument_list|(
+name|ah
+argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3204,7 +3246,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"arp: link address is broadcast for IP address %s!\n"
 argument_list|,
@@ -3408,7 +3450,7 @@ name|log_arp_wrong_iface
 condition|)
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
 literal|"arp: %s is on %s "
 literal|"but got reply from %*D on %s\n"
@@ -3611,7 +3653,8 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"arp from %*D: addr len: new %d, i/f %d (ignored)"
+literal|"arp from %*D: addr len: new %d, "
+literal|"i/f %d (ignored)\n"
 argument_list|,
 name|ifp
 operator|->
