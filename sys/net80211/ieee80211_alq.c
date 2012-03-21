@@ -606,12 +606,15 @@ name|r
 operator|->
 name|r_threadid
 operator|=
+name|htonl
+argument_list|(
 operator|(
 name|uint32_t
 operator|)
 name|curthread
 operator|->
 name|td_tid
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(
