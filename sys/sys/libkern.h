@@ -1191,7 +1191,9 @@ end_function_decl
 
 begin_decl_stmt
 specifier|extern
+specifier|const
 name|uint32_t
+specifier|const
 name|crc32_tab
 index|[]
 decl_stmt|;
