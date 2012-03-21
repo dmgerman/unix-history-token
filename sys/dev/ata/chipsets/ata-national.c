@@ -403,7 +403,9 @@ decl_stmt|;
 name|int
 name|piomode
 decl_stmt|;
-name|u_int32_t
+specifier|static
+specifier|const
+name|uint32_t
 name|piotiming
 index|[]
 init|=
@@ -425,7 +427,9 @@ block|,
 literal|0x00100010
 block|}
 decl_stmt|;
-name|u_int32_t
+specifier|static
+specifier|const
+name|uint32_t
 name|dmatiming
 index|[]
 init|=
@@ -437,7 +441,9 @@ block|,
 literal|0x80002020
 block|}
 decl_stmt|;
-name|u_int32_t
+specifier|static
+specifier|const
+name|uint32_t
 name|udmatiming
 index|[]
 init|=

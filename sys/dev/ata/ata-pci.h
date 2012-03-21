@@ -26,6 +26,7 @@ decl_stmt|;
 name|u_int8_t
 name|max_dma
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|text
@@ -86,6 +87,7 @@ name|void
 modifier|*
 name|handle
 decl_stmt|;
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -3688,6 +3690,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|char
 modifier|*
 name|ata_pcivendor2str
@@ -3769,6 +3772,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -3777,6 +3781,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -3786,6 +3791,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -3794,6 +3800,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -3877,7 +3884,7 @@ parameter_list|(
 name|dname
 parameter_list|)
 define|\
-value|static device_method_t __CONCAT(dname,_methods)[] = { \     DEVMETHOD(device_probe,     __CONCAT(dname,_probe)), \     DEVMETHOD(device_attach,    ata_pci_attach), \     DEVMETHOD(device_detach,    ata_pci_detach), \     DEVMETHOD(device_suspend,   ata_pci_suspend), \     DEVMETHOD(device_resume,    ata_pci_resume), \     DEVMETHOD(device_shutdown,  bus_generic_shutdown), \     DEVMETHOD(bus_read_ivar,		ata_pci_read_ivar), \     DEVMETHOD(bus_write_ivar,		ata_pci_write_ivar), \     DEVMETHOD(bus_alloc_resource,       ata_pci_alloc_resource), \     DEVMETHOD(bus_release_resource,     ata_pci_release_resource), \     DEVMETHOD(bus_activate_resource,    bus_generic_activate_resource), \     DEVMETHOD(bus_deactivate_resource,  bus_generic_deactivate_resource), \     DEVMETHOD(bus_setup_intr,           ata_pci_setup_intr), \     DEVMETHOD(bus_teardown_intr,        ata_pci_teardown_intr), \     DEVMETHOD(pci_read_config,		ata_pci_read_config), \     DEVMETHOD(pci_write_config,		ata_pci_write_config), \     DEVMETHOD(bus_print_child,		ata_pci_print_child), \     DEVMETHOD(bus_child_location_str,	ata_pci_child_location_str), \     { 0, 0 } \ }; \ static driver_t __CONCAT(dname,_driver) = { \         "atapci", \         __CONCAT(dname,_methods), \         sizeof(struct ata_pci_controller) \ }; \ DRIVER_MODULE(dname, pci, __CONCAT(dname,_driver), ata_pci_devclass, 0, 0); \ MODULE_VERSION(dname, 1); \ MODULE_DEPEND(dname, ata, 1, 1, 1); \ MODULE_DEPEND(dname, atapci, 1, 1, 1);
+value|static device_method_t __CONCAT(dname,_methods)[] = { \     DEVMETHOD(device_probe,     __CONCAT(dname,_probe)), \     DEVMETHOD(device_attach,    ata_pci_attach), \     DEVMETHOD(device_detach,    ata_pci_detach), \     DEVMETHOD(device_suspend,   ata_pci_suspend), \     DEVMETHOD(device_resume,    ata_pci_resume), \     DEVMETHOD(device_shutdown,  bus_generic_shutdown), \     DEVMETHOD(bus_read_ivar,		ata_pci_read_ivar), \     DEVMETHOD(bus_write_ivar,		ata_pci_write_ivar), \     DEVMETHOD(bus_alloc_resource,       ata_pci_alloc_resource), \     DEVMETHOD(bus_release_resource,     ata_pci_release_resource), \     DEVMETHOD(bus_activate_resource,    bus_generic_activate_resource), \     DEVMETHOD(bus_deactivate_resource,  bus_generic_deactivate_resource), \     DEVMETHOD(bus_setup_intr,           ata_pci_setup_intr), \     DEVMETHOD(bus_teardown_intr,        ata_pci_teardown_intr), \     DEVMETHOD(pci_read_config,		ata_pci_read_config), \     DEVMETHOD(pci_write_config,		ata_pci_write_config), \     DEVMETHOD(bus_print_child,		ata_pci_print_child), \     DEVMETHOD(bus_child_location_str,	ata_pci_child_location_str), \     DEVMETHOD_END \ }; \ static driver_t __CONCAT(dname,_driver) = { \         "atapci", \         __CONCAT(dname,_methods), \         sizeof(struct ata_pci_controller) \ }; \ DRIVER_MODULE(dname, pci, __CONCAT(dname,_driver), ata_pci_devclass, NULL, NULL); \ MODULE_VERSION(dname, 1); \ MODULE_DEPEND(dname, ata, 1, 1, 1); \ MODULE_DEPEND(dname, atapci, 1, 1, 1);
 end_define
 
 end_unit

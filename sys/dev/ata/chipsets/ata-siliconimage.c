@@ -487,8 +487,10 @@ name|dev
 argument_list|)
 decl_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|ata_chip_id
+specifier|const
 name|ids
 index|[]
 init|=
@@ -1703,6 +1705,8 @@ decl_stmt|;
 name|int
 name|piomode
 decl_stmt|;
+specifier|static
+specifier|const
 name|uint8_t
 name|piotimings
 index|[]
@@ -1725,6 +1729,8 @@ block|,
 literal|0x3f
 block|}
 decl_stmt|;
+specifier|static
+specifier|const
 name|uint8_t
 name|udmatimings
 index|[]
@@ -2832,7 +2838,9 @@ literal|0xac
 operator|+
 name|rego
 decl_stmt|;
-name|u_int16_t
+specifier|static
+specifier|const
+name|uint16_t
 name|piotimings
 index|[]
 init|=
@@ -2848,7 +2856,9 @@ block|,
 literal|0x10c1
 block|}
 decl_stmt|;
-name|u_int16_t
+specifier|static
+specifier|const
+name|uint16_t
 name|dmatimings
 index|[]
 init|=
@@ -2860,7 +2870,9 @@ block|,
 literal|0x10c1
 block|}
 decl_stmt|;
-name|u_int8_t
+specifier|static
+specifier|const
+name|uint8_t
 name|udmatimings
 index|[]
 init|=

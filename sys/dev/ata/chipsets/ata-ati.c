@@ -216,14 +216,36 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ATI_PATA
-value|0x01
+name|SII_MEMIO
+value|1
 end_define
+
+begin_comment
+comment|/* must match ata_siliconimage.c's definition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SII_BUG
+value|0x04
+end_define
+
+begin_comment
+comment|/* must match ata_siliconimage.c's definition */
+end_comment
 
 begin_define
 define|#
 directive|define
 name|ATI_SATA
+value|SII_MEMIO
+end_define
+
+begin_define
+define|#
+directive|define
+name|ATI_PATA
 value|0x02
 end_define
 
@@ -231,20 +253,6 @@ begin_define
 define|#
 directive|define
 name|ATI_AHCI
-value|0x04
-end_define
-
-begin_define
-define|#
-directive|define
-name|SII_MEMIO
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|SII_BUG
 value|0x04
 end_define
 
@@ -292,8 +300,10 @@ name|dev
 argument_list|)
 decl_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|ata_chip_id
+specifier|const
 name|ids
 index|[]
 init|=
@@ -333,7 +343,7 @@ literal|0x00
 block|,
 name|ATI_SATA
 block|,
-literal|0
+name|SII_BUG
 block|,
 name|ATA_SA150
 block|,
@@ -361,7 +371,7 @@ literal|0x00
 block|,
 name|ATI_SATA
 block|,
-literal|0
+name|SII_BUG
 block|,
 name|ATA_SA150
 block|,
@@ -375,7 +385,7 @@ literal|0x00
 block|,
 name|ATI_SATA
 block|,
-literal|0
+name|SII_BUG
 block|,
 name|ATA_SA150
 block|,
@@ -581,23 +591,7 @@ break|break;
 case|case
 name|ATI_SATA
 case|:
-comment|/* 	 * the ATI SATA controller is actually a SiI 3112 controller 	 * cfg values below much match those in ata-siliconimage.c 	 */
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|cfg1
-operator|=
-name|SII_MEMIO
-expr_stmt|;
-name|ctlr
-operator|->
-name|chip
-operator|->
-name|cfg2
-operator|=
-name|SII_BUG
-expr_stmt|;
+comment|/* 	 * the ATI SATA controller is actually a SiI 3112 controller 	 */
 name|ctlr
 operator|->
 name|chipinit
@@ -1075,7 +1069,9 @@ decl_stmt|;
 name|int
 name|piomode
 decl_stmt|;
-name|u_int8_t
+specifier|static
+specifier|const
+name|uint8_t
 name|piotimings
 index|[]
 init|=
@@ -1091,7 +1087,9 @@ block|,
 literal|0x20
 block|}
 decl_stmt|;
-name|u_int8_t
+specifier|static
+specifier|const
+name|uint8_t
 name|dmatimings
 index|[]
 init|=
