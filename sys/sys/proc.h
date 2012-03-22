@@ -1819,6 +1819,17 @@ begin_comment
 comment|/* Handle RFPPWAIT on syscall exit */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDP_RESETSPUR
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Reset spurious page fault history. */
+end_comment
+
 begin_comment
 comment|/*  * Reasons that the current thread can not be run yet.  * More than one may apply.  */
 end_comment
