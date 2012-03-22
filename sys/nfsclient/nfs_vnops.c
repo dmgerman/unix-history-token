@@ -4831,7 +4831,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/* 		 * We only accept a positive hit in the cache if the 		 * change time of the file matches our cached copy. 		 * Otherwise, we discard the cache entry and fallback 		 * to doing a lookup RPC. 		 * 		 * To better handle stale file handles and attributes, 		 * clear the attribute cache of this node if it is a 		 * leaf component, part of an open() call, and not 		 * locally modified before fetching the attributes. 		 * This should allow stale file handles to be detected 		 * here where we can fall back to a LOOKUP RPC to 		 * recover rather than having nfs_open() detect the 		 * stale file handle and failing open(2) with ESTALE. 		 */
+comment|/* 		 * We only accept a positive hit in the cache if the 		 * change time of the file matches our cached copy. 		 * Otherwise, we discard the cache entry and fallback 		 * to doing a lookup RPC.  We also only trust cache 		 * entries for less than nm_nametimeo seconds. 		 * 		 * To better handle stale file handles and attributes, 		 * clear the attribute cache of this node if it is a 		 * leaf component, part of an open() call, and not 		 * locally modified before fetching the attributes. 		 * This should allow stale file handles to be detected 		 * here where we can fall back to a LOOKUP RPC to 		 * recover rather than having nfs_open() detect the 		 * stale file handle and failing open(2) with ESTALE. 		 */
 name|newvp
 operator|=
 operator|*
@@ -4911,6 +4911,23 @@ expr_stmt|;
 block|}
 if|if
 condition|(
+call|(
+name|u_int
+call|)
+argument_list|(
+name|ticks
+operator|-
+name|ncticks
+argument_list|)
+operator|<
+operator|(
+name|nmp
+operator|->
+name|nm_nametimeo
+operator|*
+name|hz
+operator|)
+operator|&&
 name|VOP_GETATTR
 argument_list|(
 name|newvp
