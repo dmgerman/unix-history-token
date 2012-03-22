@@ -1352,7 +1352,7 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_unregister_sysctls: registering SYSCTLs"
+literal|"linker_file_unregister_sysctls: unregistering SYSCTLs"
 literal|" for %s\n"
 operator|,
 name|lf
