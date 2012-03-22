@@ -123,6 +123,7 @@ name|UINT32
 name|io_vector
 decl_stmt|;
 block|}
+decl|static
 name|ioapics
 index|[
 name|MAX_APIC_ID
@@ -147,6 +148,7 @@ range|:
 literal|8
 decl_stmt|;
 block|}
+decl|static
 name|lapics
 index|[
 name|MAX_APIC_ID
