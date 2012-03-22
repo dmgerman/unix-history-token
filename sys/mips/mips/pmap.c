@@ -13342,8 +13342,7 @@ operator|)
 return|;
 block|}
 comment|/*  *	Routine:	pmap_kextract  *	Function:  *		Extract the physical page address associated  *		virtual address.  */
-comment|/* PMAP_INLINE */
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
