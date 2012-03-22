@@ -599,7 +599,7 @@ end_comment
 
 begin_decl_stmt
 specifier|static
-name|int
+name|long
 name|pv_entry_count
 decl_stmt|;
 end_decl_stmt
@@ -8891,7 +8891,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|SYSCTL_INT
+name|SYSCTL_LONG
 argument_list|(
 name|_vm_pmap
 argument_list|,
