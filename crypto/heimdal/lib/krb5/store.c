@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2008 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -14,14 +14,6 @@ include|#
 directive|include
 file|"store-int.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: store.c 22071 2007-11-14 20:04:50Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_define
 define|#
@@ -65,9 +57,14 @@ parameter_list|)
 value|(BYTEORDER_IS((SP), KRB5_STORAGE_BYTEORDER_HOST) || \ 			       krb5_storage_is_flags((SP), KRB5_STORAGE_HOST_BYTEORDER))
 end_define
 
+begin_comment
+comment|/**  * Add the flags on a storage buffer by or-ing in the flags to the buffer.  *  * @param sp the storage buffer to set the flags on  * @param flags the flags to set  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_set_flags
 parameter_list|(
 name|krb5_storage
@@ -87,9 +84,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Clear the flags on a storage buffer  *  * @param sp the storage buffer to clear the flags on  * @param flags the flags to clear  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_clear_flags
 parameter_list|(
 name|krb5_storage
@@ -110,9 +112,14 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Return true or false depending on if the storage flags is set or  * not. NB testing for the flag 0 always return true.  *  * @param sp the storage buffer to check flags on  * @param flags The flags to test for  *  * @return true if all the flags are set, false if not.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_storage_is_flags
 parameter_list|(
 name|krb5_storage
@@ -137,9 +144,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Set the new byte order of the storage buffer.  *  * @param sp the storage buffer to set the byte order for.  * @param byteorder the new byte order.  *  * The byte order are: KRB5_STORAGE_BYTEORDER_BE,  * KRB5_STORAGE_BYTEORDER_LE and KRB5_STORAGE_BYTEORDER_HOST.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_set_byteorder
 parameter_list|(
 name|krb5_storage
@@ -166,17 +178,19 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Return the current byteorder for the buffer. See krb5_storage_set_byteorder() for the list or byte order contants.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_flags
 name|KRB5_LIB_FUNCTION
+name|krb5_flags
+name|KRB5_LIB_CALL
 name|krb5_storage_get_byteorder
 parameter_list|(
 name|krb5_storage
 modifier|*
 name|sp
-parameter_list|,
-name|krb5_flags
-name|byteorder
 parameter_list|)
 block|{
 return|return
@@ -189,9 +203,133 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Set the max alloc value  *  * @param sp the storage buffer set the max allow for  * @param size maximum size to allocate, use 0 to remove limit  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|off_t
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
+name|krb5_storage_set_max_alloc
+parameter_list|(
+name|krb5_storage
+modifier|*
+name|sp
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+name|sp
+operator|->
+name|max_alloc
+operator|=
+name|size
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/* don't allocate unresonable amount of memory */
+end_comment
+
+begin_function
+specifier|static
+name|krb5_error_code
+name|size_too_large
+parameter_list|(
+name|krb5_storage
+modifier|*
+name|sp
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|max_alloc
+operator|&&
+name|sp
+operator|->
+name|max_alloc
+operator|<
+name|size
+condition|)
+return|return
+name|HEIM_ERR_TOO_BIG
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|krb5_error_code
+name|size_too_large_num
+parameter_list|(
+name|krb5_storage
+modifier|*
+name|sp
+parameter_list|,
+name|size_t
+name|count
+parameter_list|,
+name|size_t
+name|size
+parameter_list|)
+block|{
+if|if
+condition|(
+name|sp
+operator|->
+name|max_alloc
+operator|==
+literal|0
+operator|||
+name|size
+operator|==
+literal|0
+condition|)
+return|return
+literal|0
+return|;
+name|size
+operator|=
+name|sp
+operator|->
+name|max_alloc
+operator|/
+name|size
+expr_stmt|;
+if|if
+condition|(
+name|size
+operator|<
+name|count
+condition|)
+return|return
+name|HEIM_ERR_TOO_BIG
+return|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Seek to a new offset.  *  * @param sp the storage buffer to seek in.  * @param offset the offset to seek  * @param whence relateive searching, SEEK_CUR from the current  * position, SEEK_END from the end, SEEK_SET absolute from the start.  *  * @return The new current offset  *  * @ingroup krb5_storage  */
+end_comment
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|off_t
+name|KRB5_LIB_CALL
 name|krb5_storage_seek
 parameter_list|(
 name|krb5_storage
@@ -223,9 +361,48 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Truncate the storage buffer in sp to offset.  *  * @param sp the storage buffer to truncate.  * @param offset the offset to truncate too.  *  * @return An Kerberos 5 error code.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
+name|krb5_storage_truncate
+parameter_list|(
+name|krb5_storage
+modifier|*
+name|sp
+parameter_list|,
+name|off_t
+name|offset
+parameter_list|)
+block|{
+return|return
+call|(
+modifier|*
+name|sp
+operator|->
+name|trunc
+call|)
+argument_list|(
+name|sp
+argument_list|,
+name|offset
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Read to the storage buffer.  *  * @param sp the storage buffer to read from  * @param buf the buffer to store the data in  * @param len the length to read  *  * @return The length of data read (can be shorter then len), or negative on error.  *  * @ingroup krb5_storage  */
+end_comment
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_ssize_t
+name|KRB5_LIB_CALL
 name|krb5_storage_read
 parameter_list|(
 name|krb5_storage
@@ -255,9 +432,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Write to the storage buffer.  *  * @param sp the storage buffer to write to  * @param buf the buffer to write to the storage buffer  * @param len the length to write  *  * @return The length of data written (can be shorter then len), or negative on error.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
+name|krb5_ssize_t
+name|KRB5_LIB_CALL
 name|krb5_storage_write
 parameter_list|(
 name|krb5_storage
@@ -288,9 +470,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Set the return code that will be used when end of storage is reached.  *  * @param sp the storage  * @param code the error code to return on end of storage  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_storage_set_eof_code
 parameter_list|(
 name|krb5_storage
@@ -310,143 +497,37 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Get the return code that will be used when end of storage is reached.  *  * @param sp the storage  *  * @return storage error code  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_ssize_t
 name|KRB5_LIB_FUNCTION
-name|_krb5_put_int
+name|int
+name|KRB5_LIB_CALL
+name|krb5_storage_get_eof_code
 parameter_list|(
-name|void
+name|krb5_storage
 modifier|*
-name|buffer
-parameter_list|,
-name|unsigned
-name|long
-name|value
-parameter_list|,
-name|size_t
-name|size
+name|sp
 parameter_list|)
 block|{
-name|unsigned
-name|char
-modifier|*
-name|p
-init|=
-name|buffer
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-name|size
-operator|-
-literal|1
-init|;
-name|i
-operator|>=
-literal|0
-condition|;
-name|i
-operator|--
-control|)
-block|{
-name|p
-index|[
-name|i
-index|]
-operator|=
-name|value
-operator|&
-literal|0xff
-expr_stmt|;
-name|value
-operator|>>=
-literal|8
-expr_stmt|;
-block|}
 return|return
-name|size
+name|sp
+operator|->
+name|eof_code
 return|;
 block|}
 end_function
 
-begin_function
-name|krb5_ssize_t
-name|KRB5_LIB_FUNCTION
-name|_krb5_get_int
-parameter_list|(
-name|void
-modifier|*
-name|buffer
-parameter_list|,
-name|unsigned
-name|long
-modifier|*
-name|value
-parameter_list|,
-name|size_t
-name|size
-parameter_list|)
-block|{
-name|unsigned
-name|char
-modifier|*
-name|p
-init|=
-name|buffer
-decl_stmt|;
-name|unsigned
-name|long
-name|v
-init|=
-literal|0
-decl_stmt|;
-name|int
-name|i
-decl_stmt|;
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|size
-condition|;
-name|i
-operator|++
-control|)
-name|v
-operator|=
-operator|(
-name|v
-operator|<<
-literal|8
-operator|)
-operator|+
-name|p
-index|[
-name|i
-index|]
-expr_stmt|;
-operator|*
-name|value
-operator|=
-name|v
-expr_stmt|;
-return|return
-name|size
-return|;
-block|}
-end_function
+begin_comment
+comment|/**  * Free a krb5 storage.  *  * @param sp the storage to free.  *  * @return An Kerberos 5 error code.  *  * @ingroup krb5_storage  */
+end_comment
 
 begin_function
+name|KRB5_LIB_FUNCTION
 name|krb5_error_code
-name|KRB5_LIB_FUNCTION
+name|KRB5_LIB_CALL
 name|krb5_storage_free
 parameter_list|(
 name|krb5_storage
@@ -488,9 +569,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Copy the contnent of storage  *  * @param sp the storage to copy to a data  * @param data the copied data, free with krb5_data_free()  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_storage_to_data
 parameter_list|(
 name|krb5_storage
@@ -504,8 +590,7 @@ parameter_list|)
 block|{
 name|off_t
 name|pos
-decl_stmt|;
-name|size_t
+decl_stmt|,
 name|size
 decl_stmt|;
 name|krb5_error_code
@@ -524,11 +609,17 @@ argument_list|,
 name|SEEK_CUR
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|pos
+operator|<
+literal|0
+condition|)
+return|return
+name|HEIM_ERR_NOT_SEEKABLE
+return|;
 name|size
 operator|=
-operator|(
-name|size_t
-operator|)
 name|sp
 operator|->
 name|seek
@@ -540,6 +631,22 @@ argument_list|,
 name|SEEK_END
 argument_list|)
 expr_stmt|;
+name|ret
+operator|=
+name|size_too_large
+argument_list|(
+name|sp
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 name|ret
 operator|=
 name|krb5_data_alloc
@@ -681,18 +788,22 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|<
+literal|0
+condition|)
+return|return
+name|errno
+return|;
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|ret
 operator|!=
 name|len
 condition|)
 return|return
-operator|(
-name|ret
-operator|<
-literal|0
-operator|)
-condition|?
-name|errno
-else|:
 name|sp
 operator|->
 name|eof_code
@@ -703,9 +814,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a int32 to storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value to store  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_int32
 parameter_list|(
 name|krb5_storage
@@ -758,9 +874,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a uint32 to storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value to store  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_uint32
 parameter_list|(
 name|krb5_storage
@@ -832,18 +953,22 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
+operator|<
+literal|0
+condition|)
+return|return
+name|errno
+return|;
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|ret
 operator|!=
 name|len
 condition|)
 return|return
-operator|(
-name|ret
-operator|<
-literal|0
-operator|)
-condition|?
-name|errno
-else|:
 name|sp
 operator|->
 name|eof_code
@@ -869,9 +994,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a int32 from storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value read from the buffer  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_int32
 parameter_list|(
 name|krb5_storage
@@ -941,9 +1071,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a uint32 from storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value read from the buffer  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_uint32
 parameter_list|(
 name|krb5_storage
@@ -991,9 +1126,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a int16 to storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value to store  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_int16
 parameter_list|(
 name|krb5_storage
@@ -1046,9 +1186,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a uint16 to storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value to store  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_uint16
 parameter_list|(
 name|krb5_storage
@@ -1073,9 +1218,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a int16 from storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value read from the buffer  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_int16
 parameter_list|(
 name|krb5_storage
@@ -1156,9 +1306,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a int16 from storage, byte order is controlled by the settings  * on the storage, see krb5_storage_set_byteorder().  *  * @param sp the storage to write too  * @param value the value read from the buffer  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_uint16
 parameter_list|(
 name|krb5_storage
@@ -1206,9 +1361,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a int8 to storage.  *  * @param sp the storage to write too  * @param value the value to store  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_int8
 parameter_list|(
 name|krb5_storage
@@ -1267,9 +1427,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a uint8 to storage.  *  * @param sp the storage to write too  * @param value the value to store  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_uint8
 parameter_list|(
 name|krb5_storage
@@ -1294,9 +1459,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a int8 from storage  *  * @param sp the storage to write too  * @param value the value read from the buffer  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_int8
 parameter_list|(
 name|krb5_storage
@@ -1357,9 +1527,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a uint8 from storage  *  * @param sp the storage to write too  * @param value the value read from the buffer  *  * @return 0 for success, or a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_uint8
 parameter_list|(
 name|krb5_storage
@@ -1407,9 +1582,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a data to the storage. The data is stored with an int32 as  * lenght plus the data (not padded).  *  * @param sp the storage buffer to write to  * @param data the buffer to store.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_data
 parameter_list|(
 name|krb5_storage
@@ -1463,36 +1643,42 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-name|data
-operator|.
-name|length
-condition|)
-block|{
-if|if
-condition|(
-name|ret
 operator|<
 literal|0
 condition|)
 return|return
 name|errno
 return|;
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|ret
+operator|!=
+name|data
+operator|.
+name|length
+condition|)
 return|return
 name|sp
 operator|->
 name|eof_code
 return|;
-block|}
 return|return
 literal|0
 return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Parse a data from the storage.  *  * @param sp the storage buffer to read from  * @param data the parsed data  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_data
 parameter_list|(
 name|krb5_storage
@@ -1517,6 +1703,22 @@ argument_list|(
 name|sp
 argument_list|,
 operator|&
+name|size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
+name|size_too_large
+argument_list|(
+name|sp
+argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
@@ -1589,9 +1791,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a string to the buffer. The data is formated as an len:uint32  * plus the string itself (not padded).  *  * @param sp the storage buffer to write to  * @param s the string to store.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_string
 parameter_list|(
 name|krb5_storage
@@ -1636,9 +1843,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Parse a string from the storage.  *  * @param sp the storage buffer to read from  * @param string the parsed string  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_string
 parameter_list|(
 name|krb5_storage
@@ -1727,9 +1939,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a zero terminated string to the buffer. The data is stored  * one character at a time until a NUL is stored.  *  * @param sp the storage buffer to write to  * @param s the string to store.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_stringz
 parameter_list|(
 name|krb5_storage
@@ -1771,35 +1988,40 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-name|len
-condition|)
-block|{
-if|if
-condition|(
-name|ret
 operator|<
 literal|0
 condition|)
 return|return
 name|ret
 return|;
-else|else
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|ret
+operator|!=
+name|len
+condition|)
 return|return
 name|sp
 operator|->
 name|eof_code
 return|;
-block|}
 return|return
 literal|0
 return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Parse zero terminated string from the storage.  *  * @param sp the storage buffer to read from  * @param string the parsed string  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_stringz
 parameter_list|(
 name|krb5_storage
@@ -1857,6 +2079,20 @@ decl_stmt|;
 name|len
 operator|++
 expr_stmt|;
+name|ret
+operator|=
+name|size_too_large
+argument_list|(
+name|sp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+break|break;
 name|tmp
 operator|=
 name|realloc
@@ -1942,8 +2178,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_stringnl
 parameter_list|(
 name|krb5_storage
@@ -1983,26 +2220,26 @@ expr_stmt|;
 if|if
 condition|(
 name|ret
-operator|!=
-name|len
-condition|)
-block|{
-if|if
-condition|(
-name|ret
 operator|<
 literal|0
 condition|)
 return|return
 name|ret
 return|;
-else|else
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|ret
+operator|!=
+name|len
+condition|)
 return|return
 name|sp
 operator|->
 name|eof_code
 return|;
-block|}
 name|ret
 operator|=
 name|sp
@@ -2046,8 +2283,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_stringnl
 parameter_list|(
 name|krb5_storage
@@ -2141,6 +2379,20 @@ block|}
 name|len
 operator|++
 expr_stmt|;
+name|ret
+operator|=
+name|size_too_large
+argument_list|(
+name|sp
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+break|break;
 name|tmp
 operator|=
 name|realloc
@@ -2236,9 +2488,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Write a principal block to storage.  *  * @param sp the storage buffer to write to  * @param p the principal block to write.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_principal
 parameter_list|(
 name|krb5_storage
@@ -2249,7 +2506,7 @@ name|krb5_const_principal
 name|p
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|int
@@ -2406,9 +2663,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Parse principal from the storage.  *  * @param sp the storage buffer to read from  * @param princ the parsed principal  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_principal
 parameter_list|(
 name|krb5_storage
@@ -2547,6 +2809,43 @@ return|return
 name|EINVAL
 return|;
 block|}
+name|ret
+operator|=
+name|size_too_large_num
+argument_list|(
+name|sp
+argument_list|,
+name|ncomp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|p
+operator|->
+name|name
+operator|.
+name|name_string
+operator|.
+name|val
+index|[
+literal|0
+index|]
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+block|{
+name|free
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
 name|p
 operator|->
 name|name
@@ -2605,7 +2904,6 @@ name|ncomp
 argument_list|,
 sizeof|sizeof
 argument_list|(
-operator|*
 name|p
 operator|->
 name|name
@@ -2613,6 +2911,9 @@ operator|.
 name|name_string
 operator|.
 name|val
+index|[
+literal|0
+index|]
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -2736,9 +3037,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Store a keyblock to the storage.  *  * @param sp the storage buffer to write to  * @param p the keyblock to write  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_keyblock
 parameter_list|(
 name|krb5_storage
@@ -2817,9 +3123,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a keyblock from the storage.  *  * @param sp the storage buffer to write to  * @param p the keyblock read from storage, free using krb5_free_keyblock()  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_keyblock
 parameter_list|(
 name|krb5_storage
@@ -2906,9 +3217,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Write a times block to storage.  *  * @param sp the storage buffer to write to  * @param times the times block to write.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_times
 parameter_list|(
 name|krb5_storage
@@ -2993,9 +3309,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a times block from the storage.  *  * @param sp the storage buffer to write to  * @param times the times block read from storage  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_times
 parameter_list|(
 name|krb5_storage
@@ -3104,9 +3425,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Write a address block to storage.  *  * @param sp the storage buffer to write to  * @param p the address block to write.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_address
 parameter_list|(
 name|krb5_storage
@@ -3155,9 +3481,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a address block from the storage.  *  * @param sp the storage buffer to write to  * @param adr the address block read from storage  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_address
 parameter_list|(
 name|krb5_storage
@@ -3216,9 +3547,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Write a addresses block to storage.  *  * @param sp the storage buffer to write to  * @param p the addresses block to write.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_addrs
 parameter_list|(
 name|krb5_storage
@@ -3229,7 +3565,7 @@ name|krb5_addresses
 name|p
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|int
@@ -3295,9 +3631,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a addresses block from the storage.  *  * @param sp the storage buffer to write to  * @param adr the addresses block read from storage  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_addrs
 parameter_list|(
 name|krb5_storage
@@ -3309,7 +3650,7 @@ modifier|*
 name|adr
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|int
@@ -3326,6 +3667,32 @@ name|sp
 argument_list|,
 operator|&
 name|tmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
+name|size_too_large_num
+argument_list|(
+name|sp
+argument_list|,
+name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|adr
+operator|->
+name|val
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3412,9 +3779,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Write a auth data block to storage.  *  * @param sp the storage buffer to write to  * @param auth the auth data block to write.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_authdata
 parameter_list|(
 name|krb5_storage
@@ -3428,7 +3800,7 @@ block|{
 name|krb5_error_code
 name|ret
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|ret
@@ -3514,9 +3886,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a auth data from the storage.  *  * @param sp the storage buffer to write to  * @param auth the auth data block read from storage  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_authdata
 parameter_list|(
 name|krb5_storage
@@ -3548,6 +3925,32 @@ name|sp
 argument_list|,
 operator|&
 name|tmp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
+name|ret
+operator|=
+name|size_too_large_num
+argument_list|(
+name|sp
+argument_list|,
+name|tmp
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|auth
+operator|->
+name|val
+index|[
+literal|0
+index|]
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3705,12 +4108,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *  */
+comment|/**  * Write a credentials block to storage.  *  * @param sp the storage buffer to write to  * @param creds the creds block to write.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_creds
 parameter_list|(
 name|krb5_storage
@@ -3940,9 +4344,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a credentials block from the storage.  *  * @param sp the storage buffer to write to  * @param creds the credentials block read from storage  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_creds
 parameter_list|(
 name|krb5_storage
@@ -4288,12 +4697,13 @@ value|0x0040
 end_define
 
 begin_comment
-comment|/*  *  */
+comment|/**  * Write a tagged credentials block to storage.  *  * @param sp the storage buffer to write to  * @param creds the creds block to write.  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_store_creds_tag
 parameter_list|(
 name|krb5_storage
@@ -4404,6 +4814,13 @@ argument_list|,
 name|header
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+return|return
+name|ret
+return|;
 if|if
 condition|(
 name|creds
@@ -4671,9 +5088,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Read a tagged credentials block from the storage.  *  * @param sp the storage buffer to write to  * @param creds the credentials block read from storage  *  * @return 0 on success, a Kerberos 5 error code on failure.  *  * @ingroup krb5_storage  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_ret_creds_tag
 parameter_list|(
 name|krb5_storage

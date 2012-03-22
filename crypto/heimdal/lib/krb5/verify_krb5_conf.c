@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1999 - 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -26,14 +26,6 @@ include|#
 directive|include
 file|<err.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: verify_krb5_conf.c 22233 2007-12-08 21:43:37Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/* verify krb5.conf */
@@ -306,7 +298,6 @@ name|data
 parameter_list|)
 block|{
 name|long
-name|int
 name|v
 decl_stmt|;
 name|char
@@ -325,6 +316,38 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|(
+name|v
+operator|==
+name|LONG_MIN
+operator|||
+name|v
+operator|==
+name|LONG_MAX
+operator|)
+operator|&&
+name|errno
+operator|!=
+literal|0
+condition|)
+block|{
+name|krb5_warnx
+argument_list|(
+name|context
+argument_list|,
+literal|"%s: over/under flow for \"%s\""
+argument_list|,
+name|path
+argument_list|,
+name|data
+argument_list|)
+expr_stmt|;
+return|return
+literal|1
+return|;
+block|}
 if|if
 condition|(
 operator|*
@@ -1791,6 +1814,9 @@ name|void
 modifier|*
 name|check_data
 decl_stmt|;
+name|int
+name|deprecated
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -1885,11 +1911,21 @@ name|check_boolean
 block|}
 block|,
 block|{
+literal|"allow_weak_crypto"
+block|,
+name|krb5_config_string
+block|,
+name|check_boolean
+block|}
+block|,
+block|{
 literal|"capath"
 block|,
 name|krb5_config_list
 block|,
 name|all_strings
+block|,
+literal|1
 block|}
 block|,
 block|{
@@ -3309,6 +3345,12 @@ operator|->
 name|next
 control|)
 block|{
+name|local
+operator|=
+name|NULL
+expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -3321,6 +3363,19 @@ argument_list|,
 name|p
 operator|->
 name|name
+argument_list|)
+operator|<
+literal|0
+operator|||
+name|local
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"out of memory"
 argument_list|)
 expr_stmt|;
 for|for
@@ -3461,6 +3516,27 @@ name|e
 operator|->
 name|check_data
 argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|e
+operator|->
+name|deprecated
+condition|)
+block|{
+name|krb5_warnx
+argument_list|(
+name|context
+argument_list|,
+literal|"%s: is a deprecated entry"
+argument_list|,
+name|local
+argument_list|)
+expr_stmt|;
+name|error
+operator||=
+literal|1
 expr_stmt|;
 block|}
 break|break;

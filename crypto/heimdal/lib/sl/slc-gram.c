@@ -144,33 +144,14 @@ file|"slc-gram.y"
 end_line
 
 begin_comment
-comment|/*  * Copyright (c) 2004-2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2004-2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: slc-gram.y 20767 2007-06-01 11:24:52Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -242,6 +223,24 @@ modifier|*
 name|assignment
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/* Declarations for Bison:  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|YYMALLOC
+value|malloc
+end_define
+
+begin_define
+define|#
+directive|define
+name|YYFREE
+value|free
+end_define
 
 begin_comment
 comment|/* Enabling traces.  */
@@ -345,7 +344,7 @@ union|union
 name|YYSTYPE
 line|#
 directive|line
-number|54
+number|57
 file|"slc-gram.y"
 block|{
 name|char
@@ -361,7 +360,7 @@ block|}
 comment|/* Line 193 of yacc.c.  */
 line|#
 directive|line
-number|162
+number|165
 file|"slc-gram.c"
 name|YYSTYPE
 typedef|;
@@ -408,7 +407,7 @@ end_comment
 begin_line
 line|#
 directive|line
-number|175
+number|178
 file|"slc-gram.c"
 end_line
 
@@ -2253,17 +2252,17 @@ init|=
 block|{
 literal|0
 block|,
-literal|67
+literal|70
 block|,
-literal|67
+literal|70
 block|,
-literal|73
-block|,
-literal|78
+literal|76
 block|,
 literal|81
 block|,
-literal|90
+literal|84
+block|,
+literal|93
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -5484,7 +5483,7 @@ literal|2
 case|:
 line|#
 directive|line
-number|68
+number|71
 file|"slc-gram.y"
 block|{
 name|assignment
@@ -5511,7 +5510,7 @@ literal|3
 case|:
 line|#
 directive|line
-number|74
+number|77
 file|"slc-gram.y"
 block|{
 operator|(
@@ -5574,7 +5573,7 @@ literal|5
 case|:
 line|#
 directive|line
-number|82
+number|85
 file|"slc-gram.y"
 block|{
 operator|(
@@ -5681,7 +5680,7 @@ literal|6
 case|:
 line|#
 directive|line
-number|91
+number|94
 file|"slc-gram.y"
 block|{
 operator|(
@@ -5786,7 +5785,7 @@ break|break;
 comment|/* Line 1267 of yacc.c.  */
 line|#
 directive|line
-number|1397
+number|1400
 file|"slc-gram.c"
 default|default:
 break|break;
@@ -6430,7 +6429,7 @@ end_decl_stmt
 begin_line
 line|#
 directive|line
-number|101
+number|104
 file|"slc-gram.y"
 end_line
 
@@ -6554,6 +6553,11 @@ init|=
 literal|0
 decl_stmt|;
 name|int
+name|seen_name
+init|=
+literal|0
+decl_stmt|;
+name|int
 name|seen_short
 init|=
 literal|0
@@ -6642,6 +6646,23 @@ name|a
 operator|->
 name|name
 argument_list|,
+literal|"name"
+argument_list|)
+operator|==
+literal|0
+condition|)
+name|seen_name
+operator|++
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|a
+operator|->
+name|name
+argument_list|,
 literal|"type"
 argument_list|)
 operator|==
@@ -6707,7 +6728,11 @@ name|ex
 argument_list|(
 name|a
 argument_list|,
-literal|"unknown name"
+literal|"unknown name %s"
+argument_list|,
+name|a
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|ret
@@ -6731,6 +6756,28 @@ argument_list|(
 name|as
 argument_list|,
 literal|"neither long nor short option"
+argument_list|)
+expr_stmt|;
+name|ret
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|seen_long
+operator|==
+literal|0
+operator|&&
+name|seen_name
+operator|==
+literal|0
+condition|)
+block|{
+name|ex
+argument_list|(
+name|as
+argument_list|,
+literal|"either of long or name option must be used"
 argument_list|)
 expr_stmt|;
 name|ret
@@ -7061,7 +7108,11 @@ name|ex
 argument_list|(
 name|a
 argument_list|,
-literal|"unknown name"
+literal|"unknown name: %s"
+argument_list|,
+name|a
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 name|ret
@@ -8009,6 +8060,56 @@ end_function
 begin_function
 specifier|static
 name|void
+name|defval_neg_flag
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|struct
+name|assignment
+modifier|*
+name|defval
+parameter_list|)
+block|{
+if|if
+condition|(
+name|defval
+operator|!=
+name|NULL
+condition|)
+name|cprint
+argument_list|(
+literal|1
+argument_list|,
+literal|"opt.%s = %s;\n"
+argument_list|,
+name|name
+argument_list|,
+name|defval
+operator|->
+name|u
+operator|.
+name|value
+argument_list|)
+expr_stmt|;
+else|else
+name|cprint
+argument_list|(
+literal|1
+argument_list|,
+literal|"opt.%s = 1;\n"
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
 name|defval_string
 parameter_list|(
 specifier|const
@@ -8032,7 +8133,7 @@ name|cprint
 argument_list|(
 literal|1
 argument_list|,
-literal|"opt.%s = \"%s\";\n"
+literal|"opt.%s = (char *)(unsigned long)\"%s\";\n"
 argument_list|,
 name|name
 argument_list|,
@@ -8221,7 +8322,7 @@ literal|"int"
 block|,
 literal|"arg_negative_flag"
 block|,
-name|defval_int
+name|defval_neg_flag
 block|,
 name|NULL
 block|}
@@ -8479,6 +8580,11 @@ name|nargs
 init|=
 literal|0
 decl_stmt|;
+name|int
+name|narguments
+init|=
+literal|0
+decl_stmt|;
 name|name
 operator|=
 name|find
@@ -8512,6 +8618,13 @@ name|as
 argument_list|,
 literal|"argument"
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|arg
+condition|)
+name|narguments
+operator|++
 expr_stmt|;
 name|opt1
 operator|=
@@ -8867,6 +8980,7 @@ if|if
 condition|(
 name|aarg
 condition|)
+block|{
 name|fprintf
 argument_list|(
 name|cfile
@@ -8880,6 +8994,10 @@ operator|.
 name|value
 argument_list|)
 expr_stmt|;
+name|narguments
+operator|++
+expr_stmt|;
+block|}
 else|else
 name|fprintf
 argument_list|(
@@ -9122,9 +9240,9 @@ name|end
 decl_stmt|;
 if|if
 condition|(
-name|arg
+name|narguments
 operator|==
-name|NULL
+literal|0
 condition|)
 block|{
 name|max_args

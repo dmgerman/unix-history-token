@@ -13,30 +13,11 @@ directive|if
 literal|1
 end_if
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: unvis.c 21005 2007-06-08 01:54:35Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -287,8 +268,9 @@ value|(((u_char)(c))>= '0'&& ((u_char)(c))<= '7')
 end_define
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rk_strunvis
 parameter_list|(
 name|char
@@ -302,8 +284,9 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rk_unvis
 parameter_list|(
 name|char
@@ -324,8 +307,9 @@ comment|/*  * unvis - decode characters previously encoded by vis  */
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rk_unvis
 parameter_list|(
 name|char
@@ -519,7 +503,7 @@ operator|*
 name|cp
 operator|=
 operator|(
-name|char
+name|u_char
 operator|)
 literal|0200
 expr_stmt|;
@@ -853,7 +837,7 @@ name|c
 argument_list|)
 condition|)
 block|{
-comment|/*  			 * yes - and maybe a third  			 */
+comment|/* 			 * yes - and maybe a third 			 */
 operator|*
 name|cp
 operator|=
@@ -881,7 +865,7 @@ literal|0
 operator|)
 return|;
 block|}
-comment|/*  		 * no - done with current sequence, push back passed char  		 */
+comment|/* 		 * no - done with current sequence, push back passed char 		 */
 operator|*
 name|astate
 operator|=
@@ -938,7 +922,7 @@ name|UNVIS_VALIDPUSH
 operator|)
 return|;
 default|default:
-comment|/*  		 * decoder in unknown state - (probably uninitialized)  		 */
+comment|/* 		 * decoder in unknown state - (probably uninitialized) 		 */
 operator|*
 name|astate
 operator|=
@@ -954,12 +938,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * strunvis - decode src into dst   *  *	Number of chars decoded into dst is returned, -1 on error.  *	Dst is null terminated.  */
+comment|/*  * strunvis - decode src into dst  *  *	Number of chars decoded into dst is returned, -1 on error.  *	Dst is null terminated.  */
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rk_strunvis
 parameter_list|(
 name|char

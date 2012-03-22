@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: glue.c 14566 2005-02-06 01:22:49Z lukeh $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -740,6 +740,8 @@ name|krb5_cc_ops
 name|krb5_kcmss_ops
 init|=
 block|{
+name|KRB5_CC_OPS_VERSION
+block|,
 literal|"KCM"
 block|,
 name|kcmss_get_name

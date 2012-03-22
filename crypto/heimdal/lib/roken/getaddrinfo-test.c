@@ -1,32 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1999 - 2000 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: getaddrinfo-test.c 15930 2005-08-12 13:42:17Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -64,6 +45,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|int
+name|verbose_counter
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
 name|version_flag
 decl_stmt|;
 end_decl_stmt
@@ -83,6 +71,21 @@ name|args
 index|[]
 init|=
 block|{
+block|{
+literal|"verbose"
+block|,
+literal|0
+block|,
+name|arg_counter
+block|,
+operator|&
+name|verbose_counter
+block|,
+literal|"verbose"
+block|,
+name|NULL
+block|}
+block|,
 block|{
 literal|"flags"
 block|,
@@ -231,6 +234,10 @@ decl_stmt|;
 name|int
 name|ret
 decl_stmt|;
+if|if
+condition|(
+name|verbose_counter
+condition|)
 name|printf
 argument_list|(
 literal|"(%s,%s)... "
@@ -294,9 +301,10 @@ if|if
 condition|(
 name|ret
 condition|)
-block|{
-name|printf
+name|errx
 argument_list|(
+literal|1
+argument_list|,
 literal|"error: %s\n"
 argument_list|,
 name|gai_strerror
@@ -305,8 +313,10 @@ name|ret
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return;
-block|}
+if|if
+condition|(
+name|verbose_counter
+condition|)
 name|printf
 argument_list|(
 literal|"\n"
@@ -361,6 +371,10 @@ operator|==
 name|NULL
 condition|)
 block|{
+if|if
+condition|(
+name|verbose_counter
+condition|)
 name|printf
 argument_list|(
 literal|"\tbad address?\n"
@@ -368,6 +382,11 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
+if|if
+condition|(
+name|verbose_counter
+condition|)
+block|{
 name|printf
 argument_list|(
 literal|"\tfamily = %d, socktype = %d, protocol = %d, "
@@ -418,6 +437,7 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|freeaddrinfo
 argument_list|(
@@ -506,7 +526,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"%s from %s-%s)\n"
+literal|"%s from %s-%s\n"
 argument_list|,
 name|getprogname
 argument_list|()

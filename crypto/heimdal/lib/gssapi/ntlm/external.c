@@ -1,21 +1,25 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"ntlm/ntlm.h"
+file|"ntlm.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: external.c 19359 2006-12-15 20:01:48Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static gss_mo_desc ntlm_mo[] = {     { 	GSS_C_MA_SASL_MECH_NAME, 	GSS_MO_MA, 	"SASL mech name", 	rk_UNCONST("NTLM"), 	_gss_mo_get_ctx_as_string, 	NULL     },     { 	GSS_C_MA_MECH_NAME, 	GSS_MO_MA, 	"Mechanism name", 	rk_UNCONST("NTLMSPP"), 	_gss_mo_get_ctx_as_string, 	NULL     },     { 	GSS_C_MA_MECH_DESCRIPTION, 	GSS_MO_MA, 	"Mechanism description", 	rk_UNCONST("Heimdal NTLMSSP Mechanism"), 	_gss_mo_get_ctx_as_string, 	NULL     } };
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -35,6 +39,8 @@ argument_list|(
 literal|"\x2b\x06\x01\x04\x01\x82\x37\x02\x02\x0a"
 argument_list|)
 block|}
+block|,
+literal|0
 block|,
 name|_gss_ntlm_acquire_cred
 block|,
@@ -93,7 +99,67 @@ block|,
 name|_gss_ntlm_canonicalize_name
 block|,
 name|_gss_ntlm_duplicate_name
-block|}
+block|,
+name|_gss_ntlm_inquire_sec_context_by_oid
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|_gss_ntlm_iter_creds_f
+block|,
+name|_gss_ntlm_destroy_cred
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+if|#
+directive|if
+literal|0
+block|ntlm_mo,     sizeof(ntlm_mo) / sizeof(ntlm_mo[0]),
+else|#
+directive|else
+name|NULL
+block|,
+literal|0
+block|,
+endif|#
+directive|endif
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -110,31 +176,6 @@ name|ntlm_mech
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|gss_OID_desc
-name|_gss_ntlm_mechanism_desc
-init|=
-block|{
-literal|10
-block|,
-name|rk_UNCONST
-argument_list|(
-literal|"\x2b\x06\x01\x04\x01\x82\x37\x02\x02\x0a"
-argument_list|)
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|gss_OID
-name|GSS_NTLM_MECHANISM
-init|=
-operator|&
-name|_gss_ntlm_mechanism_desc
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

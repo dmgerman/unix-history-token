@@ -8,7 +8,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: globals.c 16160 2005-10-12 09:42:47Z joda $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -652,7 +652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* these are set in ruserpass */
+comment|/* these are set in ruserpassword */
 end_comment
 
 begin_decl_stmt

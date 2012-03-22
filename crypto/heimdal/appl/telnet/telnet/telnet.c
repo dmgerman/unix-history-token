@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnet.c 16285 2005-11-03 18:38:57Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -6774,7 +6774,7 @@ name|TS_IAC
 expr_stmt|;
 break|break;
 block|}
-comment|/*  		     * The 'crmod' hack (see following) is needed 		     * since we can't set CRMOD on output only. 		     * Machines like MULTICS like to send \r without 		     * \n; since we must turn off CRMOD to get proper 		     * input, the mapping is done here (sigh). 		     */
+comment|/* 		     * The 'crmod' hack (see following) is needed 		     * since we can't set CRMOD on output only. 		     * Machines like MULTICS like to send \r without 		     * \n; since we must turn off CRMOD to get proper 		     * input, the mapping is done here (sigh). 		     */
 if|if
 condition|(
 operator|(
@@ -8409,7 +8409,7 @@ block|}
 ifdef|#
 directive|ifdef
 name|ENCRYPTION
-comment|/*      * Note: we assume a tie to the authentication option here.  This      * is necessary so that authentication fails, we don't spin      * forever.       */
+comment|/*      * Note: we assume a tie to the authentication option here.  This      * is necessary so that authentication fails, we don't spin      * forever.      */
 if|if
 condition|(
 name|telnetport
@@ -8571,7 +8571,7 @@ argument_list|(
 literal|"Waiting for encryption to be negotiated...\n"
 argument_list|)
 expr_stmt|;
-comment|/* 		     * Turn on MODE_TRAPSIG and then turn off localchars  		     * so that ^C will cause telnet to exit. 		     */
+comment|/* 		     * Turn on MODE_TRAPSIG and then turn off localchars 		     * so that ^C will cause telnet to exit. 		     */
 name|TerminalNewMode
 argument_list|(
 name|getconnmode

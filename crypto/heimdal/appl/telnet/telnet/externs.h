@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1988, 1990, 1993  *	The Regents of the University of
 end_comment
 
 begin_comment
-comment|/* $Id: externs.h 21734 2007-07-31 01:55:45Z lha $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -1631,21 +1631,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|printsub
-parameter_list|(
-name|int
-parameter_list|,
-name|unsigned
-name|char
-modifier|*
-parameter_list|,
-name|int
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|sendnaws
 parameter_list|(
 name|void
@@ -2227,7 +2212,7 @@ name|char
 modifier|*
 name|pointer
 parameter_list|,
-name|int
+name|size_t
 name|length
 parameter_list|)
 function_decl|;

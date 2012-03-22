@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: auth.h 5027 1998-06-09 19:25:40Z joda $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -175,13 +175,13 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 block|}

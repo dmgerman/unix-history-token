@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1998 - 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_ifdef
@@ -34,7 +34,13 @@ end_endif
 begin_include
 include|#
 directive|include
-file|<gssapi.h>
+file|<gssapi/gssapi.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<gssapi/gssapi_krb5.h>
 end_include
 
 begin_include
@@ -46,7 +52,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gssapi.c 21513 2007-07-12 12:45:25Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -69,13 +75,12 @@ end_decl_stmt
 
 begin_struct
 struct|struct
-name|gss_data
+name|gssapi_data
 block|{
 name|gss_ctx_id_t
 name|context_hdl
 decl_stmt|;
-name|char
-modifier|*
+name|gss_name_t
 name|client_name
 decl_stmt|;
 name|gss_cred_id_t
@@ -100,7 +105,7 @@ name|app_data
 parameter_list|)
 block|{
 name|struct
-name|gss_data
+name|gssapi_data
 modifier|*
 name|d
 init|=
@@ -217,7 +222,7 @@ name|int
 name|conf_state
 decl_stmt|;
 name|struct
-name|gss_data
+name|gssapi_data
 modifier|*
 name|d
 init|=
@@ -369,7 +374,7 @@ name|int
 name|conf_state
 decl_stmt|;
 name|struct
-name|gss_data
+name|gssapi_data
 modifier|*
 name|d
 init|=
@@ -599,7 +604,7 @@ name|gss_name_t
 name|client_name
 decl_stmt|;
 name|struct
-name|gss_data
+name|gssapi_data
 modifier|*
 name|d
 init|=
@@ -804,152 +809,15 @@ operator|==
 name|GSS_S_COMPLETE
 condition|)
 block|{
-name|char
-modifier|*
-name|name
-decl_stmt|;
-name|gss_buffer_desc
-name|export_name
-decl_stmt|;
-name|gss_OID
-name|oid
-decl_stmt|;
-name|maj_stat
-operator|=
-name|gss_display_name
-argument_list|(
-operator|&
-name|min_stat
-argument_list|,
-name|client_name
-argument_list|,
-operator|&
-name|export_name
-argument_list|,
-operator|&
-name|oid
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|maj_stat
-operator|!=
-literal|0
-condition|)
-block|{
-name|reply
-argument_list|(
-literal|500
-argument_list|,
-literal|"Error displaying name"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-comment|/* XXX kerberos */
-if|if
-condition|(
-name|oid
-operator|!=
-name|GSS_KRB5_NT_PRINCIPAL_NAME
-condition|)
-block|{
-name|reply
-argument_list|(
-literal|500
-argument_list|,
-literal|"OID not kerberos principal name"
-argument_list|)
-expr_stmt|;
-name|gss_release_buffer
-argument_list|(
-operator|&
-name|min_stat
-argument_list|,
-operator|&
-name|export_name
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|name
-operator|=
-name|malloc
-argument_list|(
-name|export_name
-operator|.
-name|length
-operator|+
-literal|1
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|name
-operator|==
-name|NULL
-condition|)
-block|{
-name|reply
-argument_list|(
-literal|500
-argument_list|,
-literal|"Out of memory"
-argument_list|)
-expr_stmt|;
-name|gss_release_buffer
-argument_list|(
-operator|&
-name|min_stat
-argument_list|,
-operator|&
-name|export_name
-argument_list|)
-expr_stmt|;
-goto|goto
-name|out
-goto|;
-block|}
-name|memcpy
-argument_list|(
-name|name
-argument_list|,
-name|export_name
-operator|.
-name|value
-argument_list|,
-name|export_name
-operator|.
-name|length
-argument_list|)
-expr_stmt|;
-name|name
-index|[
-name|export_name
-operator|.
-name|length
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|gss_release_buffer
-argument_list|(
-operator|&
-name|min_stat
-argument_list|,
-operator|&
-name|export_name
-argument_list|)
-expr_stmt|;
 name|d
 operator|->
 name|client_name
 operator|=
-name|name
+name|client_name
+expr_stmt|;
+name|client_name
+operator|=
+name|GSS_C_NO_NAME
 expr_stmt|;
 if|if
 condition|(
@@ -1042,7 +910,14 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"gss_accept_sec_context: %s"
+literal|"gss_accept_sec_context: %.*s"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|status_string
+operator|.
+name|length
 argument_list|,
 operator|(
 name|char
@@ -1070,8 +945,6 @@ literal|"Security resource unavailable"
 argument_list|)
 expr_stmt|;
 block|}
-name|out
-label|:
 if|if
 condition|(
 name|client_name
@@ -1098,7 +971,7 @@ end_function
 
 begin_function_decl
 name|int
-name|gss_userok
+name|gssapi_userok
 parameter_list|(
 name|void
 modifier|*
@@ -1111,7 +984,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|gss_session
+name|gssapi_session
 parameter_list|(
 name|void
 modifier|*
@@ -1133,7 +1006,7 @@ block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|gss_data
+name|gssapi_data
 argument_list|)
 block|,
 name|gss_init
@@ -1161,9 +1034,9 @@ comment|/* pbsz */
 name|NULL
 block|,
 comment|/* ccc */
-name|gss_userok
+name|gssapi_userok
 block|,
-name|gss_session
+name|gssapi_session
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1313,7 +1186,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Error importing name %s: %s\n"
+literal|"Error importing name %.*s: %.*s\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|name
+operator|.
+name|length
 argument_list|,
 operator|(
 name|char
@@ -1322,6 +1202,13 @@ operator|)
 name|name
 operator|.
 name|value
+argument_list|,
+operator|(
+name|int
+operator|)
+name|status_string
+operator|.
+name|length
 argument_list|,
 operator|(
 name|char
@@ -1408,7 +1295,7 @@ name|gss_channel_bindings_t
 name|bindings
 decl_stmt|;
 name|struct
-name|gss_data
+name|gssapi_data
 modifier|*
 name|d
 init|=
@@ -1707,7 +1594,14 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Error initializing security context: %s\n"
+literal|"Error initializing security context: %.*s\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|status_string
+operator|.
+name|length
 argument_list|,
 operator|(
 name|char
@@ -2055,7 +1949,14 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Authenticated to<%s>\n"
+literal|"Authenticated to<%.*s>\n"
+argument_list|,
+operator|(
+name|int
+operator|)
+name|name
+operator|.
+name|length
 argument_list|,
 operator|(
 name|char
@@ -2110,7 +2011,7 @@ block|,
 sizeof|sizeof
 argument_list|(
 expr|struct
-name|gss_data
+name|gssapi_data
 argument_list|)
 block|,
 name|gss_init

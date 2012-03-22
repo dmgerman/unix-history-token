@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1999 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1999 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Portions Copyright (c) 2009 Apple Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -48,7 +48,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: check-der.c 21359 2007-06-27 08:15:41Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -268,6 +268,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -284,6 +286,15 @@ name|values
 index|[
 name|i
 index|]
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -339,6 +350,8 @@ operator|)
 name|NULL
 argument_list|,
 name|cmp_integer
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -973,6 +986,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -989,6 +1004,15 @@ name|values
 index|[
 name|i
 index|]
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1044,6 +1068,8 @@ operator|)
 name|NULL
 argument_list|,
 name|cmp_unsigned
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -1208,6 +1234,8 @@ operator|=
 operator|&
 name|s1
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1219,6 +1247,15 @@ operator|.
 name|name
 argument_list|,
 literal|"a octet string"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1273,6 +1310,8 @@ operator|)
 name|der_free_octet_string
 argument_list|,
 name|cmp_octet_string
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free
@@ -1438,6 +1477,8 @@ operator|=
 operator|&
 name|s1
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1449,6 +1490,15 @@ operator|.
 name|name
 argument_list|,
 literal|"a bmp string"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1479,6 +1529,8 @@ operator|=
 operator|&
 name|s2
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1490,6 +1542,15 @@ operator|.
 name|name
 argument_list|,
 literal|"second bmp string"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1544,6 +1605,8 @@ operator|)
 name|der_free_bmp_string
 argument_list|,
 name|cmp_bmp_string
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free
@@ -1719,6 +1782,8 @@ operator|=
 operator|&
 name|s1
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1730,6 +1795,15 @@ operator|.
 name|name
 argument_list|,
 literal|"a universal string"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1760,6 +1834,8 @@ operator|=
 operator|&
 name|s2
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1771,6 +1847,15 @@ operator|.
 name|name
 argument_list|,
 literal|"second universal string"
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -1825,6 +1910,8 @@ operator|)
 name|der_free_universal_string
 argument_list|,
 name|cmp_universal_string
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free
@@ -1959,6 +2046,8 @@ operator|=
 operator|&
 name|s1
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -1972,6 +2061,15 @@ argument_list|,
 literal|"the string \"%s\""
 argument_list|,
 name|s1
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2028,6 +2126,8 @@ operator|)
 name|der_free_general_string
 argument_list|,
 name|cmp_general_string
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|free
@@ -2177,6 +2277,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -2196,6 +2298,15 @@ name|values
 index|[
 name|i
 index|]
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2251,6 +2362,8 @@ operator|)
 name|NULL
 argument_list|,
 name|cmp_generalized_time
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -2498,6 +2611,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -2511,6 +2626,15 @@ argument_list|,
 literal|"oid %d"
 argument_list|,
 name|i
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2566,6 +2690,8 @@ operator|)
 name|der_free_oid
 argument_list|,
 name|test_cmp_oid
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -2711,6 +2837,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -2724,6 +2852,15 @@ argument_list|,
 literal|"bit_string %d"
 argument_list|,
 name|i
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -2779,6 +2916,8 @@ operator|)
 name|der_free_bit_string
 argument_list|,
 name|test_cmp_bit_string
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -3030,6 +3169,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -3043,6 +3184,15 @@ argument_list|,
 literal|"heim_integer %d"
 argument_list|,
 name|i
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3098,6 +3248,8 @@ operator|)
 name|der_free_heim_integer
 argument_list|,
 name|test_cmp_heim_integer
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for
@@ -3315,6 +3467,8 @@ index|[
 name|i
 index|]
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -3328,6 +3482,15 @@ argument_list|,
 literal|"heim_boolean %d"
 argument_list|,
 name|i
+argument_list|)
+operator|<
+literal|0
+condition|)
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"malloc"
 argument_list|)
 expr_stmt|;
 if|if
@@ -3383,6 +3546,8 @@ operator|)
 name|NULL
 argument_list|,
 name|test_cmp_boolean
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 for|for

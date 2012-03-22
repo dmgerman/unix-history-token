@@ -6,7 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"spnego/spnego_locl.h"
+file|"spnego_locl.h"
 end_include
 
 begin_include
@@ -15,17 +15,21 @@ directive|include
 file|<gssapi_mech.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: external.c 18336 2006-10-07 22:27:13Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * RFC2478, SPNEGO:  *  The security mechanism of the initial  *  negotiation token is identified by the Object Identifier  *  iso.org.dod.internet.security.mechanism.snego (1.3.6.1.5.5.2).  */
 end_comment
+
+begin_if
+if|#
+directive|if
+literal|0
+end_if
+
+begin_endif
+unit|static gss_mo_desc spnego_mo[] = {     { 	GSS_C_MA_SASL_MECH_NAME, 	GSS_MO_MA, 	"SASL mech name", 	rk_UNCONST("SPNEGO"), 	_gss_mo_get_ctx_as_string, 	NULL     },     { 	GSS_C_MA_MECH_NAME, 	GSS_MO_MA, 	"Mechanism name", 	rk_UNCONST("SPNEGO"), 	_gss_mo_get_ctx_as_string, 	NULL     },     { 	GSS_C_MA_MECH_DESCRIPTION, 	GSS_MO_MA, 	"Mechanism description", 	rk_UNCONST("Heimdal SPNEGO Mechanism"), 	_gss_mo_get_ctx_as_string, 	NULL     },     { 	GSS_C_MA_MECH_NEGO, 	GSS_MO_MA     },     { 	GSS_C_MA_MECH_PSEUDO, 	GSS_MO_MA     } };
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 specifier|static
@@ -40,12 +44,13 @@ block|,
 block|{
 literal|6
 block|,
-operator|(
-name|void
-operator|*
-operator|)
+name|rk_UNCONST
+argument_list|(
 literal|"\x2b\x06\x01\x05\x05\x02"
+argument_list|)
 block|}
+block|,
+literal|0
 block|,
 name|_gss_spnego_acquire_cred
 block|,
@@ -69,10 +74,12 @@ name|_gss_spnego_wrap
 block|,
 name|_gss_spnego_unwrap
 block|,
-name|_gss_spnego_display_status
-block|,
 name|NULL
 block|,
+comment|/* gm_display_status */
+name|NULL
+block|,
+comment|/* gm_indicate_mechs */
 name|_gss_spnego_compare_name
 block|,
 name|_gss_spnego_display_name
@@ -89,7 +96,7 @@ name|_gss_spnego_inquire_context
 block|,
 name|_gss_spnego_wrap_size_limit
 block|,
-name|_gss_spnego_add_cred
+name|gss_add_cred
 block|,
 name|_gss_spnego_inquire_cred_by_mech
 block|,
@@ -97,14 +104,91 @@ name|_gss_spnego_export_sec_context
 block|,
 name|_gss_spnego_import_sec_context
 block|,
-name|_gss_spnego_inquire_names_for_mech
+name|NULL
+comment|/* _gss_spnego_inquire_names_for_mech */
 block|,
 name|_gss_spnego_inquire_mechs_for_name
 block|,
 name|_gss_spnego_canonicalize_name
 block|,
 name|_gss_spnego_duplicate_name
-block|}
+block|,
+name|_gss_spnego_inquire_sec_context_by_oid
+block|,
+name|_gss_spnego_inquire_cred_by_oid
+block|,
+name|_gss_spnego_set_sec_context_option
+block|,
+name|_gss_spnego_set_cred_option
+block|,
+name|_gss_spnego_pseudo_random
+block|,
+if|#
+directive|if
+literal|0
+block|_gss_spnego_wrap_iov,     _gss_spnego_unwrap_iov,     _gss_spnego_wrap_iov_length,
+else|#
+directive|else
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+endif|#
+directive|endif
+name|NULL
+block|,
+if|#
+directive|if
+literal|0
+block|_gss_spnego_export_cred,     _gss_spnego_import_cred,
+else|#
+directive|else
+name|NULL
+block|,
+name|NULL
+block|,
+endif|#
+directive|endif
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+if|#
+directive|if
+literal|0
+block|spnego_mo,     sizeof(spnego_mo) / sizeof(spnego_mo[0]),
+else|#
+directive|else
+name|NULL
+block|,
+literal|0
+block|,
+endif|#
+directive|endif
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -121,32 +205,6 @@ name|spnego_mech
 return|;
 block|}
 end_function
-
-begin_decl_stmt
-specifier|static
-name|gss_OID_desc
-name|_gss_spnego_mechanism_desc
-init|=
-block|{
-literal|6
-block|,
-operator|(
-name|void
-operator|*
-operator|)
-literal|"\x2b\x06\x01\x05\x05\x02"
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|gss_OID
-name|GSS_SPNEGO_MECHANISM
-init|=
-operator|&
-name|_gss_spnego_mechanism_desc
-decl_stmt|;
-end_decl_stmt
 
 end_unit
 

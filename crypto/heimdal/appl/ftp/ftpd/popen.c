@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: popen.c 10900 2002-04-02 11:57:39Z joda $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -161,7 +161,7 @@ file|"extern.h"
 end_include
 
 begin_comment
-comment|/*   * Special version of popen which avoids call to shell.  This ensures  * no one may create a pipe to a hidden program as a side effect of a  * list or dir command.  */
+comment|/*  * Special version of popen which avoids call to shell.  This ensures  * no one may create a pipe to a hidden program as a side effect of a  * list or dir command.  */
 end_comment
 
 begin_decl_stmt
@@ -176,13 +176,6 @@ begin_decl_stmt
 specifier|static
 name|int
 name|fds
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|int
-name|dochroot
 decl_stmt|;
 end_decl_stmt
 

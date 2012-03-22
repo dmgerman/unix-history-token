@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 1989, 1993  *	The Regents of the University of Calif
 end_comment
 
 begin_comment
-comment|/* $Id: ext.h 15841 2005-08-08 13:34:26Z lha $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -1095,7 +1095,7 @@ name|char
 modifier|*
 name|pointer
 parameter_list|,
-name|int
+name|size_t
 name|length
 parameter_list|)
 function_decl|;
@@ -1113,7 +1113,7 @@ name|char
 modifier|*
 name|ptr
 parameter_list|,
-name|int
+name|size_t
 name|cnt
 parameter_list|)
 function_decl|;

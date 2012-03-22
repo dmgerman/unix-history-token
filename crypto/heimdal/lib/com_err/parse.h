@@ -153,7 +153,7 @@ union|union
 name|YYSTYPE
 line|#
 directive|line
-number|53
+number|54
 file|"parse.y"
 block|{
 name|char

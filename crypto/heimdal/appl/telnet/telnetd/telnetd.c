@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: telnetd.c 21748 2007-07-31 18:57:20Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1445,6 +1445,8 @@ block|}
 name|mini_inetd
 argument_list|(
 name|port
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

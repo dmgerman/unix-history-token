@@ -1,32 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000, 2002, 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000, 2002, 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: rtbl.c 17758 2006-06-30 13:41:40Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -120,8 +101,9 @@ struct|;
 end_struct
 
 begin_function
-name|rtbl_t
 name|ROKEN_LIB_FUNCTION
+name|rtbl_t
+name|ROKEN_LIB_CALL
 name|rtbl_create
 parameter_list|(
 name|void
@@ -143,8 +125,9 @@ block|}
 end_function
 
 begin_function
-name|void
 name|ROKEN_LIB_FUNCTION
+name|void
+name|ROKEN_LIB_CALL
 name|rtbl_set_flags
 parameter_list|(
 name|rtbl_t
@@ -165,9 +148,10 @@ block|}
 end_function
 
 begin_function
+name|ROKEN_LIB_FUNCTION
 name|unsigned
 name|int
-name|ROKEN_LIB_FUNCTION
+name|ROKEN_LIB_CALL
 name|rtbl_get_flags
 parameter_list|(
 name|rtbl_t
@@ -197,7 +181,7 @@ name|int
 name|id
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -258,7 +242,7 @@ modifier|*
 name|column
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -309,15 +293,16 @@ block|}
 end_function
 
 begin_function
-name|void
 name|ROKEN_LIB_FUNCTION
+name|void
+name|ROKEN_LIB_CALL
 name|rtbl_destroy
 parameter_list|(
 name|rtbl_t
 name|table
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|j
@@ -441,8 +426,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_add_column_by_id
 parameter_list|(
 name|rtbl_t
@@ -617,8 +603,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_add_column
 parameter_list|(
 name|rtbl_t
@@ -650,8 +637,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_new_row
 parameter_list|(
 name|rtbl_t
@@ -853,7 +841,7 @@ modifier|*
 name|column
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -907,6 +895,9 @@ name|column
 operator|->
 name|width
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|column
@@ -928,8 +919,9 @@ comment|/* DEPRECATED */
 end_comment
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_set_prefix
 parameter_list|(
 name|rtbl_t
@@ -981,8 +973,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_set_separator
 parameter_list|(
 name|rtbl_t
@@ -1034,8 +1027,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_set_column_prefix
 parameter_list|(
 name|rtbl_t
@@ -1114,8 +1108,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_set_column_affix_by_id
 parameter_list|(
 name|rtbl_t
@@ -1457,8 +1452,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_add_column_entry_by_id
 parameter_list|(
 name|rtbl_t
@@ -1508,8 +1504,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_add_column_entryv_by_id
 parameter_list|(
 name|rtbl_t
@@ -1595,8 +1592,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_add_column_entry
 parameter_list|(
 name|rtbl_t
@@ -1647,8 +1645,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_add_column_entryv
 parameter_list|(
 name|rtbl_t
@@ -1735,8 +1734,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rtbl_format
 parameter_list|(
 name|rtbl_t
@@ -1747,7 +1747,7 @@ modifier|*
 name|f
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|j

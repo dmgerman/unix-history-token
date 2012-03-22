@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_define
@@ -88,7 +88,7 @@ end_endif
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: ad.c 17445 2006-05-05 10:37:46Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1187,11 +1187,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_NO_SRV
 argument_list|,
 literal|"malloc"
 argument_list|)
@@ -1221,11 +1223,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_NO_SRV
 argument_list|,
 literal|"Didn't find ldap dns"
 argument_list|)
@@ -1259,7 +1263,7 @@ name|rr
 operator|->
 name|type
 operator|!=
-name|T_SRV
+name|rk_ns_t_srv
 condition|)
 continue|continue;
 name|s
@@ -1288,11 +1292,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"malloc"
 argument_list|)
@@ -1364,11 +1370,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_NO_SRV
 argument_list|,
 literal|"No AD server found in DNS"
 argument_list|)
@@ -1522,11 +1530,13 @@ operator|!=
 name|LDAP_SUCCESS
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+literal|0
 argument_list|,
 literal|"Couldn't contact any AD servers: %s"
 argument_list|,
@@ -1675,11 +1685,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Error in AD ldap responce"
 argument_list|)
@@ -1714,11 +1726,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"No naming context found"
 argument_list|)
@@ -3700,11 +3714,13 @@ literal|0
 return|;
 else|#
 directive|else
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -3883,11 +3899,13 @@ literal|0
 return|;
 else|#
 directive|else
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -4031,14 +4049,13 @@ name|context
 init|=
 name|server_handle
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|OPENLDAP
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -4046,22 +4063,6 @@ expr_stmt|;
 return|return
 name|KADM5_RPC_ERROR
 return|;
-else|#
-directive|else
-name|krb5_set_error_string
-argument_list|(
-name|context
-operator|->
-name|context
-argument_list|,
-literal|"Function not implemented"
-argument_list|)
-expr_stmt|;
-return|return
-name|KADM5_RPC_ERROR
-return|;
-endif|#
-directive|endif
 block|}
 end_function
 
@@ -4836,11 +4837,13 @@ name|KADM5_RPC_ERROR
 return|;
 else|#
 directive|else
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -4921,11 +4924,13 @@ condition|)
 return|return
 name|ret
 return|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -4935,11 +4940,13 @@ name|KADM5_RPC_ERROR
 return|;
 else|#
 directive|else
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -4972,11 +4979,13 @@ name|context
 init|=
 name|server_handle
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -5009,7 +5018,7 @@ name|context
 init|=
 name|server_handle
 decl_stmt|;
-comment|/*       * KADM5_ATTRIBUTES      * KRB5_KDB_DISALLOW_ALL_TIX (| KADM5_KVNO)      */
+comment|/*      * KADM5_ATTRIBUTES      * KRB5_KDB_DISALLOW_ALL_TIX (| KADM5_KVNO)      */
 ifdef|#
 directive|ifdef
 name|OPENLDAP
@@ -5872,11 +5881,13 @@ name|ret
 return|;
 else|#
 directive|else
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -6199,11 +6210,13 @@ name|n_keys
 operator|=
 literal|0
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -6238,11 +6251,13 @@ name|context
 init|=
 name|server_handle
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)
@@ -6279,11 +6294,13 @@ name|context
 init|=
 name|server_handle
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_RPC_ERROR
 argument_list|,
 literal|"Function not implemented"
 argument_list|)

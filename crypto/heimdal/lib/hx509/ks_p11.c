@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 - 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2004 - 2008 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"hx_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: ks_p11.c 22071 2007-11-14 20:04:50Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -128,7 +120,7 @@ name|num_slots
 decl_stmt|;
 name|unsigned
 name|int
-name|refcount
+name|ref
 decl_stmt|;
 name|struct
 name|p11_slot
@@ -509,6 +501,9 @@ operator|(
 name|CK_BYTE
 operator|*
 operator|)
+operator|(
+name|intptr_t
+operator|)
 name|from
 operator|,
 name|flen
@@ -730,6 +725,9 @@ operator|,
 operator|(
 name|CK_BYTE
 operator|*
+operator|)
+operator|(
+name|intptr_t
 operator|)
 name|from
 operator|,
@@ -1295,10 +1293,11 @@ decl_stmt|;
 name|CK_TOKEN_INFO
 name|token_info
 decl_stmt|;
+name|size_t
+name|i
+decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
-name|i
 decl_stmt|;
 name|slot
 operator|->
@@ -1420,6 +1419,9 @@ name|name
 argument_list|,
 literal|"%.*s"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|i
 argument_list|,
 name|slot_info
@@ -1721,7 +1723,7 @@ name|flags
 operator||=
 name|P11_SESSION
 expr_stmt|;
-comment|/*       * If we have have to login, and haven't tried before and have a      * prompter or known to work pin code.      *      * This code is very conversative and only uses the prompter in      * the hx509_lock, the reason is that it's bad to try many      * passwords on a pkcs11 token, it might lock up and have to be      * unlocked by a administrator.      *      * XXX try harder to not use pin several times on the same card.      */
+comment|/*      * If we have have to login, and haven't tried before and have a      * prompter or known to work pin code.      *      * This code is very conversative and only uses the prompter in      * the hx509_lock, the reason is that it's bad to try many      * passwords on a pkcs11 token, it might lock up and have to be      * unlocked by a administrator.      *      * XXX try harder to not use pin several times on the same card.      */
 if|if
 condition|(
 operator|(
@@ -1764,12 +1766,6 @@ name|char
 modifier|*
 name|str
 decl_stmt|;
-name|slot
-operator|->
-name|flags
-operator||=
-name|P11_LOGIN_DONE
-expr_stmt|;
 if|if
 condition|(
 name|slot
@@ -1968,21 +1964,17 @@ argument_list|,
 name|ret
 argument_list|)
 expr_stmt|;
-name|p11_put_session
-argument_list|(
-name|p
-argument_list|,
-name|slot
-argument_list|,
-name|slot
-operator|->
-name|session
-argument_list|)
-expr_stmt|;
 return|return
 name|HX509_PKCS11_LOGIN
 return|;
 block|}
+else|else
+name|slot
+operator|->
+name|flags
+operator||=
+name|P11_LOGIN_DONE
+expr_stmt|;
 if|if
 condition|(
 name|slot
@@ -2023,17 +2015,6 @@ argument_list|,
 name|ENOMEM
 argument_list|,
 literal|"out of memory"
-argument_list|)
-expr_stmt|;
-name|p11_put_session
-argument_list|(
-name|p
-argument_list|,
-name|slot
-argument_list|,
-name|slot
-operator|->
-name|session
 argument_list|)
 expr_stmt|;
 return|return
@@ -2196,6 +2177,8 @@ name|object_count
 decl_stmt|;
 name|int
 name|ret
+decl_stmt|,
+name|ret2
 decl_stmt|,
 name|i
 decl_stmt|;
@@ -2533,7 +2516,7 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
-name|ret
+name|ret2
 operator|=
 name|P11FUNC
 argument_list|(
@@ -2548,18 +2531,17 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|ret2
 operator|!=
 name|CKR_OK
 condition|)
 block|{
 return|return
-operator|-
-literal|2
+name|ret2
 return|;
 block|}
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function
@@ -2810,7 +2792,7 @@ name|ulValueLen
 expr_stmt|;
 name|ret
 operator|=
-name|_hx509_private_key_init
+name|hx509_private_key_init
 argument_list|(
 operator|&
 name|key
@@ -2843,7 +2825,7 @@ argument_list|(
 literal|"out of memory"
 argument_list|)
 expr_stmt|;
-comment|/*       * The exponent and modulus should always be present according to      * the pkcs11 specification, but some smartcards leaves it out,      * let ignore any failure to fetch it.      */
+comment|/*      * The exponent and modulus should always be present according to      * the pkcs11 specification, but some smartcards leaves it out,      * let ignore any failure to fetch it.      */
 name|rsa
 operator|->
 name|n
@@ -2920,22 +2902,35 @@ name|private_key
 operator|=
 name|object
 expr_stmt|;
+if|if
+condition|(
 name|p
 operator|->
-name|refcount
+name|ref
+operator|==
+literal|0
+condition|)
+name|_hx509_abort
+argument_list|(
+literal|"pkcs11 ref == 0 on alloc"
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|ref
 operator|++
 expr_stmt|;
 if|if
 condition|(
 name|p
 operator|->
-name|refcount
+name|ref
 operator|==
-literal|0
+name|UINT_MAX
 condition|)
 name|_hx509_abort
 argument_list|(
-literal|"pkcs11 refcount to high"
+literal|"pkcs11 ref == UINT_MAX on alloc"
 argument_list|)
 expr_stmt|;
 name|RSA_set_method
@@ -2966,7 +2961,7 @@ argument_list|(
 literal|"RSA_set_app_data"
 argument_list|)
 expr_stmt|;
-name|_hx509_private_key_assign_rsa
+name|hx509_private_key_assign_rsa
 argument_list|(
 name|key
 argument_list|,
@@ -2997,7 +2992,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|_hx509_private_key_free
+name|hx509_private_key_free
 argument_list|(
 operator|&
 name|key
@@ -3154,22 +3149,35 @@ condition|)
 return|return
 name|ret
 return|;
+if|if
+condition|(
 name|p
 operator|->
-name|refcount
+name|ref
+operator|==
+literal|0
+condition|)
+name|_hx509_abort
+argument_list|(
+literal|"pkcs11 ref == 0 on alloc"
+argument_list|)
+expr_stmt|;
+name|p
+operator|->
+name|ref
 operator|++
 expr_stmt|;
 if|if
 condition|(
 name|p
 operator|->
-name|refcount
+name|ref
 operator|==
-literal|0
+name|UINT_MAX
 condition|)
 name|_hx509_abort
 argument_list|(
-literal|"pkcs11 refcount to high"
+literal|"pkcs11 ref to high"
 argument_list|)
 expr_stmt|;
 name|_hx509_cert_set_release
@@ -3213,8 +3221,8 @@ name|context
 argument_list|,
 name|cert
 argument_list|,
-name|oid_id_pkcs_9_at_localKeyId
-argument_list|()
+operator|&
+name|asn1_oid_id_pkcs_9_at_localKeyId
 argument_list|,
 operator|&
 name|data
@@ -3645,7 +3653,7 @@ return|;
 block|}
 name|p
 operator|->
-name|refcount
+name|ref
 operator|=
 literal|1
 expr_stmt|;
@@ -3758,6 +3766,9 @@ goto|;
 block|}
 name|getFuncs
 operator|=
+operator|(
+name|CK_C_GetFunctionList
+operator|)
 name|dlsym
 argument_list|(
 name|p
@@ -3953,11 +3964,12 @@ name|CK_SLOT_ID_PTR
 name|slot_ids
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|num_tokens
 init|=
 literal|0
+decl_stmt|;
+name|size_t
+name|i
 decl_stmt|;
 name|slot_ids
 operator|=
@@ -4222,20 +4234,20 @@ modifier|*
 name|p
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
 condition|(
 name|p
 operator|->
-name|refcount
+name|ref
 operator|==
 literal|0
 condition|)
 name|_hx509_abort
 argument_list|(
-literal|"pkcs11 refcount to low"
+literal|"pkcs11 ref to low"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4243,7 +4255,7 @@ condition|(
 operator|--
 name|p
 operator|->
-name|refcount
+name|ref
 operator|>
 literal|0
 condition|)
@@ -4296,11 +4308,6 @@ operator|&
 name|P11_SESSION
 condition|)
 block|{
-name|int
-name|ret
-decl_stmt|;
-name|ret
-operator|=
 name|P11FUNC
 argument_list|(
 name|p
@@ -4319,13 +4326,6 @@ name|session
 operator|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|!=
-name|CKR_OK
-condition|)
-empty_stmt|;
 block|}
 if|if
 condition|(
@@ -4443,7 +4443,7 @@ operator|.
 name|infos
 condition|)
 block|{
-name|int
+name|size_t
 name|j
 decl_stmt|;
 for|for
@@ -4580,7 +4580,7 @@ name|p
 init|=
 name|data
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -4685,7 +4685,8 @@ name|c
 decl_stmt|;
 name|int
 name|ret
-decl_stmt|,
+decl_stmt|;
+name|size_t
 name|i
 decl_stmt|;
 name|c
@@ -5236,7 +5237,7 @@ name|p
 init|=
 name|data
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|,
 name|j
@@ -5519,13 +5520,6 @@ argument_list|(
 name|CKM_MD5
 argument_list|,
 literal|"md5"
-argument_list|)
-expr_stmt|;
-name|MECHNAME
-argument_list|(
-name|CKM_MD2
-argument_list|,
-literal|"md2"
 argument_list|)
 expr_stmt|;
 name|MECHNAME

@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: enc-proto.h 10809 2002-01-18 12:58:49Z joda $ */
+comment|/* $Id$ */
 end_comment
 
 begin_if
@@ -259,13 +259,13 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -322,13 +322,13 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -642,13 +642,13 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -757,13 +757,13 @@ name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|,
 name|unsigned
 name|char
 modifier|*
 parameter_list|,
-name|int
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

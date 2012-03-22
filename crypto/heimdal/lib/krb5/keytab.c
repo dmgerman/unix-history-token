@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -9,21 +9,18 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: keytab.c 20211 2007-02-09 07:11:03Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_comment
+comment|/**  * @page krb5_keytab_intro The keytab handing functions  * @section section_krb5_keytab Kerberos Keytabs  *  * See the library functions here: @ref krb5_keytab  *  * Keytabs are long term key storage for servers, their equvalment of  * password files.  *  * Normally the only function that useful for server are to specify  * what keytab to use to other core functions like krb5_rd_req()  * krb5_kt_resolve(), and krb5_kt_close().  *  * @subsection krb5_keytab_names Keytab names  *  * A keytab name is on the form type:residual. The residual part is  * specific to each keytab-type.  *  * When a keytab-name is resolved, the type is matched with an internal  * list of keytab types. If there is no matching keytab type,  * the default keytab is used. The current default type is FILE.  *  * The default value can be changed in the configuration file  * /etc/krb5.conf by setting the variable  * [defaults]default_keytab_name.  *  * The keytab types that are implemented in Heimdal are:  * - file  *   store the keytab in a file, the type's name is FILE .  The  *   residual part is a filename. For compatibility with other  *   Kerberos implemtation WRFILE and JAVA14 is also accepted.  WRFILE  *   has the same format as FILE. JAVA14 have a format that is  *   compatible with older versions of MIT kerberos and SUN's Java  *   based installation.  They store a truncted kvno, so when the knvo  *   excess 255, they are truncted in this format.  *  * - keytab  *   store the keytab in a AFS keyfile (usually /usr/afs/etc/KeyFile ),  *   the type's name is AFSKEYFILE. The residual part is a filename.  *  * - memory  *   The keytab is stored in a memory segment. This allows sensitive  *   and/or temporary data not to be stored on disk. The type's name  *   is MEMORY. Each MEMORY keytab is referenced counted by and  *   opened by the residual name, so two handles can point to the  *   same memory area.  When the last user closes using krb5_kt_close()  *   the keytab, the keys in they keytab is memset() to zero and freed  *   and can no longer be looked up by name.  *  *  * @subsection krb5_keytab_example Keytab example  *  *  This is a minimalistic version of ktutil.  *  * @code int main (int argc, char **argv) {     krb5_context context;     krb5_keytab keytab;     krb5_kt_cursor cursor;     krb5_keytab_entry entry;     krb5_error_code ret;     char *principal;      if (krb5_init_context (&context) != 0) 	errx(1, "krb5_context");      ret = krb5_kt_default (context,&keytab);     if (ret) 	krb5_err(context, 1, ret, "krb5_kt_default");      ret = krb5_kt_start_seq_get(context, keytab,&cursor);     if (ret) 	krb5_err(context, 1, ret, "krb5_kt_start_seq_get");     while((ret = krb5_kt_next_entry(context, keytab,&entry,&cursor)) == 0){ 	krb5_unparse_name(context, entry.principal,&principal); 	printf("principal: %s\n", principal); 	free(principal); 	krb5_kt_free_entry(context,&entry);     }     ret = krb5_kt_end_seq_get(context, keytab,&cursor);     if (ret) 	krb5_err(context, 1, ret, "krb5_kt_end_seq_get");     ret = krb5_kt_close(context, keytab);     if (ret) 	krb5_err(context, 1, ret, "krb5_kt_close");     krb5_free_context(context);     return 0; }  * @endcode  *  */
+end_comment
 
 begin_comment
-comment|/*  * Register a new keytab in `ops'  * Return 0 or an error.  */
+comment|/**  * Register a new keytab backend.  *  * @param context a Keberos context.  * @param ops a backend to register.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_register
 parameter_list|(
 name|krb5_context
@@ -54,11 +51,18 @@ operator|-
 literal|1
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"krb5_kt_register; prefix too long"
+name|KRB5_KT_BADNAME
+argument_list|,
+name|N_
+argument_list|(
+literal|"can't register cache type, prefix too long"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -97,11 +101,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -148,13 +159,120 @@ return|;
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|keytab_name
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+modifier|*
+name|type
+parameter_list|,
+name|size_t
+modifier|*
+name|type_len
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|residual
+decl_stmt|;
+name|residual
+operator|=
+name|strchr
+argument_list|(
+name|name
+argument_list|,
+literal|':'
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|residual
+operator|==
+name|NULL
+operator|||
+name|name
+index|[
+literal|0
+index|]
+operator|==
+literal|'/'
+ifdef|#
+directive|ifdef
+name|_WIN32
+comment|/* Avoid treating<drive>:<path> as a keytab type          * specification */
+operator|||
+name|name
+operator|+
+literal|1
+operator|==
+name|residual
+endif|#
+directive|endif
+condition|)
+block|{
+operator|*
+name|type
+operator|=
+literal|"FILE"
+expr_stmt|;
+operator|*
+name|type_len
+operator|=
+name|strlen
+argument_list|(
+operator|*
+name|type
+argument_list|)
+expr_stmt|;
+name|residual
+operator|=
+name|name
+expr_stmt|;
+block|}
+else|else
+block|{
+operator|*
+name|type
+operator|=
+name|name
+expr_stmt|;
+operator|*
+name|type_len
+operator|=
+name|residual
+operator|-
+name|name
+expr_stmt|;
+name|residual
+operator|++
+expr_stmt|;
+block|}
+return|return
+name|residual
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Resolve the keytab name (of the form `type:residual') in `name'  * into a keytab in `id'.  * Return 0 or an error  */
+comment|/**  * Resolve the keytab name (of the form `type:residual') in `name'  * into a keytab in `id'.  *  * @param context a Keberos context.  * @param name name to resolve  * @param id resulting keytab, free with krb5_kt_close().  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_resolve
 parameter_list|(
 name|krb5_context
@@ -192,52 +310,17 @@ name|ret
 decl_stmt|;
 name|residual
 operator|=
-name|strchr
+name|keytab_name
 argument_list|(
 name|name
 argument_list|,
-literal|':'
+operator|&
+name|type
+argument_list|,
+operator|&
+name|type_len
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|residual
-operator|==
-name|NULL
-condition|)
-block|{
-name|type
-operator|=
-literal|"FILE"
-expr_stmt|;
-name|type_len
-operator|=
-name|strlen
-argument_list|(
-name|type
-argument_list|)
-expr_stmt|;
-name|residual
-operator|=
-name|name
-expr_stmt|;
-block|}
-else|else
-block|{
-name|type
-operator|=
-name|name
-expr_stmt|;
-name|type_len
-operator|=
-name|residual
-operator|-
-name|name
-expr_stmt|;
-name|residual
-operator|++
-expr_stmt|;
-block|}
 for|for
 control|(
 name|i
@@ -285,11 +368,18 @@ operator|->
 name|num_kt_types
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_KT_UNKNOWN_TYPE
+argument_list|,
+name|N_
+argument_list|(
 literal|"unknown keytab type %.*s"
+argument_list|,
+literal|"type"
+argument_list|)
 argument_list|,
 operator|(
 name|int
@@ -321,11 +411,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -400,12 +497,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * copy the name of the default keytab into `name'.  * Return 0 or KRB5_CONFIG_NOTENUFSPACE if `namesize' is too short.  */
+comment|/**  * copy the name of the default keytab into `name'.  *  * @param context a Keberos context.  * @param name buffer where the name will be written  * @param namesize length of name  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_default_name
 parameter_list|(
 name|krb5_context
@@ -435,7 +533,7 @@ operator|>=
 name|namesize
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -451,12 +549,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * copy the name of the default modify keytab into `name'.  * Return 0 or KRB5_CONFIG_NOTENUFSPACE if `namesize' is too short.  */
+comment|/**  * Copy the name of the default modify keytab into `name'.  *  * @param context a Keberos context.  * @param name buffer where the name will be written  * @param namesize length of name  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_default_modify_name
 parameter_list|(
 name|krb5_context
@@ -530,7 +629,7 @@ operator|>=
 name|namesize
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -585,7 +684,7 @@ operator|>=
 name|namesize
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -601,12 +700,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set `id' to the default keytab.  * Return 0 or an error.  */
+comment|/**  * Set `id' to the default keytab.  *  * @param context a Keberos context.  * @param id the new default keytab.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_default
 parameter_list|(
 name|krb5_context
@@ -633,12 +733,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the key identified by `(principal, vno, enctype)' from the  * keytab in `keyprocarg' (the default if == NULL) into `*key'.  * Return 0 or an error.  */
+comment|/**  * Read the key identified by `(principal, vno, enctype)' from the  * keytab in `keyprocarg' (the default if == NULL) into `*key'.  *  * @param context a Keberos context.  * @param keyprocarg  * @param principal  * @param vno  * @param enctype  * @param key  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_read_service_key
 parameter_list|(
 name|krb5_context
@@ -766,12 +867,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return the type of the `keytab' in the string `prefix of length  * `prefixsize'.  */
+comment|/**  * Return the type of the `keytab' in the string `prefix of length  * `prefixsize'.  *  * @param context a Keberos context.  * @param keytab the keytab to get the prefix for  * @param prefix prefix buffer  * @param prefixsize length of prefix buffer  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_type
 parameter_list|(
 name|krb5_context
@@ -806,12 +908,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieve the name of the keytab `keytab' into `name', `namesize'  * Return 0 or an error.  */
+comment|/**  * Retrieve the name of the keytab `keytab' into `name', `namesize'  *  * @param context a Keberos context.  * @param keytab the keytab to get the name for.  * @param name name buffer.  * @param namesize size of name buffer.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_name
 parameter_list|(
 name|krb5_context
@@ -849,12 +952,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Retrieve the full name of the keytab `keytab' and store the name in  * `str'. `str' needs to be freed by the caller using free(3).  * Returns 0 or an error. On error, *str is set to NULL.  */
+comment|/**  * Retrieve the full name of the keytab `keytab' and store the name in  * `str'.  *  * @param context a Keberos context.  * @param keytab keytab to get name for.  * @param str the name of the keytab name, usee krb5_xfree() to free  *        the string.  On error, *str is set to NULL.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_full_name
 parameter_list|(
 name|krb5_context
@@ -952,11 +1056,18 @@ operator|-
 literal|1
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"malloc - out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 operator|*
@@ -975,12 +1086,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Finish using the keytab in `id'.  All resources will be released,  * even on errors.  Return 0 or an error.  */
+comment|/**  * Finish using the keytab in `id'.  All resources will be released,  * even on errors.  *  * @param context a Keberos context.  * @param id keytab to close.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_close
 parameter_list|(
 name|krb5_context
@@ -1032,12 +1144,140 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare `entry' against `principal, vno, enctype'.  * Any of `principal, vno, enctype' might be 0 which acts as a wildcard.  * Return TRUE if they compare the same, FALSE otherwise.  */
+comment|/**  * Destroy (remove) the keytab in `id'.  All resources will be released,  * even on errors, does the equvalment of krb5_kt_close() on the resources.  *  * @param context a Keberos context.  * @param id keytab to destroy.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_kt_destroy
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_keytab
+name|id
+parameter_list|)
+block|{
+name|krb5_error_code
+name|ret
+decl_stmt|;
+name|ret
+operator|=
+call|(
+modifier|*
+name|id
+operator|->
+name|destroy
+call|)
+argument_list|(
+name|context
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+name|krb5_kt_close
+argument_list|(
+name|context
+argument_list|,
+name|id
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Match any aliases in keytab `entry' with `principal'.  */
+end_comment
+
+begin_function
+specifier|static
+name|krb5_boolean
+name|compare_aliseses
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_keytab_entry
+modifier|*
+name|entry
+parameter_list|,
+name|krb5_const_principal
+name|principal
+parameter_list|)
+block|{
+name|unsigned
+name|int
+name|i
+decl_stmt|;
+if|if
+condition|(
+name|entry
+operator|->
+name|aliases
+operator|==
+name|NULL
+condition|)
+return|return
+name|FALSE
+return|;
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+name|entry
+operator|->
+name|aliases
+operator|->
+name|len
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+name|krb5_principal_compare
+argument_list|(
+name|context
+argument_list|,
+operator|&
+name|entry
+operator|->
+name|aliases
+operator|->
+name|val
+index|[
+name|i
+index|]
+argument_list|,
+name|principal
+argument_list|)
+condition|)
+return|return
+name|TRUE
+return|;
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Compare `entry' against `principal, vno, enctype'.  * Any of `principal, vno, enctype' might be 0 which acts as a wildcard.  * Return TRUE if they compare the same, FALSE otherwise.  *  * @param context a Keberos context.  * @param entry an entry to match with.  * @param principal principal to match, NULL matches all principals.  * @param vno key version to match, 0 matches all key version numbers.  * @param enctype encryption type to match, 0 matches all encryption types.  *  * @return Return TRUE or match, FALSE if not matched.  *  * @ingroup krb5_keytab  */
+end_comment
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_kt_compare
 parameter_list|(
 name|krb5_context
@@ -1064,6 +1304,7 @@ operator|!=
 name|NULL
 operator|&&
 operator|!
+operator|(
 name|krb5_principal_compare
 argument_list|(
 name|context
@@ -1074,6 +1315,16 @@ name|principal
 argument_list|,
 name|principal
 argument_list|)
+operator|||
+name|compare_aliseses
+argument_list|(
+name|context
+argument_list|,
+name|entry
+argument_list|,
+name|principal
+argument_list|)
+operator|)
 condition|)
 return|return
 name|FALSE
@@ -1112,13 +1363,163 @@ return|;
 block|}
 end_function
 
+begin_function
+name|krb5_error_code
+name|_krb5_kt_principal_not_found
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_error_code
+name|ret
+parameter_list|,
+name|krb5_keytab
+name|id
+parameter_list|,
+name|krb5_const_principal
+name|principal
+parameter_list|,
+name|krb5_enctype
+name|enctype
+parameter_list|,
+name|int
+name|kvno
+parameter_list|)
+block|{
+name|char
+name|princ
+index|[
+literal|256
+index|]
+decl_stmt|,
+name|kvno_str
+index|[
+literal|25
+index|]
+decl_stmt|,
+modifier|*
+name|kt_name
+decl_stmt|;
+name|char
+modifier|*
+name|enctype_str
+init|=
+name|NULL
+decl_stmt|;
+name|krb5_unparse_name_fixed
+argument_list|(
+name|context
+argument_list|,
+name|principal
+argument_list|,
+name|princ
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|princ
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_kt_get_full_name
+argument_list|(
+name|context
+argument_list|,
+name|id
+argument_list|,
+operator|&
+name|kt_name
+argument_list|)
+expr_stmt|;
+name|krb5_enctype_to_string
+argument_list|(
+name|context
+argument_list|,
+name|enctype
+argument_list|,
+operator|&
+name|enctype_str
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|kvno
+condition|)
+name|snprintf
+argument_list|(
+name|kvno_str
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|kvno_str
+argument_list|)
+argument_list|,
+literal|"(kvno %d)"
+argument_list|,
+name|kvno
+argument_list|)
+expr_stmt|;
+else|else
+name|kvno_str
+index|[
+literal|0
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"Failed to find %s%s in keytab %s (%s)"
+argument_list|,
+literal|"principal, kvno, keytab file, enctype"
+argument_list|)
+argument_list|,
+name|princ
+argument_list|,
+name|kvno_str
+argument_list|,
+name|kt_name
+condition|?
+name|kt_name
+else|:
+literal|"unknown keytab"
+argument_list|,
+name|enctype_str
+condition|?
+name|enctype_str
+else|:
+literal|"unknown enctype"
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|kt_name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|enctype_str
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
 begin_comment
-comment|/*  * Retrieve the keytab entry for `principal, kvno, enctype' into `entry'  * from the keytab `id'.  * kvno == 0 is a wildcard and gives the keytab with the highest vno.  * Return 0 or an error.  */
+comment|/**  * Retrieve the keytab entry for `principal, kvno, enctype' into `entry'  * from the keytab `id'. Matching is done like krb5_kt_compare().  *  * @param context a Keberos context.  * @param id a keytab.  * @param principal principal to match, NULL matches all principals.  * @param kvno key version to match, 0 matches all key version numbers.  * @param enctype encryption type to match, 0 matches all encryption types.  * @param entry the returned entry, free with krb5_kt_free_entry().  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_get_entry
 parameter_list|(
 name|krb5_context
@@ -1194,15 +1595,16 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_clear_error_string
-argument_list|(
+comment|/* This is needed for krb5_verify_init_creds, but keep error 	 * string from previous error for the human. */
 name|context
-argument_list|)
+operator|->
+name|error_code
+operator|=
+name|KRB5_KT_NOTFOUND
 expr_stmt|;
 return|return
 name|KRB5_KT_NOTFOUND
 return|;
-comment|/* XXX i.e. file not found */
 block|}
 name|entry
 operator|->
@@ -1368,141 +1770,39 @@ condition|(
 name|entry
 operator|->
 name|vno
-condition|)
-block|{
-return|return
+operator|==
 literal|0
-return|;
-block|}
-else|else
-block|{
-name|char
-name|princ
-index|[
-literal|256
-index|]
-decl_stmt|,
-name|kvno_str
-index|[
-literal|25
-index|]
-decl_stmt|,
-modifier|*
-name|kt_name
-decl_stmt|;
-name|char
-modifier|*
-name|enctype_str
-init|=
-name|NULL
-decl_stmt|;
-name|krb5_unparse_name_fixed
+condition|)
+return|return
+name|_krb5_kt_principal_not_found
 argument_list|(
 name|context
 argument_list|,
-name|principal
-argument_list|,
-name|princ
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|princ
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|krb5_kt_get_full_name
-argument_list|(
-name|context
+name|KRB5_KT_NOTFOUND
 argument_list|,
 name|id
 argument_list|,
-operator|&
-name|kt_name
-argument_list|)
-expr_stmt|;
-name|krb5_enctype_to_string
-argument_list|(
-name|context
+name|principal
 argument_list|,
 name|enctype
 argument_list|,
-operator|&
-name|enctype_str
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kvno
-condition|)
-name|snprintf
-argument_list|(
-name|kvno_str
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|kvno_str
-argument_list|)
-argument_list|,
-literal|"(kvno %d)"
-argument_list|,
 name|kvno
 argument_list|)
-expr_stmt|;
-else|else
-name|kvno_str
-index|[
-literal|0
-index|]
-operator|=
-literal|'\0'
-expr_stmt|;
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"Failed to find %s%s in keytab %s (%s)"
-argument_list|,
-name|princ
-argument_list|,
-name|kvno_str
-argument_list|,
-name|kt_name
-condition|?
-name|kt_name
-else|:
-literal|"unknown keytab"
-argument_list|,
-name|enctype_str
-condition|?
-name|enctype_str
-else|:
-literal|"unknown enctype"
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|kt_name
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|enctype_str
-argument_list|)
-expr_stmt|;
-return|return
-name|KRB5_KT_NOTFOUND
 return|;
-block|}
+return|return
+literal|0
+return|;
 block|}
 end_function
 
 begin_comment
-comment|/*  * Copy the contents of `in' into `out'.  * Return 0 or an error.  */
+comment|/**  * Copy the contents of `in' into `out'.  *  * @param context a Keberos context.  * @param in the keytab entry to copy.  * @param out the copy of the keytab entry, free with krb5_kt_free_entry().  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_copy_entry_contents
 parameter_list|(
 name|krb5_context
@@ -1616,12 +1916,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Free the contents of `entry'.  */
+comment|/**  * Free the contents of `entry'.  *  * @param context a Keberos context.  * @param entry the entry to free  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_free_entry
 parameter_list|(
 name|krb5_context
@@ -1671,12 +1972,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set `cursor' to point at the beginning of `id'.  * Return 0 or an error.  */
+comment|/**  * Set `cursor' to point at the beginning of `id'.  *  * @param context a Keberos context.  * @param id a keytab.  * @param cursor a newly allocated cursor, free with krb5_kt_end_seq_get().  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_start_seq_get
 parameter_list|(
 name|krb5_context
@@ -1699,12 +2001,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"start_seq_get is not supported in the %s "
-literal|" keytab"
+name|HEIM_ERR_OPNOTSUPP
+argument_list|,
+name|N_
+argument_list|(
+literal|"start_seq_get is not supported "
+literal|"in the %s keytab type"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|id
 operator|->
@@ -1734,12 +2043,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get the next entry from `id' pointed to by `cursor' and advance the  * `cursor'.  * Return 0 or an error.  */
+comment|/**  * Get the next entry from keytab, advance the cursor.  On last entry  * the function will return KRB5_KT_END.  *  * @param context a Keberos context.  * @param id a keytab.  * @param entry the returned entry, free with krb5_kt_free_entry().  * @param cursor the cursor of the iteration.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_next_entry
 parameter_list|(
 name|krb5_context
@@ -1766,12 +2076,19 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|HEIM_ERR_OPNOTSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"next_entry is not supported in the %s "
 literal|" keytab"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|id
 operator|->
@@ -1803,12 +2120,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Release all resources associated with `cursor'.  */
+comment|/**  * Release all resources associated with `cursor'.  *  * @param context a Keberos context.  * @param id a keytab.  * @param cursor the cursor to free.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_end_seq_get
 parameter_list|(
 name|krb5_context
@@ -1831,9 +2149,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|HEIM_ERR_OPNOTSUPP
 argument_list|,
 literal|"end_seq_get is not supported in the %s "
 literal|" keytab"
@@ -1866,12 +2186,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add the entry in `entry' to the keytab `id'.  * Return 0 or an error.  */
+comment|/**  * Add the entry in `entry' to the keytab `id'.  *  * @param context a Keberos context.  * @param id a keytab.  * @param entry the entry to add  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_add_entry
 parameter_list|(
 name|krb5_context
@@ -1894,11 +2215,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_KT_NOWRITE
+argument_list|,
+name|N_
+argument_list|(
 literal|"Add is not supported in the %s keytab"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|id
 operator|->
@@ -1937,12 +2265,13 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Remove the entry `entry' from the keytab `id'.  * Return 0 or an error.  */
+comment|/**  * Remove an entry from the keytab, matching is done using  * krb5_kt_compare().   * @param context a Keberos context.  * @param id a keytab.  * @param entry the entry to remove  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_kt_remove_entry
 parameter_list|(
 name|krb5_context
@@ -1965,11 +2294,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_KT_NOWRITE
+argument_list|,
+name|N_
+argument_list|(
 literal|"Remove is not supported in the %s keytab"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|id
 operator|->
@@ -1994,6 +2330,147 @@ name|id
 argument_list|,
 name|entry
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * Return true if the keytab exists and have entries  *  * @param context a Keberos context.  * @param id a keytab.  *  * @return Return an error code or 0, see krb5_get_error_message().  *  * @ingroup krb5_keytab  */
+end_comment
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_kt_have_content
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_keytab
+name|id
+parameter_list|)
+block|{
+name|krb5_keytab_entry
+name|entry
+decl_stmt|;
+name|krb5_kt_cursor
+name|cursor
+decl_stmt|;
+name|krb5_error_code
+name|ret
+decl_stmt|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|ret
+operator|=
+name|krb5_kt_start_seq_get
+argument_list|(
+name|context
+argument_list|,
+name|id
+argument_list|,
+operator|&
+name|cursor
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|notfound
+goto|;
+name|ret
+operator|=
+name|krb5_kt_next_entry
+argument_list|(
+name|context
+argument_list|,
+name|id
+argument_list|,
+operator|&
+name|entry
+argument_list|,
+operator|&
+name|cursor
+argument_list|)
+expr_stmt|;
+name|krb5_kt_end_seq_get
+argument_list|(
+name|context
+argument_list|,
+name|id
+argument_list|,
+operator|&
+name|cursor
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|notfound
+goto|;
+name|krb5_kt_free_entry
+argument_list|(
+name|context
+argument_list|,
+operator|&
+name|entry
+argument_list|)
+expr_stmt|;
+return|return
+literal|0
+return|;
+name|notfound
+label|:
+name|ret
+operator|=
+name|krb5_kt_get_full_name
+argument_list|(
+name|context
+argument_list|,
+name|id
+argument_list|,
+operator|&
+name|name
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+operator|==
+literal|0
+condition|)
+block|{
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|KRB5_KT_NOTFOUND
+argument_list|,
+name|N_
+argument_list|(
+literal|"No entry in keytab: %s"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|,
+name|name
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|name
+argument_list|)
+expr_stmt|;
+block|}
+return|return
+name|KRB5_KT_NOTFOUND
 return|;
 block|}
 end_function

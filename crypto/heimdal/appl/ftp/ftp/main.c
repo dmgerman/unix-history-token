@@ -22,7 +22,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: main.c 16160 2005-10-12 09:42:47Z joda $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -879,7 +879,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* char * tail(filename) 	char *filename; { 	char *s; 	 	while (*filename) { 		s = strrchr(filename, '/'); 		if (s == NULL) 			break; 		if (s[1]) 			return (s + 1); 		*s = '\0'; 	} 	return (filename); } */
+comment|/* char * tail(filename) 	char *filename; { 	char *s;  	while (*filename) { 		s = strrchr(filename, '/'); 		if (s == NULL) 			break; 		if (s[1]) 			return (s + 1); 		*s = '\0'; 	} 	return (filename); } */
 end_comment
 
 begin_function
@@ -2238,10 +2238,6 @@ name|i
 expr_stmt|;
 if|if
 condition|(
-name|c
-operator|->
-name|c_name
-operator|&&
 operator|(
 operator|!
 name|proxy
@@ -2262,13 +2258,7 @@ name|c_name
 argument_list|)
 expr_stmt|;
 block|}
-elseif|else
-if|if
-condition|(
-name|c
-operator|->
-name|c_name
-condition|)
+else|else
 block|{
 for|for
 control|(

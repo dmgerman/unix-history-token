@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) Jelmer Vernooij 2005<jelmer@samba.org>  * Copyright (C) Stefan Metzmacher 2006<metze@samba.org>  *  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
+comment|/*  * Copyright (C) Jelmer Vernooij 2005<jelmer@samba.org>  * Copyright (C) Stefan Metzmacher 2006<metze@samba.org>  *  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the author nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  */
 end_comment
 
 begin_comment
@@ -97,22 +97,11 @@ begin_comment
 comment|/* _SAMBA_BUILD_ */
 end_comment
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
-
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_undef
 undef|#
@@ -495,7 +484,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* we need to use a very terse format here as IRIX 6.4 silently    truncates names to 16 chars, so if we use a longer name then we    can't tell which port a packet came from with recvfrom()         with this format we have 8 chars left for the directory name */
+comment|/* we need to use a very terse format here as IRIX 6.4 silently    truncates names to 16 chars, so if we use a longer name then we    can't tell which port a packet came from with recvfrom()     with this format we have 8 chars left for the directory name */
 end_comment
 
 begin_define
@@ -2778,7 +2767,7 @@ name|initialized
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * TODO: don't use the structs use plain buffer offsets 	 *       and PUSH_U8(), PUSH_U16() and PUSH_U32() 	 *  	 * for now make sure we disable PCAP support 	 * if the struct has alignment! 	 */
+comment|/* 	 * TODO: don't use the structs use plain buffer offsets 	 *       and PUSH_U8(), PUSH_U16() and PUSH_U32() 	 * 	 * for now make sure we disable PCAP support 	 * if the struct has alignment! 	 */
 if|if
 condition|(
 sizeof|sizeof
@@ -5574,7 +5563,7 @@ name|addrlen
 argument_list|)
 return|;
 block|}
-comment|/*  	 * assume out sockaddr have the same size as the in parent 	 * socket family 	 */
+comment|/* 	 * assume out sockaddr have the same size as the in parent 	 * socket family 	 */
 name|my_addrlen
 operator|=
 name|socket_length

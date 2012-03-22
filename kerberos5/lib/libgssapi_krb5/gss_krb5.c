@@ -31,6 +31,12 @@ directive|include
 file|<roken.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<der.h>
+end_include
+
 begin_function
 name|OM_uint32
 name|gss_krb5_copy_ccache

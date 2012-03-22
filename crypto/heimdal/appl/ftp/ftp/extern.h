@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 1994 The Regents of the University of California.  
 end_comment
 
 begin_comment
-comment|/* $Id: extern.h 9075 2000-09-19 13:15:12Z assar $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include
@@ -935,7 +935,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|ruserpass
+name|ruserpassword
 parameter_list|(
 name|char
 modifier|*

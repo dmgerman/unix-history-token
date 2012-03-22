@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"krb5_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: addr_families.c 22039 2007-11-10 11:47:35Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
@@ -120,6 +112,18 @@ name|krb5_boolean
 function_decl|(
 modifier|*
 name|uninteresting
+function_decl|)
+parameter_list|(
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+parameter_list|)
+function_decl|;
+name|krb5_boolean
+function_decl|(
+modifier|*
+name|is_loopback
 function_decl|)
 parameter_list|(
 specifier|const
@@ -664,6 +668,58 @@ end_function
 
 begin_function
 specifier|static
+name|krb5_boolean
+name|ipv4_is_loopback
+parameter_list|(
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|)
+block|{
+specifier|const
+name|struct
+name|sockaddr_in
+modifier|*
+name|sin4
+init|=
+operator|(
+specifier|const
+expr|struct
+name|sockaddr_in
+operator|*
+operator|)
+name|sa
+decl_stmt|;
+if|if
+condition|(
+operator|(
+name|ntohl
+argument_list|(
+name|sin4
+operator|->
+name|sin_addr
+operator|.
+name|s_addr
+argument_list|)
+operator|>>
+literal|24
+operator|)
+operator|==
+name|IN_LOOPBACKNET
+condition|)
+return|return
+name|TRUE
+return|;
+return|return
+name|FALSE
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|void
 name|ipv4_anyaddr
 parameter_list|(
@@ -909,9 +965,6 @@ name|p
 operator|=
 name|address
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_INET_ATON
 if|if
 condition|(
 name|inet_aton
@@ -928,41 +981,6 @@ return|return
 operator|-
 literal|1
 return|;
-elif|#
-directive|elif
-name|defined
-argument_list|(
-name|HAVE_INET_ADDR
-argument_list|)
-name|a
-operator|.
-name|s_addr
-operator|=
-name|inet_addr
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|a
-operator|.
-name|s_addr
-operator|==
-name|INADDR_NONE
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-else|#
-directive|else
-return|return
-operator|-
-literal|1
-return|;
-endif|#
-directive|endif
 name|addr
 operator|->
 name|addr_type
@@ -1061,11 +1079,18 @@ operator|>
 literal|32
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"IPv4 prefix too large (%ld)"
+argument_list|,
+literal|"len"
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -1649,7 +1674,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  *   */
+comment|/*  *  */
 end_comment
 
 begin_function
@@ -1705,6 +1730,60 @@ name|IN6_IS_ADDR_V4COMPAT
 argument_list|(
 name|in6
 argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|krb5_boolean
+name|ipv6_is_loopback
+parameter_list|(
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|)
+block|{
+specifier|const
+name|struct
+name|sockaddr_in6
+modifier|*
+name|sin6
+init|=
+operator|(
+specifier|const
+expr|struct
+name|sockaddr_in6
+operator|*
+operator|)
+name|sa
+decl_stmt|;
+specifier|const
+name|struct
+name|in6_addr
+modifier|*
+name|in6
+init|=
+operator|(
+specifier|const
+expr|struct
+name|in6_addr
+operator|*
+operator|)
+operator|&
+name|sin6
+operator|->
+name|sin6_addr
+decl_stmt|;
+return|return
+operator|(
+name|IN6_IS_ADDR_LOOPBACK
+argument_list|(
+name|in6
+argument_list|)
+operator|)
 return|;
 block|}
 end_function
@@ -1802,9 +1881,6 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|HAVE_INET_NTOP
 if|if
 condition|(
 name|inet_ntop
@@ -1827,11 +1903,9 @@ argument_list|)
 operator|==
 name|NULL
 condition|)
-endif|#
-directive|endif
 block|{
 comment|/* XXX this is pretty ugly, but better than abort() */
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|unsigned
@@ -2167,11 +2241,18 @@ operator|>
 literal|128
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"IPv6 prefix too large (%ld)"
+argument_list|,
+literal|"length"
+argument_list|)
 argument_list|,
 name|len
 argument_list|)
@@ -2194,11 +2275,18 @@ name|addr
 argument_list|)
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"IPv6 addr bad length"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -2430,6 +2518,12 @@ end_endif
 begin_comment
 comment|/* IPv6 */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HEIMDAL_SMALLER
+end_ifndef
 
 begin_comment
 comment|/*  * table  */
@@ -3517,9 +3611,17 @@ literal|1
 expr_stmt|;
 block|}
 else|else
+block|{
 name|abort
 argument_list|()
 expr_stmt|;
+name|UNREACHABLE
+argument_list|(
+argument|return
+literal|0
+argument_list|)
+empty_stmt|;
+block|}
 if|if
 condition|(
 name|a2
@@ -3671,6 +3773,15 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HEIMDAL_SMALLER */
+end_comment
+
 begin_function
 specifier|static
 name|int
@@ -3734,6 +3845,15 @@ name|address
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|sp
+operator|==
+name|NULL
+condition|)
+return|return
+name|ENOMEM
+return|;
 comment|/* for totally obscure reasons, these are not in network byteorder */
 name|krb5_storage_set_byteorder
 argument_list|(
@@ -3967,6 +4087,8 @@ name|ipv4_h_addr2addr
 block|,
 name|ipv4_uninteresting
 block|,
+name|ipv4_is_loopback
+block|,
 name|ipv4_anyaddr
 block|,
 name|ipv4_print_addr
@@ -4008,6 +4130,8 @@ name|ipv6_h_addr2addr
 block|,
 name|ipv6_uninteresting
 block|,
+name|ipv6_is_loopback
+block|,
 name|ipv6_anyaddr
 block|,
 name|ipv6_print_addr
@@ -4025,38 +4149,9 @@ block|}
 block|,
 endif|#
 directive|endif
-block|{
-name|KRB5_ADDRESS_ADDRPORT
-block|,
-name|KRB5_ADDRESS_ADDRPORT
-block|,
-literal|0
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|addrport_print_addr
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|,
-name|NULL
-block|}
-block|,
+ifndef|#
+directive|ifndef
+name|HEIMDAL_SMALLER
 comment|/* fake address type */
 block|{
 name|KRB5_ADDRESS_ARANGE
@@ -4083,6 +4178,8 @@ name|NULL
 block|,
 name|NULL
 block|,
+name|NULL
+block|,
 name|arange_print_addr
 block|,
 name|arange_parse_addr
@@ -4092,6 +4189,44 @@ block|,
 name|arange_free
 block|,
 name|arange_copy
+block|,
+name|NULL
+block|}
+block|,
+endif|#
+directive|endif
+block|{
+name|KRB5_ADDRESS_ADDRPORT
+block|,
+name|KRB5_ADDRESS_ADDRPORT
+block|,
+literal|0
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|addrport_print_addr
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -4185,7 +4320,7 @@ name|addr_operations
 modifier|*
 name|find_atype
 parameter_list|(
-name|int
+name|krb5_address_type
 name|atype
 parameter_list|)
 block|{
@@ -4227,12 +4362,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * krb5_sockaddr2address stores a address a "struct sockaddr" sa in  * the krb5_address addr.   *  * @param context a Keberos context  * @param sa a struct sockaddr to extract the address from  * @param addr an Kerberos 5 address to store the address in.  *  * @return Return an error code or 0.  *  * @ingroup krb5_address  */
+comment|/**  * krb5_sockaddr2address stores a address a "struct sockaddr" sa in  * the krb5_address addr.  *  * @param context a Keberos context  * @param sa a struct sockaddr to extract the address from  * @param addr an Kerberos 5 address to store the address in.  *  * @return Return an error code or 0.  *  * @ingroup krb5_address  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sockaddr2address
 parameter_list|(
 name|krb5_context
@@ -4268,11 +4404,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address family %d not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|sa
 operator|->
@@ -4304,8 +4447,9 @@ comment|/**  * krb5_sockaddr2port extracts a port (if possible) from a "struct  
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_sockaddr2port
 parameter_list|(
 name|krb5_context
@@ -4341,11 +4485,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address family %d not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|sa
 operator|->
@@ -4377,8 +4528,9 @@ comment|/**  * krb5_addr2sockaddr sets the "struct sockaddr sockaddr" from addr 
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_addr2sockaddr
 parameter_list|(
 name|krb5_context
@@ -4421,11 +4573,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address type %d not supported"
+argument_list|,
+literal|"krb5_address type"
+argument_list|)
 argument_list|,
 name|addr
 operator|->
@@ -4445,11 +4604,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Can't convert address type %d to sockaddr"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|addr
 operator|->
@@ -4487,8 +4653,9 @@ comment|/**  * krb5_max_sockaddr_size returns the max size of the .Li struct  * 
 end_comment
 
 begin_function
-name|size_t
 name|KRB5_LIB_FUNCTION
+name|size_t
+name|KRB5_LIB_CALL
 name|krb5_max_sockaddr_size
 parameter_list|(
 name|void
@@ -4544,8 +4711,9 @@ comment|/**  * krb5_sockaddr_uninteresting returns TRUE for all .Fa sa that the 
 end_comment
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_sockaddr_uninteresting
 parameter_list|(
 specifier|const
@@ -4596,13 +4764,68 @@ return|;
 block|}
 end_function
 
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
+name|krb5_sockaddr_is_loopback
+parameter_list|(
+specifier|const
+name|struct
+name|sockaddr
+modifier|*
+name|sa
+parameter_list|)
+block|{
+name|struct
+name|addr_operations
+modifier|*
+name|a
+init|=
+name|find_af
+argument_list|(
+name|sa
+operator|->
+name|sa_family
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+name|NULL
+operator|||
+name|a
+operator|->
+name|is_loopback
+operator|==
+name|NULL
+condition|)
+return|return
+name|TRUE
+return|;
+return|return
+call|(
+modifier|*
+name|a
+operator|->
+name|is_loopback
+call|)
+argument_list|(
+name|sa
+argument_list|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/**  * krb5_h_addr2sockaddr initializes a "struct sockaddr sa" from af and  * the "struct hostent" (see gethostbyname(3) ) h_addr_list  * component. The argument sa_size should initially contain the size  * of the sa, and after the call, it will contain the actual length of  * the address.  *  * @param context a Keberos context  * @param af addresses  * @param addr address  * @param sa returned struct sockaddr  * @param sa_size size of sa  * @param port port to set in sa.  *  * @return Return an error code or 0.  *  * @ingroup krb5_address  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_h_addr2sockaddr
 parameter_list|(
 name|krb5_context
@@ -4646,9 +4869,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
 argument_list|,
 literal|"Address family %d not supported"
 argument_list|,
@@ -4686,8 +4911,9 @@ comment|/**  * krb5_h_addr2addr works like krb5_h_addr2sockaddr with the excepti
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_h_addr2addr
 parameter_list|(
 name|krb5_context
@@ -4723,11 +4949,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address family %d not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|af
 argument_list|)
@@ -4757,8 +4990,9 @@ comment|/**  * krb5_anyaddr fills in a "struct sockaddr sa" that can be used to 
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_anyaddr
 parameter_list|(
 name|krb5_context
@@ -4797,11 +5031,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address family %d not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|af
 argument_list|)
@@ -4835,8 +5076,9 @@ comment|/**  * krb5_print_address prints the address in addr to the string strin
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_print_address
 parameter_list|(
 specifier|const
@@ -4891,7 +5133,7 @@ decl_stmt|;
 name|int
 name|l
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|s
@@ -4919,6 +5161,9 @@ name|l
 operator|<
 literal|0
 operator|||
+operator|(
+name|size_t
+operator|)
 name|l
 operator|>=
 name|len
@@ -4984,6 +5229,9 @@ name|l
 operator|<
 literal|0
 operator|||
+operator|(
+name|size_t
+operator|)
 name|l
 operator|>=
 name|len
@@ -5064,8 +5312,9 @@ comment|/**  * krb5_parse_address returns the resolved hostname in string to the
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_parse_address
 parameter_list|(
 name|krb5_context
@@ -5178,11 +5427,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -5223,13 +5479,27 @@ condition|(
 name|error
 condition|)
 block|{
+name|krb5_error_code
+name|ret2
+decl_stmt|;
 name|save_errno
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|ret2
+operator|=
+name|krb5_eai_to_heim_errno
+argument_list|(
+name|error
+argument_list|,
+name|save_errno
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret2
 argument_list|,
 literal|"%s: %s"
 argument_list|,
@@ -5242,12 +5512,7 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-name|krb5_eai_to_heim_errno
-argument_list|(
-name|error
-argument_list|,
-name|save_errno
-argument_list|)
+name|ret2
 return|;
 block|}
 name|n
@@ -5289,11 +5554,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|freeaddrinfo
@@ -5369,15 +5641,30 @@ argument_list|,
 name|addresses
 argument_list|)
 condition|)
+block|{
+name|krb5_free_address
+argument_list|(
+name|context
+argument_list|,
+operator|&
+name|addresses
+operator|->
+name|val
+index|[
+name|i
+index|]
+argument_list|)
+expr_stmt|;
 continue|continue;
+block|}
+name|i
+operator|++
+expr_stmt|;
 name|addresses
 operator|->
 name|len
 operator|=
 name|i
-expr_stmt|;
-name|i
-operator|++
 expr_stmt|;
 block|}
 name|freeaddrinfo
@@ -5392,12 +5679,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * krb5_address_order compares the addresses addr1 and addr2 so that  * it can be used for sorting addresses. If the addresses are the same  * address krb5_address_order will return 0. Behavies like memcmp(2).   *  * @param context a Keberos context  * @param addr1 krb5_address to compare  * @param addr2 krb5_address to compare  *  * @return< 0 if address addr1 in "less" then addr2. 0 if addr1 and  * addr2 is the same address,> 0 if addr2 is "less" then addr1.  *  * @ingroup krb5_address  */
+comment|/**  * krb5_address_order compares the addresses addr1 and addr2 so that  * it can be used for sorting addresses. If the addresses are the same  * address krb5_address_order will return 0. Behavies like memcmp(2).  *  * @param context a Keberos context  * @param addr1 krb5_address to compare  * @param addr2 krb5_address to compare  *  * @return< 0 if address addr1 in "less" then addr2. 0 if addr1 and  * addr2 is the same address,> 0 if addr2 is "less" then addr1.  *  * @ingroup krb5_address  */
 end_comment
 
 begin_function
-name|int
 name|KRB5_LIB_FUNCTION
+name|int
+name|KRB5_LIB_CALL
 name|krb5_address_order
 parameter_list|(
 name|krb5_context
@@ -5436,11 +5724,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address family %d not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|addr1
 operator|->
@@ -5490,11 +5785,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address family %d not supported"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|addr2
 operator|->
@@ -5604,8 +5906,9 @@ comment|/**  * krb5_address_compare compares the addresses  addr1 and addr2.  * 
 end_comment
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_address_compare
 parameter_list|(
 name|krb5_context
@@ -5642,8 +5945,9 @@ comment|/**  * krb5_address_search checks if the address addr is a member of the
 end_comment
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_address_search
 parameter_list|(
 name|krb5_context
@@ -5660,7 +5964,7 @@ modifier|*
 name|addrlist
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -5709,8 +6013,9 @@ comment|/**  * krb5_free_address frees the data stored in the address that is  *
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_address
 parameter_list|(
 name|krb5_context
@@ -5790,8 +6095,9 @@ comment|/**  * krb5_free_addresses frees the data stored in the address that is 
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_free_addresses
 parameter_list|(
 name|krb5_context
@@ -5802,7 +6108,7 @@ modifier|*
 name|addresses
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -5863,8 +6169,9 @@ comment|/**  * krb5_copy_address copies the content of address  * inaddr to outa
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_address
 parameter_list|(
 name|krb5_context
@@ -5935,8 +6242,9 @@ comment|/**  * krb5_copy_addresses copies the content of addresses  * inaddr to 
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_addresses
 parameter_list|(
 name|krb5_context
@@ -5952,7 +6260,7 @@ modifier|*
 name|outaddr
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|ALLOC_SEQ
@@ -6028,8 +6336,9 @@ comment|/**  * krb5_append_addresses adds the set of addresses in source to  * d
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_append_addresses
 parameter_list|(
 name|krb5_context
@@ -6052,7 +6361,7 @@ decl_stmt|;
 name|krb5_error_code
 name|ret
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -6096,11 +6405,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"realloc: out of memory"
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
+literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6198,8 +6514,9 @@ comment|/**  * Create an address of type KRB5_ADDRESS_ADDRPORT from (addr, port)
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_make_addrport
 parameter_list|(
 name|krb5_context
@@ -6262,11 +6579,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -6302,11 +6626,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|free
@@ -6550,10 +6881,6 @@ argument_list|,
 literal|2
 argument_list|)
 expr_stmt|;
-name|p
-operator|+=
-literal|2
-expr_stmt|;
 return|return
 literal|0
 return|;
@@ -6565,8 +6892,9 @@ comment|/**  * Calculate the boundary addresses of `inaddr'/`prefixlen' and stor
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_address_prefixlen_boundary
 parameter_list|(
 name|krb5_context
@@ -6633,12 +6961,19 @@ argument_list|,
 name|high
 argument_list|)
 return|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_PROG_ATYPE_NOSUPP
+argument_list|,
+name|N_
+argument_list|(
 literal|"Address family %d doesn't support "
 literal|"address mask operation"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|inaddr
 operator|->

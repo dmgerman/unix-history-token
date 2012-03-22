@@ -8,7 +8,7 @@ comment|/*  * Copyright (C) 1990 by the Massachusetts Institute of Technology  *
 end_comment
 
 begin_comment
-comment|/* $Id: misc-proto.h 9187 2000-11-15 23:00:21Z assar $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -203,8 +203,7 @@ name|char
 modifier|*
 name|pointer
 parameter_list|,
-name|int
-name|length
+name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl

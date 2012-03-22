@@ -1,21 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2003 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
 include|#
 directive|include
-file|"krb5/gsskrb5_locl.h"
+file|"gsskrb5_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: 8003.c 18334 2006-10-07 22:16:04Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|krb5_error_code
@@ -309,13 +301,23 @@ index|[
 literal|4
 index|]
 decl_stmt|;
-name|MD5_CTX
-name|md5
+name|EVP_MD_CTX
+modifier|*
+name|ctx
 decl_stmt|;
-name|MD5_Init
+name|ctx
+operator|=
+name|EVP_MD_CTX_create
+argument_list|()
+expr_stmt|;
+name|EVP_DigestInit_ex
 argument_list|(
-operator|&
-name|md5
+name|ctx
+argument_list|,
+name|EVP_md5
+argument_list|()
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|_gsskrb5_encode_om_uint32
@@ -327,10 +329,9 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|num
 argument_list|,
@@ -351,10 +352,9 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|num
 argument_list|,
@@ -372,10 +372,9 @@ name|initiator_address
 operator|.
 name|length
 condition|)
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|b
 operator|->
@@ -399,10 +398,9 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|num
 argument_list|,
@@ -423,10 +421,9 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|num
 argument_list|,
@@ -444,10 +441,9 @@ name|acceptor_address
 operator|.
 name|length
 condition|)
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|b
 operator|->
@@ -473,10 +469,9 @@ argument_list|,
 name|num
 argument_list|)
 expr_stmt|;
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|num
 argument_list|,
@@ -494,10 +489,9 @@ name|application_data
 operator|.
 name|length
 condition|)
-name|MD5_Update
+name|EVP_DigestUpdate
 argument_list|(
-operator|&
-name|md5
+name|ctx
 argument_list|,
 name|b
 operator|->
@@ -512,12 +506,18 @@ operator|.
 name|length
 argument_list|)
 expr_stmt|;
-name|MD5_Final
+name|EVP_DigestFinal_ex
 argument_list|(
+name|ctx
+argument_list|,
 name|p
 argument_list|,
-operator|&
-name|md5
+name|NULL
+argument_list|)
+expr_stmt|;
+name|EVP_MD_CTX_destroy
+argument_list|(
+name|ctx
 argument_list|)
 expr_stmt|;
 return|return
@@ -559,7 +559,7 @@ name|u_char
 modifier|*
 name|p
 decl_stmt|;
-comment|/*       * see rfc1964 (section 1.1.1 (Initial Token), and the checksum value       * field's format) */
+comment|/*      * see rfc1964 (section 1.1.1 (Initial Token), and the checksum value      * field's format) */
 name|result
 operator|->
 name|cksumtype
@@ -859,22 +859,6 @@ index|[
 literal|16
 index|]
 decl_stmt|;
-if|if
-condition|(
-name|cksum
-operator|==
-name|NULL
-condition|)
-block|{
-operator|*
-name|minor_status
-operator|=
-literal|0
-expr_stmt|;
-return|return
-name|GSS_S_BAD_BINDINGS
-return|;
-block|}
 comment|/* XXX should handle checksums> 24 bytes */
 if|if
 condition|(
@@ -985,7 +969,7 @@ return|;
 block|}
 if|if
 condition|(
-name|memcmp
+name|ct_memcmp
 argument_list|(
 name|hash
 argument_list|,

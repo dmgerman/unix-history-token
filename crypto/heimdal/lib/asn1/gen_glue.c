@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997, 1999, 2000, 2003 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997, 1999, 2000, 2003 - 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Portions Copyright (c) 2009 Apple Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: gen_glue.c 15617 2005-07-12 06:27:42Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -135,6 +135,7 @@ argument_list|,
 literal|"%s int2%s(unsigned n)\n"
 literal|"{\n"
 literal|"\t%s flags;\n\n"
+literal|"\tmemset(&flags, 0, sizeof(flags));\n\n"
 argument_list|,
 name|gen_name
 argument_list|,
@@ -211,15 +212,44 @@ name|Member
 modifier|*
 name|m
 decl_stmt|;
+if|if
+condition|(
+name|template_flag
+condition|)
+block|{
 name|fprintf
 argument_list|(
 name|headerfile
 argument_list|,
-literal|"const struct units * asn1_%s_units(void);"
+literal|"extern const struct units *asn1_%s_table_units;\n"
 argument_list|,
 name|gen_name
 argument_list|)
 expr_stmt|;
+name|fprintf
+argument_list|(
+name|headerfile
+argument_list|,
+literal|"#define asn1_%s_units() (asn1_%s_table_units)\n"
+argument_list|,
+name|gen_name
+argument_list|,
+name|gen_name
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|fprintf
+argument_list|(
+name|headerfile
+argument_list|,
+literal|"const struct units * asn1_%s_units(void);\n"
+argument_list|,
+name|gen_name
+argument_list|)
+expr_stmt|;
+block|}
 name|fprintf
 argument_list|(
 name|codefile
@@ -255,7 +285,7 @@ literal|"\t{\"%s\",\t1U<< %d},\n"
 argument_list|,
 name|m
 operator|->
-name|gen_name
+name|name
 argument_list|,
 name|m
 operator|->
@@ -272,6 +302,22 @@ literal|"\t{NULL,\t0}\n"
 literal|"};\n\n"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|template_flag
+condition|)
+name|fprintf
+argument_list|(
+name|codefile
+argument_list|,
+literal|"const struct units * asn1_%s_table_units = %s_units;\n"
+argument_list|,
+name|gen_name
+argument_list|,
+name|gen_name
+argument_list|)
+expr_stmt|;
+else|else
 name|fprintf
 argument_list|(
 name|codefile

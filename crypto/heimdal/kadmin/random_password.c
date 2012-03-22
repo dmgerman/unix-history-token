@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1998, 1999 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -9,16 +9,8 @@ directive|include
 file|"kadmin_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: random_password.c 21745 2007-07-31 16:11:25Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
-comment|/* This file defines some a function that generates a random password,    that can be used when creating a large amount of principals (such    as for a batch of students). Since this is a political matter, you    should think about how secure generated passwords has to be.        Both methods defined here will give you at least 55 bits of    entropy.    */
+comment|/* This file defines some a function that generates a random password,    that can be used when creating a large amount of principals (such    as for a batch of students). Since this is a political matter, you    should think about how secure generated passwords has to be.     Both methods defined here will give you at least 55 bits of    entropy.    */
 end_comment
 
 begin_comment
@@ -244,7 +236,7 @@ block|}
 end_function
 
 begin_comment
-comment|/* This a helper function that generates a random password with a    number of characters from a set of character classes.     If there are n classes, and the size of each class is Pi, and the    number of characters from each class is Ni, the number of possible    passwords are (given that the character classes are disjoint):       n             n    -----        /  ----  \    |   |  Ni    |  \     |    |   | Pi     |   \  Ni| !    |   | ---- * |   /    |    |   | Ni!    |  /___  |     i=1          \  i=1  /         Since it uses the RND function above, neither the size of each     class, nor the total length of the generated password should be     larger than 127 (without fixing RND).        */
+comment|/* This a helper function that generates a random password with a    number of characters from a set of character classes.     If there are n classes, and the size of each class is Pi, and the    number of characters from each class is Ni, the number of possible    passwords are (given that the character classes are disjoint):       n             n    -----        /  ----  \    |   |  Ni    |  \     |    |   | Pi     |   \  Ni| !    |   | ---- * |   /    |    |   | Ni!    |  /___  |     i=1          \  i=1  /      Since it uses the RND function above, neither the size of each     class, nor the total length of the generated password should be     larger than 127 (without fixing RND).     */
 end_comment
 
 begin_function

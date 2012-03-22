@@ -62,6 +62,29 @@ begin_comment
 comment|/*  * Function fnmatch() as specified in POSIX 1003.2-1992, section B.6.  * Compares a filename or pathname to a pattern.  */
 end_comment
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_CONFIG_H
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<config.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_include
+include|#
+directive|include
+file|<roken.h>
+end_include
+
 begin_include
 include|#
 directive|include
@@ -100,8 +123,9 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|rk_fnmatch
 parameter_list|(
 specifier|const

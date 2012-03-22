@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: rshd.c 21515 2007-07-12 12:47:07Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -127,29 +127,6 @@ end_endif
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KRB4
-end_ifdef
-
-begin_decl_stmt
-name|des_key_schedule
-name|schedule
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|des_cblock
-name|iv
-decl_stmt|;
-end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|KRB5
 end_ifdef
 
@@ -237,13 +214,6 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
-
-begin_define
-define|#
-directive|define
-name|DO_KRB4
-value|2
-end_define
 
 begin_define
 define|#
@@ -515,9 +485,14 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"%s: %m: %s"
+literal|"%s: %s: %s"
 argument_list|,
 name|what
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|,
 name|buf
 operator|+
@@ -628,7 +603,12 @@ literal|1
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"read: %m"
+literal|"read: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -804,359 +784,6 @@ end_function
 begin_ifdef
 ifdef|#
 directive|ifdef
-name|KRB4
-end_ifdef
-
-begin_function
-specifier|static
-name|int
-name|recv_krb4_auth
-parameter_list|(
-name|int
-name|s
-parameter_list|,
-name|u_char
-modifier|*
-name|buf
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|thisaddr
-parameter_list|,
-name|struct
-name|sockaddr
-modifier|*
-name|thataddr
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|client_username
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|server_username
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|cmd
-parameter_list|)
-block|{
-name|int
-name|status
-decl_stmt|;
-name|int32_t
-name|options
-decl_stmt|;
-name|KTEXT_ST
-name|ticket
-decl_stmt|;
-name|AUTH_DAT
-name|auth
-decl_stmt|;
-name|char
-name|instance
-index|[
-name|INST_SZ
-operator|+
-literal|1
-index|]
-decl_stmt|;
-name|char
-name|version
-index|[
-name|KRB_SENDAUTH_VLEN
-operator|+
-literal|1
-index|]
-decl_stmt|;
-if|if
-condition|(
-name|memcmp
-argument_list|(
-name|buf
-argument_list|,
-name|KRB_SENDAUTH_VERS
-argument_list|,
-literal|4
-argument_list|)
-operator|!=
-literal|0
-condition|)
-return|return
-operator|-
-literal|1
-return|;
-if|if
-condition|(
-name|net_read
-argument_list|(
-name|s
-argument_list|,
-name|buf
-operator|+
-literal|4
-argument_list|,
-name|KRB_SENDAUTH_VLEN
-operator|-
-literal|4
-argument_list|)
-operator|!=
-name|KRB_SENDAUTH_VLEN
-operator|-
-literal|4
-condition|)
-name|syslog_and_die
-argument_list|(
-literal|"reading auth info: %m"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|memcmp
-argument_list|(
-name|buf
-argument_list|,
-name|KRB_SENDAUTH_VERS
-argument_list|,
-name|KRB_SENDAUTH_VLEN
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|syslog_and_die
-argument_list|(
-literal|"unrecognized auth protocol: %.8s"
-argument_list|,
-name|buf
-argument_list|)
-expr_stmt|;
-name|options
-operator|=
-name|KOPT_IGNORE_PROTOCOL
-expr_stmt|;
-if|if
-condition|(
-name|do_encrypt
-condition|)
-name|options
-operator||=
-name|KOPT_DO_MUTUAL
-expr_stmt|;
-name|k_getsockinst
-argument_list|(
-name|s
-argument_list|,
-name|instance
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|instance
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|status
-operator|=
-name|krb_recvauth
-argument_list|(
-name|options
-argument_list|,
-name|s
-argument_list|,
-operator|&
-name|ticket
-argument_list|,
-literal|"rcmd"
-argument_list|,
-name|instance
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|thataddr
-argument_list|,
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|thisaddr
-argument_list|,
-operator|&
-name|auth
-argument_list|,
-literal|""
-argument_list|,
-name|schedule
-argument_list|,
-name|version
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|status
-operator|!=
-name|KSUCCESS
-condition|)
-name|syslog_and_die
-argument_list|(
-literal|"recvauth: %s"
-argument_list|,
-name|krb_get_err_text
-argument_list|(
-name|status
-argument_list|)
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|strncmp
-argument_list|(
-name|version
-argument_list|,
-name|KCMD_OLD_VERSION
-argument_list|,
-name|KRB_SENDAUTH_VLEN
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|syslog_and_die
-argument_list|(
-literal|"bad version: %s"
-argument_list|,
-name|version
-argument_list|)
-expr_stmt|;
-operator|*
-name|server_username
-operator|=
-name|read_str
-argument_list|(
-name|s
-argument_list|,
-name|USERNAME_SZ
-argument_list|,
-literal|"remote username"
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|kuserok
-argument_list|(
-operator|&
-name|auth
-argument_list|,
-operator|*
-name|server_username
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|fatal
-argument_list|(
-name|s
-argument_list|,
-name|NULL
-argument_list|,
-literal|"Permission denied."
-argument_list|)
-expr_stmt|;
-operator|*
-name|cmd
-operator|=
-name|read_str
-argument_list|(
-name|s
-argument_list|,
-name|ARG_MAX
-operator|+
-literal|1
-argument_list|,
-literal|"command"
-argument_list|)
-expr_stmt|;
-name|syslog
-argument_list|(
-name|LOG_INFO
-operator||
-name|LOG_AUTH
-argument_list|,
-literal|"kerberos v4 shell from %s on %s as %s, cmd '%.80s'"
-argument_list|,
-name|krb_unparse_name_long
-argument_list|(
-name|auth
-operator|.
-name|pname
-argument_list|,
-name|auth
-operator|.
-name|pinst
-argument_list|,
-name|auth
-operator|.
-name|prealm
-argument_list|)
-argument_list|,
-name|inet_ntoa
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|sockaddr_in
-operator|*
-operator|)
-name|thataddr
-operator|)
-operator|->
-name|sin_addr
-argument_list|)
-argument_list|,
-operator|*
-name|server_username
-argument_list|,
-operator|*
-name|cmd
-argument_list|)
-expr_stmt|;
-name|memcpy
-argument_list|(
-name|iv
-argument_list|,
-name|auth
-operator|.
-name|session
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|iv
-argument_list|)
-argument_list|)
-expr_stmt|;
-return|return
-literal|0
-return|;
-block|}
-end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
-comment|/* KRB4 */
-end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
 name|KRB5
 end_ifdef
 
@@ -1232,12 +859,13 @@ literal|0
 return|;
 name|ret
 operator|=
-name|krb5_cc_gen_new
+name|krb5_cc_new_unique
 argument_list|(
 name|context
 argument_list|,
-operator|&
-name|krb5_mcc_ops
+name|krb5_cc_type_memory
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|ccache
@@ -1672,7 +1300,12 @@ name|len
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"reading auth info: %m"
+literal|"reading auth info: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -2400,6 +2033,13 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|krb5_auth_con_free
+argument_list|(
+name|context
+argument_list|,
+name|auth_context
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -2616,7 +2256,12 @@ continue|continue;
 else|else
 name|syslog_and_die
 argument_list|(
-literal|"select: %m"
+literal|"select: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -2655,7 +2300,12 @@ literal|0
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"read: %m"
+literal|"read: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2726,7 +2376,12 @@ literal|0
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"read: %m"
+literal|"read: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -2814,7 +2469,12 @@ literal|0
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"read: %m"
+literal|"read: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -3608,7 +3268,12 @@ literal|0
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"getsockname: %m"
+literal|"getsockname: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|thataddr_len
@@ -3634,7 +3299,12 @@ literal|0
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"getpeername: %m"
+literal|"getpeername: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* check for V4MAPPED addresses? */
@@ -3691,7 +3361,12 @@ literal|1
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"reading port number: %m"
+literal|"reading port number: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3768,7 +3443,7 @@ name|IPPORT_RESERVED
 operator|-
 literal|1
 decl_stmt|;
-comment|/*  	 * There's no reason to require a ``privileged'' port number 	 * here, but for some reason the brain dead rsh clients 	 * do... :-( 	 */
+comment|/* 	 * There's no reason to require a ``privileged'' port number 	 * here, but for some reason the brain dead rsh clients 	 * do... :-( 	 */
 name|erraddr
 operator|->
 name|sa_family
@@ -3831,7 +3506,12 @@ literal|0
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"socket: %m"
+literal|"socket: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if
@@ -3855,7 +3535,12 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"connect: %m"
+literal|"connect: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|close
@@ -3885,50 +3570,14 @@ literal|4
 condition|)
 name|syslog_and_die
 argument_list|(
-literal|"reading auth info: %m"
-argument_list|)
-expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
-if|if
-condition|(
-operator|(
-name|do_kerberos
-operator|&
-name|DO_KRB4
-operator|)
-operator|&&
-name|recv_krb4_auth
+literal|"reading auth info: %s"
+argument_list|,
+name|strerror
 argument_list|(
-name|s
-argument_list|,
-name|buf
-argument_list|,
-name|thisaddr
-argument_list|,
-name|thataddr
-argument_list|,
-operator|&
-name|client_user
-argument_list|,
-operator|&
-name|server_user
-argument_list|,
-operator|&
-name|cmd
+name|errno
 argument_list|)
-operator|==
-literal|0
-condition|)
-name|auth_method
-operator|=
-name|AUTH_KRB4
+argument_list|)
 expr_stmt|;
-elseif|else
-endif|#
-directive|endif
-comment|/* KRB4 */
 ifdef|#
 directive|ifdef
 name|KRB5
@@ -4304,7 +3953,12 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"setlogin() failed: %m"
+literal|"setlogin() failed: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4330,7 +3984,12 @@ name|syslog
 argument_list|(
 name|LOG_ERR
 argument_list|,
-literal|"setpcred() failure: %m"
+literal|"setpcred() failure: %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 endif|#
@@ -4636,11 +4295,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KRB4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|KRB5
 argument_list|)
 if|if
@@ -4662,62 +4316,6 @@ condition|)
 name|k_setpag
 argument_list|()
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|KRB4
-if|if
-condition|(
-name|k_afs_cell_of_file
-argument_list|(
-name|pwd
-operator|->
-name|pw_dir
-argument_list|,
-name|cell
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|cell
-argument_list|)
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|krb_afslog_uid_home
-argument_list|(
-name|cell
-argument_list|,
-name|NULL
-argument_list|,
-name|pwd
-operator|->
-name|pw_uid
-argument_list|,
-name|pwd
-operator|->
-name|pw_dir
-argument_list|)
-expr_stmt|;
-name|krb_afslog_uid_home
-argument_list|(
-name|NULL
-argument_list|,
-name|NULL
-argument_list|,
-name|pwd
-operator|->
-name|pw_uid
-argument_list|,
-name|pwd
-operator|->
-name|pw_dir
-argument_list|)
-expr_stmt|;
-endif|#
-directive|endif
-ifdef|#
-directive|ifdef
-name|KRB5
 comment|/* XXX */
 if|if
 condition|(
@@ -4813,13 +4411,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-endif|#
-directive|endif
-comment|/* KRB5 */
 block|}
 endif|#
 directive|endif
-comment|/* KRB5 || KRB4 */
+comment|/* KRB5 */
 name|execle
 argument_list|(
 name|pwd
@@ -4899,11 +4494,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KRB4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|KRB5
 argument_list|)
 block|{
@@ -4977,11 +4567,6 @@ block|}
 block|,
 if|#
 directive|if
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|KRB5
@@ -5198,11 +4783,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|KRB4
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|KRB5
 argument_list|)
 if|if
@@ -5219,8 +4799,6 @@ name|do_kerberos
 condition|)
 name|do_kerberos
 operator|=
-name|DO_KRB4
-operator||
 name|DO_KRB5
 expr_stmt|;
 endif|#
@@ -5354,11 +4932,6 @@ condition|)
 block|{
 if|#
 directive|if
-name|defined
-argument_list|(
-name|KRB4
-argument_list|)
-operator|||
 name|defined
 argument_list|(
 name|KRB5
@@ -5591,6 +5164,8 @@ block|}
 name|mini_inetd_addrinfo
 argument_list|(
 name|ai
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|freeaddrinfo
@@ -5630,7 +5205,12 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"setsockopt (SO_KEEPALIVE): %m"
+literal|"setsockopt (SO_KEEPALIVE): %s"
+argument_list|,
+name|strerror
+argument_list|(
+name|errno
+argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* set SO_LINGER? */

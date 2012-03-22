@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005, PADL Software Pty Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of PADL Software nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PADL SOFTWARE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PADL SOFTWARE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2005, PADL Software Pty Ltd.  * All rights reserved.  *  * Portions Copyright (c) 2009 Apple Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of PADL Software nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PADL SOFTWARE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PADL SOFTWARE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/*   * $Id: kcm_locl.h 20470 2007-04-20 10:41:11Z lha $   */
+comment|/*  * $Id$  */
 end_comment
 
 begin_ifndef
@@ -119,32 +119,57 @@ name|kcm_creds
 struct_decl|;
 end_struct_decl
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
-name|kcm_cursor
+name|kcm_default_cache
 block|{
+name|uid_t
+name|uid
+decl_stmt|;
 name|pid_t
-name|pid
+name|session
 decl_stmt|;
-name|uint32_t
-name|key
-decl_stmt|;
-name|struct
-name|kcm_creds
+comment|/* really au_asid_t */
+name|char
 modifier|*
-name|credp
+name|name
 decl_stmt|;
-comment|/* pointer to next credential */
 name|struct
-name|kcm_cursor
+name|kcm_default_cache
 modifier|*
 name|next
 decl_stmt|;
 block|}
-name|kcm_cursor
-typedef|;
-end_typedef
+struct|;
+end_struct
+
+begin_decl_stmt
+specifier|extern
+name|struct
+name|kcm_default_cache
+modifier|*
+name|default_caches
+decl_stmt|;
+end_decl_stmt
+
+begin_struct
+struct|struct
+name|kcm_creds
+block|{
+name|kcmuuid_t
+name|uuid
+decl_stmt|;
+name|krb5_creds
+name|cred
+decl_stmt|;
+name|struct
+name|kcm_creds
+modifier|*
+name|next
+decl_stmt|;
+block|}
+struct|;
+end_struct
 
 begin_typedef
 typedef|typedef
@@ -154,6 +179,9 @@ block|{
 name|char
 modifier|*
 name|name
+decl_stmt|;
+name|kcmuuid_t
+name|uuid
 decl_stmt|;
 name|unsigned
 name|refcnt
@@ -170,6 +198,10 @@ decl_stmt|;
 name|gid_t
 name|gid
 decl_stmt|;
+name|pid_t
+name|session
+decl_stmt|;
+comment|/* really au_asid_t */
 name|krb5_principal
 name|client
 decl_stmt|;
@@ -178,34 +210,19 @@ name|krb5_principal
 name|server
 decl_stmt|;
 comment|/* primary server principal (TGS if NULL) */
-struct|struct
-name|kcm_creds
-block|{
-name|krb5_creds
-name|cred
-decl_stmt|;
-comment|/* XXX would be useful for have ACLs on creds */
 name|struct
 name|kcm_creds
 modifier|*
-name|next
-decl_stmt|;
-block|}
-modifier|*
 name|creds
-struct|;
-name|uint32_t
-name|n_cursor
-decl_stmt|;
-name|kcm_cursor
-modifier|*
-name|cursors
 decl_stmt|;
 name|krb5_deltat
 name|tkt_life
 decl_stmt|;
 name|krb5_deltat
 name|renew_life
+decl_stmt|;
+name|int32_t
+name|kdc_offset
 decl_stmt|;
 union|union
 block|{
@@ -349,6 +366,9 @@ decl_stmt|;
 name|gid_t
 name|gid
 decl_stmt|;
+name|pid_t
+name|session
+decl_stmt|;
 block|}
 name|kcm_client
 typedef|;
@@ -470,10 +490,28 @@ name|name_constraints
 decl_stmt|;
 end_decl_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SUPPORT_DETACH
+end_ifdef
+
 begin_decl_stmt
 specifier|extern
 name|int
 name|detach_from_console
+decl_stmt|;
+end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|launchd_flag
 decl_stmt|;
 end_decl_stmt
 
@@ -496,10 +534,31 @@ endif|#
 directive|endif
 end_endif
 
+begin_function_decl
+name|void
+name|kcm_service
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+specifier|const
+name|heim_idata
+modifier|*
+parameter_list|,
+specifier|const
+name|heim_icred
+parameter_list|,
+name|heim_ipc_complete
+parameter_list|,
+name|heim_sipc_call
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_include
 include|#
 directive|include
-file|<kcm_protos.h>
+file|<kcm-protos.h>
 end_include
 
 begin_endif

@@ -23,7 +23,7 @@ end_include
 
 begin_function_decl
 name|krb5_error_code
-name|_hdb_fetch
+name|_hdb_fetch_kvno
 parameter_list|(
 name|krb5_context
 comment|/*context*/
@@ -37,6 +37,9 @@ comment|/*principal*/
 parameter_list|,
 name|unsigned
 comment|/*flags*/
+parameter_list|,
+name|krb5_kvno
+comment|/*kvno*/
 parameter_list|,
 name|hdb_entry_ex
 modifier|*
@@ -55,6 +58,25 @@ comment|/*mkvno*/
 parameter_list|,
 name|hdb_master_key
 comment|/*mkey*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|krb5_error_code
+name|_hdb_keytab2hdb_entry
+parameter_list|(
+name|krb5_context
+comment|/*context*/
+parameter_list|,
+specifier|const
+name|krb5_keytab_entry
+modifier|*
+comment|/*ktentry*/
+parameter_list|,
+name|hdb_entry_ex
+modifier|*
+comment|/*entry*/
 parameter_list|)
 function_decl|;
 end_function_decl

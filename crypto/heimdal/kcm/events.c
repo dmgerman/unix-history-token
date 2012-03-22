@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: events.c 15294 2005-05-30 01:43:23Z lukeh $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -615,7 +615,6 @@ name|kcm_release_ccache
 argument_list|(
 name|context
 argument_list|,
-operator|&
 operator|(
 operator|*
 name|e

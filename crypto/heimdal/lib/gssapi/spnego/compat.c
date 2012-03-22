@@ -6,16 +6,8 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"spnego/spnego_locl.h"
+file|"spnego_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: compat.c 21866 2007-08-08 11:31:29Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_comment
 comment|/*  * Apparently Microsoft got the OID wrong, and used  * 1.2.840.48018.1.2.2 instead. We need both this and  * the correct Kerberos OID here in order to deal with  * this. Because this is manifest in SPNEGO only I'd  * prefer to deal with this here rather than inside the  * Kerberos mechanism.  */
@@ -28,11 +20,10 @@ init|=
 block|{
 literal|9
 block|,
-operator|(
-name|void
-operator|*
-operator|)
+name|rk_UNCONST
+argument_list|(
 literal|"\x2a\x86\x48\x82\xf7\x12\x01\x02\x02"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -44,11 +35,10 @@ init|=
 block|{
 literal|9
 block|,
-operator|(
-name|void
-operator|*
-operator|)
+name|rk_UNCONST
+argument_list|(
 literal|"\x2a\x86\x48\x86\xf7\x12\x01\x02\x02"
+argument_list|)
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -59,6 +49,7 @@ end_comment
 
 begin_function
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_alloc_sec_context
 parameter_list|(
 name|OM_uint32
@@ -157,12 +148,6 @@ name|GSS_C_NO_NAME
 expr_stmt|;
 name|ctx
 operator|->
-name|delegated_cred_id
-operator|=
-name|GSS_C_NO_CREDENTIAL
-expr_stmt|;
-name|ctx
-operator|->
 name|open
 operator|=
 literal|0
@@ -213,6 +198,7 @@ end_comment
 
 begin_function
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_internal_delete_sec_context
 parameter_list|(
 name|OM_uint32
@@ -313,17 +299,6 @@ operator|->
 name|initiator_mech_types
 argument_list|)
 expr_stmt|;
-name|_gss_spnego_release_cred
-argument_list|(
-operator|&
-name|minor
-argument_list|,
-operator|&
-name|ctx
-operator|->
-name|delegated_cred_id
-argument_list|)
-expr_stmt|;
 name|gss_release_oid
 argument_list|(
 operator|&
@@ -421,11 +396,6 @@ argument_list|(
 name|ctx
 argument_list|)
 expr_stmt|;
-operator|*
-name|context_handle
-operator|=
-name|NULL
-expr_stmt|;
 return|return
 name|ret
 return|;
@@ -438,6 +408,7 @@ end_comment
 
 begin_function
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_require_mechlist_mic
 parameter_list|(
 name|OM_uint32
@@ -743,6 +714,7 @@ end_function
 
 begin_function
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_indicate_mechtypelist
 parameter_list|(
 name|OM_uint32
@@ -767,7 +739,7 @@ name|int
 name|includeMSCompatOID
 parameter_list|,
 specifier|const
-name|gssspnego_cred
+name|gss_cred_id_t
 name|cred_handle
 parameter_list|,
 name|MechTypeList
@@ -792,7 +764,7 @@ decl_stmt|;
 name|OM_uint32
 name|ret
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|mechtypelist
@@ -810,8 +782,6 @@ expr_stmt|;
 if|if
 condition|(
 name|cred_handle
-operator|!=
-name|NULL
 condition|)
 block|{
 name|ret
@@ -821,8 +791,6 @@ argument_list|(
 name|minor_status
 argument_list|,
 name|cred_handle
-operator|->
-name|negotiated_cred_id
 argument_list|,
 name|NULL
 argument_list|,

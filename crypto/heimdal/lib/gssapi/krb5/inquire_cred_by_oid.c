@@ -6,19 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"krb5/gsskrb5_locl.h"
+file|"gsskrb5_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: inquire_cred_by_oid.c 19031 2006-11-13 18:02:57Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gsskrb5_inquire_cred_by_oid
 parameter_list|(
 name|OM_uint32

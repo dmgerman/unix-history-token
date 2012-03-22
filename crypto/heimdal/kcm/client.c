@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2005, PADL Software Pty Ltd.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of PADL Software nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PADL SOFTWARE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PADL SOFTWARE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2005, PADL Software Pty Ltd.  * All rights reserved.  *  * Portions Copyright (c) 2009 Apple Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of PADL Software nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY PADL SOFTWARE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL PADL SOFTWARE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -14,14 +14,6 @@ include|#
 directive|include
 file|<pwd.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: client.c 20487 2007-04-21 06:25:06Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_function
 name|krb5_error_code
@@ -114,6 +106,7 @@ name|kcm_release_ccache
 argument_list|(
 name|context
 argument_list|,
+operator|*
 name|ccache
 argument_list|)
 expr_stmt|;
@@ -197,42 +190,6 @@ argument_list|,
 name|ccache
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ret
-condition|)
-block|{
-name|kcm_release_ccache
-argument_list|(
-name|context
-argument_list|,
-operator|&
-name|ccache
-argument_list|)
-expr_stmt|;
-return|return
-name|ret
-return|;
-block|}
-name|ret
-operator|=
-name|kcm_ccache_destroy
-argument_list|(
-name|context
-argument_list|,
-name|ccache
-operator|->
-name|name
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|ret
-operator|==
-literal|0
-condition|)
-block|{
-comment|/* don't leave any events dangling */
 name|kcm_cleanup_events
 argument_list|(
 name|context
@@ -240,17 +197,27 @@ argument_list|,
 name|ccache
 argument_list|)
 expr_stmt|;
-block|}
 name|kcm_release_ccache
 argument_list|(
 name|context
 argument_list|,
-operator|&
 name|ccache
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
 return|return
 name|ret
+return|;
+return|return
+name|kcm_ccache_destroy
+argument_list|(
+name|context
+argument_list|,
+name|name
+argument_list|)
 return|;
 block|}
 end_function
@@ -523,6 +490,14 @@ name|client
 operator|->
 name|gid
 expr_stmt|;
+name|ccache
+operator|->
+name|session
+operator|=
+name|client
+operator|->
+name|session
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -560,7 +535,6 @@ name|kcm_release_ccache
 argument_list|(
 name|context
 argument_list|,
-operator|&
 name|ccache
 argument_list|)
 expr_stmt|;
@@ -598,7 +572,6 @@ name|kcm_release_ccache
 argument_list|(
 name|context
 argument_list|,
-operator|&
 name|ccache
 argument_list|)
 expr_stmt|;
@@ -613,7 +586,7 @@ return|return
 name|ret
 return|;
 block|}
-comment|/*       * Finally, if the user is root and the cache was created under      * another user's name, chown the cache to that user and their      * default gid.      */
+comment|/*      * Finally, if the user is root and the cache was created under      * another user's name, chown the cache to that user and their      * default gid.      */
 if|if
 condition|(
 name|CLIENT_IS_ROOT
