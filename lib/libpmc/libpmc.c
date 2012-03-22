@@ -428,7 +428,7 @@ end_if
 begin_function_decl
 specifier|static
 name|int
-name|mips24k_allocate_pmc
+name|mips_allocate_pmc
 parameter_list|(
 name|enum
 name|pmc_event
@@ -1537,7 +1537,7 @@ name|MIPS24K
 argument_list|,
 name|mips24k
 argument_list|,
-name|mips24k
+name|mips
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -11476,28 +11476,28 @@ end_decl_stmt
 begin_define
 define|#
 directive|define
-name|MIPS24K_KW_OS
+name|MIPS_KW_OS
 value|"os"
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS24K_KW_USR
+name|MIPS_KW_USR
 value|"usr"
 end_define
 
 begin_define
 define|#
 directive|define
-name|MIPS24K_KW_ANYTHREAD
+name|MIPS_KW_ANYTHREAD
 value|"anythread"
 end_define
 
 begin_function
 specifier|static
 name|int
-name|mips24k_allocate_pmc
+name|mips_allocate_pmc
 parameter_list|(
 name|enum
 name|pmc_event
@@ -11557,7 +11557,7 @@ name|KWMATCH
 argument_list|(
 name|p
 argument_list|,
-name|MIPS24K_KW_OS
+name|MIPS_KW_OS
 argument_list|)
 condition|)
 name|pmc_config
@@ -11573,7 +11573,7 @@ name|KWMATCH
 argument_list|(
 name|p
 argument_list|,
-name|MIPS24K_KW_USR
+name|MIPS_KW_USR
 argument_list|)
 condition|)
 name|pmc_config
@@ -11589,7 +11589,7 @@ name|KWMATCH
 argument_list|(
 name|p
 argument_list|,
-name|MIPS24K_KW_ANYTHREAD
+name|MIPS_KW_ANYTHREAD
 argument_list|)
 condition|)
 name|pmc_config
