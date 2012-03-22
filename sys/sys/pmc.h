@@ -1290,7 +1290,7 @@ begin_struct
 struct|struct
 name|pmc_syscall_args
 block|{
-name|uint32_t
+name|register_t
 name|pmop_code
 decl_stmt|;
 comment|/* one of PMC_OP_* */
