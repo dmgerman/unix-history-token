@@ -455,7 +455,8 @@ name|char
 modifier|*
 name|pmc_name_of_capability
 parameter_list|(
-name|uint32_t
+name|enum
+name|pmc_caps
 name|_c
 parameter_list|)
 function_decl|;
