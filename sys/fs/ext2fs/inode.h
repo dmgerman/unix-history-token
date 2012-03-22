@@ -123,12 +123,6 @@ decl_stmt|;
 name|uint32_t
 name|i_next_alloc_goal
 decl_stmt|;
-name|uint32_t
-name|i_prealloc_block
-decl_stmt|;
-name|uint32_t
-name|i_prealloc_count
-decl_stmt|;
 comment|/* Fields from struct dinode in UFS. */
 name|uint16_t
 name|i_mode

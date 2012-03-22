@@ -344,7 +344,7 @@ comment|/* all inodes have at least some bytes */
 name|uint16_t
 name|e4fs_want_extra_isize
 decl_stmt|;
-comment|/* new inodes should reserve some bytes */
+comment|/* inodes must reserve some bytes */
 name|uint32_t
 name|e4fs_flags
 decl_stmt|;
@@ -662,6 +662,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT4F_ROCOMPAT_EXTRA_ISIZE
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT2F_INCOMPAT_COMP
 value|0x0001
 end_define
@@ -688,7 +695,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_ROCOMPAT_SUPP
-value|(EXT2F_ROCOMPAT_SPARSESUPER \ 					 | EXT2F_ROCOMPAT_LARGEFILE)
+value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT4F_ROCOMPAT_EXTRA_ISIZE)
 end_define
 
 begin_define
