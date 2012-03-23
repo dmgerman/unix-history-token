@@ -1899,6 +1899,26 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|pci_restore_state
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pci_save_state
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|pci_set_max_read_req
 parameter_list|(
