@@ -412,7 +412,11 @@ name|acpi_pci_driver
 argument_list|,
 name|acpi_pci_methods
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pci_softc
+argument_list|)
 argument_list|,
 name|pci_driver
 argument_list|)
@@ -1332,7 +1336,25 @@ name|int
 name|busno
 decl_stmt|,
 name|domain
+decl_stmt|,
+name|error
 decl_stmt|;
+name|error
+operator|=
+name|pci_attach_common
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 comment|/* 	 * Since there can be multiple independantly numbered PCI 	 * busses on systems with multiple PCI domains, we can't use 	 * the unit number to decide which bus we are probing. We ask 	 * the parent pcib what our domain and bus numbers are. 	 */
 name|domain
 operator|=
@@ -1346,21 +1368,6 @@ operator|=
 name|pcib_get_bus
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"domain=%d, physical bus=%d\n"
-argument_list|,
-name|domain
-argument_list|,
-name|busno
 argument_list|)
 expr_stmt|;
 comment|/* 	 * First, PCI devices are added as in the normal PCI bus driver. 	 * Afterwards, the ACPI namespace under the bridge driver is 	 * walked to save ACPI handles to all the devices that appear in 	 * the ACPI namespace as immediate descendants of the bridge. 	 * 	 * XXX: Sometimes PCI devices show up in the ACPI namespace that 	 * pci_add_children() doesn't find.  We currently just ignore 	 * these devices. 	 */
