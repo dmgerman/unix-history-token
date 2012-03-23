@@ -341,8 +341,11 @@ name|ofw_pcibus_driver
 argument_list|,
 name|ofw_pcibus_methods
 argument_list|,
-literal|1
-comment|/* no softc */
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pci_softc
+argument_list|)
 argument_list|,
 name|pci_driver
 argument_list|)
@@ -445,6 +448,25 @@ name|busno
 decl_stmt|,
 name|domain
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
+name|pci_attach_common
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|domain
 operator|=
 name|pcib_get_domain
@@ -457,21 +479,6 @@ operator|=
 name|pcib_get_bus
 argument_list|(
 name|dev
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|device_printf
-argument_list|(
-name|dev
-argument_list|,
-literal|"domain=%d, physical bus=%d\n"
-argument_list|,
-name|domain
-argument_list|,
-name|busno
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Attach those children represented in the device tree. 	 */

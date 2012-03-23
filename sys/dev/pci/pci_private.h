@@ -27,6 +27,17 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_struct
+struct|struct
+name|pci_softc
+block|{
+name|bus_dma_tag_t
+name|sc_dma_tag
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_decl_stmt
 specifier|extern
 name|int
@@ -90,6 +101,16 @@ name|force
 parameter_list|,
 name|uint32_t
 name|prefetchmask
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pci_attach_common
+parameter_list|(
+name|device_t
+name|dev
 parameter_list|)
 function_decl|;
 end_function_decl
