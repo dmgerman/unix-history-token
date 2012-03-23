@@ -197,7 +197,7 @@ parameter_list|(
 name|_x
 parameter_list|)
 define|\
-value|(__builtin_constant_p(_x) ?			\ 	    __bswap16_const((__uint16_t)(_x)) : __bswap16_var(_x))
+value|((__uint16_t)(__builtin_constant_p(_x) ?	\ 	    __bswap16_const((__uint16_t)(_x)) : __bswap16_var(_x)))
 define|#
 directive|define
 name|__htonl
