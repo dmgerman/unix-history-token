@@ -3191,7 +3191,7 @@ name|UIO_WRITE
 expr_stmt|;
 name|datalen
 operator|=
-name|imin
+name|MIN
 argument_list|(
 name|uio
 operator|->

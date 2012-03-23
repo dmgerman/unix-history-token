@@ -3740,11 +3740,11 @@ name|so
 decl_stmt|;
 name|int
 name|i
-decl_stmt|;
-name|int
-name|len
 decl_stmt|,
 name|error
+decl_stmt|;
+name|ssize_t
+name|len
 decl_stmt|;
 name|cap_rights_t
 name|rights
@@ -4755,7 +4755,7 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
-name|socklen_t
+name|ssize_t
 name|len
 decl_stmt|;
 name|int
@@ -5073,9 +5073,6 @@ name|auio
 operator|.
 name|uio_resid
 operator|!=
-operator|(
-name|int
-operator|)
 name|len
 operator|&&
 operator|(
@@ -5111,9 +5108,6 @@ name|ktruio
 operator|->
 name|uio_resid
 operator|=
-operator|(
-name|int
-operator|)
 name|len
 operator|-
 name|auio
@@ -5148,9 +5142,6 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|int
-operator|)
 name|len
 operator|-
 name|auio
@@ -9953,7 +9944,8 @@ else|else
 block|{
 name|int
 name|bsize
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|resid
 decl_stmt|;
 comment|/* 				 * Ensure that our page is still around 				 * when the I/O completes. 				 */
@@ -11878,9 +11870,10 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|len
-decl_stmt|,
 name|i
+decl_stmt|;
+name|ssize_t
+name|len
 decl_stmt|;
 name|struct
 name|sockaddr
@@ -12587,9 +12580,10 @@ decl_stmt|;
 name|int
 name|fromlen
 decl_stmt|;
-name|int
+name|ssize_t
 name|len
-decl_stmt|,
+decl_stmt|;
+name|int
 name|i
 decl_stmt|,
 name|msg_flags
@@ -13045,9 +13039,6 @@ name|auio
 operator|.
 name|uio_resid
 operator|!=
-operator|(
-name|int
-operator|)
 name|len
 operator|&&
 operator|(
@@ -13109,9 +13100,6 @@ name|ktruio
 operator|->
 name|uio_resid
 operator|=
-operator|(
-name|int
-operator|)
 name|len
 operator|-
 name|auio
@@ -13149,9 +13137,6 @@ index|[
 literal|0
 index|]
 operator|=
-operator|(
-name|int
-operator|)
 name|len
 operator|-
 name|auio
@@ -13209,7 +13194,7 @@ operator|->
 name|from
 argument_list|,
 operator|(
-name|unsigned
+name|size_t
 operator|)
 name|len
 argument_list|)

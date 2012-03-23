@@ -2727,7 +2727,7 @@ name|bcount
 condition|)
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 call|(
 name|unsigned
@@ -2861,7 +2861,7 @@ block|}
 block|}
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uio
 operator|->
@@ -3626,7 +3626,7 @@ condition|)
 block|{
 name|size
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uiop
 operator|->
@@ -3637,7 +3637,7 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uiop
 operator|->
@@ -3849,7 +3849,7 @@ condition|)
 block|{
 name|size
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uiop
 operator|->
@@ -3860,7 +3860,7 @@ argument_list|)
 expr_stmt|;
 name|size
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|uiop
 operator|->
@@ -5012,7 +5012,7 @@ operator|)
 expr_stmt|;
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 call|(
 name|unsigned
@@ -7348,7 +7348,7 @@ name|uiop
 operator|->
 name|uio_resid
 decl_stmt|;
-name|int
+name|ssize_t
 name|left
 init|=
 name|uiop

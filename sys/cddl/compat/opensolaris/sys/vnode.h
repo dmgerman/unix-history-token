@@ -1287,7 +1287,8 @@ name|int
 name|error
 decl_stmt|,
 name|vfslocked
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|resid
 decl_stmt|;
 name|ASSERT

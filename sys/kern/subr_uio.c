@@ -662,7 +662,7 @@ name|iovec
 modifier|*
 name|iov
 decl_stmt|;
-name|u_int
+name|size_t
 name|cnt
 decl_stmt|;
 name|int
@@ -991,8 +991,7 @@ modifier|*
 name|uio
 parameter_list|)
 block|{
-name|unsigned
-name|int
+name|size_t
 name|offset
 decl_stmt|,
 name|n
@@ -1053,7 +1052,7 @@ operator|-
 name|offset
 operator|)
 operator|>
-name|INT_MAX
+name|IOSIZE_MAX
 condition|)
 return|return
 operator|(
@@ -2170,7 +2169,7 @@ name|iov
 operator|->
 name|iov_len
 operator|>
-name|INT_MAX
+name|IOSIZE_MAX
 operator|-
 name|uio
 operator|->

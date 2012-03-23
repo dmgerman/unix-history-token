@@ -11737,9 +11737,10 @@ name|ap
 operator|->
 name|a_uio
 decl_stmt|;
-name|int
+name|ssize_t
 name|tresid
-decl_stmt|,
+decl_stmt|;
+name|int
 name|error
 init|=
 literal|0

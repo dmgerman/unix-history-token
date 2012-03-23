@@ -3475,7 +3475,7 @@ name|ucred
 modifier|*
 name|file_cred
 parameter_list|,
-name|int
+name|ssize_t
 modifier|*
 name|aresid
 parameter_list|,

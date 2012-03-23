@@ -2179,6 +2179,9 @@ name|diff
 decl_stmt|,
 name|fsize
 decl_stmt|;
+name|ssize_t
+name|n
+decl_stmt|;
 name|int
 name|error
 init|=
@@ -2186,8 +2189,6 @@ literal|0
 decl_stmt|;
 name|long
 name|size
-decl_stmt|,
-name|n
 decl_stmt|,
 name|on
 decl_stmt|;

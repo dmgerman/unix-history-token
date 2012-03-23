@@ -480,6 +480,20 @@ begin_comment
 comment|/* address space maps to a zeroed page	*/
 end_comment
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|iosize_max_clamp
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IOSIZE_MAX
+value|(iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+end_define
+
 begin_comment
 comment|/*  * General function declarations.  */
 end_comment

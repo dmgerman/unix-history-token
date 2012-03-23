@@ -481,7 +481,7 @@ name|m
 init|=
 name|fmode
 decl_stmt|;
-name|int
+name|ssize_t
 name|resid
 decl_stmt|;
 name|int
@@ -1860,7 +1860,7 @@ name|s
 operator|->
 name|outoff
 decl_stmt|;
-name|int
+name|ssize_t
 name|resid
 decl_stmt|;
 if|#

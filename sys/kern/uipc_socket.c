@@ -3920,7 +3920,8 @@ name|top
 decl_stmt|;
 name|long
 name|len
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|resid
 decl_stmt|;
 name|int
@@ -4465,7 +4466,8 @@ parameter_list|)
 block|{
 name|long
 name|space
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|resid
 decl_stmt|;
 name|int
@@ -5177,7 +5179,8 @@ parameter_list|)
 block|{
 name|long
 name|space
-decl_stmt|,
+decl_stmt|;
+name|ssize_t
 name|resid
 decl_stmt|;
 name|int
@@ -6477,11 +6480,12 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|,
-name|len
-decl_stmt|,
 name|error
 decl_stmt|,
 name|offset
+decl_stmt|;
+name|ssize_t
+name|len
 decl_stmt|;
 name|struct
 name|protosw
@@ -6504,7 +6508,7 @@ name|type
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|orig_resid
 init|=
 name|uio
@@ -9838,9 +9842,10 @@ decl_stmt|;
 name|int
 name|flags
 decl_stmt|,
-name|len
-decl_stmt|,
 name|error
+decl_stmt|;
+name|ssize_t
+name|len
 decl_stmt|;
 name|struct
 name|protosw

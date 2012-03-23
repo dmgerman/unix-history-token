@@ -7874,8 +7874,6 @@ decl_stmt|,
 modifier|*
 name|intp
 decl_stmt|,
-name|reclen
-decl_stmt|,
 name|found
 decl_stmt|,
 name|flags
@@ -7883,6 +7881,9 @@ decl_stmt|,
 name|clen
 decl_stmt|,
 name|blen
+decl_stmt|;
+name|ssize_t
+name|reclen
 decl_stmt|;
 name|int
 name|vfslocked
@@ -8199,7 +8200,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"can't read %d\n"
+literal|"can't read %zd\n"
 argument_list|,
 name|reclen
 argument_list|)
