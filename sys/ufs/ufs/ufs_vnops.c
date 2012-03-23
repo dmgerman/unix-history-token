@@ -7307,10 +7307,19 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * The kern_renameat() looks up the fvp using the DELETE flag, which 	 * causes the removal of the name cache entry for fvp. 	 * As the relookup of the fvp is done in two steps: 	 * ufs_lookup_ino() and then VFS_VGET(), another thread might do a 	 * normal lookup of the from name just before the VFS_VGET() call, 	 * causing the cache entry to be re-instantiated. 	 */
+comment|/* 	 * The kern_renameat() looks up the fvp using the DELETE flag, which 	 * causes the removal of the name cache entry for fvp. 	 * As the relookup of the fvp is done in two steps: 	 * ufs_lookup_ino() and then VFS_VGET(), another thread might do a 	 * normal lookup of the from name just before the VFS_VGET() call, 	 * causing the cache entry to be re-instantiated. 	 * 	 * The same issue also applies to tvp if it exists as 	 * otherwise we may have a stale name cache entry for the new 	 * name that references the old i-node if it has other links 	 * or open file descriptors. 	 */
 name|cache_purge
 argument_list|(
 name|fvp
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|tvp
+condition|)
+name|cache_purge
+argument_list|(
+name|tvp
 argument_list|)
 expr_stmt|;
 name|unlockout
