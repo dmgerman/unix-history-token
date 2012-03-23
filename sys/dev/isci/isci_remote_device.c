@@ -142,12 +142,10 @@ if|if
 condition|(
 name|isci_controller
 operator|->
-name|sim
-operator|!=
-name|NULL
+name|has_been_scanned
 condition|)
 block|{
-comment|/* The sim object is not NULL, meaning we have attached 			 *  the controller to CAM already.  In that case, create 			 *  a CCB to instruct CAM to rescan this device. 			 * If the sim object is NULL, this device will get 			 *  scanned as part of the initial scan when the 			 *  controller is attached to CAM. 			 */
+comment|/* The sim object has been scanned at least once 			 *  already.  In that case, create a CCB to instruct 			 *  CAM to rescan this device. 			 * If the sim object has not been scanned, this device 			 *  will get scanned as part of the initial scan. 			 */
 name|union
 name|ccb
 modifier|*

@@ -347,6 +347,9 @@ decl_stmt|;
 name|BOOL
 name|is_started
 decl_stmt|;
+name|BOOL
+name|has_been_scanned
+decl_stmt|;
 name|uint32_t
 name|initial_discovery_mask
 decl_stmt|;
