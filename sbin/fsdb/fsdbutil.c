@@ -1127,7 +1127,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"LINKCNT=%hd FLAGS=%#x BLKCNT=%jx GEN=%jx\n"
+literal|"LINKCNT=%d FLAGS=%#x BLKCNT=%jx GEN=%jx\n"
 argument_list|,
 name|DIP
 argument_list|(
