@@ -1047,7 +1047,7 @@ name|vsize
 operator|=
 literal|1
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT16
 case|:
@@ -1064,7 +1064,7 @@ name|vsize
 operator|=
 literal|2
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT32
 case|:
@@ -1081,7 +1081,7 @@ name|vsize
 operator|=
 literal|4
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT64
 case|:
@@ -1135,7 +1135,7 @@ name|vsize
 operator|=
 literal|2
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT32_ARRAY
 case|:
@@ -1152,7 +1152,7 @@ name|vsize
 operator|=
 literal|4
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT64_ARRAY
 case|:
@@ -4351,7 +4351,7 @@ name|vsize
 operator|=
 literal|2
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT32
 case|:
@@ -4374,7 +4374,7 @@ name|vsize
 operator|=
 literal|4
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT64
 case|:
