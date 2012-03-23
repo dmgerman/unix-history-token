@@ -1490,6 +1490,9 @@ name|uint64_t
 name|platform_counter_freq
 decl_stmt|;
 comment|/* 	 * XXX 	 * octeon_boot_params_init() should be called before anything else, 	 * certainly before any output; we may find out from the boot 	 * descriptor's flags that we're supposed to use the PCI or UART1 	 * consoles rather than UART0.  No point doing that reorganization 	 * until we actually intercept UART_DEV_CONSOLE for the UART1 case 	 * and somehow handle the PCI console, which we lack code for 	 * entirely. 	 */
+name|mips_postboot_fixup
+argument_list|()
+expr_stmt|;
 comment|/* Initialize pcpu stuff */
 name|mips_pcpu0_init
 argument_list|()
