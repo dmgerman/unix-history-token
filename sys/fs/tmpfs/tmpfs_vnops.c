@@ -5000,6 +5000,17 @@ argument_list|(
 name|fvp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|tvp
+operator|!=
+name|NULL
+condition|)
+name|cache_purge
+argument_list|(
+name|tvp
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 literal|0
