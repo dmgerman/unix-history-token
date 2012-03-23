@@ -4633,16 +4633,6 @@ operator|(
 name|error
 operator|)
 return|;
-operator|(
-name|void
-operator|)
-name|device_set_driver
-argument_list|(
-name|dev
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
 name|BUS_PROBE_NOMATCH
 argument_list|(
 name|dev
@@ -7842,7 +7832,7 @@ condition|(
 name|best
 condition|)
 block|{
-comment|/* 		 * If this device was atached, and we were asked to 		 * rescan, and it is a different driver, then we have 		 * to detach the old driver and reattach this new one. 		 * Note, we don't have to check for DF_REBID here 		 * because if the state is> DS_ALIVE, we know it must 		 * be. 		 * 		 * This assumes that all DF_REBID drivers can have 		 * their probe routine called at any time and that 		 * they are idempotent as well as completely benign in 		 * normal operations. 		 * 		 * We also have to make sure that the detach 		 * succeeded, otherwise we fail the operation (or 		 * maybe it should just fail silently?  I'm torn). 		 */
+comment|/* 		 * If this device was attached, and we were asked to 		 * rescan, and it is a different driver, then we have 		 * to detach the old driver and reattach this new one. 		 * Note, we don't have to check for DF_REBID here 		 * because if the state is> DS_ALIVE, we know it must 		 * be. 		 * 		 * This assumes that all DF_REBID drivers can have 		 * their probe routine called at any time and that 		 * they are idempotent as well as completely benign in 		 * normal operations. 		 * 		 * We also have to make sure that the detach 		 * succeeded, otherwise we fail the operation (or 		 * maybe it should just fail silently?  I'm torn). 		 */
 if|if
 condition|(
 name|child
@@ -9397,6 +9387,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|device_set_desc
+argument_list|(
+name|dev
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
 name|kobj_delete
 argument_list|(
 operator|(
@@ -10029,13 +10026,6 @@ operator|(
 name|void
 operator|)
 name|device_set_driver
-argument_list|(
-name|dev
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|device_set_desc
 argument_list|(
 name|dev
 argument_list|,
