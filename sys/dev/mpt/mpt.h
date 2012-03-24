@@ -2714,11 +2714,13 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* Interrupt handle */
-name|struct
-name|mpt_pci_cfg
-name|pci_cfg
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct mpt_pci_cfg	pci_cfg;
 comment|/* saved PCI conf registers */
+endif|#
+directive|endif
 comment|/* 	 * DMA Mapping Stuff 	 */
 name|struct
 name|resource
