@@ -4247,7 +4247,7 @@ argument_list|)
 argument_list|,
 literal|8
 argument_list|,
-literal|0
+literal|0x100000000
 argument_list|,
 name|sc
 operator|->
