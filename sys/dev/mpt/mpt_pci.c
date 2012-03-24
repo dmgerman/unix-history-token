@@ -43,12 +43,6 @@ directive|include
 file|<dev/mpt/mpt_raid.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<dev/mpt/mpilib/mpi_cnfg.h>
-end_include
-
 begin_if
 if|#
 directive|if
