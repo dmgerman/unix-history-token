@@ -1090,6 +1090,9 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+name|uint64_t
+name|cvmctl
+decl_stmt|;
 comment|/* Disable all CIU interrupts by default */
 name|cvmx_write_csr
 argument_list|(
@@ -1186,6 +1189,36 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+comment|/*  	 * Move the Performance Counter interrupt to OCTEON_PMC_IRQ 	 */
+name|cvmctl
+operator|=
+name|mips_rd_cvmctl
+argument_list|()
+expr_stmt|;
+name|cvmctl
+operator|&=
+operator|~
+operator|(
+literal|7
+operator|<<
+literal|7
+operator|)
+expr_stmt|;
+name|cvmctl
+operator||=
+operator|(
+name|OCTEON_PMC_IRQ
+operator|+
+literal|2
+operator|)
+operator|<<
+literal|7
+expr_stmt|;
+name|mips_wr_cvmctl
+argument_list|(
+name|cvmctl
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 

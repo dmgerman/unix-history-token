@@ -545,6 +545,13 @@ name|octeon_irq_t
 typedef|;
 end_typedef
 
+begin_define
+define|#
+directive|define
+name|OCTEON_PMC_IRQ
+value|OCTEON_IRQ_4
+end_define
+
 begin_endif
 endif|#
 directive|endif
