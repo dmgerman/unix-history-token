@@ -757,18 +757,24 @@ name|V_autoinc_step
 value|VNET(autoinc_step)
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|int
-name|fw_tables_max
-decl_stmt|;
-end_decl_stmt
+begin_macro
+name|VNET_DECLARE
+argument_list|(
+argument|unsigned int
+argument_list|,
+argument|fw_tables_max
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_define
 define|#
 directive|define
 name|V_fw_tables_max
-value|fw_tables_max
+value|VNET(fw_tables_max)
 end_define
 
 begin_struct
@@ -1348,6 +1354,22 @@ parameter_list|,
 name|ipfw_xtable
 modifier|*
 name|tbl
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|ipfw_resize_tables
+parameter_list|(
+name|struct
+name|ip_fw_chain
+modifier|*
+name|ch
+parameter_list|,
+name|unsigned
+name|int
+name|ntables
 parameter_list|)
 function_decl|;
 end_function_decl
