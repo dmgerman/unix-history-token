@@ -14655,6 +14655,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|waitok
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
@@ -14806,6 +14808,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_NOWAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ffs_syncvnode
@@ -14813,6 +14817,8 @@ argument_list|(
 name|dvp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|ACQUIRE_LOCK
@@ -55584,6 +55590,8 @@ argument_list|(
 name|pvp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 condition|)
@@ -58969,6 +58977,8 @@ argument_list|(
 name|lvp
 argument_list|,
 name|MNT_NOWAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 name|vput
@@ -59603,6 +59613,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_NOWAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 condition|)
@@ -60004,6 +60016,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 condition|)
@@ -60027,6 +60041,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_NOWAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 condition|)

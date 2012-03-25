@@ -1059,6 +1059,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -1641,6 +1643,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -1843,6 +1847,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=

@@ -1955,6 +1955,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -2083,6 +2085,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -2130,6 +2134,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
@@ -4843,6 +4849,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 if|if
@@ -10205,6 +10213,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 ifdef|#
@@ -11058,7 +11068,7 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-operator||
+argument_list|,
 name|NO_INO_UPDT
 argument_list|)
 expr_stmt|;
@@ -11123,7 +11133,7 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-operator||
+argument_list|,
 name|NO_INO_UPDT
 argument_list|)
 expr_stmt|;
@@ -11178,7 +11188,7 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-operator||
+argument_list|,
 name|NO_INO_UPDT
 argument_list|)
 expr_stmt|;
@@ -11483,6 +11493,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 block|}
@@ -13514,7 +13526,7 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-operator||
+argument_list|,
 name|NO_INO_UPDT
 argument_list|)
 expr_stmt|;
@@ -13594,7 +13606,7 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-operator||
+argument_list|,
 name|NO_INO_UPDT
 argument_list|)
 expr_stmt|;
@@ -13664,7 +13676,7 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
-operator||
+argument_list|,
 name|NO_INO_UPDT
 argument_list|)
 expr_stmt|;
@@ -13892,7 +13904,7 @@ argument_list|(
 name|vp
 argument_list|,
 name|waitfor
-operator||
+argument_list|,
 name|NO_INO_UPDT
 argument_list|)
 expr_stmt|;
