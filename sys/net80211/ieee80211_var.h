@@ -535,6 +535,11 @@ name|task
 name|ic_bmiss_task
 decl_stmt|;
 comment|/* deferred beacon miss hndlr */
+name|struct
+name|task
+name|ic_chw_task
+decl_stmt|;
+comment|/* deferred HT CHW update */
 name|uint32_t
 name|ic_flags
 decl_stmt|;
@@ -1415,6 +1420,18 @@ modifier|*
 parameter_list|,
 name|struct
 name|ieee80211_rx_ampdu
+modifier|*
+parameter_list|)
+function_decl|;
+comment|/* The channel width has changed (20<->2040) */
+name|void
+function_decl|(
+modifier|*
+name|ic_update_chw
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
 modifier|*
 parameter_list|)
 function_decl|;
