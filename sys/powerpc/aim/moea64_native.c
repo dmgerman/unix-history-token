@@ -211,6 +211,7 @@ comment|/*  * The tlbie instruction must be executed in 64-bit mode  * so we hav
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|mtx
 name|tlbie_mutex
@@ -256,15 +257,15 @@ operator|<<
 literal|48
 operator|)
 expr_stmt|;
-name|mtx_lock_spin
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+name|mtx_lock
 argument_list|(
 operator|&
 name|tlbie_mutex
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|__powerpc64__
 asm|__asm __volatile("\ 	    ptesync; \ 	    tlbie %0; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
 operator|::
 literal|"r"
@@ -276,6 +277,15 @@ literal|"memory"
 block|)
 function|;
 end_function
+
+begin_expr_stmt
+name|mtx_unlock
+argument_list|(
+operator|&
+name|tlbie_mutex
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_else
 else|#
@@ -303,6 +313,19 @@ operator|(
 name|uint32_t
 operator|)
 name|vpn
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Note: spin mutex is to disable exceptions while fiddling MSR */
+end_comment
+
+begin_expr_stmt
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|tlbie_mutex
+argument_list|)
 expr_stmt|;
 end_expr_stmt
 
@@ -350,11 +373,6 @@ unit|)
 empty_stmt|;
 end_empty_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
 name|mtx_unlock_spin
 argument_list|(
@@ -363,6 +381,11 @@ name|tlbie_mutex
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 unit|}
@@ -1316,18 +1339,37 @@ name|moea64_pteg_table
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the TLBIE lock. TLBIE can only be executed by one CPU. 	 */
+ifdef|#
+directive|ifdef
+name|__powerpc64__
 name|mtx_init
 argument_list|(
 operator|&
 name|tlbie_mutex
 argument_list|,
-literal|"tlbie mutex"
+literal|"tlbie"
+argument_list|,
+name|NULL
+argument_list|,
+name|MTX_DEF
+argument_list|)
+expr_stmt|;
+else|#
+directive|else
+name|mtx_init
+argument_list|(
+operator|&
+name|tlbie_mutex
+argument_list|,
+literal|"tlbie"
 argument_list|,
 name|NULL
 argument_list|,
 name|MTX_SPIN
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|moea64_mid_bootstrap
 argument_list|(
 name|mmup
