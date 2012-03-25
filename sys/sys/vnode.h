@@ -1425,17 +1425,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|DOCLOSE
-value|0x0008
-end_define
-
-begin_comment
-comment|/* vclean: close active files */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|V_SAVE
 value|0x0001
 end_define
