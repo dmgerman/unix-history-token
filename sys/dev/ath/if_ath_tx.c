@@ -9477,6 +9477,7 @@ argument_list|,
 name|bf_list
 argument_list|)
 expr_stmt|;
+comment|/* XXX don't sched - we're paused! */
 return|return;
 block|}
 comment|/* 	 * TODO: If it's _before_ the BAW left edge, complain very loudly. 	 * This means something (else) has slid the left edge along 	 * before we got a chance to be TXed. 	 */
@@ -10614,7 +10615,7 @@ operator|->
 name|sc_dev
 argument_list|,
 literal|"%s: node %p: bf=%p: addbaw=%d, dobaw=%d, "
-literal|"seqno_assign=%d, seqno_required=%d, seqno=%d\n"
+literal|"seqno_assign=%d, seqno_required=%d, seqno=%d, retry=%d\n"
 argument_list|,
 name|__func__
 argument_list|,
@@ -10654,6 +10655,35 @@ name|bf_state
 operator|.
 name|bfs_seqno
 argument_list|)
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_retries
+argument_list|)
+expr_stmt|;
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: node %p: bf=%p: tid txq_depth=%d hwq_depth=%d\n"
+argument_list|,
+name|__func__
+argument_list|,
+name|ni
+argument_list|,
+name|bf
+argument_list|,
+name|tid
+operator|->
+name|axq_depth
+argument_list|,
+name|tid
+operator|->
+name|hwq_depth
 argument_list|)
 expr_stmt|;
 name|device_printf
