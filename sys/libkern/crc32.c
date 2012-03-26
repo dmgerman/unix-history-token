@@ -36,7 +36,6 @@ end_include
 begin_decl_stmt
 specifier|const
 name|uint32_t
-specifier|const
 name|crc32_tab
 index|[]
 init|=
@@ -644,7 +643,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|crc32Table
 index|[
 literal|256
@@ -1234,7 +1232,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o32
 index|[
 literal|256
@@ -1768,7 +1765,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o40
 index|[
 literal|256
@@ -2302,7 +2298,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o48
 index|[
 literal|256
@@ -2836,7 +2831,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o56
 index|[
 literal|256
@@ -3370,7 +3364,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o64
 index|[
 literal|256
@@ -3904,7 +3897,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o72
 index|[
 literal|256
@@ -4438,7 +4430,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o80
 index|[
 literal|256
@@ -4972,7 +4963,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|sctp_crc_tableil8_o88
 index|[
 literal|256

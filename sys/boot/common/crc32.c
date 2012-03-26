@@ -37,7 +37,6 @@ begin_decl_stmt
 specifier|static
 specifier|const
 name|uint32_t
-specifier|const
 name|crc32_tab
 index|[]
 init|=
