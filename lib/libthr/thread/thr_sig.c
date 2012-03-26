@@ -1833,7 +1833,7 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|_SIG_MAXSIG
 condition|;
 operator|++
@@ -1872,7 +1872,7 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|_SIG_MAXSIG
 condition|;
 operator|++
@@ -1911,7 +1911,7 @@ operator|=
 literal|1
 init|;
 name|i
-operator|<
+operator|<=
 name|_SIG_MAXSIG
 condition|;
 operator|++
