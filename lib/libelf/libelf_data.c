@@ -246,6 +246,10 @@ name|SHT_MIPS_DWARF
 case|:
 comment|/* FALLTHROUGH */
 case|case
+name|SHT_MIPS_REGINFO
+case|:
+comment|/* FALLTHROUGH */
+case|case
 name|SHT_MIPS_OPTIONS
 case|:
 comment|/* FALLTHROUGH */
