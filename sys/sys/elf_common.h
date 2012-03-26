@@ -2229,6 +2229,13 @@ end_comment
 begin_define
 define|#
 directive|define
+name|SHT_MIPS_REGINFO
+value|0x70000006
+end_define
+
+begin_define
+define|#
+directive|define
 name|SHT_MIPS_OPTIONS
 value|0x7000000d
 end_define
