@@ -11587,8 +11587,22 @@ end_define
 begin_define
 define|#
 directive|define
-name|BGE_MISCCFG_BOARD_ID
+name|BGE_MISCCFG_BOARD_ID_MASK
 value|0x0001E000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_MISCCFG_BOARD_ID_5704
+value|0x00000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|BGE_MISCCFG_BOARD_ID_5704CIOBE
+value|0x00004000
 end_define
 
 begin_define
@@ -15197,6 +15211,12 @@ name|bge_stat_ch
 decl_stmt|;
 name|uint32_t
 name|bge_rx_discards
+decl_stmt|;
+name|uint32_t
+name|bge_rx_inerrs
+decl_stmt|;
+name|uint32_t
+name|bge_rx_nobds
 decl_stmt|;
 name|uint32_t
 name|bge_tx_discards
