@@ -4965,10 +4965,6 @@ decl_stmt|;
 name|int
 name|sf_watchdog_timer
 decl_stmt|;
-name|struct
-name|task
-name|sf_link_task
-decl_stmt|;
 name|int
 name|sf_link
 decl_stmt|;
