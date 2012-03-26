@@ -1108,6 +1108,12 @@ name|mtx
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|rwlock
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
@@ -1285,6 +1291,24 @@ name|knl
 parameter_list|,
 name|struct
 name|mtx
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_init_rw_reader
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|struct
+name|rwlock
 modifier|*
 name|lock
 parameter_list|)
