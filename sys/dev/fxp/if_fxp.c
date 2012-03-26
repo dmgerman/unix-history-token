@@ -3685,7 +3685,7 @@ name|sc
 operator|->
 name|stats_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3837,7 +3837,7 @@ name|fxp_desc
 operator|.
 name|cbl_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -3995,7 +3995,7 @@ name|sc
 operator|->
 name|mcs_addr
 argument_list|,
-literal|0
+name|BUS_DMA_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
@@ -4817,7 +4817,7 @@ name|fxp_init_body
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|fxp_stop
@@ -13498,7 +13498,7 @@ name|fxp_init_body
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 elseif|else
@@ -14140,7 +14140,7 @@ name|fxp_init_body
 argument_list|(
 name|sc
 argument_list|,
-literal|1
+literal|0
 argument_list|)
 expr_stmt|;
 name|FXP_UNLOCK
