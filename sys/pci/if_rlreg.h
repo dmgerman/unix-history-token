@@ -352,6 +352,65 @@ begin_comment
 comment|/* EEPROM command register */
 end_comment
 
+begin_comment
+comment|/* RTL8139/RTL8139C+ only */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_8139_CFG0
+value|0x0051
+end_define
+
+begin_comment
+comment|/* config register #0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_8139_CFG1
+value|0x0052
+end_define
+
+begin_comment
+comment|/* config register #1 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_8139_CFG3
+value|0x0059
+end_define
+
+begin_comment
+comment|/* config register #3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_8139_CFG4
+value|0x005A
+end_define
+
+begin_comment
+comment|/* config register #4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RL_8139_CFG5
+value|0x00D8
+end_define
+
+begin_comment
+comment|/* config register #5 */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -4668,6 +4727,24 @@ name|rl_expcap
 decl_stmt|;
 name|int
 name|rl_txthresh
+decl_stmt|;
+name|bus_size_t
+name|rl_cfg0
+decl_stmt|;
+name|bus_size_t
+name|rl_cfg1
+decl_stmt|;
+name|bus_size_t
+name|rl_cfg2
+decl_stmt|;
+name|bus_size_t
+name|rl_cfg3
+decl_stmt|;
+name|bus_size_t
+name|rl_cfg4
+decl_stmt|;
+name|bus_size_t
+name|rl_cfg5
 decl_stmt|;
 name|struct
 name|rl_chain_data
