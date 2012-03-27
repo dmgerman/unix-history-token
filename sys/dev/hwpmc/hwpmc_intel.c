@@ -816,6 +816,13 @@ operator|)
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+condition|)
+goto|goto
+name|error
+goto|;
 comment|/* 	 * Init the uncore class. 	 */
 if|#
 directive|if

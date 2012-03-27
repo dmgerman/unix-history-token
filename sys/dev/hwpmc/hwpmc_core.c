@@ -16102,12 +16102,21 @@ name|ipa_version
 operator|>
 literal|3
 condition|)
+block|{
 comment|/* Unknown PMC architecture. */
+name|printf
+argument_list|(
+literal|"hwpc_core: unknown PMC architecture: %d\n"
+argument_list|,
+name|ipa_version
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPROGMISMATCH
 operator|)
 return|;
+block|}
 name|core_cputype
 operator|=
 name|md
