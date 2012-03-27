@@ -9051,6 +9051,9 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|register_t
+name|intr
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -9106,7 +9109,9 @@ argument_list|,
 literal|"Powering system off\n"
 argument_list|)
 expr_stmt|;
-name|ACPI_DISABLE_IRQS
+name|intr
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|status
@@ -9125,6 +9130,12 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
+block|{
+name|intr_restore
+argument_list|(
+name|intr
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -9139,11 +9150,17 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|DELAY
 argument_list|(
 literal|1000000
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|intr
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -11815,6 +11832,9 @@ name|int
 name|state
 parameter_list|)
 block|{
+name|register_t
+name|intr
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -12104,7 +12124,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_DISABLE_IRQS
+name|intr
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|status
@@ -12114,6 +12136,11 @@ argument_list|(
 name|state
 argument_list|,
 name|acpi_sleep_flags
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|intr
 argument_list|)
 expr_stmt|;
 if|if
