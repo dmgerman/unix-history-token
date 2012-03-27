@@ -1045,6 +1045,30 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Find node on which a given Soc device is located.  * input is the pci device (slot) number.  */
+end_comment
+
+begin_function
+specifier|static
+name|__inline__
+name|int
+name|nlm_get_device_node
+parameter_list|(
+name|int
+name|device
+parameter_list|)
+block|{
+return|return
+operator|(
+name|device
+operator|/
+literal|8
+operator|)
+return|;
+block|}
+end_function
+
 begin_endif
 endif|#
 directive|endif
