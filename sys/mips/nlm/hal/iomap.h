@@ -39,6 +39,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|XLP_L2L3_CACHELINE_SIZE
+value|64
+end_define
+
+begin_define
+define|#
+directive|define
 name|XLP_PCIE_CFG_SIZE
 value|0x1000
 end_define
