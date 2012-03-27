@@ -747,7 +747,7 @@ goto|goto
 name|unsupp
 goto|;
 block|}
-comment|/* Take out cores which do not exist on chip */
+comment|/* Try to find the enabled cores from SYS block */
 name|sysbase
 operator|=
 name|nlm_get_sys_regbase
@@ -766,6 +766,19 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* XLP 416 does not report this correctly, fix */
+if|if
+condition|(
+name|nlm_processor_id
+argument_list|()
+operator|==
+name|CHIP_PROCESSOR_ID_XLP_416
+condition|)
+name|cpu_rst_mask
+operator|=
+literal|0xe
+expr_stmt|;
+comment|/* Take out cores which do not exist on chip */
 for|for
 control|(
 name|i
@@ -2313,7 +2326,9 @@ operator|)
 expr_stmt|;
 comment|/* Use multiple consoles */
 name|nlm_pic_irt_init
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 comment|/* complete before interrupts or console init */
 name|init_static_kenv
@@ -2336,6 +2351,8 @@ name|xlp_cpu_frequency
 operator|=
 name|xlp_get_cpu_frequency
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
