@@ -1523,7 +1523,11 @@ name|xlp_pci_driver
 argument_list|,
 name|xlp_pci_methods
 argument_list|,
-literal|0
+sizeof|sizeof
+argument_list|(
+expr|struct
+name|pci_softc
+argument_list|)
 argument_list|,
 name|pci_driver
 argument_list|)
