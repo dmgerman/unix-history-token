@@ -1527,6 +1527,11 @@ operator|!
 name|Arg
 condition|)
 block|{
+name|AcpiPsFreeOp
+argument_list|(
+name|Field
+argument_list|)
+expr_stmt|;
 name|return_PTR
 argument_list|(
 name|NULL
@@ -1665,6 +1670,11 @@ operator|!
 name|Arg
 condition|)
 block|{
+name|AcpiPsFreeOp
+argument_list|(
+name|Field
+argument_list|)
+expr_stmt|;
 name|return_PTR
 argument_list|(
 name|NULL
