@@ -3450,6 +3450,9 @@ name|p
 argument_list|,
 name|RACCT_WALLCLOCK
 argument_list|,
+operator|(
+name|uint64_t
+operator|)
 name|wallclock
 operator|.
 name|tv_sec
