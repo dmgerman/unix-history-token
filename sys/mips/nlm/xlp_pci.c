@@ -693,6 +693,50 @@ name|XLP_PCIE_CFG_SIZE
 operator|-
 name|XLP_IO_PCI_HDRSZ
 expr_stmt|;
+comment|/* MMC needs to 2 slots with rids 16 and 20 and a 			 * fixup for size */
+if|if
+condition|(
+name|pci_get_device
+argument_list|(
+name|child
+argument_list|)
+operator|==
+name|PCI_DEVICE_ID_NLM_MMC
+condition|)
+block|{
+name|count
+operator|=
+literal|0x100
+expr_stmt|;
+if|if
+condition|(
+operator|*
+name|rid
+operator|==
+literal|16
+condition|)
+empty_stmt|;
+comment|/* first slot already setup */
+elseif|else
+if|if
+condition|(
+operator|*
+name|rid
+operator|==
+literal|20
+condition|)
+name|start
+operator|+=
+literal|0x100
+expr_stmt|;
+comment|/* second slot */
+else|else
+return|return
+operator|(
+name|NULL
+operator|)
+return|;
+block|}
 name|end
 operator|=
 name|start
@@ -1192,6 +1236,7 @@ name|flags
 operator|=
 name|flags
 expr_stmt|;
+comment|/* memory resource from ecfg space, if MEM_RES_EMUL is set */
 if|if
 condition|(
 operator|(
