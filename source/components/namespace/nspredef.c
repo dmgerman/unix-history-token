@@ -1530,12 +1530,9 @@ block|{
 comment|/* Create the new outer package and populate it */
 name|Status
 operator|=
-name|AcpiNsWrapWithPackage
+name|AcpiNsRepairPackageList
 argument_list|(
 name|Data
-argument_list|,
-operator|*
-name|Elements
 argument_list|,
 name|ReturnObjectPtr
 argument_list|)
