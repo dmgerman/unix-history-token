@@ -1543,6 +1543,12 @@ expr_stmt|;
 name|pmap_bootstrap
 argument_list|()
 expr_stmt|;
+name|mips_proc0_init
+argument_list|()
+expr_stmt|;
+name|mutex_init
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -1566,12 +1572,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|mips_proc0_init
-argument_list|()
-expr_stmt|;
-name|mutex_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -1933,14 +1933,22 @@ argument_list|(
 operator|&
 name|_end
 argument_list|)
+expr_stmt|;
+name|base
+operator|=
+name|round_page
+argument_list|(
+name|base
+argument_list|)
 operator|+
 literal|0x20000
 expr_stmt|;
+comment|/* round up */
+comment|/* TODO : hack to avoid uboot packet mem, network 			 * interface will write here if not reset correctly 			 * by u-boot */
 name|lim
 operator|=
 literal|0x0c000000
 expr_stmt|;
-comment|/* TODO : hack to avoid uboot packet mem */
 block|}
 if|if
 condition|(
@@ -2027,14 +2035,10 @@ comment|/* 		 * Exclude reset entry memory range 0x1fc00000 - 0x20000000 		 * fr
 if|if
 condition|(
 name|base
-operator|<=
-literal|0x1fc00000
+operator|<
+literal|0x20000000
 operator|&&
-operator|(
-name|base
-operator|+
 name|lim
-operator|)
 operator|>
 literal|0x1fc00000
 condition|)
@@ -2390,14 +2394,15 @@ comment|/* setup for the startup core */
 name|xlp_setup_mmu
 argument_list|()
 expr_stmt|;
+comment|/* Read/Guess/setup board information */
+name|nlm_board_info_setup
+argument_list|()
+expr_stmt|;
 comment|/* MIPS generic init */
 name|mips_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * XLP specific post initialization  	 * initialize other on chip stuff 	 */
-name|nlm_board_info_setup
-argument_list|()
-expr_stmt|;
 name|xlp_pic_init
 argument_list|()
 expr_stmt|;
