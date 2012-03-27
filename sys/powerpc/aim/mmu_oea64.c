@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rwlock.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sched.h>
 end_include
 
@@ -349,28 +355,40 @@ name|VSID_HASH_MASK
 value|0x0000007fffffffffULL
 end_define
 
+begin_comment
+comment|/*  * Locking semantics:  * -- Read lock: if no modifications are being made to either the PVO lists  *    or page table or if any modifications being made result in internal  *    changes (e.g. wiring, protection) such that the existence of the PVOs  *    is unchanged and they remain associated with the same pmap (in which  *    case the changes should be protected by the pmap lock)  * -- Write lock: required if PTEs/PVOs are being inserted or removed.  */
+end_comment
+
 begin_define
 define|#
 directive|define
-name|LOCK_TABLE
+name|LOCK_TABLE_RD
 parameter_list|()
-value|mtx_lock(&moea64_table_mutex)
+value|rw_rlock(&moea64_table_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|UNLOCK_TABLE
+name|UNLOCK_TABLE_RD
 parameter_list|()
-value|mtx_unlock(&moea64_table_mutex);
+value|rw_runlock(&moea64_table_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|ASSERT_TABLE_LOCK
+name|LOCK_TABLE_WR
 parameter_list|()
-value|mtx_assert(&moea64_table_mutex, MA_OWNED)
+value|rw_wlock(&moea64_table_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|UNLOCK_TABLE_WR
+parameter_list|()
+value|rw_wunlock(&moea64_table_lock)
 end_define
 
 begin_struct
@@ -450,8 +468,8 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|mtx
-name|moea64_table_mutex
+name|rwlock
+name|moea64_table_lock
 decl_stmt|;
 end_decl_stmt
 
@@ -1955,9 +1973,6 @@ name|int
 name|flags
 parameter_list|)
 block|{
-name|ASSERT_TABLE_LOCK
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Construct a PTE.  Default to IMB initially.  Valid bit only gets 	 * set when the real pte is set in memory. 	 * 	 * Note: Don't set the valid bit for correct operation of tlb update. 	 */
 name|pt
 operator|->
@@ -2832,6 +2847,9 @@ condition|(
 name|hw_direct_map
 condition|)
 block|{
+name|LOCK_TABLE_WR
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|kernel_pmap
@@ -2956,6 +2974,9 @@ name|PMAP_UNLOCK
 argument_list|(
 name|kernel_pmap
 argument_list|)
+expr_stmt|;
+name|UNLOCK_TABLE_WR
+argument_list|()
 expr_stmt|;
 block|}
 else|else
@@ -3738,18 +3759,14 @@ name|msr
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Initialize the lock that synchronizes access to the pteg and pvo 	 * tables. 	 */
-name|mtx_init
+name|rw_init_flags
 argument_list|(
 operator|&
-name|moea64_table_mutex
+name|moea64_table_lock
 argument_list|,
-literal|"pmap table"
+literal|"pmap tables"
 argument_list|,
-name|NULL
-argument_list|,
-name|MTX_DEF
-operator||
-name|MTX_RECURSE
+name|RW_RECURSE
 argument_list|)
 expr_stmt|;
 name|mtx_init
@@ -4472,7 +4489,7 @@ name|i
 index|]
 argument_list|)
 expr_stmt|;
-name|LOCK_TABLE
+name|LOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 name|moea64_scratchpage_pte
@@ -4530,7 +4547,7 @@ operator|->
 name|pvo_vpn
 argument_list|)
 expr_stmt|;
-name|UNLOCK_TABLE
+name|UNLOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 block|}
@@ -4707,6 +4724,9 @@ name|i
 decl_stmt|,
 name|ptegidx
 decl_stmt|;
+name|LOCK_TABLE_WR
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pm
@@ -4731,9 +4751,6 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|pt
 operator|=
 name|MOEA64_PVO_TO_PTE
@@ -4921,10 +4938,10 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|UNLOCK_TABLE
+block|}
+name|UNLOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
-block|}
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
@@ -5400,7 +5417,7 @@ name|boolean_t
 name|wired
 parameter_list|)
 block|{
-name|vm_page_lock_queues
+name|LOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
@@ -5423,7 +5440,7 @@ argument_list|,
 name|wired
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -5435,7 +5452,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Map the given physical page at the specified virtual address in the  * target pmap with the protection requested.  If specified the page  * will be wired down.  *  * The page queues and pmap must be locked.  */
+comment|/*  * Map the given physical page at the specified virtual address in the  * target pmap with the protection requested.  If specified the page  * will be wired down.  *  * The table (write) and pmap must be locked.  */
 end_comment
 
 begin_function
@@ -5528,18 +5545,6 @@ operator|=
 name|PVO_MANAGED
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|pmap_bootstrapped
-condition|)
-name|mtx_assert
-argument_list|(
-operator|&
-name|vm_page_queue_mtx
-argument_list|,
-name|MA_OWNED
-argument_list|)
-expr_stmt|;
 name|PMAP_LOCK_ASSERT
 argument_list|(
 name|pmap
@@ -5921,7 +5926,7 @@ name|m
 operator|=
 name|m_start
 expr_stmt|;
-name|vm_page_lock_queues
+name|LOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
@@ -5986,7 +5991,7 @@ name|listq
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -6017,7 +6022,7 @@ name|vm_prot_t
 name|prot
 parameter_list|)
 block|{
-name|vm_page_lock_queues
+name|LOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
@@ -6046,7 +6051,7 @@ argument_list|,
 name|FALSE
 argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -6079,6 +6084,9 @@ decl_stmt|;
 name|vm_paddr_t
 name|pa
 decl_stmt|;
+name|LOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pm
@@ -6126,6 +6134,9 @@ argument_list|(
 name|pvo
 argument_list|)
 operator|)
+expr_stmt|;
+name|UNLOCK_TABLE_RD
+argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -6179,6 +6190,9 @@ expr_stmt|;
 name|pa
 operator|=
 literal|0
+expr_stmt|;
+name|LOCK_TABLE_RD
+argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
@@ -6291,6 +6305,9 @@ argument_list|(
 name|pa
 argument_list|)
 expr_stmt|;
+name|UNLOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
@@ -6352,15 +6369,6 @@ name|needed_lock
 operator|=
 operator|!
 name|PMAP_LOCKED
-argument_list|(
-name|kernel_pmap
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|needed_lock
-condition|)
-name|PMAP_LOCK
 argument_list|(
 name|kernel_pmap
 argument_list|)
@@ -6452,6 +6460,18 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
+name|LOCK_TABLE_WR
+argument_list|()
+expr_stmt|;
+if|if
+condition|(
+name|needed_lock
+condition|)
+name|PMAP_LOCK
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
 name|moea64_pvo_enter
 argument_list|(
 name|installed_mmu
@@ -6485,6 +6505,9 @@ name|PMAP_UNLOCK
 argument_list|(
 name|kernel_pmap
 argument_list|)
+expr_stmt|;
+name|UNLOCK_TABLE_WR
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -6791,6 +6814,9 @@ decl_stmt|;
 name|boolean_t
 name|rv
 decl_stmt|;
+name|LOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pmap
@@ -6832,6 +6858,9 @@ name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
+expr_stmt|;
+name|UNLOCK_TABLE_RD
+argument_list|()
 expr_stmt|;
 return|return
 operator|(
@@ -7050,10 +7079,10 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|vm_page_lock_queues
+name|powerpc_sync
 argument_list|()
 expr_stmt|;
-name|powerpc_sync
+name|LOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -7075,9 +7104,6 @@ name|PMAP_LOCK
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -7200,15 +7226,15 @@ argument_list|()
 expr_stmt|;
 block|}
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
 block|}
+name|UNLOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -7230,9 +7256,6 @@ name|m
 argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -7346,9 +7369,6 @@ name|ma
 expr_stmt|;
 return|return;
 block|}
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pvo_head
 operator|=
 name|vm_page_to_pvoh
@@ -7367,6 +7387,9 @@ argument_list|)
 argument_list|,
 name|ma
 argument_list|)
+expr_stmt|;
+name|LOCK_TABLE_RD
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -7387,9 +7410,6 @@ name|PMAP_LOCK
 argument_list|(
 name|pmap
 argument_list|)
-expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
 expr_stmt|;
 name|pt
 operator|=
@@ -7459,15 +7479,15 @@ name|isync
 argument_list|()
 expr_stmt|;
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pmap
 argument_list|)
 expr_stmt|;
 block|}
+name|UNLOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|m
 operator|->
 name|md
@@ -7475,9 +7495,6 @@ operator|.
 name|mdpg_cache_attrs
 operator|=
 name|ma
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -7518,6 +7535,9 @@ argument_list|,
 name|ma
 argument_list|)
 expr_stmt|;
+name|LOCK_TABLE_WR
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|kernel_pmap
@@ -7544,6 +7564,14 @@ name|pte_lo
 argument_list|,
 name|PVO_WIRED
 argument_list|)
+expr_stmt|;
+name|PMAP_UNLOCK
+argument_list|(
+name|kernel_pmap
+argument_list|)
+expr_stmt|;
+name|UNLOCK_TABLE_WR
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -7590,11 +7618,6 @@ operator|)
 name|va
 argument_list|,
 name|PAGE_SIZE
-argument_list|)
-expr_stmt|;
-name|PMAP_UNLOCK
-argument_list|(
-name|kernel_pmap
 argument_list|)
 expr_stmt|;
 block|}
@@ -7663,6 +7686,9 @@ operator|(
 name|va
 operator|)
 return|;
+name|LOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|kernel_pmap
@@ -7713,6 +7739,9 @@ argument_list|(
 name|pvo
 argument_list|)
 operator|)
+expr_stmt|;
+name|UNLOCK_TABLE_RD
+argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
@@ -7890,7 +7919,7 @@ name|rv
 operator|=
 name|FALSE
 expr_stmt|;
-name|vm_page_lock_queues
+name|LOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -7926,7 +7955,7 @@ literal|16
 condition|)
 break|break;
 block|}
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 return|return
@@ -7981,7 +8010,7 @@ operator|(
 name|count
 operator|)
 return|;
-name|vm_page_lock_queues
+name|LOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -8007,7 +8036,7 @@ condition|)
 name|count
 operator|++
 expr_stmt|;
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 return|return
@@ -8494,10 +8523,14 @@ decl_stmt|;
 name|uint64_t
 name|oldlo
 decl_stmt|;
-comment|/* 	 * Grab the PTE pointer before we diddle with the cached PTE 	 * copy. 	 */
-name|LOCK_TABLE
-argument_list|()
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pm
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
+comment|/* 	 * Grab the PTE pointer before we diddle with the cached PTE 	 * copy. 	 */
 name|pt
 operator|=
 name|MOEA64_PVO_TO_PTE
@@ -8757,9 +8790,6 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -8850,6 +8880,9 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+name|LOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pm
@@ -8955,6 +8988,9 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+name|UNLOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
@@ -9225,7 +9261,7 @@ decl_stmt|,
 modifier|*
 name|tpvo
 decl_stmt|;
-name|vm_page_lock_queues
+name|LOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
@@ -9263,7 +9299,7 @@ name|pvo
 argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -9315,7 +9351,7 @@ operator|==
 literal|0
 condition|)
 return|return;
-name|vm_page_lock_queues
+name|LOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_LOCK
@@ -9415,7 +9451,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_WR
 argument_list|()
 expr_stmt|;
 name|PMAP_UNLOCK
@@ -9457,15 +9493,15 @@ decl_stmt|;
 name|pmap_t
 name|pmap
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 name|pvo_head
 operator|=
 name|vm_page_to_pvoh
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|LOCK_TABLE_WR
+argument_list|()
 expr_stmt|;
 for|for
 control|(
@@ -9518,6 +9554,9 @@ name|pmap
 argument_list|)
 expr_stmt|;
 block|}
+name|UNLOCK_TABLE_WR
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -9546,9 +9585,6 @@ name|m
 argument_list|,
 name|PGA_WRITEABLE
 argument_list|)
-expr_stmt|;
-name|vm_page_unlock_queues
-argument_list|()
 expr_stmt|;
 block|}
 end_function
@@ -9885,6 +9921,21 @@ name|bootstrap
 operator|=
 literal|1
 expr_stmt|;
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pm
+argument_list|,
+name|MA_OWNED
+argument_list|)
+expr_stmt|;
+name|rw_assert
+argument_list|(
+operator|&
+name|moea64_table_lock
+argument_list|,
+name|RA_WLOCKED
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Compute the PTE Group index. 	 */
 name|va
 operator|&=
@@ -9914,9 +9965,6 @@ name|PVO_LARGE
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Remove any existing mapping for this page.  Reuse the pvo entry if 	 * there is a mapping. 	 */
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|moea64_pvo_enter_calls
 operator|++
 expr_stmt|;
@@ -10038,9 +10086,6 @@ name|moea64_pte_overflow
 operator|--
 expr_stmt|;
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -10107,9 +10152,6 @@ block|}
 else|else
 block|{
 comment|/* 		 * Note: drop the table lock around the UMA allocation in 		 * case the UMA allocator needs to manipulate the page 		 * table. The mapping we are working with is already 		 * protected by the PMAP lock. 		 */
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|pvo
 operator|=
 name|uma_zalloc
@@ -10119,9 +10161,6 @@ argument_list|,
 name|M_NOWAIT
 argument_list|)
 expr_stmt|;
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 block|}
 if|if
 condition|(
@@ -10129,16 +10168,11 @@ name|pvo
 operator|==
 name|NULL
 condition|)
-block|{
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|ENOMEM
 operator|)
 return|;
-block|}
 name|moea64_pvo_entries
 operator|++
 expr_stmt|;
@@ -10391,9 +10425,6 @@ condition|)
 name|isync
 argument_list|()
 expr_stmt|;
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
@@ -10443,10 +10474,24 @@ block|{
 name|uintptr_t
 name|pt
 decl_stmt|;
-comment|/* 	 * If there is an active pte entry, we need to deactivate it (and 	 * save the ref& cfg bits). 	 */
-name|LOCK_TABLE
-argument_list|()
+name|PMAP_LOCK_ASSERT
+argument_list|(
+name|pvo
+operator|->
+name|pvo_pmap
+argument_list|,
+name|MA_OWNED
+argument_list|)
 expr_stmt|;
+name|rw_assert
+argument_list|(
+operator|&
+name|moea64_table_lock
+argument_list|,
+name|RA_WLOCKED
+argument_list|)
+expr_stmt|;
+comment|/* 	 * If there is an active pte entry, we need to deactivate it (and 	 * save the ref& cfg bits). 	 */
 name|pt
 operator|=
 name|MOEA64_PVO_TO_PTE
@@ -10520,6 +10565,29 @@ name|pm_stats
 operator|.
 name|wired_count
 operator|--
+expr_stmt|;
+comment|/* 	 * Remove this PVO from the PV and pmap lists. 	 */
+name|LIST_REMOVE
+argument_list|(
+name|pvo
+argument_list|,
+name|pvo_vlink
+argument_list|)
+expr_stmt|;
+name|LIST_REMOVE
+argument_list|(
+name|pvo
+argument_list|,
+name|pvo_plink
+argument_list|)
+expr_stmt|;
+comment|/* 	 * Remove this from the overflow list and return it to the pool 	 * if we aren't going to reuse it. 	 */
+name|LIST_REMOVE
+argument_list|(
+name|pvo
+argument_list|,
+name|pvo_olink
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Update vm about the REF/CHG bits if the page is managed. 	 */
 if|if
@@ -10612,39 +10680,30 @@ argument_list|,
 name|PGA_REFERENCED
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|LIST_EMPTY
+argument_list|(
+name|vm_page_to_pvoh
+argument_list|(
+name|pg
+argument_list|)
+argument_list|)
+condition|)
+name|vm_page_aflag_clear
+argument_list|(
+name|pg
+argument_list|,
+name|PGA_WRITEABLE
+argument_list|)
+expr_stmt|;
 block|}
 block|}
-comment|/* 	 * Remove this PVO from the PV and pmap lists. 	 */
-name|LIST_REMOVE
-argument_list|(
-name|pvo
-argument_list|,
-name|pvo_vlink
-argument_list|)
-expr_stmt|;
-name|LIST_REMOVE
-argument_list|(
-name|pvo
-argument_list|,
-name|pvo_plink
-argument_list|)
-expr_stmt|;
-comment|/* 	 * Remove this from the overflow list and return it to the pool 	 * if we aren't going to reuse it. 	 */
-name|LIST_REMOVE
-argument_list|(
-name|pvo
-argument_list|,
-name|pvo_olink
-argument_list|)
-expr_stmt|;
 name|moea64_pvo_entries
 operator|--
 expr_stmt|;
 name|moea64_pvo_remove_calls
 operator|++
-expr_stmt|;
-name|UNLOCK_TABLE
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -10825,9 +10884,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-name|LOCK_TABLE
-argument_list|()
-expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
 argument|pvo
@@ -10854,9 +10910,6 @@ name|va
 condition|)
 break|break;
 block|}
-name|UNLOCK_TABLE
-argument_list|()
-expr_stmt|;
 return|return
 operator|(
 name|pvo
@@ -10888,7 +10941,7 @@ decl_stmt|;
 name|uintptr_t
 name|pt
 decl_stmt|;
-name|vm_page_lock_queues
+name|LOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
@@ -10914,7 +10967,7 @@ operator|&
 name|ptebit
 condition|)
 block|{
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 return|return
@@ -10938,8 +10991,12 @@ argument|pvo_vlink
 argument_list|)
 block|{
 comment|/* 		 * See if this pvo has a valid PTE.  if so, fetch the 		 * REF/CHG bits from the valid PTE.  If the appropriate 		 * ptebit is set, return success. 		 */
-name|LOCK_TABLE
-argument_list|()
+name|PMAP_LOCK
+argument_list|(
+name|pvo
+operator|->
+name|pvo_pmap
+argument_list|)
 expr_stmt|;
 name|pt
 operator|=
@@ -10985,10 +11042,14 @@ operator|&
 name|ptebit
 condition|)
 block|{
-name|UNLOCK_TABLE
-argument_list|()
+name|PMAP_UNLOCK
+argument_list|(
+name|pvo
+operator|->
+name|pvo_pmap
+argument_list|)
 expr_stmt|;
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 return|return
@@ -10998,11 +11059,15 @@ operator|)
 return|;
 block|}
 block|}
-name|UNLOCK_TABLE
-argument_list|()
+name|PMAP_UNLOCK
+argument_list|(
+name|pvo
+operator|->
+name|pvo_pmap
+argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 return|return
@@ -11039,9 +11104,6 @@ decl_stmt|;
 name|uintptr_t
 name|pt
 decl_stmt|;
-name|vm_page_lock_queues
-argument_list|()
-expr_stmt|;
 comment|/* 	 * Sync so that any pending REF/CHG bits are flushed to the PTEs (so 	 * we can reset the right ones).  note that since the pvo entries and 	 * list heads are accessed via BAT0 and are never placed in the page 	 * table, we don't have to worry about further accesses setting the 	 * REF/CHG bits. 	 */
 name|powerpc_sync
 argument_list|()
@@ -11050,6 +11112,9 @@ comment|/* 	 * For each pvo entry, clear the pvo's ptebit.  If this pvo has a 	 
 name|count
 operator|=
 literal|0
+expr_stmt|;
+name|LOCK_TABLE_RD
+argument_list|()
 expr_stmt|;
 name|LIST_FOREACH
 argument_list|(
@@ -11060,8 +11125,12 @@ argument_list|,
 argument|pvo_vlink
 argument_list|)
 block|{
-name|LOCK_TABLE
-argument_list|()
+name|PMAP_LOCK
+argument_list|(
+name|pvo
+operator|->
+name|pvo_pmap
+argument_list|)
 expr_stmt|;
 name|pt
 operator|=
@@ -11143,11 +11212,15 @@ operator|&=
 operator|~
 name|ptebit
 expr_stmt|;
-name|UNLOCK_TABLE
-argument_list|()
+name|PMAP_UNLOCK
+argument_list|(
+name|pvo
+operator|->
+name|pvo_pmap
+argument_list|)
 expr_stmt|;
 block|}
-name|vm_page_unlock_queues
+name|UNLOCK_TABLE_RD
 argument_list|()
 expr_stmt|;
 return|return
@@ -11185,6 +11258,9 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+name|LOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|kernel_pmap
@@ -11247,6 +11323,9 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|UNLOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|kernel_pmap
@@ -11502,6 +11581,9 @@ decl_stmt|;
 name|vm_size_t
 name|len
 decl_stmt|;
+name|LOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_LOCK
 argument_list|(
 name|pm
@@ -11607,6 +11689,9 @@ operator|-=
 name|len
 expr_stmt|;
 block|}
+name|UNLOCK_TABLE_RD
+argument_list|()
+expr_stmt|;
 name|PMAP_UNLOCK
 argument_list|(
 name|pm
