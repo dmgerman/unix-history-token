@@ -319,6 +319,17 @@ name|PCIE_MSI_INT_EN
 value|(1<< 9)
 end_define
 
+begin_comment
+comment|/* XXXJC: Ax workaround */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PCIE_LINK0_IRT
+value|78
+end_define
+
 begin_if
 if|#
 directive|if
@@ -387,6 +398,46 @@ define|\
 value|(nlm_get_pcie_base(node, inst) + XLP_IO_PCI_HDRSZ)
 end_define
 
+begin_function
+specifier|static
+name|__inline
+name|int
+name|xlp_pcie_link_irt
+parameter_list|(
+name|int
+name|link
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|(
+name|link
+operator|<
+literal|0
+operator|)
+operator|||
+operator|(
+name|link
+operator|>
+literal|3
+operator|)
+condition|)
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|PCIE_LINK0_IRT
+operator|+
+name|link
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Build Intel MSI message and data values from a source.  AMD64 systems  * seem to be compatible, so we use the same function for both.  */
 end_comment
@@ -412,27 +463,6 @@ parameter_list|)
 define|\
 value|(MSI_MIPS_DATA_TRGRLVL | MSI_MIPS_DATA_DELFIXED |	       \ 	 MSI_MIPS_DATA_ASSERT | (irq))
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|LOCORE
-end_ifndef
-
-begin_function_decl
-name|int
-name|xlp_pcie_link_irt
-parameter_list|(
-name|int
-name|link
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_endif
 endif|#

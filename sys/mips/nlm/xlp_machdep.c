@@ -373,7 +373,7 @@ begin_decl_stmt
 name|uint64_t
 name|xlp_io_base
 init|=
-name|MIPS_PHYS_TO_KSEG1
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
 argument_list|(
 name|XLP_DEFAULT_IO_BASE
 argument_list|)
@@ -2325,12 +2325,6 @@ name|RB_MULTIPLE
 operator|)
 expr_stmt|;
 comment|/* Use multiple consoles */
-name|nlm_pic_irt_init
-argument_list|(
-literal|0
-argument_list|)
-expr_stmt|;
-comment|/* complete before interrupts or console init */
 name|init_static_kenv
 argument_list|(
 name|boot1_env

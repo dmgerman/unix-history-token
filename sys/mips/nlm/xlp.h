@@ -37,13 +37,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIC_UART_1_IRQ
-value|10
-end_define
-
-begin_define
-define|#
-directive|define
 name|PIC_PCIE_0_IRQ
 value|11
 end_define
@@ -73,26 +66,19 @@ begin_define
 define|#
 directive|define
 name|PIC_EHCI_0_IRQ
-value|39
-end_define
-
-begin_comment
-comment|/* 41 used by IRQ_SMP */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|PIC_EHCI_1_IRQ
-value|42
+value|16
 end_define
 
 begin_define
 define|#
 directive|define
 name|PIC_MMC_IRQ
-value|43
+value|21
 end_define
+
+begin_comment
+comment|/* 41 used by IRQ_SMP */
+end_comment
 
 begin_comment
 comment|/* XLP 8xx/4xx A0, A1, A2 CPU COP0 PRIDs */
@@ -257,16 +243,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|nlm_pic_irt_init
-parameter_list|(
-name|int
-name|node
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|xlp_irt_to_irq
 parameter_list|(
@@ -279,16 +255,6 @@ end_function_decl
 begin_function_decl
 name|int
 name|xlp_irq_to_irt
-parameter_list|(
-name|int
-name|irq
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|xlp_irq_is_picintr
 parameter_list|(
 name|int
 name|irq

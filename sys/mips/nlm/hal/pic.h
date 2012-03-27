@@ -990,7 +990,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|PIC_IRQ_IS_IRT
+name|XLP_IRQ_IS_PICINTR
 parameter_list|(
 name|irq
 parameter_list|)
