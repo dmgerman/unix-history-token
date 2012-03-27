@@ -1035,7 +1035,7 @@ begin_function
 specifier|static
 name|__inline__
 name|int
-name|nlm_uenginenum
+name|nlm_num_uengines
 parameter_list|(
 name|uint64_t
 name|pcibase

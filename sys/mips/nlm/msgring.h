@@ -22,6 +22,24 @@ name|CMS_DEFAULT_CREDIT
 value|50
 end_define
 
+begin_comment
+comment|/*  * packets are sent to VC 0 of a thread  * freebacks are sent to VC 3 of a thread  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|XLPGE_RX_VC
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|XLPGE_FB_VC
+value|3
+end_define
+
 begin_decl_stmt
 specifier|extern
 name|uint32_t
