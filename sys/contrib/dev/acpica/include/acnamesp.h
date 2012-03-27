@@ -907,15 +907,11 @@ end_function_decl
 
 begin_function_decl
 name|ACPI_STATUS
-name|AcpiNsWrapWithPackage
+name|AcpiNsRepairPackageList
 parameter_list|(
 name|ACPI_PREDEFINED_DATA
 modifier|*
 name|Data
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|OriginalObject
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
