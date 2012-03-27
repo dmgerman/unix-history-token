@@ -62,6 +62,24 @@ value|2
 end_define
 
 begin_comment
+comment|/* used if there is no FDT */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BOARD_CONSOLE_SPEED
+value|115200
+end_define
+
+begin_define
+define|#
+directive|define
+name|BOARD_CONSOLE_UART
+value|0
+end_define
+
+begin_comment
 comment|/*  * EVP board CPLD chip select and daughter card info field  */
 end_comment
 
