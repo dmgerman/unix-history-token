@@ -925,6 +925,9 @@ name|wakeup_cpus
 decl_stmt|;
 endif|#
 directive|endif
+name|register_t
+name|rf
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -986,7 +989,9 @@ name|sc
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|spinlock_enter
+name|rf
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|intr_suspend
@@ -1283,8 +1288,10 @@ expr_stmt|;
 name|intr_resume
 argument_list|()
 expr_stmt|;
-name|spinlock_exit
-argument_list|()
+name|intr_restore
+argument_list|(
+name|rf
+argument_list|)
 expr_stmt|;
 name|AcpiSetFirmwareWakingVector
 argument_list|(
