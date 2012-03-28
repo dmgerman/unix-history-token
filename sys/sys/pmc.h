@@ -44,7 +44,7 @@ begin_define
 define|#
 directive|define
 name|PMC_NAME_MAX
-value|16
+value|64
 end_define
 
 begin_comment
@@ -55,7 +55,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CLASS_MAX
-value|6
+value|8
 end_define
 
 begin_comment
@@ -104,7 +104,7 @@ directive|define
 name|__PMC_CPUS
 parameter_list|()
 define|\
-value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom") \ 	__PMC_CPU(INTEL_COREI7, 0x8B,   "Intel Core i7") \ 	__PMC_CPU(INTEL_WESTMERE, 0x8C,   "Intel Westmere") \ 	__PMC_CPU(INTEL_SANDYBRIDGE, 0x8D,   "Intel Sandy Bridge") \ 	__PMC_CPU(INTEL_XSCALE,	0x100,	"Intel XScale") \ 	__PMC_CPU(MIPS_24K,     0x200,  "MIPS 24K")  \ 	__PMC_CPU(MIPS_OCTEON,  0x201,  "Cavium Octeon")  \ 	__PMC_CPU(PPC_7450,     0x300,  "PowerPC MPC7450")
+value|__PMC_CPU(AMD_K7,	0x00,	"AMD K7")		\ 	__PMC_CPU(AMD_K8,	0x01,	"AMD K8")		\ 	__PMC_CPU(INTEL_P5,	0x80,	"Intel Pentium")	\ 	__PMC_CPU(INTEL_P6,	0x81,	"Intel Pentium Pro")	\ 	__PMC_CPU(INTEL_CL,	0x82,	"Intel Celeron")	\ 	__PMC_CPU(INTEL_PII,	0x83,	"Intel Pentium II")	\ 	__PMC_CPU(INTEL_PIII,	0x84,	"Intel Pentium III")	\ 	__PMC_CPU(INTEL_PM,	0x85,	"Intel Pentium M")	\ 	__PMC_CPU(INTEL_PIV,	0x86,	"Intel Pentium IV")	\ 	__PMC_CPU(INTEL_CORE,	0x87,	"Intel Core Solo/Duo")	\ 	__PMC_CPU(INTEL_CORE2,	0x88,	"Intel Core2")		\ 	__PMC_CPU(INTEL_CORE2EXTREME,	0x89,	"Intel Core2 Extreme")	\ 	__PMC_CPU(INTEL_ATOM,	0x8A,	"Intel Atom")		\ 	__PMC_CPU(INTEL_COREI7, 0x8B,   "Intel Core i7")	\ 	__PMC_CPU(INTEL_WESTMERE, 0x8C,   "Intel Westmere")	\ 	__PMC_CPU(INTEL_SANDYBRIDGE, 0x8D,   "Intel Sandy Bridge")	\ 	__PMC_CPU(INTEL_XSCALE,	0x100,	"Intel XScale")		\ 	__PMC_CPU(MIPS_24K,     0x200,  "MIPS 24K")		\ 	__PMC_CPU(MIPS_OCTEON,  0x201,  "Cavium Octeon")	\ 	__PMC_CPU(PPC_7450,     0x300,  "PowerPC MPC7450")	\ 	__PMC_CPU(GENERIC, 	0x400,  "Generic")
 end_define
 
 begin_enum
@@ -142,7 +142,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CPU_LAST
-value|PMC_CPU_PPC_7450
+value|PMC_CPU_GENERIC
 end_define
 
 begin_comment
@@ -182,10 +182,12 @@ comment|/* MIPS 24K */
 value|\ 	__PMC_CLASS(OCTEON)
 comment|/* Cavium Octeon */
 value|\ 	__PMC_CLASS(PPC7450)
+comment|/* Motorola MPC7450 class */
+value|\ 	__PMC_CLASS(SOFT)
 end_define
 
 begin_comment
-comment|/* Motorola MPC7450 class */
+comment|/* Software events */
 end_comment
 
 begin_enum
@@ -219,7 +221,7 @@ begin_define
 define|#
 directive|define
 name|PMC_CLASS_LAST
-value|PMC_CLASS_PPC7450
+value|PMC_CLASS_SOFT
 end_define
 
 begin_comment
@@ -546,7 +548,7 @@ directive|define
 name|__PMC_OPS
 parameter_list|()
 define|\
-value|__PMC_OP(CONFIGURELOG, "Set log file")				\ 	__PMC_OP(FLUSHLOG, "Flush log file")				\ 	__PMC_OP(GETCPUINFO, "Get system CPU information")		\ 	__PMC_OP(GETDRIVERSTATS, "Get driver statistics")		\ 	__PMC_OP(GETMODULEVERSION, "Get module version")		\ 	__PMC_OP(GETPMCINFO, "Get per-cpu PMC information")		\ 	__PMC_OP(PMCADMIN, "Set PMC state")				\ 	__PMC_OP(PMCALLOCATE, "Allocate and configure a PMC")		\ 	__PMC_OP(PMCATTACH, "Attach a PMC to a process")		\ 	__PMC_OP(PMCDETACH, "Detach a PMC from a process")		\ 	__PMC_OP(PMCGETMSR, "Get a PMC's hardware address")		\ 	__PMC_OP(PMCRELEASE, "Release a PMC")				\ 	__PMC_OP(PMCRW, "Read/Set a PMC")				\ 	__PMC_OP(PMCSETCOUNT, "Set initial count/sampling rate")	\ 	__PMC_OP(PMCSTART, "Start a PMC")				\ 	__PMC_OP(PMCSTOP, "Stop a PMC")					\ 	__PMC_OP(WRITELOG, "Write a cookie to the log file")		\ 	__PMC_OP(CLOSELOG, "Close log file")
+value|__PMC_OP(CONFIGURELOG, "Set log file")				\ 	__PMC_OP(FLUSHLOG, "Flush log file")				\ 	__PMC_OP(GETCPUINFO, "Get system CPU information")		\ 	__PMC_OP(GETDRIVERSTATS, "Get driver statistics")		\ 	__PMC_OP(GETMODULEVERSION, "Get module version")		\ 	__PMC_OP(GETPMCINFO, "Get per-cpu PMC information")		\ 	__PMC_OP(PMCADMIN, "Set PMC state")				\ 	__PMC_OP(PMCALLOCATE, "Allocate and configure a PMC")		\ 	__PMC_OP(PMCATTACH, "Attach a PMC to a process")		\ 	__PMC_OP(PMCDETACH, "Detach a PMC from a process")		\ 	__PMC_OP(PMCGETMSR, "Get a PMC's hardware address")		\ 	__PMC_OP(PMCRELEASE, "Release a PMC")				\ 	__PMC_OP(PMCRW, "Read/Set a PMC")				\ 	__PMC_OP(PMCSETCOUNT, "Set initial count/sampling rate")	\ 	__PMC_OP(PMCSTART, "Start a PMC")				\ 	__PMC_OP(PMCSTOP, "Stop a PMC")					\ 	__PMC_OP(WRITELOG, "Write a cookie to the log file")		\ 	__PMC_OP(CLOSELOG, "Close log file")				\ 	__PMC_OP(GETDYNEVENTINFO, "Get dynamic events list")
 end_define
 
 begin_enum
@@ -1207,6 +1209,51 @@ block|}
 struct|;
 end_struct
 
+begin_comment
+comment|/*  * OP GETDYNEVENTINFO  *  * Retrieve a PMC dynamic class events list.  */
+end_comment
+
+begin_struct
+struct|struct
+name|pmc_dyn_event_descr
+block|{
+name|char
+name|pm_ev_name
+index|[
+name|PMC_NAME_MAX
+index|]
+decl_stmt|;
+name|enum
+name|pmc_event
+name|pm_ev_code
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pmc_op_getdyneventinfo
+block|{
+name|enum
+name|pmc_class
+name|pm_class
+decl_stmt|;
+name|unsigned
+name|int
+name|pm_nevent
+decl_stmt|;
+name|struct
+name|pmc_dyn_event_descr
+name|pm_events
+index|[
+name|PMC_EV_DYN_COUNT
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1256,14 +1303,14 @@ begin_define
 define|#
 directive|define
 name|PMC_NLOGBUFFERS
-value|16
+value|64
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_NSAMPLES
-value|32
+value|512
 end_define
 
 begin_define
@@ -1927,6 +1974,9 @@ name|struct
 name|pmc_samplebuffer
 modifier|*
 name|pc_sb
+index|[
+literal|2
+index|]
 decl_stmt|;
 comment|/* space for samples */
 name|struct
@@ -2425,8 +2475,6 @@ name|defined
 argument_list|(
 name|DEBUG
 argument_list|)
-operator|&&
-name|DEBUG
 end_if
 
 begin_comment
@@ -3109,6 +3157,9 @@ parameter_list|(
 name|int
 name|_cpu
 parameter_list|,
+name|int
+name|_soft
+parameter_list|,
 name|struct
 name|pmc
 modifier|*
@@ -3159,6 +3210,30 @@ name|struct
 name|trapframe
 modifier|*
 name|_tf
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|pmc_mdep
+modifier|*
+name|pmc_mdep_alloc
+parameter_list|(
+name|int
+name|nclasses
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pmc_mdep_free
+parameter_list|(
+name|struct
+name|pmc_mdep
+modifier|*
+name|md
 parameter_list|)
 function_decl|;
 end_function_decl

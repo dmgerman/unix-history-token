@@ -61,6 +61,9 @@ block|,
 name|PMCLOG_TYPE_MAP_OUT
 block|,
 name|PMCLOG_TYPE_CALLCHAIN
+block|,
+comment|/* 	 * V3 ABI 	 * 	 * New variant of PMCLOG_TYPE_PMCALLOCATE for dynamic event. 	 */
+name|PMCLOG_TYPE_PMCALLOCATEDYN
 block|}
 enum|;
 end_enum
@@ -407,6 +410,31 @@ name|__packed
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|pmclog_pmcallocatedyn
+block|{
+name|PMCLOG_ENTRY_HEADER
+name|uint32_t
+name|pl_pmcid
+decl_stmt|;
+name|uint32_t
+name|pl_event
+decl_stmt|;
+name|uint32_t
+name|pl_flags
+decl_stmt|;
+name|char
+name|pl_evname
+index|[
+name|PMC_NAME_MAX
+index|]
+decl_stmt|;
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_union
 union|union
 name|pmclog_entry
@@ -443,6 +471,10 @@ decl_stmt|;
 name|struct
 name|pmclog_pmcallocate
 name|pl_a
+decl_stmt|;
+name|struct
+name|pmclog_pmcallocatedyn
+name|pl_ad
 decl_stmt|;
 name|struct
 name|pmclog_pmcattach
