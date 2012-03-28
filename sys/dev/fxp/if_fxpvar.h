@@ -747,6 +747,17 @@ begin_comment
 comment|/* Rx lock-up bug */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|FXP_FLAG_NO_UCODE
+value|0x10000
+end_define
+
+begin_comment
+comment|/* ucode is not applicable */
+end_comment
+
 begin_comment
 comment|/* Macros to ease CSR access. */
 end_comment

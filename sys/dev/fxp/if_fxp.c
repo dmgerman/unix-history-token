@@ -896,7 +896,7 @@ literal|0x0d
 block|,
 literal|0
 block|,
-literal|"Intel 82550 Pro/100 Ethernet"
+literal|"Intel 82550C Pro/100 Ethernet"
 block|}
 block|,
 block|{
@@ -2906,6 +2906,45 @@ operator|->
 name|flags
 operator||=
 name|FXP_FLAG_WOLCAP
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|sc
+operator|->
+name|revision
+operator|==
+name|FXP_REV_82550_C
+condition|)
+block|{
+comment|/* 		 * 82550C with server extension requires microcode to 		 * receive fragmented UDP datagrams.  However if the 		 * microcode is used for client-only featured 82550C 		 * it locks up controller. 		 */
+name|fxp_read_eeprom
+argument_list|(
+name|sc
+argument_list|,
+operator|&
+name|data
+argument_list|,
+literal|3
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|data
+operator|&
+literal|0x0400
+operator|)
+operator|==
+literal|0
+condition|)
+name|sc
+operator|->
+name|flags
+operator||=
+name|FXP_FLAG_NO_UCODE
 expr_stmt|;
 block|}
 comment|/* Receiver lock-up workaround detection. */
@@ -14547,12 +14586,6 @@ name|D101S_RCVBUNDLE_UCODE
 decl_stmt|;
 end_decl_stmt
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|notyet
-end_ifdef
-
 begin_decl_stmt
 specifier|static
 name|uint32_t
@@ -14572,11 +14605,6 @@ init|=
 name|D102_C_RCVBUNDLE_UCODE
 decl_stmt|;
 end_decl_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_decl_stmt
 specifier|static
@@ -14678,9 +14706,6 @@ block|,
 name|D101S_CPUSAVER_BUNDLE_MAX_DWORD
 block|}
 block|,
-ifdef|#
-directive|ifdef
-name|notyet
 block|{
 name|FXP_REV_82550
 block|,
@@ -14707,8 +14732,6 @@ block|,
 name|D102_C_CPUSAVER_BUNDLE_MAX_DWORD
 block|}
 block|,
-endif|#
-directive|endif
 block|{
 name|FXP_REV_82551_F
 block|,
@@ -14775,6 +14798,15 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|flags
+operator|&
+name|FXP_FLAG_NO_UCODE
+condition|)
+return|return;
 for|for
 control|(
 name|uc
@@ -15031,6 +15063,13 @@ operator|->
 name|flags
 operator||=
 name|FXP_FLAG_UCODE
+expr_stmt|;
+name|bzero
+argument_list|(
+name|cbp
+argument_list|,
+name|FXP_TXCB_SZ
+argument_list|)
 expr_stmt|;
 block|}
 end_function
