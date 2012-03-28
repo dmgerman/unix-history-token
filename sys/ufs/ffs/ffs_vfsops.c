@@ -7276,7 +7276,7 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-comment|/* 		 * The IN_ACCESS flag is converted to IN_MODIFIED by 		 * ufs_close() and ufs_getattr() by the calls to 		 * ufs_itimes_locked(), without subsequent 		 * UFS_UPDATE().  Test also all the other timestamp 		 * flags too, to pick up any other cases that could be 		 * missed. 		 */
+comment|/* 		 * The IN_ACCESS flag is converted to IN_MODIFIED by 		 * ufs_close() and ufs_getattr() by the calls to 		 * ufs_itimes_locked(), without subsequent UFS_UPDATE(). 		 * Test also all the other timestamp flags too, to pick up 		 * any other cases that could be missed. 		 */
 if|if
 condition|(
 operator|(
