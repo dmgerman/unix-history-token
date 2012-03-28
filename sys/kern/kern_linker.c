@@ -2666,6 +2666,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KLD_DEBUG
+name|MOD_SLOCK
+expr_stmt|;
 name|KLD_DPF
 argument_list|(
 name|FILE
@@ -2681,6 +2686,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|MOD_SUNLOCK
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
