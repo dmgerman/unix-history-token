@@ -58,7 +58,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * This module attempts to repair or convert objects returned by the  * predefined methods to an object type that is expected, as per the ACPI  * specification. The need for this code is dictated by the many machines that  * return incorrect types for the standard predefined methods. Performing these  * conversions here, in one place, eliminates the need for individual ACPI  * device drivers to do the same. Note: Most of these conversions are different  * than the internal object conversion routines used for implicit object  * conversion.  *  * The following conversions can be performed as necessary:  *  * Integer -> String  * Integer -> Buffer  * String  -> Integer  * String  -> Buffer  * Buffer  -> Integer  * Buffer  -> String  * Buffer  -> Package of Integers  * Package -> Package of one Package  *  * Additional possible repairs:  *  * Required package elements that are NULL replaced by Integer/String/Buffer  * Incorrect standalone package wrapped with required outer package  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * This module attempts to repair or convert objects returned by the  * predefined methods to an object type that is expected, as per the ACPI  * specification. The need for this code is dictated by the many machines that  * return incorrect types for the standard predefined methods. Performing these  * conversions here, in one place, eliminates the need for individual ACPI  * device drivers to do the same. Note: Most of these conversions are different  * than the internal object conversion routines used for implicit object  * conversion.  *  * The following conversions can be performed as necessary:  *  * Integer -> String  * Integer -> Buffer  * String  -> Integer  * String  -> Buffer  * Buffer  -> Integer  * Buffer  -> String  * Buffer  -> Package of Integers  * Package -> Package of one Package  * An incorrect standalone object is wrapped with required outer package  *  * Additional possible repairs:  * Required package elements that are NULL replaced by Integer/String/Buffer  *  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -103,23 +103,6 @@ begin_function_decl
 specifier|static
 name|ACPI_STATUS
 name|AcpiNsConvertToBuffer
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|OriginalObject
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnObject
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|ACPI_STATUS
-name|AcpiNsConvertToPackage
 parameter_list|(
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -274,10 +257,13 @@ operator|&
 name|ACPI_RTYPE_PACKAGE
 condition|)
 block|{
+comment|/*          * A package is expected. We will wrap the existing object with a          * new package object. It is often the case that if a variable-length          * package is required, but there is only a single object needed, the          * BIOS will return that object instead of wrapping it with a Package          * object. Note: after the wrapping, the package will be validated          * for correct contents (expected object type or types).          */
 name|Status
 operator|=
-name|AcpiNsConvertToPackage
+name|AcpiNsWrapWithPackage
 argument_list|(
+name|Data
+argument_list|,
 name|ReturnObject
 argument_list|,
 operator|&
@@ -292,9 +278,24 @@ name|Status
 argument_list|)
 condition|)
 block|{
-goto|goto
-name|ObjectRepaired
-goto|;
+comment|/*              * The original object just had its reference count              * incremented for being inserted into the new package.              */
+operator|*
+name|ReturnObjectPtr
+operator|=
+name|NewObject
+expr_stmt|;
+comment|/* New Package object */
+name|Data
+operator|->
+name|Flags
+operator||=
+name|ACPI_OBJECT_REPAIRED
+expr_stmt|;
+return|return
+operator|(
+name|AE_OK
+operator|)
+return|;
 block|}
 block|}
 comment|/* We cannot repair this object */
@@ -306,12 +307,24 @@ return|;
 name|ObjectRepaired
 label|:
 comment|/* Object was successfully repaired */
-comment|/*      * If the original object is a package element, we need to:      * 1. Set the reference count of the new object to match the      *    reference count of the old object.      * 2. Decrement the reference count of the original object.      */
 if|if
 condition|(
 name|PackageIndex
 operator|!=
 name|ACPI_NOT_PACKAGE_ELEMENT
+condition|)
+block|{
+comment|/*          * The original object is a package element. We need to          * decrement the reference count of the original object,          * for removing it from the package.          *          * However, if the original object was just wrapped with a          * package object as part of the repair, we don't need to          * change the reference count.          */
+if|if
+condition|(
+operator|!
+operator|(
+name|Data
+operator|->
+name|Flags
+operator|&
+name|ACPI_OBJECT_WRAPPED
+operator|)
 condition|)
 block|{
 name|NewObject
@@ -345,12 +358,13 @@ name|ReferenceCount
 operator|--
 expr_stmt|;
 block|}
+block|}
 name|ACPI_DEBUG_PRINT
 argument_list|(
 operator|(
 name|ACPI_DB_REPAIR
 operator|,
-literal|"%s: Converted %s to expected %s at index %u\n"
+literal|"%s: Converted %s to expected %s at Package index %u\n"
 operator|,
 name|Data
 operator|->
@@ -1100,162 +1114,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsConvertToPackage  *  * PARAMETERS:  OriginalObject      - Object to be converted  *              ReturnObject        - Where the new converted object is returned  *  * RETURN:      Status. AE_OK if conversion was successful.  *  * DESCRIPTION: Attempt to convert a Buffer object to a Package. Each byte of  *              the buffer is converted to a single integer package element.  *  ******************************************************************************/
-end_comment
-
-begin_function
-specifier|static
-name|ACPI_STATUS
-name|AcpiNsConvertToPackage
-parameter_list|(
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|OriginalObject
-parameter_list|,
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|ReturnObject
-parameter_list|)
-block|{
-name|ACPI_OPERAND_OBJECT
-modifier|*
-name|NewObject
-decl_stmt|;
-name|ACPI_OPERAND_OBJECT
-modifier|*
-modifier|*
-name|Elements
-decl_stmt|;
-name|UINT32
-name|Length
-decl_stmt|;
-name|UINT8
-modifier|*
-name|Buffer
-decl_stmt|;
-switch|switch
-condition|(
-name|OriginalObject
-operator|->
-name|Common
-operator|.
-name|Type
-condition|)
-block|{
-case|case
-name|ACPI_TYPE_BUFFER
-case|:
-comment|/* Buffer-to-Package conversion */
-name|Length
-operator|=
-name|OriginalObject
-operator|->
-name|Buffer
-operator|.
-name|Length
-expr_stmt|;
-name|NewObject
-operator|=
-name|AcpiUtCreatePackageObject
-argument_list|(
-name|Length
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-name|NewObject
-condition|)
-block|{
-return|return
-operator|(
-name|AE_NO_MEMORY
-operator|)
-return|;
-block|}
-comment|/* Convert each buffer byte to an integer package element */
-name|Elements
-operator|=
-name|NewObject
-operator|->
-name|Package
-operator|.
-name|Elements
-expr_stmt|;
-name|Buffer
-operator|=
-name|OriginalObject
-operator|->
-name|Buffer
-operator|.
-name|Pointer
-expr_stmt|;
-while|while
-condition|(
-name|Length
-operator|--
-condition|)
-block|{
-operator|*
-name|Elements
-operator|=
-name|AcpiUtCreateIntegerObject
-argument_list|(
-operator|(
-name|UINT64
-operator|)
-operator|*
-name|Buffer
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|!
-operator|*
-name|Elements
-condition|)
-block|{
-name|AcpiUtRemoveReference
-argument_list|(
-name|NewObject
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|AE_NO_MEMORY
-operator|)
-return|;
-block|}
-name|Elements
-operator|++
-expr_stmt|;
-name|Buffer
-operator|++
-expr_stmt|;
-block|}
-break|break;
-default|default:
-return|return
-operator|(
-name|AE_AML_OPERAND_TYPE
-operator|)
-return|;
-block|}
-operator|*
-name|ReturnObject
-operator|=
-name|NewObject
-expr_stmt|;
-return|return
-operator|(
-name|AE_OK
-operator|)
-return|;
-block|}
-end_function
-
-begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRepairNullElement  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ExpectedBtypes      - Object types expected  *              PackageIndex        - Index of object within parent package (if  *                                    applicable - ACPI_NOT_PACKAGE_ELEMENT  *                                    otherwise)  *              ReturnObjectPtr     - Pointer to the object returned from the  *                                    evaluation of a method or object  *  * RETURN:      Status. AE_OK if repair was successful.  *  * DESCRIPTION: Attempt to repair a NULL element of a returned Package object.  *  ******************************************************************************/
 end_comment
 
@@ -1632,16 +1490,20 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsRepairPackageList  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              ObjDescPtr          - Pointer to the object to repair. The new  *                                    package object is returned here,  *                                    overwriting the old object.  *  * RETURN:      Status, new object in *ObjDescPtr  *  * DESCRIPTION: Repair a common problem with objects that are defined to return  *              a variable-length Package of Packages. If the variable-length  *              is one, some BIOS code mistakenly simply declares a single  *              Package instead of a Package with one sub-Package. This  *              function attempts to repair this error by wrapping a Package  *              object around the original Package, creating the correct  *              Package with one sub-Package.  *  *              Names that can be repaired in this manner include:  *              _ALR, _CSD, _HPX, _MLS, _PRT, _PSS, _TRT, TSS  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiNsWrapWithPackage  *  * PARAMETERS:  Data                - Pointer to validation data structure  *              OriginalObject      - Pointer to the object to repair.  *              ObjDescPtr          - The new package object is returned here  *  * RETURN:      Status, new object in *ObjDescPtr  *  * DESCRIPTION: Repair a common problem with objects that are defined to  *              return a variable-length Package of sub-objects. If there is  *              only one sub-object, some BIOS code mistakenly simply declares  *              the single object instead of a Package with one sub-object.  *              This function attempts to repair this error by wrapping a  *              Package object around the original object, creating the  *              correct and expected Package with one sub-object.  *  *              Names that can be repaired in this manner include:  *              _ALR, _CSD, _HPX, _MLS, _PLD, _PRT, _PSS, _TRT, _TSS,  *              _BCL, _DOD, _FIX, _Sx  *  ******************************************************************************/
 end_comment
 
 begin_function
 name|ACPI_STATUS
-name|AcpiNsRepairPackageList
+name|AcpiNsWrapWithPackage
 parameter_list|(
 name|ACPI_PREDEFINED_DATA
 modifier|*
 name|Data
+parameter_list|,
+name|ACPI_OPERAND_OBJECT
+modifier|*
+name|OriginalObject
 parameter_list|,
 name|ACPI_OPERAND_OBJECT
 modifier|*
@@ -1655,10 +1517,10 @@ name|PkgObjDesc
 decl_stmt|;
 name|ACPI_FUNCTION_NAME
 argument_list|(
-name|NsRepairPackageList
+name|NsWrapWithPackage
 argument_list|)
 expr_stmt|;
-comment|/*      * Create the new outer package and populate it. The new package will      * have a single element, the lone subpackage.      */
+comment|/*      * Create the new outer package and populate it. The new package will      * have a single element, the lone sub-object.      */
 name|PkgObjDesc
 operator|=
 name|AcpiUtCreatePackageObject
@@ -1687,8 +1549,25 @@ index|[
 literal|0
 index|]
 operator|=
-operator|*
-name|ObjDescPtr
+name|OriginalObject
+expr_stmt|;
+name|ACPI_DEBUG_PRINT
+argument_list|(
+operator|(
+name|ACPI_DB_REPAIR
+operator|,
+literal|"%s: Wrapped %s with expected Package object\n"
+operator|,
+name|Data
+operator|->
+name|Pathname
+operator|,
+name|AcpiUtGetObjectTypeName
+argument_list|(
+name|OriginalObject
+argument_list|)
+operator|)
+argument_list|)
 expr_stmt|;
 comment|/* Return the new object in the object pointer */
 operator|*
@@ -1701,19 +1580,8 @@ operator|->
 name|Flags
 operator||=
 name|ACPI_OBJECT_REPAIRED
-expr_stmt|;
-name|ACPI_DEBUG_PRINT
-argument_list|(
-operator|(
-name|ACPI_DB_REPAIR
-operator|,
-literal|"%s: Repaired incorrectly formed Package\n"
-operator|,
-name|Data
-operator|->
-name|Pathname
-operator|)
-argument_list|)
+operator||
+name|ACPI_OBJECT_WRAPPED
 expr_stmt|;
 return|return
 operator|(
