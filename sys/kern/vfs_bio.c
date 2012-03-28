@@ -3485,7 +3485,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear BIO_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything ( see  * getblk() ).  This is really just a special case of breadn().  */
+comment|/*  * Get a buffer with the specified data.  */
 end_comment
 
 begin_function
@@ -3517,7 +3517,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|breadn
+name|breadn_flags
 argument_list|(
 name|vp
 argument_list|,
@@ -3532,6 +3532,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|cred
+argument_list|,
+literal|0
 argument_list|,
 name|bpp
 argument_list|)
@@ -3786,6 +3788,78 @@ modifier|*
 name|bpp
 parameter_list|)
 block|{
+return|return
+operator|(
+name|breadn_flags
+argument_list|(
+name|vp
+argument_list|,
+name|blkno
+argument_list|,
+name|size
+argument_list|,
+name|rablkno
+argument_list|,
+name|rabsize
+argument_list|,
+name|cnt
+argument_list|,
+name|cred
+argument_list|,
+literal|0
+argument_list|,
+name|bpp
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Entry point for bread() and breadn().  *  * Get a buffer with the specified data.  Look in the cache first.  We  * must clear BIO_ERROR and B_INVAL prior to initiating I/O.  If B_CACHE  * is set, the buffer is valid and we do not have to do anything, see  * getblk(). Also starts asynchronous I/O on read-ahead blocks.  */
+end_comment
+
+begin_function
+name|int
+name|breadn_flags
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|,
+name|daddr_t
+name|blkno
+parameter_list|,
+name|int
+name|size
+parameter_list|,
+name|daddr_t
+modifier|*
+name|rablkno
+parameter_list|,
+name|int
+modifier|*
+name|rabsize
+parameter_list|,
+name|int
+name|cnt
+parameter_list|,
+name|struct
+name|ucred
+modifier|*
+name|cred
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|buf
+modifier|*
+modifier|*
+name|bpp
+parameter_list|)
+block|{
 name|struct
 name|buf
 modifier|*
@@ -3813,6 +3887,7 @@ argument_list|,
 name|size
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Can only return NULL if GB_LOCK_NOWAIT flag is specified. 	 */
 operator|*
 name|bpp
 operator|=
@@ -3830,9 +3905,20 @@ literal|0
 argument_list|,
 literal|0
 argument_list|,
-literal|0
+name|flags
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|bp
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+name|EBUSY
+operator|)
+return|;
 comment|/* if not found in cache, do some I/O */
 if|if
 condition|(

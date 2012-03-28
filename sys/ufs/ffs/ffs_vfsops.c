@@ -7554,6 +7554,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|waitfor
+argument_list|,
+literal|0
 argument_list|)
 operator|)
 operator|!=
