@@ -1211,23 +1211,23 @@ end_comment
 begin_define
 define|#
 directive|define
-name|IDT_DTRACE_RET
-value|0x20
-end_define
-
-begin_comment
-comment|/* DTrace pid provider Interrupt Vector */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IDT_SYSCALL
 value|0x80
 end_define
 
 begin_comment
 comment|/* System Call Interrupt Vector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IDT_DTRACE_RET
+value|0x92
+end_define
+
+begin_comment
+comment|/* DTrace pid provider Interrupt Vector */
 end_comment
 
 begin_if
