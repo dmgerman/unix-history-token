@@ -3262,7 +3262,12 @@ operator|.
 name|rcvif
 expr_stmt|;
 else|else
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* 	 * If the hardware did not process an 802.1Q tag, do this now, 	 * to allow 802.1P priority frames to be passed to the main input 	 * path correctly. 	 * TODO: Deal with Q-in-Q frames, but not arbitrary nesting levels. 	 */
 if|if
@@ -3338,6 +3343,9 @@ name|m_freem
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return;
 block|}
