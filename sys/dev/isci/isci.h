@@ -264,6 +264,11 @@ decl_stmt|;
 name|uint8_t
 name|index
 decl_stmt|;
+name|struct
+name|ISCI_REMOTE_DEVICE
+modifier|*
+name|da_remote_device
+decl_stmt|;
 block|}
 struct|;
 end_struct

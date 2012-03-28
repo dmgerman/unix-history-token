@@ -1381,6 +1381,25 @@ operator|->
 name|pending_device_reset_element
 argument_list|)
 expr_stmt|;
+comment|/* 		 * For the first SCI_MAX_DOMAINS device objects, do not put 		 *  them in the pool, rather assign them to each domain.  This 		 *  ensures that any device attached directly to port "i" will 		 *  always get CAM target id "i". 		 */
+if|if
+condition|(
+name|i
+operator|<
+name|SCI_MAX_DOMAINS
+condition|)
+name|controller
+operator|->
+name|domain
+index|[
+name|i
+index|]
+operator|.
+name|da_remote_device
+operator|=
+name|remote_device
+expr_stmt|;
+else|else
 name|sci_pool_put
 argument_list|(
 name|controller
