@@ -12039,7 +12039,7 @@ name|vnet_mroute_init
 argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
-name|SI_ORDER_MIDDLE
+name|SI_ORDER_ANY
 argument_list|,
 name|vnet_mroute_init
 argument_list|,
@@ -12423,7 +12423,7 @@ name|ip_mroutemod
 argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt
