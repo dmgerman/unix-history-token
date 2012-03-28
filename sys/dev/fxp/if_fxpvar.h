@@ -578,6 +578,12 @@ decl_stmt|;
 name|uint32_t
 name|tx_cmd
 decl_stmt|;
+name|uint16_t
+name|eeprom
+index|[
+literal|256
+index|]
+decl_stmt|;
 block|}
 struct|;
 end_struct
