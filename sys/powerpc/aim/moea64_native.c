@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sysctl.h>
 end_include
 
@@ -260,39 +266,29 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|__powerpc64__
+name|sched_pin
+argument_list|()
+expr_stmt|;
+asm|__asm __volatile("ptesync");
 name|mtx_lock
 argument_list|(
 operator|&
 name|tlbie_mutex
 argument_list|)
 expr_stmt|;
-asm|__asm __volatile("\ 	    ptesync; \ 	    tlbie %0; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
-operator|::
-literal|"r"
-operator|(
-name|vpn
-operator|)
-operator|:
-literal|"memory"
-block|)
-function|;
-end_function
-
-begin_expr_stmt
+asm|__asm __volatile("tlbie %0" :: "r"(vpn) : "memory");
 name|mtx_unlock
 argument_list|(
 operator|&
 name|tlbie_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_else
+asm|__asm __volatile("eieio; tlbsync; ptesync");
+name|sched_unpin
+argument_list|()
+expr_stmt|;
 else|#
 directive|else
-end_else
-
-begin_expr_stmt
 name|vpn_hi
 operator|=
 call|(
@@ -304,9 +300,6 @@ operator|>>
 literal|32
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
 name|vpn_lo
 operator|=
 operator|(
@@ -314,27 +307,15 @@ name|uint32_t
 operator|)
 name|vpn
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/* Note: spin mutex is to disable exceptions while fiddling MSR */
-end_comment
-
-begin_expr_stmt
 name|mtx_lock_spin
 argument_list|(
 operator|&
 name|tlbie_mutex
 argument_list|)
 expr_stmt|;
-end_expr_stmt
-
-begin_asm
 asm|__asm __volatile("\ 	    mfmsr %0; \ 	    mr %1, %0; \ 	    insrdi %1,%5,1,0; \ 	    mtmsrd %1; isync; \ 	    ptesync; \ 	    \ 	    sld %1,%2,%4; \ 	    or %1,%1,%3; \ 	    tlbie %1; \ 	    \ 	    mtmsrd %0; isync; \ 	    eieio; \ 	    tlbsync; \ 	    ptesync;"
-end_asm
-
-begin_expr_stmt
-unit|:
+block|:
 literal|"=r"
 operator|(
 name|msr
@@ -366,12 +347,9 @@ literal|1
 operator|)
 operator|:
 literal|"memory"
-end_expr_stmt
-
-begin_empty_stmt
-unit|)
-empty_stmt|;
-end_empty_stmt
+block|)
+function|;
+end_function
 
 begin_expr_stmt
 name|mtx_unlock_spin
