@@ -15625,6 +15625,12 @@ name|ACPI_LV_INFO
 block|}
 block|,
 block|{
+literal|"ACPI_LV_REPAIR"
+block|,
+name|ACPI_LV_REPAIR
+block|}
+block|,
+block|{
 literal|"ACPI_LV_ALL_EXCEPTIONS"
 block|,
 name|ACPI_LV_ALL_EXCEPTIONS
