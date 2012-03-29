@@ -870,7 +870,7 @@ name|nlm_is_xlp8xx_ax
 argument_list|()
 condition|)
 block|{
-name|uchar_t
+name|uint8_t
 name|val
 decl_stmt|;
 comment|/* membar fixup */
