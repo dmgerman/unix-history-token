@@ -329,6 +329,20 @@ begin_comment
 comment|/* "<-- Backspace" key, XXX */
 end_comment
 
+begin_comment
+comment|/* NULL-safe version of "tty_opened()" */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|tty_opened_ns
+parameter_list|(
+name|tp
+parameter_list|)
+value|((tp) != NULL&& tty_opened(tp))
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
