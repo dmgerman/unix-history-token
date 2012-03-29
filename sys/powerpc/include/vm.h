@@ -42,13 +42,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_UNCACHED
-value|VM_MEMATTR_UNCACHEABLE
-end_define
-
-begin_define
-define|#
-directive|define
 name|VM_MEMATTR_CACHEABLE
 value|0x02
 end_define
