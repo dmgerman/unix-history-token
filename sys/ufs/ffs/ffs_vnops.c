@@ -1269,7 +1269,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 name|BO_LOCK
@@ -1348,7 +1348,7 @@ name|ffs_update
 argument_list|(
 name|vp
 argument_list|,
-name|MNT_WAIT
+literal|1
 argument_list|)
 expr_stmt|;
 if|if
