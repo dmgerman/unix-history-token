@@ -1116,6 +1116,19 @@ literal|0xFF
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|//Explicitly set byte 12 to 0.  SATI requires that all bytes in the data
+comment|//response be explicitly set to some value.
+name|sati_set_data_byte
+argument_list|(
+name|sequence
+argument_list|,
+name|scsi_io
+argument_list|,
+literal|12
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 comment|//Check Bit 13 of ATA_IDENTIFY_DEVICE_DATA physical_logical_sector_info
 comment|//(Word 106) is enabled
 name|physical_per_logical_enable_bit
