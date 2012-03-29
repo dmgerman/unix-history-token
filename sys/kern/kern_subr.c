@@ -760,10 +760,15 @@ name|UIO_USERSPACE
 operator|&&
 name|nofault
 condition|)
+block|{
+comment|/* 		 * Fail if a non-spurious page fault occurs. 		 */
 name|newflags
 operator||=
 name|TDP_NOFAULTING
+operator||
+name|TDP_RESETSPUR
 expr_stmt|;
+block|}
 name|save
 operator|=
 name|curthread_pflags_set
