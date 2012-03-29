@@ -139,7 +139,7 @@ name|__bswap16_gen
 parameter_list|(
 name|x
 parameter_list|)
-value|((__uint16_t)((x)<< 8 | (x)>> 8))
+value|(__uint16_t)((x)<< 8 | (x)>> 8)
 end_define
 
 begin_define
@@ -150,7 +150,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((__uint32_t)__bswap16_gen(x)<< 16) | __bswap16_gen((x)>> 16))
+value|(((__uint32_t)__bswap16(x)<< 16) | __bswap16((x)>> 16))
 end_define
 
 begin_define
@@ -161,7 +161,7 @@ parameter_list|(
 name|x
 parameter_list|)
 define|\
-value|(((__uint64_t)__bswap32_gen(x)<< 32) | __bswap32_gen((x)>> 32))
+value|(((__uint64_t)__bswap32(x)<< 32) | __bswap32((x)>> 32))
 end_define
 
 begin_ifdef
