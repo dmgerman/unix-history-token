@@ -10496,18 +10496,17 @@ name|tid
 argument_list|)
 expr_stmt|;
 comment|/* Punt some frames to the hardware if needed */
-name|ath_txq_sched
+comment|//ath_txq_sched(sc, sc->sc_ac2q[tid->ac]);
+name|taskqueue_enqueue
 argument_list|(
 name|sc
+operator|->
+name|sc_tq
 argument_list|,
+operator|&
 name|sc
 operator|->
-name|sc_ac2q
-index|[
-name|tid
-operator|->
-name|ac
-index|]
+name|sc_txqtask
 argument_list|)
 expr_stmt|;
 block|}

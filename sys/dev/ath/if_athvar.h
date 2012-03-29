@@ -1847,6 +1847,11 @@ name|task
 name|sc_txtask
 decl_stmt|;
 comment|/* tx int processing */
+name|struct
+name|task
+name|sc_txqtask
+decl_stmt|;
+comment|/* tx proc processing */
 name|int
 name|sc_wd_timer
 decl_stmt|;
