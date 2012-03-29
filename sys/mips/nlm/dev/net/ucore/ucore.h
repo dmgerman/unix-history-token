@@ -114,14 +114,14 @@ begin_define
 define|#
 directive|define
 name|PACKET_MEMORY
-value|(0xFFE00)
+value|0xFFE00
 end_define
 
 begin_define
 define|#
 directive|define
 name|PACKET_DATA_OFFSET
-value|(64)
+value|64
 end_define
 
 begin_define
@@ -180,7 +180,7 @@ name|VAL_FSV
 parameter_list|(
 name|x
 parameter_list|)
-value|(x<<19)
+value|(x<< 19)
 end_define
 
 begin_define
@@ -190,7 +190,7 @@ name|VAL_FFS
 parameter_list|(
 name|x
 parameter_list|)
-value|(x<<14)
+value|(x<< 14)
 end_define
 
 begin_define
@@ -242,6 +242,74 @@ name|USE_HASH_DST
 value|(1<< 20)
 end_define
 
+begin_function
+specifier|static
+name|__inline
+name|unsigned
+name|int
+name|nlm_read_ucore_reg
+parameter_list|(
+name|int
+name|reg
+parameter_list|)
+block|{
+specifier|volatile
+name|unsigned
+name|int
+modifier|*
+name|addr
+init|=
+operator|(
+specifier|volatile
+name|void
+operator|*
+operator|)
+name|reg
+decl_stmt|;
+return|return
+operator|(
+operator|*
+name|addr
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|void
+name|nlm_write_ucore_reg
+parameter_list|(
+name|int
+name|reg
+parameter_list|,
+name|unsigned
+name|int
+name|val
+parameter_list|)
+block|{
+specifier|volatile
+name|unsigned
+name|int
+modifier|*
+name|addr
+init|=
+operator|(
+specifier|volatile
+name|void
+operator|*
+operator|)
+name|reg
+decl_stmt|;
+operator|*
+name|addr
+operator|=
+name|val
+expr_stmt|;
+block|}
+end_function
+
 begin_define
 define|#
 directive|define
@@ -252,7 +320,7 @@ parameter_list|,
 name|reg
 parameter_list|)
 define|\
-value|static __inline__ unsigned int nlm_read_ucore_##name(void)	\ {								\ 	unsigned int __rv;                                      \ 	__asm__ __volatile__ (                                  \ 	".set	push\n"                                         \ 	".set	noreorder\n"                                    \ 	".set	mips32\n"                                       \ 	"li	$8, %1\n"					\ 	"lw	%0, ($8)\n"					\ 	".set	pop\n"                                          \ 	: "=r" (__rv)						\ 	: "i" (reg)						\ 	: "$8"							\ 	); 		                			\         return __rv;						\ }								\ 								\ static __inline__ void nlm_write_ucore_##name(unsigned int val)	\ {								\ 	__asm__ __volatile__(                                   \ 	".set	push\n"                                         \ 	".set	noreorder\n"                                    \ 	".set	mips32\n"                                       \ 	"li	$8, %1\n"					\ 	"sw	%0, ($8)\n"					\ 	".set	pop\n"                                          \ 	:: "r" (val), "i" (reg)					\ 	: "$8"							\ 	);							\ } struct __hack
+value|static __inline unsigned int					\ nlm_read_ucore_##name(void)					\ {								\ 	return nlm_read_ucore_reg(reg);				\ }								\ 								\ static __inline void						\ nlm_write_ucore_##name(unsigned int v)				\ {								\ 	nlm_write_ucore_reg(reg, v);				\ } struct __hack
 end_define
 
 begin_expr_stmt

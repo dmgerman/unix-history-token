@@ -30,8 +30,8 @@ name|int
 name|num_cachelines
 init|=
 literal|1518
-operator|>>
-literal|6
+operator|/
+literal|64
 decl_stmt|;
 comment|/* pktsize / L3 cacheline size */
 comment|/* Spray packets to using distribution vector */
