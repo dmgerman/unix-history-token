@@ -20961,7 +20961,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-empty_stmt|;
 return|return
 operator|(
 name|res
