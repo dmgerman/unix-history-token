@@ -2268,6 +2268,7 @@ name|hdr
 operator|.
 name|db_offset
 operator|&&
+operator|!
 name|is_gpt
 operator|)
 operator|||
