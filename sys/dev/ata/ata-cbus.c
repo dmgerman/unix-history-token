@@ -1661,6 +1661,9 @@ name|dev
 argument_list|)
 argument_list|)
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|struct
 name|ata_channel
 modifier|*
@@ -1671,6 +1674,8 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|res
 decl_stmt|;
@@ -1687,6 +1692,9 @@ condition|(
 name|flags
 condition|)
 block|{
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 case|case
 name|ATA_LF_LOCK
 case|:
@@ -1829,6 +1837,8 @@ block|}
 block|}
 block|}
 break|break;
+endif|#
+directive|endif
 case|case
 name|ATA_LF_WHICH
 case|:
@@ -1897,6 +1907,9 @@ argument_list|,
 name|ata_cbuschannel_resume
 argument_list|)
 block|,
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 comment|/* ATA methods */
 name|DEVMETHOD
 argument_list|(
@@ -1905,6 +1918,8 @@ argument_list|,
 name|ata_cbuschannel_banking
 argument_list|)
 block|,
+endif|#
+directive|endif
 block|{
 literal|0
 block|,
