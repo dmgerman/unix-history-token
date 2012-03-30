@@ -1292,6 +1292,18 @@ end_empty_stmt
 
 begin_function_decl
 specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rtld_strerror
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
 name|Obj_Entry
 modifier|*
 name|map_object

@@ -675,7 +675,7 @@ literal|"%s: mmap of entire address space failed: %s"
 argument_list|,
 name|path
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -844,7 +844,7 @@ literal|"%s: mmap of data failed: %s"
 argument_list|,
 name|path
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -957,7 +957,7 @@ literal|"%s: mprotect failed: %s"
 argument_list|,
 name|path
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -1074,7 +1074,7 @@ literal|"%s: mmap of bss failed: %s"
 argument_list|,
 name|path
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)
@@ -1526,7 +1526,7 @@ literal|"%s: read error: %s"
 argument_list|,
 name|path
 argument_list|,
-name|strerror
+name|rtld_strerror
 argument_list|(
 name|errno
 argument_list|)
