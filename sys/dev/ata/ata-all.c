@@ -339,6 +339,12 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function_decl
 specifier|static
 name|void
@@ -380,6 +386,11 @@ name|int
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function_decl
 specifier|static
@@ -450,6 +461,12 @@ name|NULL
 function_decl|;
 end_function_decl
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_decl_stmt
 name|struct
 name|intr_config_hook
@@ -459,6 +476,11 @@ init|=
 name|NULL
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|devclass_t
@@ -478,6 +500,12 @@ name|ata_composite_zone
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_decl_stmt
 name|int
 name|ata_wc
@@ -494,6 +522,11 @@ literal|0
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 name|int
 name|ata_dma_check_80pin
@@ -505,6 +538,12 @@ end_decl_stmt
 begin_comment
 comment|/* local vars */
 end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_decl_stmt
 specifier|static
@@ -523,6 +562,11 @@ init|=
 literal|1
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/* sysctl vars */
@@ -545,6 +589,12 @@ literal|"ATA driver parameters"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -578,6 +628,11 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_expr_stmt
 name|TUNABLE_INT
 argument_list|(
@@ -609,6 +664,12 @@ literal|"Check for 80pin cable before setting ATA DMA mode"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_expr_stmt
 name|TUNABLE_INT
@@ -705,6 +766,11 @@ literal|"ATA disk set max native address"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
@@ -1126,6 +1192,9 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 comment|/* reset the controller HW, the channel and device(s) */
 while|while
 condition|(
@@ -1147,16 +1216,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-ifndef|#
-directive|ifndef
-name|ATA_CAM
 name|ATA_RESET
 argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|ATA_LOCKING
 argument_list|(
 name|dev
@@ -1164,6 +1228,8 @@ argument_list|,
 name|ATA_LF_UNLOCK
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* allocate DMA resources if DMA HW present*/
 if|if
 condition|(
@@ -3198,6 +3264,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 name|int
 name|ata_check_80pin
@@ -3275,6 +3347,17 @@ name|mode
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 name|void
@@ -3432,6 +3515,11 @@ name|mode
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * device related interfaces  */
@@ -3960,6 +4048,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 name|int
@@ -4625,6 +4719,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -4820,6 +4919,12 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 name|int
@@ -5640,6 +5745,11 @@ name|error
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifndef
 ifndef|#
@@ -6817,6 +6927,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 name|char
 modifier|*
@@ -6892,6 +7008,11 @@ name|str
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|const
@@ -7384,6 +7505,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 specifier|const
 name|char
@@ -7437,6 +7564,11 @@ block|}
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function
 name|int
 name|ata_atapi
@@ -7473,6 +7605,12 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 name|int
@@ -7600,6 +7738,17 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 name|int
 name|ata_wmode
@@ -7649,6 +7798,17 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 name|int
@@ -7753,6 +7913,17 @@ literal|1
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 name|int
@@ -7882,6 +8053,17 @@ return|;
 block|}
 end_function
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 specifier|static
 name|void
@@ -7931,6 +8113,17 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 specifier|static
@@ -8009,6 +8202,17 @@ literal|0
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
 
 begin_function
 specifier|static
@@ -8142,6 +8346,11 @@ literal|0x00
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_ifdef
 ifdef|#
