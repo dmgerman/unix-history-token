@@ -142,6 +142,7 @@ specifier|static
 specifier|const
 name|struct
 name|pccard_product
+specifier|const
 name|ata_pccard_products
 index|[]
 init|=
@@ -812,11 +813,7 @@ argument_list|,
 name|ata_pccard_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -851,9 +848,9 @@ name|ata_pccard_driver
 argument_list|,
 name|ata_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

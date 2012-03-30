@@ -6934,6 +6934,7 @@ name|ATA_CAM
 end_ifndef
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ata_unit2str
