@@ -4380,6 +4380,7 @@ name|NULL
 condition|?
 name|NULL
 else|:
+operator|&
 name|timo
 argument_list|)
 expr_stmt|;
@@ -16328,7 +16329,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|do_rw_rdlock2
+name|do_rw_rdlock
 argument_list|(
 name|td
 argument_list|,
@@ -16434,7 +16435,7 @@ operator|)
 return|;
 name|error
 operator|=
-name|do_rw_wrlock2
+name|do_rw_wrlock
 argument_list|(
 name|td
 argument_list|,
