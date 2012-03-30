@@ -245,6 +245,31 @@ name|tls_max_index
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|main_argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|main_argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
+decl_stmt|;
+end_decl_stmt
+
 begin_struct_decl
 struct_decl|struct
 name|stat
@@ -307,6 +332,27 @@ name|InitFunc
 function_decl|)
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|InitArrFunc
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -807,6 +853,34 @@ name|Elf_Addr
 name|fini
 decl_stmt|;
 comment|/* Termination function to call */
+name|Elf_Addr
+name|preinit_array
+decl_stmt|;
+comment|/* Pre-initialization array of functions */
+name|Elf_Addr
+name|init_array
+decl_stmt|;
+comment|/* Initialization array of functions */
+name|Elf_Addr
+name|fini_array
+decl_stmt|;
+comment|/* Termination array of functions */
+name|int
+name|preinit_array_num
+decl_stmt|;
+comment|/* Number of entries in preinit_array */
+name|int
+name|init_array_num
+decl_stmt|;
+comment|/* Number of entries in init_array */
+name|int
+name|fini_array_num
+decl_stmt|;
+comment|/* Number of entries in fini_array */
+name|int32_t
+name|osrel
+decl_stmt|;
+comment|/* OSREL note value */
 name|bool
 name|mainprog
 range|:
@@ -933,6 +1007,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Object has references to STT_GNU_IFUNC */
+name|bool
+name|crt_no_init
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object' crt does not call _init/_fini */
 name|struct
 name|link_map
 name|linkmap
@@ -1401,6 +1481,20 @@ name|void
 name|lockdflt_init
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|digest_notes
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|Elf_Addr
+parameter_list|,
+name|Elf_Addr
 parameter_list|)
 function_decl|;
 end_function_decl
