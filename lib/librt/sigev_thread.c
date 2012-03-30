@@ -940,7 +940,7 @@ name|sigev_id_t
 name|id
 parameter_list|)
 block|{
-comment|/* 	 * Build a new sigevent, and tell kernel to deliver SIGSERVICE 	 * signal to the new thread. 	 */
+comment|/* 	 * Build a new sigevent, and tell kernel to deliver SIGLIBRT 	 * signal to the new thread. 	 */
 name|newevp
 operator|->
 name|sigev_notify
@@ -951,7 +951,7 @@ name|newevp
 operator|->
 name|sigev_signo
 operator|=
-name|SIGSERVICE
+name|SIGLIBRT
 expr_stmt|;
 name|newevp
 operator|->
@@ -1196,7 +1196,7 @@ name|sn_tn
 operator|->
 name|tn_thread
 argument_list|,
-name|SIGSERVICE
+name|SIGLIBRT
 argument_list|)
 expr_stmt|;
 if|if
@@ -1398,7 +1398,7 @@ operator|&
 name|set
 argument_list|)
 expr_stmt|;
-comment|/* SIGSERVICE is masked. */
+comment|/* SIGLIBRT is masked. */
 name|sigdelset
 argument_list|(
 operator|&
@@ -1625,7 +1625,7 @@ argument_list|(
 operator|&
 name|set
 argument_list|,
-name|SIGSERVICE
+name|SIGLIBRT
 argument_list|)
 expr_stmt|;
 for|for

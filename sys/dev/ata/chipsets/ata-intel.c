@@ -575,8 +575,10 @@ name|dev
 argument_list|)
 decl_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|ata_chip_id
+specifier|const
 name|ids
 index|[]
 init|=
@@ -4080,7 +4082,9 @@ name|new44
 init|=
 literal|0
 decl_stmt|;
-name|u_int8_t
+specifier|static
+specifier|const
+name|uint8_t
 name|timings
 index|[]
 init|=
@@ -4102,7 +4106,9 @@ block|,
 literal|0x23
 block|}
 decl_stmt|;
-name|u_int8_t
+specifier|static
+specifier|const
+name|uint8_t
 name|utimings
 index|[]
 init|=

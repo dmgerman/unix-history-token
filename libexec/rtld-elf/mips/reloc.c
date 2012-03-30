@@ -1245,6 +1245,9 @@ name|Obj_Entry
 modifier|*
 name|obj_rtld
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -1527,7 +1530,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -1717,7 +1720,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -2174,7 +2177,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -2304,7 +2307,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -2452,7 +2455,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -2682,6 +2685,9 @@ name|Obj_Entry
 modifier|*
 name|obj
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -2732,6 +2738,9 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|Struct_RtldLockState

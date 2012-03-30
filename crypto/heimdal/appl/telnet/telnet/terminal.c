@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: terminal.c 9733 2001-03-06 20:10:14Z assar $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -1536,7 +1536,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SCTP_STREAM_RESET_DENIED
+name|SCTP_STREAM_RESET_REJECT
 value|0x00000002
 end_define
 

@@ -45,6 +45,9 @@ parameter_list|(
 name|UINT8
 name|SleepState
 parameter_list|,
+name|UINT8
+name|Flags
+parameter_list|,
 name|UINT32
 name|FunctionId
 parameter_list|)
@@ -483,6 +486,9 @@ parameter_list|(
 name|UINT8
 name|SleepState
 parameter_list|,
+name|UINT8
+name|Flags
+parameter_list|,
 name|UINT32
 name|FunctionId
 parameter_list|)
@@ -525,6 +531,8 @@ operator|->
 name|ExtendedFunction
 argument_list|(
 name|SleepState
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -538,6 +546,8 @@ operator|->
 name|LegacyFunction
 argument_list|(
 name|SleepState
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 block|}
@@ -556,6 +566,8 @@ operator|->
 name|ExtendedFunction
 argument_list|(
 name|SleepState
+argument_list|,
+name|Flags
 argument_list|)
 expr_stmt|;
 return|return
@@ -598,7 +610,6 @@ argument_list|(
 name|AcpiEnterSleepStatePrep
 argument_list|)
 expr_stmt|;
-comment|/* _PSW methods could be run here to enable wake-on keyboard, LAN, etc. */
 name|Status
 operator|=
 name|AcpiGetSleepTypeData
@@ -660,7 +671,7 @@ name|AcpiEvaluateObject
 argument_list|(
 name|NULL
 argument_list|,
-name|METHOD_NAME__PTS
+name|METHOD_PATHNAME__PTS
 argument_list|,
 operator|&
 name|ArgList
@@ -733,7 +744,7 @@ block|}
 comment|/*      * Set the system indicators to show the desired sleep state.      * _SST is an optional method (return no error if not found)      */
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__SST
+name|METHOD_PATHNAME__SST
 argument_list|,
 name|SstValue
 argument_list|)
@@ -754,7 +765,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnterSleepState  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiEnterSleepState  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *              Flags               - ACPI_EXECUTE_GTS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -763,6 +774,9 @@ name|AcpiEnterSleepState
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -813,6 +827,8 @@ name|AcpiHwSleepDispatch
 argument_list|(
 name|SleepState
 argument_list|,
+name|Flags
+argument_list|,
 name|ACPI_SLEEP_FUNCTION_ID
 argument_list|)
 expr_stmt|;
@@ -832,7 +848,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiLeaveSleepStatePrep  *  * PARAMETERS:  SleepState          - Which sleep state we are exiting  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep. Called with interrupts DISABLED.  *              We break wake/resume into 2 stages so that OSPM can handle  *              various OS-specific tasks between the two steps.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiLeaveSleepStatePrep  *  * PARAMETERS:  SleepState          - Which sleep state we are exiting  *              Flags               - ACPI_EXECUTE_BFS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Perform the first state of OS-independent ACPI cleanup after a  *              sleep. Called with interrupts DISABLED.  *              We break wake/resume into 2 stages so that OSPM can handle  *              various OS-specific tasks between the two steps.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -841,6 +857,9 @@ name|AcpiLeaveSleepStatePrep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -856,6 +875,8 @@ operator|=
 name|AcpiHwSleepDispatch
 argument_list|(
 name|SleepState
+argument_list|,
+name|Flags
 argument_list|,
 name|ACPI_WAKE_PREP_FUNCTION_ID
 argument_list|)
@@ -900,6 +921,8 @@ operator|=
 name|AcpiHwSleepDispatch
 argument_list|(
 name|SleepState
+argument_list|,
+literal|0
 argument_list|,
 name|ACPI_WAKE_FUNCTION_ID
 argument_list|)

@@ -32,6 +32,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_accept_sec_context
 parameter_list|(
 name|OM_uint32
@@ -82,6 +83,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_acquire_cred
 parameter_list|(
 name|OM_uint32
@@ -119,72 +121,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
-name|_gss_spnego_add_cred
-parameter_list|(
-name|OM_uint32
-modifier|*
-comment|/*minor_status*/
-parameter_list|,
-specifier|const
-name|gss_cred_id_t
-comment|/*input_cred_handle*/
-parameter_list|,
-specifier|const
-name|gss_name_t
-comment|/*desired_name*/
-parameter_list|,
-specifier|const
-name|gss_OID
-comment|/*desired_mech*/
-parameter_list|,
-name|gss_cred_usage_t
-comment|/*cred_usage*/
-parameter_list|,
-name|OM_uint32
-comment|/*initiator_time_req*/
-parameter_list|,
-name|OM_uint32
-comment|/*acceptor_time_req*/
-parameter_list|,
-name|gss_cred_id_t
-modifier|*
-comment|/*output_cred_handle*/
-parameter_list|,
-name|gss_OID_set
-modifier|*
-comment|/*actual_mechs*/
-parameter_list|,
-name|OM_uint32
-modifier|*
-comment|/*initiator_time_rec*/
-parameter_list|,
-name|OM_uint32
-modifier|*
-name|acceptor_time_rec
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
-name|_gss_spnego_alloc_cred
-parameter_list|(
-name|OM_uint32
-modifier|*
-comment|/*minor_status*/
-parameter_list|,
-name|gss_cred_id_t
-comment|/*mech_cred_handle*/
-parameter_list|,
-name|gss_cred_id_t
-modifier|*
-comment|/*cred_handle*/
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_alloc_sec_context
 parameter_list|(
 name|OM_uint32
@@ -200,6 +137,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_canonicalize_name
 parameter_list|(
 name|OM_uint32
@@ -223,6 +161,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_compare_name
 parameter_list|(
 name|OM_uint32
@@ -246,6 +185,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_context_time
 parameter_list|(
 name|OM_uint32
@@ -265,6 +205,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_delete_sec_context
 parameter_list|(
 name|OM_uint32
@@ -283,6 +224,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_display_name
 parameter_list|(
 name|OM_uint32
@@ -305,34 +247,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
-name|_gss_spnego_display_status
-parameter_list|(
-name|OM_uint32
-modifier|*
-comment|/*minor_status*/
-parameter_list|,
-name|OM_uint32
-comment|/*status_value*/
-parameter_list|,
-name|int
-comment|/*status_type*/
-parameter_list|,
-specifier|const
-name|gss_OID
-comment|/*mech_type*/
-parameter_list|,
-name|OM_uint32
-modifier|*
-comment|/*message_context*/
-parameter_list|,
-name|gss_buffer_t
-name|status_string
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_duplicate_name
 parameter_list|(
 name|OM_uint32
@@ -352,6 +267,25 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
+name|_gss_spnego_export_cred
+parameter_list|(
+name|OM_uint32
+modifier|*
+comment|/*minor_status*/
+parameter_list|,
+name|gss_cred_id_t
+comment|/*cred_handle*/
+parameter_list|,
+name|gss_buffer_t
+comment|/*value*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_export_name
 parameter_list|(
 name|OM_uint32
@@ -370,6 +304,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_export_sec_context
 parameter_list|(
 name|OM_uint32
@@ -388,6 +323,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_get_mic
 parameter_list|(
 name|OM_uint32
@@ -413,6 +349,26 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
+name|_gss_spnego_import_cred
+parameter_list|(
+name|OM_uint32
+modifier|*
+comment|/*minor_status*/
+parameter_list|,
+name|gss_buffer_t
+comment|/*value*/
+parameter_list|,
+name|gss_cred_id_t
+modifier|*
+comment|/*cred_handle*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_import_name
 parameter_list|(
 name|OM_uint32
@@ -436,6 +392,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_import_sec_context
 parameter_list|(
 name|OM_uint32
@@ -455,6 +412,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_indicate_mechtypelist
 parameter_list|(
 name|OM_uint32
@@ -479,7 +437,7 @@ name|int
 comment|/*includeMSCompatOID*/
 parameter_list|,
 specifier|const
-name|gssspnego_cred
+name|gss_cred_id_t
 comment|/*cred_handle*/
 parameter_list|,
 name|MechTypeList
@@ -495,6 +453,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_init_sec_context
 parameter_list|(
 name|OM_uint32
@@ -551,6 +510,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_inquire_context
 parameter_list|(
 name|OM_uint32
@@ -594,6 +554,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_inquire_cred
 parameter_list|(
 name|OM_uint32
@@ -625,6 +586,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_inquire_cred_by_mech
 parameter_list|(
 name|OM_uint32
@@ -660,6 +622,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_inquire_cred_by_oid
 parameter_list|(
 name|OM_uint32
@@ -683,6 +646,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_inquire_mechs_for_name
 parameter_list|(
 name|OM_uint32
@@ -702,6 +666,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_inquire_names_for_mech
 parameter_list|(
 name|OM_uint32
@@ -721,6 +686,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_inquire_sec_context_by_oid
 parameter_list|(
 name|OM_uint32
@@ -744,6 +710,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_internal_delete_sec_context
 parameter_list|(
 name|OM_uint32
@@ -762,6 +729,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_process_context_token
 parameter_list|(
 name|OM_uint32
@@ -781,6 +749,35 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
+name|_gss_spnego_pseudo_random
+parameter_list|(
+name|OM_uint32
+modifier|*
+comment|/*minor_status*/
+parameter_list|,
+name|gss_ctx_id_t
+comment|/*context_handle*/
+parameter_list|,
+name|int
+comment|/*prf_key*/
+parameter_list|,
+specifier|const
+name|gss_buffer_t
+comment|/*prf_in*/
+parameter_list|,
+name|ssize_t
+comment|/*desired_output_len*/
+parameter_list|,
+name|gss_buffer_t
+comment|/*prf_out*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_release_cred
 parameter_list|(
 name|OM_uint32
@@ -796,6 +793,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_release_name
 parameter_list|(
 name|OM_uint32
@@ -811,6 +809,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_require_mechlist_mic
 parameter_list|(
 name|OM_uint32
@@ -829,36 +828,31 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
-name|_gss_spnego_seal
+name|GSSAPI_CALLCONV
+name|_gss_spnego_set_cred_option
 parameter_list|(
 name|OM_uint32
 modifier|*
 comment|/*minor_status*/
 parameter_list|,
-name|gss_ctx_id_t
-comment|/*context_handle*/
-parameter_list|,
-name|int
-comment|/*conf_req_flag*/
-parameter_list|,
-name|int
-comment|/*qop_req*/
-parameter_list|,
-name|gss_buffer_t
-comment|/*input_message_buffer*/
-parameter_list|,
-name|int
+name|gss_cred_id_t
 modifier|*
-comment|/*conf_state*/
+comment|/*cred_handle*/
 parameter_list|,
+specifier|const
+name|gss_OID
+comment|/*object*/
+parameter_list|,
+specifier|const
 name|gss_buffer_t
-name|output_message_buffer
+comment|/*value*/
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_set_sec_context_option
 parameter_list|(
 name|OM_uint32
@@ -882,57 +876,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
-name|_gss_spnego_sign
-parameter_list|(
-name|OM_uint32
-modifier|*
-comment|/*minor_status*/
-parameter_list|,
-name|gss_ctx_id_t
-comment|/*context_handle*/
-parameter_list|,
-name|int
-comment|/*qop_req*/
-parameter_list|,
-name|gss_buffer_t
-comment|/*message_buffer*/
-parameter_list|,
-name|gss_buffer_t
-name|message_token
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
-name|_gss_spnego_unseal
-parameter_list|(
-name|OM_uint32
-modifier|*
-comment|/*minor_status*/
-parameter_list|,
-name|gss_ctx_id_t
-comment|/*context_handle*/
-parameter_list|,
-name|gss_buffer_t
-comment|/*input_message_buffer*/
-parameter_list|,
-name|gss_buffer_t
-comment|/*output_message_buffer*/
-parameter_list|,
-name|int
-modifier|*
-comment|/*conf_state*/
-parameter_list|,
-name|int
-modifier|*
-name|qop_state
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_unwrap
 parameter_list|(
 name|OM_uint32
@@ -963,7 +907,8 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
-name|_gss_spnego_verify
+name|GSSAPI_CALLCONV
+name|_gss_spnego_unwrap_iov
 parameter_list|(
 name|OM_uint32
 modifier|*
@@ -972,21 +917,27 @@ parameter_list|,
 name|gss_ctx_id_t
 comment|/*context_handle*/
 parameter_list|,
-name|gss_buffer_t
-comment|/*message_buffer*/
-parameter_list|,
-name|gss_buffer_t
-comment|/*token_buffer*/
-parameter_list|,
 name|int
 modifier|*
-name|qop_state
+comment|/*conf_state*/
+parameter_list|,
+name|gss_qop_t
+modifier|*
+comment|/*qop_state*/
+parameter_list|,
+name|gss_iov_buffer_desc
+modifier|*
+comment|/*iov*/
+parameter_list|,
+name|int
+comment|/*iov_count*/
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_verify_mic
 parameter_list|(
 name|OM_uint32
@@ -1014,6 +965,7 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_wrap
 parameter_list|(
 name|OM_uint32
@@ -1046,6 +998,71 @@ end_function_decl
 
 begin_function_decl
 name|OM_uint32
+name|GSSAPI_CALLCONV
+name|_gss_spnego_wrap_iov
+parameter_list|(
+name|OM_uint32
+modifier|*
+comment|/*minor_status*/
+parameter_list|,
+name|gss_ctx_id_t
+comment|/*context_handle*/
+parameter_list|,
+name|int
+comment|/*conf_req_flag*/
+parameter_list|,
+name|gss_qop_t
+comment|/*qop_req*/
+parameter_list|,
+name|int
+modifier|*
+comment|/*conf_state*/
+parameter_list|,
+name|gss_iov_buffer_desc
+modifier|*
+comment|/*iov*/
+parameter_list|,
+name|int
+comment|/*iov_count*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|GSSAPI_CALLCONV
+name|_gss_spnego_wrap_iov_length
+parameter_list|(
+name|OM_uint32
+modifier|*
+comment|/*minor_status*/
+parameter_list|,
+name|gss_ctx_id_t
+comment|/*context_handle*/
+parameter_list|,
+name|int
+comment|/*conf_req_flag*/
+parameter_list|,
+name|gss_qop_t
+comment|/*qop_req*/
+parameter_list|,
+name|int
+modifier|*
+comment|/*conf_state*/
+parameter_list|,
+name|gss_iov_buffer_desc
+modifier|*
+comment|/*iov*/
+parameter_list|,
+name|int
+comment|/*iov_count*/
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|OM_uint32
+name|GSSAPI_CALLCONV
 name|_gss_spnego_wrap_size_limit
 parameter_list|(
 name|OM_uint32

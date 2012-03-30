@@ -346,6 +346,16 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Optional ACPI methods for suspend and resume, e.g., _GTS and _BFS. */
+end_comment
+
+begin_decl_stmt
+name|int
+name|acpi_sleep_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* Supported sleep states. */
 end_comment
 
@@ -1900,6 +1910,44 @@ literal|"debug.acpi.quirks"
 argument_list|,
 operator|&
 name|acpi_quirks
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/* Execute optional ACPI methods for suspend and resume. */
+end_comment
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.acpi.sleep_flags"
+argument_list|,
+operator|&
+name|acpi_sleep_flags
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_debug_acpi
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|sleep_flags
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
+argument_list|,
+operator|&
+name|acpi_sleep_flags
+argument_list|,
+literal|0
+argument_list|,
+literal|"Execute optional ACPI methods for suspend/resume."
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -9003,6 +9051,9 @@ operator|*
 operator|)
 name|arg
 decl_stmt|;
+name|register_t
+name|intr
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -9058,7 +9109,9 @@ argument_list|,
 literal|"Powering system off\n"
 argument_list|)
 expr_stmt|;
-name|ACPI_DISABLE_IRQS
+name|intr
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|status
@@ -9066,6 +9119,8 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|ACPI_STATE_S5
+argument_list|,
+name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 if|if
@@ -9075,6 +9130,12 @@ argument_list|(
 name|status
 argument_list|)
 condition|)
+block|{
+name|intr_restore
+argument_list|(
+name|intr
+argument_list|)
+expr_stmt|;
 name|device_printf
 argument_list|(
 name|sc
@@ -9089,11 +9150,17 @@ name|status
 argument_list|)
 argument_list|)
 expr_stmt|;
+block|}
 else|else
 block|{
 name|DELAY
 argument_list|(
 literal|1000000
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|intr
 argument_list|)
 expr_stmt|;
 name|device_printf
@@ -11765,6 +11832,9 @@ name|int
 name|state
 parameter_list|)
 block|{
+name|register_t
+name|intr
+decl_stmt|;
 name|ACPI_STATUS
 name|status
 decl_stmt|;
@@ -12054,7 +12124,9 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|ACPI_DISABLE_IRQS
+name|intr
+operator|=
+name|intr_disable
 argument_list|()
 expr_stmt|;
 name|status
@@ -12062,6 +12134,13 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|state
+argument_list|,
+name|acpi_sleep_flags
+argument_list|)
+expr_stmt|;
+name|intr_restore
+argument_list|(
+name|intr
 argument_list|)
 expr_stmt|;
 if|if
@@ -12127,6 +12206,8 @@ block|{
 name|AcpiLeaveSleepStatePrep
 argument_list|(
 name|state
+argument_list|,
+name|acpi_sleep_flags
 argument_list|)
 expr_stmt|;
 name|AcpiLeaveSleepState
@@ -15635,6 +15716,12 @@ block|{
 literal|"ACPI_LV_INFO"
 block|,
 name|ACPI_LV_INFO
+block|}
+block|,
+block|{
+literal|"ACPI_LV_REPAIR"
+block|,
+name|ACPI_LV_REPAIR
 block|}
 block|,
 block|{

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2000, 2003-2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2000, 2003-2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: password_quality.c 17595 2006-05-30 21:51:55Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -245,8 +245,6 @@ literal|"!@#$%^&*()/?<>,.{[]}\\|'~`\" "
 block|}
 decl_stmt|;
 name|int
-name|i
-decl_stmt|,
 name|counter
 init|=
 literal|0
@@ -254,6 +252,8 @@ decl_stmt|,
 name|req_classes
 decl_stmt|;
 name|size_t
+name|i
+decl_stmt|,
 name|len
 decl_stmt|;
 name|char
@@ -498,11 +498,11 @@ name|pwd
 operator|->
 name|data
 argument_list|,
+literal|'\n'
+argument_list|,
 name|pwd
 operator|->
 name|length
-argument_list|,
-literal|'\n'
 argument_list|)
 operator|!=
 name|NULL
@@ -600,6 +600,8 @@ name|out
 argument_list|,
 operator|&
 name|error
+argument_list|,
+name|program
 argument_list|,
 name|program
 argument_list|,
@@ -749,14 +751,9 @@ argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
-name|waitpid
+name|wait_for_process
 argument_list|(
 name|child
-argument_list|,
-operator|&
-name|status
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 return|return
@@ -785,50 +782,21 @@ argument_list|(
 name|error
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|waitpid
+name|status
+operator|=
+name|wait_for_process
 argument_list|(
 name|child
-argument_list|,
-operator|&
-name|status
-argument_list|,
-literal|0
-argument_list|)
-operator|<
-literal|0
-condition|)
-block|{
-name|snprintf
-argument_list|(
-name|message
-argument_list|,
-name|length
-argument_list|,
-literal|"external program failed: %s"
-argument_list|,
-name|reply
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|p
-argument_list|)
-expr_stmt|;
-return|return
-literal|1
-return|;
-block|}
 if|if
 condition|(
-operator|!
-name|WIFEXITED
+name|SE_IS_ERROR
 argument_list|(
 name|status
 argument_list|)
 operator|||
-name|WEXITSTATUS
+name|SE_PROCSTATUS
 argument_list|(
 name|status
 argument_list|)
@@ -934,6 +902,8 @@ name|external_passwd_quality
 block|}
 block|,
 block|{
+name|NULL
+block|,
 name|NULL
 block|}
 block|}
@@ -1150,6 +1120,10 @@ return|return;
 block|}
 name|version
 operator|=
+operator|(
+name|int
+operator|*
+operator|)
 name|dlsym
 argument_list|(
 name|handle
@@ -1321,6 +1295,11 @@ return|;
 block|}
 name|v
 operator|=
+operator|(
+expr|struct
+name|kadm5_pw_policy_verifier
+operator|*
+operator|)
 name|dlsym
 argument_list|(
 name|handle
@@ -1564,12 +1543,18 @@ condition|(
 name|tmp
 operator|==
 name|NULL
+operator|||
+operator|*
+name|tmp
+operator|==
+name|NULL
 condition|)
 return|return
 literal|0
 return|;
 while|while
 condition|(
+operator|*
 name|tmp
 condition|)
 block|{
@@ -1594,7 +1579,12 @@ name|tmp
 operator|++
 expr_stmt|;
 block|}
+return|return
+literal|0
+return|;
 block|}
+else|else
+block|{
 return|return
 name|add_verifier
 argument_list|(
@@ -1603,6 +1593,7 @@ argument_list|,
 name|check_library
 argument_list|)
 return|;
+block|}
 else|#
 directive|else
 return|return
@@ -1672,6 +1663,15 @@ condition|(
 name|p
 condition|)
 block|{
+name|size_t
+name|len
+init|=
+name|p
+operator|-
+name|name
+operator|+
+literal|1
+decl_stmt|;
 name|func
 operator|=
 name|p
@@ -1680,13 +1680,9 @@ literal|1
 expr_stmt|;
 name|module
 operator|=
-name|strndup
+name|malloc
 argument_list|(
-name|name
-argument_list|,
-name|p
-operator|-
-name|name
+name|len
 argument_list|)
 expr_stmt|;
 if|if
@@ -1698,6 +1694,15 @@ condition|)
 return|return
 name|NULL
 return|;
+name|strlcpy
+argument_list|(
+name|module
+argument_list|,
+name|name
+argument_list|,
+name|len
+argument_list|)
+expr_stmt|;
 block|}
 else|else
 name|func
@@ -1760,7 +1765,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|name
+name|func
 argument_list|,
 name|f
 operator|->
@@ -1943,9 +1948,11 @@ argument_list|,
 name|pwd_data
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+literal|0
 argument_list|,
 literal|"password policy failed: %s"
 argument_list|,
@@ -2001,9 +2008,11 @@ name|msg
 operator|=
 literal|"failed to find password verifier function"
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+literal|0
 argument_list|,
 literal|"Failed to find password policy "
 literal|"function: %s"
@@ -2043,9 +2052,11 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+literal|0
 argument_list|,
 literal|"Password policy "
 literal|"%s failed with %s"
@@ -2099,9 +2110,11 @@ if|if
 condition|(
 name|msg
 condition|)
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+literal|0
 argument_list|,
 literal|"(old) password policy "
 literal|"failed with %s"

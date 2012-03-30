@@ -264,6 +264,11 @@ decl_stmt|;
 name|uint8_t
 name|index
 decl_stmt|;
+name|struct
+name|ISCI_REMOTE_DEVICE
+modifier|*
+name|da_remote_device
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -346,6 +351,9 @@ index|]
 decl_stmt|;
 name|BOOL
 name|is_started
+decl_stmt|;
+name|BOOL
+name|has_been_scanned
 decl_stmt|;
 name|uint32_t
 name|initial_discovery_mask

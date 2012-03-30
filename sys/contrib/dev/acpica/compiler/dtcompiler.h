@@ -422,6 +422,17 @@ comment|/* dtio - binary and text input/output */
 end_comment
 
 begin_function_decl
+name|UINT32
+name|DtGetNextLine
+parameter_list|(
+name|FILE
+modifier|*
+name|Handle
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|DT_FIELD
 modifier|*
 name|DtScanFile

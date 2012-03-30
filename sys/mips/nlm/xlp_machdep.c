@@ -373,7 +373,7 @@ begin_decl_stmt
 name|uint64_t
 name|xlp_io_base
 init|=
-name|MIPS_PHYS_TO_KSEG1
+name|MIPS_PHYS_TO_DIRECT_UNCACHED
 argument_list|(
 name|XLP_DEFAULT_IO_BASE
 argument_list|)
@@ -747,7 +747,7 @@ goto|goto
 name|unsupp
 goto|;
 block|}
-comment|/* Take out cores which do not exist on chip */
+comment|/* Try to find the enabled cores from SYS block */
 name|sysbase
 operator|=
 name|nlm_get_sys_regbase
@@ -766,6 +766,19 @@ argument_list|)
 operator|&
 literal|0xff
 expr_stmt|;
+comment|/* XLP 416 does not report this correctly, fix */
+if|if
+condition|(
+name|nlm_processor_id
+argument_list|()
+operator|==
+name|CHIP_PROCESSOR_ID_XLP_416
+condition|)
+name|cpu_rst_mask
+operator|=
+literal|0xe
+expr_stmt|;
+comment|/* Take out cores which do not exist on chip */
 for|for
 control|(
 name|i
@@ -1543,6 +1556,12 @@ expr_stmt|;
 name|pmap_bootstrap
 argument_list|()
 expr_stmt|;
+name|mips_proc0_init
+argument_list|()
+expr_stmt|;
+name|mutex_init
+argument_list|()
+expr_stmt|;
 ifdef|#
 directive|ifdef
 name|DDB
@@ -1566,12 +1585,6 @@ expr_stmt|;
 block|}
 endif|#
 directive|endif
-name|mips_proc0_init
-argument_list|()
-expr_stmt|;
-name|mutex_init
-argument_list|()
-expr_stmt|;
 block|}
 end_function
 
@@ -1933,14 +1946,22 @@ argument_list|(
 operator|&
 name|_end
 argument_list|)
+expr_stmt|;
+name|base
+operator|=
+name|round_page
+argument_list|(
+name|base
+argument_list|)
 operator|+
 literal|0x20000
 expr_stmt|;
+comment|/* round up */
+comment|/* TODO : hack to avoid uboot packet mem, network 			 * interface will write here if not reset correctly 			 * by u-boot */
 name|lim
 operator|=
 literal|0x0c000000
 expr_stmt|;
-comment|/* TODO : hack to avoid uboot packet mem */
 block|}
 if|if
 condition|(
@@ -2027,14 +2048,10 @@ comment|/* 		 * Exclude reset entry memory range 0x1fc00000 - 0x20000000 		 * fr
 if|if
 condition|(
 name|base
-operator|<=
-literal|0x1fc00000
+operator|<
+literal|0x20000000
 operator|&&
-operator|(
-name|base
-operator|+
 name|lim
-operator|)
 operator|>
 literal|0x1fc00000
 condition|)
@@ -2308,10 +2325,6 @@ name|RB_MULTIPLE
 operator|)
 expr_stmt|;
 comment|/* Use multiple consoles */
-name|nlm_pic_irt_init
-argument_list|()
-expr_stmt|;
-comment|/* complete before interrupts or console init */
 name|init_static_kenv
 argument_list|(
 name|boot1_env
@@ -2332,6 +2345,8 @@ name|xlp_cpu_frequency
 operator|=
 name|xlp_get_cpu_frequency
 argument_list|(
+literal|0
+argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
@@ -2390,14 +2405,15 @@ comment|/* setup for the startup core */
 name|xlp_setup_mmu
 argument_list|()
 expr_stmt|;
+comment|/* Read/Guess/setup board information */
+name|nlm_board_info_setup
+argument_list|()
+expr_stmt|;
 comment|/* MIPS generic init */
 name|mips_init
 argument_list|()
 expr_stmt|;
 comment|/* 	 * XLP specific post initialization  	 * initialize other on chip stuff 	 */
-name|nlm_board_info_setup
-argument_list|()
-expr_stmt|;
 name|xlp_pic_init
 argument_list|()
 expr_stmt|;

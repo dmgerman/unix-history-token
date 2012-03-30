@@ -353,6 +353,31 @@ name|PMC_EV_TSC_LAST
 value|PMC_EV_TSC_TSC
 end_define
 
+begin_comment
+comment|/*  * Software events are dynamicaly defined.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_DYN_COUNT
+value|0x1000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_SOFT_FIRST
+value|0x20000
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_SOFT_LAST
+value|(PMC_EV_SOFT_FIRST + PMC_EV_DYN_COUNT - 1)
+end_define
+
 begin_define
 define|#
 directive|define
@@ -480,6 +505,33 @@ name|PMC_EV_MIPS24K_LAST
 value|PMC_EV_MIPS24K_WBB_FULL_PIPELINE_STALLS
 end_define
 
+begin_comment
+comment|/*  * Cavium Octeon counters. Obtained from cvmx-core.h  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__PMC_EV_OCTEON
+parameter_list|()
+define|\
+value|__PMC_EV(OCTEON, CLK)                         \     __PMC_EV(OCTEON, ISSUE)                       \     __PMC_EV(OCTEON, RET)                         \     __PMC_EV(OCTEON, NISSUE)                      \     __PMC_EV(OCTEON, SISSUE)                      \     __PMC_EV(OCTEON, DISSUE)                      \     __PMC_EV(OCTEON, IFI)                         \     __PMC_EV(OCTEON, BR)                          \     __PMC_EV(OCTEON, BRMIS)                       \     __PMC_EV(OCTEON, J)                           \     __PMC_EV(OCTEON, JMIS)                        \     __PMC_EV(OCTEON, REPLAY)                      \     __PMC_EV(OCTEON, IUNA)                        \     __PMC_EV(OCTEON, TRAP)                        \     __PMC_EV(OCTEON, UULOAD)                      \     __PMC_EV(OCTEON, UUSTORE)                     \     __PMC_EV(OCTEON, ULOAD)                       \     __PMC_EV(OCTEON, USTORE)                      \     __PMC_EV(OCTEON, EC)                          \     __PMC_EV(OCTEON, MC)                          \     __PMC_EV(OCTEON, CC)                          \     __PMC_EV(OCTEON, CSRC)                        \     __PMC_EV(OCTEON, CFETCH)                      \     __PMC_EV(OCTEON, CPREF)                       \     __PMC_EV(OCTEON, ICA)                         \     __PMC_EV(OCTEON, II)                          \     __PMC_EV(OCTEON, IP)                          \     __PMC_EV(OCTEON, CIMISS)                      \     __PMC_EV(OCTEON, WBUF)                        \     __PMC_EV(OCTEON, WDAT)                        \     __PMC_EV(OCTEON, WBUFLD)                      \     __PMC_EV(OCTEON, WBUFFL)                      \     __PMC_EV(OCTEON, WBUFTR)                      \     __PMC_EV(OCTEON, BADD)                        \     __PMC_EV(OCTEON, BADDL2)                      \     __PMC_EV(OCTEON, BFILL)                       \     __PMC_EV(OCTEON, DDIDS)                       \     __PMC_EV(OCTEON, IDIDS)                       \     __PMC_EV(OCTEON, DIDNA)                       \     __PMC_EV(OCTEON, LDS)                         \     __PMC_EV(OCTEON, LMLDS)                       \     __PMC_EV(OCTEON, IOLDS)                       \     __PMC_EV(OCTEON, DMLDS)                       \     __PMC_EV(OCTEON, STS)                         \     __PMC_EV(OCTEON, LMSTS)                       \     __PMC_EV(OCTEON, IOSTS)                       \     __PMC_EV(OCTEON, IOBDMA)                      \     __PMC_EV(OCTEON, DTLB)                        \     __PMC_EV(OCTEON, DTLBAD)                      \     __PMC_EV(OCTEON, ITLB)                        \     __PMC_EV(OCTEON, SYNC)                        \     __PMC_EV(OCTEON, SYNCIOB)                     \     __PMC_EV(OCTEON, SYNCW)
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_OCTEON_FIRST
+value|PMC_EV_OCTEON_CLK
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_EV_OCTEON_LAST
+value|PMC_EV_OCTEON_SYNCW
+end_define
+
 begin_define
 define|#
 directive|define
@@ -504,7 +556,7 @@ value|PMC_EV_PPC7450_PREFETCH_ENGINE_FULL
 end_define
 
 begin_comment
-comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  * 0x11200	0x00FF		INTEL XScale events  * 0x11300      0x00FF          MIPS 24K events  */
+comment|/*  * All known PMC events.  *  * PMC event numbers are allocated sparsely to allow new PMC events to  * be added to a PMC class without breaking ABI compatibility.  The  * current allocation scheme is:  *  * START	#EVENTS		DESCRIPTION  * 0		0x1000		Reserved  * 0x1000	0x0001		TSC  * 0x2000	0x0080		AMD K7 events  * 0x2080	0x0100		AMD K8 events  * 0x10000	0x0080		INTEL architectural fixed-function events  * 0x10080	0x0F80		INTEL architectural programmable events  * 0x11000	0x0080		INTEL Pentium 4 events  * 0x11080	0x0080		INTEL Pentium MMX events  * 0x11100	0x0100		INTEL Pentium Pro/P-II/P-III/Pentium-M events  * 0x11200	0x00FF		INTEL XScale events  * 0x11300      0x00FF          MIPS 24K events  * 0x20000	0x1000		Software events  */
 end_comment
 
 begin_define
@@ -513,14 +565,14 @@ directive|define
 name|__PMC_EVENTS
 parameter_list|()
 define|\
-value|__PMC_EV_BLOCK(TSC,	0x01000)	\ 	__PMC_EV_TSC()				\ 	__PMC_EV_BLOCK(K7,	0x2000)		\ 	__PMC_EV_K7()				\ 	__PMC_EV_BLOCK(K8,	0x2080)		\ 	__PMC_EV_K8()				\ 	__PMC_EV_BLOCK(IAF,	0x10000)	\ 	__PMC_EV_IAF()				\ 	__PMC_EV_BLOCK(IAP,	0x10080)	\ 	__PMC_EV_IAP()				\ 	__PMC_EV_BLOCK(P4,	0x11000)	\ 	__PMC_EV_P4()				\ 	__PMC_EV_BLOCK(P5,	0x11080)	\ 	__PMC_EV_P5()				\ 	__PMC_EV_BLOCK(P6,	0x11100)	\ 	__PMC_EV_P6()				\ 	__PMC_EV_BLOCK(XSCALE,	0x11200)	\ 	__PMC_EV_XSCALE()                       \ 	__PMC_EV_BLOCK(MIPS24K,	0x11300)	\ 	__PMC_EV_MIPS24K()			\ 	__PMC_EV_BLOCK(UCF,	0x12000)	\ 	__PMC_EV_UCF()				\ 	__PMC_EV_BLOCK(UCP,	0x12080)	\ 	__PMC_EV_UCP()				\ 	__PMC_EV_BLOCK(PPC7450,	0x13000)	\ 	__PMC_EV_PPC7450()			\  #define	PMC_EVENT_FIRST	PMC_EV_TSC_TSC
+value|__PMC_EV_BLOCK(TSC,	0x01000)	\ 	__PMC_EV_TSC()				\ 	__PMC_EV_BLOCK(K7,	0x2000)		\ 	__PMC_EV_K7()				\ 	__PMC_EV_BLOCK(K8,	0x2080)		\ 	__PMC_EV_K8()				\ 	__PMC_EV_BLOCK(IAF,	0x10000)	\ 	__PMC_EV_IAF()				\ 	__PMC_EV_BLOCK(IAP,	0x10080)	\ 	__PMC_EV_IAP()				\ 	__PMC_EV_BLOCK(P4,	0x11000)	\ 	__PMC_EV_P4()				\ 	__PMC_EV_BLOCK(P5,	0x11080)	\ 	__PMC_EV_P5()				\ 	__PMC_EV_BLOCK(P6,	0x11100)	\ 	__PMC_EV_P6()				\ 	__PMC_EV_BLOCK(XSCALE,	0x11200)	\ 	__PMC_EV_XSCALE()                       \ 	__PMC_EV_BLOCK(MIPS24K,	0x11300)	\ 	__PMC_EV_MIPS24K()			\ 	__PMC_EV_BLOCK(OCTEON,	0x11400)	\ 	__PMC_EV_OCTEON()			\ 	__PMC_EV_BLOCK(UCF,	0x12000)	\ 	__PMC_EV_UCF()				\ 	__PMC_EV_BLOCK(UCP,	0x12080)	\ 	__PMC_EV_UCP()				\ 	__PMC_EV_BLOCK(PPC7450,	0x13000)	\ 	__PMC_EV_PPC7450()			\  #define	PMC_EVENT_FIRST	PMC_EV_TSC_TSC
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_EVENT_LAST
-value|PMC_EV_UCP_LAST
+value|PMC_EV_SOFT_LAST
 end_define
 
 begin_endif

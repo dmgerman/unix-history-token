@@ -270,6 +270,8 @@ name|ASL_MSG_OUTPUT_FILENAME
 block|,
 name|ASL_MSG_PACKAGE_LENGTH
 block|,
+name|ASL_MSG_PREPROCESSOR_FILENAME
+block|,
 name|ASL_MSG_READ
 block|,
 name|ASL_MSG_RECURSION
@@ -347,6 +349,25 @@ block|,
 name|ASL_MSG_VENDOR_LIST
 block|,
 name|ASL_MSG_WRITE
+block|,
+comment|/* These messages are used by the Preprocessor only */
+name|ASL_MSG_DIRECTIVE_SYNTAX
+block|,
+name|ASL_MSG_ENDIF_MISMATCH
+block|,
+name|ASL_MSG_ERROR_DIRECTIVE
+block|,
+name|ASL_MSG_EXISTING_NAME
+block|,
+name|ASL_MSG_INVALID_INVOCATION
+block|,
+name|ASL_MSG_MACRO_SYNTAX
+block|,
+name|ASL_MSG_TOO_MANY_ARGUMENTS
+block|,
+name|ASL_MSG_UNKNOWN_DIRECTIVE
+block|,
+name|ASL_MSG_UNKNOWN_PRAGMA
 block|,
 comment|/* These messages are used by the data table compiler only */
 name|ASL_MSG_BUFFER_ELEMENT
@@ -684,6 +705,9 @@ block|,
 comment|/*    ASL_MSG_PACKAGE_LENGTH */
 literal|"Effective AML package length is zero"
 block|,
+comment|/*    ASL_MSG_PREPROCESSOR_FILENAME */
+literal|"Could not create preprocessor filename"
+block|,
 comment|/*    ASL_MSG_READ */
 literal|"Could not read file"
 block|,
@@ -801,7 +825,35 @@ block|,
 comment|/*    ASL_MSG_WRITE */
 literal|"Could not write file"
 block|,
-comment|/* These messages are used by the data table compiler only */
+comment|/* Preprocessor */
+comment|/*    ASL_MSG_DIRECTIVE_SYNTAX */
+literal|"Invalid directive syntax"
+block|,
+comment|/*    ASL_MSG_ENDIF_MISMATCH */
+literal|"Mismatched #endif"
+block|,
+comment|/*    ASL_MSG_ERROR_DIRECTIVE */
+literal|"#error"
+block|,
+comment|/*    ASL_MSG_EXISTING_NAME */
+literal|"Name is already defined"
+block|,
+comment|/*    ASL_MSG_INVALID_INVOCATION */
+literal|"Invalid macro invocation"
+block|,
+comment|/*    ASL_MSG_MACRO_SYNTAX */
+literal|"Invalid macro syntax"
+block|,
+comment|/*    ASL_MSG_TOO_MANY_ARGUMENTS */
+literal|"Too many macro arguments"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_DIRECTIVE */
+literal|"Unknown directive"
+block|,
+comment|/*    ASL_MSG_UNKNOWN_PRAGMA */
+literal|"Unknown pragma"
+block|,
+comment|/* Table compiler */
 comment|/*    ASL_MSG_BUFFER_ELEMENT */
 literal|"Invalid element in buffer initializer list"
 block|,

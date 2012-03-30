@@ -34,6 +34,13 @@ begin_define
 define|#
 directive|define
 name|IPFW_TABLES_MAX
+value|65535
+end_define
+
+begin_define
+define|#
+directive|define
+name|IPFW_TABLES_DEFAULT
 value|128
 end_define
 

@@ -1563,6 +1563,43 @@ value|0xFF
 end_define
 
 begin_comment
+comment|/*  * Sleep/Wake flags  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_NO_OPTIONAL_METHODS
+value|0x00
+end_define
+
+begin_comment
+comment|/* Do not execute any optional methods */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXECUTE_GTS
+value|0x01
+end_define
+
+begin_comment
+comment|/* For enter sleep interface */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|ACPI_EXECUTE_BFS
+value|0x02
+end_define
+
+begin_comment
+comment|/* For leave sleep prep interface */
+end_comment
+
+begin_comment
 comment|/*  * Standard notify values  */
 end_comment
 
@@ -2633,6 +2670,9 @@ function_decl|)
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_typedef

@@ -283,6 +283,12 @@ name|r_info
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|req
+operator|.
+name|flags
+operator|=
+name|SYMLOOK_EARLY
+expr_stmt|;
 for|for
 control|(
 name|srcobj
@@ -584,6 +590,9 @@ name|SymCache
 modifier|*
 name|cache
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -660,7 +669,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -805,7 +814,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -854,7 +863,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -969,7 +978,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -1055,6 +1064,9 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 name|obj_rtld
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|RtldLockState
 modifier|*
@@ -1186,6 +1198,8 @@ name|rela
 argument_list|,
 name|cache
 argument_list|,
+name|flags
+argument_list|,
 name|lockstate
 argument_list|)
 operator|<
@@ -1296,7 +1310,7 @@ name|obj
 operator|->
 name|priv
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|obj
 operator|->
@@ -1518,6 +1532,9 @@ name|Obj_Entry
 modifier|*
 name|obj
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -1631,7 +1648,9 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|true
+name|SYMLOOK_IN_PLT
+operator||
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -1920,6 +1939,9 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|Struct_RtldLockState

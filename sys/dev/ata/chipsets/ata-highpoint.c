@@ -274,14 +274,17 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
 name|idx
 decl_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|ata_chip_id
+specifier|const
 name|ids
 index|[]
 init|=
@@ -912,7 +915,9 @@ operator|)
 operator|+
 name|target
 decl_stmt|;
-name|u_int32_t
+specifier|static
+specifier|const
+name|uint32_t
 name|timings33
 index|[]
 index|[
@@ -920,7 +925,7 @@ literal|4
 index|]
 init|=
 block|{
-comment|/*    HPT366      HPT370      HPT372      HPT374               mode */
+comment|/*    HPT366      HPT370      HPT372      HPT374           mode */
 block|{
 literal|0x40d0a7aa
 block|,

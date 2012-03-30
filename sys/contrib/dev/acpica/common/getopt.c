@@ -40,13 +40,14 @@ end_include
 begin_define
 define|#
 directive|define
-name|ERR
+name|ACPI_OPTION_ERROR
 parameter_list|(
-name|szz
+name|msg
 parameter_list|,
-name|czz
+name|badchar
 parameter_list|)
-value|if(AcpiGbl_Opterr){fprintf(stderr,"%s%s%c\n",argv[0],szz,czz);}
+define|\
+value|if (AcpiGbl_Opterr) {fprintf (stderr, "%s%c\n", msg, badchar);}
 end_define
 
 begin_decl_stmt
@@ -204,9 +205,9 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|ERR
+name|ACPI_OPTION_ERROR
 argument_list|(
-literal|": illegal option -- "
+literal|"Illegal option: -"
 argument_list|,
 name|CurrentChar
 argument_list|)
@@ -298,9 +299,9 @@ operator|>=
 name|argc
 condition|)
 block|{
-name|ERR
+name|ACPI_OPTION_ERROR
 argument_list|(
-literal|": option requires an argument -- "
+literal|"Option requires an argument: -"
 argument_list|,
 name|CurrentChar
 argument_list|)
@@ -386,6 +387,82 @@ name|AcpiGbl_Optarg
 operator|=
 literal|"^"
 expr_stmt|;
+block|}
+name|AcpiGbl_Optind
+operator|++
+expr_stmt|;
+name|CurrentCharPtr
+operator|=
+literal|1
+expr_stmt|;
+block|}
+comment|/* Option has a required single-char argument? */
+elseif|else
+if|if
+condition|(
+operator|*
+name|OptsPtr
+operator|==
+literal|'|'
+condition|)
+block|{
+if|if
+condition|(
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+index|[
+call|(
+name|int
+call|)
+argument_list|(
+name|CurrentCharPtr
+operator|+
+literal|1
+argument_list|)
+index|]
+operator|!=
+literal|'\0'
+condition|)
+block|{
+name|AcpiGbl_Optarg
+operator|=
+operator|&
+name|argv
+index|[
+name|AcpiGbl_Optind
+index|]
+index|[
+call|(
+name|int
+call|)
+argument_list|(
+name|CurrentCharPtr
+operator|+
+literal|1
+argument_list|)
+index|]
+expr_stmt|;
+block|}
+else|else
+block|{
+name|ACPI_OPTION_ERROR
+argument_list|(
+literal|"Option requires a single-character suboption: -"
+argument_list|,
+name|CurrentChar
+argument_list|)
+expr_stmt|;
+name|CurrentCharPtr
+operator|=
+literal|1
+expr_stmt|;
+return|return
+operator|(
+literal|'?'
+operator|)
+return|;
 block|}
 name|AcpiGbl_Optind
 operator|++

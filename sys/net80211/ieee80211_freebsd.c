@@ -2842,13 +2842,13 @@ name|i_addr2
 argument_list|,
 literal|"%s replay detected tid %d<rsc %ju, csc %ju, keyix %u rxkeyix %u>"
 argument_list|,
-name|tid
-argument_list|,
 name|k
 operator|->
 name|wk_cipher
 operator|->
 name|ic_name
+argument_list|,
+name|tid
 argument_list|,
 operator|(
 name|intmax_t

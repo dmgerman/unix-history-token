@@ -34,7 +34,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExecuteSleepMethod  *  * PARAMETERS:  MethodName          - Pathname of method to execute  *              IntegerArgument     - Argument to pass to the method  *  * RETURN:      None  *  * DESCRIPTION: Execute a sleep/wake related method with one integer argument  *              and no return value.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExecuteSleepMethod  *  * PARAMETERS:  MethodPathname      - Pathname of method to execute  *              IntegerArgument     - Argument to pass to the method  *  * RETURN:      None  *  * DESCRIPTION: Execute a sleep/wake related method with one integer argument  *              and no return value.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -43,7 +43,7 @@ name|AcpiHwExecuteSleepMethod
 parameter_list|(
 name|char
 modifier|*
-name|MethodName
+name|MethodPathname
 parameter_list|,
 name|UINT32
 name|IntegerArgument
@@ -100,7 +100,7 @@ name|AcpiEvaluateObject
 argument_list|(
 name|NULL
 argument_list|,
-name|MethodName
+name|MethodPathname
 argument_list|,
 operator|&
 name|ArgList
@@ -129,7 +129,7 @@ name|Status
 operator|,
 literal|"While executing method %s"
 operator|,
-name|MethodName
+name|MethodPathname
 operator|)
 argument_list|)
 expr_stmt|;
@@ -140,7 +140,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedSleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the extended FADT sleep  *              registers (V5 FADT).  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedSleep  *  * PARAMETERS:  SleepState          - Which sleep state to enter  *              Flags               - ACPI_EXECUTE_GTS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Enter a system sleep state via the extended FADT sleep  *              registers (V5 FADT).  *              THIS FUNCTION MUST BE CALLED WITH INTERRUPTS DISABLED  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -149,6 +149,9 @@ name|AcpiHwExtendedSleep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -220,14 +223,22 @@ name|AcpiGbl_SystemAwakeAndRunning
 operator|=
 name|FALSE
 expr_stmt|;
-comment|/* Execute the _GTS method (Going To Sleep) */
+comment|/* Optionally execute _GTS (Going To Sleep) */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EXECUTE_GTS
+condition|)
+block|{
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__GTS
+name|METHOD_PATHNAME__GTS
 argument_list|,
 name|SleepState
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Flush caches, as per ACPI specification */
 name|ACPI_FLUSH_CPU_CACHE
 argument_list|()
@@ -341,7 +352,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform first part of OS-independent ACPI cleanup after  *              a sleep. Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWakePrep  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - ACPI_EXECUTE_BFS to run optional method  *  * RETURN:      Status  *  * DESCRIPTION: Perform first part of OS-independent ACPI cleanup after  *              a sleep. Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -350,6 +361,9 @@ name|AcpiHwExtendedWakePrep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_STATUS
@@ -414,13 +428,22 @@ name|SleepControl
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Optionally execute _BFS (Back From Sleep) */
+if|if
+condition|(
+name|Flags
+operator|&
+name|ACPI_EXECUTE_BFS
+condition|)
+block|{
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__BFS
+name|METHOD_PATHNAME__BFS
 argument_list|,
 name|SleepState
 argument_list|)
 expr_stmt|;
+block|}
 name|return_ACPI_STATUS
 argument_list|(
 name|AE_OK
@@ -430,7 +453,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
+comment|/*******************************************************************************  *  * FUNCTION:    AcpiHwExtendedWake  *  * PARAMETERS:  SleepState          - Which sleep state we just exited  *              Flags               - Reserved, set to zero  *  * RETURN:      Status  *  * DESCRIPTION: Perform OS-independent ACPI cleanup after a sleep  *              Called with interrupts ENABLED.  *  ******************************************************************************/
 end_comment
 
 begin_function
@@ -439,6 +462,9 @@ name|AcpiHwExtendedWake
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 block|{
 name|ACPI_FUNCTION_TRACE
@@ -454,14 +480,14 @@ expr_stmt|;
 comment|/* Execute the wake methods */
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__SST
+name|METHOD_PATHNAME__SST
 argument_list|,
 name|ACPI_SST_WAKING
 argument_list|)
 expr_stmt|;
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__WAK
+name|METHOD_PATHNAME__WAK
 argument_list|,
 name|SleepState
 argument_list|)
@@ -486,7 +512,7 @@ name|TRUE
 expr_stmt|;
 name|AcpiHwExecuteSleepMethod
 argument_list|(
-name|METHOD_NAME__SST
+name|METHOD_PATHNAME__SST
 argument_list|,
 name|ACPI_SST_WORKING
 argument_list|)

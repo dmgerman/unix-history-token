@@ -27,7 +27,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_CA_VERSION
-value|0x20120215
+value|0x20120320
 end_define
 
 begin_include
@@ -1460,6 +1460,9 @@ name|AcpiEnterSleepState
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1477,6 +1480,9 @@ name|AcpiLeaveSleepStatePrep
 parameter_list|(
 name|UINT8
 name|SleepState
+parameter_list|,
+name|UINT8
+name|Flags
 parameter_list|)
 function_decl|;
 end_function_decl

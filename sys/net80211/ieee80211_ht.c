@@ -6768,7 +6768,7 @@ end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|htinfo_update_chw
 parameter_list|(
 name|struct
@@ -6796,6 +6796,11 @@ name|c
 decl_stmt|;
 name|int
 name|chanflags
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|chanflags
 operator|=
@@ -6925,6 +6930,10 @@ name|ni_chan
 operator|=
 name|c
 expr_stmt|;
+name|ret
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* NB: caller responsible for forcing any channel change */
 block|}
@@ -6944,6 +6953,11 @@ literal|40
 else|:
 literal|20
 expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
@@ -7137,7 +7151,7 @@ comment|/*  * Parse and update HT-related state extracted from  * the HT cap and
 end_comment
 
 begin_function
-name|void
+name|int
 name|ieee80211_ht_updateparams
 parameter_list|(
 name|struct
@@ -7173,6 +7187,11 @@ name|htinfo
 decl_stmt|;
 name|int
 name|htflags
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
 decl_stmt|;
 name|ieee80211_parse_htcap
 argument_list|(
@@ -7289,12 +7308,18 @@ operator|=
 name|IEEE80211_CHAN_HT40D
 expr_stmt|;
 block|}
+if|if
+condition|(
 name|htinfo_update_chw
 argument_list|(
 name|ni
 argument_list|,
 name|htflags
 argument_list|)
+condition|)
+name|ret
+operator|=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -7328,6 +7353,11 @@ operator|&=
 operator|~
 name|IEEE80211_NODE_RIFS
 expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
 block|}
 end_function
 
@@ -7454,6 +7484,9 @@ operator|=
 name|IEEE80211_CHAN_HT40D
 expr_stmt|;
 block|}
+operator|(
+name|void
+operator|)
 name|htinfo_update_chw
 argument_list|(
 name|ni

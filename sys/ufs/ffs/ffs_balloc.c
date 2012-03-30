@@ -2304,6 +2304,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -2575,6 +2577,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * After the buffers are invalidated and on-disk pointers are 	 * cleared, free the blocks. 	 */
@@ -5550,6 +5554,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 for|for
@@ -5821,6 +5827,8 @@ argument_list|(
 name|vp
 argument_list|,
 name|MNT_WAIT
+argument_list|,
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/* 	 * After the buffers are invalidated and on-disk pointers are 	 * cleared, free the blocks. 	 */

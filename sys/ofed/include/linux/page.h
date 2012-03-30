@@ -73,7 +73,7 @@ name|pgprot_noncached
 parameter_list|(
 name|prot
 parameter_list|)
-value|VM_MEMATTR_UNCACHED
+value|VM_MEMATTR_UNCACHEABLE
 end_define
 
 begin_define

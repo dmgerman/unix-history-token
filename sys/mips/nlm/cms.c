@@ -209,12 +209,6 @@ directive|include
 file|<mips/nlm/xlp.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<mips/nlm/board.h>
-end_include
-
 begin_define
 define|#
 directive|define
@@ -319,7 +313,7 @@ specifier|static
 name|int
 name|xlp_msg_threads_per_core
 init|=
-literal|3
+name|XLP_MAX_THREADS
 decl_stmt|;
 end_decl_stmt
 
@@ -422,7 +416,7 @@ specifier|static
 name|int
 name|polled
 init|=
-literal|1
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -954,33 +948,8 @@ argument_list|)
 expr_stmt|;
 if|#
 directive|if
-literal|1
-comment|/* defined DEBUG */
-else|else
-name|printf
-argument_list|(
-literal|"[%s]: No Handler for msg from stn %d,"
-literal|" vc=%d, size=%d, msg0=%jx, droppinge\n"
-argument_list|,
-name|__func__
-argument_list|,
-name|srcid
-argument_list|,
-name|vc
-argument_list|,
-name|size
-argument_list|,
-operator|(
-name|uintmax_t
-operator|)
-name|msg
-operator|.
-name|msg
-index|[
 literal|0
-index|]
-argument_list|)
-expr_stmt|;
+block|else 				printf("[%s]: No Handler for msg from stn %d," 				    " vc=%d, size=%d, msg0=%jx, droppinge\n", 				    __func__, srcid, vc, size, 				    (uintmax_t)msg.msg[0]);
 endif|#
 directive|endif
 name|fmn_msgcount
@@ -1727,21 +1696,6 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|bootverbose
-condition|)
-name|printf
-argument_list|(
-literal|"Msgring handler create on cpu %d (%s)\n"
-argument_list|,
-name|hwtid
-argument_list|,
-name|td
-operator|->
-name|td_name
-argument_list|)
-expr_stmt|;
 block|}
 end_function
 
@@ -1766,6 +1720,10 @@ block|{
 name|int
 name|i
 decl_stmt|;
+if|if
+condition|(
+name|bootverbose
+condition|)
 name|printf
 argument_list|(
 literal|"Register handler %d-%d %p(%p)\n"
@@ -1907,6 +1865,25 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+comment|/* used polled handler for Ax silion */
+if|if
+condition|(
+name|nlm_is_xlp8xx_ax
+argument_list|()
+condition|)
+name|polled
+operator|=
+literal|1
+expr_stmt|;
+comment|/* Don't poll on all threads, if polled */
+if|if
+condition|(
+name|polled
+condition|)
+name|xlp_msg_threads_per_core
+operator|-=
+literal|1
+expr_stmt|;
 name|mtx_init
 argument_list|(
 operator|&
@@ -1941,7 +1918,6 @@ operator|-
 literal|1
 operator|)
 expr_stmt|;
-comment|/*thrmask<<= xlp_threads_per_core - xlp_msg_threads_per_core;*/
 name|mask
 operator|=
 literal|0
@@ -1981,17 +1957,6 @@ literal|0
 block|printf("CMS Message handler thread mask %#jx\n", 	    (uintmax_t)xlp_msg_thread_mask);
 endif|#
 directive|endif
-if|if
-condition|(
-name|nlm_is_xlp3xx
-argument_list|()
-condition|)
-name|polled
-operator|=
-literal|0
-expr_stmt|;
-comment|/* switch to interrupt driven driver */
-comment|/*	nlm_cms_default_setup(0,0,0,0); */
 name|xlp_cms_credit_setup
 argument_list|(
 name|CMS_DEFAULT_CREDIT

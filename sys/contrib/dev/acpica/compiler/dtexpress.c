@@ -214,9 +214,7 @@ name|ASL_MSG_DIVIDE_BY_ZERO
 argument_list|,
 name|Gbl_CurrentField
 argument_list|,
-name|Gbl_CurrentField
-operator|->
-name|Value
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -249,9 +247,7 @@ name|ASL_MSG_DIVIDE_BY_ZERO
 argument_list|,
 name|Gbl_CurrentField
 argument_list|,
-name|Gbl_CurrentField
-operator|->
-name|Value
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -353,7 +349,7 @@ case|:
 name|Result
 operator|=
 name|LeftValue
-operator|=
+operator|==
 name|RightValue
 expr_stmt|;
 break|break;
@@ -425,9 +421,7 @@ name|ASL_MSG_INVALID_EXPRESSION
 argument_list|,
 name|Gbl_CurrentField
 argument_list|,
-name|Gbl_CurrentField
-operator|->
-name|Value
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -440,11 +434,7 @@ name|DbgPrint
 argument_list|(
 name|ASL_DEBUG_OUTPUT
 argument_list|,
-literal|"IntegerEval: %s (%8.8X%8.8X %s %8.8X%8.8X) = %8.8X%8.8X\n"
-argument_list|,
-name|Gbl_CurrentField
-operator|->
-name|Value
+literal|"IntegerEval: (%8.8X%8.8X %s %8.8X%8.8X) = %8.8X%8.8X\n"
 argument_list|,
 name|ACPI_FORMAT_UINT64
 argument_list|(

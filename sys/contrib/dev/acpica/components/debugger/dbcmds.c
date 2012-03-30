@@ -360,6 +360,8 @@ operator|=
 name|AcpiEnterSleepState
 argument_list|(
 name|SleepState
+argument_list|,
+name|ACPI_NO_OPTIONAL_METHODS
 argument_list|)
 expr_stmt|;
 if|if
@@ -384,6 +386,8 @@ operator|=
 name|AcpiLeaveSleepStatePrep
 argument_list|(
 name|SleepState
+argument_list|,
+name|ACPI_NO_OPTIONAL_METHODS
 argument_list|)
 expr_stmt|;
 if|if

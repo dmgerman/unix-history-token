@@ -6741,13 +6741,6 @@ call|(
 name|uint32_t
 call|)
 argument_list|(
-name|u_long
-argument_list|)
-argument_list|(
-operator|(
-name|uint8_t
-operator|*
-operator|)
 name|blk
 operator|->
 name|buf_addr

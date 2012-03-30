@@ -3322,6 +3322,15 @@ literal|0
 condition|)
 return|return;
 comment|/* Support both backend schemes for relaying ring page limits. */
+if|if
+condition|(
+name|sc
+operator|->
+name|ring_pages
+operator|>
+literal|1
+condition|)
+block|{
 name|error
 operator|=
 name|xs_printf
@@ -3400,6 +3409,7 @@ name|node_path
 argument_list|)
 expr_stmt|;
 return|return;
+block|}
 block|}
 name|error
 operator|=

@@ -486,15 +486,30 @@ literal|1
 expr_stmt|;
 end_expr_stmt
 
+begin_macro
+name|VNET_DEFINE
+argument_list|(
+argument|unsigned int
+argument_list|,
+argument|fw_tables_max
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
 begin_comment
 comment|/* Use 128 tables by default */
 end_comment
 
 begin_decl_stmt
+specifier|static
+name|unsigned
 name|int
-name|fw_tables_max
+name|default_fw_tables
 init|=
-name|IPFW_TABLES_MAX
+name|IPFW_TABLES_DEFAULT
 decl_stmt|;
 end_decl_stmt
 
@@ -636,6 +651,16 @@ init|=
 name|IPFW_DEFAULT_RULE
 decl_stmt|;
 end_decl_stmt
+
+begin_function_decl
+specifier|static
+name|int
+name|sysctl_ipfw_table_num
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_macro
 name|SYSBEGIN
@@ -784,7 +809,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-name|SYSCTL_UINT
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_ip_fw
 argument_list|,
@@ -792,14 +817,19 @@ name|OID_AUTO
 argument_list|,
 name|tables_max
 argument_list|,
-name|CTLFLAG_RD
-argument_list|,
-operator|&
-name|V_fw_tables_max
+name|CTLTYPE_UINT
+operator||
+name|CTLFLAG_RW
 argument_list|,
 literal|0
 argument_list|,
-literal|"The maximum number of tables."
+literal|0
+argument_list|,
+name|sysctl_ipfw_table_num
+argument_list|,
+literal|"IU"
+argument_list|,
+literal|"Maximum number of tables"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -842,7 +872,7 @@ argument_list|(
 literal|"net.inet.ip.fw.tables_max"
 argument_list|,
 operator|&
-name|V_fw_tables_max
+name|default_fw_tables
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -10447,6 +10477,90 @@ end_return
 
 begin_comment
 unit|}
+comment|/*  * Set maximum number of tables that can be used in given VNET ipfw instance.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|SYSCTL_NODE
+end_ifdef
+
+begin_function
+unit|static
+name|int
+name|sysctl_ipfw_table_num
+parameter_list|(
+name|SYSCTL_HANDLER_ARGS
+parameter_list|)
+block|{
+name|int
+name|error
+decl_stmt|;
+name|unsigned
+name|int
+name|ntables
+decl_stmt|;
+name|ntables
+operator|=
+name|V_fw_tables_max
+expr_stmt|;
+name|error
+operator|=
+name|sysctl_handle_int
+argument_list|(
+name|oidp
+argument_list|,
+operator|&
+name|ntables
+argument_list|,
+literal|0
+argument_list|,
+name|req
+argument_list|)
+expr_stmt|;
+comment|/* Read operation or some error */
+if|if
+condition|(
+operator|(
+name|error
+operator|!=
+literal|0
+operator|)
+operator|||
+operator|(
+name|req
+operator|->
+name|newptr
+operator|==
+name|NULL
+operator|)
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
+return|return
+operator|(
+name|ipfw_resize_tables
+argument_list|(
+operator|&
+name|V_layer3_chain
+argument_list|,
+name|ntables
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Module and VNET glue  */
 end_comment
 
@@ -10455,7 +10569,7 @@ comment|/*  * Stuff that must be initialised only on boot or module load  */
 end_comment
 
 begin_function
-unit|static
+specifier|static
 name|int
 name|ipfw_init
 parameter_list|(
@@ -10553,6 +10667,17 @@ literal|"limited to %d packets/entry by default\n"
 argument_list|,
 name|V_verbose_limit
 argument_list|)
+expr_stmt|;
+comment|/* Check user-supplied table count for validness */
+if|if
+condition|(
+name|default_fw_tables
+operator|>
+name|IPFW_TABLES_MAX
+condition|)
+name|default_fw_tables
+operator|=
+name|IPFW_TABLES_MAX
 expr_stmt|;
 name|ipfw_log_bpf
 argument_list|(
@@ -10673,27 +10798,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* Check user-supplied number for validness */
-if|if
-condition|(
-name|V_fw_tables_max
-operator|<
-literal|0
-condition|)
-name|V_fw_tables_max
-operator|=
-name|IPFW_TABLES_MAX
-expr_stmt|;
-if|if
-condition|(
-name|V_fw_tables_max
-operator|>
-literal|65534
-condition|)
-name|V_fw_tables_max
-operator|=
-literal|65534
-expr_stmt|;
 comment|/* insert the default rule and create the initial map */
 name|chain
 operator|->
@@ -10751,6 +10855,11 @@ name|M_WAITOK
 operator||
 name|M_ZERO
 argument_list|)
+expr_stmt|;
+comment|/* Set initial number of tables */
+name|V_fw_tables_max
+operator|=
+name|default_fw_tables
 expr_stmt|;
 name|error
 operator|=

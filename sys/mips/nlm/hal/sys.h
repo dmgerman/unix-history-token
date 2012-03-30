@@ -613,6 +613,47 @@ parameter_list|)
 value|(nlm_get_sys_pcibase(node) + XLP_IO_PCI_HDRSZ)
 end_define
 
+begin_enum
+enum|enum
+block|{
+comment|/* Don't change order and it must start from zero */
+name|DFS_DEVICE_NAE
+init|=
+literal|0
+block|,
+name|DFS_DEVICE_SAE
+block|,
+name|DFS_DEVICE_RSA
+block|,
+name|DFS_DEVICE_DTRE
+block|,
+name|DFS_DEVICE_CMP
+block|,
+name|DFS_DEVICE_KBP
+block|,
+name|DFS_DEVICE_DMC
+block|,
+name|DFS_DEVICE_NAND
+block|,
+name|DFS_DEVICE_MMC
+block|,
+name|DFS_DEVICE_NOR
+block|,
+name|DFS_DEVICE_CORE
+block|,
+name|DFS_DEVICE_REGEX_SLOW
+block|,
+name|DFS_DEVICE_REGEX_FAST
+block|,
+name|DFS_DEVICE_SATA
+block|,
+name|INVALID_DFS_DEVICE
+init|=
+literal|0xFF
+block|}
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif

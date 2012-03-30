@@ -81,6 +81,14 @@ end_typedef
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+ifdef|#
+directive|ifdef
+name|_XLOCALE_H_
+include|#
+directive|include
+file|<xlocale/_inttypes.h>
+endif|#
+directive|endif
 name|intmax_t
 name|imaxabs
 argument_list|(

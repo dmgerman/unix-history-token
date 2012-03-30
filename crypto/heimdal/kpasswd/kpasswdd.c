@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: kpasswdd.c 22252 2007-12-09 05:59:34Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -965,6 +965,8 @@ name|NULL
 decl_stmt|;
 name|krb5_principal
 name|principal
+init|=
+name|NULL
 decl_stmt|;
 name|krb5_data
 modifier|*
@@ -1774,6 +1776,7 @@ condition|(
 name|ret
 condition|)
 block|{
+specifier|const
 name|char
 modifier|*
 name|str
@@ -1813,7 +1816,7 @@ else|:
 literal|"Internal error"
 argument_list|)
 expr_stmt|;
-name|krb5_free_error_string
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
@@ -1845,6 +1848,19 @@ name|free_ChangePasswdDataMS
 argument_list|(
 operator|&
 name|chpw
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|principal
+operator|!=
+name|admin_principal
+condition|)
+name|krb5_free_principal
+argument_list|(
+name|context
+argument_list|,
+name|principal
 argument_list|)
 expr_stmt|;
 if|if
@@ -1956,6 +1972,7 @@ name|krb5_realm
 modifier|*
 name|r
 decl_stmt|;
+comment|/*      * Only send an error reply if the request passes basic length      * verification.  Otherwise, kpasswdd would reply to every UDP packet,      * allowing an attacker to set up a ping-pong DoS attack via a spoofed UDP      * packet with a source address of another UDP service that also replies      * to every packet.      *      * Also suppress the error reply if ap_req_len is 0, which indicates      * either an invalid request or an error packet.  An error packet may be      * the result of a ping-pong attacker pointing us at another kpasswdd.      */
 name|pkt_len
 operator|=
 operator|(
@@ -2034,21 +2051,22 @@ operator|)
 name|len
 argument_list|)
 expr_stmt|;
-name|reply_error
-argument_list|(
-name|NULL
-argument_list|,
-name|s
-argument_list|,
-name|sa
-argument_list|,
-name|sa_size
-argument_list|,
-literal|0
-argument_list|,
+return|return
 literal|1
+return|;
+block|}
+if|if
+condition|(
+name|ap_req_len
+operator|==
+literal|0
+condition|)
+block|{
+name|krb5_warnx
+argument_list|(
+name|context
 argument_list|,
-literal|"Bad request"
+literal|"Request is error packet (ap_req_len == 0)"
 argument_list|)
 expr_stmt|;
 return|return
@@ -3197,15 +3215,15 @@ operator|==
 literal|0
 condition|)
 block|{
-name|int
-name|ret
+name|krb5_ssize_t
+name|retx
 decl_stmt|;
 name|fd_set
 name|fdset
 init|=
 name|real_fdset
 decl_stmt|;
-name|ret
+name|retx
 operator|=
 name|select
 argument_list|(
@@ -3225,7 +3243,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|retx
 operator|<
 literal|0
 condition|)
@@ -3291,7 +3309,7 @@ argument_list|(
 name|__ss
 argument_list|)
 decl_stmt|;
-name|ret
+name|retx
 operator|=
 name|recvfrom
 argument_list|(
@@ -3317,7 +3335,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|ret
+name|retx
 operator|<
 literal|0
 condition|)
@@ -3367,7 +3385,7 @@ name|addrlen
 argument_list|,
 name|buf
 argument_list|,
-name|ret
+name|retx
 argument_list|)
 expr_stmt|;
 block|}
@@ -3478,10 +3496,20 @@ end_decl_stmt
 begin_decl_stmt
 specifier|static
 name|char
+name|sHDB
+index|[]
+init|=
+literal|"HDB:"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
 modifier|*
 name|keytab_str
 init|=
-literal|"HDB:"
+name|sHDB
 decl_stmt|;
 end_decl_stmt
 
@@ -3619,6 +3647,10 @@ name|arg_string
 block|,
 operator|&
 name|config_file
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3647,6 +3679,8 @@ operator|&
 name|port_str
 block|,
 literal|"port"
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3658,6 +3692,10 @@ name|arg_flag
 block|,
 operator|&
 name|version_flag
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|,
 block|{
@@ -3669,6 +3707,10 @@ name|arg_flag
 block|,
 operator|&
 name|help_flag
+block|,
+name|NULL
+block|,
+name|NULL
 block|}
 block|}
 decl_stmt|;
@@ -3706,9 +3748,6 @@ modifier|*
 name|argv
 parameter_list|)
 block|{
-name|int
-name|optind
-decl_stmt|;
 name|krb5_keytab
 name|keytab
 decl_stmt|;
@@ -3725,8 +3764,6 @@ name|port
 decl_stmt|,
 name|i
 decl_stmt|;
-name|optind
-operator|=
 name|krb5_program_setup
 argument_list|(
 operator|&
@@ -4128,22 +4165,22 @@ name|num_strings
 condition|)
 block|{
 name|int
-name|i
+name|j
 decl_stmt|;
 for|for
 control|(
-name|i
+name|j
 operator|=
 literal|0
 init|;
-name|i
+name|j
 operator|<
 name|addresses_str
 operator|.
 name|num_strings
 condition|;
 operator|++
-name|i
+name|j
 control|)
 name|add_one_address
 argument_list|(
@@ -4151,10 +4188,10 @@ name|addresses_str
 operator|.
 name|strings
 index|[
-name|i
+name|j
 index|]
 argument_list|,
-name|i
+name|j
 operator|==
 literal|0
 argument_list|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Portions Copyright (c) 2009 Apple Inc. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -9,13 +9,11 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: log.c 19088 2006-11-21 08:08:46Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|<vis.h>
+end_include
 
 begin_struct
 struct|struct
@@ -369,8 +367,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_initlog
 parameter_list|(
 name|krb5_context
@@ -409,11 +408,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -443,11 +449,18 @@ argument_list|(
 name|f
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -466,8 +479,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_addlog_func
 parameter_list|(
 name|krb5_context
@@ -511,11 +525,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -572,6 +593,7 @@ end_struct
 begin_function
 specifier|static
 name|void
+name|KRB5_CALLCONV
 name|log_syslog
 parameter_list|(
 specifier|const
@@ -613,6 +635,7 @@ end_function
 begin_function
 specifier|static
 name|void
+name|KRB5_CALLCONV
 name|close_syslog
 parameter_list|(
 name|void
@@ -684,11 +707,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -809,6 +839,7 @@ end_struct
 begin_function
 specifier|static
 name|void
+name|KRB5_CALLCONV
 name|log_file
 parameter_list|(
 specifier|const
@@ -832,6 +863,18 @@ modifier|*
 name|f
 init|=
 name|data
+decl_stmt|;
+name|char
+modifier|*
+name|msgclean
+decl_stmt|;
+name|size_t
+name|len
+init|=
+name|strlen
+argument_list|(
+name|msg
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -865,6 +908,43 @@ operator|==
 name|NULL
 condition|)
 return|return;
+comment|/* make sure the log doesn't contain special chars */
+name|msgclean
+operator|=
+name|malloc
+argument_list|(
+operator|(
+name|len
+operator|+
+literal|1
+operator|)
+operator|*
+literal|4
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|msgclean
+operator|==
+name|NULL
+condition|)
+goto|goto
+name|out
+goto|;
+name|strvisx
+argument_list|(
+name|msgclean
+argument_list|,
+name|rk_UNCONST
+argument_list|(
+name|msg
+argument_list|)
+argument_list|,
+name|len
+argument_list|,
+name|VIS_OCTAL
+argument_list|)
+expr_stmt|;
 name|fprintf
 argument_list|(
 name|f
@@ -875,9 +955,16 @@ literal|"%s %s\n"
 argument_list|,
 name|timestr
 argument_list|,
-name|msg
+name|msgclean
 argument_list|)
 expr_stmt|;
+name|free
+argument_list|(
+name|msgclean
+argument_list|)
+expr_stmt|;
+name|out
+label|:
 if|if
 condition|(
 name|f
@@ -907,6 +994,7 @@ end_function
 begin_function
 specifier|static
 name|void
+name|KRB5_CALLCONV
 name|close_file
 parameter_list|(
 name|void
@@ -1003,11 +1091,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1060,8 +1155,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_addlog_dest
 parameter_list|(
 name|krb5_context
@@ -1183,11 +1279,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|HEIM_ERR_LOG_PARSE
+argument_list|,
+name|N_
+argument_list|(
 literal|"failed to parse \"%s\""
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|orig
 argument_list|)
@@ -1331,11 +1434,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -1381,11 +1491,18 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"open(%s): %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"open(%s) logile: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|fn
 argument_list|,
@@ -1404,6 +1521,11 @@ return|return
 name|ret
 return|;
 block|}
+name|rk_cloexec
+argument_list|(
+name|i
+argument_list|)
+expr_stmt|;
 name|file
 operator|=
 name|fdopen
@@ -1429,11 +1551,18 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"fdopen(%s): %s"
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"fdopen(%s) logfile: %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|fn
 argument_list|,
@@ -1691,20 +1820,27 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"unknown log type: %s"
-argument_list|,
-name|p
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|HEIM_ERR_LOG_PARSE
 expr_stmt|;
 comment|/* XXX */
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+name|N_
+argument_list|(
+literal|"unknown log type: %s"
+argument_list|,
+literal|""
+argument_list|)
+argument_list|,
+name|p
+argument_list|)
+expr_stmt|;
 block|}
 return|return
 name|ret
@@ -1713,8 +1849,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_openlog
 parameter_list|(
 name|krb5_context
@@ -1810,6 +1947,10 @@ name|p
 init|;
 operator|*
 name|q
+operator|&&
+name|ret
+operator|==
+literal|0
 condition|;
 name|q
 operator|++
@@ -1847,14 +1988,15 @@ literal|"SYSLOG"
 argument_list|)
 expr_stmt|;
 return|return
-literal|0
+name|ret
 return|;
 block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_closelog
 parameter_list|(
 name|krb5_context
@@ -1964,8 +2106,9 @@ parameter_list|)
 end_define
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vlog_msg
 parameter_list|(
 name|krb5_context
@@ -2125,6 +2268,9 @@ operator|==
 name|NULL
 condition|)
 block|{
+name|int
+name|ret
+init|=
 name|vasprintf
 argument_list|(
 operator|&
@@ -2134,9 +2280,13 @@ name|fmt
 argument_list|,
 name|ap
 argument_list|)
-expr_stmt|;
+decl_stmt|;
 if|if
 condition|(
+name|ret
+operator|<
+literal|0
+operator|||
 name|msg
 operator|==
 name|NULL
@@ -2202,8 +2352,9 @@ block|}
 end_block
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_vlog
 parameter_list|(
 name|krb5_context
@@ -2258,8 +2409,9 @@ block|}
 end_block
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_log_msg
 parameter_list|(
 name|krb5_context
@@ -2340,8 +2492,9 @@ block|}
 end_block
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_log
 parameter_list|(
 name|krb5_context
@@ -2413,6 +2566,117 @@ name|ret
 return|;
 block|}
 end_block
+
+begin_function
+name|void
+name|KRB5_LIB_FUNCTION
+name|_krb5_debug
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|int
+name|level
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function|__attribute__
+parameter_list|(
+function|(format
+parameter_list|(
+name|printf
+parameter_list|,
+function|3
+operator|,
+function|4
+end_function
+
+begin_block
+unit|)))
+block|{
+name|va_list
+name|ap
+decl_stmt|;
+if|if
+condition|(
+name|context
+operator|==
+name|NULL
+operator|||
+name|context
+operator|->
+name|debug_dest
+operator|==
+name|NULL
+condition|)
+return|return;
+name|va_start
+argument_list|(
+name|ap
+argument_list|,
+name|fmt
+argument_list|)
+expr_stmt|;
+name|krb5_vlog
+argument_list|(
+name|context
+argument_list|,
+name|context
+operator|->
+name|debug_dest
+argument_list|,
+name|level
+argument_list|,
+name|fmt
+argument_list|,
+name|ap
+argument_list|)
+expr_stmt|;
+name|va_end
+argument_list|(
+name|ap
+argument_list|)
+expr_stmt|;
+block|}
+end_block
+
+begin_function
+name|krb5_boolean
+name|KRB5_LIB_FUNCTION
+name|_krb5_have_debug
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|int
+name|level
+parameter_list|)
+block|{
+if|if
+condition|(
+name|context
+operator|==
+name|NULL
+operator|||
+name|context
+operator|->
+name|debug_dest
+operator|==
+name|NULL
+condition|)
+return|return
+literal|0
+return|;
+return|return
+literal|1
+return|;
+block|}
+end_function
 
 end_unit
 

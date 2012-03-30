@@ -103,6 +103,33 @@ name|BREAKPOINT_INSTR_SZ
 value|1
 end_define
 
+begin_elif
+elif|#
+directive|elif
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+end_elif
+
+begin_define
+define|#
+directive|define
+name|BREAKPOINT_INSTR
+value|0xd
+end_define
+
+begin_comment
+comment|/* break */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|BREAKPOINT_INSTR_SZ
+value|4
+end_define
+
 begin_else
 else|#
 directive|else

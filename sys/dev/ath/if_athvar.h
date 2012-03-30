@@ -722,6 +722,18 @@ literal|1
 decl_stmt|;
 comment|/* do rate lookup before each TX */
 name|int
+name|bfs_need_seqno
+range|:
+literal|1
+decl_stmt|;
+comment|/* need to assign a seqno for aggregation */
+name|int
+name|bfs_seqno_assigned
+range|:
+literal|1
+decl_stmt|;
+comment|/* seqno has been assigned */
+name|int
 name|bfs_nfl
 decl_stmt|;
 comment|/* next fragment length */
@@ -1835,6 +1847,11 @@ name|task
 name|sc_txtask
 decl_stmt|;
 comment|/* tx int processing */
+name|struct
+name|task
+name|sc_txqtask
+decl_stmt|;
+comment|/* tx proc processing */
 name|int
 name|sc_wd_timer
 decl_stmt|;

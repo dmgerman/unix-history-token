@@ -73,7 +73,7 @@ name|cdev
 block|{
 name|void
 modifier|*
-name|__si_reserved
+name|si_spare0
 decl_stmt|;
 name|u_int
 name|si_flags
@@ -191,9 +191,10 @@ name|cdev
 modifier|*
 name|si_parent
 decl_stmt|;
-name|void
+name|struct
+name|mount
 modifier|*
-name|si_spare0
+name|si_mountpt
 decl_stmt|;
 name|void
 modifier|*

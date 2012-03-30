@@ -220,6 +220,26 @@ directive|include
 file|<sys/pmckern.h>
 end_include
 
+begin_expr_stmt
+name|PMC_SOFT_DEFINE
+argument_list|( , ,
+name|clock
+argument_list|,
+name|hard
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PMC_SOFT_DEFINE
+argument_list|( , ,
+name|clock
+argument_list|,
+name|stat
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -1782,6 +1802,25 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_intr_frame
+operator|!=
+name|NULL
+condition|)
+name|PMC_SOFT_CALL_TF
+argument_list|( , ,
+name|clock
+argument_list|,
+name|hard
+argument_list|,
+name|td
+operator|->
+name|td_intr_frame
+argument_list|)
+expr_stmt|;
 endif|#
 directive|endif
 name|callout_tick
@@ -2162,6 +2201,25 @@ argument_list|,
 name|PMC_FN_DO_SAMPLES
 argument_list|,
 name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|td
+operator|->
+name|td_intr_frame
+operator|!=
+name|NULL
+condition|)
+name|PMC_SOFT_CALL_TF
+argument_list|( , ,
+name|clock
+argument_list|,
+name|hard
+argument_list|,
+name|td
+operator|->
+name|td_intr_frame
 argument_list|)
 expr_stmt|;
 endif|#
@@ -3022,6 +3080,30 @@ argument_list|(
 name|td
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+if|if
+condition|(
+name|td
+operator|->
+name|td_intr_frame
+operator|!=
+name|NULL
+condition|)
+name|PMC_SOFT_CALL_TF
+argument_list|( , ,
+name|clock
+argument_list|,
+name|stat
+argument_list|,
+name|td
+operator|->
+name|td_intr_frame
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 block|}
 end_function
 

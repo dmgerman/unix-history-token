@@ -142,6 +142,31 @@ name|Status
 operator|)
 return|;
 block|}
+comment|/* Preprocessor */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Preprocess input file"
+argument_list|)
+expr_stmt|;
+name|PrDoPreprocess
+argument_list|()
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_PreprocessOnly
+condition|)
+block|{
+return|return
+name|AE_OK
+return|;
+block|}
 comment|/*      * Scan the input file (file is already open) and      * build the parse tree      */
 name|Event
 operator|=

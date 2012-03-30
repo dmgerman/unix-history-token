@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -15,14 +15,6 @@ directive|include
 file|<resolve.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: get_host_realm.c 18541 2006-10-17 19:28:36Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/* To automagically find the correct realm of a host (without  * [domain_realm] in krb5.conf) add a text record for your domain with  * the name of your realm, like this:  *  * _kerberos	IN	TXT	"FOO.SE"  *  * The search is recursive, so you can add entries for specific  * hosts. To find the realm of host a.b.c, it first tries  * _kerberos.a.b.c, then _kerberos.b.c and so on.  *  * This method is described in draft-ietf-cat-krb-dns-locate-03.txt.  *  */
 end_comment
@@ -33,7 +25,7 @@ name|int
 name|copy_txt_to_realms
 parameter_list|(
 name|struct
-name|resource_record
+name|rk_resource_record
 modifier|*
 name|head
 parameter_list|,
@@ -44,10 +36,11 @@ name|realms
 parameter_list|)
 block|{
 name|struct
-name|resource_record
+name|rk_resource_record
 modifier|*
 name|rr
 decl_stmt|;
+name|unsigned
 name|int
 name|n
 decl_stmt|,
@@ -77,7 +70,7 @@ name|rr
 operator|->
 name|type
 operator|==
-name|T_TXT
+name|rk_ns_t_txt
 condition|)
 operator|++
 name|n
@@ -170,7 +163,7 @@ name|rr
 operator|->
 name|type
 operator|==
-name|T_TXT
+name|rk_ns_t_txt
 condition|)
 block|{
 name|char
@@ -290,7 +283,7 @@ name|MAXHOSTNAMELEN
 index|]
 decl_stmt|;
 name|struct
-name|dns_reply
+name|rk_dns_reply
 modifier|*
 name|r
 decl_stmt|;
@@ -400,6 +393,9 @@ name|ret
 operator|<
 literal|0
 operator|||
+operator|(
+name|size_t
+operator|)
 name|ret
 operator|>=
 sizeof|sizeof
@@ -424,7 +420,7 @@ return|;
 block|}
 name|r
 operator|=
-name|dns_lookup
+name|rk_dns_lookup
 argument_list|(
 name|dom
 argument_list|,
@@ -449,7 +445,7 @@ argument_list|,
 name|realms
 argument_list|)
 expr_stmt|;
-name|dns_free_data
+name|rk_dns_free_data
 argument_list|(
 name|r
 argument_list|)
@@ -559,8 +555,9 @@ comment|/*  * This function assumes that `host' is a FQDN (and doesn't handle th
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|_krb5_get_host_realm_int
 parameter_list|(
 name|krb5_context
@@ -774,11 +771,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -817,11 +821,18 @@ operator|*
 name|realms
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -853,11 +864,18 @@ return|return
 literal|0
 return|;
 block|}
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_ERR_HOST_REALM_UNKNOWN
+argument_list|,
+name|N_
+argument_list|(
 literal|"unable to find realm of host %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|host
 argument_list|)
@@ -873,8 +891,9 @@ comment|/*  * Return the realm(s) of `host' as a NULL-terminated list in  * `rea
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_host_realm
 parameter_list|(
 name|krb5_context
@@ -944,7 +963,7 @@ operator|=
 name|hostname
 expr_stmt|;
 block|}
-comment|/*       * If our local hostname is without components, don't even try to dns.      */
+comment|/*      * If our local hostname is without components, don't even try to dns.      */
 name|use_dns
 operator|=
 operator|(
@@ -995,11 +1014,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KRB5_ERR_HOST_REALM_UNKNOWN
+argument_list|,
+name|N_
+argument_list|(
 literal|"Unable to find realm of host %s"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|,
 name|host
 argument_list|)

@@ -63,7 +63,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_UNCACHED
+name|VM_MEMATTR_WEAK_UNCACHEABLE
 value|((vm_memattr_t)PAT_UNCACHED)
 end_define
 

@@ -3867,16 +3867,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__powerpc__
 argument_list|)
 comment|/* 	 * Enable the MSI mapping window for all HyperTransport 	 * slaves.  PCI-PCI bridges have their windows enabled via 	 * PCIB_MAP_MSI(). 	 */
@@ -14125,7 +14115,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* 		 * If the allocation fails, clear the BAR and delete 		 * the resource list entry to force 		 * pci_alloc_resource() to allocate resources from the 		 * parent. 		 */
+comment|/* 		 * If the allocation fails, delete the resource list entry 		 * to force pci_alloc_resource() to allocate resources 		 * from the parent. 		 */
 name|resource_list_delete
 argument_list|(
 name|rl
@@ -14135,12 +14125,9 @@ argument_list|,
 name|reg
 argument_list|)
 expr_stmt|;
-name|start
-operator|=
-literal|0
-expr_stmt|;
 block|}
 else|else
+block|{
 name|start
 operator|=
 name|rman_get_start
@@ -14157,6 +14144,7 @@ argument_list|,
 name|start
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|barlen
@@ -20973,7 +20961,6 @@ argument_list|)
 expr_stmt|;
 name|out
 label|:
-empty_stmt|;
 return|return
 operator|(
 name|res
@@ -21877,39 +21864,6 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-ifndef|#
-directive|ifndef
-name|__PCI_BAR_ZERO_VALID
-comment|/* 		 * If this is a BAR, clear the BAR so it stops 		 * decoding before releasing the resource. 		 */
-switch|switch
-condition|(
-name|type
-condition|)
-block|{
-case|case
-name|SYS_RES_IOPORT
-case|:
-case|case
-name|SYS_RES_MEMORY
-case|:
-name|pci_write_bar
-argument_list|(
-name|child
-argument_list|,
-name|pci_find_bar
-argument_list|(
-name|child
-argument_list|,
-name|rid
-argument_list|)
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-endif|#
-directive|endif
 name|resource_list_unreserve
 argument_list|(
 name|rl

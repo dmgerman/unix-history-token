@@ -12,7 +12,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: sys_term.c 22390 2007-12-31 10:12:48Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -194,6 +194,27 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* really, mac os uses wtmpx (or asl) */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__APPLE__
+end_ifdef
+
+begin_undef
+undef|#
+directive|undef
+name|_PATH_WTMP
+end_undef
 
 begin_endif
 endif|#
@@ -812,6 +833,18 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|really_stream
+value|0
+end_define
 
 begin_endif
 endif|#
@@ -4187,6 +4220,7 @@ name|int
 name|t
 parameter_list|)
 block|{
+comment|/* Dont need to set this as the controlling PTY on steams sockets,      * don't abort on failure. */
 if|#
 directive|if
 name|defined
@@ -4215,6 +4249,9 @@ literal|0
 argument_list|)
 operator|<
 literal|0
+operator|&&
+operator|!
+name|really_stream
 condition|)
 name|fatalperror
 argument_list|(
@@ -4912,6 +4949,13 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_if
+if|#
+directive|if
+operator|!
+name|HAVE_DECL_ENVIRON
+end_if
+
 begin_decl_stmt
 specifier|extern
 name|char
@@ -4920,6 +4964,11 @@ modifier|*
 name|environ
 decl_stmt|;
 end_decl_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 name|void
@@ -5476,6 +5525,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|name
+operator|&&
 name|name
 index|[
 literal|0

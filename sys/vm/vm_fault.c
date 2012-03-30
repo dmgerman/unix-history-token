@@ -5286,6 +5286,10 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * Block entry into the machine-independent layer's page fault handler by  * the calling thread.  Subsequent calls to vm_fault() by that thread will  * return KERN_PROTECTION_FAILURE.  Enable machine-dependent handling of  * spurious page faults.   */
+end_comment
+
 begin_function
 name|int
 name|vm_fault_disable_pagefaults
@@ -5298,6 +5302,8 @@ operator|(
 name|curthread_pflags_set
 argument_list|(
 name|TDP_NOFAULTING
+operator||
+name|TDP_RESETSPUR
 argument_list|)
 operator|)
 return|;

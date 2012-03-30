@@ -19746,32 +19746,14 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-ifdef|#
-directive|ifdef
-name|IPFW_TABLES_MAX
-name|warn
-argument_list|(
-literal|"Warn: Failed to get the max tables number via sysctl. "
-literal|"Using the compiled in defaults. \nThe reason was"
-argument_list|)
-expr_stmt|;
-name|tables_max
-operator|=
-name|IPFW_TABLES_MAX
-expr_stmt|;
-else|#
-directive|else
 name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"Failed sysctlbyname(\"net.inet.ip.fw.tables_max\")"
+literal|"Can't determine maximum number of ipfw tables. "
+literal|"Perhaps you forgot to load ipfw module?"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
-block|}
 name|memset
 argument_list|(
 operator|&

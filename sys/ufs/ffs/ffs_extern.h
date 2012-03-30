@@ -729,6 +729,9 @@ name|vp
 parameter_list|,
 name|int
 name|waitfor
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1512,14 +1515,14 @@ value|4
 end_define
 
 begin_comment
-comment|/*  * Flag to ffs_syncinode() to request flushing of data only,  * but skip the ffs_update() on the inode itself. Used to avoid  * deadlock when flushing snapshot inodes while holding snaplk.  * Avoid bit conflicts with MNT_WAIT values in sys/mount.h  */
+comment|/*  * Flag to ffs_syncvnode() to request flushing of data only,  * but skip the ffs_update() on the inode itself. Used to avoid  * deadlock when flushing snapshot inodes while holding snaplk.  */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|NO_INO_UPDT
-value|0x10
+value|0x00000001
 end_define
 
 begin_function_decl

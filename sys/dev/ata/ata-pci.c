@@ -3101,11 +3101,7 @@ argument_list|,
 name|ata_pci_child_location_str
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3146,9 +3142,9 @@ name|ata_pci_driver
 argument_list|,
 name|ata_pci_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3602,6 +3598,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|ATA_CAM
+end_ifndef
+
 begin_function
 specifier|static
 name|int
@@ -3661,6 +3663,11 @@ name|unit
 return|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -3942,6 +3949,9 @@ argument_list|,
 name|ata_pcichannel_getrev
 argument_list|)
 block|,
+ifndef|#
+directive|ifndef
+name|ATA_CAM
 name|DEVMETHOD
 argument_list|(
 name|ata_locking
@@ -3949,6 +3959,8 @@ argument_list|,
 name|ata_pcichannel_locking
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|DEVMETHOD
 argument_list|(
 name|ata_reset
@@ -3956,11 +3968,7 @@ argument_list|,
 name|ata_pcichannel_reset
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3994,9 +4002,9 @@ name|ata_pcichannel_driver
 argument_list|,
 name|ata_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -4494,6 +4502,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -4502,6 +4511,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -4569,6 +4579,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -4577,6 +4588,7 @@ parameter_list|(
 name|device_t
 name|dev
 parameter_list|,
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -4586,6 +4598,7 @@ name|int
 name|slot
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ata_chip_id
 modifier|*
@@ -4722,6 +4735,7 @@ block|}
 end_function
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ata_pcivendor2str

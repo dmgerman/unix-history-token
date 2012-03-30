@@ -15343,6 +15343,8 @@ name|pmc_process_interrupt
 argument_list|(
 name|cpu
 argument_list|,
+name|PMC_HR
+argument_list|,
 name|pm
 argument_list|,
 name|tf
@@ -15707,6 +15709,8 @@ name|pmc_process_interrupt
 argument_list|(
 name|cpu
 argument_list|,
+name|PMC_HR
+argument_list|,
 name|pm
 argument_list|,
 name|tf
@@ -15855,6 +15859,8 @@ operator|=
 name|pmc_process_interrupt
 argument_list|(
 name|cpu
+argument_list|,
+name|PMC_HR
 argument_list|,
 name|pm
 argument_list|,
@@ -16102,12 +16108,21 @@ name|ipa_version
 operator|>
 literal|3
 condition|)
+block|{
 comment|/* Unknown PMC architecture. */
+name|printf
+argument_list|(
+literal|"hwpc_core: unknown PMC architecture: %d\n"
+argument_list|,
+name|ipa_version
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|EPROGMISMATCH
 operator|)
 return|;
+block|}
 name|core_cputype
 operator|=
 name|md

@@ -1124,7 +1124,7 @@ operator|->
 name|Signature
 argument_list|)
 expr_stmt|;
-comment|/*      * ACPI Table Override:      *      * Before we install the table, let the host OS override it with a new      * one if desired. Any table within the RSDT/XSDT can be replaced,      * including the DSDT which is pointed to by the FADT.      *      * NOTE: If the table is overridden, then FinalTable will contain a      * mapped pointer to the full new table. If the table is not overridden,      * then the table will be fully mapped elsewhere (in verify table).      * In any case, we must unmap the header that was mapped above.      */
+comment|/*      * ACPI Table Override:      *      * Before we install the table, let the host OS override it with a new      * one if desired. Any table within the RSDT/XSDT can be replaced,      * including the DSDT which is pointed to by the FADT.      *      * NOTE: If the table is overridden, then FinalTable will contain a      * mapped pointer to the full new table. If the table is not overridden,      * or if there has been a physical override, then the table will be      * fully mapped later (in verify table). In any case, we must      * unmap the header that was mapped above.      */
 name|FinalTable
 operator|=
 name|AcpiTbTableOverride
@@ -1168,6 +1168,20 @@ argument_list|(
 name|FinalTable
 operator|->
 name|Revision
+argument_list|)
+expr_stmt|;
+block|}
+comment|/*      * If we have a physical override during this early loading of the ACPI      * tables, unmap the table for now. It will be mapped again later when      * it is actually used. This supports very early loading of ACPI tables,      * before virtual memory is fully initialized and running within the      * host OS. Note: A logical override has the ACPI_TABLE_ORIGIN_OVERRIDE      * flag set and will not be deleted below.      */
+if|if
+condition|(
+name|FinalTable
+operator|!=
+name|Table
+condition|)
+block|{
+name|AcpiTbDeleteTable
+argument_list|(
+name|TableDesc
 argument_list|)
 expr_stmt|;
 block|}

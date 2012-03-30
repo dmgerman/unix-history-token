@@ -117,6 +117,13 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
+name|int
+name|PrParserdebug
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
 specifier|const
 name|ASL_MAPPING_ENTRY
 name|AslKeywordMapping
@@ -136,7 +143,7 @@ begin_define
 define|#
 directive|define
 name|ASL_LINE_BUFFER_SIZE
-value|1024
+value|4096
 end_define
 
 begin_define
@@ -298,6 +305,18 @@ name|ASL_EXTERN
 name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
+name|Gbl_PreprocessOnly
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
 name|Gbl_DisassembleAll
 parameter_list|,
 name|FALSE
@@ -335,6 +354,18 @@ name|BOOLEAN
 name|ASL_INIT_GLOBAL
 parameter_list|(
 name|Gbl_NsOutputFlag
+parameter_list|,
+name|FALSE
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|ASL_EXTERN
+name|BOOLEAN
+name|ASL_INIT_GLOBAL
+parameter_list|(
+name|Gbl_PreprocessorOutputFlag
 parameter_list|,
 name|FALSE
 parameter_list|)
@@ -1213,7 +1244,7 @@ begin_define
 define|#
 directive|define
 name|ASL_NUM_EVENTS
-value|19
+value|20
 end_define
 
 begin_decl_stmt

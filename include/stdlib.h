@@ -182,6 +182,14 @@ end_define
 
 begin_decl_stmt
 name|__BEGIN_DECLS
+ifdef|#
+directive|ifdef
+name|_XLOCALE_H_
+include|#
+directive|include
+file|<xlocale/_stdlib.h>
+endif|#
+directive|endif
 specifier|extern
 name|int
 name|__mb_cur_max

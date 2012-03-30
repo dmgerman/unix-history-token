@@ -4619,7 +4619,9 @@ name|ah
 parameter_list|)
 block|{
 return|return
+operator|(
 name|HAL_RFGAIN_INACTIVE
+operator|)
 return|;
 block|}
 end_function
@@ -4679,7 +4681,9 @@ name|AH_NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AH_TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -4724,7 +4728,9 @@ name|AH_NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AH_TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -6956,7 +6962,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|AH_TRUE
+operator|)
 return|;
 block|}
 end_function

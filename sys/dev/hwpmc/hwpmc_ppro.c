@@ -3794,6 +3794,8 @@ name|pmc_process_interrupt
 argument_list|(
 name|cpu
 argument_list|,
+name|PMC_HR
+argument_list|,
 name|pm
 argument_list|,
 name|tf

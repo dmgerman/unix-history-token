@@ -787,18 +787,6 @@ decl_stmt|;
 name|UINT32
 name|i
 decl_stmt|;
-comment|/* Update the local FADT table header length */
-name|AcpiGbl_FADT
-operator|.
-name|Header
-operator|.
-name|Length
-operator|=
-sizeof|sizeof
-argument_list|(
-name|ACPI_TABLE_FADT
-argument_list|)
-expr_stmt|;
 comment|/*      * Expand the 32-bit FACS and DSDT addresses to 64-bit as necessary.      * Later code will always use the X 64-bit field.      */
 if|if
 condition|(
@@ -877,6 +865,18 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+comment|/*      * Now we can update the local FADT length to the length of the      * current FADT version as defined by the ACPI specification.      * Thus, we will have a common FADT internally.      */
+name|AcpiGbl_FADT
+operator|.
+name|Header
+operator|.
+name|Length
+operator|=
+sizeof|sizeof
+argument_list|(
+name|ACPI_TABLE_FADT
+argument_list|)
+expr_stmt|;
 comment|/*      * Expand the ACPI 1.0 32-bit addresses to the ACPI 2.0 64-bit "X"      * generic address structures as necessary. Later code will always use      * the 64-bit address structures.      *      * March 2009:      * We now always use the 32-bit address if it is valid (non-null). This      * is not in accordance with the ACPI specification which states that      * the 64-bit address supersedes the 32-bit version, but we do this for      * compatibility with other ACPI implementations. Most notably, in the      * case where both the 32 and 64 versions are non-null, we use the 32-bit      * version. This is the only address that is guaranteed to have been      * tested by the BIOS manufacturer.      */
 for|for
 control|(

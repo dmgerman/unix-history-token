@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2002 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"krb5_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: get_addrs.c 13863 2004-05-25 21:46:46Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_ifdef
 ifdef|#
@@ -111,9 +103,11 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"gethostname: %s"
 argument_list|,
@@ -145,9 +139,11 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"gethostbyname %s: %s"
 argument_list|,
@@ -193,11 +189,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -295,12 +298,12 @@ name|LOOP
 init|=
 literal|1
 block|,
-comment|/* do include loopback interfaces */
+comment|/* do include loopback addrs */
 name|LOOP_IF_NONE
 init|=
 literal|2
 block|,
-comment|/* include loopback if no other if's */
+comment|/* include loopback addrs if no others */
 name|EXTRA_ADDRESSES
 init|=
 literal|4
@@ -351,6 +354,7 @@ name|ret
 init|=
 name|ENXIO
 decl_stmt|;
+name|unsigned
 name|int
 name|num
 decl_stmt|,
@@ -359,12 +363,6 @@ decl_stmt|;
 name|krb5_addresses
 name|ignore_addresses
 decl_stmt|;
-name|res
-operator|->
-name|val
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|getifaddrs
@@ -381,9 +379,11 @@ name|ret
 operator|=
 name|errno
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"getifaddrs: %s"
 argument_list|,
@@ -450,11 +450,18 @@ argument_list|(
 name|ifa0
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENXIO
+argument_list|,
+name|N_
+argument_list|(
 literal|"no addresses found"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -529,17 +536,22 @@ argument_list|(
 name|ifa0
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
-operator|(
 name|ENOMEM
-operator|)
 return|;
 block|}
 comment|/* Now traverse the list. */
@@ -618,20 +630,13 @@ condition|)
 continue|continue;
 if|if
 condition|(
-operator|(
+name|krb5_sockaddr_is_loopback
+argument_list|(
 name|ifa
 operator|->
-name|ifa_flags
-operator|&
-name|IFF_LOOPBACK
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-comment|/* We'll deal with the LOOP_IF_NONE case later. */
-if|if
-condition|(
+name|ifa_addr
+argument_list|)
+operator|&&
 operator|(
 name|flags
 operator|&
@@ -640,8 +645,8 @@ operator|)
 operator|==
 literal|0
 condition|)
+comment|/* We'll deal with the LOOP_IF_NONE case later. */
 continue|continue;
-block|}
 name|ret
 operator|=
 name|krb5_sockaddr2address
@@ -807,6 +812,17 @@ condition|)
 continue|continue;
 if|if
 condition|(
+operator|!
+name|krb5_sockaddr_is_loopback
+argument_list|(
+name|ifa
+operator|->
+name|ifa_addr
+argument_list|)
+condition|)
+continue|continue;
+if|if
+condition|(
 operator|(
 name|ifa
 operator|->
@@ -814,10 +830,11 @@ name|ifa_flags
 operator|&
 name|IFF_LOOPBACK
 operator|)
-operator|!=
+operator|==
 literal|0
 condition|)
-block|{
+comment|/* Presumably loopback addrs are only used on loopback ifs! */
+continue|continue;
 name|ret
 operator|=
 name|krb5_sockaddr2address
@@ -841,10 +858,8 @@ if|if
 condition|(
 name|ret
 condition|)
-block|{
-comment|/* 		     * See comment above. 		     */
 continue|continue;
-block|}
+comment|/* We don't consider this failure fatal */
 if|if
 condition|(
 operator|(
@@ -890,7 +905,6 @@ operator|++
 expr_stmt|;
 block|}
 block|}
-block|}
 if|if
 condition|(
 name|flags
@@ -914,6 +928,7 @@ if|if
 condition|(
 name|ret
 condition|)
+block|{
 name|free
 argument_list|(
 name|res
@@ -921,6 +936,13 @@ operator|->
 name|val
 argument_list|)
 expr_stmt|;
+name|res
+operator|->
+name|val
+operator|=
+name|NULL
+expr_stmt|;
+block|}
 else|else
 name|res
 operator|->
@@ -959,6 +981,18 @@ init|=
 operator|-
 literal|1
 decl_stmt|;
+name|res
+operator|->
+name|len
+operator|=
+literal|0
+expr_stmt|;
+name|res
+operator|->
+name|val
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -999,18 +1033,6 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|res
-operator|->
-name|len
-operator|=
-literal|0
-expr_stmt|;
-name|res
-operator|->
-name|val
-operator|=
-name|NULL
-expr_stmt|;
 name|ret
 operator|=
 literal|0
@@ -1130,8 +1152,9 @@ comment|/*  * Try to get all addresses, but return the one corresponding to  * `
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_all_client_addrs
 parameter_list|(
 name|krb5_context
@@ -1177,8 +1200,9 @@ comment|/*  * Try to get all local addresses that a server should listen to.  * 
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_get_all_server_addrs
 parameter_list|(
 name|krb5_context

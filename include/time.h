@@ -1005,6 +1005,11 @@ directive|if
 name|__POSIX_VISIBLE
 operator|>=
 literal|200809
+operator|||
+name|defined
+argument_list|(
+name|_XLOCALE_H_
+argument_list|)
 end_if
 
 begin_include

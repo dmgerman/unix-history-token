@@ -1243,6 +1243,17 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|ieee80211_update_chw
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|ieee80211_ibss_merge
 parameter_list|(

@@ -1199,5 +1199,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|extern
+name|void
+name|_gss_mg_collect_error
+parameter_list|(
+name|gss_OID
+name|mech
+parameter_list|,
+name|OM_uint32
+name|maj
+parameter_list|,
+name|OM_uint32
+name|min
+parameter_list|)
+function_decl|;
+end_function_decl
+
 end_unit
 

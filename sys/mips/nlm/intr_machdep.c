@@ -544,7 +544,7 @@ block|{
 comment|/* 		 * PIC based interrupts need ack in PIC, and some SoC 		 * components need additional acks (e.g. PCI) 		 */
 if|if
 condition|(
-name|xlp_irq_is_picintr
+name|XLP_IRQ_IS_PICINTR
 argument_list|(
 name|irq
 argument_list|)
@@ -585,7 +585,9 @@ name|NULL
 condition|)
 name|panic
 argument_list|(
-literal|"Not supported - non filter percpu intr"
+literal|"Unsupported non filter percpu intr %d"
+argument_list|,
+name|irq
 argument_list|)
 expr_stmt|;
 name|errcode
