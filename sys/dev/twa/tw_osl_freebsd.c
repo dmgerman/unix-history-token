@@ -2304,7 +2304,12 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|bus_dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 name|sc
@@ -2312,7 +2317,7 @@ operator|->
 name|alignment
 argument_list|,
 comment|/* alignment */
-name|TW_OSLI_DMA_BOUNDARY
+literal|0
 argument_list|,
 comment|/* boundary */
 name|BUS_SPACE_MAXADDR
