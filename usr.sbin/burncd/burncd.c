@@ -417,6 +417,25 @@ name|env_speed
 decl_stmt|;
 if|if
 condition|(
+name|feature_present
+argument_list|(
+literal|"ata_cam"
+argument_list|)
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"\nATA_CAM option is enabled in kernel.\n"
+literal|"Install the sysutils/cdrtools port and use cdrecord instead.\n\n"
+literal|"Please refer to:\n"
+literal|"http://www.freebsd.org/doc/handbook/creating-cds.html#CDRECORD"
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 operator|(
 name|dev
 operator|=
