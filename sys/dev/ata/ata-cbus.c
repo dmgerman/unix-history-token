@@ -1239,11 +1239,7 @@ argument_list|,
 name|ata_cbus_print_child
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1920,11 +1916,7 @@ argument_list|)
 block|,
 endif|#
 directive|endif
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1959,9 +1951,9 @@ name|ata_cbuschannel_driver
 argument_list|,
 name|ata_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

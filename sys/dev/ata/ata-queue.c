@@ -3639,6 +3639,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|const
 name|char
 modifier|*
 name|ata_cmd2str
