@@ -10785,7 +10785,6 @@ name|timeout
 operator|!=
 name|NULL
 condition|)
-empty_stmt|;
 name|abs_timeout_init
 argument_list|(
 operator|&
