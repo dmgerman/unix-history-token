@@ -1113,12 +1113,6 @@ condition|(
 name|tf
 operator|->
 name|tf_type
-operator|<
-literal|0
-operator|||
-name|tf
-operator|->
-name|tf_type
 operator|>
 name|T_MAX
 condition|)
@@ -1627,12 +1621,6 @@ name|T_KERNEL
 expr_stmt|;
 if|if
 condition|(
-name|tf
-operator|->
-name|tf_type
-operator|<
-literal|0
-operator|||
 name|tf
 operator|->
 name|tf_type
