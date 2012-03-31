@@ -9121,10 +9121,7 @@ name|s
 argument_list|,
 name|IEEE80211_IOC_MESH_FWRD
 argument_list|,
-name|atoi
-argument_list|(
-name|val
-argument_list|)
+name|d
 argument_list|,
 literal|0
 argument_list|,
@@ -9147,10 +9144,7 @@ name|s
 argument_list|,
 name|IEEE80211_IOC_MESH_AP
 argument_list|,
-name|atoi
-argument_list|(
-name|val
-argument_list|)
+name|d
 argument_list|,
 literal|0
 argument_list|,
