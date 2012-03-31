@@ -5506,10 +5506,6 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lock PTHREAD_PRIO_NONE protocol POSIX mutex.  */
-end_comment
-
-begin_comment
 comment|/*  * Unlock PTHREAD_PRIO_NONE protocol POSIX mutex.  */
 end_comment
 
