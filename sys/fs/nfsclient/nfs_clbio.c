@@ -186,6 +186,13 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|extern
+name|int
+name|newnfs_keep_dirty_on_error
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
 name|int
 name|ncl_pbuf_freecnt
 init|=
@@ -1497,6 +1504,16 @@ operator|&
 name|ncl_pbuf_freecnt
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+operator|||
+operator|!
+name|newnfs_keep_dirty_on_error
+condition|)
+block|{
 name|vnode_pager_undirty_pages
 argument_list|(
 name|pages
@@ -1521,6 +1538,7 @@ operator|->
 name|v_mount
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 name|rtvals
 index|[
