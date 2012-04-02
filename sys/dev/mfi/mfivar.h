@@ -416,9 +416,9 @@ name|mfi_cmd_tbolt
 struct_decl|;
 end_struct_decl
 
-begin_typedef
-typedef|typedef
+begin_struct
 struct|struct
+name|mfi_atomic
 block|{
 specifier|volatile
 name|unsigned
@@ -426,9 +426,8 @@ name|int
 name|val
 decl_stmt|;
 block|}
-name|atomic_t
-typedef|;
-end_typedef
+struct|;
+end_struct
 
 begin_define
 define|#
@@ -719,7 +718,8 @@ name|eventhandler_tag
 name|eh
 decl_stmt|;
 comment|/* OCR flags */
-name|atomic_t
+name|struct
+name|mfi_atomic
 name|fw_reset_no_pci_access
 decl_stmt|;
 name|uint8_t
