@@ -2609,6 +2609,16 @@ name|error
 operator|=
 name|ESRCH
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|ttd
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|PROC_UNLOCK
 argument_list|(
 name|p

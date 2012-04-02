@@ -176,6 +176,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sdt.h>
 end_include
 
@@ -2745,6 +2751,16 @@ name|td_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * mark as execed, wakeup the process that vforked (if any) and tell 	 * it that it now has its own resources back 	 */
 name|p
 operator|->

@@ -811,6 +811,16 @@ name|td_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|thread_lock
 argument_list|(
 name|td

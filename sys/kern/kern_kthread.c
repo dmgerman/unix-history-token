@@ -427,6 +427,16 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* call the processes' main()... */
 name|cpu_set_fork_handler
 argument_list|(
@@ -1656,6 +1666,16 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
