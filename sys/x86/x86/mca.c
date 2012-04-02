@@ -2005,12 +2005,6 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|mca_lock
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"MCA: Unable to allocate space for an event.\n"
@@ -2019,6 +2013,12 @@ expr_stmt|;
 name|mca_log
 argument_list|(
 name|record
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|mca_lock
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2504,10 +2504,22 @@ name|recoverable
 operator|=
 literal|0
 expr_stmt|;
+name|mtx_lock_spin
+argument_list|(
+operator|&
+name|mca_lock
+argument_list|)
+expr_stmt|;
 name|mca_log
 argument_list|(
 operator|&
 name|rec
+argument_list|)
+expr_stmt|;
+name|mtx_unlock_spin
+argument_list|(
+operator|&
+name|mca_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -2691,24 +2703,12 @@ name|logged
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|mca_lock
-argument_list|)
-expr_stmt|;
 name|mca_log
 argument_list|(
 operator|&
 name|mca
 operator|->
 name|rec
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|mca_lock
 argument_list|)
 expr_stmt|;
 block|}
@@ -3937,7 +3937,7 @@ comment|/* Called when a machine check exception fires. */
 end_comment
 
 begin_function
-name|int
+name|void
 name|mca_intr
 parameter_list|(
 name|void
@@ -3981,11 +3981,11 @@ name|MSR_P5_MC_ADDR
 argument_list|)
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+name|panic
+argument_list|(
+literal|"Machine check"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/* Scan the banks and check for any non-recoverable errors. */
 name|recoverable
@@ -4026,11 +4026,16 @@ operator|~
 name|MCG_STATUS_MCIP
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
+if|if
+condition|(
+operator|!
 name|recoverable
-operator|)
-return|;
+condition|)
+name|panic
+argument_list|(
+literal|"Unrecoverable machine check exception"
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -4104,24 +4109,12 @@ name|logged
 operator|=
 literal|1
 expr_stmt|;
-name|mtx_unlock_spin
-argument_list|(
-operator|&
-name|mca_lock
-argument_list|)
-expr_stmt|;
 name|mca_log
 argument_list|(
 operator|&
 name|mca
 operator|->
 name|rec
-argument_list|)
-expr_stmt|;
-name|mtx_lock_spin
-argument_list|(
-operator|&
-name|mca_lock
 argument_list|)
 expr_stmt|;
 block|}
