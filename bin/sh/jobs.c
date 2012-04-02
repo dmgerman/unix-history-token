@@ -4638,19 +4638,22 @@ decl_stmt|;
 name|TRACE
 argument_list|(
 operator|(
-literal|"vforkexecshell(%%%td, %p, %d) called\n"
+literal|"vforkexecshell(%%%td, %s, %p) called\n"
 operator|,
 name|jp
 operator|-
 name|jobtab
 operator|,
+name|argv
+index|[
+literal|0
+index|]
+operator|,
 operator|(
 name|void
 operator|*
 operator|)
-name|n
-operator|,
-name|mode
+name|pip
 operator|)
 argument_list|)
 expr_stmt|;
