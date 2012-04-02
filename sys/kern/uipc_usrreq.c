@@ -5416,6 +5416,8 @@ name|MPSAFE
 operator||
 name|FOLLOW
 operator||
+name|LOCKSHARED
+operator||
 name|LOCKLEAF
 argument_list|,
 name|UIO_SYSSPACE
