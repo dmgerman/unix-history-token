@@ -9225,15 +9225,27 @@ name|usb_hub_descriptor_min
 name|uhci_hubd_piix
 init|=
 block|{
+operator|.
+name|bDescLength
+operator|=
 sizeof|sizeof
 argument_list|(
 name|uhci_hubd_piix
 argument_list|)
 block|,
+operator|.
+name|bDescriptorType
+operator|=
 name|UDESC_HUB
 block|,
+operator|.
+name|bNbrPorts
+operator|=
 literal|2
 block|,
+operator|.
+name|wHubCharacteristics
+operator|=
 block|{
 name|UHD_PWR_NO_SWITCH
 operator||
@@ -9242,17 +9254,11 @@ block|,
 literal|0
 block|}
 block|,
+operator|.
+name|bPwrOn2PwrGood
+operator|=
 literal|50
-block|,
-comment|/* power on to power good */
-literal|0
-block|,
-block|{
-literal|0x00
-block|}
-block|,
-comment|/* both ports are removable */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 

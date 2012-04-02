@@ -4670,6 +4670,9 @@ operator|->
 name|wTotalLength
 argument_list|)
 operator|<
+operator|(
+name|uint16_t
+operator|)
 sizeof|sizeof
 argument_list|(
 operator|*

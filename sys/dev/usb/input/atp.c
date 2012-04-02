@@ -3535,6 +3535,9 @@ expr_stmt|;
 comment|/* 		 * Shave off pressures below the noise-pressure 		 * threshold; this will reduce the contribution from 		 * lower pressure readings. 		 */
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|p
 index|[
 name|i
@@ -4014,6 +4017,9 @@ name|loc
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|abs
 argument_list|(
 name|delta_mickeys
@@ -5349,11 +5355,6 @@ name|u_int
 name|n_ypspans
 parameter_list|)
 block|{
-name|int
-name|i
-decl_stmt|,
-name|j
-decl_stmt|;
 name|atp_pspan
 name|spans
 index|[
@@ -5368,6 +5369,12 @@ name|nspans
 index|[
 literal|2
 index|]
+decl_stmt|;
+name|u_int
+name|i
+decl_stmt|;
+name|u_int
+name|j
 decl_stmt|;
 comment|/* Copy unmatched pspans into the local arrays. */
 for|for
@@ -6376,6 +6383,9 @@ block|{
 return|return
 operator|(
 operator|(
+operator|(
+name|u_int
+operator|)
 name|abs
 argument_list|(
 name|stroke
@@ -6392,6 +6402,9 @@ name|atp_small_movement_threshold
 operator|)
 operator|&&
 operator|(
+operator|(
+name|u_int
+operator|)
 name|abs
 argument_list|(
 name|stroke
@@ -6436,6 +6449,9 @@ name|delta_mickeys
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|u_int
+operator|)
 name|abs
 argument_list|(
 name|component
@@ -8228,7 +8244,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,
@@ -8607,6 +8622,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|int
+operator|)
 name|sc
 operator|->
 name|sc_params
@@ -8642,6 +8660,9 @@ if|if
 condition|(
 name|len
 operator|<
+operator|(
+name|int
+operator|)
 name|sc
 operator|->
 name|sc_params
@@ -10994,10 +11015,19 @@ name|driver_t
 name|atp_driver
 init|=
 block|{
+operator|.
+name|name
+operator|=
 name|ATP_DRIVER_NAME
 block|,
+operator|.
+name|methods
+operator|=
 name|atp_methods
 block|,
+operator|.
+name|size
+operator|=
 expr|sizeof
 operator|(
 expr|struct

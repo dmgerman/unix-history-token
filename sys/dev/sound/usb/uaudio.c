@@ -5897,15 +5897,6 @@ modifier|*
 name|pc
 decl_stmt|;
 name|uint32_t
-name|n
-decl_stmt|;
-name|uint32_t
-name|m
-decl_stmt|;
-name|uint32_t
-name|blockcount
-decl_stmt|;
-name|uint32_t
 name|offset0
 decl_stmt|;
 name|uint32_t
@@ -5915,6 +5906,12 @@ name|uint32_t
 name|mfl
 decl_stmt|;
 name|int
+name|m
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|int
 name|len
 decl_stmt|;
 name|int
@@ -5922,6 +5919,9 @@ name|actlen
 decl_stmt|;
 name|int
 name|nframes
+decl_stmt|;
+name|int
+name|blockcount
 decl_stmt|;
 name|usbd_xfer_status
 argument_list|(
@@ -6048,12 +6048,10 @@ name|m
 operator|>
 name|len
 condition|)
-block|{
 name|m
 operator|=
 name|len
 expr_stmt|;
-block|}
 name|usbd_copy_out
 argument_list|(
 name|pc
@@ -8804,7 +8802,7 @@ modifier|*
 name|d
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|uint32_t
@@ -8816,7 +8814,7 @@ name|uint32_t
 name|offset
 init|=
 operator|(
-name|index
+name|i
 operator|*
 name|d
 operator|->
@@ -12452,8 +12450,8 @@ block|}
 end_function
 
 begin_function
-specifier|const
 specifier|static
+specifier|const
 name|struct
 name|uaudio_terminal_node
 modifier|*
@@ -12466,7 +12464,7 @@ modifier|*
 name|iot
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -12518,10 +12516,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|i
 operator|--
 condition|)
-block|{
 return|return
 operator|(
 name|root
@@ -12529,7 +12526,6 @@ operator|+
 name|n
 operator|)
 return|;
-block|}
 block|}
 block|}
 do|while
@@ -12547,8 +12543,8 @@ block|}
 end_function
 
 begin_function
-specifier|const
 specifier|static
+specifier|const
 name|struct
 name|uaudio_terminal_node
 modifier|*
@@ -12561,7 +12557,7 @@ modifier|*
 name|iot
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -12613,10 +12609,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|i
 operator|--
 condition|)
-block|{
 return|return
 operator|(
 name|root
@@ -12624,7 +12619,6 @@ operator|+
 name|n
 operator|)
 return|;
-block|}
 block|}
 block|}
 do|while

@@ -1136,7 +1136,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,
