@@ -4985,6 +4985,24 @@ goto|goto
 name|out
 goto|;
 block|}
+comment|/* 	 * The file may have been removed after namei droped the original 	 * lock. 	 */
+if|if
+condition|(
+name|ip
+operator|->
+name|i_effnlink
+operator|==
+literal|0
+condition|)
+block|{
+name|error
+operator|=
+name|ENOENT
+expr_stmt|;
+goto|goto
+name|out
+goto|;
+block|}
 if|if
 condition|(
 name|ip
