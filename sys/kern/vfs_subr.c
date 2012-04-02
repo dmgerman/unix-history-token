@@ -11693,6 +11693,19 @@ name|vp
 argument_list|)
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|vp
+operator|->
+name|v_type
+operator|==
+name|VSOCK
+condition|)
+name|vfs_unp_reclaim
+argument_list|(
+name|vp
+argument_list|)
+expr_stmt|;
 comment|/* 	 * Reclaim the vnode. 	 */
 if|if
 condition|(

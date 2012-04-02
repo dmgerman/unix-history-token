@@ -4812,6 +4812,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|void
+name|vfs_unp_reclaim
+parameter_list|(
+name|struct
+name|vnode
+modifier|*
+name|vp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|int
 name|setfmode
 parameter_list|(
