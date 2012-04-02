@@ -1204,9 +1204,24 @@ end_define
 begin_define
 define|#
 directive|define
+name|UR_SET_AND_TEST
+value|0x0c
+end_define
+
+begin_comment
+comment|/* USB 2.0 only */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|UR_SET_HUB_DEPTH
 value|0x0c
 end_define
+
+begin_comment
+comment|/* USB 3.0 only */
+end_comment
 
 begin_define
 define|#
@@ -1345,6 +1360,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|UHF_PORT_L1
+value|10
+end_define
+
+begin_define
+define|#
+directive|define
 name|UHF_C_PORT_CONNECTION
 value|16
 end_define
@@ -1389,6 +1411,13 @@ define|#
 directive|define
 name|UHF_PORT_INDICATOR
 value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|UHF_C_PORT_L1
+value|23
 end_define
 
 begin_comment
@@ -1662,7 +1691,33 @@ decl_stmt|;
 define|#
 directive|define
 name|USB_V2EXT_LPM
-value|0x02
+value|(1U<< 1)
+define|#
+directive|define
+name|USB_V2EXT_BESL_SUPPORTED
+value|(1U<< 2)
+define|#
+directive|define
+name|USB_V2EXT_BESL_BASELINE_VALID
+value|(1U<< 3)
+define|#
+directive|define
+name|USB_V2EXT_BESL_DEEP_VALID
+value|(1U<< 4)
+define|#
+directive|define
+name|USB_V2EXT_BESL_BASELINE_GET
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 8)& 0xF)
+define|#
+directive|define
+name|USB_V2EXT_BESL_DEEP_GET
+parameter_list|(
+name|x
+parameter_list|)
+value|(((x)>> 12)& 0xF)
 block|}
 name|__packed
 struct|;
@@ -3285,6 +3340,11 @@ define|#
 directive|define
 name|UPS_RESET
 value|0x0010
+define|#
+directive|define
+name|UPS_PORT_L1
+value|0x0020
+comment|/* USB 2.0 only */
 comment|/* The link-state bits are valid for Super-Speed USB HUBs */
 define|#
 directive|define
@@ -3412,8 +3472,14 @@ name|UPS_C_PORT_RESET
 value|0x0010
 define|#
 directive|define
+name|UPS_C_PORT_L1
+value|0x0020
+comment|/* USB 2.0 only */
+define|#
+directive|define
 name|UPS_C_BH_PORT_RESET
 value|0x0020
+comment|/* USB 3.0 only */
 define|#
 directive|define
 name|UPS_C_PORT_LINK_STATE
