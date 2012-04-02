@@ -23,12 +23,6 @@ directive|include
 file|<dev/mfi/mfireg.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/bus.h>
-end_include
-
 begin_struct
 struct|struct
 name|iovec32
@@ -38,20 +32,6 @@ name|iov_base
 decl_stmt|;
 name|int
 name|iov_len
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_struct
-struct|struct
-name|megasas_sge
-block|{
-name|bus_addr_t
-name|phys_addr
-decl_stmt|;
-name|uint32_t
-name|length
 decl_stmt|;
 block|}
 struct|;

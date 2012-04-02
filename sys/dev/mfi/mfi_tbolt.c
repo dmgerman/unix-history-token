@@ -2495,7 +2495,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|atomic_read
+name|mfi_atomic_read
 argument_list|(
 operator|&
 name|sc

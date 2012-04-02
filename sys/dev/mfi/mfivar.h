@@ -410,6 +410,20 @@ block|}
 struct|;
 end_struct
 
+begin_struct
+struct|struct
+name|megasas_sge
+block|{
+name|bus_addr_t
+name|phys_addr
+decl_stmt|;
+name|uint32_t
+name|length
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_struct_decl
 struct_decl|struct
 name|mfi_cmd_tbolt
@@ -432,7 +446,7 @@ end_struct
 begin_define
 define|#
 directive|define
-name|atomic_read
+name|mfi_atomic_read
 parameter_list|(
 name|v
 parameter_list|)
@@ -442,7 +456,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|atomic_set
+name|mfi_atomic_set
 parameter_list|(
 name|v
 parameter_list|,
@@ -2137,7 +2151,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|SKINNY_MEMORY
+name|MFI_SKINNY_MEMORY
 value|0x02000000
 end_define
 
