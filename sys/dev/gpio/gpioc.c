@@ -392,7 +392,6 @@ name|sc
 operator|->
 name|sc_ctl_dev
 condition|)
-empty_stmt|;
 name|destroy_dev
 argument_list|(
 name|sc
