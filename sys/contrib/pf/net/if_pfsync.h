@@ -612,7 +612,7 @@ name|int
 name|pfsyncr_maxupdates
 decl_stmt|;
 name|int
-name|pfsyncr_authlevel
+name|pfsyncr_defer
 decl_stmt|;
 block|}
 struct|;

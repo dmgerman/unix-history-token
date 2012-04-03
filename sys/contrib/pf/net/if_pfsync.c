@@ -12,7 +12,7 @@ comment|/*  * Copyright (c) 2009 David Gwynne<dlg@openbsd.org>  *  * Permission 
 end_comment
 
 begin_comment
-comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  */
+comment|/*  * Revisions picked from OpenBSD after revision 1.110 import:  * 1.118, 1.124, 1.148, 1.149, 1.151, 1.171 - fixes to bulk updates  * 1.120, 1.175 - use monotonic time_uptime  * 1.122 - reduce number of updates for non-TCP sessions  * 1.128 - cleanups  * 1.146 - bzero() mbuf before sparsely filling it with data  * 1.170 - SIOCSIFMTU checks  * 1.126, 1.142 - deferred packets processing  */
 end_comment
 
 begin_ifdef
@@ -1202,6 +1202,9 @@ decl_stmt|;
 name|struct
 name|pfsync_upd_reqs
 name|sc_upd_req_list
+decl_stmt|;
+name|int
+name|sc_defer
 decl_stmt|;
 name|struct
 name|pfsync_deferrals
@@ -9558,6 +9561,14 @@ name|sc
 operator|->
 name|sc_maxupdates
 expr_stmt|;
+name|pfsyncr
+operator|.
+name|pfsyncr_defer
+operator|=
+name|sc
+operator|->
+name|sc_defer
+expr_stmt|;
 return|return
 operator|(
 name|copyout
@@ -9741,6 +9752,14 @@ operator|=
 name|pfsyncr
 operator|.
 name|pfsyncr_maxupdates
+expr_stmt|;
+name|sc
+operator|->
+name|sc_defer
+operator|=
+name|pfsyncr
+operator|.
+name|pfsyncr_defer
 expr_stmt|;
 if|if
 condition|(
@@ -12446,23 +12465,6 @@ argument_list|,
 name|PFSYNC_S_INS
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|ISSET
-argument_list|(
-name|st
-operator|->
-name|state_flags
-argument_list|,
-name|PFSTATE_ACK
-argument_list|)
-condition|)
-name|schednetisr
-argument_list|(
-name|NETISR_PFSYNC
-argument_list|)
-expr_stmt|;
-else|else
 name|st
 operator|->
 name|sync_updates
@@ -12530,6 +12532,28 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+operator|!
+name|sc
+operator|->
+name|sc_defer
+operator|||
+name|m
+operator|->
+name|m_flags
+operator|&
+operator|(
+name|M_BCAST
+operator||
+name|M_MCAST
+operator|)
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 if|if
 condition|(
 name|sc
@@ -12688,6 +12712,13 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
+name|swi_sched
+argument_list|(
+name|V_pfsync_swi_cookie
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|1
