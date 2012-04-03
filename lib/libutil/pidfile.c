@@ -89,6 +89,31 @@ directive|include
 file|<libutil.h>
 end_include
 
+begin_struct
+struct|struct
+name|pidfh
+block|{
+name|int
+name|pf_fd
+decl_stmt|;
+name|char
+name|pf_path
+index|[
+name|MAXPATHLEN
+operator|+
+literal|1
+index|]
+decl_stmt|;
+name|dev_t
+name|pf_dev
+decl_stmt|;
+name|ino_t
+name|pf_ino
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_function_decl
 specifier|static
 name|int
@@ -110,6 +135,7 @@ specifier|static
 name|int
 name|pidfile_verify
 parameter_list|(
+specifier|const
 name|struct
 name|pidfh
 modifier|*
@@ -1064,6 +1090,7 @@ begin_function
 name|int
 name|pidfile_fileno
 parameter_list|(
+specifier|const
 name|struct
 name|pidfh
 modifier|*
