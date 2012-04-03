@@ -288,7 +288,7 @@ literal|0x8086
 block|,
 literal|0x0082
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N 6205"
+literal|"Intel Centrino Advanced-N 6205"
 block|}
 block|,
 block|{
@@ -296,7 +296,7 @@ literal|0x8086
 block|,
 literal|0x0083
 block|,
-literal|"Intel(R) Centrino(R) Wireless-N 1000"
+literal|"Intel Centrino Wireless-N 1000"
 block|}
 block|,
 block|{
@@ -304,7 +304,7 @@ literal|0x8086
 block|,
 literal|0x0084
 block|,
-literal|"Intel(R) Centrino(R) Wireless-N 1000"
+literal|"Intel Centrino Wireless-N 1000"
 block|}
 block|,
 block|{
@@ -312,7 +312,7 @@ literal|0x8086
 block|,
 literal|0x0085
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N 6205"
+literal|"Intel Centrino Advanced-N 6205"
 block|}
 block|,
 block|{
@@ -320,7 +320,7 @@ literal|0x8086
 block|,
 literal|0x0087
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N + WiMAX 6250"
+literal|"Intel Centrino Advanced-N + WiMAX 6250"
 block|}
 block|,
 block|{
@@ -328,7 +328,7 @@ literal|0x8086
 block|,
 literal|0x0089
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N + WiMAX 6250"
+literal|"Intel Centrino Advanced-N + WiMAX 6250"
 block|}
 block|,
 block|{
@@ -336,7 +336,7 @@ literal|0x8086
 block|,
 literal|0x008a
 block|,
-literal|"Intel(R) Centrino(R) Wireless-N 1030"
+literal|"Intel Centrino Wireless-N 1030"
 block|}
 block|,
 block|{
@@ -344,7 +344,7 @@ literal|0x8086
 block|,
 literal|0x008b
 block|,
-literal|"Intel(R) Centrino(R) Wireless-N 1030"
+literal|"Intel Centrino Wireless-N 1030"
 block|}
 block|,
 block|{
@@ -352,7 +352,7 @@ literal|0x8086
 block|,
 literal|0x0090
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N 6230"
+literal|"Intel Centrino Advanced-N 6230"
 block|}
 block|,
 block|{
@@ -360,7 +360,7 @@ literal|0x8086
 block|,
 literal|0x0091
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N 6230"
+literal|"Intel Centrino Advanced-N 6230"
 block|}
 block|,
 block|{
@@ -368,7 +368,7 @@ literal|0x8086
 block|,
 literal|0x0885
 block|,
-literal|"Intel(R) Centrino(R) Wireless-N + WiMAX 6150"
+literal|"Intel Centrino Wireless-N + WiMAX 6150"
 block|}
 block|,
 block|{
@@ -376,7 +376,7 @@ literal|0x8086
 block|,
 literal|0x0886
 block|,
-literal|"Intel(R) Centrino(R) Wireless-N + WiMAX 6150"
+literal|"Intel Centrino Wireless-N + WiMAX 6150"
 block|}
 block|,
 block|{
@@ -384,7 +384,7 @@ literal|0x8086
 block|,
 literal|0x0896
 block|,
-literal|"Intel(R) Centrino(R) Wireless-N 130"
+literal|"Intel Centrino Wireless-N 130"
 block|}
 block|,
 block|{
@@ -392,7 +392,7 @@ literal|0x8086
 block|,
 literal|0x4229
 block|,
-literal|"Intel(R) Wireless WiFi Link 4965"
+literal|"Intel Wireless WiFi Link 4965"
 block|}
 block|,
 block|{
@@ -400,7 +400,7 @@ literal|0x8086
 block|,
 literal|0x422b
 block|,
-literal|"Intel(R) Centrino(R) Ultimate-N 6300"
+literal|"Intel Centrino Ultimate-N 6300"
 block|}
 block|,
 block|{
@@ -408,7 +408,7 @@ literal|0x8086
 block|,
 literal|0x422c
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N 6200"
+literal|"Intel Centrino Advanced-N 6200"
 block|}
 block|,
 block|{
@@ -416,7 +416,7 @@ literal|0x8086
 block|,
 literal|0x422d
 block|,
-literal|"Intel(R) Wireless WiFi Link 4965"
+literal|"Intel Wireless WiFi Link 4965"
 block|}
 block|,
 block|{
@@ -424,7 +424,7 @@ literal|0x8086
 block|,
 literal|0x4230
 block|,
-literal|"Intel(R) Wireless WiFi Link 4965"
+literal|"Intel Wireless WiFi Link 4965"
 block|}
 block|,
 block|{
@@ -432,7 +432,7 @@ literal|0x8086
 block|,
 literal|0x4232
 block|,
-literal|"Intel(R) WiFi Link 5100"
+literal|"Intel WiFi Link 5100"
 block|}
 block|,
 block|{
@@ -440,7 +440,7 @@ literal|0x8086
 block|,
 literal|0x4233
 block|,
-literal|"Intel(R) Wireless WiFi Link 4965"
+literal|"Intel Wireless WiFi Link 4965"
 block|}
 block|,
 block|{
@@ -448,7 +448,7 @@ literal|0x8086
 block|,
 literal|0x4235
 block|,
-literal|"Intel(R) Ultimate N WiFi Link 5300"
+literal|"Intel Ultimate N WiFi Link 5300"
 block|}
 block|,
 block|{
@@ -456,7 +456,7 @@ literal|0x8086
 block|,
 literal|0x4236
 block|,
-literal|"Intel(R) Ultimate N WiFi Link 5300"
+literal|"Intel Ultimate N WiFi Link 5300"
 block|}
 block|,
 block|{
@@ -464,7 +464,7 @@ literal|0x8086
 block|,
 literal|0x4237
 block|,
-literal|"Intel(R) WiFi Link 5100"
+literal|"Intel WiFi Link 5100"
 block|}
 block|,
 block|{
@@ -472,7 +472,7 @@ literal|0x8086
 block|,
 literal|0x4238
 block|,
-literal|"Intel(R) Centrino(R) Ultimate-N 6300"
+literal|"Intel Centrino Ultimate-N 6300"
 block|}
 block|,
 block|{
@@ -480,7 +480,7 @@ literal|0x8086
 block|,
 literal|0x4239
 block|,
-literal|"Intel(R) Centrino(R) Advanced-N 6200"
+literal|"Intel Centrino Advanced-N 6200"
 block|}
 block|,
 block|{
@@ -488,7 +488,7 @@ literal|0x8086
 block|,
 literal|0x423a
 block|,
-literal|"Intel(R) WiMAX/WiFi Link 5350"
+literal|"Intel WiMAX/WiFi Link 5350"
 block|}
 block|,
 block|{
@@ -496,7 +496,7 @@ literal|0x8086
 block|,
 literal|0x423b
 block|,
-literal|"Intel(R) WiMAX/WiFi Link 5350"
+literal|"Intel WiMAX/WiFi Link 5350"
 block|}
 block|,
 block|{
@@ -504,7 +504,7 @@ literal|0x8086
 block|,
 literal|0x423c
 block|,
-literal|"Intel(R) WiMAX/WiFi Link 5150"
+literal|"Intel WiMAX/WiFi Link 5150"
 block|}
 block|,
 block|{
@@ -512,7 +512,7 @@ literal|0x8086
 block|,
 literal|0x423d
 block|,
-literal|"Intel(R) WiMAX/WiFi Link 5150"
+literal|"Intel WiMAX/WiFi Link 5150"
 block|}
 block|,
 block|{
