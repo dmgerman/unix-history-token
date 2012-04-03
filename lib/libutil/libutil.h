@@ -1067,6 +1067,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|int
+name|pidfile_fileno
+parameter_list|(
+name|struct
+name|pidfh
+modifier|*
+name|pfh
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif
