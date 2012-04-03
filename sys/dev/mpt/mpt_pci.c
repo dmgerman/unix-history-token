@@ -225,6 +225,24 @@ end_endif
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|MPI_MANUFACTPAGE_DEVID_SAS1068E_FB
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MPI_MANUFACTPAGE_DEVID_SAS1068E_FB
+value|0x0059
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|MPI_MANUFACTPAGE_DEVID_SAS1078DE_FB
 end_ifndef
 
@@ -637,6 +655,9 @@ name|MPI_MANUFACTPAGE_DEVID_SAS1068A_FB
 case|:
 case|case
 name|MPI_MANUFACTPAGE_DEVID_SAS1068E
+case|:
+case|case
+name|MPI_MANUFACTPAGE_DEVID_SAS1068E_FB
 case|:
 case|case
 name|MPI_MANUFACTPAGE_DEVID_SAS1078
@@ -1522,6 +1543,9 @@ name|MPI_MANUFACTPAGE_DEVID_SAS1068A_FB
 case|:
 case|case
 name|MPI_MANUFACTPAGE_DEVID_SAS1068E
+case|:
+case|case
+name|MPI_MANUFACTPAGE_DEVID_SAS1068E_FB
 case|:
 name|mpt
 operator|->
