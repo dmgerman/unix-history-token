@@ -843,6 +843,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sc
@@ -3226,6 +3229,9 @@ if|if
 condition|(
 name|isize
 operator|>
+operator|(
+name|int
+operator|)
 name|usbd_xfer_max_framelen
 argument_list|(
 name|sc
@@ -3631,7 +3637,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,

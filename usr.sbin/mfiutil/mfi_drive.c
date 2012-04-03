@@ -595,7 +595,7 @@ name|MFI_PD_STATE_SYSTEM
 case|:
 return|return
 operator|(
-literal|"SYSTEM"
+literal|"JBOD"
 operator|)
 return|;
 default|default:

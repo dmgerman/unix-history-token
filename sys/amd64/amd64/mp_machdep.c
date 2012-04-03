@@ -5896,6 +5896,9 @@ operator|->
 name|pcb_cr3
 argument_list|)
 expr_stmt|;
+name|initializecpu
+argument_list|()
+expr_stmt|;
 name|PCPU_SET
 argument_list|(
 name|switchtime

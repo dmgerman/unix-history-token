@@ -1000,7 +1000,7 @@ name|ucom_softc
 modifier|*
 name|sc
 parameter_list|,
-name|uint32_t
+name|int
 name|subunits
 parameter_list|,
 name|void
@@ -1019,7 +1019,7 @@ modifier|*
 name|mtx
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|subunit
 decl_stmt|;
 name|int
@@ -1037,7 +1037,7 @@ operator|)
 operator|||
 operator|(
 name|subunits
-operator|==
+operator|<=
 literal|0
 operator|)
 operator|||
@@ -1289,7 +1289,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-name|uint32_t
+name|int
 name|subunit
 decl_stmt|;
 if|if
@@ -4840,28 +4840,6 @@ name|sc
 argument_list|)
 expr_stmt|;
 comment|/* Check requested parameters. */
-if|if
-condition|(
-name|t
-operator|->
-name|c_ospeed
-operator|<
-literal|0
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-literal|"negative ospeed\n"
-argument_list|)
-expr_stmt|;
-name|error
-operator|=
-name|EINVAL
-expr_stmt|;
-goto|goto
-name|done
-goto|;
-block|}
 if|if
 condition|(
 name|t

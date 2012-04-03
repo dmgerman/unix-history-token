@@ -295,6 +295,9 @@ name|FALSE
 expr_stmt|;
 switch|switch
 condition|(
+operator|(
+name|int
+operator|)
 name|completion_status
 condition|)
 block|{

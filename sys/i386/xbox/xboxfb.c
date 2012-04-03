@@ -132,7 +132,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/legacyvar.h>
+file|<x86/legacyvar.h>
 end_include
 
 begin_include

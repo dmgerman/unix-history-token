@@ -2088,7 +2088,8 @@ argument_list|)
 decl_stmt|;
 name|int
 name|actlen
-decl_stmt|,
+decl_stmt|;
+name|int
 name|sumlen
 decl_stmt|;
 name|usbd_xfer_status
@@ -2122,6 +2123,9 @@ if|if
 condition|(
 name|actlen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sc

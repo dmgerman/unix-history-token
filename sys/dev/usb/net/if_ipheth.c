@@ -2102,7 +2102,10 @@ if|if
 condition|(
 name|len
 operator|<
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 expr|struct
@@ -2110,7 +2113,7 @@ name|ether_header
 argument_list|)
 operator|+
 name|IPHETH_RX_ADJ
-operator|)
+argument_list|)
 condition|)
 block|{
 name|m_freem

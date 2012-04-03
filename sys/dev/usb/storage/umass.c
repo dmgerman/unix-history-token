@@ -6372,6 +6372,9 @@ if|if
 condition|(
 name|actlen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sc
@@ -8776,6 +8779,9 @@ if|if
 condition|(
 name|actlen
 operator|<
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|sc

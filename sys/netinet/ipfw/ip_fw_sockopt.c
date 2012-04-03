@@ -636,17 +636,6 @@ operator||
 name|M_ZERO
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|rule
-operator|==
-name|NULL
-condition|)
-return|return
-operator|(
-name|ENOSPC
-operator|)
-return|;
 comment|/* get_map returns with IPFW_UH_WLOCK if successful */
 name|map
 operator|=
@@ -4068,13 +4057,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|buf
-operator|==
-name|NULL
-condition|)
-break|break;
 name|IPFW_UH_RLOCK
 argument_list|(
 name|chain

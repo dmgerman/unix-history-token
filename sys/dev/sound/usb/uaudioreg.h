@@ -317,7 +317,7 @@ name|p
 parameter_list|,
 name|n
 parameter_list|)
-value|(((p)->tSamFreq[((n)*3)+0]) |	    \ 			  ((p)->tSamFreq[((n)*3)+1]<< 8) | \ 			  ((p)->tSamFreq[((n)*3)+2]<< 16))
+value|((uint32_t)((((p)->tSamFreq[((n)*3)+0]) | \ 			  ((p)->tSamFreq[((n)*3)+1]<< 8) | \ 			  ((p)->tSamFreq[((n)*3)+2]<< 16))))
 define|#
 directive|define
 name|UA_SAMP_LO

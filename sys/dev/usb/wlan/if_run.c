@@ -277,11 +277,11 @@ end_include
 begin_define
 define|#
 directive|define
-name|nitems
+name|N
 parameter_list|(
 name|_a
 parameter_list|)
-value|(sizeof((_a)) / sizeof((_a)[0]))
+value|((int)(sizeof((_a)) / sizeof((_a)[0])))
 end_define
 
 begin_ifdef
@@ -4373,7 +4373,7 @@ literal|14
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt2860_rf2850
 argument_list|)
@@ -15222,6 +15222,10 @@ if|if
 condition|(
 name|xferlen
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|uint32_t
@@ -15237,6 +15241,7 @@ sizeof|sizeof
 argument_list|(
 expr|struct
 name|rt2870_rxd
+argument_list|)
 argument_list|)
 condition|)
 block|{
@@ -15478,6 +15483,16 @@ if|if
 condition|(
 operator|(
 name|dmalen
+operator|>=
+operator|(
+name|uint32_t
+operator|)
+operator|-
+literal|8
+operator|)
+operator|||
+operator|(
+name|dmalen
 operator|==
 literal|0
 operator|)
@@ -15510,6 +15525,9 @@ operator|+
 literal|8
 operator|)
 operator|>
+operator|(
+name|uint32_t
+operator|)
 name|xferlen
 condition|)
 block|{
@@ -24382,7 +24400,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt2860_def_bbp
 argument_list|)
@@ -24598,7 +24616,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt3572_def_rf
 argument_list|)
@@ -24638,7 +24656,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt3070_def_rf
 argument_list|)
@@ -26854,7 +26872,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|nitems
+name|N
 argument_list|(
 name|rt2870_def_mac
 argument_list|)
@@ -28040,10 +28058,19 @@ name|driver_t
 name|run_driver
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"run"
 block|,
+operator|.
+name|methods
+operator|=
 name|run_methods
 block|,
+operator|.
+name|size
+operator|=
 expr|sizeof
 operator|(
 expr|struct

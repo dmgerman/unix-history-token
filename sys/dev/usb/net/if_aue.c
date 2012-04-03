@@ -3730,6 +3730,9 @@ operator|)
 operator|&&
 name|actlen
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|pkt
@@ -3968,12 +3971,17 @@ if|if
 condition|(
 name|actlen
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|stat
 argument_list|)
 operator|+
 name|ETHER_CRC_LEN
+argument_list|)
 condition|)
 block|{
 name|ifp
