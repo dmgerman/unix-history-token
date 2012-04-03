@@ -894,6 +894,12 @@ literal|1
 decl_stmt|;
 comment|/* True if this is the dynamic linker */
 name|bool
+name|relocated
+range|:
+literal|1
+decl_stmt|;
+comment|/* True if processed by relocate_objects() */
+name|bool
 name|textrel
 range|:
 literal|1
@@ -1091,6 +1097,17 @@ begin_comment
 comment|/* Return newest versioned symbol. Used by 				   dlsym. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SYMLOOK_EARLY
+value|0x04
+end_define
+
+begin_comment
+comment|/* Symlook is done during initialization. */
+end_comment
+
 begin_comment
 comment|/* Flags for load_object(). */
 end_comment
@@ -1148,6 +1165,17 @@ end_define
 
 begin_comment
 comment|/* Loading filtee. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_LO_EARLY
+value|0x20
+end_define
+
+begin_comment
+comment|/* Do not call ctors, postpone it to the 				   initialization during the image start. */
 end_comment
 
 begin_comment
@@ -1711,6 +1739,9 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|Struct_RtldLockState
 modifier|*
@@ -1734,6 +1765,9 @@ name|reloc_jmpslots
 parameter_list|(
 name|Obj_Entry
 modifier|*
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|Struct_RtldLockState
@@ -1762,6 +1796,9 @@ name|reloc_gnu_ifunc
 parameter_list|(
 name|Obj_Entry
 modifier|*
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|Struct_RtldLockState

@@ -511,6 +511,9 @@ name|SymCache
 modifier|*
 name|cache
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -611,7 +614,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -712,7 +715,9 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|true
+name|SYMLOOK_IN_PLT
+operator||
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -918,7 +923,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -1040,7 +1045,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -1098,7 +1103,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -1160,7 +1165,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -1288,6 +1293,9 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 name|obj_rtld
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|RtldLockState
 modifier|*
@@ -1448,6 +1456,8 @@ name|locrela
 argument_list|,
 name|cache
 argument_list|,
+name|flags
+argument_list|,
 name|lockstate
 argument_list|)
 condition|)
@@ -1509,6 +1519,8 @@ argument_list|,
 name|rela
 argument_list|,
 name|cache
+argument_list|,
+name|flags
 argument_list|,
 name|lockstate
 argument_list|)
@@ -1806,6 +1818,9 @@ name|Obj_Entry
 modifier|*
 name|obj
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|Struct_RtldLockState
 modifier|*
@@ -1832,6 +1847,9 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|RtldLockState
 modifier|*
@@ -1962,7 +1980,9 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|true
+name|SYMLOOK_IN_PLT
+operator||
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -2100,7 +2120,9 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|true
+name|SYMLOOK_IN_PLT
+operator||
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
