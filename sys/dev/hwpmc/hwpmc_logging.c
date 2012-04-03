@@ -1285,6 +1285,7 @@ operator|->
 name|po_mtx
 argument_list|)
 expr_stmt|;
+comment|/* No more buffers and shutdown required. */
 if|if
 condition|(
 name|po
@@ -1316,6 +1317,7 @@ operator|&
 name|pmc_kthread_mtx
 argument_list|)
 expr_stmt|;
+break|break;
 block|}
 operator|(
 name|void
@@ -1576,6 +1578,13 @@ operator|=
 name|NULL
 expr_stmt|;
 block|}
+name|wakeup_one
+argument_list|(
+name|po
+operator|->
+name|po_kthread
+argument_list|)
+expr_stmt|;
 name|po
 operator|->
 name|po_kthread
@@ -2840,12 +2849,6 @@ operator|)
 argument_list|)
 expr_stmt|;
 comment|/* stop the kthread, this will reset the 'OWNS_LOGFILE' flag */
-if|if
-condition|(
-name|po
-operator|->
-name|po_kthread
-condition|)
 name|pmclog_stop_kthread
 argument_list|(
 name|po
