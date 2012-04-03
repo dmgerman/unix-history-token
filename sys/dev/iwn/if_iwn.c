@@ -366,6 +366,22 @@ block|,
 block|{
 literal|0x8086
 block|,
+literal|0x0885
+block|,
+literal|"Intel(R) Centrino(R) Wireless-N + WiMAX 6150"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
+literal|0x0886
+block|,
+literal|"Intel(R) Centrino(R) Wireless-N + WiMAX 6150"
+block|}
+block|,
+block|{
+literal|0x8086
+block|,
 literal|0x0896
 block|,
 literal|"Intel(R) Centrino(R) Wireless-N 130"
