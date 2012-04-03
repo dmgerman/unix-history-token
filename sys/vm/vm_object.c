@@ -2785,12 +2785,6 @@ operator|->
 name|cached_page_count
 operator|!=
 literal|0
-operator|&&
-name|object
-operator|->
-name|type
-operator|==
-name|OBJT_VNODE
 condition|)
 block|{
 name|object
@@ -2799,6 +2793,14 @@ name|cached_page_count
 operator|=
 literal|0
 expr_stmt|;
+if|if
+condition|(
+name|object
+operator|->
+name|type
+operator|==
+name|OBJT_VNODE
+condition|)
 name|vdrop
 argument_list|(
 name|object
