@@ -900,6 +900,12 @@ literal|1
 decl_stmt|;
 comment|/* True if processed by relocate_objects() */
 name|bool
+name|ver_checked
+range|:
+literal|1
+decl_stmt|;
+comment|/* True if processed by rtld_verify_object_versions */
+name|bool
 name|textrel
 range|:
 literal|1
