@@ -703,9 +703,12 @@ name|int
 name|zc_cleanup_fd
 decl_stmt|;
 name|uint8_t
+name|zc_simple
+decl_stmt|;
+name|uint8_t
 name|zc_pad
 index|[
-literal|4
+literal|3
 index|]
 decl_stmt|;
 comment|/* alignment */

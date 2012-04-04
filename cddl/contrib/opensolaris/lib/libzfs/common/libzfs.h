@@ -2196,6 +2196,8 @@ parameter_list|(
 name|zfs_handle_t
 modifier|*
 parameter_list|,
+name|boolean_t
+parameter_list|,
 name|zfs_iter_f
 parameter_list|,
 name|void
