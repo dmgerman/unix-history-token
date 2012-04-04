@@ -503,6 +503,9 @@ name|char
 modifier|*
 name|desc
 decl_stmt|;
+name|int
+name|rval
+decl_stmt|;
 if|if
 condition|(
 name|pci_get_vendor
@@ -517,6 +520,10 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+name|rval
+operator|=
+name|BUS_PROBE_DEFAULT
+expr_stmt|;
 switch|switch
 condition|(
 name|pci_get_device
@@ -633,6 +640,15 @@ literal|"LSILogic 1030 Ultra4 Adapter"
 expr_stmt|;
 break|break;
 case|case
+name|MPI_MANUFACTPAGE_DEVID_SAS1068E_FB
+case|:
+comment|/* 		 * Allow mfi(4) to claim this device in case it's in MegaRAID 		 * mode. 		 */
+name|rval
+operator|=
+name|BUS_PROBE_LOW_PRIORITY
+expr_stmt|;
+comment|/* FALLTHROUGH */
+case|case
 name|MPI_MANUFACTPAGE_DEVID_SAS1064
 case|:
 case|case
@@ -655,9 +671,6 @@ name|MPI_MANUFACTPAGE_DEVID_SAS1068A_FB
 case|:
 case|case
 name|MPI_MANUFACTPAGE_DEVID_SAS1068E
-case|:
-case|case
-name|MPI_MANUFACTPAGE_DEVID_SAS1068E_FB
 case|:
 case|case
 name|MPI_MANUFACTPAGE_DEVID_SAS1078
@@ -686,7 +699,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-literal|0
+name|rval
 operator|)
 return|;
 block|}
