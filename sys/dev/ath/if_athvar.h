@@ -327,6 +327,14 @@ name|int
 name|paused
 decl_stmt|;
 comment|/*>0 if the TID has been paused */
+name|int
+name|bar_wait
+decl_stmt|;
+comment|/* waiting for BAR */
+name|int
+name|bar_tx
+decl_stmt|;
+comment|/* BAR TXed */
 comment|/* 	 * Is the TID being cleaned up after a transition 	 * from aggregation to non-aggregation? 	 * When this is set to 1, this TID will be paused 	 * and no further traffic will be queued until all 	 * the hardware packets pending for this TID have been 	 * TXed/completed; at which point (non-aggregation) 	 * traffic will resume being TXed. 	 */
 name|int
 name|cleanup_inprogress
