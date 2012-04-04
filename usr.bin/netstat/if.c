@@ -353,7 +353,7 @@ if|if
 condition|(
 name|sysctlbyname
 argument_list|(
-literal|"net.inet.pfsync.stats"
+literal|"net.pfsync.stats"
 argument_list|,
 operator|&
 name|pfsyncstat
@@ -386,7 +386,7 @@ name|ENOENT
 condition|)
 name|warn
 argument_list|(
-literal|"sysctl: net.inet.pfsync.stats"
+literal|"sysctl: net.pfsync.stats"
 argument_list|)
 expr_stmt|;
 return|return;
