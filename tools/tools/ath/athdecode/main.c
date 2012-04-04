@@ -1801,9 +1801,13 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"\n%05d: "
+literal|"\n%05d: [%d] "
 argument_list|,
 name|recnum
+argument_list|,
+name|r
+operator|->
+name|threadid
 argument_list|)
 expr_stmt|;
 name|dr
