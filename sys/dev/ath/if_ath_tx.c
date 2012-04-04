@@ -10825,7 +10825,10 @@ operator|-
 literal|1
 argument_list|)
 expr_stmt|;
-comment|//t = 1;
+name|t
+operator|=
+literal|1
+expr_stmt|;
 block|}
 comment|/* 		 * If the current TID is running AMPDU, update 		 * the BAW. 		 */
 if|if
