@@ -1490,6 +1490,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_WA_D3_L1_DISABLE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* bit 23 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_WA_DEFAULT
 value|0x0000073f
 end_define
@@ -1498,8 +1509,12 @@ begin_define
 define|#
 directive|define
 name|AR9280_WA_DEFAULT
-value|0x0040073f
+value|0x0040073b
 end_define
+
+begin_comment
+comment|/* disable bit 2, see commit */
+end_comment
 
 begin_define
 define|#
