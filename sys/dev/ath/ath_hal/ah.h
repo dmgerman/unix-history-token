@@ -4187,6 +4187,8 @@ parameter_list|,
 name|HAL_BOOL
 parameter_list|,
 name|HAL_BOOL
+parameter_list|,
+name|HAL_BOOL
 parameter_list|)
 function_decl|;
 name|HAL_BOOL

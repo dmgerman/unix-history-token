@@ -2505,6 +2505,9 @@ name|firstSeg
 parameter_list|,
 name|HAL_BOOL
 name|lastSeg
+parameter_list|,
+name|HAL_BOOL
+name|lastAggr
 parameter_list|)
 function_decl|;
 end_function_decl

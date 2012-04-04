@@ -1520,7 +1520,14 @@ operator|->
 name|bf_nseg
 operator|-
 literal|1
+argument_list|,
 comment|/* last segment */
+name|bf
+operator|->
+name|bf_next
+operator|==
+name|NULL
+comment|/* last sub-frame in aggr */
 argument_list|)
 expr_stmt|;
 name|DPRINTF

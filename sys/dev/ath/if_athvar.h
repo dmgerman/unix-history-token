@@ -4321,9 +4321,11 @@ parameter_list|,
 name|_first
 parameter_list|,
 name|_last
+parameter_list|,
+name|_lastaggr
 parameter_list|)
 define|\
-value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last)))
+value|((*(_ah)->ah_chainTxDesc)((_ah), (_ds), (_pktlen), (_hdrlen), \ 	(_type), (_keyix), (_cipher), (_delims), (_seglen), \ 	(_first), (_last), (_lastaggr)))
 end_define
 
 begin_define
