@@ -57,12 +57,6 @@ directive|include
 file|<sys/taskqueue.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<machine/atomic.h>
-end_include
-
 begin_comment
 comment|/*  * SCSI structures and definitions are used from here, but no linking  * requirements are made to CAM.  */
 end_comment
@@ -432,41 +426,6 @@ end_struct_decl
 
 begin_struct
 struct|struct
-name|mfi_atomic
-block|{
-specifier|volatile
-name|unsigned
-name|int
-name|val
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_define
-define|#
-directive|define
-name|mfi_atomic_read
-parameter_list|(
-name|v
-parameter_list|)
-value|((v)->val)
-end_define
-
-begin_define
-define|#
-directive|define
-name|mfi_atomic_set
-parameter_list|(
-name|v
-parameter_list|,
-name|i
-parameter_list|)
-value|((v)->val - (i))
-end_define
-
-begin_struct
-struct|struct
 name|mfi_softc
 block|{
 name|device_t
@@ -732,10 +691,6 @@ name|eventhandler_tag
 name|eh
 decl_stmt|;
 comment|/* OCR flags */
-name|struct
-name|mfi_atomic
-name|fw_reset_no_pci_access
-decl_stmt|;
 name|uint8_t
 name|adpreset
 decl_stmt|;
