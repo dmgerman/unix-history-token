@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: hmacmd5.c,v 1.16 2009-02-06 23:47:42 tbox Exp $ */
+comment|/* $Id: hmacmd5.c,v 1.16 2009/02/06 23:47:42 tbox Exp $ */
 end_comment
 
 begin_comment

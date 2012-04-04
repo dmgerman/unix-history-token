@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009, 2011  Internet Systems Consor
 end_comment
 
 begin_comment
-comment|/* $Id: rndc-confgen.c,v 1.5.308.2 2011-03-12 04:59:13 tbox Exp $ */
+comment|/* $Id: rndc-confgen.c,v 1.5.308.2 2011/03/12 04:59:13 tbox Exp $ */
 end_comment
 
 begin_comment

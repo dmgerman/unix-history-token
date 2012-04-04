@@ -46,7 +46,7 @@ name|char
 name|rcsid
 index|[]
 init|=
-literal|"$Id: inet_aton.c,v 1.23 2008-12-01 23:47:45 tbox Exp $"
+literal|"$Id: inet_aton.c,v 1.23 2008/12/01 23:47:45 tbox Exp $"
 decl_stmt|;
 end_decl_stmt
 

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2010  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: dns64.h,v 1.3 2010-12-08 23:51:56 tbox Exp $ */
+comment|/* $Id: dns64.h,v 1.3 2010/12/08 23:51:56 tbox Exp $ */
 end_comment
 
 begin_ifndef

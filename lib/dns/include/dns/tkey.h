@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009-2011  Internet Systems Consortium, I
 end_comment
 
 begin_comment
-comment|/* $Id: tkey.h,v 1.32 2011-01-08 23:47:01 tbox Exp $ */
+comment|/* $Id: tkey.h,v 1.32 2011/01/08 23:47:01 tbox Exp $ */
 end_comment
 
 begin_ifndef

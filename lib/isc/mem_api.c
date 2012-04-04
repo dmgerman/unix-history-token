@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009, 2010  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: mem_api.c,v 1.8 2010-08-12 21:30:26 jinmei Exp $ */
+comment|/* $Id: mem_api.c,v 1.8 2010/08/12 21:30:26 jinmei Exp $ */
 end_comment
 
 begin_include

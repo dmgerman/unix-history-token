@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2010  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: zoneconf.h,v 1.28 2010-12-20 23:47:20 tbox Exp $ */
+comment|/* $Id: zoneconf.h,v 1.28 2010/12/20 23:47:20 tbox Exp $ */
 end_comment
 
 begin_ifndef

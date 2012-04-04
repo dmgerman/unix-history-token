@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: keydata_65533.h,v 1.2 2009-06-30 02:52:32 each Exp $ */
+comment|/* $Id: keydata_65533.h,v 1.2 2009/06/30 02:52:32 each Exp $ */
 end_comment
 
 begin_typedef

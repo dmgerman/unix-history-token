@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: context_p.h,v 1.19 2008-12-17 23:47:58 tbox Exp $ */
+comment|/* $Id: context_p.h,v 1.19 2008/12/17 23:47:58 tbox Exp $ */
 end_comment
 
 begin_ifndef

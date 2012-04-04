@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2010  Internet Systems Conso
 end_comment
 
 begin_comment
-comment|/* $Id: genrandom.c,v 1.7 2010-05-17 23:51:04 tbox Exp $ */
+comment|/* $Id: genrandom.c,v 1.7 2010/05/17 23:51:04 tbox Exp $ */
 end_comment
 
 begin_comment

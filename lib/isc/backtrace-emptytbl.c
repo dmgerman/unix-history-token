@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: backtrace-emptytbl.c,v 1.3 2009-09-01 20:13:44 each Exp $ */
+comment|/* $Id: backtrace-emptytbl.c,v 1.3 2009/09/01 20:13:44 each Exp $ */
 end_comment
 
 begin_comment
