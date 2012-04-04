@@ -781,7 +781,7 @@ index|]
 operator|.
 name|name
 argument_list|,
-literal|"SUJ"
+literal|"FAT12"
 argument_list|)
 operator|==
 literal|0
