@@ -296,6 +296,10 @@ name|UMTX_OP_MUTEX_WAKE
 value|18
 end_define
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -320,8 +324,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_MUTEX_WAKE2
 value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|23
 end_define
 
 begin_comment
