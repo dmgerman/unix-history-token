@@ -3996,6 +3996,102 @@ begin_comment
 comment|/* Find zombie process by id. */
 end_comment
 
+begin_comment
+comment|/*  * pget() flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_HOLD
+value|0x00001
+end_define
+
+begin_comment
+comment|/* Hold the process. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_CANSEE
+value|0x00002
+end_define
+
+begin_comment
+comment|/* Check against p_cansee(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_CANDEBUG
+value|0x00004
+end_define
+
+begin_comment
+comment|/* Check against p_candebug(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_ISCURRENT
+value|0x00008
+end_define
+
+begin_comment
+comment|/* Check that the found process is current. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_NOTWEXIT
+value|0x00010
+end_define
+
+begin_comment
+comment|/* Check that the process is not in P_WEXIT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_NOTINEXEC
+value|0x00020
+end_define
+
+begin_comment
+comment|/* Check that the process is not in P_INEXEC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_WANTREAD
+value|(PGET_HOLD | PGET_CANDEBUG | PGET_NOTWEXIT)
+end_define
+
+begin_function_decl
+name|int
+name|pget
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+modifier|*
+name|pp
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_function_decl
 name|void
 name|ast
