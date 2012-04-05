@@ -13459,9 +13459,6 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-name|rmb
-argument_list|()
-expr_stmt|;
 name|count
 operator|=
 name|fuword32
@@ -13648,8 +13645,6 @@ name|int
 name|error
 decl_stmt|,
 name|cnt
-decl_stmt|,
-name|nwake
 decl_stmt|;
 name|uint32_t
 name|flags
@@ -13712,8 +13707,13 @@ operator|&
 name|key
 argument_list|)
 expr_stmt|;
-name|nwake
-operator|=
+if|if
+condition|(
+name|cnt
+operator|>
+literal|0
+condition|)
+block|{
 name|umtxq_signal
 argument_list|(
 operator|&
@@ -13722,11 +13722,12 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Check if count is greater than 0, this means the memory is 		 * still being referenced by user code, so we can safely 		 * update _has_waiters flag. 		 */
 if|if
 condition|(
 name|cnt
-operator|<=
-name|nwake
+operator|==
+literal|1
 condition|)
 block|{
 name|umtxq_unlock
@@ -13759,6 +13760,7 @@ operator|&
 name|key
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|umtxq_unbusy
 argument_list|(
