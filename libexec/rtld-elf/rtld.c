@@ -2312,6 +2312,13 @@ name|aux_info
 index|[
 name|AT_CANARY
 index|]
+operator|!=
+name|NULL
+operator|&&
+name|aux_info
+index|[
+name|AT_CANARY
+index|]
 operator|->
 name|a_un
 operator|.
