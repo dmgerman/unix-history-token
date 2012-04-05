@@ -1310,7 +1310,7 @@ name|obj
 operator|->
 name|priv
 operator|=
-name|malloc
+name|xmalloc
 argument_list|(
 name|obj
 operator|->

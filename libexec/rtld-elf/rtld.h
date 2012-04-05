@@ -181,7 +181,7 @@ name|CNEW
 parameter_list|(
 name|type
 parameter_list|)
-value|((type *) xcalloc(sizeof(type)))
+value|((type *) xcalloc(1, sizeof(type)))
 end_define
 
 begin_comment
@@ -1362,6 +1362,8 @@ name|void
 modifier|*
 name|xcalloc
 parameter_list|(
+name|size_t
+parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
