@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: msgs.h,v 1.19 2009-10-01 23:48:08 tbox Exp $ */
+comment|/* $Id: msgs.h,v 1.19 2009/10/01 23:48:08 tbox Exp $ */
 end_comment
 
 begin_ifndef

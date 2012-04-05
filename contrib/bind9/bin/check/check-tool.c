@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: check-tool.c,v 1.41 2010-09-07 23:46:59 tbox Exp $ */
+comment|/* $Id: check-tool.c,v 1.41 2010/09/07 23:46:59 tbox Exp $ */
 end_comment
 
 begin_comment

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: md5.h,v 1.20 2010-01-07 23:48:54 tbox Exp $ */
+comment|/* $Id: md5.h,v 1.20 2010/01/07 23:48:54 tbox Exp $ */
 end_comment
 
 begin_comment

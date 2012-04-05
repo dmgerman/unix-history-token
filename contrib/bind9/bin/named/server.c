@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: server.c,v 1.599.8.12 2011-08-02 04:58:45 each Exp $ */
+comment|/* $Id: server.c,v 1.599.8.19 2012/02/22 00:33:32 each Exp $ */
 end_comment
 
 begin_comment
@@ -12808,6 +12808,11 @@ name|cfg_obj_t
 modifier|*
 name|dlvobj
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|dom
+decl_stmt|;
 name|dlvobj
 operator|=
 name|cfg_listelt_value
@@ -12818,11 +12823,8 @@ name|obj
 argument_list|)
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|strcmp
-argument_list|(
+name|dom
+operator|=
 name|cfg_obj_asstring
 argument_list|(
 name|cfg_tuple_get
@@ -12832,10 +12834,9 @@ argument_list|,
 literal|"domain"
 argument_list|)
 argument_list|)
-argument_list|,
-literal|"auto"
-argument_list|)
-operator|&&
+expr_stmt|;
+if|if
+condition|(
 name|cfg_obj_isvoid
 argument_list|(
 name|cfg_tuple_get
@@ -12844,6 +12845,33 @@ name|dlvobj
 argument_list|,
 literal|"trust-anchor"
 argument_list|)
+argument_list|)
+condition|)
+block|{
+comment|/* If "no", skip; if "auto", use global default */
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|dom
+argument_list|,
+literal|"no"
+argument_list|)
+condition|)
+name|result
+operator|=
+name|ISC_R_NOTFOUND
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|dom
+argument_list|,
+literal|"auto"
 argument_list|)
 condition|)
 block|{
@@ -12867,6 +12895,7 @@ operator|&
 name|obj
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 block|}
 if|if
@@ -13420,6 +13449,9 @@ block|}
 if|if
 condition|(
 name|empty_zones_enable
+operator|&&
+operator|!
+name|lwresd_g_useresolvconf
 condition|)
 block|{
 specifier|const
@@ -16964,6 +16996,27 @@ name|zone
 argument_list|)
 argument_list|)
 expr_stmt|;
+comment|/* 	 * Ensure that zone keys are reloaded on reconfig 	 */
+if|if
+condition|(
+operator|(
+name|dns_zone_getkeyopts
+argument_list|(
+name|zone
+argument_list|)
+operator|&
+name|DNS_ZONEKEY_MAINTAIN
+operator|)
+operator|!=
+literal|0
+condition|)
+name|dns_zone_rekey
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_FALSE
+argument_list|)
+expr_stmt|;
 name|cleanup
 label|:
 if|if
@@ -17158,6 +17211,13 @@ name|dns_view_detach
 argument_list|(
 operator|&
 name|pview
+argument_list|)
+expr_stmt|;
+name|dns_zone_synckeyzone
+argument_list|(
+name|view
+operator|->
+name|managed_keys
 argument_list|)
 expr_stmt|;
 return|return
@@ -21005,6 +21065,11 @@ name|num_zones
 init|=
 literal|0
 decl_stmt|;
+name|isc_boolean_t
+name|exclusive
+init|=
+name|ISC_FALSE
+decl_stmt|;
 name|ISC_LIST_INIT
 argument_list|(
 name|viewlist
@@ -21018,23 +21083,6 @@ expr_stmt|;
 name|ISC_LIST_INIT
 argument_list|(
 name|cachelist
-argument_list|)
-expr_stmt|;
-comment|/* Ensure exclusive access to configuration data. */
-name|result
-operator|=
-name|isc_task_beginexclusive
-argument_list|(
-name|server
-operator|->
-name|task
-argument_list|)
-expr_stmt|;
-name|RUNTIME_CHECK
-argument_list|(
-name|result
-operator|==
-name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 comment|/* Create the ACL configuration context */
@@ -21417,6 +21465,34 @@ name|CHECK
 argument_list|(
 name|result
 argument_list|)
+expr_stmt|;
+block|}
+comment|/* Ensure exclusive access to configuration data. */
+if|if
+condition|(
+operator|!
+name|exclusive
+condition|)
+block|{
+name|result
+operator|=
+name|isc_task_beginexclusive
+argument_list|(
+name|server
+operator|->
+name|task
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
+argument_list|)
+expr_stmt|;
+name|exclusive
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 block|}
 comment|/* 	 * Set process limits, which (usually) needs to be done as root. 	 */
@@ -24800,6 +24876,10 @@ name|ns_g_mctx
 argument_list|)
 expr_stmt|;
 comment|/* Relinquish exclusive access to configuration data. */
+if|if
+condition|(
+name|exclusive
+condition|)
 name|isc_task_endexclusive
 argument_list|(
 name|server
@@ -36006,6 +36086,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 comment|/* Mark view unfrozen so that zone can be added */
+name|isc_task_beginexclusive
+argument_list|(
+name|server
+operator|->
+name|task
+argument_list|)
+expr_stmt|;
 name|dns_view_thaw
 argument_list|(
 name|view
@@ -36041,17 +36128,22 @@ argument_list|(
 name|view
 argument_list|)
 expr_stmt|;
+name|isc_task_endexclusive
+argument_list|(
+name|server
+operator|->
+name|task
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|result
 operator|!=
 name|ISC_R_SUCCESS
 condition|)
-block|{
 goto|goto
 name|cleanup
 goto|;
-block|}
 comment|/* Is it there yet? */
 name|CHECK
 argument_list|(

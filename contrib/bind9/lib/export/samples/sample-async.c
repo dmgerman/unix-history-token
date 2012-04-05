@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: sample-async.c,v 1.5 2009-09-29 15:06:07 fdupont Exp $ */
+comment|/* $Id: sample-async.c,v 1.5 2009/09/29 15:06:07 fdupont Exp $ */
 end_comment
 
 begin_include

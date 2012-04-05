@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: check.c,v 1.125.14.6 2011-06-17 07:04:31 each Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -3572,6 +3572,22 @@ name|intervaltable
 typedef|;
 end_typedef
 
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|optlevel_config
+block|,
+name|optlevel_options
+block|,
+name|optlevel_view
+block|,
+name|optlevel_zone
+block|}
+name|optlevel_t
+typedef|;
+end_typedef
+
 begin_function
 specifier|static
 name|isc_result_t
@@ -3589,6 +3605,9 @@ parameter_list|,
 name|isc_mem_t
 modifier|*
 name|mctx
+parameter_list|,
+name|optlevel_t
+name|optlevel
 parameter_list|)
 block|{
 name|isc_result_t
@@ -4547,6 +4566,9 @@ decl_stmt|;
 specifier|const
 name|cfg_obj_t
 modifier|*
+name|dlvobj
+decl_stmt|,
+modifier|*
 name|anchor
 decl_stmt|;
 name|obj
@@ -4554,18 +4576,6 @@ operator|=
 name|cfg_listelt_value
 argument_list|(
 name|element
-argument_list|)
-expr_stmt|;
-name|dlv
-operator|=
-name|cfg_obj_asstring
-argument_list|(
-name|cfg_tuple_get
-argument_list|(
-name|obj
-argument_list|,
-literal|"domain"
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|anchor
@@ -4577,23 +4587,51 @@ argument_list|,
 literal|"trust-anchor"
 argument_list|)
 expr_stmt|;
-comment|/* 			 * If domain is "auto" and trust anchor is missing, 			 * skip remaining tests 			 */
+name|dlvobj
+operator|=
+name|cfg_tuple_get
+argument_list|(
+name|obj
+argument_list|,
+literal|"domain"
+argument_list|)
+expr_stmt|;
+name|dlv
+operator|=
+name|cfg_obj_asstring
+argument_list|(
+name|dlvobj
+argument_list|)
+expr_stmt|;
+comment|/* 			 * If domain is "auto" or "no" and trust anchor 			 * is missing, skip remaining tests 			 */
 if|if
 condition|(
-operator|!
-name|strcmp
-argument_list|(
-name|dlv
-argument_list|,
-literal|"auto"
-argument_list|)
-operator|&&
 name|cfg_obj_isvoid
 argument_list|(
 name|anchor
 argument_list|)
 condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|strcasecmp
+argument_list|(
+name|dlv
+argument_list|,
+literal|"no"
+argument_list|)
+operator|||
+operator|!
+name|strcasecmp
+argument_list|(
+name|dlv
+argument_list|,
+literal|"auto"
+argument_list|)
+condition|)
 continue|continue;
+block|}
 name|isc_buffer_init
 argument_list|(
 operator|&
@@ -4839,8 +4877,8 @@ argument_list|,
 name|ISC_LOG_ERROR
 argument_list|,
 literal|"dnssec-lookaside requires "
-literal|"either 'auto' or a domain and "
-literal|"trust anchor"
+literal|"either 'auto' or 'no', or a "
+literal|"domain and trust anchor"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4867,6 +4905,75 @@ operator|&
 name|symtab
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Check auto-dnssec at the view/options level 	 */
+name|obj
+operator|=
+name|NULL
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|cfg_map_get
+argument_list|(
+name|options
+argument_list|,
+literal|"auto-dnssec"
+argument_list|,
+operator|&
+name|obj
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|obj
+operator|!=
+name|NULL
+condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|arg
+init|=
+name|cfg_obj_asstring
+argument_list|(
+name|obj
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|optlevel
+operator|!=
+name|optlevel_zone
+operator|&&
+name|strcasecmp
+argument_list|(
+name|arg
+argument_list|,
+literal|"off"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|cfg_obj_log
+argument_list|(
+name|obj
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"auto-dnssec may only be activated at the "
+literal|"zone level"
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|ISC_R_FAILURE
+expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Check dnssec-must-be-secure. 	 */
 name|obj
@@ -8804,6 +8911,8 @@ argument_list|,
 name|logctx
 argument_list|,
 name|mctx
+argument_list|,
+name|optlevel_zone
 argument_list|)
 expr_stmt|;
 if|if
@@ -11286,7 +11395,7 @@ name|isc_symtab_create
 argument_list|(
 name|mctx
 argument_list|,
-literal|100
+literal|1000
 argument_list|,
 name|freekey
 argument_list|,
@@ -11553,7 +11662,7 @@ name|isc_symtab_create
 argument_list|(
 name|mctx
 argument_list|,
-literal|100
+literal|1000
 argument_list|,
 name|freekey
 argument_list|,
@@ -12174,6 +12283,8 @@ argument_list|,
 name|logctx
 argument_list|,
 name|mctx
+argument_list|,
+name|optlevel_view
 argument_list|)
 expr_stmt|;
 else|else
@@ -12186,6 +12297,8 @@ argument_list|,
 name|logctx
 argument_list|,
 name|mctx
+argument_list|,
+name|optlevel_config
 argument_list|)
 expr_stmt|;
 if|if
@@ -13732,6 +13845,8 @@ argument_list|,
 name|logctx
 argument_list|,
 name|mctx
+argument_list|,
+name|optlevel_options
 argument_list|)
 operator|!=
 name|ISC_R_SUCCESS

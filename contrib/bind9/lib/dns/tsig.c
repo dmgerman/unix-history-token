@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2002  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/*  * $Id: tsig.c,v 1.147.10.1 2011-03-21 19:53:34 each Exp $  */
+comment|/*  * $Id$  */
 end_comment
 
 begin_comment
@@ -4855,6 +4855,14 @@ name|sigsize
 init|=
 literal|0
 decl_stmt|;
+name|isc_boolean_t
+name|response
+init|=
+name|is_response
+argument_list|(
+name|msg
+argument_list|)
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|msg
@@ -4876,10 +4884,7 @@ expr_stmt|;
 comment|/* 	 * If this is a response, there should be a query tsig. 	 */
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 operator|&&
 name|msg
 operator|->
@@ -5008,10 +5013,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 condition|)
 name|tsig
 operator|.
@@ -5148,10 +5150,7 @@ return|;
 comment|/* 		 * If this is a response, digest the query signature. 		 */
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 condition|)
 block|{
 name|dns_rdata_t
@@ -5508,6 +5507,12 @@ name|error
 operator|==
 name|dns_tsigerror_badtime
 condition|)
+block|{
+name|INSIST
+argument_list|(
+name|response
+argument_list|)
+expr_stmt|;
 name|tsig
 operator|.
 name|timesigned
@@ -5516,6 +5521,7 @@ name|querytsig
 operator|.
 name|timesigned
 expr_stmt|;
+block|}
 name|isc_buffer_putuint48
 argument_list|(
 operator|&
@@ -5628,7 +5634,7 @@ condition|)
 goto|goto
 name|cleanup_context
 goto|;
-comment|/* 			 * Digest the error and other data. 			 */
+comment|/* 			 * Digest other data. 			 */
 if|if
 condition|(
 name|tsig
@@ -5796,10 +5802,7 @@ literal|8
 decl_stmt|;
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 operator|&&
 name|bytes
 operator|<
@@ -6337,6 +6340,9 @@ name|unsigned
 name|int
 name|alg
 decl_stmt|;
+name|isc_boolean_t
+name|response
+decl_stmt|;
 name|REQUIRE
 argument_list|(
 name|source
@@ -6355,6 +6361,13 @@ expr_stmt|;
 name|tsigkey
 operator|=
 name|dns_message_gettsigkey
+argument_list|(
+name|msg
+argument_list|)
+expr_stmt|;
+name|response
+operator|=
+name|is_response
 argument_list|(
 name|msg
 argument_list|)
@@ -6429,10 +6442,7 @@ return|;
 comment|/* 	 * If this is a response and there's no key or query TSIG, there 	 * shouldn't be one on the response. 	 */
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 operator|&&
 operator|(
 name|tsigkey
@@ -6526,10 +6536,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 condition|)
 block|{
 name|ret
@@ -6590,10 +6597,7 @@ block|}
 comment|/* 	 * Do the key name and algorithm match that of the query? 	 */
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 operator|&&
 operator|(
 operator|!
@@ -7165,10 +7169,7 @@ operator|)
 return|;
 if|if
 condition|(
-name|is_response
-argument_list|(
-name|msg
-argument_list|)
+name|response
 condition|)
 block|{
 name|isc_buffer_init

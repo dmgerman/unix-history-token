@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2010, 2011  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: opensslgost_link.c,v 1.5 2011-01-19 23:47:12 tbox Exp $ */
+comment|/* $Id: opensslgost_link.c,v 1.5 2011/01/19 23:47:12 tbox Exp $ */
 end_comment
 
 begin_include

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: bind9.h,v 1.2 2009-12-05 23:31:41 each Exp $ */
+comment|/* $Id: bind9.h,v 1.2 2009/12/05 23:31:41 each Exp $ */
 end_comment
 
 begin_ifndef

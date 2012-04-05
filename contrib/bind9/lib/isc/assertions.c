@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007-2009  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: assertions.c,v 1.26 2009-09-29 15:06:07 fdupont Exp $ */
+comment|/* $Id: assertions.c,v 1.26 2009/09/29 15:06:07 fdupont Exp $ */
 end_comment
 
 begin_comment

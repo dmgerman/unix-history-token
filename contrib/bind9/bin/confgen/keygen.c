@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: keygen.c,v 1.4 2009-11-12 14:02:38 marka Exp $ */
+comment|/* $Id: keygen.c,v 1.4 2009/11/12 14:02:38 marka Exp $ */
 end_comment
 
 begin_comment

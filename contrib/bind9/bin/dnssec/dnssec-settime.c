@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-settime.c,v 1.28.16.3 2011-06-02 20:24:11 each Exp $ */
+comment|/* $Id: dnssec-settime.c,v 1.28.16.3 2011/06/02 20:24:11 each Exp $ */
 end_comment
 
 begin_comment

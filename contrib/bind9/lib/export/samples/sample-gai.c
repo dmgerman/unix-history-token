@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: sample-gai.c,v 1.4 2009-09-02 23:48:02 tbox Exp $ */
+comment|/* $Id: sample-gai.c,v 1.4 2009/09/02 23:48:02 tbox Exp $ */
 end_comment
 
 begin_include

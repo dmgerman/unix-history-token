@@ -16,7 +16,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: acconfig.h,v 1.53 2008-12-01 23:47:44 tbox Exp $ */
+comment|/* $Id: acconfig.h,v 1.53 2008/12/01 23:47:44 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -1224,6 +1224,17 @@ define|#
 directive|define
 name|PORT_NONBLOCK
 value|O_NONBLOCK
+end_define
+
+begin_comment
+comment|/* The size of `void *', as computed by sizeof. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIZEOF_VOID_P
+value|8
 end_define
 
 begin_comment

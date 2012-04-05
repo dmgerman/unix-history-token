@@ -17,7 +17,7 @@ value|1
 end_define
 
 begin_comment
-comment|/* $Id: sha1.h,v 1.19 2009-02-06 23:47:42 tbox Exp $ */
+comment|/* $Id: sha1.h,v 1.19 2009/02/06 23:47:42 tbox Exp $ */
 end_comment
 
 begin_comment

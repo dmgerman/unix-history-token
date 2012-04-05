@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009, 2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-revoke.c,v 1.22 2010-05-06 23:50:56 tbox Exp $ */
+comment|/* $Id: dnssec-revoke.c,v 1.22.124.2 2011/10/20 23:46:27 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -366,6 +366,11 @@ name|remove
 init|=
 name|ISC_FALSE
 decl_stmt|;
+name|isc_boolean_t
+name|id
+init|=
+name|ISC_FALSE
+decl_stmt|;
 if|if
 condition|(
 name|argc
@@ -416,7 +421,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"E:fK:rhv:"
+literal|"E:fK:rRhv:"
 argument_list|)
 operator|)
 operator|!=
@@ -477,6 +482,14 @@ case|case
 literal|'r'
 case|:
 name|remove
+operator|=
+name|ISC_TRUE
+expr_stmt|;
+break|break;
+case|case
+literal|'R'
+case|:
+name|id
 operator|=
 name|ISC_TRUE
 expr_stmt|;
@@ -779,6 +792,27 @@ name|result
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|id
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stdout
+argument_list|,
+literal|"%u\n"
+argument_list|,
+name|dst_key_rid
+argument_list|(
+name|key
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|cleanup
+goto|;
+block|}
 name|dst_key_format
 argument_list|(
 name|key

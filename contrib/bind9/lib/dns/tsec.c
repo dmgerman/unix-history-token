@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009, 2010  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: tsec.c,v 1.7 2010-12-09 00:54:34 marka Exp $ */
+comment|/* $Id: tsec.c,v 1.7 2010/12/09 00:54:34 marka Exp $ */
 end_comment
 
 begin_include
