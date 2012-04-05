@@ -4572,6 +4572,22 @@ condition|(
 operator|!
 name|timeout
 condition|)
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+name|timeout
+operator|=
+name|V_pf_default_rule
+operator|.
+name|timeout
+index|[
+name|sp
+operator|->
+name|timeout
+index|]
+expr_stmt|;
+else|#
+directive|else
 name|timeout
 operator|=
 name|pf_default_rule
@@ -4583,6 +4599,8 @@ operator|->
 name|timeout
 index|]
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* sp->expire may have been adaptively scaled by export. */
 name|st
 operator|->
