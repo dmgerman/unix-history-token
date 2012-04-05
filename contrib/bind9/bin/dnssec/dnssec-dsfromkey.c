@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2008-2010  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2008-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-dsfromkey.c,v 1.2.14.6 2010-01-11 23:47:22 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -1149,11 +1149,6 @@ argument_list|(
 literal|"can't print DS name"
 argument_list|)
 expr_stmt|;
-name|putchar
-argument_list|(
-literal|' '
-argument_list|)
-expr_stmt|;
 name|isc_buffer_usedregion
 argument_list|(
 operator|&
@@ -1163,24 +1158,20 @@ operator|&
 name|r
 argument_list|)
 expr_stmt|;
-name|isc_util_fwrite
+name|printf
 argument_list|(
-name|r
-operator|.
-name|base
+literal|" %.*s"
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|int
+operator|)
 name|r
 operator|.
 name|length
 argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|printf
-argument_list|(
-literal|" DS "
+name|r
+operator|.
+name|base
 argument_list|)
 expr_stmt|;
 name|isc_buffer_usedregion
@@ -1192,28 +1183,36 @@ operator|&
 name|r
 argument_list|)
 expr_stmt|;
-name|isc_util_fwrite
+name|printf
 argument_list|(
-name|r
-operator|.
-name|base
+literal|" DS %.*s\n"
 argument_list|,
-literal|1
-argument_list|,
+operator|(
+name|int
+operator|)
 name|r
 operator|.
 name|length
 argument_list|,
-name|stdout
-argument_list|)
-expr_stmt|;
-name|putchar
-argument_list|(
-literal|'\n'
+name|r
+operator|.
+name|base
 argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 specifier|static

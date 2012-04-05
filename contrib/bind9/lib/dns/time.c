@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2009-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2009-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1998-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: time.c,v 1.31.332.6 2011-03-09 23:45:50 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -484,15 +484,11 @@ block|}
 end_function
 
 begin_function
-name|isc_result_t
-name|dns_time32_totext
+name|isc_int64_t
+name|dns_time64_from32
 parameter_list|(
 name|isc_uint32_t
 name|value
-parameter_list|,
-name|isc_buffer_t
-modifier|*
-name|target
 parameter_list|)
 block|{
 name|isc_stdtime_t
@@ -550,9 +546,32 @@ operator|)
 expr_stmt|;
 return|return
 operator|(
+name|t
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|isc_result_t
+name|dns_time32_totext
+parameter_list|(
+name|isc_uint32_t
+name|value
+parameter_list|,
+name|isc_buffer_t
+modifier|*
+name|target
+parameter_list|)
+block|{
+return|return
+operator|(
 name|dns_time64_totext
 argument_list|(
-name|t
+name|dns_time64_from32
+argument_list|(
+name|value
+argument_list|)
 argument_list|,
 name|target
 argument_list|)

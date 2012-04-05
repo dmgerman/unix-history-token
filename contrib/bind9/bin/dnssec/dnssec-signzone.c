@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Portions Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Portions Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Portions Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  *  * Portions Copyright (C) 1995-2000 by Network Associates, Inc.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC AND NETWORK ASSOCIATES DISCLAIMS  * ALL WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED  * WARRANTIES OF MERCHANTABILITY AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE  * FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES  * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN  * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF OR  * IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-signzone.c,v 1.209.12.24 2011-05-07 00:23:50 each Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -2798,6 +2798,12 @@ condition|(
 name|keep
 condition|)
 block|{
+if|if
+condition|(
+name|key
+operator|!=
+name|NULL
+condition|)
 name|nowsignedby
 index|[
 name|key
@@ -15137,6 +15143,18 @@ expr_stmt|;
 block|}
 end_function
 
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -15551,29 +15569,28 @@ parameter_list|,
 name|isc_time_t
 modifier|*
 name|timer_finish
+parameter_list|,
+name|isc_time_t
+modifier|*
+name|sign_start
+parameter_list|,
+name|isc_time_t
+modifier|*
+name|sign_finish
 parameter_list|)
 block|{
 name|isc_uint64_t
-name|runtime_us
+name|time_us
 decl_stmt|;
-comment|/* Runtime in microseconds */
+comment|/* Time in microseconds */
 name|isc_uint64_t
-name|runtime_ms
+name|time_ms
 decl_stmt|;
-comment|/* Runtime in milliseconds */
+comment|/* Time in milliseconds */
 name|isc_uint64_t
 name|sig_ms
 decl_stmt|;
 comment|/* Signatures per millisecond */
-name|runtime_us
-operator|=
-name|isc_time_microdiff
-argument_list|(
-name|timer_finish
-argument_list|,
-name|timer_start
-argument_list|)
-expr_stmt|;
 name|printf
 argument_list|(
 literal|"Signatures generated:               %10d\n"
@@ -15609,22 +15626,31 @@ argument_list|,
 name|nverifyfailed
 argument_list|)
 expr_stmt|;
-name|runtime_ms
+name|time_us
 operator|=
-name|runtime_us
+name|isc_time_microdiff
+argument_list|(
+name|sign_finish
+argument_list|,
+name|sign_start
+argument_list|)
+expr_stmt|;
+name|time_ms
+operator|=
+name|time_us
 operator|/
 literal|1000
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Runtime in seconds:                %7u.%03u\n"
+literal|"Signing time in seconds:           %7u.%03u\n"
 argument_list|,
 call|(
 name|unsigned
 name|int
 call|)
 argument_list|(
-name|runtime_ms
+name|time_ms
 operator|/
 literal|1000
 argument_list|)
@@ -15634,7 +15660,7 @@ name|unsigned
 name|int
 call|)
 argument_list|(
-name|runtime_ms
+name|time_ms
 operator|%
 literal|1000
 argument_list|)
@@ -15642,7 +15668,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|runtime_us
+name|time_us
 operator|>
 literal|0
 condition|)
@@ -15658,7 +15684,7 @@ operator|*
 literal|1000000000
 operator|)
 operator|/
-name|runtime_us
+name|time_us
 expr_stmt|;
 name|printf
 argument_list|(
@@ -15682,6 +15708,46 @@ literal|1000
 argument_list|)
 expr_stmt|;
 block|}
+name|time_us
+operator|=
+name|isc_time_microdiff
+argument_list|(
+name|timer_finish
+argument_list|,
+name|timer_start
+argument_list|)
+expr_stmt|;
+name|time_ms
+operator|=
+name|time_us
+operator|/
+literal|1000
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Runtime in seconds:                %7u.%03u\n"
+argument_list|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
+name|time_ms
+operator|/
+literal|1000
+argument_list|)
+argument_list|,
+call|(
+name|unsigned
+name|int
+call|)
+argument_list|(
+name|time_ms
+operator|%
+literal|1000
+argument_list|)
+argument_list|)
+expr_stmt|;
 block|}
 end_function
 
@@ -15772,6 +15838,11 @@ name|isc_time_t
 name|timer_start
 decl_stmt|,
 name|timer_finish
+decl_stmt|;
+name|isc_time_t
+name|sign_start
+decl_stmt|,
+name|sign_finish
 decl_stmt|;
 name|signer_key_t
 modifier|*
@@ -18122,6 +18193,12 @@ expr_stmt|;
 name|presign
 argument_list|()
 expr_stmt|;
+name|TIME_NOW
+argument_list|(
+operator|&
+name|sign_start
+argument_list|)
+expr_stmt|;
 name|signapex
 argument_list|()
 expr_stmt|;
@@ -18258,6 +18335,12 @@ argument_list|)
 expr_stmt|;
 name|postsign
 argument_list|()
+expr_stmt|;
+name|TIME_NOW
+argument_list|(
+operator|&
+name|sign_finish
+argument_list|)
 expr_stmt|;
 name|verifyzone
 argument_list|()
@@ -18516,6 +18599,12 @@ name|timer_start
 argument_list|,
 operator|&
 name|timer_finish
+argument_list|,
+operator|&
+name|sign_start
+argument_list|,
+operator|&
+name|sign_finish
 argument_list|)
 expr_stmt|;
 block|}

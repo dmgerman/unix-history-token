@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2007, 2008, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2007, 2008, 2010-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-keyfromlabel.c,v 1.4.50.4 2011-03-12 04:57:22 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -156,6 +156,18 @@ init|=
 literal|"RSA | RSAMD5 | DH | DSA | RSASHA1 |"
 literal|" NSEC3DSA | NSEC3RSASHA1 |"
 literal|" RSASHA256 | RSASHA512"
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
 decl_stmt|;
 end_decl_stmt
 
@@ -378,11 +390,6 @@ literal|0
 decl_stmt|;
 name|dns_secalg_t
 name|alg
-decl_stmt|;
-name|isc_boolean_t
-name|null_key
-init|=
-name|ISC_FALSE
 decl_stmt|;
 name|isc_mem_t
 modifier|*
@@ -1283,20 +1290,6 @@ argument_list|(
 name|ret
 argument_list|)
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|flags
-operator|&
-name|DNS_KEYFLAG_TYPEMASK
-operator|)
-operator|==
-name|DNS_KEYTYPE_NOKEY
-condition|)
-name|null_key
-operator|=
-name|ISC_TRUE
 expr_stmt|;
 name|isc_buffer_init
 argument_list|(

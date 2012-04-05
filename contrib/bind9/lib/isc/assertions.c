@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1997-2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: assertions.c,v 1.23 2008-10-15 23:47:31 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -69,18 +69,65 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_comment
-comment|/*%  * Public.  */
-end_comment
-
 begin_decl_stmt
-name|LIBISC_EXTERNAL_DATA
+specifier|static
 name|isc_assertioncallback_t
-name|isc_assertion_failed
+name|isc_assertion_failed_cb
 init|=
 name|default_callback
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*%  * Public.  */
+end_comment
+
+begin_comment
+comment|/*% assertion failed handler */
+end_comment
+
+begin_comment
+comment|/* coverity[+kill] */
+end_comment
+
+begin_function
+name|void
+name|isc_assertion_failed
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|file
+parameter_list|,
+name|int
+name|line
+parameter_list|,
+name|isc_assertiontype_t
+name|type
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|cond
+parameter_list|)
+block|{
+name|isc_assertion_failed_cb
+argument_list|(
+name|file
+argument_list|,
+name|line
+argument_list|,
+name|type
+argument_list|,
+name|cond
+argument_list|)
+expr_stmt|;
+name|abort
+argument_list|()
+expr_stmt|;
+comment|/* NOTREACHED */
+block|}
+end_function
 
 begin_comment
 comment|/*% Set callback. */
@@ -100,12 +147,12 @@ name|cb
 operator|==
 name|NULL
 condition|)
-name|isc_assertion_failed
+name|isc_assertion_failed_cb
 operator|=
 name|default_callback
 expr_stmt|;
 else|else
-name|isc_assertion_failed
+name|isc_assertion_failed_cb
 operator|=
 name|cb
 expr_stmt|;

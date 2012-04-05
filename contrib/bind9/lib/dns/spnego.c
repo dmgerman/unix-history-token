@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2006-2009, 2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2006-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: spnego.c,v 1.8.118.8 2011-04-04 11:12:21 marka Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -3929,13 +3929,15 @@ operator|(
 name|e
 operator|)
 return|;
-name|p
-operator|+=
-name|l
-expr_stmt|;
+comment|/* p += l; */
 name|len
 operator|-=
 name|l
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
 expr_stmt|;
 name|ret
 operator|+=
@@ -4099,6 +4101,16 @@ expr_stmt|;
 name|len
 operator|-=
 name|l
+expr_stmt|;
+name|POST
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
 expr_stmt|;
 name|ret
 operator|+=
@@ -4275,6 +4287,16 @@ name|len
 operator|-=
 name|l
 expr_stmt|;
+name|POST
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 name|ret
 operator|+=
 name|l
@@ -4449,6 +4471,16 @@ expr_stmt|;
 name|len
 operator|-=
 name|l
+expr_stmt|;
+name|POST
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
 expr_stmt|;
 name|ret
 operator|+=
@@ -5077,6 +5109,11 @@ name|data
 operator|->
 name|length
 expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 name|memcpy
 argument_list|(
 name|p
@@ -5457,6 +5494,16 @@ name|len
 operator|-=
 name|l
 expr_stmt|;
+name|POST
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 name|ret
 operator|+=
 name|l
@@ -5591,6 +5638,16 @@ name|len
 operator|-=
 name|l
 expr_stmt|;
+name|POST
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 name|ret
 operator|+=
 name|l
@@ -5714,6 +5771,16 @@ name|len
 operator|-=
 name|l
 expr_stmt|;
+name|POST
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
+expr_stmt|;
 name|ret
 operator|+=
 name|l
@@ -5836,6 +5903,16 @@ expr_stmt|;
 name|len
 operator|-=
 name|l
+expr_stmt|;
+name|POST
+argument_list|(
+name|p
+argument_list|)
+expr_stmt|;
+name|POST
+argument_list|(
+name|len
+argument_list|)
 expr_stmt|;
 name|ret
 operator|+=

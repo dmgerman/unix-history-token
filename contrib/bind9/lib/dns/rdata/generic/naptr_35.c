@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004, 2005, 2007, 2008  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004, 2005, 2007, 2008, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2001, 2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: naptr_35.c,v 1.53 2008-02-15 23:46:51 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -18,13 +18,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|RDATA_IN_1_NAPTR_35_C
+name|RDATA_GENERIC_NAPTR_35_C
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|RDATA_IN_1_NAPTR_35_C
+name|RDATA_GENERIC_NAPTR_35_C
 end_define
 
 begin_define
@@ -38,7 +38,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|fromtext_in_naptr
+name|fromtext_naptr
 parameter_list|(
 name|ARGS_FROMTEXT
 parameter_list|)
@@ -57,13 +57,6 @@ argument_list|(
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -343,7 +336,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|totext_in_naptr
+name|totext_naptr
 parameter_list|(
 name|ARGS_TOTEXT
 parameter_list|)
@@ -380,15 +373,6 @@ operator|->
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdata
-operator|->
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -627,7 +611,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|fromwire_in_naptr
+name|fromwire_naptr
 parameter_list|(
 name|ARGS_FROMWIRE
 parameter_list|)
@@ -643,13 +627,6 @@ argument_list|(
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -778,7 +755,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|towire_in_naptr
+name|towire_naptr
 parameter_list|(
 name|ARGS_TOWIRE
 parameter_list|)
@@ -799,15 +776,6 @@ operator|->
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdata
-operator|->
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1006,7 +974,7 @@ begin_function
 specifier|static
 specifier|inline
 name|int
-name|compare_in_naptr
+name|compare_naptr
 parameter_list|(
 name|ARGS_COMPARE
 parameter_list|)
@@ -1057,15 +1025,6 @@ operator|->
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdata1
-operator|->
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1461,12 +1420,12 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|fromstruct_in_naptr
+name|fromstruct_naptr
 parameter_list|(
 name|ARGS_FROMSTRUCT
 parameter_list|)
 block|{
-name|dns_rdata_in_naptr_t
+name|dns_rdata_naptr_t
 modifier|*
 name|naptr
 init|=
@@ -1480,13 +1439,6 @@ argument_list|(
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -1710,12 +1662,12 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|tostruct_in_naptr
+name|tostruct_naptr
 parameter_list|(
 name|ARGS_TOSTRUCT
 parameter_list|)
 block|{
-name|dns_rdata_in_naptr_t
+name|dns_rdata_naptr_t
 modifier|*
 name|naptr
 init|=
@@ -1737,15 +1689,6 @@ operator|->
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdata
-operator|->
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -2196,12 +2139,12 @@ begin_function
 specifier|static
 specifier|inline
 name|void
-name|freestruct_in_naptr
+name|freestruct_naptr
 parameter_list|(
 name|ARGS_FREESTRUCT
 parameter_list|)
 block|{
-name|dns_rdata_in_naptr_t
+name|dns_rdata_naptr_t
 modifier|*
 name|naptr
 init|=
@@ -2212,17 +2155,6 @@ argument_list|(
 name|source
 operator|!=
 name|NULL
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|naptr
-operator|->
-name|common
-operator|.
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|REQUIRE
@@ -2327,7 +2259,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|additionaldata_in_naptr
+name|additionaldata_naptr
 parameter_list|(
 name|ARGS_ADDLDATA
 parameter_list|)
@@ -2361,15 +2293,6 @@ operator|->
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdata
-operator|->
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Order, preference. 	 */
@@ -2566,7 +2489,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_result_t
-name|digest_in_naptr
+name|digest_naptr
 parameter_list|(
 name|ARGS_DIGEST
 parameter_list|)
@@ -2595,15 +2518,6 @@ operator|->
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdata
-operator|->
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|dns_rdata_toregion
@@ -2775,7 +2689,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_boolean_t
-name|checkowner_in_naptr
+name|checkowner_naptr
 parameter_list|(
 name|ARGS_CHECKOWNER
 parameter_list|)
@@ -2785,13 +2699,6 @@ argument_list|(
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -2826,7 +2733,7 @@ begin_function
 specifier|static
 specifier|inline
 name|isc_boolean_t
-name|checknames_in_naptr
+name|checknames_naptr
 parameter_list|(
 name|ARGS_CHECKNAMES
 parameter_list|)
@@ -2838,15 +2745,6 @@ operator|->
 name|type
 operator|==
 literal|35
-argument_list|)
-expr_stmt|;
-name|REQUIRE
-argument_list|(
-name|rdata
-operator|->
-name|rdclass
-operator|==
-literal|1
 argument_list|)
 expr_stmt|;
 name|UNUSED
@@ -2878,7 +2776,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* RDATA_IN_1_NAPTR_35_C */
+comment|/* RDATA_GENERIC_NAPTR_35_C */
 end_comment
 
 end_unit

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: named-checkzone.c,v 1.51.34.6 2010-09-07 23:46:06 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -271,6 +271,18 @@ define|\
 value|do { \ 		if (result != ISC_R_SUCCESS) { \ 			if (!quiet) \ 				fprintf(stderr, "%s() returned %s\n", \ 					function, dns_result_totext(result)); \ 			return (result); \ 		} \ 	} while (0)
 end_define
 
+begin_decl_stmt
+name|ISC_PLATFORM_NORETURN_PRE
+specifier|static
+name|void
+name|usage
+argument_list|(
+name|void
+argument_list|)
+name|ISC_PLATFORM_NORETURN_POST
+decl_stmt|;
+end_decl_stmt
+
 begin_function
 specifier|static
 name|void
@@ -420,6 +432,11 @@ name|dns_masterformat_t
 name|outputformat
 init|=
 name|dns_masterformat_text
+decl_stmt|;
+name|isc_boolean_t
+name|logdump
+init|=
+name|ISC_FALSE
 decl_stmt|;
 name|FILE
 modifier|*
@@ -1547,6 +1564,11 @@ operator|=
 literal|1
 expr_stmt|;
 comment|/* always dump */
+name|logdump
+operator|=
+operator|!
+name|quiet
+expr_stmt|;
 if|if
 condition|(
 name|output_filename
@@ -1614,10 +1636,16 @@ operator|==
 literal|0
 operator|)
 condition|)
+block|{
 name|errout
 operator|=
 name|stderr
 expr_stmt|;
+name|logdump
+operator|=
+name|ISC_FALSE
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|isc_commandline_index
@@ -1747,12 +1775,7 @@ condition|)
 block|{
 if|if
 condition|(
-operator|!
-name|quiet
-operator|&&
-name|progmode
-operator|==
-name|progmode_compile
+name|logdump
 condition|)
 block|{
 name|fprintf
@@ -1787,12 +1810,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|!
-name|quiet
-operator|&&
-name|progmode
-operator|==
-name|progmode_compile
+name|logdump
 condition|)
 name|fprintf
 argument_list|(

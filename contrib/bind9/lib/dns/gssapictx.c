@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2008, 2010, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2008, 2010-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2000, 2001  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: gssapictx.c,v 1.12.118.8 2011-04-07 23:07:37 marka Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include
@@ -482,6 +482,13 @@ argument_list|(
 name|namep
 argument_list|,
 name|buffer
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|isc_buffer_putuint8
@@ -1247,12 +1254,20 @@ else|:
 literal|"accept"
 argument_list|,
 operator|(
+name|gname
+operator|!=
+name|NULL
+operator|)
+condition|?
+operator|(
 name|char
 operator|*
 operator|)
 name|gnamebuf
 operator|.
 name|value
+else|:
+literal|"?"
 argument_list|,
 name|gss_error_tostring
 argument_list|(
@@ -1297,12 +1312,20 @@ else|:
 literal|"accept"
 argument_list|,
 operator|(
+name|gname
+operator|!=
+name|NULL
+operator|)
+condition|?
+operator|(
 name|char
 operator|*
 operator|)
 name|gnamebuf
 operator|.
 name|value
+else|:
+literal|"?"
 argument_list|)
 expr_stmt|;
 name|log_cred
@@ -1318,6 +1341,18 @@ operator|)
 return|;
 else|#
 directive|else
+name|REQUIRE
+argument_list|(
+name|cred
+operator|!=
+name|NULL
+operator|&&
+operator|*
+name|cred
+operator|==
+name|NULL
+argument_list|)
+expr_stmt|;
 name|UNUSED
 argument_list|(
 name|name
@@ -1392,6 +1427,9 @@ decl_stmt|;
 name|isc_buffer_t
 name|buffer
 decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
 comment|/* 	 * It is far, far easier to write the names we are looking at into 	 * a string, and do string operations on them. 	 */
 name|isc_buffer_init
 argument_list|(
@@ -1406,12 +1444,21 @@ name|sbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|dns_name_toprincipal
 argument_list|(
 name|signer
 argument_list|,
 operator|&
 name|buffer
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|isc_buffer_putuint8
@@ -1668,6 +1715,9 @@ decl_stmt|;
 name|isc_buffer_t
 name|buffer
 decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
 comment|/* 	 * It is far, far easier to write the names we are looking at into 	 * a string, and do string operations on them. 	 */
 name|isc_buffer_init
 argument_list|(
@@ -1682,12 +1732,21 @@ name|sbuf
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|result
+operator|=
 name|dns_name_toprincipal
 argument_list|(
 name|signer
 argument_list|,
 operator|&
 name|buffer
+argument_list|)
+expr_stmt|;
+name|RUNTIME_CHECK
+argument_list|(
+name|result
+operator|==
+name|ISC_R_SUCCESS
 argument_list|)
 expr_stmt|;
 name|isc_buffer_putuint8

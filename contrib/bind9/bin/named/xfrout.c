@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2010  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: xfrout.c,v 1.131.26.6 2010-05-27 23:48:18 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include
@@ -5597,7 +5597,6 @@ name|tsigkey
 operator|!=
 name|NULL
 condition|)
-block|{
 name|dns_name_format
 argument_list|(
 operator|&
@@ -5615,7 +5614,6 @@ name|keyname
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 else|else
 name|keyname
 index|[
@@ -6009,7 +6007,17 @@ name|xfr
 operator|->
 name|mctx
 operator|=
+name|NULL
+expr_stmt|;
+name|isc_mem_attach
+argument_list|(
 name|mctx
+argument_list|,
+operator|&
+name|xfr
+operator|->
+name|mctx
+argument_list|)
 expr_stmt|;
 name|xfr
 operator|->
@@ -6636,6 +6644,36 @@ operator|->
 name|lasttsig
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Account for reserved space. 		 */
+if|if
+condition|(
+name|xfr
+operator|->
+name|tsigkey
+operator|!=
+name|NULL
+condition|)
+name|INSIST
+argument_list|(
+name|msg
+operator|->
+name|reserved
+operator|!=
+literal|0U
+argument_list|)
+expr_stmt|;
+name|isc_buffer_add
+argument_list|(
+operator|&
+name|xfr
+operator|->
+name|buf
+argument_list|,
+name|msg
+operator|->
+name|reserved
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Include a question section in the first message only. 		 * BIND 8.2.1 will not recognize an IXFR if it does not 		 * have a question section. 		 */
 if|if
 condition|(
@@ -6830,12 +6868,25 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* 			 * Reserve space for the 12-byte message header 			 */
+name|isc_buffer_add
+argument_list|(
+operator|&
+name|xfr
+operator|->
+name|buf
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
 name|msg
 operator|->
 name|tcp_continuation
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Try to fit in as many RRs as possible, unless "one-answer" 	 * format has been requested. 	 */
 for|for
@@ -7781,6 +7832,12 @@ init|=
 operator|*
 name|xfrp
 decl_stmt|;
+name|ns_client_t
+modifier|*
+name|client
+init|=
+name|NULL
+decl_stmt|;
 name|INSIST
 argument_list|(
 name|xfr
@@ -7966,6 +8023,17 @@ operator|->
 name|db
 argument_list|)
 expr_stmt|;
+comment|/* 	 * We want to detch the client after we have released the memory 	 * context as ns_client_detach checks the memory reference count. 	 */
+name|ns_client_attach
+argument_list|(
+name|xfr
+operator|->
+name|client
+argument_list|,
+operator|&
+name|client
+argument_list|)
+expr_stmt|;
 name|ns_client_detach
 argument_list|(
 operator|&
@@ -7974,8 +8042,9 @@ operator|->
 name|client
 argument_list|)
 expr_stmt|;
-name|isc_mem_put
+name|isc_mem_putanddetach
 argument_list|(
+operator|&
 name|xfr
 operator|->
 name|mctx
@@ -7987,6 +8056,12 @@ argument_list|(
 operator|*
 name|xfr
 argument_list|)
+argument_list|)
+expr_stmt|;
+name|ns_client_detach
+argument_list|(
+operator|&
+name|client
 argument_list|)
 expr_stmt|;
 operator|*

@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 2001-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: check.c,v 1.95.12.8 2011-03-12 04:57:26 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -7495,6 +7495,19 @@ name|len
 init|=
 literal|0
 decl_stmt|;
+name|isc_result_t
+name|result
+decl_stmt|;
+name|isc_buffer_t
+name|buf
+decl_stmt|;
+name|unsigned
+name|char
+name|secretbuf
+index|[
+literal|1024
+index|]
+decl_stmt|;
 specifier|static
 specifier|const
 name|algorithmtable
@@ -7611,6 +7624,61 @@ expr_stmt|;
 return|return
 operator|(
 name|ISC_R_FAILURE
+operator|)
+return|;
+block|}
+name|isc_buffer_init
+argument_list|(
+operator|&
+name|buf
+argument_list|,
+name|secretbuf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|secretbuf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|result
+operator|=
+name|isc_base64_decodestring
+argument_list|(
+name|cfg_obj_asstring
+argument_list|(
+name|secretobj
+argument_list|)
+argument_list|,
+operator|&
+name|buf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|result
+operator|!=
+name|ISC_R_SUCCESS
+condition|)
+block|{
+name|cfg_obj_log
+argument_list|(
+name|secretobj
+argument_list|,
+name|logctx
+argument_list|,
+name|ISC_LOG_ERROR
+argument_list|,
+literal|"bad secret '%s'"
+argument_list|,
+name|isc_result_totext
+argument_list|(
+name|result
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|result
 operator|)
 return|;
 block|}
@@ -9613,7 +9681,7 @@ name|isc_symtab_create
 argument_list|(
 name|mctx
 argument_list|,
-literal|100
+literal|1000
 argument_list|,
 name|freekey
 argument_list|,
@@ -9919,7 +9987,7 @@ name|isc_symtab_create
 argument_list|(
 name|mctx
 argument_list|,
-literal|100
+literal|1000
 argument_list|,
 name|freekey
 argument_list|,
