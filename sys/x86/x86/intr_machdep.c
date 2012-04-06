@@ -2266,15 +2266,6 @@ comment|/* 	 * Doesn't work yet 	 */
 return|return;
 endif|#
 directive|endif
-comment|/* The BSP is always a valid target. */
-name|CPU_SETOF
-argument_list|(
-literal|0
-argument_list|,
-operator|&
-name|intr_cpus
-argument_list|)
-expr_stmt|;
 comment|/* Don't bother on UP. */
 if|if
 condition|(
