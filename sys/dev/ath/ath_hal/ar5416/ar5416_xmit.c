@@ -1666,6 +1666,9 @@ name|firstSeg
 parameter_list|,
 name|HAL_BOOL
 name|lastSeg
+parameter_list|,
+name|HAL_BOOL
+name|lastAggr
 parameter_list|)
 block|{
 name|struct
@@ -1701,6 +1704,11 @@ argument_list|)
 decl_stmt|;
 name|int
 name|isaggr
+init|=
+literal|0
+decl_stmt|;
+name|uint32_t
+name|last_aggr
 init|=
 literal|0
 decl_stmt|;
@@ -1749,6 +1757,16 @@ name|isaggr
 operator|=
 literal|1
 expr_stmt|;
+if|if
+condition|(
+name|lastAggr
+operator|==
+name|AH_FALSE
+condition|)
+name|last_aggr
+operator|=
+name|AR_MoreAggr
+expr_stmt|;
 block|}
 comment|/* 	 * Since this function is called before any of the other 	 * descriptor setup functions (at least in this particular 	 * 802.11n aggregation implementation), always bzero() the 	 * descriptor. Previously this would be done for all but 	 * the first segment. 	 * XXX TODO: figure out why; perhaps I'm using this slightly 	 * XXX incorrectly. 	 */
 name|OS_MEMZERO
@@ -1771,6 +1789,7 @@ operator|&
 name|AR_FrameLen
 operator|)
 expr_stmt|;
+comment|/* 	 * For aggregates: 	 * + IsAggr must be set for all descriptors of all subframes of 	 *   the aggregate 	 * + MoreAggr must be set for all descriptors of all subframes 	 *   of the aggregate EXCEPT the last subframe; 	 * + MoreAggr must be _CLEAR_ for all descrpitors of the last 	 *   subframe of the aggregate. 	 */
 name|ads
 operator|->
 name|ds_ctl1
@@ -1787,7 +1806,7 @@ condition|?
 operator|(
 name|AR_IsAggr
 operator||
-name|AR_MoreAggr
+name|last_aggr
 operator|)
 else|:
 literal|0

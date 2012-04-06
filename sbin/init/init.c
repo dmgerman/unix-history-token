@@ -2548,7 +2548,7 @@ block|{
 name|int
 name|fd
 decl_stmt|;
-comment|/* Try to open /dev/console. */
+comment|/* 	 * Try to open /dev/console.  Open the device with O_NONBLOCK to 	 * prevent potential blocking on a carrier. 	 */
 name|revoke
 argument_list|(
 name|_PATH_CONSOLE
@@ -2573,6 +2573,26 @@ operator|-
 literal|1
 condition|)
 block|{
+operator|(
+name|void
+operator|)
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_SETFL
+argument_list|,
+name|fcntl
+argument_list|(
+name|fd
+argument_list|,
+name|F_GETFL
+argument_list|)
+operator|&
+operator|~
+name|O_NONBLOCK
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|login_tty

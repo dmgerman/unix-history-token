@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: xfrout.c,v 1.139.16.3 2011-07-28 04:30:54 marka Exp $ */
+comment|/* $Id: xfrout.c,v 1.139.16.4 2011/12/01 01:00:50 marka Exp $ */
 end_comment
 
 begin_include
@@ -5577,6 +5577,36 @@ operator|->
 name|lasttsig
 argument_list|)
 expr_stmt|;
+comment|/* 		 * Account for reserved space. 		 */
+if|if
+condition|(
+name|xfr
+operator|->
+name|tsigkey
+operator|!=
+name|NULL
+condition|)
+name|INSIST
+argument_list|(
+name|msg
+operator|->
+name|reserved
+operator|!=
+literal|0U
+argument_list|)
+expr_stmt|;
+name|isc_buffer_add
+argument_list|(
+operator|&
+name|xfr
+operator|->
+name|buf
+argument_list|,
+name|msg
+operator|->
+name|reserved
+argument_list|)
+expr_stmt|;
 comment|/* 		 * Include a question section in the first message only. 		 * BIND 8.2.1 will not recognize an IXFR if it does not 		 * have a question section. 		 */
 if|if
 condition|(
@@ -5771,12 +5801,25 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
+block|{
+comment|/* 			 * Reserve space for the 12-byte message header 			 */
+name|isc_buffer_add
+argument_list|(
+operator|&
+name|xfr
+operator|->
+name|buf
+argument_list|,
+literal|12
+argument_list|)
+expr_stmt|;
 name|msg
 operator|->
 name|tcp_continuation
 operator|=
 literal|1
 expr_stmt|;
+block|}
 block|}
 comment|/* 	 * Try to fit in as many RRs as possible, unless "one-answer" 	 * format has been requested. 	 */
 for|for

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: getaddrinfo.c,v 1.54 2008-11-25 23:47:23 tbox Exp $ */
+comment|/* $Id: getaddrinfo.c,v 1.54 2008/11/25 23:47:23 tbox Exp $ */
 end_comment
 
 begin_comment

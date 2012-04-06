@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009, 2011  Internet Systems Consortium, Inc. ("ISC"
 end_comment
 
 begin_comment
-comment|/* $Id: hip_55.c,v 1.8 2011-01-13 04:59:26 tbox Exp $ */
+comment|/* $Id: hip_55.c,v 1.8 2011/01/13 04:59:26 tbox Exp $ */
 end_comment
 
 begin_comment

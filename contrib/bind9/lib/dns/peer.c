@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: peer.c,v 1.33 2009-09-02 23:48:02 tbox Exp $ */
+comment|/* $Id: peer.c,v 1.33 2009/09/02 23:48:02 tbox Exp $ */
 end_comment
 
 begin_comment

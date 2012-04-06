@@ -2594,14 +2594,14 @@ block|{
 literal|"bpf interface lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{
 literal|"bpf cdev lock"
 block|,
 operator|&
-name|lock_class_mtx_sleep
+name|lock_class_rw
 block|}
 block|,
 block|{

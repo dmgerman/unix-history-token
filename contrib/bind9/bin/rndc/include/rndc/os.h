@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: os.h,v 1.12 2009-06-10 00:27:21 each Exp $ */
+comment|/* $Id: os.h,v 1.12 2009/06/10 00:27:21 each Exp $ */
 end_comment
 
 begin_comment

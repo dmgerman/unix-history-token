@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2011  Internet Systems Consortium, Inc
 end_comment
 
 begin_comment
-comment|/* $Id: dnssec-keygen.c,v 1.115.14.2 2011-03-12 04:59:14 tbox Exp $ */
+comment|/* $Id: dnssec-keygen.c,v 1.115.14.4 2011/11/30 00:51:38 marka Exp $ */
 end_comment
 
 begin_comment
@@ -813,6 +813,12 @@ name|algname
 init|=
 name|NULL
 decl_stmt|,
+modifier|*
+name|freeit
+init|=
+name|NULL
+decl_stmt|;
+name|char
 modifier|*
 name|nametype
 init|=
@@ -2255,6 +2261,21 @@ name|strdup
 argument_list|(
 name|DEFAULT_ALGORITHM
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|algname
+operator|==
+name|NULL
+condition|)
+name|fatal
+argument_list|(
+literal|"strdup failed"
+argument_list|)
+expr_stmt|;
+name|freeit
+operator|=
+name|algname
 expr_stmt|;
 if|if
 condition|(
@@ -4483,16 +4504,11 @@ if|if
 condition|(
 name|key_collision
 argument_list|(
-name|dst_key_id
-argument_list|(
 name|key
-argument_list|)
 argument_list|,
 name|name
 argument_list|,
 name|directory
-argument_list|,
-name|alg
 argument_list|,
 name|mctx
 argument_list|,
@@ -4735,6 +4751,17 @@ name|isc_mem_destroy
 argument_list|(
 operator|&
 name|mctx
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|freeit
+operator|!=
+name|NULL
+condition|)
+name|free
+argument_list|(
+name|freeit
 argument_list|)
 expr_stmt|;
 return|return

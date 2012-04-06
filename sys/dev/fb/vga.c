@@ -12329,23 +12329,6 @@ name|vi_cheight
 expr_stmt|;
 comment|/* POINTS */
 block|}
-else|else
-block|{
-comment|/* XXX: shouldn't be happening... */
-name|printf
-argument_list|(
-literal|"vga%d: %s: failed to obtain mode info. (vga_save_state())\n"
-argument_list|,
-name|adp
-operator|->
-name|va_unit
-argument_list|,
-name|adp
-operator|->
-name|va_name
-argument_list|)
-expr_stmt|;
-block|}
 else|#
 directive|else
 name|buf

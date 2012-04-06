@@ -1093,6 +1093,7 @@ name|label
 modifier|*
 name|label
 decl_stmt|;
+comment|/* Assume reader lock is enough. */
 name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d
@@ -1222,6 +1223,7 @@ block|{
 name|int
 name|error
 decl_stmt|;
+comment|/* Assume reader lock is enough. */
 name|BPFD_LOCK_ASSERT
 argument_list|(
 name|d

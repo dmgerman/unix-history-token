@@ -38557,7 +38557,7 @@ name|omit_one_operand
 argument_list|(
 name|type
 argument_list|,
-name|integer_zero_node
+name|integer_one_node
 argument_list|,
 name|arg
 argument_list|)

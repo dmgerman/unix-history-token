@@ -2801,7 +2801,7 @@ value|do {					\ 	(d)->bd_hbuf = (d)->bd_sbuf;					\ 	(d)->bd_hlen = (d)->bd_sle
 end_define
 
 begin_comment
-comment|/*  * Descriptor associated with each attached hardware interface.  */
+comment|/*  * Descriptor associated with each attached hardware interface.  * FIXME: this structure is exposed to external callers to speed up  * bpf_peers_present() call. However we cover all fields not needed by  * this function via BPF_INTERNAL define  */
 end_comment
 
 begin_struct
@@ -2823,6 +2823,9 @@ argument_list|)
 name|bif_dlist
 expr_stmt|;
 comment|/* descriptor list */
+ifdef|#
+directive|ifdef
+name|BPF_INTERNAL
 name|u_int
 name|bif_dlt
 decl_stmt|;
@@ -2838,10 +2841,20 @@ name|bif_ifp
 decl_stmt|;
 comment|/* corresponding interface */
 name|struct
-name|mtx
-name|bif_mtx
+name|rwlock
+name|bif_lock
 decl_stmt|;
-comment|/* mutex for interface */
+comment|/* interface lock */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bpf_d
+argument_list|)
+name|bif_wlist
+expr_stmt|;
+comment|/* writer-only list */
+endif|#
+directive|endif
 block|}
 struct|;
 end_struct

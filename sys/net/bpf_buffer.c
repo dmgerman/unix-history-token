@@ -568,7 +568,7 @@ block|{
 name|u_int
 name|size
 decl_stmt|;
-name|BPFD_LOCK
+name|BPFD_WLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -582,7 +582,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-name|BPFD_UNLOCK
+name|BPFD_WUNLOCK
 argument_list|(
 name|d
 argument_list|)
@@ -631,7 +631,7 @@ name|bd_bufsize
 operator|=
 name|size
 expr_stmt|;
-name|BPFD_UNLOCK
+name|BPFD_WUNLOCK
 argument_list|(
 name|d
 argument_list|)

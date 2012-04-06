@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2010  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: cfg.h,v 1.46 2010-08-13 23:47:04 tbox Exp $ */
+comment|/* $Id: cfg.h,v 1.46 2010/08/13 23:47:04 tbox Exp $ */
 end_comment
 
 begin_ifndef

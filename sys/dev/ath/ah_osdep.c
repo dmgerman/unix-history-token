@@ -60,6 +60,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/pcpu.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/lock.h>
 end_include
 
@@ -1176,6 +1182,14 @@ name|ae_data
 decl_stmt|;
 name|r
 operator|->
+name|threadid
+operator|=
+name|curthread
+operator|->
+name|td_tid
+expr_stmt|;
+name|r
+operator|->
 name|op
 operator|=
 name|OP_WRITE
@@ -1401,6 +1415,14 @@ name|ae_data
 decl_stmt|;
 name|r
 operator|->
+name|threadid
+operator|=
+name|curthread
+operator|->
+name|td_tid
+expr_stmt|;
+name|r
+operator|->
 name|op
 operator|=
 name|OP_READ
@@ -1482,6 +1504,14 @@ name|ale
 operator|->
 name|ae_data
 decl_stmt|;
+name|r
+operator|->
+name|threadid
+operator|=
+name|curthread
+operator|->
+name|td_tid
+expr_stmt|;
 name|r
 operator|->
 name|op
