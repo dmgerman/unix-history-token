@@ -2629,6 +2629,17 @@ begin_comment
 comment|/* process umask */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|KERN_PROC_OSREL
+value|40
+end_define
+
+begin_comment
+comment|/* osreldate for process binary */
+end_comment
+
 begin_comment
 comment|/*  * KERN_IPC identifiers  */
 end_comment
