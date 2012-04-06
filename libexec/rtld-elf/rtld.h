@@ -1302,7 +1302,6 @@ typedef|;
 end_typedef
 
 begin_function_decl
-specifier|extern
 name|void
 name|_rtld_error
 parameter_list|(
@@ -1325,7 +1324,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
 specifier|const
 name|char
 modifier|*
@@ -1337,7 +1335,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|Obj_Entry
 modifier|*
 name|map_object
@@ -1357,7 +1354,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 modifier|*
 name|xcalloc
@@ -1370,7 +1366,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 modifier|*
 name|xmalloc
@@ -1381,7 +1376,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|xstrdup
@@ -1413,7 +1407,6 @@ comment|/* For resolving undefined weak refs. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_relocations
 parameter_list|(
@@ -1424,7 +1417,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_obj_relocations
 parameter_list|(
@@ -1435,7 +1427,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_Elf_Rel
 parameter_list|(
@@ -1452,7 +1443,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_Elf_Rela
 parameter_list|(
