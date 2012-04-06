@@ -1417,15 +1417,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|vm_page_cache_remove
-parameter_list|(
-name|vm_page_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|vm_page_cache_transfer
 parameter_list|(
 name|vm_object_t

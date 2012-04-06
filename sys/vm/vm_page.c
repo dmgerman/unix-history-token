@@ -4263,6 +4263,7 @@ comment|/*  *	Remove the given cached page from its containing object's  *	colle
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|vm_page_cache_remove
 parameter_list|(
