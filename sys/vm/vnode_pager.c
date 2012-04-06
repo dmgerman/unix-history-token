@@ -1620,7 +1620,7 @@ operator|==
 name|object
 condition|)
 block|{
-name|vm_page_cache_remove
+name|vm_page_cache_free
 argument_list|(
 name|m
 argument_list|)
