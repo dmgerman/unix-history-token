@@ -930,6 +930,8 @@ literal|1
 argument|; 		cacheline_size =
 literal|32
 argument|; 	}
+comment|/* Make sure the kernel icache is valid before we go too much further */
+argument|__syncicache((caddr_t)startkernel, endkernel - startkernel);
 ifndef|#
 directive|ifndef
 name|__powerpc64__
