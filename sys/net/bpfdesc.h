@@ -138,6 +138,10 @@ name|u_char
 name|bd_immediate
 decl_stmt|;
 comment|/* true to return on packet arrival */
+name|u_char
+name|bd_writer
+decl_stmt|;
+comment|/* non-zero if d is writer-only */
 name|int
 name|bd_hdrcmplt
 decl_stmt|;

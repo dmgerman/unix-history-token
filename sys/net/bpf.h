@@ -2845,6 +2845,14 @@ name|rwlock
 name|bif_lock
 decl_stmt|;
 comment|/* interface lock */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|bpf_d
+argument_list|)
+name|bif_wlist
+expr_stmt|;
+comment|/* writer-only list */
 endif|#
 directive|endif
 block|}
