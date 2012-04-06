@@ -1064,6 +1064,12 @@ name|nr_ringid
 operator|=
 name|ringid
 expr_stmt|;
+name|req
+operator|.
+name|nr_version
+operator|=
+name|NETMAP_API
+expr_stmt|;
 name|err
 operator|=
 name|ioctl
