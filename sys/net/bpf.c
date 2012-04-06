@@ -5937,6 +5937,9 @@ name|ofunc
 decl_stmt|;
 endif|#
 directive|endif
+name|int
+name|need_upgrade
+decl_stmt|;
 ifdef|#
 directive|ifdef
 name|COMPAT_FREEBSD32
@@ -5948,11 +5951,6 @@ decl_stmt|;
 name|struct
 name|bpf_program
 name|fp_swab
-decl_stmt|;
-name|int
-name|need_upgrade
-init|=
-literal|0
 decl_stmt|;
 if|if
 condition|(
@@ -6214,6 +6212,10 @@ operator|(
 name|EINVAL
 operator|)
 return|;
+name|need_upgrade
+operator|=
+literal|0
+expr_stmt|;
 name|size
 operator|=
 name|flen
