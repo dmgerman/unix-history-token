@@ -22234,6 +22234,16 @@ expr_stmt|;
 block|}
 end_function
 
+begin_expr_stmt
+name|__weak_reference
+argument_list|(
+name|__stack_chk_fail
+argument_list|,
+name|__stack_chk_fail_local
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 name|void
 name|__chk_fail
