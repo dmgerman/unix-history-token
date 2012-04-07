@@ -2783,7 +2783,6 @@ expr_stmt|;
 break|break;
 block|}
 comment|/* 		 * If any of the rates are non-HT, this packet 		 * can't be aggregated. 		 * XXX TODO: add a bf_state flag which gets marked 		 * if any active rate is non-HT. 		 */
-comment|/* 		 * XXX TODO: AR5416 has an 8K aggregation size limit 		 * when RTS is enabled, and RTS is required for dual-stream 		 * rates. 		 * 		 * For now, limit all aggregates for the AR5416 to be 8K. 		 */
 comment|/* 		 * do not exceed aggregation limit 		 */
 name|al_delta
 operator|=
@@ -2820,6 +2819,50 @@ name|ATH_AGGR_LIMITED
 expr_stmt|;
 break|break;
 block|}
+comment|/* 		 * If RTS/CTS is set on the first frame, enforce 		 * the RTS aggregate limit. 		 */
+if|if
+condition|(
+name|bf_first
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator|&
+operator|(
+name|HAL_TXDESC_CTSENA
+operator||
+name|HAL_TXDESC_RTSENA
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+name|nframes
+operator|&&
+operator|(
+name|sc
+operator|->
+name|sc_rts_aggr_limit
+operator|<
+operator|(
+name|al
+operator|+
+name|bpad
+operator|+
+name|al_delta
+operator|+
+name|prev_al
+operator|)
+operator|)
+condition|)
+block|{
+name|status
+operator|=
+name|ATH_AGGR_8K_LIMITED
+expr_stmt|;
+break|break;
+block|}
+block|}
 comment|/* 		 * Do not exceed subframe limit. 		 */
 if|if
 condition|(
@@ -2845,7 +2888,45 @@ name|ATH_AGGR_LIMITED
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * TODO: If it's _before_ the BAW left edge, complain very loudly. 		 * This means something (else) has slid the left edge along 		 * before we got a chance to be TXed. 		 */
+comment|/* 		 * If the current frame has an RTS/CTS configuration 		 * that differs from the first frame, don't include 		 * this in the aggregate.  It's possible that the 		 * "right" thing to do here is enforce the aggregate 		 * configuration. 		 */
+if|if
+condition|(
+operator|(
+name|bf_first
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator|&
+operator|(
+name|HAL_TXDESC_RTSENA
+operator||
+name|HAL_TXDESC_CTSENA
+operator|)
+operator|)
+operator|!=
+operator|(
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator|&
+operator|(
+name|HAL_TXDESC_RTSENA
+operator||
+name|HAL_TXDESC_CTSENA
+operator|)
+operator|)
+condition|)
+block|{
+name|status
+operator|=
+name|ATH_AGGR_NONAGGR
+expr_stmt|;
+break|break;
+block|}
+comment|/* 		 * TODO: If it's _before_ the BAW left edge, complain very 		 * loudly. 		 * 		 * This means something (else) has slid the left edge along 		 * before we got a chance to be TXed. 		 */
 comment|/* 		 * Check if we have space in the BAW for this frame before 		 * we add it. 		 * 		 * see ath_tx_xmit_aggr() for more info. 		 */
 if|if
 condition|(
@@ -3068,7 +3149,6 @@ name|bfs_addedbaw
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 		 * XXX TODO: If any frame in the aggregate requires RTS/CTS, 		 * set the first frame. 		 */
 comment|/* 		 * XXX enforce ACK for aggregate frames (this needs to be 		 * XXX handled more gracefully? 		 */
 if|if
 condition|(
