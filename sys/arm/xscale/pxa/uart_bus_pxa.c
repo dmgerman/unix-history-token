@@ -215,7 +215,6 @@ name|uart_softc
 modifier|*
 name|sc
 decl_stmt|;
-comment|/* Check to see if the enable bit's on. */
 name|base
 operator|=
 operator|(
@@ -226,6 +225,24 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|QEMU_WORKAROUNDS
+comment|/* 	 * QEMU really exposes only the first uart unless 	 * you specify several of them in the configuration. 	 * Otherwise all the rest of UARTs stay unconnected, 	 * which causes problems in the ns16550 attach routine. 	 * Unfortunately, even if you provide qemu with 4 uarts 	 * on the command line, it has a bug where it segfaults 	 * trying to enable bluetooth on the HWUART.  So we just 	 * allow the FFUART to be attached. 	 * Also, don't check the UUE (UART Unit Enable) bit, as 	 * the gumstix bootloader doesn't set it. 	 */
+if|if
+condition|(
+name|base
+operator|!=
+name|PXA2X0_FFUART_BASE
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
+else|#
+directive|else
+comment|/* Check to see if the enable bit's on. */
 if|if
 condition|(
 operator|(
@@ -252,6 +269,8 @@ operator|(
 name|ENXIO
 operator|)
 return|;
+endif|#
+directive|endif
 name|sc
 operator|=
 name|device_get_softc
