@@ -1836,7 +1836,7 @@ begin_define
 define|#
 directive|define
 name|ARM_VECTORS_HIGH
-value|0xffff0000U
+value|0xffff0000
 end_define
 
 begin_comment
