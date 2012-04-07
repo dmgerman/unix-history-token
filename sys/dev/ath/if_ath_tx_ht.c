@@ -2888,10 +2888,25 @@ name|ATH_AGGR_LIMITED
 expr_stmt|;
 break|break;
 block|}
-comment|/* 		 * If the current frame has an RTS/CTS configuration 		 * that differs from the first frame, don't include 		 * this in the aggregate.  It's possible that the 		 * "right" thing to do here is enforce the aggregate 		 * configuration. 		 */
-if|if
-condition|(
+comment|/* 		 * If the current frame has an RTS/CTS configuration 		 * that differs from the first frame, override the 		 * subsequent frame with this config. 		 */
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator|&=
 operator|(
+name|HAL_TXDESC_RTSENA
+operator||
+name|HAL_TXDESC_CTSENA
+operator|)
+expr_stmt|;
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_txflags
+operator||=
 name|bf_first
 operator|->
 name|bf_state
@@ -2903,29 +2918,7 @@ name|HAL_TXDESC_RTSENA
 operator||
 name|HAL_TXDESC_CTSENA
 operator|)
-operator|)
-operator|!=
-operator|(
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_txflags
-operator|&
-operator|(
-name|HAL_TXDESC_RTSENA
-operator||
-name|HAL_TXDESC_CTSENA
-operator|)
-operator|)
-condition|)
-block|{
-name|status
-operator|=
-name|ATH_AGGR_NONAGGR
 expr_stmt|;
-break|break;
-block|}
 comment|/* 		 * TODO: If it's _before_ the BAW left edge, complain very 		 * loudly. 		 * 		 * This means something (else) has slid the left edge along 		 * before we got a chance to be TXed. 		 */
 comment|/* 		 * Check if we have space in the BAW for this frame before 		 * we add it. 		 * 		 * see ath_tx_xmit_aggr() for more info. 		 */
 if|if
