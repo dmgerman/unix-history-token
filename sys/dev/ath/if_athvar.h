@@ -546,10 +546,6 @@ name|int
 name|bf_nseg
 decl_stmt|;
 name|uint16_t
-name|bf_txflags
-decl_stmt|;
-comment|/* tx descriptor flags */
-name|uint16_t
 name|bf_flags
 decl_stmt|;
 comment|/* status flags (below) */
@@ -763,9 +759,9 @@ name|bfs_al
 decl_stmt|;
 comment|/* length of aggregate */
 name|int
-name|bfs_flags
+name|bfs_txflags
 decl_stmt|;
-comment|/* HAL descriptor flags */
+comment|/* HAL (tx) descriptor flags */
 name|int
 name|bfs_txrate0
 decl_stmt|;

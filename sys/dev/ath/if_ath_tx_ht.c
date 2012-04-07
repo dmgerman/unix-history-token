@@ -1264,7 +1264,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 operator|&
 operator|(
 name|HAL_TXDESC_RTSENA
@@ -2017,7 +2017,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 decl_stmt|;
 name|struct
 name|ath_rc_series
@@ -2480,7 +2480,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 decl_stmt|;
 comment|/* Setup rate scenario */
 name|memset
@@ -3076,7 +3076,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 operator|&
 name|HAL_TXDESC_NOACK
 condition|)
@@ -3096,7 +3096,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 operator|&=
 operator|(
 operator|~

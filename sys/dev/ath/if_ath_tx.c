@@ -1738,7 +1738,7 @@ name|bf_first
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 operator||
 name|HAL_TXDESC_INTREQ
 argument_list|,
@@ -3177,7 +3177,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 operator|&
 operator|(
 name|HAL_TXDESC_RTSENA
@@ -3333,7 +3333,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 argument_list|)
 expr_stmt|;
 comment|/* Squirrel away in ath_buf */
@@ -3488,7 +3488,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
+name|bfs_txflags
 comment|/* flags */
 argument_list|,
 name|bf
@@ -5391,13 +5391,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
-operator|=
-name|flags
-expr_stmt|;
-name|bf
-operator|->
-name|bf_txflags
+name|bfs_txflags
 operator|=
 name|flags
 expr_stmt|;
@@ -6868,13 +6862,7 @@ name|bf
 operator|->
 name|bf_state
 operator|.
-name|bfs_flags
-operator|=
-name|flags
-expr_stmt|;
-name|bf
-operator|->
-name|bf_txflags
+name|bfs_txflags
 operator|=
 name|flags
 expr_stmt|;
@@ -11890,7 +11878,9 @@ operator|(
 operator|(
 name|bf
 operator|->
-name|bf_txflags
+name|bf_state
+operator|.
+name|bfs_txflags
 operator|&
 name|HAL_TXDESC_NOACK
 operator|)
@@ -15024,7 +15014,9 @@ operator|(
 operator|(
 name|bf
 operator|->
-name|bf_txflags
+name|bf_state
+operator|.
+name|bfs_txflags
 operator|&
 name|HAL_TXDESC_NOACK
 operator|)

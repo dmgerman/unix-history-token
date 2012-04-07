@@ -709,7 +709,9 @@ name|ds_data
 argument_list|,
 name|bf
 operator|->
-name|bf_txflags
+name|bf_state
+operator|.
+name|bfs_txflags
 argument_list|,
 operator|!
 name|done
@@ -731,13 +733,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"        TXF: %04x Seq: %d swtry: %d ADDBAW?: %d DOBAW?: %d\n"
-argument_list|,
-name|bf
-operator|->
-name|bf_state
-operator|.
-name|bfs_flags
+literal|"        Seq: %d swtry: %d ADDBAW?: %d DOBAW?: %d\n"
 argument_list|,
 name|bf
 operator|->
