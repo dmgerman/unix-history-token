@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009, 2010  Internet Systems Conso
 end_comment
 
 begin_comment
-comment|/* $Id: keytable.c,v 1.41 2010-06-25 23:46:51 tbox Exp $ */
+comment|/* $Id: keytable.c,v 1.41 2010/06/25 23:46:51 tbox Exp $ */
 end_comment
 
 begin_comment

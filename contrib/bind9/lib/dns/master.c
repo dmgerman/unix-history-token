@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: master.c,v 1.178.346.2 2011-03-12 04:59:17 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -10830,7 +10830,7 @@ name|new_rdata
 operator|=
 name|grow_rdata
 argument_list|(
-name|rdata_size
+name|rdcount
 operator|+
 name|RDSZ
 argument_list|,
@@ -10863,7 +10863,9 @@ name|cleanup
 goto|;
 block|}
 name|rdata_size
-operator|+=
+operator|=
+name|rdcount
+operator|+
 name|RDSZ
 expr_stmt|;
 name|rdata
@@ -13103,6 +13105,13 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|rdlcount
+operator|<
+name|new_len
+argument_list|)
+expr_stmt|;
 name|new
 index|[
 name|rdlcount
@@ -13190,6 +13199,13 @@ argument_list|,
 name|this
 argument_list|,
 name|link
+argument_list|)
+expr_stmt|;
+name|INSIST
+argument_list|(
+name|rdlcount
+operator|<
+name|new_len
 argument_list|)
 expr_stmt|;
 name|new
@@ -13432,6 +13448,13 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|rdcount
+operator|<
+name|new_len
+argument_list|)
+expr_stmt|;
 name|new
 index|[
 name|rdcount
@@ -13550,6 +13573,13 @@ argument_list|,
 name|link
 argument_list|)
 expr_stmt|;
+name|INSIST
+argument_list|(
+name|rdcount
+operator|<
+name|new_len
+argument_list|)
+expr_stmt|;
 name|new
 index|[
 name|rdcount
@@ -13592,6 +13622,10 @@ argument_list|(
 name|rdcount
 operator|==
 name|old_len
+operator|||
+name|rdcount
+operator|==
+literal|0
 argument_list|)
 expr_stmt|;
 if|if

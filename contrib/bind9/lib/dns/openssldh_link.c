@@ -4,7 +4,7 @@ comment|/*  * Portions Copyright (C) 2004-2009, 2011  Internet Systems Consortiu
 end_comment
 
 begin_comment
-comment|/*  * Principal Author: Brian Wellington  * $Id: openssldh_link.c,v 1.20 2011-01-11 23:47:13 tbox Exp $  */
+comment|/*  * Principal Author: Brian Wellington  * $Id: openssldh_link.c,v 1.20 2011/01/11 23:47:13 tbox Exp $  */
 end_comment
 
 begin_ifdef

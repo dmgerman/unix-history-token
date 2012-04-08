@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: namedconf.h,v 1.18 2010-08-11 18:14:20 each Exp $ */
+comment|/* $Id: namedconf.h,v 1.18 2010/08/11 18:14:20 each Exp $ */
 end_comment
 
 begin_ifndef

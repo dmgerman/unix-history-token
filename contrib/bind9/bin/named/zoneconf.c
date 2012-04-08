@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: zoneconf.c,v 1.170.14.4 2011-05-23 20:56:10 each Exp $ */
+comment|/* $Id: zoneconf.c,v 1.170.14.7 2012/01/31 23:46:39 tbox Exp $ */
 end_comment
 
 begin_comment
@@ -7033,6 +7033,12 @@ argument_list|,
 name|count
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|count
+operator|!=
+literal|0
+condition|)
 name|ns_config_putipandkeylist
 argument_list|(
 name|mctx
@@ -7044,6 +7050,18 @@ operator|&
 name|keynames
 argument_list|,
 name|count
+argument_list|)
+expr_stmt|;
+else|else
+name|INSIST
+argument_list|(
+name|addrs
+operator|==
+name|NULL
+operator|&&
+name|keynames
+operator|==
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -7812,11 +7830,25 @@ argument_list|(
 name|zone
 argument_list|)
 condition|)
+block|{
+name|dns_zone_log
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|"not reusable: type mismatch"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_FALSE
 operator|)
 return|;
+block|}
 comment|/* 	 * We always reconfigure a static-stub zone for simplicity, assuming 	 * the amount of data to be loaded is small. 	 */
 if|if
 condition|(
@@ -7827,11 +7859,25 @@ argument_list|)
 operator|==
 name|dns_zone_staticstub
 condition|)
+block|{
+name|dns_zone_log
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|"not reusable: staticstub"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_FALSE
 operator|)
 return|;
+block|}
 name|obj
 operator|=
 name|NULL
@@ -7908,11 +7954,25 @@ literal|0
 operator|)
 operator|)
 condition|)
+block|{
+name|dns_zone_log
+argument_list|(
+name|zone
+argument_list|,
+name|ISC_LOG_DEBUG
+argument_list|(
+literal|1
+argument_list|)
+argument_list|,
+literal|"not reusable: filename mismatch"
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|ISC_FALSE
 operator|)
 return|;
+block|}
 return|return
 operator|(
 name|ISC_TRUE

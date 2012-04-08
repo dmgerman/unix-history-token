@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: dig.h,v 1.111.306.2 2011-02-28 01:19:58 tbox Exp $ */
+comment|/* $Id: dig.h,v 1.111.306.3 2011/12/07 17:23:55 each Exp $ */
 end_comment
 
 begin_ifndef
@@ -1146,6 +1146,10 @@ specifier|const
 name|char
 modifier|*
 name|host
+parameter_list|,
+name|isc_result_t
+modifier|*
+name|resultp
 parameter_list|)
 function_decl|;
 end_function_decl

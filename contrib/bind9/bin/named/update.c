@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: update.c,v 1.186.16.5 2011-03-25 23:53:52 each Exp $ */
+comment|/* $Id: update.c,v 1.186.16.7 2011/11/03 02:55:34 each Exp $ */
 end_comment
 
 begin_include
@@ -5614,17 +5614,6 @@ begin_comment
 comment|/*  * Incremental updating of NSECs and RRSIGs.  */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|MAXZONEKEYS
-value|32
-end_define
-
-begin_comment
-comment|/*%< Maximum number of zone keys supported. */
-end_comment
-
 begin_comment
 comment|/*%  * We abuse the dns_diff_t type to represent a set of domain names  * affected by the update.  */
 end_comment
@@ -8646,7 +8635,7 @@ name|dst_key_t
 modifier|*
 name|zone_keys
 index|[
-name|MAXZONEKEYS
+name|DNS_MAXZONEKEYS
 index|]
 decl_stmt|;
 name|unsigned
@@ -8778,7 +8767,7 @@ name|client
 operator|->
 name|mctx
 argument_list|,
-name|MAXZONEKEYS
+name|DNS_MAXZONEKEYS
 argument_list|,
 name|zone_keys
 argument_list|,
@@ -19734,6 +19723,32 @@ name|ns_client_t
 modifier|*
 name|evclient
 decl_stmt|;
+comment|/* 	 * This may take some time so replace this client. 	 */
+if|if
+condition|(
+operator|!
+name|client
+operator|->
+name|mortal
+operator|&&
+operator|(
+name|client
+operator|->
+name|attributes
+operator|&
+name|NS_CLIENTATTR_TCP
+operator|)
+operator|==
+literal|0
+condition|)
+name|CHECK
+argument_list|(
+name|ns_client_replace
+argument_list|(
+name|client
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|event
 operator|=
 operator|(

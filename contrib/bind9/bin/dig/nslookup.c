@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: nslookup.c,v 1.127.38.2 2011-02-28 01:19:58 tbox Exp $ */
+comment|/* $Id: nslookup.c,v 1.127.38.2 2011/02/28 01:19:58 tbox Exp $ */
 end_comment
 
 begin_include

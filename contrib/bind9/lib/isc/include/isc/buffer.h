@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2008, 2010  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: buffer.h,v 1.55 2010-12-20 23:47:21 tbox Exp $ */
+comment|/* $Id: buffer.h,v 1.55 2010/12/20 23:47:21 tbox Exp $ */
 end_comment
 
 begin_ifndef

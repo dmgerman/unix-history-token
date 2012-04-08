@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: rpz.h,v 1.3 2011-01-13 04:59:26 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -86,16 +86,16 @@ name|DNS_RPZ_TYPE_QNAME
 block|,
 name|DNS_RPZ_TYPE_IP
 block|,
-name|DNS_RPZ_TYPE_NSIP
-block|,
 name|DNS_RPZ_TYPE_NSDNAME
+block|,
+name|DNS_RPZ_TYPE_NSIP
 block|}
 name|dns_rpz_type_t
 typedef|;
 end_typedef
 
 begin_comment
-comment|/*  * Require DNS_RPZ_POLICY_NO_OP< DNS_RPZ_POLICY_NXDOMAIN<  *	   DNS_RPZ_POLICY_NODATA< DNS_RPZ_POLICY_CNAME.  */
+comment|/*  * Require DNS_RPZ_POLICY_PASSTHRU< DNS_RPZ_POLICY_NXDOMAIN<  * DNS_RPZ_POLICY_NODATA< DNS_RPZ_POLICY_CNAME to choose among competing  * policies.  */
 end_comment
 
 begin_typedef
@@ -106,30 +106,35 @@ name|DNS_RPZ_POLICY_GIVEN
 init|=
 literal|0
 block|,
-comment|/* 'given': what something else says */
-name|DNS_RPZ_POLICY_NO_OP
+comment|/* 'given': what policy record says */
+name|DNS_RPZ_POLICY_DISABLED
 init|=
 literal|1
 block|,
-comment|/* 'no-op': do not rewrite */
-name|DNS_RPZ_POLICY_NXDOMAIN
+comment|/* 'cname x': answer with x's rrsets */
+name|DNS_RPZ_POLICY_PASSTHRU
 init|=
 literal|2
+block|,
+comment|/* 'passthru': do not rewrite */
+name|DNS_RPZ_POLICY_NXDOMAIN
+init|=
+literal|3
 block|,
 comment|/* 'nxdomain': answer with NXDOMAIN */
 name|DNS_RPZ_POLICY_NODATA
 init|=
-literal|3
+literal|4
 block|,
 comment|/* 'nodata': answer with ANCOUNT=0 */
 name|DNS_RPZ_POLICY_CNAME
 init|=
-literal|4
+literal|5
 block|,
 comment|/* 'cname x': answer with x's rrsets */
 name|DNS_RPZ_POLICY_RECORD
-init|=
-literal|5
+block|,
+name|DNS_RPZ_POLICY_WILDCNAME
 block|,
 name|DNS_RPZ_POLICY_MISS
 block|,
@@ -171,15 +176,15 @@ comment|/* Policy zone name */
 name|dns_name_t
 name|nsdname
 decl_stmt|;
-comment|/* RPZ_NSDNAME_ZONE.origin */
+comment|/* DNS_RPZ_NSDNAME_ZONE.origin */
 name|dns_rpz_policy_t
 name|policy
 decl_stmt|;
-comment|/* RPZ_POLICY_GIVEN or override */
+comment|/* DNS_RPZ_POLICY_GIVEN or override */
 name|dns_name_t
 name|cname
 decl_stmt|;
-comment|/* override name for 					     RPZ_POLICY_CNAME */
+comment|/* override value for ..._CNAME */
 block|}
 struct|;
 end_struct
@@ -216,30 +221,45 @@ define|#
 directive|define
 name|DNS_RPZ_DONE_QNAME
 value|0x0002
+comment|/* qname checked */
 define|#
 directive|define
-name|DNS_RPZ_DONE_A
+name|DNS_RPZ_DONE_QNAME_IP
 value|0x0004
+comment|/* IP addresses of qname checked */
 define|#
 directive|define
-name|DNS_RPZ_RECURSING
+name|DNS_RPZ_DONE_NSDNAME
 value|0x0008
+comment|/* NS name missed; checking addresses */
 define|#
 directive|define
-name|DNS_RPZ_HAVE_IP
+name|DNS_RPZ_DONE_IPv4
 value|0x0010
 define|#
 directive|define
-name|DNS_RPZ_HAVE_NSIPv4
+name|DNS_RPZ_RECURSING
 value|0x0020
 define|#
 directive|define
-name|DNS_RPZ_HAVE_NSIPv6
+name|DNS_RPZ_HAVE_IP
 value|0x0040
+comment|/* a policy zone has IP addresses */
 define|#
 directive|define
-name|DNS_RPZ_HAD_NSDNAME
+name|DNS_RPZ_HAVE_NSIPv4
 value|0x0080
+comment|/*		  IPv4 NISP addresses */
+define|#
+directive|define
+name|DNS_RPZ_HAVE_NSIPv6
+value|0x0100
+comment|/*		  IPv6 NISP addresses */
+define|#
+directive|define
+name|DNS_RPZ_HAVE_NSDNAME
+value|0x0200
+comment|/*		  NS names */
 comment|/* 	 * Best match so far. 	 */
 struct|struct
 block|{
@@ -270,6 +290,10 @@ name|dns_db_t
 modifier|*
 name|db
 decl_stmt|;
+name|dns_dbversion_t
+modifier|*
+name|version
+decl_stmt|;
 name|dns_dbnode_t
 modifier|*
 name|node
@@ -281,7 +305,7 @@ decl_stmt|;
 block|}
 name|m
 struct|;
-comment|/* 	 * State for chasing NS names and addresses including recursion. 	 */
+comment|/* 	 * State for chasing IP addresses and NS names including recursion. 	 */
 struct|struct
 block|{
 name|unsigned
@@ -307,7 +331,7 @@ modifier|*
 name|r_rdataset
 decl_stmt|;
 block|}
-name|ns
+name|r
 struct|;
 comment|/* 	 * State of real query while recursing for NSIP or NSDNAME. 	 */
 struct|struct
@@ -412,6 +436,13 @@ name|DNS_RPZ_DEBUG_LEVEL2
 value|ISC_LOG_DEBUG(2)
 end_define
 
+begin_define
+define|#
+directive|define
+name|DNS_RPZ_DEBUG_LEVEL3
+value|ISC_LOG_DEBUG(3)
+end_define
+
 begin_function_decl
 specifier|const
 name|char
@@ -432,6 +463,18 @@ specifier|const
 name|char
 modifier|*
 name|str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|const
+name|char
+modifier|*
+name|dns_rpz_policy2str
+parameter_list|(
+name|dns_rpz_policy_t
+name|policy
 parameter_list|)
 function_decl|;
 end_function_decl

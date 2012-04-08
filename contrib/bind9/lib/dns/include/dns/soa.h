@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: soa.h,v 1.12 2009-09-10 01:47:09 each Exp $ */
+comment|/* $Id: soa.h,v 1.12 2009/09/10 01:47:09 each Exp $ */
 end_comment
 
 begin_ifndef

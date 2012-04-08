@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2004-2009, 2011  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2004-2009, 2011, 2012  Internet Systems Consortium, Inc. ("ISC")  * Copyright (C) 1999-2003  Internet Software Consortium.  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: masterdump.c,v 1.99.258.7 2011-06-08 23:02:42 each Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_comment
@@ -1670,26 +1670,24 @@ argument_list|(
 name|rdataset
 argument_list|)
 expr_stmt|;
-name|REQUIRE
-argument_list|(
+name|current_ttl
+operator|=
+name|ctx
+operator|->
+name|current_ttl
+expr_stmt|;
+name|current_ttl_valid
+operator|=
+name|ctx
+operator|->
+name|current_ttl_valid
+expr_stmt|;
+while|while
+condition|(
 name|result
 operator|==
 name|ISC_R_SUCCESS
-argument_list|)
-expr_stmt|;
-name|current_ttl
-operator|=
-name|ctx
-operator|->
-name|current_ttl
-expr_stmt|;
-name|current_ttl_valid
-operator|=
-name|ctx
-operator|->
-name|current_ttl_valid
-expr_stmt|;
-do|do
+condition|)
 block|{
 name|column
 operator|=
@@ -2250,13 +2248,6 @@ name|rdataset
 argument_list|)
 expr_stmt|;
 block|}
-do|while
-condition|(
-name|result
-operator|==
-name|ISC_R_SUCCESS
-condition|)
-do|;
 if|if
 condition|(
 name|result
@@ -3871,6 +3862,12 @@ argument_list|(
 name|rdataset
 argument_list|)
 argument_list|)
+expr_stmt|;
+name|rdataset
+operator|->
+name|attributes
+operator||=
+name|DNS_RDATASETATTR_LOADORDER
 expr_stmt|;
 name|restart
 label|:

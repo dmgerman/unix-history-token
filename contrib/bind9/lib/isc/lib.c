@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2005, 2007, 2009  Internet Systems Consortium,
 end_comment
 
 begin_comment
-comment|/* $Id: lib.c,v 1.16 2009-09-02 23:48:02 tbox Exp $ */
+comment|/* $Id: lib.c,v 1.16 2009/09/02 23:48:02 tbox Exp $ */
 end_comment
 
 begin_comment

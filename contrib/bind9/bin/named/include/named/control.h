@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2007, 2009, 2010  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: control.h,v 1.31 2010-08-16 22:21:06 marka Exp $ */
+comment|/* $Id: control.h,v 1.31 2010/08/16 22:21:06 marka Exp $ */
 end_comment
 
 begin_ifndef
