@@ -483,6 +483,23 @@ operator|=
 literal|5
 expr_stmt|;
 break|break;
+case|case
+literal|0x2A
+case|:
+comment|/* Per Intel document 253669-039US 05/2011. */
+case|case
+literal|0x2D
+case|:
+comment|/* Per Intel document 253669-041US 12/2011. */
+name|cputype
+operator|=
+name|PMC_CPU_INTEL_SANDYBRIDGE
+expr_stmt|;
+name|nclasses
+operator|=
+literal|5
+expr_stmt|;
+break|break;
 block|}
 break|break;
 if|#
@@ -642,6 +659,9 @@ name|PMC_CPU_INTEL_CORE2EXTREME
 case|:
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_WESTMERE
@@ -818,6 +838,9 @@ case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
 case|case
+name|PMC_CPU_INTEL_SANDYBRIDGE
+case|:
+case|case
 name|PMC_CPU_INTEL_WESTMERE
 case|:
 name|error
@@ -911,6 +934,9 @@ case|case
 name|PMC_CPU_INTEL_COREI7
 case|:
 case|case
+name|PMC_CPU_INTEL_SANDYBRIDGE
+case|:
+case|case
 name|PMC_CPU_INTEL_WESTMERE
 case|:
 name|pmc_core_finalize
@@ -1002,6 +1028,9 @@ condition|)
 block|{
 case|case
 name|PMC_CPU_INTEL_COREI7
+case|:
+case|case
+name|PMC_CPU_INTEL_SANDYBRIDGE
 case|:
 case|case
 name|PMC_CPU_INTEL_WESTMERE
