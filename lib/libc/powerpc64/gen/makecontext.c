@@ -404,8 +404,10 @@ name|mc
 operator|->
 name|mc_srr0
 operator|=
+operator|*
 operator|(
 name|uintptr_t
+operator|*
 operator|)
 name|_ctx_start
 expr_stmt|;

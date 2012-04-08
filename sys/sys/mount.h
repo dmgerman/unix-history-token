@@ -3390,6 +3390,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vfs_getopt_size
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|off_t
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|vfs_getopts

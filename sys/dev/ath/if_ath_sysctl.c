@@ -1575,6 +1575,17 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
+literal|"aggr single packet RTS aggr limited: %d\n"
+argument_list|,
+name|sc
+operator|->
+name|sc_aggr_stats
+operator|.
+name|aggr_rts_aggr_limited
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
 literal|"aggr sched, no work: %d\n"
 argument_list|,
 name|sc

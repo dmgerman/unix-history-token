@@ -47,6 +47,9 @@ decl_stmt|;
 name|u_int32_t
 name|aggr_sched_nopkt
 decl_stmt|;
+name|u_int32_t
+name|aggr_rts_aggr_limited
+decl_stmt|;
 block|}
 struct|;
 end_struct

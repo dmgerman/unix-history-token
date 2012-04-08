@@ -546,10 +546,6 @@ name|int
 name|bf_nseg
 decl_stmt|;
 name|uint16_t
-name|bf_txflags
-decl_stmt|;
-comment|/* tx descriptor flags */
-name|uint16_t
 name|bf_flags
 decl_stmt|;
 comment|/* status flags (below) */
@@ -763,9 +759,9 @@ name|bfs_al
 decl_stmt|;
 comment|/* length of aggregate */
 name|int
-name|bfs_flags
+name|bfs_txflags
 decl_stmt|;
-comment|/* HAL descriptor flags */
+comment|/* HAL (tx) descriptor flags */
 name|int
 name|bfs_txrate0
 decl_stmt|;
@@ -2025,6 +2021,10 @@ name|int
 name|sc_rxchainmask
 decl_stmt|;
 comment|/* currently configured RX chainmask */
+name|int
+name|sc_rts_aggr_limit
+decl_stmt|;
+comment|/* TX limit on RTS aggregates */
 comment|/* Queue limits */
 comment|/* 	 * To avoid queue starvation in congested conditions, 	 * these parameters tune the maximum number of frames 	 * queued to the data/mcastq before they're dropped. 	 * 	 * This is to prevent: 	 * + a single destination overwhelming everything, including 	 *   management/multicast frames; 	 * + multicast frames overwhelming everything (when the 	 *   air is sufficiently busy that cabq can't drain.) 	 * 	 * These implement: 	 * + data_minfree is the maximum number of free buffers 	 *   overall to successfully allow a data frame. 	 * 	 * + mcastq_maxdepth is the maximum depth allowed of the cabq. 	 */
 name|int
