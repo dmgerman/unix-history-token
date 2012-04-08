@@ -3629,7 +3629,7 @@ literal|0x40
 argument_list|,
 name|IAP_F_FM
 operator||
-name|IAP_F_I7
+name|IAP_F_I7O
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5893,7 +5893,7 @@ literal|0x02
 argument_list|,
 name|IAP_F_FM
 operator||
-name|IAP_F_I7
+name|IAP_F_I7O
 argument_list|)
 block|,
 name|IAPDESCR
@@ -5985,7 +5985,7 @@ literal|0x20
 argument_list|,
 name|IAP_F_FM
 operator||
-name|IAP_F_I7O
+name|IAP_F_I7
 argument_list|)
 block|,
 name|IAPDESCR
@@ -6013,7 +6013,7 @@ name|IAP_F_FM
 operator||
 name|IAP_F_WM
 operator||
-name|IAP_F_I7O
+name|IAP_F_I7
 argument_list|)
 block|,
 name|IAPDESCR
@@ -10694,7 +10694,7 @@ literal|0x03
 argument_list|,
 name|IAP_F_FM
 operator||
-name|IAP_F_I7
+name|IAP_F_I7O
 argument_list|)
 block|,
 name|IAPDESCR
@@ -11587,9 +11587,6 @@ name|PMC_EV_IAP_EVENT_43H_01H
 case|:
 case|case
 name|PMC_EV_IAP_EVENT_43H_02H
-case|:
-case|case
-name|PMC_EV_IAP_EVENT_48H_02H
 case|:
 case|case
 name|PMC_EV_IAP_EVENT_51H_01H
