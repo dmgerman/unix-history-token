@@ -287,17 +287,7 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__sparc64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__arm__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__mips__
+name|__NO_TLS
 argument_list|)
 end_if
 
