@@ -1411,7 +1411,7 @@ name|page
 argument_list|,
 name|object
 argument_list|,
-name|offset
+name|pidx
 argument_list|)
 operator|!=
 literal|0
