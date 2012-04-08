@@ -91,7 +91,7 @@ name|FALSE
 expr_stmt|;
 name|c
 operator|->
-name|as_use_strongest_session_key
+name|tgt_use_strongest_session_key
 operator|=
 name|FALSE
 expr_stmt|;
@@ -103,7 +103,7 @@ name|FALSE
 expr_stmt|;
 name|c
 operator|->
-name|tgs_use_strongest_session_key
+name|svc_use_strongest_session_key
 operator|=
 name|FALSE
 expr_stmt|;
@@ -424,7 +424,7 @@ endif|#
 directive|endif
 name|c
 operator|->
-name|as_use_strongest_session_key
+name|tgt_use_strongest_session_key
 operator|=
 name|krb5_config_get_bool_default
 argument_list|(
@@ -434,11 +434,11 @@ name|NULL
 argument_list|,
 name|c
 operator|->
-name|as_use_strongest_session_key
+name|tgt_use_strongest_session_key
 argument_list|,
 literal|"kdc"
 argument_list|,
-literal|"as-use-strongest-session-key"
+literal|"tgt-use-strongest-session-key"
 argument_list|,
 name|NULL
 argument_list|)
@@ -466,7 +466,7 @@ argument_list|)
 expr_stmt|;
 name|c
 operator|->
-name|tgs_use_strongest_session_key
+name|svc_use_strongest_session_key
 operator|=
 name|krb5_config_get_bool_default
 argument_list|(
@@ -476,11 +476,11 @@ name|NULL
 argument_list|,
 name|c
 operator|->
-name|tgs_use_strongest_session_key
+name|svc_use_strongest_session_key
 argument_list|,
 literal|"kdc"
 argument_list|,
-literal|"tgs-use-strongest-session-key"
+literal|"svc-use-strongest-session-key"
 argument_list|,
 name|NULL
 argument_list|)

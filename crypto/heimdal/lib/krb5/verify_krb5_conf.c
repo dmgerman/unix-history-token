@@ -2885,6 +2885,8 @@ block|,
 name|krb5_config_string
 block|,
 name|check_boolean
+block|,
+literal|1
 block|}
 block|,
 block|{

@@ -1537,7 +1537,8 @@ block|,
 operator|&
 name|_krb5_checksum_hmac_md5
 block|,
-name|NULL
+operator|&
+name|_krb5_checksum_hmac_md5
 block|,
 name|F_SPECIAL
 block|,

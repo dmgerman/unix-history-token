@@ -2171,9 +2171,9 @@ expr_stmt|;
 if|if
 condition|(
 name|kct
-operator|!=
+operator|==
 name|NULL
-operator|&&
+operator|||
 name|kct
 operator|->
 name|type

@@ -96,6 +96,17 @@ name|HEIM_EAI_NODATA
 return|;
 endif|#
 directive|endif
+ifdef|#
+directive|ifdef
+name|WSANO_DATA
+case|case
+name|WSANO_DATA
+case|:
+return|return
+name|HEIM_EAI_NODATA
+return|;
+endif|#
+directive|endif
 case|case
 name|EAI_NONAME
 case|:

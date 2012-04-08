@@ -687,7 +687,7 @@ expr_stmt|;
 name|ch
 operator|=
 name|ch
-operator|<<
+operator|>>
 literal|6
 expr_stmt|;
 case|case
@@ -709,7 +709,7 @@ expr_stmt|;
 name|ch
 operator|=
 name|ch
-operator|<<
+operator|>>
 literal|6
 expr_stmt|;
 case|case
@@ -731,7 +731,7 @@ expr_stmt|;
 name|ch
 operator|=
 name|ch
-operator|<<
+operator|>>
 literal|6
 expr_stmt|;
 case|case
@@ -1212,8 +1212,6 @@ index|]
 operator|=
 operator|(
 name|bom
-operator|>>
-literal|8
 operator|)
 operator|&
 literal|0xff
@@ -1225,6 +1223,8 @@ index|]
 operator|=
 operator|(
 name|bom
+operator|>>
+literal|8
 operator|)
 operator|&
 literal|0xff
@@ -1297,8 +1297,6 @@ name|in
 index|[
 literal|0
 index|]
-operator|>>
-literal|8
 operator|)
 operator|&
 literal|0xff
@@ -1313,6 +1311,8 @@ name|in
 index|[
 literal|0
 index|]
+operator|>>
+literal|8
 operator|)
 operator|&
 literal|0xff
@@ -1666,7 +1666,7 @@ expr_stmt|;
 name|ch
 operator|=
 name|ch
-operator|<<
+operator|>>
 literal|6
 expr_stmt|;
 case|case
@@ -1688,7 +1688,7 @@ expr_stmt|;
 name|ch
 operator|=
 name|ch
-operator|<<
+operator|>>
 literal|6
 expr_stmt|;
 case|case

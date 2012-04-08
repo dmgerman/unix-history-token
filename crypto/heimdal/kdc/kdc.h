@@ -71,13 +71,13 @@ name|encode_as_rep_as_tgs_rep
 decl_stmt|;
 comment|/* bug compatibility */
 name|krb5_boolean
-name|as_use_strongest_session_key
+name|tgt_use_strongest_session_key
 decl_stmt|;
 name|krb5_boolean
 name|preauth_use_strongest_session_key
 decl_stmt|;
 name|krb5_boolean
-name|tgs_use_strongest_session_key
+name|svc_use_strongest_session_key
 decl_stmt|;
 name|krb5_boolean
 name|use_strongest_server_key

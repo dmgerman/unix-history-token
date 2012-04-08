@@ -15,14 +15,6 @@ directive|include
 file|"kadm5-pwcheck.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id$"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -1948,6 +1940,10 @@ argument_list|,
 name|pwd_data
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|msg
+condition|)
 name|krb5_set_error_message
 argument_list|(
 name|context

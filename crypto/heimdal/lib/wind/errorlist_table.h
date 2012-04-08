@@ -4,7 +4,7 @@ comment|/* ./errorlist_table.h */
 end_comment
 
 begin_comment
-comment|/* Automatically generated at 2011-09-30T15:24:59.457950 */
+comment|/* Automatically generated at 2012-01-11T14:07:01.014378 */
 end_comment
 
 begin_ifndef
