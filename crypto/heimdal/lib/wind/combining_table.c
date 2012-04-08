@@ -4,7 +4,7 @@ comment|/* ./combining_table.c */
 end_comment
 
 begin_comment
-comment|/* Automatically generated at 2011-09-30T15:24:59.280091 */
+comment|/* Automatically generated at 2012-01-11T14:07:00.838826 */
 end_comment
 
 begin_include

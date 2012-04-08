@@ -753,6 +753,17 @@ name|NULL
 condition|)
 block|{
 comment|/* out of buffers, cleanup */
+name|device_printf
+argument_list|(
+name|sc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"%s: no buffer?\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
 name|ath_txfrag_cleanup
 argument_list|(
 name|sc
@@ -4534,6 +4545,11 @@ name|struct
 name|mbuf
 modifier|*
 name|m0
+parameter_list|,
+name|struct
+name|ath_txq
+modifier|*
+name|txq
 parameter_list|)
 block|{
 name|struct
@@ -4544,16 +4560,6 @@ init|=
 name|ni
 operator|->
 name|ni_vap
-decl_stmt|;
-name|struct
-name|ath_vap
-modifier|*
-name|avp
-init|=
-name|ATH_VAP
-argument_list|(
-name|vap
-argument_list|)
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -4630,11 +4636,6 @@ name|struct
 name|ath_desc
 modifier|*
 name|ds
-decl_stmt|;
-name|struct
-name|ath_txq
-modifier|*
-name|txq
 decl_stmt|;
 name|struct
 name|ieee80211_frame
@@ -5235,39 +5236,6 @@ return|return
 name|EIO
 return|;
 block|}
-name|txq
-operator|=
-name|sc
-operator|->
-name|sc_ac2q
-index|[
-name|pri
-index|]
-expr_stmt|;
-comment|/* 	 * When servicing one or more stations in power-save mode 	 * (or) if there is some mcast data waiting on the mcast 	 * queue (to prevent out of order delivery) multicast 	 * frames must be buffered until after the beacon. 	 * 	 * XXX This likely means that if there's a station in power 	 * save mode, we won't be doing any kind of aggregation towards 	 * anyone.  This is likely a very suboptimal way of dealing 	 * with things. 	 */
-if|if
-condition|(
-name|ismcast
-operator|&&
-operator|(
-name|vap
-operator|->
-name|iv_ps_sta
-operator|||
-name|avp
-operator|->
-name|av_mcastq
-operator|.
-name|axq_depth
-operator|)
-condition|)
-name|txq
-operator|=
-operator|&
-name|avp
-operator|->
-name|av_mcastq
-expr_stmt|;
 comment|/* 	 * Calculate miscellaneous flags. 	 */
 if|if
 condition|(
@@ -5841,7 +5809,7 @@ name|type
 decl_stmt|,
 name|subtype
 decl_stmt|;
-comment|/* 	 * Determine the target hardware queue. 	 * 	 * For multicast frames, the txq gets overridden to be the 	 * software TXQ and it's done via direct-dispatch. 	 * 	 * For any other frame, we do a TID/QoS lookup inside the frame 	 * to see what the TID should be. If it's a non-QoS frame, the 	 * AC and TID are overridden. The TID/TXQ code assumes the 	 * TID is on a predictable hardware TXQ, so we don't support 	 * having a node TID queued to multiple hardware TXQs. 	 * This may change in the future but would require some locking 	 * fudgery. 	 */
+comment|/* 	 * Determine the target hardware queue. 	 * 	 * For multicast frames, the txq gets overridden appropriately 	 * depending upon the state of PS. 	 * 	 * For any other frame, we do a TID/QoS lookup inside the frame 	 * to see what the TID should be. If it's a non-QoS frame, the 	 * AC and TID are overridden. The TID/TXQ code assumes the 	 * TID is on a predictable hardware TXQ, so we don't support 	 * having a node TID queued to multiple hardware TXQs. 	 * This may change in the future but would require some locking 	 * fudgery. 	 */
 name|pri
 operator|=
 name|ath_tx_getac
@@ -6032,25 +6000,10 @@ argument_list|,
 name|is_ampdu
 argument_list|)
 expr_stmt|;
-comment|/* Multicast frames go onto the software multicast queue */
+comment|/* 	 * When servicing one or more stations in power-save mode 	 * (or) if there is some mcast data waiting on the mcast 	 * queue (to prevent out of order delivery) multicast frames 	 * must be bufferd until after the beacon. 	 * 	 * TODO: we should lock the mcastq before we check the length. 	 */
 if|if
 condition|(
 name|ismcast
-condition|)
-name|txq
-operator|=
-operator|&
-name|avp
-operator|->
-name|av_mcastq
-expr_stmt|;
-comment|/* 	 * XXX This likely means that if there's a station in power 	 * save mode, we won't be doing any kind of aggregation towards 	 * anyone.  This is likely a very suboptimal way of dealing 	 * with things. 	 */
-if|if
-condition|(
-operator|(
-operator|!
-name|is_ampdu
-operator|)
 operator|&&
 operator|(
 name|vap
@@ -6231,6 +6184,8 @@ argument_list|,
 name|bf
 argument_list|,
 name|m0
+argument_list|,
+name|txq
 argument_list|)
 expr_stmt|;
 if|if

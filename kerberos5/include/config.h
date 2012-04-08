@@ -4898,7 +4898,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_STRING
-value|"Heimdal 1.5.1"
+value|"Heimdal 1.5.2"
 end_define
 
 begin_comment
@@ -4931,7 +4931,7 @@ begin_define
 define|#
 directive|define
 name|PACKAGE_VERSION
-value|"1.5.1"
+value|"1.5.2"
 end_define
 
 begin_comment
@@ -5108,7 +5108,7 @@ begin_define
 define|#
 directive|define
 name|VERSION
-value|"1.5.1"
+value|"1.5.2"
 end_define
 
 begin_comment

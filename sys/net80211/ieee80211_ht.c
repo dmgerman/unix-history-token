@@ -10221,6 +10221,16 @@ name|txa_attempts
 operator|>=
 name|ieee80211_bar_maxtries
 condition|)
+block|{
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_fail
+operator|++
+expr_stmt|;
 name|ieee80211_ampdu_stop
 argument_list|(
 name|ni
@@ -10230,7 +10240,18 @@ argument_list|,
 name|IEEE80211_REASON_TIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 else|else
+block|{
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_retry
+operator|++
+expr_stmt|;
 name|ieee80211_send_bar
 argument_list|(
 name|ni
@@ -10242,6 +10263,7 @@ operator|->
 name|txa_seqpending
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -10352,6 +10374,15 @@ argument_list|)
 argument_list|,
 name|status
 argument_list|)
+expr_stmt|;
+name|ni
+operator|->
+name|ni_vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx
+operator|++
 expr_stmt|;
 comment|/* XXX locking */
 if|if
@@ -10900,6 +10931,13 @@ operator|&=
 operator|~
 name|IEEE80211_AGGR_BARPEND
 expr_stmt|;
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_fail
+operator|++
+expr_stmt|;
 return|return
 name|ret
 return|;
@@ -10923,6 +10961,13 @@ literal|0
 return|;
 name|bad
 label|:
+name|vap
+operator|->
+name|iv_stats
+operator|.
+name|is_ampdu_bar_tx_fail
+operator|++
+expr_stmt|;
 name|ieee80211_free_node
 argument_list|(
 name|ni

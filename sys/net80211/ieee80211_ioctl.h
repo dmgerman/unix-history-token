@@ -809,9 +809,21 @@ name|is_beacon_bad
 decl_stmt|;
 comment|/* Number of bad beacons */
 name|uint32_t
+name|is_ampdu_bar_tx
+decl_stmt|;
+comment|/* A-MPDU BAR frames TXed */
+name|uint32_t
+name|is_ampdu_bar_tx_retry
+decl_stmt|;
+comment|/* A-MPDU BAR frames TX rtry */
+name|uint32_t
+name|is_ampdu_bar_tx_fail
+decl_stmt|;
+comment|/* A-MPDU BAR frames TX fail */
+name|uint32_t
 name|is_spare
 index|[
-literal|10
+literal|7
 index|]
 decl_stmt|;
 block|}

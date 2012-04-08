@@ -260,6 +260,13 @@ argument_list|,
 literal|"ISR_S4"
 argument_list|)
 block|,
+name|DEFINT
+argument_list|(
+name|AR_ISR_S5
+argument_list|,
+literal|"ISR_S5"
+argument_list|)
+block|,
 name|DEFINTfmt
 argument_list|(
 name|AR_IMR
@@ -351,6 +358,13 @@ argument_list|(
 name|AR_ISR_S4_S
 argument_list|,
 literal|"ISR_S4_S"
+argument_list|)
+block|,
+name|DEFINT
+argument_list|(
+name|AR_ISR_S5_S
+argument_list|,
+literal|"ISR_S5_S"
 argument_list|)
 block|,
 name|DEFBASIC
