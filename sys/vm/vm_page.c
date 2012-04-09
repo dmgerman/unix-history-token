@@ -4714,11 +4714,14 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|__predict_true
+argument_list|(
 name|object
 operator|->
 name|cache
 operator|==
 name|NULL
+argument_list|)
 condition|)
 return|return
 operator|(

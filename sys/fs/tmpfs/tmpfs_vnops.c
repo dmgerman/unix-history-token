@@ -3098,13 +3098,11 @@ else|else
 block|{
 if|if
 condition|(
-name|__predict_false
+name|vm_page_is_cached
 argument_list|(
 name|vobj
-operator|->
-name|cache
-operator|!=
-name|NULL
+argument_list|,
+name|idx
 argument_list|)
 condition|)
 name|vm_page_cache_free
