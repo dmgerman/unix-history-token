@@ -1149,17 +1149,6 @@ begin_comment
 comment|/* non-maskable, catchable */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|SA_PROC
-value|0x80
-end_define
-
-begin_comment
-comment|/* deliverable to any thread */
-end_comment
-
 begin_decl_stmt
 specifier|static
 name|int
@@ -1170,20 +1159,14 @@ index|]
 init|=
 block|{
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGHUP */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGINT */
 name|SA_KILL
 operator||
 name|SA_CORE
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGQUIT */
 name|SA_KILL
@@ -1204,8 +1187,6 @@ comment|/* SIGABRT */
 name|SA_KILL
 operator||
 name|SA_CORE
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGEMT */
 name|SA_KILL
@@ -1214,8 +1195,6 @@ name|SA_CORE
 block|,
 comment|/* SIGFPE */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGKILL */
 name|SA_KILL
@@ -1234,66 +1213,44 @@ name|SA_CORE
 block|,
 comment|/* SIGSYS */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGPIPE */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGALRM */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGTERM */
 name|SA_IGNORE
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGURG */
 name|SA_STOP
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGSTOP */
 name|SA_STOP
 operator||
 name|SA_TTYSTOP
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGTSTP */
 name|SA_IGNORE
 operator||
 name|SA_CONT
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGCONT */
 name|SA_IGNORE
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGCHLD */
 name|SA_STOP
 operator||
 name|SA_TTYSTOP
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGTTIN */
 name|SA_STOP
 operator||
 name|SA_TTYSTOP
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGTTOU */
 name|SA_IGNORE
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGIO */
 name|SA_KILL
@@ -1303,33 +1260,21 @@ name|SA_KILL
 block|,
 comment|/* SIGXFSZ */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGVTALRM */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGPROF */
 name|SA_IGNORE
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGWINCH  */
 name|SA_IGNORE
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGINFO */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGUSR1 */
 name|SA_KILL
-operator||
-name|SA_PROC
 block|,
 comment|/* SIGUSR2 */
 block|}
