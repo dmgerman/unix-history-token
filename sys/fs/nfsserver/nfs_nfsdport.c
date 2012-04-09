@@ -1760,6 +1760,12 @@ name|ni_rootdir
 operator|=
 name|rootvnode
 expr_stmt|;
+name|ndp
+operator|->
+name|ni_topdir
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 operator|!
