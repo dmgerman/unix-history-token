@@ -1432,7 +1432,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Set up nameidata for a lookup() call and do it  * For the cases where we are crossing mount points  * (looking up the public fh path or the v4 root path when  *  not using a pseudo-root fs), set/release the Giant lock,  * as required.  */
+comment|/*  * Set up nameidata for a lookup() call and do it.  */
 end_comment
 
 begin_function
