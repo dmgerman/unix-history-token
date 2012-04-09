@@ -795,6 +795,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|CPUID2_RDRAND
+value|0x40000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|CPUID2_HV
 value|0x80000000
 end_define
