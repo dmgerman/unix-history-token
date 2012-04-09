@@ -2380,7 +2380,6 @@ argument_list|)
 operator|==
 literal|0xc3
 condition|)
-empty_stmt|;
 block|{
 name|pc
 operator|+=
