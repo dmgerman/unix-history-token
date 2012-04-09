@@ -13081,6 +13081,16 @@ operator|*
 name|v
 operator|=
 name|tmp
+operator|&
+operator|(
+operator|(
+literal|1ULL
+operator|<<
+name|core_iap_width
+operator|)
+operator|-
+literal|1
+operator|)
 expr_stmt|;
 name|PMCDBG
 argument_list|(
