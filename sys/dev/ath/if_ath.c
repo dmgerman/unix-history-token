@@ -21049,6 +21049,17 @@ name|ath_node
 modifier|*
 name|an
 decl_stmt|;
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+init|=
+name|sc
+operator|->
+name|sc_ifp
+operator|->
+name|if_l2com
+decl_stmt|;
 name|int
 name|nacked
 decl_stmt|;
