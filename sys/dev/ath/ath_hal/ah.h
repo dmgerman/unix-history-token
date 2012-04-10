@@ -2393,6 +2393,10 @@ literal|8
 index|]
 decl_stmt|;
 comment|/* last int state */
+name|uint32_t
+name|ah_syncstate
+decl_stmt|;
+comment|/* last sync intr state */
 name|HAL_OPS_CONFIG
 name|ah_config
 decl_stmt|;
