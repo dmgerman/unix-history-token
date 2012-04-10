@@ -56,6 +56,20 @@ end_struct
 
 begin_struct
 struct|struct
+name|ath_intr_stats
+block|{
+name|u_int32_t
+name|sync_intr
+index|[
+literal|32
+index|]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|ath_stats
 block|{
 name|u_int32_t

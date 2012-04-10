@@ -1269,6 +1269,10 @@ name|struct
 name|ath_tx_aggr_stats
 name|sc_aggr_stats
 decl_stmt|;
+name|struct
+name|ath_intr_stats
+name|sc_intr_stats
+decl_stmt|;
 name|int
 name|sc_debug
 decl_stmt|;
