@@ -665,73 +665,62 @@ name|uint16_t
 name|bfs_ndelim
 decl_stmt|;
 comment|/* number of delims for padding */
-name|int
+name|u_int32_t
 name|bfs_aggr
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* part of aggregate? */
-name|int
 name|bfs_aggrburst
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* part of aggregate burst? */
-name|int
 name|bfs_isretried
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* retried frame? */
-name|int
 name|bfs_dobaw
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* actually check against BAW? */
-name|int
 name|bfs_addedbaw
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* has been added to the BAW */
-name|int
 name|bfs_shpream
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* use short preamble */
-name|int
 name|bfs_istxfrag
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* is fragmented */
-name|int
 name|bfs_ismrr
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do multi-rate TX retry */
-name|int
 name|bfs_doprot
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do RTS/CTS based protection */
-name|int
 name|bfs_doratelookup
 range|:
 literal|1
-decl_stmt|;
+decl_stmt|,
 comment|/* do rate lookup before each TX */
-name|int
 name|bfs_need_seqno
 range|:
 literal|1
-decl_stmt|;
-comment|/* need to assign a seqno for aggregation */
-name|int
+decl_stmt|,
+comment|/* need to assign a seqno for aggr */
 name|bfs_seqno_assigned
 range|:
 literal|1
