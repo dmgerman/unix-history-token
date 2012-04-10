@@ -730,7 +730,7 @@ argument_list|,
 operator|&
 name|args
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 comment|/* Allocate (and attach) packet buffer */
@@ -747,7 +747,7 @@ name|rx_buffer_zone
 argument_list|,
 name|m
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 condition|)
 block|{
@@ -3038,7 +3038,7 @@ argument_list|)
 argument_list|,
 name|M_SFXGE
 argument_list|,
-name|M_DONTWAIT
+name|M_NOWAIT
 argument_list|)
 expr_stmt|;
 if|if
