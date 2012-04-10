@@ -245,6 +245,13 @@ decl_stmt|;
 name|SCI_FAST_LIST_ELEMENT_T
 name|pending_device_reset_element
 decl_stmt|;
+name|TAILQ_HEAD
+argument_list|(
+argument_list|,
+argument|ccb_hdr
+argument_list|)
+name|queued_ccbs
+expr_stmt|;
 block|}
 struct|;
 end_struct

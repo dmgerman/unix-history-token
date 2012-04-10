@@ -1381,6 +1381,14 @@ operator|->
 name|pending_device_reset_element
 argument_list|)
 expr_stmt|;
+name|TAILQ_INIT
+argument_list|(
+operator|&
+name|remote_device
+operator|->
+name|queued_ccbs
+argument_list|)
+expr_stmt|;
 comment|/* 		 * For the first SCI_MAX_DOMAINS device objects, do not put 		 *  them in the pool, rather assign them to each domain.  This 		 *  ensures that any device attached directly to port "i" will 		 *  always get CAM target id "i". 		 */
 if|if
 condition|(
