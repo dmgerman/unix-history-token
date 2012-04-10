@@ -729,7 +729,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|boolean_t
 name|vm_object_page_clean
 parameter_list|(
 name|vm_object_t
@@ -827,7 +827,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|boolean_t
 name|vm_object_sync
 parameter_list|(
 name|vm_object_t

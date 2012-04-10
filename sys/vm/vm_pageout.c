@@ -1492,6 +1492,8 @@ argument_list|,
 literal|0
 argument_list|,
 name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 operator|)
 return|;
@@ -1499,7 +1501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_pageout_flush() - launder the given pages  *  *	The given pages are laundered.  Note that we setup for the start of  *	I/O ( i.e. busy the page ), mark it read-only, and bump the object  *	reference count all in here rather then in the parent.  If we want  *	the parent to do more sophisticated things we may have to change  *	the ordering.  *  *	Returned runlen is the count of pages between mreq and first  *	page after mreq with status VM_PAGER_AGAIN.  */
+comment|/*  * vm_pageout_flush() - launder the given pages  *  *	The given pages are laundered.  Note that we setup for the start of  *	I/O ( i.e. busy the page ), mark it read-only, and bump the object  *	reference count all in here rather then in the parent.  If we want  *	the parent to do more sophisticated things we may have to change  *	the ordering.  *  *	Returned runlen is the count of pages between mreq and first  *	page after mreq with status VM_PAGER_AGAIN.  *	*eio is set to TRUE if pager returned VM_PAGER_ERROR or VM_PAGER_FAIL  *	for any page in runlen set.  */
 end_comment
 
 begin_function
@@ -1522,6 +1524,10 @@ parameter_list|,
 name|int
 modifier|*
 name|prunlen
+parameter_list|,
+name|boolean_t
+modifier|*
+name|eio
 parameter_list|)
 block|{
 name|vm_object_t
@@ -1651,6 +1657,17 @@ name|count
 operator|-
 name|mreq
 expr_stmt|;
+if|if
+condition|(
+name|eio
+operator|!=
+name|NULL
+condition|)
+operator|*
+name|eio
+operator|=
+name|FALSE
+expr_stmt|;
 name|vm_page_lock_queues
 argument_list|()
 expr_stmt|;
@@ -1741,6 +1758,27 @@ name|vm_page_activate
 argument_list|(
 name|mt
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|eio
+operator|!=
+name|NULL
+operator|&&
+name|i
+operator|>=
+name|mreq
+operator|&&
+name|i
+operator|-
+name|mreq
+operator|<
+name|runlen
+condition|)
+operator|*
+name|eio
+operator|=
+name|TRUE
 expr_stmt|;
 break|break;
 case|case

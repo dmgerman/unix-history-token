@@ -10234,6 +10234,9 @@ name|unsigned
 name|int
 name|last_timestamp
 decl_stmt|;
+name|boolean_t
+name|failed
+decl_stmt|;
 name|vm_map_lock_read
 argument_list|(
 name|map
@@ -10401,6 +10404,10 @@ name|start
 argument_list|,
 name|end
 argument_list|)
+expr_stmt|;
+name|failed
+operator|=
+name|FALSE
 expr_stmt|;
 comment|/* 	 * Make a second pass, cleaning/uncaching pages from the indicated 	 * objects as we go. 	 */
 for|for
@@ -10573,6 +10580,9 @@ argument_list|(
 name|map
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
 name|vm_object_sync
 argument_list|(
 name|object
@@ -10585,6 +10595,10 @@ name|syncio
 argument_list|,
 name|invalidate
 argument_list|)
+condition|)
+name|failed
+operator|=
+name|TRUE
 expr_stmt|;
 name|start
 operator|+=
@@ -10633,6 +10647,10 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
+name|failed
+condition|?
+name|KERN_FAILURE
+else|:
 name|KERN_SUCCESS
 operator|)
 return|;
