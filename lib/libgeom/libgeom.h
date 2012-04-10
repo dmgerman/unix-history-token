@@ -196,8 +196,6 @@ block|,
 name|ISPROVIDER
 block|,
 name|ISCONSUMER
-block|,
-name|ISUNRESOLVED
 block|}
 name|lg_what
 enum|;
