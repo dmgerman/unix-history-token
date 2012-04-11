@@ -1031,7 +1031,8 @@ literal|"\035AVX"
 comment|/* Advanced Vector Extensions */
 literal|"\036F16C"
 comment|/* Half-precision conversions */
-literal|"\037<b30>"
+literal|"\037RDRAND"
+comment|/* RDRAND Instruction */
 literal|"\040HV"
 comment|/* Hypervisor */
 argument_list|)

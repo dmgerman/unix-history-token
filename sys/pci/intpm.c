@@ -586,6 +586,21 @@ break|break;
 case|case
 literal|0x43851002
 case|:
+comment|/* SB800 and newer can not be configured in a compatible way. */
+if|if
+condition|(
+name|pci_get_revid
+argument_list|(
+name|dev
+argument_list|)
+operator|>=
+literal|0x40
+condition|)
+return|return
+operator|(
+name|ENXIO
+operator|)
+return|;
 name|device_set_desc
 argument_list|(
 name|dev
@@ -1339,7 +1354,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|SMB_EINVAL
 expr_stmt|;
 block|}
 return|return
@@ -2390,7 +2405,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|EINVAL
+name|SMB_EINVAL
 operator|)
 return|;
 block|}
@@ -3863,7 +3878,7 @@ block|}
 else|else
 name|error
 operator|=
-name|EIO
+name|SMB_EBUSERR
 expr_stmt|;
 block|}
 name|INTSMB_UNLOCK

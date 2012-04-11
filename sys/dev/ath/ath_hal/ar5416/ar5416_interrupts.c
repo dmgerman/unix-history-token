@@ -181,6 +181,12 @@ name|ah_intrstate
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|ah
+operator|->
+name|ah_syncstate
+operator|=
+literal|0
+expr_stmt|;
 endif|#
 directive|endif
 comment|/* 	 * Verify there's a mac interrupt and the RTC is on. 	 */
@@ -249,6 +255,15 @@ name|isr
 operator|=
 literal|0
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_INTERRUPT_DEBUGGING
+name|ah
+operator|->
+name|ah_syncstate
+operator|=
+endif|#
+directive|endif
 name|o_sync_cause
 operator|=
 name|sync_cause
