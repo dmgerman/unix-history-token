@@ -5045,7 +5045,7 @@ argument_list|(
 name|msrc
 argument_list|)
 expr_stmt|;
-name|kcopy
+name|bcopy
 argument_list|(
 operator|(
 name|void
