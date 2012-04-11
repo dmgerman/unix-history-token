@@ -9295,11 +9295,6 @@ modifier|*
 name|sc
 decl_stmt|;
 name|struct
-name|ifnet
-modifier|*
-name|ifp
-decl_stmt|;
-name|struct
 name|mii_data
 modifier|*
 name|mii
@@ -9319,12 +9314,6 @@ argument_list|(
 name|BCE_VERBOSE_PHY
 argument_list|)
 expr_stmt|;
-name|ifp
-operator|=
-name|sc
-operator|->
-name|bce_ifp
-expr_stmt|;
 name|mii
 operator|=
 name|device_get_softc
@@ -9333,33 +9322,6 @@ name|sc
 operator|->
 name|bce_miibus
 argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|mii
-operator|==
-name|NULL
-operator|||
-name|ifp
-operator|==
-name|NULL
-operator|||
-operator|(
-name|ifp
-operator|->
-name|if_drv_flags
-operator|&
-name|IFF_DRV_RUNNING
-operator|)
-operator|==
-literal|0
-condition|)
-return|return;
-name|sc
-operator|->
-name|bce_link_up
-operator|=
-name|FALSE
 expr_stmt|;
 name|val
 operator|=
@@ -9386,27 +9348,6 @@ name|BCE_EMAC_MODE_25G
 operator|)
 expr_stmt|;
 comment|/* Set MII or GMII interface based on the PHY speed. */
-if|if
-condition|(
-operator|(
-name|mii
-operator|->
-name|mii_media_status
-operator|&
-operator|(
-name|IFM_ACTIVE
-operator||
-name|IFM_AVALID
-operator|)
-operator|)
-operator|==
-operator|(
-name|IFM_ACTIVE
-operator||
-name|IFM_AVALID
-operator|)
-condition|)
-block|{
 switch|switch
 condition|(
 name|IFM_SUBTYPE
@@ -9443,15 +9384,9 @@ name|val
 operator||=
 name|BCE_EMAC_MODE_PORT_MII_10
 expr_stmt|;
-name|sc
-operator|->
-name|bce_link_up
-operator|=
-name|TRUE
-expr_stmt|;
 break|break;
 block|}
-comment|/* FALLTHROUGH */
+comment|/* fall-through */
 case|case
 name|IFM_100_TX
 case|:
@@ -9467,12 +9402,6 @@ expr_stmt|;
 name|val
 operator||=
 name|BCE_EMAC_MODE_PORT_MII
-expr_stmt|;
-name|sc
-operator|->
-name|bce_link_up
-operator|=
-name|TRUE
 expr_stmt|;
 break|break;
 case|case
@@ -9491,7 +9420,7 @@ name|val
 operator||=
 name|BCE_EMAC_MODE_25G
 expr_stmt|;
-comment|/* FALLTHROUGH */
+comment|/* fall-through */
 case|case
 name|IFM_1000_T
 case|:
@@ -9511,23 +9440,6 @@ name|val
 operator||=
 name|BCE_EMAC_MODE_PORT_GMII
 expr_stmt|;
-name|sc
-operator|->
-name|bce_link_up
-operator|=
-name|TRUE
-expr_stmt|;
-if|if
-condition|(
-name|bce_verbose
-operator|||
-name|bootverbose
-condition|)
-name|BCE_PRINTF
-argument_list|(
-literal|"Gigabit link up!\n"
-argument_list|)
-expr_stmt|;
 break|break;
 default|default:
 name|DBPRINT
@@ -9536,21 +9448,15 @@ name|sc
 argument_list|,
 name|BCE_INFO_PHY
 argument_list|,
-literal|"Unknown link speed.\n"
+literal|"Unknown link speed, enabling "
+literal|"default GMII interface.\n"
 argument_list|)
 expr_stmt|;
-break|break;
+name|val
+operator||=
+name|BCE_EMAC_MODE_PORT_GMII
+expr_stmt|;
 block|}
-block|}
-if|if
-condition|(
-name|sc
-operator|->
-name|bce_link_up
-operator|==
-name|FALSE
-condition|)
-return|return;
 comment|/* Set half or full duplex based on PHY settings. */
 if|if
 condition|(
@@ -27525,12 +27431,25 @@ name|__FUNCTION__
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 		 * Link state changed, allow tick routine to update 		 * the state baased on actual media state. 		 */
+comment|/* 		 * Assume link is down and allow 		 * tick routine to update the state 		 * based on the actual media state. 		 */
 name|sc
 operator|->
-name|bce_link_tick
+name|bce_link_up
 operator|=
-name|TRUE
+name|FALSE
+expr_stmt|;
+name|callout_stop
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|bce_tick_callout
+argument_list|)
+expr_stmt|;
+name|bce_tick
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 comment|/* Acknowledge the link change interrupt. */
@@ -29942,6 +29861,11 @@ argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
+name|bce_ifmedia_upd_locked
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 comment|/* Let the OS know the driver is up and running. */
 name|ifp
 operator|->
@@ -29955,17 +29879,6 @@ name|if_drv_flags
 operator|&=
 operator|~
 name|IFF_DRV_OACTIVE
-expr_stmt|;
-name|sc
-operator|->
-name|bce_link_tick
-operator|=
-name|TRUE
-expr_stmt|;
-name|bce_ifmedia_upd_locked
-argument_list|(
-name|ifp
-argument_list|)
 expr_stmt|;
 name|callout_reset
 argument_list|(
@@ -34869,12 +34782,6 @@ if|if
 condition|(
 name|sc
 operator|->
-name|bce_link_tick
-operator|==
-name|FALSE
-operator|&&
-name|sc
-operator|->
 name|bce_link_up
 operator|==
 name|TRUE
@@ -34897,21 +34804,91 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
+comment|/* Check if the link has come up. */
+if|if
+condition|(
+operator|(
+name|mii
+operator|->
+name|mii_media_status
+operator|&
+name|IFM_ACTIVE
+operator|)
+operator|&&
+operator|(
+name|IFM_SUBTYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+operator|!=
+name|IFM_NONE
+operator|)
+condition|)
+block|{
+name|DBPRINT
+argument_list|(
+name|sc
+argument_list|,
+name|BCE_VERBOSE_MISC
+argument_list|,
+literal|"%s(): Link up!\n"
+argument_list|,
+name|__FUNCTION__
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
-name|bce_link_tick
+name|bce_link_up
 operator|=
-name|FALSE
+name|TRUE
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|IFM_SUBTYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+operator|==
+name|IFM_1000_T
+operator|||
+name|IFM_SUBTYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+operator|==
+name|IFM_1000_SX
+operator|||
+name|IFM_SUBTYPE
+argument_list|(
+name|mii
+operator|->
+name|mii_media_active
+argument_list|)
+operator|==
+name|IFM_2500_SX
+operator|)
+operator|&&
+operator|(
+name|bce_verbose
+operator|||
+name|bootverbose
+operator|)
+condition|)
+name|BCE_PRINTF
+argument_list|(
+literal|"Gigabit link up!\n"
+argument_list|)
 expr_stmt|;
 comment|/* Now that link is up, handle any outstanding TX traffic. */
 if|if
 condition|(
-name|sc
-operator|->
-name|bce_link_up
-operator|==
-name|TRUE
-operator|&&
 operator|!
 name|IFQ_DRV_IS_EMPTY
 argument_list|(
@@ -34928,7 +34905,8 @@ name|sc
 argument_list|,
 name|BCE_VERBOSE_MISC
 argument_list|,
-literal|"%s(): Found pending TX traffic.\n"
+literal|"%s(): Found "
+literal|"pending TX traffic.\n"
 argument_list|,
 name|__FUNCTION__
 argument_list|)
@@ -34938,6 +34916,7 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|bce_tick_exit
 label|:
