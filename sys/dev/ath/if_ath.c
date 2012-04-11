@@ -21049,6 +21049,9 @@ name|ath_node
 modifier|*
 name|an
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|IEEE80211_SUPPORT_SUPERG
 name|struct
 name|ieee80211com
 modifier|*
@@ -21060,6 +21063,9 @@ name|sc_ifp
 operator|->
 name|if_l2com
 decl_stmt|;
+endif|#
+directive|endif
+comment|/* IEEE80211_SUPPORT_SUPERG */
 name|int
 name|nacked
 decl_stmt|;
