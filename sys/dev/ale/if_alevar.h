@@ -709,10 +709,6 @@ name|task
 name|ale_int_task
 decl_stmt|;
 name|struct
-name|task
-name|ale_link_task
-decl_stmt|;
-name|struct
 name|taskqueue
 modifier|*
 name|ale_tq
