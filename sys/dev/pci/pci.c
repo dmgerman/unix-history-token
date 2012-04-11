@@ -3843,16 +3843,6 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|__i386__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__amd64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
 name|__powerpc__
 argument_list|)
 comment|/* 	 * Enable the MSI mapping window for all HyperTransport 	 * slaves.  PCI-PCI bridges have their windows enabled via 	 * PCIB_MAP_MSI(). 	 */
