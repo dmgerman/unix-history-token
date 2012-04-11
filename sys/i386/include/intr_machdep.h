@@ -354,6 +354,26 @@ name|elcr_found
 decl_stmt|;
 end_decl_stmt
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|DEV_ATPIC
+end_ifndef
+
+begin_function_decl
+name|void
+name|atpic_reset
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* XXX: The elcr_* prototypes probably belong somewhere else. */
 end_comment

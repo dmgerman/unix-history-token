@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2003 John Baldwin<jhb@FreeBSD.org>  * All rights re
 end_comment
 
 begin_comment
-comment|/*  * Machine dependent interrupt code for amd64.  For amd64, we have to  * deal with different PICs.  Thus, we use the passed in vector to lookup  * an interrupt source associated with that vector.  The interrupt source  * describes which PIC the source belongs to and includes methods to handle  * that source.  */
+comment|/*  * Machine dependent interrupt code for x86.  For x86, we have to  * deal with different PICs.  Thus, we use the passed in vector to lookup  * an interrupt source associated with that vector.  The interrupt source  * describes which PIC the source belongs to and includes methods to handle  * that source.  */
 end_comment
 
 begin_include
@@ -150,11 +150,33 @@ directive|include
 file|<x86/isa/icu.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|PC98
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<pc98/cbus/cbus.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
 begin_include
 include|#
 directive|include
 file|<x86/isa/isa.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_endif
 endif|#
@@ -1723,9 +1745,10 @@ name|IO_ICU1
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-literal|1
-operator|<<
-literal|2
+name|IRQ_MASK
+argument_list|(
+name|ICU_SLAVEID
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1734,7 +1757,7 @@ name|IO_ICU1
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-name|ICW4_8086
+name|MASTER_MODE
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1781,7 +1804,7 @@ name|IO_ICU2
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-literal|2
+name|ICU_SLAVEID
 argument_list|)
 expr_stmt|;
 name|outb
@@ -1790,7 +1813,7 @@ name|IO_ICU2
 operator|+
 name|ICU_IMR_OFFSET
 argument_list|,
-name|ICW4_8086
+name|SLAVE_MODE
 argument_list|)
 expr_stmt|;
 name|outb
@@ -2236,6 +2259,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|XEN
+comment|/* 	 * Doesn't work yet 	 */
+return|return;
+endif|#
+directive|endif
 comment|/* The BSP is always a valid target. */
 name|CPU_SETOF
 argument_list|(
