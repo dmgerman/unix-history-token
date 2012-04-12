@@ -158,28 +158,6 @@ end_struct
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|IFCAP_NETMAP
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|IFCAP_NETMAP
-value|0x100000
-end_define
-
-begin_comment
-comment|/* used on linux */
-end_comment
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifndef
-ifndef|#
-directive|ifndef
 name|NIOCREGIF
 end_ifndef
 
