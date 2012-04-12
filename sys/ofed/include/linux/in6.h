@@ -15,22 +15,11 @@ directive|define
 name|_LINUX_IN6_H_
 end_define
 
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|KLD_MODULE
-end_ifndef
-
 begin_include
 include|#
 directive|include
 file|"opt_inet6.h"
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_endif
 endif|#

@@ -6,6 +6,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_inet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"mlx4_en.h"
 end_include
 
@@ -1507,6 +1513,9 @@ argument_list|,
 name|i
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 comment|/* Configure lro mngr */
 if|if
 condition|(
@@ -1550,6 +1559,8 @@ operator|->
 name|dev
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 block|}
 name|err
 operator|=
@@ -1729,6 +1740,9 @@ modifier|*
 name|ring
 parameter_list|)
 block|{
+ifdef|#
+directive|ifdef
+name|INET
 name|tcp_lro_free
 argument_list|(
 operator|&
@@ -1737,6 +1751,8 @@ operator|->
 name|lro
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|mlx4_en_free_rx_buf
 argument_list|(
 name|priv
@@ -2317,11 +2333,16 @@ name|mbuf
 modifier|*
 name|mb
 decl_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 name|struct
 name|lro_entry
 modifier|*
 name|queued
 decl_stmt|;
+endif|#
+directive|endif
 name|int
 name|index
 decl_stmt|;
@@ -2625,6 +2646,9 @@ literal|0xffff
 argument_list|)
 expr_stmt|;
 comment|/* This packet is eligible for LRO if it is: 			 * - DIX Ethernet (type interpretation) 			 * - TCP/IP (v4) 			 * - without IP options 			 * - not an IP fragment 			 */
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|mlx4_en_can_lro
@@ -2671,6 +2695,8 @@ goto|goto
 name|next
 goto|;
 block|}
+endif|#
+directive|endif
 comment|/* LRO not possible, complete processing here */
 name|INC_PERF_COUNTER
 argument_list|(
@@ -2699,6 +2725,9 @@ operator|.
 name|rx_chksum_none
 operator|++
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|INET
 if|if
 condition|(
 name|priv
@@ -2729,6 +2758,8 @@ condition|)
 goto|goto
 name|next
 goto|;
+endif|#
+directive|endif
 block|}
 comment|/* Push it up the stack */
 name|dev
@@ -2787,6 +2818,9 @@ block|}
 comment|/* Flush all pending IP reassembly sessions */
 name|out
 label|:
+ifdef|#
+directive|ifdef
+name|INET
 name|mlx4_en_flush_frags
 argument_list|(
 name|priv
@@ -2836,6 +2870,8 @@ name|queued
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|AVG_PERF_COUNTER
 argument_list|(
 name|priv
