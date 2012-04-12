@@ -1222,6 +1222,17 @@ name|uint8_t
 name|endpoint
 parameter_list|)
 function_decl|;
+name|int
+name|libusb_get_max_iso_packet_size
+parameter_list|(
+name|libusb_device
+modifier|*
+name|dev
+parameter_list|,
+name|uint8_t
+name|endpoint
+parameter_list|)
+function_decl|;
 name|libusb_device
 modifier|*
 name|libusb_ref_device
