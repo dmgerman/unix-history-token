@@ -403,8 +403,9 @@ argument_list|(
 name|dev
 argument_list|)
 operator|)
-operator|<=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|device_printf

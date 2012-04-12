@@ -412,7 +412,8 @@ argument_list|(
 name|dev
 argument_list|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
