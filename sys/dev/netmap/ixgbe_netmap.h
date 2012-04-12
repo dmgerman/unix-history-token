@@ -1578,15 +1578,13 @@ operator|||
 name|force_update
 condition|)
 block|{
+comment|/* XXX apparently the length field in advanced descriptors 		 * does not include the CRC irrespective of the setting 		 * of CRCSTRIP. The data sheets say differently. 		 * Very strange. 		 */
 name|int
 name|crclen
 init|=
-name|ix_crcstrip
-condition|?
 literal|0
-else|:
-literal|4
 decl_stmt|;
+comment|// ix_crcstrip ? 0 : 4;
 name|l
 operator|=
 name|rxr
