@@ -5080,6 +5080,11 @@ name|EPROTONOSUPPORT
 expr_stmt|;
 break|break;
 block|}
+name|LAGG_WLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sc
@@ -5089,10 +5094,12 @@ operator|!=
 name|LAGG_PROTO_NONE
 condition|)
 block|{
-name|LAGG_WLOCK
-argument_list|(
+comment|/* Reset protocol first in case detach unlocks */
 name|sc
-argument_list|)
+operator|->
+name|sc_proto
+operator|=
+name|LAGG_PROTO_NONE
 expr_stmt|;
 name|error
 operator|=
@@ -5102,13 +5109,6 @@ name|sc_detach
 argument_list|(
 name|sc
 argument_list|)
-expr_stmt|;
-comment|/* Reset protocol and pointers */
-name|sc
-operator|->
-name|sc_proto
-operator|=
-name|LAGG_PROTO_NONE
 expr_stmt|;
 name|sc
 operator|->
@@ -5176,10 +5176,21 @@ name|sc_portreq
 operator|=
 name|NULL
 expr_stmt|;
-name|LAGG_WUNLOCK
-argument_list|(
+block|}
+elseif|else
+if|if
+condition|(
 name|sc
-argument_list|)
+operator|->
+name|sc_input
+operator|!=
+name|NULL
+condition|)
+block|{
+comment|/* Still detaching */
+name|error
+operator|=
+name|EBUSY
 expr_stmt|;
 block|}
 if|if
@@ -5188,7 +5199,14 @@ name|error
 operator|!=
 literal|0
 condition|)
+block|{
+name|LAGG_WUNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 break|break;
+block|}
 for|for
 control|(
 name|int
@@ -5255,11 +5273,6 @@ operator|.
 name|ti_proto
 argument_list|)
 expr_stmt|;
-name|LAGG_WLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|sc
 operator|->
 name|sc_proto
@@ -5303,6 +5316,11 @@ operator|)
 return|;
 block|}
 block|}
+name|LAGG_WUNLOCK
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
 name|error
 operator|=
 name|EPROTONOSUPPORT
