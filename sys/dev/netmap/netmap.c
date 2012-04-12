@@ -7769,7 +7769,7 @@ condition|?
 operator|&
 name|na
 operator|->
-name|tx_si
+name|rx_si
 else|:
 name|NULL
 expr_stmt|;
@@ -7798,7 +7798,7 @@ condition|?
 operator|&
 name|na
 operator|->
-name|rx_si
+name|tx_si
 else|:
 name|NULL
 expr_stmt|;
