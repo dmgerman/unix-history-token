@@ -300,7 +300,7 @@ parameter_list|,
 name|size
 parameter_list|)
 define|\
-value|_ioremap_attr((addr), (size), VM_MEMATTR_UNCACHED)
+value|_ioremap_attr((addr), (size), VM_MEMATTR_UNCACHEABLE)
 end_define
 
 begin_define
