@@ -24,6 +24,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|"opt_ath.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/param.h>
 end_include
 
@@ -134,10 +140,6 @@ include|#
 directive|include
 file|<dev/pci/pcireg.h>
 end_include
-
-begin_comment
-comment|/* #define	ATH_EEPROM_FIRMWARE */
-end_comment
 
 begin_comment
 comment|/* For EEPROM firmware */
