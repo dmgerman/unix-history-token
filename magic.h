@@ -278,7 +278,9 @@ begin_define
 define|#
 directive|define
 name|MAGIC_NO_CHECK_BUILTIN
-value|0x3fb000
+value|( \ 	MAGIC_NO_CHECK_COMPRESS	| \ 	MAGIC_NO_CHECK_TAR	| \
+comment|/*	MAGIC_NO_CHECK_SOFT	| */
+value|\ 	MAGIC_NO_CHECK_APPTYPE	| \ 	MAGIC_NO_CHECK_ELF	| \ 	MAGIC_NO_CHECK_TEXT	| \ 	MAGIC_NO_CHECK_CDF	| \ 	MAGIC_NO_CHECK_TOKENS	| \ 	MAGIC_NO_CHECK_ENCODING	| \ )
 end_define
 
 begin_comment

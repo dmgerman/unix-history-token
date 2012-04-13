@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: file.c,v 1.144 2011/05/10 17:08:14 christos Exp $"
+literal|"@(#)$File: file.c,v 1.145 2011/12/08 12:12:46 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -480,7 +480,9 @@ literal|"tokens"
 block|,
 name|MAGIC_NO_CHECK_TOKENS
 block|}
-block|, }
+block|,
+comment|/* OBSOLETE: ignored for backwards compatibility */
+block|}
 expr_stmt|;
 end_expr_stmt
 

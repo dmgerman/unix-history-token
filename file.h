@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) Ian F. Darwin 1986-1995.  * Software written by Ian 
 end_comment
 
 begin_comment
-comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.134 2011/09/16 21:23:59 christos Exp $  */
+comment|/*  * file.h - definitions for file(1) program  * @(#)$File: file.h,v 1.135 2011/09/20 15:30:14 christos Exp $  */
 end_comment
 
 begin_ifndef
@@ -1846,6 +1846,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1878,6 +1880,8 @@ parameter_list|,
 specifier|const
 name|char
 modifier|*
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1957,6 +1961,8 @@ name|char
 modifier|*
 parameter_list|,
 name|size_t
+parameter_list|,
+name|int
 parameter_list|,
 name|int
 parameter_list|)

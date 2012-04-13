@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: encoding.c,v 1.5 2010/07/21 16:47:17 christos Exp $"
+literal|"@(#)$File: encoding.c,v 1.7 2012/01/24 19:02:02 christos Exp $"
 argument_list|)
 end_macro
 
@@ -286,6 +286,11 @@ name|nbuf
 init|=
 name|NULL
 decl_stmt|;
+operator|*
+name|type
+operator|=
+literal|"text"
+expr_stmt|;
 name|mlen
 operator|=
 operator|(
@@ -387,11 +392,6 @@ goto|goto
 name|done
 goto|;
 block|}
-operator|*
-name|type
-operator|=
-literal|"text"
-expr_stmt|;
 if|if
 condition|(
 name|looks_ascii
@@ -772,10 +772,6 @@ block|}
 block|}
 name|done
 label|:
-if|if
-condition|(
-name|nbuf
-condition|)
 name|free
 argument_list|(
 name|nbuf

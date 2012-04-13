@@ -209,7 +209,7 @@ name|CDF_SEC_SIZE
 parameter_list|(
 name|h
 parameter_list|)
-value|(1<< (h)->h_sec_size_p2)
+value|((size_t)(1<< (h)->h_sec_size_p2))
 end_define
 
 begin_define
@@ -231,7 +231,7 @@ name|CDF_SHORT_SEC_SIZE
 parameter_list|(
 name|h
 parameter_list|)
-value|(1<< (h)->h_short_sec_size_p2)
+value|((size_t)(1<< (h)->h_short_sec_size_p2))
 end_define
 
 begin_define
@@ -555,6 +555,12 @@ decl_stmt|;
 name|cdf_timestamp_t
 name|_pi_tp
 decl_stmt|;
+name|float
+name|_pi_f
+decl_stmt|;
+name|double
+name|_pi_d
+decl_stmt|;
 struct|struct
 block|{
 name|uint32_t
@@ -595,6 +601,14 @@ define|#
 directive|define
 name|pi_s16
 value|pi_val._pi_s16
+define|#
+directive|define
+name|pi_f
+value|pi_val._pi_f
+define|#
+directive|define
+name|pi_d
+value|pi_val._pi_d
 define|#
 directive|define
 name|pi_tp

@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: apprentice.c,v 1.171 2011/09/16 21:04:59 christos Exp $"
+literal|"@(#)$File: apprentice.c,v 1.173 2011/12/08 12:38:24 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -3776,10 +3776,6 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-if|if
-condition|(
-name|line
-condition|)
 name|free
 argument_list|(
 name|line
@@ -4100,6 +4096,11 @@ expr_stmt|;
 name|errs
 operator|++
 expr_stmt|;
+name|closedir
+argument_list|(
+name|dir
+argument_list|)
+expr_stmt|;
 goto|goto
 name|out
 goto|;
@@ -4196,6 +4197,11 @@ expr_stmt|;
 name|free
 argument_list|(
 name|mfn
+argument_list|)
+expr_stmt|;
+name|closedir
+argument_list|(
+name|dir
 argument_list|)
 expr_stmt|;
 name|errs
@@ -11300,6 +11306,9 @@ parameter_list|)
 block|{
 name|int
 name|fd
+init|=
+operator|-
+literal|1
 decl_stmt|;
 name|char
 modifier|*
@@ -11500,6 +11509,13 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|fd
+operator|!=
+operator|-
+literal|1
+condition|)
 operator|(
 name|void
 operator|)

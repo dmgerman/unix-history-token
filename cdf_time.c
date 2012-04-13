@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: cdf_time.c,v 1.10 2011/02/10 17:03:16 christos Exp $"
+literal|"@(#)$File: cdf_time.c,v 1.11 2011/12/13 13:48:41 christos Exp $"
 argument_list|)
 end_macro
 
@@ -456,6 +456,8 @@ expr_stmt|;
 name|t
 operator|-=
 name|rdays
+operator|-
+literal|1
 expr_stmt|;
 name|tm
 operator|.

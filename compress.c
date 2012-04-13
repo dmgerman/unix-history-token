@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: compress.c,v 1.67 2011/09/01 12:12:37 christos Exp $"
+literal|"@(#)$File: compress.c,v 1.68 2011/12/08 12:38:24 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -757,10 +757,6 @@ block|}
 block|}
 name|error
 label|:
-if|if
-condition|(
-name|newbuf
-condition|)
 name|free
 argument_list|(
 name|newbuf

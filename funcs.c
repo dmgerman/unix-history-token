@@ -18,7 +18,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: funcs.c,v 1.57 2011/05/11 01:02:41 christos Exp $"
+literal|"@(#)$File: funcs.c,v 1.60 2011/12/08 12:38:24 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -1140,6 +1140,8 @@ argument_list|,
 name|nb
 argument_list|,
 name|BINTEST
+argument_list|,
+name|looks_text
 argument_list|)
 operator|)
 operator|!=
@@ -1250,7 +1252,7 @@ goto|goto
 name|done
 goto|;
 block|}
-comment|/* try text properties (and possibly text tokens) */
+comment|/* try text properties */
 if|if
 condition|(
 operator|(
@@ -1276,6 +1278,8 @@ argument_list|,
 name|ubuf
 argument_list|,
 name|nb
+argument_list|,
+name|looks_text
 argument_list|)
 operator|)
 operator|!=
@@ -1350,6 +1354,8 @@ argument_list|,
 name|code
 argument_list|,
 name|type
+argument_list|,
+name|looks_text
 argument_list|)
 operator|)
 operator|!=
@@ -1485,10 +1491,6 @@ operator|-
 literal|1
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|u8buf
-condition|)
 name|free
 argument_list|(
 name|u8buf

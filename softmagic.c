@@ -22,7 +22,7 @@ end_ifndef
 begin_macro
 name|FILE_RCSID
 argument_list|(
-literal|"@(#)$File: softmagic.c,v 1.145 2011/05/13 22:15:40 christos Exp $"
+literal|"@(#)$File: softmagic.c,v 1.147 2011/11/05 15:44:22 rrt Exp $"
 argument_list|)
 end_macro
 
@@ -88,6 +88,8 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|int
+parameter_list|,
+name|int
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -113,6 +115,8 @@ parameter_list|,
 name|size_t
 parameter_list|,
 name|unsigned
+name|int
+parameter_list|,
 name|int
 parameter_list|)
 function_decl|;
@@ -360,6 +364,9 @@ name|nbytes
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|int
+name|text
 parameter_list|)
 block|{
 name|struct
@@ -414,6 +421,8 @@ argument_list|,
 name|nbytes
 argument_list|,
 name|mode
+argument_list|,
+name|text
 argument_list|)
 operator|)
 operator|!=
@@ -461,6 +470,9 @@ name|nbytes
 parameter_list|,
 name|int
 name|mode
+parameter_list|,
+name|int
+name|text
 parameter_list|)
 block|{
 name|uint32_t
@@ -564,6 +576,54 @@ decl_stmt|;
 if|if
 condition|(
 operator|(
+name|IS_STRING
+argument_list|(
+name|m
+operator|->
+name|type
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|text
+operator|&&
+operator|(
+name|m
+operator|->
+name|str_flags
+operator|&
+operator|(
+name|STRING_BINTEST
+operator||
+name|STRING_TEXTTEST
+operator|)
+operator|)
+operator|==
+name|STRING_BINTEST
+operator|)
+operator|||
+operator|(
+operator|!
+name|text
+operator|&&
+operator|(
+name|m
+operator|->
+name|str_flags
+operator|&
+operator|(
+name|STRING_TEXTTEST
+operator||
+name|STRING_BINTEST
+operator|)
+operator|)
+operator|==
+name|STRING_TEXTTEST
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
 name|m
 operator|->
 name|flag
@@ -627,6 +687,8 @@ argument_list|,
 name|nbytes
 argument_list|,
 name|cont_level
+argument_list|,
+name|text
 argument_list|)
 condition|)
 block|{
@@ -980,6 +1042,8 @@ argument_list|,
 name|nbytes
 argument_list|,
 name|cont_level
+argument_list|,
+name|text
 argument_list|)
 condition|)
 block|{
@@ -5562,6 +5626,9 @@ parameter_list|,
 name|unsigned
 name|int
 name|cont_level
+parameter_list|,
+name|int
+name|text
 parameter_list|)
 block|{
 name|uint32_t
@@ -9147,6 +9214,8 @@ operator|-
 name|offset
 argument_list|,
 name|BINTEST
+argument_list|,
+name|text
 argument_list|)
 return|;
 case|case
