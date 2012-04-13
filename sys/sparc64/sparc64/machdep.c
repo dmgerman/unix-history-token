@@ -2372,11 +2372,6 @@ argument_list|(
 name|tl0_base
 argument_list|)
 expr_stmt|;
-comment|/* 	 * It's now safe to use the real DELAY(). 	 */
-name|delay_func
-operator|=
-name|delay_tick
-expr_stmt|;
 comment|/* 	 * Initialize the dynamic per-CPU area for the BSP and the message 	 * buffer (after setting the trap table). 	 */
 name|dpcpu_init
 argument_list|(
