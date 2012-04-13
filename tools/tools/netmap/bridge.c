@@ -1647,13 +1647,14 @@ argument_list|,
 name|me
 operator|->
 name|end
-operator|>
+operator|>=
 name|me
 operator|->
 name|nifp
 operator|->
-name|ni_rx_queues
+name|ni_tx_rings
 condition|?
+comment|// XXX who comes first ?
 literal|"host"
 else|:
 literal|"net"
@@ -1890,6 +1891,14 @@ expr_stmt|;
 break|break;
 block|}
 block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
 if|if
 condition|(
 name|argc
@@ -2430,7 +2439,7 @@ index|]
 operator|.
 name|nifp
 operator|->
-name|ni_rx_queues
+name|ni_rx_rings
 argument_list|,
 name|me
 index|[
@@ -2453,7 +2462,7 @@ index|]
 operator|.
 name|nifp
 operator|->
-name|ni_rx_queues
+name|ni_rx_rings
 argument_list|)
 expr_stmt|;
 comment|/* main loop */

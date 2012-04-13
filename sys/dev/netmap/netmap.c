@@ -688,7 +688,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|1
 condition|;
@@ -720,7 +720,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|+
 literal|1
 condition|;
@@ -776,7 +776,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|1
 condition|;
@@ -847,7 +847,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|+
 literal|1
 condition|;
@@ -1135,7 +1135,7 @@ name|tx_rings
 index|[
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 index|]
 decl_stmt|;
 name|struct
@@ -1425,7 +1425,7 @@ name|rx_rings
 index|[
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 index|]
 decl_stmt|;
 name|struct
@@ -1944,7 +1944,7 @@ name|kring
 operator|->
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|1
 decl_stmt|;
@@ -2097,13 +2097,13 @@ name|lim
 init|=
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 decl_stmt|;
 if|if
 condition|(
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|>
 name|lim
 condition|)
@@ -2111,7 +2111,7 @@ name|lim
 operator|=
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 expr_stmt|;
 if|if
 condition|(
@@ -2540,7 +2540,7 @@ name|nr_rx_rings
 operator|=
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 expr_stmt|;
 name|nmr
 operator|->
@@ -2548,7 +2548,7 @@ name|nr_tx_rings
 operator|=
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 expr_stmt|;
 name|nmr
 operator|->
@@ -2949,7 +2949,7 @@ name|nr_rx_rings
 operator|=
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 expr_stmt|;
 name|nmr
 operator|->
@@ -2957,7 +2957,7 @@ name|nr_tx_rings
 operator|=
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 expr_stmt|;
 name|nmr
 operator|->
@@ -3102,11 +3102,11 @@ operator|)
 condition|?
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 else|:
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 expr_stmt|;
 for|for
 control|(
@@ -3500,13 +3500,13 @@ name|lim_tx
 operator|=
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 expr_stmt|;
 name|lim_rx
 operator|=
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 expr_stmt|;
 comment|/* how many queues we are scanning */
 if|if
@@ -4336,7 +4336,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Initialize a ``netmap_adapter`` object created by driver on attach.  * We allocate a block of memory with room for a struct netmap_adapter  * plus two sets of N+2 struct netmap_kring (where N is the number  * of hardware rings):  * krings	0..N-1	are for the hardware queues.  * kring	N	is for the host stack queue  * kring	N+1	is only used for the selinfo for all queues.  * Return 0 on success, ENOMEM otherwise.  *  * na->num_tx_queues can be set for cards with different tx/rx setups  */
+comment|/*  * Initialize a ``netmap_adapter`` object created by driver on attach.  * We allocate a block of memory with room for a struct netmap_adapter  * plus two sets of N+2 struct netmap_kring (where N is the number  * of hardware rings):  * krings	0..N-1	are for the hardware queues.  * kring	N	is for the host stack queue  * kring	N+1	is only used for the selinfo for all queues.  * Return 0 on success, ENOMEM otherwise.  *  * na->num_tx_rings can be set for cards with different tx/rx setups  */
 end_comment
 
 begin_function
@@ -4399,19 +4399,19 @@ if|if
 condition|(
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|==
 literal|0
 condition|)
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|=
 name|num_queues
 expr_stmt|;
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|=
 name|num_queues
 expr_stmt|;
@@ -4420,11 +4420,11 @@ name|n
 operator|=
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|+
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|2
 expr_stmt|;
@@ -4501,15 +4501,9 @@ name|tx_rings
 operator|+
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|1
-expr_stmt|;
-name|na
-operator|->
-name|buff_size
-operator|=
-name|NETMAP_BUF_SIZE
 expr_stmt|;
 name|bcopy
 argument_list|(
@@ -4572,7 +4566,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|1
 condition|;
@@ -4608,7 +4602,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|+
 literal|1
 condition|;
@@ -4737,7 +4731,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|+
 literal|1
 condition|;
@@ -4784,7 +4778,7 @@ name|i
 operator|<
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|+
 literal|1
 condition|;
@@ -4910,7 +4904,7 @@ name|rx_rings
 index|[
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 index|]
 decl_stmt|;
 name|u_int
@@ -5099,7 +5093,7 @@ name|if_xname
 argument_list|,
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 argument_list|)
 expr_stmt|;
 name|selwakeuppri
@@ -5442,7 +5436,7 @@ operator|=
 operator|(
 name|na
 operator|->
-name|num_rx_queues
+name|num_rx_rings
 operator|>
 literal|1
 operator|)
@@ -5471,7 +5465,7 @@ operator|=
 operator|(
 name|na
 operator|->
-name|num_tx_queues
+name|num_tx_rings
 operator|>
 literal|1
 operator|)
