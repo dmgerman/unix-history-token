@@ -311,6 +311,9 @@ literal|"invalid ofs 0x%x out of 0x%x 0x%x 0x%x"
 argument_list|,
 name|o
 argument_list|,
+operator|(
+name|u_int
+operator|)
 name|p
 index|[
 literal|0
@@ -366,6 +369,7 @@ comment|/*  * we store objects by kernel address, need to find the offset  * wit
 end_comment
 
 begin_function
+specifier|static
 name|ssize_t
 name|netmap_obj_offset
 parameter_list|(
