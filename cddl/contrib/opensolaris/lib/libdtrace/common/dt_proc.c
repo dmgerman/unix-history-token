@@ -3403,7 +3403,7 @@ name|dpr
 operator|->
 name|dpr_tid
 argument_list|,
-name|SIGUSR1
+name|SIGTHR
 argument_list|)
 expr_stmt|;
 endif|#
