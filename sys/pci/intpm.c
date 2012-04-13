@@ -1354,7 +1354,7 @@ break|break;
 default|default:
 name|error
 operator|=
-name|EINVAL
+name|SMB_EINVAL
 expr_stmt|;
 block|}
 return|return
@@ -2405,7 +2405,7 @@ break|break;
 default|default:
 return|return
 operator|(
-name|EINVAL
+name|SMB_EINVAL
 operator|)
 return|;
 block|}
@@ -3878,7 +3878,7 @@ block|}
 else|else
 name|error
 operator|=
-name|EIO
+name|SMB_EBUSERR
 expr_stmt|;
 block|}
 name|INTSMB_UNLOCK
