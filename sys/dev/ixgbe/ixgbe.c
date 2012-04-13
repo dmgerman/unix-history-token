@@ -17550,6 +17550,26 @@ operator|&=
 operator|~
 name|IXGBE_RDRXCTL_RSCFRSTSIZE
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* crcstrip is optional in netmap */
+if|if
+condition|(
+name|adapter
+operator|->
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_NETMAP
+operator|&&
+operator|!
+name|ix_crcstrip
+condition|)
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|rdrxctl
 operator||=
 name|IXGBE_RDRXCTL_CRCSTRIP
@@ -18881,6 +18901,34 @@ operator|&=
 operator|~
 name|IXGBE_HLREG0_JUMBOEN
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|DEV_NETMAP
+comment|/* crcstrip is conditional in netmap (in RDRXCTL too ?) */
+if|if
+condition|(
+name|ifp
+operator|->
+name|if_capenable
+operator|&
+name|IFCAP_NETMAP
+operator|&&
+operator|!
+name|ix_crcstrip
+condition|)
+name|hlreg
+operator|&=
+operator|~
+name|IXGBE_HLREG0_RXCRCSTRP
+expr_stmt|;
+else|else
+name|hlreg
+operator||=
+name|IXGBE_HLREG0_RXCRCSTRP
+expr_stmt|;
+endif|#
+directive|endif
+comment|/* DEV_NETMAP */
 name|IXGBE_WRITE_REG
 argument_list|(
 name|hw
