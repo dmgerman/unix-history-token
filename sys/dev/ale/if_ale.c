@@ -350,6 +350,7 @@ end_comment
 
 begin_struct
 specifier|static
+specifier|const
 struct|struct
 name|ale_dev
 block|{
@@ -365,6 +366,7 @@ modifier|*
 name|ale_name
 decl_stmt|;
 block|}
+decl|const
 name|ale_devs
 index|[]
 init|=
@@ -1042,11 +1044,7 @@ argument_list|,
 name|ale_miibus_statchg
 argument_list|)
 block|,
-block|{
-name|NULL
-block|,
-name|NULL
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1088,9 +1086,9 @@ name|ale_driver
 argument_list|,
 name|ale_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1106,9 +1104,9 @@ name|miibus_driver
 argument_list|,
 name|miibus_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1885,6 +1883,7 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|ale_dev
 modifier|*
@@ -3444,7 +3443,7 @@ name|ale_phyaddr
 argument_list|,
 name|MII_OFFSET_ANY
 argument_list|,
-literal|0
+name|MIIF_DOPAUSE
 argument_list|)
 expr_stmt|;
 if|if
@@ -11427,9 +11426,6 @@ name|reg
 operator||=
 name|MAC_CFG_FULL_DUPLEX
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 if|if
 condition|(
 operator|(
@@ -11468,8 +11464,6 @@ name|reg
 operator||=
 name|MAC_CFG_RX_FC
 expr_stmt|;
-endif|#
-directive|endif
 block|}
 name|CSR_WRITE_4
 argument_list|(
