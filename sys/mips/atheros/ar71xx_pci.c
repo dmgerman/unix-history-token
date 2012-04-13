@@ -851,8 +851,6 @@ name|uint32_t
 name|data
 decl_stmt|;
 name|uint32_t
-name|cmd
-decl_stmt|,
 name|shift
 decl_stmt|,
 name|mask
