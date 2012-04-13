@@ -132,6 +132,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|DOSPTYP_PPCBOOT
+value|0x41
+end_define
+
+begin_comment
+comment|/* PReP/CHRP boot partition */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|DOSPTYP_LDM
+value|0x42
+end_define
+
+begin_comment
+comment|/* Win2k dynamic extended partition */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|DOSPTYP_386BSD
 value|0xa5
 end_define

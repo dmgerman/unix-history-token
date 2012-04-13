@@ -124,15 +124,6 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|popstring
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
 name|setinputfile
 parameter_list|(
 specifier|const

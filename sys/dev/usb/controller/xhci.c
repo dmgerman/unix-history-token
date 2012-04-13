@@ -251,6 +251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -1693,7 +1694,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -2680,7 +2681,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -2857,7 +2858,7 @@ name|NULL
 argument_list|,
 name|hz
 operator|/
-literal|1000
+literal|100
 argument_list|)
 expr_stmt|;
 name|temp
@@ -3162,43 +3163,37 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
-name|xhci_suspend
+name|xhci_set_hw_power_sleep
 parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|,
+name|uint32_t
+name|state
+parameter_list|)
+block|{
 name|struct
 name|xhci_softc
 modifier|*
 name|sc
-parameter_list|)
+init|=
+name|XHCI_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
 block|{
-comment|/* XXX TODO */
-block|}
-end_function
-
-begin_function
-name|void
-name|xhci_resume
-parameter_list|(
-name|struct
-name|xhci_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
-comment|/* XXX TODO */
-block|}
-end_function
-
-begin_function
-name|void
-name|xhci_shutdown
-parameter_list|(
-name|struct
-name|xhci_softc
-modifier|*
-name|sc
-parameter_list|)
-block|{
+case|case
+name|USB_HW_POWER_SUSPEND
+case|:
 name|DPRINTF
 argument_list|(
 literal|"Stopping the XHCI\n"
@@ -3209,6 +3204,38 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_SHUTDOWN
+case|:
+name|DPRINTF
+argument_list|(
+literal|"Stopping the XHCI\n"
+argument_list|)
+expr_stmt|;
+name|xhci_halt_controller
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_RESUME
+case|:
+name|DPRINTF
+argument_list|(
+literal|"Starting the XHCI\n"
+argument_list|)
+expr_stmt|;
+name|xhci_start_controller
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
 block|}
 end_function
 
@@ -4219,6 +4246,9 @@ literal|0
 operator|&&
 name|offset
 operator|<
+operator|(
+name|int64_t
+operator|)
 sizeof|sizeof
 argument_list|(
 name|td
@@ -5393,7 +5423,7 @@ literal|0
 end_if
 
 begin_comment
-unit|static usb_error_t xhci_cmd_nop(struct xhci_softc *sc) { 	struct xhci_trb trb; 	uint32_t temp;  	DPRINTF("\n");  	trb.qwTrb0 = 0; 	trb.dwTrb2 = 0; 	temp = XHCI_TRB_3_TYPE_SET(XHCI_TRB_TYPE_NOOP);  	trb.dwTrb3 = htole32(temp);  	return (xhci_do_command(sc,&trb, 50
+unit|static usb_error_t xhci_cmd_nop(struct xhci_softc *sc) { 	struct xhci_trb trb; 	uint32_t temp;  	DPRINTF("\n");  	trb.qwTrb0 = 0; 	trb.dwTrb2 = 0; 	temp = XHCI_TRB_3_TYPE_SET(XHCI_TRB_TYPE_NOOP);  	trb.dwTrb3 = htole32(temp);  	return (xhci_do_command(sc,&trb, 100
 comment|/* ms */
 end_comment
 
@@ -5466,7 +5496,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 expr_stmt|;
@@ -5572,7 +5602,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6175,7 +6205,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6257,7 +6287,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6352,7 +6382,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6455,7 +6485,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6550,7 +6580,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -6626,7 +6656,7 @@ argument_list|,
 operator|&
 name|trb
 argument_list|,
-literal|50
+literal|100
 comment|/* ms */
 argument_list|)
 operator|)
@@ -10017,6 +10047,9 @@ decl_stmt|;
 name|uint32_t
 name|route
 decl_stmt|;
+name|uint32_t
+name|rh_port
+decl_stmt|;
 name|uint8_t
 name|is_hub
 decl_stmt|;
@@ -10024,7 +10057,7 @@ name|uint8_t
 name|index
 decl_stmt|;
 name|uint8_t
-name|rh_port
+name|depth
 decl_stmt|;
 name|index
 operator|=
@@ -10104,6 +10137,14 @@ operator|==
 name|NULL
 condition|)
 break|break;
+name|depth
+operator|=
+name|hubdev
+operator|->
+name|parent_hub
+operator|->
+name|depth
+expr_stmt|;
 comment|/* 		 * NOTE: HS/FS/LS devices and the SS root HUB can have 		 * more than 15 ports 		 */
 name|rh_port
 operator|=
@@ -10113,35 +10154,49 @@ name|port_no
 expr_stmt|;
 if|if
 condition|(
-name|hubdev
-operator|->
-name|parent_hub
-operator|->
-name|parent_hub
+name|depth
 operator|==
-name|NULL
+literal|0
 condition|)
 break|break;
-name|route
-operator|*=
-literal|16
-expr_stmt|;
 if|if
 condition|(
 name|rh_port
 operator|>
 literal|15
 condition|)
-name|route
-operator||=
+name|rh_port
+operator|=
 literal|15
 expr_stmt|;
-else|else
+if|if
+condition|(
+name|depth
+operator|<
+literal|6
+condition|)
 name|route
 operator||=
 name|rh_port
+operator|<<
+operator|(
+literal|4
+operator|*
+operator|(
+name|depth
+operator|-
+literal|1
+operator|)
+operator|)
 expr_stmt|;
 block|}
+name|DPRINTF
+argument_list|(
+literal|"Route=0x%08x\n"
+argument_list|,
+name|route
+argument_list|)
+expr_stmt|;
 name|temp
 operator|=
 name|XHCI_SCTX_0_ROUTE_SET
@@ -10178,7 +10233,7 @@ expr_stmt|;
 break|break;
 default|default:
 name|temp
-operator|=
+operator||=
 name|XHCI_SCTX_0_CTX_NUM_SET
 argument_list|(
 literal|1
@@ -12478,7 +12533,7 @@ name|ptr
 parameter_list|,
 name|val
 parameter_list|)
-value|ptr[0] = (uint8_t)(val), ptr[1] = (uint8_t)((val)>> 8)
+value|ptr = { (uint8_t)(val), (uint8_t)((val)>> 8) }
 end_define
 
 begin_decl_stmt
@@ -12658,6 +12713,9 @@ literal|2
 block|,
 operator|.
 name|bmAttributes
+index|[
+literal|0
+index|]
 operator|=
 literal|2
 block|, 	}
@@ -12712,12 +12770,14 @@ literal|255
 block|,
 comment|/* dummy - not used */
 operator|.
-name|bU2DevExitLat
+name|wU2DevExitLat
 operator|=
-literal|255
+block|{
+literal|0x00
 block|,
-comment|/* dummy - not used */
+literal|0x08
 block|}
+block|, 	}
 block|,
 operator|.
 name|cidd
@@ -13671,7 +13731,16 @@ name|oper
 argument_list|,
 name|port
 argument_list|)
-operator|&
+expr_stmt|;
+name|i
+operator|=
+name|XHCI_PS_PLS_GET
+argument_list|(
+name|v
+argument_list|)
+expr_stmt|;
+name|v
+operator|&=
 operator|~
 name|XHCI_PS_CLEAR
 expr_stmt|;
@@ -13714,6 +13783,9 @@ name|XHCI_PS_CEC
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|UHF_C_PORT_SUSPEND
+case|:
 case|case
 name|UHF_C_PORT_LINK_STATE
 case|:
@@ -13858,6 +13930,49 @@ break|break;
 case|case
 name|UHF_PORT_SUSPEND
 case|:
+comment|/* U3 -> U15 */
+if|if
+condition|(
+name|i
+operator|==
+literal|3
+condition|)
+block|{
+name|XWRITE4
+argument_list|(
+name|sc
+argument_list|,
+name|oper
+argument_list|,
+name|port
+argument_list|,
+name|v
+operator||
+name|XHCI_PS_PLS_SET
+argument_list|(
+literal|0xF
+argument_list|)
+operator||
+name|XHCI_PS_LWS
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* wait 20ms for resume sequence to complete */
+name|usb_pause_mtx
+argument_list|(
+operator|&
+name|sc
+operator|->
+name|sc_bus
+operator|.
+name|bus_mtx
+argument_list|,
+name|hz
+operator|/
+literal|50
+argument_list|)
+expr_stmt|;
+comment|/* U0 */
 name|XWRITE4
 argument_list|(
 name|sc
@@ -14254,10 +14369,13 @@ name|v
 operator|&
 name|XHCI_PS_PP
 condition|)
+block|{
+comment|/* 			 * The USB 3.0 RH is using the 			 * USB 2.0's power bit 			 */
 name|i
 operator||=
 name|UPS_PORT_POWER
 expr_stmt|;
+block|}
 name|USETW
 argument_list|(
 name|sc
@@ -17222,6 +17340,11 @@ operator|.
 name|device_state_change
 operator|=
 name|xhci_device_state_change
+block|,
+operator|.
+name|set_hw_power_sleep
+operator|=
+name|xhci_set_hw_power_sleep
 block|, }
 decl_stmt|;
 end_decl_stmt

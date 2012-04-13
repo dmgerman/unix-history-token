@@ -924,7 +924,7 @@ name|debug
 condition|)
 name|printf
 argument_list|(
-literal|"dev_bsize %ld\n"
+literal|"dev_bsize %u\n"
 argument_list|,
 name|real_dev_bsize
 argument_list|)

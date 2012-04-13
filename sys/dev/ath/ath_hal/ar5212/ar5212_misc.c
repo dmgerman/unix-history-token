@@ -819,7 +819,7 @@ argument_list|(
 name|ah
 argument_list|)
 decl_stmt|;
-comment|/* XXX save bssid for possible re-use on reset */
+comment|/* save bssid for possible re-use on reset */
 name|OS_MEMCPY
 argument_list|(
 name|ahp
@@ -830,6 +830,12 @@ name|bssid
 argument_list|,
 name|IEEE80211_ADDR_LEN
 argument_list|)
+expr_stmt|;
+name|ahp
+operator|->
+name|ah_assocId
+operator|=
+name|assocId
 expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
@@ -2401,7 +2407,7 @@ operator|>=
 name|HAL_DECOMP_MASK_SIZE
 condition|)
 return|return
-name|HAL_EINVAL
+name|AH_FALSE
 return|;
 name|OS_REG_WRITE
 argument_list|(
@@ -5539,6 +5545,26 @@ parameter_list|)
 block|{
 return|return
 name|AH_FALSE
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/*  * Return what percentage of the extension channel is busy.  * This is always disabled for AR5212 series NICs.  */
+end_comment
+
+begin_function
+name|uint32_t
+name|ar5212Get11nExtBusy
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+block|{
+return|return
+literal|0
 return|;
 block|}
 end_function

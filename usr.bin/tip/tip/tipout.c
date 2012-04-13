@@ -597,9 +597,15 @@ name|scnt
 operator|<
 literal|0
 operator|&&
+operator|(
 name|errno
 operator|==
 name|EIO
+operator|||
+name|errno
+operator|==
+name|ENXIO
+operator|)
 operator|)
 condition|)
 block|{
@@ -629,7 +635,7 @@ argument_list|)
 expr_stmt|;
 name|intTERM
 argument_list|(
-literal|0
+name|SIGHUP
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/

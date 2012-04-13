@@ -89,7 +89,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|LangOptions
@@ -133,7 +133,7 @@ name|CodeGenerator
 modifier|*
 name|CreateLLVMCodeGen
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|,

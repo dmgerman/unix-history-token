@@ -18,12 +18,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/md5.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 

@@ -3499,7 +3499,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|rindex
+name|strchr
 argument_list|(
 name|oldname
 argument_list|,

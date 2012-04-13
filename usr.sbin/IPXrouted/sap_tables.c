@@ -622,7 +622,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Change an existing SAP entry. If a clone exist for the old one,  * check if it is cheaper. If it is change tothe clone, otherwise  * delete all the clones.  */
+comment|/*  * Change an existing SAP entry. If a clone exist for the old one,  * check if it is cheaper. If it is change to the clone, otherwise  * delete all the clones.  */
 end_comment
 
 begin_function

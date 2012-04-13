@@ -557,11 +557,11 @@ name|uint32_t
 name|mesh_ttl
 decl_stmt|;
 name|enum
-name|TruthValue
+name|wlanMeshPeeringEnabled
 name|mesh_peering
 decl_stmt|;
 name|enum
-name|TruthValue
+name|wlanMeshForwardingEnabled
 name|mesh_forwarding
 decl_stmt|;
 name|enum

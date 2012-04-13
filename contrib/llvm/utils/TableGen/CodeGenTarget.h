@@ -86,7 +86,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"Record.h"
+file|"llvm/TableGen/Record.h"
 end_include
 
 begin_include
@@ -367,26 +367,6 @@ argument_list|()
 expr_stmt|;
 return|return
 name|RegAltNameIndices
-return|;
-block|}
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|CodeGenRegisterClass
-operator|>
-operator|&
-name|getRegisterClasses
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getRegBank
-argument_list|()
-operator|.
-name|getRegClasses
-argument_list|()
 return|;
 block|}
 specifier|const

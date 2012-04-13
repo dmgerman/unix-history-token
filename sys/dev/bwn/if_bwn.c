@@ -226,6 +226,7 @@ file|<dev/bwn/if_bwnvar.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -1341,7 +1342,8 @@ index|]
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
 parameter_list|,
@@ -22518,7 +22520,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -24044,13 +24047,6 @@ argument_list|(
 name|mac
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|error
-condition|)
-goto|goto
-name|fail1
-goto|;
 name|bwn_wme_init
 argument_list|(
 name|mac
@@ -24109,13 +24105,6 @@ operator|(
 name|error
 operator|)
 return|;
-name|fail1
-label|:
-name|bwn_chip_exit
-argument_list|(
-name|mac
-argument_list|)
-expr_stmt|;
 name|fail0
 label|:
 name|siba_powerdown
@@ -104805,7 +104794,7 @@ argument_list|,
 name|bwn_resume
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

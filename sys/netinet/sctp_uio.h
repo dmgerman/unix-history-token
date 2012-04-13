@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2007, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -1499,7 +1499,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|/*  * stream reset event  */
+comment|/*  * Stream reset event - subscribe to SCTP_STREAM_RESET_EVENT  */
 end_comment
 
 begin_struct
@@ -1519,7 +1519,7 @@ name|sctp_assoc_t
 name|strreset_assoc_id
 decl_stmt|;
 name|uint16_t
-name|strreset_list
+name|strreset_stream_list
 index|[]
 decl_stmt|;
 block|}
@@ -1527,49 +1527,124 @@ struct|;
 end_struct
 
 begin_comment
-comment|/* flags in strreset_flags field */
+comment|/* flags in stream_reset_event (strreset_flags) */
 end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_INBOUND_STR
-value|0x0001
+name|SCTP_STREAM_RESET_DENIED
+value|0x0004
 end_define
+
+begin_comment
+comment|/* SCTP_STRRESET_FAILED */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_OUTBOUND_STR
-value|0x0002
+name|SCTP_STREAM_RESET_FAILED
+value|0x0008
 end_define
+
+begin_comment
+comment|/* SCTP_STRRESET_FAILED */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_ALL_STREAMS
+name|SCTP_STREAM_CHANGED_DENIED
+value|0x0010
+end_define
+
+begin_comment
+comment|/*  * Assoc reset event - subscribe to SCTP_ASSOC_RESET_EVENT  */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_assoc_reset_event
+block|{
+name|uint16_t
+name|assocreset_type
+decl_stmt|;
+name|uint16_t
+name|assocreset_flags
+decl_stmt|;
+name|uint32_t
+name|assocreset_length
+decl_stmt|;
+name|sctp_assoc_t
+name|assocreset_assoc_id
+decl_stmt|;
+name|uint32_t
+name|assocreset_local_tsn
+decl_stmt|;
+name|uint32_t
+name|assocreset_remote_tsn
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_RESET_DENIED
 value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_STREAM_LIST
+name|SCTP_ASSOC_RESET_FAILED
 value|0x0008
 end_define
 
+begin_comment
+comment|/*  * Stream change event - subscribe to SCTP_STREAM_CHANGE_EVENT  */
+end_comment
+
+begin_struct
+struct|struct
+name|sctp_stream_change_event
+block|{
+name|uint16_t
+name|strchange_type
+decl_stmt|;
+name|uint16_t
+name|strchange_flags
+decl_stmt|;
+name|uint32_t
+name|strchange_length
+decl_stmt|;
+name|sctp_assoc_t
+name|strchange_assoc_id
+decl_stmt|;
+name|uint16_t
+name|strchange_instrms
+decl_stmt|;
+name|uint16_t
+name|strchange_outstrms
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_FAILED
-value|0x0010
+name|SCTP_STREAM_CHANGE_DENIED
+value|0x0004
 end_define
 
 begin_define
 define|#
 directive|define
-name|SCTP_STRRESET_ADD_STREAM
-value|0x0020
+name|SCTP_STREAM_CHANGE_FAILED
+value|0x0008
 end_define
 
 begin_comment
@@ -1645,6 +1720,14 @@ decl_stmt|;
 name|struct
 name|sctp_stream_reset_event
 name|sn_strreset_event
+decl_stmt|;
+name|struct
+name|sctp_assoc_reset_event
+name|sn_assocreset_event
+decl_stmt|;
+name|struct
+name|sctp_stream_change_event
+name|sn_strchange_event
 decl_stmt|;
 block|}
 union|;
@@ -1745,6 +1828,20 @@ end_define
 begin_comment
 comment|/* we don't send this */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ASSOC_RESET_EVENT
+value|0x000c
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_CHANGE_EVENT
+value|0x000d
+end_define
 
 begin_comment
 comment|/*  * socket option structs  */
@@ -1857,12 +1954,12 @@ begin_struct
 struct|struct
 name|sctp_paddrthlds
 block|{
-name|sctp_assoc_t
-name|spt_assoc_id
-decl_stmt|;
 name|struct
 name|sockaddr_storage
 name|spt_address
+decl_stmt|;
+name|sctp_assoc_t
+name|spt_assoc_id
 decl_stmt|;
 name|uint16_t
 name|spt_pathmaxrxt
@@ -2329,6 +2426,24 @@ end_struct
 
 begin_struct
 struct|struct
+name|sctp_udpencaps
+block|{
+name|struct
+name|sockaddr_storage
+name|sue_address
+decl_stmt|;
+name|sctp_assoc_t
+name|sue_assoc_id
+decl_stmt|;
+name|uint16_t
+name|sue_port
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
 name|sctp_cwnd_args
 block|{
 name|struct
@@ -2416,60 +2531,42 @@ name|SCTP_MAX_EXPLICT_STR_RESET
 value|1000
 end_define
 
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_LOCAL_RECV
-value|0x0001
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_LOCAL_SEND
-value|0x0002
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_BOTH
-value|0x0003
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_TSN
-value|0x0004
-end_define
-
-begin_define
-define|#
-directive|define
-name|SCTP_RESET_ADD_STREAMS
-value|0x0005
-end_define
-
 begin_struct
 struct|struct
-name|sctp_stream_reset
+name|sctp_reset_streams
 block|{
 name|sctp_assoc_t
-name|strrst_assoc_id
+name|srs_assoc_id
 decl_stmt|;
 name|uint16_t
-name|strrst_flags
+name|srs_flags
 decl_stmt|;
 name|uint16_t
-name|strrst_num_streams
+name|srs_number_streams
 decl_stmt|;
 comment|/* 0 == ALL */
 name|uint16_t
-name|strrst_list
+name|srs_stream_list
 index|[]
 decl_stmt|;
 comment|/* list if strrst_num_streams is not 0 */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|sctp_add_streams
+block|{
+name|sctp_assoc_t
+name|sas_assoc_id
+decl_stmt|;
+name|uint16_t
+name|sas_instrms
+decl_stmt|;
+name|uint16_t
+name|sas_outstrms
+decl_stmt|;
 block|}
 struct|;
 end_struct

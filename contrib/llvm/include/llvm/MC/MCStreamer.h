@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -89,10 +83,25 @@ directive|include
 file|"llvm/MC/MCWin64EH.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|MCAsmBackend
+decl_stmt|;
 name|class
 name|MCAsmInfo
 decl_stmt|;
@@ -119,9 +128,6 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|StringRef
-decl_stmt|;
-name|class
-name|TargetAsmBackend
 decl_stmt|;
 name|class
 name|TargetLoweringObjectFile
@@ -218,10 +224,9 @@ name|void
 name|EnsureValidW64UnwindInfo
 parameter_list|()
 function_decl|;
-specifier|const
 name|MCSymbol
 modifier|*
-name|LastNonPrivate
+name|LastSymbol
 decl_stmt|;
 comment|/// SectionStack - This is stack of current and previous section
 comment|/// values saved by PushSection.
@@ -244,8 +249,33 @@ literal|4
 operator|>
 name|SectionStack
 expr_stmt|;
+name|unsigned
+name|UniqueCodeBeginSuffix
+decl_stmt|;
+name|unsigned
+name|UniqueDataBeginSuffix
+decl_stmt|;
 name|protected
 label|:
+comment|/// Indicator of whether the previous data-or-code indicator was for
+comment|/// code or not.  Used to determine when we need to emit a new indicator.
+enum|enum
+name|DataType
+block|{
+name|Data
+block|,
+name|Code
+block|,
+name|JumpTable8
+block|,
+name|JumpTable16
+block|,
+name|JumpTable32
+block|}
+enum|;
+name|DataType
+name|RegionIndicator
+decl_stmt|;
 name|MCStreamer
 argument_list|(
 name|MCContext
@@ -346,6 +376,17 @@ name|FrameInfos
 index|[
 name|i
 index|]
+return|;
+block|}
+name|ArrayRef
+operator|<
+name|MCDwarfFrameInfo
+operator|>
+name|getFrameInfos
+argument_list|()
+block|{
+return|return
+name|FrameInfos
 return|;
 block|}
 name|unsigned
@@ -837,6 +878,146 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|/// EmitDataRegion - Emit a label that marks the beginning of a data
+end_comment
+
+begin_comment
+comment|/// region.
+end_comment
+
+begin_comment
+comment|/// On ELF targets, this corresponds to an assembler statement such as:
+end_comment
+
+begin_comment
+comment|///   $d.1:
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitDataRegion
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitJumpTable8Region - Emit a label that marks the beginning of a
+end_comment
+
+begin_comment
+comment|/// jump table composed of 8-bit offsets.
+end_comment
+
+begin_comment
+comment|/// On ELF targets, this corresponds to an assembler statement such as:
+end_comment
+
+begin_comment
+comment|///   $d.1:
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitJumpTable8Region
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitJumpTable16Region - Emit a label that marks the beginning of a
+end_comment
+
+begin_comment
+comment|/// jump table composed of 16-bit offsets.
+end_comment
+
+begin_comment
+comment|/// On ELF targets, this corresponds to an assembler statement such as:
+end_comment
+
+begin_comment
+comment|///   $d.1:
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitJumpTable16Region
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitJumpTable32Region - Emit a label that marks the beginning of a
+end_comment
+
+begin_comment
+comment|/// jump table composed of 32-bit offsets.
+end_comment
+
+begin_comment
+comment|/// On ELF targets, this corresponds to an assembler statement such as:
+end_comment
+
+begin_comment
+comment|///   $d.1:
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitJumpTable32Region
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitCodeRegion - Emit a label that marks the beginning of a code
+end_comment
+
+begin_comment
+comment|/// region.
+end_comment
+
+begin_comment
+comment|/// On ELF targets, this corresponds to an assembler statement such as:
+end_comment
+
+begin_comment
+comment|///   $a.1:
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCodeRegion
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// ForceCodeRegion - Forcibly sets the current region mode to code.  Used
+end_comment
+
+begin_comment
+comment|/// at function entry points.
+end_comment
+
+begin_function
+name|void
+name|ForceCodeRegion
+parameter_list|()
+block|{
+name|RegionIndicator
+operator|=
+name|Code
+expr_stmt|;
+block|}
+end_function
+
 begin_function_decl
 name|virtual
 name|void
@@ -1247,6 +1428,10 @@ begin_comment
 comment|/// @param Size - The size of the common symbol.
 end_comment
 
+begin_comment
+comment|/// @param ByteAlignment - The alignment of the common symbol in bytes.
+end_comment
+
 begin_function_decl
 name|virtual
 name|void
@@ -1258,6 +1443,9 @@ name|Symbol
 parameter_list|,
 name|uint64_t
 name|Size
+parameter_list|,
+name|unsigned
+name|ByteAlignment
 parameter_list|)
 init|=
 literal|0
@@ -2119,6 +2307,17 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
+name|EmitCompactUnwindEncoding
+parameter_list|(
+name|uint32_t
+name|CompactUnwindEncoding
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
 name|EmitCFISections
 parameter_list|(
 name|bool
@@ -2740,7 +2939,7 @@ name|CE
 init|=
 literal|0
 parameter_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 modifier|*
 name|TAB
 init|=
@@ -2779,7 +2978,7 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 modifier|&
 name|TAB
 parameter_list|,
@@ -2824,7 +3023,7 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 modifier|&
 name|TAB
 parameter_list|,
@@ -2861,7 +3060,7 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 modifier|&
 name|TAB
 parameter_list|,
@@ -2939,7 +3138,7 @@ name|MCContext
 modifier|&
 name|Ctx
 parameter_list|,
-name|TargetAsmBackend
+name|MCAsmBackend
 modifier|&
 name|TAB
 parameter_list|,

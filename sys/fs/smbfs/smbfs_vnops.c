@@ -4710,7 +4710,7 @@ decl_stmt|;
 comment|/* 	 * Backslash characters, being a path delimiter, are prohibited 	 * within a path component even for LOOKUP operations. 	 */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -4762,7 +4762,7 @@ name|ENAMETOOLONG
 return|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -4797,7 +4797,7 @@ name|error
 return|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 operator|+
@@ -4837,7 +4837,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|badchars83
 argument_list|,
@@ -4873,7 +4873,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|badchars
 argument_list|,
@@ -5225,6 +5225,10 @@ argument_list|,
 name|vpp
 argument_list|,
 name|cnp
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 name|SMBVDEBUG

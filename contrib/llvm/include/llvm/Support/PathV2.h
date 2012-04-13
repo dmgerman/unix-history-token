@@ -640,6 +640,29 @@ name|char
 name|value
 parameter_list|)
 function_decl|;
+comment|/// @brief Get the typical temporary directory for the system, e.g.,
+comment|/// "/var/tmp" or "C:/TEMP"
+comment|///
+comment|/// @param erasedOnReboot Whether to favor a path that is erased on reboot
+comment|/// rather than one that potentially persists longer. This parameter will be
+comment|/// ignored if the user or system has set the typical environment variable
+comment|/// (e.g., TEMP on Windows, TMPDIR on *nix) to specify a temporary directory.
+comment|///
+comment|/// @param Result Holds the resulting path name.
+name|void
+name|system_temp_directory
+argument_list|(
+name|bool
+name|erasedOnReboot
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|char
+operator|>
+operator|&
+name|result
+argument_list|)
+decl_stmt|;
 comment|/// @brief Has root name?
 comment|///
 comment|/// root_name != ""

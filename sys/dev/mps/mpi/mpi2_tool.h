@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $FreeBSD$ */
+comment|/*-  * Copyright (c) 2011 LSI Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  *  * LSI MPT-Fusion Host Adapter FreeBSD  *  * $FreeBSD$  */
 end_comment
 
 begin_comment
-comment|/*  *  Copyright (c) 2000-2009 LSI Corporation.  *  *  *           Name:  mpi2_tool.h  *          Title:  MPI diagnostic tool structures and definitions  *  Creation Date:  March 26, 2007  *  *    mpi2_tool.h Version:  02.00.04  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  12-18-07  02.00.01  Added Diagnostic Buffer Post and Diagnostic Release  *                      structures and defines.  *  02-29-08  02.00.02  Modified various names to make them 32-character unique.  *  05-06-09  02.00.03  Added ISTWI Read Write Tool and Diagnostic CLI Tool.  *  07-30-09  02.00.04  Added ExtendedType field to DiagnosticBufferPost request  *                      and reply messages.  *                      Added MPI2_DIAG_BUF_TYPE_EXTENDED.  *                      Incremented MPI2_DIAG_BUF_TYPE_COUNT.  *  --------------------------------------------------------------------------  */
+comment|/*  *  Copyright (c) 2000-2011 LSI Corporation.  *  *  *           Name:  mpi2_tool.h  *          Title:  MPI diagnostic tool structures and definitions  *  Creation Date:  March 26, 2007  *  *    mpi2_tool.h Version:  02.00.06  *  *  Version History  *  ---------------  *  *  Date      Version   Description  *  --------  --------  ------------------------------------------------------  *  04-30-07  02.00.00  Corresponds to Fusion-MPT MPI Specification Rev A.  *  12-18-07  02.00.01  Added Diagnostic Buffer Post and Diagnostic Release  *                      structures and defines.  *  02-29-08  02.00.02  Modified various names to make them 32-character unique.  *  05-06-09  02.00.03  Added ISTWI Read Write Tool and Diagnostic CLI Tool.  *  07-30-09  02.00.04  Added ExtendedType field to DiagnosticBufferPost request  *                      and reply messages.  *                      Added MPI2_DIAG_BUF_TYPE_EXTENDED.  *                      Incremented MPI2_DIAG_BUF_TYPE_COUNT.  *  05-12-10  02.00.05  Added Diagnostic Data Upload tool.  *  08-11-10  02.00.06  Added defines that were missing for Diagnostic Buffer  *                      Post Request.  *  --------------------------------------------------------------------------  */
 end_comment
 
 begin_ifndef
@@ -39,6 +39,13 @@ define|#
 directive|define
 name|MPI2_TOOLBOX_MEMORY_MOVE_TOOL
 value|(0x01)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_TOOLBOX_DIAG_DATA_UPLOAD_TOOL
+value|(0x02)
 end_define
 
 begin_define
@@ -343,6 +350,130 @@ typedef|;
 end_typedef
 
 begin_comment
+comment|/**************************************************************************** *  Toolbox Diagnostic Data Upload request ****************************************************************************/
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_TOOLBOX_DIAG_DATA_UPLOAD_REQUEST
+block|{
+name|U8
+name|Tool
+decl_stmt|;
+comment|/* 0x00 */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 0x01 */
+name|U8
+name|ChainOffset
+decl_stmt|;
+comment|/* 0x02 */
+name|U8
+name|Function
+decl_stmt|;
+comment|/* 0x03 */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 0x04 */
+name|U8
+name|Reserved3
+decl_stmt|;
+comment|/* 0x06 */
+name|U8
+name|MsgFlags
+decl_stmt|;
+comment|/* 0x07 */
+name|U8
+name|VP_ID
+decl_stmt|;
+comment|/* 0x08 */
+name|U8
+name|VF_ID
+decl_stmt|;
+comment|/* 0x09 */
+name|U16
+name|Reserved4
+decl_stmt|;
+comment|/* 0x0A */
+name|U8
+name|SGLFlags
+decl_stmt|;
+comment|/* 0x0C */
+name|U8
+name|Reserved5
+decl_stmt|;
+comment|/* 0x0D */
+name|U16
+name|Reserved6
+decl_stmt|;
+comment|/* 0x0E */
+name|U32
+name|Flags
+decl_stmt|;
+comment|/* 0x10 */
+name|U32
+name|DataLength
+decl_stmt|;
+comment|/* 0x14 */
+name|MPI2_SGE_SIMPLE_UNION
+name|SGL
+decl_stmt|;
+comment|/* 0x18 */
+block|}
+name|MPI2_TOOLBOX_DIAG_DATA_UPLOAD_REQUEST
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_TOOLBOX_DIAG_DATA_UPLOAD_REQUEST
+operator|,
+name|Mpi2ToolboxDiagDataUploadRequest_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2ToolboxDiagDataUploadRequest_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|_MPI2_DIAG_DATA_UPLOAD_HEADER
+block|{
+name|U32
+name|DiagDataLength
+decl_stmt|;
+comment|/* 00h */
+name|U8
+name|FormatCode
+decl_stmt|;
+comment|/* 04h */
+name|U8
+name|Reserved1
+decl_stmt|;
+comment|/* 05h */
+name|U16
+name|Reserved2
+decl_stmt|;
+comment|/* 06h */
+block|}
+name|MPI2_DIAG_DATA_UPLOAD_HEADER
+operator|,
+name|MPI2_POINTER
+name|PTR_MPI2_DIAG_DATA_UPLOAD_HEADER
+operator|,
+name|Mpi2DiagDataUploadHeader_t
+operator|,
+name|MPI2_POINTER
+name|pMpi2DiagDataUploadHeader_t
+typedef|;
+end_typedef
+
+begin_comment
 comment|/**************************************************************************** *  Toolbox ISTWI Read Write Tool ****************************************************************************/
 end_comment
 
@@ -511,7 +642,7 @@ value|(0x12)
 end_define
 
 begin_comment
-comment|/* values for SGLFlags field are in the SGL section of mpi2.h */
+comment|/* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
 end_comment
 
 begin_comment
@@ -809,7 +940,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/* values for SGLFlags field are in the SGL section of mpi2.h */
+comment|/* use MPI2_SGLFLAGS_ defines from mpi2.h for the SGLFlags field */
 end_comment
 
 begin_comment
@@ -1028,6 +1159,24 @@ define|#
 directive|define
 name|MPI2_DIAG_BUF_TYPE_COUNT
 value|(0x03)
+end_define
+
+begin_comment
+comment|/* values for the Flags field */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MPI2_DIAG_BUF_FLAG_RELEASE_ON_FULL
+value|(0x00000002)
+end_define
+
+begin_define
+define|#
+directive|define
+name|MPI2_DIAG_BUF_FLAG_IMMEDIATE_RELEASE
+value|(0x00000001)
 end_define
 
 begin_comment

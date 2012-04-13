@@ -820,6 +820,7 @@ comment|/* XXX Not in any common header. */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet6_ip6
@@ -970,6 +971,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet6_ip6_mcast
@@ -1929,7 +1931,7 @@ comment|/* 	 * XXX: Accesses to ifma_protospec must be covered by IF_ADDR_LOCK; 
 name|IN6_MULTI_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2021,7 +2023,7 @@ operator|*
 name|group
 expr_stmt|;
 comment|/* 	 * Check if a link-layer group is already associated 	 * with this network-layer group on the given ifnet. 	 */
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2055,7 +2057,7 @@ operator|(
 name|error
 operator|)
 return|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2183,7 +2185,7 @@ goto|goto
 name|out_locked
 goto|;
 block|}
-name|IF_ADDR_LOCK_ASSERT
+name|IF_ADDR_WLOCK_ASSERT
 argument_list|(
 name|ifp
 argument_list|)
@@ -2319,7 +2321,7 @@ name|inm
 expr_stmt|;
 name|out_locked
 label|:
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7724,7 +7726,7 @@ name|optval
 operator|=
 name|im6o
 operator|->
-name|im6o_multicast_loop
+name|im6o_multicast_hlim
 expr_stmt|;
 name|INP_WUNLOCK
 argument_list|(
@@ -7863,7 +7865,6 @@ name|struct
 name|inpcb
 modifier|*
 name|in6p
-name|__unused
 parameter_list|,
 specifier|const
 name|struct
@@ -7962,30 +7963,7 @@ name|sockaddr_in6
 argument_list|)
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|notyet
 name|rtalloc_ign_fib
-argument_list|(
-operator|&
-name|ro6
-argument_list|,
-literal|0
-argument_list|,
-name|inp
-condition|?
-name|inp
-operator|->
-name|inp_inc
-operator|.
-name|inc_fibnum
-else|:
-literal|0
-argument_list|)
-expr_stmt|;
-else|#
-directive|else
-name|rtalloc_ign
 argument_list|(
 operator|(
 expr|struct
@@ -7996,10 +7974,18 @@ operator|&
 name|ro6
 argument_list|,
 literal|0
+argument_list|,
+name|in6p
+condition|?
+name|in6p
+operator|->
+name|inp_inc
+operator|.
+name|inc_fibnum
+else|:
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 if|if
 condition|(
 name|ro6
@@ -11748,7 +11734,7 @@ return|;
 name|IN6_MULTI_LOCK
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -11915,7 +11901,7 @@ condition|)
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

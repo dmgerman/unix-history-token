@@ -192,16 +192,17 @@ begin_struct
 struct|struct
 name|cisco_header
 block|{
-name|u_char
+name|uint8_t
 name|address
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|control
 decl_stmt|;
-name|u_short
+name|uint16_t
 name|protocol
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -216,25 +217,26 @@ begin_struct
 struct|struct
 name|cisco_packet
 block|{
-name|u_long
+name|uint32_t
 name|type
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|par1
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|par2
 decl_stmt|;
-name|u_short
+name|uint16_t
 name|rel
 decl_stmt|;
-name|u_short
+name|uint16_t
 name|time0
 decl_stmt|;
-name|u_short
+name|uint16_t
 name|time1
 decl_stmt|;
 block|}
+name|__packed
 struct|;
 end_struct
 
@@ -253,7 +255,7 @@ name|hook_p
 name|hook
 decl_stmt|;
 comment|/* the hook for this proto */
-name|u_short
+name|uint16_t
 name|af
 decl_stmt|;
 comment|/* address family, -1 = downstream */
@@ -265,13 +267,13 @@ begin_struct
 struct|struct
 name|cisco_priv
 block|{
-name|u_long
+name|uint32_t
 name|local_seq
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|remote_seq
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|seqRetries
 decl_stmt|;
 comment|/* how many times we've been here throwing out 				 * the same sequence number without ack */
@@ -1134,7 +1136,7 @@ name|arg
 operator|+
 name|pos
 argument_list|,
-literal|"unacknowledged keepalives: %ld"
+literal|"unacknowledged keepalives: %d"
 argument_list|,
 name|sc
 operator|->
@@ -1507,14 +1509,13 @@ argument_list|)
 operator|)
 return|;
 comment|/* OK so it came from a protocol, heading out. Prepend general data 	   packet header. For now, IP,IPX only  */
-name|m
-operator|=
-name|NGI_M
+name|NGI_GET_M
 argument_list|(
 name|item
+argument_list|,
+name|m
 argument_list|)
 expr_stmt|;
-comment|/* still associated with item */
 name|M_PREPEND
 argument_list|(
 name|m
@@ -1538,6 +1539,13 @@ goto|goto
 name|out
 goto|;
 block|}
+name|NGI_M
+argument_list|(
+name|item
+argument_list|)
+operator|=
+name|m
+expr_stmt|;
 name|h
 operator|=
 name|mtod
@@ -2537,7 +2545,7 @@ name|struct
 name|timeval
 name|time
 decl_stmt|;
-name|u_long
+name|uint32_t
 name|t
 decl_stmt|;
 name|int
@@ -2692,7 +2700,7 @@ operator|=
 name|htons
 argument_list|(
 call|(
-name|u_short
+name|uint16_t
 call|)
 argument_list|(
 name|t
@@ -2708,7 +2716,7 @@ operator|=
 name|htons
 argument_list|(
 operator|(
-name|u_short
+name|uint16_t
 operator|)
 name|t
 argument_list|)

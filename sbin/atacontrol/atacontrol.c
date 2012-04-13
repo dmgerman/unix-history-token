@@ -2066,6 +2066,23 @@ name|array
 decl_stmt|;
 if|if
 condition|(
+name|feature_present
+argument_list|(
+literal|"ata_cam"
+argument_list|)
+condition|)
+block|{
+name|errx
+argument_list|(
+literal|1
+argument_list|,
+literal|"\nATA_CAM option is enabled in kernel.\n"
+literal|"Please use camcontrol instead."
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
 name|argc
 operator|<
 literal|2

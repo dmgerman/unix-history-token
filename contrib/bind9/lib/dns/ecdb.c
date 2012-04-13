@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (C) 2009-2011  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
+comment|/*  * Copyright (C) 2009-2012  Internet Systems Consortium, Inc. ("ISC")  *  * Permission to use, copy, modify, and/or distribute this software for any  * purpose with or without fee is hereby granted, provided that the above  * copyright notice and this permission notice appear in all copies.  *  * THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH  * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY  * AND FITNESS.  IN NO EVENT SHALL ISC BE LIABLE FOR ANY SPECIAL, DIRECT,  * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM  * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE  * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR  * PERFORMANCE OF THIS SOFTWARE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: ecdb.c,v 1.8 2011-01-14 00:51:43 tbox Exp $ */
+comment|/* $Id$ */
 end_comment
 
 begin_include
@@ -106,23 +106,6 @@ name|ecdbn
 parameter_list|)
 value|ISC_MAGIC_VALID(ecdbn, ECDBNODE_MAGIC)
 end_define
-
-begin_if
-if|#
-directive|if
-name|DNS_RDATASET_FIXED
-end_if
-
-begin_error
-error|#
-directive|error
-literal|"Fixed rdataset isn't supported in this implementation"
-end_error
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_comment
 comment|/*%  * The 'ephemeral' cache DB (ecdb) implementation.  An ecdb just provides  * temporary storage for ongoing name resolution with the common DB interfaces.  * It actually doesn't cache anything.  The implementation expects any stored  * data is released within a short period, and does not care about the  * scalability in terms of the number of nodes.  */
@@ -3136,10 +3119,27 @@ name|ISC_R_NOMORE
 operator|)
 return|;
 block|}
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
+name|raw
+operator|+=
+literal|2
+operator|+
+operator|(
+literal|4
+operator|*
+name|count
+operator|)
+expr_stmt|;
+else|#
+directive|else
 name|raw
 operator|+=
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * The privateuint4 field is the number of rdata beyond the cursor 	 * position, so we decrement the total count by one before storing 	 * it. 	 */
 name|count
 operator|--
@@ -3233,12 +3233,25 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
+name|raw
+operator|+=
+name|length
+operator|+
+literal|4
+expr_stmt|;
+else|#
+directive|else
 name|raw
 operator|+=
 name|length
 operator|+
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 name|rdataset
 operator|->
 name|private5
@@ -3310,10 +3323,21 @@ index|[
 literal|1
 index|]
 expr_stmt|;
+if|#
+directive|if
+name|DNS_RDATASET_FIXED
+name|raw
+operator|+=
+literal|4
+expr_stmt|;
+else|#
+directive|else
 name|raw
 operator|+=
 literal|2
 expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|rdataset

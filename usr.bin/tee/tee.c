@@ -145,6 +145,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|LIST
 modifier|*
 name|head
@@ -152,6 +153,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|add
 parameter_list|(
@@ -518,6 +520,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|add
 parameter_list|(

@@ -126,6 +126,14 @@ decl_stmt|;
 name|class
 name|LLVMContext
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 comment|/// Enum used to categorize the alignment types stored by TargetAlignElem
 enum|enum
 name|AlignTypeEnum
@@ -216,6 +224,12 @@ specifier|const
 expr_stmt|;
 block|}
 struct|;
+comment|/// TargetData - This class holds a parsed version of the target data layout
+comment|/// string in a module and provides methods for querying it.  The target data
+comment|/// layout string is specified *by the target* - a frontend generating LLVM IR
+comment|/// is required to generate the right target data for the target being codegen'd
+comment|/// to.  If some measure of portability is desired, an empty string may be
+comment|/// specified in the module.
 name|class
 name|TargetData
 range|:
@@ -240,6 +254,10 @@ name|unsigned
 name|PointerPrefAlign
 block|;
 comment|///< Pointer preferred alignment
+name|unsigned
+name|StackNaturalAlign
+block|;
+comment|///< Stack natural alignment
 name|SmallVector
 operator|<
 name|unsigned
@@ -299,7 +317,7 @@ argument|uint32_t bit_width
 argument_list|,
 argument|bool ABIAlign
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -307,7 +325,7 @@ comment|//! Internal helper method that returns requested alignment for type.
 name|unsigned
 name|getAlignment
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|bool abi_or_pref
 argument_list|)
@@ -541,6 +559,29 @@ name|Width
 argument_list|)
 return|;
 block|}
+comment|/// Returns true if the given alignment exceeds the natural stack alignment.
+name|bool
+name|exceedsNaturalStackAlignment
+argument_list|(
+name|unsigned
+name|Align
+argument_list|)
+decl|const
+block|{
+return|return
+operator|(
+name|StackNaturalAlign
+operator|!=
+literal|0
+operator|)
+operator|&&
+operator|(
+name|Align
+operator|>
+name|StackNaturalAlign
+operator|)
+return|;
+block|}
 comment|/// fitsInLegalInteger - This function returns true if the specified type fits
 comment|/// in a native integer type supported by the CPU.  For example, if the CPU
 comment|/// only supports i32 as a native integer type, then i27 fits in a legal
@@ -656,7 +697,6 @@ comment|/// specified type.  For example, returns 36 for i36 and 80 for x86_fp80
 name|uint64_t
 name|getTypeSizeInBits
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -669,7 +709,6 @@ comment|/// for i36 and 10 for x86_fp80.
 name|uint64_t
 name|getTypeStoreSize
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -695,7 +734,6 @@ comment|/// example, returns 40 for i36 and 80 for x86_fp80.
 name|uint64_t
 name|getTypeStoreSizeInBits
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -718,7 +756,6 @@ comment|/// x86_fp80, depending on alignment.
 name|uint64_t
 name|getTypeAllocSize
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -748,7 +785,6 @@ comment|/// For example, returns 96 or 128 for x86_fp80, depending on alignment.
 name|uint64_t
 name|getTypeAllocSizeInBits
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -769,7 +805,6 @@ comment|/// specified type.
 name|unsigned
 name|getABITypeAlignment
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -791,7 +826,6 @@ comment|/// for the specified type when it is part of a call frame.
 name|unsigned
 name|getCallFrameTypeAlignment
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -803,7 +837,6 @@ comment|/// the specified type.  This is always at least as good as the ABI alig
 name|unsigned
 name|getPrefTypeAlignment
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -816,7 +849,6 @@ comment|///
 name|unsigned
 name|getPreferredTypeAlignmentShift
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -842,19 +874,16 @@ comment|///
 name|uint64_t
 name|getIndexedOffset
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
 argument_list|,
+name|ArrayRef
+operator|<
 name|Value
 operator|*
-specifier|const
-operator|*
+operator|>
 name|Indices
-argument_list|,
-name|unsigned
-name|NumIndices
 argument_list|)
 decl|const
 decl_stmt|;
@@ -866,7 +895,6 @@ name|StructLayout
 modifier|*
 name|getStructLayout
 argument_list|(
-specifier|const
 name|StructType
 operator|*
 name|Ty
@@ -1090,7 +1118,6 @@ decl_stmt|;
 comment|// Only TargetData can create this class
 name|StructLayout
 argument_list|(
-specifier|const
 name|StructType
 operator|*
 name|ST

@@ -135,7 +135,7 @@ name|virtual
 name|void
 name|print
 argument_list|(
-argument|llvm::raw_ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 specifier|const
 block|;   }

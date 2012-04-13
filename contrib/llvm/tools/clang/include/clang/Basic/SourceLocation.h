@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/PointerLikeTypeTraits.h"
 end_include
 
@@ -89,12 +95,6 @@ name|llvm
 block|{
 name|class
 name|MemoryBuffer
-decl_stmt|;
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|StringRef
 decl_stmt|;
 name|template
 operator|<
@@ -128,8 +128,9 @@ comment|///
 name|class
 name|FileID
 block|{
-comment|/// ID - Opaque identifier, 0 is "invalid".
-name|unsigned
+comment|/// ID - Opaque identifier, 0 is "invalid".>0 is this module,<-1 is
+comment|/// something loaded from another module.
+name|int
 name|ID
 decl_stmt|;
 name|public
@@ -275,8 +276,8 @@ block|{
 return|return
 name|get
 argument_list|(
-operator|~
-literal|0U
+operator|-
+literal|1
 argument_list|)
 return|;
 block|}
@@ -286,7 +287,13 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|static_cast
+operator|<
+name|unsigned
+operator|>
+operator|(
 name|ID
+operator|)
 return|;
 block|}
 name|private
@@ -307,7 +314,7 @@ specifier|static
 name|FileID
 name|get
 parameter_list|(
-name|unsigned
+name|int
 name|V
 parameter_list|)
 block|{
@@ -324,7 +331,7 @@ return|return
 name|F
 return|;
 block|}
-name|unsigned
+name|int
 name|getOpaqueValue
 argument_list|()
 specifier|const
@@ -335,9 +342,21 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// SourceLocation - This is a carefully crafted 32-bit identifier that encodes
-comment|/// a full include stack, line and column number information for a position in
-comment|/// an input translation unit.
+comment|/// \brief Encodes a location in the source. The SourceManager can decode this
+comment|/// to get at the full include stack, line and column information.
+comment|///
+comment|/// Technically, a source location is simply an offset into the manager's view
+comment|/// of the input source, which is all input buffers (including macro
+comment|/// expansions) concatenated in an effectively arbitrary order. The manager
+comment|/// actually maintains two blocks of input buffers. One, starting at offset
+comment|/// 0 and growing upwards, contains all buffers from this module. The other,
+comment|/// starting at the highest possible offset and growing downwards, contains
+comment|/// buffers of loaded modules.
+comment|///
+comment|/// In addition, one bit of SourceLocation is used for quick access to the
+comment|/// information whether the location is in a file or a macro expansion.
+comment|///
+comment|/// It is important that this type remains small. It is currently 32 bits wide.
 name|class
 name|SourceLocation
 block|{
@@ -347,6 +366,14 @@ decl_stmt|;
 name|friend
 name|class
 name|SourceManager
+decl_stmt|;
+name|friend
+name|class
+name|ASTReader
+decl_stmt|;
+name|friend
+name|class
+name|ASTWriter
 decl_stmt|;
 enum|enum
 block|{
@@ -367,7 +394,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|{}
-comment|// 0 is an invalid FileID.
 name|bool
 name|isFileID
 argument_list|()
@@ -398,10 +424,11 @@ operator|!=
 literal|0
 return|;
 block|}
-comment|/// isValid - Return true if this is a valid SourceLocation object.  Invalid
-comment|/// SourceLocations are often used when events have no corresponding location
-comment|/// in the source (e.g. a diagnostic is required for a command line option).
+comment|/// \brief Return true if this is a valid SourceLocation object.
 comment|///
+comment|/// Invalid SourceLocations are often used when events have no corresponding
+comment|/// location in the source (e.g. a diagnostic is required for a command line
+comment|/// option).
 name|bool
 name|isValid
 argument_list|()
@@ -426,8 +453,7 @@ return|;
 block|}
 name|private
 label|:
-comment|/// getOffset - Return the index for SourceManager's SLocEntryTable table,
-comment|/// note that this is not an index *into* it though.
+comment|/// \brief Return the offset into the manager's global input view.
 name|unsigned
 name|getOffset
 argument_list|()
@@ -512,10 +538,10 @@ return|;
 block|}
 name|public
 label|:
-comment|/// getFileLocWithOffset - Return a source location with the specified offset
-comment|/// from this file SourceLocation.
+comment|/// \brief Return a source location with the specified offset from this
+comment|/// SourceLocation.
 name|SourceLocation
-name|getFileLocWithOffset
+name|getLocWithOffset
 argument_list|(
 name|int
 name|Offset
@@ -537,7 +563,7 @@ operator|)
 operator|==
 literal|0
 operator|&&
-literal|"invalid location"
+literal|"offset overflow"
 argument_list|)
 expr_stmt|;
 name|SourceLocation
@@ -642,8 +668,6 @@ block|}
 name|void
 name|print
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -1239,7 +1263,7 @@ argument_list|()
 specifier|const
 block|;
 name|FullSourceLoc
-name|getInstantiationLoc
+name|getExpansionLoc
 argument_list|()
 specifier|const
 block|;
@@ -1249,7 +1273,7 @@ argument_list|()
 specifier|const
 block|;
 name|unsigned
-name|getInstantiationLineNumber
+name|getExpansionLineNumber
 argument_list|(
 argument|bool *Invalid =
 literal|0
@@ -1257,7 +1281,7 @@ argument_list|)
 specifier|const
 block|;
 name|unsigned
-name|getInstantiationColumnNumber
+name|getExpansionColumnNumber
 argument_list|(
 argument|bool *Invalid =
 literal|0
@@ -1304,8 +1328,6 @@ specifier|const
 block|;
 comment|/// getBufferData - Return a StringRef to the source buffer data for the
 comment|/// specified FileID.
-name|llvm
-operator|::
 name|StringRef
 name|getBufferData
 argument_list|(
@@ -1508,8 +1530,8 @@ expr|}
 block|;
 comment|/// PresumedLoc - This class represents an unpacked "presumed" location which
 comment|/// can be presented to the user.  A 'presumed' location can be modified by
-comment|/// #line and GNU line marker directives and is always the instantiation point
-comment|/// of a normal location.
+comment|/// #line and GNU line marker directives and is always the expansion point of
+comment|/// a normal location.
 comment|///
 comment|/// You can get a PresumedLoc from a SourceLocation with SourceManager.
 name|class

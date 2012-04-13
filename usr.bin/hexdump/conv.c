@@ -145,7 +145,7 @@ name|pad
 decl_stmt|,
 name|width
 decl_stmt|;
-name|char
+name|u_char
 name|peekbuf
 index|[
 name|MB_LEN_MAX
@@ -330,7 +330,7 @@ operator|)
 operator|-
 literal|2
 operator|&&
-name|buf
+name|p
 operator|==
 name|peekbuf
 operator|)

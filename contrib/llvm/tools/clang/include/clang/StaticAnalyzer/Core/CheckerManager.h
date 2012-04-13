@@ -112,6 +112,9 @@ name|namespace
 name|ento
 block|{
 name|class
+name|CheckerBase
+decl_stmt|;
+name|class
 name|ExprEngine
 decl_stmt|;
 name|class
@@ -139,7 +142,7 @@ name|class
 name|ExplodedGraph
 decl_stmt|;
 name|class
-name|GRState
+name|ProgramState
 decl_stmt|;
 name|class
 name|EndOfFunctionNodeBuilder
@@ -244,13 +247,13 @@ name|Fn
 expr_stmt|;
 name|public
 label|:
-name|void
+name|CheckerBase
 modifier|*
 name|Checker
 decl_stmt|;
 name|CheckerFn
 argument_list|(
-argument|void *checker
+argument|CheckerBase *checker
 argument_list|,
 argument|Func fn
 argument_list|)
@@ -349,13 +352,13 @@ name|Fn
 expr_stmt|;
 name|public
 label|:
-name|void
+name|CheckerBase
 modifier|*
 name|Checker
 decl_stmt|;
 name|CheckerFn
 argument_list|(
-argument|void *checker
+argument|CheckerBase *checker
 argument_list|,
 argument|Func fn
 argument_list|)
@@ -454,7 +457,7 @@ label|:
 end_label
 
 begin_decl_stmt
-name|void
+name|CheckerBase
 modifier|*
 name|Checker
 decl_stmt|;
@@ -463,7 +466,7 @@ end_decl_stmt
 begin_macro
 name|CheckerFn
 argument_list|(
-argument|void *checker
+argument|CheckerBase *checker
 argument_list|,
 argument|Func fn
 argument_list|)
@@ -549,7 +552,7 @@ label|:
 end_label
 
 begin_decl_stmt
-name|void
+name|CheckerBase
 modifier|*
 name|Checker
 decl_stmt|;
@@ -558,7 +561,7 @@ end_decl_stmt
 begin_macro
 name|CheckerFn
 argument_list|(
-argument|void *checker
+argument|CheckerBase *checker
 argument_list|,
 argument|Func fn
 argument_list|)
@@ -632,7 +635,7 @@ label|:
 end_label
 
 begin_decl_stmt
-name|void
+name|CheckerBase
 modifier|*
 name|Checker
 decl_stmt|;
@@ -641,7 +644,7 @@ end_decl_stmt
 begin_macro
 name|CheckerFn
 argument_list|(
-argument|void *checker
+argument|CheckerBase *checker
 argument_list|,
 argument|Func fn
 argument_list|)
@@ -724,11 +727,12 @@ name|LangOpts
 return|;
 block|}
 typedef|typedef
-name|void
+name|CheckerBase
 modifier|*
 name|CheckerRef
 typedef|;
 typedef|typedef
+specifier|const
 name|void
 modifier|*
 name|CheckerTag
@@ -910,6 +914,26 @@ begin_comment
 comment|/// \brief Run checkers for pre-visiting Stmts.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The notification is performed for every explored CFGElement, which does
+end_comment
+
+begin_comment
+comment|/// not include the control flow statements such as IfStmt.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \sa runCheckersForBranchCondition, runCheckersForPostStmt
+end_comment
+
 begin_function
 name|void
 name|runCheckersForPreStmt
@@ -952,6 +976,26 @@ end_function
 
 begin_comment
 comment|/// \brief Run checkers for post-visiting Stmts.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// The notification is performed for every explored CFGElement, which does
+end_comment
+
+begin_comment
+comment|/// not include the control flow statements such as IfStmt.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \sa runCheckersForBranchCondition, runCheckersForPreStmt
 end_comment
 
 begin_function
@@ -1286,12 +1330,28 @@ begin_comment
 comment|/// \brief Run checkers for live symbols.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Allows modifying SymbolReaper object. For example, checkers can explicitly
+end_comment
+
+begin_comment
+comment|/// register symbols of interest as live. These symbols will not be marked
+end_comment
+
+begin_comment
+comment|/// dead and removed.
+end_comment
+
 begin_function_decl
 name|void
 name|runCheckersForLiveSymbols
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|,
@@ -1304,6 +1364,22 @@ end_function_decl
 
 begin_comment
 comment|/// \brief Run checkers for dead symbols.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Notifies checkers when symbols become dead. For example, this allows
+end_comment
+
+begin_comment
+comment|/// checkers to aggressively clean up/reduce the checker state and produce
+end_comment
+
+begin_comment
+comment|/// precise diagnostics.
 end_comment
 
 begin_function_decl
@@ -1344,7 +1420,7 @@ name|bool
 name|wantsRegionChangeUpdate
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|)
@@ -1355,14 +1431,46 @@ begin_comment
 comment|/// \brief Run checkers for region changes.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This corresponds to the check::RegionChanges callback.
+end_comment
+
+begin_comment
+comment|/// \param state The current program state.
+end_comment
+
+begin_comment
+comment|/// \param invalidated A set of all symbols potentially touched by the change.
+end_comment
+
+begin_comment
+comment|/// \param ExplicitRegions The regions explicitly requested for invalidation.
+end_comment
+
+begin_comment
+comment|///   For example, in the case of a function call, these would be arguments.
+end_comment
+
+begin_comment
+comment|/// \param Regions The transitive closure of accessible regions,
+end_comment
+
+begin_comment
+comment|///   i.e. all regions that may have been touched by this change.
+end_comment
+
 begin_decl_stmt
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|runCheckersForRegionChanges
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -1373,19 +1481,21 @@ name|InvalidatedSymbols
 operator|*
 name|invalidated
 argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
 name|MemRegion
 operator|*
-specifier|const
-operator|*
-name|Begin
+operator|>
+name|ExplicitRegions
 argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
 name|MemRegion
 operator|*
-specifier|const
-operator|*
-name|End
+operator|>
+name|Regions
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -1396,12 +1506,12 @@ end_comment
 
 begin_function_decl
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|runCheckersForEvalAssume
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|,
@@ -1469,6 +1579,64 @@ parameter_list|,
 name|BugReporter
 modifier|&
 name|BR
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Run checkers for debug-printing a ProgramState.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Unlike most other callbacks, any checker can simply implement the virtual
+end_comment
+
+begin_comment
+comment|/// method CheckerBase::printState if it has custom data to print.
+end_comment
+
+begin_comment
+comment|/// \param Out The output stream
+end_comment
+
+begin_comment
+comment|/// \param State The state being printed
+end_comment
+
+begin_comment
+comment|/// \param NL The preferred representation of a newline.
+end_comment
+
+begin_comment
+comment|/// \param Sep The preferred separator between different kinds of data.
+end_comment
+
+begin_function_decl
+name|void
+name|runCheckersForPrintState
+parameter_list|(
+name|raw_ostream
+modifier|&
+name|Out
+parameter_list|,
+specifier|const
+name|ProgramState
+modifier|*
+name|State
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|NL
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|Sep
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1611,6 +1779,8 @@ argument|const SVal&location
 argument_list|,
 argument|bool isLoad
 argument_list|,
+argument|const Stmt *S
+argument_list|,
 argument|CheckerContext&
 argument_list|)
 operator|>
@@ -1633,6 +1803,11 @@ specifier|const
 name|SVal
 operator|&
 name|val
+argument_list|,
+specifier|const
+name|Stmt
+operator|*
+name|S
 argument_list|,
 name|CheckerContext
 operator|&
@@ -1724,7 +1899,7 @@ operator|<
 name|void
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 argument_list|,
 name|SymbolReaper
@@ -1740,11 +1915,11 @@ typedef|typedef
 name|CheckerFn
 operator|<
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 operator|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 operator|,
 specifier|const
@@ -1754,19 +1929,21 @@ name|InvalidatedSymbols
 operator|*
 name|symbols
 operator|,
+name|ArrayRef
+operator|<
 specifier|const
 name|MemRegion
 operator|*
-specifier|const
-operator|*
-name|begin
+operator|>
+name|ExplicitRegions
 operator|,
+name|ArrayRef
+operator|<
 specifier|const
 name|MemRegion
 operator|*
-specifier|const
-operator|*
-name|end
+operator|>
+name|Regions
 operator|)
 operator|>
 name|CheckRegionChangesFunc
@@ -1780,7 +1957,7 @@ operator|<
 name|bool
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 argument_list|)
 operator|>
@@ -1793,11 +1970,11 @@ typedef|typedef
 name|CheckerFn
 operator|<
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 operator|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 operator|,
 specifier|const
@@ -1828,6 +2005,33 @@ operator|&
 argument_list|)
 operator|>
 name|EvalCallFunc
+expr_stmt|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|CheckerFn
+operator|<
+name|bool
+argument_list|(
+specifier|const
+name|CallExpr
+operator|*
+argument_list|,
+name|ExprEngine
+operator|&
+name|Eng
+argument_list|,
+name|ExplodedNode
+operator|*
+name|Pred
+argument_list|,
+name|ExplodedNodeSet
+operator|&
+name|Dst
+argument_list|)
+operator|>
+name|InlineCallFunc
 expr_stmt|;
 end_typedef
 
@@ -2012,6 +2216,16 @@ name|void
 name|_registerForEvalCall
 parameter_list|(
 name|EvalCallFunc
+name|checkfn
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|_registerForInlineCall
+parameter_list|(
+name|InlineCallFunc
 name|checkfn
 parameter_list|)
 function_decl|;
@@ -2335,8 +2549,6 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CheckDeclFunc
@@ -2527,8 +2739,6 @@ end_expr_stmt
 
 begin_typedef
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CheckStmtFunc
@@ -2726,6 +2936,17 @@ name|std
 operator|::
 name|vector
 operator|<
+name|InlineCallFunc
+operator|>
+name|InlineCallCheckers
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|std
+operator|::
+name|vector
+operator|<
 name|CheckEndOfTranslationUnit
 operator|>
 name|EndOfTranslationUnitCheckers
@@ -2736,8 +2957,6 @@ begin_struct
 struct|struct
 name|EventInfo
 block|{
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CheckEventFunc

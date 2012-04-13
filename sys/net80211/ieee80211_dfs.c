@@ -129,6 +129,7 @@ file|<net80211/ieee80211_var.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_80211_DFS
@@ -224,6 +225,76 @@ name|CAC_TIMEOUT
 value|msecs_to_ticks(ieee80211_cac_timeout*1000)
 end_define
 
+begin_comment
+comment|/*  DFS* In order to facilitate  debugging, a couple of operating  * modes aside from the default are needed.  *  * 0 - default CAC/NOL behaviour - ie, start CAC, place  *     channel on NOL list.  * 1 - send CAC, but don't change channel or add the channel  *     to the NOL list.  * 2 - just match on radar, don't send CAC or place channel in  *     the NOL list.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|ieee80211_dfs_debug
+init|=
+name|DFS_DBG_NONE
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * This option must not be included in the default kernel  * as it allows users to plainly disable CAC/NOL handling.  */
+end_comment
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_DFS_DEBUG
+end_ifdef
+
+begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_net_wlan
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|dfs_debug
+argument_list|,
+name|CTLFLAG_RW
+argument_list|,
+operator|&
+name|ieee80211_dfs_debug
+argument_list|,
+literal|0
+argument_list|,
+literal|"DFS debug behaviour"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_function
+specifier|static
+name|int
+name|null_set_quiet
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+name|ni
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|quiet_elm
+parameter_list|)
+block|{
+return|return
+name|ENOSYS
+return|;
+block|}
+end_function
+
 begin_function
 name|void
 name|ieee80211_dfs_attach
@@ -273,6 +344,12 @@ argument_list|)
 argument_list|,
 literal|0
 argument_list|)
+expr_stmt|;
+name|ic
+operator|->
+name|ic_set_quiet
+operator|=
+name|null_set_quiet
 expr_stmt|;
 block|}
 end_function
@@ -1143,7 +1220,43 @@ argument_list|(
 name|ic
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Mark all entries with this frequency.  Notify user 	 * space and arrange for notification when the radar 	 * indication is cleared.  Then kick the NOL processing 	 * thread if not already running. 	 */
+comment|/* 	 * If doing DFS debugging (mode 2), don't bother 	 * running the rest of this function. 	 * 	 * Simply announce the presence of the radar and continue 	 * along merrily. 	 */
+if|if
+condition|(
+name|ieee80211_dfs_debug
+operator|==
+name|DFS_DBG_NOCSANOL
+condition|)
+block|{
+name|announce_radar
+argument_list|(
+name|ic
+operator|->
+name|ic_ifp
+argument_list|,
+name|chan
+argument_list|,
+name|chan
+argument_list|)
+expr_stmt|;
+name|ieee80211_notify_radar
+argument_list|(
+name|ic
+argument_list|,
+name|chan
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+comment|/* 	 * Don't mark the channel and don't put it into NOL 	 * if we're doing DFS debugging. 	 */
+if|if
+condition|(
+name|ieee80211_dfs_debug
+operator|==
+name|DFS_DBG_NONE
+condition|)
+block|{
+comment|/* 		 * Mark all entries with this frequency.  Notify user 		 * space and arrange for notification when the radar 		 * indication is cleared.  Then kick the NOL processing 		 * thread if not already running. 		 */
 name|now
 operator|=
 name|ticks
@@ -1250,6 +1363,7 @@ argument_list|,
 name|ic
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * If radar is detected on the bss channel while 	 * doing CAC; force a state change by scheduling the 	 * callout to be dispatched asap.  Otherwise, if this 	 * event is for the bss channel then we must quiet 	 * traffic and schedule a channel switch. 	 * 	 * Note this allows us to receive notification about 	 * channels other than the bss channel; not sure 	 * that can/will happen but it's simple to support. 	 */
 if|if
 condition|(
@@ -1261,6 +1375,13 @@ name|ic_bsschan
 condition|)
 block|{
 comment|/* XXX need a way to defer to user app */
+comment|/* 		 * Don't flip over to a new channel if 		 * we are currently doing DFS debugging. 		 */
+if|if
+condition|(
+name|ieee80211_dfs_debug
+operator|==
+name|DFS_DBG_NONE
+condition|)
 name|dfs
 operator|->
 name|newchan
@@ -1269,6 +1390,13 @@ name|ieee80211_dfs_pickchannel
 argument_list|(
 name|ic
 argument_list|)
+expr_stmt|;
+else|else
+name|dfs
+operator|->
+name|newchan
+operator|=
+name|chan
 expr_stmt|;
 name|announce_radar
 argument_list|(

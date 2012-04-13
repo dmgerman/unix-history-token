@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Driver/Types.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Driver/Util.h"
 end_include
 
@@ -109,9 +115,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|raw_ostream
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -134,7 +137,13 @@ name|class
 name|Action
 decl_stmt|;
 name|class
+name|Arg
+decl_stmt|;
+name|class
 name|ArgList
+decl_stmt|;
+name|class
+name|Command
 decl_stmt|;
 name|class
 name|Compilation
@@ -169,7 +178,7 @@ name|OptTable
 modifier|*
 name|Opts
 decl_stmt|;
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|Diags
 decl_stmt|;
@@ -232,8 +241,6 @@ comment|/// functionality.
 comment|/// FIXME: This type of customization should be removed in favor of the
 comment|/// universal driver when it is ready.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -312,6 +319,27 @@ name|char
 modifier|*
 name|CCLogDiagnosticsFilename
 decl_stmt|;
+comment|/// A list of inputs and their types for the given arguments.
+typedef|typedef
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|types
+operator|::
+name|ID
+operator|,
+specifier|const
+name|Arg
+operator|*
+operator|>
+operator|,
+literal|16
+operator|>
+name|InputList
+expr_stmt|;
 comment|/// Whether the driver should follow g++ like behavior.
 name|unsigned
 name|CCCIsCXX
@@ -355,6 +383,12 @@ comment|/// to CCLogDiagnosticsFilename or to stderr, in a stable machine readab
 comment|/// format.
 name|unsigned
 name|CCLogDiagnostics
+range|:
+literal|1
+decl_stmt|;
+comment|/// Whether the driver is generating diagnostics for debugging purposes.
+name|unsigned
+name|CCGenDiagnostics
 range|:
 literal|1
 decl_stmt|;
@@ -457,21 +491,33 @@ name|Args
 argument_list|)
 decl|const
 decl_stmt|;
+comment|// getFinalPhase - Determine which compilation mode we are in and record
+comment|// which option we used to determine the final phase.
+name|phases
+operator|::
+name|ID
+name|getFinalPhase
+argument_list|(
+argument|const DerivedArgList&DAL
+argument_list|,
+argument|Arg **FinalPhaseArg =
+literal|0
+argument_list|)
+specifier|const
+expr_stmt|;
 name|public
 label|:
 name|Driver
 argument_list|(
-argument|llvm::StringRef _ClangExecutable
+argument|StringRef _ClangExecutable
 argument_list|,
-argument|llvm::StringRef _DefaultHostTriple
+argument|StringRef _DefaultHostTriple
 argument_list|,
-argument|llvm::StringRef _DefaultImageName
+argument|StringRef _DefaultImageName
 argument_list|,
 argument|bool IsProduction
 argument_list|,
-argument|bool CXXIsProduction
-argument_list|,
-argument|Diagnostic&_Diags
+argument|DiagnosticsEngine&_Diags
 argument_list|)
 empty_stmt|;
 operator|~
@@ -507,7 +553,7 @@ name|Opts
 return|;
 block|}
 specifier|const
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|getDiags
 argument_list|()
@@ -610,12 +656,10 @@ return|;
 block|}
 name|void
 name|setInstalledDir
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Value
-argument_list|)
+parameter_list|)
 block|{
 name|InstalledDir
 operator|=
@@ -636,8 +680,6 @@ name|Compilation
 modifier|*
 name|BuildCompilation
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 specifier|const
@@ -655,8 +697,6 @@ name|InputArgList
 modifier|*
 name|ParseArgStrings
 argument_list|(
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 specifier|const
@@ -665,6 +705,32 @@ operator|*
 operator|>
 name|Args
 argument_list|)
+decl_stmt|;
+comment|/// BuildInputs - Construct the list of inputs and their types from
+comment|/// the given arguments.
+comment|///
+comment|/// \param TC - The default host tool chain.
+comment|/// \param Args - The input arguments.
+comment|/// \param Inputs - The list to store the resulting compilation
+comment|/// inputs onto.
+name|void
+name|BuildInputs
+argument_list|(
+specifier|const
+name|ToolChain
+operator|&
+name|TC
+argument_list|,
+specifier|const
+name|DerivedArgList
+operator|&
+name|Args
+argument_list|,
+name|InputList
+operator|&
+name|Inputs
+argument_list|)
+decl|const
 decl_stmt|;
 comment|/// BuildActions - Construct the list of actions to perform for the
 comment|/// given arguments, which are only done for a single architecture.
@@ -684,6 +750,11 @@ specifier|const
 name|DerivedArgList
 operator|&
 name|Args
+argument_list|,
+specifier|const
+name|InputList
+operator|&
+name|Inputs
 argument_list|,
 name|ActionList
 operator|&
@@ -709,6 +780,11 @@ specifier|const
 name|DerivedArgList
 operator|&
 name|Args
+argument_list|,
+specifier|const
+name|InputList
+operator|&
+name|BAInputs
 argument_list|,
 name|ActionList
 operator|&
@@ -742,9 +818,31 @@ specifier|const
 name|Compilation
 operator|&
 name|C
+argument_list|,
+specifier|const
+name|Command
+operator|*
+operator|&
+name|FailingCommand
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// generateCompilationDiagnostics - Generate diagnostics information
+comment|/// including preprocessed source file(s).
+comment|///
+name|void
+name|generateCompilationDiagnostics
+parameter_list|(
+name|Compilation
+modifier|&
+name|C
+parameter_list|,
+specifier|const
+name|Command
+modifier|*
+name|FailingCommand
+parameter_list|)
+function_decl|;
 comment|/// @}
 comment|/// @name Helper Methods
 comment|/// @{
@@ -790,8 +888,6 @@ name|Compilation
 operator|&
 name|C
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -946,8 +1042,8 @@ name|AtTopLevel
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// GetTemporaryPath - Return the pathname of a temporary file to
-comment|/// use as part of compilation; the file will have the given suffix.
+comment|/// GetTemporaryPath - Return the pathname of a temporary file to use
+comment|/// as part of compilation; the file will have the given prefix and suffix.
 comment|///
 comment|/// GCC goes to extra lengths here to be a bit more robust.
 name|std
@@ -955,6 +1051,8 @@ operator|::
 name|string
 name|GetTemporaryPath
 argument_list|(
+argument|StringRef Prefix
+argument_list|,
 argument|const char *Suffix
 argument_list|)
 specifier|const

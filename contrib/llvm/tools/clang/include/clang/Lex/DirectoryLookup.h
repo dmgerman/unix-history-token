@@ -62,26 +62,14 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/Basic/SourceManager.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|StringRef
-decl_stmt|;
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"clang/Basic/SourceManager.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -161,6 +149,12 @@ name|LookupType
 range|:
 literal|2
 decl_stmt|;
+comment|/// \brief Whether this is a header map used when building a framework.
+name|unsigned
+name|IsIndexHeaderMap
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 comment|/// DirectoryLookup ctor - Note that this ctor *does not take ownership* of
@@ -188,7 +182,16 @@ argument_list|)
 operator|,
 name|LookupType
 argument_list|(
-argument|isFramework ? LT_Framework : LT_NormalDir
+name|isFramework
+condition|?
+name|LT_Framework
+else|:
+name|LT_NormalDir
+argument_list|)
+operator|,
+name|IsIndexHeaderMap
+argument_list|(
+argument|false
 argument_list|)
 block|{
 name|u
@@ -206,6 +209,8 @@ argument_list|,
 argument|SrcMgr::CharacteristicKind DT
 argument_list|,
 argument|bool isUser
+argument_list|,
+argument|bool isIndexHeaderMap
 argument_list|)
 operator|:
 name|DirCharacteristic
@@ -220,7 +225,12 @@ argument_list|)
 operator|,
 name|LookupType
 argument_list|(
-argument|LT_HeaderMap
+name|LT_HeaderMap
+argument_list|)
+operator|,
+name|IsIndexHeaderMap
+argument_list|(
+argument|isIndexHeaderMap
 argument_list|)
 block|{
 name|u
@@ -381,6 +391,19 @@ return|return
 name|UserSupplied
 return|;
 block|}
+comment|/// \brief Whether this header map is building a framework or not.
+name|bool
+name|isIndexHeaderMap
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isHeaderMap
+argument_list|()
+operator|&&
+name|IsIndexHeaderMap
+return|;
+block|}
 comment|/// LookupFile - Lookup the specified file in this search path, returning it
 comment|/// if it exists or returning null if not.
 comment|///
@@ -394,13 +417,17 @@ comment|///
 comment|/// \param RelativePath If not NULL, will be set to the path relative to
 comment|/// SearchPath at which the file was found. This only differs from the
 comment|/// Filename for framework includes.
+comment|///
+comment|/// \param BuildingModule The name of the module we're currently building.
+comment|///
+comment|/// \param SuggestedModule If non-null, and the file found is semantically
+comment|/// part of a known module, this will be set to the name of the module that
+comment|/// could be imported instead of preprocessing/parsing the file found.
 specifier|const
 name|FileEntry
 modifier|*
 name|LookupFile
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Filename
 argument_list|,
@@ -408,8 +435,6 @@ name|HeaderSearch
 operator|&
 name|HS
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -417,14 +442,19 @@ operator|>
 operator|*
 name|SearchPath
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|StringRef
+name|BuildingModule
+argument_list|,
+name|StringRef
+operator|*
+name|SuggestedModule
 argument_list|)
 decl|const
 decl_stmt|;
@@ -435,8 +465,6 @@ name|FileEntry
 modifier|*
 name|DoFrameworkLookup
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Filename
 argument_list|,
@@ -444,8 +472,6 @@ name|HeaderSearch
 operator|&
 name|HS
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -453,14 +479,19 @@ operator|>
 operator|*
 name|SearchPath
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|StringRef
+name|BuildingModule
+argument_list|,
+name|StringRef
+operator|*
+name|SuggestedModule
 argument_list|)
 decl|const
 decl_stmt|;

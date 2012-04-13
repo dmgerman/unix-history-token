@@ -1025,6 +1025,7 @@ value|VNET(flowtable_ready)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet
@@ -1733,7 +1734,7 @@ end_ifndef
 begin_function
 specifier|static
 name|void
-name|in_rtalloc_ign_wrapper
+name|rtalloc_ign_wrapper
 parameter_list|(
 name|struct
 name|route
@@ -6281,6 +6282,10 @@ operator|!=
 name|NULL
 operator|)
 operator|&&
+name|lle
+operator|!=
+name|NULL
+operator|&&
 name|fle
 operator|->
 name|f_fhash
@@ -6324,6 +6329,14 @@ operator|->
 name|rt_ifp
 operator|!=
 name|NULL
+operator|)
+operator|&&
+operator|(
+name|lle
+operator|->
+name|la_flags
+operator|&
+name|LLE_VALID
 operator|)
 condition|)
 block|{
@@ -6905,7 +6918,7 @@ name|ft
 operator|->
 name|ft_rtalloc
 operator|=
-name|in_rtalloc_ign_wrapper
+name|rtalloc_ign_wrapper
 expr_stmt|;
 endif|#
 directive|endif

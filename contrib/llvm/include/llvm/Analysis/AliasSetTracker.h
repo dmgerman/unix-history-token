@@ -544,7 +544,7 @@ comment|// Doubly linked list of AliasSets.
 end_comment
 
 begin_comment
-comment|// All calls& invokes in this alias set.
+comment|// All instructions without a specific address in this alias set.
 end_comment
 
 begin_expr_stmt
@@ -557,7 +557,7 @@ operator|<
 name|Instruction
 operator|>
 expr|>
-name|CallSites
+name|UnknownInsts
 expr_stmt|;
 end_expr_stmt
 
@@ -722,8 +722,9 @@ block|}
 end_function
 
 begin_decl_stmt
-name|CallSite
-name|getCallSite
+name|Instruction
+modifier|*
+name|getUnknownInst
 argument_list|(
 name|unsigned
 name|i
@@ -734,20 +735,17 @@ name|assert
 argument_list|(
 name|i
 operator|<
-name|CallSites
+name|UnknownInsts
 operator|.
 name|size
 argument_list|()
 argument_list|)
 expr_stmt|;
 return|return
-name|CallSite
-argument_list|(
-name|CallSites
+name|UnknownInsts
 index|[
 name|i
 index|]
-argument_list|)
 return|;
 block|}
 end_decl_stmt
@@ -1425,10 +1423,11 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|addCallSite
+name|addUnknownInst
 parameter_list|(
-name|CallSite
-name|CS
+name|Instruction
+modifier|*
+name|I
 parameter_list|,
 name|AliasAnalysis
 modifier|&
@@ -1439,10 +1438,11 @@ end_function_decl
 
 begin_function
 name|void
-name|removeCallSite
+name|removeUnknownInst
 parameter_list|(
-name|CallSite
-name|CS
+name|Instruction
+modifier|*
+name|I
 parameter_list|)
 block|{
 for|for
@@ -1454,7 +1454,7 @@ literal|0
 init|,
 name|e
 init|=
-name|CallSites
+name|UnknownInsts
 operator|.
 name|size
 argument_list|()
@@ -1468,28 +1468,25 @@ name|i
 control|)
 if|if
 condition|(
-name|CallSites
+name|UnknownInsts
 index|[
 name|i
 index|]
 operator|==
-name|CS
-operator|.
-name|getInstruction
-argument_list|()
+name|I
 condition|)
 block|{
-name|CallSites
+name|UnknownInsts
 index|[
 name|i
 index|]
 operator|=
-name|CallSites
+name|UnknownInsts
 operator|.
 name|back
 argument_list|()
 expr_stmt|;
-name|CallSites
+name|UnknownInsts
 operator|.
 name|pop_back
 argument_list|()
@@ -1556,10 +1553,11 @@ end_decl_stmt
 
 begin_decl_stmt
 name|bool
-name|aliasesCallSite
+name|aliasesUnknownInst
 argument_list|(
-name|CallSite
-name|CS
+name|Instruction
+operator|*
+name|Inst
 argument_list|,
 name|AliasAnalysis
 operator|&
@@ -1771,50 +1769,6 @@ function_decl|;
 name|bool
 name|add
 parameter_list|(
-name|CallSite
-name|CS
-parameter_list|)
-function_decl|;
-comment|// Call/Invoke instructions
-name|bool
-name|add
-parameter_list|(
-name|CallInst
-modifier|*
-name|CI
-parameter_list|)
-block|{
-return|return
-name|add
-argument_list|(
-name|CallSite
-argument_list|(
-name|CI
-argument_list|)
-argument_list|)
-return|;
-block|}
-name|bool
-name|add
-parameter_list|(
-name|InvokeInst
-modifier|*
-name|II
-parameter_list|)
-block|{
-return|return
-name|add
-argument_list|(
-name|CallSite
-argument_list|(
-name|II
-argument_list|)
-argument_list|)
-return|;
-block|}
-name|bool
-name|add
-parameter_list|(
 name|Instruction
 modifier|*
 name|I
@@ -1840,6 +1794,14 @@ name|AST
 parameter_list|)
 function_decl|;
 comment|// Add alias relations from another AST
+name|bool
+name|addUnknown
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
+parameter_list|)
+function_decl|;
 comment|/// remove methods - These methods are used to remove all entries that might
 comment|/// be aliased by the specified instruction.  These methods return true if any
 comment|/// alias sets were eliminated.
@@ -1887,49 +1849,6 @@ function_decl|;
 name|bool
 name|remove
 parameter_list|(
-name|CallSite
-name|CS
-parameter_list|)
-function_decl|;
-name|bool
-name|remove
-parameter_list|(
-name|CallInst
-modifier|*
-name|CI
-parameter_list|)
-block|{
-return|return
-name|remove
-argument_list|(
-name|CallSite
-argument_list|(
-name|CI
-argument_list|)
-argument_list|)
-return|;
-block|}
-name|bool
-name|remove
-parameter_list|(
-name|InvokeInst
-modifier|*
-name|II
-parameter_list|)
-block|{
-return|return
-name|remove
-argument_list|(
-name|CallSite
-argument_list|(
-name|II
-argument_list|)
-argument_list|)
-return|;
-block|}
-name|bool
-name|remove
-parameter_list|(
 name|Instruction
 modifier|*
 name|I
@@ -1941,6 +1860,14 @@ parameter_list|(
 name|AliasSet
 modifier|&
 name|AS
+parameter_list|)
+function_decl|;
+name|bool
+name|removeUnknown
+parameter_list|(
+name|Instruction
+modifier|*
+name|I
 parameter_list|)
 function_decl|;
 name|void
@@ -2309,10 +2236,11 @@ end_function_decl
 begin_function_decl
 name|AliasSet
 modifier|*
-name|findAliasSetForCallSite
+name|findAliasSetForUnknownInst
 parameter_list|(
-name|CallSite
-name|CS
+name|Instruction
+modifier|*
+name|Inst
 parameter_list|)
 function_decl|;
 end_function_decl

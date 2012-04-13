@@ -175,6 +175,7 @@ comment|/* Default num lines per file. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|bytecnt
 decl_stmt|;
@@ -185,6 +186,7 @@ comment|/* Byte count to split on. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|chunks
 init|=
@@ -197,6 +199,7 @@ comment|/* Chunks count to split into. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|long
 name|numlines
 decl_stmt|;
@@ -207,6 +210,7 @@ comment|/* Line count to split on. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|file_open
 decl_stmt|;
@@ -217,6 +221,7 @@ comment|/* If a file open. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|ifd
 init|=
@@ -235,6 +240,7 @@ comment|/* Input/output file descriptors. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|bfr
 index|[
@@ -248,6 +254,7 @@ comment|/* I/O buffer. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|fname
 index|[
@@ -261,18 +268,21 @@ comment|/* File name prefix. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|regex_t
 name|rgx
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|long
 name|sufflen
 init|=
@@ -1676,10 +1686,6 @@ name|long
 name|fnum
 decl_stmt|;
 specifier|static
-name|int
-name|defname
-decl_stmt|;
-specifier|static
 name|char
 modifier|*
 name|fpnt
@@ -1715,10 +1721,6 @@ name|fname
 operator|+
 literal|1
 expr_stmt|;
-name|defname
-operator|=
-literal|1
-expr_stmt|;
 block|}
 else|else
 block|{
@@ -1730,10 +1732,6 @@ name|strlen
 argument_list|(
 name|fname
 argument_list|)
-expr_stmt|;
-name|defname
-operator|=
-literal|0
 expr_stmt|;
 block|}
 name|ofd

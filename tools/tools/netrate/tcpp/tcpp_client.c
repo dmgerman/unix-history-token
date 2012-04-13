@@ -292,7 +292,7 @@ name|fd
 decl_stmt|,
 name|i
 decl_stmt|;
-comment|/* 	 * Spread load over available IPs, roating through them as we go.  No 	 * attempt to localize IPs to particular workers. 	 */
+comment|/* 	 * Spread load over available IPs, rotating through them as we go.  No 	 * attempt to localize IPs to particular workers. 	 */
 name|sin
 operator|=
 name|localipbase

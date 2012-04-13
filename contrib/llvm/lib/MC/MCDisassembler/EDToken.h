@@ -310,6 +310,7 @@ operator|&
 name|str
 argument_list|,
 specifier|const
+name|signed
 name|char
 operator|*
 name|operandOrder

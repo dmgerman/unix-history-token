@@ -158,7 +158,7 @@ argument_list|)
 block|;
 name|User
 argument_list|(
-argument|const Type *ty
+argument|Type *ty
 argument_list|,
 argument|unsigned vty
 argument_list|,

@@ -64,7 +64,7 @@ begin_define
 define|#
 directive|define
 name|NFPI
-value|4
+value|2
 end_define
 
 begin_comment
@@ -135,6 +135,17 @@ end_decl_stmt
 
 begin_comment
 comment|/* enable soft updates for file system */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|jflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* enable soft updates journaling for filesys */
 end_comment
 
 begin_decl_stmt

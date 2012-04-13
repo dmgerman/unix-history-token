@@ -1545,7 +1545,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"set(%ld, %.*s) = "
+literal|"set(%u, %.*s) = "
 argument_list|,
 name|uid
 argument_list|,
@@ -1641,7 +1641,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"encrypt(%ld, %s, %08x%08x) = "
+literal|"encrypt(%u, %s, %08x%08x) = "
 argument_list|,
 name|uid
 argument_list|,
@@ -1820,7 +1820,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"decrypt(%ld, %s, %08x%08x) = "
+literal|"decrypt(%u, %s, %08x%08x) = "
 argument_list|,
 name|uid
 argument_list|,
@@ -2115,7 +2115,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"net_get(%ld) = "
+literal|"net_get(%u) = "
 argument_list|,
 name|uid
 argument_list|)
@@ -2272,7 +2272,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"get_conv(%ld, %.*s) = "
+literal|"get_conv(%u, %.*s) = "
 argument_list|,
 name|uid
 argument_list|,
@@ -2281,7 +2281,7 @@ name|int
 operator|)
 sizeof|sizeof
 argument_list|(
-name|arg
+name|keybuf
 argument_list|)
 argument_list|,
 name|arg
@@ -2417,7 +2417,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"encrypt(%ld, %s, %08x%08x) = "
+literal|"encrypt(%u, %s, %08x%08x) = "
 argument_list|,
 name|uid
 argument_list|,
@@ -2591,7 +2591,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"decrypt(%ld, %s, %08x%08x) = "
+literal|"decrypt(%u, %s, %08x%08x) = "
 argument_list|,
 name|uid
 argument_list|,
@@ -3867,7 +3867,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"local_uid  %ld\n"
+literal|"local_uid  %u\n"
 argument_list|,
 name|uid
 argument_list|)
@@ -3933,7 +3933,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"local_uid  %ld mismatches auth %ld\n"
+literal|"local_uid  %u mismatches auth %u\n"
 argument_list|,
 name|uid
 argument_list|,

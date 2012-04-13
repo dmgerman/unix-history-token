@@ -267,9 +267,7 @@ name|ID
 block|;
 name|explicit
 name|LPPassManager
-argument_list|(
-argument|int Depth
-argument_list|)
+argument_list|()
 block|;
 comment|/// run - Execute all of the passes scheduled for execution.  Keep track of
 comment|/// whether any of the passes modifies the module, and if so, return true.

@@ -192,7 +192,6 @@ block|;
 comment|// DO NOT IMPLEMENT
 name|ConstantInt
 argument_list|(
-specifier|const
 name|IntegerType
 operator|*
 name|Ty
@@ -256,7 +255,6 @@ name|Constant
 operator|*
 name|getTrue
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -267,7 +265,6 @@ name|Constant
 operator|*
 name|getFalse
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -280,7 +277,7 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|uint64_t V
 argument_list|,
@@ -298,7 +295,7 @@ name|ConstantInt
 operator|*
 name|get
 argument_list|(
-argument|const IntegerType *Ty
+argument|IntegerType *Ty
 argument_list|,
 argument|uint64_t V
 argument_list|,
@@ -315,7 +312,7 @@ name|ConstantInt
 operator|*
 name|getSigned
 argument_list|(
-argument|const IntegerType *Ty
+argument|IntegerType *Ty
 argument_list|,
 argument|int64_t V
 argument_list|)
@@ -325,7 +322,7 @@ name|Constant
 operator|*
 name|getSigned
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|int64_t V
 argument_list|)
@@ -354,7 +351,7 @@ name|ConstantInt
 operator|*
 name|get
 argument_list|(
-argument|const IntegerType *Ty
+argument|IntegerType *Ty
 argument_list|,
 argument|StringRef Str
 argument_list|,
@@ -368,7 +365,6 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -464,7 +460,6 @@ comment|/// getType - Specialize the getType() method to always return an Intege
 comment|/// which reduces the amount of casting needed in parts of the compiler.
 comment|///
 specifier|inline
-specifier|const
 name|IntegerType
 operator|*
 name|getType
@@ -474,7 +469,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|IntegerType
 operator|*
 operator|>
@@ -499,7 +493,7 @@ specifier|static
 name|bool
 name|isValueValidForType
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|uint64_t V
 argument_list|)
@@ -508,7 +502,7 @@ specifier|static
 name|bool
 name|isValueValidForType
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|int64_t V
 argument_list|)
@@ -559,7 +553,7 @@ comment|/// to true.
 comment|/// @returns true iff this constant's bits are all set to true.
 comment|/// @brief Determine if the value is all ones.
 name|bool
-name|isAllOnesValue
+name|isMinusOne
 argument_list|()
 specifier|const
 block|{
@@ -640,6 +634,7 @@ name|uge
 argument_list|(
 argument|uint64_t Num
 argument_list|)
+specifier|const
 block|{
 return|return
 name|Val
@@ -749,7 +744,6 @@ name|protected
 operator|:
 name|ConstantFP
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -793,7 +787,6 @@ name|Constant
 operator|*
 name|getZeroValueForNegation
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -808,7 +801,7 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|const Type* Ty
+argument|Type* Ty
 argument_list|,
 argument|double V
 argument_list|)
@@ -818,7 +811,7 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|const Type* Ty
+argument|Type* Ty
 argument_list|,
 argument|StringRef Str
 argument_list|)
@@ -843,7 +836,6 @@ name|ConstantFP
 operator|*
 name|getNegativeZero
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -854,7 +846,7 @@ name|ConstantFP
 operator|*
 name|getInfinity
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|bool Negative = false
 argument_list|)
@@ -864,7 +856,6 @@ specifier|static
 name|bool
 name|isValueValidForType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1071,7 +1062,6 @@ operator|:
 name|explicit
 name|ConstantAggregateZero
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ty
@@ -1118,7 +1108,6 @@ name|ConstantAggregateZero
 operator|*
 name|get
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1198,20 +1187,15 @@ name|protected
 operator|:
 name|ConstantArray
 argument_list|(
-specifier|const
 name|ArrayType
 operator|*
 name|T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|Constant
 operator|*
 operator|>
-operator|&
 name|Val
 argument_list|)
 block|;
@@ -1223,7 +1207,6 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-specifier|const
 name|ArrayType
 operator|*
 name|T
@@ -1264,7 +1247,6 @@ comment|/// getType - Specialize the getType() method to always return an ArrayT
 comment|/// which reduces the amount of casting needed in parts of the compiler.
 comment|///
 specifier|inline
-specifier|const
 name|ArrayType
 operator|*
 name|getType
@@ -1274,7 +1256,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|ArrayType
 operator|*
 operator|>
@@ -1393,7 +1374,7 @@ name|ConstantArray
 operator|>
 block|{ }
 block|;
-name|DEFINE_TRANSPARENT_CASTED_OPERAND_ACCESSORS
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|ConstantArray
 argument_list|,
@@ -1437,20 +1418,15 @@ name|protected
 operator|:
 name|ConstantStruct
 argument_list|(
-specifier|const
 name|StructType
 operator|*
 name|T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|Constant
 operator|*
 operator|>
-operator|&
 name|Val
 argument_list|)
 block|;
@@ -1462,7 +1438,6 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-specifier|const
 name|StructType
 operator|*
 name|T
@@ -1480,7 +1455,7 @@ name|Constant
 operator|*
 name|get
 argument_list|(
-argument|const StructType *T
+argument|StructType *T
 argument_list|,
 argument|...
 argument_list|)
@@ -1575,7 +1550,6 @@ block|;
 comment|/// getType() specialization - Reduce amount of casting...
 comment|///
 specifier|inline
-specifier|const
 name|StructType
 operator|*
 name|getType
@@ -1585,7 +1559,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|StructType
 operator|*
 operator|>
@@ -1666,7 +1639,7 @@ name|ConstantStruct
 operator|>
 block|{ }
 block|;
-name|DEFINE_TRANSPARENT_CASTED_OPERAND_ACCESSORS
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|ConstantStruct
 argument_list|,
@@ -1710,20 +1683,15 @@ name|protected
 operator|:
 name|ConstantVector
 argument_list|(
-specifier|const
 name|VectorType
 operator|*
 name|T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|Constant
 operator|*
 operator|>
-operator|&
 name|Val
 argument_list|)
 block|;
@@ -1753,7 +1721,6 @@ comment|/// getType - Specialize the getType() method to always return a VectorT
 comment|/// which reduces the amount of casting needed in parts of the compiler.
 comment|///
 specifier|inline
-specifier|const
 name|VectorType
 operator|*
 name|getType
@@ -1763,7 +1730,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|VectorType
 operator|*
 operator|>
@@ -1861,7 +1827,7 @@ name|ConstantVector
 operator|>
 block|{ }
 block|;
-name|DEFINE_TRANSPARENT_CASTED_OPERAND_ACCESSORS
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|ConstantVector
 argument_list|,
@@ -1911,7 +1877,6 @@ operator|:
 name|explicit
 name|ConstantPointerNull
 argument_list|(
-specifier|const
 name|PointerType
 operator|*
 name|T
@@ -1919,7 +1884,7 @@ argument_list|)
 operator|:
 name|Constant
 argument_list|(
-argument|reinterpret_cast<const Type*>(T)
+argument|reinterpret_cast<Type*>(T)
 argument_list|,
 argument|Value::ConstantPointerNullVal
 argument_list|,
@@ -1959,7 +1924,6 @@ name|ConstantPointerNull
 operator|*
 name|get
 argument_list|(
-specifier|const
 name|PointerType
 operator|*
 name|T
@@ -1974,7 +1938,6 @@ comment|/// getType - Specialize the getType() method to always return an Pointe
 comment|/// which reduces the amount of casting needed in parts of the compiler.
 comment|///
 specifier|inline
-specifier|const
 name|PointerType
 operator|*
 name|getType
@@ -1984,7 +1947,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|PointerType
 operator|*
 operator|>
@@ -2228,7 +2190,7 @@ literal|2
 operator|>
 block|{ }
 block|;
-name|DEFINE_TRANSPARENT_CASTED_OPERAND_ACCESSORS
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|BlockAddress
 argument_list|,
@@ -2284,7 +2246,7 @@ name|protected
 operator|:
 name|ConstantExpr
 argument_list|(
-argument|const Type *ty
+argument|Type *ty
 argument_list|,
 argument|unsigned Opcode
 argument_list|,
@@ -2323,7 +2285,6 @@ name|Constant
 operator|*
 name|getAlignOf
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2338,7 +2299,6 @@ name|Constant
 operator|*
 name|getSizeOf
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2352,7 +2312,7 @@ name|Constant
 operator|*
 name|getOffsetOf
 argument_list|(
-argument|const StructType *STy
+argument|StructType *STy
 argument_list|,
 argument|unsigned FieldNo
 argument_list|)
@@ -2365,7 +2325,6 @@ name|Constant
 operator|*
 name|getOffsetOf
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2660,7 +2619,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2675,7 +2633,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2690,7 +2647,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2705,7 +2661,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2720,7 +2675,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2735,7 +2689,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2750,7 +2703,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2765,7 +2717,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2780,7 +2731,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2795,7 +2745,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2810,7 +2759,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2825,7 +2773,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -3156,7 +3103,7 @@ comment|///< The opcode for the conversion
 argument|Constant *C
 argument_list|,
 comment|///< The constant to be converted
-argument|const Type *Ty
+argument|Type *Ty
 comment|///< The type to which the constant is converted
 argument_list|)
 block|;
@@ -3171,7 +3118,6 @@ operator|*
 name|C
 argument_list|,
 comment|///< The constant to zext or bitcast
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -3189,7 +3135,6 @@ operator|*
 name|C
 argument_list|,
 comment|///< The constant to sext or bitcast
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -3207,7 +3152,6 @@ operator|*
 name|C
 argument_list|,
 comment|///< The constant to trunc or bitcast
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -3225,7 +3169,6 @@ operator|*
 name|C
 argument_list|,
 comment|///< The pointer value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -3241,7 +3184,7 @@ argument_list|(
 argument|Constant *C
 argument_list|,
 comment|///< The integer constant to be casted
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 comment|///< The integer type to cast to
 argument|bool isSigned
@@ -3259,7 +3202,6 @@ operator|*
 name|C
 argument_list|,
 comment|///< The integer constant to be casted
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -3383,9 +3325,7 @@ name|getGetElementPtr
 argument_list|(
 argument|Constant *C
 argument_list|,
-argument|Constant *const *IdxList
-argument_list|,
-argument|unsigned NumIdx
+argument|ArrayRef<Constant *> IdxList
 argument_list|,
 argument|bool InBounds = false
 argument_list|)
@@ -3395,14 +3335,24 @@ name|getGetElementPtr
 argument_list|(
 name|C
 argument_list|,
+name|makeArrayRef
+argument_list|(
 operator|(
 name|Value
 operator|*
+specifier|const
 operator|*
 operator|)
 name|IdxList
+operator|.
+name|data
+argument_list|()
 argument_list|,
-name|NumIdx
+name|IdxList
+operator|.
+name|size
+argument_list|()
+argument_list|)
 argument_list|,
 name|InBounds
 argument_list|)
@@ -3415,9 +3365,39 @@ name|getGetElementPtr
 argument_list|(
 argument|Constant *C
 argument_list|,
-argument|Value *const *IdxList
+argument|Constant *Idx
 argument_list|,
-argument|unsigned NumIdx
+argument|bool InBounds = false
+argument_list|)
+block|{
+comment|// This form of the function only exists to avoid ambiguous overload
+comment|// warnings about whether to convert Idx to ArrayRef<Constant *> or
+comment|// ArrayRef<Value *>.
+return|return
+name|getGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+name|cast
+operator|<
+name|Value
+operator|>
+operator|(
+name|Idx
+operator|)
+argument_list|,
+name|InBounds
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Constant
+operator|*
+name|getGetElementPtr
+argument_list|(
+argument|Constant *C
+argument_list|,
+argument|ArrayRef<Value *> IdxList
 argument_list|,
 argument|bool InBounds = false
 argument_list|)
@@ -3431,9 +3411,7 @@ name|getInBoundsGetElementPtr
 argument_list|(
 argument|Constant *C
 argument_list|,
-argument|Constant *const *IdxList
-argument_list|,
-argument|unsigned NumIdx
+argument|ArrayRef<Constant *> IdxList
 argument_list|)
 block|{
 return|return
@@ -3442,8 +3420,6 @@ argument_list|(
 name|C
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|,
 name|true
 argument_list|)
@@ -3456,9 +3432,31 @@ name|getInBoundsGetElementPtr
 argument_list|(
 argument|Constant *C
 argument_list|,
-argument|Value* const *IdxList
+argument|Constant *Idx
+argument_list|)
+block|{
+comment|// This form of the function only exists to avoid ambiguous overload
+comment|// warnings about whether to convert Idx to ArrayRef<Constant *> or
+comment|// ArrayRef<Value *>.
+return|return
+name|getGetElementPtr
+argument_list|(
+name|C
 argument_list|,
-argument|unsigned NumIdx
+name|Idx
+argument_list|,
+name|true
+argument_list|)
+return|;
+block|}
+specifier|static
+name|Constant
+operator|*
+name|getInBoundsGetElementPtr
+argument_list|(
+argument|Constant *C
+argument_list|,
+argument|ArrayRef<Value *> IdxList
 argument_list|)
 block|{
 return|return
@@ -3467,8 +3465,6 @@ argument_list|(
 name|C
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|,
 name|true
 argument_list|)
@@ -3639,7 +3635,7 @@ name|getWithOperands
 argument_list|(
 argument|ArrayRef<Constant*> Ops
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -3732,7 +3728,7 @@ literal|1
 operator|>
 block|{ }
 block|;
-name|DEFINE_TRANSPARENT_CASTED_OPERAND_ACCESSORS
+name|DEFINE_TRANSPARENT_OPERAND_ACCESSORS
 argument_list|(
 argument|ConstantExpr
 argument_list|,
@@ -3789,7 +3785,6 @@ operator|:
 name|explicit
 name|UndefValue
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|T
@@ -3839,7 +3834,6 @@ name|UndefValue
 operator|*
 name|get
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|T

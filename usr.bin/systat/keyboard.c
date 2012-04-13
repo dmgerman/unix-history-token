@@ -89,14 +89,14 @@ name|void
 parameter_list|)
 block|{
 name|char
-name|ch
-decl_stmt|,
 name|line
 index|[
 literal|80
 index|]
 decl_stmt|;
 name|int
+name|ch
+decl_stmt|,
 name|oldmask
 decl_stmt|;
 for|for

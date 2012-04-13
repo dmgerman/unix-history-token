@@ -577,6 +577,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cold
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
@@ -1044,6 +1047,9 @@ expr_stmt|;
 if|if
 condition|(
 name|cold
+operator|||
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 		 * During autoconfiguration, just return; 		 * don't run any other threads or panic below, 		 * in case this is the idle thread and already asleep. 		 * XXX: this used to do "s = splhigh(); splx(safepri); 		 * splx(s);" to give interrupts a chance, but there is 		 * no way to give interrupts a chance now. 		 */
@@ -1273,7 +1279,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * pause() is like tsleep() except that the intention is to not be  * explicitly woken up by another thread.  Instead, the current thread  * simply wishes to sleep until the timeout expires.  It is  * implemented using a dummy wait channel.  */
+comment|/*  * pause() delays the calling thread by the given number of system ticks.  * During cold bootup, pause() uses the DELAY() function instead of  * the tsleep() function to do the waiting. The "timo" argument must be  * greater than or equal to zero. A "timo" value of zero is equivalent  * to a "timo" value of one.  */
 end_comment
 
 begin_function
@@ -1292,14 +1298,67 @@ block|{
 name|KASSERT
 argument_list|(
 name|timo
-operator|!=
+operator|>=
 literal|0
 argument_list|,
 operator|(
-literal|"pause: timeout required"
+literal|"pause: timo must be>= 0"
 operator|)
 argument_list|)
 expr_stmt|;
+comment|/* silently convert invalid timeouts */
+if|if
+condition|(
+name|timo
+operator|<
+literal|1
+condition|)
+name|timo
+operator|=
+literal|1
+expr_stmt|;
+if|if
+condition|(
+name|cold
+condition|)
+block|{
+comment|/* 		 * We delay one HZ at a time to avoid overflowing the 		 * system specific DELAY() function(s): 		 */
+while|while
+condition|(
+name|timo
+operator|>=
+name|hz
+condition|)
+block|{
+name|DELAY
+argument_list|(
+literal|1000000
+argument_list|)
+expr_stmt|;
+name|timo
+operator|-=
+name|hz
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|timo
+operator|>
+literal|0
+condition|)
+name|DELAY
+argument_list|(
+name|timo
+operator|*
+name|tick
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 return|return
 operator|(
 name|tsleep
@@ -1605,6 +1664,12 @@ condition|)
 name|kdb_switch
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 if|if
 condition|(
 name|flags

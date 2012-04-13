@@ -256,12 +256,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/fifofs/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<net/if.h>
 end_include
 
@@ -3046,7 +3040,7 @@ name|s
 parameter_list|,
 name|c
 parameter_list|)
-value|index((s), (c))
+value|strchr((s), (c))
 end_define
 
 begin_comment

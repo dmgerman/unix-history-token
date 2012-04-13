@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cons.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/fcntl.h>
 end_include
 
@@ -51,12 +57,6 @@ begin_include
 include|#
 directive|include
 file|<sys/kernel.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/libkern.h>
 end_include
 
 begin_include
@@ -2010,14 +2010,18 @@ argument_list|(
 literal|"<empty line>    Abort manual input\n"
 argument_list|)
 expr_stmt|;
-name|again
-label|:
+do|do
+block|{
+name|error
+operator|=
+name|EINVAL
+expr_stmt|;
 name|printf
 argument_list|(
 literal|"\nmountroot> "
 argument_list|)
 expr_stmt|;
-name|gets
+name|cngets
 argument_list|(
 name|name
 argument_list|,
@@ -2038,11 +2042,7 @@ index|]
 operator|==
 literal|'\0'
 condition|)
-return|return
-operator|(
-literal|0
-operator|)
-return|;
+break|break;
 if|if
 condition|(
 name|name
@@ -2051,6 +2051,13 @@ literal|0
 index|]
 operator|==
 literal|'?'
+operator|&&
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 name|printf
@@ -2061,9 +2068,7 @@ expr_stmt|;
 name|g_dev_print
 argument_list|()
 expr_stmt|;
-goto|goto
-name|again
-goto|;
+continue|continue;
 block|}
 if|if
 condition|(
@@ -2073,6 +2078,13 @@ literal|0
 index|]
 operator|==
 literal|'.'
+operator|&&
+name|name
+index|[
+literal|1
+index|]
+operator|==
+literal|'\0'
 condition|)
 block|{
 name|pause
@@ -2082,9 +2094,7 @@ argument_list|,
 name|hz
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
+continue|continue;
 block|}
 name|mnt
 operator|=
@@ -2105,16 +2115,19 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
 name|printf
 argument_list|(
-literal|"Invalid specification.\n"
+literal|"Invalid file system specification.\n"
 argument_list|)
 expr_stmt|;
-goto|goto
-name|again
-goto|;
 block|}
+do|while
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+do|;
 return|return
 operator|(
 name|error
@@ -4038,17 +4051,16 @@ decl_stmt|;
 name|off_t
 name|ofs
 decl_stmt|;
+name|ssize_t
+name|resid
+decl_stmt|;
 name|int
 name|error
 decl_stmt|,
 name|flags
-decl_stmt|;
-name|int
+decl_stmt|,
 name|len
 decl_stmt|,
-name|resid
-decl_stmt|;
-name|int
 name|vfslocked
 decl_stmt|;
 name|NDINIT

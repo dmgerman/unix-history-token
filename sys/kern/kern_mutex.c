@@ -42,6 +42,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -227,6 +233,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_expr_stmt
+name|PMC_SOFT_DEFINE
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Internal utility macros.  */
 end_comment
@@ -266,6 +299,7 @@ specifier|static
 name|void
 name|assert_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -288,6 +322,7 @@ specifier|static
 name|void
 name|db_show_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -344,6 +379,7 @@ specifier|static
 name|int
 name|owner_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -529,6 +565,7 @@ begin_function
 name|void
 name|assert_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -541,6 +578,7 @@ block|{
 name|mtx_assert
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|mtx
 operator|*
@@ -674,6 +712,7 @@ begin_function
 name|int
 name|owner_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -686,12 +725,14 @@ modifier|*
 name|owner
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|mtx
 modifier|*
 name|m
 init|=
 operator|(
+specifier|const
 expr|struct
 name|mtx
 operator|*
@@ -749,6 +790,12 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|MPASS
 argument_list|(
 name|curthread
@@ -899,6 +946,12 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1051,6 +1104,12 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1232,6 +1291,12 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1341,7 +1406,7 @@ end_comment
 
 begin_function
 name|int
-name|_mtx_trylock
+name|mtx_trylock_flags_
 parameter_list|(
 name|struct
 name|mtx
@@ -1378,6 +1443,16 @@ directive|endif
 name|int
 name|rval
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1655,6 +1730,12 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
 name|mtx_owned
 argument_list|(
 name|m
@@ -1728,6 +1809,18 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -2315,6 +2408,12 @@ endif|#
 directive|endif
 if|if
 condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
 name|LOCK_LOG_TEST
 argument_list|(
 operator|&
@@ -2334,6 +2433,18 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -2479,7 +2590,7 @@ end_comment
 
 begin_function
 name|void
-name|_thread_lock_flags
+name|thread_lock_flags_
 parameter_list|(
 name|struct
 name|thread
@@ -2545,6 +2656,12 @@ name|uintptr_t
 operator|)
 name|curthread
 expr_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 for|for
 control|(
 init|;
@@ -2698,6 +2815,18 @@ operator|++
 expr_stmt|;
 break|break;
 block|}
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -3066,6 +3195,12 @@ name|ts
 decl_stmt|;
 if|if
 condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
 name|mtx_recursed
 argument_list|(
 name|m
@@ -3212,6 +3347,7 @@ begin_function
 name|void
 name|_mtx_assert
 parameter_list|(
+specifier|const
 name|struct
 name|mtx
 modifier|*
@@ -3928,6 +4064,7 @@ begin_function
 name|void
 name|db_show_mtx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -3939,6 +4076,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|const
 name|struct
 name|mtx
 modifier|*
@@ -3947,6 +4085,7 @@ decl_stmt|;
 name|m
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|mtx
 operator|*

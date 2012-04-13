@@ -1693,7 +1693,7 @@ name|syslog
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"%s: device '%s' not in "
+literal|"%s: adding device '%s' to "
 literal|"device list"
 argument_list|,
 name|__func__
@@ -1822,6 +1822,19 @@ argument_list|,
 literal|"da"
 argument_list|,
 literal|2
+argument_list|)
+operator|==
+literal|0
+operator|||
+name|strncmp
+argument_list|(
+name|disk_entry
+operator|->
+name|dev_name
+argument_list|,
+literal|"ada"
+argument_list|,
+literal|3
 argument_list|)
 operator|==
 literal|0
@@ -2440,7 +2453,7 @@ name|SNMP_ERR_NOERROR
 operator|)
 return|;
 case|case
-name|LEAF_hrDiskStorageRemoveble
+name|LEAF_hrDiskStorageRemovable
 case|:
 name|value
 operator|->

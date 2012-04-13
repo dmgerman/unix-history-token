@@ -3149,6 +3149,16 @@ literal|0
 decl_stmt|;
 if|if
 condition|(
+name|len
+operator|>
+name|MAXKEYLEN
+condition|)
+name|len
+operator|=
+name|MAXKEYLEN
+expr_stmt|;
+if|if
+condition|(
 operator|!
 operator|(
 name|ep

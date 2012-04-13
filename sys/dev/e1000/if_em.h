@@ -405,14 +405,16 @@ begin_comment
 comment|/* On 82575 */
 end_comment
 
+begin_comment
+comment|/* More backward compatibility */
+end_comment
+
 begin_if
 if|#
 directive|if
-operator|!
-name|defined
-argument_list|(
-name|SYSCTL_ADD_UQUAD
-argument_list|)
+name|__FreeBSD_version
+operator|<
+literal|900000
 end_if
 
 begin_define
@@ -1121,8 +1123,11 @@ name|EM_VFTA_SIZE
 index|]
 decl_stmt|;
 comment|/* Info about the interface */
-name|u8
+name|u16
 name|link_active
+decl_stmt|;
+name|u16
+name|fc
 decl_stmt|;
 name|u16
 name|link_speed
@@ -1132,9 +1137,6 @@ name|link_duplex
 decl_stmt|;
 name|u32
 name|smartspeed
-decl_stmt|;
-name|u32
-name|fc_setting
 decl_stmt|;
 name|struct
 name|em_int_delay_info

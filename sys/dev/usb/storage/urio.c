@@ -206,6 +206,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -1135,7 +1136,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,
@@ -2035,10 +2035,12 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ur
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -2084,10 +2086,12 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ur
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

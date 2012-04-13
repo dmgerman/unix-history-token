@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997-2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997-2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -15,14 +15,6 @@ directive|include
 file|"kadmin-commands.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: ank.c 16658 2006-01-25 12:29:46Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_comment
 comment|/*  * fetch the default principal corresponding to `princ'  */
 end_comment
@@ -34,7 +26,7 @@ name|get_default
 parameter_list|(
 name|kadm5_server_context
 modifier|*
-name|context
+name|contextp
 parameter_list|,
 name|krb5_principal
 name|princ
@@ -49,13 +41,12 @@ decl_stmt|;
 name|krb5_principal
 name|def_principal
 decl_stmt|;
-name|krb5_realm
-modifier|*
+name|krb5_const_realm
 name|realm
 init|=
-name|krb5_princ_realm
+name|krb5_principal_get_realm
 argument_list|(
-name|context
+name|contextp
 operator|->
 name|context
 argument_list|,
@@ -66,14 +57,13 @@ name|ret
 operator|=
 name|krb5_make_principal
 argument_list|(
-name|context
+name|contextp
 operator|->
 name|context
 argument_list|,
 operator|&
 name|def_principal
 argument_list|,
-operator|*
 name|realm
 argument_list|,
 literal|"default"
@@ -92,7 +82,7 @@ name|ret
 operator|=
 name|kadm5_get_principal
 argument_list|(
-name|context
+name|contextp
 argument_list|,
 name|def_principal
 argument_list|,
@@ -103,7 +93,7 @@ argument_list|)
 expr_stmt|;
 name|krb5_free_principal
 argument_list|(
-name|context
+name|contextp
 operator|->
 name|context
 argument_list|,
@@ -492,16 +482,18 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"failed to verify password"
-argument_list|)
-expr_stmt|;
 name|ret
 operator|=
 name|KRB5_LIBOS_BADPWDMATCH
+expr_stmt|;
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|,
+literal|"failed to verify password"
+argument_list|)
 expr_stmt|;
 goto|goto
 name|out

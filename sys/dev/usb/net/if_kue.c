@@ -632,6 +632,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -1628,8 +1629,15 @@ name|sc
 argument_list|)
 condition|)
 break|break;
-name|bcopy
+name|memcpy
 argument_list|(
+name|KUE_MCFILT
+argument_list|(
+name|sc
+argument_list|,
+name|i
+argument_list|)
+argument_list|,
 name|LLADDR
 argument_list|(
 operator|(
@@ -1640,13 +1648,6 @@ operator|)
 name|ifma
 operator|->
 name|ifma_addr
-argument_list|)
-argument_list|,
-name|KUE_MCFILT
-argument_list|(
-name|sc
-argument_list|,
-name|i
 argument_list|)
 argument_list|,
 name|ETHER_ADDR_LEN
@@ -2384,7 +2385,10 @@ if|if
 condition|(
 name|actlen
 operator|<=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 literal|2
 operator|+
 sizeof|sizeof
@@ -2392,7 +2396,7 @@ argument_list|(
 expr|struct
 name|ether_header
 argument_list|)
-operator|)
+argument_list|)
 condition|)
 block|{
 name|ifp

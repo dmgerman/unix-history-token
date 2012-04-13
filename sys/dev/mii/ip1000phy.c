@@ -167,11 +167,7 @@ argument_list|,
 name|bus_generic_shutdown
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1271,6 +1267,14 @@ name|IP1000PHY_1000CR_1000T
 operator||
 name|IP1000PHY_1000CR_1000T_FDX
 expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|mii_mpd_model
+operator|!=
+name|MII_MODEL_xxICPLUS_IP1001
+condition|)
 name|reg
 operator||=
 name|IP1000PHY_1000CR_MASTER

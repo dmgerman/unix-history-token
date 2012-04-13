@@ -11949,6 +11949,7 @@ block|}
 end_function
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet_ip
@@ -11961,8 +11962,8 @@ name|CTLFLAG_RD
 argument_list|,
 name|sysctl_mfctable
 argument_list|,
-literal|"IPv4 Multicast Forwarding Table (struct *mfc[mfchashsize], "
-literal|"netinet/ip_mroute.h)"
+literal|"IPv4 Multicast Forwarding Table "
+literal|"(struct *mfc[mfchashsize], netinet/ip_mroute.h)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12039,7 +12040,7 @@ name|vnet_mroute_init
 argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
-name|SI_ORDER_MIDDLE
+name|SI_ORDER_ANY
 argument_list|,
 name|vnet_mroute_init
 argument_list|,
@@ -12423,7 +12424,7 @@ name|ip_mroutemod
 argument_list|,
 name|SI_SUB_PSEUDO
 argument_list|,
-name|SI_ORDER_ANY
+name|SI_ORDER_MIDDLE
 argument_list|)
 expr_stmt|;
 end_expr_stmt

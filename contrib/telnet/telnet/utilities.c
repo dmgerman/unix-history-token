@@ -4123,6 +4123,8 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
+literal|"%s"
+argument_list|,
 literal|"\" VALUE "
 operator|+
 name|noquote
@@ -4189,6 +4191,8 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
+literal|"%s"
+argument_list|,
 literal|"\" VAR "
 operator|+
 name|noquote
@@ -4206,6 +4210,8 @@ name|fprintf
 argument_list|(
 name|NetTrace
 argument_list|,
+literal|"%s"
+argument_list|,
 literal|"\" ESC "
 operator|+
 name|noquote
@@ -4222,6 +4228,8 @@ case|:
 name|fprintf
 argument_list|(
 name|NetTrace
+argument_list|,
+literal|"%s"
 argument_list|,
 literal|"\" USERVAR "
 operator|+

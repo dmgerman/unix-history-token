@@ -805,9 +805,25 @@ name|is_hwmp_proxy
 decl_stmt|;
 comment|/* PREP for proxy route */
 name|uint32_t
+name|is_beacon_bad
+decl_stmt|;
+comment|/* Number of bad beacons */
+name|uint32_t
+name|is_ampdu_bar_tx
+decl_stmt|;
+comment|/* A-MPDU BAR frames TXed */
+name|uint32_t
+name|is_ampdu_bar_tx_retry
+decl_stmt|;
+comment|/* A-MPDU BAR frames TX rtry */
+name|uint32_t
+name|is_ampdu_bar_tx_fail
+decl_stmt|;
+comment|/* A-MPDU BAR frames TX fail */
+name|uint32_t
 name|is_spare
 index|[
-literal|11
+literal|7
 index|]
 decl_stmt|;
 block|}
@@ -2993,6 +3009,61 @@ end_define
 
 begin_comment
 comment|/* TDMA: beacon intvl (slots) */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET
+value|205
+end_define
+
+begin_comment
+comment|/* Quiet Enable/Disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_PERIOD
+value|206
+end_define
+
+begin_comment
+comment|/* Quiet Period */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_OFFSET
+value|207
+end_define
+
+begin_comment
+comment|/* Quiet Offset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_DUR
+value|208
+end_define
+
+begin_comment
+comment|/* Quiet Duration */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IEEE80211_IOC_QUIET_COUNT
+value|209
+end_define
+
+begin_comment
+comment|/* Quiet Count */
 end_comment
 
 begin_comment

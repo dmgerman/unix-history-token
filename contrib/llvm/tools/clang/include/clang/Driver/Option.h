@@ -58,48 +58,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"clang/Basic/LLVM.h"
 end_include
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|isa
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|cast
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|cast_or_null
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast_or_null
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|namespace
@@ -181,11 +141,9 @@ name|OptSpecifier
 name|ID
 decl_stmt|;
 comment|/// The option name.
-name|llvm
-operator|::
 name|StringRef
 name|Name
-expr_stmt|;
+decl_stmt|;
 comment|/// Group this option is a member of, if any.
 specifier|const
 name|OptionGroup
@@ -284,8 +242,6 @@ return|return
 name|Kind
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getName
 argument_list|()
@@ -508,8 +464,6 @@ return|;
 block|}
 comment|/// getRenderName - Return the name to use when rendering this
 comment|/// option.
-name|llvm
-operator|::
 name|StringRef
 name|getRenderName
 argument_list|()

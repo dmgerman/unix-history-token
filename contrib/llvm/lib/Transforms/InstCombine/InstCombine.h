@@ -52,6 +52,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/IntrinsicInst.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Operator.h"
 end_include
 
@@ -442,7 +448,6 @@ name|Value
 modifier|*
 name|RHS
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -1260,6 +1265,15 @@ modifier|&
 name|EV
 parameter_list|)
 function_decl|;
+name|Instruction
+modifier|*
+name|visitLandingPadInst
+parameter_list|(
+name|LandingPadInst
+modifier|&
+name|LI
+parameter_list|)
+function_decl|;
 comment|// visitInstruction - Specify what to return for unhandled instructions...
 name|Instruction
 modifier|*
@@ -1279,12 +1293,10 @@ label|:
 name|bool
 name|ShouldChangeType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|From
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|To
@@ -1311,12 +1323,10 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
 name|Type
 modifier|*
 name|FindElementAtOffset
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1363,7 +1373,6 @@ name|Value
 operator|*
 name|V
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1404,6 +1413,10 @@ name|transformCallThroughTrampoline
 parameter_list|(
 name|CallSite
 name|CS
+parameter_list|,
+name|IntrinsicInst
+modifier|*
+name|Tramp
 parameter_list|)
 function_decl|;
 name|Instruction
@@ -2146,7 +2159,6 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty

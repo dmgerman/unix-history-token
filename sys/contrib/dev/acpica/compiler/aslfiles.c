@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -38,7 +38,6 @@ comment|/* Local prototypes */
 end_comment
 
 begin_function_decl
-specifier|static
 name|FILE
 modifier|*
 name|FlOpenIncludeWithPrefix
@@ -258,6 +257,9 @@ decl_stmt|;
 name|UINT32
 name|FileSize
 decl_stmt|;
+name|long
+name|Offset
+decl_stmt|;
 name|fp
 operator|=
 name|Gbl_Files
@@ -266,6 +268,13 @@ name|FileId
 index|]
 operator|.
 name|Handle
+expr_stmt|;
+name|Offset
+operator|=
+name|ftell
+argument_list|(
+name|fp
+argument_list|)
 expr_stmt|;
 name|fseek
 argument_list|(
@@ -286,11 +295,12 @@ argument_list|(
 name|fp
 argument_list|)
 expr_stmt|;
+comment|/* Restore file pointer */
 name|fseek
 argument_list|(
 name|fp
 argument_list|,
-literal|0
+name|Offset
 argument_list|,
 name|SEEK_SET
 argument_list|)
@@ -623,15 +633,6 @@ operator|.
 name|Handle
 argument_list|)
 expr_stmt|;
-name|Gbl_Files
-index|[
-name|FileId
-index|]
-operator|.
-name|Handle
-operator|=
-name|NULL
-expr_stmt|;
 if|if
 condition|(
 name|Error
@@ -648,6 +649,15 @@ name|AslAbort
 argument_list|()
 expr_stmt|;
 block|}
+name|Gbl_Files
+index|[
+name|FileId
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
 return|return;
 block|}
 end_function
@@ -870,7 +880,6 @@ comment|/***********************************************************************
 end_comment
 
 begin_function
-specifier|static
 name|FILE
 modifier|*
 name|FlOpenIncludeWithPrefix
@@ -1511,6 +1520,42 @@ argument_list|,
 name|stderr
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Gbl_Files
+index|[
+name|ASL_FILE_DEBUG_OUTPUT
+index|]
+operator|.
+name|Handle
+condition|)
+block|{
+name|AslCommonError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_DEBUG_FILENAME
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
 name|AslCompilerSignon
 argument_list|(
 name|ASL_FILE_DEBUG_OUTPUT
@@ -1589,6 +1634,57 @@ name|ASL_FILE_LISTING_OUTPUT
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Create the preprocessor output file */
+name|Filename
+operator|=
+name|FlGenerateFilename
+argument_list|(
+name|FilenamePrefix
+argument_list|,
+name|FILE_SUFFIX_PREPROCESSOR
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|Filename
+condition|)
+block|{
+name|AslCommonError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_PREPROCESSOR_FILENAME
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|AE_ERROR
+operator|)
+return|;
+block|}
+name|FlOpenFile
+argument_list|(
+name|ASL_FILE_PREPROCESSOR
+argument_list|,
+name|Filename
+argument_list|,
+literal|"w+b"
+argument_list|)
+expr_stmt|;
+comment|/* All done for data table compiler */
 if|if
 condition|(
 name|Gbl_FileType
@@ -1653,6 +1749,7 @@ argument_list|,
 literal|"w+b"
 argument_list|)
 expr_stmt|;
+comment|/* // TBD: TEMP //    AslCompilerin = Gbl_Files[ASL_FILE_SOURCE_OUTPUT].Handle; */
 comment|/* Create/Open a assembly code source output file if asked */
 if|if
 condition|(

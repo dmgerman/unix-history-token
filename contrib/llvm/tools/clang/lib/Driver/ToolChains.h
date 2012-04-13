@@ -219,6 +219,17 @@ name|ARCSimulator_NoARCRuntime
 block|}
 name|ARCRuntimeForSimulator
 block|;
+name|mutable
+expr|enum
+block|{
+name|LibCXXSimulator_None
+block|,
+name|LibCXXSimulator_NotAvailable
+block|,
+name|LibCXXSimulator_Available
+block|}
+name|LibCXXForSimulator
+block|;
 name|private
 operator|:
 comment|/// Whether we are targeting iPhoneOS target.
@@ -287,6 +298,8 @@ name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
 argument|const ArgList&Args
+argument_list|,
+argument|types::ID InputType
 argument_list|)
 specifier|const
 block|;
@@ -494,15 +507,16 @@ block|}
 comment|/// getDarwinArchName - Get the "Darwin" arch name for a particular compiler
 comment|/// invocation. For example, Darwin treats different ARM variations as
 comment|/// distinct architectures.
-name|llvm
-operator|::
 name|StringRef
 name|getDarwinArchName
 argument_list|(
-argument|const ArgList&Args
-argument_list|)
 specifier|const
-expr_stmt|;
+name|ArgList
+operator|&
+name|Args
+argument_list|)
+decl|const
+decl_stmt|;
 specifier|static
 name|bool
 name|isVersionLT
@@ -764,6 +778,12 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|virtual
+name|bool
+name|hasBlocksRuntime
+argument_list|()
+specifier|const
+expr_stmt|;
+name|virtual
 name|DerivedArgList
 modifier|*
 name|TranslateArgs
@@ -968,15 +988,20 @@ expr_stmt|;
 name|virtual
 name|unsigned
 name|GetDefaultStackProtectorLevel
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|KernelOrKext
+argument_list|)
+decl|const
 block|{
-comment|// Stack protectors default to on for 10.6 and beyond.
+comment|// Stack protectors default to on for user code on 10.5,
+comment|// and for everything in 10.6 and beyond
 return|return
 operator|!
 name|isTargetIPhoneOS
 argument_list|()
 operator|&&
+operator|(
 operator|!
 name|isMacosxVersionLT
 argument_list|(
@@ -984,6 +1009,20 @@ literal|10
 argument_list|,
 literal|6
 argument_list|)
+operator|||
+operator|(
+operator|!
+name|isMacosxVersionLT
+argument_list|(
+literal|10
+argument_list|,
+literal|5
+argument_list|)
+operator|&&
+operator|!
+name|KernelOrKext
+operator|)
+operator|)
 return|;
 block|}
 name|virtual
@@ -1046,6 +1085,14 @@ range|:
 name|public
 name|Darwin
 block|{
+name|private
+operator|:
+name|void
+name|AddGCCLibexecPath
+argument_list|(
+argument|unsigned darwinVersion
+argument_list|)
+block|;
 name|public
 operator|:
 name|DarwinClang
@@ -1173,6 +1220,8 @@ name|string
 name|ComputeEffectiveClangTriple
 argument_list|(
 argument|const ArgList&Args
+argument_list|,
+argument|types::ID InputType
 argument_list|)
 specifier|const
 block|;
@@ -1506,6 +1555,244 @@ operator|:
 name|public
 name|Generic_ELF
 block|{
+comment|/// \brief Struct to store and manipulate GCC versions.
+comment|///
+comment|/// We rely on assumptions about the form and structure of GCC version
+comment|/// numbers: they consist of at most three '.'-separated components, and each
+comment|/// component is a non-negative integer except for the last component. For
+comment|/// the last component we are very flexible in order to tolerate release
+comment|/// candidates or 'x' wildcards.
+comment|///
+comment|/// Note that the ordering established among GCCVersions is based on the
+comment|/// preferred version string to use. For example we prefer versions without
+comment|/// a hard-coded patch number to those with a hard coded patch number.
+comment|///
+comment|/// Currently this doesn't provide any logic for textual suffixes to patches
+comment|/// in the way that (for example) Debian's version format does. If that ever
+comment|/// becomes necessary, it can be added.
+block|struct
+name|GCCVersion
+block|{
+comment|/// \brief The unparsed text of the version.
+name|std
+operator|::
+name|string
+name|Text
+block|;
+comment|/// \brief The parsed major, minor, and patch numbers.
+name|int
+name|Major
+block|,
+name|Minor
+block|,
+name|Patch
+block|;
+comment|/// \brief Any textual suffix on the patch number.
+name|std
+operator|::
+name|string
+name|PatchSuffix
+block|;
+specifier|static
+name|GCCVersion
+name|Parse
+argument_list|(
+argument|StringRef VersionText
+argument_list|)
+block|;
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|GCCVersion
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|;
+name|bool
+name|operator
+operator|>
+operator|(
+specifier|const
+name|GCCVersion
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+name|RHS
+operator|<
+operator|*
+name|this
+return|;
+block|}
+name|bool
+name|operator
+operator|<=
+operator|(
+specifier|const
+name|GCCVersion
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|>
+name|RHS
+operator|)
+return|;
+block|}
+name|bool
+name|operator
+operator|>=
+operator|(
+specifier|const
+name|GCCVersion
+operator|&
+name|RHS
+operator|)
+specifier|const
+block|{
+return|return
+operator|!
+operator|(
+operator|*
+name|this
+operator|<
+name|RHS
+operator|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// \brief This is a class to find a viable GCC installation for Clang to
+comment|/// use.
+comment|///
+comment|/// This class tries to find a GCC installation on the system, and report
+comment|/// information about it. It starts from the host information provided to the
+comment|/// Driver, and has logic for fuzzing that where appropriate.
+name|class
+name|GCCInstallationDetector
+block|{
+name|bool
+name|IsValid
+block|;
+name|std
+operator|::
+name|string
+name|GccTriple
+block|;
+comment|// FIXME: These might be better as path objects.
+name|std
+operator|::
+name|string
+name|GccInstallPath
+block|;
+name|std
+operator|::
+name|string
+name|GccParentLibPath
+block|;
+name|GCCVersion
+name|Version
+block|;
+name|public
+operator|:
+name|GCCInstallationDetector
+argument_list|(
+specifier|const
+name|Driver
+operator|&
+name|D
+argument_list|)
+block|;
+comment|/// \brief Check whether we detected a valid GCC install.
+name|bool
+name|isValid
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsValid
+return|;
+block|}
+comment|/// \brief Get the GCC triple for the detected install.
+name|StringRef
+name|getTriple
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GccTriple
+return|;
+block|}
+comment|/// \brief Get the detected GCC installation path.
+name|StringRef
+name|getInstallPath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GccInstallPath
+return|;
+block|}
+comment|/// \brief Get the detected GCC parent lib path.
+name|StringRef
+name|getParentLibPath
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GccParentLibPath
+return|;
+block|}
+comment|/// \brief Get the detected GCC version string.
+name|StringRef
+name|getVersion
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Version
+operator|.
+name|Text
+return|;
+block|}
+name|private
+operator|:
+specifier|static
+name|void
+name|CollectLibDirsAndTriples
+argument_list|(
+argument|llvm::Triple::ArchType HostArch
+argument_list|,
+argument|SmallVectorImpl<StringRef>&LibDirs
+argument_list|,
+argument|SmallVectorImpl<StringRef>&Triples
+argument_list|)
+block|;
+name|void
+name|ScanLibDirForGCCTriple
+argument_list|(
+argument|llvm::Triple::ArchType HostArch
+argument_list|,
+argument|const std::string&LibDir
+argument_list|,
+argument|StringRef CandidateTriple
+argument_list|)
+block|;   }
+block|;
+name|GCCInstallationDetector
+name|GCCInstallation
+block|;
 name|public
 operator|:
 name|Linux
@@ -1539,6 +1826,26 @@ argument_list|,
 argument|const JobAction&JA
 argument_list|,
 argument|const ActionList&Inputs
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
 argument_list|)
 specifier|const
 block|;
@@ -1716,18 +2023,35 @@ operator|*
 name|GetForcedPicModel
 argument_list|()
 specifier|const
-block|; }
+block|;
+name|virtual
+name|void
+name|AddClangSystemIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AddClangCXXStdlibIncludeArgs
+argument_list|(
+argument|const ArgList&DriverArgs
+argument_list|,
+argument|ArgStringList&CC1Args
+argument_list|)
+specifier|const
+block|;  }
 block|;  }
 comment|// end namespace toolchains
+block|}
+comment|// end namespace driver
 block|}
 end_decl_stmt
 
 begin_comment
-comment|// end namespace driver
-end_comment
-
-begin_comment
-unit|}
 comment|// end namespace clang
 end_comment
 

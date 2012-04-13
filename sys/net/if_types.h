@@ -2177,17 +2177,6 @@ end_define
 begin_define
 define|#
 directive|define
-name|IFT_CARP
-value|0xf8
-end_define
-
-begin_comment
-comment|/* Common Address Redundancy Protocol */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|IFT_IPXIP
 value|0xf9
 end_define

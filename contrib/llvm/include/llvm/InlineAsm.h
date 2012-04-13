@@ -196,7 +196,7 @@ name|IsAlignStack
 block|;
 name|InlineAsm
 argument_list|(
-argument|const PointerType *Ty
+argument|PointerType *Ty
 argument_list|,
 argument|const std::string&AsmString
 argument_list|,
@@ -227,7 +227,7 @@ name|InlineAsm
 operator|*
 name|get
 argument_list|(
-argument|const FunctionType *Ty
+argument|FunctionType *Ty
 argument_list|,
 argument|StringRef AsmString
 argument_list|,
@@ -320,7 +320,7 @@ specifier|static
 name|bool
 name|Verify
 argument_list|(
-argument|const FunctionType *Ty
+argument|FunctionType *Ty
 argument_list|,
 argument|StringRef Constraints
 argument_list|)
@@ -680,6 +680,19 @@ operator|&&
 literal|"Too many inline asm operands!"
 argument_list|)
 expr_stmt|;
+name|assert
+argument_list|(
+name|Kind
+operator|>=
+name|Kind_RegUse
+operator|&&
+name|Kind
+operator|<=
+name|Kind_Mem
+operator|&&
+literal|"Invalid Kind"
+argument_list|)
+expr_stmt|;
 return|return
 name|Kind
 operator||
@@ -704,6 +717,29 @@ name|unsigned
 name|MatchedOperandNo
 parameter_list|)
 block|{
+name|assert
+argument_list|(
+name|MatchedOperandNo
+operator|<=
+literal|0x7fff
+operator|&&
+literal|"Too big matched operand"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|InputFlag
+operator|&
+operator|~
+literal|0xffff
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"High bits already contain data"
+argument_list|)
+expr_stmt|;
 return|return
 name|InputFlag
 operator||
@@ -711,6 +747,59 @@ name|Flag_MatchingOperand
 operator||
 operator|(
 name|MatchedOperandNo
+operator|<<
+literal|16
+operator|)
+return|;
+block|}
+comment|/// getFlagWordForRegClass - Augment an existing flag word returned by
+comment|/// getFlagWord with the required register class for the following register
+comment|/// operands.
+comment|/// A tied use operand cannot have a register class, use the register class
+comment|/// from the def operand instead.
+specifier|static
+name|unsigned
+name|getFlagWordForRegClass
+parameter_list|(
+name|unsigned
+name|InputFlag
+parameter_list|,
+name|unsigned
+name|RC
+parameter_list|)
+block|{
+comment|// Store RC + 1, reserve the value 0 to mean 'no register class'.
+operator|++
+name|RC
+expr_stmt|;
+name|assert
+argument_list|(
+name|RC
+operator|<=
+literal|0x7fff
+operator|&&
+literal|"Too large register class ID"
+argument_list|)
+expr_stmt|;
+name|assert
+argument_list|(
+operator|(
+name|InputFlag
+operator|&
+operator|~
+literal|0xffff
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"High bits already contain data"
+argument_list|)
+expr_stmt|;
+return|return
+name|InputFlag
+operator||
+operator|(
+name|RC
 operator|<<
 literal|16
 operator|)
@@ -872,6 +961,56 @@ name|Flag_MatchingOperand
 operator|)
 operator|>>
 literal|16
+expr_stmt|;
+return|return
+name|true
+return|;
+block|}
+comment|/// hasRegClassConstraint - Returns true if the flag contains a register
+comment|/// class constraint.  Sets RC to the register class ID.
+specifier|static
+name|bool
+name|hasRegClassConstraint
+parameter_list|(
+name|unsigned
+name|Flag
+parameter_list|,
+name|unsigned
+modifier|&
+name|RC
+parameter_list|)
+block|{
+if|if
+condition|(
+name|Flag
+operator|&
+name|Flag_MatchingOperand
+condition|)
+return|return
+name|false
+return|;
+name|unsigned
+name|High
+init|=
+name|Flag
+operator|>>
+literal|16
+decl_stmt|;
+comment|// getFlagWordForRegClass() uses 0 to mean no register class, and otherwise
+comment|// stores RC + 1.
+if|if
+condition|(
+operator|!
+name|High
+condition|)
+return|return
+name|false
+return|;
+name|RC
+operator|=
+name|High
+operator|-
+literal|1
 expr_stmt|;
 return|return
 name|true

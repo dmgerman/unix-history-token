@@ -491,7 +491,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Replace the last byte in a buffer.  If the buffer was empty  * intially, then a new byte will be added.  */
+comment|/**  * Replace the last byte in a buffer.  If the buffer was empty  * initially, then a new byte will be added.  */
 end_comment
 
 begin_function

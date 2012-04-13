@@ -338,16 +338,6 @@ parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
 comment|//
-comment|// TailDuplication - Eliminate unconditional branches through controlled code
-comment|// duplication, creating simpler CFG structures.
-comment|//
-name|FunctionPass
-modifier|*
-name|createTailDuplicationPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
-comment|//
 comment|// JumpThreading - Thread control through mult-pred/multi-succ blocks where some
 comment|// preds always go to some succ.
 comment|//

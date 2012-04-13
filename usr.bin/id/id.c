@@ -148,6 +148,7 @@ file|<unistd.h>
 end_include
 
 begin_function_decl
+specifier|static
 name|void
 name|id_print
 parameter_list|(
@@ -165,6 +166,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pline
 parameter_list|(
@@ -176,6 +178,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|pretty
 parameter_list|(
@@ -186,7 +189,14 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|USE_BSM_AUDIT
+end_ifdef
+
 begin_function_decl
+specifier|static
 name|void
 name|auditid
 parameter_list|(
@@ -195,7 +205,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
+specifier|static
 name|void
 name|group
 parameter_list|(
@@ -209,6 +225,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|maclabel
 parameter_list|(
@@ -218,6 +235,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -227,6 +245,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|struct
 name|passwd
 modifier|*
@@ -239,6 +258,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|int
 name|isgroups
 decl_stmt|,
@@ -926,6 +946,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pretty
 parameter_list|(
@@ -1183,6 +1204,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|id_print
 parameter_list|(
@@ -1587,6 +1609,7 @@ name|USE_BSM_AUDIT
 end_ifdef
 
 begin_function
+specifier|static
 name|void
 name|auditid
 parameter_list|(
@@ -1811,6 +1834,7 @@ directive|endif
 end_endif
 
 begin_function
+specifier|static
 name|void
 name|group
 parameter_list|(
@@ -2057,6 +2081,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|maclabel
 parameter_list|(
@@ -2179,6 +2204,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|struct
 name|passwd
 modifier|*
@@ -2267,6 +2293,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|pline
 parameter_list|(
@@ -2362,6 +2389,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: util.h,v 1.4 2009-09-29 15:06:05 fdupont Exp $ */
+comment|/* $Id: util.h,v 1.4 2009/09/29 15:06:05 fdupont Exp $ */
 end_comment
 
 begin_ifndef

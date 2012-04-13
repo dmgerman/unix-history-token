@@ -2409,9 +2409,10 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|resid
-decl_stmt|,
+decl_stmt|;
+name|int
 name|flags
 decl_stmt|;
 name|elf_file_t
@@ -3717,10 +3718,21 @@ name|kernel_map
 argument_list|)
 expr_stmt|;
 comment|/* 	 * In order to satisfy amd64's architectural requirements on the 	 * location of code and data in the kernel's address space, request a 	 * mapping that is above the kernel.   	 */
+ifdef|#
+directive|ifdef
+name|__amd64__
 name|mapbase
 operator|=
 name|KERNBASE
 expr_stmt|;
+else|#
+directive|else
+name|mapbase
+operator|=
+name|VM_MIN_KERNEL_ADDRESS
+expr_stmt|;
+endif|#
+directive|endif
 name|error
 operator|=
 name|vm_map_find

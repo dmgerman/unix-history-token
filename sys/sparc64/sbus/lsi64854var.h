@@ -64,13 +64,17 @@ decl_stmt|;
 name|bus_dma_tag_t
 name|sc_buffer_dmat
 decl_stmt|;
+name|bus_size_t
+name|sc_maxdmasize
+decl_stmt|;
 name|int
 name|sc_datain
 decl_stmt|;
 name|size_t
 name|sc_dmasize
 decl_stmt|;
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 name|sc_dmaaddr
 decl_stmt|;
@@ -100,7 +104,8 @@ name|struct
 name|lsi64854_softc
 modifier|*
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 parameter_list|,
 name|size_t
@@ -215,7 +220,9 @@ name|DMA_ENINTR
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {			\ 	uint32_t csr = L64854_GCSR(sc);		\ 	csr |= L64854_INT_EN;			\ 	L64854_SCSR(sc, csr);			\ } while (0)
+value|do {			\ 	uint32_t csr = L64854_GCSR(sc);		\ 	csr |= L64854_INT_EN;			\ 	L64854_SCSR(sc, csr);			\ } while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_define
@@ -235,7 +242,9 @@ name|DMA_GO
 parameter_list|(
 name|sc
 parameter_list|)
-value|do {				\ 	uint32_t csr = L64854_GCSR(sc);		\ 	csr |= D_EN_DMA;			\ 	L64854_SCSR(sc, csr);			\ 	sc->sc_active = 1;			\ } while (0)
+value|do {				\ 	uint32_t csr = L64854_GCSR(sc);		\ 	csr |= D_EN_DMA;			\ 	L64854_SCSR(sc, csr);			\ 	sc->sc_active = 1;			\ } while (
+comment|/* CONSTCOND */
+value|0)
 end_define
 
 begin_function_decl

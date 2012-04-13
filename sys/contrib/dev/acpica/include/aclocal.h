@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -52,7 +52,7 @@ begin_define
 define|#
 directive|define
 name|AML_NUM_OPCODES
-value|0x7F
+value|0x81
 end_define
 
 begin_comment
@@ -553,17 +553,6 @@ end_comment
 begin_define
 define|#
 directive|define
-name|ANOBJ_IS_BIT_OFFSET
-value|0x40
-end_define
-
-begin_comment
-comment|/* iASL only: Reference is a bit offset */
-end_comment
-
-begin_define
-define|#
-directive|define
 name|ANOBJ_IS_REFERENCED
 value|0x80
 end_define
@@ -768,6 +757,14 @@ name|ACPI_NAMESPACE_NODE
 modifier|*
 name|DataRegisterNode
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ConnectionNode
+decl_stmt|;
+name|UINT8
+modifier|*
+name|ResourceBuffer
+decl_stmt|;
 name|UINT32
 name|BankValue
 decl_stmt|;
@@ -777,6 +774,9 @@ decl_stmt|;
 name|UINT32
 name|FieldBitLength
 decl_stmt|;
+name|UINT16
+name|ResourceLength
+decl_stmt|;
 name|UINT8
 name|FieldFlags
 decl_stmt|;
@@ -785,6 +785,9 @@ name|Attribute
 decl_stmt|;
 name|UINT8
 name|FieldType
+decl_stmt|;
+name|UINT8
+name|AccessLength
 decl_stmt|;
 block|}
 name|ACPI_CREATE_FIELD_INFO
@@ -1021,7 +1024,7 @@ comment|/*  * Secondary information structures for ACPI predefined objects that 
 end_comment
 
 begin_comment
-comment|/*  * Used for ACPI_PTYPE1_FIXED, ACPI_PTYPE1_VAR, ACPI_PTYPE2,  * ACPI_PTYPE2_MIN, ACPI_PTYPE2_PKG_COUNT, ACPI_PTYPE2_COUNT  */
+comment|/*  * Used for ACPI_PTYPE1_FIXED, ACPI_PTYPE1_VAR, ACPI_PTYPE2,  * ACPI_PTYPE2_MIN, ACPI_PTYPE2_PKG_COUNT, ACPI_PTYPE2_COUNT,  * ACPI_PTYPE2_FIX_VAR  */
 end_comment
 
 begin_typedef
@@ -1155,6 +1158,10 @@ name|acpi_operand_object
 modifier|*
 name|ParentPackage
 decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|Node
+decl_stmt|;
 name|UINT32
 name|Flags
 decl_stmt|;
@@ -1175,6 +1182,13 @@ define|#
 directive|define
 name|ACPI_OBJECT_REPAIRED
 value|1
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_OBJECT_WRAPPED
+value|2
 end_define
 
 begin_comment
@@ -2024,6 +2038,35 @@ function_decl|;
 end_typedef
 
 begin_comment
+comment|/* Address Range info block */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_address_range
+block|{
+name|struct
+name|acpi_address_range
+modifier|*
+name|Next
+decl_stmt|;
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|RegionNode
+decl_stmt|;
+name|ACPI_PHYSICAL_ADDRESS
+name|StartAddress
+decl_stmt|;
+name|ACPI_PHYSICAL_ADDRESS
+name|EndAddress
+decl_stmt|;
+block|}
+name|ACPI_ADDRESS_RANGE
+typedef|;
+end_typedef
+
+begin_comment
 comment|/*****************************************************************************  *  * Parser typedefs and structs  *  ****************************************************************************/
 end_comment
 
@@ -2083,6 +2126,30 @@ name|ACPI_OPCODE_INFO
 typedef|;
 end_typedef
 
+begin_comment
+comment|/* Structure for Resource Tag information */
+end_comment
+
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_tag_info
+block|{
+name|UINT32
+name|BitOffset
+decl_stmt|;
+name|UINT32
+name|BitLength
+decl_stmt|;
+block|}
+name|ACPI_TAG_INFO
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* Value associated with the parse object */
+end_comment
+
 begin_typedef
 typedef|typedef
 union|union
@@ -2117,6 +2184,10 @@ modifier|*
 name|Arg
 decl_stmt|;
 comment|/* arguments and contained ops */
+name|ACPI_TAG_INFO
+name|Tag
+decl_stmt|;
+comment|/* Resource descriptor tag info  */
 block|}
 name|ACPI_PARSE_VALUE
 typedef|;
@@ -3321,7 +3392,7 @@ end_define
 begin_define
 define|#
 directive|define
-name|ACPI_RESOURCE_NAME_RESERVED_S1
+name|ACPI_RESOURCE_NAME_FIXED_DMA
 value|0x50
 end_define
 
@@ -3444,8 +3515,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_RESOURCE_NAME_GPIO
+value|0x8C
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_RESOURCE_NAME_SERIAL_BUS
+value|0x8E
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_RESOURCE_NAME_LARGE_MAX
-value|0x8B
+value|0x8E
 end_define
 
 begin_comment

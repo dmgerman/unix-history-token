@@ -8793,19 +8793,23 @@ value|0x0008
 end_define
 
 begin_comment
-comment|/* The following struct holds the initialization array. */
+comment|/*    * this is 3*1024 for parameter, 3.5*1024 for sample and 2*3.5*1024   * for code since each instruction is 40 bits and takes two dwords  */
 end_comment
 
 begin_comment
-comment|/*  * this is 3*1024 for parameter, 3.5*1024 for sample and 2*3.5*1024 for code since   * each instruction is 40 bits and takes two dwords   */
+comment|/* The following struct holds the initialization array. */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|INKY_BA1_DWORD_SIZE
-value|(13 * 1024 + 512)
+value|(13*1024+512)
 end_define
+
+begin_comment
+comment|/* this is parameter, sample, and code */
+end_comment
 
 begin_define
 define|#
@@ -8816,14 +8820,14 @@ end_define
 
 begin_struct
 struct|struct
-name|BA1struct
+name|cs461x_firmware_struct
 block|{
 struct|struct
 block|{
-name|u_long
-name|ulDestByteOffset
+name|u_int32_t
+name|ulDestAddr
 decl_stmt|,
-name|ulSourceByteSize
+name|ulSourceSize
 decl_stmt|;
 block|}
 name|MemoryStat
@@ -8831,7 +8835,7 @@ index|[
 name|INKY_MEMORY_COUNT
 index|]
 struct|;
-name|u_long
+name|u_int32_t
 name|BA1Array
 index|[
 name|INKY_BA1_DWORD_SIZE

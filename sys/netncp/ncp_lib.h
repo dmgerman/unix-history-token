@@ -1088,6 +1088,7 @@ name|u_int32_t
 parameter_list|,
 name|u_int16_t
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 parameter_list|,

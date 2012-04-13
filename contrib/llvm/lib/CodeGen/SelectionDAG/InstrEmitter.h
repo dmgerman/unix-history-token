@@ -311,6 +311,25 @@ name|bool
 name|IsCloned
 argument_list|)
 decl_stmt|;
+comment|/// ConstrainForSubReg - Try to constrain VReg to a register class that
+comment|/// supports SubIdx sub-registers.  Emit a copy if that isn't possible.
+comment|/// Return the virtual register to use.
+name|unsigned
+name|ConstrainForSubReg
+parameter_list|(
+name|unsigned
+name|VReg
+parameter_list|,
+name|unsigned
+name|SubIdx
+parameter_list|,
+name|EVT
+name|VT
+parameter_list|,
+name|DebugLoc
+name|DL
+parameter_list|)
+function_decl|;
 comment|/// EmitSubregNode - Generate machine code for subreg nodes.
 comment|///
 name|void

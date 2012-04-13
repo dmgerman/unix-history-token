@@ -135,6 +135,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/sound/pci/emuxkireg.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/sound/pci/emu10kx.h>
 end_include
 
@@ -785,7 +791,7 @@ value|0x0c
 end_define
 
 begin_comment
-comment|/* Live! 5.1 Digital, non-standart 5.1 (center& sub) outputs */
+comment|/* Live! 5.1 Digital, non-standard 5.1 (center& sub) outputs */
 end_comment
 
 begin_define
@@ -933,7 +939,7 @@ value|A_IN_AUX2_L
 end_define
 
 begin_comment
-comment|/* Audigiy Outputs */
+comment|/* Audigy Outputs */
 end_comment
 
 begin_define
@@ -1157,23 +1163,75 @@ name|A_OUT_ADC_REC
 value|A_OUT_ADC_REC_L
 end_define
 
-begin_include
-include|#
-directive|include
-file|"emu10k1-alsa%diked.h"
-end_include
+begin_define
+define|#
+directive|define
+name|EMU_DATA2
+value|0x24
+end_define
 
-begin_include
-include|#
-directive|include
-file|"p16v-alsa%diked.h"
-end_include
+begin_define
+define|#
+directive|define
+name|EMU_IPR2
+value|0x28
+end_define
 
-begin_include
-include|#
-directive|include
-file|"p17v-alsa%diked.h"
-end_include
+begin_define
+define|#
+directive|define
+name|EMU_INTE2
+value|0x2c
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_IPR3
+value|0x38
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_INTE3
+value|0x3c
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_A2_SRCSel
+value|0x60
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_A2_SRCMULTI_ENABLE
+value|0x6e
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_A_I2S_CAPTURE_96000
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_A2_MIXER_I2S_ENABLE
+value|0x7B
+end_define
+
+begin_define
+define|#
+directive|define
+name|EMU_A2_MIXER_SPDIF_ENABLE
+value|0x7A
+end_define
 
 begin_define
 define|#
@@ -3842,7 +3900,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PTR / DATA interface. Access to EMU10Kx is made  * via (channel, register) pair. Some registers are channel-specific,  * some not.  */
+comment|/*  * EMU_PTR / EMU_DATA interface. Access to EMU10Kx is made  * via (channel, register) pair. Some registers are channel-specific,  * some not.  */
 end_comment
 
 begin_function
@@ -3891,7 +3949,7 @@ operator||
 operator|(
 name|chn
 operator|&
-name|PTR_CHANNELNUM_MASK
+name|EMU_PTR_CHNO_MASK
 operator|)
 expr_stmt|;
 name|EMU_RWLOCK
@@ -3901,7 +3959,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|PTR
+name|EMU_PTR
 argument_list|,
 name|ptr
 argument_list|,
@@ -3914,7 +3972,7 @@ name|emu_rd_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|DATA
+name|EMU_DATA
 argument_list|,
 literal|4
 argument_list|)
@@ -4028,7 +4086,7 @@ operator||
 operator|(
 name|chn
 operator|&
-name|PTR_CHANNELNUM_MASK
+name|EMU_PTR_CHNO_MASK
 operator|)
 expr_stmt|;
 name|EMU_RWLOCK
@@ -4038,7 +4096,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|PTR
+name|EMU_PTR
 argument_list|,
 name|ptr
 argument_list|,
@@ -4101,7 +4159,7 @@ name|emu_rd_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|DATA
+name|EMU_DATA
 argument_list|,
 literal|4
 argument_list|)
@@ -4114,7 +4172,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|DATA
+name|EMU_DATA
 argument_list|,
 name|data
 argument_list|,
@@ -4128,7 +4186,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * PTR2 / DATA2 interface. Access to P16v is made  * via (channel, register) pair. Some registers are channel-specific,  * some not. This interface is supported by CA0102 and CA0108 chips only.  */
+comment|/*  * EMU_A2_PTR / EMU_DATA2 interface. Access to P16v is made  * via (channel, register) pair. Some registers are channel-specific,  * some not. This interface is supported by CA0102 and CA0108 chips only.  */
 end_comment
 
 begin_function
@@ -4158,7 +4216,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|PTR2
+name|EMU_A2_PTR
 argument_list|,
 operator|(
 name|reg
@@ -4177,7 +4235,7 @@ name|emu_rd_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|DATA2
+name|EMU_DATA2
 argument_list|,
 literal|4
 argument_list|)
@@ -4219,7 +4277,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|PTR2
+name|EMU_A2_PTR
 argument_list|,
 operator|(
 name|reg
@@ -4236,7 +4294,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|DATA2
+name|EMU_DATA2
 argument_list|,
 name|data
 argument_list|,
@@ -4308,7 +4366,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Direct hardware register access  * Assume that it is never used to access PTR-based registers and can run unlocked.  */
+comment|/*  * Direct hardware register access  * Assume that it is never used to access EMU_PTR-based registers and can run unlocked.  */
 end_comment
 
 begin_function
@@ -4336,10 +4394,10 @@ name|KASSERT
 argument_list|(
 name|regno
 operator|!=
-name|PTR
+name|EMU_PTR
 argument_list|,
 operator|(
-literal|"emu_wr: attempt to write to PTR"
+literal|"emu_wr: attempt to write to EMU_PTR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4347,10 +4405,10 @@ name|KASSERT
 argument_list|(
 name|regno
 operator|!=
-name|PTR2
+name|EMU_A2_PTR
 argument_list|,
 operator|(
-literal|"emu_wr: attempt to write to PTR2"
+literal|"emu_wr: attempt to write to EMU_A2_PTR"
 operator|)
 argument_list|)
 expr_stmt|;
@@ -4393,7 +4451,7 @@ name|KASSERT
 argument_list|(
 name|regno
 operator|!=
-name|DATA
+name|EMU_DATA
 argument_list|,
 operator|(
 literal|"emu_rd: attempt to read DATA"
@@ -4404,7 +4462,7 @@ name|KASSERT
 argument_list|(
 name|regno
 operator|!=
-name|DATA2
+name|EMU_DATA2
 argument_list|,
 operator|(
 literal|"emu_rd: attempt to read DATA2"
@@ -4464,7 +4522,7 @@ name|emu_rd_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 literal|2
 argument_list|)
@@ -4473,31 +4531,11 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 name|iocfg
 operator||
-name|A_IOCFG_GPOUT2
-argument_list|,
-literal|2
-argument_list|)
-expr_stmt|;
-name|DELAY
-argument_list|(
-literal|500
-argument_list|)
-expr_stmt|;
-name|emu_wr_nolock
-argument_list|(
-name|sc
-argument_list|,
-name|A_IOCFG
-argument_list|,
-name|iocfg
-operator||
-name|A_IOCFG_GPOUT1
-operator||
-name|A_IOCFG_GPOUT2
+name|EMU_A_IOCFG_GPOUT2
 argument_list|,
 literal|2
 argument_list|)
@@ -4511,11 +4549,31 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 name|iocfg
 operator||
-name|A_IOCFG_GPOUT1
+name|EMU_A_IOCFG_GPOUT1
+operator||
+name|EMU_A_IOCFG_GPOUT2
+argument_list|,
+literal|2
+argument_list|)
+expr_stmt|;
+name|DELAY
+argument_list|(
+literal|500
+argument_list|)
+expr_stmt|;
+name|emu_wr_nolock
+argument_list|(
+name|sc
+argument_list|,
+name|EMU_A_IOCFG
+argument_list|,
+name|iocfg
+operator||
+name|EMU_A_IOCFG_GPOUT1
 argument_list|,
 literal|2
 argument_list|)
@@ -4529,7 +4587,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 name|iocfg
 argument_list|,
@@ -4565,7 +4623,7 @@ name|emu_rd_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
 literal|4
 argument_list|)
@@ -4574,11 +4632,11 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
 name|iocfg
 operator||
-name|HCFG_GPOUT2
+name|EMU_HCFG_GPOUT2
 argument_list|,
 literal|4
 argument_list|)
@@ -4592,13 +4650,13 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
 name|iocfg
 operator||
-name|HCFG_GPOUT1
+name|EMU_HCFG_GPOUT1
 operator||
-name|HCFG_GPOUT2
+name|EMU_HCFG_GPOUT2
 argument_list|,
 literal|4
 argument_list|)
@@ -4612,7 +4670,7 @@ name|emu_wr_nolock
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
 name|iocfg
 argument_list|,
@@ -4639,7 +4697,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * emu_timer_ - HW timer managment  */
+comment|/*  * emu_timer_ - HW timer management  */
 end_comment
 
 begin_function
@@ -4851,7 +4909,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|TIMER
+name|EMU_TIMER
 argument_list|,
 name|sc
 operator|->
@@ -5064,7 +5122,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|TIMER
+name|EMU_TIMER
 argument_list|,
 name|sc
 operator|->
@@ -5088,20 +5146,20 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 literal|4
 argument_list|)
 expr_stmt|;
 name|x
 operator||=
-name|INTE_INTERVALTIMERENB
+name|EMU_INTE_INTERTIMERENB
 expr_stmt|;
 name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 name|x
 argument_list|,
@@ -5117,7 +5175,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 literal|4
 argument_list|)
@@ -5125,13 +5183,13 @@ expr_stmt|;
 name|x
 operator|&=
 operator|~
-name|INTE_INTERVALTIMERENB
+name|EMU_INTE_INTERTIMERENB
 expr_stmt|;
 name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 name|x
 argument_list|,
@@ -5245,7 +5303,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * emu_intr_ - HW interrupt handler managment  */
+comment|/*  * emu_intr_ - HW interrupt handler management  */
 end_comment
 
 begin_function
@@ -5373,7 +5431,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 literal|4
 argument_list|)
@@ -5386,7 +5444,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 name|x
 argument_list|,
@@ -5522,7 +5580,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 literal|4
 argument_list|)
@@ -5583,7 +5641,7 @@ name|irq_func
 operator|=
 name|NULL
 expr_stmt|;
-comment|/* other interrupt handlers may use this INTE value */
+comment|/* other interrupt handlers may use this EMU_INTE value */
 for|for
 control|(
 name|i
@@ -5625,7 +5683,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 name|x
 argument_list|,
@@ -5690,7 +5748,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|IPR
+name|EMU_IPR
 argument_list|,
 literal|4
 argument_list|)
@@ -5710,7 +5768,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|IPR
+name|EMU_IPR
 argument_list|,
 name|stat
 argument_list|,
@@ -5868,7 +5926,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|IPR2
+name|EMU_IPR2
 argument_list|,
 literal|4
 argument_list|)
@@ -5888,7 +5946,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|IPR2
+name|EMU_IPR2
 argument_list|,
 name|stat
 argument_list|,
@@ -5909,13 +5967,13 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"IPR2: %08x\n"
+literal|"EMU_IPR2: %08x\n"
 argument_list|,
 name|stat
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* to avoid infinite loop. shoud be removed 				 * after completion of P16V interface. */
+comment|/* to avoid infinite loop. should be removed 				 * after completion of P16V interface. */
 block|}
 if|if
 condition|(
@@ -5935,7 +5993,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|IPR3
+name|EMU_IPR3
 argument_list|,
 literal|4
 argument_list|)
@@ -5955,7 +6013,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|IPR3
+name|EMU_IPR3
 argument_list|,
 name|stat
 argument_list|,
@@ -5976,7 +6034,7 @@ name|sc
 operator|->
 name|dev
 argument_list|,
-literal|"IPR3: %08x\n"
+literal|"EMU_IPR3: %08x\n"
 argument_list|,
 name|stat
 argument_list|)
@@ -6683,13 +6741,6 @@ call|(
 name|uint32_t
 call|)
 argument_list|(
-name|u_long
-argument_list|)
-argument_list|(
-operator|(
-name|uint8_t
-operator|*
-operator|)
 name|blk
 operator|->
 name|buf_addr
@@ -8519,9 +8570,9 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CPF
+name|EMU_CHAN_CPF
 argument_list|,
-name|CPF_STEREO_MASK
+name|EMU_CHAN_CPF_STEREO_MASK
 argument_list|)
 expr_stmt|;
 block|}
@@ -8535,7 +8586,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CPF
+name|EMU_CHAN_CPF
 argument_list|,
 literal|0
 argument_list|)
@@ -8584,7 +8635,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|FXRT
+name|EMU_CHAN_FXRT
 argument_list|,
 operator|(
 operator|(
@@ -8646,7 +8697,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|A_FXRT1
+name|EMU_A_CHAN_FXRT1
 argument_list|,
 operator|(
 name|v
@@ -8701,7 +8752,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|A_FXRT2
+name|EMU_A_CHAN_FXRT2
 argument_list|,
 operator|(
 name|v
@@ -8756,7 +8807,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|A_SENDAMOUNTS
+name|EMU_A_CHAN_SENDAMOUNTS
 argument_list|,
 operator|(
 name|v
@@ -8812,7 +8863,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|PTRX
+name|EMU_CHAN_PTRX
 argument_list|,
 operator|(
 name|v
@@ -8845,7 +8896,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|DSL
+name|EMU_CHAN_DSL
 argument_list|,
 name|v
 operator|->
@@ -8871,7 +8922,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|PSST
+name|EMU_CHAN_PSST
 argument_list|,
 name|v
 operator|->
@@ -8897,7 +8948,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CCCA
+name|EMU_CHAN_CCCA
 argument_list|,
 name|start
 operator||
@@ -8908,7 +8959,7 @@ name|b16
 condition|?
 literal|0
 else|:
-name|CCCA_8BITSELECT
+name|EMU_CHAN_CCCA_8BITSELECT
 operator|)
 argument_list|)
 expr_stmt|;
@@ -8920,7 +8971,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|Z1
+name|EMU_CHAN_Z1
 argument_list|,
 literal|0
 argument_list|)
@@ -8933,7 +8984,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|Z2
+name|EMU_CHAN_Z2
 argument_list|,
 literal|0
 argument_list|)
@@ -8955,7 +9006,7 @@ operator|<<
 literal|1
 operator|)
 operator||
-name|MAP_PTI_MASK
+name|EMU_CHAN_MAP_PTI_MASK
 expr_stmt|;
 name|emu_wrptr
 argument_list|(
@@ -8965,7 +9016,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|MAPA
+name|EMU_CHAN_MAPA
 argument_list|,
 name|silent_page
 argument_list|)
@@ -8978,7 +9029,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|MAPB
+name|EMU_CHAN_MAPB
 argument_list|,
 name|silent_page
 argument_list|)
@@ -8991,9 +9042,9 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CVCF
+name|EMU_CHAN_CVCF
 argument_list|,
-name|CVCF_CURRENTFILTER_MASK
+name|EMU_CHAN_CVCF_CURRFILTER_MASK
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -9004,9 +9055,9 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|VTFT
+name|EMU_CHAN_VTFT
 argument_list|,
-name|VTFT_FILTERTARGET_MASK
+name|EMU_CHAN_VTFT_FILTERTARGET_MASK
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -9017,7 +9068,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|ATKHLDM
+name|EMU_CHAN_ATKHLDM
 argument_list|,
 literal|0
 argument_list|)
@@ -9030,9 +9081,9 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|DCYSUSM
+name|EMU_CHAN_DCYSUSM
 argument_list|,
-name|DCYSUSM_DECAYTIME_MASK
+name|EMU_CHAN_DCYSUSM_DECAYTIME_MASK
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -9043,7 +9094,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|LFOVAL1
+name|EMU_CHAN_LFOVAL1
 argument_list|,
 literal|0x8000
 argument_list|)
@@ -9056,7 +9107,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|LFOVAL2
+name|EMU_CHAN_LFOVAL2
 argument_list|,
 literal|0x8000
 argument_list|)
@@ -9069,7 +9120,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|FMMOD
+name|EMU_CHAN_FMMOD
 argument_list|,
 literal|0
 argument_list|)
@@ -9082,7 +9133,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|TREMFRQ
+name|EMU_CHAN_TREMFRQ
 argument_list|,
 literal|0
 argument_list|)
@@ -9095,7 +9146,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|FM2FRQ2
+name|EMU_CHAN_FM2FRQ2
 argument_list|,
 literal|0
 argument_list|)
@@ -9108,7 +9159,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|ENVVAL
+name|EMU_CHAN_ENVVAL
 argument_list|,
 literal|0x8000
 argument_list|)
@@ -9121,11 +9172,11 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|ATKHLDV
+name|EMU_CHAN_ATKHLDV
 argument_list|,
-name|ATKHLDV_HOLDTIME_MASK
+name|EMU_CHAN_ATKHLDV_HOLDTIME_MASK
 operator||
-name|ATKHLDV_ATTACKTIME_MASK
+name|EMU_CHAN_ATKHLDV_ATTACKTIME_MASK
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -9136,7 +9187,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|ENVVOL
+name|EMU_CHAN_ENVVOL
 argument_list|,
 literal|0x8000
 argument_list|)
@@ -9149,7 +9200,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|PEFE_FILTERAMOUNT
+name|EMU_CHAN_PEFE_FILTERAMOUNT
 argument_list|,
 literal|0x7f
 argument_list|)
@@ -9162,7 +9213,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|PEFE_PITCHAMOUNT
+name|EMU_CHAN_PEFE_PITCHAMOUNT
 argument_list|,
 literal|0
 argument_list|)
@@ -9223,9 +9274,9 @@ operator|&
 literal|0x20
 operator|)
 condition|?
-name|SOLEH
+name|EMU_SOLEH
 else|:
-name|SOLEL
+name|EMU_SOLEL
 expr_stmt|;
 name|channel
 operator|&=
@@ -9362,7 +9413,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CD0
+name|EMU_CHAN_CD0
 operator|+
 name|i
 argument_list|,
@@ -9377,7 +9428,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CCR_CACHEINVALIDSIZE
+name|EMU_CHAN_CCR_CACHEINVALIDSIZE
 argument_list|,
 literal|0
 argument_list|)
@@ -9390,7 +9441,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CCR_READADDRESS
+name|EMU_CHAN_CCR_READADDRESS
 argument_list|,
 name|cra
 argument_list|)
@@ -9403,7 +9454,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CCR_CACHEINVALIDSIZE
+name|EMU_CHAN_CCR_CACHEINVALIDSIZE
 argument_list|,
 name|ccis
 argument_list|)
@@ -9416,7 +9467,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|IFATN
+name|EMU_CHAN_IFATN
 argument_list|,
 literal|0xff00
 argument_list|)
@@ -9429,7 +9480,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|VTFT
+name|EMU_CHAN_VTFT
 argument_list|,
 literal|0xffffffff
 argument_list|)
@@ -9442,7 +9493,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CVCF
+name|EMU_CHAN_CVCF
 argument_list|,
 literal|0xffffffff
 argument_list|)
@@ -9455,7 +9506,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|DCYSUSV
+name|EMU_CHAN_DCYSUSV
 argument_list|,
 literal|0x00007f7f
 argument_list|)
@@ -9499,7 +9550,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|PTRX_PITCHTARGET
+name|EMU_CHAN_PTRX_PITCHTARGET
 argument_list|,
 name|pitch_target
 argument_list|)
@@ -9512,7 +9563,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CPF_CURRENTPITCH
+name|EMU_CHAN_CPF_PITCH
 argument_list|,
 name|pitch_target
 argument_list|)
@@ -9525,7 +9576,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|IP
+name|EMU_CHAN_IP
 argument_list|,
 name|initial_pitch
 argument_list|)
@@ -9541,7 +9592,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|PTRX_PITCHTARGET
+name|EMU_CHAN_PTRX_PITCHTARGET
 argument_list|,
 literal|0
 argument_list|)
@@ -9554,7 +9605,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CPF_CURRENTPITCH
+name|EMU_CHAN_CPF_PITCH
 argument_list|,
 literal|0
 argument_list|)
@@ -9567,7 +9618,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|IFATN
+name|EMU_CHAN_IFATN
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -9580,7 +9631,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|VTFT
+name|EMU_CHAN_VTFT
 argument_list|,
 literal|0x0000ffff
 argument_list|)
@@ -9593,7 +9644,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CVCF
+name|EMU_CHAN_CVCF
 argument_list|,
 literal|0x0000ffff
 argument_list|)
@@ -9606,7 +9657,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|IP
+name|EMU_CHAN_IP
 argument_list|,
 literal|0
 argument_list|)
@@ -9706,7 +9757,7 @@ name|v
 operator|->
 name|vnum
 argument_list|,
-name|CCCA_CURRADDR
+name|EMU_CHAN_CCCA_CURRADDR
 argument_list|)
 operator|-
 operator|(
@@ -10414,9 +10465,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|DBG
+name|EMU_DBG
 argument_list|,
-name|EMU10K1_DBG_SINGLE_STEP
+name|EMU_DBG_SINGLE_STEP
 argument_list|)
 expr_stmt|;
 block|}
@@ -10428,9 +10479,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|A_DBG
+name|EMU_A_DBG
 argument_list|,
-name|A_DBG_SINGLE_STEP
+name|EMU_A_DBG_SINGLE_STEP
 argument_list|)
 expr_stmt|;
 block|}
@@ -13162,7 +13213,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|DBG
+name|EMU_DBG
 argument_list|,
 literal|0
 argument_list|)
@@ -13176,7 +13227,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|A_DBG
+name|EMU_A_DBG
 argument_list|,
 literal|0
 argument_list|)
@@ -14888,9 +14939,9 @@ return|return;
 block|}
 name|hcfg
 operator|=
-name|HCFG_AUDIOENABLE
+name|EMU_HCFG_AUDIOENABLE
 operator||
-name|HCFG_AUTOMUTE
+name|EMU_HCFG_AUTOMUTE
 expr_stmt|;
 name|a_iocfg
 operator|=
@@ -14906,7 +14957,7 @@ literal|6
 condition|)
 name|hcfg
 operator||=
-name|HCFG_JOYENABLE
+name|EMU_HCFG_JOYENABLE
 expr_stmt|;
 if|if
 condition|(
@@ -14916,14 +14967,14 @@ name|is_emu10k1
 condition|)
 name|hcfg
 operator||=
-name|HCFG_LOCKTANKCACHE_MASK
+name|EMU_HCFG_LOCKTANKCACHE_MASK
 expr_stmt|;
 else|else
 name|hcfg
 operator||=
-name|HCFG_CODECFORMAT_I2S
+name|EMU_HCFG_CODECFMT_I2S
 operator||
-name|HCFG_JOYENABLE
+name|EMU_HCFG_JOYENABLE
 expr_stmt|;
 if|if
 condition|(
@@ -14951,11 +15002,11 @@ expr_stmt|;
 block|}
 name|a_iocfg
 operator||=
-name|A_IOCFG_ENABLE_DIGITAL
+name|EMU_A_IOCFG_GPOUT1
 expr_stmt|;
 name|hcfg
 operator||=
-name|HCFG_GPOUT0
+name|EMU_HCFG_GPOUT0
 expr_stmt|;
 block|}
 if|if
@@ -14996,10 +15047,10 @@ operator|->
 name|is_ca0108
 operator|)
 condition|)
-comment|/* 		 * Setting A_IOCFG_DISABLE_ANALOG will do opposite things 		 * on diffrerent cards. 		 * "don't disable analog outs" on Audigy 2 (ca0102/ca0108) 		 * "disable analog outs" on Audigy (emu10k2) 		 */
+comment|/* 		 * Setting EMU_A_IOCFG_DISABLE_ANALOG will do opposite things 		 * on diffrerent cards. 		 * "don't disable analog outs" on Audigy 2 (ca0102/ca0108) 		 * "disable analog outs" on Audigy (emu10k2) 		 */
 name|a_iocfg
 operator||=
-name|A_IOCFG_DISABLE_ANALOG
+name|EMU_A_IOCFG_DISABLE_ANALOG
 expr_stmt|;
 if|if
 condition|(
@@ -15037,7 +15088,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
 name|hcfg
 argument_list|,
@@ -15071,7 +15122,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 literal|2
 argument_list|)
@@ -15084,7 +15135,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 name|tmp
 argument_list|,
@@ -15165,23 +15216,23 @@ return|return;
 block|}
 name|spcs
 operator|=
-name|SPCS_CLKACCY_1000PPM
+name|EMU_SPCS_CLKACCY_1000PPM
 operator||
-name|SPCS_SAMPLERATE_48
+name|EMU_SPCS_SAMPLERATE_48
 operator||
-name|SPCS_CHANNELNUM_LEFT
+name|EMU_SPCS_CHANNELNUM_LEFT
 operator||
-name|SPCS_SOURCENUM_UNSPEC
+name|EMU_SPCS_SOURCENUM_UNSPEC
 operator||
-name|SPCS_GENERATIONSTATUS
+name|EMU_SPCS_GENERATIONSTATUS
 operator||
 literal|0x00001200
 operator||
 literal|0x00000000
 operator||
-name|SPCS_EMPHASIS_NONE
+name|EMU_SPCS_EMPHASIS_NONE
 operator||
-name|SPCS_COPYRIGHT
+name|EMU_SPCS_COPYRIGHT
 expr_stmt|;
 name|mode
 operator|=
@@ -15193,7 +15244,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SPCS0
+name|EMU_SPCS0
 argument_list|,
 name|spcs
 argument_list|)
@@ -15204,7 +15255,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SPCS1
+name|EMU_SPCS1
 argument_list|,
 name|spcs
 argument_list|)
@@ -15215,7 +15266,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SPCS2
+name|EMU_SPCS2
 argument_list|,
 name|spcs
 argument_list|)
@@ -15631,7 +15682,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-comment|/* 	 * XXX May not need this if we have IPR3 handler. 	 * Is it a real init calls, or IPR3 interrupt acknowledgments? 	 * Looks much like "(data<< 16) | register". 	 */
+comment|/* 	 * XXX May not need this if we have EMU_IPR3 handler. 	 * Is it a real init calls, or EMU_IPR3 interrupt acknowledgments? 	 * Looks much like "(data<< 16) | register". 	 */
 name|emu_wr_cbptr
 argument_list|(
 name|sc
@@ -15742,13 +15793,13 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
-name|HCFG_LOCKSOUNDCACHE
+name|EMU_HCFG_LOCKSOUNDCACHE
 operator||
-name|HCFG_LOCKTANKCACHE_MASK
+name|EMU_HCFG_LOCKTANKCACHE_MASK
 operator||
-name|HCFG_MUTEBUTTONENABLE
+name|EMU_HCFG_MUTEBUTTONENABLE
 argument_list|,
 literal|4
 argument_list|)
@@ -15760,9 +15811,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|MICBS
+name|EMU_MICBS
 argument_list|,
-name|ADCBS_BUFSIZE_NONE
+name|EMU_RECBS_BUFSIZE_NONE
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -15771,29 +15822,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|MICBA
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|emu_wrptr
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|FXBS
-argument_list|,
-name|ADCBS_BUFSIZE_NONE
-argument_list|)
-expr_stmt|;
-name|emu_wrptr
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|FXBA
+name|EMU_MICBA
 argument_list|,
 literal|0
 argument_list|)
@@ -15804,9 +15833,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|ADCBS
+name|EMU_FXBS
 argument_list|,
-name|ADCBS_BUFSIZE_NONE
+name|EMU_RECBS_BUFSIZE_NONE
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -15815,7 +15844,29 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|ADCBA
+name|EMU_FXBA
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|emu_wrptr
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|EMU_ADCBS
+argument_list|,
+name|EMU_RECBS_BUFSIZE_NONE
+argument_list|)
+expr_stmt|;
+name|emu_wrptr
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|EMU_ADCBA
 argument_list|,
 literal|0
 argument_list|)
@@ -15825,13 +15876,13 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
-name|INTE_INTERVALTIMERENB
+name|EMU_INTE_INTERTIMERENB
 operator||
-name|INTE_SAMPLERATETRACKER
+name|EMU_INTE_SAMPLERATER
 operator||
-name|INTE_PCIERRORENABLE
+name|EMU_INTE_PCIERRENABLE
 argument_list|,
 literal|4
 argument_list|)
@@ -15842,7 +15893,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|CLIEL
+name|EMU_CLIEL
 argument_list|,
 literal|0
 argument_list|)
@@ -15853,7 +15904,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|CLIEH
+name|EMU_CLIEH
 argument_list|,
 literal|0
 argument_list|)
@@ -15864,7 +15915,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SOLEL
+name|EMU_SOLEL
 argument_list|,
 literal|0
 argument_list|)
@@ -15875,7 +15926,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SOLEH
+name|EMU_SOLEH
 argument_list|,
 literal|0
 argument_list|)
@@ -15899,7 +15950,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE2
+name|EMU_INTE2
 argument_list|,
 literal|0
 argument_list|,
@@ -15916,7 +15967,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE3
+name|EMU_INTE3
 argument_list|,
 literal|0
 argument_list|,
@@ -15936,9 +15987,9 @@ name|has_51
 condition|)
 name|ac97slot
 operator|=
-name|AC97SLOT_CNTR
+name|EMU_AC97SLOT_CENTER
 operator||
-name|AC97SLOT_LFE
+name|EMU_AC97SLOT_LFE
 expr_stmt|;
 if|if
 condition|(
@@ -15948,13 +15999,13 @@ name|has_71
 condition|)
 name|ac97slot
 operator|=
-name|AC97SLOT_CNTR
+name|EMU_AC97SLOT_CENTER
 operator||
-name|AC97SLOT_LFE
+name|EMU_AC97SLOT_LFE
 operator||
-name|AC97SLOT_REAR_LEFT
+name|EMU_AC97SLOT_REAR_LEFT
 operator||
-name|AC97SLOT_REAR_RIGHT
+name|EMU_AC97SLOT_REAR_RIGHT
 expr_stmt|;
 if|if
 condition|(
@@ -15972,7 +16023,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|AC97SLOT
+name|EMU_AC97SLOT
 argument_list|,
 name|ac97slot
 argument_list|)
@@ -15990,7 +16041,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SPBYPASS
+name|EMU_SPBYPASS
 argument_list|,
 literal|0xf00
 argument_list|)
@@ -16277,11 +16328,11 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|MAPA
+name|EMU_CHAN_MAPA
 argument_list|,
 name|tmp
 operator||
-name|MAP_PTI_MASK
+name|EMU_CHAN_MAP_PTI_MASK
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -16290,11 +16341,11 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|MAPB
+name|EMU_CHAN_MAPB
 argument_list|,
 name|tmp
 operator||
-name|MAP_PTI_MASK
+name|EMU_CHAN_MAP_PTI_MASK
 argument_list|)
 expr_stmt|;
 block|}
@@ -16304,7 +16355,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|PTB
+name|EMU_PTB
 argument_list|,
 operator|(
 name|sc
@@ -16321,7 +16372,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|TCB
+name|EMU_TCB
 argument_list|,
 literal|0
 argument_list|)
@@ -16333,7 +16384,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|TCBS
+name|EMU_TCBS
 argument_list|,
 literal|0
 argument_list|)
@@ -16360,7 +16411,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|DCYSUSV
+name|EMU_CHAN_DCYSUSV
 argument_list|,
 literal|0
 argument_list|)
@@ -16371,7 +16422,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|IP
+name|EMU_CHAN_IP
 argument_list|,
 literal|0
 argument_list|)
@@ -16382,7 +16433,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|VTFT
+name|EMU_CHAN_VTFT
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -16393,7 +16444,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|CVCF
+name|EMU_CHAN_CVCF
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -16404,7 +16455,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|PTRX
+name|EMU_CHAN_PTRX
 argument_list|,
 literal|0
 argument_list|)
@@ -16415,7 +16466,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|CPF
+name|EMU_CHAN_CPF
 argument_list|,
 literal|0
 argument_list|)
@@ -16426,7 +16477,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|CCR
+name|EMU_CHAN_CCR
 argument_list|,
 literal|0
 argument_list|)
@@ -16437,7 +16488,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|PSST
+name|EMU_CHAN_PSST
 argument_list|,
 literal|0
 argument_list|)
@@ -16448,7 +16499,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|DSL
+name|EMU_CHAN_DSL
 argument_list|,
 literal|0x10
 argument_list|)
@@ -16459,7 +16510,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|CCCA
+name|EMU_CHAN_CCCA
 argument_list|,
 literal|0
 argument_list|)
@@ -16470,7 +16521,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|Z1
+name|EMU_CHAN_Z1
 argument_list|,
 literal|0
 argument_list|)
@@ -16481,7 +16532,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|Z2
+name|EMU_CHAN_Z2
 argument_list|,
 literal|0
 argument_list|)
@@ -16492,7 +16543,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|FXRT
+name|EMU_CHAN_FXRT
 argument_list|,
 literal|0xd01c0000
 argument_list|)
@@ -16503,7 +16554,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|ATKHLDM
+name|EMU_CHAN_ATKHLDM
 argument_list|,
 literal|0
 argument_list|)
@@ -16514,7 +16565,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|DCYSUSM
+name|EMU_CHAN_DCYSUSM
 argument_list|,
 literal|0
 argument_list|)
@@ -16525,7 +16576,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|IFATN
+name|EMU_CHAN_IFATN
 argument_list|,
 literal|0xffff
 argument_list|)
@@ -16536,7 +16587,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|PEFE
+name|EMU_CHAN_PEFE
 argument_list|,
 literal|0
 argument_list|)
@@ -16547,7 +16598,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|FMMOD
+name|EMU_CHAN_FMMOD
 argument_list|,
 literal|0
 argument_list|)
@@ -16558,7 +16609,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|TREMFRQ
+name|EMU_CHAN_TREMFRQ
 argument_list|,
 literal|24
 argument_list|)
@@ -16570,7 +16621,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|FM2FRQ2
+name|EMU_CHAN_FM2FRQ2
 argument_list|,
 literal|24
 argument_list|)
@@ -16582,7 +16633,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|TEMPENV
+name|EMU_CHAN_TEMPENV
 argument_list|,
 literal|0
 argument_list|)
@@ -16594,7 +16645,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|LFOVAL2
+name|EMU_CHAN_LFOVAL2
 argument_list|,
 literal|0
 argument_list|)
@@ -16605,7 +16656,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|LFOVAL1
+name|EMU_CHAN_LFOVAL1
 argument_list|,
 literal|0
 argument_list|)
@@ -16616,7 +16667,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|ATKHLDV
+name|EMU_CHAN_ATKHLDV
 argument_list|,
 literal|0
 argument_list|)
@@ -16627,7 +16678,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|ENVVOL
+name|EMU_CHAN_ENVVOL
 argument_list|,
 literal|0
 argument_list|)
@@ -16638,7 +16689,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|ENVVAL
+name|EMU_CHAN_ENVVAL
 argument_list|,
 literal|0
 argument_list|)
@@ -16714,7 +16765,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|A_FXRT1
+name|EMU_A_CHAN_FXRT1
 argument_list|,
 literal|0x3f3f3f3f
 argument_list|)
@@ -16725,7 +16776,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|A_FXRT2
+name|EMU_A_CHAN_FXRT2
 argument_list|,
 literal|0x3f3f3f3f
 argument_list|)
@@ -16736,7 +16787,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|A_SENDAMOUNTS
+name|EMU_A_CHAN_SENDAMOUNTS
 argument_list|,
 literal|0x0
 argument_list|)
@@ -16776,9 +16827,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|A_SPDIF_SAMPLERATE
+name|EMU_A_SPDIF_SAMPLERATE
 argument_list|,
-name|A_SPDIF_48000
+name|EMU_A_SPDIF_48000
 argument_list|)
 expr_stmt|;
 comment|/* 	 * CAxxxx cards needs additional setup: 	 * 1. Set I2S capture sample rate to 96000 	 * 2. Disable P16v / P17v proceesing 	 * 3. Allow EMU10K DSP inputs 	 */
@@ -16805,7 +16856,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|A_SPDIF_SAMPLERATE
+name|EMU_A_SPDIF_SAMPLERATE
 argument_list|)
 expr_stmt|;
 name|spdif_sr
@@ -16814,7 +16865,7 @@ literal|0xfffff1ff
 expr_stmt|;
 name|spdif_sr
 operator||=
-name|A_I2S_CAPTURE_96000
+name|EMU_A_I2S_CAPTURE_96000
 expr_stmt|;
 name|emu_wrptr
 argument_list|(
@@ -16822,7 +16873,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|A_SPDIF_SAMPLERATE
+name|EMU_A_SPDIF_SAMPLERATE
 argument_list|,
 name|spdif_sr
 argument_list|)
@@ -16834,7 +16885,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SRCSel
+name|EMU_A2_SRCSel
 argument_list|,
 literal|0x14
 argument_list|)
@@ -16852,7 +16903,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SRCMULTI_ENABLE
+name|EMU_A2_SRCMULTI_ENABLE
 argument_list|,
 literal|0xFF00FF00
 argument_list|)
@@ -16865,7 +16916,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|P17V_MIXER_I2S_ENABLE
+name|EMU_A2_MIXER_I2S_ENABLE
 argument_list|,
 literal|0xFF000000
 argument_list|)
@@ -16876,7 +16927,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|P17V_MIXER_SPDIF_ENABLE
+name|EMU_A2_MIXER_SPDIF_ENABLE
 argument_list|,
 literal|0xFF000000
 argument_list|)
@@ -16887,7 +16938,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 literal|2
 argument_list|)
@@ -16896,7 +16947,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 name|tmp
 operator|&
@@ -17002,7 +17053,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
 literal|4
 argument_list|)
@@ -17401,7 +17452,7 @@ name|emu_rd
 argument_list|(
 name|sc
 argument_list|,
-name|A_IOCFG
+name|EMU_A_IOCFG
 argument_list|,
 literal|2
 argument_list|)
@@ -17640,7 +17691,7 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|INTE
+name|EMU_INTE
 argument_list|,
 literal|0
 argument_list|,
@@ -17666,7 +17717,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|DCYSUSV
+name|EMU_CHAN_DCYSUSV
 argument_list|,
 literal|0
 argument_list|)
@@ -17691,7 +17742,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|VTFT
+name|EMU_CHAN_VTFT
 argument_list|,
 literal|0
 argument_list|)
@@ -17702,7 +17753,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|CVCF
+name|EMU_CHAN_CVCF
 argument_list|,
 literal|0
 argument_list|)
@@ -17713,7 +17764,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|PTRX
+name|EMU_CHAN_PTRX
 argument_list|,
 literal|0
 argument_list|)
@@ -17724,7 +17775,7 @@ name|sc
 argument_list|,
 name|ch
 argument_list|,
-name|CPF
+name|EMU_CHAN_CPF
 argument_list|,
 literal|0
 argument_list|)
@@ -17735,13 +17786,13 @@ name|emu_wr
 argument_list|(
 name|sc
 argument_list|,
-name|HCFG
+name|EMU_HCFG
 argument_list|,
-name|HCFG_LOCKSOUNDCACHE
+name|EMU_HCFG_LOCKSOUNDCACHE
 operator||
-name|HCFG_LOCKTANKCACHE_MASK
+name|EMU_HCFG_LOCKTANKCACHE_MASK
 operator||
-name|HCFG_MUTEBUTTONENABLE
+name|EMU_HCFG_MUTEBUTTONENABLE
 argument_list|,
 literal|4
 argument_list|)
@@ -17752,7 +17803,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|PTB
+name|EMU_PTB
 argument_list|,
 literal|0
 argument_list|)
@@ -17764,9 +17815,9 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|MICBS
+name|EMU_MICBS
 argument_list|,
-name|ADCBS_BUFSIZE_NONE
+name|EMU_RECBS_BUFSIZE_NONE
 argument_list|)
 expr_stmt|;
 name|emu_wrptr
@@ -17775,29 +17826,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|MICBA
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|emu_wrptr
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|FXBS
-argument_list|,
-name|ADCBS_BUFSIZE_NONE
-argument_list|)
-expr_stmt|;
-name|emu_wrptr
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|FXBA
+name|EMU_MICBA
 argument_list|,
 literal|0
 argument_list|)
@@ -17808,7 +17837,18 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|FXWC
+name|EMU_FXBS
+argument_list|,
+name|EMU_RECBS_BUFSIZE_NONE
+argument_list|)
+expr_stmt|;
+name|emu_wrptr
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|EMU_FXBA
 argument_list|,
 literal|0
 argument_list|)
@@ -17819,18 +17859,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|ADCBS
-argument_list|,
-name|ADCBS_BUFSIZE_NONE
-argument_list|)
-expr_stmt|;
-name|emu_wrptr
-argument_list|(
-name|sc
-argument_list|,
-literal|0
-argument_list|,
-name|ADCBA
+name|EMU_FXWC
 argument_list|,
 literal|0
 argument_list|)
@@ -17841,7 +17870,18 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|TCB
+name|EMU_ADCBS
+argument_list|,
+name|EMU_RECBS_BUFSIZE_NONE
+argument_list|)
+expr_stmt|;
+name|emu_wrptr
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|EMU_ADCBA
 argument_list|,
 literal|0
 argument_list|)
@@ -17852,7 +17892,18 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|TCBS
+name|EMU_TCB
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|emu_wrptr
+argument_list|(
+name|sc
+argument_list|,
+literal|0
+argument_list|,
+name|EMU_TCBS
 argument_list|,
 literal|0
 argument_list|)
@@ -17864,7 +17915,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|CLIEL
+name|EMU_CLIEL
 argument_list|,
 literal|0
 argument_list|)
@@ -17875,7 +17926,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|CLIEH
+name|EMU_CLIEH
 argument_list|,
 literal|0
 argument_list|)
@@ -17886,7 +17937,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SOLEL
+name|EMU_SOLEL
 argument_list|,
 literal|0
 argument_list|)
@@ -17897,7 +17948,7 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-name|SOLEH
+name|EMU_SOLEH
 argument_list|,
 literal|0
 argument_list|)
@@ -19056,7 +19107,7 @@ name|sc
 operator|->
 name|gpr_base
 operator|=
-name|A_FXGPREGBASE
+name|EMU_A_FXGPREGBASE
 expr_stmt|;
 name|sc
 operator|->
@@ -19068,7 +19119,7 @@ name|sc
 operator|->
 name|code_base
 operator|=
-name|A_MICROCODEBASE
+name|EMU_A_MICROCODEBASE
 expr_stmt|;
 name|sc
 operator|->
@@ -19107,7 +19158,7 @@ name|sc
 operator|->
 name|address_mask
 operator|=
-name|A_PTR_ADDRESS_MASK
+name|EMU_A_PTR_ADDR_MASK
 expr_stmt|;
 block|}
 if|if
@@ -19140,7 +19191,7 @@ name|sc
 operator|->
 name|code_base
 operator|=
-name|MICROCODEBASE
+name|EMU_MICROCODEBASE
 expr_stmt|;
 name|sc
 operator|->
@@ -19155,7 +19206,7 @@ name|sc
 operator|->
 name|gpr_base
 operator|=
-name|FXGPREGBASE
+name|EMU_FXGPREGBASE
 expr_stmt|;
 name|sc
 operator|->
@@ -19216,7 +19267,7 @@ name|sc
 operator|->
 name|address_mask
 operator|=
-name|PTR_ADDRESS_MASK
+name|EMU_PTR_ADDR_MASK
 expr_stmt|;
 block|}
 if|if
@@ -20476,9 +20527,9 @@ if|#
 directive|if
 literal|0
 comment|/* Midi Interface 1: Live!, Audigy, Audigy 2 */
-block|if ((sc->is_emu10k1) || (sc->is_emu10k2) || (sc->is_ca0102)) { 		func = malloc(sizeof(struct sndcard_func), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (func == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo = malloc(sizeof(struct emu_midiinfo), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (midiinfo == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo->card = sc; 		if (sc->is_emu10k2 || (sc->is_ca0102)) { 			midiinfo->port = A_MUDATA1; 			midiinfo->portnr = 1; 		} 		if (sc->is_emu10k1) { 			midiinfo->port = MUDATA; 			midiinfo->portnr = 1; 		} 		func->func = SCF_MIDI; 		func->varinfo = midiinfo; 		sc->midi[0] = device_add_child(dev, "midi", -1); 		device_set_ivars(sc->midi[0], func); 	}
+block|if ((sc->is_emu10k1) || (sc->is_emu10k2) || (sc->is_ca0102)) { 		func = malloc(sizeof(struct sndcard_func), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (func == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo = malloc(sizeof(struct emu_midiinfo), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (midiinfo == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo->card = sc; 		if (sc->is_emu10k2 || (sc->is_ca0102)) { 			midiinfo->port = EMU_A_MUDATA1; 			midiinfo->portnr = 1; 		} 		if (sc->is_emu10k1) { 			midiinfo->port = MUDATA; 			midiinfo->portnr = 1; 		} 		func->func = SCF_MIDI; 		func->varinfo = midiinfo; 		sc->midi[0] = device_add_child(dev, "midi", -1); 		device_set_ivars(sc->midi[0], func); 	}
 comment|/* Midi Interface 2: Audigy, Audigy 2 (on AudigyDrive) */
-block|if (sc->is_emu10k2 || (sc->is_ca0102)) { 		func = malloc(sizeof(struct sndcard_func), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (func == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo = malloc(sizeof(struct emu_midiinfo), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (midiinfo == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo->card = sc;  		midiinfo->port = A_MUDATA2; 		midiinfo->portnr = 2;  		func->func = SCF_MIDI; 		func->varinfo = midiinfo; 		sc->midi[1] = device_add_child(dev, "midi", -1); 		device_set_ivars(sc->midi[1], func); 	}
+block|if (sc->is_emu10k2 || (sc->is_ca0102)) { 		func = malloc(sizeof(struct sndcard_func), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (func == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo = malloc(sizeof(struct emu_midiinfo), M_DEVBUF, M_NOWAIT | M_ZERO); 		if (midiinfo == NULL) { 			error = ENOMEM; 			goto bad; 		} 		midiinfo->card = sc;  		midiinfo->port = EMU_A_MUDATA2; 		midiinfo->portnr = 2;  		func->func = SCF_MIDI; 		func->varinfo = midiinfo; 		sc->midi[1] = device_add_child(dev, "midi", -1); 		device_set_ivars(sc->midi[1], func); 	}
 endif|#
 directive|endif
 return|return

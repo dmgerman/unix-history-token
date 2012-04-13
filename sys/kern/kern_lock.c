@@ -18,6 +18,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -129,6 +135,33 @@ include|#
 directive|include
 file|<ddb/ddb.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_expr_stmt
+name|PMC_SOFT_DECLARE
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_endif
 endif|#
@@ -496,6 +529,7 @@ specifier|static
 name|void
 name|assert_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -518,6 +552,7 @@ specifier|static
 name|void
 name|db_show_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -558,6 +593,7 @@ specifier|static
 name|int
 name|owner_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -676,6 +712,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -748,7 +785,7 @@ name|thread
 operator|*
 name|lockmgr_xholder
 argument_list|(
-argument|struct lock *lk
+argument|const struct lock *lk
 argument_list|)
 block|{
 name|uintptr_t
@@ -1475,6 +1512,7 @@ specifier|static
 name|void
 name|assert_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -1544,6 +1582,7 @@ specifier|static
 name|int
 name|owner_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -2338,6 +2377,18 @@ condition|)
 break|break;
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -3242,6 +3293,18 @@ name|tid
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -4465,6 +4528,18 @@ name|tid
 argument_list|)
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -5079,6 +5154,12 @@ name|tid
 decl_stmt|,
 name|x
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|tid
 operator|=
 operator|(
@@ -5220,6 +5301,7 @@ begin_function
 name|void
 name|lockmgr_printinfo
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5294,7 +5376,8 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"lock type %s: EXCL by thread %p (pid %d)\n"
+literal|"lock type %s: EXCL by thread %p "
+literal|"(pid %d, %s, tid %d)\n"
 argument_list|,
 name|lk
 operator|->
@@ -5309,6 +5392,16 @@ operator|->
 name|td_proc
 operator|->
 name|p_pid
+argument_list|,
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_comm
+argument_list|,
+name|td
+operator|->
+name|td_tid
 argument_list|)
 expr_stmt|;
 block|}
@@ -5363,6 +5456,7 @@ begin_function
 name|int
 name|lockstatus
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5484,6 +5578,7 @@ begin_function
 name|void
 name|_lockmgr_assert
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5968,6 +6063,7 @@ specifier|static
 name|void
 name|db_show_lockmgr
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -5979,6 +6075,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -5987,6 +6084,7 @@ decl_stmt|;
 name|lk
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|lock
 operator|*

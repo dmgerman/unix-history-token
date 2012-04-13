@@ -700,7 +700,7 @@ block|}
 block|}
 block|,
 block|{
-literal|"SW"
+literal|"SE"
 block|,
 literal|"Sweden"
 block|,

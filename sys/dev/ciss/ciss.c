@@ -164,6 +164,7 @@ file|<dev/ciss/cissvar.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|CISS_MALLOC_CLASS
@@ -2013,6 +2014,76 @@ literal|"HP Smart Array"
 block|}
 block|,
 block|{
+literal|0x103C
+block|,
+literal|0x3350
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P222"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3351
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P420"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3352
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P421"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3353
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P822"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3354
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P420i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3355
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P220i"
+block|}
+block|,
+block|{
+literal|0x103C
+block|,
+literal|0x3356
+block|,
+name|CISS_BOARD_SA5
+block|,
+literal|"HP Smart Array P721m"
+block|}
+block|,
+block|{
 literal|0
 block|,
 literal|0
@@ -3799,9 +3870,14 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|ciss_dev
+argument_list|)
 argument_list|,
-comment|/* parent */
+comment|/* PCI parent */
 literal|1
 argument_list|,
 literal|0
@@ -7587,15 +7663,18 @@ name|page_code
 operator|=
 name|CISS_VPD_LOGICAL_DRIVE_GEOMETRY
 expr_stmt|;
-name|inq
-operator|->
-name|length
-operator|=
+name|scsi_ulto2b
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|ld
 operator|->
 name|cl_geometry
+argument_list|)
+argument_list|,
+name|inq
+operator|->
+name|length
 argument_list|)
 expr_stmt|;
 if|if
@@ -20494,7 +20573,18 @@ name|pis
 operator|->
 name|board_id
 operator|=
-name|pci_get_devid
+operator|(
+name|pci_get_subvendor
+argument_list|(
+name|sc
+operator|->
+name|ciss_dev
+argument_list|)
+operator|<<
+literal|16
+operator|)
+operator||
+name|pci_get_subdevice
 argument_list|(
 name|sc
 operator|->

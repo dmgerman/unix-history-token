@@ -304,7 +304,8 @@ index|]
 parameter_list|,
 name|int
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
 parameter_list|,
@@ -544,7 +545,7 @@ parameter_list|(
 name|uint32_t
 parameter_list|,
 name|enum
-name|ieee80211_phymode
+name|ieee80211_phytype
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1643,7 +1644,7 @@ literal|0x4307
 block|}
 block|,
 block|{
-literal|0x4403
+literal|0x4402
 block|,
 literal|0x4403
 block|,
@@ -3488,7 +3489,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -13171,7 +13173,7 @@ name|bwi_plcp2rate
 argument_list|(
 name|plcp
 argument_list|,
-name|IEEE80211_MODE_11G
+name|IEEE80211_T_OFDM
 argument_list|)
 expr_stmt|;
 else|else
@@ -13181,7 +13183,7 @@ name|bwi_plcp2rate
 argument_list|(
 name|plcp
 argument_list|,
-name|IEEE80211_MODE_11B
+name|IEEE80211_T_CCK
 argument_list|)
 expr_stmt|;
 comment|/* RX radio tap */
@@ -18677,8 +18679,8 @@ name|uint32_t
 name|plcp0
 parameter_list|,
 name|enum
-name|ieee80211_phymode
-name|phymode
+name|ieee80211_phytype
+name|type
 parameter_list|)
 block|{
 name|uint32_t
@@ -18697,7 +18699,7 @@ name|ieee80211_plcp2rate
 argument_list|(
 name|plcp
 argument_list|,
-name|phymode
+name|type
 argument_list|)
 operator|)
 return|;

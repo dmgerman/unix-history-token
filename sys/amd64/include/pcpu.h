@@ -430,6 +430,14 @@ name|curthread
 value|(__curthread())
 end_define
 
+begin_define
+define|#
+directive|define
+name|IS_BSP
+parameter_list|()
+value|(PCPU_GET(cpuid) == 0)
+end_define
+
 begin_else
 else|#
 directive|else

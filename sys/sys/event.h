@@ -695,25 +695,6 @@ directive|ifdef
 name|_KERNEL
 end_ifdef
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|MALLOC_DECLARE
-end_ifdef
-
-begin_expr_stmt
-name|MALLOC_DECLARE
-argument_list|(
-name|M_KQUEUE
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_comment
 comment|/*  * Flags for knote call  */
 end_comment
@@ -1127,6 +1108,12 @@ name|mtx
 struct_decl|;
 end_struct_decl
 
+begin_struct_decl
+struct_decl|struct
+name|rwlock
+struct_decl|;
+end_struct_decl
+
 begin_function_decl
 specifier|extern
 name|void
@@ -1304,6 +1291,24 @@ name|knl
 parameter_list|,
 name|struct
 name|mtx
+modifier|*
+name|lock
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|void
+name|knlist_init_rw_reader
+parameter_list|(
+name|struct
+name|knlist
+modifier|*
+name|knl
+parameter_list|,
+name|struct
+name|rwlock
 modifier|*
 name|lock
 parameter_list|)

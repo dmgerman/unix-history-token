@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/MathExtras.h"
 end_include
 
@@ -434,7 +440,7 @@ comment|/// StringRef::getAsInteger is superficially similar but (1) does
 comment|/// not assume that the string is well-formed and (2) grows the
 comment|/// result to hold the input.
 comment|///
-comment|/// @param radix 2, 8, 10, or 16
+comment|/// @param radix 2, 8, 10, 16, or 36
 comment|/// @brief Convert a char array into an APInt
 name|void
 name|fromString
@@ -496,6 +502,17 @@ name|bool
 name|isSigned
 parameter_list|)
 function_decl|;
+comment|/// shared code between two array constructors
+name|void
+name|initFromArray
+argument_list|(
+name|ArrayRef
+operator|<
+name|uint64_t
+operator|>
+name|array
+argument_list|)
+decl_stmt|;
 comment|/// out-of-line slow case for inline copy constructor
 name|void
 name|initSlowCase
@@ -658,12 +675,25 @@ name|clearUnusedBits
 argument_list|()
 expr_stmt|;
 block|}
-comment|/// Note that numWords can be smaller or larger than the corresponding bit
-comment|/// width but any extraneous bits will be dropped.
+comment|/// Note that bigVal.size() can be smaller or larger than the corresponding
+comment|/// bit width but any extraneous bits will be dropped.
 comment|/// @param numBits the bit width of the constructed APInt
-comment|/// @param numWords the number of words in bigVal
 comment|/// @param bigVal a sequence of words to form the initial value of the APInt
 comment|/// @brief Construct an APInt of numBits width, initialized as bigVal[].
+name|APInt
+argument_list|(
+argument|unsigned numBits
+argument_list|,
+argument|ArrayRef<uint64_t> bigVal
+argument_list|)
+empty_stmt|;
+comment|/// Equivalent to APInt(numBits, ArrayRef<uint64_t>(bigVal, numWords)), but
+comment|/// deprecated because this constructor is prone to ambiguity with the
+comment|/// APInt(unsigned, uint64_t, bool) constructor.
+comment|///
+comment|/// If this overload is ever deleted, care should be taken to prevent calls
+comment|/// from being incorrectly captured by the APInt(unsigned, uint64_t, bool)
+comment|/// constructor.
 name|APInt
 argument_list|(
 argument|unsigned numBits
@@ -676,8 +706,8 @@ empty_stmt|;
 comment|/// This constructor interprets the string \arg str in the given radix. The
 comment|/// interpretation stops when the first character that is not suitable for the
 comment|/// radix is encountered, or the end of the string. Acceptable radix values
-comment|/// are 2, 8, 10 and 16. It is an error for the value implied by the string to
-comment|/// require more bits than numBits.
+comment|/// are 2, 8, 10, 16, and 36. It is an error for the value implied by the
+comment|/// string to require more bits than numBits.
 comment|///
 comment|/// @param numBits the bit width of the constructed APInt
 comment|/// @param str the string to be interpreted
@@ -970,10 +1000,13 @@ name|APInt
 argument_list|(
 name|N
 argument_list|,
+name|makeArrayRef
+argument_list|(
+name|pVal
+argument_list|,
 name|getNumWords
 argument_list|()
-argument_list|,
-name|pVal
+argument_list|)
 argument_list|)
 operator|.
 name|zext
@@ -5623,7 +5656,7 @@ comment|/// Considers the APInt to be unsigned and converts it into a string in 
 end_comment
 
 begin_comment
-comment|/// radix given. The radix can be 2, 8, 10 or 16.
+comment|/// radix given. The radix can be 2, 8, 10 16, or 36.
 end_comment
 
 begin_decl_stmt
@@ -5663,7 +5696,7 @@ comment|/// Considers the APInt to be signed and converts it into a string in th
 end_comment
 
 begin_comment
-comment|/// radix given. The radix can be 2, 8, 10 or 16.
+comment|/// radix given. The radix can be 2, 8, 10, 16, or 36.
 end_comment
 
 begin_decl_stmt

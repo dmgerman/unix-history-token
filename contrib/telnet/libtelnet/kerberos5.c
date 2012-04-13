@@ -287,6 +287,54 @@ end_decl_stmt
 
 begin_function
 specifier|static
+name|void
+name|print_krb5_error
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_error_code
+name|code
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|msg
+parameter_list|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|error_message
+decl_stmt|;
+name|error_message
+operator|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|code
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+name|msg
+argument_list|,
+name|error_message
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
+argument_list|(
+name|context
+argument_list|,
+name|error_message
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|int
 name|Data
 parameter_list|(
@@ -697,16 +745,13 @@ condition|(
 name|auth_debug_mode
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Kerberos V5: could not get default ccache: %s\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: could not get default ccache: %s\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -759,16 +804,13 @@ condition|(
 name|auth_debug_mode
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Kerberos V5: krb5_auth_con_init failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: krb5_auth_con_init failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -800,17 +842,14 @@ condition|(
 name|auth_debug_mode
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Kerberos V5:"
-literal|" krb5_auth_con_setaddrs_from_fd failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5:"
+literal|" krb5_auth_con_setaddrs_from_fd failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -898,19 +937,35 @@ condition|(
 name|auth_debug_mode
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Kerberos V5:"
-literal|" krb5_sname_to_principal(%s) failed (%s)\r\n"
-argument_list|,
-name|RemoteHostName
-argument_list|,
-name|krb5_get_err_text
+specifier|const
+name|char
+modifier|*
+name|err_str
+decl_stmt|;
+name|err_str
+operator|=
+name|krb5_get_error_message
 argument_list|(
 name|context
 argument_list|,
 name|ret
 argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"Kerberosr V5:"
+literal|" krb5_sname_to_principal(%s) failed (%s)\r\n"
+argument_list|,
+name|RemoteHostName
+argument_list|,
+name|err_str
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
+argument_list|(
+name|context
+argument_list|,
+name|err_str
 argument_list|)
 expr_stmt|;
 block|}
@@ -944,17 +999,14 @@ condition|(
 name|auth_debug_mode
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Kerberos V5:"
-literal|" krb5_unparse_name_fixed failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5:"
+literal|" krb5_unparse_name_fixed failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1013,16 +1065,13 @@ operator|||
 name|auth_debug_mode
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"Kerberos V5: mk_req failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: mk_req failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -1274,16 +1323,13 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: krb5_auth_con_init failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: krb5_auth_con_init failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1328,17 +1374,14 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: "
-literal|"krb5_auth_con_setaddrs_from_fd failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: "
+literal|"krb5_auth_con_setaddrs_from_fd failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1387,17 +1430,14 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: "
-literal|"krb5_sock_to_principal failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: "
+literal|"krb5_sock_to_principal failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1440,6 +1480,20 @@ name|char
 modifier|*
 name|errbuf
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|err_str
+decl_stmt|;
+name|err_str
+operator|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
 name|asprintf
 argument_list|(
 operator|&
@@ -1447,12 +1501,14 @@ name|errbuf
 argument_list|,
 literal|"Read req failed: %s"
 argument_list|,
-name|krb5_get_err_text
+name|err_str
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
-name|ret
-argument_list|)
+name|err_str
 argument_list|)
 expr_stmt|;
 name|Data
@@ -1535,6 +1591,20 @@ name|char
 modifier|*
 name|errbuf
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|err_str
+decl_stmt|;
+name|err_str
+operator|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
 name|asprintf
 argument_list|(
 operator|&
@@ -1542,12 +1612,14 @@ name|errbuf
 argument_list|,
 literal|"Bad checksum: %s"
 argument_list|,
-name|krb5_get_err_text
+name|err_str
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
-name|ret
-argument_list|)
+name|err_str
 argument_list|)
 expr_stmt|;
 name|Data
@@ -1621,17 +1693,14 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: "
-literal|"krb5_auth_con_getremotesubkey failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: "
+literal|"krb5_auth_con_getremotesubkey failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1684,17 +1753,14 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: "
-literal|"krb5_auth_con_getkey failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: "
+literal|"krb5_auth_con_getkey failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -1790,17 +1856,14 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: "
-literal|"krb5_mk_rep failed (%s)\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: "
+literal|"krb5_mk_rep failed (%s)\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2132,16 +2195,13 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: could not get ccache: %s\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: could not get ccache: %s\r\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2168,16 +2228,13 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: could not init ccache: %s\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: could not init ccache: %s\r\n"
 argument_list|)
 expr_stmt|;
 break|break;
@@ -2222,6 +2279,20 @@ name|char
 modifier|*
 name|errbuf
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|err_str
+decl_stmt|;
+name|err_str
+operator|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|ret
+argument_list|)
+expr_stmt|;
 name|asprintf
 argument_list|(
 operator|&
@@ -2229,12 +2300,14 @@ name|errbuf
 argument_list|,
 literal|"Read forwarded creds failed: %s"
 argument_list|,
-name|krb5_get_err_text
+name|err_str
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
-name|ret
-argument_list|)
+name|err_str
 argument_list|)
 expr_stmt|;
 if|if
@@ -2527,16 +2600,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"[ krb5_auth_con_getkey: %s ]\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"[ krb5_auth_con_getkey: %s ]\r\n"
 argument_list|)
 expr_stmt|;
 name|auth_send_retry
@@ -2664,16 +2734,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|printf
-argument_list|(
-literal|"[ Mutual authentication failed: %s ]\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"[ Mutual authentication failed: %s ]\r\n"
 argument_list|)
 expr_stmt|;
 name|auth_send_retry
@@ -3192,16 +3259,13 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"KerberosV5: could not get default ccache: %s\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"KerberosV5: could not get default ccache: %s\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3227,16 +3291,13 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"KerberosV5: could not get principal: %s\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"KerberosV5: could not get principal: %s\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3300,16 +3361,13 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"KerberosV5: could not get principal: %s\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"KerberosV5: could not get principal: %s\r\n"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -3382,16 +3440,13 @@ if|if
 condition|(
 name|auth_debug_mode
 condition|)
-name|printf
-argument_list|(
-literal|"Kerberos V5: error getting forwarded creds: %s\r\n"
-argument_list|,
-name|krb5_get_err_text
+name|print_krb5_error
 argument_list|(
 name|context
 argument_list|,
 name|ret
-argument_list|)
+argument_list|,
+literal|"Kerberos V5: error getting forwarded creds: %s\r\n"
 argument_list|)
 expr_stmt|;
 return|return;

@@ -2690,7 +2690,7 @@ name|valid
 operator|=
 literal|0
 expr_stmt|;
-name|vm_page_set_valid
+name|vm_page_set_valid_range
 argument_list|(
 name|m
 argument_list|,

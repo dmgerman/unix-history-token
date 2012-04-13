@@ -28,6 +28,12 @@ directive|include
 file|<machine/atomic.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/tls.h>
+end_include
+
 begin_struct_decl
 struct_decl|struct
 name|Struct_Obj_Entry
@@ -105,6 +111,19 @@ define|\
 value|(((InitFunc)(target))())
 end_define
 
+begin_define
+define|#
+directive|define
+name|call_init_pointer
+parameter_list|(
+name|obj
+parameter_list|,
+name|target
+parameter_list|)
+define|\
+value|(((InitArrFunc)(target))(main_argc, main_argv, environ))
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -145,7 +164,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|round(size, align)
+value|round(TLS_TCB_SIZE, align)
 end_define
 
 begin_define

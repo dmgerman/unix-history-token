@@ -2501,7 +2501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Count the occurances of c in str  */
+comment|/*  * Count the occurrences of c in str  */
 end_comment
 
 begin_function

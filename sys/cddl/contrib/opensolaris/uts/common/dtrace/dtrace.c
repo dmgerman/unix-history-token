@@ -1195,6 +1195,11 @@ name|defined
 argument_list|(
 name|__amd64__
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
 end_if
 
 begin_decl_stmt
@@ -24068,6 +24073,13 @@ decl_stmt|;
 name|hrtime_t
 name|now
 decl_stmt|;
+if|if
+condition|(
+name|panicstr
+operator|!=
+name|NULL
+condition|)
+return|return;
 if|#
 directive|if
 name|defined
@@ -44690,6 +44702,11 @@ directive|if
 name|defined
 argument_list|(
 name|__amd64__
+argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|__mips__
 argument_list|)
 comment|/* 	 * FreeBSD isn't good at limiting the amount of memory we 	 * ask to malloc, so let's place a limit here before trying 	 * to do something that might well end in tears at bedtime. 	 */
 if|if

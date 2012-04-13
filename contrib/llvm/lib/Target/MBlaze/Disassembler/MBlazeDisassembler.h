@@ -103,17 +103,26 @@ operator|:
 comment|/// Constructor     - Initializes the disassembler.
 comment|///
 name|MBlazeDisassembler
-argument_list|()
+argument_list|(
+specifier|const
+name|MCSubtargetInfo
+operator|&
+name|STI
+argument_list|)
 operator|:
 name|MCDisassembler
-argument_list|()
+argument_list|(
+argument|STI
+argument_list|)
 block|{   }
 operator|~
 name|MBlazeDisassembler
 argument_list|()
 block|{   }
 comment|/// getInstruction - See MCDisassembler.
-name|bool
+name|MCDisassembler
+operator|::
+name|DecodeStatus
 name|getInstruction
 argument_list|(
 argument|MCInst&instr
@@ -125,6 +134,8 @@ argument_list|,
 argument|uint64_t address
 argument_list|,
 argument|raw_ostream&vStream
+argument_list|,
+argument|raw_ostream&cStream
 argument_list|)
 specifier|const
 block|;

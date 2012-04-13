@@ -72,6 +72,7 @@ file|<sys/soundcard.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -1147,10 +1148,6 @@ block|}
 elseif|else
 if|if
 condition|(
-name|argc
-operator|>
-literal|1
-operator|&&
 name|strcmp
 argument_list|(
 literal|"rec"
@@ -1198,6 +1195,24 @@ argument_list|,
 operator|*
 operator|*
 name|argv
+argument_list|)
+expr_stmt|;
+name|dusage
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+block|}
+if|if
+condition|(
+name|argc
+operator|<=
+literal|1
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"no recording device specified"
 argument_list|)
 expr_stmt|;
 name|dusage

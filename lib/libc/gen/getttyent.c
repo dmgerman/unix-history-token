@@ -279,7 +279,7 @@ comment|/* extend buffer if line was too big, and retry */
 while|while
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -712,7 +712,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,
@@ -937,7 +937,7 @@ operator|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,

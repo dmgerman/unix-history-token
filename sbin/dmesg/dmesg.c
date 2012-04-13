@@ -163,15 +163,7 @@ file|<sys/syslog.h>
 end_include
 
 begin_decl_stmt
-name|char
-name|s_msgbufp
-index|[]
-init|=
-literal|"_msgbufp"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
+specifier|static
 name|struct
 name|nlist
 name|nl
@@ -183,7 +175,7 @@ directive|define
 name|X_MSGBUF
 value|0
 block|{
-name|s_msgbufp
+literal|"_msgbufp"
 block|,
 literal|0
 block|,

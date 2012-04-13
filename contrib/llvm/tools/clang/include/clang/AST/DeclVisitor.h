@@ -134,10 +134,8 @@ argument_list|()
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Decl that isn't part of DeclNodes.inc!"
 argument_list|)
 expr_stmt|;

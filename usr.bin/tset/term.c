@@ -222,7 +222,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|ttypath
 argument_list|,
@@ -556,7 +556,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|answer
 argument_list|,

@@ -180,6 +180,7 @@ comment|/* sysctl vars */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -860,13 +861,6 @@ block|,
 comment|/* bus methods */
 name|DEVMETHOD
 argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_read_ivar
 argument_list|,
 name|cbb_read_ivar
@@ -972,11 +966,7 @@ argument_list|,
 name|cbb_power_disable_socket
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

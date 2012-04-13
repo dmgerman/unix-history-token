@@ -345,6 +345,28 @@ end_comment
 begin_define
 define|#
 directive|define
+name|GLOB_STAR
+value|0x4000
+end_define
+
+begin_comment
+comment|/* use glob ** to recurse directories */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|GLOB_DOT
+value|0x8000
+end_define
+
+begin_comment
+comment|/* don't skip dotfiles (except . and ..) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|GLOB_ABEND
 value|GLOB_ABORTED
 end_define

@@ -291,6 +291,7 @@ comment|/* sysctl vars */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -1936,6 +1937,23 @@ name|not_a_card
 init|=
 literal|0
 decl_stmt|;
+comment|/* 	 * We need to act as a power sequencer on startup.  Delay 2s/channel 	 * to ensure the other channels have had a chance to come up.  We likely 	 * should add a lock that's shared on a per-slot basis so that only 	 * one power event can happen per slot at a time. 	 */
+name|pause
+argument_list|(
+literal|"cbbstart"
+argument_list|,
+name|hz
+operator|*
+name|device_get_unit
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
+operator|*
+literal|2
+argument_list|)
+expr_stmt|;
 name|mtx_lock
 argument_list|(
 operator|&

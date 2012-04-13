@@ -147,25 +147,10 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 comment|/// CompilerInvocation - Helper class for holding the data necessary to invoke
 comment|/// the compiler.
@@ -264,7 +249,7 @@ specifier|const
 operator|*
 name|ArgEnd
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|)
@@ -348,6 +333,15 @@ argument|InputKind IK
 argument_list|,
 argument|LangStandard::Kind LangStd = LangStandard::lang_unspecified
 argument_list|)
+block|;
+comment|/// \brief Retrieve a module hash string that is suitable for uniquely
+comment|/// identifying the conditions under which the module was built.
+name|std
+operator|::
+name|string
+name|getModuleHash
+argument_list|()
+specifier|const
 block|;
 comment|/// @}
 comment|/// @name Option Subgroups

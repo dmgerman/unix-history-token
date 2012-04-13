@@ -462,6 +462,16 @@ init|=
 literal|243
 block|,
 comment|/* hardware supports 32bit TSF in RX descriptor */
+name|HAL_CAP_BB_READ_WAR
+init|=
+literal|244
+block|,
+comment|/* baseband read WAR */
+name|HAL_CAP_SERIALISE_WAR
+init|=
+literal|245
+block|,
+comment|/* serialise register access on PCI */
 block|}
 name|HAL_CAPABILITY_TYPE
 typedef|;
@@ -2132,6 +2142,12 @@ name|int32_t
 name|pe_enabled
 decl_stmt|;
 comment|/* Whether radar detection is enabled */
+name|int32_t
+name|pe_enrelpwr
+decl_stmt|;
+name|int32_t
+name|pe_en_relstep_check
+decl_stmt|;
 block|}
 name|HAL_PHYERR_PARAM
 typedef|;
@@ -2143,17 +2159,6 @@ directive|define
 name|HAL_PHYERR_PARAM_NOVAL
 value|65535
 end_define
-
-begin_define
-define|#
-directive|define
-name|HAL_PHYERR_PARAM_ENABLE
-value|0x8000
-end_define
-
-begin_comment
-comment|/* Enable/Disable if applicable */
-end_comment
 
 begin_comment
 comment|/*  * DFS operating mode flags.  */
@@ -2308,6 +2313,14 @@ name|int
 name|ah_additional_swba_backoff
 decl_stmt|;
 comment|/* in TU's */
+name|int
+name|ah_force_full_reset
+decl_stmt|;
+comment|/* force full chip reset rather then warm reset */
+name|int
+name|ah_serialise_reg_war
+decl_stmt|;
+comment|/* force serialisation of register IO */
 block|}
 name|HAL_OPS_CONFIG
 typedef|;
@@ -2373,6 +2386,17 @@ modifier|*
 name|ah_eepromdata
 decl_stmt|;
 comment|/* eeprom buffer, if needed */
+name|uint32_t
+name|ah_intrstate
+index|[
+literal|8
+index|]
+decl_stmt|;
+comment|/* last int state */
+name|uint32_t
+name|ah_syncstate
+decl_stmt|;
+comment|/* last sync intr state */
 name|HAL_OPS_CONFIG
 name|ah_config
 decl_stmt|;
@@ -4167,6 +4191,8 @@ parameter_list|,
 name|HAL_BOOL
 parameter_list|,
 name|HAL_BOOL
+parameter_list|,
+name|HAL_BOOL
 parameter_list|)
 function_decl|;
 name|HAL_BOOL
@@ -4253,6 +4279,26 @@ name|void
 name|__ahdecl
 function_decl|(
 modifier|*
+name|ah_set11nAggrFirst
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
+parameter_list|,
+name|u_int
+parameter_list|,
+name|u_int
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
 name|ah_set11nAggrMiddle
 function_decl|)
 parameter_list|(
@@ -4265,6 +4311,22 @@ name|ath_desc
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+name|void
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_set11nAggrLast
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|struct
+name|ath_desc
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
@@ -4299,6 +4361,30 @@ name|ath_desc
 modifier|*
 parameter_list|,
 name|u_int
+parameter_list|)
+function_decl|;
+name|uint32_t
+name|__ahdecl
+function_decl|(
+modifier|*
+name|ah_get_mib_cycle_counts_pct
+function_decl|)
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
+parameter_list|,
+name|uint32_t
+modifier|*
 parameter_list|)
 function_decl|;
 name|uint32_t
@@ -4831,6 +4917,30 @@ name|struct
 name|ath_hal
 modifier|*
 name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * Read EEPROM data from ah_eepromdata  */
+end_comment
+
+begin_function_decl
+name|HAL_BOOL
+name|__ahdecl
+name|ath_hal_EepromDataRead
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|,
+name|u_int
+name|off
+parameter_list|,
+name|uint16_t
+modifier|*
+name|data
 parameter_list|)
 function_decl|;
 end_function_decl

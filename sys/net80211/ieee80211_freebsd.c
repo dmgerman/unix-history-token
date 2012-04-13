@@ -206,6 +206,7 @@ directive|endif
 end_endif
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_80211_COM
@@ -2839,13 +2840,15 @@ name|wh
 operator|->
 name|i_addr2
 argument_list|,
-literal|"%s replay detected<rsc %ju, csc %ju, keyix %u rxkeyix %u>"
+literal|"%s replay detected tid %d<rsc %ju, csc %ju, keyix %u rxkeyix %u>"
 argument_list|,
 name|k
 operator|->
 name|wk_cipher
 operator|->
 name|ic_name
+argument_list|,
+name|tid
 argument_list|,
 operator|(
 name|intmax_t
@@ -4213,6 +4216,37 @@ literal|1
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|IEEE80211_ALQ
+end_ifdef
+
+begin_expr_stmt
+name|MODULE_DEPEND
+argument_list|(
+name|wlan
+argument_list|,
+name|alq
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* IEEE80211_ALQ */
+end_comment
 
 end_unit
 

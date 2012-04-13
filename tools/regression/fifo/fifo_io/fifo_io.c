@@ -1501,7 +1501,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * This test operates on blocking and non-blocking fifo file descriptors, in  * order to determine whether they block at good moments or not.  By good we  * mean: don't block for non-blocking sockets, and do block for blocking  * ones, assuming there isn't I/O buffer to satisfy the request.  *  * We use a timeout of 5 seconds, concluding that in 5 seconds either all I/O  * that can take place will, and that if we reach the end of the timeout,  * then blocking has occured.  *  * We assume that the buffer size on a fifo is<512K, and as such, that  * writing that much data without an active reader will result in blocking.  */
+comment|/*  * This test operates on blocking and non-blocking fifo file descriptors, in  * order to determine whether they block at good moments or not.  By good we  * mean: don't block for non-blocking sockets, and do block for blocking  * ones, assuming there isn't I/O buffer to satisfy the request.  *  * We use a timeout of 5 seconds, concluding that in 5 seconds either all I/O  * that can take place will, and that if we reach the end of the timeout,  * then blocking has occurred.  *  * We assume that the buffer size on a fifo is<512K, and as such, that  * writing that much data without an active reader will result in blocking.  */
 end_comment
 
 begin_function

@@ -118,6 +118,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/proc.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/usb/usb.h>
 end_include
 
@@ -3215,10 +3221,12 @@ goto|goto
 name|done
 goto|;
 block|}
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|parm
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -3824,10 +3832,12 @@ operator|=
 operator|&
 name|dummy
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|dummy
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7748,6 +7758,10 @@ name|info
 operator|->
 name|xfer_mtx
 argument_list|)
+operator|&&
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 comment|/* 	       	 * Cases that end up here: 		 * 		 * 5) HW interrupt done callback or other source. 		 */
@@ -9454,7 +9468,13 @@ name|xfer
 argument_list|,
 operator|(
 name|void
+argument_list|(
 operator|*
+argument_list|)
+argument_list|(
+name|void
+operator|*
+argument_list|)
 operator|)
 operator|&
 name|usb_dma_delay_done_cb
@@ -10853,6 +10873,10 @@ name|bus
 operator|->
 name|bus_mtx
 argument_list|)
+operator|&&
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 name|mtx_unlock
@@ -10884,6 +10908,10 @@ name|xroot
 operator|->
 name|xfer_mtx
 argument_list|)
+operator|&&
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
 condition|)
 block|{
 name|mtx_unlock

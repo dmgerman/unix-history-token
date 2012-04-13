@@ -4862,6 +4862,7 @@ value|3
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|direct
 name|root_dir
@@ -4929,6 +4930,7 @@ value|2
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|direct
 name|snap_dir
@@ -6142,19 +6144,6 @@ block|{
 name|ufs2_daddr_t
 name|d
 decl_stmt|;
-name|int
-name|c
-decl_stmt|;
-name|c
-operator|=
-name|ino_to_cg
-argument_list|(
-operator|&
-name|sblock
-argument_list|,
-name|ino
-argument_list|)
-expr_stmt|;
 name|bread
 argument_list|(
 operator|&

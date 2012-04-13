@@ -34,6 +34,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<machine/tls.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stddef.h>
 end_include
 
@@ -51,36 +57,21 @@ value|offsetof(struct tcb, tcb_dtv)
 end_define
 
 begin_comment
-comment|/*  * Variant II tcb, first two members are required by rtld.  */
+comment|/*  * Variant I tcb. The structure layout is fixed, don't blindly  * change it!  */
 end_comment
 
 begin_struct
 struct|struct
 name|tcb
 block|{
-name|struct
-name|tcb
-modifier|*
-name|tcb_self
-decl_stmt|;
-comment|/* required by rtld */
 name|void
 modifier|*
 name|tcb_dtv
 decl_stmt|;
-comment|/* required by rtld */
 name|struct
 name|pthread
 modifier|*
 name|tcb_thread
-decl_stmt|;
-comment|/* our hook */
-name|void
-modifier|*
-name|tcb_spare
-index|[
-literal|1
-index|]
 decl_stmt|;
 block|}
 struct|;
@@ -156,8 +147,8 @@ name|_tcb_get
 argument_list|(
 argument|void
 argument_list|)
-block|{
-name|void
+block|{ 	struct
+name|tcb
 operator|*
 name|tcb
 block|;

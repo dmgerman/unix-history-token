@@ -1986,6 +1986,9 @@ name|SymCache
 modifier|*
 name|cache
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -2209,6 +2212,12 @@ name|r_info
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|req
+operator|.
+name|flags
+operator|=
+name|SYMLOOK_EARLY
+expr_stmt|;
 for|for
 control|(
 name|srcobj
@@ -2335,6 +2344,9 @@ name|Obj_Entry
 modifier|*
 name|obj_rtld
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -2435,6 +2447,8 @@ name|rela
 argument_list|,
 name|cache
 argument_list|,
+name|flags
+argument_list|,
 name|lockstate
 argument_list|)
 operator|<
@@ -2486,6 +2500,9 @@ parameter_list|,
 name|SymCache
 modifier|*
 name|cache
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|RtldLockState
 modifier|*
@@ -2720,7 +2737,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -3313,6 +3330,9 @@ name|Obj_Entry
 modifier|*
 name|obj
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -3426,7 +3446,9 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|true
+name|SYMLOOK_IN_PLT
+operator||
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -3482,6 +3504,55 @@ name|jmpslots_done
 operator|=
 name|true
 expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|reloc_iresolve
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|reloc_gnu_ifunc
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
 return|return
 operator|(
 literal|0
@@ -3629,7 +3700,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 32-bits of address zero. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hi(addr), %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 32-bits of address zero. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hi(addr), %g1 			 *	jmp	%g1+%lo(addr) 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|2
@@ -3688,7 +3759,7 @@ literal|32
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 32-bits of address -1. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hix(addr), %g1 			 *	xor	%g1, %lox(addr), %g1 			 *	jmp	%g1 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 32-bits of address -1. 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%hix(addr), %g1 			 *	xor	%g1, %lox(addr), %g1 			 *	jmp	%g1 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -3774,7 +3845,7 @@ literal|4
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 32-bits -- we can use a direct call 			 * insn 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	mov	%o7, %g1 			 *	call	(.+offset) 			 *	 mov	%g1, %o7 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 32-bits -- we can use a direct call 			 * insn 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	mov	%o7, %g1 			 *	call	(.+offset) 			 *	 mov	%g1, %o7 			 *	nop 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|3
@@ -3844,7 +3915,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(addr), %g1 			 *	or	%g1, %m44(addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4
@@ -3945,7 +4016,7 @@ literal|44
 operator|)
 condition|)
 block|{
-comment|/* 			 * We're withing 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
+comment|/* 			 * We're within 44 bits.  We can generate this 			 * pattern: 			 * 			 * The resulting code in the jump slot is: 			 * 			 *	sethi	%hi(. - .PLT0), %g1 			 *	sethi	%h44(-addr), %g1 			 *	xor	%g1, %m44(-addr), %g1 			 *	sllx	%g1, 12, %g1 			 *	jmp	%g1+%l44(addr) 			 *	nop 			 *	nop 			 *	nop 			 * 			 */
 name|where
 index|[
 literal|4

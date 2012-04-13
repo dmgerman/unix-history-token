@@ -16,7 +16,7 @@ name|_MACHINE_IEEEFP_H_
 end_define
 
 begin_comment
-comment|/*  * IEEE floating point type, constant and function definitions.  * XXX: FP*FLD and FP*OFF are undocumented pollution.  */
+comment|/*  * Deprecated historical FPU control interface  *  * IEEE floating point type, constant and function definitions.  * XXX: FP*FLD and FP*OFF are undocumented pollution.  */
 end_comment
 
 begin_ifndef
@@ -927,17 +927,6 @@ end_endif
 begin_comment
 comment|/* __GNUCLIKE_ASM */
 end_comment
-
-begin_comment
-comment|/* Suppress prototypes in the MI header. */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|_IEEEFP_INLINED_
-value|1
-end_define
 
 begin_endif
 endif|#

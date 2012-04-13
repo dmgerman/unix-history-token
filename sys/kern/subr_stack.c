@@ -265,6 +265,7 @@ begin_function
 name|void
 name|stack_copy
 parameter_list|(
+specifier|const
 name|struct
 name|stack
 modifier|*
@@ -311,6 +312,7 @@ begin_function
 name|void
 name|stack_print
 parameter_list|(
+specifier|const
 name|struct
 name|stack
 modifier|*
@@ -411,6 +413,7 @@ begin_function
 name|void
 name|stack_print_short
 parameter_list|(
+specifier|const
 name|struct
 name|stack
 modifier|*
@@ -532,6 +535,7 @@ begin_function
 name|void
 name|stack_print_ddb
 parameter_list|(
+specifier|const
 name|struct
 name|stack
 modifier|*
@@ -630,6 +634,7 @@ begin_function
 name|void
 name|stack_print_short_ddb
 parameter_list|(
+specifier|const
 name|struct
 name|stack
 modifier|*
@@ -760,6 +765,7 @@ name|sbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|struct
 name|stack
 modifier|*
@@ -873,6 +879,7 @@ name|sbuf
 modifier|*
 name|sb
 parameter_list|,
+specifier|const
 name|struct
 name|stack
 modifier|*
@@ -992,6 +999,7 @@ parameter_list|,
 name|int
 name|line
 parameter_list|,
+specifier|const
 name|struct
 name|stack
 modifier|*

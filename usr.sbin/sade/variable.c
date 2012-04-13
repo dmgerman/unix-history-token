@@ -262,7 +262,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|tmp
 argument_list|,
@@ -464,7 +464,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|var
 argument_list|,
@@ -750,7 +750,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|tmp
 argument_list|,
@@ -786,7 +786,7 @@ condition|(
 operator|(
 name|cp3
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -808,7 +808,7 @@ condition|(
 operator|(
 name|cp3
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -1216,7 +1216,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|var
 argument_list|,

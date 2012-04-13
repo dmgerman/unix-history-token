@@ -76,6 +76,7 @@ value|0377
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|t1
 index|[
@@ -85,6 +86,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|t2
 index|[
@@ -94,6 +96,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|t3
 index|[
@@ -103,6 +106,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|deck
 index|[
@@ -112,6 +116,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|buf
 index|[
@@ -121,6 +126,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|shuffle
 parameter_list|(
@@ -131,6 +137,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|setup
 parameter_list|(
@@ -141,6 +148,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|setup
 parameter_list|(
@@ -170,6 +178,10 @@ decl_stmt|;
 name|int32_t
 name|seed
 decl_stmt|;
+name|char
+modifier|*
+name|cryptpw
+decl_stmt|;
 name|strlcpy
 argument_list|(
 name|salt
@@ -182,16 +194,40 @@ name|salt
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|memcpy
-argument_list|(
-name|buf
-argument_list|,
+name|cryptpw
+operator|=
 name|crypt
 argument_list|(
 name|pw
 argument_list|,
 name|salt
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cryptpw
+operator|==
+name|NULL
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"crypt(3) failure\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
+name|memcpy
+argument_list|(
+name|buf
+argument_list|,
+name|cryptpw
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -739,6 +775,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|shuffle
 parameter_list|(

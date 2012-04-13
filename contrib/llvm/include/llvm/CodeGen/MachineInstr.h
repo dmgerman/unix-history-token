@@ -146,6 +146,9 @@ name|class
 name|TargetInstrInfo
 decl_stmt|;
 name|class
+name|TargetRegisterClass
+decl_stmt|;
+name|class
 name|TargetRegisterInfo
 decl_stmt|;
 name|class
@@ -210,11 +213,6 @@ modifier|*
 name|MCID
 decl_stmt|;
 comment|// Instruction descriptor.
-name|uint16_t
-name|NumImplicitOps
-decl_stmt|;
-comment|// Number of implicit operands (which
-comment|// are determined at construction time).
 name|uint8_t
 name|Flags
 decl_stmt|;
@@ -255,11 +253,6 @@ name|DebugLoc
 name|debugLoc
 decl_stmt|;
 comment|// Source line information.
-comment|// OperandComplete - Return true if it's illegal to add a new operand
-name|bool
-name|OperandsComplete
-parameter_list|()
-function_decl|const;
 name|MachineInstr
 argument_list|(
 specifier|const
@@ -1496,6 +1489,57 @@ name|findFirstPredOperandIdx
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// findInlineAsmFlagIdx() - Find the index of the flag word operand that
+comment|/// corresponds to operand OpIdx on an inline asm instruction.  Returns -1 if
+comment|/// getOperand(OpIdx) does not belong to an inline asm operand group.
+comment|///
+comment|/// If GroupNo is not NULL, it will receive the number of the operand group
+comment|/// containing OpIdx.
+comment|///
+comment|/// The flag operand is an immediate that can be decoded with methods like
+comment|/// InlineAsm::hasRegClassConstraint().
+comment|///
+name|int
+name|findInlineAsmFlagIdx
+argument_list|(
+name|unsigned
+name|OpIdx
+argument_list|,
+name|unsigned
+operator|*
+name|GroupNo
+operator|=
+literal|0
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// getRegClassConstraint - Compute the static register class constraint for
+comment|/// operand OpIdx.  For normal instructions, this is derived from the
+comment|/// MCInstrDesc.  For inline assembly it is derived from the flag words.
+comment|///
+comment|/// Returns NULL if the static register classs constraint cannot be
+comment|/// determined.
+comment|///
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|getRegClassConstraint
+argument_list|(
+name|unsigned
+name|OpIdx
+argument_list|,
+specifier|const
+name|TargetInstrInfo
+operator|*
+name|TII
+argument_list|,
+specifier|const
+name|TargetRegisterInfo
+operator|*
+name|TRI
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// isRegTiedToUseOperand - Given the index of a register def operand,
 comment|/// check if the register def is tied to a source operand, due to either
 comment|/// two-address elimination or inline assembly constraints. Returns the

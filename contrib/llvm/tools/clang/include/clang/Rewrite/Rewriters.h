@@ -62,13 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_decl_stmt
@@ -81,33 +75,29 @@ decl_stmt|;
 comment|/// RewriteMacrosInInput - Implement -rewrite-macros mode.
 name|void
 name|RewriteMacrosInInput
-argument_list|(
+parameter_list|(
 name|Preprocessor
-operator|&
+modifier|&
 name|PP
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|raw_ostream
-operator|*
+modifier|*
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// DoRewriteTest - A simple test for the TokenRewriter class.
 name|void
 name|DoRewriteTest
-argument_list|(
+parameter_list|(
 name|Preprocessor
-operator|&
+modifier|&
 name|PP
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|raw_ostream
-operator|*
+modifier|*
 name|OS
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 

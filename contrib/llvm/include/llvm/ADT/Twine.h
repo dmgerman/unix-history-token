@@ -167,6 +167,9 @@ block|,
 comment|/// A pointer to a StringRef instance.
 name|StringRefKind
 block|,
+comment|/// A char value reinterpreted as a pointer, to render as a character.
+name|CharKind
+block|,
 comment|/// An unsigned int value reinterpreted as a pointer, to render as an
 comment|/// unsigned decimal integer.
 name|DecUIKind
@@ -194,22 +197,86 @@ comment|/// integer.
 name|UHexKind
 block|}
 enum|;
+union|union
+name|Child
+block|{
+specifier|const
+name|Twine
+modifier|*
+name|twine
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|cString
+decl_stmt|;
+specifier|const
+name|std
+operator|::
+name|string
+operator|*
+name|stdString
+expr_stmt|;
+specifier|const
+name|StringRef
+modifier|*
+name|stringRef
+decl_stmt|;
+name|char
+name|character
+decl_stmt|;
+name|unsigned
+name|int
+name|decUI
+decl_stmt|;
+name|int
+name|decI
+decl_stmt|;
+specifier|const
+name|unsigned
+name|long
+modifier|*
+name|decUL
+decl_stmt|;
+specifier|const
+name|long
+modifier|*
+name|decL
+decl_stmt|;
+specifier|const
+name|unsigned
+name|long
+name|long
+modifier|*
+name|decULL
+decl_stmt|;
+specifier|const
+name|long
+name|long
+modifier|*
+name|decLL
+decl_stmt|;
+specifier|const
+name|uint64_t
+modifier|*
+name|uHex
+decl_stmt|;
+block|}
+union|;
 name|private
 label|:
 comment|/// LHS - The prefix in the concatenation, which may be uninitialized for
 comment|/// Null or Empty kinds.
-specifier|const
-name|void
-modifier|*
+name|Child
 name|LHS
 decl_stmt|;
 comment|/// RHS - The suffix in the concatenation, which may be uninitialized for
 comment|/// Null or Empty kinds.
-specifier|const
-name|void
-modifier|*
+name|Child
 name|RHS
 decl_stmt|;
+comment|// enums stored as unsigned chars to save on space while some compilers
+comment|// don't support specifying the backing type for an enum
 comment|/// LHSKind - The NodeKind of the left hand side, \see getLHSKind().
 name|unsigned
 name|char
@@ -262,18 +329,6 @@ operator|&
 name|_RHS
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|_LHS
-argument_list|)
-operator|,
-name|RHS
-argument_list|(
-operator|&
-name|_RHS
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|TwineKind
@@ -284,6 +339,20 @@ argument_list|(
 argument|TwineKind
 argument_list|)
 block|{
+name|LHS
+operator|.
+name|twine
+operator|=
+operator|&
+name|_LHS
+block|;
+name|RHS
+operator|.
+name|twine
+operator|=
+operator|&
+name|_RHS
+block|;
 name|assert
 argument_list|(
 name|isValid
@@ -296,11 +365,11 @@ comment|/// Construct a twine from explicit values.
 name|explicit
 name|Twine
 argument_list|(
-argument|const void *_LHS
+argument|Child _LHS
 argument_list|,
 argument|NodeKind _LHSKind
 argument_list|,
-argument|const void *_RHS
+argument|Child _RHS
 argument_list|,
 argument|NodeKind _RHSKind
 argument_list|)
@@ -465,15 +534,9 @@ operator|==
 name|TwineKind
 operator|&&
 operator|!
-name|static_cast
-operator|<
-specifier|const
-name|Twine
-operator|*
-operator|>
-operator|(
 name|LHS
-operator|)
+operator|.
+name|twine
 operator|->
 name|isBinary
 argument_list|()
@@ -489,15 +552,9 @@ operator|==
 name|TwineKind
 operator|&&
 operator|!
-name|static_cast
-operator|<
-specifier|const
-name|Twine
-operator|*
-operator|>
-operator|(
 name|RHS
-operator|)
+operator|.
+name|twine
 operator|->
 name|isBinary
 argument_list|()
@@ -543,9 +600,7 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|,
-specifier|const
-name|void
-operator|*
+name|Child
 name|Ptr
 argument_list|,
 name|NodeKind
@@ -561,9 +616,7 @@ name|raw_ostream
 operator|&
 name|OS
 argument_list|,
-specifier|const
-name|void
-operator|*
+name|Child
 name|Ptr
 argument_list|,
 name|NodeKind
@@ -628,6 +681,8 @@ literal|'\0'
 condition|)
 block|{
 name|LHS
+operator|.
+name|cString
 operator|=
 name|Str
 expr_stmt|;
@@ -671,12 +726,6 @@ operator|&
 name|Str
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|Str
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|StdStringKind
@@ -687,6 +736,13 @@ argument_list|(
 argument|EmptyKind
 argument_list|)
 block|{
+name|LHS
+operator|.
+name|stdString
+operator|=
+operator|&
+name|Str
+block|;
 name|assert
 argument_list|(
 name|isValid
@@ -705,12 +761,6 @@ operator|&
 name|Str
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|Str
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|StringRefKind
@@ -721,6 +771,13 @@ argument_list|(
 argument|EmptyKind
 argument_list|)
 block|{
+name|LHS
+operator|.
+name|stringRef
+operator|=
+operator|&
+name|Str
+block|;
 name|assert
 argument_list|(
 name|isValid
@@ -729,6 +786,87 @@ operator|&&
 literal|"Invalid twine!"
 argument_list|)
 block|;     }
+comment|/// Construct from a char.
+name|explicit
+name|Twine
+argument_list|(
+argument|char Val
+argument_list|)
+operator|:
+name|LHSKind
+argument_list|(
+name|CharKind
+argument_list|)
+operator|,
+name|RHSKind
+argument_list|(
+argument|EmptyKind
+argument_list|)
+block|{
+name|LHS
+operator|.
+name|character
+operator|=
+name|Val
+block|;     }
+comment|/// Construct from a signed char.
+name|explicit
+name|Twine
+argument_list|(
+argument|signed char Val
+argument_list|)
+operator|:
+name|LHSKind
+argument_list|(
+name|CharKind
+argument_list|)
+operator|,
+name|RHSKind
+argument_list|(
+argument|EmptyKind
+argument_list|)
+block|{
+name|LHS
+operator|.
+name|character
+operator|=
+name|static_cast
+operator|<
+name|char
+operator|>
+operator|(
+name|Val
+operator|)
+block|;     }
+comment|/// Construct from an unsigned char.
+name|explicit
+name|Twine
+argument_list|(
+argument|unsigned char Val
+argument_list|)
+operator|:
+name|LHSKind
+argument_list|(
+name|CharKind
+argument_list|)
+operator|,
+name|RHSKind
+argument_list|(
+argument|EmptyKind
+argument_list|)
+block|{
+name|LHS
+operator|.
+name|character
+operator|=
+name|static_cast
+operator|<
+name|char
+operator|>
+operator|(
+name|Val
+operator|)
+block|;     }
 comment|/// Construct a twine to print \arg Val as an unsigned decimal integer.
 name|explicit
 name|Twine
@@ -736,18 +874,6 @@ argument_list|(
 argument|unsigned Val
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
-name|Val
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|DecUIKind
@@ -757,7 +883,13 @@ name|RHSKind
 argument_list|(
 argument|EmptyKind
 argument_list|)
-block|{     }
+block|{
+name|LHS
+operator|.
+name|decUI
+operator|=
+name|Val
+block|;     }
 comment|/// Construct a twine to print \arg Val as a signed decimal integer.
 name|explicit
 name|Twine
@@ -765,18 +897,6 @@ argument_list|(
 argument|int Val
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|(
-name|void
-operator|*
-operator|)
-operator|(
-name|intptr_t
-operator|)
-name|Val
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|DecIKind
@@ -786,7 +906,13 @@ name|RHSKind
 argument_list|(
 argument|EmptyKind
 argument_list|)
-block|{     }
+block|{
+name|LHS
+operator|.
+name|decI
+operator|=
+name|Val
+block|;     }
 comment|/// Construct a twine to print \arg Val as an unsigned decimal integer.
 name|explicit
 name|Twine
@@ -794,12 +920,6 @@ argument_list|(
 argument|const unsigned long&Val
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|Val
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|DecULKind
@@ -809,7 +929,14 @@ name|RHSKind
 argument_list|(
 argument|EmptyKind
 argument_list|)
-block|{     }
+block|{
+name|LHS
+operator|.
+name|decUL
+operator|=
+operator|&
+name|Val
+block|;     }
 comment|/// Construct a twine to print \arg Val as a signed decimal integer.
 name|explicit
 name|Twine
@@ -820,12 +947,6 @@ operator|&
 name|Val
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|Val
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|DecLKind
@@ -835,7 +956,14 @@ name|RHSKind
 argument_list|(
 argument|EmptyKind
 argument_list|)
-block|{     }
+block|{
+name|LHS
+operator|.
+name|decL
+operator|=
+operator|&
+name|Val
+block|;     }
 comment|/// Construct a twine to print \arg Val as an unsigned decimal integer.
 name|explicit
 name|Twine
@@ -843,12 +971,6 @@ argument_list|(
 argument|const unsigned long long&Val
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|Val
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|DecULLKind
@@ -858,7 +980,14 @@ name|RHSKind
 argument_list|(
 argument|EmptyKind
 argument_list|)
-block|{     }
+block|{
+name|LHS
+operator|.
+name|decULL
+operator|=
+operator|&
+name|Val
+block|;     }
 comment|/// Construct a twine to print \arg Val as a signed decimal integer.
 name|explicit
 name|Twine
@@ -866,12 +995,6 @@ argument_list|(
 argument|const long long&Val
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|Val
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|DecLLKind
@@ -881,7 +1004,14 @@ name|RHSKind
 argument_list|(
 argument|EmptyKind
 argument_list|)
-block|{     }
+block|{
+name|LHS
+operator|.
+name|decLL
+operator|=
+operator|&
+name|Val
+block|;     }
 comment|// FIXME: Unfortunately, to make sure this is as efficient as possible we
 comment|// need extra binary constructors from particular types. We can't rely on
 comment|// the compiler to be smart enough to fold operator+()/concat() down to the
@@ -901,17 +1031,6 @@ operator|&
 name|_RHS
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-name|_LHS
-argument_list|)
-operator|,
-name|RHS
-argument_list|(
-operator|&
-name|_RHS
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|CStringKind
@@ -922,6 +1041,19 @@ argument_list|(
 argument|StringRefKind
 argument_list|)
 block|{
+name|LHS
+operator|.
+name|cString
+operator|=
+name|_LHS
+block|;
+name|RHS
+operator|.
+name|stringRef
+operator|=
+operator|&
+name|_RHS
+block|;
 name|assert
 argument_list|(
 name|isValid
@@ -945,17 +1077,6 @@ operator|*
 name|_RHS
 argument_list|)
 operator|:
-name|LHS
-argument_list|(
-operator|&
-name|_LHS
-argument_list|)
-operator|,
-name|RHS
-argument_list|(
-name|_RHS
-argument_list|)
-operator|,
 name|LHSKind
 argument_list|(
 name|StringRefKind
@@ -966,6 +1087,19 @@ argument_list|(
 argument|CStringKind
 argument_list|)
 block|{
+name|LHS
+operator|.
+name|stringRef
+operator|=
+operator|&
+name|_LHS
+block|;
+name|RHS
+operator|.
+name|cString
+operator|=
+name|_RHS
+block|;
 name|assert
 argument_list|(
 name|isValid
@@ -1017,15 +1151,32 @@ modifier|&
 name|Val
 parameter_list|)
 block|{
+name|Child
+name|LHS
+decl_stmt|,
+name|RHS
+decl_stmt|;
+name|LHS
+operator|.
+name|uHex
+operator|=
+operator|&
+name|Val
+expr_stmt|;
+name|RHS
+operator|.
+name|twine
+operator|=
+literal|0
+expr_stmt|;
 return|return
 name|Twine
 argument_list|(
-operator|&
-name|Val
+name|LHS
 argument_list|,
 name|UHexKind
 argument_list|,
-literal|0
+name|RHS
 argument_list|,
 name|EmptyKind
 argument_list|)
@@ -1245,12 +1396,9 @@ case|:
 return|return
 name|StringRef
 argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|)
 name|LHS
+operator|.
+name|cString
 argument_list|)
 return|;
 case|case
@@ -1260,14 +1408,9 @@ return|return
 name|StringRef
 argument_list|(
 operator|*
-operator|(
-specifier|const
-name|std
-operator|::
-name|string
-operator|*
-operator|)
 name|LHS
+operator|.
+name|stdString
 argument_list|)
 return|;
 case|case
@@ -1275,12 +1418,9 @@ name|StringRefKind
 case|:
 return|return
 operator|*
-operator|(
-specifier|const
-name|StringRef
-operator|*
-operator|)
 name|LHS
+operator|.
+name|stringRef
 return|;
 block|}
 end_expr_stmt
@@ -1491,20 +1631,31 @@ comment|// twines.
 end_comment
 
 begin_decl_stmt
-specifier|const
-name|void
-modifier|*
+name|Child
 name|NewLHS
-init|=
-name|this
 decl_stmt|,
-modifier|*
 name|NewRHS
-init|=
-operator|&
-name|Suffix
 decl_stmt|;
 end_decl_stmt
+
+begin_expr_stmt
+name|NewLHS
+operator|.
+name|twine
+operator|=
+name|this
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|NewRHS
+operator|.
+name|twine
+operator|=
+operator|&
+name|Suffix
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|NodeKind

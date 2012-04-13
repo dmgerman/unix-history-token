@@ -120,7 +120,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * A function using a stack frame has the following instruction as the first  * one: addiu sp,sp,-<frame_size>  *  * We make use of this to detect starting address of a function. This works  * better than using 'j ra' instruction to signify end of the previous  * function (for e.g. functions like boot() or panic() do not actually  * emit a 'j ra' instruction).  *  * XXX the abi does not require that the addiu instruction be the first one.  */
+comment|/*  * A function using a stack frame has the following instruction as the first  * one: [d]addiu sp,sp,-<frame_size>  *  * We make use of this to detect starting address of a function. This works  * better than using 'j ra' instruction to signify end of the previous  * function (for e.g. functions like boot() or panic() do not actually  * emit a 'j ra' instruction).  *  * XXX the abi does not require that the addiu instruction be the first one.  */
 end_comment
 
 begin_define
@@ -130,7 +130,7 @@ name|MIPS_START_OF_FUNCTION
 parameter_list|(
 name|ins
 parameter_list|)
-value|(((ins)& 0xffff8000) == 0x27bd8000)
+value|((((ins)& 0xffff8000) == 0x27bd8000) \ 	|| (((ins)& 0xffff8000) == 0x67bd8000))
 end_define
 
 begin_comment
@@ -147,19 +147,44 @@ parameter_list|)
 value|((ins) == 0x03e00008)
 end_define
 
-begin_comment
-comment|/*  * kdbpeekD(addr) - skip one word starting at 'addr', then read the second word  */
-end_comment
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+end_if
 
 begin_define
 define|#
 directive|define
-name|kdbpeekD
+name|MIPS_IS_VALID_KERNELADDR
 parameter_list|(
-name|addr
+name|reg
 parameter_list|)
-value|kdbpeek(((int *)(addr)) + 1)
+value|((((reg)& 3) == 0)&& \ 					((vm_offset_t)(reg)>= MIPS_XKPHYS_START))
 end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|MIPS_IS_VALID_KERNELADDR
+parameter_list|(
+name|reg
+parameter_list|)
+value|((((reg)& 3) == 0)&& \ 					((vm_offset_t)(reg)>= MIPS_KSEG0_START))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_comment
 comment|/*  * Functions ``special'' enough to print by name  */
@@ -543,16 +568,11 @@ comment|/* check for bad SP: could foul up next frame */
 comment|/*XXX MIPS64 bad: this hard-coded SP is lame */
 if|if
 condition|(
+operator|!
+name|MIPS_IS_VALID_KERNELADDR
+argument_list|(
 name|sp
-operator|&
-literal|3
-operator|||
-operator|(
-name|uintptr_t
-operator|)
-name|sp
-operator|<
-literal|0x80000000u
+argument_list|)
 condition|)
 block|{
 call|(
@@ -560,7 +580,7 @@ modifier|*
 name|printfn
 call|)
 argument_list|(
-literal|"SP 0x%x: not in kernel\n"
+literal|"SP 0x%jx: not in kernel\n"
 argument_list|,
 name|sp
 argument_list|)
@@ -782,16 +802,11 @@ comment|/* check for bad PC */
 comment|/*XXX MIPS64 bad: These hard coded constants are lame */
 if|if
 condition|(
+operator|!
+name|MIPS_IS_VALID_KERNELADDR
+argument_list|(
 name|pc
-operator|&
-literal|3
-operator|||
-name|pc
-operator|<
-operator|(
-name|uintptr_t
-operator|)
-literal|0x80000000
+argument_list|)
 condition|)
 block|{
 call|(
@@ -799,7 +814,7 @@ modifier|*
 name|printfn
 call|)
 argument_list|(
-literal|"PC 0x%x: not in kernel\n"
+literal|"PC 0x%jx: not in kernel\n"
 argument_list|,
 name|pc
 argument_list|)
@@ -1376,7 +1391,7 @@ index|[
 literal|0
 index|]
 operator|=
-name|kdbpeekD
+name|kdbpeekd
 argument_list|(
 operator|(
 name|int
@@ -1413,7 +1428,7 @@ index|[
 literal|1
 index|]
 operator|=
-name|kdbpeekD
+name|kdbpeekd
 argument_list|(
 operator|(
 name|int
@@ -1450,7 +1465,7 @@ index|[
 literal|2
 index|]
 operator|=
-name|kdbpeekD
+name|kdbpeekd
 argument_list|(
 operator|(
 name|int
@@ -1487,7 +1502,7 @@ index|[
 literal|3
 index|]
 operator|=
-name|kdbpeekD
+name|kdbpeekd
 argument_list|(
 operator|(
 name|int
@@ -1521,7 +1536,7 @@ case|:
 comment|/* ra */
 name|ra
 operator|=
-name|kdbpeekD
+name|kdbpeekd
 argument_list|(
 operator|(
 name|int
@@ -1548,6 +1563,12 @@ name|OP_ADDI
 case|:
 case|case
 name|OP_ADDIU
+case|:
+case|case
+name|OP_DADDI
+case|:
+case|case
+name|OP_DADDIU
 case|:
 comment|/* look for stack pointer adjustment */
 if|if
@@ -1667,7 +1688,7 @@ modifier|*
 name|printfn
 call|)
 argument_list|(
-literal|") ra %x sp %x sz %d\n"
+literal|") ra %jx sp %jx sz %d\n"
 argument_list|,
 name|ra
 argument_list|,

@@ -1070,7 +1070,9 @@ operator|)
 name|oldblks
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|oldblks
+argument_list|)
 argument_list|)
 expr_stmt|;
 for|for
@@ -1175,7 +1177,9 @@ operator|)
 name|newblks
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|newblks
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|bcopy
@@ -1197,7 +1201,9 @@ literal|0
 index|]
 argument_list|,
 sizeof|sizeof
+argument_list|(
 name|oldblks
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|oip

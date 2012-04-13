@@ -592,8 +592,6 @@ block|,
 operator|.
 name|d_flags
 operator|=
-name|D_PSEUDO
-operator||
 name|D_NEEDMINOR
 block|,
 operator|.
@@ -777,6 +775,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_link
@@ -1121,11 +1120,9 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free_type
+name|if_free
 argument_list|(
 name|ifp
-argument_list|,
-name|IFT_ETHER
 argument_list|)
 expr_stmt|;
 name|mtx_destroy

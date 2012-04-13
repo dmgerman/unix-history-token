@@ -60,7 +60,7 @@ file|"portald.h"
 end_include
 
 begin_comment
-comment|/*  * Set the process's credentials to those specified in user,  * saveing the existing ones in save.  * Return 0 on success, -1 (with errno set) on error.  */
+comment|/*  * Set the process's credentials to those specified in user,  * saving the existing ones in save.  * Return 0 on success, -1 (with errno set) on error.  */
 end_comment
 
 begin_function

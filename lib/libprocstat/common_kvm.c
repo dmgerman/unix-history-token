@@ -277,7 +277,7 @@ name|buf
 argument_list|,
 name|si
 operator|.
-name|__si_namebuf
+name|si_name
 argument_list|,
 name|SPECNAMELEN
 operator|+

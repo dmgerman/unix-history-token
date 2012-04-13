@@ -467,6 +467,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_link
@@ -846,8 +847,6 @@ block|,
 operator|.
 name|d_flags
 operator|=
-name|D_PSEUDO
-operator||
 name|D_NEEDMINOR
 block|,
 operator|.

@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/CommandLine.h"
 end_include
 
@@ -97,12 +103,10 @@ comment|/// error.
 specifier|static
 name|ParsedSourceLocation
 name|FromString
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{
 name|ParsedSourceLocation
 name|PSL
@@ -111,12 +115,8 @@ name|std
 operator|::
 name|pair
 operator|<
-name|llvm
-operator|::
 name|StringRef
 operator|,
-name|llvm
-operator|::
 name|StringRef
 operator|>
 name|ColSplit
@@ -132,12 +132,8 @@ name|std
 operator|::
 name|pair
 operator|<
-name|llvm
-operator|::
 name|StringRef
 operator|,
-name|llvm
-operator|::
 name|StringRef
 operator|>
 name|LineSplit

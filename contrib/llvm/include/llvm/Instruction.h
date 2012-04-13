@@ -834,6 +834,22 @@ name|mayReadFromMemory
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// mayReadOrWriteMemory - Return true if this instruction may read or
+comment|/// write memory.
+comment|///
+name|bool
+name|mayReadOrWriteMemory
+argument_list|()
+specifier|const
+block|{
+return|return
+name|mayReadFromMemory
+argument_list|()
+operator|||
+name|mayWriteToMemory
+argument_list|()
+return|;
+block|}
 comment|/// mayThrow - Return true if this instruction may throw an exception.
 comment|///
 name|bool
@@ -1289,7 +1305,7 @@ return|;
 block|}
 name|Instruction
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|unsigned iType
 argument_list|,
@@ -1303,7 +1319,7 @@ argument_list|)
 empty_stmt|;
 name|Instruction
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|unsigned iType
 argument_list|,

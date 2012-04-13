@@ -30,7 +30,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Moschip MCS7730/MCS7830 USB to Ethernet controller  * The datasheet is available at the following URL:  * http://www.moschip.com/data/products/MCS7830/Data%20Sheet_7830.pdf  */
+comment|/*  * Moschip MCS7730/MCS7830/MCS7832 USB to Ethernet controller  * The datasheet is available at the following URL:  * http://www.moschip.com/data/products/MCS7830/Data%20Sheet_7830.pdf  */
 end_comment
 
 begin_comment
@@ -220,6 +220,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -321,6 +322,17 @@ argument_list|,
 argument|USB_PRODUCT_MOSCHIP_MCS7830
 argument_list|,
 argument|MCS7830
+argument_list|)
+block|}
+block|,
+block|{
+name|USB_VPI
+argument_list|(
+argument|USB_VENDOR_MOSCHIP
+argument_list|,
+argument|USB_PRODUCT_MOSCHIP_MCS7832
+argument_list|,
+argument|MCS7832
 argument_list|)
 block|}
 block|,
@@ -898,14 +910,6 @@ argument_list|,
 name|mos_detach
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -928,11 +932,7 @@ argument_list|,
 name|mos_miibus_statchg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2534,11 +2534,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-name|MOS_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_active
@@ -2554,6 +2549,11 @@ operator|=
 name|mii
 operator|->
 name|mii_media_status
+expr_stmt|;
+name|MOS_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function
@@ -3306,6 +3306,22 @@ block|{
 name|MOS_DPRINTFN
 argument_list|(
 literal|"model: MCS7830"
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|sc
+operator|->
+name|mos_flags
+operator|&
+name|MCS7832
+condition|)
+block|{
+name|MOS_DPRINTFN
+argument_list|(
+literal|"model: MCS7832"
 argument_list|)
 expr_stmt|;
 block|}

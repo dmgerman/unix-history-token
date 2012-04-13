@@ -107,8 +107,26 @@ begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
-value|"mips64eb"
+value|"mips64"
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_ARCH32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH32
+value|"mips"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_elif
 elif|#
@@ -123,7 +141,7 @@ begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
-value|"mipsn32eb"
+value|"mipsn32"
 end_define
 
 begin_else
@@ -135,7 +153,7 @@ begin_define
 define|#
 directive|define
 name|MACHINE_ARCH
-value|"mipseb"
+value|"mips"
 end_define
 
 begin_endif
@@ -160,6 +178,24 @@ directive|define
 name|MACHINE_ARCH
 value|"mips64el"
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MACHINE_ARCH32
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|MACHINE_ARCH32
+value|"mipsel"
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_elif
 elif|#

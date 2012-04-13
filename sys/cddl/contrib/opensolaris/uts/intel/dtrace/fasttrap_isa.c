@@ -399,6 +399,10 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|/* sun */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -6511,7 +6515,7 @@ name|void
 operator|*
 argument_list|)
 expr_stmt|;
-comment|/* 		 * Generic Instruction Tracing 		 * --------------------------- 		 * 		 * This is the layout of the scratch space in the user-land 		 * thread structure for our generated instructions. 		 * 		 *	32-bit mode			bytes 		 *	------------------------	----- 		 * a:<original instruction><= 15 		 *	jmp<pc + tp->ftt_size>	    5 		 * b:<original instrction><= 15 		 *	int	T_DTRACE_RET		    2 		 *					----- 		 *<= 37 		 * 		 *	64-bit mode			bytes 		 *	------------------------	----- 		 * a:<original instruction><= 15 		 *	jmp	0(%rip)			    6 		 *<pc + tp->ftt_size>		    8 		 * b:<original instruction><= 15 		 * 	int	T_DTRACE_RET		    2 		 * 					----- 		 *<= 46 		 * 		 * The %pc is set to a, and curthread->t_dtrace_astpc is set 		 * to b. If we encounter a signal on the way out of the 		 * kernel, trap() will set %pc to curthread->t_dtrace_astpc 		 * so that we execute the original instruction and re-enter 		 * the kernel rather than redirecting to the next instruction. 		 * 		 * If there are return probes (so we know that we're going to 		 * need to reenter the kernel after executing the original 		 * instruction), the scratch space will just contain the 		 * original instruction followed by an interrupt -- the same 		 * data as at b. 		 * 		 * %rip-relative Addressing 		 * ------------------------ 		 * 		 * There's a further complication in 64-bit mode due to %rip- 		 * relative addressing. While this is clearly a beneficial 		 * architectural decision for position independent code, it's 		 * hard not to see it as a personal attack against the pid 		 * provider since before there was a relatively small set of 		 * instructions to emulate; with %rip-relative addressing, 		 * almost every instruction can potentially depend on the 		 * address at which it's executed. Rather than emulating 		 * the broad spectrum of instructions that can now be 		 * position dependent, we emulate jumps and others as in 		 * 32-bit mode, and take a different tack for instructions 		 * using %rip-relative addressing. 		 * 		 * For every instruction that uses the ModRM byte, the 		 * in-kernel disassembler reports its location. We use the 		 * ModRM byte to identify that an instruction uses 		 * %rip-relative addressing and to see what other registers 		 * the instruction uses. To emulate those instructions, 		 * we modify the instruction to be %rax-relative rather than 		 * %rip-relative (or %rcx-relative if the instruction uses 		 * %rax; or %r8- or %r9-relative if the REX.B is present so 		 * we don't have to rewrite the REX prefix). We then load 		 * the value that %rip would have been into the scratch 		 * register and generate an instruction to reset the scratch 		 * register back to its original value. The instruction 		 * sequence looks like this: 		 * 		 *	64-mode %rip-relative		bytes 		 *	------------------------	----- 		 * a:<modified instruction><= 15 		 *	movq	$<value>, %<scratch>	    6 		 *	jmp	0(%rip)			    6 		 *<pc + tp->ftt_size>		    8 		 * b:<modified instruction><= 15 		 * 	int	T_DTRACE_RET		    2 		 * 					----- 		 *					   52 		 * 		 * We set curthread->t_dtrace_regv so that upon receiving 		 * a signal we can reset the value of the scratch register. 		 */
+comment|/* 		 * Generic Instruction Tracing 		 * --------------------------- 		 * 		 * This is the layout of the scratch space in the user-land 		 * thread structure for our generated instructions. 		 * 		 *	32-bit mode			bytes 		 *	------------------------	----- 		 * a:<original instruction><= 15 		 *	jmp<pc + tp->ftt_size>	    5 		 * b:<original instruction><= 15 		 *	int	T_DTRACE_RET		    2 		 *					----- 		 *<= 37 		 * 		 *	64-bit mode			bytes 		 *	------------------------	----- 		 * a:<original instruction><= 15 		 *	jmp	0(%rip)			    6 		 *<pc + tp->ftt_size>		    8 		 * b:<original instruction><= 15 		 * 	int	T_DTRACE_RET		    2 		 * 					----- 		 *<= 46 		 * 		 * The %pc is set to a, and curthread->t_dtrace_astpc is set 		 * to b. If we encounter a signal on the way out of the 		 * kernel, trap() will set %pc to curthread->t_dtrace_astpc 		 * so that we execute the original instruction and re-enter 		 * the kernel rather than redirecting to the next instruction. 		 * 		 * If there are return probes (so we know that we're going to 		 * need to reenter the kernel after executing the original 		 * instruction), the scratch space will just contain the 		 * original instruction followed by an interrupt -- the same 		 * data as at b. 		 * 		 * %rip-relative Addressing 		 * ------------------------ 		 * 		 * There's a further complication in 64-bit mode due to %rip- 		 * relative addressing. While this is clearly a beneficial 		 * architectural decision for position independent code, it's 		 * hard not to see it as a personal attack against the pid 		 * provider since before there was a relatively small set of 		 * instructions to emulate; with %rip-relative addressing, 		 * almost every instruction can potentially depend on the 		 * address at which it's executed. Rather than emulating 		 * the broad spectrum of instructions that can now be 		 * position dependent, we emulate jumps and others as in 		 * 32-bit mode, and take a different tack for instructions 		 * using %rip-relative addressing. 		 * 		 * For every instruction that uses the ModRM byte, the 		 * in-kernel disassembler reports its location. We use the 		 * ModRM byte to identify that an instruction uses 		 * %rip-relative addressing and to see what other registers 		 * the instruction uses. To emulate those instructions, 		 * we modify the instruction to be %rax-relative rather than 		 * %rip-relative (or %rcx-relative if the instruction uses 		 * %rax; or %r8- or %r9-relative if the REX.B is present so 		 * we don't have to rewrite the REX prefix). We then load 		 * the value that %rip would have been into the scratch 		 * register and generate an instruction to reset the scratch 		 * register back to its original value. The instruction 		 * sequence looks like this: 		 * 		 *	64-mode %rip-relative		bytes 		 *	------------------------	----- 		 * a:<modified instruction><= 15 		 *	movq	$<value>, %<scratch>	    6 		 *	jmp	0(%rip)			    6 		 *<pc + tp->ftt_size>		    8 		 * b:<modified instruction><= 15 		 * 	int	T_DTRACE_RET		    2 		 * 					----- 		 *					   52 		 * 		 * We set curthread->t_dtrace_regv so that upon receiving 		 * a signal we can reset the value of the scratch register. 		 */
 name|ASSERT
 argument_list|(
 name|tp
@@ -6969,6 +6973,12 @@ name|scratch
 argument_list|)
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|defined
+argument_list|(
+name|sun
+argument_list|)
 if|if
 condition|(
 name|fasttrap_copyout
@@ -6985,6 +6995,24 @@ name|i
 argument_list|)
 condition|)
 block|{
+else|#
+directive|else
+if|if
+condition|(
+name|uwrite
+argument_list|(
+name|curproc
+argument_list|,
+name|scratch
+argument_list|,
+name|i
+argument_list|,
+name|addr
+argument_list|)
+condition|)
+block|{
+endif|#
+directive|endif
 name|fasttrap_sigtrap
 argument_list|(
 name|p
@@ -7168,9 +7196,6 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 name|int
 name|fasttrap_return_probe
 parameter_list|(
@@ -7275,13 +7300,7 @@ literal|0
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*ARGSUSED*/
-end_comment
-
-begin_function
 name|uint64_t
 name|fasttrap_pid_getarg
 parameter_list|(
@@ -7329,13 +7348,7 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_comment
 comment|/*ARGSUSED*/
-end_comment
-
-begin_function
 name|uint64_t
 name|fasttrap_usdt_getarg
 parameter_list|(
@@ -7383,9 +7396,6 @@ argument_list|)
 operator|)
 return|;
 block|}
-end_function
-
-begin_function
 specifier|static
 name|ulong_t
 name|fasttrap_getreg

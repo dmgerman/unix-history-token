@@ -11,6 +11,10 @@ begin_comment
 comment|/* Portions Copyright 2007 Jeremy Teo */
 end_comment
 
+begin_comment
+comment|/* Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org> */
+end_comment
+
 begin_ifdef
 ifdef|#
 directive|ifdef

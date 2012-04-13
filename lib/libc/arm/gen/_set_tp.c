@@ -12,7 +12,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|<stdint.h>
+file|<sys/types.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
 end_include
 
 begin_function
@@ -23,7 +29,21 @@ name|void
 modifier|*
 name|tp
 parameter_list|)
-block|{ }
+block|{
+operator|*
+operator|(
+operator|(
+expr|struct
+name|tcb
+operator|*
+operator|*
+operator|)
+name|ARM_TP_ADDRESS
+operator|)
+operator|=
+name|tp
+expr_stmt|;
+block|}
 end_function
 
 end_unit

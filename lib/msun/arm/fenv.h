@@ -21,6 +21,24 @@ directive|include
 file|<sys/_types.h>
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__fenv_static
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__fenv_static
+value|static
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_typedef
 typedef|typedef
 name|__uint32_t
@@ -155,11 +173,144 @@ name|_ENABLE_MASK
 value|(FE_ALL_EXCEPT<< _FPUSW_SHIFT)
 end_define
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|ARM_HARD_FLOAT
-end_ifdef
+end_ifndef
+
+begin_function_decl
+name|int
+name|feclearexcept
+parameter_list|(
+name|int
+name|__excepts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fegetexceptflag
+parameter_list|(
+name|fexcept_t
+modifier|*
+name|__flagp
+parameter_list|,
+name|int
+name|__excepts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fesetexceptflag
+parameter_list|(
+specifier|const
+name|fexcept_t
+modifier|*
+name|__flagp
+parameter_list|,
+name|int
+name|__excepts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|feraiseexcept
+parameter_list|(
+name|int
+name|__excepts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fetestexcept
+parameter_list|(
+name|int
+name|__excepts
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fegetround
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fesetround
+parameter_list|(
+name|int
+name|__round
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fegetenv
+parameter_list|(
+name|fenv_t
+modifier|*
+name|__envp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|feholdexcept
+parameter_list|(
+name|fenv_t
+modifier|*
+name|__envp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|fesetenv
+parameter_list|(
+specifier|const
+name|fenv_t
+modifier|*
+name|__envp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|feupdateenv
+parameter_list|(
+specifier|const
+name|fenv_t
+modifier|*
+name|__envp
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* ARM_HARD_FLOAT */
+end_comment
 
 begin_define
 define|#
@@ -181,37 +332,9 @@ parameter_list|)
 value|__asm __volatile("wfs %0" : : "r" (__fpsr))
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|__rfs
-parameter_list|(
-name|__fpsr
-parameter_list|)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__wfs
-parameter_list|(
-name|__fpsr
-parameter_list|)
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|feclearexcept
 parameter_list|(
@@ -247,8 +370,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fegetexceptflag
 parameter_list|(
@@ -285,8 +408,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fesetexceptflag
 parameter_list|(
@@ -334,8 +457,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|feraiseexcept
 parameter_list|(
@@ -366,8 +489,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fetestexcept
 parameter_list|(
@@ -395,8 +518,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fegetround
 parameter_list|(
@@ -414,8 +537,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fesetround
 parameter_list|(
@@ -433,8 +556,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fegetenv
 parameter_list|(
@@ -457,8 +580,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|feholdexcept
 parameter_list|(
@@ -504,8 +627,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|fesetenv
 parameter_list|(
@@ -530,8 +653,8 @@ block|}
 end_function
 
 begin_function
-specifier|static
-name|__inline
+name|__fenv_static
+specifier|inline
 name|int
 name|feupdateenv
 parameter_list|(
@@ -577,9 +700,13 @@ directive|if
 name|__BSD_VISIBLE
 end_if
 
+begin_comment
+comment|/* We currently provide no external definitions of the functions below. */
+end_comment
+
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|feenableexcept
 parameter_list|(
@@ -631,7 +758,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|fedisableexcept
 parameter_list|(
@@ -686,7 +813,7 @@ end_function
 
 begin_function
 specifier|static
-name|__inline
+specifier|inline
 name|int
 name|fegetexcept
 parameter_list|(
@@ -723,6 +850,15 @@ end_endif
 
 begin_comment
 comment|/* __BSD_VISIBLE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* ARM_HARD_FLOAT */
 end_comment
 
 begin_macro

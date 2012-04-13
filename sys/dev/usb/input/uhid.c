@@ -226,6 +226,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -652,6 +653,9 @@ condition|(
 operator|(
 name|actlen
 operator|>=
+operator|(
+name|int
+operator|)
 name|sc
 operator|->
 name|sc_isize
@@ -679,6 +683,9 @@ if|if
 condition|(
 name|actlen
 operator|>
+operator|(
+name|int
+operator|)
 name|sc
 operator|->
 name|sc_isize
@@ -3514,7 +3521,6 @@ name|sc_fifo
 argument_list|,
 name|unit
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,

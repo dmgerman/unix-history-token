@@ -6,19 +6,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|"abi.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"int_lib.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|<float.h>
 end_include
 
 begin_comment
@@ -52,12 +40,6 @@ end_ifndef
 begin_comment
 comment|/* Support for systems that have hardware floating-point; we'll set the inexact flag  * as a side-effect of this computation.  */
 end_comment
-
-begin_include
-include|#
-directive|include
-file|<stdint.h>
-end_include
 
 begin_function
 name|COMPILER_RT_ABI

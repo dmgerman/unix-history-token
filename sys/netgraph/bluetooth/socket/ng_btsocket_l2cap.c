@@ -180,6 +180,7 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_BTSOCKET_L2CAP
@@ -473,6 +474,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_bluetooth_l2cap_sockets

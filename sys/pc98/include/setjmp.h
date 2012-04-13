@@ -10,7 +10,7 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<i386/setjmp.h>
+file|<x86/setjmp.h>
 end_include
 
 end_unit

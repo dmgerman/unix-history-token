@@ -306,6 +306,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -324,6 +325,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug_turnstile
@@ -709,19 +711,11 @@ operator|->
 name|p_pid
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|DDB
-name|db_trace_thread
+name|kdb_backtrace_thread
 argument_list|(
 name|td
-argument_list|,
-operator|-
-literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|panic
 argument_list|(
 literal|"sleeping thread"

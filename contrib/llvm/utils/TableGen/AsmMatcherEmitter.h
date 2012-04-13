@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"TableGenBackend.h"
+file|"llvm/TableGen/TableGenBackend.h"
 end_include
 
 begin_include

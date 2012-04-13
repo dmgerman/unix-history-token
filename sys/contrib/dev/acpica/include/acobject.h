@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -644,14 +644,18 @@ value|\     UINT32                          Value;
 comment|/* Value to store into the Bank or Index register */
 value|\     UINT8                           StartFieldBitOffset;
 comment|/* Bit offset within first field datum (0-63) */
-value|\   typedef struct acpi_object_field_common
+value|\     UINT8                           AccessLength;
 end_define
 
 begin_comment
-comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
+comment|/* For serial regions/fields */
 end_comment
 
-begin_block
+begin_typedef
+typedef|typedef
+struct|struct
+name|acpi_object_field_common
+comment|/* COMMON FIELD (for BUFFER, REGION, BANK, and INDEX fields) */
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
@@ -662,12 +666,9 @@ name|RegionObj
 expr_stmt|;
 comment|/* Parent Operation Region object (REGION/BANK fields only) */
 block|}
-end_block
-
-begin_expr_stmt
 name|ACPI_OBJECT_FIELD_COMMON
-expr_stmt|;
-end_expr_stmt
+typedef|;
+end_typedef
 
 begin_typedef
 typedef|typedef
@@ -676,12 +677,20 @@ name|acpi_object_region_field
 block|{
 name|ACPI_OBJECT_COMMON_HEADER
 name|ACPI_COMMON_FIELD_INFO
-expr|union
+name|UINT16
+name|ResourceLength
+decl_stmt|;
+name|union
 name|acpi_operand_object
-operator|*
+modifier|*
 name|RegionObj
-expr_stmt|;
+decl_stmt|;
 comment|/* Containing OpRegion object */
+name|UINT8
+modifier|*
+name|ResourceBuffer
+decl_stmt|;
+comment|/* ResourceTemplate for serial regions/fields */
 block|}
 name|ACPI_OBJECT_REGION_FIELD
 typedef|;
@@ -956,6 +965,10 @@ modifier|*
 name|Method_REG
 decl_stmt|;
 comment|/* _REG method for this region (if any) */
+name|ACPI_NAMESPACE_NODE
+modifier|*
+name|ScopeNode
+decl_stmt|;
 name|void
 modifier|*
 name|RegionContext

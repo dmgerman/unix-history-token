@@ -245,6 +245,7 @@ file|<dev/usb/wlan/if_urtwvar.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -6269,30 +6270,25 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
-name|name
 index|[
 name|IFNAMSIZ
 index|]
 parameter_list|,
 name|int
-name|unit
+parameter_list|,
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
-name|opmode
-parameter_list|,
-name|int
-name|flags
 parameter_list|,
 specifier|const
 name|uint8_t
-name|bssid
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 parameter_list|,
 specifier|const
 name|uint8_t
-name|mac
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
@@ -6576,7 +6572,7 @@ specifier|static
 name|uint16_t
 name|urtw_rate2rtl
 parameter_list|(
-name|int
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6586,7 +6582,7 @@ specifier|static
 name|uint16_t
 name|urtw_rtl2rate
 parameter_list|(
-name|int
+name|uint32_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -8793,7 +8789,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -9082,7 +9079,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|ret
 operator|!=
 literal|0
 condition|)
@@ -9098,7 +9095,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|error
+name|ret
 operator|!=
 literal|0
 condition|)
@@ -9247,7 +9244,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|uint8_t
 name|data8
 decl_stmt|;
@@ -12686,11 +12683,13 @@ name|xferlen
 operator|+=
 literal|1
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|data
 operator|->
 name|buf
+argument_list|,
+literal|0
 argument_list|,
 name|URTW_TX_MAXSIZE
 argument_list|)
@@ -13724,7 +13723,7 @@ specifier|static
 name|uint16_t
 name|urtw_rate2rtl
 parameter_list|(
-name|int
+name|uint32_t
 name|rate
 parameter_list|)
 block|{
@@ -13734,7 +13733,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -13791,7 +13790,7 @@ specifier|static
 name|uint16_t
 name|urtw_rtl2rate
 parameter_list|(
-name|int
+name|uint32_t
 name|rate
 parameter_list|)
 block|{
@@ -13801,7 +13800,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -16793,7 +16792,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -18987,7 +18986,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -20904,7 +20903,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|i
 decl_stmt|;
@@ -24838,6 +24837,9 @@ if|if
 condition|(
 name|actlen
 operator|<
+operator|(
+name|int
+operator|)
 name|URTW_MIN_RXBUFSZ
 condition|)
 block|{
@@ -27409,10 +27411,19 @@ name|driver_t
 name|urtw_driver
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"urtw"
 block|,
+operator|.
+name|methods
+operator|=
 name|urtw_methods
 block|,
+operator|.
+name|size
+operator|=
 expr|sizeof
 operator|(
 expr|struct

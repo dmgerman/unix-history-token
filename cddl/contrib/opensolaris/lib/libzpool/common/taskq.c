@@ -256,6 +256,8 @@ name|task_t
 argument_list|)
 argument_list|,
 name|tqflags
+operator|&
+name|KM_SLEEP
 argument_list|)
 expr_stmt|;
 name|mutex_enter

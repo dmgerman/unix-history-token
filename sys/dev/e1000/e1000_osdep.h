@@ -290,15 +290,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|false
-value|FALSE
+name|TRUE
+value|1
 end_define
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bool_true_false_are_defined
+end_ifndef
 
 begin_define
 define|#
 directive|define
-name|TRUE
-value|1
+name|false
+value|FALSE
 end_define
 
 begin_define
@@ -307,6 +313,11 @@ directive|define
 name|true
 value|TRUE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -344,7 +355,7 @@ name|E1000_MUTEX_INIT
 parameter_list|(
 name|mutex
 parameter_list|)
-value|mtx_init((mutex), #mutex, \                                             MTX_NETWORK_LOCK, MTX_DEF)
+value|mtx_init((mutex), #mutex, \                                             MTX_NETWORK_LOCK, \                                             MTX_DEF | MTX_DUPOK)
 end_define
 
 begin_define
@@ -443,12 +454,23 @@ name|s8
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bool_true_false_are_defined
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|boolean_t
 name|bool
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#

@@ -136,12 +136,12 @@ file|<unistd.h>
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|hs
 block|{
 name|struct
 name|whod
-modifier|*
 name|hs_wd
 decl_stmt|;
 name|int
@@ -152,13 +152,6 @@ modifier|*
 name|hs
 struct|;
 end_struct
-
-begin_decl_stmt
-name|struct
-name|whod
-name|awhod
-decl_stmt|;
-end_decl_stmt
 
 begin_define
 define|#
@@ -177,29 +170,32 @@ name|ISDOWN
 parameter_list|(
 name|h
 parameter_list|)
-value|(now - (h)->hs_wd->wd_recvtime> 11 * 60)
+value|(now - (h)->hs_wd.wd_recvtime> 11 * 60)
 end_define
 
 begin_define
 define|#
 directive|define
 name|WHDRSIZE
-value|(sizeof (awhod) - sizeof (awhod.wd_we))
+value|__offsetof(struct whod, wd_we)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|size_t
 name|nhosts
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|now
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rflg
 init|=
@@ -208,6 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|DIR
 modifier|*
 name|dirp
@@ -215,6 +212,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|hscmp
 parameter_list|(
@@ -230,6 +228,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|interval
@@ -244,6 +243,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|lcmp
 parameter_list|(
@@ -259,15 +259,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|morehosts
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|void
 name|ruptime
 parameter_list|(
@@ -295,6 +287,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|tcmp
 parameter_list|(
@@ -310,6 +303,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|ucmp
 parameter_list|(
@@ -325,6 +319,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -525,6 +520,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|interval
@@ -571,7 +567,7 @@ argument_list|(
 name|resbuf
 argument_list|)
 argument_list|,
-literal|"   %s ??:??"
+literal|"%s      ??:??"
 argument_list|,
 name|updown
 argument_list|)
@@ -582,7 +578,7 @@ name|resbuf
 operator|)
 return|;
 block|}
-comment|/* round to minutes. */
+comment|/* Round to minutes. */
 name|minutes
 operator|=
 operator|(
@@ -633,7 +629,7 @@ argument_list|(
 name|resbuf
 argument_list|)
 argument_list|,
-literal|"%s %3d+%02d:%02d"
+literal|"%s %4d+%02d:%02d"
 argument_list|,
 name|updown
 argument_list|,
@@ -657,7 +653,7 @@ argument_list|(
 name|resbuf
 argument_list|)
 argument_list|,
-literal|"%s     %2d:%02d"
+literal|"%s      %2d:%02d"
 argument_list|,
 name|updown
 argument_list|,
@@ -689,6 +685,7 @@ comment|/* Alphabetical comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|hscmp
 parameter_list|(
@@ -715,7 +712,7 @@ name|a1
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_hostname
 argument_list|,
 name|HS
@@ -724,7 +721,7 @@ name|a2
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_hostname
 argument_list|)
 operator|)
@@ -737,6 +734,7 @@ comment|/* Load average comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|lcmp
 parameter_list|(
@@ -816,7 +814,7 @@ name|a2
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_loadav
 index|[
 literal|0
@@ -828,7 +826,7 @@ name|a1
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_loadav
 index|[
 literal|0
@@ -840,6 +838,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ruptime
 parameter_list|(
@@ -892,16 +891,6 @@ name|char
 modifier|*
 name|hostname
 decl_stmt|;
-name|char
-name|buf
-index|[
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|whod
-argument_list|)
-index|]
-decl_stmt|;
 name|int
 name|fd
 decl_stmt|,
@@ -912,7 +901,7 @@ decl_stmt|;
 name|size_t
 name|hspace
 decl_stmt|;
-name|u_int
+name|ssize_t
 name|cc
 decl_stmt|;
 name|rewinddir
@@ -1012,86 +1001,6 @@ argument_list|)
 expr_stmt|;
 continue|continue;
 block|}
-name|cc
-operator|=
-name|read
-argument_list|(
-name|fd
-argument_list|,
-name|buf
-argument_list|,
-sizeof|sizeof
-argument_list|(
-expr|struct
-name|whod
-argument_list|)
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|fd
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|host
-operator|!=
-name|NULL
-condition|)
-block|{
-name|hostname
-operator|=
-operator|(
-operator|(
-expr|struct
-name|whod
-operator|*
-operator|)
-name|buf
-operator|)
-operator|->
-name|wd_hostname
-expr_stmt|;
-if|if
-condition|(
-name|strcasecmp
-argument_list|(
-name|hostname
-argument_list|,
-name|host
-argument_list|)
-operator|!=
-literal|0
-condition|)
-continue|continue;
-block|}
-if|if
-condition|(
-name|cc
-operator|<
-name|WHDRSIZE
-condition|)
-continue|continue;
-if|if
-condition|(
-name|LEFTEARTH
-argument_list|(
-operator|(
-operator|(
-expr|struct
-name|whod
-operator|*
-operator|)
-name|buf
-operator|)
-operator|->
-name|wd_recvtime
-argument_list|)
-condition|)
-continue|continue;
 if|if
 condition|(
 name|nhosts
@@ -1138,56 +1047,84 @@ operator|+
 name|nhosts
 expr_stmt|;
 block|}
-if|if
-condition|(
-operator|(
-name|hsp
-operator|->
-name|hs_wd
-operator|=
-name|malloc
-argument_list|(
-operator|(
-name|size_t
-operator|)
-name|WHDRSIZE
-argument_list|)
-operator|)
-operator|==
-name|NULL
-condition|)
-name|err
-argument_list|(
-literal|1
-argument_list|,
-name|NULL
-argument_list|)
-expr_stmt|;
-name|memmove
-argument_list|(
-name|hsp
-operator|->
-name|hs_wd
-argument_list|,
-name|buf
-argument_list|,
-operator|(
-name|size_t
-operator|)
-name|WHDRSIZE
-argument_list|)
-expr_stmt|;
-for|for
-control|(
 name|wd
 operator|=
-operator|(
-expr|struct
-name|whod
+operator|&
+name|hsp
+operator|->
+name|hs_wd
+expr_stmt|;
+name|cc
+operator|=
+name|read
+argument_list|(
+name|fd
+argument_list|,
+name|wd
+argument_list|,
+sizeof|sizeof
+argument_list|(
 operator|*
+name|wd
+argument_list|)
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
 operator|)
-name|buf
-operator|,
+name|close
+argument_list|(
+name|fd
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cc
+operator|<
+operator|(
+name|ssize_t
+operator|)
+name|WHDRSIZE
+condition|)
+continue|continue;
+if|if
+condition|(
+name|host
+operator|!=
+name|NULL
+condition|)
+block|{
+name|hostname
+operator|=
+name|wd
+operator|->
+name|wd_hostname
+expr_stmt|;
+if|if
+condition|(
+name|strcasecmp
+argument_list|(
+name|hostname
+argument_list|,
+name|host
+argument_list|)
+operator|!=
+literal|0
+condition|)
+continue|continue;
+block|}
+if|if
+condition|(
+name|LEFTEARTH
+argument_list|(
+name|wd
+operator|->
+name|wd_recvtime
+argument_list|)
+condition|)
+continue|continue;
+for|for
+control|(
 name|i
 operator|=
 literal|0
@@ -1196,8 +1133,8 @@ name|i
 operator|<
 literal|2
 condition|;
-operator|++
 name|i
+operator|++
 control|)
 if|if
 condition|(
@@ -1229,24 +1166,34 @@ literal|0
 operator|,
 name|we
 operator|=
-operator|(
-expr|struct
-name|whoent
-operator|*
-operator|)
-operator|(
-name|buf
-operator|+
-name|cc
-operator|)
-init|;
-operator|--
-name|we
-operator|>=
+operator|&
 name|wd
 operator|->
 name|wd_we
+index|[
+literal|0
+index|]
+init|;
+operator|(
+name|char
+operator|*
+operator|)
+operator|(
+name|we
+operator|+
+literal|1
+operator|)
+operator|<=
+operator|(
+name|char
+operator|*
+operator|)
+name|wd
+operator|+
+name|cc
 condition|;
+name|we
+operator|++
 control|)
 if|if
 condition|(
@@ -1345,6 +1292,13 @@ index|[
 name|i
 index|]
 expr_stmt|;
+name|wd
+operator|=
+operator|&
+name|hsp
+operator|->
+name|hs_wd
+expr_stmt|;
 if|if
 condition|(
 name|ISDOWN
@@ -1360,9 +1314,7 @@ name|printf
 argument_list|(
 literal|"%-25.25s%s\n"
 argument_list|,
-name|hsp
-operator|->
-name|hs_wd
+name|wd
 operator|->
 name|wd_hostname
 argument_list|,
@@ -1373,7 +1325,7 @@ operator|-
 name|hsp
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_recvtime
 argument_list|,
 literal|"down"
@@ -1389,9 +1341,7 @@ name|printf
 argument_list|(
 literal|"%-25.25s%s,  %4d user%s  load %*.2f, %*.2f, %*.2f\n"
 argument_list|,
-name|hsp
-operator|->
-name|hs_wd
+name|wd
 operator|->
 name|wd_hostname
 argument_list|,
@@ -1400,18 +1350,14 @@ argument_list|(
 operator|(
 name|time_t
 operator|)
-name|hsp
-operator|->
-name|hs_wd
+name|wd
 operator|->
 name|wd_sendtime
 operator|-
 operator|(
 name|time_t
 operator|)
-name|hsp
-operator|->
-name|hs_wd
+name|wd
 operator|->
 name|wd_boottime
 argument_list|,
@@ -1440,9 +1386,7 @@ literal|5
 else|:
 literal|4
 argument_list|,
-name|hsp
-operator|->
-name|hs_wd
+name|wd
 operator|->
 name|wd_loadav
 index|[
@@ -1459,9 +1403,7 @@ literal|5
 else|:
 literal|4
 argument_list|,
-name|hsp
-operator|->
-name|hs_wd
+name|wd
 operator|->
 name|wd_loadav
 index|[
@@ -1478,9 +1420,7 @@ literal|5
 else|:
 literal|4
 argument_list|,
-name|hsp
-operator|->
-name|hs_wd
+name|wd
 operator|->
 name|wd_loadav
 index|[
@@ -1488,13 +1428,6 @@ literal|2
 index|]
 operator|/
 literal|100.0
-argument_list|)
-expr_stmt|;
-name|free
-argument_list|(
-name|hsp
-operator|->
-name|hs_wd
 argument_list|)
 expr_stmt|;
 block|}
@@ -1515,6 +1448,7 @@ comment|/* Number of users comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|ucmp
 parameter_list|(
@@ -1612,6 +1546,7 @@ comment|/* Uptime comparison. */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|tcmp
 parameter_list|(
@@ -1646,7 +1581,7 @@ name|a2
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_recvtime
 operator|-
 name|now
@@ -1657,7 +1592,7 @@ name|a2
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_sendtime
 operator|-
 name|HS
@@ -1666,7 +1601,7 @@ name|a2
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_boottime
 operator|)
 operator|-
@@ -1685,7 +1620,7 @@ name|a1
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_recvtime
 operator|-
 name|now
@@ -1696,7 +1631,7 @@ name|a1
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_sendtime
 operator|-
 name|HS
@@ -1705,7 +1640,7 @@ name|a1
 argument_list|)
 operator|->
 name|hs_wd
-operator|->
+operator|.
 name|wd_boottime
 operator|)
 operator|)
@@ -1715,6 +1650,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

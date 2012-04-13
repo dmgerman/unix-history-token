@@ -907,6 +907,9 @@ case|:
 case|case
 name|_FIO_SEEK_HOLE
 case|:
+ifdef|#
+directive|ifdef
+name|sun
 if|if
 condition|(
 name|ddi_copyin
@@ -933,6 +936,19 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+else|#
+directive|else
+name|off
+operator|=
+operator|*
+operator|(
+name|offset_t
+operator|*
+operator|)
+name|data
+expr_stmt|;
+endif|#
+directive|endif
 name|zp
 operator|=
 name|VTOZ
@@ -983,6 +999,9 @@ operator|(
 name|error
 operator|)
 return|;
+ifdef|#
+directive|ifdef
+name|sun
 if|if
 condition|(
 name|ddi_copyout
@@ -1009,6 +1028,19 @@ operator|(
 name|EFAULT
 operator|)
 return|;
+else|#
+directive|else
+operator|*
+operator|(
+name|offset_t
+operator|*
+operator|)
+name|data
+operator|=
+name|off
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
@@ -1141,16 +1173,16 @@ else|else
 block|{
 if|if
 condition|(
-name|__predict_false
+name|vm_page_is_cached
 argument_list|(
 name|obj
-operator|->
-name|cache
-operator|!=
-name|NULL
+argument_list|,
+name|OFF_TO_IDX
+argument_list|(
+name|start
+argument_list|)
 argument_list|)
 condition|)
-block|{
 name|vm_page_cache_free
 argument_list|(
 name|obj
@@ -1168,7 +1200,6 @@ operator|+
 literal|1
 argument_list|)
 expr_stmt|;
-block|}
 name|pp
 operator|=
 name|NULL
@@ -11334,7 +11365,7 @@ name|MIN
 argument_list|(
 name|links
 argument_list|,
-name|UINT32_MAX
+name|LINK_MAX
 argument_list|)
 expr_stmt|;
 comment|/* nlink_t limit! */
@@ -22387,7 +22418,6 @@ comment|/*ARGSUSED*/
 end_comment
 
 begin_function
-specifier|static
 name|int
 name|zfs_setsecattr
 parameter_list|(

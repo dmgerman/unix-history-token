@@ -1578,7 +1578,7 @@ decl_stmt|;
 name|int
 name|unit
 decl_stmt|;
-comment|/* 	 * NOTE: the softc struct is bzero-ed in device_set_driver. 	 * We can safely call ustorage_fs_detach without specifically 	 * initializing the struct. 	 */
+comment|/* 	 * NOTE: the softc struct is cleared in device_set_driver. 	 * We can safely call ustorage_fs_detach without specifically 	 * initializing the struct. 	 */
 name|sc
 operator|->
 name|sc_dev
@@ -1598,6 +1598,16 @@ operator|=
 name|device_get_unit
 argument_list|(
 name|dev
+argument_list|)
+expr_stmt|;
+comment|/* enable power saving mode */
+name|usbd_set_power_mode
+argument_list|(
+name|uaa
+operator|->
+name|device
+argument_list|,
+name|USB_POWER_MODE_SAVE
 argument_list|)
 expr_stmt|;
 if|if
@@ -4275,9 +4285,8 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 operator|)
 return|;
@@ -4356,9 +4365,8 @@ name|sc
 argument_list|,
 literal|36
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 operator|)
 return|;
@@ -4443,9 +4451,8 @@ name|sc
 argument_list|,
 literal|36
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 operator|)
 return|;
@@ -4656,9 +4663,8 @@ name|sc
 argument_list|,
 literal|18
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 operator|)
 return|;
@@ -4809,9 +4815,8 @@ name|sc
 argument_list|,
 literal|8
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 operator|)
 return|;
@@ -5220,9 +5225,8 @@ name|sc
 argument_list|,
 name|len
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 operator|)
 return|;
@@ -5571,9 +5575,8 @@ name|sc
 argument_list|,
 literal|12
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 operator|)
 return|;
@@ -6680,9 +6683,8 @@ index|[
 literal|4
 index|]
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -6750,9 +6752,8 @@ index|[
 literal|4
 index|]
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -6830,9 +6831,8 @@ literal|7
 index|]
 argument_list|)
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -6906,9 +6906,8 @@ index|[
 literal|4
 index|]
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -6992,9 +6991,8 @@ literal|7
 index|]
 argument_list|)
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -7061,9 +7059,8 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -7490,9 +7487,8 @@ literal|7
 index|]
 argument_list|)
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -7560,9 +7556,8 @@ index|[
 literal|4
 index|]
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -7617,9 +7612,8 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -7680,9 +7674,8 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -7743,9 +7736,8 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -7783,9 +7775,8 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if
@@ -8164,9 +8155,8 @@ name|sc
 argument_list|,
 literal|0
 argument_list|,
-literal|0
 operator|-
-literal|1
+literal|1U
 argument_list|)
 expr_stmt|;
 if|if

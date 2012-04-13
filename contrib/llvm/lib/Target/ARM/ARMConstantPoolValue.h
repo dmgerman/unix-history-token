@@ -82,16 +82,19 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|Constant
+name|BlockAddress
 decl_stmt|;
 name|class
-name|BlockAddress
+name|Constant
 decl_stmt|;
 name|class
 name|GlobalValue
 decl_stmt|;
 name|class
 name|LLVMContext
+decl_stmt|;
+name|class
+name|MachineBasicBlock
 decl_stmt|;
 name|namespace
 name|ARMCP
@@ -106,6 +109,8 @@ block|,
 name|CPBlockAddress
 block|,
 name|CPLSDA
+block|,
+name|CPMachineBasicBlock
 block|}
 enum|;
 enum|enum
@@ -134,18 +139,6 @@ range|:
 name|public
 name|MachineConstantPoolValue
 block|{
-specifier|const
-name|Constant
-operator|*
-name|CVal
-block|;
-comment|// Constant being loaded.
-specifier|const
-name|char
-operator|*
-name|S
-block|;
-comment|// ExtSymbol being loaded.
 name|unsigned
 name|LabelId
 block|;
@@ -171,78 +164,44 @@ comment|// GV modifier i.e. (&GV(modifier)-(LPIC+8))
 name|bool
 name|AddCurrentAddress
 block|;
-name|public
+name|protected
 operator|:
 name|ARMConstantPoolValue
 argument_list|(
-argument|const Constant *cval
+argument|Type *Ty
 argument_list|,
 argument|unsigned id
 argument_list|,
-argument|ARMCP::ARMCPKind Kind = ARMCP::CPValue
+argument|ARMCP::ARMCPKind Kind
 argument_list|,
-argument|unsigned char PCAdj =
-literal|0
+argument|unsigned char PCAdj
 argument_list|,
-argument|ARMCP::ARMCPModifier Modifier = ARMCP::no_modifier
+argument|ARMCP::ARMCPModifier Modifier
 argument_list|,
-argument|bool AddCurrentAddress = false
+argument|bool AddCurrentAddress
 argument_list|)
 block|;
 name|ARMConstantPoolValue
 argument_list|(
 argument|LLVMContext&C
 argument_list|,
-argument|const char *s
-argument_list|,
 argument|unsigned id
 argument_list|,
-argument|unsigned char PCAdj =
-literal|0
+argument|ARMCP::ARMCPKind Kind
 argument_list|,
-argument|ARMCP::ARMCPModifier Modifier = ARMCP::no_modifier
-argument_list|,
-argument|bool AddCurrentAddress = false
-argument_list|)
-block|;
-name|ARMConstantPoolValue
-argument_list|(
-argument|const GlobalValue *GV
+argument|unsigned char PCAdj
 argument_list|,
 argument|ARMCP::ARMCPModifier Modifier
+argument_list|,
+argument|bool AddCurrentAddress
 argument_list|)
 block|;
-name|ARMConstantPoolValue
-argument_list|()
-block|;
+name|public
+operator|:
+name|virtual
 operator|~
 name|ARMConstantPoolValue
 argument_list|()
-block|;
-specifier|const
-name|GlobalValue
-operator|*
-name|getGV
-argument_list|()
-specifier|const
-block|;
-specifier|const
-name|char
-operator|*
-name|getSymbol
-argument_list|()
-specifier|const
-block|{
-return|return
-name|S
-return|;
-block|}
-specifier|const
-name|BlockAddress
-operator|*
-name|getBlockAddress
-argument_list|()
-specifier|const
 block|;
 name|ARMCP
 operator|::
@@ -261,70 +220,7 @@ operator|*
 name|getModifierText
 argument_list|()
 specifier|const
-block|{
-switch|switch
-condition|(
-name|Modifier
-condition|)
-block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown modifier!"
-argument_list|)
-expr_stmt|;
-comment|// FIXME: Are these case sensitive? It'd be nice to lower-case all the
-comment|// strings if that's legal.
-case|case
-name|ARMCP
-operator|::
-name|no_modifier
-case|:
-return|return
-literal|"none"
-return|;
-case|case
-name|ARMCP
-operator|::
-name|TLSGD
-case|:
-return|return
-literal|"tlsgd"
-return|;
-case|case
-name|ARMCP
-operator|::
-name|GOT
-case|:
-return|return
-literal|"GOT"
-return|;
-case|case
-name|ARMCP
-operator|::
-name|GOTOFF
-case|:
-return|return
-literal|"GOTOFF"
-return|;
-case|case
-name|ARMCP
-operator|::
-name|GOTTPOFF
-case|:
-return|return
-literal|"gottpoff"
-return|;
-case|case
-name|ARMCP
-operator|::
-name|TPOFF
-case|:
-return|return
-literal|"tpoff"
-return|;
-block|}
-block|}
+block|;
 name|bool
 name|hasModifier
 argument_list|()
@@ -395,6 +291,7 @@ block|}
 name|bool
 name|isBlockAddress
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Kind
@@ -407,6 +304,7 @@ block|}
 name|bool
 name|isLSDA
 argument_list|()
+specifier|const
 block|{
 return|return
 name|Kind
@@ -414,6 +312,19 @@ operator|==
 name|ARMCP
 operator|::
 name|CPLSDA
+return|;
+block|}
+name|bool
+name|isMachineBasicBlock
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|ARMCP
+operator|::
+name|CPMachineBasicBlock
 return|;
 block|}
 name|virtual
@@ -437,15 +348,16 @@ argument_list|)
 block|;
 name|virtual
 name|void
-name|AddSelectionDAGCSEId
+name|addSelectionDAGCSEId
 argument_list|(
 name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|)
 block|;
-comment|/// hasSameValue - Return true if this ARM constpool value
-comment|/// can share the same constantpool entry as another ARM constpool value.
+comment|/// hasSameValue - Return true if this ARM constpool value can share the same
+comment|/// constantpool entry as another ARM constpool value.
+name|virtual
 name|bool
 name|hasSameValue
 argument_list|(
@@ -453,6 +365,47 @@ name|ARMConstantPoolValue
 operator|*
 name|ACPV
 argument_list|)
+block|;
+name|bool
+name|equals
+argument_list|(
+argument|const ARMConstantPoolValue *A
+argument_list|)
+specifier|const
+block|{
+return|return
+name|this
+operator|->
+name|LabelId
+operator|==
+name|A
+operator|->
+name|LabelId
+operator|&&
+name|this
+operator|->
+name|PCAdjust
+operator|==
+name|A
+operator|->
+name|PCAdjust
+operator|&&
+name|this
+operator|->
+name|Modifier
+operator|==
+name|A
+operator|->
+name|Modifier
+return|;
+block|}
+name|virtual
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
 block|;
 name|void
 name|print
@@ -473,18 +426,23 @@ argument_list|)
 expr_stmt|;
 block|}
 name|void
-name|print
-argument_list|(
-argument|raw_ostream&O
-argument_list|)
-specifier|const
-block|;
-name|void
 name|dump
 argument_list|()
 specifier|const
-block|; }
-decl_stmt|;
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ARMConstantPoolValue *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 specifier|inline
 name|raw_ostream
 operator|&
@@ -494,7 +452,7 @@ operator|(
 name|raw_ostream
 operator|&
 name|O
-operator|,
+expr|,
 specifier|const
 name|ARMConstantPoolValue
 operator|&
@@ -512,7 +470,438 @@ return|return
 name|O
 return|;
 block|}
+comment|/// ARMConstantPoolConstant - ARM-specific constant pool values for Constants,
+comment|/// Functions, and BlockAddresses.
+name|class
+name|ARMConstantPoolConstant
+operator|:
+name|public
+name|ARMConstantPoolValue
+block|{
+specifier|const
+name|Constant
+operator|*
+name|CVal
+block|;
+comment|// Constant being loaded.
+name|ARMConstantPoolConstant
+argument_list|(
+argument|const Constant *C
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ARMCP::ARMCPKind Kind
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|,
+argument|ARMCP::ARMCPModifier Modifier
+argument_list|,
+argument|bool AddCurrentAddress
+argument_list|)
+block|;
+name|ARMConstantPoolConstant
+argument_list|(
+argument|Type *Ty
+argument_list|,
+argument|const Constant *C
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ARMCP::ARMCPKind Kind
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|,
+argument|ARMCP::ARMCPModifier Modifier
+argument_list|,
+argument|bool AddCurrentAddress
+argument_list|)
+block|;
+name|public
+operator|:
+specifier|static
+name|ARMConstantPoolConstant
+operator|*
+name|Create
+argument_list|(
+argument|const Constant *C
+argument_list|,
+argument|unsigned ID
+argument_list|)
+block|;
+specifier|static
+name|ARMConstantPoolConstant
+operator|*
+name|Create
+argument_list|(
+argument|const GlobalValue *GV
+argument_list|,
+argument|ARMCP::ARMCPModifier Modifier
+argument_list|)
+block|;
+specifier|static
+name|ARMConstantPoolConstant
+operator|*
+name|Create
+argument_list|(
+argument|const Constant *C
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ARMCP::ARMCPKind Kind
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|)
+block|;
+specifier|static
+name|ARMConstantPoolConstant
+operator|*
+name|Create
+argument_list|(
+argument|const Constant *C
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|ARMCP::ARMCPKind Kind
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|,
+argument|ARMCP::ARMCPModifier Modifier
+argument_list|,
+argument|bool AddCurrentAddress
+argument_list|)
+block|;
+specifier|const
+name|GlobalValue
+operator|*
+name|getGV
+argument_list|()
+specifier|const
+block|;
+specifier|const
+name|BlockAddress
+operator|*
+name|getBlockAddress
+argument_list|()
+specifier|const
+block|;
+name|virtual
+name|int
+name|getExistingMachineCPValue
+argument_list|(
+argument|MachineConstantPool *CP
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+block|;
+comment|/// hasSameValue - Return true if this ARM constpool value can share the same
+comment|/// constantpool entry as another ARM constpool value.
+name|virtual
+name|bool
+name|hasSameValue
+argument_list|(
+name|ARMConstantPoolValue
+operator|*
+name|ACPV
+argument_list|)
+block|;
+name|virtual
+name|void
+name|addSelectionDAGCSEId
+argument_list|(
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|;
+name|virtual
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ARMConstantPoolValue *APV
+argument_list|)
+block|{
+return|return
+name|APV
+operator|->
+name|isGlobalValue
+argument_list|()
+operator|||
+name|APV
+operator|->
+name|isBlockAddress
+argument_list|()
+operator|||
+name|APV
+operator|->
+name|isLSDA
+argument_list|()
+return|;
 block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ARMConstantPoolConstant *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// ARMConstantPoolSymbol - ARM-specific constantpool values for external
+comment|/// symbols.
+name|class
+name|ARMConstantPoolSymbol
+operator|:
+name|public
+name|ARMConstantPoolValue
+block|{
+specifier|const
+name|char
+operator|*
+name|S
+block|;
+comment|// ExtSymbol being loaded.
+name|ARMConstantPoolSymbol
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|const char *s
+argument_list|,
+argument|unsigned id
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|,
+argument|ARMCP::ARMCPModifier Modifier
+argument_list|,
+argument|bool AddCurrentAddress
+argument_list|)
+block|;
+name|public
+operator|:
+operator|~
+name|ARMConstantPoolSymbol
+argument_list|()
+block|;
+specifier|static
+name|ARMConstantPoolSymbol
+operator|*
+name|Create
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|const char *s
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|)
+block|;
+specifier|const
+name|char
+operator|*
+name|getSymbol
+argument_list|()
+specifier|const
+block|{
+return|return
+name|S
+return|;
+block|}
+name|virtual
+name|int
+name|getExistingMachineCPValue
+argument_list|(
+argument|MachineConstantPool *CP
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+block|;
+name|virtual
+name|void
+name|addSelectionDAGCSEId
+argument_list|(
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|;
+comment|/// hasSameValue - Return true if this ARM constpool value can share the same
+comment|/// constantpool entry as another ARM constpool value.
+name|virtual
+name|bool
+name|hasSameValue
+argument_list|(
+name|ARMConstantPoolValue
+operator|*
+name|ACPV
+argument_list|)
+block|;
+name|virtual
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ARMConstantPoolValue *ACPV
+argument_list|)
+block|{
+return|return
+name|ACPV
+operator|->
+name|isExtSymbol
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ARMConstantPoolSymbol *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
+comment|/// ARMConstantPoolMBB - ARM-specific constantpool value of a machine basic
+comment|/// block.
+name|class
+name|ARMConstantPoolMBB
+operator|:
+name|public
+name|ARMConstantPoolValue
+block|{
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|MBB
+block|;
+comment|// Machine basic block.
+name|ARMConstantPoolMBB
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|const MachineBasicBlock *mbb
+argument_list|,
+argument|unsigned id
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|,
+argument|ARMCP::ARMCPModifier Modifier
+argument_list|,
+argument|bool AddCurrentAddress
+argument_list|)
+block|;
+name|public
+operator|:
+specifier|static
+name|ARMConstantPoolMBB
+operator|*
+name|Create
+argument_list|(
+argument|LLVMContext&C
+argument_list|,
+argument|const MachineBasicBlock *mbb
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|unsigned char PCAdj
+argument_list|)
+block|;
+specifier|const
+name|MachineBasicBlock
+operator|*
+name|getMBB
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MBB
+return|;
+block|}
+name|virtual
+name|int
+name|getExistingMachineCPValue
+argument_list|(
+argument|MachineConstantPool *CP
+argument_list|,
+argument|unsigned Alignment
+argument_list|)
+block|;
+name|virtual
+name|void
+name|addSelectionDAGCSEId
+argument_list|(
+name|FoldingSetNodeID
+operator|&
+name|ID
+argument_list|)
+block|;
+comment|/// hasSameValue - Return true if this ARM constpool value can share the same
+comment|/// constantpool entry as another ARM constpool value.
+name|virtual
+name|bool
+name|hasSameValue
+argument_list|(
+name|ARMConstantPoolValue
+operator|*
+name|ACPV
+argument_list|)
+block|;
+name|virtual
+name|void
+name|print
+argument_list|(
+argument|raw_ostream&O
+argument_list|)
+specifier|const
+block|;
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ARMConstantPoolValue *ACPV
+argument_list|)
+block|{
+return|return
+name|ACPV
+operator|->
+name|isMachineBasicBlock
+argument_list|()
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ARMConstantPoolMBB *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;  }
 end_decl_stmt
 
 begin_comment

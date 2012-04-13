@@ -342,6 +342,7 @@ struct|;
 end_struct
 
 begin_function_decl
+specifier|static
 name|LINE
 modifier|*
 name|alloc_line
@@ -352,6 +353,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|dowarn
 parameter_list|(
@@ -361,6 +363,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flush_line
 parameter_list|(
@@ -371,6 +374,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flush_lines
 parameter_list|(
@@ -380,6 +384,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flush_blanks
 parameter_list|(
@@ -389,6 +394,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|free_line
 parameter_list|(
@@ -399,6 +405,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -408,6 +415,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 name|CSET
 name|last_set
 decl_stmt|;
@@ -418,6 +426,7 @@ comment|/* char_set of last char printed */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|LINE
 modifier|*
 name|lines
@@ -425,6 +434,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|compress_spaces
 decl_stmt|;
@@ -435,6 +445,7 @@ comment|/* if doing space -> tab conversion */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fine
 decl_stmt|;
@@ -445,6 +456,7 @@ comment|/* if `fine' resolution (half lines) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|max_bufd_lines
 decl_stmt|;
@@ -455,6 +467,7 @@ comment|/* max # lines to keep in memory */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nblank_lines
 decl_stmt|;
@@ -465,6 +478,7 @@ comment|/* # blanks after last flushed line */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|no_backspaces
 decl_stmt|;
@@ -475,6 +489,7 @@ comment|/* if not to output any backspaces */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|pass_unknown_seqs
 decl_stmt|;
@@ -1418,6 +1433,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|flush_lines
 parameter_list|(
@@ -1506,6 +1522,7 @@ comment|/*  * Print a number of newline/half newlines.  If fine flag is set, nbl
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|flush_blanks
 parameter_list|(
@@ -1606,6 +1623,7 @@ comment|/*  * Write a line to stdout taking care of space to tab conversion (-h 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|flush_line
 parameter_list|(
@@ -2193,6 +2211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|LINE
 modifier|*
 name|alloc_line
@@ -2310,6 +2329,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|free_line
 parameter_list|(
@@ -2332,6 +2352,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -2357,6 +2378,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|dowarn
 parameter_list|(

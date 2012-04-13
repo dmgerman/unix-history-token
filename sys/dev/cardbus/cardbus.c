@@ -148,6 +148,7 @@ comment|/* sysctl vars */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -1576,6 +1577,13 @@ name|cardbus_resume
 argument_list|)
 block|,
 comment|/* Bus interface */
+name|DEVMETHOD
+argument_list|(
+name|bus_get_dma_tag
+argument_list|,
+name|bus_generic_get_dma_tag
+argument_list|)
+block|,
 name|DEVMETHOD
 argument_list|(
 name|bus_read_ivar

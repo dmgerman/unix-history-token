@@ -328,6 +328,11 @@ name|bool
 name|MergeIdenticalEdges
 init|=
 name|false
+parameter_list|,
+name|bool
+name|DontDeleteUselessPHIs
+init|=
+name|false
 parameter_list|)
 function_decl|;
 specifier|inline
@@ -482,6 +487,11 @@ name|bool
 name|MergeIdenticalEdges
 init|=
 name|false
+parameter_list|,
+name|bool
+name|DontDeleteUselessPHIs
+init|=
+name|false
 parameter_list|)
 block|{
 name|TerminatorInst
@@ -536,6 +546,8 @@ argument_list|,
 name|P
 argument_list|,
 name|MergeIdenticalEdges
+argument_list|,
+name|DontDeleteUselessPHIs
 argument_list|)
 return|;
 operator|++
@@ -625,6 +637,56 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// SplitLandingPadPredecessors - This method transforms the landing pad,
+comment|/// OrigBB, by introducing two new basic blocks into the function. One of those
+comment|/// new basic blocks gets the predecessors listed in Preds. The other basic
+comment|/// block gets the remaining predecessors of OrigBB. The landingpad instruction
+comment|/// OrigBB is clone into both of the new basic blocks. The new blocks are given
+comment|/// the suffixes 'Suffix1' and 'Suffix2', and are returned in the NewBBs vector.
+comment|///
+comment|/// This currently updates the LLVM IR, AliasAnalysis, DominatorTree,
+comment|/// DominanceFrontier, LoopInfo, and LCCSA but no other analyses. In particular,
+comment|/// it does not preserve LoopSimplify (because it's complicated to handle the
+comment|/// case where one of the edges being split is an exit of a loop with other
+comment|/// exits).
+comment|///
+name|void
+name|SplitLandingPadPredecessors
+argument_list|(
+name|BasicBlock
+operator|*
+name|OrigBB
+argument_list|,
+name|ArrayRef
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+name|Preds
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Suffix
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Suffix2
+argument_list|,
+name|Pass
+operator|*
+name|P
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|&
+name|NewBBs
+argument_list|)
+decl_stmt|;
 comment|/// FoldReturnIntoUncondBranch - This method duplicates the specified return
 comment|/// instruction into a predecessor which ends in an unconditional branch. If
 comment|/// the return instruction returns a value defined by a PHI, propagate the

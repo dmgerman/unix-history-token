@@ -364,21 +364,72 @@ name|ZeroOrNegativeOneBooleanContent
 comment|// All bits equal to bit 0.
 block|}
 enum|;
+specifier|static
+name|ISD
+operator|::
+name|NodeType
+name|getExtendForContent
+argument_list|(
+argument|BooleanContent Content
+argument_list|)
+block|{
+switch|switch
+condition|(
+name|Content
+condition|)
+block|{
+default|default:
+name|assert
+argument_list|(
+name|false
+operator|&&
+literal|"Unknown BooleanContent!"
+argument_list|)
+expr_stmt|;
+case|case
+name|UndefinedBooleanContent
+case|:
+comment|// Extend by adding rubbish bits.
+return|return
+name|ISD
+operator|::
+name|ANY_EXTEND
+return|;
+case|case
+name|ZeroOrOneBooleanContent
+case|:
+comment|// Extend by adding zero bits.
+return|return
+name|ISD
+operator|::
+name|ZERO_EXTEND
+return|;
+case|case
+name|ZeroOrNegativeOneBooleanContent
+case|:
+comment|// Extend by copying the sign bit.
+return|return
+name|ISD
+operator|::
+name|SIGN_EXTEND
+return|;
+block|}
+block|}
 comment|/// NOTE: The constructor takes ownership of TLOF.
 name|explicit
 name|TargetLowering
-parameter_list|(
+argument_list|(
 specifier|const
 name|TargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetLoweringObjectFile
-modifier|*
+operator|*
 name|TLOF
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 name|virtual
 operator|~
 name|TargetLowering
@@ -504,15 +555,14 @@ comment|/// the condition operand of SELECT and BRCOND nodes.  In the case of
 comment|/// BRCOND the argument passed is MVT::Other since there are no other
 comment|/// operands to get a type hint from.
 name|virtual
-name|MVT
-operator|::
-name|SimpleValueType
+name|EVT
 name|getSetCCResultType
 argument_list|(
-argument|EVT VT
+name|EVT
+name|VT
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// getCmpLibcallReturnType - Return the ValueType for comparison
 comment|/// libcalls. Comparions libcalls include floating point comparion calls,
 comment|/// and Ordered/Unordered check calls on floating point numbers.
@@ -529,12 +579,23 @@ comment|/// nature of the high-bits of boolean values held in types wider than i
 comment|/// "Boolean values" are special true/false values produced by nodes like
 comment|/// SETCC and consumed (as the condition) by nodes like SELECT and BRCOND.
 comment|/// Not to be confused with general values promoted from i1.
+comment|/// Some cpus distinguish between vectors of boolean and scalars; the isVec
+comment|/// parameter selects between the two kinds.  For example on X86 a scalar
+comment|/// boolean should be zero extended from i1, while the elements of a vector
+comment|/// of booleans should be sign extended from i1.
 name|BooleanContent
 name|getBooleanContents
-argument_list|()
-specifier|const
+argument_list|(
+name|bool
+name|isVec
+argument_list|)
+decl|const
 block|{
 return|return
+name|isVec
+condition|?
+name|BooleanVectorContents
+else|:
 name|BooleanContents
 return|;
 block|}
@@ -559,7 +620,7 @@ operator|::
 name|Preference
 name|getSchedulingPreference
 argument_list|(
-argument|SDNode *N
+argument|SDNode *
 argument_list|)
 specifier|const
 block|{
@@ -956,13 +1017,13 @@ argument_list|)
 condition|)
 block|{
 case|case
-name|Legal
+name|TypeLegal
 case|:
 return|return
 name|VT
 return|;
 case|case
-name|Expand
+name|TypeExpandInteger
 case|:
 name|VT
 operator|=
@@ -1073,15 +1134,13 @@ name|getTgtMemIntrinsic
 argument_list|(
 name|IntrinsicInfo
 operator|&
-name|Info
 argument_list|,
 specifier|const
 name|CallInst
 operator|&
-name|I
 argument_list|,
 name|unsigned
-name|Intrinsic
+comment|/*Intrinsic*/
 argument_list|)
 decl|const
 block|{
@@ -1099,10 +1158,10 @@ argument_list|(
 specifier|const
 name|APFloat
 operator|&
-name|Imm
+comment|/*Imm*/
 argument_list|,
 name|EVT
-name|VT
+comment|/*VT*/
 argument_list|)
 decl|const
 block|{
@@ -1124,10 +1183,10 @@ operator|<
 name|int
 operator|>
 operator|&
-name|Mask
+comment|/*Mask*/
 argument_list|,
 name|EVT
-name|VT
+comment|/*VT*/
 argument_list|)
 decl|const
 block|{
@@ -1164,10 +1223,10 @@ operator|<
 name|int
 operator|>
 operator|&
-name|Mask
+comment|/*Mask*/
 argument_list|,
 name|EVT
-name|VT
+comment|/*VT*/
 argument_list|)
 decl|const
 block|{
@@ -1399,7 +1458,6 @@ operator|.
 name|isSimple
 argument_list|()
 operator|&&
-operator|(
 name|getLoadExtAction
 argument_list|(
 name|ExtType
@@ -1408,16 +1466,6 @@ name|VT
 argument_list|)
 operator|==
 name|Legal
-operator|||
-name|getLoadExtAction
-argument_list|(
-name|ExtType
-argument_list|,
-name|VT
-argument_list|)
-operator|==
-name|Custom
-operator|)
 return|;
 block|}
 comment|/// getTruncStoreAction - Return how this store with truncation should be
@@ -1505,7 +1553,6 @@ operator|.
 name|isSimple
 argument_list|()
 operator|&&
-operator|(
 name|getTruncStoreAction
 argument_list|(
 name|ValVT
@@ -1514,16 +1561,6 @@ name|MemVT
 argument_list|)
 operator|==
 name|Legal
-operator|||
-name|getTruncStoreAction
-argument_list|(
-name|ValVT
-argument_list|,
-name|MemVT
-argument_list|)
-operator|==
-name|Custom
-operator|)
 return|;
 block|}
 comment|/// getIndexedLoadAction - Return how the indexed load should be treated:
@@ -2044,7 +2081,6 @@ comment|/// counterpart (e.g. structs), otherwise it will assert.
 name|EVT
 name|getValueType
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2087,7 +2123,6 @@ name|virtual
 name|unsigned
 name|getByValTypeAlignment
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2403,7 +2438,6 @@ name|bool
 name|ShouldShrinkFPConstant
 argument_list|(
 name|EVT
-name|VT
 argument_list|)
 decl|const
 block|{
@@ -2531,7 +2565,6 @@ name|bool
 name|allowsUnalignedMemoryAccesses
 argument_list|(
 name|EVT
-name|VT
 argument_list|)
 decl|const
 block|{
@@ -2568,23 +2601,23 @@ name|EVT
 name|getOptimalMemOpType
 argument_list|(
 name|uint64_t
-name|Size
+comment|/*Size*/
 argument_list|,
 name|unsigned
-name|DstAlign
+comment|/*DstAlign*/
 argument_list|,
 name|unsigned
-name|SrcAlign
+comment|/*SrcAlign*/
 argument_list|,
 name|bool
-name|NonScalarIntSafe
+comment|/*NonScalarIntSafe*/
 argument_list|,
 name|bool
-name|MemcpyStrSrc
+comment|/*MemcpyStrSrc*/
 argument_list|,
 name|MachineFunction
 operator|&
-name|MF
+comment|/*MF*/
 argument_list|)
 decl|const
 block|{
@@ -2730,6 +2763,18 @@ return|return
 name|ShouldFoldAtomicFences
 return|;
 block|}
+comment|/// getInsertFencesFor - return whether the DAG builder should automatically
+comment|/// insert fences and reduce ordering for atomics.
+comment|///
+name|bool
+name|getInsertFencesForAtomic
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InsertFencesForAtomic
+return|;
+block|}
 comment|/// getPreIndexedAddressParts - returns true by value, base pointer and
 comment|/// offset pointer and addressing mode by reference if the node's address
 comment|/// can be legally represented as pre-indexed load / store address.
@@ -2739,25 +2784,25 @@ name|getPreIndexedAddressParts
 argument_list|(
 name|SDNode
 operator|*
-name|N
+comment|/*N*/
 argument_list|,
 name|SDValue
 operator|&
-name|Base
+comment|/*Base*/
 argument_list|,
 name|SDValue
 operator|&
-name|Offset
+comment|/*Offset*/
 argument_list|,
 name|ISD
 operator|::
 name|MemIndexedMode
 operator|&
-name|AM
+comment|/*AM*/
 argument_list|,
 name|SelectionDAG
 operator|&
-name|DAG
+comment|/*DAG*/
 argument_list|)
 decl|const
 block|{
@@ -2774,29 +2819,29 @@ name|getPostIndexedAddressParts
 argument_list|(
 name|SDNode
 operator|*
-name|N
+comment|/*N*/
 argument_list|,
 name|SDNode
 operator|*
-name|Op
+comment|/*Op*/
 argument_list|,
 name|SDValue
 operator|&
-name|Base
+comment|/*Base*/
 argument_list|,
 name|SDValue
 operator|&
-name|Offset
+comment|/*Offset*/
 argument_list|,
 name|ISD
 operator|::
 name|MemIndexedMode
 operator|&
-name|AM
+comment|/*AM*/
 argument_list|,
 name|SelectionDAG
 operator|&
-name|DAG
+comment|/*DAG*/
 argument_list|)
 decl|const
 block|{
@@ -2822,19 +2867,19 @@ argument_list|(
 specifier|const
 name|MachineJumpTableInfo
 operator|*
-name|MJTI
+comment|/*MJTI*/
 argument_list|,
 specifier|const
 name|MachineBasicBlock
 operator|*
-name|MBB
+comment|/*MBB*/
 argument_list|,
 name|unsigned
-name|uid
+comment|/*uid*/
 argument_list|,
 name|MCContext
 operator|&
-name|Ctx
+comment|/*Ctx*/
 argument_list|)
 decl|const
 block|{
@@ -2911,11 +2956,11 @@ name|getStackCookieLocation
 argument_list|(
 name|unsigned
 operator|&
-name|AddressSpace
+comment|/*AddressSpace*/
 argument_list|,
 name|unsigned
 operator|&
-name|Offset
+comment|/*Offset*/
 argument_list|)
 decl|const
 block|{
@@ -3418,7 +3463,7 @@ name|bool
 name|isTypeDesirableForOp
 argument_list|(
 name|unsigned
-name|Opc
+comment|/*Opc*/
 argument_list|,
 name|EVT
 name|VT
@@ -3441,10 +3486,10 @@ name|bool
 name|isDesirableToTransformToIntegerOp
 argument_list|(
 name|unsigned
-name|Opc
+comment|/*Opc*/
 argument_list|,
 name|EVT
-name|VT
+comment|/*VT*/
 argument_list|)
 decl|const
 block|{
@@ -3460,11 +3505,11 @@ name|bool
 name|IsDesirableToPromoteOp
 argument_list|(
 name|SDValue
-name|Op
+comment|/*Op*/
 argument_list|,
 name|EVT
 operator|&
-name|PVT
+comment|/*PVT*/
 argument_list|)
 decl|const
 block|{
@@ -3488,6 +3533,21 @@ name|Ty
 parameter_list|)
 block|{
 name|BooleanContents
+operator|=
+name|Ty
+expr_stmt|;
+block|}
+comment|/// setBooleanVectorContents - Specify how the target extends the result
+comment|/// of a vector boolean value from a vector of i1 to a wider type.  See
+comment|/// getBooleanContents.
+name|void
+name|setBooleanVectorContents
+parameter_list|(
+name|BooleanContent
+name|Ty
+parameter_list|)
+block|{
+name|BooleanVectorContents
 operator|=
 name|Ty
 expr_stmt|;
@@ -4297,6 +4357,21 @@ operator|=
 name|fold
 expr_stmt|;
 block|}
+comment|/// setInsertFencesForAtomic - Set if the the DAG builder should
+comment|/// automatically insert fences and reduce the order of atomic memory
+comment|/// operations to Monotonic.
+name|void
+name|setInsertFencesForAtomic
+parameter_list|(
+name|bool
+name|fence
+parameter_list|)
+block|{
+name|InsertFencesForAtomic
+operator|=
+name|fence
+expr_stmt|;
+block|}
 name|public
 label|:
 comment|//===--------------------------------------------------------------------===//
@@ -4314,15 +4389,15 @@ name|SDValue
 name|LowerFormalArguments
 argument_list|(
 name|SDValue
-name|Chain
+comment|/*Chain*/
 argument_list|,
 name|CallingConv
 operator|::
 name|ID
-name|CallConv
+comment|/*CallConv*/
 argument_list|,
 name|bool
-name|isVarArg
+comment|/*isVarArg*/
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -4332,21 +4407,21 @@ operator|::
 name|InputArg
 operator|>
 operator|&
-name|Ins
+comment|/*Ins*/
 argument_list|,
 name|DebugLoc
-name|dl
+comment|/*dl*/
 argument_list|,
 name|SelectionDAG
 operator|&
-name|DAG
+comment|/*DAG*/
 argument_list|,
 name|SmallVectorImpl
 operator|<
 name|SDValue
 operator|>
 operator|&
-name|InVals
+comment|/*InVals*/
 argument_list|)
 decl|const
 block|{
@@ -4374,7 +4449,6 @@ block|{
 name|SDValue
 name|Node
 decl_stmt|;
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -4473,7 +4547,7 @@ name|LowerCallTo
 argument_list|(
 argument|SDValue Chain
 argument_list|,
-argument|const Type *RetTy
+argument|Type *RetTy
 argument_list|,
 argument|bool RetSExt
 argument_list|,
@@ -4512,22 +4586,22 @@ name|SDValue
 name|LowerCall
 argument_list|(
 name|SDValue
-name|Chain
+comment|/*Chain*/
 argument_list|,
 name|SDValue
-name|Callee
+comment|/*Callee*/
 argument_list|,
 name|CallingConv
 operator|::
 name|ID
-name|CallConv
+comment|/*CallConv*/
 argument_list|,
 name|bool
-name|isVarArg
+comment|/*isVarArg*/
 argument_list|,
 name|bool
 operator|&
-name|isTailCall
+comment|/*isTailCall*/
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -4537,7 +4611,7 @@ operator|::
 name|OutputArg
 operator|>
 operator|&
-name|Outs
+comment|/*Outs*/
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -4545,7 +4619,7 @@ operator|<
 name|SDValue
 operator|>
 operator|&
-name|OutVals
+comment|/*OutVals*/
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -4555,21 +4629,21 @@ operator|::
 name|InputArg
 operator|>
 operator|&
-name|Ins
+comment|/*Ins*/
 argument_list|,
 name|DebugLoc
-name|dl
+comment|/*dl*/
 argument_list|,
 name|SelectionDAG
 operator|&
-name|DAG
+comment|/*DAG*/
 argument_list|,
 name|SmallVectorImpl
 operator|<
 name|SDValue
 operator|>
 operator|&
-name|InVals
+comment|/*InVals*/
 argument_list|)
 decl|const
 block|{
@@ -4610,14 +4684,14 @@ argument_list|(
 name|CallingConv
 operator|::
 name|ID
-name|CallConv
+comment|/*CallConv*/
 argument_list|,
 name|MachineFunction
 operator|&
-name|MF
+comment|/*MF*/
 argument_list|,
 name|bool
-name|isVarArg
+comment|/*isVarArg*/
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -4627,11 +4701,11 @@ operator|::
 name|OutputArg
 operator|>
 operator|&
-name|Outs
+comment|/*Outs*/
 argument_list|,
 name|LLVMContext
 operator|&
-name|Context
+comment|/*Context*/
 argument_list|)
 decl|const
 block|{
@@ -4650,15 +4724,15 @@ name|SDValue
 name|LowerReturn
 argument_list|(
 name|SDValue
-name|Chain
+comment|/*Chain*/
 argument_list|,
 name|CallingConv
 operator|::
 name|ID
-name|CallConv
+comment|/*CallConv*/
 argument_list|,
 name|bool
-name|isVarArg
+comment|/*isVarArg*/
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -4668,7 +4742,7 @@ operator|::
 name|OutputArg
 operator|>
 operator|&
-name|Outs
+comment|/*Outs*/
 argument_list|,
 specifier|const
 name|SmallVectorImpl
@@ -4676,14 +4750,14 @@ operator|<
 name|SDValue
 operator|>
 operator|&
-name|OutVals
+comment|/*OutVals*/
 argument_list|,
 name|DebugLoc
-name|dl
+comment|/*dl*/
 argument_list|,
 name|SelectionDAG
 operator|&
-name|DAG
+comment|/*DAG*/
 argument_list|)
 decl|const
 block|{
@@ -4709,7 +4783,6 @@ name|isUsedByReturnOnly
 argument_list|(
 name|SDNode
 operator|*
-name|N
 argument_list|)
 decl|const
 block|{
@@ -4727,7 +4800,6 @@ name|mayBeEmittedAsTailCall
 argument_list|(
 name|CallInst
 operator|*
-name|CI
 argument_list|)
 decl|const
 block|{
@@ -4755,7 +4827,7 @@ argument_list|,
 name|ISD
 operator|::
 name|NodeType
-name|ExtendKind
+comment|/*ExtendKind*/
 argument_list|)
 decl|const
 block|{
@@ -4849,18 +4921,18 @@ name|ReplaceNodeResults
 argument_list|(
 name|SDNode
 operator|*
-name|N
+comment|/*N*/
 argument_list|,
 name|SmallVectorImpl
 operator|<
 name|SDValue
 operator|>
 operator|&
-name|Results
+comment|/*Results*/
 argument_list|,
 name|SelectionDAG
 operator|&
-name|DAG
+comment|/*DAG*/
 argument_list|)
 decl|const
 block|{
@@ -4894,7 +4966,6 @@ name|createFastISel
 argument_list|(
 name|FunctionLoweringInfo
 operator|&
-name|funcInfo
 argument_list|)
 decl|const
 block|{
@@ -4915,7 +4986,6 @@ name|ExpandInlineAsm
 argument_list|(
 name|CallInst
 operator|*
-name|CI
 argument_list|)
 decl|const
 block|{
@@ -5320,6 +5390,24 @@ name|MBB
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// AdjustInstrPostInstrSelection - This method should be implemented by
+comment|/// targets that mark instructions with the 'hasPostISelHook' flag. These
+comment|/// instructions must be adjusted after instruction selection by target hooks.
+comment|/// e.g. To fill in optional defs for ARM 's' setting instructions.
+name|virtual
+name|void
+name|AdjustInstrPostInstrSelection
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|SDNode
+operator|*
+name|Node
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Addressing mode description hooks (used by LSR etc).
 comment|//
@@ -5386,13 +5474,44 @@ name|AddrMode
 operator|&
 name|AM
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
+comment|/// icmp immediate, that is the target has icmp instructions which can compare
+comment|/// a register against the immediate without having to materialize the
+comment|/// immediate into a register.
+name|virtual
+name|bool
+name|isLegalICmpImmediate
+argument_list|(
+name|int64_t
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
+comment|/// add immediate, that is the target has add instructions which can add
+comment|/// a register with the immediate without having to materialize the
+comment|/// immediate into a register.
+name|virtual
+name|bool
+name|isLegalAddImmediate
+argument_list|(
+name|int64_t
+argument_list|)
+decl|const
+block|{
+return|return
+name|true
+return|;
+block|}
 comment|/// isTruncateFree - Return true if it's free to truncate a value of
 comment|/// type Ty1 to type Ty2. e.g. On x86 it's free to truncate a i32 value in
 comment|/// register EAX to i16 by referencing its sub-register AX.
@@ -5400,15 +5519,13 @@ name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
-specifier|const
 name|Type
 operator|*
-name|Ty1
+comment|/*Ty1*/
 argument_list|,
-specifier|const
 name|Type
 operator|*
-name|Ty2
+comment|/*Ty2*/
 argument_list|)
 decl|const
 block|{
@@ -5421,10 +5538,10 @@ name|bool
 name|isTruncateFree
 argument_list|(
 name|EVT
-name|VT1
+comment|/*VT1*/
 argument_list|,
 name|EVT
-name|VT2
+comment|/*VT2*/
 argument_list|)
 decl|const
 block|{
@@ -5444,15 +5561,13 @@ name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
-specifier|const
 name|Type
 operator|*
-name|Ty1
+comment|/*Ty1*/
 argument_list|,
-specifier|const
 name|Type
 operator|*
-name|Ty2
+comment|/*Ty2*/
 argument_list|)
 decl|const
 block|{
@@ -5465,10 +5580,10 @@ name|bool
 name|isZExtFree
 argument_list|(
 name|EVT
-name|VT1
+comment|/*VT1*/
 argument_list|,
 name|EVT
-name|VT2
+comment|/*VT2*/
 argument_list|)
 decl|const
 block|{
@@ -5484,49 +5599,15 @@ name|bool
 name|isNarrowingProfitable
 argument_list|(
 name|EVT
-name|VT1
+comment|/*VT1*/
 argument_list|,
 name|EVT
-name|VT2
+comment|/*VT2*/
 argument_list|)
 decl|const
 block|{
 return|return
 name|false
-return|;
-block|}
-comment|/// isLegalICmpImmediate - Return true if the specified immediate is legal
-comment|/// icmp immediate, that is the target has icmp instructions which can compare
-comment|/// a register against the immediate without having to materialize the
-comment|/// immediate into a register.
-name|virtual
-name|bool
-name|isLegalICmpImmediate
-argument_list|(
-name|int64_t
-name|Imm
-argument_list|)
-decl|const
-block|{
-return|return
-name|true
-return|;
-block|}
-comment|/// isLegalAddImmediate - Return true if the specified immediate is legal
-comment|/// add immediate, that is the target has add instructions which can add
-comment|/// a register with the immediate without having to materialize the
-comment|/// immediate into a register.
-name|virtual
-name|bool
-name|isLegalAddImmediate
-argument_list|(
-name|int64_t
-name|Imm
-argument_list|)
-decl|const
-block|{
-return|return
-name|true
 return|;
 block|}
 comment|//===--------------------------------------------------------------------===//
@@ -5802,6 +5883,12 @@ comment|/// boolean values held in a type wider than i1.  See getBooleanContents
 name|BooleanContent
 name|BooleanContents
 decl_stmt|;
+comment|/// BooleanVectorContents - Information about the contents of the high-bits
+comment|/// in boolean vector values when the element type is wider than i1.  See
+comment|/// getBooleanContents.
+name|BooleanContent
+name|BooleanVectorContents
+decl_stmt|;
 comment|/// SchedPreferenceInfo - The target scheduling preference: shortest possible
 comment|/// total cycles or lowest register usage.
 name|Sched
@@ -5847,6 +5934,12 @@ comment|/// be folded into the enclosed atomic intrinsic instruction by the
 comment|/// combiner.
 name|bool
 name|ShouldFoldAtomicFences
+decl_stmt|;
+comment|/// InsertFencesForAtomic - Whether the DAG builder should automatically
+comment|/// insert fences and reduce ordering for atomics.  (This will be set for
+comment|/// for most architectures with weak memory ordering.)
+name|bool
+name|InsertFencesForAtomic
 decl_stmt|;
 comment|/// StackPointerRegisterToSaveRestore - If set to a physical register, this
 comment|/// specifies the register that llvm.savestack/llvm.restorestack should save
@@ -6809,7 +6902,6 @@ comment|/// the offsets, if the return value is being lowered to memory.
 name|void
 name|GetReturnInfo
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|ReturnType

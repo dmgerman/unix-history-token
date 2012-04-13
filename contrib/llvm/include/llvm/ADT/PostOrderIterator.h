@@ -113,6 +113,27 @@ name|SetType
 name|Visited
 block|; }
 expr_stmt|;
+comment|/// DFSetTraits - Allow the SetType used to record depth-first search results to
+comment|/// optionally record node postorder.
+name|template
+operator|<
+name|class
+name|SetType
+operator|>
+expr|struct
+name|DFSetTraits
+block|{
+specifier|static
+name|void
+name|finishPostorder
+argument_list|(
+argument|typename SetType::iterator::value_type
+argument_list|,
+argument|SetType&
+argument_list|)
+block|{}
+block|}
+expr_stmt|;
 name|template
 operator|<
 name|class
@@ -661,6 +682,25 @@ operator|(
 operator|)
 block|{
 comment|// Preincrement
+name|DFSetTraits
+operator|<
+name|SetType
+operator|>
+operator|::
+name|finishPostorder
+argument_list|(
+name|VisitStack
+operator|.
+name|back
+argument_list|()
+operator|.
+name|first
+argument_list|,
+name|this
+operator|->
+name|Visited
+argument_list|)
+block|;
 name|VisitStack
 operator|.
 name|pop_back

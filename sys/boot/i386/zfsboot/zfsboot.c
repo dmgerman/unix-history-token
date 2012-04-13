@@ -150,8 +150,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PATH_CONFIG
+name|PATH_DOTCONFIG
 value|"/boot.config"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_CONFIG
+value|"/boot/config"
 end_define
 
 begin_define
@@ -2460,6 +2467,18 @@ name|dn
 argument_list|)
 operator|==
 literal|0
+operator|||
+name|zfs_lookup
+argument_list|(
+name|spa
+argument_list|,
+name|PATH_DOTCONFIG
+argument_list|,
+operator|&
+name|dn
+argument_list|)
+operator|==
+literal|0
 condition|)
 block|{
 name|off
@@ -2493,15 +2512,6 @@ condition|)
 block|{
 if|if
 condition|(
-name|parse
-argument_list|()
-condition|)
-name|autoboot
-operator|=
-literal|0
-expr_stmt|;
-if|if
-condition|(
 operator|!
 name|OPT_CHECK
 argument_list|(
@@ -2516,6 +2526,15 @@ name|PATH_CONFIG
 argument_list|,
 name|cmd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|parse
+argument_list|()
+condition|)
+name|autoboot
+operator|=
+literal|0
 expr_stmt|;
 comment|/* Do not process this command twice */
 operator|*

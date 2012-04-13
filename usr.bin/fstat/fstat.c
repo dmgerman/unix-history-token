@@ -150,6 +150,7 @@ file|"functions.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fsflg
 decl_stmt|,
@@ -166,16 +167,18 @@ comment|/* show files open by a particular (effective) user */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|checkfile
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* true if restricting to particular files or filesystems */
+comment|/* restrict to particular files or filesystems */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nflg
 decl_stmt|;
@@ -186,6 +189,7 @@ comment|/* (numerical) display f.s. and rdev as dev_t */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|mflg
 decl_stmt|;
@@ -196,6 +200,7 @@ comment|/* include memory-mapped files */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflg
 decl_stmt|;
@@ -232,6 +237,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|DEVS
 modifier|*
 name|devs
@@ -239,6 +245,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|memf
@@ -343,6 +350,24 @@ begin_function_decl
 specifier|static
 name|void
 name|print_pts_info
+parameter_list|(
+name|struct
+name|procstat
+modifier|*
+name|procstat
+parameter_list|,
+name|struct
+name|filestat
+modifier|*
+name|fst
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
+name|print_shm_info
 parameter_list|(
 name|struct
 name|procstat
@@ -663,7 +688,7 @@ condition|(
 operator|!
 name|checkfile
 condition|)
-comment|/* file(s) specified, but none accessable */
+comment|/* file(s) specified, but none accessible */
 name|exit
 argument_list|(
 literal|1
@@ -1316,6 +1341,17 @@ name|fst
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+name|PS_FST_TYPE_SHM
+case|:
+name|print_shm_info
+argument_list|(
+name|procstat
+argument_list|,
+name|fst
+argument_list|)
+expr_stmt|;
+break|break;
 default|default:
 if|if
 condition|(
@@ -1929,6 +1965,149 @@ name|devname
 argument_list|)
 expr_stmt|;
 block|}
+name|print_access_flags
+argument_list|(
+name|fst
+operator|->
+name|fs_fflags
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|void
+name|print_shm_info
+parameter_list|(
+name|struct
+name|procstat
+modifier|*
+name|procstat
+parameter_list|,
+name|struct
+name|filestat
+modifier|*
+name|fst
+parameter_list|)
+block|{
+name|struct
+name|shmstat
+name|shm
+decl_stmt|;
+name|char
+name|errbuf
+index|[
+name|_POSIX2_LINE_MAX
+index|]
+decl_stmt|;
+name|char
+name|mode
+index|[
+literal|15
+index|]
+decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
+name|procstat_get_shm_info
+argument_list|(
+name|procstat
+argument_list|,
+name|fst
+argument_list|,
+operator|&
+name|shm
+argument_list|,
+name|errbuf
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"* error"
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
+if|if
+condition|(
+name|nflg
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"             "
+argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|snprintf
+argument_list|(
+name|mode
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|mode
+argument_list|)
+argument_list|,
+literal|"%o"
+argument_list|,
+name|shm
+operator|.
+name|mode
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
+name|printf
+argument_list|(
+literal|" %-15s"
+argument_list|,
+name|fst
+operator|->
+name|fs_path
+operator|!=
+name|NULL
+condition|?
+name|fst
+operator|->
+name|fs_path
+else|:
+literal|"-"
+argument_list|)
+expr_stmt|;
+name|strmode
+argument_list|(
+name|shm
+operator|.
+name|mode
+argument_list|,
+name|mode
+argument_list|)
+expr_stmt|;
+block|}
+name|printf
+argument_list|(
+literal|" %10s %6ju"
+argument_list|,
+name|mode
+argument_list|,
+name|shm
+operator|.
+name|size
+argument_list|)
+expr_stmt|;
 name|print_access_flags
 argument_list|(
 name|fst

@@ -72,6 +72,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<dev/pci/pcivar.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<machine/bus.h>
 end_include
 
@@ -1990,13 +1996,6 @@ block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_read_ivar
 argument_list|,
 name|ixppcib_read_ivar
@@ -2081,12 +2080,8 @@ argument_list|,
 name|ixppcib_route_interrupt
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 

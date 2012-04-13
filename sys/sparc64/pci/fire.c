@@ -647,13 +647,6 @@ block|,
 comment|/* Bus interface */
 name|DEVMETHOD
 argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
 name|bus_read_ivar
 argument_list|,
 name|fire_read_ivar
@@ -787,7 +780,7 @@ argument_list|,
 name|fire_get_node
 argument_list|)
 block|,
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2149,10 +2142,10 @@ argument_list|,
 name|FO_PCI_TLU_CTRL
 argument_list|)
 operator|&
-name|FO_PCI_TLU_CTRL_CFG_MASK
+name|FO_PCI_TLU_CTRL_CFG_MPS_MASK
 operator|)
 operator|>>
-name|FO_PCI_TLU_CTRL_CFG_SHFT
+name|FO_PCI_TLU_CTRL_CFG_MPS_SHFT
 expr_stmt|;
 name|i
 operator|=
@@ -2173,7 +2166,6 @@ name|mps
 operator|>=
 name|i
 condition|)
-empty_stmt|;
 name|mps
 operator|=
 name|i
@@ -4254,7 +4246,7 @@ argument_list|)
 argument_list|,
 literal|8
 argument_list|,
-literal|0
+literal|0x100000000
 argument_list|,
 name|sc
 operator|->

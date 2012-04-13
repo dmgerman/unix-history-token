@@ -284,7 +284,7 @@ decl_stmt|,
 name|nitems
 decl_stmt|;
 name|int
-name|assasinated
+name|assassinated
 init|=
 literal|0
 decl_stmt|;
@@ -517,7 +517,7 @@ argument_list|(
 name|euid
 argument_list|)
 expr_stmt|;
-name|assasinated
+name|assassinated
 operator|=
 name|kill
 argument_list|(
@@ -536,7 +536,7 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
-name|assasinated
+name|assassinated
 condition|)
 name|fatal
 argument_list|(
@@ -581,7 +581,7 @@ expr_stmt|;
 comment|/* 	 * Restart the printer daemon if it was killed 	 */
 if|if
 condition|(
-name|assasinated
+name|assassinated
 operator|&&
 operator|!
 name|startdaemon

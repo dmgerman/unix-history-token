@@ -130,6 +130,10 @@ parameter_list|()
 block|{ }
 comment|/// \brief Callback invoked when performing code completion inside a
 comment|/// function-like macro argument.
+comment|///
+comment|/// There will be another callback invocation after the macro arguments are
+comment|/// parsed, so this callback should generally be used to note that the next
+comment|/// callback is invoked inside a macro argument.
 name|virtual
 name|void
 name|CodeCompleteMacroArgument

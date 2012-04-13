@@ -3597,6 +3597,14 @@ argument_list|)
 condition|)
 return|return
 operator|(
+name|n
+operator|->
+name|scale
+condition|?
+name|n
+operator|->
+name|scale
+else|:
 literal|1
 operator|)
 return|;

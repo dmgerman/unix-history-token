@@ -128,6 +128,12 @@ directive|include
 file|"citrus_module.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"libc_private.h"
+end_include
+
 begin_function_decl
 specifier|static
 name|int
@@ -1103,7 +1109,7 @@ operator|)
 return|;
 name|handle
 operator|=
-name|dlopen
+name|libc_dlopen
 argument_list|(
 name|p
 argument_list|,

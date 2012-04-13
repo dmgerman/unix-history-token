@@ -379,6 +379,13 @@ name|proto_conn
 modifier|*
 name|hc_controlin
 decl_stmt|;
+comment|/* PID file path. */
+name|char
+name|hc_pidfile
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
 comment|/* List of addresses to listen on. */
 name|TAILQ_HEAD
 argument_list|(

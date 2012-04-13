@@ -544,7 +544,7 @@ name|errx
 argument_list|(
 literal|1
 argument_list|,
-literal|"cmpndewey: cant happen"
+literal|"cmpndewey: can't happen"
 argument_list|)
 expr_stmt|;
 return|return

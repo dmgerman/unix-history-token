@@ -87,7 +87,7 @@ union|union
 name|YYSTYPE
 line|#
 directive|line
-number|54
+number|57
 file|"slc-gram.y"
 block|{
 name|char

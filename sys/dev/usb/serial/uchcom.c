@@ -202,6 +202,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -3855,10 +3856,19 @@ name|driver_t
 name|uchcom_driver
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"ucom"
 block|,
+operator|.
+name|methods
+operator|=
 name|uchcom_methods
 block|,
+operator|.
+name|size
+operator|=
 expr|sizeof
 operator|(
 expr|struct

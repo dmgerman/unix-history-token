@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright (c) 2011 Martin Matuska<mm@FreeBSD.org>. All rights reserved.  */
 end_comment
 
 begin_include
@@ -314,6 +314,20 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
+name|zpool_do_reguid
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|int
 name|zpool_do_attach
 parameter_list|(
 name|int
@@ -563,6 +577,8 @@ block|,
 name|HELP_SET
 block|,
 name|HELP_SPLIT
+block|,
+name|HELP_REGUID
 block|}
 name|zpool_help_t
 typedef|;
@@ -788,6 +804,14 @@ block|,
 name|zpool_do_upgrade
 block|,
 name|HELP_UPGRADE
+block|}
+block|,
+block|{
+literal|"reguid"
+block|,
+name|zpool_do_reguid
+block|,
+name|HELP_REGUID
 block|}
 block|,
 block|{
@@ -1033,7 +1057,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tonline<pool><device> ...\n"
+literal|"\tonline [-e]<pool><device> ...\n"
 argument_list|)
 operator|)
 return|;
@@ -1090,8 +1114,7 @@ return|return
 operator|(
 name|gettext
 argument_list|(
-literal|"\tupgrade\n"
-literal|"\tupgrade -v\n"
+literal|"\tupgrade [-v]\n"
 literal|"\tupgrade [-V version]<-a | pool ...>\n"
 argument_list|)
 operator|)
@@ -1129,6 +1152,17 @@ argument_list|(
 literal|"\tsplit [-n] [-R altroot] [-o mntopts]\n"
 literal|"\t    [-o property=value]<pool><newpool> "
 literal|"[<device> ...]\n"
+argument_list|)
+operator|)
+return|;
+case|case
+name|HELP_REGUID
+case|:
+return|return
+operator|(
+name|gettext
+argument_list|(
+literal|"\treguid<pool>\n"
 argument_list|)
 operator|)
 return|;
@@ -6611,6 +6645,10 @@ decl_stmt|;
 name|int
 name|namewidth
 decl_stmt|;
+name|char
+modifier|*
+name|comment
+decl_stmt|;
 name|verify
 argument_list|(
 name|nvlist_lookup_string
@@ -6724,7 +6762,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"  pool: %s\n"
+literal|"   pool: %s\n"
 argument_list|)
 argument_list|,
 name|name
@@ -6737,7 +6775,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    id: %llu\n"
+literal|"     id: %llu\n"
 argument_list|)
 argument_list|,
 operator|(
@@ -6753,7 +6791,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|" state: %s"
+literal|"  state: %s"
 argument_list|)
 argument_list|,
 name|health
@@ -6805,8 +6843,8 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: One or more devices are missing "
-literal|"from the system.\n"
+literal|" status: One or more devices are "
+literal|"missing from the system.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6824,7 +6862,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: One or more devices contains "
+literal|" status: One or more devices contains "
 literal|"corrupted data.\n"
 argument_list|)
 argument_list|)
@@ -6840,7 +6878,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: The pool data is corrupted.\n"
+literal|" status: The pool data is corrupted.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -6855,7 +6893,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: One or more devices "
+literal|" status: One or more devices "
 literal|"are offlined.\n"
 argument_list|)
 argument_list|)
@@ -6871,7 +6909,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: The pool metadata is "
+literal|" status: The pool metadata is "
 literal|"corrupted.\n"
 argument_list|)
 argument_list|)
@@ -6887,7 +6925,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: The pool is formatted using an "
+literal|" status: The pool is formatted using an "
 literal|"older on-disk version.\n"
 argument_list|)
 argument_list|)
@@ -6903,7 +6941,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: The pool is formatted using an "
+literal|" status: The pool is formatted using an "
 literal|"incompatible version.\n"
 argument_list|)
 argument_list|)
@@ -6919,7 +6957,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: The pool was last accessed by "
+literal|" status: The pool was last accessed by "
 literal|"another system.\n"
 argument_list|)
 argument_list|)
@@ -6938,7 +6976,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: One or more devices are "
+literal|" status: One or more devices are "
 literal|"faulted.\n"
 argument_list|)
 argument_list|)
@@ -6954,7 +6992,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: An intent log record cannot be "
+literal|" status: An intent log record cannot be "
 literal|"read.\n"
 argument_list|)
 argument_list|)
@@ -6970,7 +7008,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"status: One or more devices were being "
+literal|" status: One or more devices were being "
 literal|"resilvered.\n"
 argument_list|)
 argument_list|)
@@ -7009,7 +7047,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"action: The pool can be "
+literal|" action: The pool can be "
 literal|"imported using its name or numeric identifier, "
 literal|"though\n\tsome features will not be available "
 literal|"without an explicit 'zpool upgrade'.\n"
@@ -7030,7 +7068,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"action: The pool can be "
+literal|" action: The pool can be "
 literal|"imported using its name or numeric "
 literal|"identifier and\n\tthe '-f' flag.\n"
 argument_list|)
@@ -7044,7 +7082,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"action: The pool can be "
+literal|" action: The pool can be "
 literal|"imported using its name or numeric "
 literal|"identifier.\n"
 argument_list|)
@@ -7068,7 +7106,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"action: The pool can be imported "
+literal|" action: The pool can be imported "
 literal|"despite missing or damaged devices.  The\n\tfault "
 literal|"tolerance of the pool may be compromised if imported.\n"
 argument_list|)
@@ -7092,7 +7130,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"action: The pool cannot be "
+literal|" action: The pool cannot be "
 literal|"imported.  Access the pool on a system running "
 literal|"newer\n\tsoftware, or recreate the pool from "
 literal|"backup.\n"
@@ -7116,7 +7154,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"action: The pool cannot be "
+literal|" action: The pool cannot be "
 literal|"imported. Attach the missing\n\tdevices and try "
 literal|"again.\n"
 argument_list|)
@@ -7131,13 +7169,41 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"action: The pool cannot be "
+literal|" action: The pool cannot be "
 literal|"imported due to damaged devices or data.\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Print the comment attached to the pool. */
+if|if
+condition|(
+name|nvlist_lookup_string
+argument_list|(
+name|config
+argument_list|,
+name|ZPOOL_CONFIG_COMMENT
+argument_list|,
+operator|&
+name|comment
+argument_list|)
+operator|==
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"comment: %s\n"
+argument_list|)
+argument_list|,
+name|comment
+argument_list|)
+expr_stmt|;
 comment|/* 	 * If the state is "closed" or "can't open", and the aux state 	 * is "corrupt data": 	 */
 if|if
 condition|(
@@ -7233,7 +7299,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"config:\n\n"
+literal|" config:\n\n"
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -9833,9 +9899,14 @@ name|uint64_t
 name|ishole
 init|=
 name|B_FALSE
+decl_stmt|,
+name|islog
+init|=
+name|B_FALSE
 decl_stmt|;
-if|if
-condition|(
+operator|(
+name|void
+operator|)
 name|nvlist_lookup_uint64
 argument_list|(
 name|newchild
@@ -9848,10 +9919,28 @@ argument_list|,
 operator|&
 name|ishole
 argument_list|)
-operator|==
-literal|0
-operator|&&
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|nvlist_lookup_uint64
+argument_list|(
+name|newchild
+index|[
+name|c
+index|]
+argument_list|,
+name|ZPOOL_CONFIG_IS_LOG
+argument_list|,
+operator|&
+name|islog
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
 name|ishole
+operator|||
+name|islog
 condition|)
 continue|continue;
 name|vname
@@ -9902,6 +9991,123 @@ argument_list|(
 name|vname
 argument_list|)
 expr_stmt|;
+block|}
+comment|/* 	 * Log device section 	 */
+if|if
+condition|(
+name|num_logs
+argument_list|(
+name|newnv
+argument_list|)
+operator|>
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+literal|"%-*s      -      -      -      -      -      "
+literal|"-\n"
+argument_list|,
+name|cb
+operator|->
+name|cb_namewidth
+argument_list|,
+literal|"logs"
+argument_list|)
+expr_stmt|;
+for|for
+control|(
+name|c
+operator|=
+literal|0
+init|;
+name|c
+operator|<
+name|children
+condition|;
+name|c
+operator|++
+control|)
+block|{
+name|uint64_t
+name|islog
+init|=
+name|B_FALSE
+decl_stmt|;
+operator|(
+name|void
+operator|)
+name|nvlist_lookup_uint64
+argument_list|(
+name|newchild
+index|[
+name|c
+index|]
+argument_list|,
+name|ZPOOL_CONFIG_IS_LOG
+argument_list|,
+operator|&
+name|islog
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|islog
+condition|)
+block|{
+name|vname
+operator|=
+name|zpool_vdev_name
+argument_list|(
+name|g_zfs
+argument_list|,
+name|zhp
+argument_list|,
+name|newchild
+index|[
+name|c
+index|]
+argument_list|,
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+name|print_vdev_stats
+argument_list|(
+name|zhp
+argument_list|,
+name|vname
+argument_list|,
+name|oldnv
+condition|?
+name|oldchild
+index|[
+name|c
+index|]
+else|:
+name|NULL
+argument_list|,
+name|newchild
+index|[
+name|c
+index|]
+argument_list|,
+name|cb
+argument_list|,
+name|depth
+operator|+
+literal|2
+argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|vname
+argument_list|)
+expr_stmt|;
+block|}
+block|}
 block|}
 comment|/* 	 * Include level 2 ARC devices in iostat output 	 */
 if|if
@@ -14265,6 +14471,197 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/*  * zpool reguid<pool>  */
+end_comment
+
+begin_function
+name|int
+name|zpool_do_reguid
+parameter_list|(
+name|int
+name|argc
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+name|argv
+parameter_list|)
+block|{
+name|int
+name|c
+decl_stmt|;
+name|char
+modifier|*
+name|poolname
+decl_stmt|;
+name|zpool_handle_t
+modifier|*
+name|zhp
+decl_stmt|;
+name|int
+name|ret
+init|=
+literal|0
+decl_stmt|;
+comment|/* check options */
+while|while
+condition|(
+operator|(
+name|c
+operator|=
+name|getopt
+argument_list|(
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+literal|""
+argument_list|)
+operator|)
+operator|!=
+operator|-
+literal|1
+condition|)
+block|{
+switch|switch
+condition|(
+name|c
+condition|)
+block|{
+case|case
+literal|'?'
+case|:
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"invalid option '%c'\n"
+argument_list|)
+argument_list|,
+name|optopt
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+name|argc
+operator|-=
+name|optind
+expr_stmt|;
+name|argv
+operator|+=
+name|optind
+expr_stmt|;
+comment|/* get pool name and check number of arguments */
+if|if
+condition|(
+name|argc
+operator|<
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"missing pool name\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|argc
+operator|>
+literal|1
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+name|gettext
+argument_list|(
+literal|"too many arguments\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|usage
+argument_list|(
+name|B_FALSE
+argument_list|)
+expr_stmt|;
+block|}
+name|poolname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|zhp
+operator|=
+name|zpool_open
+argument_list|(
+name|g_zfs
+argument_list|,
+name|poolname
+argument_list|)
+operator|)
+operator|==
+name|NULL
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+name|ret
+operator|=
+name|zpool_reguid
+argument_list|(
+name|zhp
+argument_list|)
+expr_stmt|;
+name|zpool_close
+argument_list|(
+name|zhp
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ret
+operator|)
+return|;
+block|}
+end_function
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -14616,7 +15013,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|" scan: "
+literal|"  scan: "
 argument_list|)
 argument_list|)
 expr_stmt|;
@@ -15073,7 +15470,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    %s scanned out of %s at %s/s"
+literal|"        %s scanned out of %s at %s/s"
 argument_list|)
 argument_list|,
 name|examined_buf
@@ -15150,7 +15547,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    %s resilvered, %.2f%% done\n"
+literal|"        %s resilvered, %.2f%% done\n"
 argument_list|)
 argument_list|,
 name|processed_buf
@@ -15178,7 +15575,7 @@ name|printf
 argument_list|(
 name|gettext
 argument_list|(
-literal|"    %s repaired, %.2f%% done\n"
+literal|"        %s repaired, %.2f%% done\n"
 argument_list|)
 argument_list|,
 name|processed_buf
@@ -15627,12 +16024,6 @@ name|c
 argument_list|)
 operator|!=
 literal|0
-operator|||
-name|ddo
-operator|->
-name|ddo_count
-operator|==
-literal|0
 condition|)
 return|return;
 operator|(
@@ -15643,6 +16034,39 @@ argument_list|(
 literal|"\n"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|" dedup: "
+argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ddo
+operator|->
+name|ddo_count
+operator|==
+literal|0
+condition|)
+block|{
+operator|(
+name|void
+operator|)
+name|printf
+argument_list|(
+name|gettext
+argument_list|(
+literal|"no DDT entries\n"
+argument_list|)
+argument_list|)
+expr_stmt|;
+return|return;
+block|}
 operator|(
 name|void
 operator|)

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995 - 2000, 2002, 2004, 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995 - 2000, 2002, 2004, 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -8,14 +8,6 @@ include|#
 directive|include
 file|"kafs_locl.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: afssys.c 17050 2006-04-11 08:12:29Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
@@ -92,6 +84,12 @@ block|}
 struct|;
 end_struct
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_IOWR
+end_ifdef
+
 begin_define
 define|#
 directive|define
@@ -105,6 +103,11 @@ directive|define
 name|VIOC_SYSCALL_DEV_OPENAFS
 value|_IOWR('C', 1, struct devdata)
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_decl_stmt
 name|int
@@ -493,7 +496,7 @@ comment|/* _AIX */
 end_comment
 
 begin_comment
-comment|/*   * This probably only works under Solaris and could get confused if  * there's a /etc/name_to_sysnum file.    */
+comment|/*  * This probably only works under Solaris and could get confused if  * there's a /etc/name_to_sysnum file.  */
 end_comment
 
 begin_if
@@ -840,7 +843,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
-comment|/*       * Be quite liberal in what error are ok, the first is the one      * that should trigger given that params is NULL.      */
+comment|/*      * Be quite liberal in what error are ok, the first is the one      * that should trigger given that params is NULL.      */
 if|if
 condition|(
 name|ret
@@ -2024,6 +2027,9 @@ operator|==
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|VIOC_SYSCALL_DEV
 if|if
 condition|(
 name|try_ioctlpath
@@ -2040,6 +2046,11 @@ condition|)
 goto|goto
 name|done
 goto|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|VIOC_SYSCALL_DEV_OPENAFS
 if|if
 condition|(
 name|try_ioctlpath
@@ -2056,6 +2067,8 @@ condition|)
 goto|goto
 name|done
 goto|;
+endif|#
+directive|endif
 block|}
 block|}
 name|ret
@@ -2098,6 +2111,9 @@ condition|)
 goto|goto
 name|done
 goto|;
+ifdef|#
+directive|ifdef
+name|VIOC_SYSCALL_DEV_OPENAFS
 name|ret
 operator|=
 name|try_ioctlpath
@@ -2118,6 +2134,11 @@ condition|)
 goto|goto
 name|done
 goto|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|VIOC_SYSCALL_DEV
 name|ret
 operator|=
 name|try_ioctlpath
@@ -2138,6 +2159,8 @@ condition|)
 goto|goto
 name|done
 goto|;
+endif|#
+directive|endif
 if|#
 directive|if
 name|defined

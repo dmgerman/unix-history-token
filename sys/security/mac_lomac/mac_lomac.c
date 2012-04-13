@@ -248,6 +248,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_security_mac
@@ -588,6 +589,7 @@ value|mac_label_set((l), lomac_slot, (uintptr_t)(val))
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_LOMAC
@@ -3479,7 +3481,7 @@ name|string
 expr_stmt|;
 name|range
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|string
 argument_list|,
@@ -3498,7 +3500,7 @@ name|NULL
 expr_stmt|;
 name|auxsingle
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|string
 argument_list|,
@@ -3558,7 +3560,7 @@ name|range
 expr_stmt|;
 name|rangehigh
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|rangelow
 argument_list|,
@@ -3598,7 +3600,7 @@ operator|)
 return|;
 name|rangeend
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|rangehigh
 argument_list|,
@@ -3693,7 +3695,7 @@ operator|++
 expr_stmt|;
 name|auxsingleend
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|auxsingle
 argument_list|,
@@ -4658,6 +4660,11 @@ name|mac_lomac
 modifier|*
 name|ml
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|dn
+decl_stmt|;
 name|int
 name|lomac_type
 decl_stmt|;
@@ -4668,13 +4675,18 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
+name|dn
+operator|=
+name|devtoname
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"null"
 argument_list|)
@@ -4683,9 +4695,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"zero"
 argument_list|)
@@ -4694,9 +4704,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"random"
 argument_list|)
@@ -4705,9 +4713,7 @@ literal|0
 operator|||
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"fd/"
 argument_list|,
@@ -4721,9 +4727,7 @@ literal|0
 operator|||
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"ttyv"
 argument_list|,
@@ -4747,9 +4751,7 @@ operator|&&
 operator|(
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"ttyp"
 argument_list|,
@@ -4763,9 +4765,7 @@ literal|0
 operator|||
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"pts/"
 argument_list|,
@@ -4779,9 +4779,7 @@ literal|0
 operator|||
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"ptyp"
 argument_list|,

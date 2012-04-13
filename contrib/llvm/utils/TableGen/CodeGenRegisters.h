@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"Record.h"
+file|"SetTheory.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"SetTheory.h"
+file|"llvm/TableGen/Record.h"
 end_include
 
 begin_include
@@ -85,6 +85,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/BitVector.h"
 end_include
 
 begin_include
@@ -276,6 +282,13 @@ name|B
 operator|)
 specifier|const
 block|{
+name|assert
+argument_list|(
+name|A
+operator|&&
+name|B
+argument_list|)
+block|;
 return|return
 name|A
 operator|->
@@ -323,17 +336,7 @@ operator|::
 name|Set
 name|Members
 expr_stmt|;
-specifier|const
-name|std
-operator|::
-name|vector
-operator|<
-name|Record
-operator|*
-operator|>
-operator|*
-name|Elements
-expr_stmt|;
+comment|// Allocation orders. Order[0] always contains all registers in Members.
 name|std
 operator|::
 name|vector
@@ -346,13 +349,56 @@ operator|,
 literal|16
 operator|>
 expr|>
-name|AltOrders
+name|Orders
 expr_stmt|;
-name|public
-label|:
+comment|// Bit mask of sub-classes including this, indexed by their EnumValue.
+name|BitVector
+name|SubClasses
+decl_stmt|;
+comment|// List of super-classes, topologocally ordered to have the larger classes
+comment|// first.  This is the same as sorting by EnumValue.
+name|SmallVector
+operator|<
+name|CodeGenRegisterClass
+operator|*
+operator|,
+literal|4
+operator|>
+name|SuperClasses
+expr_stmt|;
 name|Record
 modifier|*
 name|TheDef
+decl_stmt|;
+name|std
+operator|::
+name|string
+name|Name
+expr_stmt|;
+comment|// For a synthesized class, inherit missing properties from the nearest
+comment|// super-class.
+name|void
+name|inheritProperties
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+parameter_list|)
+function_decl|;
+comment|// Map SubRegIndex -> sub-class
+name|DenseMap
+operator|<
+name|Record
+operator|*
+operator|,
+name|CodeGenRegisterClass
+operator|*
+operator|>
+name|SubClassWithSubReg
+expr_stmt|;
+name|public
+label|:
+name|unsigned
+name|EnumValue
 decl_stmt|;
 name|std
 operator|::
@@ -397,12 +443,35 @@ operator|::
 name|string
 name|AltOrderSelect
 expr_stmt|;
+comment|// Return the Record that defined this class, or NULL if the class was
+comment|// created by TableGen.
+name|Record
+operator|*
+name|getDef
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TheDef
+return|;
+block|}
 specifier|const
 name|std
 operator|::
 name|string
 operator|&
 name|getName
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Name
+return|;
+block|}
+name|std
+operator|::
+name|string
+name|getQualifiedName
 argument_list|()
 specifier|const
 expr_stmt|;
@@ -499,7 +568,88 @@ operator|*
 name|RC
 argument_list|)
 decl|const
-decl_stmt|;
+block|{
+return|return
+name|SubClasses
+operator|.
+name|test
+argument_list|(
+name|RC
+operator|->
+name|EnumValue
+argument_list|)
+return|;
+block|}
+comment|// getSubClassWithSubReg - Returns the largest sub-class where all
+comment|// registers have a SubIdx sub-register.
+name|CodeGenRegisterClass
+modifier|*
+name|getSubClassWithSubReg
+argument_list|(
+name|Record
+operator|*
+name|SubIdx
+argument_list|)
+decl|const
+block|{
+return|return
+name|SubClassWithSubReg
+operator|.
+name|lookup
+argument_list|(
+name|SubIdx
+argument_list|)
+return|;
+block|}
+name|void
+name|setSubClassWithSubReg
+parameter_list|(
+name|Record
+modifier|*
+name|SubIdx
+parameter_list|,
+name|CodeGenRegisterClass
+modifier|*
+name|SubRC
+parameter_list|)
+block|{
+name|SubClassWithSubReg
+index|[
+name|SubIdx
+index|]
+operator|=
+name|SubRC
+expr_stmt|;
+block|}
+comment|// getSubClasses - Returns a constant BitVector of subclasses indexed by
+comment|// EnumValue.
+comment|// The SubClasses vector includs an entry for this class.
+specifier|const
+name|BitVector
+operator|&
+name|getSubClasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SubClasses
+return|;
+block|}
+comment|// getSuperClasses - Returns a list of super classes ordered by EnumValue.
+comment|// The array does not include an entry for this class.
+name|ArrayRef
+operator|<
+name|CodeGenRegisterClass
+operator|*
+operator|>
+name|getSuperClasses
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SuperClasses
+return|;
+block|}
 comment|// Returns an ordered list of class members.
 comment|// The order of registers is the same as in the .td file.
 comment|// No = 0 is the default allocation order, No = 1 is the first alternative.
@@ -515,23 +665,10 @@ literal|0
 argument_list|)
 specifier|const
 block|{
-if|if
-condition|(
-name|No
-operator|==
-literal|0
-condition|)
 return|return
-operator|*
-name|Elements
-return|;
-else|else
-return|return
-name|AltOrders
+name|Orders
 index|[
 name|No
-operator|-
-literal|1
 index|]
 return|;
 block|}
@@ -542,12 +679,25 @@ argument_list|()
 specifier|const
 block|{
 return|return
-literal|1
-operator|+
-name|AltOrders
+name|Orders
 operator|.
 name|size
 argument_list|()
+return|;
+block|}
+comment|// Get the set of registers.  This set contains the same registers as
+comment|// getOrder(0).
+specifier|const
+name|CodeGenRegister
+operator|::
+name|Set
+operator|&
+name|getMembers
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Members
 return|;
 block|}
 name|CodeGenRegisterClass
@@ -560,6 +710,137 @@ operator|*
 name|R
 argument_list|)
 expr_stmt|;
+comment|// A key representing the parts of a register class used for forming
+comment|// sub-classes.  Note the ordering provided by this key is not the same as
+comment|// the topological order used for the EnumValues.
+struct|struct
+name|Key
+block|{
+specifier|const
+name|CodeGenRegister
+operator|::
+name|Set
+operator|*
+name|Members
+expr_stmt|;
+name|unsigned
+name|SpillSize
+decl_stmt|;
+name|unsigned
+name|SpillAlignment
+decl_stmt|;
+name|Key
+argument_list|(
+specifier|const
+name|Key
+operator|&
+name|O
+argument_list|)
+operator|:
+name|Members
+argument_list|(
+name|O
+operator|.
+name|Members
+argument_list|)
+operator|,
+name|SpillSize
+argument_list|(
+name|O
+operator|.
+name|SpillSize
+argument_list|)
+operator|,
+name|SpillAlignment
+argument_list|(
+argument|O.SpillAlignment
+argument_list|)
+block|{}
+name|Key
+argument_list|(
+argument|const CodeGenRegister::Set *M
+argument_list|,
+argument|unsigned S =
+literal|0
+argument_list|,
+argument|unsigned A =
+literal|0
+argument_list|)
+operator|:
+name|Members
+argument_list|(
+name|M
+argument_list|)
+operator|,
+name|SpillSize
+argument_list|(
+name|S
+argument_list|)
+operator|,
+name|SpillAlignment
+argument_list|(
+argument|A
+argument_list|)
+block|{}
+name|Key
+argument_list|(
+specifier|const
+name|CodeGenRegisterClass
+operator|&
+name|RC
+argument_list|)
+operator|:
+name|Members
+argument_list|(
+operator|&
+name|RC
+operator|.
+name|getMembers
+argument_list|()
+argument_list|)
+operator|,
+name|SpillSize
+argument_list|(
+name|RC
+operator|.
+name|SpillSize
+argument_list|)
+operator|,
+name|SpillAlignment
+argument_list|(
+argument|RC.SpillAlignment
+argument_list|)
+block|{}
+comment|// Lexicographical order of (Members, SpillSize, SpillAlignment).
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|Key
+operator|&
+operator|)
+specifier|const
+expr_stmt|;
+block|}
+struct|;
+comment|// Create a non-user defined register class.
+name|CodeGenRegisterClass
+argument_list|(
+argument|StringRef Name
+argument_list|,
+argument|Key Props
+argument_list|)
+empty_stmt|;
+comment|// Called by CodeGenRegBank::CodeGenRegBank().
+specifier|static
+name|void
+name|computeSubClasses
+parameter_list|(
+name|CodeGenRegBank
+modifier|&
+parameter_list|)
+function_decl|;
 block|}
 end_decl_stmt
 
@@ -617,11 +898,13 @@ operator|*
 operator|>
 name|Def2Reg
 expr_stmt|;
+comment|// Register classes.
 name|std
 operator|::
 name|vector
 operator|<
 name|CodeGenRegisterClass
+operator|*
 operator|>
 name|RegClasses
 expr_stmt|;
@@ -635,6 +918,36 @@ operator|*
 operator|>
 name|Def2RC
 expr_stmt|;
+typedef|typedef
+name|std
+operator|::
+name|map
+operator|<
+name|CodeGenRegisterClass
+operator|::
+name|Key
+operator|,
+name|CodeGenRegisterClass
+operator|*
+operator|>
+name|RCKeyMap
+expr_stmt|;
+name|RCKeyMap
+name|Key2RC
+decl_stmt|;
+comment|// Add RC to *2RC maps.
+name|void
+name|addToMaps
+parameter_list|(
+name|CodeGenRegisterClass
+modifier|*
+parameter_list|)
+function_decl|;
+comment|// Infer missing register classes.
+name|void
+name|computeInferredRegisterClasses
+parameter_list|()
+function_decl|;
 comment|// Composite SubRegIndex instances.
 comment|// Map (SubRegIndex, SubRegIndex) -> SubRegIndex.
 typedef|typedef
@@ -761,16 +1074,14 @@ name|Record
 modifier|*
 parameter_list|)
 function_decl|;
-specifier|const
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 name|CodeGenRegisterClass
+operator|*
 operator|>
-operator|&
 name|getRegClasses
 argument_list|()
+specifier|const
 block|{
 return|return
 name|RegClasses

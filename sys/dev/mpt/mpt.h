@@ -2405,7 +2405,7 @@ name|mpt_pers_mask
 decl_stmt|;
 name|uint32_t
 label|:
-literal|8
+literal|7
 operator|,
 name|unit
 operator|:
@@ -2472,6 +2472,10 @@ operator|:
 literal|1
 operator|,
 name|is_fc
+operator|:
+literal|1
+operator|,
+name|is_1078
 operator|:
 literal|1
 expr_stmt|;
@@ -2710,11 +2714,13 @@ modifier|*
 name|ih
 decl_stmt|;
 comment|/* Interrupt handle */
-name|struct
-name|mpt_pci_cfg
-name|pci_cfg
-decl_stmt|;
+if|#
+directive|if
+literal|0
+block|struct mpt_pci_cfg	pci_cfg;
 comment|/* saved PCI conf registers */
+endif|#
+directive|endif
 comment|/* 	 * DMA Mapping Stuff 	 */
 name|struct
 name|resource
@@ -3172,7 +3178,7 @@ argument_list|)
 expr_stmt|;
 name|panic
 argument_list|(
-literal|"Recursed lock with mask: 0x%x\n"
+literal|"Recursed lock with mask: 0x%x"
 argument_list|,
 name|s
 argument_list|)
@@ -3222,7 +3228,7 @@ block|}
 else|else
 name|panic
 argument_list|(
-literal|"Negative lock count\n"
+literal|"Negative lock count"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3957,6 +3963,19 @@ name|uint32_t
 name|val
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|mpt
+operator|->
+name|pci_pio_reg
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no PIO resource"
+operator|)
+argument_list|)
+expr_stmt|;
 name|bus_space_write_4
 argument_list|(
 name|mpt
@@ -3990,6 +4009,19 @@ name|int
 name|offset
 parameter_list|)
 block|{
+name|KASSERT
+argument_list|(
+name|mpt
+operator|->
+name|pci_pio_reg
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"no PIO resource"
+operator|)
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 name|bus_space_read_4
@@ -4703,7 +4735,7 @@ operator|->
 name|tgt_cmds_allocated
 argument_list|,
 operator|(
-literal|"bad tag %d\n"
+literal|"bad tag %d"
 operator|,
 name|tag
 operator|)
@@ -5039,7 +5071,7 @@ block|}
 block|}
 name|panic
 argument_list|(
-literal|"%s(%d): req %p:%u function %x not in els or tgt ptrs\n"
+literal|"%s(%d): req %p:%u function %x not in els or tgt ptrs"
 argument_list|,
 name|s
 argument_list|,
@@ -5125,7 +5157,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-literal|"%s(%d): req %p:%u func %x in els ptrs at ioindex %d\n"
+literal|"%s(%d): req %p:%u func %x in els ptrs at ioindex %d"
 operator|,
 name|s
 operator|,
@@ -5181,7 +5213,7 @@ name|i
 index|]
 argument_list|,
 operator|(
-literal|"%s(%d): req %p:%u func %x in tgt ptrs at ioindex %d\n"
+literal|"%s(%d): req %p:%u func %x in tgt ptrs at ioindex %d"
 operator|,
 name|s
 operator|,

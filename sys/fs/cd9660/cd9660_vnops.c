@@ -80,12 +80,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<fs/fifofs/fifo.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/malloc.h>
 end_include
 
@@ -1326,18 +1320,13 @@ argument_list|)
 expr_stmt|;
 name|n
 operator|=
-name|min
-argument_list|(
-call|(
-name|u_int
-call|)
+name|MIN
 argument_list|(
 name|imp
 operator|->
 name|logical_block_size
 operator|-
 name|on
-argument_list|)
 argument_list|,
 name|uio
 operator|->
@@ -1552,7 +1541,7 @@ expr_stmt|;
 block|}
 name|n
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|n
 argument_list|,

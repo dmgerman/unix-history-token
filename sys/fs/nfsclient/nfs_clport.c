@@ -20,6 +20,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|"opt_inet6.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -949,6 +955,21 @@ block|}
 name|vp
 operator|=
 name|nvp
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|vp
+operator|->
+name|v_bufobj
+operator|.
+name|bo_bsize
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"nfscl_nget: bo_bsize == 0"
+operator|)
+argument_list|)
 expr_stmt|;
 name|vp
 operator|->
@@ -5144,7 +5165,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|(
 expr|struct
@@ -5157,6 +5178,12 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
 argument_list|)
 expr_stmt|;
 if|if
@@ -5335,7 +5362,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|rtalloc1_fib
 argument_list|(
 operator|(
 expr|struct
@@ -5348,6 +5375,12 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|curthread
+operator|->
+name|td_proc
+operator|->
+name|p_fibnum
 argument_list|)
 expr_stmt|;
 if|if

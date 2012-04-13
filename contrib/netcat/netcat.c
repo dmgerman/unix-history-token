@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* $OpenBSD: netcat.c,v 1.100 2011/01/09 22:16:46 jeremy Exp $ */
+comment|/* $OpenBSD: netcat.c,v 1.101 2011/06/21 17:31:07 mikeb Exp $ */
 end_comment
 
 begin_comment
@@ -2935,9 +2935,21 @@ condition|)
 block|{
 if|if
 condition|(
-name|setfib
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_SETFIB
+argument_list|,
+operator|&
+name|rtableid
+argument_list|,
+sizeof|sizeof
 argument_list|(
 name|rtableid
+argument_list|)
 argument_list|)
 operator|==
 operator|-
@@ -2947,7 +2959,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"setfib"
+literal|"setsockopt(.., SO_SETFIB, %u, ..)"
+argument_list|,
+name|rtableid
 argument_list|)
 expr_stmt|;
 block|}
@@ -3316,12 +3330,28 @@ condition|(
 name|rtableid
 condition|)
 block|{
-if|if
-condition|(
-name|setfib
+name|ret
+operator|=
+name|setsockopt
+argument_list|(
+name|s
+argument_list|,
+name|SOL_SOCKET
+argument_list|,
+name|SO_SETFIB
+argument_list|,
+operator|&
+name|rtableid
+argument_list|,
+sizeof|sizeof
 argument_list|(
 name|rtableid
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
 operator|==
 operator|-
 literal|1
@@ -3330,7 +3360,9 @@ name|err
 argument_list|(
 literal|1
 argument_list|,
-literal|"setfib"
+literal|"setsockopt(.., SO_SETFIB, %u, ..)"
+argument_list|,
+name|rtableid
 argument_list|)
 expr_stmt|;
 block|}

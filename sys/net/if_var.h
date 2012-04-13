@@ -73,6 +73,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|carp_softc
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|ifvlantrunk
 struct_decl|;
 end_struct_decl
@@ -239,16 +245,6 @@ end_expr_stmt
 begin_comment
 comment|/* instantiation is preserved in the list */
 end_comment
-
-begin_expr_stmt
-name|TAILQ_HEAD
-argument_list|(
-name|ifprefixhead
-argument_list|,
-name|ifprefix
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_expr_stmt
 name|TAILQ_HEAD
@@ -619,11 +615,13 @@ name|if_label
 decl_stmt|;
 comment|/* interface MAC label */
 comment|/* these are only used by IPv6 */
-name|struct
-name|ifprefixhead
-name|if_prefixhead
+name|void
+modifier|*
+name|if_unused
+index|[
+literal|2
+index|]
 decl_stmt|;
-comment|/* list of prefixes per if */
 name|void
 modifier|*
 name|if_afdata
@@ -644,10 +642,10 @@ name|if_linktask
 decl_stmt|;
 comment|/* task for link change events */
 name|struct
-name|mtx
-name|if_addr_mtx
+name|rwlock
+name|if_addr_lock
 decl_stmt|;
-comment|/* mutex to protect address lists */
+comment|/* lock to protect address lists */
 name|LIST_ENTRY
 argument_list|(
 argument|ifnet
@@ -663,7 +661,7 @@ argument_list|)
 name|if_groups
 expr_stmt|;
 comment|/* linked list of groups per if */
-comment|/* protected by if_addr_mtx */
+comment|/* protected by if_addr_lock */
 name|void
 modifier|*
 name|if_pf_kif
@@ -910,7 +908,7 @@ define|#
 directive|define
 name|IF_ADDR_LOCK_INIT
 parameter_list|(
-define|if)	mtx_init(&(if)->if_addr_mtx,		\ 				    "if_addr_mtx", NULL, MTX_DEF)
+define|if)	rw_init(&(if)->if_addr_lock, "if_addr_lock")
 end_define
 
 begin_define
@@ -918,23 +916,39 @@ define|#
 directive|define
 name|IF_ADDR_LOCK_DESTROY
 parameter_list|(
-define|if)	mtx_destroy(&(if)->if_addr_mtx)
+define|if)	rw_destroy(&(if)->if_addr_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IF_ADDR_LOCK
+name|IF_ADDR_WLOCK
 parameter_list|(
-define|if)	mtx_lock(&(if)->if_addr_mtx)
+define|if)	rw_wlock(&(if)->if_addr_lock)
 end_define
 
 begin_define
 define|#
 directive|define
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_WUNLOCK
 parameter_list|(
-define|if)	mtx_unlock(&(if)->if_addr_mtx)
+define|if)	rw_wunlock(&(if)->if_addr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_RLOCK
+parameter_list|(
+define|if)	rw_rlock(&(if)->if_addr_lock)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_RUNLOCK
+parameter_list|(
+define|if)	rw_runlock(&(if)->if_addr_lock)
 end_define
 
 begin_define
@@ -942,7 +956,15 @@ define|#
 directive|define
 name|IF_ADDR_LOCK_ASSERT
 parameter_list|(
-define|if)	mtx_assert(&(if)->if_addr_mtx, MA_OWNED)
+define|if)	rw_assert(&(if)->if_addr_lock, RA_LOCKED)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_ADDR_WLOCK_ASSERT
+parameter_list|(
+define|if) rw_assert(&(if)->if_addr_lock, RA_WLOCKED)
 end_define
 
 begin_comment
@@ -1147,6 +1169,30 @@ parameter_list|,
 name|m
 parameter_list|)
 value|do { 				\ 	IF_LOCK(ifq); 						\ 	_IF_DEQUEUE(ifq, m); 					\ 	IF_UNLOCK(ifq); 					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|_IF_DEQUEUE_ALL
+parameter_list|(
+name|ifq
+parameter_list|,
+name|m
+parameter_list|)
+value|do {				\ 	(m) = (ifq)->ifq_head;					\ 	(ifq)->ifq_head = (ifq)->ifq_tail = NULL;		\ 	(ifq)->ifq_len = 0;					\ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|IF_DEQUEUE_ALL
+parameter_list|(
+name|ifq
+parameter_list|,
+name|m
+parameter_list|)
+value|do {				\ 	IF_LOCK(ifq); 						\ 	_IF_DEQUEUE_ALL(ifq, m);				\ 	IF_UNLOCK(ifq); 					\ } while (0)
 end_define
 
 begin_define
@@ -2718,6 +2764,12 @@ modifier|*
 name|ifa_ifp
 decl_stmt|;
 comment|/* back-pointer to interface */
+name|struct
+name|carp_softc
+modifier|*
+name|ifa_carp
+decl_stmt|;
+comment|/* pointer to CARP data */
 name|TAILQ_ENTRY
 argument_list|(
 argument|ifaddr
@@ -2878,45 +2930,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/*  * The prefix structure contains information about one prefix  * of an interface.  They are maintained by the different address families,  * are allocated and attached when a prefix or an address is set,  * and are linked together so all prefixes for an interface can be located.  */
-end_comment
-
-begin_struct
-struct|struct
-name|ifprefix
-block|{
-name|struct
-name|sockaddr
-modifier|*
-name|ifpr_prefix
-decl_stmt|;
-comment|/* prefix of interface */
-name|struct
-name|ifnet
-modifier|*
-name|ifpr_ifp
-decl_stmt|;
-comment|/* back-pointer to interface */
-name|TAILQ_ENTRY
-argument_list|(
-argument|ifprefix
-argument_list|)
-name|ifpr_list
-expr_stmt|;
-comment|/* queue macro glue */
-name|u_char
-name|ifpr_plen
-decl_stmt|;
-comment|/* prefix length in bits */
-name|u_char
-name|ifpr_type
-decl_stmt|;
-comment|/* protocol dependent prefix type */
-block|}
-struct|;
-end_struct
 
 begin_comment
 comment|/*  * Multicast address structure.  This is analogous to the ifaddr  * structure except that it keeps track of multicast addresses.  */
@@ -3437,19 +3450,6 @@ parameter_list|(
 name|struct
 name|ifnet
 modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|if_free_type
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|u_char
 parameter_list|)
 function_decl|;
 end_function_decl

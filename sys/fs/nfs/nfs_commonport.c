@@ -547,7 +547,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/*  * Definition of mutex locks.  * newnfsd_mtx is used in nfsrvd_nfsd() to protect the nfs socket list  * and assorted other nfsd structures.  * Giant is used to protect the nfsd list and count, which is just  *  updated when nfsd's start/stop and is grabbed for nfsrvd_dorpc()  *  for the VFS ops.  */
+comment|/*  * Definition of mutex locks.  * newnfsd_mtx is used in nfsrvd_nfsd() to protect the nfs socket list  * and assorted other nfsd structures.  */
 end_comment
 
 begin_decl_stmt
@@ -2064,12 +2064,6 @@ expr_stmt|;
 name|newnfsstats
 operator|.
 name|srvcache_tcppeak
-operator|=
-literal|0
-expr_stmt|;
-name|newnfsstats
-operator|.
-name|srvcache_size
 operator|=
 literal|0
 expr_stmt|;

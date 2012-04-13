@@ -827,12 +827,6 @@ name|if_init
 operator|=
 name|sncinit
 expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
 name|IFQ_SET_MAXLEN
 argument_list|(
 operator|&

@@ -112,6 +112,9 @@ block|,
 comment|// C++0x char32_t
 name|TST_int
 block|,
+name|TST_half
+block|,
+comment|// OpenCL half, ARM NEON __fp16
 name|TST_float
 block|,
 name|TST_double
@@ -156,6 +159,9 @@ comment|// C++0x auto
 name|TST_unknown_anytype
 block|,
 comment|// __unknown_anytype extension
+name|TST_atomic
+block|,
+comment|// C1X _Atomic
 name|TST_error
 comment|// erroneous type
 block|}
@@ -289,6 +295,8 @@ block|,
 name|SC_PrivateExtern
 block|,
 comment|// These are only legal on variables.
+name|SC_OpenCLWorkGroupLocal
+block|,
 name|SC_Auto
 block|,
 name|SC_Register

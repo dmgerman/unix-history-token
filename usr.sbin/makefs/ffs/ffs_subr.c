@@ -42,39 +42,14 @@ end_include
 begin_include
 include|#
 directive|include
-file|"ffs/ufs_bswap.h"
+file|"ffs/ffs_extern.h"
 end_include
 
-begin_decl_stmt
-name|void
-name|panic
-name|__P
-argument_list|(
-operator|(
-specifier|const
-name|char
-operator|*
-operator|,
-operator|...
-operator|)
-argument_list|)
-name|__attribute__
-argument_list|(
-operator|(
-name|__noreturn__
-operator|,
-name|__format__
-argument_list|(
-name|__printf__
-argument_list|,
-literal|1
-argument_list|,
-literal|2
-argument_list|)
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"ffs/ufs_bswap.h"
+end_include
 
 begin_comment
 comment|/*  * Update the frsum fields to reflect addition or deletion   * of some frags.  */
@@ -274,7 +249,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * block operations  *  * check if a block is available  *  returns true if all the correponding bits in the free map are 1  *  returns false if any corresponding bit in the free map is 0   */
+comment|/*  * block operations  *  * check if a block is available  *  returns true if all the corresponding bits in the free map are 1  *  returns false if any corresponding bit in the free map is 0  */
 end_comment
 
 begin_function

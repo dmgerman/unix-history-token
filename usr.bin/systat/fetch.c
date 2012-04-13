@@ -233,7 +233,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read sysctl data with variable size. Try some times (with increasing   * buffers), fail if still too small.  * This is needed sysctls with possibly raplidly increasing data sizes,  * but imposes little overhead in the case of constant sizes.  * Returns NULL on error, or a pointer to freshly malloc()'ed memory that holds  * the requested data.  * If szp is not NULL, the size of the returned data will be written into *szp.  */
+comment|/*  * Read sysctl data with variable size. Try some times (with increasing  * buffers), fail if still too small.  * This is needed sysctls with possibly raplidly increasing data sizes,  * but imposes little overhead in the case of constant sizes.  * Returns NULL on error, or a pointer to freshly malloc()'ed memory that holds  * the requested data.  * If szp is not NULL, the size of the returned data will be written into *szp.  */
 end_comment
 
 begin_comment
@@ -259,7 +259,7 @@ value|10
 end_define
 
 begin_comment
-comment|/*   * Factor for over-allocation in percent (the margin is increased by this on  * any failed try).  */
+comment|/*  * Factor for over-allocation in percent (the margin is increased by this on  * any failed try).  */
 end_comment
 
 begin_define

@@ -155,13 +155,6 @@ argument_list|)
 specifier|const
 block|;
 name|void
-name|getInitialFrameState
-argument_list|(
-argument|std::vector<MachineMove>&Moves
-argument_list|)
-specifier|const
-block|;
-name|void
 name|processFunctionBeforeCalleeSavedScan
 argument_list|(
 argument|MachineFunction&MF

@@ -73,7 +73,7 @@ name|size_t
 name|re_nsub
 decl_stmt|;
 comment|/* number of parenthesized subexpressions */
-name|__const
+specifier|const
 name|char
 modifier|*
 name|re_endp

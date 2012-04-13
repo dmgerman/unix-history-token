@@ -98,6 +98,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/TemplateBase.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/AST/UsuallyTinyPtrVector.h"
 end_include
 
@@ -178,18 +184,10 @@ name|class
 name|ObjCPropertyRefExpr
 decl_stmt|;
 name|class
-name|TemplateArgumentLoc
-decl_stmt|;
-name|class
-name|TemplateArgumentListInfo
-decl_stmt|;
-name|class
 name|OpaqueValueExpr
 decl_stmt|;
 comment|/// \brief A simple array of base specifiers.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CXXBaseSpecifier
@@ -1314,11 +1312,23 @@ specifier|const
 block|;
 comment|/// EvaluateAsBooleanCondition - Return true if this is a constant
 comment|/// which we we can fold and convert to a boolean condition using
-comment|/// any crazy technique that we want to.
+comment|/// any crazy technique that we want to, even if the expression has
+comment|/// side-effects.
 name|bool
 name|EvaluateAsBooleanCondition
 argument_list|(
 argument|bool&Result
+argument_list|,
+argument|const ASTContext&Ctx
+argument_list|)
+specifier|const
+block|;
+comment|/// EvaluateAsInt - Return true if this is a constant which we can fold and
+comment|/// convert to an integer using any crazy technique that we want to.
+name|bool
+name|EvaluateAsInt
+argument_list|(
+argument|llvm::APSInt&Result
 argument_list|,
 argument|const ASTContext&Ctx
 argument_list|)
@@ -1344,12 +1354,12 @@ argument|const ASTContext&Ctx
 argument_list|)
 specifier|const
 block|;
-comment|/// EvaluateAsInt - Call Evaluate and return the folded integer. This
+comment|/// EvaluateKnownConstInt - Call Evaluate and return the folded integer. This
 comment|/// must be called on an expression that constant folds to an integer.
 name|llvm
 operator|::
 name|APSInt
-name|EvaluateAsInt
+name|EvaluateKnownConstInt
 argument_list|(
 argument|const ASTContext&Ctx
 argument_list|)
@@ -2005,125 +2015,6 @@ return|;
 block|}
 expr|}
 block|;
-comment|/// \brief Represents an explicit template argument list in C++, e.g.,
-comment|/// the "<int>" in "sort<int>".
-block|struct
-name|ExplicitTemplateArgumentList
-block|{
-comment|/// \brief The source location of the left angle bracket ('<');
-name|SourceLocation
-name|LAngleLoc
-block|;
-comment|/// \brief The source location of the right angle bracket ('>');
-name|SourceLocation
-name|RAngleLoc
-block|;
-comment|/// \brief The number of template arguments in TemplateArgs.
-comment|/// The actual template arguments (if any) are stored after the
-comment|/// ExplicitTemplateArgumentList structure.
-name|unsigned
-name|NumTemplateArgs
-block|;
-comment|/// \brief Retrieve the template arguments
-name|TemplateArgumentLoc
-operator|*
-name|getTemplateArgs
-argument_list|()
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-name|TemplateArgumentLoc
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-comment|/// \brief Retrieve the template arguments
-specifier|const
-name|TemplateArgumentLoc
-operator|*
-name|getTemplateArgs
-argument_list|()
-specifier|const
-block|{
-return|return
-name|reinterpret_cast
-operator|<
-specifier|const
-name|TemplateArgumentLoc
-operator|*
-operator|>
-operator|(
-name|this
-operator|+
-literal|1
-operator|)
-return|;
-block|}
-name|void
-name|initializeFrom
-argument_list|(
-specifier|const
-name|TemplateArgumentListInfo
-operator|&
-name|List
-argument_list|)
-block|;
-name|void
-name|initializeFrom
-argument_list|(
-specifier|const
-name|TemplateArgumentListInfo
-operator|&
-name|List
-argument_list|,
-name|bool
-operator|&
-name|Dependent
-argument_list|,
-name|bool
-operator|&
-name|InstantiationDependent
-argument_list|,
-name|bool
-operator|&
-name|ContainsUnexpandedParameterPack
-argument_list|)
-block|;
-name|void
-name|copyInto
-argument_list|(
-argument|TemplateArgumentListInfo&List
-argument_list|)
-specifier|const
-block|;
-specifier|static
-name|std
-operator|::
-name|size_t
-name|sizeFor
-argument_list|(
-argument|unsigned NumTemplateArgs
-argument_list|)
-block|;
-specifier|static
-name|std
-operator|::
-name|size_t
-name|sizeFor
-argument_list|(
-specifier|const
-name|TemplateArgumentListInfo
-operator|&
-name|List
-argument_list|)
-block|; }
-block|;
 comment|/// \brief A reference to a declared variable, function, enum, etc.
 comment|/// [C99 6.5.1p2]
 comment|///
@@ -2398,6 +2289,12 @@ block|;
 name|DeclRefExprBits
 operator|.
 name|HasFoundDecl
+operator|=
+literal|0
+block|;
+name|DeclRefExprBits
+operator|.
+name|HadMultipleCandidates
 operator|=
 literal|0
 block|;
@@ -2702,7 +2599,7 @@ comment|/// member template name.
 end_comment
 
 begin_function
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 modifier|&
 name|getExplicitTemplateArgs
 parameter_list|()
@@ -2722,7 +2619,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -2742,7 +2639,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -2757,7 +2654,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -2779,7 +2676,7 @@ end_comment
 
 begin_expr_stmt
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -2815,7 +2712,7 @@ end_comment
 
 begin_expr_stmt
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getExplicitTemplateArgsOpt
 argument_list|()
@@ -3026,8 +2923,65 @@ name|RAngleLoc
 return|;
 end_return
 
+begin_comment
+unit|}
+comment|/// \brief Returns true if this expression refers to a function that
+end_comment
+
+begin_comment
+comment|/// was resolved from an overloaded set having size greater than 1.
+end_comment
+
+begin_macro
+unit|bool
+name|hadMultipleCandidates
+argument_list|()
+end_macro
+
+begin_expr_stmt
+specifier|const
+block|{
+return|return
+name|DeclRefExprBits
+operator|.
+name|HadMultipleCandidates
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Sets the flag telling whether this expression refers to
+end_comment
+
+begin_comment
+comment|/// a function that was resolved from an overloaded set having size
+end_comment
+
+begin_comment
+comment|/// greater than 1.
+end_comment
+
 begin_function
-unit|}    static
+name|void
+name|setHadMultipleCandidates
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
+block|{
+name|DeclRefExprBits
+operator|.
+name|HadMultipleCandidates
+operator|=
+name|V
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+specifier|static
 name|bool
 name|classof
 parameter_list|(
@@ -3756,14 +3710,32 @@ operator|:
 name|public
 name|Expr
 block|{
+name|public
+operator|:
+expr|enum
+name|CharacterKind
+block|{
+name|Ascii
+block|,
+name|Wide
+block|,
+name|UTF16
+block|,
+name|UTF32
+block|}
+block|;
+name|private
+operator|:
 name|unsigned
 name|Value
 block|;
 name|SourceLocation
 name|Loc
 block|;
-name|bool
-name|IsWide
+name|unsigned
+name|Kind
+operator|:
+literal|2
 block|;
 name|public
 operator|:
@@ -3772,7 +3744,7 @@ name|CharacterLiteral
 argument_list|(
 argument|unsigned value
 argument_list|,
-argument|bool iswide
+argument|CharacterKind kind
 argument_list|,
 argument|QualType type
 argument_list|,
@@ -3808,9 +3780,9 @@ argument_list|(
 name|l
 argument_list|)
 block|,
-name|IsWide
+name|Kind
 argument_list|(
-argument|iswide
+argument|kind
 argument_list|)
 block|{   }
 comment|/// \brief Construct an empty character literal.
@@ -3835,13 +3807,19 @@ return|return
 name|Loc
 return|;
 block|}
-name|bool
-name|isWide
+name|CharacterKind
+name|getKind
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsWide
+name|static_cast
+operator|<
+name|CharacterKind
+operator|>
+operator|(
+name|Kind
+operator|)
 return|;
 block|}
 name|SourceRange
@@ -3876,14 +3854,14 @@ operator|=
 name|Location
 block|; }
 name|void
-name|setWide
+name|setKind
 argument_list|(
-argument|bool W
+argument|CharacterKind kind
 argument_list|)
 block|{
-name|IsWide
+name|Kind
 operator|=
-name|W
+name|kind
 block|; }
 name|void
 name|setValue
@@ -4360,6 +4338,24 @@ operator|:
 name|public
 name|Expr
 block|{
+name|public
+operator|:
+expr|enum
+name|StringKind
+block|{
+name|Ascii
+block|,
+name|Wide
+block|,
+name|UTF8
+block|,
+name|UTF16
+block|,
+name|UTF32
+block|}
+block|;
+name|private
+operator|:
 name|friend
 name|class
 name|ASTStmtReader
@@ -4372,14 +4368,18 @@ block|;
 name|unsigned
 name|ByteLength
 block|;
-name|bool
-name|IsWide
+name|unsigned
+name|NumConcatenated
+block|;
+name|unsigned
+name|Kind
+operator|:
+literal|3
 block|;
 name|bool
 name|IsPascal
-block|;
-name|unsigned
-name|NumConcatenated
+operator|:
+literal|1
 block|;
 name|SourceLocation
 name|TokLocs
@@ -4422,9 +4422,9 @@ name|Create
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|,
-argument|bool Wide
+argument|StringKind Kind
 argument_list|,
 argument|bool Pascal
 argument_list|,
@@ -4443,9 +4443,9 @@ name|Create
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|,
-argument|bool Wide
+argument|StringKind Kind
 argument_list|,
 argument|bool Pascal
 argument_list|,
@@ -4461,7 +4461,7 @@ name|C
 argument_list|,
 name|Str
 argument_list|,
-name|Wide
+name|Kind
 argument_list|,
 name|Pascal
 argument_list|,
@@ -4485,16 +4485,12 @@ argument_list|,
 argument|unsigned NumStrs
 argument_list|)
 block|;
-name|llvm
-operator|::
 name|StringRef
 name|getString
 argument_list|()
 specifier|const
 block|{
 return|return
-name|llvm
-operator|::
 name|StringRef
 argument_list|(
 name|StrData
@@ -4518,16 +4514,77 @@ name|setString
 argument_list|(
 argument|ASTContext&C
 argument_list|,
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|)
 block|;
+name|StringKind
+name|getKind
+argument_list|()
+specifier|const
+block|{
+return|return
+name|static_cast
+operator|<
+name|StringKind
+operator|>
+operator|(
+name|Kind
+operator|)
+return|;
+block|}
+name|bool
+name|isAscii
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|Ascii
+return|;
+block|}
 name|bool
 name|isWide
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsWide
+name|Kind
+operator|==
+name|Wide
+return|;
+block|}
+name|bool
+name|isUTF8
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|UTF8
+return|;
+block|}
+name|bool
+name|isUTF16
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|UTF16
+return|;
+block|}
+name|bool
+name|isUTF32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Kind
+operator|==
+name|UTF32
 return|;
 block|}
 name|bool
@@ -4544,8 +4601,6 @@ name|containsNonAsciiOrNull
 argument_list|()
 specifier|const
 block|{
-name|llvm
-operator|::
 name|StringRef
 name|Str
 operator|=
@@ -7823,6 +7878,13 @@ name|HasExplicitTemplateArgumentList
 operator|:
 literal|1
 block|;
+comment|/// \brief True if this member expression refers to a method that
+comment|/// was resolved from an overloaded set having size greater than 1.
+name|bool
+name|HadMultipleCandidates
+operator|:
+literal|1
+block|;
 comment|/// \brief Retrieve the qualifier that preceded the member name, if any.
 name|MemberNameQualifier
 operator|*
@@ -7957,6 +8019,11 @@ argument_list|)
 block|,
 name|HasExplicitTemplateArgumentList
 argument_list|(
+name|false
+argument_list|)
+block|,
+name|HadMultipleCandidates
+argument_list|(
 argument|false
 argument_list|)
 block|{
@@ -8054,6 +8121,11 @@ name|false
 argument_list|)
 block|,
 name|HasExplicitTemplateArgumentList
+argument_list|(
+name|false
+argument_list|)
+block|,
+name|HadMultipleCandidates
 argument_list|(
 argument|false
 argument_list|)
@@ -8273,7 +8345,7 @@ block|}
 comment|/// \brief Retrieve the explicit template argument list that
 comment|/// follow the member template name.  This must only be called on an
 comment|/// expression with explicit template arguments.
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -8292,7 +8364,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -8305,7 +8377,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -8320,7 +8392,7 @@ comment|/// \brief Retrieve the explicit template argument list that
 comment|/// followed the member template name.  This must only be called on
 comment|/// an expression with explicit template arguments.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -8344,7 +8416,7 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 comment|/// returns null if there are no explicit template arguments.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getOptionalExplicitTemplateArgs
 argument_list|()
@@ -8549,6 +8621,30 @@ name|isImplicitCXXThis
 argument_list|()
 return|;
 block|}
+comment|/// \brief Returns true if this member expression refers to a method that
+comment|/// was resolved from an overloaded set having size greater than 1.
+name|bool
+name|hadMultipleCandidates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HadMultipleCandidates
+return|;
+block|}
+comment|/// \brief Sets the flag telling whether this expression refers to
+comment|/// a method that was resolved from an overloaded set having size
+comment|/// greater than 1.
+name|void
+name|setHadMultipleCandidates
+argument_list|(
+argument|bool V = true
+argument_list|)
+block|{
+name|HadMultipleCandidates
+operator|=
+name|V
+block|;   }
 specifier|static
 name|bool
 name|classof
@@ -8985,202 +9081,11 @@ name|void
 name|CheckCastConsistency
 argument_list|()
 specifier|const
-block|{
-ifndef|#
-directive|ifndef
-name|NDEBUG
-switch|switch
-condition|(
-name|getCastKind
-argument_list|()
-condition|)
-block|{
-case|case
-name|CK_DerivedToBase
-case|:
-case|case
-name|CK_UncheckedDerivedToBase
-case|:
-case|case
-name|CK_DerivedToBaseMemberPointer
-case|:
-case|case
-name|CK_BaseToDerived
-case|:
-case|case
-name|CK_BaseToDerivedMemberPointer
-case|:
-name|assert
-argument_list|(
-operator|!
-name|path_empty
-argument_list|()
-operator|&&
-literal|"Cast kind should have a base path!"
-argument_list|)
 expr_stmt|;
-break|break;
-comment|// These should not have an inheritance path.
-case|case
-name|CK_BitCast
-case|:
-case|case
-name|CK_Dynamic
-case|:
-case|case
-name|CK_ToUnion
-case|:
-case|case
-name|CK_ArrayToPointerDecay
-case|:
-case|case
-name|CK_FunctionToPointerDecay
-case|:
-case|case
-name|CK_NullToMemberPointer
-case|:
-case|case
-name|CK_NullToPointer
-case|:
-case|case
-name|CK_ConstructorConversion
-case|:
-case|case
-name|CK_IntegralToPointer
-case|:
-case|case
-name|CK_PointerToIntegral
-case|:
-case|case
-name|CK_ToVoid
-case|:
-case|case
-name|CK_VectorSplat
-case|:
-case|case
-name|CK_IntegralCast
-case|:
-case|case
-name|CK_IntegralToFloating
-case|:
-case|case
-name|CK_FloatingToIntegral
-case|:
-case|case
-name|CK_FloatingCast
-case|:
-case|case
-name|CK_AnyPointerToObjCPointerCast
-case|:
-case|case
-name|CK_AnyPointerToBlockPointerCast
-case|:
-case|case
-name|CK_ObjCObjectLValueCast
-case|:
-case|case
-name|CK_FloatingRealToComplex
-case|:
-case|case
-name|CK_FloatingComplexToReal
-case|:
-case|case
-name|CK_FloatingComplexCast
-case|:
-case|case
-name|CK_FloatingComplexToIntegralComplex
-case|:
-case|case
-name|CK_IntegralRealToComplex
-case|:
-case|case
-name|CK_IntegralComplexToReal
-case|:
-case|case
-name|CK_IntegralComplexCast
-case|:
-case|case
-name|CK_IntegralComplexToFloatingComplex
-case|:
-case|case
-name|CK_ObjCProduceObject
-case|:
-case|case
-name|CK_ObjCConsumeObject
-case|:
-case|case
-name|CK_ObjCReclaimReturnedObject
-case|:
-name|assert
-argument_list|(
-operator|!
-name|getType
-argument_list|()
-operator|->
-name|isBooleanType
-argument_list|()
-operator|&&
-literal|"unheralded conversion to bool"
-argument_list|)
-expr_stmt|;
-comment|// fallthrough to check for null base path
-case|case
-name|CK_Dependent
-case|:
-case|case
-name|CK_LValueToRValue
-case|:
-case|case
-name|CK_GetObjCProperty
-case|:
-case|case
-name|CK_NoOp
-case|:
-case|case
-name|CK_PointerToBoolean
-case|:
-case|case
-name|CK_IntegralToBoolean
-case|:
-case|case
-name|CK_FloatingToBoolean
-case|:
-case|case
-name|CK_MemberPointerToBoolean
-case|:
-case|case
-name|CK_FloatingComplexToBoolean
-case|:
-case|case
-name|CK_IntegralComplexToBoolean
-case|:
-case|case
-name|CK_LValueBitCast
-case|:
-comment|// -> bool&
-case|case
-name|CK_UserDefinedConversion
-case|:
-comment|// operator bool()
-name|assert
-argument_list|(
-name|path_empty
-argument_list|()
-operator|&&
-literal|"Cast kind should not have a base path!"
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
 end_expr_stmt
 
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_expr_stmt
-unit|}    const
+specifier|const
 name|CXXBaseSpecifier
 operator|*
 specifier|const
@@ -9353,9 +9258,15 @@ argument_list|(
 name|BasePathSize
 argument_list|)
 block|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
 name|CheckCastConsistency
 argument_list|()
-block|;   }
+block|;
+endif|#
+directive|endif
+block|}
 comment|/// \brief Construct an empty cast.
 name|CastExpr
 argument_list|(
@@ -11272,7 +11183,7 @@ block|}
 block|;
 comment|/// CompoundAssignOperator - For compound assignments (e.g. +=), we keep
 comment|/// track of the type the operation is performed in.  Due to the semantics of
-comment|/// these operators, the operands are promoted, the aritmetic performed, an
+comment|/// these operators, the operands are promoted, the arithmetic performed, an
 comment|/// implicit conversion back to the result type done, then the assignment takes
 comment|/// place.  This captures the intermediate type which the computation is done
 comment|/// in.
@@ -13062,7 +12973,7 @@ operator|+
 literal|2
 argument_list|)
 operator|->
-name|EvaluateAsInt
+name|EvaluateKnownConstInt
 argument_list|(
 name|Ctx
 argument_list|)
@@ -16915,7 +16826,7 @@ comment|/// aggregate Constant of ConstantInt(s).
 name|void
 name|getEncodedElementAccess
 argument_list|(
-argument|llvm::SmallVectorImpl<unsigned>&Elts
+argument|SmallVectorImpl<unsigned>&Elts
 argument_list|)
 specifier|const
 block|;
@@ -17585,6 +17496,502 @@ operator|&
 name|SrcExpr
 operator|+
 literal|1
+argument_list|)
+return|;
+block|}
+expr|}
+block|;
+comment|/// AtomicExpr - Variadic atomic builtins: __atomic_exchange, __atomic_fetch_*,
+comment|/// __atomic_load, __atomic_store, and __atomic_compare_exchange_*, for the
+comment|/// similarly-named C++0x instructions.  All of these instructions take one
+comment|/// primary pointer and at least one memory order.
+name|class
+name|AtomicExpr
+operator|:
+name|public
+name|Expr
+block|{
+name|public
+operator|:
+expr|enum
+name|AtomicOp
+block|{
+name|Load
+block|,
+name|Store
+block|,
+name|CmpXchgStrong
+block|,
+name|CmpXchgWeak
+block|,
+name|Xchg
+block|,
+name|Add
+block|,
+name|Sub
+block|,
+name|And
+block|,
+name|Or
+block|,
+name|Xor
+block|}
+block|;
+name|private
+operator|:
+expr|enum
+block|{
+name|PTR
+block|,
+name|ORDER
+block|,
+name|VAL1
+block|,
+name|ORDER_FAIL
+block|,
+name|VAL2
+block|,
+name|END_EXPR
+block|}
+block|;
+name|Stmt
+operator|*
+name|SubExprs
+index|[
+name|END_EXPR
+index|]
+block|;
+name|unsigned
+name|NumSubExprs
+block|;
+name|SourceLocation
+name|BuiltinLoc
+block|,
+name|RParenLoc
+block|;
+name|AtomicOp
+name|Op
+block|;
+name|public
+operator|:
+name|AtomicExpr
+argument_list|(
+argument|SourceLocation BLoc
+argument_list|,
+argument|Expr **args
+argument_list|,
+argument|unsigned nexpr
+argument_list|,
+argument|QualType t
+argument_list|,
+argument|AtomicOp op
+argument_list|,
+argument|SourceLocation RP
+argument_list|)
+block|;
+comment|/// \brief Build an empty AtomicExpr.
+name|explicit
+name|AtomicExpr
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Expr
+argument_list|(
+argument|AtomicExprClass
+argument_list|,
+argument|Empty
+argument_list|)
+block|{ }
+name|Expr
+operator|*
+name|getPtr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|PTR
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setPtr
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|PTR
+index|]
+operator|=
+name|E
+block|;   }
+name|Expr
+operator|*
+name|getOrder
+argument_list|()
+specifier|const
+block|{
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|ORDER
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setOrder
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|SubExprs
+index|[
+name|ORDER
+index|]
+operator|=
+name|E
+block|;   }
+name|Expr
+operator|*
+name|getVal1
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|NumSubExprs
+operator|>=
+literal|3
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|VAL1
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setVal1
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|NumSubExprs
+operator|>=
+literal|3
+argument_list|)
+block|;
+name|SubExprs
+index|[
+name|VAL1
+index|]
+operator|=
+name|E
+block|;   }
+name|Expr
+operator|*
+name|getOrderFail
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|NumSubExprs
+operator|==
+literal|5
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|ORDER_FAIL
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setOrderFail
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|NumSubExprs
+operator|==
+literal|5
+argument_list|)
+block|;
+name|SubExprs
+index|[
+name|ORDER_FAIL
+index|]
+operator|=
+name|E
+block|;   }
+name|Expr
+operator|*
+name|getVal2
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|NumSubExprs
+operator|==
+literal|5
+argument_list|)
+block|;
+return|return
+name|cast
+operator|<
+name|Expr
+operator|>
+operator|(
+name|SubExprs
+index|[
+name|VAL2
+index|]
+operator|)
+return|;
+block|}
+name|void
+name|setVal2
+argument_list|(
+argument|Expr *E
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|NumSubExprs
+operator|==
+literal|5
+argument_list|)
+block|;
+name|SubExprs
+index|[
+name|VAL2
+index|]
+operator|=
+name|E
+block|;   }
+name|AtomicOp
+name|getOp
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Op
+return|;
+block|}
+name|void
+name|setOp
+argument_list|(
+argument|AtomicOp op
+argument_list|)
+block|{
+name|Op
+operator|=
+name|op
+block|; }
+name|unsigned
+name|getNumSubExprs
+argument_list|()
+block|{
+return|return
+name|NumSubExprs
+return|;
+block|}
+name|void
+name|setNumSubExprs
+argument_list|(
+argument|unsigned num
+argument_list|)
+block|{
+name|NumSubExprs
+operator|=
+name|num
+block|; }
+name|Expr
+operator|*
+operator|*
+name|getSubExprs
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|SubExprs
+operator|)
+return|;
+block|}
+name|bool
+name|isVolatile
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getPtr
+argument_list|()
+operator|->
+name|getType
+argument_list|()
+operator|->
+name|getPointeeType
+argument_list|()
+operator|.
+name|isVolatileQualified
+argument_list|()
+return|;
+block|}
+name|bool
+name|isCmpXChg
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getOp
+argument_list|()
+operator|==
+name|AtomicExpr
+operator|::
+name|CmpXchgStrong
+operator|||
+name|getOp
+argument_list|()
+operator|==
+name|AtomicExpr
+operator|::
+name|CmpXchgWeak
+return|;
+block|}
+name|SourceLocation
+name|getBuiltinLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|BuiltinLoc
+return|;
+block|}
+name|void
+name|setBuiltinLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|BuiltinLoc
+operator|=
+name|L
+block|; }
+name|SourceLocation
+name|getRParenLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RParenLoc
+return|;
+block|}
+name|void
+name|setRParenLoc
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|RParenLoc
+operator|=
+name|L
+block|; }
+name|SourceRange
+name|getSourceRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceRange
+argument_list|(
+name|BuiltinLoc
+argument_list|,
+name|RParenLoc
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Stmt *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getStmtClass
+argument_list|()
+operator|==
+name|AtomicExprClass
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AtomicExpr *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Iterators
+name|child_range
+name|children
+argument_list|()
+block|{
+return|return
+name|child_range
+argument_list|(
+name|SubExprs
+argument_list|,
+name|SubExprs
+operator|+
+name|NumSubExprs
 argument_list|)
 return|;
 block|}

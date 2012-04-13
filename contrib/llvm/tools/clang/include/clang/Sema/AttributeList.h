@@ -166,8 +166,8 @@ name|IdentifierInfo
 modifier|*
 name|ParmName
 decl_stmt|;
-name|SourceLocation
-name|AttrLoc
+name|SourceRange
+name|AttrRange
 decl_stmt|;
 name|SourceLocation
 name|ScopeLoc
@@ -198,6 +198,13 @@ comment|/// True if already diagnosed as invalid.
 name|mutable
 name|unsigned
 name|Invalid
+range|:
+literal|1
+decl_stmt|;
+comment|/// True if this attribute was used as a type attribute.
+name|mutable
+name|unsigned
+name|UsedAsTypeAttr
 range|:
 literal|1
 decl_stmt|;
@@ -373,7 +380,7 @@ name|AttributeList
 argument_list|(
 argument|IdentifierInfo *attrName
 argument_list|,
-argument|SourceLocation attrLoc
+argument|SourceRange attrRange
 argument_list|,
 argument|IdentifierInfo *scopeName
 argument_list|,
@@ -407,9 +414,9 @@ argument_list|(
 name|parmName
 argument_list|)
 operator|,
-name|AttrLoc
+name|AttrRange
 argument_list|(
-name|attrLoc
+name|attrRange
 argument_list|)
 operator|,
 name|ScopeLoc
@@ -438,6 +445,11 @@ name|cxx0x
 argument_list|)
 operator|,
 name|Invalid
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|UsedAsTypeAttr
 argument_list|(
 name|false
 argument_list|)
@@ -490,7 +502,7 @@ name|AttributeList
 argument_list|(
 argument|IdentifierInfo *attrName
 argument_list|,
-argument|SourceLocation attrLoc
+argument|SourceRange attrRange
 argument_list|,
 argument|IdentifierInfo *scopeName
 argument_list|,
@@ -528,9 +540,9 @@ argument_list|(
 name|parmName
 argument_list|)
 operator|,
-name|AttrLoc
+name|AttrRange
 argument_list|(
-name|attrLoc
+name|attrRange
 argument_list|)
 operator|,
 name|ScopeLoc
@@ -559,6 +571,11 @@ name|cxx0x
 argument_list|)
 operator|,
 name|Invalid
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|UsedAsTypeAttr
 argument_list|(
 name|false
 argument_list|)
@@ -632,6 +649,10 @@ enum|enum
 name|Kind
 block|{
 comment|// Please keep this list alphabetized.
+name|AT_acquired_after
+block|,
+name|AT_acquired_before
+block|,
 name|AT_address_space
 block|,
 name|AT_alias
@@ -657,6 +678,9 @@ name|AT_carries_dependency
 block|,
 name|AT_cdecl
 block|,
+name|AT_cf_audited_transfer
+block|,
+comment|// Clang-specific.
 name|AT_cf_consumed
 block|,
 comment|// Clang-specific.
@@ -667,6 +691,9 @@ name|AT_cf_returns_not_retained
 block|,
 comment|// Clang-specific.
 name|AT_cf_returns_retained
+block|,
+comment|// Clang-specific.
+name|AT_cf_unknown_transfer
 block|,
 comment|// Clang-specific.
 name|AT_cleanup
@@ -689,6 +716,12 @@ name|AT_dllexport
 block|,
 name|AT_dllimport
 block|,
+name|AT_exclusive_lock_function
+block|,
+name|AT_exclusive_locks_required
+block|,
+name|AT_exclusive_trylock_function
+block|,
 name|AT_ext_vector_type
 block|,
 name|AT_fastcall
@@ -700,6 +733,10 @@ block|,
 name|AT_global
 block|,
 name|AT_gnu_inline
+block|,
+name|AT_guarded_by
+block|,
+name|AT_guarded_var
 block|,
 name|AT_host
 block|,
@@ -715,6 +752,12 @@ comment|// Clang-specific.
 name|AT_init_priority
 block|,
 name|AT_launch_bounds
+block|,
+name|AT_lock_returned
+block|,
+name|AT_lockable
+block|,
+name|AT_locks_excluded
 block|,
 name|AT_malloc
 block|,
@@ -734,6 +777,8 @@ block|,
 comment|// Clang-specific.
 name|AT_no_instrument_function
 block|,
+name|AT_no_thread_safety_analysis
+block|,
 name|AT_nocommon
 block|,
 name|AT_nodebug
@@ -746,6 +791,9 @@ name|AT_noreturn
 block|,
 name|AT_nothrow
 block|,
+name|AT_ns_bridged
+block|,
+comment|// Clang-specific.
 name|AT_ns_consumed
 block|,
 comment|// Clang-specific.
@@ -775,6 +823,9 @@ comment|// Clang-specific.
 name|AT_objc_precise_lifetime
 block|,
 comment|// Clang-specific.
+name|AT_objc_returns_inner_pointer
+block|,
+comment|// Clang-specific.
 name|AT_opencl_image_access
 block|,
 comment|// OpenCL-specific.
@@ -800,17 +851,29 @@ block|,
 name|AT_pcs
 block|,
 comment|// ARM specific
+name|AT_pt_guarded_by
+block|,
+name|AT_pt_guarded_var
+block|,
 name|AT_pure
 block|,
 name|AT_regparm
 block|,
 name|AT_reqd_wg_size
 block|,
+name|AT_scoped_lockable
+block|,
 name|AT_section
 block|,
 name|AT_sentinel
 block|,
 name|AT_shared
+block|,
+name|AT_shared_lock_function
+block|,
+name|AT_shared_locks_required
+block|,
+name|AT_shared_trylock_function
 block|,
 name|AT_stdcall
 block|,
@@ -819,6 +882,8 @@ block|,
 name|AT_transparent_union
 block|,
 name|AT_unavailable
+block|,
+name|AT_unlock_function
 block|,
 name|AT_unused
 block|,
@@ -841,6 +906,8 @@ name|AT_weak_import
 block|,
 name|AT_weakref
 block|,
+name|AT_returns_twice
+block|,
 name|IgnoredAttribute
 block|,
 name|UnknownAttribute
@@ -862,7 +929,19 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|AttrLoc
+name|AttrRange
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceRange
+name|getRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AttrRange
 return|;
 block|}
 name|bool
@@ -952,6 +1031,24 @@ block|{
 name|Invalid
 operator|=
 name|b
+expr_stmt|;
+block|}
+name|bool
+name|isUsedAsTypeAttr
+argument_list|()
+specifier|const
+block|{
+return|return
+name|UsedAsTypeAttr
+return|;
+block|}
+name|void
+name|setUsedAsTypeAttr
+parameter_list|()
+block|{
+name|UsedAsTypeAttr
+operator|=
+name|true
 expr_stmt|;
 block|}
 name|Kind
@@ -1406,8 +1503,6 @@ name|Alloc
 expr_stmt|;
 comment|/// Free lists.  The index is determined by the following formula:
 comment|///   (size - sizeof(AttributeList)) / sizeof(void*)
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|AttributeList
@@ -1654,8 +1749,8 @@ name|IdentifierInfo
 modifier|*
 name|attrName
 parameter_list|,
-name|SourceLocation
-name|attrLoc
+name|SourceRange
+name|attrRange
 parameter_list|,
 name|IdentifierInfo
 modifier|*
@@ -1721,7 +1816,7 @@ name|AttributeList
 argument_list|(
 name|attrName
 argument_list|,
-name|attrLoc
+name|attrRange
 argument_list|,
 name|scopeName
 argument_list|,
@@ -1750,8 +1845,8 @@ name|IdentifierInfo
 modifier|*
 name|attrName
 parameter_list|,
-name|SourceLocation
-name|attrLoc
+name|SourceRange
+name|attrRange
 parameter_list|,
 name|IdentifierInfo
 modifier|*
@@ -1818,7 +1913,7 @@ name|AttributeList
 argument_list|(
 name|attrName
 argument_list|,
-name|attrLoc
+name|attrRange
 argument_list|,
 name|scopeName
 argument_list|,
@@ -2286,8 +2381,8 @@ name|IdentifierInfo
 modifier|*
 name|attrName
 parameter_list|,
-name|SourceLocation
-name|attrLoc
+name|SourceRange
+name|attrRange
 parameter_list|,
 name|IdentifierInfo
 modifier|*
@@ -2332,7 +2427,7 @@ name|create
 argument_list|(
 name|attrName
 argument_list|,
-name|attrLoc
+name|attrRange
 argument_list|,
 name|scopeName
 argument_list|,
@@ -2368,8 +2463,8 @@ name|IdentifierInfo
 modifier|*
 name|attrName
 parameter_list|,
-name|SourceLocation
-name|attrLoc
+name|SourceRange
+name|attrRange
 parameter_list|,
 name|IdentifierInfo
 modifier|*
@@ -2424,7 +2519,7 @@ name|create
 argument_list|(
 name|attrName
 argument_list|,
-name|attrLoc
+name|attrRange
 argument_list|,
 name|scopeName
 argument_list|,

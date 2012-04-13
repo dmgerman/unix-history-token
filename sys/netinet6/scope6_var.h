@@ -144,20 +144,6 @@ end_decl_stmt
 
 begin_decl_stmt
 name|u_int32_t
-name|scope6_in6_addrscope
-name|__P
-argument_list|(
-operator|(
-expr|struct
-name|in6_addr
-operator|*
-operator|)
-argument_list|)
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|u_int32_t
 name|scope6_addr2default
 name|__P
 argument_list|(

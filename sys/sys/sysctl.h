@@ -471,6 +471,19 @@ name|defined
 argument_list|(
 name|__powerpc64__
 argument_list|)
+operator|||
+expr|\
+operator|(
+name|defined
+argument_list|(
+name|__mips__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|__mips_n64
+argument_list|)
+operator|)
 end_if
 
 begin_define
@@ -2572,6 +2585,72 @@ end_define
 
 begin_comment
 comment|/* process groups */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_ENV
+value|35
+end_define
+
+begin_comment
+comment|/* get environment */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_AUXV
+value|36
+end_define
+
+begin_comment
+comment|/* get ELF auxiliary vector */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_RLIMIT
+value|37
+end_define
+
+begin_comment
+comment|/* process resource limits */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_PS_STRINGS
+value|38
+end_define
+
+begin_comment
+comment|/* get ps_strings location */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_UMASK
+value|39
+end_define
+
+begin_comment
+comment|/* process umask */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|KERN_PROC_OSREL
+value|40
+end_define
+
+begin_comment
+comment|/* osreldate for process binary */
 end_comment
 
 begin_comment

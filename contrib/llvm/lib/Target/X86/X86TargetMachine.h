@@ -133,6 +133,9 @@ name|class
 name|formatted_raw_ostream
 decl_stmt|;
 name|class
+name|StringRef
+decl_stmt|;
+name|class
 name|X86TargetMachine
 range|:
 name|public
@@ -147,36 +150,21 @@ block|;
 name|X86ELFWriterInfo
 name|ELFWriterInfo
 block|;
-name|Reloc
-operator|::
-name|Model
-name|DefRelocModel
-block|;
-comment|// Reloc model before it's overridden.
-name|private
-operator|:
-comment|// We have specific defaults for X86.
-name|virtual
-name|void
-name|setCodeModelForJIT
-argument_list|()
-block|;
-name|virtual
-name|void
-name|setCodeModelForStatic
-argument_list|()
-block|;
 name|public
 operator|:
 name|X86TargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|const std::string&TT
+argument|StringRef TT
 argument_list|,
-argument|const std::string&CPU
+argument|StringRef CPU
 argument_list|,
-argument|const std::string&FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|,
 argument|bool is64Bit
 argument_list|)
@@ -372,31 +360,17 @@ name|public
 operator|:
 name|X86_32TargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|M
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|;
 name|virtual
@@ -493,31 +467,17 @@ name|public
 operator|:
 name|X86_64TargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|;
 name|virtual

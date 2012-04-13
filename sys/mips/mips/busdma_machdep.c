@@ -190,7 +190,7 @@ decl_stmt|;
 name|bus_size_t
 name|alignment
 decl_stmt|;
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 decl_stmt|;
 name|bus_addr_t
@@ -386,6 +386,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -1297,7 +1298,7 @@ parameter_list|,
 name|bus_size_t
 name|alignment
 parameter_list|,
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 parameter_list|,
 name|bus_addr_t
@@ -1570,7 +1571,7 @@ name|newtag
 operator|->
 name|lowaddr
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|parent
 operator|->
@@ -1585,7 +1586,7 @@ name|newtag
 operator|->
 name|highaddr
 operator|=
-name|max
+name|MAX
 argument_list|(
 name|parent
 operator|->
@@ -1625,7 +1626,7 @@ name|newtag
 operator|->
 name|boundary
 operator|=
-name|min
+name|MIN
 argument_list|(
 name|parent
 operator|->

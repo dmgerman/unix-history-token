@@ -284,7 +284,7 @@ index|]
 operator|=
 literal|2
 block|,
-comment|/* ms */
+comment|/* 2 ms */
 operator|.
 name|bInterval
 index|[
@@ -293,16 +293,17 @@ index|]
 operator|=
 literal|2
 block|,
+comment|/* 2 ms */
 operator|.
 name|bInterval
 index|[
 name|USB_SPEED_HIGH
 index|]
 operator|=
-literal|2
-operator|*
-literal|8
-block|, }
+literal|5
+block|,
+comment|/* 2 ms */
+block|}
 decl_stmt|;
 end_decl_stmt
 

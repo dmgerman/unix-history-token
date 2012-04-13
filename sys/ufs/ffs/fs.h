@@ -838,7 +838,7 @@ name|u_int32_t
 name|fs_pendinginodes
 decl_stmt|;
 comment|/* (u) inodes being freed */
-name|ino_t
+name|uint32_t
 name|fs_snapinum
 index|[
 name|FSMAXSNAP
@@ -2260,10 +2260,10 @@ block|{
 name|uint32_t
 name|jr_op
 decl_stmt|;
-name|ino_t
+name|uint32_t
 name|jr_ino
 decl_stmt|;
-name|ino_t
+name|uint32_t
 name|jr_parent
 decl_stmt|;
 name|uint16_t
@@ -2272,7 +2272,7 @@ decl_stmt|;
 name|uint16_t
 name|jr_mode
 decl_stmt|;
-name|off_t
+name|int64_t
 name|jr_diroff
 decl_stmt|;
 name|uint64_t
@@ -2293,19 +2293,19 @@ block|{
 name|uint32_t
 name|jm_op
 decl_stmt|;
-name|ino_t
+name|uint32_t
 name|jm_ino
 decl_stmt|;
-name|ino_t
+name|uint32_t
 name|jm_parent
 decl_stmt|;
 name|uint16_t
 name|jm_unused
 decl_stmt|;
-name|off_t
+name|int64_t
 name|jm_oldoff
 decl_stmt|;
-name|off_t
+name|int64_t
 name|jm_newoff
 decl_stmt|;
 block|}
@@ -2359,7 +2359,7 @@ decl_stmt|;
 name|uint32_t
 name|jt_ino
 decl_stmt|;
-name|off_t
+name|int64_t
 name|jt_size
 decl_stmt|;
 name|uint32_t

@@ -122,7 +122,7 @@ name|class
 name|PTHLexer
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|FileSystemStatCache
@@ -325,13 +325,11 @@ comment|///  be found.
 name|IdentifierInfo
 modifier|*
 name|get
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// Create - This method creates PTHManager objects.  The 'file' argument
 comment|///  is the name of the PTH file.  This method returns NULL upon failure.
 specifier|static
@@ -346,7 +344,7 @@ name|string
 operator|&
 name|file
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|)

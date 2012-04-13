@@ -141,15 +141,6 @@ operator|&
 name|tii
 argument_list|)
 block|;
-comment|/// getRegisterNumbering - Given the enum value for some register, e.g.
-comment|/// PPC::F14, return the number that it corresponds to (e.g. 14).
-specifier|static
-name|unsigned
-name|getRegisterNumbering
-argument_list|(
-argument|unsigned RegEnum
-argument_list|)
-block|;
 comment|/// getPointerRegClass - Return the register class to use to hold pointers.
 comment|/// This is used for addressing modes.
 name|virtual
@@ -238,11 +229,6 @@ specifier|const
 block|;
 comment|// Debug information queries.
 name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
@@ -258,24 +244,6 @@ block|;
 name|unsigned
 name|getEHHandlerRegister
 argument_list|()
-specifier|const
-block|;
-name|int
-name|getDwarfRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
-name|int
-name|getLLVMRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
 specifier|const
 block|; }
 decl_stmt|;

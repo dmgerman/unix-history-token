@@ -28,7 +28,7 @@ end_comment
 begin_define
 define|#
 directive|define
-name|VM_MEMATTR_UNCACHED
+name|VM_MEMATTR_UNCACHEABLE
 value|((vm_memattr_t)PTE_C_UNCACHED)
 end_define
 

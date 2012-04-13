@@ -811,7 +811,7 @@ operator|>=
 literal|1
 argument_list|,
 operator|(
-literal|"attempt to net_add_domain(%s) before domaininit()"
+literal|"attempt to domain_add(%s) before domaininit()"
 operator|,
 name|dp
 operator|->

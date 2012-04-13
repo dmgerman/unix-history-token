@@ -354,6 +354,15 @@ operator|&
 name|V
 operator|)
 block|{
+if|if
+condition|(
+operator|!
+name|V
+condition|)
+return|return
+operator|*
+name|this
+return|;
 name|sys
 operator|::
 name|AtomicAdd
@@ -363,7 +372,7 @@ name|Value
 argument_list|,
 name|V
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|init
 argument_list|()
@@ -381,6 +390,15 @@ operator|&
 name|V
 operator|)
 block|{
+if|if
+condition|(
+operator|!
+name|V
+condition|)
+return|return
+operator|*
+name|this
+return|;
 name|sys
 operator|::
 name|AtomicAdd
@@ -391,12 +409,15 @@ argument_list|,
 operator|-
 name|V
 argument_list|)
-block|;
+expr_stmt|;
 return|return
 name|init
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 specifier|const
 name|Statistic
 operator|&
@@ -424,6 +445,9 @@ name|init
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 specifier|const
 name|Statistic
 operator|&
@@ -451,8 +475,14 @@ name|init
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_function
 name|Statistic
 modifier|&
 name|init
@@ -481,14 +511,25 @@ operator|*
 name|this
 return|;
 block|}
+end_function
+
+begin_function_decl
 name|void
 name|RegisterStatistic
 parameter_list|()
 function_decl|;
-block|}
-empty_stmt|;
+end_function_decl
+
+begin_comment
+unit|};
 comment|// STATISTIC - A macro to make definition of statistics really simple.  This
+end_comment
+
+begin_comment
 comment|// automatically passes the DEBUG_TYPE of the file into the statistic.
+end_comment
+
+begin_define
 define|#
 directive|define
 name|STATISTIC
@@ -499,22 +540,46 @@ name|DESC
 parameter_list|)
 define|\
 value|static llvm::Statistic VARNAME = { DEBUG_TYPE, DESC, 0, 0 }
+end_define
+
+begin_comment
 comment|/// \brief Enable the collection and printing of statistics.
+end_comment
+
+begin_function_decl
 name|void
 name|EnableStatistics
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Check if statistics are enabled.
+end_comment
+
+begin_function_decl
 name|bool
 name|AreStatisticsEnabled
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Print statistics to the file returned by CreateInfoOutputFile().
+end_comment
+
+begin_function_decl
 name|void
 name|PrintStatistics
 parameter_list|()
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Print statistics to the given output stream.
+end_comment
+
+begin_function_decl
 name|void
 name|PrintStatistics
 parameter_list|(
@@ -523,10 +588,10 @@ modifier|&
 name|OS
 parameter_list|)
 function_decl|;
-block|}
-end_decl_stmt
+end_function_decl
 
 begin_comment
+unit|}
 comment|// End llvm namespace
 end_comment
 

@@ -72,12 +72,8 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineLocation.h"
+file|"llvm/MC/MachineLocation.h"
 end_include
-
-begin_comment
-comment|// FIXME
-end_comment
 
 begin_include
 include|#
@@ -107,12 +103,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetAsmInfo
-decl_stmt|;
-name|class
-name|MachineMove
-decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
@@ -1003,6 +993,11 @@ name|LsdaEncoding
 argument_list|(
 literal|0
 argument_list|)
+operator|,
+name|CompactUnwindEncoding
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|MCSymbol
 operator|*
@@ -1040,6 +1035,9 @@ name|PersonalityEncoding
 decl_stmt|;
 name|unsigned
 name|LsdaEncoding
+decl_stmt|;
+name|uint32_t
+name|CompactUnwindEncoding
 decl_stmt|;
 block|}
 struct|;

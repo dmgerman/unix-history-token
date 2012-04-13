@@ -28,6 +28,12 @@ end_comment
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -158,23 +164,6 @@ operator|&
 literal|0x80000000
 expr_stmt|;
 comment|/* sign bit of x */
-if|if
-condition|(
-name|xsb
-operator|==
-literal|0
-condition|)
-name|y
-operator|=
-name|x
-expr_stmt|;
-else|else
-name|y
-operator|=
-operator|-
-name|x
-expr_stmt|;
-comment|/* y = |x| */
 name|hx
 operator|&=
 literal|0x7fffffff
@@ -387,11 +376,16 @@ operator|*
 name|ln2_lo
 expr_stmt|;
 block|}
+name|STRICT_ASSIGN
+argument_list|(
+name|double
+argument_list|,
 name|x
-operator|=
+argument_list|,
 name|hi
 operator|-
 name|lo
+argument_list|)
 expr_stmt|;
 name|c
 operator|=

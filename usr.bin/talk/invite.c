@@ -108,6 +108,7 @@ comment|/*  * The msg.id's for the invitations  * on the local and remote machin
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|local_id
 decl_stmt|,
@@ -116,6 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|jmp_buf
 name|invitebuf
 decl_stmt|;
@@ -244,7 +246,7 @@ expr_stmt|;
 name|announce_invite
 argument_list|()
 expr_stmt|;
-comment|/* 	 * Shut off the automatic messages for a while, 	 * so we can use the interupt timer to resend the invitation 	 */
+comment|/* 	 * Shut off the automatic messages for a while, 	 * so we can use the interrupt timer to resend the invitation 	 */
 name|end_msgs
 argument_list|()
 expr_stmt|;
@@ -381,7 +383,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Routine called on interupt to re-invite the callee  */
+comment|/*  * Routine called on interrupt to re-invite the callee  */
 end_comment
 
 begin_comment

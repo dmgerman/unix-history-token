@@ -241,6 +241,8 @@ name|struct
 name|partedit_item
 modifier|*
 name|items
+init|=
+name|NULL
 decl_stmt|;
 name|struct
 name|gmesh
@@ -365,6 +367,12 @@ condition|(
 literal|1
 condition|)
 block|{
+name|dlg_clear
+argument_list|()
+expr_stmt|;
+name|dlg_put_backtitle
+argument_list|()
+expr_stmt|;
 name|error
 operator|=
 name|geom_gettree
@@ -373,6 +381,12 @@ operator|&
 name|mesh
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|==
+literal|0
+condition|)
 name|items
 operator|=
 name|read_geom_mesh
@@ -384,18 +398,38 @@ operator|&
 name|nitems
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+operator|||
+name|items
+operator|==
+name|NULL
+condition|)
+block|{
+name|dialog_msgbox
+argument_list|(
+literal|"Error"
+argument_list|,
+literal|"No disks found. If you need to "
+literal|"install a kernel driver, choose Shell at the "
+literal|"installation menu."
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+name|TRUE
+argument_list|)
+expr_stmt|;
+break|break;
+block|}
 name|get_mount_points
 argument_list|(
 name|items
 argument_list|,
 name|nitems
 argument_list|)
-expr_stmt|;
-name|dlg_clear
-argument_list|()
-expr_stmt|;
-name|dlg_put_backtitle
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -1073,11 +1107,14 @@ name|struct
 name|partition_metadata
 modifier|*
 name|md
+decl_stmt|,
+modifier|*
+name|root
+init|=
+name|NULL
 decl_stmt|;
 name|int
-name|root_found
-init|=
-name|FALSE
+name|cancel
 decl_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
@@ -1109,16 +1146,17 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|root_found
+name|root
 operator|=
-name|TRUE
+name|md
 expr_stmt|;
 comment|/* XXX: Check for duplicate mountpoints */
 block|}
 if|if
 condition|(
-operator|!
-name|root_found
+name|root
+operator|==
+name|NULL
 condition|)
 block|{
 name|dialog_msgbox
@@ -1135,6 +1173,56 @@ argument_list|,
 name|TRUE
 argument_list|)
 expr_stmt|;
+return|return
+operator|(
+name|FALSE
+operator|)
+return|;
+block|}
+comment|/* 	 * Check for root partitions that we aren't formatting, which is  	 * usually a mistake 	 */
+if|if
+condition|(
+name|root
+operator|->
+name|newfs
+operator|==
+name|NULL
+condition|)
+block|{
+name|dialog_vars
+operator|.
+name|defaultno
+operator|=
+name|TRUE
+expr_stmt|;
+name|cancel
+operator|=
+name|dialog_yesno
+argument_list|(
+literal|"Warning"
+argument_list|,
+literal|"The chosen root partition "
+literal|"has a preexisting filesystem. If it contains an existing "
+literal|"FreeBSD system, please update it with freebsd-update "
+literal|"instead of installing a new system on it. The partition "
+literal|"can also be erased by pressing \"No\" and then deleting "
+literal|"and recreating it. Are you sure you want to proceed?"
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+expr_stmt|;
+name|dialog_vars
+operator|.
+name|defaultno
+operator|=
+name|FALSE
+expr_stmt|;
+if|if
+condition|(
+name|cancel
+condition|)
 return|return
 operator|(
 name|FALSE

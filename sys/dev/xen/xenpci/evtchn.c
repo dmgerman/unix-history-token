@@ -135,7 +135,7 @@ name|__ffs
 parameter_list|(
 name|word
 parameter_list|)
-value|ffs(word)
+value|(ffs(word) - 1)
 end_define
 
 begin_elif

@@ -136,6 +136,8 @@ comment|/*  * File access mode flags table.  */
 end_comment
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 block|{
 name|int
@@ -194,6 +196,8 @@ comment|/*  * Usage flags translation table.  */
 end_comment
 
 begin_struct
+specifier|static
+specifier|const
 struct|struct
 block|{
 name|int

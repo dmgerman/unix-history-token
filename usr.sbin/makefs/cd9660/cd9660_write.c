@@ -1130,8 +1130,6 @@ argument_list|(
 name|writenode
 argument_list|,
 name|temp_file_name
-argument_list|,
-literal|0
 argument_list|)
 expr_stmt|;
 name|ret
@@ -1176,7 +1174,7 @@ block|}
 block|}
 else|else
 block|{
-comment|/* 		 * Here is a new revelation that ECMA didnt explain 		 * (at least not well). 		 * ALL . and .. records store the name "\0" and "\1" 		 * resepctively. So, for each directory, we have to 		 * make a new node. 		 * 		 * This is where it gets kinda messy, since we have to 		 * be careful of sector boundaries 		 */
+comment|/* 		 * Here is a new revelation that ECMA didn't explain 		 * (at least not well). 		 * ALL . and .. records store the name "\0" and "\1" 		 * respectively. So, for each directory, we have to 		 * make a new node. 		 * 		 * This is where it gets kinda messy, since we have to 		 * be careful of sector boundaries 		 */
 name|cur_sector_offset
 operator|=
 literal|0

@@ -470,7 +470,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Get kernel boot path. For FreeBSD it seems that no arguments are  * present. Returns NULL if an error occured. The returned data is a  * pointer to a global strorage.  */
+comment|/**  * Get kernel boot path. For FreeBSD it seems that no arguments are  * present. Returns NULL if an error occurred. The returned data is a  * pointer to a global storage.  */
 end_comment
 
 begin_function

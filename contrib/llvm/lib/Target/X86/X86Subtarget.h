@@ -225,6 +225,26 @@ comment|/// HasFMA4 - Target has 4-operand fused multiply-add
 name|bool
 name|HasFMA4
 block|;
+comment|/// HasMOVBE - True if the processor has the MOVBE instruction.
+name|bool
+name|HasMOVBE
+block|;
+comment|/// HasRDRAND - True if the processor has the RDRAND instruction.
+name|bool
+name|HasRDRAND
+block|;
+comment|/// HasF16C - Processor has 16-bit floating point conversion instructions.
+name|bool
+name|HasF16C
+block|;
+comment|/// HasLZCNT - Processor has LZCNT instruction.
+name|bool
+name|HasLZCNT
+block|;
+comment|/// HasBMI - Processor has BMI1 instructions.
+name|bool
+name|HasBMI
+block|;
 comment|/// IsBTMemSlow - True if BT (bit test) of memory instructions are slow.
 name|bool
 name|IsBTMemSlow
@@ -237,6 +257,11 @@ comment|/// HasVectorUAMem - True if SIMD operations can have unaligned memory
 comment|/// operands. This may require setting a feature bit in the processor.
 name|bool
 name|HasVectorUAMem
+block|;
+comment|/// HasCmpxchg16b - True if this processor has the CMPXCHG16B instruction;
+comment|/// this is true for most x86-64 chips, but not the first AMD chips.
+name|bool
+name|HasCmpxchg16b
 block|;
 comment|/// stackAlignment - The minimum alignment known to hold of the stack frame on
 comment|/// entry to the function and which must be maintained by every function.
@@ -257,6 +282,10 @@ operator|:
 comment|/// In64BitMode - True if compiling for 64-bit, false for 32-bit.
 name|bool
 name|In64BitMode
+block|;
+comment|/// InNaClMode - True if compiling for Native Client target.
+name|bool
+name|InNaClMode
 block|;
 name|public
 operator|:
@@ -543,6 +572,51 @@ name|HasFMA4
 return|;
 block|}
 name|bool
+name|hasMOVBE
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasMOVBE
+return|;
+block|}
+name|bool
+name|hasRDRAND
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasRDRAND
+return|;
+block|}
+name|bool
+name|hasF16C
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasF16C
+return|;
+block|}
+name|bool
+name|hasLZCNT
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasLZCNT
+return|;
+block|}
+name|bool
+name|hasBMI
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasBMI
+return|;
+block|}
+name|bool
 name|isBTMemSlow
 argument_list|()
 specifier|const
@@ -567,6 +641,15 @@ specifier|const
 block|{
 return|return
 name|HasVectorUAMem
+return|;
+block|}
+name|bool
+name|hasCmpxchg16b
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasCmpxchg16b
 return|;
 block|}
 specifier|const
@@ -662,6 +745,49 @@ name|Linux
 return|;
 block|}
 name|bool
+name|isTargetNaCl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TargetTriple
+operator|.
+name|getOS
+argument_list|()
+operator|==
+name|Triple
+operator|::
+name|NativeClient
+return|;
+block|}
+name|bool
+name|isTargetNaCl32
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTargetNaCl
+argument_list|()
+operator|&&
+operator|!
+name|is64Bit
+argument_list|()
+return|;
+block|}
+name|bool
+name|isTargetNaCl64
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isTargetNaCl
+argument_list|()
+operator|&&
+name|is64Bit
+argument_list|()
+return|;
+block|}
+name|bool
 name|isTargetWindows
 argument_list|()
 specifier|const
@@ -744,11 +870,12 @@ name|isTargetWin64
 argument_list|()
 specifier|const
 block|{
+comment|// FIXME: x86_64-cygwin has not been released yet.
 return|return
 name|In64BitMode
 operator|&&
 operator|(
-name|isTargetMingw
+name|isTargetCygMing
 argument_list|()
 operator|||
 name|isTargetWindows

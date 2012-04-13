@@ -51,6 +51,10 @@ name|register_t
 name|md_saved_flags
 decl_stmt|;
 comment|/* (k) */
+name|register_t
+name|md_spurflt_addr
+decl_stmt|;
+comment|/* (k) Spurious page fault address. */
 block|}
 struct|;
 end_struct

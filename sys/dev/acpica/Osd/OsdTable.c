@@ -337,5 +337,30 @@ return|;
 block|}
 end_function
 
+begin_function
+name|ACPI_STATUS
+name|AcpiOsPhysicalTableOverride
+parameter_list|(
+name|ACPI_TABLE_HEADER
+modifier|*
+name|ExistingTable
+parameter_list|,
+name|ACPI_PHYSICAL_ADDRESS
+modifier|*
+name|NewAddress
+parameter_list|,
+name|UINT32
+modifier|*
+name|NewTableLength
+parameter_list|)
+block|{
+return|return
+operator|(
+name|AE_SUPPORT
+operator|)
+return|;
+block|}
+end_function
+
 end_unit
 

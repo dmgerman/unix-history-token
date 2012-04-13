@@ -33,6 +33,54 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*  * Elf_Auxinfo *__elf_aux_vector, the pointer to the ELF aux vector  * provided by kernel. Either set for us by rtld, or found at runtime  * on stack for static binaries.  *  * Type is void to avoid polluting whole libc with ELF types.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|void
+modifier|*
+name|__elf_aux_vector
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * libc should use libc_dlopen internally, which respects a global  * flag where loading of new shared objects can be restricted.  */
+end_comment
+
+begin_function_decl
+name|void
+modifier|*
+name|libc_dlopen
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/*  * For dynamic linker.  */
+end_comment
+
+begin_function_decl
+name|void
+name|_rtld_error
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/*  * File lock contention is difficult to diagnose without knowing  * where locks were set. Allow a debug library to be built which  * records the source file and line number of each lock call.  */
 end_comment
 
@@ -718,6 +766,15 @@ modifier|*
 parameter_list|,
 name|void
 modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|__init_elf_aux_vector
+parameter_list|(
+name|void
 parameter_list|)
 function_decl|;
 end_function_decl

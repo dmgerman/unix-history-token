@@ -243,6 +243,19 @@ name|usb_bus
 modifier|*
 parameter_list|)
 function_decl|;
+name|void
+function_decl|(
+modifier|*
+name|set_hw_power_sleep
+function_decl|)
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+parameter_list|,
+name|uint32_t
+parameter_list|)
+function_decl|;
 comment|/* 	 * The following flag is set if one or more control transfers are 	 * active: 	 */
 define|#
 directive|define
@@ -268,6 +281,21 @@ define|#
 directive|define
 name|USB_HW_POWER_NON_ROOT_HUB
 value|0x10
+comment|/* 	 * The following flag is set if we are suspending 	 */
+define|#
+directive|define
+name|USB_HW_POWER_SUSPEND
+value|0x20
+comment|/* 	 * The following flag is set if we are resuming 	 */
+define|#
+directive|define
+name|USB_HW_POWER_RESUME
+value|0x40
+comment|/* 	 * The following flag is set if we are shutting down 	 */
+define|#
+directive|define
+name|USB_HW_POWER_SHUTDOWN
+value|0x60
 comment|/* USB Device mode only - Mandatory */
 name|void
 function_decl|(

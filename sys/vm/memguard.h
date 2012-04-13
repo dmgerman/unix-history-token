@@ -109,7 +109,7 @@ end_function_decl
 
 begin_function_decl
 name|int
-name|memguard_cmp
+name|memguard_cmp_mtp
 parameter_list|(
 name|struct
 name|malloc_type
@@ -117,6 +117,15 @@ modifier|*
 parameter_list|,
 name|unsigned
 name|long
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|memguard_cmp_zone
+parameter_list|(
+name|uma_zone_t
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -199,11 +208,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|memguard_cmp
+name|memguard_cmp_mtp
 parameter_list|(
 name|mtp
 parameter_list|,
 name|size
+parameter_list|)
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|memguard_cmp_zone
+parameter_list|(
+name|zone
 parameter_list|)
 value|0
 end_define

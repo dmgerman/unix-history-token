@@ -103,19 +103,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-name|class
-name|Twine
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -318,23 +305,21 @@ comment|/// \param PreferredTypeIsPointer Whether the preferred type for the con
 comment|/// of this macro is a pointer type.
 name|unsigned
 name|getMacroUsagePriority
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|MacroName
-argument_list|,
+parameter_list|,
 specifier|const
 name|LangOptions
-operator|&
+modifier|&
 name|LangOpts
-argument_list|,
+parameter_list|,
 name|bool
 name|PreferredTypeIsPointer
-operator|=
+init|=
 name|false
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// \brief Determine the libclang cursor kind associated with the given
 comment|/// declaration.
 name|CXCursorKind
@@ -503,9 +488,9 @@ block|,
 comment|/// \brief Code completion where an Objective-C class message is expected.
 name|CCC_ObjCClassMessage
 block|,
-comment|/// \brief Code completion where a superclass of an Objective-C class is
+comment|/// \brief Code completion where the name of an Objective-C class is
 comment|/// expected.
-name|CCC_ObjCSuperclass
+name|CCC_ObjCInterfaceName
 block|,
 comment|/// \brief Code completion where an Objective-C category name is expected.
 name|CCC_ObjCCategoryName
@@ -530,6 +515,16 @@ comment|/// \brief The type of the base object in a member access expression.
 name|QualType
 name|BaseType
 decl_stmt|;
+comment|/// \brief The identifiers for Objective-C selector parts.
+name|IdentifierInfo
+modifier|*
+modifier|*
+name|SelIdents
+decl_stmt|;
+comment|/// \brief The number of Objective-C selector parts.
+name|unsigned
+name|NumSelIdents
+decl_stmt|;
 name|public
 label|:
 comment|/// \brief Construct a new code-completion context of the given kind.
@@ -540,7 +535,17 @@ argument_list|)
 block|:
 name|Kind
 argument_list|(
-argument|Kind
+name|Kind
+argument_list|)
+operator|,
+name|SelIdents
+argument_list|(
+name|NULL
+argument_list|)
+operator|,
+name|NumSelIdents
+argument_list|(
+literal|0
 argument_list|)
 block|{ }
 comment|/// \brief Construct a new code-completion context of the given kind.
@@ -549,11 +554,26 @@ argument_list|(
 argument|enum Kind Kind
 argument_list|,
 argument|QualType T
+argument_list|,
+argument|IdentifierInfo **SelIdents = NULL
+argument_list|,
+argument|unsigned NumSelIdents =
+literal|0
 argument_list|)
-block|:
+operator|:
 name|Kind
 argument_list|(
-argument|Kind
+name|Kind
+argument_list|)
+operator|,
+name|SelIdents
+argument_list|(
+name|SelIdents
+argument_list|)
+operator|,
+name|NumSelIdents
+argument_list|(
+argument|NumSelIdents
 argument_list|)
 block|{
 if|if
@@ -569,6 +589,14 @@ operator|||
 name|Kind
 operator|==
 name|CCC_ObjCPropertyAccess
+operator|||
+name|Kind
+operator|==
+name|CCC_ObjCClassMessage
+operator|||
+name|Kind
+operator|==
+name|CCC_ObjCInstanceMessage
 condition|)
 name|BaseType
 operator|=
@@ -612,6 +640,28 @@ specifier|const
 block|{
 return|return
 name|BaseType
+return|;
+block|}
+comment|/// \brief Retrieve the Objective-C selector identifiers.
+name|IdentifierInfo
+operator|*
+operator|*
+name|getSelIdents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SelIdents
+return|;
+block|}
+comment|/// \brief Retrieve the number of Objective-C selector identifiers.
+name|unsigned
+name|getNumSelIdents
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NumSelIdents
 return|;
 block|}
 comment|/// \brief Determines whether we want C++ constructors as results within this
@@ -837,6 +887,14 @@ label|:
 comment|/// \brief The number of chunks stored in this string.
 name|unsigned
 name|NumChunks
+range|:
+literal|16
+decl_stmt|;
+comment|/// \brief The number of annotations for this code-completion result.
+name|unsigned
+name|NumAnnotations
+range|:
+literal|16
 decl_stmt|;
 comment|/// \brief The priority of this code-completion string.
 name|unsigned
@@ -878,6 +936,10 @@ argument_list|,
 argument|unsigned Priority
 argument_list|,
 argument|CXAvailabilityKind Availability
+argument_list|,
+argument|const char **Annotations
+argument_list|,
+argument|unsigned NumAnnotations
 argument_list|)
 empty_stmt|;
 operator|~
@@ -998,7 +1060,7 @@ return|return
 name|Priority
 return|;
 block|}
-comment|/// \brief Reteirve the availability of this code completion result.
+comment|/// \brief Retrieve the availability of this code completion result.
 name|unsigned
 name|getAvailability
 argument_list|()
@@ -1008,6 +1070,23 @@ return|return
 name|Availability
 return|;
 block|}
+comment|/// \brief Retrieve the number of annotations for this code completion result.
+name|unsigned
+name|getAnnotationCount
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// \brief Retrieve the annotation string specified by \c AnnotationNr.
+specifier|const
+name|char
+modifier|*
+name|getAnnotation
+argument_list|(
+name|unsigned
+name|AnnotationNr
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Retrieve a string representation of the code completion string,
 comment|/// which is mainly useful for debugging.
 name|std
@@ -1036,7 +1115,7 @@ name|char
 operator|*
 name|CopyString
 argument_list|(
-argument|llvm::StringRef String
+argument|StringRef String
 argument_list|)
 block|;
 comment|/// \brief Copy the given string into this allocator.
@@ -1045,7 +1124,7 @@ name|char
 operator|*
 name|CopyString
 argument_list|(
-argument|llvm::Twine String
+argument|Twine String
 argument_list|)
 block|;
 comment|// \brief Copy the given string into this allocator.
@@ -1060,8 +1139,6 @@ block|{
 return|return
 name|CopyString
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 argument_list|(
 name|String
@@ -1081,8 +1158,6 @@ block|{
 return|return
 name|CopyString
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 argument_list|(
 name|String
@@ -1117,8 +1192,6 @@ name|CXAvailabilityKind
 name|Availability
 block|;
 comment|/// \brief The chunks stored in this string.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Chunk
@@ -1126,6 +1199,16 @@ block|,
 literal|4
 operator|>
 name|Chunks
+block|;
+name|SmallVector
+operator|<
+specifier|const
+name|char
+operator|*
+block|,
+literal|2
+operator|>
+name|Annotations
 block|;
 name|public
 operator|:
@@ -1344,6 +1427,19 @@ argument_list|(
 name|C
 argument_list|)
 block|; }
+name|void
+name|AddAnnotation
+argument_list|(
+argument|const char *A
+argument_list|)
+block|{
+name|Annotations
+operator|.
+name|push_back
+argument_list|(
+name|A
+argument_list|)
+block|; }
 block|}
 decl_stmt|;
 comment|/// \brief Captures a result of code completion.
@@ -1469,6 +1565,8 @@ argument|NestedNameSpecifier *Qualifier =
 literal|0
 argument_list|,
 argument|bool QualifierIsInformative = false
+argument_list|,
+argument|bool Accessible = true
 argument_list|)
 block|:
 name|Kind
@@ -1530,7 +1628,9 @@ argument|Qualifier
 argument_list|)
 block|{
 name|computeCursorKindAndAvailability
-argument_list|()
+argument_list|(
+name|Accessible
+argument_list|)
 block|;   }
 comment|/// \brief Build a result that refers to a keyword or symbol.
 name|CodeCompletionResult
@@ -1811,7 +1911,12 @@ name|private
 label|:
 name|void
 name|computeCursorKindAndAvailability
-parameter_list|()
+parameter_list|(
+name|bool
+name|Accessible
+init|=
+name|true
+parameter_list|)
 function_decl|;
 block|}
 empty_stmt|;
@@ -1902,15 +2007,11 @@ name|Y
 operator|)
 return|;
 block|}
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -2292,8 +2393,6 @@ name|public
 name|CodeCompleteConsumer
 block|{
 comment|/// \brief The raw output stream.
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -2313,7 +2412,7 @@ argument|bool IncludeCodePatterns
 argument_list|,
 argument|bool IncludeGlobals
 argument_list|,
-argument|llvm::raw_ostream&OS
+argument|raw_ostream&OS
 argument_list|)
 operator|:
 name|CodeCompleteConsumer

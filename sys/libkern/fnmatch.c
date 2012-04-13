@@ -330,7 +330,7 @@ operator|&
 name|FNM_LEADING_DIR
 operator|)
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|string
 argument_list|,
@@ -367,7 +367,7 @@ condition|(
 operator|(
 name|string
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|string
 argument_list|,

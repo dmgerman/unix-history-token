@@ -203,6 +203,7 @@ value|5*60
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|interval
 block|{
@@ -547,7 +548,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|argv
 index|[

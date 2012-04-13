@@ -119,6 +119,7 @@ value|5 * BUFSIZ
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|openfile
 block|{
@@ -161,6 +162,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|morefiles
 decl_stmt|;
@@ -171,6 +173,7 @@ comment|/* set by getargs(), changed by gatherline() */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nofinalnl
 decl_stmt|;
@@ -181,6 +184,7 @@ comment|/* normally append \n to each output line */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|line
 index|[
@@ -190,6 +194,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|linep

@@ -38,23 +38,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_struct_decl
-struct_decl|struct
-name|ccb_calc_geometry
-struct_decl|;
-end_struct_decl
-
-begin_function_decl
-name|int
-name|scsi_da_bios_params
-parameter_list|(
-name|struct
-name|ccb_calc_geometry
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_define
 define|#
 directive|define

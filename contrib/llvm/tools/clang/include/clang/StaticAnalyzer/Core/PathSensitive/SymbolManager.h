@@ -84,6 +84,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/StoreRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -99,15 +111,18 @@ directive|include
 file|"llvm/ADT/DenseSet.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|BumpPtrAllocator
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -135,7 +150,7 @@ name|class
 name|SubRegion
 decl_stmt|;
 name|class
-name|TypedRegion
+name|TypedValueRegion
 decl_stmt|;
 name|class
 name|VarRegion
@@ -153,8 +168,6 @@ operator|:
 expr|enum
 name|Kind
 block|{
-name|BEGIN_SYMBOLS
-block|,
 name|RegionValueKind
 block|,
 name|ConjuredKind
@@ -165,7 +178,13 @@ name|ExtentKind
 block|,
 name|MetadataKind
 block|,
+name|BEGIN_SYMBOLS
+operator|=
+name|RegionValueKind
+block|,
 name|END_SYMBOLS
+operator|=
+name|MetadataKind
 block|,
 name|SymIntKind
 block|,
@@ -214,7 +233,7 @@ name|virtual
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 operator|=
@@ -315,7 +334,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 name|Kind
@@ -328,11 +347,11 @@ argument_list|()
 block|;
 return|return
 name|k
-operator|>
+operator|>=
 name|BEGIN_SYMBOLS
 operator|&&
 name|k
-operator|<
+operator|<=
 name|END_SYMBOLS
 return|;
 block|}
@@ -344,15 +363,26 @@ name|SymbolData
 modifier|*
 name|SymbolRef
 typedef|;
-comment|// A symbol representing the value of a MemRegion.
+typedef|typedef
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|SymbolRef
+operator|,
+literal|2
+operator|>
+name|SymbolRefSmallVectorTy
+expr_stmt|;
+comment|/// A symbol representing the value of a MemRegion.
 name|class
 name|SymbolRegionValue
-operator|:
+range|:
 name|public
 name|SymbolData
 block|{
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|R
 block|;
@@ -362,7 +392,7 @@ name|SymbolRegionValue
 argument_list|(
 argument|SymbolID sym
 argument_list|,
-argument|const TypedRegion *r
+argument|const TypedValueRegion *r
 argument_list|)
 operator|:
 name|SymbolData
@@ -378,7 +408,7 @@ argument|r
 argument_list|)
 block|{}
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|getRegion
 argument_list|()
@@ -394,7 +424,7 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|,
-argument|const TypedRegion* R
+argument|const TypedValueRegion* R
 argument_list|)
 block|{
 name|profile
@@ -431,7 +461,7 @@ block|;   }
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -448,7 +478,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 return|return
@@ -462,7 +492,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|// A symbol representing the result of an expression.
+comment|/// A symbol representing the result of an expression.
 name|class
 name|SymbolConjured
 operator|:
@@ -491,13 +521,13 @@ name|SymbolConjured
 argument_list|(
 argument|SymbolID sym
 argument_list|,
-argument|const Stmt* s
+argument|const Stmt *s
 argument_list|,
 argument|QualType t
 argument_list|,
 argument|unsigned count
 argument_list|,
-argument|const void* symbolTag
+argument|const void *symbolTag
 argument_list|)
 operator|:
 name|SymbolData
@@ -568,7 +598,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -578,13 +608,13 @@ name|Profile
 argument_list|(
 argument|llvm::FoldingSetNodeID& profile
 argument_list|,
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|,
 argument|QualType T
 argument_list|,
 argument|unsigned Count
 argument_list|,
-argument|const void* SymbolTag
+argument|const void *SymbolTag
 argument_list|)
 block|{
 name|profile
@@ -651,7 +681,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 return|return
@@ -665,8 +695,8 @@ return|;
 block|}
 expr|}
 block|;
-comment|// A symbol representing the value of a MemRegion whose parent region has
-comment|// symbolic value.
+comment|/// A symbol representing the value of a MemRegion whose parent region has
+comment|/// symbolic value.
 name|class
 name|SymbolDerived
 operator|:
@@ -677,7 +707,7 @@ name|SymbolRef
 name|parentSymbol
 block|;
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|R
 block|;
@@ -689,7 +719,7 @@ argument|SymbolID sym
 argument_list|,
 argument|SymbolRef parent
 argument_list|,
-argument|const TypedRegion *r
+argument|const TypedValueRegion *r
 argument_list|)
 operator|:
 name|SymbolData
@@ -719,7 +749,7 @@ name|parentSymbol
 return|;
 block|}
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|getRegion
 argument_list|()
@@ -739,7 +769,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -751,7 +781,7 @@ argument|llvm::FoldingSetNodeID& profile
 argument_list|,
 argument|SymbolRef parent
 argument_list|,
-argument|const TypedRegion *r
+argument|const TypedValueRegion *r
 argument_list|)
 block|{
 name|profile
@@ -800,7 +830,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 return|return
@@ -870,7 +900,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -920,7 +950,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 return|return
@@ -973,13 +1003,13 @@ argument|SymbolID sym
 argument_list|,
 argument|const MemRegion* r
 argument_list|,
-argument|const Stmt* s
+argument|const Stmt *s
 argument_list|,
 argument|QualType t
 argument_list|,
 argument|unsigned count
 argument_list|,
-argument|const void* tag
+argument|const void *tag
 argument_list|)
 operator|:
 name|SymbolData
@@ -1066,7 +1096,7 @@ block|;
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -1160,7 +1190,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 return|return
@@ -1174,7 +1204,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|// SymIntExpr - Represents symbolic expression like 'x' + 3.
+comment|/// SymIntExpr - Represents symbolic expression like 'x' + 3.
 name|class
 name|SymIntExpr
 operator|:
@@ -1244,7 +1274,7 @@ comment|// generation of virtual functions.
 name|QualType
 name|getType
 argument_list|(
-argument|ASTContext& C
+argument|ASTContext&C
 argument_list|)
 specifier|const
 block|{
@@ -1266,7 +1296,7 @@ block|}
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -1373,7 +1403,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 return|return
@@ -1387,7 +1417,7 @@ return|;
 block|}
 expr|}
 block|;
-comment|// SymSymExpr - Represents symbolic expression like 'x' + 'y'.
+comment|/// SymSymExpr - Represents symbolic expression like 'x' + 'y'.
 name|class
 name|SymSymExpr
 operator|:
@@ -1488,7 +1518,7 @@ comment|// generation of virtual functions.
 name|QualType
 name|getType
 argument_list|(
-argument|ASTContext& C
+argument|ASTContext&C
 argument_list|)
 specifier|const
 block|{
@@ -1499,7 +1529,7 @@ block|}
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream&os
+argument|raw_ostream&os
 argument_list|)
 specifier|const
 block|;
@@ -1581,7 +1611,7 @@ specifier|inline
 name|bool
 name|classof
 argument_list|(
-argument|const SymExpr* SE
+argument|const SymExpr *SE
 argument_list|)
 block|{
 return|return
@@ -1607,8 +1637,25 @@ name|SymExpr
 operator|>
 name|DataSetTy
 expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|SymbolRef
+operator|,
+name|SymbolRefSmallVectorTy
+operator|*
+operator|>
+name|SymbolDependTy
+expr_stmt|;
 name|DataSetTy
 name|DataSet
+block|;
+comment|/// Stores the extra dependencies between symbols: the data should be kept
+comment|/// alive as long as the key is live.
+name|SymbolDependTy
+name|SymbolDependencies
 block|;
 name|unsigned
 name|SymbolCounter
@@ -1646,6 +1693,11 @@ operator|&
 name|bpalloc
 argument_list|)
 operator|:
+name|SymbolDependencies
+argument_list|(
+literal|16
+argument_list|)
+block|,
 name|SymbolCounter
 argument_list|(
 literal|0
@@ -1677,14 +1729,14 @@ argument_list|(
 argument|QualType T
 argument_list|)
 block|;
-comment|/// Make a unique symbol for MemRegion R according to its kind.
+comment|/// \brief Make a unique symbol for MemRegion R according to its kind.
 specifier|const
 name|SymbolRegionValue
 operator|*
 name|getRegionValueSymbol
 argument_list|(
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 operator|*
 name|R
 argument_list|)
@@ -1694,13 +1746,13 @@ name|SymbolConjured
 operator|*
 name|getConjuredSymbol
 argument_list|(
-argument|const Stmt* E
+argument|const Stmt *E
 argument_list|,
 argument|QualType T
 argument_list|,
 argument|unsigned VisitCount
 argument_list|,
-argument|const void* SymbolTag =
+argument|const void *SymbolTag =
 literal|0
 argument_list|)
 block|;
@@ -1709,11 +1761,11 @@ name|SymbolConjured
 operator|*
 name|getConjuredSymbol
 argument_list|(
-argument|const Expr* E
+argument|const Expr *E
 argument_list|,
 argument|unsigned VisitCount
 argument_list|,
-argument|const void* SymbolTag =
+argument|const void *SymbolTag =
 literal|0
 argument_list|)
 block|{
@@ -1740,7 +1792,7 @@ name|getDerivedSymbol
 argument_list|(
 argument|SymbolRef parentSymbol
 argument_list|,
-argument|const TypedRegion *R
+argument|const TypedValueRegion *R
 argument_list|)
 block|;
 specifier|const
@@ -1754,6 +1806,10 @@ operator|*
 name|R
 argument_list|)
 block|;
+comment|/// \brief Creates a metadata symbol associated with a specific region.
+comment|///
+comment|/// VisitCount can be used to differentiate regions corresponding to
+comment|/// different loop iterations, thus, making the symbol path-dependent.
 specifier|const
 name|SymbolMetadata
 operator|*
@@ -1761,13 +1817,13 @@ name|getMetadataSymbol
 argument_list|(
 argument|const MemRegion* R
 argument_list|,
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|,
 argument|QualType T
 argument_list|,
 argument|unsigned VisitCount
 argument_list|,
-argument|const void* SymbolTag =
+argument|const void *SymbolTag =
 literal|0
 argument_list|)
 block|;
@@ -1843,6 +1899,25 @@ name|Ctx
 argument_list|)
 return|;
 block|}
+comment|/// \brief Add artificial symbol dependency.
+comment|///
+comment|/// The dependent symbol should stay alive as long as the primary is alive.
+name|void
+name|addSymbolDependency
+argument_list|(
+argument|const SymbolRef Primary
+argument_list|,
+argument|const SymbolRef Dependent
+argument_list|)
+block|;
+specifier|const
+name|SymbolRefSmallVectorTy
+operator|*
+name|getDependentSymbols
+argument_list|(
+argument|const SymbolRef Primary
+argument_list|)
+block|;
 name|ASTContext
 operator|&
 name|getContext
@@ -1865,7 +1940,14 @@ expr|}
 block|;
 name|class
 name|SymbolReaper
+block|{   enum
+name|SymbolStatus
 block|{
+name|NotProcessed
+block|,
+name|HaveMarkedDependents
+block|}
+block|;
 typedef|typedef
 name|llvm
 operator|::
@@ -1873,16 +1955,41 @@ name|DenseSet
 operator|<
 name|SymbolRef
 operator|>
-name|SetTy
+name|SymbolSetTy
 expr_stmt|;
-name|SetTy
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+name|SymbolRef
+operator|,
+name|SymbolStatus
+operator|>
+name|SymbolMapTy
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseSet
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+operator|>
+name|RegionSetTy
+expr_stmt|;
+name|SymbolMapTy
 name|TheLiving
 block|;
-name|SetTy
+name|SymbolSetTy
 name|MetadataInUse
 block|;
-name|SetTy
+name|SymbolSetTy
 name|TheDead
+block|;
+name|RegionSetTy
+name|RegionRoots
 block|;
 specifier|const
 name|LocationContext
@@ -1897,6 +2004,21 @@ block|;
 name|SymbolManager
 operator|&
 name|SymMgr
+block|;
+name|StoreRef
+name|reapedStore
+block|;
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|MemRegion
+operator|*
+block|,
+name|unsigned
+operator|>
+name|includedRegionCache
 block|;
 name|public
 operator|:
@@ -1915,6 +2037,10 @@ argument_list|,
 name|SymbolManager
 operator|&
 name|symmgr
+argument_list|,
+name|StoreManager
+operator|&
+name|storeMgr
 argument_list|)
 operator|:
 name|LCtx
@@ -1929,7 +2055,14 @@ argument_list|)
 block|,
 name|SymMgr
 argument_list|(
-argument|symmgr
+name|symmgr
+argument_list|)
+block|,
+name|reapedStore
+argument_list|(
+literal|0
+argument_list|,
+argument|storeMgr
 argument_list|)
 block|{}
 operator|~
@@ -1965,6 +2098,15 @@ argument|SymbolRef sym
 argument_list|)
 block|;
 name|bool
+name|isLiveRegion
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|region
+argument_list|)
+block|;
+name|bool
 name|isLive
 argument_list|(
 argument|const Stmt *ExprVal
@@ -1975,32 +2117,39 @@ name|bool
 name|isLive
 argument_list|(
 argument|const VarRegion *VR
+argument_list|,
+argument|bool includeStoreBindings = false
 argument_list|)
 specifier|const
 block|;
-comment|// markLive - Unconditionally marks a symbol as live. This should never be
-comment|//  used by checkers, only by the state infrastructure such as the store and
-comment|//  environment. Checkers should instead use metadata symbols and markInUse.
+comment|/// \brief Unconditionally marks a symbol as live.
+comment|///
+comment|/// This should never be
+comment|/// used by checkers, only by the state infrastructure such as the store and
+comment|/// environment. Checkers should instead use metadata symbols and markInUse.
 name|void
 name|markLive
 argument_list|(
 argument|SymbolRef sym
 argument_list|)
 block|;
-comment|// markInUse - Marks a symbol as important to a checker. For metadata symbols,
-comment|//  this will keep the symbol alive as long as its associated region is also
-comment|//  live. For other symbols, this has no effect; checkers are not permitted
-comment|//  to influence the life of other symbols. This should be used before any
-comment|//  symbol marking has occurred, i.e. in the MarkLiveSymbols callback.
+comment|/// \brief Marks a symbol as important to a checker.
+comment|///
+comment|/// For metadata symbols,
+comment|/// this will keep the symbol alive as long as its associated region is also
+comment|/// live. For other symbols, this has no effect; checkers are not permitted
+comment|/// to influence the life of other symbols. This should be used before any
+comment|/// symbol marking has occurred, i.e. in the MarkLiveSymbols callback.
 name|void
 name|markInUse
 argument_list|(
 argument|SymbolRef sym
 argument_list|)
 block|;
-comment|// maybeDead - If a symbol is known to be live, marks the symbol as live.
-comment|//  Otherwise, if the symbol cannot be proven live, it is marked as dead.
-comment|//  Returns true if the symbol is dead, false if live.
+comment|/// \brief If a symbol is known to be live, marks the symbol as live.
+comment|///
+comment|///  Otherwise, if the symbol cannot be proven live, it is marked as dead.
+comment|///  Returns true if the symbol is dead, false if live.
 name|bool
 name|maybeDead
 argument_list|(
@@ -2008,7 +2157,7 @@ argument|SymbolRef sym
 argument_list|)
 block|;
 typedef|typedef
-name|SetTy
+name|SymbolSetTy
 operator|::
 name|const_iterator
 name|dead_iterator
@@ -2050,9 +2199,40 @@ name|empty
 argument_list|()
 return|;
 block|}
-comment|/// isDead - Returns whether or not a symbol has been confirmed dead. This
-comment|///  should only be called once all marking of dead symbols has completed.
-comment|///  (For checkers, this means only in the evalDeadSymbols callback.)
+typedef|typedef
+name|RegionSetTy
+operator|::
+name|const_iterator
+name|region_iterator
+expr_stmt|;
+name|region_iterator
+name|region_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegionRoots
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|region_iterator
+name|region_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegionRoots
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+comment|/// \brief Returns whether or not a symbol has been confirmed dead.
+comment|///
+comment|/// This should only be called once all marking of dead symbols has completed.
+comment|/// (For checkers, this means only in the evalDeadSymbols callback.)
 name|bool
 name|isDead
 argument_list|(
@@ -2069,16 +2249,46 @@ name|sym
 argument_list|)
 return|;
 block|}
-expr|}
+name|void
+name|markLive
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|region
+argument_list|)
+block|;
+comment|/// \brief Set to the value of the symbolic store after
+comment|/// StoreManager::removeDeadBindings has been called.
+name|void
+name|setReapedStore
+argument_list|(
+argument|StoreRef st
+argument_list|)
+block|{
+name|reapedStore
+operator|=
+name|st
+block|; }
+name|private
+operator|:
+comment|/// Mark the symbols dependent on the input symbol as live.
+name|void
+name|markDependentsLive
+argument_list|(
+argument|SymbolRef sym
+argument_list|)
+block|; }
 block|;
 name|class
 name|SymbolVisitor
 block|{
 name|public
 operator|:
-comment|// VisitSymbol - A visitor method invoked by
-comment|//  GRStateManager::scanReachableSymbols.  The method returns \c true if
-comment|//  symbols should continue be scanned and \c false otherwise.
+comment|/// \brief A visitor method invoked by ProgramStateManager::scanReachableSymbols.
+comment|///
+comment|/// The method returns \c true if symbols should continue be scanned and \c
+comment|/// false otherwise.
 name|virtual
 name|bool
 name|VisitSymbol
@@ -2088,6 +2298,17 @@ argument_list|)
 operator|=
 literal|0
 block|;
+name|virtual
+name|bool
+name|VisitMemRegion
+argument_list|(
+argument|const MemRegion *region
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
 name|virtual
 operator|~
 name|SymbolVisitor
@@ -2102,19 +2323,15 @@ name|llvm
 block|{
 specifier|static
 specifier|inline
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|os
-expr|,
+operator|,
 specifier|const
 name|clang
 operator|::
@@ -2136,7 +2353,7 @@ return|return
 name|os
 return|;
 block|}
-expr|}
+block|}
 end_decl_stmt
 
 begin_comment

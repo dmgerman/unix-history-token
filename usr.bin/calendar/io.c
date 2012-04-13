@@ -835,6 +835,10 @@ literal|0
 condition|)
 block|{
 comment|/* Show error status based on return value */
+if|if
+condition|(
+name|debug
+condition|)
 name|fprintf
 argument_list|(
 name|stderr

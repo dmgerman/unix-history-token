@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -7645,7 +7645,7 @@ name|err
 operator|)
 return|;
 block|}
-comment|/* 	 * We lock the zap with adding ==  FALSE. Because, if we pass 	 * the actual value of add, it could trigger a mzap_upgrade(). 	 * At present we are just evaluating the possibility of this operation 	 * and hence we donot want to trigger an upgrade. 	 */
+comment|/* 	 * We lock the zap with adding == FALSE. Because, if we pass 	 * the actual value of add, it could trigger a mzap_upgrade(). 	 * At present we are just evaluating the possibility of this operation 	 * and hence we donot want to trigger an upgrade. 	 */
 name|err
 operator|=
 name|zap_lockdir

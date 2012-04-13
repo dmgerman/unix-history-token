@@ -65,15 +65,11 @@ directive|include
 file|"clang/Basic/LangOptions.h"
 end_include
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -101,20 +97,18 @@ expr_stmt|;
 name|virtual
 name|bool
 name|handledStmt
-argument_list|(
+parameter_list|(
 name|Stmt
-operator|*
+modifier|*
 name|E
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|raw_ostream
-operator|&
+modifier|&
 name|OS
-argument_list|)
+parameter_list|)
 init|=
 literal|0
-decl_stmt|;
+function_decl|;
 block|}
 empty_stmt|;
 comment|/// \brief Describes how types, statements, expressions, and
@@ -183,7 +177,12 @@ argument_list|)
 operator|,
 name|SuppressStrongLifetime
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|Bool
+argument_list|(
+argument|LO.Bool
 argument_list|)
 block|{ }
 comment|/// \brief The number of spaces to use to indent each line.
@@ -193,7 +192,6 @@ operator|:
 literal|8
 expr_stmt|;
 comment|/// \brief What language we're printing.
-specifier|const
 name|LangOptions
 name|LangOpts
 decl_stmt|;
@@ -306,6 +304,13 @@ comment|/// \brief When true, suppress printing of the __strong lifetime qualifi
 comment|/// ARC.
 name|unsigned
 name|SuppressStrongLifetime
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether we can use 'bool' rather than '_Bool', even if the language
+comment|/// doesn't actually have 'bool' (because, e.g., it is defined as a macro).
+name|unsigned
+name|Bool
 range|:
 literal|1
 decl_stmt|;

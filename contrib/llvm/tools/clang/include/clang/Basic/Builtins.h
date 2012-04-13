@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cstring>
 end_include
 
@@ -82,21 +88,6 @@ undef|#
 directive|undef
 name|alloca
 end_undef
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|>
-name|class
-name|SmallVectorImpl
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -277,13 +268,18 @@ decl_stmt|;
 name|public
 label|:
 name|Context
-argument_list|(
+argument_list|()
+expr_stmt|;
+comment|/// \brief Perform target-specific initialization
+name|void
+name|InitializeTarget
+parameter_list|(
 specifier|const
 name|TargetInfo
-operator|&
+modifier|&
 name|Target
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// InitializeBuiltins - Mark the identifiers for all the builtins with their
 comment|/// appropriate builtin ID # and mark any non-portable builtin identifiers as
 comment|/// such.
@@ -304,8 +300,6 @@ comment|/// \brief Popular the vector with the names of all of the builtins.
 name|void
 name|GetBuiltinNames
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 specifier|const
@@ -431,6 +425,31 @@ operator|.
 name|Attributes
 argument_list|,
 literal|'r'
+argument_list|)
+operator|!=
+literal|0
+return|;
+block|}
+comment|/// isReturnsTwice - Return true if we know this builtin can return twice.
+name|bool
+name|isReturnsTwice
+argument_list|(
+name|unsigned
+name|ID
+argument_list|)
+decl|const
+block|{
+return|return
+name|strchr
+argument_list|(
+name|GetRecord
+argument_list|(
+name|ID
+argument_list|)
+operator|.
+name|Attributes
+argument_list|,
+literal|'j'
 argument_list|)
 operator|!=
 literal|0

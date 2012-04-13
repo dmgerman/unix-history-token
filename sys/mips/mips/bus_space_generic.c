@@ -268,12 +268,6 @@ begin_comment
 comment|/* Ultra-gross kludge */
 end_comment
 
-begin_include
-include|#
-directive|include
-file|"opt_cputype.h"
-end_include
-
 begin_if
 if|#
 directive|if
@@ -612,11 +606,9 @@ name|__unused
 parameter_list|,
 name|bus_space_handle_t
 name|handle
-name|__unused
 parameter_list|,
 name|bus_size_t
 name|offset
-name|__unused
 parameter_list|,
 name|bus_size_t
 name|size
@@ -624,16 +616,16 @@ name|__unused
 parameter_list|,
 name|bus_space_handle_t
 modifier|*
-name|nhandle
-name|__unused
+name|bshp
 parameter_list|)
 block|{
-name|printf
-argument_list|(
-literal|"SUBREGION?!?!?!\n"
-argument_list|)
+operator|*
+name|bshp
+operator|=
+name|handle
+operator|+
+name|offset
 expr_stmt|;
-comment|/* Do nothing */
 return|return
 operator|(
 literal|0

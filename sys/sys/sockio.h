@@ -358,8 +358,8 @@ end_comment
 begin_define
 define|#
 directive|define
-name|SIOCAIFADDR
-value|_IOW('i', 26, struct ifaliasreq)
+name|OSIOCAIFADDR
+value|_IOW('i', 26, struct oifaliasreq)
 end_define
 
 begin_comment
@@ -485,6 +485,17 @@ end_define
 
 begin_comment
 comment|/* get ifnet descr */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIOCAIFADDR
+value|_IOW('i', 43, struct ifaliasreq)
+end_define
+
+begin_comment
+comment|/* add/chg IF alias */
 end_comment
 
 begin_define

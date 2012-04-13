@@ -108,10 +108,8 @@ argument_list|()
 condition|)
 block|{
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unknown type class!"
 argument_list|)
 expr_stmt|;

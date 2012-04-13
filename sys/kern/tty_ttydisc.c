@@ -647,7 +647,7 @@ index|[
 name|VMIN
 index|]
 decl_stmt|;
-name|int
+name|ssize_t
 name|oresid
 init|=
 name|uio
@@ -1095,7 +1095,7 @@ index|[
 name|VMIN
 index|]
 decl_stmt|;
-name|int
+name|ssize_t
 name|oresid
 init|=
 name|uio
@@ -4905,7 +4905,7 @@ name|error
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|obytes
 init|=
 name|uio

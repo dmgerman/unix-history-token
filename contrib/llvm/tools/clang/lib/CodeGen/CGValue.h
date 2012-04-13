@@ -1573,27 +1573,81 @@ comment|// Qualifiers
 name|Qualifiers
 name|Quals
 decl_stmt|;
-comment|// Associated flags.
+comment|/// DestructedFlag - This is set to true if some external code is
+comment|/// responsible for setting up a destructor for the slot.  Otherwise
+comment|/// the code which constructs it should push the appropriate cleanup.
 name|bool
-name|LifetimeFlag
+name|DestructedFlag
 range|:
 literal|1
 decl_stmt|;
+comment|/// ObjCGCFlag - This is set to true if writing to the memory in the
+comment|/// slot might require calling an appropriate Objective-C GC
+comment|/// barrier.  The exact interaction here is unnecessarily mysterious.
 name|bool
-name|RequiresGCollection
+name|ObjCGCFlag
 range|:
 literal|1
 decl_stmt|;
-comment|/// IsZeroed - This is set to true if the destination is known to be zero
-comment|/// before the assignment into it.  This means that zero fields don't need to
-comment|/// be set.
+comment|/// ZeroedFlag - This is set to true if the memory in the slot is
+comment|/// known to be zero before the assignment into it.  This means that
+comment|/// zero fields don't need to be set.
 name|bool
-name|IsZeroed
+name|ZeroedFlag
+range|:
+literal|1
+decl_stmt|;
+comment|/// AliasedFlag - This is set to true if the slot might be aliased
+comment|/// and it's not undefined behavior to access it through such an
+comment|/// alias.  Note that it's always undefined behavior to access a C++
+comment|/// object that's under construction through an alias derived from
+comment|/// outside the construction process.
+comment|///
+comment|/// This flag controls whether calls that produce the aggregate
+comment|/// value may be evaluated directly into the slot, or whether they
+comment|/// must be evaluated into an unaliased temporary and then memcpy'ed
+comment|/// over.  Since it's invalid in general to memcpy a non-POD C++
+comment|/// object, it's important that this flag never be set when
+comment|/// evaluating an expression which constructs such an object.
+name|bool
+name|AliasedFlag
 range|:
 literal|1
 decl_stmt|;
 name|public
 label|:
+enum|enum
+name|IsAliased_t
+block|{
+name|IsNotAliased
+block|,
+name|IsAliased
+block|}
+enum|;
+enum|enum
+name|IsDestructed_t
+block|{
+name|IsNotDestructed
+block|,
+name|IsDestructed
+block|}
+enum|;
+enum|enum
+name|IsZeroed_t
+block|{
+name|IsNotZeroed
+block|,
+name|IsZeroed
+block|}
+enum|;
+enum|enum
+name|NeedsGCBarriers_t
+block|{
+name|DoesNotNeedGCBarriers
+block|,
+name|NeedsGCBarriers
+block|}
+enum|;
 comment|/// ignored - Returns an aggregate value slot indicating that the
 comment|/// aggregate value is being ignored.
 specifier|static
@@ -1619,17 +1673,21 @@ argument_list|()
 expr_stmt|;
 name|AV
 operator|.
-name|LifetimeFlag
+name|DestructedFlag
 operator|=
 name|AV
 operator|.
-name|RequiresGCollection
+name|ObjCGCFlag
 operator|=
 name|AV
 operator|.
-name|IsZeroed
+name|ZeroedFlag
 operator|=
-literal|0
+name|AV
+operator|.
+name|AliasedFlag
+operator|=
+name|false
 expr_stmt|;
 return|return
 name|AV
@@ -1637,16 +1695,13 @@ return|;
 block|}
 comment|/// forAddr - Make a slot for an aggregate value.
 comment|///
-comment|/// \param Volatile - true if the slot should be volatile-initialized
+comment|/// \param quals - The qualifiers that dictate how the slot should
+comment|/// be initialied. Only 'volatile' and the Objective-C lifetime
+comment|/// qualifiers matter.
 comment|///
-comment|/// \param Qualifiers - The qualifiers that dictate how the slot
-comment|/// should be initialied. Only 'volatile' and the Objective-C
-comment|/// lifetime qualifiers matter.
-comment|///
-comment|/// \param LifetimeExternallyManaged - true if the slot's lifetime
-comment|///   is being externally managed; false if a destructor should be
-comment|///   registered for any temporaries evaluated into the slot
-comment|/// \param RequiresGCollection - true if the slot is located
+comment|/// \param isDestructed - true if something else is responsible
+comment|///   for calling destructors on this object
+comment|/// \param needsGC - true if the slot is potentially located
 comment|///   somewhere that ObjC GC calls should be emitted for
 specifier|static
 name|AggValueSlot
@@ -1656,23 +1711,24 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|Addr
+name|addr
 argument_list|,
 name|Qualifiers
-name|Quals
+name|quals
 argument_list|,
-name|bool
-name|LifetimeExternallyManaged
+name|IsDestructed_t
+name|isDestructed
 argument_list|,
-name|bool
-name|RequiresGCollection
+name|NeedsGCBarriers_t
+name|needsGC
+argument_list|,
+name|IsAliased_t
+name|isAliased
+argument_list|,
+name|IsZeroed_t
+name|isZeroed
 operator|=
-name|false
-argument_list|,
-name|bool
-name|IsZeroed
-operator|=
-name|false
+name|IsNotZeroed
 argument_list|)
 block|{
 name|AggValueSlot
@@ -1682,31 +1738,37 @@ name|AV
 operator|.
 name|Addr
 operator|=
-name|Addr
+name|addr
 expr_stmt|;
 name|AV
 operator|.
 name|Quals
 operator|=
-name|Quals
+name|quals
 expr_stmt|;
 name|AV
 operator|.
-name|LifetimeFlag
+name|DestructedFlag
 operator|=
-name|LifetimeExternallyManaged
+name|isDestructed
 expr_stmt|;
 name|AV
 operator|.
-name|RequiresGCollection
+name|ObjCGCFlag
 operator|=
-name|RequiresGCollection
+name|needsGC
 expr_stmt|;
 name|AV
 operator|.
-name|IsZeroed
+name|ZeroedFlag
 operator|=
-name|IsZeroed
+name|isZeroed
+expr_stmt|;
+name|AV
+operator|.
+name|AliasedFlag
+operator|=
+name|isAliased
 expr_stmt|;
 return|return
 name|AV
@@ -1719,18 +1781,19 @@ parameter_list|(
 name|LValue
 name|LV
 parameter_list|,
-name|bool
-name|LifetimeExternallyManaged
+name|IsDestructed_t
+name|isDestructed
 parameter_list|,
-name|bool
-name|RequiresGCollection
-init|=
-name|false
+name|NeedsGCBarriers_t
+name|needsGC
 parameter_list|,
-name|bool
-name|IsZeroed
+name|IsAliased_t
+name|isAliased
+parameter_list|,
+name|IsZeroed_t
+name|isZeroed
 init|=
-name|false
+name|IsNotZeroed
 parameter_list|)
 block|{
 return|return
@@ -1746,35 +1809,40 @@ operator|.
 name|getQuals
 argument_list|()
 argument_list|,
-name|LifetimeExternallyManaged
+name|isDestructed
 argument_list|,
-name|RequiresGCollection
+name|needsGC
 argument_list|,
-name|IsZeroed
+name|isAliased
+argument_list|,
+name|isZeroed
 argument_list|)
 return|;
 block|}
-name|bool
-name|isLifetimeExternallyManaged
+name|IsDestructed_t
+name|isExternallyDestructed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LifetimeFlag
+name|IsDestructed_t
+argument_list|(
+name|DestructedFlag
+argument_list|)
 return|;
 block|}
 name|void
-name|setLifetimeExternallyManaged
+name|setExternallyDestructed
 parameter_list|(
 name|bool
-name|Managed
+name|destructed
 init|=
 name|true
 parameter_list|)
 block|{
-name|LifetimeFlag
+name|DestructedFlag
 operator|=
-name|Managed
+name|destructed
 expr_stmt|;
 block|}
 name|Qualifiers
@@ -1812,13 +1880,16 @@ name|getObjCLifetime
 argument_list|()
 return|;
 block|}
-name|bool
+name|NeedsGCBarriers_t
 name|requiresGCollection
 argument_list|()
 specifier|const
 block|{
 return|return
-name|RequiresGCollection
+name|NeedsGCBarriers_t
+argument_list|(
+name|ObjCGCFlag
+argument_list|)
 return|;
 block|}
 name|llvm
@@ -1842,6 +1913,18 @@ return|return
 name|Addr
 operator|==
 literal|0
+return|;
+block|}
+name|IsAliased_t
+name|isPotentiallyAliased
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IsAliased_t
+argument_list|(
+name|AliasedFlag
+argument_list|)
 return|;
 block|}
 name|RValue
@@ -1871,18 +1954,21 @@ init|=
 name|true
 parameter_list|)
 block|{
-name|IsZeroed
+name|ZeroedFlag
 operator|=
 name|V
 expr_stmt|;
 block|}
-name|bool
+name|IsZeroed_t
 name|isZeroed
 argument_list|()
 specifier|const
 block|{
 return|return
-name|IsZeroed
+name|IsZeroed_t
+argument_list|(
+name|ZeroedFlag
+argument_list|)
 return|;
 block|}
 block|}

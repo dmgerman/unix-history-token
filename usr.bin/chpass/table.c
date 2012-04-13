@@ -63,24 +63,6 @@ file|"chpass.h"
 end_include
 
 begin_decl_stmt
-name|char
-name|e1
-index|[]
-init|=
-literal|": "
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-name|char
-name|e2
-index|[]
-init|=
-literal|":,"
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|ENTRY
 name|list
 index|[]
@@ -95,7 +77,7 @@ literal|1
 block|,
 literal|5
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}
@@ -109,7 +91,7 @@ literal|1
 block|,
 literal|8
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}
@@ -123,7 +105,7 @@ literal|1
 block|,
 literal|3
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}
@@ -137,7 +119,7 @@ literal|1
 block|,
 literal|3
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}
@@ -151,7 +133,7 @@ literal|1
 block|,
 literal|5
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}
@@ -197,7 +179,7 @@ literal|1
 block|,
 literal|9
 block|,
-name|e2
+literal|":,"
 block|,
 name|NULL
 block|}
@@ -213,7 +195,7 @@ literal|0
 block|,
 literal|9
 block|,
-name|e2
+literal|":,"
 block|,
 name|NULL
 block|}
@@ -229,7 +211,7 @@ literal|0
 block|,
 literal|12
 block|,
-name|e2
+literal|":,"
 block|,
 name|NULL
 block|}
@@ -243,7 +225,7 @@ literal|0
 block|,
 literal|10
 block|,
-name|e2
+literal|":,"
 block|,
 name|NULL
 block|}
@@ -257,7 +239,7 @@ literal|0
 block|,
 literal|15
 block|,
-name|e2
+literal|":,"
 block|,
 name|NULL
 block|}
@@ -271,7 +253,7 @@ literal|0
 block|,
 literal|11
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}
@@ -285,7 +267,7 @@ literal|1
 block|,
 literal|14
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}
@@ -299,7 +281,7 @@ literal|0
 block|,
 literal|5
 block|,
-name|e1
+literal|": "
 block|,
 name|NULL
 block|}

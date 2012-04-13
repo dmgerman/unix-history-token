@@ -3686,7 +3686,7 @@ condition|(
 operator|*
 name|endv
 operator|&&
-name|index
+name|strchr
 argument_list|(
 literal|" \t\n\r"
 argument_list|,
@@ -3699,7 +3699,7 @@ operator|++
 expr_stmt|;
 name|vp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|endv
 argument_list|,
@@ -3730,7 +3730,7 @@ operator|&&
 operator|(
 name|s
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|vp
 argument_list|,

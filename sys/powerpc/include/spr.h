@@ -2731,7 +2731,7 @@ name|SPR_MMCR0_PMC1SEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< 6)
+value|(((x)& 0x3f)<< 6)
 end_define
 
 begin_comment
@@ -2745,7 +2745,7 @@ name|SPR_MMCR0_PMC2SEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< 0)
+value|(((x)& 0x3f)<< 0)
 end_define
 
 begin_comment
@@ -2864,7 +2864,7 @@ name|SPR_MMCR1_PMC3SEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< 27)
+value|(((x)& 0x1f)<< 27)
 end_define
 
 begin_comment
@@ -2878,7 +2878,7 @@ name|SPR_MMCR1_PMC4SEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< 22)
+value|(((x)& 0x1f)<< 22)
 end_define
 
 begin_comment
@@ -2892,7 +2892,7 @@ name|SPR_MMCR1_PMC5SEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< 17)
+value|(((x)& 0x1f)<< 17)
 end_define
 
 begin_comment
@@ -2906,7 +2906,7 @@ name|SPR_MMCR1_PMC6SEL
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)<< 11)
+value|(((x)& 0x3f)<< 11)
 end_define
 
 begin_comment

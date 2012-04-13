@@ -296,23 +296,18 @@ name|math_errhandling
 value|MATH_ERREXCEPT
 end_define
 
-begin_comment
-comment|/* XXX We need a<machine/math.h>. */
-end_comment
+begin_define
+define|#
+directive|define
+name|FP_FAST_FMAF
+value|1
+end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|__ia64__
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|__sparc64__
-argument_list|)
-end_if
+end_ifdef
 
 begin_define
 define|#
@@ -320,17 +315,6 @@ directive|define
 name|FP_FAST_FMA
 value|1
 end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|__ia64__
-end_ifdef
 
 begin_define
 define|#
@@ -343,13 +327,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_define
-define|#
-directive|define
-name|FP_FAST_FMAF
-value|1
-end_define
 
 begin_comment
 comment|/* Symbolic constants to classify floating point numbers. */
@@ -2645,11 +2622,21 @@ end_if
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|acoshl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	acoshl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2668,11 +2655,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|asinhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	asinhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2705,11 +2702,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|atanhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	atanhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2765,11 +2772,21 @@ end_decl_stmt
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|coshl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	coshl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2788,11 +2805,32 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|erfcl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|erfl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	erfcl(long double); long double	erfl(long double);
 endif|#
 directive|endif
 end_endif
@@ -2811,11 +2849,32 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|expl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|expm1l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	expl(long double); long double	expm1l(long double);
 endif|#
 directive|endif
 end_endif
@@ -2978,11 +3037,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|lgammal
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	lgammal(long double);
 endif|#
 directive|endif
 end_endif
@@ -3012,11 +3081,43 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|log10l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|log1pl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|long
+name|double
+name|log2l
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	log10l(long double); long double	log1pl(long double); long double	log2l(long double);
 endif|#
 directive|endif
 end_endif
@@ -3035,11 +3136,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|logl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	logl(long double);
 endif|#
 directive|endif
 end_endif
@@ -3162,11 +3273,24 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|powl
+parameter_list|(
+name|long
+name|double
+parameter_list|,
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	powl(long double, long double);
 endif|#
 directive|endif
 end_endif
@@ -3253,11 +3377,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|sinhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	sinhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -3287,11 +3421,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|tanhl
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	tanhl(long double);
 endif|#
 directive|endif
 end_endif
@@ -3310,11 +3454,21 @@ end_function_decl
 begin_if
 if|#
 directive|if
-literal|0
+name|_DECLARE_C99_LDBL_MATH
 end_if
 
+begin_function_decl
+name|long
+name|double
+name|tgammal
+parameter_list|(
+name|long
+name|double
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
-unit|long double	tgammal(long double);
 endif|#
 directive|endif
 end_endif

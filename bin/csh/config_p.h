@@ -259,17 +259,6 @@ directive|define
 name|SYSMALLOC
 end_define
 
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NLS_CATALOGS
-end_define
-
 begin_endif
 endif|#
 directive|endif

@@ -340,7 +340,7 @@ name|VESA_MODE
 parameter_list|(
 name|x
 parameter_list|)
-value|((x)>= M_VESA_BASE)
+value|((x)>= M_VESA_BASE&& (x)<= M_VESA_MODE_MAX)
 end_define
 
 begin_function_decl

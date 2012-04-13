@@ -1045,11 +1045,11 @@ name|HasTrivialDefaultConstructor
 operator|:
 literal|1
 block|;
-comment|/// HasConstExprNonCopyMoveConstructor - True when this class has at least
+comment|/// HasConstexprNonCopyMoveConstructor - True when this class has at least
 comment|/// one constexpr constructor which is neither the copy nor move
 comment|/// constructor.
 name|bool
-name|HasConstExprNonCopyMoveConstructor
+name|HasConstexprNonCopyMoveConstructor
 operator|:
 literal|1
 block|;
@@ -1192,6 +1192,20 @@ block|;
 comment|/// \brief Whether we have already declared a destructor within the class.
 name|bool
 name|DeclaredDestructor
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether an implicit move constructor was attempted to be declared
+comment|/// but would have been deleted.
+name|bool
+name|FailedImplicitMoveConstructor
+operator|:
+literal|1
+block|;
+comment|/// \brief Whether an implicit move assignment operator was attempted to be
+comment|/// declared but would have been deleted.
+name|bool
+name|FailedImplicitMoveAssignment
 operator|:
 literal|1
 block|;
@@ -2506,6 +2520,115 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Determine whether implicit move constructor generation for this
+end_comment
+
+begin_comment
+comment|/// class has failed before.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasFailedImplicitMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|FailedImplicitMoveConstructor
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set whether implicit move constructor generation for this class
+end_comment
+
+begin_comment
+comment|/// has failed before.
+end_comment
+
+begin_function
+name|void
+name|setFailedImplicitMoveConstructor
+parameter_list|(
+name|bool
+name|Failed
+init|=
+name|true
+parameter_list|)
+block|{
+name|data
+argument_list|()
+operator|.
+name|FailedImplicitMoveConstructor
+operator|=
+name|Failed
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this class should get an implicit move
+end_comment
+
+begin_comment
+comment|/// constructor or if any existing special member function inhibits this.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Covers all bullets of C++0x [class.copy]p9 except the last, that the
+end_comment
+
+begin_comment
+comment|/// constructor wouldn't be deleted, which is only looked up from a cached
+end_comment
+
+begin_comment
+comment|/// result.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsImplicitMoveConstructor
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|hasFailedImplicitMoveConstructor
+argument_list|()
+operator|&&
+operator|!
+name|hasDeclaredMoveConstructor
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredCopyConstructor
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredCopyAssignment
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredMoveAssignment
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredDestructor
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// hasUserDeclaredCopyAssignment - Whether this class has a
 end_comment
 
@@ -2605,6 +2728,115 @@ name|data
 argument_list|()
 operator|.
 name|DeclaredMoveAssignment
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether implicit move assignment generation for this
+end_comment
+
+begin_comment
+comment|/// class has failed before.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasFailedImplicitMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+name|data
+argument_list|()
+operator|.
+name|FailedImplicitMoveAssignment
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Set whether implicit move assignment generation for this class
+end_comment
+
+begin_comment
+comment|/// has failed before.
+end_comment
+
+begin_function
+name|void
+name|setFailedImplicitMoveAssignment
+parameter_list|(
+name|bool
+name|Failed
+init|=
+name|true
+parameter_list|)
+block|{
+name|data
+argument_list|()
+operator|.
+name|FailedImplicitMoveAssignment
+operator|=
+name|Failed
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Determine whether this class should get an implicit move
+end_comment
+
+begin_comment
+comment|/// assignment operator or if any existing special member function inhibits
+end_comment
+
+begin_comment
+comment|/// this.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Covers all bullets of C++0x [class.copy]p20 except the last, that the
+end_comment
+
+begin_comment
+comment|/// constructor wouldn't be deleted.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|needsImplicitMoveAssignment
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|hasFailedImplicitMoveAssignment
+argument_list|()
+operator|&&
+operator|!
+name|hasDeclaredMoveAssignment
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredCopyConstructor
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredCopyAssignment
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredMoveConstructor
+argument_list|()
+operator|&&
+operator|!
+name|hasUserDeclaredDestructor
+argument_list|()
 return|;
 block|}
 end_expr_stmt
@@ -3017,16 +3249,16 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|// hasConstExprNonCopyMoveConstructor - Whether this class has at least one
+comment|// hasConstexprNonCopyMoveConstructor - Whether this class has at least one
 end_comment
 
 begin_comment
-comment|// constexpr constructor other than the copy or move constructors
+comment|// constexpr constructor other than the copy or move constructors.
 end_comment
 
 begin_expr_stmt
 name|bool
-name|hasConstExprNonCopyMoveConstructor
+name|hasConstexprNonCopyMoveConstructor
 argument_list|()
 specifier|const
 block|{
@@ -3034,7 +3266,7 @@ return|return
 name|data
 argument_list|()
 operator|.
-name|HasConstExprNonCopyMoveConstructor
+name|HasConstexprNonCopyMoveConstructor
 return|;
 block|}
 end_expr_stmt
@@ -3224,6 +3456,83 @@ name|isTriviallyCopyable
 argument_list|()
 operator|&&
 name|hasTrivialDefaultConstructor
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|// isLiteral - Whether this class is a literal type.
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// C++0x [basic.types]p10
+end_comment
+
+begin_comment
+comment|//   A class type that has all the following properties:
+end_comment
+
+begin_comment
+comment|//     -- a trivial destructor
+end_comment
+
+begin_comment
+comment|//     -- every constructor call and full-expression in the
+end_comment
+
+begin_comment
+comment|//        brace-or-equal-intializers for non-static data members (if any) is
+end_comment
+
+begin_comment
+comment|//        a constant expression.
+end_comment
+
+begin_comment
+comment|//     -- it is an aggregate type or has at least one constexpr constructor or
+end_comment
+
+begin_comment
+comment|//        constructor template that is not a copy or move constructor, and
+end_comment
+
+begin_comment
+comment|//     -- all non-static data members and base classes of literal types
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// We resolve DR1361 by ignoring the second bullet.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isLiteral
+argument_list|()
+specifier|const
+block|{
+return|return
+name|hasTrivialDestructor
+argument_list|()
+operator|&&
+operator|(
+name|isAggregate
+argument_list|()
+operator|||
+name|hasConstexprNonCopyMoveConstructor
+argument_list|()
+operator|)
+operator|&&
+operator|!
+name|hasNonLiteralTypeFieldsOrBases
 argument_list|()
 return|;
 block|}
@@ -4611,6 +4920,8 @@ argument|StorageClass SCAsWritten
 argument_list|,
 argument|bool isInline
 argument_list|,
+argument|bool isConstexpr
+argument_list|,
 argument|SourceLocation EndLocation
 argument_list|)
 operator|:
@@ -4633,6 +4944,8 @@ argument_list|,
 argument|SCAsWritten
 argument_list|,
 argument|isInline
+argument_list|,
+argument|isConstexpr
 argument_list|)
 block|{
 if|if
@@ -4672,6 +4985,8 @@ argument_list|,
 argument|StorageClass SCAsWritten
 argument_list|,
 argument|bool isInline
+argument_list|,
+argument|bool isConstexpr
 argument_list|,
 argument|SourceLocation EndLocation
 argument_list|)
@@ -5072,6 +5387,10 @@ end_comment
 
 begin_comment
 comment|/// };
+end_comment
+
+begin_comment
+comment|/// \endcode
 end_comment
 
 begin_expr_stmt
@@ -6159,6 +6478,8 @@ argument_list|,
 argument|bool isInline
 argument_list|,
 argument|bool isImplicitlyDeclared
+argument_list|,
+argument|bool isConstexpr
 argument_list|)
 operator|:
 name|CXXMethodDecl
@@ -6180,6 +6501,8 @@ argument_list|,
 name|SC_None
 argument_list|,
 name|isInline
+argument_list|,
+name|isConstexpr
 argument_list|,
 name|SourceLocation
 argument_list|()
@@ -6244,6 +6567,8 @@ argument_list|,
 argument|bool isInline
 argument_list|,
 argument|bool isImplicitlyDeclared
+argument_list|,
+argument|bool isConstexpr
 argument_list|)
 block|;
 comment|/// isExplicitSpecified - Whether this constructor declaration has the
@@ -7125,6 +7450,9 @@ name|SC_None
 argument_list|,
 name|isInline
 argument_list|,
+comment|/*isConstexpr=*/
+name|false
+argument_list|,
 name|SourceLocation
 argument_list|()
 argument_list|)
@@ -7360,6 +7688,8 @@ argument|bool isInline
 argument_list|,
 argument|bool isExplicitSpecified
 argument_list|,
+argument|bool isConstexpr
+argument_list|,
 argument|SourceLocation EndLocation
 argument_list|)
 operator|:
@@ -7382,6 +7712,8 @@ argument_list|,
 name|SC_None
 argument_list|,
 name|isInline
+argument_list|,
+name|isConstexpr
 argument_list|,
 name|EndLocation
 argument_list|)
@@ -7423,6 +7755,8 @@ argument_list|,
 argument|bool isInline
 argument_list|,
 argument|bool isExplicit
+argument_list|,
+argument|bool isConstexpr
 argument_list|,
 argument|SourceLocation EndLocation
 argument_list|)

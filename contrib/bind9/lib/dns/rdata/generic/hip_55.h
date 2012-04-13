@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2009  Internet Systems Consortium, Inc. ("ISC")  *  
 end_comment
 
 begin_comment
-comment|/* $Id: hip_55.h,v 1.2 2009-02-26 06:09:19 marka Exp $ */
+comment|/* $Id: hip_55.h,v 1.2 2009/02/26 06:09:19 marka Exp $ */
 end_comment
 
 begin_ifndef

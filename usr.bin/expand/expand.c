@@ -123,12 +123,14 @@ comment|/*  * expand - expand tabs to equivalent spaces  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nstops
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|tabstops
 index|[

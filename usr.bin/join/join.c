@@ -214,6 +214,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|INPUT
 name|input1
 init|=
@@ -279,6 +280,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 name|OLIST
 modifier|*
 name|olist
@@ -290,6 +292,7 @@ comment|/* output field list */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|olistcnt
 decl_stmt|;
@@ -300,6 +303,7 @@ comment|/* output field list count */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|u_long
 name|olistalloc
 decl_stmt|;
@@ -310,6 +314,7 @@ comment|/* output field allocated count */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|joinout
 init|=
@@ -322,6 +327,7 @@ comment|/* show lines with matched join fields (-v) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|needsep
 decl_stmt|;
@@ -332,6 +338,7 @@ comment|/* need separator character */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|spans
 init|=
@@ -344,6 +351,7 @@ comment|/* span multiple delimiters (-t) */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|empty
@@ -365,6 +373,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|wchar_t
 modifier|*
 name|tabchar
@@ -378,6 +387,7 @@ comment|/* delimiter characters (-t) */
 end_comment
 
 begin_function_decl
+specifier|static
 name|int
 name|cmp
 parameter_list|(
@@ -395,6 +405,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|fieldarg
 parameter_list|(
@@ -405,6 +416,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|joinlines
 parameter_list|(
@@ -418,6 +430,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|mbscoll
 parameter_list|(
@@ -433,6 +446,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|mbssep
@@ -449,6 +463,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|obsolete
 parameter_list|(
@@ -460,6 +475,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|outfield
 parameter_list|(
@@ -474,6 +490,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|outoneline
 parameter_list|(
@@ -487,6 +504,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|outtwoline
 parameter_list|(
@@ -506,6 +524,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|slurp
 parameter_list|(
@@ -516,6 +535,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|wchar_t
 modifier|*
 name|towcs
@@ -528,6 +548,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -1336,6 +1357,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|slurp
 parameter_list|(
@@ -1840,6 +1862,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|mbssep
@@ -2008,6 +2031,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|cmp
 parameter_list|(
@@ -2085,6 +2109,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|mbscoll
 parameter_list|(
@@ -2185,6 +2210,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|wchar_t
 modifier|*
 name|towcs
@@ -2282,6 +2308,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|joinlines
 parameter_list|(
@@ -2394,6 +2421,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|outoneline
 parameter_list|(
@@ -2547,6 +2575,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|outtwoline
 parameter_list|(
@@ -2785,6 +2814,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|outfield
 parameter_list|(
@@ -2906,6 +2936,7 @@ comment|/*  * Convert an output list argument "2.1, 1.3, 2.4" into an array of o
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|fieldarg
 parameter_list|(
@@ -3118,6 +3149,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|obsolete
 parameter_list|(
@@ -3518,6 +3550,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

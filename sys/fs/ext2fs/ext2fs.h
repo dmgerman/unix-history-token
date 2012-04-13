@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|_FS_EXT2FS_EXT2_FS_H_
+name|_FS_EXT2FS_EXT2FS_H_
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|_FS_EXT2FS_EXT2_FS_H_
+name|_FS_EXT2FS_EXT2FS_H_
 end_define
 
 begin_include
@@ -34,6 +34,17 @@ define|#
 directive|define
 name|EXT2_LINK_MAX
 value|32000
+end_define
+
+begin_comment
+comment|/*  * A summary of contiguous blocks of various sizes is maintained  * in each cylinder group. Normally this is set by the initial  * value of fs_maxcontig.  *  * XXX:FS_MAXCONTIG is set to 16 to conserve space. Here we set  * EXT2_MAXCONTIG to 32 for better performance.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT2_MAXCONTIG
+value|32
 end_define
 
 begin_comment
@@ -79,7 +90,7 @@ begin_define
 define|#
 directive|define
 name|EXT2_MAXSYMLINKLEN
-value|(EXT2_N_BLOCKS * sizeof (uint32_t))
+value|(EXT2_N_BLOCKS * sizeof(uint32_t))
 end_define
 
 begin_comment
@@ -304,9 +315,70 @@ name|e3fs_first_meta_bg
 decl_stmt|;
 comment|/* First metablock block group */
 name|uint32_t
+name|e3fs_mkfs_time
+decl_stmt|;
+comment|/* when the fs was created */
+name|uint32_t
+name|e3fs_jnl_blks
+index|[
+literal|17
+index|]
+decl_stmt|;
+comment|/* backup of the journal inode */
+name|uint32_t
+name|e4fs_bcount_hi
+decl_stmt|;
+comment|/* block count */
+name|uint32_t
+name|e4fs_rbcount_hi
+decl_stmt|;
+comment|/* reserved blocks count */
+name|uint32_t
+name|e4fs_fbcount_hi
+decl_stmt|;
+comment|/* free blocks count */
+name|uint16_t
+name|e4fs_min_extra_isize
+decl_stmt|;
+comment|/* all inodes have at least some bytes */
+name|uint16_t
+name|e4fs_want_extra_isize
+decl_stmt|;
+comment|/* inodes must reserve some bytes */
+name|uint32_t
+name|e4fs_flags
+decl_stmt|;
+comment|/* miscellaneous flags */
+name|uint16_t
+name|e4fs_raid_stride
+decl_stmt|;
+comment|/* RAID stride */
+name|uint16_t
+name|e4fs_mmpintv
+decl_stmt|;
+comment|/* number of seconds to wait in MMP checking */
+name|uint64_t
+name|e4fs_mmpblk
+decl_stmt|;
+comment|/* block for multi-mount protection */
+name|uint32_t
+name|e4fs_raid_stripe_wid
+decl_stmt|;
+comment|/* blocks on all data disks (N * stride) */
+name|uint8_t
+name|e4fs_log_gpf
+decl_stmt|;
+comment|/* FLEX_BG group size */
+name|uint8_t
+name|e4fs_char_pad2
+decl_stmt|;
+name|uint16_t
+name|e4fs_pad
+decl_stmt|;
+name|uint32_t
 name|reserved2
 index|[
-literal|190
+literal|162
 index|]
 decl_stmt|;
 comment|/* Padding to the end of the block */
@@ -442,6 +514,25 @@ modifier|*
 name|e2fs_gd
 decl_stmt|;
 comment|/* Group Descriptors */
+name|int32_t
+name|e2fs_maxcontig
+decl_stmt|;
+comment|/* max number of contiguous blks */
+name|int32_t
+name|e2fs_contigsumsize
+decl_stmt|;
+comment|/* size of cluster summary array */
+name|int32_t
+modifier|*
+name|e2fs_maxcluster
+decl_stmt|;
+comment|/* max cluster in each cyl group */
+name|struct
+name|csum
+modifier|*
+name|e2fs_clustersum
+decl_stmt|;
+comment|/* cluster summary in each cyl group */
 block|}
 struct|;
 end_struct
@@ -571,6 +662,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|EXT4F_ROCOMPAT_EXTRA_ISIZE
+value|0x0040
+end_define
+
+begin_define
+define|#
+directive|define
 name|EXT2F_INCOMPAT_COMP
 value|0x0001
 end_define
@@ -597,7 +695,7 @@ begin_define
 define|#
 directive|define
 name|EXT2F_ROCOMPAT_SUPP
-value|(EXT2F_ROCOMPAT_SPARSESUPER \ 					 | EXT2F_ROCOMPAT_LARGEFILE)
+value|(EXT2F_ROCOMPAT_SPARSESUPER | \ 					 EXT2F_ROCOMPAT_LARGEFILE | \ 					 EXT4F_ROCOMPAT_EXTRA_ISIZE)
 end_define
 
 begin_define
@@ -819,6 +917,27 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* cluster summary information */
+end_comment
+
+begin_struct
+struct|struct
+name|csum
+block|{
+name|int8_t
+name|cs_init
+decl_stmt|;
+comment|/* cluster summary has been initialized */
+name|int32_t
+modifier|*
+name|cs_sum
+decl_stmt|;
+comment|/* cluster summary array */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* EXT2FS metadatas are stored in little-endian byte order. These macros  * helps reading these metadatas  */
 end_comment
 
@@ -921,7 +1040,7 @@ name|EXT2_ADDR_PER_BLOCK
 parameter_list|(
 name|s
 parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / sizeof (uint32_t))
+value|(EXT2_BLOCK_SIZE(s) / sizeof(uint32_t))
 end_define
 
 begin_if
@@ -1181,7 +1300,7 @@ name|EXT2_DESC_PER_BLOCK
 parameter_list|(
 name|s
 parameter_list|)
-value|(EXT2_BLOCK_SIZE(s) / sizeof (struct ext2_gd))
+value|(EXT2_BLOCK_SIZE(s) / sizeof(struct ext2_gd))
 end_define
 
 begin_endif

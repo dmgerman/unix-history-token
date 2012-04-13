@@ -8319,17 +8319,16 @@ name|inc
 operator|->
 name|inc6_faddr
 expr_stmt|;
-name|rtalloc_ign
+name|in6_rtalloc_ign
 argument_list|(
-operator|(
-expr|struct
-name|route
-operator|*
-operator|)
 operator|&
 name|sro6
 argument_list|,
 literal|0
+argument_list|,
+name|inc
+operator|->
+name|inc_fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -10469,7 +10468,7 @@ block|}
 end_function
 
 begin_expr_stmt
-name|SYSCTL_PROC
+name|SYSCTL_VNET_PROC
 argument_list|(
 name|_net_inet_tcp
 argument_list|,

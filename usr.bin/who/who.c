@@ -160,6 +160,7 @@ specifier|static
 name|void
 name|row
 parameter_list|(
+specifier|const
 name|struct
 name|utmpx
 modifier|*
@@ -206,6 +207,28 @@ end_decl_stmt
 
 begin_comment
 comment|/* Write column headings */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|aflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Print all entries */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|bflag
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Show date of the last reboot */
 end_comment
 
 begin_decl_stmt
@@ -297,7 +320,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"HTmqsu"
+literal|"HTabmqsu"
 argument_list|)
 operator|)
 operator|!=
@@ -324,6 +347,30 @@ literal|'T'
 case|:
 comment|/* Show terminal state */
 name|Tflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'a'
+case|:
+comment|/* Same as -bdlprtTu */
+name|aflag
+operator|=
+name|bflag
+operator|=
+name|Tflag
+operator|=
+name|uflag
+operator|=
+literal|1
+expr_stmt|;
+break|break;
+case|case
+literal|'b'
+case|:
+comment|/* Show date of the last reboot */
+name|bflag
 operator|=
 literal|1
 expr_stmt|;
@@ -539,7 +586,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: who [-HmqsTu] [am I] [file]\n"
+literal|"usage: who [-abHmqsTu] [am I] [file]\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -576,7 +623,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"%-8s %-12s "
+literal|"%-12s %-12s "
 argument_list|,
 literal|"LINE"
 argument_list|,
@@ -607,6 +654,7 @@ specifier|static
 name|void
 name|row
 parameter_list|(
+specifier|const
 name|struct
 name|utmpx
 modifier|*
@@ -761,9 +809,25 @@ argument_list|,
 name|state
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ut
+operator|->
+name|ut_type
+operator|==
+name|BOOT_TIME
+condition|)
 name|printf
 argument_list|(
-literal|"%-8s "
+literal|"%-12s "
+argument_list|,
+literal|"system boot"
+argument_list|)
+expr_stmt|;
+else|else
+name|printf
+argument_list|(
+literal|"%-12s "
 argument_list|,
 name|ut
 operator|->
@@ -995,13 +1059,31 @@ condition|)
 block|{
 if|if
 condition|(
+operator|(
+operator|(
+name|aflag
+operator|||
+operator|!
+name|bflag
+operator|)
+operator|&&
 name|utx
 operator|->
 name|ut_type
-operator|!=
+operator|==
 name|USER_PROCESS
+operator|)
+operator|||
+operator|(
+name|bflag
+operator|&&
+name|utx
+operator|->
+name|ut_type
+operator|==
+name|BOOT_TIME
+operator|)
 condition|)
-continue|continue;
 if|if
 condition|(
 name|ttystat
@@ -1010,10 +1092,9 @@ name|utx
 operator|->
 name|ut_line
 argument_list|)
-operator|!=
+operator|==
 literal|0
 condition|)
-continue|continue;
 name|row
 argument_list|(
 name|utx

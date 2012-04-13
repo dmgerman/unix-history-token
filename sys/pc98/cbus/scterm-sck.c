@@ -471,8 +471,8 @@ name|KANJI
 end_ifdef
 
 begin_function
-name|__inline
 specifier|static
+specifier|inline
 name|u_char
 name|iskanji1
 parameter_list|(
@@ -673,8 +673,8 @@ block|}
 end_function
 
 begin_function
-name|__inline
 specifier|static
+specifier|inline
 name|u_char
 name|iskanji2
 parameter_list|(

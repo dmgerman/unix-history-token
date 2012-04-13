@@ -713,6 +713,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_AHCI
@@ -1296,6 +1297,16 @@ literal|0
 block|}
 block|,
 block|{
+literal|0x28268086
+block|,
+literal|0x00
+block|,
+literal|"Intel Patsburg (RAID)"
+block|,
+literal|0
+block|}
+block|,
+block|{
 literal|0x1e028086
 block|,
 literal|0x00
@@ -1440,7 +1451,7 @@ literal|0x611111ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6111"
+literal|"Marvell 88SE6111"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
@@ -1454,7 +1465,7 @@ literal|0x612111ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6121"
+literal|"Marvell 88SE6121"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
@@ -1472,7 +1483,7 @@ literal|0x614111ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6141"
+literal|"Marvell 88SE6141"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
@@ -1490,7 +1501,7 @@ literal|0x614511ab
 block|,
 literal|0x00
 block|,
-literal|"Marvell 88SX6145"
+literal|"Marvell 88SE6145"
 block|,
 name|AHCI_Q_NOFORCE
 operator||
@@ -2457,6 +2468,26 @@ name|recovery_slot
 value|spriv_field1
 end_define
 
+begin_decl_stmt
+specifier|static
+name|int
+name|force_ahci
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"hw.ahci.force"
+argument_list|,
+operator|&
+name|force_ahci
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_function
 specifier|static
 name|int
@@ -2566,6 +2597,11 @@ operator|&&
 operator|(
 name|valid
 operator|||
+operator|(
+name|force_ahci
+operator|==
+literal|1
+operator|&&
 operator|!
 operator|(
 name|ahci_ids
@@ -2576,6 +2612,7 @@ operator|.
 name|quirks
 operator|&
 name|AHCI_Q_NOFORCE
+operator|)
 operator|)
 operator|)
 condition|)
@@ -4082,23 +4119,6 @@ name|unit
 operator|++
 control|)
 block|{
-if|if
-condition|(
-operator|(
-name|ctlr
-operator|->
-name|ichannels
-operator|&
-operator|(
-literal|1
-operator|<<
-name|unit
-operator|)
-operator|)
-operator|==
-literal|0
-condition|)
-continue|continue;
 name|child
 operator|=
 name|device_add_child
@@ -4117,6 +4137,7 @@ name|child
 operator|==
 name|NULL
 condition|)
+block|{
 name|device_printf
 argument_list|(
 name|dev
@@ -4124,7 +4145,8 @@ argument_list|,
 literal|"failed to add channel device\n"
 argument_list|)
 expr_stmt|;
-else|else
+continue|continue;
+block|}
 name|device_set_ivars
 argument_list|(
 name|child
@@ -4137,6 +4159,27 @@ operator|(
 name|intptr_t
 operator|)
 name|unit
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|(
+name|ctlr
+operator|->
+name|ichannels
+operator|&
+operator|(
+literal|1
+operator|<<
+name|unit
+operator|)
+operator|)
+operator|==
+literal|0
+condition|)
+name|device_disable
+argument_list|(
+name|child
 argument_list|)
 expr_stmt|;
 block|}
@@ -4170,62 +4213,15 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
-name|device_t
-modifier|*
-name|children
-decl_stmt|;
 name|int
-name|nchildren
-decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Detach& delete all children */
-if|if
-condition|(
-operator|!
-name|device_get_children
+name|device_delete_children
 argument_list|(
 name|dev
-argument_list|,
-operator|&
-name|children
-argument_list|,
-operator|&
-name|nchildren
-argument_list|)
-condition|)
-block|{
-for|for
-control|(
-name|i
-operator|=
-literal|0
-init|;
-name|i
-operator|<
-name|nchildren
-condition|;
-name|i
-operator|++
-control|)
-name|device_delete_child
-argument_list|(
-name|dev
-argument_list|,
-name|children
-index|[
-name|i
-index|]
 argument_list|)
 expr_stmt|;
-name|free
-argument_list|(
-name|children
-argument_list|,
-name|M_TEMP
-argument_list|)
-expr_stmt|;
-block|}
 comment|/* Free interrupts. */
 for|for
 control|(

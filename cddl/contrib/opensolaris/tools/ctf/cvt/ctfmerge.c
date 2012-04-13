@@ -302,6 +302,9 @@ name|progname
 argument_list|,
 name|progname
 argument_list|,
+operator|(
+name|int
+operator|)
 name|strlen
 argument_list|(
 name|progname
@@ -1980,6 +1983,8 @@ argument_list|,
 name|tmpname
 argument_list|,
 name|CTF_COMPRESS
+operator||
+name|CTF_SWAP_BYTES
 operator||
 name|keep_stabs
 argument_list|)
@@ -3782,6 +3787,8 @@ argument_list|,
 name|tmpname
 argument_list|,
 name|CTF_COMPRESS
+operator||
+name|CTF_SWAP_BYTES
 operator||
 name|write_fuzzy_match
 operator||

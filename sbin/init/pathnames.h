@@ -12,6 +12,13 @@ end_include
 begin_define
 define|#
 directive|define
+name|_PATH_INITLOG
+value|"/var/log/init.log"
+end_define
+
+begin_define
+define|#
+directive|define
 name|_PATH_SLOGGER
 value|"/sbin/session_logger"
 end_define

@@ -191,6 +191,13 @@ name|evalskip
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|skipcount
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/* reasons for skipping commands (see comment on breakcmd routine) */
 end_comment

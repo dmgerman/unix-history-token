@@ -11,6 +11,20 @@ begin_comment
 comment|/*-  * Copyright (c) 1999 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Lennart Augustsson (lennart@augustsson.net) at  * Carlstedt Research& Technology.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
+begin_include
+include|#
+directive|include
+file|<sys/cdefs.h>
+end_include
+
+begin_expr_stmt
+name|__FBSDID
+argument_list|(
+literal|"$FreeBSD$"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|/*  * USB audio specs: http://www.usb.org/developers/devclass_docs/audio10.pdf  *                  http://www.usb.org/developers/devclass_docs/frmts10.pdf  *                  http://www.usb.org/developers/devclass_docs/termt10.pdf  */
 end_comment
@@ -278,6 +292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -2680,18 +2695,7 @@ argument_list|,
 name|bus_generic_shutdown
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3131,7 +3135,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Play: %d Hz, %d ch, %s format\n"
+literal|"Play: %d Hz, %d ch, %s format.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3163,7 +3167,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No playback!\n"
+literal|"No playback.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3180,7 +3184,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"Record: %d Hz, %d ch, %s format\n"
+literal|"Record: %d Hz, %d ch, %s format.\n"
 argument_list|,
 name|sc
 operator|->
@@ -3212,7 +3216,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No recording!\n"
+literal|"No recording.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3241,7 +3245,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"MIDI sequencer\n"
+literal|"MIDI sequencer.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3251,7 +3255,7 @@ name|device_printf
 argument_list|(
 name|dev
 argument_list|,
-literal|"No midi sequencer\n"
+literal|"No midi sequencer.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3269,6 +3273,26 @@ name|func
 operator|=
 name|SCF_PCM
 expr_stmt|;
+comment|/* 	 * Only attach a PCM device if we have a playback, recording 	 * or mixer device present: 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_play_chan
+operator|.
+name|valid
+operator|||
+name|sc
+operator|->
+name|sc_rec_chan
+operator|.
+name|valid
+operator|||
+name|sc
+operator|->
+name|sc_mix_info
+condition|)
+block|{
 name|child
 operator|=
 name|device_add_child
@@ -3307,6 +3331,7 @@ operator|->
 name|sc_sndcard_func
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|bus_generic_attach
@@ -3721,12 +3746,53 @@ argument_list|(
 name|dev
 argument_list|)
 decl_stmt|;
+comment|/* 	 * Stop USB transfers early so that any audio applications 	 * will time out and close opened /dev/dspX.Y device(s), if 	 * any. 	 */
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_play_chan
+operator|.
+name|valid
+condition|)
+name|usbd_transfer_unsetup
+argument_list|(
+name|sc
+operator|->
+name|sc_play_chan
+operator|.
+name|xfer
+argument_list|,
+name|UAUDIO_NCHANBUFS
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|sc
+operator|->
+name|sc_rec_chan
+operator|.
+name|valid
+condition|)
+name|usbd_transfer_unsetup
+argument_list|(
+name|sc
+operator|->
+name|sc_rec_chan
+operator|.
+name|xfer
+argument_list|,
+name|UAUDIO_NCHANBUFS
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|bus_generic_detach
 argument_list|(
 name|dev
 argument_list|)
+operator|!=
+literal|0
 condition|)
 block|{
 name|DPRINTF
@@ -5831,15 +5897,6 @@ modifier|*
 name|pc
 decl_stmt|;
 name|uint32_t
-name|n
-decl_stmt|;
-name|uint32_t
-name|m
-decl_stmt|;
-name|uint32_t
-name|blockcount
-decl_stmt|;
-name|uint32_t
 name|offset0
 decl_stmt|;
 name|uint32_t
@@ -5849,6 +5906,12 @@ name|uint32_t
 name|mfl
 decl_stmt|;
 name|int
+name|m
+decl_stmt|;
+name|int
+name|n
+decl_stmt|;
+name|int
 name|len
 decl_stmt|;
 name|int
@@ -5856,6 +5919,9 @@ name|actlen
 decl_stmt|;
 name|int
 name|nframes
+decl_stmt|;
+name|int
+name|blockcount
 decl_stmt|;
 name|usbd_xfer_status
 argument_list|(
@@ -5982,12 +6048,10 @@ name|m
 operator|>
 name|len
 condition|)
-block|{
 name|m
 operator|=
 name|len
 expr_stmt|;
-block|}
 name|usbd_copy_out
 argument_list|(
 name|pc
@@ -8738,7 +8802,7 @@ modifier|*
 name|d
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|uint32_t
@@ -8750,7 +8814,7 @@ name|uint32_t
 name|offset
 init|=
 operator|(
-name|index
+name|i
 operator|*
 name|d
 operator|->
@@ -12386,8 +12450,8 @@ block|}
 end_function
 
 begin_function
-specifier|const
 specifier|static
+specifier|const
 name|struct
 name|uaudio_terminal_node
 modifier|*
@@ -12400,7 +12464,7 @@ modifier|*
 name|iot
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -12452,10 +12516,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|i
 operator|--
 condition|)
-block|{
 return|return
 operator|(
 name|root
@@ -12463,7 +12526,6 @@ operator|+
 name|n
 operator|)
 return|;
-block|}
 block|}
 block|}
 do|while
@@ -12481,8 +12543,8 @@ block|}
 end_function
 
 begin_function
-specifier|const
 specifier|static
+specifier|const
 name|struct
 name|uaudio_terminal_node
 modifier|*
@@ -12495,7 +12557,7 @@ modifier|*
 name|iot
 parameter_list|,
 name|uint8_t
-name|index
+name|i
 parameter_list|)
 block|{
 name|struct
@@ -12547,10 +12609,9 @@ block|{
 if|if
 condition|(
 operator|!
-name|index
+name|i
 operator|--
 condition|)
-block|{
 return|return
 operator|(
 name|root
@@ -12558,7 +12619,6 @@ operator|+
 name|n
 operator|)
 return|;
-block|}
 block|}
 block|}
 do|while

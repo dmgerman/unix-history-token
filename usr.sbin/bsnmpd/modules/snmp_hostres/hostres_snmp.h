@@ -588,7 +588,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* Refresh the FS table if neccessary. */
+comment|/* Refresh the FS table if necessary. */
 end_comment
 
 begin_function_decl

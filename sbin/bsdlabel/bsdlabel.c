@@ -116,7 +116,7 @@ begin_define
 define|#
 directive|define
 name|MAXPARTITIONS
-value|26
+value|20
 end_define
 
 begin_include
@@ -210,9 +210,11 @@ end_function_decl
 begin_function_decl
 specifier|static
 name|int
-name|geom_bsd_available
+name|geom_class_available
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -620,6 +622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_enum
+specifier|static
 enum|enum
 block|{
 name|UNSPEC
@@ -860,7 +863,7 @@ break|break;
 case|case
 literal|'r'
 case|:
-comment|/* 				 * We accept and ignode -r for compatibility with 				 * historically disklabel usage. 				 */
+comment|/* 				 * We accept and ignore -r for compatibility with 				 * historical disklabel usage. 				 */
 break|break;
 case|case
 literal|'w'
@@ -1607,9 +1610,12 @@ end_function
 begin_function
 specifier|static
 name|int
-name|geom_bsd_available
+name|geom_class_available
 parameter_list|(
-name|void
+specifier|const
+name|char
+modifier|*
+name|name
 parameter_list|)
 block|{
 name|struct
@@ -1664,7 +1670,7 @@ name|class
 operator|->
 name|lg_name
 argument_list|,
-literal|"BSD"
+name|name
 argument_list|)
 operator|==
 literal|0
@@ -1737,7 +1743,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"write to disk label supressed - label was as follows:"
+literal|"write to disk label suppressed - label was as follows:"
 argument_list|)
 expr_stmt|;
 name|display
@@ -1832,7 +1838,9 @@ name|labeloffset
 operator|+
 name|labelsoffset
 operator|*
-name|secsize
+name|lab
+operator|.
+name|d_secsize
 argument_list|,
 name|lp
 argument_list|)
@@ -1876,11 +1884,44 @@ name|serrno
 operator|=
 name|errno
 expr_stmt|;
+if|if
+condition|(
+name|geom_class_available
+argument_list|(
+literal|"PART"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Since we weren't able open provider for 			 * writing, then recommend user to use gpart(8). 			 */
+name|warnc
+argument_list|(
+name|serrno
+argument_list|,
+literal|"cannot open provider %s for writing label"
+argument_list|,
+name|specname
+argument_list|)
+expr_stmt|;
+name|warnx
+argument_list|(
+literal|"Try to use gpart(8)."
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 comment|/* Give up if GEOM_BSD is not available. */
 if|if
 condition|(
-name|geom_bsd_available
-argument_list|()
+name|geom_class_available
+argument_list|(
+literal|"BSD"
+argument_list|)
 operator|==
 literal|0
 condition|)
@@ -1959,7 +2000,9 @@ name|labeloffset
 operator|+
 name|labelsoffset
 operator|*
-name|secsize
+name|lab
+operator|.
+name|d_secsize
 argument_list|)
 expr_stmt|;
 name|errstr
@@ -4001,7 +4044,7 @@ condition|(
 operator|(
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -4032,7 +4075,7 @@ condition|)
 continue|continue;
 name|tp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|cp
 argument_list|,
@@ -4393,10 +4436,6 @@ block|{
 if|if
 condition|(
 name|v
-operator|==
-literal|0
-operator|||
-name|v
 operator|>
 name|MAXPARTITIONS
 condition|)
@@ -4415,6 +4454,33 @@ operator|->
 name|d_npartitions
 operator|=
 name|MAXPARTITIONS
+expr_stmt|;
+name|errors
+operator|++
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|v
+operator|<
+name|DEFPARTITIONS
+condition|)
+block|{
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"line %d: bad # of partitions\n"
+argument_list|,
+name|lineno
+argument_list|)
+expr_stmt|;
+name|lp
+operator|->
+name|d_npartitions
+operator|=
+name|DEFPARTITIONS
 expr_stmt|;
 name|errors
 operator|++
@@ -5958,6 +6024,7 @@ name|d_npartitions
 operator|>
 name|MAXPARTITIONS
 condition|)
+block|{
 name|warnx
 argument_list|(
 literal|"number of partitions (%lu)> MAXPARTITIONS (%d)"
@@ -5972,6 +6039,37 @@ argument_list|,
 name|MAXPARTITIONS
 argument_list|)
 expr_stmt|;
+name|errors
+operator|++
+expr_stmt|;
+block|}
+if|if
+condition|(
+name|lp
+operator|->
+name|d_npartitions
+operator|<
+name|DEFPARTITIONS
+condition|)
+block|{
+name|warnx
+argument_list|(
+literal|"number of partitions (%lu)< DEFPARTITIONS (%d)"
+argument_list|,
+operator|(
+name|u_long
+operator|)
+name|lp
+operator|->
+name|d_npartitions
+argument_list|,
+name|DEFPARTITIONS
+argument_list|)
+expr_stmt|;
+name|errors
+operator|++
+expr_stmt|;
+block|}
 block|}
 else|else
 block|{
@@ -5985,6 +6083,14 @@ operator|=
 name|getvirginlabel
 argument_list|()
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_secsize
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_secsize
@@ -5993,6 +6099,14 @@ name|vl
 operator|->
 name|d_secsize
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_nsectors
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_nsectors
@@ -6001,6 +6115,14 @@ name|vl
 operator|->
 name|d_nsectors
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_ntracks
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_ntracks
@@ -6009,6 +6131,14 @@ name|vl
 operator|->
 name|d_ntracks
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_ncylinders
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_ncylinders
@@ -6017,6 +6147,14 @@ name|vl
 operator|->
 name|d_ncylinders
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_rpm
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_rpm
@@ -6025,6 +6163,14 @@ name|vl
 operator|->
 name|d_rpm
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_interleave
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_interleave
@@ -6033,6 +6179,14 @@ name|vl
 operator|->
 name|d_interleave
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_secpercyl
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_secpercyl
@@ -6041,6 +6195,22 @@ name|vl
 operator|->
 name|d_secpercyl
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_secperunit
+operator|==
+literal|0
+operator|||
+name|lp
+operator|->
+name|d_secperunit
+operator|>
+name|vl
+operator|->
+name|d_secperunit
+condition|)
 name|lp
 operator|->
 name|d_secperunit
@@ -6049,6 +6219,14 @@ name|vl
 operator|->
 name|d_secperunit
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_bbsize
+operator|==
+literal|0
+condition|)
 name|lp
 operator|->
 name|d_bbsize
@@ -6057,6 +6235,20 @@ name|vl
 operator|->
 name|d_bbsize
 expr_stmt|;
+if|if
+condition|(
+name|lp
+operator|->
+name|d_npartitions
+operator|<
+name|DEFPARTITIONS
+operator|||
+name|lp
+operator|->
+name|d_npartitions
+operator|>
+name|MAXPARTITIONS
+condition|)
 name|lp
 operator|->
 name|d_npartitions
@@ -7587,7 +7779,7 @@ name|mediasize
 operator|/
 name|secsize
 expr_stmt|;
-comment|/* 	 * Nobody in these enligthened days uses the CHS geometry for 	 * anything, but nontheless try to get it right.  If we fail 	 * to get any good ideas from the device, construct something 	 * which is IBM-PC friendly. 	 */
+comment|/* 	 * Nobody in these enlightened days uses the CHS geometry for 	 * anything, but nonetheless try to get it right.  If we fail 	 * to get any good ideas from the device, construct something 	 * which is IBM-PC friendly. 	 */
 if|if
 condition|(
 name|ioctl

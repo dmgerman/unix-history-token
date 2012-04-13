@@ -110,7 +110,7 @@ name|fp
 parameter_list|,
 name|unsigned
 name|long
-name|reqest
+name|request
 parameter_list|,
 name|devfs_rsnum
 name|rsnum
@@ -304,6 +304,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|devfs_rsnum
 name|in_rsnum
 decl_stmt|;

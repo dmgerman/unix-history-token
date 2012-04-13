@@ -1178,9 +1178,9 @@ name|ed
 operator|->
 name|bInterval
 operator|=
-literal|8
+literal|4
 expr_stmt|;
-comment|/* 8*125 us */
+comment|/* 1 ms */
 break|break;
 block|}
 break|break;
@@ -1540,9 +1540,7 @@ name|temp
 operator|->
 name|bInterfaceNumber
 operator|=
-literal|0
-operator|-
-literal|1
+literal|0xFF
 expr_stmt|;
 name|temp
 operator|->
@@ -3799,9 +3797,11 @@ index|]
 operator|.
 name|hw_ep_scratch
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|ues
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -4981,9 +4981,11 @@ index|]
 operator|.
 name|temp_setup
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 name|uts
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

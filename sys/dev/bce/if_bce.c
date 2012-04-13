@@ -2805,21 +2805,6 @@ comment|/*	DEVMETHOD(device_identify,	bce_identify),      */
 comment|/*	DEVMETHOD(device_suspend,	bce_suspend),       */
 comment|/*	DEVMETHOD(device_resume,	bce_resume),        */
 comment|/*	DEVMETHOD(device_quiesce,	bce_quiesce),       */
-comment|/* Bus interface (bus_if.h) */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* MII interface (miibus_if.h) */
 name|DEVMETHOD
 argument_list|(
@@ -2845,11 +2830,7 @@ block|,
 comment|/* Supported by MII interface but not used here.       */
 comment|/*	DEVMETHOD(miibus_linkchg,	bce_miibus_linkchg),   */
 comment|/*	DEVMETHOD(miibus_mediainit,	bce_miibus_mediainit), */
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -2977,6 +2958,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw

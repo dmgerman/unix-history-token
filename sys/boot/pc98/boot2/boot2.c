@@ -68,12 +68,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -342,8 +336,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|PATH_CONFIG
+name|PATH_DOTCONFIG
 value|"/boot.config"
+end_define
+
+begin_define
+define|#
+directive|define
+name|PATH_CONFIG
+value|"/boot/config"
 end_define
 
 begin_define
@@ -379,26 +380,6 @@ define|#
 directive|define
 name|NDEV
 value|3
-end_define
-
-begin_define
-define|#
-directive|define
-name|V86_CY
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_C)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V86_ZR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_Z)
 end_define
 
 begin_define
@@ -632,6 +613,11 @@ name|cmddup
 index|[
 literal|512
 index|]
+decl_stmt|,
+name|knamebuf
+index|[
+literal|1024
+index|]
 decl_stmt|;
 end_decl_stmt
 
@@ -650,6 +636,8 @@ begin_decl_stmt
 specifier|static
 name|uint32_t
 name|opts
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -1819,6 +1807,9 @@ decl_stmt|;
 name|ino_t
 name|ino
 decl_stmt|;
+name|size_t
+name|nbyte
+decl_stmt|;
 name|dmadat
 operator|=
 operator|(
@@ -1994,7 +1985,19 @@ argument_list|(
 name|PATH_CONFIG
 argument_list|)
 operator|)
+operator|||
+operator|(
+name|ino
+operator|=
+name|lookup
+argument_list|(
+name|PATH_DOTCONFIG
+argument_list|)
+operator|)
 condition|)
+block|{
+name|nbyte
+operator|=
 name|fsread
 argument_list|(
 name|ino
@@ -2005,8 +2008,18 @@ sizeof|sizeof
 argument_list|(
 name|cmd
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 expr_stmt|;
+name|cmd
+index|[
+name|nbyte
+index|]
+operator|=
+literal|'\0'
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|*
@@ -2061,8 +2074,6 @@ block|}
 comment|/*      * Try to exec stage 3 boot loader. If interrupted by a keypress,      * or in case of failure, try to load a kernel directly instead.      */
 if|if
 condition|(
-name|autoboot
-operator|&&
 operator|!
 name|kname
 condition|)
@@ -2073,6 +2084,8 @@ name|PATH_BOOT3
 expr_stmt|;
 if|if
 condition|(
+name|autoboot
+operator|&&
 operator|!
 name|keyhit
 argument_list|(
@@ -3386,10 +3399,49 @@ operator|=
 literal|0
 expr_stmt|;
 block|}
+if|if
+condition|(
+operator|(
+name|i
+operator|=
+name|ep
+operator|-
+name|arg
+operator|)
+condition|)
+block|{
+if|if
+condition|(
+operator|(
+name|size_t
+operator|)
+name|i
+operator|>=
+sizeof|sizeof
+argument_list|(
+name|knamebuf
+argument_list|)
+condition|)
+return|return
+operator|-
+literal|1
+return|;
+name|memcpy
+argument_list|(
+name|knamebuf
+argument_list|,
+name|arg
+argument_list|,
+name|i
+operator|+
+literal|1
+argument_list|)
+expr_stmt|;
 name|kname
 operator|=
-name|arg
+name|knamebuf
 expr_stmt|;
+block|}
 block|}
 name|arg
 operator|=

@@ -220,20 +220,6 @@ name|timespec
 name|n_mtime
 decl_stmt|;
 comment|/* Prev modify time. */
-name|struct
-name|timespec
-name|n_ctime
-decl_stmt|;
-comment|/* Prev create time. */
-name|struct
-name|timespec
-name|n_dmtime
-decl_stmt|;
-comment|/* Prev dir modify time. */
-name|int
-name|n_dmtime_ticks
-decl_stmt|;
-comment|/* Tick of -ve cache entry */
 name|nfsfh_t
 modifier|*
 name|n_fhp

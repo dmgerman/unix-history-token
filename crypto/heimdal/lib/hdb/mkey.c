@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 - 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2000 - 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -26,14 +26,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: mkey.c 21745 2007-07-31 16:11:25Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
@@ -167,9 +159,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)
@@ -637,6 +631,9 @@ name|char
 modifier|*
 name|filename
 parameter_list|,
+name|int
+name|byteorder
+parameter_list|,
 name|hdb_master_key
 modifier|*
 name|mkey
@@ -681,9 +678,11 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|save_errno
 argument_list|,
 literal|"failed to open %s: %s"
 argument_list|,
@@ -726,16 +725,11 @@ name|krb5_storage_set_flags
 argument_list|(
 name|sp
 argument_list|,
-name|KRB5_STORAGE_HOST_BYTEORDER
+name|byteorder
 argument_list|)
 expr_stmt|;
-if|#
-directive|if
-literal|0
 comment|/* could possibly use ret_keyblock here, but do it with more        checks for now */
-block|ret = krb5_ret_keyblock(sp,&key);
-else|#
-directive|else
+block|{
 name|ret
 operator|=
 name|krb5_ret_int16
@@ -748,42 +742,27 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|htons
-argument_list|(
-name|enctype
-argument_list|)
-operator|&
-literal|0xff00
-operator|)
-operator|==
-literal|0x3000
-condition|)
-block|{
-name|krb5_set_error_string
-argument_list|(
-name|context
-argument_list|,
-literal|"unknown keytype in %s: %#x, expected %#x"
-argument_list|,
-name|filename
-argument_list|,
-name|htons
-argument_list|(
-name|enctype
-argument_list|)
-argument_list|,
-literal|0x3000
-argument_list|)
-expr_stmt|;
 name|ret
-operator|=
-name|HEIM_ERR_BAD_MKEY
-expr_stmt|;
+condition|)
 goto|goto
 name|out
 goto|;
-block|}
+name|ret
+operator|=
+name|krb5_enctype_valid
+argument_list|(
+name|context
+argument_list|,
+name|enctype
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|out
+goto|;
 name|key
 operator|.
 name|keytype
@@ -809,15 +788,14 @@ condition|)
 goto|goto
 name|out
 goto|;
-endif|#
-directive|endif
+block|}
 name|ret
 operator|=
 name|hdb_process_master_key
 argument_list|(
 name|context
 argument_list|,
-literal|0
+literal|1
 argument_list|,
 operator|&
 name|key
@@ -920,9 +898,11 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|save_errno
 argument_list|,
 literal|"failed to open %s: %s"
 argument_list|,
@@ -969,9 +949,11 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|save_errno
 argument_list|,
 literal|"error reading %s: %s"
 argument_list|,
@@ -1028,7 +1010,7 @@ name|key
 operator|.
 name|keytype
 operator|==
-name|KEYTYPE_DES
+name|ETYPE_DES_CBC_CRC
 operator|||
 name|key
 operator|.
@@ -1136,9 +1118,11 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|save_errno
 argument_list|,
 literal|"failed to open %s: %s"
 argument_list|,
@@ -1185,9 +1169,11 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|save_errno
 argument_list|,
 literal|"error reading %s: %s"
 argument_list|,
@@ -1210,9 +1196,11 @@ operator|!=
 literal|8
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|HEIM_ERR_EOF
 argument_list|,
 literal|"bad contents of %s"
 argument_list|,
@@ -1377,9 +1365,11 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|save_errno
 argument_list|,
 literal|"failed to open %s: %s"
 argument_list|,
@@ -1411,18 +1401,20 @@ operator|!=
 literal|2
 condition|)
 block|{
-name|krb5_set_error_string
+name|fclose
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|HEIM_ERR_EOF
 argument_list|,
 literal|"end of file reading %s"
 argument_list|,
 name|filename
-argument_list|)
-expr_stmt|;
-name|fclose
-argument_list|(
-name|f
 argument_list|)
 expr_stmt|;
 return|return
@@ -1560,6 +1552,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
+comment|/*        * Check both LittleEndian and BigEndian since they key file        * might be moved from a machine with diffrent byte order, or        * its running on MacOS X that always uses BE master keys.        */
 name|ret
 operator|=
 name|read_master_mit
@@ -1567,6 +1560,25 @@ argument_list|(
 name|context
 argument_list|,
 name|filename
+argument_list|,
+name|KRB5_STORAGE_BYTEORDER_LE
+argument_list|,
+name|mkey
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+name|ret
+operator|=
+name|read_master_mit
+argument_list|(
+name|context
+argument_list|,
+name|filename
+argument_list|,
+name|KRB5_STORAGE_BYTEORDER_BE
 argument_list|,
 name|mkey
 argument_list|)
@@ -1749,6 +1761,9 @@ block|}
 elseif|else
 if|if
 condition|(
+operator|(
+name|uint32_t
+operator|)
 name|mkey
 operator|->
 name|keytab
@@ -2154,7 +2169,7 @@ name|hdb_master_key
 name|mkey
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -2495,7 +2510,7 @@ name|hdb_master_key
 name|mkey
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -2755,7 +2770,7 @@ condition|)
 return|return
 name|ret
 return|;
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)

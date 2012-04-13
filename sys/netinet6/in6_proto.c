@@ -2486,7 +2486,7 @@ name|IPV6CTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|VNET_NAME
@@ -2980,7 +2980,7 @@ name|IPV6CTL_RIP6STATS
 argument_list|,
 name|rip6stats
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|VNET_NAME
@@ -3253,7 +3253,7 @@ name|ICMPV6CTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|VNET_NAME

@@ -2891,7 +2891,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * Find the given variable in the given context and the enviornment.  *  * Results:  *	A pointer to the structure describing the desired variable or  *	NULL if the variable does not exist.  */
+comment|/**  * Find the given variable in the given context and the environment.  *  * Results:  *	A pointer to the structure describing the desired variable or  *	NULL if the variable does not exist.  */
 end_comment
 
 begin_function

@@ -2195,6 +2195,13 @@ begin_comment
 comment|/* official! */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|IN_RFC3021_MASK
+value|(u_int32_t)0xfffffffe
+end_define
+
 begin_comment
 comment|/*  * Options for use with [gs]etsockopt at the IP level.  * First word of comment is data type; bool is stored in int.  */
 end_comment

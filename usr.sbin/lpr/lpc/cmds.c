@@ -252,6 +252,7 @@ specifier|static
 name|int
 name|doselect
 parameter_list|(
+specifier|const
 name|struct
 name|dirent
 modifier|*
@@ -1524,10 +1525,6 @@ if|if
 condition|(
 name|msg
 operator|==
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 condition|)
 operator|(
@@ -1832,6 +1829,7 @@ specifier|static
 name|int
 name|doselect
 parameter_list|(
+specifier|const
 name|struct
 name|dirent
 modifier|*
@@ -2031,7 +2029,7 @@ operator|)
 operator|->
 name|d_name
 expr_stmt|;
-comment|/* 	 * First separate filenames into cagatories.  Catagories are 	 * legitimate `cf', `df', `rf'& `tf' filenames, and "other" - in 	 * that order.  It is critical that the mapping be exactly the 	 * same for 'a' vs 'b', so define a macro for the job. 	 * 	 * [aside: the standard `cf' file has the jobnumber start in 	 * position 4, but some implementations have that as an extra 	 * file-sequence letter, and start the job number in position 5.] 	 */
+comment|/* 	 * First separate filenames into categories.  Categories are 	 * legitimate `cf', `df', `rf'& `tf' filenames, and "other" - in 	 * that order.  It is critical that the mapping be exactly the 	 * same for 'a' vs 'b', so define a macro for the job. 	 * 	 * [aside: the standard `cf' file has the jobnumber start in 	 * position 4, but some implementations have that as an extra 	 * file-sequence letter, and start the job number in position 5.] 	 */
 define|#
 directive|define
 name|MAP_TO_CAT
@@ -2141,7 +2139,7 @@ condition|)
 goto|goto
 name|have_res
 goto|;
-comment|/* 	 * We have two files which belong to the same job.  Sort based 	 * on the catagory of file (`c' before `d', etc). 	 */
+comment|/* 	 * We have two files which belong to the same job.  Sort based 	 * on the category of file (`c' before `d', etc). 	 */
 if|if
 condition|(
 name|cat_a
@@ -2173,7 +2171,7 @@ goto|goto
 name|have_res
 goto|;
 block|}
-comment|/* 	 * Two files in the same catagory for a single job.  Sort based 	 * on the sequence letter(s).  (usually `A' thru `Z', etc). 	 */
+comment|/* 	 * Two files in the same category for a single job.  Sort based 	 * on the sequence letter(s).  (usually `A' through `Z', etc). 	 */
 if|if
 condition|(
 name|seq_a

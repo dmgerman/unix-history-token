@@ -705,7 +705,7 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* try to read database from enviroment */
+comment|/* try to read database from environment */
 if|if
 condition|(
 operator|(

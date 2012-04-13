@@ -102,6 +102,10 @@ specifier|const
 name|FileID
 name|FID
 decl_stmt|;
+comment|/// \brief Number of SLocEntries before lexing the file.
+name|unsigned
+name|InitialNumSLocEntries
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Context-specific lexing flags set by the preprocessor.
 comment|//===--------------------------------------------------------------------===//
@@ -136,8 +140,6 @@ name|MIOpt
 decl_stmt|;
 comment|/// ConditionalStack - Information about the set of #if/#ifdef/#ifndef blocks
 comment|/// we are currently in.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|PPConditionalInfo
@@ -174,36 +176,16 @@ argument|Preprocessor *pp
 argument_list|,
 argument|FileID fid
 argument_list|)
-block|:
-name|PP
-argument_list|(
-name|pp
-argument_list|)
-operator|,
-name|FID
-argument_list|(
-name|fid
-argument_list|)
-operator|,
-name|ParsingPreprocessorDirective
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ParsingFilename
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|LexingRawMode
-argument_list|(
-argument|false
-argument_list|)
-block|{}
+empty_stmt|;
 name|PreprocessorLexer
 argument_list|()
 operator|:
 name|PP
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|InitialNumSLocEntries
 argument_list|(
 literal|0
 argument_list|)
@@ -461,6 +443,16 @@ return|return
 name|FID
 return|;
 block|}
+comment|/// \brief Number of SLocEntries before lexing the file.
+name|unsigned
+name|getInitialNumSLocEntries
+argument_list|()
+specifier|const
+block|{
+return|return
+name|InitialNumSLocEntries
+return|;
+block|}
 comment|/// getFileEntry - Return the FileEntry corresponding to this FileID.  Like
 comment|/// getFileID(), this only works for lexers with attached preprocessors.
 specifier|const
@@ -473,8 +465,6 @@ expr_stmt|;
 comment|/// \brief Iterator that traverses the current stack of preprocessor
 comment|/// conditional directives (#if/#ifdef/#ifndef).
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|PPConditionalInfo

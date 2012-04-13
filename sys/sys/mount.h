@@ -539,10 +539,6 @@ name|uint64_t
 name|mnt_flag
 decl_stmt|;
 comment|/* (i) flags shared with user */
-name|u_int
-name|mnt_noasync
-decl_stmt|;
-comment|/* (i) # noasync overrides */
 name|struct
 name|vfsoptlist
 modifier|*
@@ -731,7 +727,7 @@ parameter_list|,
 name|mvp
 parameter_list|)
 define|\
-value|do {								\ 	  MNT_ILOCK(mp);						\           MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);			\ 	  MNT_IUNLOCK(mp);						\ 	} while (0)
+value|do {								\ 		MNT_ILOCK(mp);						\ 		MNT_VNODE_FOREACH_ABORT_ILOCKED(mp, mvp);		\ 		MNT_IUNLOCK(mp);					\ 	} while (0)
 end_define
 
 begin_define
@@ -791,7 +787,7 @@ name|MNT_REL
 parameter_list|(
 name|mp
 parameter_list|)
-value|do {						\ 	KASSERT((mp)->mnt_ref> 0, ("negative mnt_ref"));			\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
+value|do {						\ 	KASSERT((mp)->mnt_ref> 0, ("negative mnt_ref"));		\ 	(mp)->mnt_ref--;						\ 	if ((mp)->mnt_ref == 0)						\ 		wakeup((mp));						\ } while (0)
 end_define
 
 begin_endif
@@ -1312,6 +1308,17 @@ end_define
 
 begin_comment
 comment|/* Allow shared locking for writes */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MNTK_NOASYNC
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* disable async */
 end_comment
 
 begin_define
@@ -2384,7 +2391,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -3078,7 +3085,7 @@ name|mntarg
 modifier|*
 name|ma
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 function_decl|;
@@ -3383,6 +3390,27 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|vfs_getopt_size
+parameter_list|(
+name|struct
+name|vfsoptlist
+modifier|*
+name|opts
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|name
+parameter_list|,
+name|off_t
+modifier|*
+name|value
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|char
 modifier|*
 name|vfs_getopts
@@ -3645,7 +3673,7 @@ name|thread
 modifier|*
 name|td
 parameter_list|,
-name|int
+name|uint64_t
 name|fsflags
 parameter_list|,
 name|struct

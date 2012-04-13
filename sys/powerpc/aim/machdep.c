@@ -809,7 +809,9 @@ endif|#
 directive|endif
 argument|extern void	*trapcode
 argument_list|,
-argument|*trapsize; extern void	*alitrap
+argument|*trapsize; extern void	*slbtrap
+argument_list|,
+argument|*slbtrapsize; extern void	*alitrap
 argument_list|,
 argument|*alisize; extern void	*dsitrap
 argument_list|,
@@ -857,7 +859,17 @@ argument|proc_linkup0(&proc0,&thread0); 	thread0.td_frame =&frame0;
 comment|/* 	 * Set up per-cpu data. 	 */
 argument|pc = __pcpu; 	pcpu_init(pc,
 literal|0
-argument|, sizeof(struct pcpu)); 	curthread_reg = pc->pc_curthread =&thread0; 	pc->pc_cpuid =
+argument|, sizeof(struct pcpu)); 	pc->pc_curthread =&thread0;
+ifdef|#
+directive|ifdef
+name|__powerpc64__
+asm|__asm __volatile("mr 13,%0" :: "r"(pc->pc_curthread));
+else|#
+directive|else
+asm|__asm __volatile("mr 2,%0" :: "r"(pc->pc_curthread));
+endif|#
+directive|endif
+argument|pc->pc_cpuid =
 literal|0
 argument|;
 asm|__asm __volatile("mtsprg 0, %0" :: "r"(pc));
@@ -918,6 +930,8 @@ literal|1
 argument|; 		cacheline_size =
 literal|32
 argument|; 	}
+comment|/* Make sure the kernel icache is valid before we go too much further */
+argument|__syncicache((caddr_t)startkernel, endkernel - startkernel);
 ifndef|#
 directive|ifndef
 name|__powerpc64__
@@ -1390,7 +1404,8 @@ directive|ifdef
 name|__powerpc64__
 name|bcopy
 argument_list|(
-name|generictrap
+operator|&
+name|slbtrap
 argument_list|,
 operator|(
 name|void
@@ -1402,12 +1417,13 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|trapsize
+name|slbtrapsize
 argument_list|)
 expr_stmt|;
 name|bcopy
 argument_list|(
-name|generictrap
+operator|&
+name|slbtrap
 argument_list|,
 operator|(
 name|void
@@ -1419,7 +1435,7 @@ operator|(
 name|size_t
 operator|)
 operator|&
-name|trapsize
+name|slbtrapsize
 argument_list|)
 expr_stmt|;
 endif|#
@@ -1518,6 +1534,23 @@ name|void
 operator|*
 operator|)
 name|EXC_VEC
+argument_list|,
+operator|(
+name|size_t
+operator|)
+operator|&
+name|trapsize
+argument_list|)
+expr_stmt|;
+name|bcopy
+argument_list|(
+name|generictrap
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|EXC_PERF
 argument_list|,
 operator|(
 name|size_t
@@ -2406,98 +2439,6 @@ argument_list|(
 name|msr
 argument_list|)
 expr_stmt|;
-block|}
-comment|/*  * kcopy(const void *src, void *dst, size_t len);  *  * Copy len bytes from src to dst, aborting if we encounter a fatal  * page fault.  *  * kcopy() _must_ save and restore the old fault handler since it is  * called by uiomove(), which may be in the path of servicing a non-fatal  * page fault.  */
-name|int
-name|kcopy
-parameter_list|(
-specifier|const
-name|void
-modifier|*
-name|src
-parameter_list|,
-name|void
-modifier|*
-name|dst
-parameter_list|,
-name|size_t
-name|len
-parameter_list|)
-block|{
-name|struct
-name|thread
-modifier|*
-name|td
-decl_stmt|;
-name|faultbuf
-name|env
-decl_stmt|,
-modifier|*
-name|oldfault
-decl_stmt|;
-name|int
-name|rv
-decl_stmt|;
-name|td
-operator|=
-name|curthread
-expr_stmt|;
-name|oldfault
-operator|=
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_onfault
-expr_stmt|;
-if|if
-condition|(
-operator|(
-name|rv
-operator|=
-name|setfault
-argument_list|(
-name|env
-argument_list|)
-operator|)
-operator|!=
-literal|0
-condition|)
-block|{
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_onfault
-operator|=
-name|oldfault
-expr_stmt|;
-return|return
-name|rv
-return|;
-block|}
-name|memcpy
-argument_list|(
-name|dst
-argument_list|,
-name|src
-argument_list|,
-name|len
-argument_list|)
-expr_stmt|;
-name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_onfault
-operator|=
-name|oldfault
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 name|int
 name|db_trap_glue

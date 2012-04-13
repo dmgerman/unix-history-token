@@ -1138,7 +1138,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"keymap=%s\n"
+literal|"keymap=\"%s\"\n"
 argument_list|,
 name|km
 operator|->
@@ -2316,7 +2316,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read options from the relevent configuration file, then  *  present to user.  */
+comment|/*  * Read options from the relevant configuration file, then  *  present to user.  */
 end_comment
 
 begin_function

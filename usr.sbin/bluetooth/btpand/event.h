@@ -50,7 +50,7 @@ value|0x10
 end_define
 
 begin_comment
-comment|/* Persistant event */
+comment|/* Persistent event */
 end_comment
 
 begin_define

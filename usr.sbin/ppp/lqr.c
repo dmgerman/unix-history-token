@@ -2762,8 +2762,6 @@ name|int
 name|len
 decl_stmt|,
 name|layer
-decl_stmt|,
-name|extra_async_bytes
 decl_stmt|;
 if|if
 condition|(
@@ -2796,10 +2794,6 @@ name|bp
 argument_list|)
 expr_stmt|;
 comment|/*-    * From rfc1989:    *    *  All octets which are included in the FCS calculation MUST be counted,    *  including the packet header, the information field, and any padding.    *  The FCS octets MUST also be counted, and one flag octet per frame    *  MUST be counted.  All other octets (such as additional flag    *  sequences, and escape bits or octets) MUST NOT be counted.    *    * As we're stacked higher than the HDLC layer (otherwise HDLC wouldn't be    * able to calculate the FCS), we must not forget about these additional    * bytes when we're asynchronous.    *    * We're also expecting to be stacked *before* the likes of the proto and    * acf layers (to avoid alignment issues), so deal with this too.    */
-name|extra_async_bytes
-operator|=
-literal|0
-expr_stmt|;
 name|p
 operator|->
 name|hdlc

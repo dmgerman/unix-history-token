@@ -187,6 +187,13 @@ name|HPET_VENDID_NVIDIA
 value|0x10de
 end_define
 
+begin_define
+define|#
+directive|define
+name|HPET_VENDID_SW
+value|0x1166
+end_define
+
 begin_expr_stmt
 name|ACPI_SERIAL_DECL
 argument_list|(
@@ -1843,7 +1850,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-name|ACPI_DEV_BASE_ORDER
+literal|2
 argument_list|,
 literal|"hpet"
 argument_list|,
@@ -2780,6 +2787,23 @@ condition|(
 name|vendor
 operator|==
 name|HPET_VENDID_NVIDIA
+operator|&&
+name|rev
+operator|<=
+literal|0x01
+condition|)
+name|sc
+operator|->
+name|allowed_irqs
+operator|=
+literal|0x00000000
+expr_stmt|;
+comment|/* 	 * ServerWorks HT1000 reported to have problems with IRQs>= 16. 	 * Lower IRQs are working, but allowed mask is not set correctly. 	 * Legacy_route mode works fine. 	 */
+if|if
+condition|(
+name|vendor
+operator|==
+name|HPET_VENDID_SW
 operator|&&
 name|rev
 operator|<=

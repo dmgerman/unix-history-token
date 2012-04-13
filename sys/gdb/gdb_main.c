@@ -106,6 +106,8 @@ name|gdb_init
 argument_list|,
 name|NULL
 argument_list|,
+name|NULL
+argument_list|,
 name|gdb_trap
 argument_list|)
 expr_stmt|;

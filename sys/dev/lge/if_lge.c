@@ -207,8 +207,10 @@ end_comment
 
 begin_decl_stmt
 specifier|static
+specifier|const
 name|struct
 name|lge_type
+specifier|const
 name|lge_devs
 index|[]
 init|=
@@ -754,21 +756,6 @@ argument_list|,
 name|lge_shutdown
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -791,11 +778,7 @@ argument_list|,
 name|lge_miibus_statchg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1948,6 +1931,7 @@ name|device_t
 name|dev
 decl_stmt|;
 block|{
+specifier|const
 name|struct
 name|lge_type
 modifier|*
@@ -2417,12 +2401,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
 expr_stmt|;
 name|ifp
 operator|->
@@ -6063,11 +6041,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-name|LGE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_active
@@ -6083,6 +6056,11 @@ operator|=
 name|mii
 operator|->
 name|mii_media_status
+expr_stmt|;
+name|LGE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return;
 block|}

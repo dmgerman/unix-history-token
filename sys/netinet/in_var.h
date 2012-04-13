@@ -102,28 +102,15 @@ define|#
 directive|define
 name|ia_flags
 value|ia_ifa.ifa_flags
-comment|/* ia_{,sub}net{,mask} in host order */
-name|u_long
-name|ia_net
-decl_stmt|;
-comment|/* network number of interface */
-name|u_long
-name|ia_netmask
-decl_stmt|;
-comment|/* mask of net part */
+comment|/* ia_subnet{,mask} in host order */
 name|u_long
 name|ia_subnet
 decl_stmt|;
-comment|/* subnet number, including net */
+comment|/* subnet address */
 name|u_long
 name|ia_subnetmask
 decl_stmt|;
-comment|/* mask of subnet part */
-name|struct
-name|in_addr
-name|ia_netbroadcast
-decl_stmt|;
-comment|/* to recognize net broadcasts */
+comment|/* mask of subnet */
 name|LIST_ENTRY
 argument_list|(
 argument|in_ifaddr
@@ -188,6 +175,9 @@ name|struct
 name|sockaddr_in
 name|ifra_mask
 decl_stmt|;
+name|int
+name|ifra_vhid
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -214,6 +204,16 @@ parameter_list|(
 name|ia
 parameter_list|)
 value|(&(((struct in_ifaddr *)(ia))->ia_dstaddr))
+end_define
+
+begin_define
+define|#
+directive|define
+name|IA_MASKSIN
+parameter_list|(
+name|ia
+parameter_list|)
+value|(&(((struct in_ifaddr *)(ia))->ia_sockmask))
 end_define
 
 begin_define
@@ -1301,7 +1301,7 @@ decl_stmt|;
 name|IN_MULTI_LOCK_ASSERT
 argument_list|()
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1315,7 +1315,7 @@ argument_list|,
 name|ina
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -1659,6 +1659,32 @@ name|void
 name|in_rtqdrain
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_addprefix
+parameter_list|(
+name|struct
+name|in_ifaddr
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|in_scrubprefix
+parameter_list|(
+name|struct
+name|in_ifaddr
+modifier|*
+parameter_list|,
+name|u_int
 parameter_list|)
 function_decl|;
 end_function_decl

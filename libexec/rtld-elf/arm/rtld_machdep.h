@@ -105,6 +105,26 @@ define|\
 value|(((InitFunc)(target))())
 end_define
 
+begin_define
+define|#
+directive|define
+name|call_init_pointer
+parameter_list|(
+name|obj
+parameter_list|,
+name|target
+parameter_list|)
+define|\
+value|(((InitArrFunc)(target))(main_argc, main_argv, environ))
+end_define
+
+begin_define
+define|#
+directive|define
+name|TLS_TCB_SIZE
+value|8
+end_define
+
 begin_typedef
 typedef|typedef
 struct|struct
@@ -145,7 +165,7 @@ parameter_list|,
 name|align
 parameter_list|)
 define|\
-value|round(size, align)
+value|round(8, align)
 end_define
 
 begin_define

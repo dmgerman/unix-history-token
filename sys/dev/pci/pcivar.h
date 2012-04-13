@@ -367,6 +367,73 @@ struct|;
 end_struct
 
 begin_comment
+comment|/* Interesting values for PCI-express */
+end_comment
+
+begin_struct
+struct|struct
+name|pcicfg_pcie
+block|{
+name|uint8_t
+name|pcie_location
+decl_stmt|;
+comment|/* Offset of PCI-e capability registers. */
+name|uint8_t
+name|pcie_type
+decl_stmt|;
+comment|/* Device type. */
+name|uint16_t
+name|pcie_flags
+decl_stmt|;
+comment|/* Device capabilities register. */
+name|uint16_t
+name|pcie_device_ctl
+decl_stmt|;
+comment|/* Device control register. */
+name|uint16_t
+name|pcie_link_ctl
+decl_stmt|;
+comment|/* Link control register. */
+name|uint16_t
+name|pcie_slot_ctl
+decl_stmt|;
+comment|/* Slot control register. */
+name|uint16_t
+name|pcie_root_ctl
+decl_stmt|;
+comment|/* Root control register. */
+name|uint16_t
+name|pcie_device_ctl2
+decl_stmt|;
+comment|/* Second device control register. */
+name|uint16_t
+name|pcie_link_ctl2
+decl_stmt|;
+comment|/* Second link control register. */
+name|uint16_t
+name|pcie_slot_ctl2
+decl_stmt|;
+comment|/* Second slot control register. */
+block|}
+struct|;
+end_struct
+
+begin_struct
+struct|struct
+name|pcicfg_pcix
+block|{
+name|uint16_t
+name|pcix_command
+decl_stmt|;
+name|uint8_t
+name|pcix_location
+decl_stmt|;
+comment|/* Offset of PCI-X capability registers. */
+block|}
+struct|;
+end_struct
+
+begin_comment
 comment|/* config header information common to all header types */
 end_comment
 
@@ -506,6 +573,16 @@ name|pcicfg_ht
 name|ht
 decl_stmt|;
 comment|/* HyperTransport */
+name|struct
+name|pcicfg_pcie
+name|pcie
+decl_stmt|;
+comment|/* PCI Express */
+name|struct
+name|pcicfg_pcix
+name|pcix
+decl_stmt|;
+comment|/* PCI-X */
 block|}
 name|pcicfgregs
 typedef|;
@@ -1370,7 +1447,7 @@ specifier|const
 name|char
 modifier|*
 modifier|*
-name|identptr
+name|vptr
 parameter_list|)
 block|{
 return|return
@@ -1386,7 +1463,7 @@ name|dev
 argument_list|,
 name|kw
 argument_list|,
-name|identptr
+name|vptr
 argument_list|)
 operator|)
 return|;
@@ -1586,7 +1663,7 @@ parameter_list|)
 block|{
 return|return
 operator|(
-name|PCI_FIND_EXTCAP
+name|PCI_FIND_CAP
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -1624,6 +1701,43 @@ block|{
 return|return
 operator|(
 name|PCI_FIND_EXTCAP
+argument_list|(
+name|device_get_parent
+argument_list|(
+name|dev
+argument_list|)
+argument_list|,
+name|dev
+argument_list|,
+name|capability
+argument_list|,
+name|capreg
+argument_list|)
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+specifier|static
+name|__inline
+name|int
+name|pci_find_htcap
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|,
+name|int
+name|capability
+parameter_list|,
+name|int
+modifier|*
+name|capreg
+parameter_list|)
+block|{
+return|return
+operator|(
+name|PCI_FIND_HTCAP
 argument_list|(
 name|device_get_parent
 argument_list|(
@@ -1916,6 +2030,26 @@ end_function_decl
 begin_function_decl
 name|int
 name|pci_get_max_read_req
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pci_restore_state
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|pci_save_state
 parameter_list|(
 name|device_t
 name|dev

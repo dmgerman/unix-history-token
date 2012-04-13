@@ -41,7 +41,7 @@ begin_define
 define|#
 directive|define
 name|YY_FLEX_SUBMINOR_VERSION
-value|33
+value|35
 end_define
 
 begin_if
@@ -122,6 +122,11 @@ end_comment
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
+name|__STDC_VERSION__
+argument_list|)
+operator|&&
 name|__STDC_VERSION__
 operator|>=
 literal|199901L
@@ -459,10 +464,17 @@ begin_comment
 comment|/* ! __cplusplus */
 end_comment
 
+begin_comment
+comment|/* C99 requires __STDC__ to be defined as 1. */
+end_comment
+
 begin_if
 if|#
 directive|if
+name|defined
+argument_list|(
 name|__STDC__
+argument_list|)
 end_if
 
 begin_define
@@ -477,7 +489,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/* __STDC__ */
+comment|/* defined (__STDC__) */
 end_comment
 
 begin_endif
@@ -663,9 +675,33 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|YY_TYPEDEF_YY_SIZE_T
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|YY_TYPEDEF_YY_SIZE_T
+end_define
+
+begin_typedef
+typedef|typedef
+name|size_t
+name|yy_size_t
+typedef|;
+end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_decl_stmt
 specifier|extern
-name|int
+name|yy_size_t
 name|yyleng
 decl_stmt|;
 end_decl_stmt
@@ -740,35 +776,6 @@ parameter_list|)
 value|yyunput( c, (yytext_ptr)  )
 end_define
 
-begin_comment
-comment|/* The following is because we cannot portably get our hands on size_t  * (without autoconf's help, which isn't available because we want  * flex-generated scanners to compile on their own).  */
-end_comment
-
-begin_ifndef
-ifndef|#
-directive|ifndef
-name|YY_TYPEDEF_YY_SIZE_T
-end_ifndef
-
-begin_define
-define|#
-directive|define
-name|YY_TYPEDEF_YY_SIZE_T
-end_define
-
-begin_typedef
-typedef|typedef
-name|unsigned
-name|int
-name|yy_size_t
-typedef|;
-end_typedef
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -804,7 +811,7 @@ name|yy_size_t
 name|yy_buf_size
 decl_stmt|;
 comment|/* Number of characters read into yy_ch_buf, not including EOB 	 * characters. 	 */
-name|int
+name|yy_size_t
 name|yy_n_chars
 decl_stmt|;
 comment|/* Whether we "own" the buffer - i.e., we know we created it, 	 * and can realloc() it to grow it, and should free() it to 	 * delete it. 	 */
@@ -939,7 +946,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-name|int
+name|yy_size_t
 name|yy_n_chars
 decl_stmt|;
 end_decl_stmt
@@ -949,7 +956,7 @@ comment|/* number of characters read into yy_ch_buf */
 end_comment
 
 begin_decl_stmt
-name|int
+name|yy_size_t
 name|yyleng
 decl_stmt|;
 end_decl_stmt
@@ -1160,7 +1167,7 @@ name|char
 modifier|*
 name|bytes
 parameter_list|,
-name|int
+name|yy_size_t
 name|len
 parameter_list|)
 function_decl|;
@@ -2732,7 +2739,7 @@ file|"lex.l"
 end_line
 
 begin_comment
-comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1998 - 2000 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -2762,14 +2769,6 @@ include|#
 directive|include
 file|"lex.h"
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: lex.l 15143 2005-05-16 08:52:54Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 specifier|static
@@ -2805,7 +2804,7 @@ end_undef
 begin_line
 line|#
 directive|line
-number|536
+number|530
 file|"lex.c"
 end_line
 
@@ -2866,6 +2865,137 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/* Accessor methods to globals.    These are made visible to non-reentrant scanners for convenience. */
+end_comment
+
+begin_function_decl
+name|int
+name|yylex_destroy
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|yyget_debug
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|yyset_debug
+parameter_list|(
+name|int
+name|debug_flag
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|YY_EXTRA_TYPE
+name|yyget_extra
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|yyset_extra
+parameter_list|(
+name|YY_EXTRA_TYPE
+name|user_defined
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FILE
+modifier|*
+name|yyget_in
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|yyset_in
+parameter_list|(
+name|FILE
+modifier|*
+name|in_str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|FILE
+modifier|*
+name|yyget_out
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|yyset_out
+parameter_list|(
+name|FILE
+modifier|*
+name|out_str
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|yy_size_t
+name|yyget_leng
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|char
+modifier|*
+name|yyget_text
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|yyget_lineno
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|yyset_lineno
+parameter_list|(
+name|int
+name|line_number
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/* Macros after this point can all be overridden by user definitions in  * section 1.  */
 end_comment
 
@@ -2916,21 +3046,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_function_decl
-specifier|static
-name|void
-name|yyunput
-parameter_list|(
-name|int
-name|c
-parameter_list|,
-name|char
-modifier|*
-name|buf_ptr
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_ifndef
 ifndef|#
@@ -3070,7 +3185,7 @@ begin_define
 define|#
 directive|define
 name|ECHO
-value|(void) fwrite( yytext, yyleng, 1, yyout )
+value|fwrite( yytext, yyleng, 1, yyout )
 end_define
 
 begin_endif
@@ -3100,7 +3215,7 @@ parameter_list|,
 name|max_size
 parameter_list|)
 define|\
-value|if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \ 		{ \ 		int c = '*'; \ 		size_t n; \ 		for ( n = 0; n< max_size&& \ 			     (c = getc( yyin )) != EOF&& c != '\n'; ++n ) \ 			buf[n] = (char) c; \ 		if ( c == '\n' ) \ 			buf[n++] = (char) c; \ 		if ( c == EOF&& ferror( yyin ) ) \ 			YY_FATAL_ERROR( "input in flex scanner failed" ); \ 		result = n; \ 		} \ 	else \ 		{ \ 		errno=0; \ 		while ( (result = fread(buf, 1, max_size, yyin))==0&& ferror(yyin)) \ 			{ \ 			if( errno != EINTR) \ 				{ \ 				YY_FATAL_ERROR( "input in flex scanner failed" ); \ 				break; \ 				} \ 			errno=0; \ 			clearerr(yyin); \ 			} \ 		}\ \  #endif
+value|if ( YY_CURRENT_BUFFER_LVALUE->yy_is_interactive ) \ 		{ \ 		int c = '*'; \ 		yy_size_t n; \ 		for ( n = 0; n< max_size&& \ 			     (c = getc( yyin )) != EOF&& c != '\n'; ++n ) \ 			buf[n] = (char) c; \ 		if ( c == '\n' ) \ 			buf[n++] = (char) c; \ 		if ( c == EOF&& ferror( yyin ) ) \ 			YY_FATAL_ERROR( "input in flex scanner failed" ); \ 		result = n; \ 		} \ 	else \ 		{ \ 		errno=0; \ 		while ( (result = fread(buf, 1, max_size, yyin))==0&& ferror(yyin)) \ 			{ \ 			if( errno != EINTR) \ 				{ \ 				YY_FATAL_ERROR( "input in flex scanner failed" ); \ 				break; \ 				} \ 			errno=0; \ 			clearerr(yyin); \ 			} \ 		}\ \  #endif
 end_define
 
 begin_comment
@@ -3299,11 +3414,11 @@ name|yy_act
 decl_stmt|;
 line|#
 directive|line
-number|59
+number|58
 file|"lex.l"
 line|#
 directive|line
-number|691
+number|712
 file|"lex.c"
 if|if
 condition|(
@@ -3604,7 +3719,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|60
+number|59
 file|"lex.l"
 block|{
 return|return
@@ -3618,7 +3733,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|61
+number|60
 file|"lex.l"
 block|{
 return|return
@@ -3632,7 +3747,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|62
+number|61
 file|"lex.l"
 block|{
 return|return
@@ -3646,7 +3761,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|63
+number|62
 file|"lex.l"
 block|{
 return|return
@@ -3660,7 +3775,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|64
+number|63
 file|"lex.l"
 block|{
 return|return
@@ -3674,7 +3789,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|65
+number|64
 file|"lex.l"
 block|{
 return|return
@@ -3688,7 +3803,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|66
+number|65
 file|"lex.l"
 block|{
 return|return
@@ -3702,7 +3817,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|67
+number|66
 file|"lex.l"
 block|{
 return|return
@@ -3716,7 +3831,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|68
+number|67
 file|"lex.l"
 block|{
 name|yylval
@@ -3739,7 +3854,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|69
+number|68
 file|"lex.l"
 expr_stmt|;
 name|YY_BREAK
@@ -3749,7 +3864,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|70
+number|69
 file|"lex.l"
 expr_stmt|;
 name|YY_BREAK
@@ -3760,7 +3875,7 @@ comment|/* rule 12 can match eol */
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|71
+number|70
 file|"lex.l"
 block|{
 name|lineno
@@ -3774,7 +3889,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|72
+number|71
 file|"lex.l"
 block|{
 return|return
@@ -3789,7 +3904,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|73
+number|72
 file|"lex.l"
 block|{
 name|yylval
@@ -3812,7 +3927,7 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|74
+number|73
 file|"lex.l"
 block|{
 return|return
@@ -3827,14 +3942,14 @@ case|:
 name|YY_RULE_SETUP
 line|#
 directive|line
-number|75
+number|74
 file|"lex.l"
 name|ECHO
 decl_stmt|;
 name|YY_BREAK
 line|#
 directive|line
-number|855
+number|876
 file|"lex.c"
 case|case
 name|YY_STATE_EOF
@@ -4311,7 +4426,7 @@ literal|0
 expr_stmt|;
 else|else
 block|{
-name|int
+name|yy_size_t
 name|num_to_read
 init|=
 name|YY_CURRENT_BUFFER_LVALUE
@@ -4359,7 +4474,7 @@ operator|->
 name|yy_is_our_buffer
 condition|)
 block|{
-name|int
+name|yy_size_t
 name|new_size
 init|=
 name|b
@@ -4545,6 +4660,76 @@ name|ret_val
 operator|=
 name|EOB_ACT_CONTINUE_SCAN
 expr_stmt|;
+if|if
+condition|(
+call|(
+name|yy_size_t
+call|)
+argument_list|(
+operator|(
+name|yy_n_chars
+operator|)
+operator|+
+name|number_to_move
+argument_list|)
+operator|>
+name|YY_CURRENT_BUFFER_LVALUE
+operator|->
+name|yy_buf_size
+condition|)
+block|{
+comment|/* Extend the array by 50%, plus the number we really need. */
+name|yy_size_t
+name|new_size
+init|=
+operator|(
+name|yy_n_chars
+operator|)
+operator|+
+name|number_to_move
+operator|+
+operator|(
+operator|(
+name|yy_n_chars
+operator|)
+operator|>>
+literal|1
+operator|)
+decl_stmt|;
+name|YY_CURRENT_BUFFER_LVALUE
+operator|->
+name|yy_ch_buf
+operator|=
+operator|(
+name|char
+operator|*
+operator|)
+name|yyrealloc
+argument_list|(
+operator|(
+name|void
+operator|*
+operator|)
+name|YY_CURRENT_BUFFER_LVALUE
+operator|->
+name|yy_ch_buf
+argument_list|,
+name|new_size
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+name|YY_CURRENT_BUFFER_LVALUE
+operator|->
+name|yy_ch_buf
+condition|)
+name|YY_FATAL_ERROR
+argument_list|(
+literal|"out of dynamic memory in yy_get_next_buffer()"
+argument_list|)
+expr_stmt|;
+block|}
 operator|(
 name|yy_n_chars
 operator|)
@@ -4877,189 +5062,6 @@ return|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|void
-name|yyunput
-parameter_list|(
-name|int
-name|c
-parameter_list|,
-specifier|register
-name|char
-modifier|*
-name|yy_bp
-parameter_list|)
-block|{
-specifier|register
-name|char
-modifier|*
-name|yy_cp
-decl_stmt|;
-name|yy_cp
-operator|=
-operator|(
-name|yy_c_buf_p
-operator|)
-expr_stmt|;
-comment|/* undo effects of setting up yytext */
-operator|*
-name|yy_cp
-operator|=
-operator|(
-name|yy_hold_char
-operator|)
-expr_stmt|;
-if|if
-condition|(
-name|yy_cp
-operator|<
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_ch_buf
-operator|+
-literal|2
-condition|)
-block|{
-comment|/* need to shift things up to make room */
-comment|/* +2 for EOB chars. */
-specifier|register
-name|int
-name|number_to_move
-init|=
-operator|(
-name|yy_n_chars
-operator|)
-operator|+
-literal|2
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|dest
-init|=
-operator|&
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_ch_buf
-index|[
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_buf_size
-operator|+
-literal|2
-index|]
-decl_stmt|;
-specifier|register
-name|char
-modifier|*
-name|source
-init|=
-operator|&
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_ch_buf
-index|[
-name|number_to_move
-index|]
-decl_stmt|;
-while|while
-condition|(
-name|source
-operator|>
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_ch_buf
-condition|)
-operator|*
-operator|--
-name|dest
-operator|=
-operator|*
-operator|--
-name|source
-expr_stmt|;
-name|yy_cp
-operator|+=
-call|(
-name|int
-call|)
-argument_list|(
-name|dest
-operator|-
-name|source
-argument_list|)
-expr_stmt|;
-name|yy_bp
-operator|+=
-call|(
-name|int
-call|)
-argument_list|(
-name|dest
-operator|-
-name|source
-argument_list|)
-expr_stmt|;
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_n_chars
-operator|=
-operator|(
-name|yy_n_chars
-operator|)
-operator|=
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_buf_size
-expr_stmt|;
-if|if
-condition|(
-name|yy_cp
-operator|<
-name|YY_CURRENT_BUFFER_LVALUE
-operator|->
-name|yy_ch_buf
-operator|+
-literal|2
-condition|)
-name|YY_FATAL_ERROR
-argument_list|(
-literal|"flex scanner push-back overflow"
-argument_list|)
-expr_stmt|;
-block|}
-operator|*
-operator|--
-name|yy_cp
-operator|=
-operator|(
-name|char
-operator|)
-name|c
-expr_stmt|;
-operator|(
-name|yytext_ptr
-operator|)
-operator|=
-name|yy_bp
-expr_stmt|;
-operator|(
-name|yy_hold_char
-operator|)
-operator|=
-operator|*
-name|yy_cp
-expr_stmt|;
-operator|(
-name|yy_c_buf_p
-operator|)
-operator|=
-name|yy_cp
-expr_stmt|;
-block|}
-end_function
-
 begin_ifndef
 ifndef|#
 directive|ifndef
@@ -5140,7 +5142,7 @@ expr_stmt|;
 else|else
 block|{
 comment|/* need more input */
-name|int
+name|yy_size_t
 name|offset
 init|=
 operator|(
@@ -5937,7 +5939,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|int
+name|yy_size_t
 name|num_to_alloc
 decl_stmt|;
 if|if
@@ -5973,6 +5975,18 @@ expr|struct
 name|yy_buffer_state
 operator|*
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|yy_buffer_stack
+operator|)
+condition|)
+name|YY_FATAL_ERROR
+argument_list|(
+literal|"out of dynamic memory in yyensure_buffer_stack()"
 argument_list|)
 expr_stmt|;
 name|memset
@@ -6061,6 +6075,18 @@ expr|struct
 name|yy_buffer_state
 operator|*
 argument_list|)
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+operator|!
+operator|(
+name|yy_buffer_stack
+operator|)
+condition|)
+name|YY_FATAL_ERROR
+argument_list|(
+literal|"out of dynamic memory in yyensure_buffer_stack()"
 argument_list|)
 expr_stmt|;
 comment|/* zero only the new slots.*/
@@ -6242,7 +6268,7 @@ block|}
 end_function
 
 begin_comment
-comment|/** Setup the input buffer state to scan a string. The next call to yylex() will  * scan from a @e copy of @a str.  * @param str a NUL-terminated string to scan  *   * @return the newly allocated buffer state object.  * @note If you want to scan bytes that may contain NUL values, then use  *       yy_scan_bytes() instead.  */
+comment|/** Setup the input buffer state to scan a string. The next call to yylex() will  * scan from a @e copy of @a str.  * @param yystr a NUL-terminated string to scan  *   * @return the newly allocated buffer state object.  * @note If you want to scan bytes that may contain NUL values, then use  *       yy_scan_bytes() instead.  */
 end_comment
 
 begin_function
@@ -6282,7 +6308,7 @@ name|char
 modifier|*
 name|yybytes
 parameter_list|,
-name|int
+name|yy_size_t
 name|_yybytes_len
 parameter_list|)
 block|{
@@ -6295,8 +6321,7 @@ name|buf
 decl_stmt|;
 name|yy_size_t
 name|n
-decl_stmt|;
-name|int
+decl_stmt|,
 name|i
 decl_stmt|;
 comment|/* Get memory for full buffer, including space for trailing EOB's. */
@@ -6530,7 +6555,7 @@ comment|/** Get the length of the current token.  *   */
 end_comment
 
 begin_function
-name|int
+name|yy_size_t
 name|yyget_leng
 parameter_list|(
 name|void
@@ -6982,7 +7007,7 @@ end_define
 begin_line
 line|#
 directive|line
-number|75
+number|74
 file|"lex.l"
 end_line
 
@@ -7086,7 +7111,7 @@ operator|==
 literal|'\n'
 condition|)
 block|{
-name|error_message
+name|_lex_error_message
 argument_list|(
 literal|"unterminated string"
 argument_list|)
@@ -7163,7 +7188,7 @@ end_function
 
 begin_function
 name|void
-name|error_message
+name|_lex_error_message
 parameter_list|(
 specifier|const
 name|char

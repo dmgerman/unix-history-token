@@ -115,24 +115,28 @@ file|<wchar.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|wchar_t
 name|dchar
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|dcharmb
 index|[
@@ -144,30 +148,35 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|fflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|sflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|size_t
 name|autostart
 decl_stmt|,
@@ -178,6 +187,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|positions
@@ -185,6 +195,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|int
 name|b_cut
 parameter_list|(
@@ -199,6 +210,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|b_n_cut
 parameter_list|(
@@ -213,6 +225,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|c_cut
 parameter_list|(
@@ -227,6 +240,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|f_cut
 parameter_list|(
@@ -241,6 +255,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|get_list
 parameter_list|(
@@ -251,6 +266,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|needpos
 parameter_list|(
@@ -668,6 +684,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|get_list
 parameter_list|(
@@ -946,6 +963,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|needpos
 parameter_list|(
@@ -1036,6 +1054,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|b_cut
 parameter_list|(
@@ -1205,6 +1224,7 @@ comment|/*  * Cut based on byte positions, taking care not to split multibyte ch
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|b_n_cut
 parameter_list|(
@@ -1547,6 +1567,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|c_cut
 parameter_list|(
@@ -1733,6 +1754,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|f_cut
 parameter_list|(

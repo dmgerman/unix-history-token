@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_define
@@ -140,6 +140,31 @@ return|return
 operator|(
 name|Status
 operator|)
+return|;
+block|}
+comment|/* Preprocessor */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Preprocess input file"
+argument_list|)
+expr_stmt|;
+name|PrDoPreprocess
+argument_list|()
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_PreprocessOnly
+condition|)
+block|{
+return|return
+name|AE_OK
 return|;
 block|}
 comment|/*      * Scan the input file (file is already open) and      * build the parse tree      */
@@ -629,6 +654,47 @@ name|Status
 operator|)
 return|;
 block|}
+elseif|else
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Signature
+argument_list|,
+name|ACPI_SIG_S3PT
+argument_list|)
+condition|)
+block|{
+name|Status
+operator|=
+name|DtCompileS3pt
+argument_list|(
+name|FieldList
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ACPI_FAILURE
+argument_list|(
+name|Status
+argument_list|)
+condition|)
+block|{
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
+name|DtSetTableLength
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+name|Status
+operator|)
+return|;
+block|}
 comment|/*      * All other tables must use the common ACPI table header. Insert the      * current iASL IDs (name, version), and compile the header now.      */
 name|DtInsertCompilerIds
 argument_list|(
@@ -681,6 +747,8 @@ if|if
 condition|(
 operator|!
 name|TableData
+operator|||
+name|Gbl_CompileGeneric
 condition|)
 block|{
 name|DtCompileGeneric
@@ -899,6 +967,11 @@ name|FlagBuffer
 init|=
 name|NULL
 decl_stmt|;
+name|UINT32
+name|CurrentFlagByteOffset
+init|=
+literal|0
+decl_stmt|;
 name|ACPI_STATUS
 name|Status
 decl_stmt|;
@@ -1005,6 +1078,17 @@ control|)
 block|{
 if|if
 condition|(
+name|Info
+operator|->
+name|Opcode
+operator|==
+name|ACPI_DMT_EXTRA_TEXT
+condition|)
+block|{
+continue|continue;
+block|}
+if|if
+condition|(
 operator|!
 name|LocalField
 condition|)
@@ -1091,6 +1175,12 @@ name|FlagBuffer
 operator|=
 name|Buffer
 expr_stmt|;
+name|CurrentFlagByteOffset
+operator|=
+name|Info
+operator|->
+name|Offset
+expr_stmt|;
 break|break;
 case|case
 name|DT_FIELD_TYPE_FLAG
@@ -1101,6 +1191,23 @@ condition|(
 name|FlagBuffer
 condition|)
 block|{
+comment|/*                  * We must increment the FlagBuffer when we have crossed                  * into the next flags byte within the flags field                  * of type DT_FIELD_TYPE_FLAGS_INTEGER.                  */
+name|FlagBuffer
+operator|+=
+operator|(
+name|Info
+operator|->
+name|Offset
+operator|-
+name|CurrentFlagByteOffset
+operator|)
+expr_stmt|;
+name|CurrentFlagByteOffset
+operator|=
+name|Info
+operator|->
+name|Offset
+expr_stmt|;
 name|DtCompileFlag
 argument_list|(
 name|FlagBuffer

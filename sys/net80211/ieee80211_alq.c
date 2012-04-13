@@ -271,7 +271,8 @@ literal|0
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"net80211: logging to %s enabled; struct size %d bytes\n"
+literal|"net80211: logging to %s enabled; "
+literal|"struct size %d bytes\n"
 argument_list|,
 name|ieee80211_alq_logfile
 argument_list|,
@@ -600,6 +601,20 @@ operator|->
 name|r_op
 operator|=
 name|op
+expr_stmt|;
+name|r
+operator|->
+name|r_threadid
+operator|=
+name|htonl
+argument_list|(
+operator|(
+name|uint32_t
+operator|)
+name|curthread
+operator|->
+name|td_tid
+argument_list|)
 expr_stmt|;
 name|memcpy
 argument_list|(

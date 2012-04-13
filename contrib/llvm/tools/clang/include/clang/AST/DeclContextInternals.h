@@ -119,8 +119,6 @@ name|StoredDeclsList
 block|{
 comment|/// DeclsTy - When in vector form, this is what the Data pointer points to.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|NamedDecl

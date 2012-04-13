@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -123,6 +123,18 @@ end_function_decl
 begin_comment
 comment|/* Local prototypes */
 end_comment
+
+begin_function_decl
+specifier|static
+name|UINT32
+name|AdGetFileSize
+parameter_list|(
+name|FILE
+modifier|*
+name|File
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 specifier|static
@@ -350,6 +362,70 @@ modifier|*
 name|AcpiGbl_ParseOpRoot
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FUNCTION:    AdGetFileSize  *  * PARAMETERS:  File                - Open file handle  *  * RETURN:      File Size  *  * DESCRIPTION: Get current file size. Uses seek-to-EOF. File must be open.  *  ******************************************************************************/
+end_comment
+
+begin_function
+specifier|static
+name|UINT32
+name|AdGetFileSize
+parameter_list|(
+name|FILE
+modifier|*
+name|File
+parameter_list|)
+block|{
+name|UINT32
+name|FileSize
+decl_stmt|;
+name|long
+name|Offset
+decl_stmt|;
+name|Offset
+operator|=
+name|ftell
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+name|fseek
+argument_list|(
+name|File
+argument_list|,
+literal|0
+argument_list|,
+name|SEEK_END
+argument_list|)
+expr_stmt|;
+name|FileSize
+operator|=
+operator|(
+name|UINT32
+operator|)
+name|ftell
+argument_list|(
+name|File
+argument_list|)
+expr_stmt|;
+comment|/* Restore file pointer */
+name|fseek
+argument_list|(
+name|File
+argument_list|,
+name|Offset
+argument_list|,
+name|SEEK_SET
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|FileSize
+operator|)
+return|;
+block|}
+end_function
 
 begin_comment
 comment|/*******************************************************************************  *  * FUNCTION:    AdInitialize  *  * PARAMETERS:  None  *  * RETURN:      Status  *  * DESCRIPTION: ACPICA and local initialization  *  ******************************************************************************/
@@ -894,7 +970,8 @@ argument_list|)
 expr_stmt|;
 name|AcpiOsPrintf
 argument_list|(
-literal|" * Format: [HexOffset DecimalOffset ByteLength]  FieldName : FieldValue\n */\n\n"
+literal|" * Format: [HexOffset DecimalOffset ByteLength]  "
+literal|"FieldName : FieldValue\n */\n\n"
 argument_list|)
 expr_stmt|;
 name|AcpiDmDumpDataTable
@@ -906,13 +983,25 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Acpi Data Table [%4.4s] decoded, written to \"%s\"\n"
+literal|"Acpi Data Table [%4.4s] decoded\n"
 argument_list|,
 name|Table
 operator|->
 name|Signature
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"Formatted output:  %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
+argument_list|,
+name|AdGetFileSize
+argument_list|(
+name|File
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -979,7 +1068,7 @@ literal|"*****/\n"
 argument_list|)
 expr_stmt|;
 block|}
-comment|/*          * Load namespace from names created within control methods          */
+comment|/* Load namespace from names created within control methods */
 name|AcpiDmFinishNamespaceLoad
 argument_list|(
 name|AcpiGbl_ParseOpRoot
@@ -989,7 +1078,7 @@ argument_list|,
 name|OwnerId
 argument_list|)
 expr_stmt|;
-comment|/*          * Cross reference the namespace here, in order to generate External() statements          */
+comment|/*          * Cross reference the namespace here, in order to          * generate External() statements          */
 name|AcpiDmCrossReferenceNamespace
 argument_list|(
 name|AcpiGbl_ParseOpRoot
@@ -1016,15 +1105,7 @@ argument_list|(
 name|AcpiGbl_ParseOpRoot
 argument_list|)
 expr_stmt|;
-comment|/* Convert fixed-offset references to resource descriptors to symbolic references */
-name|AcpiDmConvertResourceIndexes
-argument_list|(
-name|AcpiGbl_ParseOpRoot
-argument_list|,
-name|AcpiGbl_RootNode
-argument_list|)
-expr_stmt|;
-comment|/*          * If we found any external control methods, we must reparse the entire          * tree with the new information (namely, the number of arguments per          * method)          */
+comment|/*          * If we found any external control methods, we must reparse          * the entire tree with the new information (namely, the          * number of arguments per method)          */
 if|if
 condition|(
 name|AcpiDmGetExternalMethodCount
@@ -1035,13 +1116,14 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"\nFound %u external control methods, reparsing with new information\n"
+literal|"\nFound %u external control methods, "
+literal|"reparsing with new information\n"
 argument_list|,
 name|AcpiDmGetExternalMethodCount
 argument_list|()
 argument_list|)
 expr_stmt|;
-comment|/*              * Reparse, rebuild namespace. no need to xref namespace              */
+comment|/* Reparse, rebuild namespace. no need to xref namespace */
 name|AcpiPsDeleteParseTree
 argument_list|(
 name|AcpiGbl_ParseOpRoot
@@ -1114,7 +1196,7 @@ expr_stmt|;
 name|AcpiDmAddExternalsToNamespace
 argument_list|()
 expr_stmt|;
-comment|/* Parse table. No need to reload it, however (FALSE) */
+comment|/* Parse the table again. No need to reload it, however */
 name|Status
 operator|=
 name|AdParseTable
@@ -1180,6 +1262,14 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/*          * Now that the namespace is finalized, we can perform namespace          * transforms.          *          * 1) Convert fixed-offset references to resource descriptors          *    to symbolic references (Note: modifies namespace)          */
+name|AcpiDmConvertResourceIndexes
+argument_list|(
+name|AcpiGbl_ParseOpRoot
+argument_list|,
+name|AcpiGbl_RootNode
+argument_list|)
+expr_stmt|;
 comment|/* Optional displays */
 if|if
 condition|(
@@ -1197,9 +1287,21 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"Disassembly completed, written to \"%s\"\n"
+literal|"Disassembly completed\n"
+argument_list|)
+expr_stmt|;
+name|fprintf
+argument_list|(
+name|stderr
+argument_list|,
+literal|"ASL Output:    %s - %u bytes\n"
 argument_list|,
 name|DisasmFilename
+argument_list|,
+name|AdGetFileSize
+argument_list|(
+name|File
+argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -1241,9 +1343,12 @@ operator|&&
 name|File
 condition|)
 block|{
-ifdef|#
-directive|ifdef
-name|ASL_DISASM_DEBUG
+if|if
+condition|(
+name|AslCompilerdebug
+condition|)
+comment|/* Display final namespace, with transforms */
+block|{
 name|LsSetupNsList
 argument_list|(
 name|File
@@ -1252,8 +1357,7 @@ expr_stmt|;
 name|LsDisplayNamespace
 argument_list|()
 expr_stmt|;
-endif|#
-directive|endif
+block|}
 name|fclose
 argument_list|(
 name|File
@@ -2298,6 +2402,9 @@ block|}
 break|break;
 case|case
 name|AML_REGION_OP
+case|:
+case|case
+name|AML_DATA_REGION_OP
 case|:
 case|case
 name|AML_CREATE_QWORD_FIELD_OP

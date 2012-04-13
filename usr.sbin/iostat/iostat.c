@@ -46,13 +46,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<err.h>
+file|<ctype.h>
 end_include
 
 begin_include
 include|#
 directive|include
-file|<ctype.h>
+file|<devstat.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<err.h>
 end_include
 
 begin_include
@@ -64,7 +70,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|<inttypes.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<kvm.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<math.h>
 end_include
 
 begin_include
@@ -101,24 +125,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<limits.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<devstat.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<math.h>
 end_include
 
 begin_decl_stmt
@@ -3200,7 +3206,9 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"%-8.8s %5.1Lf %5.1Lf %7.1Lf %7.1Lf %4qu %5.1Lf %3.0Lf "
+literal|"%-8.8s %5.1Lf %5.1Lf %7.1Lf %7.1Lf %4"
+name|PRIu64
+literal|" %5.1Lf %3.0Lf "
 argument_list|,
 name|devname
 argument_list|,
@@ -3226,7 +3234,9 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%-8.8s %5.1Lf %5.1Lf %7.1Lf %7.1Lf %4qu %5.1Lf %3.0Lf "
+literal|"%-8.8s %5.1Lf %5.1Lf %7.1Lf %7.1Lf %4"
+name|PRIu64
+literal|" %5.1Lf %3.0Lf "
 argument_list|,
 name|devname
 argument_list|,
@@ -3363,7 +3373,11 @@ expr_stmt|;
 else|else
 name|printf
 argument_list|(
-literal|"%4.1qu%4.1qu%5.*Lf "
+literal|"%4.1"
+name|PRIu64
+literal|"%4.1"
+name|PRIu64
+literal|"%5.*Lf "
 argument_list|,
 name|total_blocks
 argument_list|,
@@ -3408,7 +3422,9 @@ literal|1024
 expr_stmt|;
 name|printf
 argument_list|(
-literal|" %5.2Lf %3.1qu %5.2Lf "
+literal|" %5.2Lf %3.1"
+name|PRIu64
+literal|" %5.2Lf "
 argument_list|,
 name|kb_per_transfer
 argument_list|,

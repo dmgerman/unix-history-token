@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2005-2007, 2009  Internet Systems Consortium, Inc. (
 end_comment
 
 begin_comment
-comment|/* $Id: sha2.h,v 1.12 2009-10-22 02:21:31 each Exp $ */
+comment|/* $Id: sha2.h,v 1.12 2009/10/22 02:21:31 each Exp $ */
 end_comment
 
 begin_comment

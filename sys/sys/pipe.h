@@ -130,6 +130,14 @@ name|maxpipekva
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|extern
+name|struct
+name|fileops
+name|pipeops
+decl_stmt|;
+end_decl_stmt
+
 begin_comment
 comment|/*  * Pipe buffer information.  * Separate in, out, cnt are used to simplify calculations.  * Buffered write is active when the buffer.cnt field is set.  */
 end_comment
@@ -307,6 +315,28 @@ begin_comment
 comment|/* Direct mode ok. */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|PIPE_NAMED
+value|0x1000
+end_define
+
+begin_comment
+comment|/* Is a named pipe. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PIPE_SAMEWGEN
+value|0x2000
+end_define
+
+begin_comment
+comment|/* same write generation for named pipes. */
+end_comment
+
 begin_comment
 comment|/*  * Per-pipe data structure.  * Two of these are linked together to produce bi-directional pipes.  */
 end_comment
@@ -478,6 +508,36 @@ name|type
 parameter_list|)
 value|mtx_assert(PIPE_MTX(pipe), (type))
 end_define
+
+begin_function_decl
+name|void
+name|pipe_dtor
+parameter_list|(
+name|struct
+name|pipe
+modifier|*
+name|dpipe
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|pipe_named_ctor
+parameter_list|(
+name|struct
+name|pipe
+modifier|*
+modifier|*
+name|ppipe
+parameter_list|,
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_endif
 endif|#

@@ -2220,7 +2220,7 @@ argument_list|(
 name|name
 argument_list|)
 argument_list|,
-literal|"%x"
+literal|"%lx"
 argument_list|,
 name|i
 argument_list|)

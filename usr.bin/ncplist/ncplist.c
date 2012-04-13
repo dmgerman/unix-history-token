@@ -32,6 +32,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<grp.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<pwd.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -641,6 +653,7 @@ name|struct
 name|ncp_bindery_object
 name|obj
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|pattern
@@ -1027,6 +1040,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show_queuelist
 parameter_list|(
@@ -1335,6 +1349,7 @@ block|{
 name|u_long
 name|type
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|name
@@ -1385,6 +1400,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|list_bindery
 parameter_list|(
@@ -1676,10 +1692,6 @@ block|{
 name|int
 name|opt
 decl_stmt|,
-name|wdone
-init|=
-literal|0
-decl_stmt|,
 name|nargs
 init|=
 literal|0
@@ -1939,10 +1951,6 @@ literal|0
 index|]
 argument_list|)
 expr_stmt|;
-name|wdone
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|LO_USERS
@@ -1954,10 +1962,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|wdone
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -1976,10 +1980,6 @@ literal|1
 index|]
 argument_list|)
 expr_stmt|;
-name|wdone
-operator|=
-literal|1
-expr_stmt|;
 break|break;
 case|case
 name|LO_VOLUMES
@@ -1991,10 +1991,6 @@ index|[
 literal|0
 index|]
 argument_list|)
-expr_stmt|;
-name|wdone
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2017,10 +2013,6 @@ index|[
 literal|2
 index|]
 argument_list|)
-expr_stmt|;
-name|wdone
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 default|default:

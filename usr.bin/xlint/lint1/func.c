@@ -107,7 +107,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * In conjunction with reached ontrols printing of "fallthrough on ..."  * warnings.  * Reset by each statement and set by FALLTHROUGH, switch (switch1())  * and case (label()).  *  * Control statements if, for, while and switch do not reset ftflg because  * this must be done by the controled statement. At least for if this is  * important because ** FALLTHROUGH ** after "if (expr) stmnt" is evaluated  * befor the following token, wich causes reduction of above, is read.  * This means that ** FALLTHROUGH ** after "if ..." would always be ignored.  */
+comment|/*  * In conjunction with reached controls printing of "fallthrough on ..."  * warnings.  * Reset by each statement and set by FALLTHROUGH, switch (switch1())  * and case (label()).  *  * Control statements if, for, while and switch do not reset ftflg because  * this must be done by the controlled statement. At least for if this is  * important because ** FALLTHROUGH ** after "if (expr) stmnt" is evaluated  * before the following token, which causes reduction of above, is read.  * This means that ** FALLTHROUGH ** after "if ..." would always be ignored.  */
 end_comment
 
 begin_decl_stmt
@@ -200,7 +200,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Are both plibflg and llibflg set, prototypes are writen as function  * definitions to the output file.  */
+comment|/*  * Are both plibflg and llibflg set, prototypes are written as function  * definitions to the output file.  */
 end_comment
 
 begin_decl_stmt
@@ -210,7 +210,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Nonzero means that no warnings about constands in conditional  * context are printed.  */
+comment|/*  * Nonzero means that no warnings about constants in conditional  * context are printed.  */
 end_comment
 
 begin_decl_stmt
@@ -878,7 +878,7 @@ argument_list|)
 operator|!=
 literal|0
 condition|)
-comment|/* function definition is not a prototyp */
+comment|/* function definition is not a prototype */
 name|warning
 argument_list|(
 literal|286
@@ -964,7 +964,7 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
-comment|/* 	 * This warning is printed only if the return value was implizitly 	 * declared to be int. Otherwise the wrong return statement 	 * has already printed a warning. 	 */
+comment|/* 	 * This warning is printed only if the return value was implicitly 	 * declared to be int. Otherwise the wrong return statement 	 * has already printed a warning. 	 */
 if|if
 condition|(
 name|cstk

@@ -88,6 +88,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/Instructions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/FoldingSet.h"
 end_include
 
@@ -4430,6 +4436,42 @@ operator|&
 literal|1
 return|;
 block|}
+name|AtomicOrdering
+name|getOrdering
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AtomicOrdering
+argument_list|(
+operator|(
+name|SubclassData
+operator|>>
+literal|7
+operator|)
+operator|&
+literal|15
+argument_list|)
+return|;
+block|}
+name|SynchronizationScope
+name|getSynchScope
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SynchronizationScope
+argument_list|(
+operator|(
+name|SubclassData
+operator|>>
+literal|11
+operator|)
+operator|&
+literal|1
+argument_list|)
+return|;
+block|}
 comment|/// Returns the SrcValue and offset that describes the location of the access
 specifier|const
 name|Value
@@ -4721,6 +4763,24 @@ name|ATOMIC_LOAD_UMAX
 operator|||
 name|N
 operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|ATOMIC_LOAD
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|ATOMIC_STORE
+operator|||
+name|N
+operator|->
 name|isTargetMemoryOpcode
 argument_list|()
 return|;
@@ -4741,6 +4801,103 @@ index|[
 literal|4
 index|]
 block|;
+name|void
+name|InitAtomic
+argument_list|(
+argument|AtomicOrdering Ordering
+argument_list|,
+argument|SynchronizationScope SynchScope
+argument_list|)
+block|{
+comment|// This must match encodeMemSDNodeFlags() in SelectionDAG.cpp.
+name|assert
+argument_list|(
+operator|(
+name|Ordering
+operator|&
+literal|15
+operator|)
+operator|==
+name|Ordering
+operator|&&
+literal|"Ordering may not require more than 4 bits!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|SynchScope
+operator|&
+literal|1
+operator|)
+operator|==
+name|SynchScope
+operator|&&
+literal|"SynchScope may not require more than 1 bit!"
+argument_list|)
+block|;
+name|SubclassData
+operator||=
+name|Ordering
+operator|<<
+literal|7
+block|;
+name|SubclassData
+operator||=
+name|SynchScope
+operator|<<
+literal|11
+block|;
+name|assert
+argument_list|(
+name|getOrdering
+argument_list|()
+operator|==
+name|Ordering
+operator|&&
+literal|"Ordering encoding error!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|getSynchScope
+argument_list|()
+operator|==
+name|SynchScope
+operator|&&
+literal|"Synch-scope encoding error!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|readMem
+argument_list|()
+operator|||
+name|getOrdering
+argument_list|()
+operator|<=
+name|Monotonic
+operator|)
+operator|&&
+literal|"Acquire/Release MachineMemOperand must be a load!"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|(
+name|writeMem
+argument_list|()
+operator|||
+name|getOrdering
+argument_list|()
+operator|<=
+name|Monotonic
+operator|)
+operator|&&
+literal|"Acquire/Release MachineMemOperand must be a store!"
+argument_list|)
+block|;   }
 name|public
 operator|:
 comment|// Opc:   opcode for atomic
@@ -4770,6 +4927,10 @@ argument_list|,
 argument|SDValue Swp
 argument_list|,
 argument|MachineMemOperand *MMO
+argument_list|,
+argument|AtomicOrdering Ordering
+argument_list|,
+argument|SynchronizationScope SynchScope
 argument_list|)
 operator|:
 name|MemSDNode
@@ -4785,20 +4946,11 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|assert
+name|InitAtomic
 argument_list|(
-name|readMem
-argument_list|()
-operator|&&
-literal|"Atomic MachineMemOperand is not a load!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|writeMem
-argument_list|()
-operator|&&
-literal|"Atomic MachineMemOperand is not a store!"
+name|Ordering
+argument_list|,
+name|SynchScope
 argument_list|)
 block|;
 name|InitOperands
@@ -4831,6 +4983,10 @@ argument_list|,
 argument|SDValue Val
 argument_list|,
 argument|MachineMemOperand *MMO
+argument_list|,
+argument|AtomicOrdering Ordering
+argument_list|,
+argument|SynchronizationScope SynchScope
 argument_list|)
 operator|:
 name|MemSDNode
@@ -4846,20 +5002,11 @@ argument_list|,
 argument|MMO
 argument_list|)
 block|{
-name|assert
+name|InitAtomic
 argument_list|(
-name|readMem
-argument_list|()
-operator|&&
-literal|"Atomic MachineMemOperand is not a load!"
-argument_list|)
-block|;
-name|assert
-argument_list|(
-name|writeMem
-argument_list|()
-operator|&&
-literal|"Atomic MachineMemOperand is not a store!"
+name|Ordering
+argument_list|,
+name|SynchScope
 argument_list|)
 block|;
 name|InitOperands
@@ -4871,6 +5018,56 @@ argument_list|,
 name|Ptr
 argument_list|,
 name|Val
+argument_list|)
+block|;   }
+name|AtomicSDNode
+argument_list|(
+argument|unsigned Opc
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SDVTList VTL
+argument_list|,
+argument|EVT MemVT
+argument_list|,
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Ptr
+argument_list|,
+argument|MachineMemOperand *MMO
+argument_list|,
+argument|AtomicOrdering Ordering
+argument_list|,
+argument|SynchronizationScope SynchScope
+argument_list|)
+operator|:
+name|MemSDNode
+argument_list|(
+argument|Opc
+argument_list|,
+argument|dl
+argument_list|,
+argument|VTL
+argument_list|,
+argument|MemVT
+argument_list|,
+argument|MMO
+argument_list|)
+block|{
+name|InitAtomic
+argument_list|(
+name|Ordering
+argument_list|,
+name|SynchScope
+argument_list|)
+block|;
+name|InitOperands
+argument_list|(
+name|Ops
+argument_list|,
+name|Chain
+argument_list|,
+name|Ptr
 argument_list|)
 block|;   }
 specifier|const
@@ -5047,6 +5244,24 @@ operator|==
 name|ISD
 operator|::
 name|ATOMIC_LOAD_UMAX
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|ATOMIC_LOAD
+operator|||
+name|N
+operator|->
+name|getOpcode
+argument_list|()
+operator|==
+name|ISD
+operator|::
+name|ATOMIC_STORE
 return|;
 block|}
 expr|}
@@ -6483,7 +6698,6 @@ return|return
 name|TargetFlags
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getType

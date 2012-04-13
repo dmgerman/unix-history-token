@@ -15,12 +15,6 @@ directive|include
 file|<stdio.h>
 end_include
 
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
 begin_comment
 comment|/*  * __eprintf() was used in an old version of<assert.h>.  * It can eventually go away, but it is needed when linking  * .o files built with the old<assert.h>.  *  * It should never be exported from a dylib, so it is marked  * visibility hidden.  */
 end_comment

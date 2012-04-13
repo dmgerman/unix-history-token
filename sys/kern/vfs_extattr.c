@@ -667,7 +667,7 @@ if|if
 condition|(
 name|nbytes
 operator|>
-name|INT_MAX
+name|IOSIZE_MAX
 condition|)
 block|{
 name|error
@@ -1425,7 +1425,7 @@ if|if
 condition|(
 name|nbytes
 operator|>
-name|INT_MAX
+name|IOSIZE_MAX
 condition|)
 block|{
 name|error
@@ -2856,7 +2856,7 @@ if|if
 condition|(
 name|nbytes
 operator|>
-name|INT_MAX
+name|IOSIZE_MAX
 condition|)
 block|{
 name|error

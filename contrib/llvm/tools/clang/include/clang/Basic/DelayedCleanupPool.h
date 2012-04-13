@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -253,8 +259,6 @@ parameter_list|()
 block|{
 for|for
 control|(
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std
@@ -332,8 +336,6 @@ name|CleanupFn
 operator|>
 name|Ptrs
 expr_stmt|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|std

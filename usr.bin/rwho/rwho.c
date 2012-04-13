@@ -149,6 +149,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|DIR
 modifier|*
 name|dirp
@@ -156,6 +157,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|whod
 name|wd
@@ -170,6 +172,7 @@ value|1000
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|myutmp
 block|{
@@ -200,6 +203,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nusers
 decl_stmt|;
@@ -229,12 +233,14 @@ value|((now) - (w)->wd_recvtime> 11 * 60)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|time_t
 name|now
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|aflg
 decl_stmt|;
@@ -251,6 +257,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|utmpcmp
 parameter_list|(
@@ -816,6 +823,9 @@ name|mp
 operator|->
 name|myhost
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mp
@@ -836,6 +846,9 @@ name|printf
 argument_list|(
 literal|"%-*.*s %-*s %s"
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mp
@@ -845,6 +858,9 @@ operator|.
 name|out_name
 argument_list|)
 argument_list|,
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|mp
@@ -1000,6 +1016,7 @@ value|((const struct myutmp *)(a))
 end_define
 
 begin_function
+specifier|static
 name|int
 name|utmpcmp
 parameter_list|(

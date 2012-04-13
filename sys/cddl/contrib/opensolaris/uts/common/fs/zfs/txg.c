@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Portions Copyright 2011 Martin Matuska<mm@FreeBSD.org>  */
 end_comment
 
 begin_include
@@ -135,7 +135,7 @@ name|OID_AUTO
 argument_list|,
 name|timeout
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|zfs_txg_timeout

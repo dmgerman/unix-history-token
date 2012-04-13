@@ -20,12 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|"opt_inet6.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"opt_kgssapi.h"
 end_include
 

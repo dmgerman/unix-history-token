@@ -264,7 +264,7 @@ block|{
 return|return
 name|Val
 operator|*
-literal|37
+literal|37U
 return|;
 block|}
 specifier|static
@@ -328,7 +328,7 @@ block|{
 return|return
 name|Val
 operator|*
-literal|37
+literal|37U
 return|;
 block|}
 specifier|static
@@ -542,7 +542,7 @@ call|)
 argument_list|(
 name|Val
 operator|*
-literal|37
+literal|37U
 argument_list|)
 return|;
 block|}
@@ -625,7 +625,7 @@ call|)
 argument_list|(
 name|Val
 operator|*
-literal|37L
+literal|37UL
 argument_list|)
 return|;
 block|}
@@ -696,7 +696,7 @@ call|)
 argument_list|(
 name|Val
 operator|*
-literal|37LL
+literal|37ULL
 argument_list|)
 return|;
 block|}
@@ -805,7 +805,7 @@ argument_list|()
 argument_list|,
 name|SecondInfo
 operator|::
-name|getEmptyKey
+name|getTombstoneKey
 argument_list|()
 argument_list|)
 return|;

@@ -1361,9 +1361,9 @@ literal|118
 block|}
 block|,
 block|{
-literal|"option-119"
+literal|"domain-search"
 block|,
-literal|"X"
+literal|"t"
 block|,
 operator|&
 name|dhcp_universe
@@ -3025,6 +3025,8 @@ name|DHO_STREETTALK_SERVER
 block|,
 name|DHO_STREETTALK_DA_SERVER
 block|,
+name|DHO_DOMAIN_SEARCH
+block|,
 comment|/* Presently-undefined options... */
 literal|62
 block|,
@@ -3111,8 +3113,6 @@ block|,
 literal|117
 block|,
 literal|118
-block|,
-literal|119
 block|,
 literal|120
 block|,

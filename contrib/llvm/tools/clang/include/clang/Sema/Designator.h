@@ -740,8 +740,6 @@ name|unsigned
 name|InitIndex
 decl_stmt|;
 comment|/// Designators - The actual designators for this initializer.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Designator

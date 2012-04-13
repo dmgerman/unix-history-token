@@ -12503,9 +12503,10 @@ decl_stmt|;
 name|int
 name|error
 decl_stmt|,
-name|resid
-decl_stmt|,
 name|vfslocked
+decl_stmt|;
+name|ssize_t
+name|resid
 decl_stmt|;
 name|struct
 name|vnode

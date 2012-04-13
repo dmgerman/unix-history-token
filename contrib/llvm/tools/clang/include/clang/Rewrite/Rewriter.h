@@ -107,16 +107,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -203,16 +193,15 @@ name|size
 argument_list|()
 return|;
 block|}
-name|llvm
-operator|::
 name|raw_ostream
-operator|&
+modifier|&
 name|write
 argument_list|(
-argument|llvm::raw_ostream&
+name|raw_ostream
+operator|&
 argument_list|)
-specifier|const
-expr_stmt|;
+decl|const
+decl_stmt|;
 comment|/// RemoveText - Remove the specified text.
 name|void
 name|RemoveText
@@ -235,36 +224,32 @@ comment|/// text is inserted after the specified location.
 comment|///
 name|void
 name|InsertText
-argument_list|(
+parameter_list|(
 name|unsigned
 name|OrigOffset
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|,
+parameter_list|,
 name|bool
 name|InsertAfter
-operator|=
+init|=
 name|true
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// InsertTextBefore - Insert some text before the specified point, where the
 comment|/// offset in the buffer is specified relative to the original
 comment|/// SourceBuffer. The text is inserted before the specified location.  This is
 comment|/// method is the same as InsertText with "InsertAfter == false".
 name|void
 name|InsertTextBefore
-argument_list|(
+parameter_list|(
 name|unsigned
 name|OrigOffset
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{
 name|InsertText
 argument_list|(
@@ -281,15 +266,13 @@ comment|/// offset in the buffer is specified relative to the original SourceBuf
 comment|/// The text is inserted after the specified location.
 name|void
 name|InsertTextAfter
-argument_list|(
+parameter_list|(
 name|unsigned
 name|OrigOffset
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{
 name|InsertText
 argument_list|(
@@ -304,19 +287,17 @@ comment|/// buffer with a new string.  This is effectively a combined "remove/in
 comment|/// operation.
 name|void
 name|ReplaceText
-argument_list|(
+parameter_list|(
 name|unsigned
 name|OrigOffset
-argument_list|,
+parameter_list|,
 name|unsigned
 name|OrigLength
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|NewStr
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|// Methods only usable by Rewriter.
@@ -571,6 +552,7 @@ name|SourceManager
 operator|&
 name|getSourceMgr
 argument_list|()
+specifier|const
 block|{
 return|return
 operator|*
@@ -579,9 +561,10 @@ return|;
 block|}
 specifier|const
 name|LangOptions
-modifier|&
+operator|&
 name|getLangOpts
-parameter_list|()
+argument_list|()
+specifier|const
 block|{
 return|return
 operator|*
@@ -660,26 +643,24 @@ comment|/// \param indentNewLines if true new lines in the string are indented
 comment|/// using the indentation of the source line in position \arg Loc.
 name|bool
 name|InsertText
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|,
+parameter_list|,
 name|bool
 name|InsertAfter
-operator|=
+init|=
 name|true
-argument_list|,
+parameter_list|,
 name|bool
 name|indentNewLines
-operator|=
+init|=
 name|false
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// InsertTextAfter - Insert the specified string at the specified location in
 comment|///  the original buffer.  This method returns true (and does nothing) if
 comment|///  the input location was not rewritable, false otherwise.  Text is
@@ -687,15 +668,13 @@ comment|///  inserted after any other text that has been previously inserted
 comment|///  at the some point (the default behavior for InsertText).
 name|bool
 name|InsertTextAfter
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|InsertText
@@ -710,16 +689,14 @@ comment|/// \brief Insert the specified string after the token in the
 comment|/// specified location.
 name|bool
 name|InsertTextAfterToken
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// InsertText - Insert the specified string at the specified location in the
 comment|/// original buffer.  This method returns true (and does nothing) if the input
 comment|/// location was not rewritable, false otherwise.  Text is
@@ -727,15 +704,13 @@ comment|/// inserted before any other text that has been previously inserted
 comment|/// at the some point.
 name|bool
 name|InsertTextBefore
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|InsertText
@@ -836,33 +811,29 @@ comment|/// buffer with a new string.  This is effectively a combined "remove/in
 comment|/// operation.
 name|bool
 name|ReplaceText
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Start
-argument_list|,
+parameter_list|,
 name|unsigned
 name|OrigLength
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|NewStr
-argument_list|)
-decl_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// ReplaceText - This method replaces a range of characters in the input
 comment|/// buffer with a new string.  This is effectively a combined "remove/insert"
 comment|/// operation.
 name|bool
 name|ReplaceText
-argument_list|(
+parameter_list|(
 name|SourceRange
 name|range
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|NewStr
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|ReplaceText

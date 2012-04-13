@@ -16,6 +16,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_hwpmc_hooks.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_kdtrace.h"
 end_include
 
@@ -43,6 +49,12 @@ begin_include
 include|#
 directive|include
 file|<sys/param.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/systm.h>
 end_include
 
 begin_include
@@ -85,12 +97,6 @@ begin_include
 include|#
 directive|include
 file|<sys/sysctl.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/systm.h>
 end_include
 
 begin_if
@@ -176,6 +182,33 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/pmckern.h>
+end_include
+
+begin_expr_stmt
+name|PMC_SOFT_DECLARE
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/* Handy macros for sleep queues. */
 end_comment
@@ -240,6 +273,7 @@ specifier|static
 name|void
 name|assert_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -262,6 +296,7 @@ specifier|static
 name|void
 name|db_show_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -302,6 +337,7 @@ specifier|static
 name|int
 name|owner_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -446,6 +482,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -514,6 +551,7 @@ begin_function
 name|void
 name|assert_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -526,6 +564,7 @@ block|{
 name|sx_assert
 argument_list|(
 operator|(
+specifier|const
 expr|struct
 name|sx
 operator|*
@@ -661,6 +700,7 @@ begin_function
 name|int
 name|owner_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -673,12 +713,14 @@ modifier|*
 name|owner
 parameter_list|)
 block|{
+specifier|const
 name|struct
 name|sx
 modifier|*
 name|sx
 init|=
 operator|(
+specifier|const
 expr|struct
 name|sx
 operator|*
@@ -1015,6 +1057,16 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1122,7 +1174,7 @@ end_function
 
 begin_function
 name|int
-name|_sx_try_slock
+name|sx_try_slock_
 parameter_list|(
 name|struct
 name|sx
@@ -1141,6 +1193,16 @@ block|{
 name|uintptr_t
 name|x
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 for|for
 control|(
 init|;
@@ -1291,6 +1353,16 @@ name|error
 init|=
 literal|0
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1404,7 +1476,7 @@ end_function
 
 begin_function
 name|int
-name|_sx_try_xlock
+name|sx_try_xlock_
 parameter_list|(
 name|struct
 name|sx
@@ -1423,6 +1495,16 @@ block|{
 name|int
 name|rval
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1576,6 +1658,12 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1685,6 +1773,12 @@ name|int
 name|line
 parameter_list|)
 block|{
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|MPASS
 argument_list|(
 name|curthread
@@ -1794,7 +1888,7 @@ end_comment
 
 begin_function
 name|int
-name|_sx_try_upgrade
+name|sx_try_upgrade_
 parameter_list|(
 name|struct
 name|sx
@@ -1816,6 +1910,16 @@ decl_stmt|;
 name|int
 name|success
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|1
+operator|)
+return|;
 name|KASSERT
 argument_list|(
 name|sx
@@ -1938,7 +2042,7 @@ end_comment
 
 begin_function
 name|void
-name|_sx_downgrade
+name|sx_downgrade_
 parameter_list|(
 name|struct
 name|sx
@@ -1960,6 +2064,12 @@ decl_stmt|;
 name|int
 name|wakeup_swapper
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|KASSERT
 argument_list|(
 name|sx
@@ -2274,6 +2384,16 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* If we already hold an exclusive lock, then recurse. */
 if|if
 condition|(
@@ -2416,6 +2536,18 @@ directive|ifdef
 name|KDTRACE_HOOKS
 name|spin_cnt
 operator|++
+expr_stmt|;
+endif|#
+directive|endif
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
@@ -3145,6 +3277,12 @@ name|queue
 decl_stmt|,
 name|wakeup_swapper
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 name|MPASS
 argument_list|(
 operator|!
@@ -3468,6 +3606,16 @@ literal|0
 decl_stmt|;
 endif|#
 directive|endif
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 comment|/* 	 * As with rwlocks, we don't make any attempt to try to block 	 * shared locks once there is an exclusive waiter. 	 */
 for|for
 control|(
@@ -3567,6 +3715,18 @@ break|break;
 block|}
 continue|continue;
 block|}
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+name|PMC_SOFT_CALL
+argument_list|( , ,
+name|lock
+argument_list|,
+name|failed
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|lock_profile_obtain_lock_failed
 argument_list|(
 operator|&
@@ -4106,6 +4266,12 @@ decl_stmt|;
 name|int
 name|wakeup_swapper
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 for|for
 control|(
 init|;
@@ -4418,6 +4584,7 @@ begin_function
 name|void
 name|_sx_assert
 parameter_list|(
+specifier|const
 name|struct
 name|sx
 modifier|*
@@ -4808,6 +4975,7 @@ specifier|static
 name|void
 name|db_show_sx
 parameter_list|(
+specifier|const
 name|struct
 name|lock_object
 modifier|*
@@ -4819,6 +4987,7 @@ name|thread
 modifier|*
 name|td
 decl_stmt|;
+specifier|const
 name|struct
 name|sx
 modifier|*
@@ -4827,6 +4996,7 @@ decl_stmt|;
 name|sx
 operator|=
 operator|(
+specifier|const
 expr|struct
 name|sx
 operator|*

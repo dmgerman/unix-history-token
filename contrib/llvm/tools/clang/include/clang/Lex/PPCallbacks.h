@@ -135,6 +135,8 @@ comment|/// entered or exited.  The SourceLocation indicates the new location, a
 comment|/// EnteringFile indicates whether this is because we are entering a new
 comment|/// #include'd file (when true) or whether we're exiting one because we ran
 comment|/// off the end (when false).
+comment|///
+comment|/// \param PrevFID the file that was exited if \arg Reason is ExitFile.
 name|virtual
 name|void
 name|FileChanged
@@ -149,6 +151,12 @@ name|SrcMgr
 operator|::
 name|CharacteristicKind
 name|FileType
+argument_list|,
+name|FileID
+name|PrevFID
+operator|=
+name|FileID
+argument_list|()
 argument_list|)
 block|{   }
 comment|/// FileSkipped - This callback is invoked whenever a source file is
@@ -211,41 +219,35 @@ comment|/// file was found. This is equal to FileName except for framework inclu
 name|virtual
 name|void
 name|InclusionDirective
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|HashLoc
-argument_list|,
+parameter_list|,
 specifier|const
 name|Token
-operator|&
+modifier|&
 name|IncludeTok
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|FileName
-argument_list|,
+parameter_list|,
 name|bool
 name|IsAngled
-argument_list|,
+parameter_list|,
 specifier|const
 name|FileEntry
-operator|*
+modifier|*
 name|File
-argument_list|,
+parameter_list|,
 name|SourceLocation
 name|EndLoc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|SearchPath
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|RelativePath
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// EndOfMainFile - This callback is invoked when the end of the main file is
 comment|/// reach, no subsequent callbacks will be made.
@@ -304,45 +306,39 @@ comment|///
 name|virtual
 name|void
 name|PragmaMessage
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Str
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// PragmaDiagnosticPush - This callback is invoked when a
 comment|/// #pragma gcc dianostic push directive is read.
 name|virtual
 name|void
 name|PragmaDiagnosticPush
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Namespace
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// PragmaDiagnosticPop - This callback is invoked when a
 comment|/// #pragma gcc dianostic pop directive is read.
 name|virtual
 name|void
 name|PragmaDiagnosticPop
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|Loc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Namespace
-argument_list|)
+parameter_list|)
 block|{   }
 comment|/// PragmaDiagnostic - This callback is invoked when a
 comment|/// #pragma gcc dianostic directive is read.
@@ -353,8 +349,6 @@ argument_list|(
 name|SourceLocation
 name|Loc
 argument_list|,
-name|llvm
-operator|::
 name|StringRef
 name|Namespace
 argument_list|,
@@ -363,8 +357,6 @@ operator|::
 name|Mapping
 name|mapping
 argument_list|,
-name|llvm
-operator|::
 name|StringRef
 name|Str
 argument_list|)
@@ -385,6 +377,9 @@ specifier|const
 name|MacroInfo
 modifier|*
 name|MI
+parameter_list|,
+name|SourceRange
+name|Range
 parameter_list|)
 block|{   }
 comment|/// MacroDefined - This hook is called whenever a macro definition is seen.
@@ -418,6 +413,28 @@ specifier|const
 name|MacroInfo
 modifier|*
 name|MI
+parameter_list|)
+block|{   }
+comment|/// Defined - This hook is called whenever the 'defined' operator is seen.
+name|virtual
+name|void
+name|Defined
+parameter_list|(
+specifier|const
+name|Token
+modifier|&
+name|MacroNameTok
+parameter_list|)
+block|{   }
+comment|/// SourceRangeSkipped - This hook is called when a source range is skipped.
+comment|/// \param Range The SourceRange that was skipped. The range begins at the
+comment|/// #if/#else directive and ends after the #endif/#else directive.
+name|virtual
+name|void
+name|SourceRangeSkipped
+parameter_list|(
+name|SourceRange
+name|Range
 parameter_list|)
 block|{   }
 comment|/// If -- This hook is called whenever an #if is seen.
@@ -538,6 +555,8 @@ argument_list|,
 argument|FileChangeReason Reason
 argument_list|,
 argument|SrcMgr::CharacteristicKind FileType
+argument_list|,
+argument|FileID PrevFID
 argument_list|)
 block|{
 name|First
@@ -549,6 +568,8 @@ argument_list|,
 name|Reason
 argument_list|,
 name|FileType
+argument_list|,
+name|PrevFID
 argument_list|)
 block|;
 name|Second
@@ -560,6 +581,8 @@ argument_list|,
 name|Reason
 argument_list|,
 name|FileType
+argument_list|,
+name|PrevFID
 argument_list|)
 block|;   }
 name|virtual
@@ -603,7 +626,7 @@ argument|SourceLocation HashLoc
 argument_list|,
 argument|const Token&IncludeTok
 argument_list|,
-argument|llvm::StringRef FileName
+argument|StringRef FileName
 argument_list|,
 argument|bool IsAngled
 argument_list|,
@@ -611,9 +634,9 @@ argument|const FileEntry *File
 argument_list|,
 argument|SourceLocation EndLoc
 argument_list|,
-argument|llvm::StringRef SearchPath
+argument|StringRef SearchPath
 argument_list|,
-argument|llvm::StringRef RelativePath
+argument|StringRef RelativePath
 argument_list|)
 block|{
 name|First
@@ -739,7 +762,7 @@ name|PragmaMessage
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|)
 block|{
 name|First
@@ -766,7 +789,7 @@ name|PragmaDiagnosticPush
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|llvm::StringRef Namespace
+argument|StringRef Namespace
 argument_list|)
 block|{
 name|First
@@ -793,7 +816,7 @@ name|PragmaDiagnosticPop
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|llvm::StringRef Namespace
+argument|StringRef Namespace
 argument_list|)
 block|{
 name|First
@@ -820,11 +843,11 @@ name|PragmaDiagnostic
 argument_list|(
 argument|SourceLocation Loc
 argument_list|,
-argument|llvm::StringRef Namespace
+argument|StringRef Namespace
 argument_list|,
 argument|diag::Mapping mapping
 argument_list|,
-argument|llvm::StringRef Str
+argument|StringRef Str
 argument_list|)
 block|{
 name|First
@@ -860,6 +883,8 @@ argument_list|(
 argument|const Token&MacroNameTok
 argument_list|,
 argument|const MacroInfo* MI
+argument_list|,
+argument|SourceRange Range
 argument_list|)
 block|{
 name|First
@@ -869,6 +894,8 @@ argument_list|(
 name|MacroNameTok
 argument_list|,
 name|MI
+argument_list|,
+name|Range
 argument_list|)
 block|;
 name|Second
@@ -878,6 +905,8 @@ argument_list|(
 name|MacroNameTok
 argument_list|,
 name|MI
+argument_list|,
+name|Range
 argument_list|)
 block|;   }
 name|virtual
@@ -932,6 +961,48 @@ argument_list|(
 name|MacroNameTok
 argument_list|,
 name|MI
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|Defined
+argument_list|(
+argument|const Token&MacroNameTok
+argument_list|)
+block|{
+name|First
+operator|->
+name|Defined
+argument_list|(
+name|MacroNameTok
+argument_list|)
+block|;
+name|Second
+operator|->
+name|Defined
+argument_list|(
+name|MacroNameTok
+argument_list|)
+block|;   }
+name|virtual
+name|void
+name|SourceRangeSkipped
+argument_list|(
+argument|SourceRange Range
+argument_list|)
+block|{
+name|First
+operator|->
+name|SourceRangeSkipped
+argument_list|(
+name|Range
+argument_list|)
+block|;
+name|Second
+operator|->
+name|SourceRangeSkipped
+argument_list|(
+name|Range
 argument_list|)
 block|;   }
 comment|/// If -- This hook is called whenever an #if is seen.

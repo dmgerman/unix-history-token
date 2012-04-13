@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: nsupdate.c,v 1.193.12.3 2011-05-23 22:12:14 each Exp $ */
+comment|/* $Id: nsupdate.c,v 1.193.12.4 2011/11/03 04:30:09 each Exp $ */
 end_comment
 
 begin_comment
@@ -11866,6 +11866,10 @@ argument_list|)
 expr_stmt|;
 name|done_update
 argument_list|()
+expr_stmt|;
+name|seenerror
+operator|=
+name|ISC_TRUE
 expr_stmt|;
 return|return;
 block|}

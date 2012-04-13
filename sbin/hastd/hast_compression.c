@@ -114,7 +114,7 @@ operator|==
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * This is the fastest method I found for checking if the given 	 * buffer contain all zeros. 	 * Because inside the loop we don't check at every step, we would 	 * get an answer only after walking through entire buffer. 	 * To return early if the buffer doesn't contain all zeros, we probe 	 * 8 bytes at the begining, in the middle and at the end of the buffer 	 * first. 	 */
+comment|/* 	 * This is the fastest method I found for checking if the given 	 * buffer contain all zeros. 	 * Because inside the loop we don't check at every step, we would 	 * get an answer only after walking through entire buffer. 	 * To return early if the buffer doesn't contain all zeros, we probe 	 * 8 bytes at the beginning, in the middle and at the end of the buffer 	 * first. 	 */
 name|size
 operator|>>=
 literal|3

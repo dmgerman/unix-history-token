@@ -132,6 +132,36 @@ endif|#
 directive|endif
 end_endif
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|AIM
+end_ifdef
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS32
+value|((vm_offset_t)0xfffff000)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|VM_MAXUSER_ADDRESS32
+value|((vm_offset_t)0x7ffff000)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_comment
 comment|/*  * Would like to have MAX addresses = 0, but this doesn't (currently) work  */
 end_comment
@@ -163,14 +193,7 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|(0x7ffffffffffff000UL)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SHAREDPAGE
-value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
+value|(0xfffffffffffff000UL)
 end_define
 
 begin_define
@@ -196,8 +219,20 @@ begin_define
 define|#
 directive|define
 name|VM_MAXUSER_ADDRESS
-value|((vm_offset_t)0x7ffff000)
+value|VM_MAXUSER_ADDRESS32
 end_define
+
+begin_define
+define|#
+directive|define
+name|VM_MAX_ADDRESS
+value|((vm_offset_t)0xffffffff)
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -205,18 +240,6 @@ directive|define
 name|SHAREDPAGE
 value|(VM_MAXUSER_ADDRESS - PAGE_SIZE)
 end_define
-
-begin_define
-define|#
-directive|define
-name|VM_MAX_ADDRESS
-value|VM_MAXUSER_ADDRESS
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_else
 else|#
@@ -227,11 +250,20 @@ begin_comment
 comment|/* LOCORE */
 end_comment
 
-begin_ifndef
-ifndef|#
-directive|ifndef
+begin_if
+if|#
+directive|if
+operator|!
+name|defined
+argument_list|(
 name|__powerpc64__
-end_ifndef
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|E500
+argument_list|)
+end_if
 
 begin_define
 define|#
@@ -265,7 +297,7 @@ begin_define
 define|#
 directive|define
 name|FREEBSD32_SHAREDPAGE
-value|(0x7ffff000 - PAGE_SIZE)
+value|(VM_MAXUSER_ADDRESS32 - PAGE_SIZE)
 end_define
 
 begin_define

@@ -813,6 +813,9 @@ name|cdev
 modifier|*
 name|sc_leddev
 decl_stmt|;
+name|int
+name|lid_closed
+decl_stmt|;
 block|}
 struct|;
 end_struct

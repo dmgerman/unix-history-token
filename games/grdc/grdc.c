@@ -68,6 +68,7 @@ value|7
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|timespec
 name|now
@@ -75,6 +76,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|tm
 modifier|*
@@ -83,6 +85,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 name|disp
 index|[
@@ -116,6 +119,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|long
 name|old
 index|[
@@ -137,6 +141,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|sigtermed
@@ -144,6 +149,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hascolor
 init|=
@@ -152,6 +158,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|set
 parameter_list|(
@@ -163,6 +170,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|standt
 parameter_list|(
@@ -172,6 +180,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|movto
 parameter_list|(
@@ -183,6 +192,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sighndl
 parameter_list|(
@@ -192,6 +202,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|usage
 parameter_list|(
@@ -201,6 +212,7 @@ function_decl|;
 end_function_decl
 
 begin_function
+specifier|static
 name|void
 name|sighndl
 parameter_list|(
@@ -1205,6 +1217,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|set
 parameter_list|(
@@ -1297,6 +1310,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|standt
 parameter_list|(
@@ -1361,6 +1375,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|movto
 parameter_list|(
@@ -1382,6 +1397,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|usage
 parameter_list|(

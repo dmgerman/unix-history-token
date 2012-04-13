@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2012  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -10,13 +10,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|__CVMX_SRIOMAINTX_TYPEDEFS_H__
+name|__CVMX_SRIOMAINTX_DEFS_H__
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|__CVMX_SRIOMAINTX_TYPEDEFS_H__
+name|__CVMX_SRIOMAINTX_DEFS_H__
 end_define
 
 begin_if
@@ -51,6 +51,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -121,6 +150,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -208,6 +266,43 @@ operator|)
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|15
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|block_id
+operator|==
+literal|2
+operator|)
+operator|||
+operator|(
+name|block_id
+operator|==
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -220,10 +315,7 @@ name|block_id
 argument_list|)
 expr_stmt|;
 return|return
-name|CVMX_ADD_IO_SEG
-argument_list|(
 literal|0x0000000000200010ull
-argument_list|)
 operator|+
 operator|(
 operator|(
@@ -239,7 +331,7 @@ operator|(
 name|block_id
 operator|)
 operator|&
-literal|1
+literal|3
 operator|)
 operator|*
 literal|0x0ull
@@ -264,7 +356,7 @@ name|offset
 parameter_list|,
 name|block_id
 parameter_list|)
-value|(CVMX_ADD_IO_SEG(0x0000000000200010ull) + (((offset)& 15) + ((block_id)& 1) * 0x0ull) * 4)
+value|(0x0000000000200010ull + (((offset)& 15) + ((block_id)& 3) * 0x0ull) * 4)
 end_define
 
 begin_endif
@@ -304,6 +396,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -377,6 +498,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -444,6 +594,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -517,6 +696,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -584,6 +792,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -657,6 +894,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -724,6 +990,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -797,6 +1092,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -864,6 +1188,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -937,6 +1290,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1004,6 +1386,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1077,6 +1488,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1144,6 +1584,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1217,6 +1686,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1284,6 +1782,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1357,6 +1884,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1424,6 +1980,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1497,6 +2082,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1564,6 +2178,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1637,6 +2280,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1704,6 +2376,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1777,6 +2478,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1844,6 +2574,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -1917,6 +2676,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -1984,6 +2772,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -2057,6 +2874,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -2124,6 +2970,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -2197,6 +3072,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -2264,6 +3168,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -2337,6 +3270,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -2404,6 +3366,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -2477,6 +3468,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -2544,6 +3564,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -2617,6 +3666,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -2687,6 +3765,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -2754,6 +3861,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -2841,6 +3977,43 @@ operator|)
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+operator|(
+name|offset
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+name|block_id
+operator|==
+literal|2
+operator|)
+operator|||
+operator|(
+name|block_id
+operator|==
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -2853,10 +4026,7 @@ name|block_id
 argument_list|)
 expr_stmt|;
 return|return
-name|CVMX_ADD_IO_SEG
-argument_list|(
 literal|0x0000000000001010ull
-argument_list|)
 operator|+
 operator|(
 operator|(
@@ -2872,7 +4042,7 @@ operator|(
 name|block_id
 operator|)
 operator|&
-literal|1
+literal|3
 operator|)
 operator|*
 literal|0x0ull
@@ -2897,7 +4067,7 @@ name|offset
 parameter_list|,
 name|block_id
 parameter_list|)
-value|(CVMX_ADD_IO_SEG(0x0000000000001010ull) + (((offset)& 3) + ((block_id)& 1) * 0x0ull) * 32)
+value|(0x0000000000001010ull + (((offset)& 3) + ((block_id)& 3) * 0x0ull) * 32)
 end_define
 
 begin_endif
@@ -2937,6 +4107,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3010,6 +4209,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -3077,6 +4305,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3150,6 +4407,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -3217,6 +4503,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3290,6 +4605,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -3357,6 +4701,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3430,6 +4803,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -3497,6 +4899,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3570,6 +5001,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -3637,6 +5097,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3710,6 +5199,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -3777,6 +5295,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3850,6 +5397,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -3917,6 +5493,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -3990,6 +5595,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -4057,6 +5691,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -4130,6 +5793,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -4197,6 +5889,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -4270,6 +5991,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -4337,6 +6087,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -4410,6 +6189,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -4477,6 +6285,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -4550,6 +6387,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -4617,6 +6483,35 @@ operator|(
 name|block_id
 operator|<=
 literal|1
+operator|)
+operator|)
+operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
 operator|)
 operator|)
 operator|)
@@ -4690,6 +6585,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -4760,6 +6684,35 @@ literal|1
 operator|)
 operator|)
 operator|)
+operator|||
+operator|(
+name|OCTEON_IS_MODEL
+argument_list|(
+name|OCTEON_CN66XX
+argument_list|)
+operator|&&
+operator|(
+operator|(
+name|block_id
+operator|==
+literal|0
+operator|)
+operator|||
+operator|(
+operator|(
+name|block_id
+operator|>=
+literal|2
+operator|)
+operator|&&
+operator|(
+name|block_id
+operator|<=
+literal|3
+operator|)
+operator|)
+operator|)
+operator|)
 operator|)
 condition|)
 name|cvmx_warn
@@ -4796,7 +6749,7 @@ directive|endif
 end_endif
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_asmbly_id  *  * SRIOMAINT_ASMBLY_ID = SRIO Assembly ID  *  * The Assembly ID register shows the Assembly ID and Vendor  *  * Notes:  * The Assembly ID register shows the Assembly ID and Vendor specified in $SRIO_ASMBLY_ID.  *  * Clk_Rst:        SRIOMAINT(0..1)_ASMBLY_ID       hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_asmbly_id  *  * SRIOMAINT_ASMBLY_ID = SRIO Assembly ID  *  * The Assembly ID register shows the Assembly ID and Vendor  *  * Notes:  * The Assembly ID register shows the Assembly ID and Vendor specified in $SRIO_ASMBLY_ID.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ASMBLY_ID     hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -4809,11 +6762,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_asmbly_id_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|assy_id
 range|:
@@ -4851,6 +6802,10 @@ name|struct
 name|cvmx_sriomaintx_asmbly_id_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_asmbly_id_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -4864,7 +6819,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_asmbly_info  *  * SRIOMAINT_ASMBLY_INFO = SRIO Assembly Information  *  * The Assembly Info register shows the Assembly Revision specified in $SRIO_ASMBLY_INFO  *  * Notes:  * The Assembly Info register shows the Assembly Revision specified in $SRIO_ASMBLY_INFO and Extended  *  Feature Pointer.  *  * Clk_Rst:        SRIOMAINT(0..1)_ASMBLY_INFO     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_asmbly_info  *  * SRIOMAINT_ASMBLY_INFO = SRIO Assembly Information  *  * The Assembly Info register shows the Assembly Revision specified in $SRIO_ASMBLY_INFO  *  * Notes:  * The Assembly Info register shows the Assembly Revision specified in $SRIO_ASMBLY_INFO and Extended  *  Feature Pointer.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ASMBLY_INFO   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -4877,11 +6832,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_asmbly_info_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|assy_rev
 range|:
@@ -4919,6 +6872,10 @@ name|struct
 name|cvmx_sriomaintx_asmbly_info_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_asmbly_info_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -4932,7 +6889,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_bar1_idx#  *  * SRIOMAINT_BAR1_IDXX = SRIO BAR1 IndexX Register  *  * Contains address index and control bits for access to memory ranges of BAR1.  *  * Notes:  * This register specifies the Octeon address, endian swap and cache status associated with each of  *  the 16 BAR1 entries.  The local address bits used are based on the BARSIZE field located in the  *  SRIOMAINT(0..1)_M2S_BAR1_START0 register.  This register is only writeable over SRIO if the  *  SRIO(0..1)_ACC_CTRL.DENY_BAR1 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0..1)_BAR1_IDX[0:15]  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_bar1_idx#  *  * SRIOMAINT_BAR1_IDXX = SRIO BAR1 IndexX Register  *  * Contains address index and control bits for access to memory ranges of BAR1.  *  * Notes:  * This register specifies the Octeon address, endian swap and cache status associated with each of  *  the 16 BAR1 entries.  The local address bits used are based on the BARSIZE field located in the  *  SRIOMAINT(0,2..3)_M2S_BAR1_START0 register.  This register is only writeable over SRIO if the  *  SRIO(0,2..3)_ACC_CTRL.DENY_BAR1 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_BAR1_IDX[0:15]        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -4945,11 +6902,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_bar1_idxx_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_30_31
 range|:
@@ -4960,7 +6915,7 @@ name|la
 range|:
 literal|22
 decl_stmt|;
-comment|/**< L2/DRAM Address bits [37:16]                                                          Not all LA[21:0] bits are used by SRIO hardware,                                                          depending on SRIOMAINT(0..1)_M2S_BAR1_START1[BARSIZE].                                                                                   Become                                                                                  L2/DRAM                                                                                  Address  Entry                                                          BARSIZE   LA Bits Used   Bits    Size                                                             0        LA[21:0]    [37:16]   64KB                                                             1        LA[21:1]    [37:17]  128KB                                                             2        LA[21:2]    [37:18]  256KB                                                             3        LA[21:3]    [37:19]  512KB                                                             4        LA[21:4]    [37:20]    1MB                                                             5        LA[21:5]    [37:21]    2MB                                                             6        LA[21:6]    [37:22]    4MB                                                             7        LA[21:7]    [37:23]    8MB                                                             8        ** not in pass 1                                                             9        ** not in pass 1                                                            10        ** not in pass 1                                                            11        ** not in pass 1                                                            12        ** not in pass 1                                                            13        ** not in pass 1 */
+comment|/**< L2/DRAM Address bits [37:16]                                                          Not all LA[21:0] bits are used by SRIO hardware,                                                          depending on SRIOMAINT(0,2..3)_M2S_BAR1_START1[BARSIZE].                                                                                   Become                                                                                  L2/DRAM                                                                                  Address  Entry                                                          BARSIZE   LA Bits Used   Bits    Size                                                             0        LA[21:0]    [37:16]   64KB                                                             1        LA[21:1]    [37:17]  128KB                                                             2        LA[21:2]    [37:18]  256KB                                                             3        LA[21:3]    [37:19]  512KB                                                             4        LA[21:4]    [37:20]    1MB                                                             5        LA[21:5]    [37:21]    2MB                                                             6        LA[21:6]    [37:22]    4MB                                                             7        LA[21:7]    [37:23]    8MB                                                             8        LA[21:8]    [37:24]   16MB                                                             9        LA[21:9]    [37:25]   32MB                                                            10        LA[21:10]   [37:26]   64MB                                                            11        LA[21:11]   [37:27]  128MB                                                            12        LA[21:12]   [37:28]  256MB                                                            13        LA[21:13]   [37:29]  512MB */
 name|uint32_t
 name|reserved_6_7
 range|:
@@ -5039,6 +6994,10 @@ name|struct
 name|cvmx_sriomaintx_bar1_idxx_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_bar1_idxx_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5052,7 +7011,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_bell_status  *  * SRIOMAINT_BELL_STATUS = SRIO Incoming Doorbell Status  *  * The SRIO Incoming (RX) Doorbell Status  *  * Notes:  * This register displays the status of the doorbells received.  If FULL is set the SRIO device will  *  retry incoming transactions.  *  * Clk_Rst:        SRIOMAINT(0..1)_BELL_STATUS     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_bell_status  *  * SRIOMAINT_BELL_STATUS = SRIO Incoming Doorbell Status  *  * The SRIO Incoming (RX) Doorbell Status  *  * Notes:  * This register displays the status of the doorbells received.  If FULL is set the SRIO device will  *  retry incoming transactions.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_BELL_STATUS   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -5065,11 +7024,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_bell_status_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_1_31
 range|:
@@ -5106,6 +7063,10 @@ name|struct
 name|cvmx_sriomaintx_bell_status_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_bell_status_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5119,7 +7080,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_comp_tag  *  * SRIOMAINT_COMP_TAG = SRIO Component Tag  *  * Component Tag  *  * Notes:  * This register contains a component tag value for the processing element and the value can be  *  assigned by software when the device is initialized.  *  * Clk_Rst:        SRIOMAINT(0..1)_COMP_TAG        hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_comp_tag  *  * SRIOMAINT_COMP_TAG = SRIO Component Tag  *  * Component Tag  *  * Notes:  * This register contains a component tag value for the processing element and the value can be  *  assigned by software when the device is initialized.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_COMP_TAG      hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -5132,11 +7093,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_comp_tag_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|comp_tag
 range|:
@@ -5163,6 +7122,10 @@ name|struct
 name|cvmx_sriomaintx_comp_tag_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_comp_tag_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5176,7 +7139,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_core_enables  *  * SRIOMAINT_CORE_ENABLES = SRIO Core Control  *  * Core Control  *  * Notes:  * This register displays the reset state of the Octeon Core Logic while the SRIO Link is running.  *  The bit should be set after the software has initialized the chip to allow memory operations.  *  * Clk_Rst:        SRIOMAINT(0..1)_CORE_ENABLES    hclk    hrst_n, srst_n  */
+comment|/**  * cvmx_sriomaint#_core_enables  *  * SRIOMAINT_CORE_ENABLES = SRIO Core Control  *  * Core Control  *  * Notes:  * This register displays the reset state of the Octeon Core Logic while the SRIO Link is running.  *  The bit should be set after the software has initialized the chip to allow memory operations.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_CORE_ENABLES  hclk    hrst_n, srst_n  */
 end_comment
 
 begin_union
@@ -5189,11 +7152,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_core_enables_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_5_31
 range|:
@@ -5274,6 +7235,10 @@ name|struct
 name|cvmx_sriomaintx_core_enables_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_core_enables_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5287,7 +7252,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_dev_id  *  * SRIOMAINT_DEV_ID = SRIO Device ID  *  * The DeviceVendor Identity field identifies the vendor that manufactured the device  *  * Notes:  * This register identifies Cavium Networks and the Product ID.  *  * Clk_Rst:        SRIOMAINT(0..1)_DEV_ID  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_dev_id  *  * SRIOMAINT_DEV_ID = SRIO Device ID  *  * The DeviceVendor Identity field identifies the vendor that manufactured the device  *  * Notes:  * This register identifies Cavium Inc. and the Product ID.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_DEV_ID        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -5300,11 +7265,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_dev_id_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|device
 range|:
@@ -5342,6 +7305,10 @@ name|struct
 name|cvmx_sriomaintx_dev_id_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_dev_id_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5355,7 +7322,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_dev_rev  *  * SRIOMAINT_DEV_REV = SRIO Device Revision  *  * The Device Revision register identifies the chip pass and revision  *  * Notes:  * This register identifies the chip pass and revision derived from the fuses.  *  * Clk_Rst:        SRIOMAINT(0..1)_DEV_REV hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_dev_rev  *  * SRIOMAINT_DEV_REV = SRIO Device Revision  *  * The Device Revision register identifies the chip pass and revision  *  * Notes:  * This register identifies the chip pass and revision derived from the fuses.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_DEV_REV       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -5368,11 +7335,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_dev_rev_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_8_31
 range|:
@@ -5409,6 +7374,10 @@ name|struct
 name|cvmx_sriomaintx_dev_rev_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_dev_rev_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5422,7 +7391,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_dst_ops  *  * SRIOMAINT_DST_OPS = SRIO Source Operations  *  * The logical operations supported from external devices.  *  * Notes:  * The logical operations supported from external devices.   The Destination OPs register shows the  *  operations specified in the SRIO(0..1)_IP_FEATURE.OPS register.  *  * Clk_Rst:        SRIOMAINT(0..1)_DST_OPS hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_dst_ops  *  * SRIOMAINT_DST_OPS = SRIO Source Operations  *  * The logical operations supported from external devices.  *  * Notes:  * The logical operations supported from external devices.   The Destination OPs register shows the  *  operations specified in the SRIO(0,2..3)_IP_FEATURE.OPS register.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_DST_OPS       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -5435,11 +7404,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_dst_ops_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|gsm_read
 range|:
@@ -5739,6 +7706,10 @@ name|struct
 name|cvmx_sriomaintx_dst_ops_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_dst_ops_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5752,7 +7723,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_attr_capt  *  * SRIOMAINT_ERB_ATTR_CAPT = SRIO Attributes Capture  *  * Attributes Capture  *  * Notes:  * This register contains the information captured during the error.  *  The HW will not update this register (i.e. this register is locked) while  *  VALID is set in this CSR.  *  The HW sets SRIO_INT_REG[PHY_ERB] every time it sets VALID in this CSR.  *  To handle the interrupt, the following procedure may be best:  *       (1) clear SRIO_INT_REG[PHY_ERB],  *       (2) read this CSR, corresponding SRIOMAINT*_ERB_ERR_DET, SRIOMAINT*_ERB_PACK_SYM_CAPT,  *           SRIOMAINT*_ERB_PACK_CAPT_1, SRIOMAINT*_ERB_PACK_CAPT_2, and SRIOMAINT*_ERB_PACK_CAPT_3  *       (3) Write VALID in this CSR to 0.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_ATTR_CAPT   hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_attr_capt  *  * SRIOMAINT_ERB_ATTR_CAPT = SRIO Attributes Capture  *  * Attributes Capture  *  * Notes:  * This register contains the information captured during the error.  *  The HW will not update this register (i.e. this register is locked) while  *  VALID is set in this CSR.  *  The HW sets SRIO_INT_REG[PHY_ERB] every time it sets VALID in this CSR.  *  To handle the interrupt, the following procedure may be best:  *       (1) clear SRIO_INT_REG[PHY_ERB],  *       (2) read this CSR, corresponding SRIOMAINT*_ERB_ERR_DET, SRIOMAINT*_ERB_PACK_SYM_CAPT,  *           SRIOMAINT*_ERB_PACK_CAPT_1, SRIOMAINT*_ERB_PACK_CAPT_2, and SRIOMAINT*_ERB_PACK_CAPT_3  *       (3) Write VALID in this CSR to 0.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_ATTR_CAPT hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -5765,29 +7736,27 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_attr_capt_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|inf_type
 range|:
 literal|3
 decl_stmt|;
-comment|/**< Type of Information Logged.                                                          000 - Packet                                                          010 - Short Control Symbol                                                                (use only first capture register)                                                          All Others Reserved */
+comment|/**< Type of Information Logged.                                                          000 - Packet                                                          010 - Short Control Symbol                                                                (use only first capture register)                                                          100 - Implementation Specific Error Reporting                                                          All Others Reserved */
 name|uint32_t
 name|err_type
 range|:
 literal|5
 decl_stmt|;
-comment|/**< The encoded value of the 31 minus the bit in                                                          SRIOMAINT(0..1)_ERB_ERR_DET that describes the error                                                          captured in SRIOMAINT(0..1)_ERB_*CAPT Registers.                                                          (For example a value of 5 indicates 31-5 = bit 26) */
+comment|/**< The encoded value of the 31 minus the bit in                                                          SRIOMAINT(0,2..3)_ERB_ERR_DET that describes the error                                                          captured in SRIOMAINT(0,2..3)_ERB_*CAPT Registers.                                                          (For example a value of 5 indicates 31-5 = bit 26) */
 name|uint32_t
 name|err_info
 range|:
 literal|20
 decl_stmt|;
-comment|/**< Error Info.  (Pass 2)                                                          ERR_TYPE Bits   Description                                                             0     23     TX Protocol Error                                                                   22     RX Protocol Error                                                                   21     TX Link Response Timeout                                                                   20     TX ACKID Timeout                                                                   - 19:16  Reserved                                                                   - 15:12  TX Protocol ID                                                                          1 = Rcvd Unexpected Link Response                                                                          2 = Rcvd Link Response before Req                                                                          3 = Rcvd NACK servicing NACK                                                                          4 = Rcvd NACK                                                                          5 = Rcvd RETRY servicing RETRY                                                                          6 = Rcvd RETRY servicing NACK                                                                          7 = Rcvd ACK servicing RETRY                                                                          8 = Rcvd ACK servicing NACK                                                                          9 = Unexp ACKID on ACK or RETRY                                                                         10 = Unexp ACK or RETRY                                                                   - 11:8   Reserved                                                                   - 7:4   RX Protocol ID                                                                          1 = Rcvd EOP w/o Prev SOP                                                                          2 = Rcvd STOMP w/o Prev SOP                                                                          3 = Unexp RESTART                                                                          4 = Redundant Status from LinkReq                                                           9-16    23:20  RX K Bits                                                                   - 19:0   Reserved                                                            26     23:20  RX K Bits                                                                   - 19:0   Reserved                                                            27     23:12  Type                                                                            0x000 TX                                                                            0x010 RX                                                                   - 11:8   RX or TX Protocol ID (see above)                                                                   - 7:4   Reserved                                                            30     23:20  RX K Bits                                                                   - 19:0   Reserved                                                            31     23:16  ACKID Timeout 0x2                                                                   - 15:14  Reserved                                                                   - 13:8   AckID                                                                   - 7:4   Reserved                                                            All others ERR_TYPEs are reserved. */
+comment|/**< Error Info.                                                          ERR_TYPE Bits   Description                                                             0     23     TX Protocol Error                                                                   22     RX Protocol Error                                                                   21     TX Link Response Timeout                                                                   20     TX ACKID Timeout                                                                   - 19:16  Reserved                                                                   - 15:12  TX Protocol ID                                                                          1 = Rcvd Unexpected Link Response                                                                          2 = Rcvd Link Response before Req                                                                          3 = Rcvd NACK servicing NACK                                                                          4 = Rcvd NACK                                                                          5 = Rcvd RETRY servicing RETRY                                                                          6 = Rcvd RETRY servicing NACK                                                                          7 = Rcvd ACK servicing RETRY                                                                          8 = Rcvd ACK servicing NACK                                                                          9 = Unexp ACKID on ACK or RETRY                                                                         10 = Unexp ACK or RETRY                                                                   - 11:8   Reserved                                                                   - 7:4   RX Protocol ID                                                                          1 = Rcvd EOP w/o Prev SOP                                                                          2 = Rcvd STOMP w/o Prev SOP                                                                          3 = Unexp RESTART                                                                          4 = Redundant Status from LinkReq                                                           9-16    23:20  RX K Bits                                                                   - 19:0   Reserved                                                            26     23:20  RX K Bits                                                                   - 19:0   Reserved                                                            27     23:12  Type                                                                            0x000 TX                                                                            0x010 RX                                                                   - 11:8   RX or TX Protocol ID (see above)                                                                   - 7:4   Reserved                                                            30     23:20  RX K Bits                                                                   - 19:0   Reserved                                                            31     23:16  ACKID Timeout 0x2                                                                   - 15:14  Reserved                                                                   - 13:8   AckID                                                                   - 7:4   Reserved                                                            All others ERR_TYPEs are reserved. */
 name|uint32_t
 name|reserved_1_3
 range|:
@@ -5838,11 +7807,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_attr_capt_cn63xxp1
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|inf_type
 range|:
@@ -5893,6 +7860,10 @@ directive|endif
 block|}
 name|cn63xxp1
 struct|;
+name|struct
+name|cvmx_sriomaintx_erb_attr_capt_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -5906,7 +7877,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_err_det  *  * SRIOMAINT_ERB_ERR_DET = SRIO Error Detect  *  * Error Detect  *  * Notes:  * The Error Detect Register indicates physical layer transmission errors detected by the hardware.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_ERR_DET     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_err_det  *  * SRIOMAINT_ERB_ERR_DET = SRIO Error Detect  *  * Error Detect  *  * Notes:  * The Error Detect Register indicates physical layer transmission errors detected by the hardware.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_ERR_DET   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -5919,17 +7890,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_err_det_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|imp_err
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Implementation Specific Error added for Pass 2. */
+comment|/**< Implementation Specific Error. */
 name|uint32_t
 name|reserved_23_30
 range|:
@@ -5940,49 +7909,49 @@ name|ctl_crc
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received a control symbol with a bad CRC value                                                          Complete Symbol in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received a control symbol with a bad CRC value                                                          Complete Symbol in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|uns_id
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received an acknowledge control symbol with an                                                          unexpected ackID (packet-accepted or packet_retry)                                                          Partial Symbol in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received an acknowledge control symbol with an                                                          unexpected ackID (packet-accepted or packet_retry)                                                          Partial Symbol in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|nack
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received packet-not-accepted acknowledge control                                                          symbols.                                                          Partial Symbol in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received packet-not-accepted acknowledge control                                                          symbols.                                                          Partial Symbol in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|out_ack
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received packet with unexpected ackID value                                                          Header in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received packet with unexpected ackID value                                                          Header in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|pkt_crc
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received a packet with a bad CRC value                                                          Header in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received a packet with a bad CRC value                                                          Header in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|size
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received packet which exceeds the maximum allowed                                                          size of 276 bytes.                                                          Header in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received packet which exceeds the maximum allowed                                                          size of 276 bytes.                                                          Header in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|inv_char
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received illegal, 8B/10B error  or undefined                                                          codegroup within a packet.  (Pass 2)                                                          Header in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received illegal, 8B/10B error  or undefined                                                          codegroup within a packet.                                                          Header in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|inv_data
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received data codegroup or 8B/10B error within an                                                          IDLE sequence.  (Pass 2)                                                          Header in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received data codegroup or 8B/10B error within an                                                          IDLE sequence.                                                          Header in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|reserved_6_14
 range|:
@@ -5993,13 +7962,13 @@ name|bad_ack
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Link_response received with an ackID that is not                                                          outstanding.                                                          Partial Symbol in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Link_response received with an ackID that is not                                                          outstanding.                                                          Partial Symbol in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|proterr
 range|:
 literal|1
 decl_stmt|;
-comment|/**< An unexpected packet or control symbol was                                                          received.                                                          Partial Symbol in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< An unexpected packet or control symbol was                                                          received.                                                          Partial Symbol in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|f_toggle
 range|:
@@ -6011,19 +7980,19 @@ name|del_err
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Received illegal or undefined codegroup.                                                          (either INV_DATA or INV_CHAR) (Pass 2)                                                          Complete Symbol in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< Received illegal or undefined codegroup.                                                          (either INV_DATA or INV_CHAR)                                                          Complete Symbol in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|uns_ack
 range|:
 literal|1
 decl_stmt|;
-comment|/**< An unexpected acknowledge control symbol was                                                          received.                                                          Partial Symbol in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< An unexpected acknowledge control symbol was                                                          received.                                                          Partial Symbol in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 name|uint32_t
 name|lnk_tout
 range|:
 literal|1
 decl_stmt|;
-comment|/**< An acknowledge or link-response control symbol is                                                          not received within the specified timeout interval                                                          Partial Header in SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT */
+comment|/**< An acknowledge or link-response control symbol is                                                          not received within the specified timeout interval                                                          Partial Header in SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT */
 else|#
 directive|else
 name|uint32_t
@@ -6123,11 +8092,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_err_det_cn63xxp1
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_23_31
 range|:
@@ -6287,6 +8254,10 @@ directive|endif
 block|}
 name|cn63xxp1
 struct|;
+name|struct
+name|cvmx_sriomaintx_erb_err_det_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -6300,7 +8271,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_err_rate  *  * SRIOMAINT_ERB_ERR_RATE = SRIO Error Rate  *  * Error Rate  *  * Notes:  * The Error Rate register is used with the Error Rate Threshold register to monitor and control the  *  reporting of transmission errors.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_ERR_RATE    hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_err_rate  *  * SRIOMAINT_ERB_ERR_RATE = SRIO Error Rate  *  * Error Rate  *  * Notes:  * The Error Rate register is used with the Error Rate Threshold register to monitor and control the  *  reporting of transmission errors.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_ERR_RATE  hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -6313,11 +8284,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_err_rate_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|err_bias
 range|:
@@ -6387,6 +8356,10 @@ name|struct
 name|cvmx_sriomaintx_erb_err_rate_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_err_rate_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -6400,7 +8373,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_err_rate_en  *  * SRIOMAINT_ERB_ERR_RATE_EN = SRIO Error Rate Enable  *  * Error Rate Enable  *  * Notes:  * This register contains the bits that control when an error condition is allowed to increment the  *  error rate counter in the Error Rate Threshold Register and lock the Error Capture registers.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_ERR_RATE_EN hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_err_rate_en  *  * SRIOMAINT_ERB_ERR_RATE_EN = SRIO Error Rate Enable  *  * Error Rate Enable  *  * Notes:  * This register contains the bits that control when an error condition is allowed to increment the  *  error rate counter in the Error Rate Threshold Register and lock the Error Capture registers.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_ERR_RATE_EN       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -6413,17 +8386,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_err_rate_en_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|imp_err
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Enable Implementation Specific Error (Pass 2). */
+comment|/**< Enable Implementation Specific Error. */
 name|uint32_t
 name|reserved_23_30
 range|:
@@ -6470,13 +8441,13 @@ name|inv_char
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Enable error rate counting of received illegal                                                          illegal, 8B/10B error or undefined codegroup                                                          within a packet.  (Pass 2) */
+comment|/**< Enable error rate counting of received illegal                                                          illegal, 8B/10B error or undefined codegroup                                                          within a packet. */
 name|uint32_t
 name|inv_data
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Enable error rate counting of received data                                                          codegroup or 8B/10B error within IDLE sequence.                                                          (Pass 2) */
+comment|/**< Enable error rate counting of received data                                                          codegroup or 8B/10B error within IDLE sequence. */
 name|uint32_t
 name|reserved_6_14
 range|:
@@ -6505,7 +8476,7 @@ name|del_err
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Enable error rate counting of illegal or undefined                                                          codegroups (either INV_DATA or INV_CHAR). (Pass 2) */
+comment|/**< Enable error rate counting of illegal or undefined                                                          codegroups (either INV_DATA or INV_CHAR). */
 name|uint32_t
 name|uns_ack
 range|:
@@ -6617,11 +8588,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_err_rate_en_cn63xxp1
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_23_31
 range|:
@@ -6781,6 +8750,10 @@ directive|endif
 block|}
 name|cn63xxp1
 struct|;
+name|struct
+name|cvmx_sriomaintx_erb_err_rate_en_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -6794,7 +8767,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_err_rate_thr  *  * SRIOMAINT_ERB_ERR_RATE_THR = SRIO Error Rate Threshold  *  * Error Rate Threshold  *  * Notes:  * The Error Rate Threshold register is used to control the reporting of errors to the link status.  *  Typically the Degraded Threshold is less than the Fail Threshold.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_ERR_RATE_THR        hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_err_rate_thr  *  * SRIOMAINT_ERB_ERR_RATE_THR = SRIO Error Rate Threshold  *  * Error Rate Threshold  *  * Notes:  * The Error Rate Threshold register is used to control the reporting of errors to the link status.  *  Typically the Degraded Threshold is less than the Fail Threshold.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_ERR_RATE_THR      hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -6807,11 +8780,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_err_rate_thr_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|fail_th
 range|:
@@ -6859,6 +8830,10 @@ name|struct
 name|cvmx_sriomaintx_erb_err_rate_thr_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_err_rate_thr_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -6872,7 +8847,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_hdr  *  * SRIOMAINT_ERB_HDR = SRIO Error Reporting Block Header  *  * Error Reporting Block Header  *  * Notes:  * The error management extensions block header register contains the EF_PTR to the next EF_BLK and  *  the EF_ID that identifies this as the error management extensions block header. In this  *  implementation this is the last block and therefore the EF_PTR is a NULL pointer.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_HDR hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_hdr  *  * SRIOMAINT_ERB_HDR = SRIO Error Reporting Block Header  *  * Error Reporting Block Header  *  * Notes:  * The error management extensions block header register contains the EF_PTR to the next EF_BLK and  *  the EF_ID that identifies this as the error management extensions block header. In this  *  implementation this is the last block and therefore the EF_PTR is a NULL pointer.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_HDR       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -6885,11 +8860,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_hdr_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|ef_ptr
 range|:
@@ -6927,6 +8900,10 @@ name|struct
 name|cvmx_sriomaintx_erb_hdr_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_hdr_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -6940,7 +8917,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_lt_addr_capt_h  *  * SRIOMAINT_ERB_LT_ADDR_CAPT_H = SRIO Logical/Transport Layer High Address Capture  *  * Logical/Transport Layer High Address Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0..1)_ERB_LT_ERR_DET is written to zero. This register should be  *  written only when error detection is disabled.  This register is only required for end point  *  transactions of 50 or 66 bits.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_LT_ADDR_CAPT_H      hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_lt_addr_capt_h  *  * SRIOMAINT_ERB_LT_ADDR_CAPT_H = SRIO Logical/Transport Layer High Address Capture  *  * Logical/Transport Layer High Address Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0,2..3)_ERB_LT_ERR_DET is written to zero. This register should be  *  written only when error detection is disabled.  This register is only required for end point  *  transactions of 50 or 66 bits.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_LT_ADDR_CAPT_H    hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -6953,11 +8930,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_lt_addr_capt_h_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr
 range|:
@@ -6984,6 +8959,10 @@ name|struct
 name|cvmx_sriomaintx_erb_lt_addr_capt_h_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_lt_addr_capt_h_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -6997,7 +8976,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_lt_addr_capt_l  *  * SRIOMAINT_ERB_LT_ADDR_CAPT_L = SRIO Logical/Transport Layer Low Address Capture  *  * Logical/Transport Layer Low Address Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0..1)_ERB_LT_ERR_DET is written to zero.  This register should be  *  written only when error detection is disabled.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_LT_ADDR_CAPT_L      hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_lt_addr_capt_l  *  * SRIOMAINT_ERB_LT_ADDR_CAPT_L = SRIO Logical/Transport Layer Low Address Capture  *  * Logical/Transport Layer Low Address Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0,2..3)_ERB_LT_ERR_DET is written to zero.  This register should be  *  written only when error detection is disabled.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_LT_ADDR_CAPT_L    hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7010,11 +8989,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_lt_addr_capt_l_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr
 range|:
@@ -7062,6 +9039,10 @@ name|struct
 name|cvmx_sriomaintx_erb_lt_addr_capt_l_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_lt_addr_capt_l_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7075,7 +9056,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_lt_ctrl_capt  *  * SRIOMAINT_ERB_LT_CTRL_CAPT = SRIO Logical/Transport Layer Control Capture  *  * Logical/Transport Layer Control Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0..1)_ERB_LT_ERR_DET is written to zero.  This register should be  *  written only when error detection is disabled.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_LT_CTRL_CAPT        hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_lt_ctrl_capt  *  * SRIOMAINT_ERB_LT_CTRL_CAPT = SRIO Logical/Transport Layer Control Capture  *  * Logical/Transport Layer Control Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0,2..3)_ERB_LT_ERR_DET is written to zero.  This register should be  *  written only when error detection is disabled.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_LT_CTRL_CAPT      hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7088,11 +9069,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_lt_ctrl_capt_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|ftype
 range|:
@@ -7145,7 +9124,7 @@ name|capt_idx
 range|:
 literal|5
 decl_stmt|;
-comment|/**< Capture Index. 31 - Bit set in                                                          SRIOMAINT(0..1)_ERB_LT_ERR_DET. */
+comment|/**< Capture Index. 31 - Bit set in                                                          SRIOMAINT(0,2..3)_ERB_LT_ERR_DET. */
 else|#
 directive|else
 name|uint32_t
@@ -7206,6 +9185,10 @@ name|struct
 name|cvmx_sriomaintx_erb_lt_ctrl_capt_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_lt_ctrl_capt_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7232,11 +9215,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_lt_dev_id_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|id16
 range|:
@@ -7295,6 +9276,10 @@ name|struct
 name|cvmx_sriomaintx_erb_lt_dev_id_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_lt_dev_id_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7308,7 +9293,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_lt_dev_id_capt  *  * SRIOMAINT_ERB_LT_DEV_ID_CAPT = SRIO Logical/Transport Layer Device ID Capture  *  * Logical/Transport Layer Device ID Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0..1)_ERB_LT_ERR_DET is written to zero.  This register should be  *  written only when error detection is disabled.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_LT_DEV_ID_CAPT      hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_lt_dev_id_capt  *  * SRIOMAINT_ERB_LT_DEV_ID_CAPT = SRIO Logical/Transport Layer Device ID Capture  *  * Logical/Transport Layer Device ID Capture  *  * Notes:  * This register contains error information. It is locked when a Logical/Transport error is detected  *  and unlocked when the SRIOMAINT(0,2..3)_ERB_LT_ERR_DET is written to zero.  This register should be  *  written only when error detection is disabled.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_LT_DEV_ID_CAPT    hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7321,11 +9306,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_lt_dev_id_capt_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|dst_id16
 range|:
@@ -7385,6 +9368,10 @@ name|struct
 name|cvmx_sriomaintx_erb_lt_dev_id_capt_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_lt_dev_id_capt_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7398,7 +9385,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_lt_err_det  *  * SRIOMAINT_ERB_LT_ERR_DET = SRIO Logical/Transport Layer Error Detect  *  * SRIO Logical/Transport Layer Error Detect  *  * Notes:  * This register indicates the error that was detected by the Logical or Transport logic layer.  *  Once a bit is set in this CSR, HW will lock the register until SW writes a zero to clear all the  *  fields.  The HW sets SRIO_INT_REG[LOG_ERB] every time it sets one of the bits.  *  To handle the interrupt, the following procedure may be best:  *       (1) clear SRIO_INT_REG[LOG_ERB],  *       (2) read this CSR, corresponding SRIOMAINT*_ERB_LT_ADDR_CAPT_H, SRIOMAINT*_ERB_LT_ADDR_CAPT_L,  *           SRIOMAINT*_ERB_LT_DEV_ID_CAPT, and SRIOMAINT*_ERB_LT_CTRL_CAPT  *       (3) Write this CSR to 0.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_LT_ERR_DET  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_lt_err_det  *  * SRIOMAINT_ERB_LT_ERR_DET = SRIO Logical/Transport Layer Error Detect  *  * SRIO Logical/Transport Layer Error Detect  *  * Notes:  * This register indicates the error that was detected by the Logical or Transport logic layer.  *  Once a bit is set in this CSR, HW will lock the register until SW writes a zero to clear all the  *  fields.  The HW sets SRIO_INT_REG[LOG_ERB] every time it sets one of the bits.  *  To handle the interrupt, the following procedure may be best:  *       (1) clear SRIO_INT_REG[LOG_ERB],  *       (2) read this CSR, corresponding SRIOMAINT*_ERB_LT_ADDR_CAPT_H, SRIOMAINT*_ERB_LT_ADDR_CAPT_L,  *           SRIOMAINT*_ERB_LT_DEV_ID_CAPT, and SRIOMAINT*_ERB_LT_CTRL_CAPT  *       (3) Write this CSR to 0.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_LT_ERR_DET        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7411,11 +9398,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_lt_err_det_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|io_err
 range|:
@@ -7457,13 +9442,13 @@ name|msg_tout
 range|:
 literal|1
 decl_stmt|;
-comment|/**< An expected incoming message request has not been                                                          received within the time-out interval specified in                                                          SRIOMAINT(0..1)_PORT_RT_CTL. When a MSG_TOUT occurs,                                                          SRIO (internally) terminates the inflight message                                                          with an error. */
+comment|/**< An expected incoming message request has not been                                                          received within the time-out interval specified in                                                          SRIOMAINT(0,2..3)_PORT_RT_CTL. When a MSG_TOUT occurs,                                                          SRIO (internally) terminates the inflight message                                                          with an error. */
 name|uint32_t
 name|pkt_tout
 range|:
 literal|1
 decl_stmt|;
-comment|/**< A required response has not been received to an                                                          outgoing memory, maintenance or message request                                                          before the time-out interval specified in                                                          SRIOMAINT(0..1)_PORT_RT_CTL.  When an IO or maintenance                                                          read request operation has a PKT_TOUT, the issuing                                                          core load or DPI DMA engine receive all ones for                                                          the result. When an IO NWRITE_R has a PKT_TOUT,                                                          this bit is the only indication of failure. When a                                                          message request operation has a PKT_TOUT, SRIO                                                          discards the the outgoing message segment,  and                                                          this bit is the only direct indication of failure.                                                          NOTE: SRIO may continue to send or retry other                                                          segments from the same message. When one or more of                                                          the segments in an outgoing message have a                                                          PKT_TOUT, SRIO will not set SRIO*_INT_REG[OMSG*]                                                          after the message "transfer". */
+comment|/**< A required response has not been received to an                                                          outgoing memory, maintenance or message request                                                          before the time-out interval specified in                                                          SRIOMAINT(0,2..3)_PORT_RT_CTL.  When an IO or maintenance                                                          read request operation has a PKT_TOUT, the issuing                                                          core load or DPI DMA engine receive all ones for                                                          the result. When an IO NWRITE_R has a PKT_TOUT,                                                          this bit is the only indication of failure. When a                                                          message request operation has a PKT_TOUT, SRIO                                                          discards the the outgoing message segment,  and                                                          this bit is the only direct indication of failure.                                                          NOTE: SRIO may continue to send or retry other                                                          segments from the same message. When one or more of                                                          the segments in an outgoing message have a                                                          PKT_TOUT, SRIO will not set SRIO*_INT_REG[OMSG*]                                                          after the message "transfer". */
 name|uint32_t
 name|uns_resp
 range|:
@@ -7562,6 +9547,10 @@ name|struct
 name|cvmx_sriomaintx_erb_lt_err_det_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_lt_err_det_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7575,7 +9564,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_lt_err_en  *  * SRIOMAINT_ERB_LT_ERR_EN = SRIO Logical/Transport Layer Error Enable  *  * SRIO Logical/Transport Layer Error Enable  *  * Notes:  * This register contains the bits that control if an error condition locks the Logical/Transport  *  Layer Error Detect and Capture registers and is reported to the system host.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_LT_ERR_EN   hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_lt_err_en  *  * SRIOMAINT_ERB_LT_ERR_EN = SRIO Logical/Transport Layer Error Enable  *  * SRIO Logical/Transport Layer Error Enable  *  * Notes:  * This register contains the bits that control if an error condition locks the Logical/Transport  *  Layer Error Detect and Capture registers and is reported to the system host.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_LT_ERR_EN hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7588,11 +9577,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_lt_err_en_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|io_err
 range|:
@@ -7739,6 +9726,10 @@ name|struct
 name|cvmx_sriomaintx_erb_lt_err_en_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_lt_err_en_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7752,7 +9743,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_pack_capt_1  *  * SRIOMAINT_ERB_PACK_CAPT_1 = SRIO Packet Capture 1  *  * Packet Capture 1  *  * Notes:  * Error capture register 1 contains either long symbol capture information or bytes 4 through 7 of  *  the packet header.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_PACK_CAPT_1 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_pack_capt_1  *  * SRIOMAINT_ERB_PACK_CAPT_1 = SRIO Packet Capture 1  *  * Packet Capture 1  *  * Notes:  * Error capture register 1 contains either long symbol capture information or bytes 4 through 7 of  *  the packet header.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_PACK_CAPT_1       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7765,11 +9756,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_pack_capt_1_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|capture
 range|:
@@ -7796,6 +9785,10 @@ name|struct
 name|cvmx_sriomaintx_erb_pack_capt_1_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_pack_capt_1_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7809,7 +9802,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_pack_capt_2  *  * SRIOMAINT_ERB_PACK_CAPT_2 = SRIO Packet Capture 2  *  * Packet Capture 2  *  * Notes:  * Error capture register 2 contains bytes 8 through 11 of the packet header.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_PACK_CAPT_2 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_pack_capt_2  *  * SRIOMAINT_ERB_PACK_CAPT_2 = SRIO Packet Capture 2  *  * Packet Capture 2  *  * Notes:  * Error capture register 2 contains bytes 8 through 11 of the packet header.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_PACK_CAPT_2       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7822,11 +9815,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_pack_capt_2_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|capture
 range|:
@@ -7853,6 +9844,10 @@ name|struct
 name|cvmx_sriomaintx_erb_pack_capt_2_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_pack_capt_2_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7866,7 +9861,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_pack_capt_3  *  * SRIOMAINT_ERB_PACK_CAPT_3 = SRIO Packet Capture 3  *  * Packet Capture 3  *  * Notes:  * Error capture register 3 contains bytes 12 through 15 of the packet header.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_PACK_CAPT_3 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_pack_capt_3  *  * SRIOMAINT_ERB_PACK_CAPT_3 = SRIO Packet Capture 3  *  * Packet Capture 3  *  * Notes:  * Error capture register 3 contains bytes 12 through 15 of the packet header.  *  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_PACK_CAPT_3       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7879,11 +9874,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_pack_capt_3_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|capture
 range|:
@@ -7910,6 +9903,10 @@ name|struct
 name|cvmx_sriomaintx_erb_pack_capt_3_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_pack_capt_3_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7923,7 +9920,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_erb_pack_sym_capt  *  * SRIOMAINT_ERB_PACK_SYM_CAPT = SRIO Packet/Control Symbol Capture  *  * Packet/Control Symbol Capture  *  * Notes:  * This register contains either captured control symbol information or the first 4 bytes of captured  *  packet information.  The Errors that generate Partial Control Symbols can be found in  *  SRIOMAINT*_ERB_ERR_DET.  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0..1)_ERB_PACK_SYM_CAPT       hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_erb_pack_sym_capt  *  * SRIOMAINT_ERB_PACK_SYM_CAPT = SRIO Packet/Control Symbol Capture  *  * Packet/Control Symbol Capture  *  * Notes:  * This register contains either captured control symbol information or the first 4 bytes of captured  *  packet information.  The Errors that generate Partial Control Symbols can be found in  *  SRIOMAINT*_ERB_ERR_DET.  The HW will not update this register (i.e. this register is locked) while  *  SRIOMAINT*_ERB_ATTR_CAPT[VALID] is set.  This register should only be read while this bit is set.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_ERB_PACK_SYM_CAPT     hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7936,11 +9933,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_erb_pack_sym_capt_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|capture
 range|:
@@ -7967,6 +9962,10 @@ name|struct
 name|cvmx_sriomaintx_erb_pack_sym_capt_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_erb_pack_sym_capt_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -7980,7 +9979,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_hb_dev_id_lock  *  * SRIOMAINT_HB_DEV_ID_LOCK = SRIO Host Device ID Lock  *  * The Host Base Device ID  *  * Notes:  * This register contains the Device ID of the Host responsible for initializing this SRIO device.  *  The register contains a special write once function that captures the first HOSTID written to it  *  after reset.  The function allows several potential hosts to write to this register and then read  *  it to see if they have responsibility for initialization.  The register can be unlocked by  *  rewriting the current host value.  This will reset the lock and restore the value to 0xFFFF.  *  * Clk_Rst:        SRIOMAINT(0..1)_HB_DEV_ID_LOCK  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_hb_dev_id_lock  *  * SRIOMAINT_HB_DEV_ID_LOCK = SRIO Host Device ID Lock  *  * The Host Base Device ID  *  * Notes:  * This register contains the Device ID of the Host responsible for initializing this SRIO device.  *  The register contains a special write once function that captures the first HOSTID written to it  *  after reset.  The function allows several potential hosts to write to this register and then read  *  it to see if they have responsibility for initialization.  The register can be unlocked by  *  rewriting the current host value.  This will reset the lock and restore the value to 0xFFFF.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_HB_DEV_ID_LOCK        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -7993,11 +9992,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_hb_dev_id_lock_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_16_31
 range|:
@@ -8034,6 +10031,10 @@ name|struct
 name|cvmx_sriomaintx_hb_dev_id_lock_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_hb_dev_id_lock_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8047,7 +10048,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_buffer_config  *  * SRIOMAINT_IR_BUFFER_CONFIG = SRIO Buffer Configuration  *  * Buffer Configuration  *  * Notes:  * This register controls the operation of the SRIO Core buffer mux logic.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_BUFFER_CONFIG        hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_buffer_config  *  * SRIOMAINT_IR_BUFFER_CONFIG = SRIO Buffer Configuration  *  * Buffer Configuration  *  * Notes:  * This register controls the operation of the SRIO Core buffer mux logic.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_BUFFER_CONFIG      hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8060,29 +10061,27 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_buffer_config_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|tx_wm0
 range|:
 literal|4
 decl_stmt|;
-comment|/**< Transmitter Flow Control Priority 0 Threshold.                                                          Number of Receive Buffers available before packet                                                          can be scheduled for transmission.                                                          Maximum Value 8.                                                          Generally, TX_WM0 Must be> TX_WM1 to reserve                                                          buffers for priority 1-3 packets when transmitting                                                          in transmitter-controlled flow control mode.                                                          TX_WM0 is not used by the hardware when TX_FLOW=0                                                          or whenever transmitting in                                                          receiver-controlled flow-control mode. */
+comment|/**< Reserved. (See SRIOMAINT(0,2..3)_IR_BUFFER_CONFIG2) */
 name|uint32_t
 name|tx_wm1
 range|:
 literal|4
 decl_stmt|;
-comment|/**< Transmitter Flow Control Priority 1 Threshold.                                                          Number of Receive Buffers available before packet                                                          can be scheduled for transmission.                                                          Maximum Value 8.                                                          Generally, TX_WM1 Must be> TX_WM2 to reserve                                                          buffers for priority 2-3 packets when transmitting                                                          in transmitter-controlled flow control mode.                                                          TX_WM1 is not used by the hardware when TX_FLOW=0                                                          or whenever transmitting in                                                          receiver-controlled flow-control mode. */
+comment|/**< Reserved. (See SRIOMAINT(0,2..3)_IR_BUFFER_CONFIG2) */
 name|uint32_t
 name|tx_wm2
 range|:
 literal|4
 decl_stmt|;
-comment|/**< Transmitter Flow Control Priority 2 Threshold.                                                          Number of Receive Buffers available before packet                                                          can be scheduled for transmission.                                                          Maximum Value 8.                                                          Generally, TX_WM2 Must be> 0 to reserve a                                                          buffer for priority 3 packets when transmitting                                                          in transmitter-controlled flow control mode.                                                          TX_WM2 is not used by the hardware when TX_FLOW=0                                                          or whenever transmitting in                                                          receiver-controlled flow-control mode. */
+comment|/**< Reserved. (See SRIOMAINT(0,2..3)_IR_BUFFER_CONFIG2) */
 name|uint32_t
 name|reserved_3_19
 range|:
@@ -8099,13 +10098,13 @@ name|tx_sync
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Controls whether the synchronizers are enabled                                                          between the SRIO TXCLK and the Internal Clocks.                                                            0 - Synchronizers are enabled                                                            1 - Synchronizers are disabled */
+comment|/**< Reserved. */
 name|uint32_t
 name|rx_sync
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Controls whether the synchronizers are enabled                                                          between the SRIO RXCLK and the Internal Clocks.                                                            0 - Synchronizers are enabled                                                            1 - Synchronizers are disabled */
+comment|/**< Reserved. */
 else|#
 directive|else
 name|uint32_t
@@ -8156,6 +10155,10 @@ name|struct
 name|cvmx_sriomaintx_ir_buffer_config_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_buffer_config_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8169,7 +10172,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_buffer_config2  *  * SRIOMAINT_IR_BUFFER_CONFIG2 = SRIO Buffer Configuration 2 (Pass 2)  *  * Buffer Configuration 2  *  * Notes:  * This register controls the RX and TX Buffer availablility by priority.  The typical values are  *  optimized for normal operation.  Care must be taken when changing these values to avoid values  *  which can result in deadlocks.  Disabling a priority is not recommended and can result in system  *  level failures.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_BUFFER_CONFIG2       hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_buffer_config2  *  * SRIOMAINT_IR_BUFFER_CONFIG2 = SRIO Buffer Configuration 2  *  * Buffer Configuration 2  *  * Notes:  * This register controls the RX and TX Buffer availablility by priority.  The typical values are  *  optimized for normal operation.  Care must be taken when changing these values to avoid values  *  which can result in deadlocks.  Disabling a priority is not recommended and can result in system  *  level failures.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_BUFFER_CONFIG2     hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8182,11 +10185,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_buffer_config2_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|tx_wm3
 range|:
@@ -8286,6 +10287,10 @@ name|struct
 name|cvmx_sriomaintx_ir_buffer_config2_s
 name|cn63xx
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_buffer_config2_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8299,7 +10304,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_pd_phy_ctrl  *  * SRIOMAINT_IR_PD_PHY_CTRL = SRIO Platform Dependent PHY Control  *  * Platform Dependent PHY Control  *  * Notes:  * This register can be used for testing.  The register is otherwise unused by the hardware.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_PD_PHY_CTRL  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_pd_phy_ctrl  *  * SRIOMAINT_IR_PD_PHY_CTRL = SRIO Platform Dependent PHY Control  *  * Platform Dependent PHY Control  *  * Notes:  * This register can be used for testing.  The register is otherwise unused by the hardware.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_PD_PHY_CTRL        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8312,11 +10317,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_pd_phy_ctrl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|pd_ctrl
 range|:
@@ -8343,6 +10346,10 @@ name|struct
 name|cvmx_sriomaintx_ir_pd_phy_ctrl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_pd_phy_ctrl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8356,7 +10363,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_pd_phy_stat  *  * SRIOMAINT_IR_PD_PHY_STAT = SRIO Platform Dependent PHY Status  *  * Platform Dependent PHY Status  *  * Notes:  * This register is used to monitor PHY status on each lane.  They are documented here to assist in  *  debugging only.  The lane numbers take into account the lane swap pin.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_PD_PHY_STAT  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_pd_phy_stat  *  * SRIOMAINT_IR_PD_PHY_STAT = SRIO Platform Dependent PHY Status  *  * Platform Dependent PHY Status  *  * Notes:  * This register is used to monitor PHY status on each lane.  They are documented here to assist in  *  debugging only.  The lane numbers take into account the lane swap pin.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_PD_PHY_STAT        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8369,11 +10376,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_pd_phy_stat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_16_31
 range|:
@@ -8487,6 +10492,10 @@ name|struct
 name|cvmx_sriomaintx_ir_pd_phy_stat_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_pd_phy_stat_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8500,7 +10509,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_pi_phy_ctrl  *  * SRIOMAINT_IR_PI_PHY_CTRL = SRIO Platform Independent PHY Control  *  * Platform Independent PHY Control  *  * Notes:  * This register is used to control platform independent operating modes of the transceivers. These  *  control bits are uniform across all platforms.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_PI_PHY_CTRL  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_pi_phy_ctrl  *  * SRIOMAINT_IR_PI_PHY_CTRL = SRIO Platform Independent PHY Control  *  * Platform Independent PHY Control  *  * Notes:  * This register is used to control platform independent operating modes of the transceivers. These  *  control bits are uniform across all platforms.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_PI_PHY_CTRL        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8513,11 +10522,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_pi_phy_ctrl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|tx_reset
 range|:
@@ -8586,6 +10593,10 @@ name|struct
 name|cvmx_sriomaintx_ir_pi_phy_ctrl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_pi_phy_ctrl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8599,7 +10610,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_pi_phy_stat  *  * SRIOMAINT_IR_PI_PHY_STAT = SRIO Platform Independent PHY Status  *  * Platform Independent PHY Status  *  * Notes:  * This register displays the status of the link initialization state machine.  Changes to this state  *  cause the SRIO(0..1)_INT_REG.LINK_UP or SRIO(0..1)_INT_REG.LINK_DOWN interrupts.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_PI_PHY_STAT  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_pi_phy_stat  *  * SRIOMAINT_IR_PI_PHY_STAT = SRIO Platform Independent PHY Status  *  * Platform Independent PHY Status  *  * Notes:  * This register displays the status of the link initialization state machine.  Changes to this state  *  cause the SRIO(0,2..3)_INT_REG.LINK_UP or SRIO(0,2..3)_INT_REG.LINK_DOWN interrupts.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_PI_PHY_STAT        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8612,11 +10623,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_pi_phy_stat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_12_31
 range|:
@@ -8627,13 +10636,13 @@ name|tx_rdy
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Minimum number of Status Transmitted  (Pass 2) */
+comment|/**< Minimum number of Status Transmitted */
 name|uint32_t
 name|rx_rdy
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Minimum number of Good Status Received (Pass 2) */
+comment|/**< Minimum number of Good Status Received */
 name|uint32_t
 name|init_sm
 range|:
@@ -8674,11 +10683,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_pi_phy_stat_cn63xxp1
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_10_31
 range|:
@@ -8707,6 +10714,10 @@ directive|endif
 block|}
 name|cn63xxp1
 struct|;
+name|struct
+name|cvmx_sriomaintx_ir_pi_phy_stat_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8720,7 +10731,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_sp_rx_ctrl  *  * SRIOMAINT_IR_SP_RX_CTRL = SRIO Soft Packet FIFO Receive Control  *  * Soft Packet FIFO Receive Control  *  * Notes:  * This register is used to configure events generated by the reception of packets using the soft  * packet FIFO.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_SP_RX_CTRL   hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_sp_rx_ctrl  *  * SRIOMAINT_IR_SP_RX_CTRL = SRIO Soft Packet FIFO Receive Control  *  * Soft Packet FIFO Receive Control  *  * Notes:  * This register is used to configure events generated by the reception of packets using the soft  * packet FIFO.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_SP_RX_CTRL hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8733,11 +10744,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_sp_rx_ctrl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_1_31
 range|:
@@ -8748,7 +10757,7 @@ name|overwrt
 range|:
 literal|1
 decl_stmt|;
-comment|/**< When clear, SRIO drops received packets that should                                                          enter the soft packet FIFO when the FIFO is full.                                                          When set, SRIO                                                          stalls received packets that should enter the soft                                                          packet FIFO when the FIFO is full. SRIO may stop                                                          receiving any packets in this stall case if                                                          software does not drain the receive soft packet                                                          FIFO. */
+comment|/**< When clear, SRIO drops received packets that should                                                          enter the soft packet FIFO when the FIFO is full.                                                          In this case, SRIO also increments                                                          SRIOMAINT(0,2..3)_IR_SP_RX_STAT.DROP_CNT. When set, SRIO                                                          stalls received packets that should enter the soft                                                          packet FIFO when the FIFO is full. SRIO may stop                                                          receiving any packets in this stall case if                                                          software does not drain the receive soft packet                                                          FIFO. */
 else|#
 directive|else
 name|uint32_t
@@ -8774,6 +10783,10 @@ name|struct
 name|cvmx_sriomaintx_ir_sp_rx_ctrl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_sp_rx_ctrl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8787,7 +10800,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_sp_rx_data  *  * SRIOMAINT_IR_SP_RX_DATA = SRIO Soft Packet FIFO Receive Data  *  * Soft Packet FIFO Receive Data  *  * Notes:  * This register is used to read data from the soft packet FIFO.  The Soft Packet FIFO contains the  *  majority of the packet data received from the SRIO link.  The packet does not include the Control  *  Symbols or the initial byte containing AckId, 2 Reserved Bits and the CRF.  In the case of packets  *  with less than 80 bytes (including AckId byte) both the trailing CRC and Pad (if present) are  *  included in the FIFO and Octet Count.  In the case of a packet with exactly 80 bytes (including  *  the AckId byte) the CRC is removed and the Pad is maintained so the Octet Count will read 81 bytes  *  instead of the expected 83.  In cases over 80 bytes the CRC at 80 bytes is removed but the  *  trailing CRC and Pad (if necessary) are present.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_SP_RX_DATA   hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_sp_rx_data  *  * SRIOMAINT_IR_SP_RX_DATA = SRIO Soft Packet FIFO Receive Data  *  * Soft Packet FIFO Receive Data  *  * Notes:  * This register is used to read data from the soft packet FIFO.  The Soft Packet FIFO contains the  *  majority of the packet data received from the SRIO link.  The packet does not include the Control  *  Symbols or the initial byte containing AckId, 2 Reserved Bits and the CRF.  In the case of packets  *  with less than 80 bytes (including AckId byte) both the trailing CRC and Pad (if present) are  *  included in the FIFO and Octet Count.  In the case of a packet with exactly 80 bytes (including  *  the AckId byte) the CRC is removed and the Pad is maintained so the Octet Count will read 81 bytes  *  instead of the expected 83.  In cases over 80 bytes the CRC at 80 bytes is removed but the  *  trailing CRC and Pad (if necessary) are present.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_SP_RX_DATA hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8800,11 +10813,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_sp_rx_data_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|pkt_data
 range|:
@@ -8831,6 +10842,10 @@ name|struct
 name|cvmx_sriomaintx_ir_sp_rx_data_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_sp_rx_data_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -8844,7 +10859,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_sp_rx_stat  *  * SRIOMAINT_IR_SP_RX_STAT = SRIO Soft Packet FIFO Receive Status  *  * Soft Packet FIFO Receive Status  *  * Notes:  * This register is used to monitor the reception of packets using the soft packet FIFO.  *  The HW sets SRIO_INT_REG[SOFT_RX] every time a packet arrives in the soft packet FIFO. To read  *  out (one or more) packets, the following procedure may be best:  *       (1) clear SRIO_INT_REG[SOFT_RX],  *       (2) read this CSR to determine how many packets there are,  *       (3) read the packets out (via SRIOMAINT*_IR_SP_RX_DATA).  *  This procedure could lead to situations where SOFT_RX will be set even though there are currently  *  no packets - the SW interrupt handler would need to properly handle this case  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_SP_RX_STAT   hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_sp_rx_stat  *  * SRIOMAINT_IR_SP_RX_STAT = SRIO Soft Packet FIFO Receive Status  *  * Soft Packet FIFO Receive Status  *  * Notes:  * This register is used to monitor the reception of packets using the soft packet FIFO.  *  The HW sets SRIO_INT_REG[SOFT_RX] every time a packet arrives in the soft packet FIFO. To read  *  out (one or more) packets, the following procedure may be best:  *       (1) clear SRIO_INT_REG[SOFT_RX],  *       (2) read this CSR to determine how many packets there are,  *       (3) read the packets out (via SRIOMAINT*_IR_SP_RX_DATA).  *  This procedure could lead to situations where SOFT_RX will be set even though there are currently  *  no packets - the SW interrupt handler would need to properly handle this case  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_SP_RX_STAT hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -8857,11 +10872,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_sp_rx_stat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|octets
 range|:
@@ -8879,13 +10892,13 @@ name|drop_cnt
 range|:
 literal|7
 decl_stmt|;
-comment|/**< Number of Packets Received when the RX FIFO was                                                          full and then discarded.                                                          This field always reads zero in Pass 1 */
+comment|/**< Number of Packets Received when the RX FIFO was                                                          full and then discarded. */
 name|uint32_t
 name|full
 range|:
 literal|1
 decl_stmt|;
-comment|/**< This bit is set when the value of Buffers Filled                                                          equals the number of available reception buffers.                                                          This bit always reads zero in Pass 1 */
+comment|/**< This bit is set when the value of Buffers Filled                                                          equals the number of available reception buffers. */
 name|uint32_t
 name|fifo_st
 range|:
@@ -8931,11 +10944,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_sp_rx_stat_cn63xxp1
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|octets
 range|:
@@ -8997,6 +11008,10 @@ directive|endif
 block|}
 name|cn63xxp1
 struct|;
+name|struct
+name|cvmx_sriomaintx_ir_sp_rx_stat_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9023,17 +11038,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_sp_tx_ctrl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|octets
 range|:
 literal|16
 decl_stmt|;
-comment|/**< Writing a non-zero value (N) to this field arms                                                          the packet FIFO for packet transmission. The FIFO                                                          control logic will transmit the next N bytes                                                          written 4-bytes at a time to the                                                          SRIOMAINT(0..1)_IR_SP_TX_DATA Register and create a                                                          single RapidIO packet. */
+comment|/**< Writing a non-zero value (N) to this field arms                                                          the packet FIFO for packet transmission. The FIFO                                                          control logic will transmit the next N bytes                                                          written 4-bytes at a time to the                                                          SRIOMAINT(0,2..3)_IR_SP_TX_DATA Register and create a                                                          single RapidIO packet. */
 name|uint32_t
 name|reserved_0_15
 range|:
@@ -9064,6 +11077,10 @@ name|struct
 name|cvmx_sriomaintx_ir_sp_tx_ctrl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_sp_tx_ctrl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9077,7 +11094,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_sp_tx_data  *  * SRIOMAINT_IR_SP_TX_DATA = SRIO Soft Packet FIFO Transmit Data  *  * Soft Packet FIFO Transmit Data  *  * Notes:  * This register is used to write data to the soft packet FIFO.  The format of the packet follows the  * Internal Packet Format (add link here).  Care must be taken on creating TIDs for the packets which  * generate a response.  Bits [7:6] of the 8 bit TID must be set for all Soft Packet FIFO generated  * packets.  TID values of 0x00 - 0xBF are reserved for hardware generated Tags.  The remainer of the  * TID[5:0] must be unique for each packet in flight and cannot be reused until a response is received  * in the SRIOMAINT(0..1)_IR_SP_RX_DATA register.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_SP_TX_DATA   hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_sp_tx_data  *  * SRIOMAINT_IR_SP_TX_DATA = SRIO Soft Packet FIFO Transmit Data  *  * Soft Packet FIFO Transmit Data  *  * Notes:  * This register is used to write data to the soft packet FIFO.  The format of the packet follows the  * Internal Packet Format (add link here).  Care must be taken on creating TIDs for the packets which  * generate a response.  Bits [7:6] of the 8 bit TID must be set for all Soft Packet FIFO generated  * packets.  TID values of 0x00 - 0xBF are reserved for hardware generated Tags.  The remainer of the  * TID[5:0] must be unique for each packet in flight and cannot be reused until a response is received  * in the SRIOMAINT(0,2..3)_IR_SP_RX_DATA register.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_SP_TX_DATA hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9090,11 +11107,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_sp_tx_data_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|pkt_data
 range|:
@@ -9121,6 +11136,10 @@ name|struct
 name|cvmx_sriomaintx_ir_sp_tx_data_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_sp_tx_data_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9134,7 +11153,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_ir_sp_tx_stat  *  * SRIOMAINT_IR_SP_TX_STAT = SRIO Soft Packet FIFO Transmit Status  *  * Soft Packet FIFO Transmit Status  *  * Notes:  * This register is used to monitor the transmission of packets using the soft packet FIFO.  *  * Clk_Rst:        SRIOMAINT(0..1)_IR_SP_TX_STAT   hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_ir_sp_tx_stat  *  * SRIOMAINT_IR_SP_TX_STAT = SRIO Soft Packet FIFO Transmit Status  *  * Soft Packet FIFO Transmit Status  *  * Notes:  * This register is used to monitor the transmission of packets using the soft packet FIFO.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_IR_SP_TX_STAT hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9147,11 +11166,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_ir_sp_tx_stat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|octets
 range|:
@@ -9221,6 +11238,10 @@ name|struct
 name|cvmx_sriomaintx_ir_sp_tx_stat_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_ir_sp_tx_stat_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9234,7 +11255,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_lane_#_status_0  *  * SRIOMAINT_LANE_X_STATUS_0 = SRIO Lane X Status 0  *  * SRIO Lane Status 0  *  * Notes:  * This register contains status information about the local lane transceiver.  *  * Clk_Rst:        SRIOMAINT(0..1)_LANE_[0:3]_STATUS_0     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_lane_#_status_0  *  * SRIOMAINT_LANE_X_STATUS_0 = SRIO Lane X Status 0  *  * SRIO Lane Status 0  *  * Notes:  * This register contains status information about the local lane transceiver.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_LANE_[0:3]_STATUS_0   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9247,11 +11268,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_lane_x_status_0_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|port
 range|:
@@ -9431,6 +11450,10 @@ name|struct
 name|cvmx_sriomaintx_lane_x_status_0_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_lane_x_status_0_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9444,7 +11467,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_lcs_ba0  *  * SRIOMAINT_LCS_BA0 = SRIO Local Configuration Space MSB Base Address  *  * MSBs of SRIO Address Space mapped to Maintenance BAR.  *  * Notes:  * The double word aligned SRIO address window mapped to the SRIO Maintenance BAR.  This window has  *  the highest priority and eclipses matches to the BAR0, BAR1 and BAR2 windows.  Note:  Address bits  *  not supplied in the transfer are considered zero.  For example, SRIO Address 65:35 must be set to  *  zero to match in a 34-bit access.  SRIO Address 65:50 must be set to zero to match in a 50-bit  *  access.  This coding allows the Maintenance Bar window to appear in specific address spaces. The  *  remaining bits are located in SRIOMAINT(0..1)_LCS_BA1. This SRIO maintenance BAR is effectively  *  disabled when LCSBA[30] is set with 34 or 50-bit addressing.  *  * Clk_Rst:        SRIOMAINT(0..1)_LCS_BA0 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_lcs_ba0  *  * SRIOMAINT_LCS_BA0 = SRIO Local Configuration Space MSB Base Address  *  * MSBs of SRIO Address Space mapped to Maintenance BAR.  *  * Notes:  * The double word aligned SRIO address window mapped to the SRIO Maintenance BAR.  This window has  *  the highest priority and eclipses matches to the BAR0, BAR1 and BAR2 windows.  Note:  Address bits  *  not supplied in the transfer are considered zero.  For example, SRIO Address 65:35 must be set to  *  zero to match in a 34-bit access.  SRIO Address 65:50 must be set to zero to match in a 50-bit  *  access.  This coding allows the Maintenance Bar window to appear in specific address spaces. The  *  remaining bits are located in SRIOMAINT(0,2..3)_LCS_BA1. This SRIO maintenance BAR is effectively  *  disabled when LCSBA[30] is set with 34 or 50-bit addressing.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_LCS_BA0       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9457,11 +11480,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_lcs_ba0_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_31_31
 range|:
@@ -9498,6 +11519,10 @@ name|struct
 name|cvmx_sriomaintx_lcs_ba0_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_lcs_ba0_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9511,7 +11536,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_lcs_ba1  *  * SRIOMAINT_LCS_BA1 = SRIO Local Configuration Space LSB Base Address  *  * LSBs of SRIO Address Space mapped to Maintenance BAR.  *  * Notes:  * The double word aligned SRIO address window mapped to the SRIO Maintenance BAR.  This window has  *  the highest priority and eclipses matches to the BAR0, BAR1 and BAR2 windows. Address bits not  *  supplied in the transfer are considered zero.  For example, SRIO Address 65:35 must be set to zero  *  to match in a 34-bit access and SRIO Address 65:50 must be set to zero to match in a 50-bit access.  *  This coding allows the Maintenance Bar window to appear in specific address spaces. Accesses  *  through this BAR are limited to single word (32-bit) aligned transfers of one to four bytes.  *  Accesses which violate this rule will return an error response if possible and be otherwise  *  ignored.  The remaining bits are located in SRIOMAINT(0..1)_LCS_BA0.  *  * Clk_Rst:        SRIOMAINT(0..1)_LCS_BA1 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_lcs_ba1  *  * SRIOMAINT_LCS_BA1 = SRIO Local Configuration Space LSB Base Address  *  * LSBs of SRIO Address Space mapped to Maintenance BAR.  *  * Notes:  * The double word aligned SRIO address window mapped to the SRIO Maintenance BAR.  This window has  *  the highest priority and eclipses matches to the BAR0, BAR1 and BAR2 windows. Address bits not  *  supplied in the transfer are considered zero.  For example, SRIO Address 65:35 must be set to zero  *  to match in a 34-bit access and SRIO Address 65:50 must be set to zero to match in a 50-bit access.  *  This coding allows the Maintenance Bar window to appear in specific address spaces. Accesses  *  through this BAR are limited to single word (32-bit) aligned transfers of one to four bytes.  *  Accesses which violate this rule will return an error response if possible and be otherwise  *  ignored.  The remaining bits are located in SRIOMAINT(0,2..3)_LCS_BA0.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_LCS_BA1       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9524,11 +11549,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_lcs_ba1_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|lcsba
 range|:
@@ -9565,6 +11588,10 @@ name|struct
 name|cvmx_sriomaintx_lcs_ba1_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_lcs_ba1_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9578,7 +11605,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_m2s_bar0_start0  *  * SRIOMAINT_M2S_BAR0_START0 = SRIO Device Access BAR0 MSB Start  *  * The starting SRIO address to forwarded to the NPEI Configuration Space.  *  * Notes:  * This register specifies the 50-bit and 66-bit SRIO Address mapped to the BAR0 Space.  See  *  SRIOMAINT(0..1)_M2S_BAR0_START1 for more details. This register is only writeable over SRIO if the  *  SRIO(0..1)_ACC_CTRL.DENY_BAR0 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0..1)_M2S_BAR0_START0 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_m2s_bar0_start0  *  * SRIOMAINT_M2S_BAR0_START0 = SRIO Device Access BAR0 MSB Start  *  * The starting SRIO address to forwarded to the NPEI Configuration Space.  *  * Notes:  * This register specifies the 50-bit and 66-bit SRIO Address mapped to the BAR0 Space.  See  *  SRIOMAINT(0,2..3)_M2S_BAR0_START1 for more details. This register is only writeable over SRIO if the  *  SRIO(0,2..3)_ACC_CTRL.DENY_BAR0 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_M2S_BAR0_START0       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9591,11 +11618,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_m2s_bar0_start0_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr64
 range|:
@@ -9633,6 +11658,10 @@ name|struct
 name|cvmx_sriomaintx_m2s_bar0_start0_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_m2s_bar0_start0_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9646,7 +11675,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_m2s_bar0_start1  *  * SRIOMAINT_M2S_BAR0_START1 = SRIO Device Access BAR0 LSB Start  *  * The starting SRIO address to forwarded to the NPEI Configuration Space.  *  * Notes:  * This register specifies the SRIO Address mapped to the BAR0 RSL Space.  If the transaction has not  *  already been mapped to SRIO Maintenance Space through the SRIOMAINT_LCS_BA[1:0] registers, if  *  ENABLE is set and the address bits match then the SRIO Memory transactions will map to Octeon SLI  *  Registers.  34-bit address transactions require a match in SRIO Address 33:14 and require all the  *  other bits in ADDR48, ADDR64 and ADDR66 fields to be zero.  50-bit address transactions a match of  *  SRIO Address 49:14 and require all the other bits of ADDR64 and ADDR66 to be zero.  66-bit address  *  transactions require matches of all valid address field bits.  Reads and  Writes through Bar0  *  have a size limit of 8 bytes and cannot cross a 64-bit boundry.  All accesses with sizes greater  *  than this limit will be ignored and return an error on any SRIO responses.  Note: ADDR48 and  *  ADDR64 fields are located in SRIOMAINT(0..1)_M2S_BAR0_START0.  This register is only writeable over  *  SRIO if the SRIO(0..1)_ACC_CTRL.DENY_BAR0 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0..1)_M2S_BAR0_START1 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_m2s_bar0_start1  *  * SRIOMAINT_M2S_BAR0_START1 = SRIO Device Access BAR0 LSB Start  *  * The starting SRIO address to forwarded to the NPEI Configuration Space.  *  * Notes:  * This register specifies the SRIO Address mapped to the BAR0 RSL Space.  If the transaction has not  *  already been mapped to SRIO Maintenance Space through the SRIOMAINT_LCS_BA[1:0] registers, if  *  ENABLE is set and the address bits match then the SRIO Memory transactions will map to Octeon SLI  *  Registers.  34-bit address transactions require a match in SRIO Address 33:14 and require all the  *  other bits in ADDR48, ADDR64 and ADDR66 fields to be zero.  50-bit address transactions a match of  *  SRIO Address 49:14 and require all the other bits of ADDR64 and ADDR66 to be zero.  66-bit address  *  transactions require matches of all valid address field bits.  Reads and  Writes through Bar0  *  have a size limit of 8 bytes and cannot cross a 64-bit boundry.  All accesses with sizes greater  *  than this limit will be ignored and return an error on any SRIO responses.  Note: ADDR48 and  *  ADDR64 fields are located in SRIOMAINT(0,2..3)_M2S_BAR0_START0.  The ADDR32/66 fields of this register  *  are writeable over SRIO if the SRIO(0,2..3)_ACC_CTRL.DENY_ADR0 bit is zero.  The ENABLE field is  *  writeable over SRIO if the SRIO(0,2..3)_ACC_CTRL.DENY_BAR0 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_M2S_BAR0_START1       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9659,11 +11688,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_m2s_bar0_start1_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr32
 range|:
@@ -9722,6 +11749,10 @@ name|struct
 name|cvmx_sriomaintx_m2s_bar0_start1_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_m2s_bar0_start1_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9735,7 +11766,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_m2s_bar1_start0  *  * SRIOMAINT_M2S_BAR1_START0 = SRIO Device Access BAR1 MSB Start  *  * The starting SRIO address to forwarded to the BAR1 Memory Space.  *  * Notes:  * This register specifies the 50-bit and 66-bit SRIO Address mapped to the BAR1 Space.  See  *  SRIOMAINT(0..1)_M2S_BAR1_START1 for more details.  This register is only writeable over SRIO if the  *  SRIO(0..1)_ACC_CTRL.DENY_BAR1 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0..1)_M2S_BAR1_START0 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_m2s_bar1_start0  *  * SRIOMAINT_M2S_BAR1_START0 = SRIO Device Access BAR1 MSB Start  *  * The starting SRIO address to forwarded to the BAR1 Memory Space.  *  * Notes:  * This register specifies the 50-bit and 66-bit SRIO Address mapped to the BAR1 Space.  See  *  SRIOMAINT(0,2..3)_M2S_BAR1_START1 for more details.  This register is only writeable over SRIO if the  *  SRIO(0,2..3)_ACC_CTRL.DENY_ADR1 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_M2S_BAR1_START0       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9748,11 +11779,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_m2s_bar1_start0_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr64
 range|:
@@ -9764,7 +11793,7 @@ name|addr48
 range|:
 literal|16
 decl_stmt|;
-comment|/**< SRIO Address 47:32 */
+comment|/**< SRIO Address 47:32                                                          The SRIO hardware does not use the low order                                                          one or two bits of this field when BARSIZE is 12                                                          or 13, respectively.                                                          (BARSIZE is SRIOMAINT(0,2..3)_M2S_BAR1_START1[BARSIZE].) */
 else|#
 directive|else
 name|uint32_t
@@ -9790,6 +11819,10 @@ name|struct
 name|cvmx_sriomaintx_m2s_bar1_start0_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_m2s_bar1_start0_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9803,7 +11836,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_m2s_bar1_start1  *  * SRIOMAINT_M2S_BAR1_START1 = SRIO Device to BAR1 Start  *  * The starting SRIO address to forwarded to the BAR1 Memory Space.  *  * Notes:  * This register specifies the SRIO Address mapped to the BAR1 Space.  If the transaction has not  *  already been mapped to SRIO Maintenance Space through the SRIOMAINT_LCS_BA[1:0] registers and the  *  address bits do not match enabled BAR0 addresses and if ENABLE is set and the addresses match the  *  BAR1 addresses then SRIO Memory transactions will map to Octeon Memory Space specified by  *  SRIOMAINT(0..1)_BAR1_IDX[31:0] registers.  The BARSIZE field determines the size of BAR1, the entry  *  select bits, and the size of each entry. A 34-bit address matches BAR1 when it matches  *  SRIO_Address[33:20+BARSIZE] while all the other bits in ADDR48, ADDR64 and ADDR66 are zero.  *  A 50-bit address matches BAR1 when it matches SRIO_Address[49:20+BARSIZE] while all the  *  other bits of ADDR64 and ADDR66 are zero.  A 66-bit address matches BAR1 when all of  *  SRIO_Address[65:20+BARSIZE] match all corresponding address CSR field bits.  Note: ADDR48 and  *  ADDR64 fields are located in SRIOMAINT(0..1)_M2S_BAR1_START0. This register is only writeable from SRIO  *  if the SRIO(0..1)_ACC_CTRL.DENY_BAR1 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0..1)_M2S_BAR1_START1 hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_m2s_bar1_start1  *  * SRIOMAINT_M2S_BAR1_START1 = SRIO Device to BAR1 Start  *  * The starting SRIO address to forwarded to the BAR1 Memory Space.  *  * Notes:  * This register specifies the SRIO Address mapped to the BAR1 Space.  If the transaction has not  *  already been mapped to SRIO Maintenance Space through the SRIOMAINT_LCS_BA[1:0] registers and the  *  address bits do not match enabled BAR0 addresses and if ENABLE is set and the addresses match the  *  BAR1 addresses then SRIO Memory transactions will map to Octeon Memory Space specified by  *  SRIOMAINT(0,2..3)_BAR1_IDX[31:0] registers.  The BARSIZE field determines the size of BAR1, the entry  *  select bits, and the size of each entry. A 34-bit address matches BAR1 when it matches  *  SRIO_Address[33:20+BARSIZE] while all the other bits in ADDR48, ADDR64 and ADDR66 are zero.  *  A 50-bit address matches BAR1 when it matches SRIO_Address[49:20+BARSIZE] while all the  *  other bits of ADDR64 and ADDR66 are zero.  A 66-bit address matches BAR1 when all of  *  SRIO_Address[65:20+BARSIZE] match all corresponding address CSR field bits.  Note: ADDR48 and  *  ADDR64 fields are located in SRIOMAINT(0,2..3)_M2S_BAR1_START0. The ADDR32/66 fields of this register  *  are writeable over SRIO if the SRIO(0,2..3)_ACC_CTRL.DENY_ADR1 bit is zero.  The remaining fields are  *  writeable over SRIO if the SRIO(0,2..3)_ACC_CTRL.DENY_BAR1 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_M2S_BAR1_START1       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9816,17 +11849,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_m2s_bar1_start1_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr32
 range|:
 literal|12
 decl_stmt|;
-comment|/**< SRIO Address 31:20                                                          With BARSIZE< 12, the upper 12-BARSIZE                                                          bits of this field are used, and the lower BARSIZE                                                          bits of this field are unused by the SRIO hardware. */
+comment|/**< SRIO Address 31:20                                                          This field is not used by the SRIO hardware for                                                          BARSIZE values 12 or 13.                                                          With BARSIZE< 12, the upper 12-BARSIZE                                                          bits of this field are used, and the lower BARSIZE                                                          bits of this field are unused by the SRIO hardware. */
 name|uint32_t
 name|reserved_7_19
 range|:
@@ -9837,7 +11868,7 @@ name|barsize
 range|:
 literal|4
 decl_stmt|;
-comment|/**< Bar Size.                                                                               SRIO_Address*                                                                          ---------------------                                                                         /                     \                                                          BARSIZE         BAR     Entry   Entry    Entry                                                          Value   BAR    compare  Select  Offset   Size                                                                  Size    bits    bits    bits                                                           0       1MB    65:20   19:16   15:0     64KB                                                           1       2MB    65:21   20:17   16:0    128KB                                                           2       4MB    65:22   21:18   17:0    256KB                                                           3       8MB    65:23   22:19   18:0    512KB                                                           4      16MB    65:24   23:20   19:0      1MB                                                           5      32MB    65:25   24:21   20:0      2MB                                                           6      64MB    65:26   25:22   21:0      4MB                                                           7     128MB    65:27   26:23   22:0      8MB                                                           8     256MB  ** not in pass 1                                                           9     512MB  ** not in pass 1                                                          10       1GB  ** not in pass 1                                                          11       2GB  ** not in pass 1                                                          12       4GB  ** not in pass 1                                                          13       8GB  ** not in pass 1                                                           *The SRIO Transaction Address                                                          The entry select bits is the X that  select an                                                          SRIOMAINT(0..1)_BAR1_IDXX entry.                                                           In O63 pass 2, BARSIZE is 4 bits (6:3 in this                                                          CSR), and BARSIZE values 8-13 are implemented,                                                          providing a total possible BAR1 size range from                                                          1MB up to 8GB. */
+comment|/**< Bar Size.                                                                               SRIO_Address*                                                                          ---------------------                                                                         /                     \                                                          BARSIZE         BAR     Entry   Entry    Entry                                                          Value   BAR    compare  Select  Offset   Size                                                                  Size    bits    bits    bits                                                           0       1MB    65:20   19:16   15:0     64KB                                                           1       2MB    65:21   20:17   16:0    128KB                                                           2       4MB    65:22   21:18   17:0    256KB                                                           3       8MB    65:23   22:19   18:0    512KB                                                           4      16MB    65:24   23:20   19:0      1MB                                                           5      32MB    65:25   24:21   20:0      2MB                                                           6      64MB    65:26   25:22   21:0      4MB                                                           7     128MB    65:27   26:23   22:0      8MB                                                           8     256MB    65:28   27:24   23:0     16MB                                                           9     512MB    65:29   28:25   24:0     32MB                                                          10    1024MB    65:30   29:26   25:0     64MB                                                          11    2048MB    65:31   30:27   26:0    128MB                                                          12    4096MB    65:32   31:28   27:0    256MB                                                          13    8192MB    65:33   32:29   28:0    512MB                                                           *The SRIO Transaction Address                                                          The entry select bits is the X that  select an                                                          SRIOMAINT(0,2..3)_BAR1_IDXX entry. */
 name|uint32_t
 name|addr66
 range|:
@@ -9889,11 +11920,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_m2s_bar1_start1_cn63xxp1
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr32
 range|:
@@ -9955,6 +11984,10 @@ directive|endif
 block|}
 name|cn63xxp1
 struct|;
+name|struct
+name|cvmx_sriomaintx_m2s_bar1_start1_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -9968,7 +12001,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_m2s_bar2_start  *  * SRIOMAINT_M2S_BAR2_START = SRIO Device to BAR2 Start  *  * The starting SRIO address to forwarded to the BAR2 Memory Space.  *  * Notes:  * This register specifies the SRIO Address mapped to the BAR2 Space.  If ENABLE is set and the  *  address bits do not match and other enabled BAR address and match the BAR2 addresses then the SRIO  *  Memory transactions will map to Octeon BAR2 Memory Space.  34-bit address transactions require  *  ADDR66, ADDR64 and ADDR48 fields set to zero and supplies zeros for unused addresses 40:34.  *  50-bit address transactions a match of SRIO Address 49:41 and require all the other bits of ADDR64  *  and ADDR66 to be zero.  66-bit address transactions require matches of all valid address field  *  bits.  This register is only writeable over SRIO if the SRIO(0..1)_ACC_CTRL.DENY_BAR2 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0..1)_M2S_BAR2_START  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_m2s_bar2_start  *  * SRIOMAINT_M2S_BAR2_START = SRIO Device to BAR2 Start  *  * The starting SRIO address to forwarded to the BAR2 Memory Space.  *  * Notes:  * This register specifies the SRIO Address mapped to the BAR2 Space.  If ENABLE is set and the  *  address bits do not match and other enabled BAR address and match the BAR2 addresses then the SRIO  *  Memory transactions will map to Octeon BAR2 Memory Space.  34-bit address transactions require  *  ADDR66, ADDR64 and ADDR48 fields set to zero and supplies zeros for unused addresses 40:34.  *  50-bit address transactions a match of SRIO Address 49:41 and require all the other bits of ADDR64  *  and ADDR66 to be zero.  66-bit address transactions require matches of all valid address field  *  bits.  The ADDR32/48/64/66 fields of this register are writeable over SRIO if the  *  SRIO(0,2..3)_ACC_CTRL.DENY_ADR2 bit is zero.  The remaining fields are writeable over SRIO if the  *  SRIO(0,2..3)_ACC_CTRL.DENY_BAR2 bit is zero.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_M2S_BAR2_START        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -9981,11 +12014,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_m2s_bar2_start_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|addr64
 range|:
@@ -10077,6 +12108,10 @@ name|struct
 name|cvmx_sriomaintx_m2s_bar2_start_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_m2s_bar2_start_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -10090,7 +12125,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_mac_ctrl  *  * SRIOMAINT_MAC_CTRL = SRIO MAC Control (Pass 2)  *  * Control for MAC Features  *  * Notes:  * This register enables MAC optimizations that may not be supported by all SRIO devices.  The  *  default values should be supported.  This register can be changed at any time while the MAC is  *  out of reset.  *  * Clk_Rst:        SRIOMAINT(0..1)_MAC_CTRL        hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_mac_ctrl  *  * SRIOMAINT_MAC_CTRL = SRIO MAC Control  *  * Control for MAC Features  *  * Notes:  * This register enables MAC optimizations that may not be supported by all SRIO devices.  The  *  default values should be supported.  This register can be changed at any time while the MAC is  *  out of reset.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_MAC_CTRL      hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -10103,16 +12138,109 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_mac_ctrl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
-name|reserved_19_31
+name|reserved_21_31
 range|:
-literal|13
+literal|11
 decl_stmt|;
+name|uint32_t
+name|sec_spf
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Send all Incoming Packets matching Secondary ID to                                                          RX Soft Packet FIFO.  This bit is ignored if                                                          RX_SPF is set. */
+name|uint32_t
+name|ack_zero
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Generate ACKs for all incoming Zero Byte packets.                                                          Default behavior is to issue a NACK.  Regardless                                                          of this setting the SRIO(0,2..3)_INT_REG.ZERO_PKT                                                          interrupt is generated.                                                          SRIO(0,2..3)_INT_REG. */
+name|uint32_t
+name|rx_spf
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Route all received packets to RX Soft Packet FIFO.                                                          No logical layer ERB Errors will be reported.                                                          Used for Diagnostics Only. */
+name|uint32_t
+name|eop_mrg
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Transmitted Packets can eliminate EOP Symbol on                                                          back to back packets. */
+name|uint32_t
+name|type_mrg
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Allow STYPE Merging on Transmit. */
+name|uint32_t
+name|lnk_rtry
+range|:
+literal|16
+decl_stmt|;
+comment|/**< Number of times MAC will reissue Link Request                                                          after timeout.  If retry count is exceeded Fatal                                                          Port Error will occur (see SRIO(0,2..3)_INT_REG.F_ERROR) */
+else|#
+directive|else
+name|uint32_t
+name|lnk_rtry
+range|:
+literal|16
+decl_stmt|;
+name|uint32_t
+name|type_mrg
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|eop_mrg
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|rx_spf
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|ack_zero
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|sec_spf
+range|:
+literal|1
+decl_stmt|;
+name|uint32_t
+name|reserved_21_31
+range|:
+literal|11
+decl_stmt|;
+endif|#
+directive|endif
+block|}
+name|s
+struct|;
+struct|struct
+name|cvmx_sriomaintx_mac_ctrl_cn63xx
+block|{
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
+name|uint32_t
+name|reserved_20_31
+range|:
+literal|12
+decl_stmt|;
+name|uint32_t
+name|ack_zero
+range|:
+literal|1
+decl_stmt|;
+comment|/**< Generate ACKs for all incoming Zero Byte packets.                                                          Default behavior is to issue a NACK.  Regardless                                                          of this setting the SRIO(0..1)_INT_REG.ZERO_PKT                                                          interrupt is generated.                                                          SRIO(0..1)_INT_REG. */
 name|uint32_t
 name|rx_spf
 range|:
@@ -10160,18 +12288,23 @@ range|:
 literal|1
 decl_stmt|;
 name|uint32_t
-name|reserved_19_31
+name|ack_zero
 range|:
-literal|13
+literal|1
+decl_stmt|;
+name|uint32_t
+name|reserved_20_31
+range|:
+literal|12
 decl_stmt|;
 endif|#
 directive|endif
 block|}
-name|s
+name|cn63xx
 struct|;
 name|struct
 name|cvmx_sriomaintx_mac_ctrl_s
-name|cn63xx
+name|cn66xx
 decl_stmt|;
 block|}
 union|;
@@ -10186,7 +12319,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_pe_feat  *  * SRIOMAINT_PE_FEAT = SRIO Processing Element Features  *  * The Supported Processing Element Features.  *  * Notes:  * The Processing Element Feature register describes the major functionality provided by the SRIO  *  device.  *  * Clk_Rst:        SRIOMAINT(0..1)_PE_FEAT hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_pe_feat  *  * SRIOMAINT_PE_FEAT = SRIO Processing Element Features  *  * The Supported Processing Element Features.  *  * Notes:  * The Processing Element Feature register describes the major functionality provided by the SRIO  *  device.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PE_FEAT       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -10199,11 +12332,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_pe_feat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|bridge
 range|:
@@ -10339,6 +12470,10 @@ name|struct
 name|cvmx_sriomaintx_pe_feat_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_pe_feat_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -10352,7 +12487,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_pe_llc  *  * SRIOMAINT_PE_LLC = SRIO Processing Element Logical Layer Control  *  * Addresses supported by the SRIO Device.  *  * Notes:  * The Processing Element Logical Layer is used for general configuration for the logical interface.  *  * Clk_Rst:        SRIOMAINT(0..1)_PE_LLC  hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_pe_llc  *  * SRIOMAINT_PE_LLC = SRIO Processing Element Logical Layer Control  *  * Addresses supported by the SRIO Device.  *  * Notes:  * The Processing Element Logical Layer is used for general configuration for the logical interface.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PE_LLC        hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -10365,11 +12500,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_pe_llc_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_3_31
 range|:
@@ -10406,6 +12539,10 @@ name|struct
 name|cvmx_sriomaintx_pe_llc_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_pe_llc_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -10419,7 +12556,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_0_ctl  *  * SRIOMAINT_PORT_0_CTL = SRIO Port 0 Control  *  * Port 0 Control  *  * Notes:  * This register contains assorted control bits.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_0_CTL      hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_0_ctl  *  * SRIOMAINT_PORT_0_CTL = SRIO Port 0 Control  *  * Port 0 Control  *  * Notes:  * This register contains assorted control bits.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_0_CTL    hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -10432,29 +12569,27 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_0_ctl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|pt_width
 range|:
 literal|2
 decl_stmt|;
-comment|/**< Hardware Port Width.                                                          00 = One Lane supported.                                                          01 = One/Two Lanes supported.                                                          10 = One/Four Lanes supported.                                                          11 = One/Two/Four Lanes supported.                                                          This is a RO copy of SRIO*_IP_FEATURE[PT_WIDTH]. */
+comment|/**< Hardware Port Width.                                                          00 = One Lane supported.                                                          01 = One/Four Lanes supported.                                                          10 = One/Two Lanes supported.                                                          11 = One/Two/Four Lanes supported.                                                          This value is a copy of SRIO*_IP_FEATURE[PT_WIDTH]                                                          limited by the number of lanes the MAC has. */
 name|uint32_t
 name|it_width
 range|:
 literal|3
 decl_stmt|;
-comment|/**< Initialized Port Width                                                          000 = Single-lane, Lane 0                                                          001 = Single-lane, Lane 1 or 2                                                          010 = Four-lane                                                          011 = Two-lane                                                          Others = Reserved */
+comment|/**< Initialized Port Width                                                          000 = Single-lane, Lane 0                                                          001 = Single-lane, Lane 1 or 2                                                          010 = Four-lane                                                          011 = Two-lane                                                          111 = Link Uninitialized                                                          Others = Reserved */
 name|uint32_t
 name|ov_width
 range|:
 literal|3
 decl_stmt|;
-comment|/**< Override Port Width.  Writing this register causes                                                          the port to reinitialize.                                                          000 = No Override all lanes possible                                                          001 = Reserved                                                          010 = Force Single-lane, Lane 0                                                          011 = Force Single-lane, Lane 2                                                                (Lane 1 if only lanes 0,1 are connected)                                                          100 = Reserved                                                          101 = Force Two-lane, Disable Four-Lane                                                          110 = Force Four-lane, Disable Two-Lane                                                          111 = All lanes sizes enabled */
+comment|/**< Override Port Width.  Writing this register causes                                                          the port to reinitialize.                                                          000 = No Override all lanes possible                                                          001 = Reserved                                                          010 = Force Single-lane, Lane 0                                                                If Ln 0 is unavailable try Ln 2 then Ln 1                                                          011 = Force Single-lane, Lane 2                                                                If Ln 2 is unavailable try Ln 1 then Ln 0                                                          100 = Reserved                                                          101 = Enable Two-lane, Disable Four-Lane                                                          110 = Enable Four-lane, Disable Two-Lane                                                          111 = All lanes sizes enabled */
 name|uint32_t
 name|disable
 range|:
@@ -10648,6 +12783,10 @@ name|struct
 name|cvmx_sriomaintx_port_0_ctl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_0_ctl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -10661,7 +12800,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_0_ctl2  *  * SRIOMAINT_PORT_0_CTL2 = SRIO Port 0 Control 2  *  * Port 0 Control 2  *  * Notes:  * These registers are accessed when a local processor or an external device wishes to examine the  *  port baudrate information.  WARNING:  Writes to this register will reinitialize the SRIO link.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_0_CTL2     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_0_ctl2  *  * SRIOMAINT_PORT_0_CTL2 = SRIO Port 0 Control 2  *  * Port 0 Control 2  *  * Notes:  * These registers are accessed when a local processor or an external device wishes to examine the  *  port baudrate information.  The Automatic Baud Rate Feature is not available on this device.  The  *  SUP_* and ENB_* fields are set directly by the QLM_SPD bits as a reference but otherwise have  *  no effect.  WARNING:  Writes to this register will reinitialize the SRIO link.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_0_CTL2   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -10674,17 +12813,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_0_ctl2_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|sel_baud
 range|:
 literal|4
 decl_stmt|;
-comment|/**< Link Baud Rate Selected.                                                            0000 - No rate selected                                                            0001 - 1.25 GBaud                                                            0010 - 2.5 GBaud                                                            0011 - 3.125 GBaud                                                            0100 - 5.0 GBaud                                                            0101 - 6.25 GBaud (reserved)                                                            0110 - 0b1111 - Reserved                                                          Indicates the speed of the interface SERDES lanes                                                          (should match the value selected by SUP_* /ENB_*                                                          below). */
+comment|/**< Link Baud Rate Selected.                                                            0000 - No rate selected                                                            0001 - 1.25 GBaud                                                            0010 - 2.5 GBaud                                                            0011 - 3.125 GBaud                                                            0100 - 5.0 GBaud                                                            0101 - 6.25 GBaud (reserved)                                                            0110 - 0b1111 - Reserved                                                          Indicates the speed of the interface SERDES lanes                                                          (selected by the QLM*_SPD straps). */
 name|uint32_t
 name|baud_sup
 range|:
@@ -10869,6 +13006,10 @@ name|struct
 name|cvmx_sriomaintx_port_0_ctl2_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_0_ctl2_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -10882,7 +13023,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_0_err_stat  *  * SRIOMAINT_PORT_0_ERR_STAT = SRIO Port 0 Error and Status  *  * Port 0 Error and Status  *  * Notes:  * This register displays port error and status information.  Several port error conditions are  *  captured here and must be cleared by writing 1's to the individual bits.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_0_ERR_STAT hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_0_err_stat  *  * SRIOMAINT_PORT_0_ERR_STAT = SRIO Port 0 Error and Status  *  * Port 0 Error and Status  *  * Notes:  * This register displays port error and status information.  Several port error conditions are  *  captured here and must be cleared by writing 1's to the individual bits.  *  Bits are R/W on 65/66xx pass 1 and R/W1C on pass 1.2  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_0_ERR_STAT       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -10895,11 +13036,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_0_err_stat_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_27_31
 range|:
@@ -10916,13 +13055,13 @@ name|o_fail
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Output Port has encountered a failure condition,                                                          meaning the port's failed error threshold has                                                          reached SRIOMAINT(0..1)_ERB_ERR_RATE_THR.ER_FAIL value. */
+comment|/**< Output Port has encountered a failure condition,                                                          meaning the port's failed error threshold has                                                          reached SRIOMAINT(0,2..3)_ERB_ERR_RATE_THR.ER_FAIL value. */
 name|uint32_t
 name|o_dgrad
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Output Port has encountered a degraded condition,                                                          meaning the port's degraded threshold has                                                          reached SRIOMAINT(0..1)_ERB_ERR_RATE_THR.ER_DGRAD                                                          value. */
+comment|/**< Output Port has encountered a degraded condition,                                                          meaning the port's degraded threshold has                                                          reached SRIOMAINT(0,2..3)_ERB_ERR_RATE_THR.ER_DGRAD                                                          value. */
 name|uint32_t
 name|reserved_21_23
 range|:
@@ -10991,7 +13130,7 @@ name|pt_write
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Port has encountered a condition which required it                                                          initiate a Maintenance Port-Write Operation. */
+comment|/**< Port has encountered a condition which required it                                                          initiate a Maintenance Port-Write Operation.                                                          Never set by hardware. */
 name|uint32_t
 name|reserved_3_3
 range|:
@@ -11130,6 +13269,10 @@ name|struct
 name|cvmx_sriomaintx_port_0_err_stat_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_0_err_stat_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11143,7 +13286,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_0_link_req  *  * SRIOMAINT_PORT_0_LINK_REQ = SRIO Port 0 Link Request (Pass 2)  *  * Port 0 Manual Link Request  *  * Notes:  * Writing this register generates the link request symbol or eight device reset symbols.   The  *  progress of the request can be determined by reading SRIOMAINT(0..1)_PORT_0_LINK_RESP.  Only a single  *  request should be generated at a time.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_0_LINK_REQ hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_0_link_req  *  * SRIOMAINT_PORT_0_LINK_REQ = SRIO Port 0 Link Request  *  * Port 0 Manual Link Request  *  * Notes:  * Writing this register generates the link request symbol or eight device reset symbols.   The  *  progress of the request can be determined by reading SRIOMAINT(0,2..3)_PORT_0_LINK_RESP.  Only a single  *  request should be generated at a time.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_0_LINK_REQ       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11156,11 +13299,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_0_link_req_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_3_31
 range|:
@@ -11193,6 +13334,10 @@ name|struct
 name|cvmx_sriomaintx_port_0_link_req_s
 name|cn63xx
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_0_link_req_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11206,7 +13351,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_0_link_resp  *  * SRIOMAINT_PORT_0_LINK_RESP = SRIO Port 0 Link Response (Pass 2)  *  * Port 0 Manual Link Response  *  * Notes:  * This register only returns responses generated by writes to SRIOMAINT(0..1)_PORT_0_LINK_REQ.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_0_LINK_RESP        hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_0_link_resp  *  * SRIOMAINT_PORT_0_LINK_RESP = SRIO Port 0 Link Response  *  * Port 0 Manual Link Response  *  * Notes:  * This register only returns responses generated by writes to SRIOMAINT(0,2..3)_PORT_0_LINK_REQ.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_0_LINK_RESP      hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11219,11 +13364,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_0_link_resp_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|valid
 range|:
@@ -11278,6 +13421,10 @@ name|struct
 name|cvmx_sriomaintx_port_0_link_resp_s
 name|cn63xx
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_0_link_resp_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11291,7 +13438,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_0_local_ackid  *  * SRIOMAINT_PORT_0_LOCAL_ACKID = SRIO Port 0 Local AckID (Pass 2)  *  * Port 0 Local AckID Control  *  * Notes:  * This register is typically only written when recovering from a failed link.  It may be read at any  *  time the MAC is out of reset.  Writes to the O_ACKID field will be used for both the O_ACKID and  *  E_ACKID.  Care must be taken to ensure that no packets are pending at the time of a write.  The  *  number of pending packets can be read in the TX_INUSE field of SRIO(0..1)_MAC_BUFFERS.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_0_LOCAL_ACKID      hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_0_local_ackid  *  * SRIOMAINT_PORT_0_LOCAL_ACKID = SRIO Port 0 Local AckID  *  * Port 0 Local AckID Control  *  * Notes:  * This register is typically only written when recovering from a failed link.  It may be read at any  *  time the MAC is out of reset.  Writes to the O_ACKID field will be used for both the O_ACKID and  *  E_ACKID.  Care must be taken to ensure that no packets are pending at the time of a write.  The  *  number of pending packets can be read in the TX_INUSE field of SRIO(0,2..3)_MAC_BUFFERS.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_0_LOCAL_ACKID    hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11304,11 +13451,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_0_local_ackid_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_30_31
 range|:
@@ -11383,6 +13528,10 @@ name|struct
 name|cvmx_sriomaintx_port_0_local_ackid_s
 name|cn63xx
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_0_local_ackid_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11396,7 +13545,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_gen_ctl  *  * SRIOMAINT_PORT_GEN_CTL = SRIO Port General Control  *  * Port General Control  *  * Notes:  * Clk_Rst:        SRIOMAINT(0..1)_PORT_GEN_CTL    hclk    hrst_n  *  */
+comment|/**  * cvmx_sriomaint#_port_gen_ctl  *  * SRIOMAINT_PORT_GEN_CTL = SRIO Port General Control  *  * Port General Control  *  * Notes:  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_GEN_CTL  hclk    hrst_n  *  */
 end_comment
 
 begin_union
@@ -11409,17 +13558,15 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_gen_ctl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|host
 range|:
 literal|1
 decl_stmt|;
-comment|/**< Host Device.                                                          The HOST reset value is based on corresponding                                                          MIO_RST_CTL*[PRTMODE], whose reset value is                                                          selected by the corresponding QLM*_HOST_MODE strap                                                          on a chip cold reset (and can be later modified by                                                          software). HOST resets to 1 when                                                          MIO_RST_CTL*[PRTMODE] selects RC (i.e. host) mode,                                                          else 0. */
+comment|/**< Host Device.                                                          The HOST reset value is based on corresponding                                                          MIO_RST_CTL*[PRTMODE].  HOST resets to 1 when                                                          this field selects RC (i.e. host) mode, else 0. */
 name|uint32_t
 name|menable
 range|:
@@ -11472,6 +13619,10 @@ name|struct
 name|cvmx_sriomaintx_port_gen_ctl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_gen_ctl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11485,7 +13636,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_lt_ctl  *  * SRIOMAINT_PORT_LT_CTL = SRIO Link Layer Timeout Control  *  * Link Layer Timeout Control  *  * Notes:  * This register controls the timeout for link layer transactions.  It is used as the timeout between  *  sending a packet (of any type) or link request to receiving the corresponding link acknowledge or  *  link-response.  Each count represents 200ns.  The minimum timeout period is the TIMEOUT x 200nS  *  and the maximum is twice that number.  A value less than 32 may not guarantee that all timeout  *  errors will be reported correctly.  When the timeout period expires the packet or link request is  *  dropped and the error is logged in the LNK_TOUT field of the SRIOMAINT(0..1)_ERB_ERR_DET register.  A  *  value of 0 in this register will allow the packet or link request to be issued but it will timeout  *  immediately.  This value is not recommended for normal operation.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_LT_CTL     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_lt_ctl  *  * SRIOMAINT_PORT_LT_CTL = SRIO Link Layer Timeout Control  *  * Link Layer Timeout Control  *  * Notes:  * This register controls the timeout for link layer transactions.  It is used as the timeout between  *  sending a packet (of any type) or link request to receiving the corresponding link acknowledge or  *  link-response.  Each count represents 200ns.  The minimum timeout period is the TIMEOUT x 200nS  *  and the maximum is twice that number.  A value less than 32 may not guarantee that all timeout  *  errors will be reported correctly.  When the timeout period expires the packet or link request is  *  dropped and the error is logged in the LNK_TOUT field of the SRIOMAINT(0,2..3)_ERB_ERR_DET register.  A  *  value of 0 in this register will allow the packet or link request to be issued but it will timeout  *  immediately.  This value is not recommended for normal operation.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_LT_CTL   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11498,11 +13649,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_lt_ctl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|timeout
 range|:
@@ -11539,6 +13688,10 @@ name|struct
 name|cvmx_sriomaintx_port_lt_ctl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_lt_ctl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11552,7 +13705,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_mbh0  *  * SRIOMAINT_PORT_MBH0 = SRIO Port Maintenance Block Header 0  *  * Port Maintenance Block Header 0  *  * Notes:  * Clk_Rst:        SRIOMAINT(0..1)_PORT_MBH0       hclk    hrst_n  *  */
+comment|/**  * cvmx_sriomaint#_port_mbh0  *  * SRIOMAINT_PORT_MBH0 = SRIO Port Maintenance Block Header 0  *  * Port Maintenance Block Header 0  *  * Notes:  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_MBH0     hclk    hrst_n  *  */
 end_comment
 
 begin_union
@@ -11565,11 +13718,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_mbh0_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|ef_ptr
 range|:
@@ -11607,6 +13758,10 @@ name|struct
 name|cvmx_sriomaintx_port_mbh0_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_mbh0_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11620,7 +13775,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_rt_ctl  *  * SRIOMAINT_PORT_RT_CTL = SRIO Logical Layer Timeout Control  *  * Logical Layer Timeout Control  *  * Notes:  * This register controls the timeout for logical layer transactions.  It is used under two  *  conditions.  First, it is used as the timeout period between sending a packet requiring a packet  *  response being sent to receiving the corresponding response.  This is used for all outgoing packet  *  types including memory, maintenance, doorbells and message operations.  When the timeout period  *  expires the packet is disgarded and the error is logged in the PKT_TOUT field of the  *  SRIOMAINT(0..1)_ERB_LT_ERR_DET register.  The second use of this register is as a timeout period  *  between incoming message segments of the same message.  If a message segment is received then the  *  MSG_TOUT field of the SRIOMAINT(0..1)_ERB_LT_ERR_DET register is set if the next segment has not been  *  received before the time expires.  In both cases, each count represents 200ns.  The minimum  *  timeout period is the TIMEOUT x 200nS and the maximum is twice that number.  A value less than 32  *  may not guarantee that all timeout errors will be reported correctly.  A value of 0 disables the  *  logical layer timeouts and is not recommended for normal operation.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_RT_CTL     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_rt_ctl  *  * SRIOMAINT_PORT_RT_CTL = SRIO Logical Layer Timeout Control  *  * Logical Layer Timeout Control  *  * Notes:  * This register controls the timeout for logical layer transactions.  It is used under two  *  conditions.  First, it is used as the timeout period between sending a packet requiring a packet  *  response being sent to receiving the corresponding response.  This is used for all outgoing packet  *  types including memory, maintenance, doorbells and message operations.  When the timeout period  *  expires the packet is disgarded and the error is logged in the PKT_TOUT field of the  *  SRIOMAINT(0,2..3)_ERB_LT_ERR_DET register.  The second use of this register is as a timeout period  *  between incoming message segments of the same message.  If a message segment is received then the  *  MSG_TOUT field of the SRIOMAINT(0,2..3)_ERB_LT_ERR_DET register is set if the next segment has not been  *  received before the time expires.  In both cases, each count represents 200ns.  The minimum  *  timeout period is the TIMEOUT x 200nS and the maximum is twice that number.  A value less than 32  *  may not guarantee that all timeout errors will be reported correctly.  A value of 0 disables the  *  logical layer timeouts and is not recommended for normal operation.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_RT_CTL   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11633,11 +13788,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_rt_ctl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|timeout
 range|:
@@ -11674,6 +13827,10 @@ name|struct
 name|cvmx_sriomaintx_port_rt_ctl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_rt_ctl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11687,7 +13844,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_port_ttl_ctl  *  * SRIOMAINT_PORT_TTL_CTL = SRIO Packet Time to Live Control (Pass 2)  *  * Packet Time to Live  *  * Notes:  * This register controls the timeout for outgoing packets.  It is used to make sure packets are  *  being transmitted and acknowledged within a reasonable period of time.   The timeout value  *  corresponds to TIMEOUT x 200ns and a value of 0 disables the timer.  The actualy value of the  *  should be greater than the physical layer timout specified in SRIOMAINT(0..1)_PORT_LT_CTL and is  *  typically a less SRIOMAINT(0..1)_PORT_LT_CTL timeout than the response timeout specified in  *  SRIOMAINT(0..1)_PORT_RT_CTL.  When the timeout expires the TTL interrupt is asserted, any packets  *  currently being transmitted are dropped, the SRIOMAINT(0..1)_TX_DROP.DROP bit is set (causing any  *  scheduled packets to be dropped), the SRIOMAINT(0..1)_TX_DROP.DROP_CNT is incremented and the SRIO  *  output state is set to IDLE (all errors are cleared).  Software must clear the  *  SRIOMAINT(0..1)_TX_DROP.DROP bit to resume transmitting packets.  *  * Clk_Rst:        SRIOMAINT(0..1)_PORT_RT_CTL     hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_port_ttl_ctl  *  * SRIOMAINT_PORT_TTL_CTL = SRIO Packet Time to Live Control  *  * Packet Time to Live  *  * Notes:  * This register controls the timeout for outgoing packets.  It is used to make sure packets are  *  being transmitted and acknowledged within a reasonable period of time.   The timeout value  *  corresponds to TIMEOUT x 200ns and a value of 0 disables the timer.  The actualy value of the  *  should be greater than the physical layer timout specified in SRIOMAINT(0,2..3)_PORT_LT_CTL and is  *  typically a less SRIOMAINT(0,2..3)_PORT_LT_CTL timeout than the response timeout specified in  *  SRIOMAINT(0,2..3)_PORT_RT_CTL.  A second application of this timer is to remove all the packets waiting  *  to be transmitted including those already in flight.  This may necessary in the case of a link  *  going down (see SRIO(0,2..3)_INT_REG.LINK_DWN).  This can accomplished by setting the TIMEOUT to small  *  value all so that all TX packets can be dropped.  In either case, when the timeout expires the TTL  *  interrupt is asserted, any packets currently being transmitted are dropped, the  *  SRIOMAINT(0,2..3)_TX_DROP.DROP bit is set (causing any scheduled packets to be dropped), the  *  SRIOMAINT(0,2..3)_TX_DROP.DROP_CNT is incremented for each packet and the SRIO output state is set to  *  IDLE (all errors are cleared).  Software must clear the SRIOMAINT(0,2..3)_TX_DROP.DROP bit to resume  *  transmitting packets.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PORT_RT_CTL   hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11700,11 +13857,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_port_ttl_ctl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|timeout
 range|:
@@ -11737,6 +13892,10 @@ name|struct
 name|cvmx_sriomaintx_port_ttl_ctl_s
 name|cn63xx
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_port_ttl_ctl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11750,7 +13909,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_pri_dev_id  *  * SRIOMAINT_PRI_DEV_ID = SRIO Primary Device ID  *  * Primary 8 and 16 bit Device IDs  *  * Notes:  * This register defines the primary 8 and 16 bit device IDs used for large and small transport.  An  *  optional secondary set of device IDs are located in SRIOMAINT(0..1)_SEC_DEV_ID.  *  * Clk_Rst:        SRIOMAINT(0..1)_PRI_DEV_ID      hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_pri_dev_id  *  * SRIOMAINT_PRI_DEV_ID = SRIO Primary Device ID  *  * Primary 8 and 16 bit Device IDs  *  * Notes:  * This register defines the primary 8 and 16 bit device IDs used for large and small transport.  An  *  optional secondary set of device IDs are located in SRIOMAINT(0,2..3)_SEC_DEV_ID.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_PRI_DEV_ID    hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11763,11 +13922,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_pri_dev_id_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_24_31
 range|:
@@ -11815,6 +13972,10 @@ name|struct
 name|cvmx_sriomaintx_pri_dev_id_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_pri_dev_id_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11828,7 +13989,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_sec_dev_ctrl  *  * SRIOMAINT_SEC_DEV_CTRL = SRIO Secondary Device ID Control  *  * Control for Secondary Device IDs  *  * Notes:  * This register enables the secondary 8 and 16 bit device IDs used for large and small transport.  *  The corresponding secondary ID must be written before the ID is enabled.  The secondary IDs should  *  not be enabled if the values of the primary and secondary IDs are identical.  *  * Clk_Rst:        SRIOMAINT(0..1)_SEC_DEV_CTRL    hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_sec_dev_ctrl  *  * SRIOMAINT_SEC_DEV_CTRL = SRIO Secondary Device ID Control  *  * Control for Secondary Device IDs  *  * Notes:  * This register enables the secondary 8 and 16 bit device IDs used for large and small transport.  *  The corresponding secondary ID must be written before the ID is enabled.  The secondary IDs should  *  not be enabled if the values of the primary and secondary IDs are identical.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_SEC_DEV_CTRL  hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11841,11 +14002,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_sec_dev_ctrl_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_2_31
 range|:
@@ -11893,6 +14052,10 @@ name|struct
 name|cvmx_sriomaintx_sec_dev_ctrl_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_sec_dev_ctrl_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11906,7 +14069,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_sec_dev_id  *  * SRIOMAINT_SEC_DEV_ID = SRIO Secondary Device ID  *  * Secondary 8 and 16 bit Device IDs  *  * Notes:  * This register defines the secondary 8 and 16 bit device IDs used for large and small transport.  *  The corresponding secondary ID must be written before the ID is enabled in the  *  SRIOMAINT(0..1)_SEC_DEV_CTRL register.  The primary set of device IDs are located in  *  SRIOMAINT(0..1)_PRI_DEV_ID register.  The secondary IDs should not be written to the same values as the  *  corresponding primary IDs.  *  * Clk_Rst:        SRIOMAINT(0..1)_SEC_DEV_ID      hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_sec_dev_id  *  * SRIOMAINT_SEC_DEV_ID = SRIO Secondary Device ID  *  * Secondary 8 and 16 bit Device IDs  *  * Notes:  * This register defines the secondary 8 and 16 bit device IDs used for large and small transport.  *  The corresponding secondary ID must be written before the ID is enabled in the  *  SRIOMAINT(0,2..3)_SEC_DEV_CTRL register.  The primary set of device IDs are located in  *  SRIOMAINT(0,2..3)_PRI_DEV_ID register.  The secondary IDs should not be written to the same values as the  *  corresponding primary IDs.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_SEC_DEV_ID    hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11919,11 +14082,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_sec_dev_id_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_24_31
 range|:
@@ -11971,6 +14132,10 @@ name|struct
 name|cvmx_sriomaintx_sec_dev_id_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_sec_dev_id_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -11984,7 +14149,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_serial_lane_hdr  *  * SRIOMAINT_SERIAL_LANE_HDR = SRIO Serial Lane Header  *  * SRIO Serial Lane Header  *  * Notes:  * The error management extensions block header register contains the EF_PTR to the next EF_BLK and  *  the EF_ID that identifies this as the Serial Lane Status Block.  *  * Clk_Rst:        SRIOMAINT(0..1)_SERIAL_LANE_HDR hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_serial_lane_hdr  *  * SRIOMAINT_SERIAL_LANE_HDR = SRIO Serial Lane Header  *  * SRIO Serial Lane Header  *  * Notes:  * The error management extensions block header register contains the EF_PTR to the next EF_BLK and  *  the EF_ID that identifies this as the Serial Lane Status Block.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_SERIAL_LANE_HDR       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -11997,11 +14162,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_serial_lane_hdr_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|ef_ptr
 range|:
@@ -12038,6 +14201,10 @@ name|struct
 name|cvmx_sriomaintx_serial_lane_hdr_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_serial_lane_hdr_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -12051,7 +14218,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_src_ops  *  * SRIOMAINT_SRC_OPS = SRIO Source Operations  *  * The logical operations initiated by the Octeon.  *  * Notes:  * The logical operations initiated by the Cores.   The Source OPs register shows the operations  *  specified in the SRIO(0..1)_IP_FEATURE.OPS register.  *  * Clk_Rst:        SRIOMAINT(0..1)_SRC_OPS hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_src_ops  *  * SRIOMAINT_SRC_OPS = SRIO Source Operations  *  * The logical operations initiated by the Octeon.  *  * Notes:  * The logical operations initiated by the Cores.   The Source OPs register shows the operations  *  specified in the SRIO(0,2..3)_IP_FEATURE.OPS register.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_SRC_OPS       hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -12064,11 +14231,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_src_ops_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|gsm_read
 range|:
@@ -12368,6 +14533,10 @@ name|struct
 name|cvmx_sriomaintx_src_ops_s
 name|cn63xxp1
 decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_src_ops_s
+name|cn66xx
+decl_stmt|;
 block|}
 union|;
 end_union
@@ -12381,7 +14550,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|/**  * cvmx_sriomaint#_tx_drop  *  * SRIOMAINT_TX_DROP = SRIO MAC Outgoing Packet Drop (Pass 2)  *  * Outging SRIO Packet Drop Control/Status  *  * Notes:  * This register controls and provides status for dropping outgoing SRIO packets.  The DROP bit  *  should only be cleared when no packets are currently being dropped.  This can be guaranteed by  *  clearing the SRIOMAINT(0..1)_PORT_0_CTL.O_ENABLE bit before changing the DROP bit and restoring the  *  O_ENABLE afterwards.  *  * Clk_Rst:        SRIOMAINT(0..1)_MAC_CTRL        hclk    hrst_n  */
+comment|/**  * cvmx_sriomaint#_tx_drop  *  * SRIOMAINT_TX_DROP = SRIO MAC Outgoing Packet Drop  *  * Outging SRIO Packet Drop Control/Status  *  * Notes:  * This register controls and provides status for dropping outgoing SRIO packets.  The DROP bit  *  should only be cleared when no packets are currently being dropped.  This can be guaranteed by  *  clearing the SRIOMAINT(0,2..3)_PORT_0_CTL.O_ENABLE bit before changing the DROP bit and restoring the  *  O_ENABLE afterwards.  *  * Clk_Rst:        SRIOMAINT(0,2..3)_MAC_CTRL      hclk    hrst_n  */
 end_comment
 
 begin_union
@@ -12394,11 +14563,9 @@ decl_stmt|;
 struct|struct
 name|cvmx_sriomaintx_tx_drop_s
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint32_t
 name|reserved_17_31
 range|:
@@ -12409,13 +14576,13 @@ name|drop
 range|:
 literal|1
 decl_stmt|;
-comment|/**< All outgoing packets are dropped.  Any packets                                                          requiring a response will return 1's after the                                                          SRIOMAINT(0..1)_PORT_RT_CTL Timeout expires.  This bit                                                          is set automatically when the TTL Timeout occurs                                                          or can be set by software and must always be                                                          cleared by software. */
+comment|/**< All outgoing packets are dropped.  Any packets                                                          requiring a response will return 1's after the                                                          SRIOMAINT(0,2..3)_PORT_RT_CTL Timeout expires.  This bit                                                          is set automatically when the TTL Timeout occurs                                                          or can be set by software and must always be                                                          cleared by software. */
 name|uint32_t
 name|drop_cnt
 range|:
 literal|16
 decl_stmt|;
-comment|/**< Number of packets dropped by transmit logic.                                                          Packets are dropped whenever a packet is ready to                                                          be transmitted and a TTL Timeouts occur, the  DROP                                                          bit is set or the SRIOMAINT(0..1)_ERB_ERR_RATE_THR                                                          FAIL_TH has been reached and the DROP_PKT bit is                                                          set in SRIOMAINT(0..1)_PORT_0_CTL. */
+comment|/**< Number of packets dropped by transmit logic.                                                          Packets are dropped whenever a packet is ready to                                                          be transmitted and a TTL Timeouts occur, the  DROP                                                          bit is set or the SRIOMAINT(0,2..3)_ERB_ERR_RATE_THR                                                          FAIL_TH has been reached and the DROP_PKT bit is                                                          set in SRIOMAINT(0,2..3)_PORT_0_CTL.  This counter wraps                                                          on overflow and is cleared only on reset. */
 else|#
 directive|else
 name|uint32_t
@@ -12441,6 +14608,10 @@ struct|;
 name|struct
 name|cvmx_sriomaintx_tx_drop_s
 name|cn63xx
+decl_stmt|;
+name|struct
+name|cvmx_sriomaintx_tx_drop_s
+name|cn66xx
 decl_stmt|;
 block|}
 union|;

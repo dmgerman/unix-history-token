@@ -93,8 +93,6 @@ block|{
 name|private
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|DeclAccessPair
@@ -1049,8 +1047,6 @@ operator|:
 name|public
 name|UnresolvedSetImpl
 block|{
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|DeclAccessPair

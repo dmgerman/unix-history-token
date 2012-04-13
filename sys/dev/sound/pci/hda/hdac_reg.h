@@ -1632,29 +1632,29 @@ end_define
 begin_define
 define|#
 directive|define
-name|HDAC_SDCTL_STRIPE_MASK
-value|0x030000
+name|HDAC_SDCTL2_STRIPE_MASK
+value|0x03
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDAC_SDCTL_STRIPE_SHIFT
-value|16
+name|HDAC_SDCTL2_STRIPE_SHIFT
+value|0
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDAC_SDCTL_TP
-value|0x040000
+name|HDAC_SDCTL2_TP
+value|0x04
 end_define
 
 begin_define
 define|#
 directive|define
-name|HDAC_SDCTL_DIR
-value|0x080000
+name|HDAC_SDCTL2_DIR
+value|0x08
 end_define
 
 begin_define

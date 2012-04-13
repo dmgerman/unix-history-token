@@ -115,7 +115,7 @@ name|u_short
 name|pg_color
 decl_stmt|;
 comment|/* (c) color of first page in obj */
-name|u_short
+name|u_int
 name|paging_in_progress
 decl_stmt|;
 comment|/* Paging (in or out) so don't collapse or destroy */
@@ -164,6 +164,9 @@ block|{
 name|off_t
 name|vnp_size
 decl_stmt|;
+name|vm_ooffset_t
+name|writemappings
+decl_stmt|;
 block|}
 name|vnp
 struct|;
@@ -177,6 +180,11 @@ argument|vm_page
 argument_list|)
 name|devp_pglist
 expr_stmt|;
+name|struct
+name|cdev_pager_ops
+modifier|*
+name|ops
+decl_stmt|;
 block|}
 name|devp
 struct|;
@@ -733,6 +741,37 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|vm_object_madvise
+parameter_list|(
+name|vm_object_t
+parameter_list|,
+name|vm_pindex_t
+parameter_list|,
+name|vm_pindex_t
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|vm_object_page_cache
+parameter_list|(
+name|vm_object_t
+name|object
+parameter_list|,
+name|vm_pindex_t
+name|start
+parameter_list|,
+name|vm_pindex_t
+name|end
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|boolean_t
 name|vm_object_page_clean
 parameter_list|(
 name|vm_object_t
@@ -858,7 +897,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
+name|boolean_t
 name|vm_object_sync
 parameter_list|(
 name|vm_object_t
@@ -870,21 +909,6 @@ parameter_list|,
 name|boolean_t
 parameter_list|,
 name|boolean_t
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|vm_object_madvise
-parameter_list|(
-name|vm_object_t
-parameter_list|,
-name|vm_pindex_t
-parameter_list|,
-name|int
-parameter_list|,
-name|int
 parameter_list|)
 function_decl|;
 end_function_decl

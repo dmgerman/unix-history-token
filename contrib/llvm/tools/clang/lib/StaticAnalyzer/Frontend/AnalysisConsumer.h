@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
@@ -83,7 +89,7 @@ name|class
 name|Preprocessor
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|namespace
 name|ento
@@ -113,7 +119,15 @@ argument_list|,
 specifier|const
 name|AnalyzerOptions
 operator|&
-name|Opts
+name|opts
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|plugins
 argument_list|)
 decl_stmt|;
 block|}

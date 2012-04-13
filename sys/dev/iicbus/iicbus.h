@@ -63,6 +63,10 @@ name|u_char
 name|started
 decl_stmt|;
 comment|/* address of the 'started' slave 				 * 0 if no start condition succeeded */
+name|u_char
+name|strict
+decl_stmt|;
+comment|/* deny operations that violate the 				 * I2C protocol */
 name|struct
 name|mtx
 name|lock

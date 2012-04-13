@@ -1160,7 +1160,7 @@ name|rin6
 operator|.
 name|ro_rt
 operator|=
-name|rtalloc1
+name|in6_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -1172,6 +1172,11 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0
+argument_list|,
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
 argument_list|)
 expr_stmt|;
 if|if

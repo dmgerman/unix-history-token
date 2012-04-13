@@ -349,6 +349,8 @@ name|debugger_on_panic
 argument_list|,
 name|CTLFLAG_RW
 operator||
+name|CTLFLAG_SECURE
+operator||
 name|CTLFLAG_TUN
 argument_list|,
 operator|&
@@ -416,6 +418,8 @@ argument_list|,
 name|trace_on_panic
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_SECURE
 operator||
 name|CTLFLAG_TUN
 argument_list|,
@@ -492,7 +496,51 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
+begin_decl_stmt
+specifier|static
+name|int
+name|stop_scheduler_on_panic
+init|=
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
+name|SYSCTL_INT
+argument_list|(
+name|_kern
+argument_list|,
+name|OID_AUTO
+argument_list|,
+name|stop_scheduler_on_panic
+argument_list|,
+name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
+argument_list|,
+operator|&
+name|stop_scheduler_on_panic
+argument_list|,
+literal|0
+argument_list|,
+literal|"stop scheduler upon entering panic"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"kern.stop_scheduler_on_panic"
+argument_list|,
+operator|&
+name|stop_scheduler_on_panic
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern
@@ -1282,6 +1330,13 @@ argument_list|(
 name|SMP
 argument_list|)
 comment|/* 	 * Bind us to CPU 0 so that all shutdown code runs there.  Some 	 * systems don't shutdown properly (i.e., ACPI power off) if we 	 * run on another processor. 	 */
+if|if
+condition|(
+operator|!
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+block|{
 name|thread_lock
 argument_list|(
 name|curthread
@@ -1309,12 +1364,11 @@ operator|==
 literal|0
 argument_list|,
 operator|(
-literal|"%s: not running on cpu 0"
-operator|,
-name|__func__
+literal|"boot: not running on cpu 0"
 operator|)
 argument_list|)
 expr_stmt|;
+block|}
 endif|#
 directive|endif
 comment|/* We're in the process of rebooting. */
@@ -1749,6 +1803,9 @@ block|}
 name|print_uptime
 argument_list|()
 expr_stmt|;
+name|cngrab
+argument_list|()
+expr_stmt|;
 comment|/* 	 * Ok, now do things that assume all filesystem activity has 	 * been completed. 	 */
 name|EVENTHANDLER_INVOKE
 argument_list|(
@@ -2063,6 +2120,9 @@ name|panic_cpu
 init|=
 name|NOCPU
 decl_stmt|;
+name|cpuset_t
+name|other_cpus
+decl_stmt|;
 endif|#
 directive|endif
 name|struct
@@ -2087,6 +2147,14 @@ index|[
 literal|256
 index|]
 decl_stmt|;
+if|if
+condition|(
+name|stop_scheduler_on_panic
+condition|)
+name|spinlock_enter
+argument_list|()
+expr_stmt|;
+else|else
 name|critical_enter
 argument_list|()
 expr_stmt|;
@@ -2128,6 +2196,50 @@ name|NOCPU
 condition|)
 empty_stmt|;
 comment|/* nothing */
+if|if
+condition|(
+name|stop_scheduler_on_panic
+condition|)
+block|{
+if|if
+condition|(
+name|panicstr
+operator|==
+name|NULL
+operator|&&
+operator|!
+name|kdb_active
+condition|)
+block|{
+name|other_cpus
+operator|=
+name|all_cpus
+expr_stmt|;
+name|CPU_CLR
+argument_list|(
+name|PCPU_GET
+argument_list|(
+name|cpuid
+argument_list|)
+argument_list|,
+operator|&
+name|other_cpus
+argument_list|)
+expr_stmt|;
+name|stop_cpus_hard
+argument_list|(
+name|other_cpus
+argument_list|)
+expr_stmt|;
+block|}
+comment|/* 		 * We set stop_scheduler here and not in the block above, 		 * because we want to ensure that if panic has been called and 		 * stop_scheduler_on_panic is true, then stop_scheduler will 		 * always be set.  Even if panic has been entered from kdb. 		 */
+name|td
+operator|->
+name|td_stopsched
+operator|=
+literal|1
+expr_stmt|;
+block|}
 endif|#
 directive|endif
 name|bootopt
@@ -2193,6 +2305,9 @@ expr_stmt|;
 name|panicstr
 operator|=
 name|buf
+expr_stmt|;
+name|cngrab
+argument_list|()
 expr_stmt|;
 name|printf
 argument_list|(
@@ -2284,6 +2399,11 @@ name|bootopt
 operator||=
 name|RB_NOSYNC
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|stop_scheduler_on_panic
+condition|)
 name|critical_exit
 argument_list|()
 expr_stmt|;
@@ -2342,7 +2462,7 @@ name|poweroff_delay
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Delay before poweroff to write disk caches (msec)"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2413,7 +2533,7 @@ name|kproc_shutdown_wait
 argument_list|,
 literal|0
 argument_list|,
-literal|""
+literal|"Max wait time (sec) to stop for each process"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

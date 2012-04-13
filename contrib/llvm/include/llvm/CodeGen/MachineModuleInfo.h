@@ -148,7 +148,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/CodeGen/MachineLocation.h"
+file|"llvm/MC/MachineLocation.h"
 end_include
 
 begin_include
@@ -407,8 +407,8 @@ name|MachineModuleInfoImpl
 operator|*
 name|ObjFileMMI
 block|;
-comment|// FrameMoves - List of moves done by a function's prolog.  Used to construct
-comment|// frame maps by debug and exception handling consumers.
+comment|/// FrameMoves - List of moves done by a function's prolog.  Used to construct
+comment|/// frame maps by debug and exception handling consumers.
 name|std
 operator|::
 name|vector
@@ -417,8 +417,13 @@ name|MachineMove
 operator|>
 name|FrameMoves
 block|;
-comment|// LandingPads - List of LandingPadInfo describing the landing pad information
-comment|// in the current function.
+comment|/// CompactUnwindEncoding - If the target supports it, this is the compact
+comment|/// unwind encoding. It replaces a function's CIE and FDE.
+name|uint32_t
+name|CompactUnwindEncoding
+block|;
+comment|/// LandingPads - List of LandingPadInfo describing the landing pad
+comment|/// information in the current function.
 name|std
 operator|::
 name|vector
@@ -427,8 +432,24 @@ name|LandingPadInfo
 operator|>
 name|LandingPads
 block|;
-comment|// Map of invoke call site index values to associated begin EH_LABEL for
-comment|// the current function.
+comment|/// LPadToCallSiteMap - Map a landing pad's EH symbol to the call site
+comment|/// indexes.
+name|DenseMap
+operator|<
+name|MCSymbol
+operator|*
+block|,
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|4
+operator|>
+expr|>
+name|LPadToCallSiteMap
+block|;
+comment|/// CallSiteMap - Map of invoke call site index values to associated begin
+comment|/// EH_LABEL for the current function.
 name|DenseMap
 operator|<
 name|MCSymbol
@@ -438,12 +459,12 @@ name|unsigned
 operator|>
 name|CallSiteMap
 block|;
-comment|// The current call site index being processed, if any. 0 if none.
+comment|/// CurCallSite - The current call site index being processed, if any. 0 if
+comment|/// none.
 name|unsigned
 name|CurCallSite
 block|;
-comment|// TypeInfos - List of C++ TypeInfo used in the current function.
-comment|//
+comment|/// TypeInfos - List of C++ TypeInfo used in the current function.
 name|std
 operator|::
 name|vector
@@ -454,8 +475,7 @@ operator|*
 operator|>
 name|TypeInfos
 block|;
-comment|// FilterIds - List of typeids encoding filters used in the current function.
-comment|//
+comment|/// FilterIds - List of typeids encoding filters used in the current function.
 name|std
 operator|::
 name|vector
@@ -464,9 +484,8 @@ name|unsigned
 operator|>
 name|FilterIds
 block|;
-comment|// FilterEnds - List of the indices in FilterIds corresponding to filter
-comment|// terminators.
-comment|//
+comment|/// FilterEnds - List of the indices in FilterIds corresponding to filter
+comment|/// terminators.
 name|std
 operator|::
 name|vector
@@ -475,8 +494,8 @@ name|unsigned
 operator|>
 name|FilterEnds
 block|;
-comment|// Personalities - Vector of all personality functions ever seen. Used to emit
-comment|// common EH frames.
+comment|/// Personalities - Vector of all personality functions ever seen. Used to
+comment|/// emit common EH frames.
 name|std
 operator|::
 name|vector
@@ -517,8 +536,9 @@ comment|/// in this module.
 name|bool
 name|DbgInfoAvailable
 block|;
-comment|/// True if this module calls VarArg function with floating point arguments.
-comment|/// This is used to emit an undefined reference to fltused on Windows targets.
+comment|/// CallsExternalVAFunctionWithFloatingPointArguments - True if this module
+comment|/// calls VarArg function with floating point arguments.  This is used to emit
+comment|/// an undefined reference to fltused on Windows targets.
 name|bool
 name|CallsExternalVAFunctionWithFloatingPointArguments
 block|;
@@ -575,9 +595,14 @@ operator|&
 name|MAI
 argument_list|,
 specifier|const
-name|TargetAsmInfo
+name|MCRegisterInfo
+operator|&
+name|MRI
+argument_list|,
+specifier|const
+name|MCObjectFileInfo
 operator|*
-name|TAI
+name|MOFI
 argument_list|)
 expr_stmt|;
 operator|~
@@ -884,6 +909,53 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// getCompactUnwindEncoding - Returns the compact unwind encoding for a
+end_comment
+
+begin_comment
+comment|/// function if the target supports the encoding. This encoding replaces a
+end_comment
+
+begin_comment
+comment|/// function's CIE and FDE.
+end_comment
+
+begin_expr_stmt
+name|uint32_t
+name|getCompactUnwindEncoding
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CompactUnwindEncoding
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// setCompactUnwindEncoding - Set the compact unwind encoding for a function
+end_comment
+
+begin_comment
+comment|/// if the target supports the encoding.
+end_comment
+
+begin_function
+name|void
+name|setCompactUnwindEncoding
+parameter_list|(
+name|uint32_t
+name|Enc
+parameter_list|)
+block|{
+name|CompactUnwindEncoding
+operator|=
+name|Enc
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
 comment|/// getAddrLabelSymbol - Return the symbol to be used for the specified basic
 end_comment
 
@@ -1161,15 +1233,12 @@ name|MachineBasicBlock
 operator|*
 name|LandingPad
 argument_list|,
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 specifier|const
 name|GlobalVariable
 operator|*
 operator|>
-operator|&
 name|TyInfo
 argument_list|)
 decl_stmt|;
@@ -1191,15 +1260,12 @@ name|MachineBasicBlock
 operator|*
 name|LandingPad
 argument_list|,
-name|std
-operator|::
-name|vector
+name|ArrayRef
 operator|<
 specifier|const
 name|GlobalVariable
 operator|*
 operator|>
-operator|&
 name|TyInfo
 argument_list|)
 decl_stmt|;
@@ -1323,7 +1389,100 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// setCallSiteBeginLabel - Map the begin label for a call site
+comment|/// setCallSiteLandingPad - Map the landing pad's EH symbol to the call
+end_comment
+
+begin_comment
+comment|/// site indexes.
+end_comment
+
+begin_decl_stmt
+name|void
+name|setCallSiteLandingPad
+argument_list|(
+name|MCSymbol
+operator|*
+name|Sym
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Sites
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// getCallSiteLandingPad - Get the call site indexes for a landing pad EH
+end_comment
+
+begin_comment
+comment|/// symbol.
+end_comment
+
+begin_expr_stmt
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|getCallSiteLandingPad
+argument_list|(
+argument|MCSymbol *Sym
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|hasCallSiteLandingPad
+argument_list|(
+name|Sym
+argument_list|)
+operator|&&
+literal|"missing call site number for landing pad!"
+argument_list|)
+block|;
+return|return
+name|LPadToCallSiteMap
+index|[
+name|Sym
+index|]
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// hasCallSiteLandingPad - Return true if the landing pad Eh symbol has an
+end_comment
+
+begin_comment
+comment|/// associated call site.
+end_comment
+
+begin_function
+name|bool
+name|hasCallSiteLandingPad
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|Sym
+parameter_list|)
+block|{
+return|return
+operator|!
+name|LPadToCallSiteMap
+index|[
+name|Sym
+index|]
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// setCallSiteBeginLabel - Map the begin label for a call site.
 end_comment
 
 begin_function
@@ -1349,7 +1508,7 @@ block|}
 end_function
 
 begin_comment
-comment|/// getCallSiteBeginLabel - Get the call site number for a begin label
+comment|/// getCallSiteBeginLabel - Get the call site number for a begin label.
 end_comment
 
 begin_function
@@ -1363,9 +1522,7 @@ parameter_list|)
 block|{
 name|assert
 argument_list|(
-name|CallSiteMap
-operator|.
-name|count
+name|hasCallSiteBeginLabel
 argument_list|(
 name|BeginLabel
 argument_list|)
@@ -1378,6 +1535,34 @@ name|CallSiteMap
 index|[
 name|BeginLabel
 index|]
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// hasCallSiteBeginLabel - Return true if the begin label has a call site
+end_comment
+
+begin_comment
+comment|/// number associated with it.
+end_comment
+
+begin_function
+name|bool
+name|hasCallSiteBeginLabel
+parameter_list|(
+name|MCSymbol
+modifier|*
+name|BeginLabel
+parameter_list|)
+block|{
+return|return
+name|CallSiteMap
+index|[
+name|BeginLabel
+index|]
+operator|!=
+literal|0
 return|;
 block|}
 end_function

@@ -90,6 +90,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/DenseSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/IndexedMap.h"
 end_include
 
@@ -486,7 +492,6 @@ function_decl|;
 name|unsigned
 name|CreateRegs
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -744,10 +749,10 @@ operator|=
 name|false
 expr_stmt|;
 block|}
-comment|/// setByValArgumentFrameIndex - Record frame index for the byval
+comment|/// setArgumentFrameIndex - Record frame index for the byval
 comment|/// argument.
 name|void
-name|setByValArgumentFrameIndex
+name|setArgumentFrameIndex
 parameter_list|(
 specifier|const
 name|Argument
@@ -758,9 +763,9 @@ name|int
 name|FI
 parameter_list|)
 function_decl|;
-comment|/// getByValArgumentFrameIndex - Get frame index for the byval argument.
+comment|/// getArgumentFrameIndex - Get frame index for the byval argument.
 name|int
-name|getByValArgumentFrameIndex
+name|getArgumentFrameIndex
 parameter_list|(
 specifier|const
 name|Argument
@@ -822,6 +827,25 @@ parameter_list|,
 name|FunctionLoweringInfo
 modifier|&
 name|FLI
+parameter_list|)
+function_decl|;
+comment|/// AddLandingPadInfo - Extract the exception handling information from the
+comment|/// landingpad instruction and add them to the specified machine module info.
+name|void
+name|AddLandingPadInfo
+parameter_list|(
+specifier|const
+name|LandingPadInst
+modifier|&
+name|I
+parameter_list|,
+name|MachineModuleInfo
+modifier|&
+name|MMI
+parameter_list|,
+name|MachineBasicBlock
+modifier|*
+name|MBB
 parameter_list|)
 function_decl|;
 block|}

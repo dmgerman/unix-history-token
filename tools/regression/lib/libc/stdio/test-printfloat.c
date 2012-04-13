@@ -1474,7 +1474,7 @@ else|#
 directive|else
 name|testfmt
 argument_list|(
-literal|"0xc.90fdaa22168cp-2"
+literal|"0x1.921fb54442d18p+1"
 argument_list|,
 literal|"%La"
 argument_list|,
@@ -1484,7 +1484,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"0x8p-1077"
+literal|"0x1p-1074"
 argument_list|,
 literal|"%La"
 argument_list|,
@@ -1495,7 +1495,7 @@ argument_list|)
 expr_stmt|;
 name|testfmt
 argument_list|(
-literal|"0x9.8765p-1024"
+literal|"0x1.30ecap-1021"
 argument_list|,
 literal|"%La"
 argument_list|,

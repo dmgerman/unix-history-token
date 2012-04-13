@@ -611,6 +611,17 @@ name|SIGLWP
 value|SIGTHR
 end_define
 
+begin_define
+define|#
+directive|define
+name|SIGLIBRT
+value|33
+end_define
+
+begin_comment
+comment|/* reserved by real-time library. */
+end_comment
+
 begin_endif
 endif|#
 directive|endif
@@ -804,6 +815,10 @@ comment|/* pthread_attr_t * */
 block|}
 name|_sigev_thread
 struct|;
+name|unsigned
+name|short
+name|_kevent_flags
+decl_stmt|;
 name|long
 name|__spare__
 index|[
@@ -828,6 +843,13 @@ define|#
 directive|define
 name|sigev_notify_kqueue
 value|sigev_signo
+end_define
+
+begin_define
+define|#
+directive|define
+name|sigev_notify_kevent_flags
+value|_sigev_un._kevent_flags
 end_define
 
 begin_define

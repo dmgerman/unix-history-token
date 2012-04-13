@@ -170,7 +170,7 @@ comment|// exception. The general meaning is: adjust stack by OFFSET and pass
 comment|// execution to HANDLER. Many platform-related details also :)
 name|EH_RETURN
 block|,
-comment|// OUTCHAIN = EH_SJLJ_SETJMP(INCHAIN, buffer)
+comment|// RESULT, OUTCHAIN = EH_SJLJ_SETJMP(INCHAIN, buffer)
 comment|// This corresponds to the eh.sjlj.setjmp intrinsic.
 comment|// It takes an input chain and a pointer to the jump buffer as inputs
 comment|// and returns an outchain.
@@ -461,6 +461,12 @@ comment|// Select(COND, TRUEVAL, FALSEVAL).  If the type of the boolean COND is 
 comment|// i1 then the high bits must conform to getBooleanContents.
 name|SELECT
 block|,
+comment|// Select with a vector condition (op #0) and two vector operands (ops #1
+comment|// and #2), returning a vector result.  All vectors have the same length.
+comment|// Much like the scalar select and setcc, each bit in the condition selects
+comment|// whether the corresponding result element is taken from op #1 or op #2.
+name|VSELECT
+block|,
 comment|// Select with condition operator - This selects between a true value and
 comment|// a false value (ops #2 and #3) based on the boolean result of comparing
 comment|// the lhs and rhs (ops #0 and #1) of a conditional expression with the
@@ -471,15 +477,9 @@ comment|// SetCC operator - This evaluates to a true value iff the condition is
 comment|// true.  If the result value type is not i1 then the high bits conform
 comment|// to getBooleanContents.  The operands to this are the left and right
 comment|// operands to compare (ops #0, and #1) and the condition code to compare
-comment|// them with (op #2) as a CondCodeSDNode.
+comment|// them with (op #2) as a CondCodeSDNode. If the operands are vector types
+comment|// then the result type must also be a vector type.
 name|SETCC
-block|,
-comment|// RESULT = VSETCC(LHS, RHS, COND) operator - This evaluates to a vector of
-comment|// integer elements with all bits of the result elements set to true if the
-comment|// comparison is true or all cleared if the comparison is false.  The
-comment|// operands to this are the left and right operands to compare (LHS/RHS) and
-comment|// the condition code to compare them with (COND) as a CondCodeSDNode.
-name|VSETCC
 block|,
 comment|// SHL_PARTS/SRA_PARTS/SRL_PARTS - These operators are used for expanded
 comment|// integer shift operations, just like ADD/SUB_PARTS.  The operation
@@ -747,14 +747,19 @@ block|,
 comment|// HANDLENODE node - Used as a handle for various purposes.
 name|HANDLENODE
 block|,
-comment|// TRAMPOLINE - This corresponds to the init_trampoline intrinsic.
-comment|// It takes as input a token chain, the pointer to the trampoline,
-comment|// the pointer to the nested function, the pointer to pass for the
-comment|// 'nest' parameter, a SRCVALUE for the trampoline and another for
-comment|// the nested function (allowing targets to access the original
-comment|// Function*).  It produces the result of the intrinsic and a token
-comment|// chain as output.
-name|TRAMPOLINE
+comment|// INIT_TRAMPOLINE - This corresponds to the init_trampoline intrinsic.  It
+comment|// takes as input a token chain, the pointer to the trampoline, the pointer
+comment|// to the nested function, the pointer to pass for the 'nest' parameter, a
+comment|// SRCVALUE for the trampoline and another for the nested function (allowing
+comment|// targets to access the original Function*).  It produces a token chain as
+comment|// output.
+name|INIT_TRAMPOLINE
+block|,
+comment|// ADJUST_TRAMPOLINE - This corresponds to the adjust_trampoline intrinsic.
+comment|// It takes a pointer to the trampoline and produces a (possibly) new
+comment|// pointer to the same trampoline with platform-specific adjustments
+comment|// applied.  The pointer it returns points to an executable block of code.
+name|ADJUST_TRAMPOLINE
 block|,
 comment|// TRAP - Trapping instruction
 name|TRAP
@@ -773,22 +778,28 @@ comment|// operand specifying if the barrier applies to device and uncached memo
 comment|// and produces an output chain.
 name|MEMBARRIER
 block|,
+comment|// OUTCHAIN = ATOMIC_FENCE(INCHAIN, ordering, scope)
+comment|// This corresponds to the fence instruction. It takes an input chain, and
+comment|// two integer constants: an AtomicOrdering and a SynchronizationScope.
+name|ATOMIC_FENCE
+block|,
+comment|// Val, OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr)
+comment|// This corresponds to "load atomic" instruction.
+name|ATOMIC_LOAD
+block|,
+comment|// OUTCHAIN = ATOMIC_LOAD(INCHAIN, ptr, val)
+comment|// This corresponds to "store atomic" instruction.
+name|ATOMIC_STORE
+block|,
 comment|// Val, OUTCHAIN = ATOMIC_CMP_SWAP(INCHAIN, ptr, cmp, swap)
-comment|// this corresponds to the atomic.lcs intrinsic.
-comment|// cmp is compared to *ptr, and if equal, swap is stored in *ptr.
-comment|// the return is always the original value in *ptr
+comment|// This corresponds to the cmpxchg instruction.
 name|ATOMIC_CMP_SWAP
 block|,
 comment|// Val, OUTCHAIN = ATOMIC_SWAP(INCHAIN, ptr, amt)
-comment|// this corresponds to the atomic.swap intrinsic.
-comment|// amt is stored to *ptr atomically.
-comment|// the return is always the original value in *ptr
+comment|// Val, OUTCHAIN = ATOMIC_LOAD_[OpName](INCHAIN, ptr, amt)
+comment|// These correspond to the atomicrmw instruction.
 name|ATOMIC_SWAP
 block|,
-comment|// Val, OUTCHAIN = ATOMIC_LOAD_[OpName](INCHAIN, ptr, amt)
-comment|// this corresponds to the atomic.load.[OpName] intrinsic.
-comment|// op(*ptr, amt) is stored to *ptr atomically.
-comment|// the return is always the original value in *ptr
 name|ATOMIC_LOAD_ADD
 block|,
 name|ATOMIC_LOAD_SUB

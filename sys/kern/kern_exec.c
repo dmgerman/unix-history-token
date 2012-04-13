@@ -194,6 +194,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sched.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/sdt.h>
 end_include
 
@@ -2099,6 +2105,15 @@ name|v_vflag
 operator|&
 name|VV_TEXT
 expr_stmt|;
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|"vv_text"
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
@@ -2237,6 +2252,16 @@ name|textset
 operator|==
 literal|0
 condition|)
+block|{
+name|ASSERT_VOP_ELOCKED
+argument_list|(
+name|imgp
+operator|->
+name|vp
+argument_list|,
+literal|"vv_text"
+argument_list|)
+expr_stmt|;
 name|imgp
 operator|->
 name|vp
@@ -2246,6 +2271,7 @@ operator|&=
 operator|~
 name|VV_TEXT
 expr_stmt|;
+block|}
 name|error
 operator|=
 name|ENOEXEC
@@ -2622,7 +2648,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -2808,6 +2834,16 @@ name|td_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* 	 * mark as execed, wakeup the process that vforked (if any) and tell 	 * it that it now has its own resources back 	 */
 name|p
 operator|->
@@ -3023,7 +3059,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3342,7 +3378,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)
@@ -3573,7 +3609,7 @@ name|imgp
 operator|->
 name|vp
 argument_list|,
-name|LK_EXCLUSIVE
+name|LK_SHARED
 operator||
 name|LK_RETRY
 argument_list|)

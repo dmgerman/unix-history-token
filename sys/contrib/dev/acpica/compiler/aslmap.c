@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -148,7 +148,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|AML_FIELD_ATTRIB_SMB_BLOCK
+name|AML_FIELD_ATTRIB_BLOCK
 argument_list|,
 literal|0
 argument_list|,
@@ -160,7 +160,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|AML_FIELD_ATTRIB_SMB_BLOCK_CALL
+name|AML_FIELD_ATTRIB_BLOCK_CALL
 argument_list|,
 literal|0
 argument_list|,
@@ -172,19 +172,19 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|AML_FIELD_ATTRIB_SMB_BYTE
+name|AML_FIELD_ATTRIB_BYTE
 argument_list|,
 literal|0
 argument_list|,
 literal|0
 argument_list|)
 block|,
-comment|/* ACCESSATTRIB_WORD_CALL */
+comment|/* ACCESSATTRIB_MULTIBYTE */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|AML_FIELD_ATTRIB_SMB_WORD_CALL
+name|AML_FIELD_ATTRIB_MULTIBYTE
 argument_list|,
 literal|0
 argument_list|,
@@ -196,7 +196,31 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|AML_FIELD_ATTRIB_SMB_QUICK
+name|AML_FIELD_ATTRIB_QUICK
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* ACCESSATTRIB_RAW_BYTES */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+name|AML_FIELD_ATTRIB_RAW_BYTES
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* ACCESSATTRIB_RAW_PROCESS */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+name|AML_FIELD_ATTRIB_RAW_PROCESS
 argument_list|,
 literal|0
 argument_list|,
@@ -208,7 +232,7 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|AML_FIELD_ATTRIB_SMB_SEND_RCV
+name|AML_FIELD_ATTRIB_SEND_RCV
 argument_list|,
 literal|0
 argument_list|,
@@ -220,7 +244,19 @@ name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|AML_FIELD_ATTRIB_SMB_WORD
+name|AML_FIELD_ATTRIB_WORD
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* ACCESSATTRIB_WORD_CALL */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+name|AML_FIELD_ATTRIB_WORD_CALL
 argument_list|,
 literal|0
 argument_list|,
@@ -323,12 +359,24 @@ argument_list|,
 name|ACPI_BTYPE_INTEGER
 argument_list|)
 block|,
-comment|/* ADDRESSSPACE_FFIXEDHW */
+comment|/* ADDRESSINGMODE_7BIT */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
-name|ACPI_ADR_SPACE_FIXED_HARDWARE
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* ADDRESSINGMODE_10BIT */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
 argument_list|,
 literal|0
 argument_list|,
@@ -503,6 +551,66 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* BITSPERBYTE_EIGHT */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* BITSPERBYTE_FIVE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* BITSPERBYTE_NINE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* BITSPERBYTE_SEVEN */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* BITSPERBYTE_SIX */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* BREAK */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -587,6 +695,54 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* CLOCKPHASE_FIRST */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* CLOCKPHASE_SECOND */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* CLOCKPOLARITY_HIGH */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* CLOCKPOLARITY_LOW */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* CONCATENATE */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -621,6 +777,18 @@ argument_list|,
 literal|0
 argument_list|,
 name|ACPI_BTYPE_INTEGER
+argument_list|)
+block|,
+comment|/* CONNECTION */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_INT_CONNECTION_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|)
 block|,
 comment|/* CONTINUE */
@@ -711,6 +879,18 @@ comment|/* CREATEWORDFIELD */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_CREATE_WORD_FIELD_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* DATABUFFER */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -837,6 +1017,30 @@ argument_list|,
 literal|0
 argument_list|,
 name|NODE_AML_PACKAGE
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* DEVICEPOLARITY_HIGH */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* DEVICEPOLARITY_LOW */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1009,6 +1213,30 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* ENDIAN_BIG */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* ENDIAN_LITTLE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* ENDTAG */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -1141,12 +1369,60 @@ argument_list|,
 name|ACPI_BTYPE_INTEGER
 argument_list|)
 block|,
+comment|/* FIXEDDMA */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* FIXEDIO */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_DEFAULT_ARG_OP
 argument_list|,
 literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* FLOWCONTROL_HW */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* FLOWCONTROL_NONE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* FLOWCONTROL_SW */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
 argument_list|,
 literal|0
 argument_list|,
@@ -1173,6 +1449,42 @@ argument_list|,
 literal|0
 argument_list|,
 name|NODE_AML_PACKAGE
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* GPIOINT */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* GPIOIO */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* I2CSERIALBUS */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
 argument_list|,
 literal|0
 argument_list|)
@@ -1285,6 +1597,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* INTLEVEL_ACTIVEBOTH */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* INTLEVEL_ACTIVEHIGH */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -1363,6 +1687,54 @@ argument_list|(
 name|AML_BYTE_OP
 argument_list|,
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* IORESTRICT_IN */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* IORESTRICT_NONE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* IORESTRICT_OUT */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* IORESTRICT_PRESERVE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|3
 argument_list|,
 literal|0
 argument_list|,
@@ -2331,6 +2703,114 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* PARITYTYPE_EVEN */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PARITYTYPE_MARK */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PARITYTYPE_NONE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PARITYTYPE_ODD */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PARITYTYPE_SPACE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|4
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PIN_NOPULL */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PIN_PULLDEFAULT */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PIN_PULLDOWN */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* PIN_PULLUP */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* POWERRESOURCE */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -2505,6 +2985,42 @@ argument_list|(
 name|AML_RAW_DATA_BYTE
 argument_list|,
 name|ACPI_ADR_SPACE_EC
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* REGIONSPACE_FFIXEDHW */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_BYTE
+argument_list|,
+name|ACPI_ADR_SPACE_FIXED_HARDWARE
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* REGIONSPACE_GPIO */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_BYTE
+argument_list|,
+name|ACPI_ADR_SPACE_GPIO
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* REGIONSPACE_GSBUS */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_RAW_DATA_BYTE
+argument_list|,
+name|ACPI_ADR_SPACE_GSBUS
 argument_list|,
 literal|0
 argument_list|,
@@ -2739,12 +3255,36 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* SHARETYPE_EXCLUSIVEWAKE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* SHARETYPE_SHARED */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
 argument_list|,
 literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* SHARETYPE_SHAREDWAKE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|3
 argument_list|,
 literal|0
 argument_list|,
@@ -2799,10 +3339,46 @@ argument_list|,
 name|ACPI_BTYPE_INTEGER
 argument_list|)
 block|,
+comment|/* SLAVEMODE_CONTROLLERINIT */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* SLAVEMODE_DEVICEINIT */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* SLEEP */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_SLEEP_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* SPISERIALBUS */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
 argument_list|,
 literal|0
 argument_list|,
@@ -2836,6 +3412,54 @@ literal|0
 argument_list|)
 block|,
 comment|/* STARTDEPENDENTFN_NOPRI */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* STOPBITS_ONE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* STOPBITS_ONEPLUSHALF */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|2
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* STOPBITS_TWO */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|3
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* STOPBITS_ZERO */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP
@@ -3051,6 +3675,18 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* UART_SERIALBUS */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_DEFAULT_ARG_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* UNICODE */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -3171,6 +3807,30 @@ argument_list|,
 literal|0
 argument_list|)
 block|,
+comment|/* WIREMODE_FOUR */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* WIREMODE_THREE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|1
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
 comment|/* WORDBUSNUMBER */
 name|OP_TABLE_ENTRY
 argument_list|(
@@ -3208,6 +3868,78 @@ literal|0
 argument_list|)
 block|,
 comment|/* WORDSPACE */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* XFERSIZE_8 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* XFERSIZE_16 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* XFERSIZE_32 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* XFERSIZE_64 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* XFERSIZE_128 */
+name|OP_TABLE_ENTRY
+argument_list|(
+name|AML_BYTE_OP
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+block|,
+comment|/* XFERSIZE_256 */
 name|OP_TABLE_ENTRY
 argument_list|(
 name|AML_BYTE_OP

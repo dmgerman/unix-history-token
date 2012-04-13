@@ -190,10 +190,15 @@ argument_list|(
 argument|const MachineLoop *Loop
 argument_list|)
 block|{
+name|assert
+argument_list|(
 name|Deps
 operator|.
-name|clear
+name|empty
 argument_list|()
+operator|&&
+literal|"stale loop dependencies"
+argument_list|)
 block|;
 name|MachineBasicBlock
 operator|*

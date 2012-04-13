@@ -103,8 +103,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|KM_ZERO
+value|M_ZERO
+end_define
+
+begin_define
+define|#
+directive|define
+name|KM_NODEBUG
+value|M_NODUMP
+end_define
+
+begin_define
+define|#
+directive|define
 name|KMC_NODEBUG
-value|0
+value|UMA_ZONE_NODUMP
 end_define
 
 begin_define

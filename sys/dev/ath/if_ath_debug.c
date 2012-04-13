@@ -587,7 +587,7 @@ specifier|const
 name|struct
 name|ath_buf
 modifier|*
-name|bf
+name|first_bf
 parameter_list|,
 name|u_int
 name|qnum
@@ -606,11 +606,21 @@ modifier|*
 name|ts
 init|=
 operator|&
-name|bf
+name|first_bf
+operator|->
+name|bf_last
 operator|->
 name|bf_status
 operator|.
 name|ds_txstat
+decl_stmt|;
+specifier|const
+name|struct
+name|ath_buf
+modifier|*
+name|bf
+init|=
+name|first_bf
 decl_stmt|;
 name|struct
 name|ath_hal
@@ -639,6 +649,13 @@ argument_list|,
 name|ix
 argument_list|)
 expr_stmt|;
+while|while
+condition|(
+name|bf
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -666,8 +683,7 @@ control|)
 block|{
 name|printf
 argument_list|(
-literal|" (DS.V:%p DS.P:%p) L:%08x D:%08x F:04%x%s\n"
-literal|"        %08x %08x %08x %08x %08x %08x\n"
+literal|" (DS.V:%p DS.P:%p) L:%08x D:%08x F:%04x%s\n"
 argument_list|,
 name|ds
 argument_list|,
@@ -693,7 +709,9 @@ name|ds_data
 argument_list|,
 name|bf
 operator|->
-name|bf_txflags
+name|bf_state
+operator|.
+name|bfs_txflags
 argument_list|,
 operator|!
 name|done
@@ -711,6 +729,57 @@ condition|?
 literal|" *"
 else|:
 literal|" !"
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"        Seq: %d swtry: %d ADDBAW?: %d DOBAW?: %d\n"
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_retries
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_addedbaw
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_dobaw
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"        SEQNO_ASSIGNED: %d, NEED_SEQNO: %d\n"
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_seqno_assigned
+argument_list|,
+name|bf
+operator|->
+name|bf_state
+operator|.
+name|bfs_need_seqno
+argument_list|)
+expr_stmt|;
+name|printf
+argument_list|(
+literal|"        %08x %08x %08x %08x %08x %08x\n"
 argument_list|,
 name|ds
 operator|->
@@ -881,6 +950,18 @@ index|]
 argument_list|)
 expr_stmt|;
 block|}
+block|}
+name|printf
+argument_list|(
+literal|"  [end]\n"
+argument_list|)
+expr_stmt|;
+name|bf
+operator|=
+name|bf
+operator|->
+name|bf_next
+expr_stmt|;
 block|}
 block|}
 end_function

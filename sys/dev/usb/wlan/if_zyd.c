@@ -300,6 +300,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -517,30 +518,25 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
-name|name
 index|[
 name|IFNAMSIZ
 index|]
 parameter_list|,
 name|int
-name|unit
+parameter_list|,
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
-name|opmode
-parameter_list|,
-name|int
-name|flags
 parameter_list|,
 specifier|const
 name|uint8_t
-name|bssid
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 parameter_list|,
 specifier|const
 name|uint8_t
-name|mac
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
@@ -2854,7 +2850,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -3904,8 +3901,9 @@ argument_list|)
 block|{
 name|int
 name|i
-decl_stmt|,
-name|cnt
+decl_stmt|;
+name|int
+name|count
 decl_stmt|;
 if|if
 condition|(
@@ -3916,7 +3914,7 @@ operator|!=
 name|datalen
 condition|)
 continue|continue;
-name|cnt
+name|count
 operator|=
 name|rqp
 operator|->
@@ -3936,7 +3934,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|cnt
+name|count
 condition|;
 name|i
 operator|++
@@ -3983,19 +3981,19 @@ if|if
 condition|(
 name|i
 operator|!=
-name|cnt
+name|count
 condition|)
 continue|continue;
 comment|/* copy answer into caller-supplied buffer */
-name|bcopy
+name|memcpy
 argument_list|(
-name|cmd
-operator|->
-name|data
-argument_list|,
 name|rqp
 operator|->
 name|odata
+argument_list|,
+name|cmd
+operator|->
+name|data
 argument_list|,
 name|rqp
 operator|->
@@ -4016,6 +4014,10 @@ name|rqp
 operator|->
 name|olen
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|rqp
 operator|->
 name|odata
@@ -4402,6 +4404,9 @@ if|if
 condition|(
 name|ilen
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|cmd
@@ -4423,13 +4428,13 @@ argument_list|(
 name|code
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|idata
-argument_list|,
 name|cmd
 operator|.
 name|data
+argument_list|,
+name|idata
 argument_list|,
 name|ilen
 argument_list|)
@@ -5340,7 +5345,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -5649,7 +5654,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -6051,7 +6056,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -6166,7 +6171,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -6775,7 +6780,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -6971,7 +6976,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -7172,7 +7177,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 init|=
@@ -7312,7 +7317,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -7658,7 +7663,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -7929,7 +7934,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -8348,7 +8353,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -8505,12 +8510,17 @@ literal|0
 init|;
 name|i
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 name|N
 argument_list|(
 name|vco
 argument_list|)
 operator|-
 literal|1
+argument_list|)
 condition|;
 name|i
 operator|++
@@ -8692,7 +8702,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -8927,13 +8937,6 @@ name|int
 name|on
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
 name|int
 name|error
 decl_stmt|;
@@ -9038,7 +9041,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|int
 name|error
 decl_stmt|,
@@ -9387,7 +9390,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -9607,7 +9610,7 @@ name|N
 parameter_list|(
 name|a
 parameter_list|)
-value|(sizeof(a) / sizeof((a)[0]))
+value|((int)(sizeof(a) / sizeof((a)[0])))
 name|struct
 name|zyd_softc
 modifier|*
@@ -12862,6 +12865,9 @@ if|if
 condition|(
 name|rlen
 operator|>
+operator|(
+name|int
+operator|)
 name|MCLBYTES
 condition|)
 block|{
@@ -12895,6 +12901,9 @@ if|if
 condition|(
 name|rlen
 operator|>
+operator|(
+name|int
+operator|)
 name|MHLEN
 condition|)
 name|m
@@ -13925,6 +13934,9 @@ name|m_pkthdr
 operator|.
 name|len
 operator|>
+operator|(
+name|int
+operator|)
 name|ZYD_MAX_TXBUFSZ
 condition|)
 block|{
@@ -16585,10 +16597,19 @@ name|driver_t
 name|zyd_driver
 init|=
 block|{
+operator|.
+name|name
+operator|=
 literal|"zyd"
 block|,
+operator|.
+name|methods
+operator|=
 name|zyd_methods
 block|,
+operator|.
+name|size
+operator|=
 expr|sizeof
 operator|(
 expr|struct

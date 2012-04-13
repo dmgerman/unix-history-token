@@ -84,6 +84,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCCodeGenInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
@@ -613,7 +619,7 @@ argument_list|,
 argument|std::string *ErrorStr =
 literal|0
 argument_list|,
-argument|CodeGenOpt::Level OptLevel =                                    CodeGenOpt::Default
+argument|CodeGenOpt::Level OptLevel =                                  CodeGenOpt::Default
 argument_list|,
 argument|bool GVsWithCode = true
 argument_list|)
@@ -637,11 +643,13 @@ argument_list|,
 argument|JITMemoryManager *JMM =
 literal|0
 argument_list|,
-argument|CodeGenOpt::Level OptLevel =                                       CodeGenOpt::Default
+argument|CodeGenOpt::Level OptLevel =                                     CodeGenOpt::Default
 argument_list|,
 argument|bool GVsWithCode = true
 argument_list|,
-argument|CodeModel::Model CMM =                                       CodeModel::Default
+argument|Reloc::Model RM = Reloc::Default
+argument_list|,
+argument|CodeModel::Model CMM =                                     CodeModel::JITDefault
 argument_list|)
 argument_list|;
 comment|/// addModule - Add a Module to the list of modules that we can JIT from.
@@ -951,7 +959,6 @@ name|GenericValue
 modifier|*
 name|Ptr
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -1345,7 +1352,6 @@ name|GenericValue
 modifier|*
 name|Ptr
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -1437,6 +1443,11 @@ decl_stmt|;
 name|bool
 name|AllocateGVsWithCode
 decl_stmt|;
+name|Reloc
+operator|::
+name|Model
+name|RelocModel
+expr_stmt|;
 name|CodeModel
 operator|::
 name|Model
@@ -1494,11 +1505,17 @@ name|AllocateGVsWithCode
 operator|=
 name|false
 expr_stmt|;
+name|RelocModel
+operator|=
+name|Reloc
+operator|::
+name|Default
+expr_stmt|;
 name|CMModel
 operator|=
 name|CodeModel
 operator|::
-name|Default
+name|JITDefault
 expr_stmt|;
 name|UseMCJIT
 operator|=
@@ -1607,8 +1624,30 @@ operator|*
 name|this
 return|;
 block|}
+comment|/// setRelocationModel - Set the relocation model that the ExecutionEngine
+comment|/// target is using. Defaults to target specific default "Reloc::Default".
+name|EngineBuilder
+modifier|&
+name|setRelocationModel
+argument_list|(
+name|Reloc
+operator|::
+name|Model
+name|RM
+argument_list|)
+block|{
+name|RelocModel
+operator|=
+name|RM
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 comment|/// setCodeModel - Set the CodeModel that the ExecutionEngine target
-comment|/// data is using. Defaults to target specific default "CodeModel::Default".
+comment|/// data is using. Defaults to target specific default
+comment|/// "CodeModel::JITDefault".
 name|EngineBuilder
 modifier|&
 name|setCodeModel
@@ -1793,6 +1832,16 @@ name|string
 operator|>
 operator|&
 name|MAttrs
+argument_list|,
+name|Reloc
+operator|::
+name|Model
+name|RM
+argument_list|,
+name|CodeModel
+operator|::
+name|Model
+name|CM
 argument_list|,
 name|std
 operator|::

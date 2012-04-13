@@ -150,9 +150,12 @@ block|,
 comment|///< .subsections_via_symbols (MachO)
 name|MCAF_Code16
 block|,
-comment|///< .code 16
+comment|///< .code16 (X86) / .code 16 (ARM)
 name|MCAF_Code32
-comment|///< .code 32
+block|,
+comment|///< .code32 (X86) / .code 32 (ARM)
+name|MCAF_Code64
+comment|///< .code64 (X86)
 block|}
 enum|;
 block|}

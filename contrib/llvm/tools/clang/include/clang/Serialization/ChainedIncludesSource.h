@@ -186,16 +186,6 @@ argument|DeclarationName Name
 argument_list|)
 block|;
 name|virtual
-name|void
-name|MaterializeVisibleDecls
-argument_list|(
-specifier|const
-name|DeclContext
-operator|*
-name|DC
-argument_list|)
-block|;
-name|virtual
 name|ExternalLoadResult
 name|FindExternalLexicalDecls
 argument_list|(
@@ -215,8 +205,6 @@ operator|::
 name|Kind
 argument_list|)
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|Decl

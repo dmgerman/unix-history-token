@@ -268,6 +268,16 @@ end_decl_stmt
 begin_function_decl
 specifier|static
 name|void
+name|cmdloop
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|static
+name|void
 name|read_profile
 parameter_list|(
 name|char
@@ -676,6 +686,7 @@ comment|/*  * Read and execute commands.  "Top" is nonzero for the top level com
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|cmdloop
 parameter_list|(

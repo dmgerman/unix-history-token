@@ -212,13 +212,6 @@ end_function_decl
 
 begin_function_decl
 name|sigret_t
-name|onalrm
-parameter_list|()
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|sigret_t
 name|tstop
 parameter_list|()
 function_decl|;
@@ -2589,32 +2582,25 @@ operator|!
 name|interactive
 condition|)
 block|{
-comment|/* set up alarm */
-operator|(
-name|void
-operator|)
-name|signal
+name|sleep
 argument_list|(
-name|SIGALRM
-argument_list|,
-name|onalrm
-argument_list|)
-expr_stmt|;
-operator|(
-name|void
-operator|)
-name|alarm
-argument_list|(
-operator|(
-name|unsigned
-operator|)
 name|delay
 argument_list|)
 expr_stmt|;
-comment|/* wait for the rest of it .... */
-name|pause
+if|if
+condition|(
+name|leaveflag
+condition|)
+block|{
+name|end_screen
 argument_list|()
 expr_stmt|;
+name|exit
+argument_list|(
+literal|0
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 else|else
 while|while
@@ -4206,17 +4192,6 @@ name|status
 argument_list|)
 expr_stmt|;
 comment|/*NOTREACHED*/
-block|}
-end_function
-
-begin_function
-name|sigret_t
-name|onalrm
-parameter_list|()
-comment|/* SIGALRM handler */
-block|{
-comment|/* this is only used in batch mode to break out of the pause() */
-comment|/* return; */
 block|}
 end_function
 

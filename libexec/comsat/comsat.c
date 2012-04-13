@@ -188,6 +188,7 @@ file|<utmpx.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -210,6 +211,7 @@ value|120
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|hostname
 index|[
@@ -219,6 +221,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|jkfprintf
 parameter_list|(
@@ -237,6 +240,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|mailfor
 parameter_list|(
@@ -247,6 +251,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|notify
 parameter_list|(
@@ -265,6 +270,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|reapchildren
 parameter_list|(
@@ -493,6 +499,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|reapchildren
 parameter_list|(
@@ -519,6 +526,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|mailfor
 parameter_list|(
@@ -765,6 +773,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|notify
 parameter_list|(
@@ -1186,6 +1195,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|jkfprintf
 parameter_list|(

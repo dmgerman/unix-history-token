@@ -461,7 +461,7 @@ block|{
 comment|/* Optional baudrate. */
 name|arg
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 operator|=

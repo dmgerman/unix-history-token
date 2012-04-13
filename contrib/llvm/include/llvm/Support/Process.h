@@ -281,6 +281,17 @@ modifier|*
 name|ResetColor
 parameter_list|()
 function_decl|;
+comment|/// Change the program working directory to that given by \arg Path.
+specifier|static
+name|void
+name|SetWorkingDirectory
+argument_list|(
+name|std
+operator|::
+name|string
+name|Path
+argument_list|)
+decl_stmt|;
 comment|/// @}
 block|}
 empty_stmt|;

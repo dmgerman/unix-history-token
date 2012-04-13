@@ -2544,6 +2544,12 @@ decl_stmt|;
 name|int
 name|spin
 decl_stmt|;
+if|if
+condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
 comment|/* don't reset the timer when/if recursing */
 if|if
 condition|(
@@ -2860,6 +2866,12 @@ name|spin
 decl_stmt|;
 if|if
 condition|(
+name|SCHEDULER_STOPPED
+argument_list|()
+condition|)
+return|return;
+if|if
+condition|(
 name|lo
 operator|->
 name|lo_flags
@@ -3119,6 +3131,7 @@ block|}
 end_function
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -3137,6 +3150,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug_lock

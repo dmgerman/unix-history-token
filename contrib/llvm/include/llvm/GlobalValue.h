@@ -183,7 +183,7 @@ name|protected
 operator|:
 name|GlobalValue
 argument_list|(
-argument|const Type *ty
+argument|Type *ty
 argument_list|,
 argument|ValueTy vty
 argument_list|,

@@ -1047,7 +1047,7 @@ name|vsize
 operator|=
 literal|1
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT16
 case|:
@@ -1064,7 +1064,7 @@ name|vsize
 operator|=
 literal|2
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT32
 case|:
@@ -1081,7 +1081,7 @@ name|vsize
 operator|=
 literal|4
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT64
 case|:
@@ -1135,7 +1135,7 @@ name|vsize
 operator|=
 literal|2
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT32_ARRAY
 case|:
@@ -1152,7 +1152,7 @@ name|vsize
 operator|=
 literal|4
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT64_ARRAY
 case|:
@@ -1528,8 +1528,9 @@ argument_list|,
 operator|&
 name|extra
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|rerrno
@@ -1924,8 +1925,9 @@ expr_stmt|;
 if|if
 condition|(
 name|size
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 if|if
@@ -2519,8 +2521,9 @@ name|nv
 argument_list|,
 name|NULL
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|printf
@@ -3665,8 +3668,9 @@ argument_list|(
 name|nvh
 argument_list|)
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|PJDLOG_ASSERT
@@ -3715,8 +3719,9 @@ name|value
 argument_list|,
 name|vsize
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|PJDLOG_ASSERT
@@ -3787,8 +3792,9 @@ name|align
 argument_list|,
 name|vsize
 argument_list|)
-operator|<
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 block|{
 name|PJDLOG_ASSERT
@@ -4345,7 +4351,7 @@ name|vsize
 operator|=
 literal|2
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT32
 case|:
@@ -4368,7 +4374,7 @@ name|vsize
 operator|=
 literal|4
 expr_stmt|;
-comment|/* FALLTHOUGH */
+comment|/* FALLTHROUGH */
 case|case
 name|NV_TYPE_INT64
 case|:

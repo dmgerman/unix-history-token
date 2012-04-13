@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -89,6 +89,43 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|defined
+argument_list|(
+name|__U_BOOT__
+argument_list|)
+operator|&&
+name|defined
+argument_list|(
+name|CONFIG_HW_WATCHDOG
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<watchdog.h>
+end_include
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|WATCHDOG_RESET
+parameter_list|()
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_define
 define|#
 directive|define
@@ -162,7 +199,21 @@ end_define
 begin_define
 define|#
 directive|define
-name|NAND_TIMEOUT_USECS
+name|NAND_TIMEOUT_USECS_READ
+value|100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAND_TIMEOUT_USECS_WRITE
+value|1000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NAND_TIMEOUT_USECS_BLOCK_ERASE
 value|1000000
 end_define
 
@@ -175,7 +226,7 @@ name|_Dividend
 parameter_list|,
 name|_Divisor
 parameter_list|)
-value|(((_Dividend)+(_Divisor-1))/(_Divisor))
+value|(((_Dividend)+((_Divisor)-1))/(_Divisor))
 end_define
 
 begin_undef
@@ -194,7 +245,7 @@ parameter_list|,
 name|Y
 parameter_list|)
 define|\
-value|({ typeof (X) __x = (X), __y = (Y);     \                 (__x< __y) ? __x : __y; })
+value|({ typeof (X) __x = (X);                \            typeof (Y) __y = (Y);                \                 (__x< __y) ? __x : __y; })
 end_define
 
 begin_undef
@@ -213,7 +264,7 @@ parameter_list|,
 name|Y
 parameter_list|)
 define|\
-value|({ typeof (X) __x = (X), __y = (Y);     \                 (__x> __y) ? __x : __y; })
+value|({ typeof (X) __x = (X);                \            typeof (Y) __y = (Y);                \                 (__x> __y) ? __x : __y; })
 end_define
 
 begin_comment
@@ -330,6 +381,19 @@ literal|10
 block|}
 block|,
 comment|/* Mode 5, requries EDO timings */
+block|{
+literal|10
+block|,
+literal|10
+block|,
+literal|25
+block|,
+literal|5
+block|,
+literal|12
+block|}
+block|,
+comment|/* Mode 6, requires EDO timings */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -421,21 +485,17 @@ if|#
 directive|if
 name|defined
 argument_list|(
-name|CVMX_BUILD_FOR_UBOOT
+name|__U_BOOT__
 argument_list|)
-operator|&&
-name|CONFIG_OCTEON_NAND_STAGE2
 end_if
 
 begin_comment
 comment|/* For u-boot nand boot we need to play some tricks to be able ** to use this early in boot.  We put them in a special section that is merged ** with the text segment.  (Using the text segment directly results in an assembler warning.) */
 end_comment
 
-begin_define
-define|#
-directive|define
-name|USE_DATA_IN_TEXT
-end_define
+begin_comment
+comment|/*#define USE_DATA_IN_TEXT*/
+end_comment
 
 begin_endif
 endif|#
@@ -1969,7 +2029,7 @@ if|if
 condition|(
 name|mode
 operator|>
-literal|5
+literal|6
 condition|)
 block|{
 name|cvmx_dprintf
@@ -2484,6 +2544,19 @@ index|[
 literal|16
 index|]
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|octeon_has_feature
+argument_list|(
+name|OCTEON_FEATURE_NAND
+argument_list|)
+condition|)
+name|CVMX_NAND_RETURN
+argument_list|(
+name|CVMX_NAND_NO_DEVICE
+argument_list|)
+expr_stmt|;
 name|cvmx_nand_flags
 operator|=
 name|flags
@@ -2520,15 +2593,51 @@ condition|(
 operator|!
 name|cvmx_nand_buffer
 condition|)
+block|{
 name|cvmx_nand_buffer
 operator|=
-name|cvmx_bootmem_alloc
+name|cvmx_bootmem_alloc_named_flags
 argument_list|(
 name|CVMX_NAND_MAX_PAGE_AND_OOB_SIZE
 argument_list|,
 literal|128
+argument_list|,
+literal|"__nand_buffer"
+argument_list|,
+name|CVMX_BOOTMEM_FLAG_END_ALLOC
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+operator|!
+name|cvmx_nand_buffer
+condition|)
+block|{
+specifier|const
+name|cvmx_bootmem_named_block_desc_t
+modifier|*
+name|block_desc
+init|=
+name|cvmx_bootmem_find_named_block
+argument_list|(
+literal|"__nand_buffer"
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|block_desc
+condition|)
+name|cvmx_nand_buffer
+operator|=
+name|cvmx_phys_to_ptr
+argument_list|(
+name|block_desc
+operator|->
+name|base_addr
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 operator|!
@@ -3718,6 +3827,7 @@ literal|0x3
 operator|)
 expr_stmt|;
 comment|/* NAND page size in bytes */
+comment|/* NAND OOB (spare) size in bytes (per page) */
 name|cvmx_nand_state
 index|[
 name|chip
@@ -3725,9 +3835,32 @@ index|]
 operator|.
 name|oob_size
 operator|=
-literal|128
+operator|(
+name|cvmx_nand_state
+index|[
+name|chip
+index|]
+operator|.
+name|page_size
+operator|/
+literal|512
+operator|)
+operator|*
+operator|(
+operator|(
+name|nand_id_buffer
+index|[
+literal|3
+index|]
+operator|&
+literal|4
+operator|)
+condition|?
+literal|16
+else|:
+literal|8
+operator|)
 expr_stmt|;
-comment|/* NAND OOB (spare) size in bytes (per page) */
 name|cvmx_nand_state
 index|[
 name|chip
@@ -3837,6 +3970,33 @@ operator|.
 name|pages_per_block
 operator|)
 expr_stmt|;
+switch|switch
+condition|(
+name|nand_id_buffer
+index|[
+literal|1
+index|]
+condition|)
+block|{
+case|case
+literal|0xD3
+case|:
+comment|/* K9F8G08U0M */
+case|case
+literal|0xDC
+case|:
+comment|/* K9F4G08U0B */
+name|cvmx_nand_state
+index|[
+name|chip
+index|]
+operator|.
+name|onfi_timing
+operator|=
+literal|6
+expr_stmt|;
+break|break;
+default|default:
 name|cvmx_nand_state
 index|[
 name|chip
@@ -3846,6 +4006,8 @@ name|onfi_timing
 operator|=
 literal|2
 expr_stmt|;
+break|break;
+block|}
 if|if
 condition|(
 name|cvmx_unlikely
@@ -4855,7 +5017,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @INTERNAL  * Build the set of command common to most transactions  * @param chip      NAND chip to program  * @param cmd_data  NAND comamnd for CLE cycle 1  * @param num_address_cycles  *                  Number of address cycles to put on the bus  * @param nand_address  *                  Data to be put on the bus. It is translated according to  *                  the rules in the file information section.  *  * @param cmd_data2 If non zero, adds a second CLE cycle used by a number of NAND  *                  transactions.  *  * @return Zero on success, a negative cvmx_nand_status_t error code on failure  */
+comment|/**  * @INTERNAL  * Build the set of command common to most transactions  * @param chip      NAND chip to program  * @param cmd_data  NAND command for CLE cycle 1  * @param num_address_cycles  *                  Number of address cycles to put on the bus  * @param nand_address  *                  Data to be put on the bus. It is translated according to  *                  the rules in the file information section.  *  * @param cmd_data2 If non zero, adds a second CLE cycle used by a number of NAND  *                  transactions.  *  * @return Zero on success, a negative cvmx_nand_status_t error code on failure  */
 end_comment
 
 begin_function
@@ -6014,7 +6176,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * @INTERNAL  * Perform a low level NAND read command  *  * @param chip   Chip to read from  * @param nand_command1  *               First command cycle value  * @param address_cycles  *               Number of address cycles after comand 1  * @param nand_address  *               NAND address to use for address cycles  * @param nand_command2  *               NAND comamnd cycle 2 if not zero  * @param buffer_address  *               Physical address to DMA into  * @param buffer_length  *               Length of the transfer in bytes  *  * @return Number of bytes transfered or a negative error code  */
+comment|/**  * @INTERNAL  * Perform a low level NAND read command  *  * @param chip   Chip to read from  * @param nand_command1  *               First command cycle value  * @param address_cycles  *               Number of address cycles after comand 1  * @param nand_address  *               NAND address to use for address cycles  * @param nand_command2  *               NAND command cycle 2 if not zero  * @param buffer_address  *               Physical address to DMA into  * @param buffer_length  *               Length of the transfer in bytes  *  * @return Number of bytes transfered or a negative error code  */
 end_comment
 
 begin_function
@@ -6410,6 +6572,9 @@ argument_list|(
 name|CVMX_NAND_NO_MEMORY
 argument_list|)
 expr_stmt|;
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
 comment|/* Wait for the DMA to complete */
 if|if
 condition|(
@@ -6425,14 +6590,19 @@ operator|==
 argument_list|,
 literal|0
 argument_list|,
-name|NAND_TIMEOUT_USECS
+name|NAND_TIMEOUT_USECS_READ
 argument_list|)
 condition|)
+block|{
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
 name|CVMX_NAND_RETURN
 argument_list|(
 name|CVMX_NAND_TIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Return the number of bytes transfered */
 name|ndf_dma_cfg
 operator|.
@@ -7115,6 +7285,9 @@ name|CVMX_NAND_NO_MEMORY
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the DMA to complete */
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|CVMX_WAIT_FOR_FIELD64
@@ -7129,14 +7302,19 @@ operator|==
 argument_list|,
 literal|0
 argument_list|,
-name|NAND_TIMEOUT_USECS
+name|NAND_TIMEOUT_USECS_WRITE
 argument_list|)
 condition|)
+block|{
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
 name|CVMX_NAND_RETURN
 argument_list|(
 name|CVMX_NAND_TIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 name|CVMX_NAND_RETURN
 argument_list|(
 name|CVMX_NAND_SUCCESS
@@ -7292,6 +7470,9 @@ name|CVMX_NAND_NO_MEMORY
 argument_list|)
 expr_stmt|;
 comment|/* Wait for the command queue to be idle, which means the wait is done */
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
 if|if
 condition|(
 name|CVMX_WAIT_FOR_FIELD64
@@ -7306,14 +7487,19 @@ operator|==
 argument_list|,
 literal|1
 argument_list|,
-name|NAND_TIMEOUT_USECS
+name|NAND_TIMEOUT_USECS_BLOCK_ERASE
 argument_list|)
 condition|)
+block|{
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
 name|CVMX_NAND_RETURN
 argument_list|(
 name|CVMX_NAND_TIMEOUT
 argument_list|)
 expr_stmt|;
+block|}
 name|CVMX_NAND_RETURN
 argument_list|(
 name|CVMX_NAND_SUCCESS

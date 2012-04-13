@@ -537,7 +537,7 @@ comment|/* XXX: for buf.c::getblk() */
 end_comment
 
 begin_comment
-comment|/* publically visible functions */
+comment|/* publicly visible functions */
 end_comment
 
 begin_function
@@ -1038,6 +1038,40 @@ goto|goto
 name|leave_ffs_parse_opts
 goto|;
 block|}
+name|rv
+operator|=
+literal|1
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|var
+argument_list|,
+literal|"label"
+argument_list|)
+operator|==
+literal|0
+condition|)
+block|{
+name|strlcpy
+argument_list|(
+name|ffs_opts
+operator|->
+name|label
+argument_list|,
+name|val
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|ffs_opts
+operator|->
+name|label
+argument_list|)
+argument_list|)
+expr_stmt|;
 name|rv
 operator|=
 literal|1
@@ -4138,15 +4172,24 @@ argument_list|(
 name|path
 argument_list|)
 argument_list|,
-literal|"%s/%s"
+literal|"%s/%s/%s"
 argument_list|,
-name|dir
+name|cur
+operator|->
+name|root
+argument_list|,
+name|cur
+operator|->
+name|path
 argument_list|,
 name|cur
 operator|->
 name|name
 argument_list|)
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|path

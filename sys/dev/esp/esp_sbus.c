@@ -4,11 +4,11 @@ comment|/*-  * Copyright (c) 2004 Scott Long  * Copyright (c) 2005 Marius Strobl
 end_comment
 
 begin_comment
-comment|/*	$NetBSD: esp_sbus.c,v 1.31 2005/02/27 00:27:48 perry Exp $	*/
+comment|/*	$NetBSD: esp_sbus.c,v 1.51 2009/09/17 16:28:12 tsutsui Exp $	*/
 end_comment
 
 begin_comment
-comment|/*-  * Copyright (c) 1997, 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Charles M. Hannum; Jason R. Thorpe of the Numerical Aerospace  * Simulation Facility, NASA Ames Research Center; Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  * 3. All advertising materials mentioning features or use of this software  *    must display the following acknowledgement:  *	This product includes software developed by the NetBSD  *	Foundation, Inc. and its contributors.  * 4. Neither the name of The NetBSD Foundation nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1997, 1998 The NetBSD Foundation, Inc.  * All rights reserved.  *  * This code is derived from software contributed to The NetBSD Foundation  * by Charles M. Hannum; Jason R. Thorpe of the Numerical Aerospace  * Simulation Facility, NASA Ames Research Center; Paul Kranenburg.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS  * ``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED  * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR  * PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS  * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/rman.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<dev/ofw/ofw_bus.h>
 end_include
 
@@ -95,12 +101,6 @@ begin_include
 include|#
 directive|include
 file|<machine/resource.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/rman.h>
 end_include
 
 begin_include
@@ -170,9 +170,7 @@ name|ncr53c9x_softc
 name|sc_ncr53c9x
 decl_stmt|;
 comment|/* glue to MI code */
-name|struct
-name|device
-modifier|*
+name|device_t
 name|sc_dev
 decl_stmt|;
 name|struct
@@ -198,13 +196,6 @@ comment|/* pointer to my DMA */
 block|}
 struct|;
 end_struct
-
-begin_decl_stmt
-specifier|static
-name|devclass_t
-name|esp_devclass
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 specifier|static
@@ -318,11 +309,7 @@ argument_list|,
 name|esp_resume
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -422,11 +409,7 @@ argument_list|,
 name|esp_resume
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -490,7 +473,7 @@ end_comment
 
 begin_function_decl
 specifier|static
-name|u_char
+name|uint8_t
 name|esp_read_reg
 parameter_list|(
 name|struct
@@ -517,7 +500,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_char
+name|uint8_t
 name|v
 parameter_list|)
 function_decl|;
@@ -572,7 +555,8 @@ name|ncr53c9x_softc
 modifier|*
 name|sc
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 name|addr
 parameter_list|,
@@ -666,6 +650,7 @@ specifier|static
 specifier|const
 name|struct
 name|ncr53c9x_glue
+specifier|const
 name|esp_sbus_glue
 init|=
 block|{
@@ -686,11 +671,7 @@ block|,
 name|esp_dma_stop
 block|,
 name|esp_dma_isactive
-block|,
-name|NULL
-block|,
-comment|/* gl_clear_latched_intr */
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -972,13 +953,13 @@ argument_list|,
 name|NULL
 argument_list|,
 comment|/* filter, filterarg */
-name|BUS_SPACE_MAXSIZE_32BIT
+name|BUS_SPACE_MAXSIZE
 argument_list|,
 comment|/* maxsize */
-literal|0
+name|BUS_SPACE_UNRESTRICTED
 argument_list|,
 comment|/* nsegments */
-name|BUS_SPACE_MAXSIZE_32BIT
+name|BUS_SPACE_MAXSIZE
 argument_list|,
 comment|/* maxsegsize */
 literal|0
@@ -1910,36 +1891,6 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Attach the DMA engine. */
-name|error
-operator|=
-name|lsi64854_attach
-argument_list|(
-name|esc
-operator|->
-name|sc_dma
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|error
-operator|!=
-literal|0
-condition|)
-block|{
-name|device_printf
-argument_list|(
-name|esc
-operator|->
-name|sc_dev
-argument_list|,
-literal|"lsi64854_attach failed\n"
-argument_list|)
-expr_stmt|;
-goto|goto
-name|fail_lock
-goto|;
-block|}
 name|sc
 operator|->
 name|sc_id
@@ -2136,14 +2087,12 @@ operator||
 name|NCRCFG2_RPE
 operator|)
 condition|)
-block|{
 name|sc
 operator|->
 name|sc_rev
 operator|=
 name|NCR_VARIANT_ESP100
 expr_stmt|;
-block|}
 else|else
 block|{
 name|sc
@@ -2216,14 +2165,12 @@ operator||
 name|NCRCFG3_FCLK
 operator|)
 condition|)
-block|{
 name|sc
 operator|->
 name|sc_rev
 operator|=
 name|NCR_VARIANT_ESP100A
 expr_stmt|;
-block|}
 else|else
 block|{
 comment|/* NCRCFG2_FE enables> 64K transfers. */
@@ -2335,8 +2282,12 @@ argument_list|,
 literal|"Unknown chip\n"
 argument_list|)
 expr_stmt|;
+name|error
+operator|=
+name|ENXIO
+expr_stmt|;
 goto|goto
-name|fail_lsi
+name|fail_lock
 goto|;
 block|}
 block|}
@@ -2360,7 +2311,6 @@ argument_list|)
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* 	 * XXX minsync and maxxfer _should_ be set up in MI code, 	 * XXX but it appears to have some dependency on what sort 	 * XXX of DMA we're hooked up to, etc. 	 */
 comment|/* 	 * This is the value used to start sync negotiations 	 * Note that the NCR register "SYNCTP" is programmed 	 * in "clocks per byte", and has a minimum value of 4. 	 * The SCSI period used in negotiation is one-fourth 	 * of the time (in nanoseconds) needed to transfer one byte. 	 * Since the chip's clock is given in MHz, we have the following 	 * formula: 4 * period = (1000 / freq) * 4 	 */
 name|sc
 operator|->
@@ -2371,6 +2321,15 @@ operator|/
 name|sc
 operator|->
 name|sc_freq
+expr_stmt|;
+comment|/* 	 * Except for some variants the maximum transfer size is 64k. 	 */
+name|sc
+operator|->
+name|sc_maxxfer
+operator|=
+literal|64
+operator|*
+literal|1024
 expr_stmt|;
 name|sc
 operator|->
@@ -2384,7 +2343,7 @@ name|sc_extended_geom
 operator|=
 literal|1
 expr_stmt|;
-comment|/* 	 * Alas, we must now modify the value a bit, because it's 	 * only valid when can switch on FASTCLK and FASTSCSI bits 	 * in config register 3... 	 */
+comment|/* 	 * Alas, we must now modify the value a bit, because it's 	 * only valid when we can switch on FASTCLK and FASTSCSI bits 	 * in the config register 3... 	 */
 switch|switch
 condition|(
 name|sc
@@ -2403,14 +2362,6 @@ name|MSG_EXT_WDTR_BUS_8_BIT
 expr_stmt|;
 name|sc
 operator|->
-name|sc_maxxfer
-operator|=
-literal|64
-operator|*
-literal|1024
-expr_stmt|;
-name|sc
-operator|->
 name|sc_minsync
 operator|=
 literal|0
@@ -2420,33 +2371,6 @@ break|break;
 case|case
 name|NCR_VARIANT_ESP100A
 case|:
-name|sc
-operator|->
-name|sc_maxwidth
-operator|=
-name|MSG_EXT_WDTR_BUS_8_BIT
-expr_stmt|;
-name|sc
-operator|->
-name|sc_maxxfer
-operator|=
-literal|64
-operator|*
-literal|1024
-expr_stmt|;
-comment|/* Min clocks/byte is 5 */
-name|sc
-operator|->
-name|sc_minsync
-operator|=
-name|ncr53c9x_cpb2stp
-argument_list|(
-name|sc
-argument_list|,
-literal|5
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|NCR_VARIANT_ESP200
 case|:
@@ -2455,16 +2379,6 @@ operator|->
 name|sc_maxwidth
 operator|=
 name|MSG_EXT_WDTR_BUS_8_BIT
-expr_stmt|;
-name|sc
-operator|->
-name|sc_maxxfer
-operator|=
-literal|16
-operator|*
-literal|1024
-operator|*
-literal|1024
 expr_stmt|;
 comment|/* Min clocks/byte is 5 */
 name|sc
@@ -2544,6 +2458,50 @@ operator|*
 literal|1024
 expr_stmt|;
 break|break;
+block|}
+comment|/* 	 * Given that we allocate resources based on sc->sc_maxxfer it doesn't 	 * make sense to supply a value higher than the maximum actually used. 	 */
+name|sc
+operator|->
+name|sc_maxxfer
+operator|=
+name|min
+argument_list|(
+name|sc
+operator|->
+name|sc_maxxfer
+argument_list|,
+name|MAXPHYS
+argument_list|)
+expr_stmt|;
+comment|/* Attach the DMA engine. */
+name|error
+operator|=
+name|lsi64854_attach
+argument_list|(
+name|esc
+operator|->
+name|sc_dma
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|device_printf
+argument_list|(
+name|esc
+operator|->
+name|sc_dev
+argument_list|,
+literal|"lsi64854_attach failed\n"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|fail_lock
+goto|;
 block|}
 comment|/* Establish interrupt channel. */
 name|i
@@ -2889,6 +2847,7 @@ specifier|static
 specifier|const
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|r_name
@@ -2897,6 +2856,7 @@ name|int
 name|r_flag
 decl_stmt|;
 block|}
+decl|const
 name|esp__read_regnames
 index|[]
 init|=
@@ -3020,8 +2980,10 @@ end_struct
 begin_struct
 specifier|static
 specifier|const
+specifier|const
 struct|struct
 block|{
+specifier|const
 name|char
 modifier|*
 name|r_name
@@ -3030,6 +2992,7 @@ name|int
 name|r_flag
 decl_stmt|;
 block|}
+decl|const
 name|esp__write_regnames
 index|[]
 init|=
@@ -3157,7 +3120,7 @@ end_endif
 
 begin_function
 specifier|static
-name|u_char
+name|uint8_t
 name|esp_read_reg
 parameter_list|(
 name|struct
@@ -3181,7 +3144,7 @@ operator|*
 operator|)
 name|sc
 decl_stmt|;
-name|u_char
+name|uint8_t
 name|v
 decl_stmt|;
 name|v
@@ -3269,7 +3232,7 @@ parameter_list|,
 name|int
 name|reg
 parameter_list|,
-name|u_char
+name|uint8_t
 name|v
 parameter_list|)
 block|{
@@ -3467,7 +3430,8 @@ name|ncr53c9x_softc
 modifier|*
 name|sc
 parameter_list|,
-name|caddr_t
+name|void
+modifier|*
 modifier|*
 name|addr
 parameter_list|,

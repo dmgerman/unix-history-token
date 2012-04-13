@@ -3649,7 +3649,14 @@ expr_stmt|;
 if|if
 condition|(
 name|rc
+operator|==
+literal|0
 condition|)
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 ifdef|#

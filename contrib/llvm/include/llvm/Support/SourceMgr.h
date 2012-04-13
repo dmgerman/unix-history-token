@@ -275,6 +275,25 @@ operator|=
 name|Ctx
 expr_stmt|;
 block|}
+name|DiagHandlerTy
+name|getDiagHandler
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DiagHandler
+return|;
+block|}
+name|void
+operator|*
+name|getDiagContext
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DiagContext
+return|;
+block|}
 specifier|const
 name|SrcBuffer
 modifier|&
@@ -516,8 +535,12 @@ name|true
 argument_list|)
 decl|const
 decl_stmt|;
-name|private
-label|:
+comment|/// PrintIncludeStack - Prints the names of included files and the line of the
+comment|/// file they were included from.  A diagnostic handler can use this before
+comment|/// printing its custom formatted message.
+comment|///
+comment|/// @param IncludeLoc - The line of the include.
+comment|/// @param OS the raw_ostream to print on.
 name|void
 name|PrintIncludeStack
 argument_list|(

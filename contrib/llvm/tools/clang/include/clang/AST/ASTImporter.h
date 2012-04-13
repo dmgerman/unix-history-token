@@ -113,7 +113,7 @@ name|class
 name|DeclContext
 decl_stmt|;
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|Expr
@@ -238,8 +238,6 @@ name|ImportedFileIDs
 expr_stmt|;
 comment|/// \brief Imported, anonymous tag declarations that are missing their
 comment|/// corresponding typedefs.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|TagDecl

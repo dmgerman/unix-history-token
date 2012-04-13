@@ -601,6 +601,57 @@ init|=
 literal|12
 block|}
 enum|;
+comment|/// These are values used in the bitcode files to encode AtomicRMW operations.
+comment|/// The values of these enums have no fixed relation to the LLVM IR enum
+comment|/// values.  Changing these will break compatibility with old files.
+enum|enum
+name|RMWOperations
+block|{
+name|RMW_XCHG
+init|=
+literal|0
+block|,
+name|RMW_ADD
+init|=
+literal|1
+block|,
+name|RMW_SUB
+init|=
+literal|2
+block|,
+name|RMW_AND
+init|=
+literal|3
+block|,
+name|RMW_NAND
+init|=
+literal|4
+block|,
+name|RMW_OR
+init|=
+literal|5
+block|,
+name|RMW_XOR
+init|=
+literal|6
+block|,
+name|RMW_MAX
+init|=
+literal|7
+block|,
+name|RMW_MIN
+init|=
+literal|8
+block|,
+name|RMW_UMAX
+init|=
+literal|9
+block|,
+name|RMW_UMIN
+init|=
+literal|10
+block|}
+enum|;
 comment|/// OverflowingBinaryOperatorOptionalFlags - Flags for serializing
 comment|/// OverflowingBinaryOperator's SubclassOptionalData contents.
 enum|enum
@@ -623,6 +674,52 @@ block|{
 name|PEO_EXACT
 init|=
 literal|0
+block|}
+enum|;
+comment|/// Encoded AtomicOrdering values.
+enum|enum
+name|AtomicOrderingCodes
+block|{
+name|ORDERING_NOTATOMIC
+init|=
+literal|0
+block|,
+name|ORDERING_UNORDERED
+init|=
+literal|1
+block|,
+name|ORDERING_MONOTONIC
+init|=
+literal|2
+block|,
+name|ORDERING_ACQUIRE
+init|=
+literal|3
+block|,
+name|ORDERING_RELEASE
+init|=
+literal|4
+block|,
+name|ORDERING_ACQREL
+init|=
+literal|5
+block|,
+name|ORDERING_SEQCST
+init|=
+literal|6
+block|}
+enum|;
+comment|/// Encoded SynchronizationScope values.
+enum|enum
+name|AtomicSynchScopeCodes
+block|{
+name|SYNCHSCOPE_SINGLETHREAD
+init|=
+literal|0
+block|,
+name|SYNCHSCOPE_CROSSTHREAD
+init|=
+literal|1
 block|}
 enum|;
 comment|// The function body block (FUNCTION_BLOCK_ID) describes function bodies.  It
@@ -785,7 +882,47 @@ comment|// CALL:       [attr, fnty, fnid, args...]
 name|FUNC_CODE_DEBUG_LOC
 init|=
 literal|35
+block|,
 comment|// DEBUG_LOC:  [Line,Col,ScopeVal, IAVal]
+name|FUNC_CODE_INST_FENCE
+init|=
+literal|36
+block|,
+comment|// FENCE: [ordering, synchscope]
+name|FUNC_CODE_INST_CMPXCHG
+init|=
+literal|37
+block|,
+comment|// CMPXCHG: [ptrty,ptr,cmp,new, align, vol,
+comment|//           ordering, synchscope]
+name|FUNC_CODE_INST_ATOMICRMW
+init|=
+literal|38
+block|,
+comment|// ATOMICRMW: [ptrty,ptr,val, operation,
+comment|//             align, vol,
+comment|//             ordering, synchscope]
+name|FUNC_CODE_INST_RESUME
+init|=
+literal|39
+block|,
+comment|// RESUME:     [opval]
+name|FUNC_CODE_INST_LANDINGPAD
+init|=
+literal|40
+block|,
+comment|// LANDINGPAD: [ty,val,val,num,id0,val0...]
+name|FUNC_CODE_INST_LOADATOMIC
+init|=
+literal|41
+block|,
+comment|// LOAD: [opty, op, align, vol,
+comment|//        ordering, synchscope]
+name|FUNC_CODE_INST_STOREATOMIC
+init|=
+literal|42
+comment|// STORE: [ptrty,ptr,val, align, vol
+comment|//         ordering, synchscope]
 block|}
 enum|;
 block|}

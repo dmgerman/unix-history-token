@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/AST/SelectorLocationsKind.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/IdentifierTable.h"
 end_include
 
@@ -1947,7 +1953,7 @@ argument_list|()
 decl_stmt|;
 name|ObjCMethodDecl
 operator|::
-name|param_iterator
+name|param_const_iterator
 name|P
 operator|=
 name|Setter
@@ -1992,7 +1998,7 @@ condition|)
 block|{
 name|ObjCMethodDecl
 operator|::
-name|param_iterator
+name|param_const_iterator
 name|P
 operator|=
 name|Setter
@@ -2344,13 +2350,48 @@ operator|:
 name|public
 name|Expr
 block|{
+comment|/// \brief Stores either the selector that this message is sending
+comment|/// to (when \c HasMethod is zero) or an \c ObjCMethodDecl pointer
+comment|/// referring to the method that we type-checked against.
+name|uintptr_t
+name|SelectorOrMethod
+block|;    enum
+block|{
+name|NumArgsBitWidth
+operator|=
+literal|16
+block|}
+block|;
 comment|/// \brief The number of arguments in the message send, not
 comment|/// including the receiver.
 name|unsigned
 name|NumArgs
 operator|:
-literal|16
+name|NumArgsBitWidth
 block|;
+name|void
+name|setNumArgs
+argument_list|(
+argument|unsigned Num
+argument_list|)
+block|{
+name|assert
+argument_list|(
+operator|(
+name|Num
+operator|>>
+name|NumArgsBitWidth
+operator|)
+operator|==
+literal|0
+operator|&&
+literal|"Num of args is out of range!"
+argument_list|)
+block|;
+name|NumArgs
+operator|=
+name|Num
+block|;   }
 comment|/// \brief The kind of message send this is, which is one of the
 comment|/// ReceiverKind values.
 comment|///
@@ -2377,20 +2418,17 @@ name|IsDelegateInitCall
 operator|:
 literal|1
 block|;
+comment|/// \brief Whether the locations of the selector identifiers are in a
+comment|/// "standard" position, a enum SelectorLocationsKind.
+name|unsigned
+name|SelLocsKind
+operator|:
+literal|2
+block|;
 comment|/// \brief When the message expression is a send to 'super', this is
 comment|/// the location of the 'super' keyword.
 name|SourceLocation
 name|SuperLoc
-block|;
-comment|/// \brief Stores either the selector that this message is sending
-comment|/// to (when \c HasMethod is zero) or an \c ObjCMethodDecl pointer
-comment|/// referring to the method that we type-checked against.
-name|uintptr_t
-name|SelectorOrMethod
-block|;
-comment|/// \brief Location of the selector.
-name|SourceLocation
-name|SelectorLoc
 block|;
 comment|/// \brief The source locations of the open and close square
 comment|/// brackets ('[' and ']', respectively).
@@ -2413,9 +2451,9 @@ argument_list|,
 name|Empty
 argument_list|)
 block|,
-name|NumArgs
+name|SelectorOrMethod
 argument_list|(
-name|NumArgs
+literal|0
 argument_list|)
 block|,
 name|Kind
@@ -2432,12 +2470,12 @@ name|IsDelegateInitCall
 argument_list|(
 literal|0
 argument_list|)
-block|,
-name|SelectorOrMethod
+block|{
+name|setNumArgs
 argument_list|(
-literal|0
+name|NumArgs
 argument_list|)
-block|{ }
+block|;   }
 name|ObjCMessageExpr
 argument_list|(
 argument|QualType T
@@ -2454,13 +2492,13 @@ argument|QualType SuperType
 argument_list|,
 argument|Selector Sel
 argument_list|,
-argument|SourceLocation SelLoc
+argument|ArrayRef<SourceLocation> SelLocs
+argument_list|,
+argument|SelectorLocationsKind SelLocsK
 argument_list|,
 argument|ObjCMethodDecl *Method
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
 argument_list|)
@@ -2477,13 +2515,13 @@ argument|TypeSourceInfo *Receiver
 argument_list|,
 argument|Selector Sel
 argument_list|,
-argument|SourceLocation SelLoc
+argument|ArrayRef<SourceLocation> SelLocs
+argument_list|,
+argument|SelectorLocationsKind SelLocsK
 argument_list|,
 argument|ObjCMethodDecl *Method
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
 argument_list|)
@@ -2500,15 +2538,25 @@ argument|Expr *Receiver
 argument_list|,
 argument|Selector Sel
 argument_list|,
-argument|SourceLocation SelLoc
+argument|ArrayRef<SourceLocation> SelLocs
+argument_list|,
+argument|SelectorLocationsKind SelLocsK
 argument_list|,
 argument|ObjCMethodDecl *Method
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
+argument_list|)
+block|;
+name|void
+name|initArgsAndSelLocs
+argument_list|(
+argument|ArrayRef<Expr *> Args
+argument_list|,
+argument|ArrayRef<SourceLocation> SelLocs
+argument_list|,
+argument|SelectorLocationsKind SelLocsK
 argument_list|)
 block|;
 comment|/// \brief Retrieve the pointer value of the message receiver.
@@ -2565,6 +2613,125 @@ operator|)
 operator|=
 name|Value
 block|;   }
+name|SelectorLocationsKind
+name|getSelLocsKind
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|SelectorLocationsKind
+operator|)
+name|SelLocsKind
+return|;
+block|}
+name|bool
+name|hasStandardSelLocs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|getSelLocsKind
+argument_list|()
+operator|!=
+name|SelLoc_NonStandard
+return|;
+block|}
+comment|/// \brief Get a pointer to the stored selector identifiers locations array.
+comment|/// No locations will be stored if HasStandardSelLocs is true.
+name|SourceLocation
+operator|*
+name|getStoredSelLocs
+argument_list|()
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+name|SourceLocation
+operator|*
+operator|>
+operator|(
+name|getArgs
+argument_list|()
+operator|+
+name|getNumArgs
+argument_list|()
+operator|)
+return|;
+block|}
+specifier|const
+name|SourceLocation
+operator|*
+name|getStoredSelLocs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|reinterpret_cast
+operator|<
+specifier|const
+name|SourceLocation
+operator|*
+operator|>
+operator|(
+name|getArgs
+argument_list|()
+operator|+
+name|getNumArgs
+argument_list|()
+operator|)
+return|;
+block|}
+comment|/// \brief Get the number of stored selector identifiers locations.
+comment|/// No locations will be stored if HasStandardSelLocs is true.
+name|unsigned
+name|getNumStoredSelLocs
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|hasStandardSelLocs
+argument_list|()
+condition|)
+return|return
+literal|0
+return|;
+return|return
+name|getNumSelectorLocs
+argument_list|()
+return|;
+block|}
+specifier|static
+name|ObjCMessageExpr
+operator|*
+name|alloc
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|ArrayRef<Expr *> Args
+argument_list|,
+argument|SourceLocation RBraceLoc
+argument_list|,
+argument|ArrayRef<SourceLocation> SelLocs
+argument_list|,
+argument|Selector Sel
+argument_list|,
+argument|SelectorLocationsKind&SelLocsK
+argument_list|)
+block|;
+specifier|static
+name|ObjCMessageExpr
+operator|*
+name|alloc
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|unsigned NumArgs
+argument_list|,
+argument|unsigned NumStoredSelLocs
+argument_list|)
+block|;
 name|public
 operator|:
 comment|/// \brief The kind of receiver this message is sending to.
@@ -2634,13 +2801,11 @@ argument|QualType SuperType
 argument_list|,
 argument|Selector Sel
 argument_list|,
-argument|SourceLocation SelLoc
+argument|ArrayRef<SourceLocation> SelLocs
 argument_list|,
 argument|ObjCMethodDecl *Method
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
 argument_list|)
@@ -2687,13 +2852,11 @@ argument|TypeSourceInfo *Receiver
 argument_list|,
 argument|Selector Sel
 argument_list|,
-argument|SourceLocation SelLoc
+argument|ArrayRef<SourceLocation> SelLocs
 argument_list|,
 argument|ObjCMethodDecl *Method
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
 argument_list|)
@@ -2740,13 +2903,11 @@ argument|Expr *Receiver
 argument_list|,
 argument|Selector Sel
 argument_list|,
-argument|SourceLocation SelLoc
+argument|ArrayRef<SourceLocation> SeLocs
 argument_list|,
 argument|ObjCMethodDecl *Method
 argument_list|,
-argument|Expr **Args
-argument_list|,
-argument|unsigned NumArgs
+argument|ArrayRef<Expr *> Args
 argument_list|,
 argument|SourceLocation RBracLoc
 argument_list|)
@@ -2766,6 +2927,8 @@ argument_list|(
 argument|ASTContext&Context
 argument_list|,
 argument|unsigned NumArgs
+argument_list|,
+argument|unsigned NumStoredSelLocs
 argument_list|)
 block|;
 comment|/// \brief Determine the kind of receiver that this message is being
@@ -2954,19 +3117,22 @@ return|;
 block|}
 name|void
 name|setClassReceiver
-argument_list|(
-argument|TypeSourceInfo *TSInfo
-argument_list|)
+parameter_list|(
+name|TypeSourceInfo
+modifier|*
+name|TSInfo
+parameter_list|)
 block|{
 name|Kind
 operator|=
 name|Class
-block|;
+expr_stmt|;
 name|setReceiverPointer
 argument_list|(
 name|TSInfo
 argument_list|)
-block|;   }
+expr_stmt|;
+block|}
 comment|/// \brief Retrieve the location of the 'super' keyword for a class
 comment|/// or instance message to 'super', otherwise an invalid source location.
 name|SourceLocation
@@ -2994,27 +3160,78 @@ name|SourceLocation
 argument_list|()
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// \brief Retrieve the Objective-C interface to which this message
+end_comment
+
+begin_comment
 comment|/// is being directed, if known.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// This routine cross-cuts all of the different kinds of message
+end_comment
+
+begin_comment
 comment|/// sends to determine what the underlying (statically known) type
+end_comment
+
+begin_comment
 comment|/// of the receiver will be; use \c getReceiverKind() to determine
+end_comment
+
+begin_comment
 comment|/// whether the message is a class or an instance method, whether it
+end_comment
+
+begin_comment
 comment|/// is a send to super or not, etc.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \returns The Objective-C interface if known, otherwise NULL.
+end_comment
+
+begin_expr_stmt
 name|ObjCInterfaceDecl
 operator|*
 name|getReceiverInterface
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Retrieve the type referred to by 'super'.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// The returned type will either be an ObjCInterfaceType (for an
+end_comment
+
+begin_comment
 comment|/// class message to super) or an ObjCObjectPointerType that refers
+end_comment
+
+begin_comment
 comment|/// to a class (for an instance message to super);
+end_comment
+
+begin_expr_stmt
 name|QualType
 name|getSuperType
 argument_list|()
@@ -3041,26 +3258,28 @@ name|getReceiverPointer
 argument_list|()
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|QualType
 argument_list|()
 return|;
-block|}
-end_decl_stmt
+end_return
 
-begin_function
-name|void
+begin_macro
+unit|}    void
 name|setSuper
-parameter_list|(
-name|SourceLocation
-name|Loc
-parameter_list|,
-name|QualType
-name|T
-parameter_list|,
-name|bool
-name|IsInstanceSuper
-parameter_list|)
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|QualType T
+argument_list|,
+argument|bool IsInstanceSuper
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|Kind
 operator|=
@@ -3083,7 +3302,7 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_expr_stmt
 name|Selector
@@ -3498,23 +3717,145 @@ end_expr_stmt
 
 begin_expr_stmt
 name|SourceLocation
-name|getSelectorLoc
+name|getSelectorStartLoc
 argument_list|()
 specifier|const
 block|{
 return|return
-name|SelectorLoc
+name|getSelectorLoc
+argument_list|(
+literal|0
+argument_list|)
 return|;
 block|}
 end_expr_stmt
 
-begin_function
+begin_decl_stmt
+name|SourceLocation
+name|getSelectorLoc
+argument_list|(
+name|unsigned
+name|Index
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|Index
+operator|<
+name|getNumSelectorLocs
+argument_list|()
+operator|&&
+literal|"Index out of range!"
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|hasStandardSelLocs
+argument_list|()
+condition|)
+return|return
+name|getStandardSelectorLoc
+argument_list|(
+name|Index
+argument_list|,
+name|getSelector
+argument_list|()
+argument_list|,
+name|getSelLocsKind
+argument_list|()
+operator|==
+name|SelLoc_StandardWithSpace
+argument_list|,
+name|llvm
+operator|::
+name|makeArrayRef
+argument_list|(
+name|const_cast
+operator|<
+name|Expr
+operator|*
+operator|*
+operator|>
+operator|(
+name|getArgs
+argument_list|()
+operator|)
+argument_list|,
+name|getNumArgs
+argument_list|()
+argument_list|)
+argument_list|,
+name|RBracLoc
+argument_list|)
+return|;
+return|return
+name|getStoredSelLocs
+argument_list|()
+index|[
+name|Index
+index|]
+return|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
 name|void
+name|getSelectorLocs
+argument_list|(
+name|SmallVectorImpl
+operator|<
+name|SourceLocation
+operator|>
+operator|&
+name|SelLocs
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|unsigned
+name|getNumSelectorLocs
+argument_list|()
+specifier|const
+block|{
+name|Selector
+name|Sel
+operator|=
+name|getSelector
+argument_list|()
+block|;
+if|if
+condition|(
+name|Sel
+operator|.
+name|isUnarySelector
+argument_list|()
+condition|)
+return|return
+literal|1
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+name|Sel
+operator|.
+name|getNumArgs
+argument_list|()
+return|;
+end_return
+
+begin_macro
+unit|}    void
 name|setSourceRange
-parameter_list|(
-name|SourceRange
-name|R
-parameter_list|)
+argument_list|(
+argument|SourceRange R
+argument_list|)
+end_macro
+
+begin_block
 block|{
 name|LBracLoc
 operator|=
@@ -3531,7 +3872,7 @@ name|getEnd
 argument_list|()
 expr_stmt|;
 block|}
-end_function
+end_block
 
 begin_expr_stmt
 name|SourceRange
@@ -4229,6 +4570,8 @@ argument|SourceLocation LParenLoc
 argument_list|,
 argument|ObjCBridgeCastKind Kind
 argument_list|,
+argument|CastKind CK
+argument_list|,
 argument|SourceLocation BridgeKeywordLoc
 argument_list|,
 argument|TypeSourceInfo *TSInfo
@@ -4247,7 +4590,7 @@ argument_list|()
 argument_list|,
 name|VK_RValue
 argument_list|,
-name|CK_BitCast
+name|CK
 argument_list|,
 name|Operand
 argument_list|,
@@ -4313,8 +4656,6 @@ operator|)
 return|;
 block|}
 comment|/// \brief Retrieve the kind of bridge being performed as a string.
-name|llvm
-operator|::
 name|StringRef
 name|getBridgeKindName
 argument_list|()

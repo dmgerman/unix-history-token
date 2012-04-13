@@ -1452,7 +1452,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* ignore buffering if a comment wasnt 					 * stored up */
+comment|/* ignore buffering if a comment wasn't 					 * stored up */
 name|ps
 operator|.
 name|search_brace
@@ -1713,7 +1713,7 @@ operator|==
 literal|0
 condition|)
 block|{
-comment|/* ignore buffering if comment wasnt 					 * saved up */
+comment|/* ignore buffering if comment wasn't 					 * saved up */
 name|ps
 operator|.
 name|search_brace
@@ -3625,7 +3625,7 @@ name|decl_on_line
 operator|=
 name|false
 expr_stmt|;
-comment|/* we cant be in the middle of 						 * a declaration, so dont do 						 * special indentation of 						 * comments */
+comment|/* we can't be in the middle of 						 * a declaration, so don't do 						 * special indentation of 						 * comments */
 if|if
 condition|(
 name|blanklines_after_declarations_at_proctop

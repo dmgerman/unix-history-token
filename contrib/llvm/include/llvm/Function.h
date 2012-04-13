@@ -467,7 +467,7 @@ comment|/// the module.
 comment|///
 name|Function
 argument_list|(
-argument|const FunctionType *Ty
+argument|FunctionType *Ty
 argument_list|,
 argument|LinkageTypes Linkage
 argument_list|,
@@ -485,7 +485,6 @@ name|Function
 modifier|*
 name|Create
 parameter_list|(
-specifier|const
 name|FunctionType
 modifier|*
 name|Ty

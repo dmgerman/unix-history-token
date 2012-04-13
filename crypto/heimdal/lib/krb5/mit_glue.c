@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2003 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2003 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -9,21 +9,20 @@ directive|include
 file|"krb5_locl.h"
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: mit_glue.c 20042 2007-01-23 20:37:43Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|HEIMDAL_SMALLER
+end_ifndef
 
 begin_comment
 comment|/*  * Glue for MIT API  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_make_checksum
 parameter_list|(
 name|krb5_context
@@ -114,8 +113,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_verify_checksum
 parameter_list|(
 name|krb5_context
@@ -192,37 +192,17 @@ name|cksum
 operator|->
 name|cksumtype
 operator|&&
-name|data_cksum
-operator|.
-name|checksum
-operator|.
-name|length
-operator|==
-name|cksum
-operator|->
-name|checksum
-operator|.
-name|length
-operator|&&
-name|memcmp
+name|krb5_data_ct_cmp
 argument_list|(
+operator|&
 name|data_cksum
 operator|.
 name|checksum
-operator|.
-name|data
 argument_list|,
+operator|&
 name|cksum
 operator|->
 name|checksum
-operator|.
-name|data
-argument_list|,
-name|cksum
-operator|->
-name|checksum
-operator|.
-name|length
 argument_list|)
 operator|==
 literal|0
@@ -247,8 +227,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_get_checksum
 parameter_list|(
 name|krb5_context
@@ -352,8 +333,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_set_checksum
 parameter_list|(
 name|krb5_context
@@ -393,8 +375,9 @@ block|}
 end_function
 
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_checksum
 parameter_list|(
 name|krb5_context
@@ -421,8 +404,9 @@ block|}
 end_function
 
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_free_checksum_contents
 parameter_list|(
 name|krb5_context
@@ -457,8 +441,9 @@ block|}
 end_function
 
 begin_function
-name|void
 name|KRB5_LIB_FUNCTION
+name|void
+name|KRB5_LIB_CALL
 name|krb5_checksum_free
 parameter_list|(
 name|krb5_context
@@ -478,8 +463,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_valid_enctype
 parameter_list|(
 name|krb5_enctype
@@ -487,6 +473,7 @@ name|etype
 parameter_list|)
 block|{
 return|return
+operator|!
 name|krb5_enctype_valid
 argument_list|(
 name|NULL
@@ -498,8 +485,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_valid_cksumtype
 parameter_list|(
 name|krb5_cksumtype
@@ -518,8 +506,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_is_coll_proof_cksum
 parameter_list|(
 name|krb5_cksumtype
@@ -538,8 +527,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_boolean
 name|KRB5_LIB_FUNCTION
+name|krb5_boolean
+name|KRB5_LIB_CALL
 name|krb5_c_is_keyed_cksum
 parameter_list|(
 name|krb5_cksumtype
@@ -558,8 +548,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_copy_checksum
 parameter_list|(
 name|krb5_context
@@ -612,8 +603,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_checksum_length
 parameter_list|(
 name|krb5_context
@@ -641,8 +633,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_block_size
 parameter_list|(
 name|krb5_context
@@ -739,8 +732,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_decrypt
 parameter_list|(
 name|krb5_context
@@ -901,8 +895,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_encrypt
 parameter_list|(
 name|krb5_context
@@ -1079,8 +1074,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_encrypt_length
 parameter_list|(
 name|krb5_context
@@ -1180,9 +1176,14 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|/**  * Deprecated: keytypes doesn't exists, they are really enctypes.  *  * @ingroup krb5_deprecated  */
+end_comment
+
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_enctype_compare
 parameter_list|(
 name|krb5_context
@@ -1198,28 +1199,33 @@ name|krb5_boolean
 modifier|*
 name|similar
 parameter_list|)
+function|KRB5_DEPRECATED_FUNCTION
+parameter_list|(
+function|"Use X instead"
+end_function
+
+begin_block
+unit|)
 block|{
 operator|*
 name|similar
 operator|=
-name|krb5_enctypes_compatible_keys
-argument_list|(
-name|context
-argument_list|,
+operator|(
 name|e1
-argument_list|,
+operator|==
 name|e2
-argument_list|)
+operator|)
 expr_stmt|;
 return|return
 literal|0
 return|;
 block|}
-end_function
+end_block
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_make_random_key
 parameter_list|(
 name|krb5_context
@@ -1247,8 +1253,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_keylengths
 parameter_list|(
 name|krb5_context
@@ -1313,8 +1320,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_prf_length
 parameter_list|(
 name|krb5_context
@@ -1342,8 +1350,9 @@ block|}
 end_function
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_c_prf
 parameter_list|(
 name|krb5_context
@@ -1416,6 +1425,224 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_c_random_make_octets
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_data
+modifier|*
+name|data
+parameter_list|)
+block|{
+return|return
+name|krb5_generate_random_keyblock
+argument_list|(
+name|context
+argument_list|,
+name|data
+operator|->
+name|length
+argument_list|,
+name|data
+operator|->
+name|data
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/**  * MIT compat glue  *  * @ingroup krb5_ccache  */
+end_comment
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_cc_copy_creds
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+specifier|const
+name|krb5_ccache
+name|from
+parameter_list|,
+name|krb5_ccache
+name|to
+parameter_list|)
+block|{
+return|return
+name|krb5_cc_copy_cache
+argument_list|(
+name|context
+argument_list|,
+name|from
+argument_list|,
+name|to
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_getsendsubkey
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_auth_context
+name|auth_context
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+modifier|*
+name|keyblock
+parameter_list|)
+block|{
+return|return
+name|krb5_auth_con_getlocalsubkey
+argument_list|(
+name|context
+argument_list|,
+name|auth_context
+argument_list|,
+name|keyblock
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_getrecvsubkey
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_auth_context
+name|auth_context
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+modifier|*
+name|keyblock
+parameter_list|)
+block|{
+return|return
+name|krb5_auth_con_getremotesubkey
+argument_list|(
+name|context
+argument_list|,
+name|auth_context
+argument_list|,
+name|keyblock
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_setsendsubkey
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_auth_context
+name|auth_context
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+name|keyblock
+parameter_list|)
+block|{
+return|return
+name|krb5_auth_con_setlocalsubkey
+argument_list|(
+name|context
+argument_list|,
+name|auth_context
+argument_list|,
+name|keyblock
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_auth_con_setrecvsubkey
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_auth_context
+name|auth_context
+parameter_list|,
+name|krb5_keyblock
+modifier|*
+name|keyblock
+parameter_list|)
+block|{
+return|return
+name|krb5_auth_con_setremotesubkey
+argument_list|(
+name|context
+argument_list|,
+name|auth_context
+argument_list|,
+name|keyblock
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_function
+name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
+name|krb5_free_default_realm
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|krb5_realm
+name|realm
+parameter_list|)
+block|{
+return|return
+name|krb5_xfree
+argument_list|(
+name|realm
+argument_list|)
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* HEIMDAL_SMALLER */
+end_comment
 
 end_unit
 

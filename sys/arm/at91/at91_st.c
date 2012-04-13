@@ -747,7 +747,7 @@ operator|/
 name|hz
 expr_stmt|;
 block|}
-comment|/* Disable all interrupts. */
+comment|/* Disable all interrupts. */
 name|WR4
 argument_list|(
 name|ST_IDR

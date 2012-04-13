@@ -232,6 +232,7 @@ function_decl|;
 end_function_decl
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|cmdtab
@@ -2142,6 +2143,8 @@ condition|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
@@ -2187,6 +2190,8 @@ argument_list|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
@@ -5428,6 +5433,8 @@ condition|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;
@@ -5503,6 +5510,8 @@ condition|)
 block|{
 name|heading
 argument_list|(
+literal|"%s"
+argument_list|,
 name|text
 argument_list|)
 expr_stmt|;

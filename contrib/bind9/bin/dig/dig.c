@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2011  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: dig.c,v 1.237.124.3 2011-03-11 06:46:58 marka Exp $ */
+comment|/* $Id: dig.c,v 1.237.124.4 2011/12/07 17:23:55 each Exp $ */
 end_comment
 
 begin_comment
@@ -7002,6 +7002,8 @@ index|]
 index|[
 literal|1
 index|]
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}

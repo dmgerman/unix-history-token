@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -438,6 +438,13 @@ name|SCTP_PEER_ADDR_THLDS
 value|0x00000023
 end_define
 
+begin_define
+define|#
+directive|define
+name|SCTP_REMOTE_UDP_ENCAPS_PORT
+value|0x00000024
+end_define
+
 begin_comment
 comment|/*  * read-only options  */
 end_comment
@@ -511,20 +518,99 @@ begin_comment
 comment|/*  * Blocking I/O is enabled on any TCP type socket by default. For the UDP  * model if this is turned on then the socket buffer is shared for send  * resources amongst all associations.  The default for the UDP model is that  * is SS_NBIO is set.  Which means all associations have a separate send  * limit BUT they will NOT ever BLOCK instead you will get an error back  * EAGAIN if you try to send too much. If you want the blocking semantics you  * set this option at the cost of sharing one socket send buffer size amongst  * all associations. Peeled off sockets turn this option off and block. But  * since both TCP and peeled off sockets have only one assoc per socket this  * is fine. It probably does NOT make sense to set this on SS_NBIO on a TCP  * model OR peeled off UDP model, but we do allow you to do so. You just use  * the normal syscall to toggle SS_NBIO the way you want.  *  * Blocking I/O is controlled by the SS_NBIO flag on the socket state so_state  * field.  */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_STREAM_RESET
+value|0x00000900
+end_define
+
 begin_comment
-comment|/* these should probably go into sockets API */
+comment|/* struct 							 * sctp_assoc_value */
 end_comment
 
 begin_define
 define|#
 directive|define
 name|SCTP_RESET_STREAMS
-value|0x00001004
+value|0x00000901
 end_define
 
 begin_comment
-comment|/* wo */
+comment|/* struct 							 * sctp_reset_streams */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_RESET_ASSOC
+value|0x00000902
+end_define
+
+begin_comment
+comment|/* sctp_assoc_t */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ADD_STREAMS
+value|0x00000903
+end_define
+
+begin_comment
+comment|/* struct 							 * sctp_add_streams */
+end_comment
+
+begin_comment
+comment|/* For enable stream reset */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_RESET_STREAM_REQ
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_RESET_ASSOC_REQ
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_CHANGE_ASSOC_REQ
+value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_ENABLE_VALUE_MASK
+value|0x00000007
+end_define
+
+begin_comment
+comment|/* For reset streams */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_INCOMING
+value|0x00000001
+end_define
+
+begin_define
+define|#
+directive|define
+name|SCTP_STREAM_RESET_OUTGOING
+value|0x00000002
+end_define
 
 begin_comment
 comment|/* here on down are more implementation specific */

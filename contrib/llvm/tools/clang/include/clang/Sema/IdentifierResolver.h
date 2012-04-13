@@ -107,8 +107,6 @@ block|{
 name|public
 label|:
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|NamedDecl

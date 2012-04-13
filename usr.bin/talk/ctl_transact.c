@@ -75,7 +75,7 @@ comment|/* time to wait for a response, in seconds */
 end_comment
 
 begin_comment
-comment|/*  * SOCKDGRAM is unreliable, so we must repeat messages if we have  * not recieved an acknowledgement within a reasonable amount  * of time  */
+comment|/*  * SOCKDGRAM is unreliable, so we must repeat messages if we have  * not received an acknowledgement within a reasonable amount  * of time  */
 end_comment
 
 begin_function

@@ -113,7 +113,7 @@ name|DEFAULT_DISPATCH
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|void Visit##CLASS##Decl(CLASS##Decl* D) {}
+value|void Visit##CLASS##Decl(CLASS##Decl *D) {}
 end_define
 
 begin_define
@@ -123,7 +123,7 @@ name|DEFAULT_DISPATCH_VARDECL
 parameter_list|(
 name|CLASS
 parameter_list|)
-value|void Visit##CLASS##Decl(CLASS##Decl* D)\   { static_cast<ImplClass*>(this)->VisitVarDecl(D); }
+value|void Visit##CLASS##Decl(CLASS##Decl *D)\   { static_cast<ImplClass*>(this)->VisitVarDecl(D); }
 end_define
 
 begin_decl_stmt
@@ -149,7 +149,7 @@ operator|:
 name|void
 name|VisitDeclRefExpr
 argument_list|(
-argument|DeclRefExpr* DR
+argument|DeclRefExpr *DR
 argument_list|)
 block|{
 name|static_cast
@@ -172,7 +172,7 @@ block|;   }
 name|void
 name|VisitDeclStmt
 argument_list|(
-argument|DeclStmt* DS
+argument|DeclStmt *DS
 argument_list|)
 block|{
 for|for
@@ -268,7 +268,7 @@ block|}
 name|void
 name|VisitDecl
 argument_list|(
-argument|Decl* D
+argument|Decl *D
 argument_list|)
 block|{
 switch|switch
@@ -330,10 +330,8 @@ argument_list|(
 argument|Using
 argument_list|)
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Subtype of ScopedDecl not handled."
 argument_list|)
 expr_stmt|;

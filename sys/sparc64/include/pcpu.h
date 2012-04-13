@@ -132,6 +132,38 @@ parameter_list|)
 value|(pcpup->pc_ ## member)
 end_define
 
+begin_expr_stmt
+specifier|static
+name|__inline
+name|__pure2
+expr|struct
+name|thread
+operator|*
+name|__curthread
+argument_list|(
+argument|void
+argument_list|)
+block|{ 	struct
+name|thread
+operator|*
+name|td
+block|;
+asm|__asm("ldx [%" __XSTRING(PCPU_REG) "], %0" : "=r" (td));
+return|return
+operator|(
+name|td
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_define
+define|#
+directive|define
+name|curthread
+value|(__curthread())
+end_define
+
 begin_comment
 comment|/*  * XXX The implementation of this operation should be made atomic  * with respect to preemption.  */
 end_comment

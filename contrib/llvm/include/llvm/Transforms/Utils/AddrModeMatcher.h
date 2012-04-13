@@ -265,7 +265,6 @@ name|TLI
 block|;
 comment|/// AccessTy/MemoryInst - This is the type for the access (e.g. double) and
 comment|/// the memory instruction that we're computing this address for.
-specifier|const
 name|Type
 operator|*
 name|AccessTy
@@ -301,7 +300,6 @@ name|TargetLowering
 operator|&
 name|T
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|AT
@@ -355,7 +353,7 @@ name|Match
 argument_list|(
 argument|Value *V
 argument_list|,
-argument|const Type *AccessTy
+argument|Type *AccessTy
 argument_list|,
 argument|Instruction *MemoryInst
 argument_list|,

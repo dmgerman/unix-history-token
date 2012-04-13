@@ -337,7 +337,7 @@ literal|0
 condition|)
 name|printf
 argument_list|(
-literal|"broadcast %s"
+literal|"broadcast %s "
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -348,6 +348,13 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
+name|print_vhid
+argument_list|(
+name|ifa
+argument_list|,
+literal|" "
+argument_list|)
+expr_stmt|;
 name|putchar
 argument_list|(
 literal|'\n'
@@ -457,12 +464,6 @@ operator|*
 name|sin
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|which
-operator|!=
-name|MASK
-condition|)
 name|sin
 operator|->
 name|sin_family
@@ -583,6 +584,12 @@ name|errstr
 argument_list|)
 expr_stmt|;
 block|}
+name|min
+operator|->
+name|sin_family
+operator|=
+name|AF_INET
+expr_stmt|;
 name|min
 operator|->
 name|sin_len

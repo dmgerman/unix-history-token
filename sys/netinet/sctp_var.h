@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *   this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 2001-2008, by Cisco Systems, Inc. All rights reserved.  * Copyright (c) 2008-2011, by Randall Stewart. All rights reserved.  * Copyright (c) 2008-2011, by Michael Tuexen. All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are met:  *  * a) Redistributions of source code must retain the above copyright notice,  *    this list of conditions and the following disclaimer.  *  * b) Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in  *    the documentation and/or other materials provided with the distribution.  *  * c) Neither the name of Cisco Systems, Inc. nor the names of its  *    contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,  * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE  * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR  * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF  * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS  * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF  * THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_comment
@@ -120,7 +120,7 @@ name|stcb
 parameter_list|,
 name|feature
 parameter_list|)
-value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features |= feature; \ 	} else { \ 		inp->sctp_features |= feature; \ 	} \ }
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features |= feature; \ 	} else if (inp) { \ 		inp->sctp_features |= feature; \ 	} \ }
 end_define
 
 begin_define
@@ -134,7 +134,7 @@ name|stcb
 parameter_list|,
 name|feature
 parameter_list|)
-value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features&= ~feature; \ 	} else { \ 		inp->sctp_features&= ~feature; \ 	} \ }
+value|{\ 	if (stcb) { \ 		stcb->asoc.sctp_features&= ~feature; \ 	} else if (inp) { \ 		inp->sctp_features&= ~feature; \ 	} \ }
 end_define
 
 begin_define
@@ -149,7 +149,7 @@ parameter_list|,
 name|feature
 parameter_list|)
 define|\
-value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == feature)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == feature)))
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == feature)) || \ 	 ((stcb == NULL)&& (inp != NULL)&& \ 	  ((inp->sctp_features& feature) == feature)))
 end_define
 
 begin_define
@@ -164,7 +164,7 @@ parameter_list|,
 name|feature
 parameter_list|)
 define|\
-value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& \ 	  ((inp->sctp_features& feature) == 0)))
+value|(((stcb != NULL)&& \ 	  ((stcb->asoc.sctp_features& feature) == 0)) || \ 	 ((stcb == NULL)&& (inp != NULL)&& \ 	  ((inp->sctp_features& feature) == 0)) || \          ((stcb == NULL)&& (inp == NULL)))
 end_define
 
 begin_comment
@@ -410,7 +410,7 @@ name|sctp_mbuf_crush
 parameter_list|(
 name|data
 parameter_list|)
-value|do { \ 	struct mbuf *_m; \ 	_m = (data); \ 	while(_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 		(data)  = SCTP_BUF_NEXT(_m); \ 		SCTP_BUF_NEXT(_m) = NULL; \ 		sctp_m_free(_m); \ 		_m = (data); \ 	} \ } while (0)
+value|do { \ 	struct mbuf *_m; \ 	_m = (data); \ 	while (_m&& (SCTP_BUF_LEN(_m) == 0)) { \ 		(data)  = SCTP_BUF_NEXT(_m); \ 		SCTP_BUF_NEXT(_m) = NULL; \ 		sctp_m_free(_m); \ 		_m = (data); \ 	} \ } while (0)
 end_define
 
 begin_define
@@ -665,15 +665,7 @@ name|__P
 argument_list|(
 operator|(
 expr|struct
-name|sctp_inpcb
-operator|*
-operator|,
-expr|struct
 name|sctp_tcb
-operator|*
-operator|,
-expr|struct
-name|sctp_nets
 operator|*
 operator|,
 name|uint16_t

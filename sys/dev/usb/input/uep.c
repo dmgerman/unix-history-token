@@ -144,6 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -740,6 +741,9 @@ if|if
 condition|(
 name|len
 operator|>
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|buf
@@ -1361,7 +1365,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|,
-literal|0
 operator|-
 literal|1
 argument_list|,

@@ -52,18 +52,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|GET_LDBL_EXPSIGN
-parameter_list|(
-name|i
-parameter_list|,
-name|v
-parameter_list|)
-value|do {	\ 	union IEEEl2bits uv;		\ 					\ 	uv.e = v;			\ 	i = uv.xbits.expsign;		\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
 name|GET_LDBL_MAN
 parameter_list|(
 name|h
@@ -73,18 +61,6 @@ parameter_list|,
 name|v
 parameter_list|)
 value|do {	\ 	union IEEEl2bits uv;		\ 					\ 	uv.e = v;			\ 	h = uv.bits.manh;		\ 	l = uv.bits.manl;		\ } while (0)
-end_define
-
-begin_define
-define|#
-directive|define
-name|SET_LDBL_EXPSIGN
-parameter_list|(
-name|v
-parameter_list|,
-name|i
-parameter_list|)
-value|do {	\ 	union IEEEl2bits uv;		\ 					\ 	uv.e = v;			\ 	uv.xbits.expsign = i;		\ 	v = uv.e;			\ } while (0)
 end_define
 
 begin_undef

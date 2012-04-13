@@ -641,7 +641,7 @@ argument_list|)
 expr_stmt|;
 name|dptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hname
 argument_list|,
@@ -795,7 +795,7 @@ return|;
 comment|/* Get the host's unqualified name (strip off the domain) */
 name|ptr
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|hname
 argument_list|,

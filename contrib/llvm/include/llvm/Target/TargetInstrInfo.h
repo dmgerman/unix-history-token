@@ -891,6 +891,24 @@ operator|&&
 literal|"Target didn't implement TargetInstrInfo::loadRegFromStackSlot!"
 argument_list|)
 block|;   }
+comment|/// expandPostRAPseudo - This function is called for all pseudo instructions
+comment|/// that remain after register allocation. Many pseudo instructions are
+comment|/// created to help register allocation. This is the place to convert them
+comment|/// into real instructions. The target can edit MI in place, or it can insert
+comment|/// new instructions and erase MI. The function should return true if
+comment|/// anything was changed.
+name|virtual
+name|bool
+name|expandPostRAPseudo
+argument_list|(
+argument|MachineBasicBlock::iterator MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// emitFrameIndexDebugValue - Emit a target-dependent form of
 comment|/// DBG_VALUE encoding the address of a frame index.  Addresses would
 comment|/// normally be lowered the same way as other addresses on the target,
@@ -1550,6 +1568,81 @@ argument|unsigned DefIdx
 argument_list|)
 specifier|const
 block|;
+comment|/// verifyInstruction - Perform target specific instruction verification.
+name|virtual
+name|bool
+name|verifyInstruction
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|StringRef&ErrInfo
+argument_list|)
+specifier|const
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|/// getExecutionDomain - Return the current execution domain and bit mask of
+comment|/// possible domains for instruction.
+comment|///
+comment|/// Some micro-architectures have multiple execution domains, and multiple
+comment|/// opcodes that perform the same operation in different domains.  For
+comment|/// example, the x86 architecture provides the por, orps, and orpd
+comment|/// instructions that all do the same thing.  There is a latency penalty if a
+comment|/// register is written in one domain and read in another.
+comment|///
+comment|/// This function returns a pair (domain, mask) containing the execution
+comment|/// domain of MI, and a bit mask of possible domains.  The setExecutionDomain
+comment|/// function can be used to change the opcode to one of the domains in the
+comment|/// bit mask.  Instructions whose execution domain can't be changed should
+comment|/// return a 0 mask.
+comment|///
+comment|/// The execution domain numbers don't have any special meaning except domain
+comment|/// 0 is used for instructions that are not associated with any interesting
+comment|/// execution domain.
+comment|///
+name|virtual
+name|std
+operator|::
+name|pair
+operator|<
+name|uint16_t
+block|,
+name|uint16_t
+operator|>
+name|getExecutionDomain
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|)
+specifier|const
+block|{
+return|return
+name|std
+operator|::
+name|make_pair
+argument_list|(
+literal|0
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|/// setExecutionDomain - Change the opcode of MI to execute in Domain.
+comment|///
+comment|/// The bit (1<< Domain) must be set in the mask returned from
+comment|/// getExecutionDomain(MI).
+comment|///
+name|virtual
+name|void
+name|setExecutionDomain
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|unsigned Domain
+argument_list|)
+specifier|const
+block|{}
 name|private
 operator|:
 name|int
@@ -1628,6 +1721,30 @@ argument_list|(
 argument|const MachineInstr *MI
 argument_list|,
 argument|const SmallVectorImpl<unsigned>&Ops
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasLoadFromStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineMemOperand *&MMO
+argument_list|,
+argument|int&FrameIndex
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|bool
+name|hasStoreToStackSlot
+argument_list|(
+argument|const MachineInstr *MI
+argument_list|,
+argument|const MachineMemOperand *&MMO
+argument_list|,
+argument|int&FrameIndex
 argument_list|)
 specifier|const
 block|;

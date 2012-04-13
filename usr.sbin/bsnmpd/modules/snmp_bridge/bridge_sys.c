@@ -5438,7 +5438,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the initial info for all members of a bridge interface.  * Returns the number of ports, 0 - if none, otherwise  * -1 if some other error occured.  */
+comment|/*  * Read the initial info for all members of a bridge interface.  * Returns the number of ports, 0 - if none, otherwise  * -1 if some other error occurred.  */
 end_comment
 
 begin_function
@@ -6384,7 +6384,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the initial info for all addresses on a bridge interface.  * Returns the number of addresses, 0 - if none, otherwise  * -1 if some other error occured.  */
+comment|/*  * Read the initial info for all addresses on a bridge interface.  * Returns the number of addresses, 0 - if none, otherwise  * -1 if some other error occurred.  */
 end_comment
 
 begin_function

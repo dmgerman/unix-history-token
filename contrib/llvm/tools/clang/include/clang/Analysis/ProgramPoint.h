@@ -102,6 +102,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -111,18 +117,27 @@ directive|include
 file|<utility>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<string>
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
 block|{
 name|class
-name|LocationContext
-decl_stmt|;
-name|class
 name|AnalysisContext
 decl_stmt|;
 name|class
 name|FunctionDecl
+decl_stmt|;
+name|class
+name|LocationContext
+decl_stmt|;
+name|class
+name|ProgramPointTag
 decl_stmt|;
 name|class
 name|ProgramPoint
@@ -151,8 +166,6 @@ block|,
 name|PostStoreKind
 block|,
 name|PostPurgeDeadSymbolsKind
-block|,
-name|PostStmtCustomKind
 block|,
 name|PostConditionKind
 block|,
@@ -200,21 +213,24 @@ modifier|*
 name|L
 decl_stmt|;
 specifier|const
-name|void
+name|ProgramPointTag
 modifier|*
 name|Tag
 decl_stmt|;
+name|ProgramPoint
+argument_list|()
+expr_stmt|;
 name|protected
 label|:
 name|ProgramPoint
 argument_list|(
-argument|const void* P
+argument|const void *P
 argument_list|,
 argument|Kind k
 argument_list|,
 argument|const LocationContext *l
 argument_list|,
-argument|const void *tag =
+argument|const ProgramPointTag *tag =
 literal|0
 argument_list|)
 block|:
@@ -250,15 +266,15 @@ argument_list|)
 block|{}
 name|ProgramPoint
 argument_list|(
-argument|const void* P1
+argument|const void *P1
 argument_list|,
-argument|const void* P2
+argument|const void *P2
 argument_list|,
 argument|Kind k
 argument_list|,
 argument|const LocationContext *l
 argument_list|,
-argument|const void *tag =
+argument|const ProgramPointTag *tag =
 literal|0
 argument_list|)
 operator|:
@@ -314,6 +330,37 @@ return|;
 block|}
 name|public
 label|:
+comment|/// Create a new ProgramPoint object that is the same as the original
+comment|/// except for using the specified tag value.
+name|ProgramPoint
+name|withTag
+argument_list|(
+specifier|const
+name|ProgramPointTag
+operator|*
+name|tag
+argument_list|)
+decl|const
+block|{
+return|return
+name|ProgramPoint
+argument_list|(
+name|Data
+operator|.
+name|first
+argument_list|,
+name|Data
+operator|.
+name|second
+argument_list|,
+name|K
+argument_list|,
+name|L
+argument_list|,
+name|tag
+argument_list|)
+return|;
+block|}
 name|Kind
 name|getKind
 argument_list|()
@@ -324,7 +371,7 @@ name|K
 return|;
 block|}
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|getTag
 argument_list|()
@@ -509,6 +556,31 @@ name|Tag
 argument_list|)
 expr_stmt|;
 block|}
+specifier|static
+name|ProgramPoint
+name|getProgramPoint
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|S
+argument_list|,
+name|ProgramPoint
+operator|::
+name|Kind
+name|K
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LC
+argument_list|,
+specifier|const
+name|ProgramPointTag
+operator|*
+name|tag
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -532,7 +604,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -549,7 +621,14 @@ argument|L
 argument_list|,
 argument|tag
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|B
+operator|&&
+literal|"BlockEntrance requires non-null block"
+argument_list|)
+block|;   }
 specifier|const
 name|CFGBlock
 operator|*
@@ -597,27 +676,6 @@ name|B
 operator|->
 name|front
 argument_list|()
-return|;
-block|}
-comment|/// Create a new BlockEntrance object that is the same as the original
-comment|/// except for using the specified tag value.
-name|BlockEntrance
-name|withTag
-argument_list|(
-argument|const void *tag
-argument_list|)
-block|{
-return|return
-name|BlockEntrance
-argument_list|(
-name|getBlock
-argument_list|()
-argument_list|,
-name|getLocationContext
-argument_list|()
-argument_list|,
-name|tag
-argument_list|)
 return|;
 block|}
 specifier|static
@@ -739,7 +797,7 @@ argument|Kind k
 argument_list|,
 argument|const LocationContext *L
 argument_list|,
-argument|const void *tag
+argument|const ProgramPointTag *tag
 argument_list|)
 operator|:
 name|ProgramPoint
@@ -845,7 +903,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 argument_list|,
@@ -915,15 +973,15 @@ name|protected
 operator|:
 name|PostStmt
 argument_list|(
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|,
-argument|const void* data
+argument|const void *data
 argument_list|,
 argument|Kind k
 argument_list|,
 argument|const LocationContext *L
 argument_list|,
-argument|const void *tag =
+argument|const ProgramPointTag *tag =
 literal|0
 argument_list|)
 operator|:
@@ -945,13 +1003,13 @@ operator|:
 name|explicit
 name|PostStmt
 argument_list|(
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|,
 argument|Kind k
 argument_list|,
 argument|const LocationContext *L
 argument_list|,
-argument|const void *tag =
+argument|const ProgramPointTag *tag =
 literal|0
 argument_list|)
 operator|:
@@ -982,7 +1040,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1029,143 +1087,6 @@ return|;
 block|}
 expr|}
 block|;
-name|class
-name|PostStmtCustom
-operator|:
-name|public
-name|PostStmt
-block|{
-name|public
-operator|:
-name|PostStmtCustom
-argument_list|(
-specifier|const
-name|Stmt
-operator|*
-name|S
-argument_list|,
-specifier|const
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|void
-operator|*
-argument_list|,
-specifier|const
-name|void
-operator|*
-operator|>
-operator|*
-name|TaggedData
-argument_list|,\
-specifier|const
-name|LocationContext
-operator|*
-name|L
-argument_list|)
-operator|:
-name|PostStmt
-argument_list|(
-argument|S
-argument_list|,
-argument|TaggedData
-argument_list|,
-argument|PostStmtCustomKind
-argument_list|,
-argument|L
-argument_list|)
-block|{}
-specifier|const
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|void
-operator|*
-block|,
-specifier|const
-name|void
-operator|*
-operator|>
-operator|&
-name|getTaggedPair
-argument_list|()
-specifier|const
-block|{
-return|return
-operator|*
-name|reinterpret_cast
-operator|<
-specifier|const
-name|std
-operator|::
-name|pair
-operator|<
-specifier|const
-name|void
-operator|*
-operator|,
-specifier|const
-name|void
-operator|*
-operator|>
-operator|*
-operator|>
-operator|(
-name|getData2
-argument_list|()
-operator|)
-return|;
-block|}
-specifier|const
-name|void
-operator|*
-name|getTag
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTaggedPair
-argument_list|()
-operator|.
-name|first
-return|;
-block|}
-specifier|const
-name|void
-operator|*
-name|getTaggedData
-argument_list|()
-specifier|const
-block|{
-return|return
-name|getTaggedPair
-argument_list|()
-operator|.
-name|second
-return|;
-block|}
-specifier|static
-name|bool
-name|classof
-argument_list|(
-argument|const ProgramPoint* Location
-argument_list|)
-block|{
-return|return
-name|Location
-operator|->
-name|getKind
-argument_list|()
-operator|==
-name|PostStmtCustomKind
-return|;
-block|}
-expr|}
-block|;
 comment|// PostCondition represents the post program point of a branch condition.
 name|class
 name|PostCondition
@@ -1188,7 +1109,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1240,7 +1161,7 @@ argument|const LocationContext *L
 argument_list|,
 argument|ProgramPoint::Kind K
 argument_list|,
-argument|const void *tag
+argument|const ProgramPointTag *tag
 argument_list|)
 operator|:
 name|StmtPoint
@@ -1304,7 +1225,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1361,7 +1282,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1418,7 +1339,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1475,7 +1396,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1532,7 +1453,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1589,7 +1510,7 @@ operator|*
 name|L
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1661,7 +1582,21 @@ argument|BlockEdgeKind
 argument_list|,
 argument|L
 argument_list|)
-block|{}
+block|{
+name|assert
+argument_list|(
+name|B1
+operator|&&
+literal|"BlockEdge: source block must be non-null"
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|B2
+operator|&&
+literal|"BlockEdge: destination block must be non-null"
+argument_list|)
+block|;       }
 specifier|const
 name|CFGBlock
 operator|*
@@ -1917,7 +1852,87 @@ name|CallExitKind
 return|;
 block|}
 expr|}
-block|;   }
+block|;
+comment|/// ProgramPoints can be "tagged" as representing points specific to a given
+comment|/// analysis entity.  Tags are abstract annotations, with an associated
+comment|/// description and potentially other information.
+name|class
+name|ProgramPointTag
+block|{
+name|public
+operator|:
+name|ProgramPointTag
+argument_list|(
+name|void
+operator|*
+name|tagKind
+operator|=
+literal|0
+argument_list|)
+operator|:
+name|TagKind
+argument_list|(
+argument|tagKind
+argument_list|)
+block|{}
+name|virtual
+operator|~
+name|ProgramPointTag
+argument_list|()
+block|;
+name|virtual
+name|StringRef
+name|getTagDescription
+argument_list|()
+specifier|const
+operator|=
+literal|0
+block|;
+name|protected
+operator|:
+comment|/// Used to implement 'classof' in subclasses.
+specifier|const
+name|void
+operator|*
+name|getTagKind
+argument_list|()
+block|{
+return|return
+name|TagKind
+return|;
+block|}
+name|private
+operator|:
+specifier|const
+name|void
+operator|*
+name|TagKind
+block|; }
+block|;
+name|class
+name|SimpleProgramPointTag
+operator|:
+name|public
+name|ProgramPointTag
+block|{
+name|std
+operator|::
+name|string
+name|desc
+block|;
+name|public
+operator|:
+name|SimpleProgramPointTag
+argument_list|(
+argument|StringRef description
+argument_list|)
+block|;
+name|StringRef
+name|getTagDescription
+argument_list|()
+specifier|const
+block|; }
+block|;  }
 comment|// end namespace clang
 name|namespace
 name|llvm
@@ -2036,7 +2051,7 @@ specifier|static
 name|unsigned
 name|getHashValue
 argument_list|(
-argument|const clang::ProgramPoint& Loc
+argument|const clang::ProgramPoint&Loc
 argument_list|)
 block|{
 return|return
@@ -2050,9 +2065,9 @@ specifier|static
 name|bool
 name|isEqual
 argument_list|(
-argument|const clang::ProgramPoint& L
+argument|const clang::ProgramPoint&L
 argument_list|,
-argument|const clang::ProgramPoint& R
+argument|const clang::ProgramPoint&R
 argument_list|)
 block|{
 return|return

@@ -542,6 +542,10 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|/*  * Code-points for some Latin1 chars in ISO-8859-1 encoding.  * UTF-8 encoded chars in the comments.  */
+end_comment
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -552,65 +556,75 @@ index|[]
 init|=
 block|{
 block|{
-literal|'á'
+literal|'\340'
 block|,
 literal|".--.-"
 block|}
 block|,
+comment|/* Ã  */
 block|{
-literal|'à'
+literal|'\341'
 block|,
 literal|".--.-"
 block|}
 block|,
+comment|/* Ã¡ */
 block|{
-literal|'â'
+literal|'\342'
 block|,
 literal|".--.-"
 block|}
 block|,
+comment|/* Ã¢ */
 block|{
-literal|'ä'
+literal|'\344'
 block|,
 literal|".-.-"
 block|}
 block|,
+comment|/* Ã¤ */
 block|{
-literal|'ç'
+literal|'\347'
 block|,
 literal|"-.-.."
 block|}
 block|,
+comment|/* Ã§ */
 block|{
-literal|'é'
+literal|'\350'
 block|,
 literal|"..-.."
 block|}
 block|,
+comment|/* Ã¨ */
 block|{
-literal|'è'
+literal|'\351'
 block|,
 literal|"..-.."
 block|}
 block|,
+comment|/* Ã© */
 block|{
-literal|'ê'
+literal|'\352'
 block|,
 literal|"-..-."
 block|}
 block|,
+comment|/* Ãª */
 block|{
-literal|'ö'
+literal|'\366'
 block|,
 literal|"---."
 block|}
 block|,
+comment|/* Ã¶ */
 block|{
-literal|'ü'
+literal|'\374'
 block|,
 literal|"..--"
 block|}
 block|,
+comment|/* Ã¼ */
 block|{
 literal|'\0'
 block|,
@@ -619,6 +633,10 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*  * Code-points for some Greek chars in ISO-8859-7 encoding.  * UTF-8 encoded chars in the comments.  */
+end_comment
 
 begin_decl_stmt
 specifier|static
@@ -629,259 +647,505 @@ name|iso8859_7tab
 index|[]
 init|=
 block|{
-comment|/* 	 * The Greek alphabet; you'll need an ISO8859-7 font in order 	 * to see the actual characters. 	 * This table does not implement: 	 * - the special sequences for the seven diphthongs, 	 * - the punctuation differences. 	 * Implementing these features would introduce too many 	 * special-cases in the program's main loop. 	 * The diphthong sequences are: 	 * alpha iota		.-.- 	 * alpha upsilon	..-- 	 * epsilon upsilon	---. 	 * eta upsilon		...- 	 * omicron iota		---.. 	 * omicron upsilon	..- 	 * upsilon iota		.--- 	 * The different punctuation symbols are: 	 * ;	..-.- 	 * !	--..-- 	 */
+comment|/* 	 * This table does not implement: 	 * - the special sequences for the seven diphthongs, 	 * - the punctuation differences. 	 * Implementing these features would introduce too many 	 * special-cases in the program's main loop. 	 * The diphthong sequences are: 	 * alpha iota		.-.- 	 * alpha upsilon	..-- 	 * epsilon upsilon	---. 	 * eta upsilon		...- 	 * omicron iota		---.. 	 * omicron upsilon	..- 	 * upsilon iota		.--- 	 * The different punctuation symbols are: 	 * ;	..-.- 	 * !	--..-- 	 */
 block|{
-literal|'á'
+literal|'\341'
 block|,
 literal|".-"
 block|}
 block|,
-comment|/* alpha */
+comment|/* Î±, alpha */
 block|{
-literal|'Ü'
+literal|'\334'
 block|,
 literal|".-"
 block|}
 block|,
-comment|/* alpha with acute */
+comment|/* Î¬, alpha with acute */
 block|{
-literal|'â'
+literal|'\342'
 block|,
 literal|"-..."
 block|}
 block|,
-comment|/* beta */
+comment|/* Î², beta */
 block|{
-literal|'ã'
+literal|'\343'
 block|,
 literal|"--."
 block|}
 block|,
-comment|/* gamma */
+comment|/* Î³, gamma */
 block|{
-literal|'ä'
+literal|'\344'
 block|,
 literal|"-.."
 block|}
 block|,
-comment|/* delta */
+comment|/* Î´, delta */
 block|{
-literal|'å'
+literal|'\345'
 block|,
 literal|"."
 block|}
 block|,
-comment|/* epsilon */
+comment|/* Îµ, epsilon */
 block|{
-literal|'Ý'
+literal|'\335'
 block|,
 literal|"."
 block|}
 block|,
-comment|/* epsilon with acute */
+comment|/* Î­, epsilon with acute */
 block|{
-literal|'æ'
+literal|'\346'
 block|,
 literal|"--.."
 block|}
 block|,
-comment|/* zeta */
+comment|/* Î¶, zeta */
 block|{
-literal|'ç'
+literal|'\347'
 block|,
 literal|"...."
 block|}
 block|,
-comment|/* eta */
+comment|/* Î·, eta */
 block|{
-literal|'Þ'
+literal|'\336'
 block|,
 literal|"...."
 block|}
 block|,
-comment|/* eta with acute */
+comment|/* Î®, eta with acute */
 block|{
-literal|'è'
+literal|'\350'
 block|,
 literal|"-.-."
 block|}
 block|,
-comment|/* theta */
+comment|/* Î¸, theta */
 block|{
-literal|'é'
+literal|'\351'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota */
+comment|/* Î¹, iota */
 block|{
-literal|'ß'
+literal|'\337'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with acute */
+comment|/* Î¯, iota with acute */
 block|{
-literal|'ú'
+literal|'\372'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with diaeresis */
+comment|/* Ï, iota with diaeresis */
 block|{
-literal|'À'
+literal|'\300'
 block|,
 literal|".."
 block|}
 block|,
-comment|/* iota with acute and diaeresis */
+comment|/* Î, iota with acute and diaeresis */
 block|{
-literal|'ê'
+literal|'\352'
 block|,
 literal|"-.-"
 block|}
 block|,
-comment|/* kappa */
+comment|/* Îº, kappa */
 block|{
-literal|'ë'
+literal|'\353'
 block|,
 literal|".-.."
 block|}
 block|,
-comment|/* lambda */
+comment|/* Î», lambda */
 block|{
-literal|'ì'
+literal|'\354'
 block|,
 literal|"--"
 block|}
 block|,
-comment|/* mu */
+comment|/* Î¼, mu */
 block|{
-literal|'í'
+literal|'\355'
 block|,
 literal|"-."
 block|}
 block|,
-comment|/* nu */
+comment|/* Î½, nu */
 block|{
-literal|'î'
+literal|'\356'
 block|,
 literal|"-..-"
 block|}
 block|,
-comment|/* xi */
+comment|/* Î¾, xi */
 block|{
-literal|'ï'
+literal|'\357'
 block|,
 literal|"---"
 block|}
 block|,
-comment|/* omicron */
+comment|/* Î¿, omicron */
 block|{
-literal|'ü'
+literal|'\374'
 block|,
 literal|"---"
 block|}
 block|,
-comment|/* omicron with acute */
+comment|/* Ï, omicron with acute */
 block|{
-literal|'ð'
+literal|'\360'
 block|,
 literal|".--."
 block|}
 block|,
-comment|/* pi */
+comment|/* Ï, pi */
 block|{
-literal|'ñ'
+literal|'\361'
 block|,
 literal|".-."
 block|}
 block|,
-comment|/* rho */
+comment|/* Ï, rho */
 block|{
-literal|'ó'
+literal|'\363'
 block|,
 literal|"..."
 block|}
 block|,
-comment|/* sigma */
+comment|/* Ï, sigma */
 block|{
-literal|'ò'
+literal|'\362'
 block|,
 literal|"..."
 block|}
 block|,
-comment|/* final sigma */
+comment|/* Ï, final sigma */
 block|{
-literal|'ô'
+literal|'\364'
 block|,
 literal|"-"
 block|}
 block|,
-comment|/* tau */
+comment|/* Ï, tau */
 block|{
-literal|'õ'
+literal|'\365'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon */
+comment|/* Ï, upsilon */
 block|{
-literal|'ý'
+literal|'\375'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon with acute */
+comment|/* Ï, upsilon with acute */
 block|{
-literal|'û'
+literal|'\373'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon and diaeresis */
+comment|/* Ï, upsilon and diaeresis */
 block|{
-literal|'à'
+literal|'\340'
 block|,
 literal|"-.--"
 block|}
 block|,
-comment|/* upsilon with acute and diaeresis */
+comment|/* Î°, upsilon with acute and diaeresis */
 block|{
-literal|'ö'
+literal|'\366'
 block|,
 literal|"..-."
 block|}
 block|,
-comment|/* phi */
+comment|/* Ï, phi */
 block|{
-literal|'÷'
+literal|'\367'
 block|,
 literal|"----"
 block|}
 block|,
-comment|/* chi */
+comment|/* Ï, chi */
 block|{
-literal|'ø'
+literal|'\370'
 block|,
 literal|"--.-"
 block|}
 block|,
-comment|/* psi */
+comment|/* Ï, psi */
 block|{
-literal|'ù'
+literal|'\371'
 block|,
 literal|".--"
 block|}
 block|,
-comment|/* omega */
+comment|/* Ï, omega */
 block|{
-literal|'þ'
+literal|'\376'
 block|,
 literal|".--"
 block|}
 block|,
-comment|/* omega with acute */
+comment|/* Ï, omega with acute */
+block|{
+literal|'\0'
+block|,
+literal|""
+block|}
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*  * Code-points for the Cyrillic alphabet in KOI8-R encoding.  * UTF-8 encoded chars in the comments.  */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|struct
+name|morsetab
+name|koi8rtab
+index|[]
+init|=
+block|{
+block|{
+literal|'\301'
+block|,
+literal|".-"
+block|}
+block|,
+comment|/* Ð°, a */
+block|{
+literal|'\302'
+block|,
+literal|"-..."
+block|}
+block|,
+comment|/* Ð±, be */
+block|{
+literal|'\327'
+block|,
+literal|".--"
+block|}
+block|,
+comment|/* Ð², ve */
+block|{
+literal|'\307'
+block|,
+literal|"--."
+block|}
+block|,
+comment|/* Ð³, ge */
+block|{
+literal|'\304'
+block|,
+literal|"-.."
+block|}
+block|,
+comment|/* Ð´, de */
+block|{
+literal|'\305'
+block|,
+literal|"."
+block|}
+block|,
+comment|/* Ðµ, ye */
+block|{
+literal|'\243'
+block|,
+literal|"."
+block|}
+block|,
+comment|/* Ñ, yo, the same as ye */
+block|{
+literal|'\326'
+block|,
+literal|"...-"
+block|}
+block|,
+comment|/* Ð¶, she */
+block|{
+literal|'\332'
+block|,
+literal|"--.."
+block|}
+block|,
+comment|/* Ð·, ze */
+block|{
+literal|'\311'
+block|,
+literal|".."
+block|}
+block|,
+comment|/* Ð¸, i */
+block|{
+literal|'\312'
+block|,
+literal|".---"
+block|}
+block|,
+comment|/* Ð¹, i kratkoye */
+block|{
+literal|'\313'
+block|,
+literal|"-.-"
+block|}
+block|,
+comment|/* Ðº, ka */
+block|{
+literal|'\314'
+block|,
+literal|".-.."
+block|}
+block|,
+comment|/* Ð», el */
+block|{
+literal|'\315'
+block|,
+literal|"--"
+block|}
+block|,
+comment|/* Ð¼, em */
+block|{
+literal|'\316'
+block|,
+literal|"-."
+block|}
+block|,
+comment|/* Ð½, en */
+block|{
+literal|'\317'
+block|,
+literal|"---"
+block|}
+block|,
+comment|/* Ð¾, o */
+block|{
+literal|'\320'
+block|,
+literal|".--."
+block|}
+block|,
+comment|/* Ð¿, pe */
+block|{
+literal|'\322'
+block|,
+literal|".-."
+block|}
+block|,
+comment|/* Ñ, er */
+block|{
+literal|'\323'
+block|,
+literal|"..."
+block|}
+block|,
+comment|/* Ñ, es */
+block|{
+literal|'\324'
+block|,
+literal|"-"
+block|}
+block|,
+comment|/* Ñ, te */
+block|{
+literal|'\325'
+block|,
+literal|"..-"
+block|}
+block|,
+comment|/* Ñ, u */
+block|{
+literal|'\306'
+block|,
+literal|"..-."
+block|}
+block|,
+comment|/* Ñ, ef */
+block|{
+literal|'\310'
+block|,
+literal|"...."
+block|}
+block|,
+comment|/* Ñ, kha */
+block|{
+literal|'\303'
+block|,
+literal|"-.-."
+block|}
+block|,
+comment|/* Ñ, ce */
+block|{
+literal|'\336'
+block|,
+literal|"---."
+block|}
+block|,
+comment|/* Ñ, che */
+block|{
+literal|'\333'
+block|,
+literal|"----"
+block|}
+block|,
+comment|/* Ñ, sha */
+block|{
+literal|'\335'
+block|,
+literal|"--.-"
+block|}
+block|,
+comment|/* Ñ, shcha */
+block|{
+literal|'\331'
+block|,
+literal|"-.--"
+block|}
+block|,
+comment|/* Ñ, yi */
+block|{
+literal|'\330'
+block|,
+literal|"-..-"
+block|}
+block|,
+comment|/* Ñ, myakhkij znak */
+block|{
+literal|'\334'
+block|,
+literal|"..-.."
+block|}
+block|,
+comment|/* Ñ, ae */
+block|{
+literal|'\300'
+block|,
+literal|"..--"
+block|}
+block|,
+comment|/* Ñ, yu */
+block|{
+literal|'\321'
+block|,
+literal|".-.-"
+block|}
+block|,
+comment|/* Ñ, ya */
 block|{
 literal|'\0'
 block|,
@@ -893,248 +1157,6 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|static
-specifier|const
-name|struct
-name|morsetab
-name|koi8rtab
-index|[]
-init|=
-block|{
-comment|/* 	 * The Cyrillic alphabet; you'll need a KOI8-R font in order 	 * to see the actual characters 	 */
-block|{
-literal|'Á'
-block|,
-literal|".-"
-block|}
-block|,
-comment|/* a */
-block|{
-literal|'Â'
-block|,
-literal|"-..."
-block|}
-block|,
-comment|/* be */
-block|{
-literal|'×'
-block|,
-literal|".--"
-block|}
-block|,
-comment|/* ve */
-block|{
-literal|'Ç'
-block|,
-literal|"--."
-block|}
-block|,
-comment|/* ge */
-block|{
-literal|'Ä'
-block|,
-literal|"-.."
-block|}
-block|,
-comment|/* de */
-block|{
-literal|'Å'
-block|,
-literal|"."
-block|}
-block|,
-comment|/* ye */
-block|{
-literal|'£'
-block|,
-literal|"."
-block|}
-block|,
-comment|/* yo, the same as ye */
-block|{
-literal|'Ö'
-block|,
-literal|"...-"
-block|}
-block|,
-comment|/* she */
-block|{
-literal|'Ú'
-block|,
-literal|"--.."
-block|}
-block|,
-comment|/* ze */
-block|{
-literal|'É'
-block|,
-literal|".."
-block|}
-block|,
-comment|/* i */
-block|{
-literal|'Ê'
-block|,
-literal|".---"
-block|}
-block|,
-comment|/* i kratkoye */
-block|{
-literal|'Ë'
-block|,
-literal|"-.-"
-block|}
-block|,
-comment|/* ka */
-block|{
-literal|'Ì'
-block|,
-literal|".-.."
-block|}
-block|,
-comment|/* el */
-block|{
-literal|'Í'
-block|,
-literal|"--"
-block|}
-block|,
-comment|/* em */
-block|{
-literal|'Î'
-block|,
-literal|"-."
-block|}
-block|,
-comment|/* en */
-block|{
-literal|'Ï'
-block|,
-literal|"---"
-block|}
-block|,
-comment|/* o */
-block|{
-literal|'Ð'
-block|,
-literal|".--."
-block|}
-block|,
-comment|/* pe */
-block|{
-literal|'Ò'
-block|,
-literal|".-."
-block|}
-block|,
-comment|/* er */
-block|{
-literal|'Ó'
-block|,
-literal|"..."
-block|}
-block|,
-comment|/* es */
-block|{
-literal|'Ô'
-block|,
-literal|"-"
-block|}
-block|,
-comment|/* te */
-block|{
-literal|'Õ'
-block|,
-literal|"..-"
-block|}
-block|,
-comment|/* u */
-block|{
-literal|'Æ'
-block|,
-literal|"..-."
-block|}
-block|,
-comment|/* ef */
-block|{
-literal|'È'
-block|,
-literal|"...."
-block|}
-block|,
-comment|/* kha */
-block|{
-literal|'Ã'
-block|,
-literal|"-.-."
-block|}
-block|,
-comment|/* ce */
-block|{
-literal|'Þ'
-block|,
-literal|"---."
-block|}
-block|,
-comment|/* che */
-block|{
-literal|'Û'
-block|,
-literal|"----"
-block|}
-block|,
-comment|/* sha */
-block|{
-literal|'Ý'
-block|,
-literal|"--.-"
-block|}
-block|,
-comment|/* shcha */
-block|{
-literal|'Ù'
-block|,
-literal|"-.--"
-block|}
-block|,
-comment|/* yi */
-block|{
-literal|'Ø'
-block|,
-literal|"-..-"
-block|}
-block|,
-comment|/* myakhkij znak */
-block|{
-literal|'Ü'
-block|,
-literal|"..-.."
-block|}
-block|,
-comment|/* ae */
-block|{
-literal|'À'
-block|,
-literal|"..--"
-block|}
-block|,
-comment|/* yu */
-block|{
-literal|'Ñ'
-block|,
-literal|".-.-"
-block|}
-block|,
-comment|/* ya */
-block|{
-literal|'\0'
-block|,
-literal|""
-block|}
-block|}
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
 name|void
 name|show
 argument_list|(
@@ -1158,6 +1180,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|ttyout
 parameter_list|(
@@ -1169,6 +1192,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|sighandler
 parameter_list|(
@@ -1293,6 +1317,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|spkr
 decl_stmt|,
@@ -1301,6 +1326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|termios
 name|otty
@@ -1310,6 +1336,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|olflags
 decl_stmt|;
@@ -1322,6 +1349,7 @@ name|SPEAKER
 end_ifdef
 
 begin_decl_stmt
+specifier|static
 name|tone_t
 name|sound
 decl_stmt|;
@@ -2145,6 +2173,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|morse
 parameter_list|(
@@ -2324,6 +2353,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show
 parameter_list|(
@@ -2406,6 +2436,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|play
 parameter_list|(
@@ -2609,6 +2640,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|ttyout
 parameter_list|(
@@ -2798,6 +2830,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|sighandler
 parameter_list|(

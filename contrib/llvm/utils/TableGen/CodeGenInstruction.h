@@ -895,6 +895,9 @@ name|bool
 name|usesCustomInserter
 decl_stmt|;
 name|bool
+name|hasPostISelHook
+decl_stmt|;
+name|bool
 name|hasCtrlDep
 decl_stmt|;
 name|bool

@@ -77,12 +77,25 @@ comment|///< '#include ""' paths, added by'gcc -iquote'.
 name|Angled
 block|,
 comment|///< Paths for '#include<>' added by '-I'.
+name|IndexHeaderMap
+block|,
+comment|///< Like Angled, but marks header maps used when
+comment|///  building frameworks.
 name|System
 block|,
 comment|///< Like Angled, but marks system directories.
+name|CSystem
+block|,
+comment|///< Like System, but only used for C.
 name|CXXSystem
 block|,
 comment|///< Like System, but only used for C++.
+name|ObjCSystem
+block|,
+comment|///< Like System, but only used for ObjC.
+name|ObjCXXSystem
+block|,
+comment|///< Like System, but only used for ObjC++.
 name|After
 comment|///< Like System, but searched after the system directories.
 block|}
@@ -126,9 +139,27 @@ name|IgnoreSysRoot
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief True if this entry is an internal search path.
+comment|///
+comment|/// This typically indicates that users didn't directly provide it, but
+comment|/// instead it was provided by a compatibility layer for a particular
+comment|/// system. This isn't redundant with IsUserSupplied (even though perhaps
+comment|/// it should be) because that is false for user provided '-iwithprefix'
+comment|/// header search entries.
+name|unsigned
+name|IsInternal
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief True if this entry's headers should be wrapped in extern "C".
+name|unsigned
+name|ImplicitExternC
+range|:
+literal|1
+decl_stmt|;
 name|Entry
 argument_list|(
-argument|llvm::StringRef path
+argument|StringRef path
 argument_list|,
 argument|frontend::IncludeDirGroup group
 argument_list|,
@@ -137,6 +168,10 @@ argument_list|,
 argument|bool isFramework
 argument_list|,
 argument|bool ignoreSysRoot
+argument_list|,
+argument|bool isInternal
+argument_list|,
+argument|bool implicitExternC
 argument_list|)
 block|:
 name|Path
@@ -161,7 +196,17 @@ argument_list|)
 operator|,
 name|IgnoreSysRoot
 argument_list|(
-argument|ignoreSysRoot
+name|ignoreSysRoot
+argument_list|)
+operator|,
+name|IsInternal
+argument_list|(
+name|isInternal
+argument_list|)
+operator|,
+name|ImplicitExternC
+argument_list|(
+argument|implicitExternC
 argument_list|)
 block|{}
 block|}
@@ -182,36 +227,6 @@ name|Entry
 operator|>
 name|UserEntries
 expr_stmt|;
-comment|/// A (system-path) delimited list of include paths to be added from the
-comment|/// environment following the user specified includes (but prior to builtin
-comment|/// and standard includes). This is parsed in the same manner as the CPATH
-comment|/// environment variable for gcc.
-name|std
-operator|::
-name|string
-name|EnvIncPath
-expr_stmt|;
-comment|/// Per-language environmental include paths, see \see EnvIncPath.
-name|std
-operator|::
-name|string
-name|CEnvIncPath
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|ObjCEnvIncPath
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|CXXEnvIncPath
-expr_stmt|;
-name|std
-operator|::
-name|string
-name|ObjCXXEnvIncPath
-expr_stmt|;
 comment|/// The directory which holds the compiler resource files (builtin includes,
 comment|/// etc.).
 name|std
@@ -219,6 +234,21 @@ operator|::
 name|string
 name|ResourceDir
 expr_stmt|;
+comment|/// \brief The directory used for the module cache.
+name|std
+operator|::
+name|string
+name|ModuleCachePath
+expr_stmt|;
+comment|/// \brief Whether we should disable the use of the hash string within the
+comment|/// module cache.
+comment|///
+comment|/// Note: Only used for testing!
+name|unsigned
+name|DisableModuleHash
+range|:
+literal|1
+decl_stmt|;
 comment|/// Include the compiler builtin includes.
 name|unsigned
 name|UseBuiltinIncludes
@@ -227,7 +257,7 @@ literal|1
 decl_stmt|;
 comment|/// Include the system standard include search directories.
 name|unsigned
-name|UseStandardIncludes
+name|UseStandardSystemIncludes
 range|:
 literal|1
 decl_stmt|;
@@ -253,7 +283,7 @@ name|public
 label|:
 name|HeaderSearchOptions
 argument_list|(
-argument|llvm::StringRef _Sysroot =
+argument|StringRef _Sysroot =
 literal|"/"
 argument_list|)
 block|:
@@ -262,12 +292,17 @@ argument_list|(
 name|_Sysroot
 argument_list|)
 operator|,
+name|DisableModuleHash
+argument_list|(
+literal|0
+argument_list|)
+operator|,
 name|UseBuiltinIncludes
 argument_list|(
 name|true
 argument_list|)
 operator|,
-name|UseStandardIncludes
+name|UseStandardSystemIncludes
 argument_list|(
 name|true
 argument_list|)
@@ -291,7 +326,7 @@ comment|/// AddPath - Add the \arg Path path to the specified \arg Group list.
 name|void
 name|AddPath
 argument_list|(
-argument|llvm::StringRef Path
+argument|StringRef Path
 argument_list|,
 argument|frontend::IncludeDirGroup Group
 argument_list|,
@@ -300,6 +335,10 @@ argument_list|,
 argument|bool IsFramework
 argument_list|,
 argument|bool IgnoreSysRoot
+argument_list|,
+argument|bool IsInternal = false
+argument_list|,
+argument|bool ImplicitExternC = false
 argument_list|)
 block|{
 name|UserEntries
@@ -317,6 +356,10 @@ argument_list|,
 name|IsFramework
 argument_list|,
 name|IgnoreSysRoot
+argument_list|,
+name|IsInternal
+argument_list|,
+name|ImplicitExternC
 argument_list|)
 argument_list|)
 block|;   }

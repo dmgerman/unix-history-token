@@ -726,7 +726,7 @@ operator|++
 control|)
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|LOCATE_REG
 argument_list|,

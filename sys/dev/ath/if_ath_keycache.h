@@ -88,6 +88,11 @@ name|ath_softc
 modifier|*
 name|sc
 parameter_list|,
+name|struct
+name|ieee80211vap
+modifier|*
+name|vap
+parameter_list|,
 specifier|const
 name|struct
 name|ieee80211_key

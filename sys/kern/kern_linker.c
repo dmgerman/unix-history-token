@@ -26,6 +26,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"opt_kld.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"opt_hwpmc_hooks.h"
 end_include
 
@@ -214,6 +220,8 @@ argument_list|,
 name|kld_debug
 argument_list|,
 name|CTLFLAG_RW
+operator||
+name|CTLFLAG_TUN
 argument_list|,
 operator|&
 name|kld_debug
@@ -221,6 +229,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Set various levels of KLD debug"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"debug.kld_debug"
+argument_list|,
+operator|&
+name|kld_debug
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1333,7 +1352,7 @@ argument_list|(
 name|FILE
 argument_list|,
 operator|(
-literal|"linker_file_unregister_sysctls: registering SYSCTLs"
+literal|"linker_file_unregister_sysctls: unregistering SYSCTLs"
 literal|" for %s\n"
 operator|,
 name|lf
@@ -1645,6 +1664,8 @@ name|int
 name|foundfile
 decl_stmt|,
 name|error
+decl_stmt|,
+name|modules
 decl_stmt|;
 comment|/* Refuse to load modules if securelevel raised */
 if|if
@@ -1787,6 +1808,17 @@ name|error
 operator|)
 return|;
 block|}
+name|modules
+operator|=
+operator|!
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|lf
+operator|->
+name|modules
+argument_list|)
+expr_stmt|;
 name|KLD_UNLOCK
 argument_list|()
 expr_stmt|;
@@ -1809,6 +1841,33 @@ name|flags
 operator||=
 name|LINKER_FILE_LINKED
 expr_stmt|;
+comment|/* 			 * If all of the modules in this file failed 			 * to load, unload the file and return an 			 * error of ENOEXEC. 			 */
+if|if
+condition|(
+name|modules
+operator|&&
+name|TAILQ_EMPTY
+argument_list|(
+operator|&
+name|lf
+operator|->
+name|modules
+argument_list|)
+condition|)
+block|{
+name|linker_file_unload
+argument_list|(
+name|lf
+argument_list|,
+name|LINKER_UNLOAD_FORCE
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|ENOEXEC
+operator|)
+return|;
+block|}
 operator|*
 name|result
 operator|=
@@ -2620,7 +2679,7 @@ block|}
 block|}
 name|MOD_SUNLOCK
 expr_stmt|;
-comment|/* 	 * Inform any modules associated with this file that they are 	 * being be unloaded. 	 */
+comment|/* 	 * Inform any modules associated with this file that they are 	 * being unloaded. 	 */
 name|MOD_XLOCK
 expr_stmt|;
 for|for
@@ -2666,6 +2725,11 @@ operator|!=
 literal|0
 condition|)
 block|{
+ifdef|#
+directive|ifdef
+name|KLD_DEBUG
+name|MOD_SLOCK
+expr_stmt|;
 name|KLD_DPF
 argument_list|(
 name|FILE
@@ -2681,6 +2745,10 @@ argument_list|)
 operator|)
 argument_list|)
 expr_stmt|;
+name|MOD_SUNLOCK
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 name|error
@@ -4293,14 +4361,14 @@ expr_stmt|;
 comment|/* 	 * If file does not contain a qualified name or any dot in it 	 * (kldname.ko, or kldname.ver.ko) treat it as an interface 	 * name. 	 */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|file
 argument_list|,
 literal|'/'
 argument_list|)
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|file
 argument_list|,
@@ -7874,8 +7942,6 @@ decl_stmt|,
 modifier|*
 name|intp
 decl_stmt|,
-name|reclen
-decl_stmt|,
 name|found
 decl_stmt|,
 name|flags
@@ -7883,6 +7949,9 @@ decl_stmt|,
 name|clen
 decl_stmt|,
 name|blen
+decl_stmt|;
+name|ssize_t
+name|reclen
 decl_stmt|;
 name|int
 name|vfslocked
@@ -8199,7 +8268,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"can't read %d\n"
+literal|"can't read %zd\n"
 argument_list|,
 name|reclen
 argument_list|)
@@ -8746,7 +8815,7 @@ decl_stmt|;
 comment|/* qualified at all? */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,
@@ -8861,7 +8930,7 @@ name|filename
 decl_stmt|;
 name|filename
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|path
 argument_list|,

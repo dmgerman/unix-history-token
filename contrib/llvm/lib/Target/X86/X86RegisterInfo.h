@@ -90,68 +90,6 @@ decl_stmt|;
 name|class
 name|X86TargetMachine
 decl_stmt|;
-comment|/// N86 namespace - Native X86 register numbers
-comment|///
-name|namespace
-name|N86
-block|{
-enum|enum
-block|{
-name|EAX
-init|=
-literal|0
-block|,
-name|ECX
-init|=
-literal|1
-block|,
-name|EDX
-init|=
-literal|2
-block|,
-name|EBX
-init|=
-literal|3
-block|,
-name|ESP
-init|=
-literal|4
-block|,
-name|EBP
-init|=
-literal|5
-block|,
-name|ESI
-init|=
-literal|6
-block|,
-name|EDI
-init|=
-literal|7
-block|}
-enum|;
-block|}
-comment|/// DWARFFlavour - Flavour of dwarf regnumbers
-comment|///
-name|namespace
-name|DWARFFlavour
-block|{
-enum|enum
-block|{
-name|X86_64
-init|=
-literal|0
-block|,
-name|X86_32_DarwinEH
-init|=
-literal|1
-block|,
-name|X86_32_Generic
-init|=
-literal|2
-block|}
-enum|;
-block|}
 name|class
 name|X86RegisterInfo
 range|:
@@ -219,26 +157,6 @@ argument_list|(
 argument|unsigned RegNo
 argument_list|)
 block|;
-comment|/// getDwarfRegNum - allows modification of X86GenRegisterInfo::getDwarfRegNum
-comment|/// (created by TableGen) for target dependencies.
-name|int
-name|getDwarfRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
-name|int
-name|getLLVMRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
 comment|// FIXME: This should be tablegen'd like getDwarfRegNum is
 name|int
 name|getSEHRegNum
@@ -272,6 +190,18 @@ argument_list|(
 argument|const TargetRegisterClass *A
 argument_list|,
 argument|const TargetRegisterClass *B
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+specifier|const
+block|;
+name|virtual
+specifier|const
+name|TargetRegisterClass
+operator|*
+name|getSubClassWithSubReg
+argument_list|(
+argument|const TargetRegisterClass *RC
 argument_list|,
 argument|unsigned Idx
 argument_list|)
@@ -390,11 +320,6 @@ argument_list|)
 specifier|const
 block|;
 comment|// Debug information queries.
-name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
-block|;
 name|unsigned
 name|getFrameRegister
 argument_list|(

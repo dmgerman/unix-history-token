@@ -159,19 +159,11 @@ directive|include
 file|<netinet/if_ether.h>
 end_include
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET
-argument_list|)
-operator|||
-name|defined
-argument_list|(
-name|INET6
-argument_list|)
-end_if
+end_ifdef
 
 begin_include
 include|#
@@ -231,6 +223,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_link_ether
@@ -249,6 +242,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_link_ether
@@ -599,28 +593,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|arprequest
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-parameter_list|,
-name|struct
-name|in_addr
-modifier|*
-parameter_list|,
-name|struct
-name|in_addr
-modifier|*
-parameter_list|,
-name|u_char
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 specifier|static
 name|void
 name|arpintr
@@ -702,21 +674,6 @@ ifdef|#
 directive|ifdef
 name|AF_INET
 end_ifdef
-
-begin_function_decl
-name|void
-name|arp_ifscrub
-parameter_list|(
-name|struct
-name|ifnet
-modifier|*
-name|ifp
-parameter_list|,
-name|uint32_t
-name|addr
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_comment
 comment|/*  * called by in_ifscrub to remove entry from the table when  * the interface goes away  */
@@ -1060,6 +1017,12 @@ name|struct
 name|sockaddr
 name|sa
 decl_stmt|;
+name|u_char
+modifier|*
+name|carpaddr
+init|=
+name|NULL
+decl_stmt|;
 if|if
 condition|(
 name|sip
@@ -1067,13 +1030,17 @@ operator|==
 name|NULL
 condition|)
 block|{
-comment|/* XXX don't believe this can happen (or explain why) */
 comment|/* 		 * The caller did not supply a source address, try to find 		 * a compatible one among those assigned to this interface. 		 */
 name|struct
 name|ifaddr
 modifier|*
 name|ifa
 decl_stmt|;
+name|IF_ADDR_RLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 name|TAILQ_FOREACH
 argument_list|(
 argument|ifa
@@ -1085,11 +1052,6 @@ argument_list|)
 block|{
 if|if
 condition|(
-operator|!
-name|ifa
-operator|->
-name|ifa_addr
-operator|||
 name|ifa
 operator|->
 name|ifa_addr
@@ -1099,18 +1061,57 @@ operator|!=
 name|AF_INET
 condition|)
 continue|continue;
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_carp
+condition|)
+block|{
+if|if
+condition|(
+call|(
+modifier|*
+name|carp_iamatch_p
+call|)
+argument_list|(
+name|ifa
+argument_list|,
+operator|&
+name|carpaddr
+argument_list|)
+operator|==
+literal|0
+condition|)
+continue|continue;
 name|sip
 operator|=
 operator|&
-name|SIN
+name|IA_SIN
 argument_list|(
 name|ifa
-operator|->
-name|ifa_addr
 argument_list|)
 operator|->
 name|sin_addr
 expr_stmt|;
+block|}
+else|else
+block|{
+name|carpaddr
+operator|=
+name|NULL
+expr_stmt|;
+name|sip
+operator|=
+operator|&
+name|IA_SIN
+argument_list|(
+name|ifa
+argument_list|)
+operator|->
+name|sin_addr
+expr_stmt|;
+block|}
 if|if
 condition|(
 literal|0
@@ -1126,11 +1127,9 @@ operator|->
 name|s_addr
 operator|)
 operator|&
-name|SIN
+name|IA_MASKSIN
 argument_list|(
 name|ifa
-operator|->
-name|ifa_netmask
 argument_list|)
 operator|->
 name|sin_addr
@@ -1141,6 +1140,11 @@ condition|)
 break|break;
 comment|/* found it. */
 block|}
+name|IF_ADDR_RUNLOCK
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sip
@@ -1158,6 +1162,27 @@ expr_stmt|;
 return|return;
 block|}
 block|}
+if|if
+condition|(
+name|enaddr
+operator|==
+name|NULL
+condition|)
+name|enaddr
+operator|=
+name|carpaddr
+condition|?
+name|carpaddr
+else|:
+operator|(
+name|u_char
+operator|*
+operator|)
+name|IF_LLADDR
+argument_list|(
+name|ifp
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 operator|(
@@ -1758,10 +1783,7 @@ argument_list|)
 operator|->
 name|sin_addr
 argument_list|,
-name|IF_LLADDR
-argument_list|(
-name|ifp
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 name|la
@@ -2106,10 +2128,7 @@ argument_list|)
 operator|->
 name|sin_addr
 argument_list|,
-name|IF_LLADDR
-argument_list|(
-name|ifp
-argument_list|)
+name|NULL
 argument_list|)
 expr_stmt|;
 return|return
@@ -2199,7 +2218,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"arp: runt packet -- m_pullup failed\n"
 argument_list|)
@@ -2267,9 +2286,10 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"arp: unknown hardware address format (0x%2D)\n"
+literal|"arp: unknown hardware address format (0x%2D)"
+literal|" (from %*D to %*D)\n"
 argument_list|,
 operator|(
 name|unsigned
@@ -2282,6 +2302,32 @@ operator|->
 name|ar_hrd
 argument_list|,
 literal|""
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_sha
+argument_list|(
+name|ar
+argument_list|)
+argument_list|,
+literal|":"
+argument_list|,
+name|ETHER_ADDR_LEN
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_tha
+argument_list|(
+name|ar
+argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 name|m_freem
@@ -2324,7 +2370,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"arp: runt packet\n"
 argument_list|)
@@ -2571,9 +2617,7 @@ init|=
 literal|0
 decl_stmt|;
 name|int
-name|carp_match
-init|=
-literal|0
+name|carped
 decl_stmt|;
 name|struct
 name|sockaddr_in
@@ -2664,7 +2708,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"in_arp: runt packet -- m_pullup failed\n"
 argument_list|)
@@ -2698,7 +2742,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"in_arp: requested protocol length != %zu\n"
 argument_list|,
@@ -2724,9 +2768,24 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
-literal|"in_arp: source hardware address is multicast."
+literal|"in_arp: %*D is multicast\n"
+argument_list|,
+name|ifp
+operator|->
+name|if_addrlen
+argument_list|,
+operator|(
+name|u_char
+operator|*
+operator|)
+name|ar_sha
+argument_list|(
+name|ah
+argument_list|)
+argument_list|,
+literal|":"
 argument_list|)
 expr_stmt|;
 return|return;
@@ -2789,7 +2848,7 @@ argument_list|(
 name|rxreplies
 argument_list|)
 expr_stmt|;
-comment|/* 	 * For a bridge, we want to check the address irrespective 	 * of the receive interface. (This will change slightly 	 * when we have clusters of interfaces). 	 * If the interface does not match, but the recieving interface 	 * is part of carp, we call carp_iamatch to see if this is a 	 * request for the virtual host ip. 	 * XXX: This is really ugly! 	 */
+comment|/* 	 * For a bridge, we want to check the address irrespective 	 * of the receive interface. (This will change slightly 	 * when we have clusters of interfaces). 	 */
 name|IN_IFADDR_RLOCK
 argument_list|()
 expr_stmt|;
@@ -2837,64 +2896,32 @@ operator|.
 name|sin_addr
 operator|.
 name|s_addr
-condition|)
-block|{
-name|ifa_ref
-argument_list|(
-operator|&
+operator|&&
+operator|(
 name|ia
 operator|->
 name|ia_ifa
-argument_list|)
-expr_stmt|;
-name|IN_IFADDR_RUNLOCK
-argument_list|()
-expr_stmt|;
-goto|goto
-name|match
-goto|;
-block|}
-if|if
-condition|(
-name|ifp
-operator|->
-name|if_carp
-operator|!=
+operator|.
+name|ifa_carp
+operator|==
 name|NULL
-operator|&&
+operator|||
 call|(
 modifier|*
 name|carp_iamatch_p
 call|)
 argument_list|(
-name|ifp
-argument_list|,
-name|ia
-argument_list|,
 operator|&
-name|isaddr
+name|ia
+operator|->
+name|ia_ifa
 argument_list|,
 operator|&
 name|enaddr
 argument_list|)
-operator|&&
-name|itaddr
-operator|.
-name|s_addr
-operator|==
-name|ia
-operator|->
-name|ia_addr
-operator|.
-name|sin_addr
-operator|.
-name|s_addr
+operator|)
 condition|)
 block|{
-name|carp_match
-operator|=
-literal|1
-expr_stmt|;
 name|ifa_ref
 argument_list|(
 operator|&
@@ -3042,7 +3069,7 @@ name|IN_IFADDR_RUNLOCK
 argument_list|()
 expr_stmt|;
 comment|/* 	 * No match, use the first inet address on the receive interface 	 * as a dummy address for the rest of the function. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3064,6 +3091,25 @@ operator|->
 name|sa_family
 operator|==
 name|AF_INET
+operator|&&
+operator|(
+name|ifa
+operator|->
+name|ifa_carp
+operator|==
+name|NULL
+operator|||
+call|(
+modifier|*
+name|carp_iamatch_p
+call|)
+argument_list|(
+name|ifa
+argument_list|,
+operator|&
+name|enaddr
+argument_list|)
+operator|)
 condition|)
 block|{
 name|ia
@@ -3078,7 +3124,7 @@ argument_list|(
 name|ifa
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3087,7 +3133,7 @@ goto|goto
 name|match
 goto|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3150,6 +3196,18 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|carped
+operator|=
+operator|(
+name|ia
+operator|->
+name|ia_ifa
+operator|.
+name|ifa_carp
+operator|!=
+name|NULL
+operator|)
+expr_stmt|;
 name|myaddr
 operator|=
 name|ia
@@ -3209,7 +3267,7 @@ condition|)
 block|{
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_NOTICE
 argument_list|,
 literal|"arp: link address is broadcast for IP address %s!\n"
 argument_list|,
@@ -3228,6 +3286,9 @@ if|if
 condition|(
 operator|!
 name|bridged
+operator|&&
+operator|!
+name|carped
 operator|&&
 name|isaddr
 operator|.
@@ -3402,9 +3463,6 @@ operator|->
 name|llt_ifp
 operator|!=
 name|ifp
-operator|&&
-operator|!
-name|carp_match
 condition|)
 block|{
 if|if
@@ -3413,7 +3471,7 @@ name|log_arp_wrong_iface
 condition|)
 name|log
 argument_list|(
-name|LOG_ERR
+name|LOG_WARNING
 argument_list|,
 literal|"arp: %s is on %s "
 literal|"but got reply from %*D on %s\n"
@@ -3616,7 +3674,8 @@ name|log
 argument_list|(
 name|LOG_WARNING
 argument_list|,
-literal|"arp from %*D: addr len: new %d, i/f %d (ignored)"
+literal|"arp from %*D: addr len: new %d, "
+literal|"i/f %d (ignored)\n"
 argument_list|,
 name|ifp
 operator|->
@@ -4484,6 +4543,15 @@ name|llentry
 modifier|*
 name|lle
 decl_stmt|;
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_carp
+operator|!=
+name|NULL
+condition|)
+return|return;
 if|if
 condition|(
 name|ntohl

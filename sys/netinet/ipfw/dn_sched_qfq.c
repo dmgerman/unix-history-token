@@ -2608,7 +2608,7 @@ name|unsigned
 name|long
 name|mask
 decl_stmt|;
-name|uint32_t
+name|uint64_t
 name|limit
 decl_stmt|,
 name|roundedF

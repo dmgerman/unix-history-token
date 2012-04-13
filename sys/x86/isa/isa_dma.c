@@ -825,19 +825,6 @@ decl_stmt|;
 name|int
 name|dma_range_checked
 decl_stmt|;
-comment|/* translate to physical */
-name|phys
-operator|=
-name|pmap_extract
-argument_list|(
-name|kernel_pmap
-argument_list|,
-operator|(
-name|vm_offset_t
-operator|)
-name|addr
-argument_list|)
-expr_stmt|;
 name|dma_range_checked
 operator|=
 name|isa_dmarangecheck
@@ -1025,6 +1012,19 @@ operator|=
 name|newaddr
 expr_stmt|;
 block|}
+comment|/* translate to physical */
+name|phys
+operator|=
+name|pmap_extract
+argument_list|(
+name|kernel_pmap
+argument_list|,
+operator|(
+name|vm_offset_t
+operator|)
+name|addr
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|flags

@@ -599,13 +599,29 @@ modifier|*
 name|osd
 decl_stmt|;
 comment|/* storage for Khelp module data */
+name|u_int
+name|t_keepinit
+decl_stmt|;
+comment|/* time to establish connection */
+name|u_int
+name|t_keepidle
+decl_stmt|;
+comment|/* time before keepalive probes begin */
+name|u_int
+name|t_keepintvl
+decl_stmt|;
+comment|/* interval between keepalives */
+name|u_int
+name|t_keepcnt
+decl_stmt|;
+comment|/* number of keepalives before close */
 name|uint32_t
 name|t_ispare
 index|[
-literal|12
+literal|8
 index|]
 decl_stmt|;
-comment|/* 4 keep timers, 5 UTO, 3 TBD */
+comment|/* 5 UTO, 3 TBD */
 name|void
 modifier|*
 name|t_pspare2
@@ -2389,27 +2405,27 @@ name|VNET_DECLARE
 argument_list|(
 name|int
 argument_list|,
+name|tcp_sendspace
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
+name|tcp_recvspace
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|VNET_DECLARE
+argument_list|(
+name|int
+argument_list|,
 name|path_mtu_discovery
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|ss_fltsz
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|VNET_DECLARE
-argument_list|(
-name|int
-argument_list|,
-name|ss_fltsz_local
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2486,22 +2502,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|V_tcp_sendspace
+value|VNET(tcp_sendspace)
+end_define
+
+begin_define
+define|#
+directive|define
+name|V_tcp_recvspace
+value|VNET(tcp_recvspace)
+end_define
+
+begin_define
+define|#
+directive|define
 name|V_path_mtu_discovery
 value|VNET(path_mtu_discovery)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ss_fltsz
-value|VNET(ss_fltsz)
-end_define
-
-begin_define
-define|#
-directive|define
-name|V_ss_fltsz_local
-value|VNET(ss_fltsz_local)
 end_define
 
 begin_define
@@ -3409,20 +3425,6 @@ specifier|extern
 name|struct
 name|pr_usrreqs
 name|tcp_usrreqs
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|tcp_sendspace
-decl_stmt|;
-end_decl_stmt
-
-begin_decl_stmt
-specifier|extern
-name|u_long
-name|tcp_recvspace
 decl_stmt|;
 end_decl_stmt
 

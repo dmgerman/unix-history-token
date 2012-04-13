@@ -15,6 +15,12 @@ directive|include
 file|<stdint.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<machine/sysarch.h>
+end_include
+
 begin_function
 name|void
 name|_set_tp
@@ -23,7 +29,15 @@ name|void
 modifier|*
 name|tp
 parameter_list|)
-block|{ }
+block|{
+name|sysarch
+argument_list|(
+name|MIPS_SET_TLS
+argument_list|,
+name|tp
+argument_list|)
+expr_stmt|;
+block|}
 end_function
 
 end_unit

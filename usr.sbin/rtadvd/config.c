@@ -831,7 +831,7 @@ operator|->
 name|ifi_ifname
 argument_list|)
 expr_stmt|;
-comment|/* XXX: No MC leaving here becasue index is disappeared */
+comment|/* XXX: No MC leaving here because index is disappeared */
 comment|/* Inactivate timer */
 name|rtadvd_remove_timer
 argument_list|(

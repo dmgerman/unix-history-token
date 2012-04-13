@@ -591,7 +591,7 @@ return|return
 name|bp
 return|;
 block|}
-comment|/*    * Handle compressed packet. 1) Read upto MAX_VJHEADER bytes into work    * space. 2) Try to uncompress it. 3) Compute amount of necessary space. 4)    * Copy unread data info there.    */
+comment|/*    * Handle compressed packet. 1) Read up to MAX_VJHEADER bytes into work    * space. 2) Try to uncompress it. 3) Compute amount of necessary space. 4)    * Copy unread data info there.    */
 if|if
 condition|(
 name|len

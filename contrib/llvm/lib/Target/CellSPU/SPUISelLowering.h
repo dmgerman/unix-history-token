@@ -372,9 +372,7 @@ specifier|const
 block|;
 comment|/// getSetCCResultType - Return the ValueType for ISD::SETCC
 name|virtual
-name|MVT
-operator|::
-name|SimpleValueType
+name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT
@@ -516,7 +514,7 @@ name|isLegalAddressImmediate
 argument_list|(
 argument|int64_t V
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -618,7 +616,7 @@ name|isLegalAddressingMode
 argument_list|(
 argument|const AddrMode&AM
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;   }

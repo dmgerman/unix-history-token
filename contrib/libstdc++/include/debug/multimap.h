@@ -354,11 +354,6 @@ name|const_iterator
 operator|>
 name|const_reverse_iterator
 expr_stmt|;
-name|using
-name|_Base
-operator|::
-name|value_compare
-expr_stmt|;
 comment|// 23.3.1.1 construct/copy/destroy:
 name|explicit
 name|multimap

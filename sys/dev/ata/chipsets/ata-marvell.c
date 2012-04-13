@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*-  * Copyright (c) 1998 - 2008 Søren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
+comment|/*-  * Copyright (c) 1998 - 2008 SÃ¸ren Schmidt<sos@FreeBSD.org>  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer,  *    without modification, immediately at the beginning of the file.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR  * IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES  * OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  * IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,  * INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT  * NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,  * DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY  * THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -444,8 +444,10 @@ name|dev
 argument_list|)
 decl_stmt|;
 specifier|static
+specifier|const
 name|struct
 name|ata_chip_id
+specifier|const
 name|ids
 index|[]
 init|=
@@ -563,7 +565,7 @@ literal|"88SX7042"
 block|}
 block|,
 block|{
-name|ATA_M88SX6101
+name|ATA_M88SE6101
 block|,
 literal|0
 block|,
@@ -573,11 +575,11 @@ name|MV_61XX
 block|,
 name|ATA_UDMA6
 block|,
-literal|"88SX6101"
+literal|"88SE6101"
 block|}
 block|,
 block|{
-name|ATA_M88SX6102
+name|ATA_M88SE6102
 block|,
 literal|0
 block|,
@@ -587,11 +589,11 @@ name|MV_61XX
 block|,
 name|ATA_UDMA6
 block|,
-literal|"88SX6102"
+literal|"88SE6102"
 block|}
 block|,
 block|{
-name|ATA_M88SX6111
+name|ATA_M88SE6111
 block|,
 literal|0
 block|,
@@ -601,11 +603,11 @@ name|MV_61XX
 block|,
 name|ATA_UDMA6
 block|,
-literal|"88SX6111"
+literal|"88SE6111"
 block|}
 block|,
 block|{
-name|ATA_M88SX6121
+name|ATA_M88SE6121
 block|,
 literal|0
 block|,
@@ -615,11 +617,11 @@ name|MV_61XX
 block|,
 name|ATA_UDMA6
 block|,
-literal|"88SX6121"
+literal|"88SE6121"
 block|}
 block|,
 block|{
-name|ATA_M88SX6141
+name|ATA_M88SE6141
 block|,
 literal|0
 block|,
@@ -629,11 +631,11 @@ name|MV_61XX
 block|,
 name|ATA_UDMA6
 block|,
-literal|"88SX6141"
+literal|"88SE6141"
 block|}
 block|,
 block|{
-name|ATA_M88SX6145
+name|ATA_M88SE6145
 block|,
 literal|0
 block|,
@@ -643,7 +645,7 @@ name|MV_61XX
 block|,
 name|ATA_UDMA6
 block|,
-literal|"88SX6145"
+literal|"88SE6145"
 block|}
 block|,
 block|{

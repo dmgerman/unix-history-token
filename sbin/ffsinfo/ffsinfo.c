@@ -201,6 +201,7 @@ comment|/* FS_DEBUG */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uufsd
 name|disk

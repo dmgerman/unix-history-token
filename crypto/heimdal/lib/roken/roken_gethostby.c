@@ -1,32 +1,13 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1998 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1998 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: roken_gethostby.c 21157 2007-06-18 22:03:13Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -220,6 +201,10 @@ argument_list|(
 name|dns_req
 argument_list|)
 expr_stmt|;
+name|dns_req
+operator|=
+name|NULL
+expr_stmt|;
 if|if
 condition|(
 name|proxy_host
@@ -252,6 +237,8 @@ argument_list|(
 name|proxy_port
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -265,7 +252,13 @@ name|dns_port
 argument_list|,
 name|dns_path
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+operator|-
+literal|1
+return|;
 block|}
 else|else
 block|{
@@ -456,8 +449,9 @@ block|}
 end_function
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|roken_gethostby_setup
 parameter_list|(
 specifier|const
@@ -607,6 +601,8 @@ decl_stmt|;
 name|char
 modifier|*
 name|request
+init|=
+name|NULL
 decl_stmt|;
 name|char
 name|buf
@@ -629,6 +625,9 @@ decl_stmt|,
 modifier|*
 name|foo
 decl_stmt|;
+name|size_t
+name|len
+decl_stmt|;
 if|if
 condition|(
 name|dns_addr
@@ -645,6 +644,8 @@ name|addr
 operator|=
 name|dns_addr
 expr_stmt|;
+if|if
+condition|(
 name|asprintf
 argument_list|(
 operator|&
@@ -656,7 +657,12 @@ name|dns_req
 argument_list|,
 name|hostname
 argument_list|)
-expr_stmt|;
+operator|<
+literal|0
+condition|)
+return|return
+name|NULL
+return|;
 if|if
 condition|(
 name|request
@@ -730,6 +736,13 @@ return|return
 name|NULL
 return|;
 block|}
+name|len
+operator|=
+name|strlen
+argument_list|(
+name|request
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|write
@@ -738,16 +751,13 @@ name|s
 argument_list|,
 name|request
 argument_list|,
-name|strlen
-argument_list|(
-name|request
-argument_list|)
+name|len
 argument_list|)
 operator|!=
-name|strlen
-argument_list|(
-name|request
-argument_list|)
+operator|(
+name|ssize_t
+operator|)
+name|len
 condition|)
 block|{
 name|close
@@ -1079,9 +1089,11 @@ block|}
 end_function
 
 begin_function
+name|ROKEN_LIB_FUNCTION
 name|struct
 name|hostent
 modifier|*
+name|ROKEN_LIB_CALL
 name|roken_gethostbyname
 parameter_list|(
 specifier|const
@@ -1119,10 +1131,11 @@ block|}
 end_function
 
 begin_function
+name|ROKEN_LIB_FUNCTION
 name|struct
 name|hostent
 modifier|*
-name|ROKEN_LIB_FUNCTION
+name|ROKEN_LIB_CALL
 name|roken_gethostbyaddr
 parameter_list|(
 specifier|const
@@ -1272,7 +1285,7 @@ file|<sys/param.h>
 end_include
 
 begin_endif
-unit|int main(int argc, char **argv) {     char *query = getenv("QUERY_STRING");     char host[MAXHOSTNAMELEN];     int i;     struct hostent *he;          printf("Content-type: text/plain\n\n");     if(query == NULL) 	exit(0);     he = gethostbyname(query);     strncpy(host, he->h_name, sizeof(host));     host[sizeof(host) - 1] = '\0';     he = gethostbyaddr(he->h_addr, he->h_length, AF_INET);     printf("%s\n", he->h_name);     for(i = 0; he->h_addr_list[i]; i++) { 	struct in_addr ip; 	unsigned char *p = (unsigned char*)he->h_addr_list[i]; 	ip.s_addr = htonl((p[0]<< 24) | (p[1]<< 16) | (p[2]<< 8) | p[3]); 	printf("%s\n", inet_ntoa(ip));     }     exit(0); }
+unit|int main(int argc, char **argv) {     char *query = getenv("QUERY_STRING");     char host[MAXHOSTNAMELEN];     int i;     struct hostent *he;      printf("Content-type: text/plain\n\n");     if(query == NULL) 	exit(0);     he = gethostbyname(query);     strncpy(host, he->h_name, sizeof(host));     host[sizeof(host) - 1] = '\0';     he = gethostbyaddr(he->h_addr, he->h_length, AF_INET);     printf("%s\n", he->h_name);     for(i = 0; he->h_addr_list[i]; i++) { 	struct in_addr ip; 	unsigned char *p = (unsigned char*)he->h_addr_list[i]; 	ip.s_addr = htonl((p[0]<< 24) | (p[1]<< 16) | (p[2]<< 8) | p[3]); 	printf("%s\n", inet_ntoa(ip));     }     exit(0); }
 endif|#
 directive|endif
 end_endif

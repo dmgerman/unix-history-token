@@ -293,7 +293,7 @@ condition|)
 block|{
 name|db_printf
 argument_list|(
-literal|"  %6ld (%p)  "
+literal|"  %6ld (%p) (stack %p)  "
 argument_list|,
 operator|(
 name|long
@@ -303,6 +303,14 @@ operator|->
 name|td_tid
 argument_list|,
 name|thr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+name|thr
+operator|->
+name|td_kstack
 argument_list|)
 expr_stmt|;
 name|prev_jb
@@ -356,7 +364,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Lookup a thread based on a db expression address.  We assume that the  * address was parsed in hexadecimal.  We reparse the address in decimal  * first and try to treat it as a thread ID to find an associated thread.  * If that fails and check_pid is true, we terat the decimal value as a  * PID.  If that matches a process, we return the first thread in that  * process.  Otherwise, we treat the addr as a pointer to a thread.  */
+comment|/*  * Lookup a thread based on a db expression address.  We assume that the  * address was parsed in hexadecimal.  We reparse the address in decimal  * first and try to treat it as a thread ID to find an associated thread.  * If that fails and check_pid is true, we treat the decimal value as a  * PID.  If that matches a process, we return the first thread in that  * process.  Otherwise, we treat the addr as a pointer to a thread.  */
 end_comment
 
 begin_function

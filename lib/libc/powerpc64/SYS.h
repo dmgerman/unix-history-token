@@ -20,10 +20,10 @@ define|#
 directive|define
 name|_SYSCALL
 parameter_list|(
-name|x
+name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 	li	0,(__CONCAT(SYS_,x));				\ 	sc
+value|.text;							\ 	.align 2;						\ 	li	0,(__CONCAT(SYS_, name));			\ 	sc
 end_define
 
 begin_define
@@ -31,10 +31,10 @@ define|#
 directive|define
 name|SYSCALL
 parameter_list|(
-name|x
+name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ 2:	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;							\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bso	2b
+value|.text;							\ 	.align 2;						\ 2:	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;							\ ENTRY(__CONCAT(__sys_, name));						\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), name);			\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), __CONCAT(_, name)); 	\ 	_SYSCALL(name);							\ 	bso	2b
 end_define
 
 begin_define
@@ -42,10 +42,10 @@ define|#
 directive|define
 name|PSEUDO
 parameter_list|(
-name|x
+name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
+value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_, name));					\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), __CONCAT(_, name));   \ 	_SYSCALL(name);						\ 	bnslr;							\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
 end_define
 
 begin_define
@@ -53,10 +53,10 @@ define|#
 directive|define
 name|RSYSCALL
 parameter_list|(
-name|x
+name|name
 parameter_list|)
 define|\
-value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_,x));					\ 	.weak	CNAME(x);					\ 	.set	CNAME(x),CNAME(__CONCAT(__sys_,x));		\ 	.weak	CNAME(__CONCAT(_,x));				\ 	.set	CNAME(__CONCAT(_,x)),CNAME(__CONCAT(__sys_,x));	\ 	_SYSCALL(x);						\ 	bnslr;							\ 								\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
+value|.text;							\ 	.align 2;						\ ENTRY(__CONCAT(__sys_, name));					\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), name);		\ 	WEAK_REFERENCE(__CONCAT(__sys_, name), __CONCAT(_, name));\ 	_SYSCALL(name);						\ 	bnslr;							\ 								\ 	mflr	%r0;						\ 	std	%r0,16(%r1);					\ 	stdu	%r1,-48(%r1);					\ 	bl	CNAME(HIDENAME(cerror));			\ 	nop;							\ 	addi	%r1,%r1,48;					\ 	ld	%r0,16(%r1);					\ 	mtlr	%r0;						\ 	blr;
 end_define
 
 end_unit

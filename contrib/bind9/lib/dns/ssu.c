@@ -8,7 +8,7 @@ comment|/*! \file */
 end_comment
 
 begin_comment
-comment|/*  * $Id: ssu.c,v 1.38 2011-01-06 23:47:00 tbox Exp $  * Principal Author: Brian Wellington  */
+comment|/*  * $Id: ssu.c,v 1.38 2011/01/06 23:47:00 tbox Exp $  * Principal Author: Brian Wellington  */
 end_comment
 
 begin_include

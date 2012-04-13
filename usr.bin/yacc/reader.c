@@ -77,7 +77,7 @@ comment|/*  Note that if a line exceeds LINESIZE characters, the line buffer	*/
 end_comment
 
 begin_comment
-comment|/*  will be expanded to accomodate it.					*/
+comment|/*  will be expanded to accommodate it.					*/
 end_comment
 
 begin_define

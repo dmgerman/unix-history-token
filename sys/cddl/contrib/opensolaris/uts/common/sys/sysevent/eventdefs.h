@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -560,6 +560,10 @@ define|#
 directive|define
 name|ESC_ZFS_BOOTFS_VDEV_ATTACH
 value|"ESC_ZFS_bootfs_vdev_attach"
+define|#
+directive|define
+name|ESC_ZFS_POOL_REGUID
+value|"ESC_ZFS_pool_reguid"
 define|#
 directive|define
 name|ESC_ZFS_VDEV_AUTOEXPAND

@@ -62,25 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/StringSwitch.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
@@ -110,6 +92,30 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/StringSwitch.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/ErrorHandling.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -124,14 +130,6 @@ include|#
 directive|include
 file|<algorithm>
 end_include
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|namespace
@@ -293,8 +291,8 @@ name|Attr
 block|{
 name|private
 label|:
-name|SourceLocation
-name|Loc
+name|SourceRange
+name|Range
 decl_stmt|;
 name|unsigned
 name|AttrKind
@@ -324,16 +322,11 @@ parameter_list|)
 function|throw
 parameter_list|()
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Attrs cannot be allocated with regular 'new'."
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 name|void
 name|operator
@@ -346,10 +339,8 @@ parameter_list|)
 function|throw
 parameter_list|()
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Attrs cannot be released with regular 'delete'."
 argument_list|)
 expr_stmt|;
@@ -427,12 +418,12 @@ name|Attr
 argument_list|(
 argument|attr::Kind AK
 argument_list|,
-argument|SourceLocation L
+argument|SourceRange R
 argument_list|)
 block|:
-name|Loc
+name|Range
 argument_list|(
-name|L
+name|R
 argument_list|)
 operator|,
 name|AttrKind
@@ -472,19 +463,31 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|Loc
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceRange
+name|getRange
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Range
 return|;
 block|}
 name|void
-name|setLocation
+name|setRange
 parameter_list|(
-name|SourceLocation
-name|L
+name|SourceRange
+name|R
 parameter_list|)
 block|{
-name|Loc
+name|Range
 operator|=
-name|L
+name|R
 expr_stmt|;
 block|}
 name|bool
@@ -538,14 +541,14 @@ name|InheritableAttr
 argument_list|(
 argument|attr::Kind AK
 argument_list|,
-argument|SourceLocation L
+argument|SourceRange R
 argument_list|)
 operator|:
 name|Attr
 argument_list|(
 argument|AK
 argument_list|,
-argument|L
+argument|R
 argument_list|)
 block|{}
 name|public
@@ -604,14 +607,14 @@ name|InheritableParamAttr
 argument_list|(
 argument|attr::Kind AK
 argument_list|,
-argument|SourceLocation L
+argument|SourceRange R
 argument_list|)
 operator|:
 name|InheritableAttr
 argument_list|(
 argument|AK
 argument_list|,
-argument|L
+argument|R
 argument_list|)
 block|{}
 name|public
@@ -653,8 +656,6 @@ directive|include
 file|"clang/AST/Attrs.inc"
 comment|/// AttrVec - A vector of Attr, which is how they are stored on the AST.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Attr
@@ -665,8 +666,6 @@ operator|>
 name|AttrVec
 expr_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const
@@ -718,8 +717,6 @@ block|{
 while|while
 condition|(
 operator|!
-name|llvm
-operator|::
 name|isa
 operator|<
 name|SpecificAttr
@@ -747,8 +744,6 @@ operator|!=
 name|I
 operator|&&
 operator|!
-name|llvm
-operator|::
 name|isa
 operator|<
 name|SpecificAttr
@@ -819,8 +814,6 @@ name|AdvanceToNext
 argument_list|()
 block|;
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|SpecificAttr
@@ -842,8 +835,6 @@ name|AdvanceToNext
 argument_list|()
 expr_stmt|;
 return|return
-name|llvm
-operator|::
 name|cast
 operator|<
 name|SpecificAttr

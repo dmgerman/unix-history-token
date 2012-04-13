@@ -155,8 +155,6 @@ name|namespace
 name|CodeGen
 block|{
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|llvm
@@ -211,8 +209,6 @@ name|class
 name|CallArgList
 range|:
 name|public
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|CallArg
@@ -383,8 +379,6 @@ argument_list|()
 return|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|Writeback
@@ -419,8 +413,6 @@ return|;
 block|}
 name|private
 label|:
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Writeback
@@ -438,8 +430,6 @@ name|class
 name|FunctionArgList
 range|:
 name|public
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const

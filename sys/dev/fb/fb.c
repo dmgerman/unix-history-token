@@ -1213,7 +1213,7 @@ comment|/* experimental */
 end_comment
 
 begin_endif
-unit|static devclass_t	fb_devclass;  static int		fbprobe(device_t dev); static int		fbattach(device_t dev);  static device_method_t fb_methods[] = { 	DEVMETHOD(device_probe,		fbprobe), 	DEVMETHOD(device_attach,	fbattach),  	DEVMETHOD(bus_print_child,	bus_generic_print_child), 	{ 0, 0 } };  static driver_t fb_driver = { 	FB_DRIVER_NAME, 	fb_methods, 	0, };  static int fbprobe(device_t dev) { 	int unit;  	unit = device_get_unit(dev); 	if (unit>= adapters) 		return ENXIO; 	if (adapter[unit] == NULL) 		return ENXIO;  	device_set_desc(dev, "generic frame buffer"); 	return 0; }  static int fbattach(device_t dev) { 	printf("fbattach: about to attach children\n"); 	bus_generic_attach(dev); 	return 0; }
+unit|static devclass_t	fb_devclass;  static int		fbprobe(device_t dev); static int		fbattach(device_t dev);  static device_method_t fb_methods[] = { 	DEVMETHOD(device_probe,		fbprobe), 	DEVMETHOD(device_attach,	fbattach),  	DEVMETHOD_END };  static driver_t fb_driver = { 	FB_DRIVER_NAME, 	fb_methods, 	0, };  static int fbprobe(device_t dev) { 	int unit;  	unit = device_get_unit(dev); 	if (unit>= adapters) 		return ENXIO; 	if (adapter[unit] == NULL) 		return ENXIO;  	device_set_desc(dev, "generic frame buffer"); 	return 0; }  static int fbattach(device_t dev) { 	printf("fbattach: about to attach children\n"); 	bus_generic_attach(dev); 	return 0; }
 endif|#
 directive|endif
 end_endif

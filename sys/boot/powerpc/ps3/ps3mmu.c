@@ -460,9 +460,6 @@ end_function
 begin_expr_stmt
 name|mtmsr
 argument_list|(
-name|mfmsr
-argument_list|()
-operator||
 name|PSL_IR
 operator||
 name|PSL_DR

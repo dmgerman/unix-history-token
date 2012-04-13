@@ -113,6 +113,7 @@ file|"strfile.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|Infile
@@ -133,6 +134,7 @@ comment|/* delimiter character */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|FILE
 modifier|*
 name|Inf
@@ -143,6 +145,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|order_unstr
 parameter_list|(
@@ -390,6 +393,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|order_unstr
 parameter_list|(

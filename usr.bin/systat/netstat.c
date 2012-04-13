@@ -2937,7 +2937,7 @@ argument_list|)
 expr_stmt|;
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,
@@ -3024,7 +3024,7 @@ expr_stmt|;
 comment|/* pad to full column to clear any garbage */
 name|cp
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,

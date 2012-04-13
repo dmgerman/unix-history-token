@@ -89,13 +89,22 @@ directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallString.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/raw_ostream.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|TargetAsmInfo
-decl_stmt|;
 name|class
 name|MCContext
 decl_stmt|;
@@ -109,10 +118,10 @@ name|class
 name|MCInstPrinter
 decl_stmt|;
 name|class
-name|Target
+name|MCRegisterInfo
 decl_stmt|;
 name|class
-name|TargetMachine
+name|Target
 decl_stmt|;
 comment|//
 comment|// This is the disassembler context returned by LLVMCreateDisasm().
@@ -172,25 +181,18 @@ name|MCAsmInfo
 operator|>
 name|MAI
 expr_stmt|;
-comment|// The target machine instance.
+comment|// The register information for the target architecture.
 name|llvm
 operator|::
 name|OwningPtr
 operator|<
+specifier|const
 name|llvm
 operator|::
-name|TargetMachine
+name|MCRegisterInfo
 operator|>
-name|TM
+name|MRI
 expr_stmt|;
-comment|// The disassembler for the target architecture.
-comment|// FIXME: using llvm::OwningPtr<const llvm::TargetAsmInfo> causes a malloc
-comment|//        error when this LLVMDisasmContext is deleted.
-specifier|const
-name|TargetAsmInfo
-modifier|*
-name|Tai
-decl_stmt|;
 comment|// The assembly context for creating symbols and MCExprs.
 name|llvm
 operator|::
@@ -228,6 +230,16 @@ name|IP
 expr_stmt|;
 name|public
 label|:
+comment|// Comment stream and backing vector.
+name|SmallString
+operator|<
+literal|128
+operator|>
+name|CommentsToEmit
+expr_stmt|;
+name|raw_svector_ostream
+name|CommentStream
+decl_stmt|;
 name|LLVMDisasmContext
 argument_list|(
 argument|std::string tripleName
@@ -244,9 +256,7 @@ argument|const Target *theTarget
 argument_list|,
 argument|const MCAsmInfo *mAI
 argument_list|,
-argument|llvm::TargetMachine *tM
-argument_list|,
-argument|const TargetAsmInfo *tai
+argument|const MCRegisterInfo *mRI
 argument_list|,
 argument|llvm::MCContext *ctx
 argument_list|,
@@ -285,23 +295,23 @@ argument_list|(
 name|theTarget
 argument_list|)
 operator|,
-name|Tai
+name|CommentStream
 argument_list|(
-argument|tai
+argument|CommentsToEmit
 argument_list|)
 block|{
-name|TM
-operator|.
-name|reset
-argument_list|(
-name|tM
-argument_list|)
-block|;
 name|MAI
 operator|.
 name|reset
 argument_list|(
 name|mAI
+argument_list|)
+block|;
+name|MRI
+operator|.
+name|reset
+argument_list|(
+name|mRI
 argument_list|)
 block|;
 name|Ctx
@@ -334,6 +344,20 @@ specifier|const
 block|{
 return|return
 name|DisAsm
+operator|.
+name|get
+argument_list|()
+return|;
+block|}
+specifier|const
+name|MCAsmInfo
+operator|*
+name|getAsmInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|MAI
 operator|.
 name|get
 argument_list|()

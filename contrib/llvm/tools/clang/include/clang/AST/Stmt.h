@@ -62,13 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Support/raw_ostream.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
@@ -98,13 +92,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallVector.h"
+file|"clang/AST/ASTContext.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"clang/AST/ASTContext.h"
+file|"llvm/Support/raw_ostream.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -112,14 +112,6 @@ include|#
 directive|include
 file|<string>
 end_include
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast_or_null
-expr_stmt|;
-end_expr_stmt
 
 begin_decl_stmt
 name|namespace
@@ -686,16 +678,11 @@ parameter_list|)
 function|throw
 parameter_list|()
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Stmts cannot be allocated with regular 'new'."
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 name|void
 name|operator
@@ -708,10 +695,8 @@ parameter_list|)
 function|throw
 parameter_list|()
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Stmts cannot be released with regular 'delete'."
 argument_list|)
 expr_stmt|;
@@ -845,6 +830,11 @@ name|class
 name|OverloadExpr
 decl_stmt|;
 comment|// ctor
+name|friend
+name|class
+name|AtomicExpr
+decl_stmt|;
+comment|// ctor
 name|unsigned
 label|:
 name|NumStmtBits
@@ -916,6 +906,11 @@ literal|1
 decl_stmt|;
 name|unsigned
 name|HasFoundDecl
+range|:
+literal|1
+decl_stmt|;
+name|unsigned
+name|HadMultipleCandidates
 range|:
 literal|1
 decl_stmt|;
@@ -1338,8 +1333,6 @@ decl_stmt|;
 name|void
 name|dump
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -1379,8 +1372,6 @@ decl_stmt|;
 name|void
 name|printPretty
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -1423,8 +1414,6 @@ block|}
 name|void
 name|printPretty
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -1463,6 +1452,40 @@ modifier|*
 name|IgnoreImplicit
 parameter_list|()
 function_decl|;
+specifier|const
+name|Stmt
+operator|*
+name|stripLabelLikeStatements
+argument_list|()
+specifier|const
+expr_stmt|;
+name|Stmt
+modifier|*
+name|stripLabelLikeStatements
+parameter_list|()
+block|{
+return|return
+name|const_cast
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
+name|const_cast
+operator|<
+specifier|const
+name|Stmt
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|stripLabelLikeStatements
+argument_list|()
+operator|)
+return|;
+block|}
 comment|// Implement isa<T> support.
 specifier|static
 name|bool
@@ -1970,14 +1993,13 @@ block|{
 name|SourceLocation
 name|SemiLoc
 block|;
-comment|/// \brief If the null statement was preceded by an empty macro this is
-comment|/// its instantiation source location, e.g:
+comment|/// \brief True if the null statement was preceded by an empty macro, e.g:
 comment|/// @code
 comment|///   #define CALL(x)
 comment|///   CALL(0);
 comment|/// @endcode
-name|SourceLocation
-name|LeadingEmptyMacro
+name|bool
+name|HasLeadingEmptyMacro
 block|;
 name|public
 operator|:
@@ -1985,7 +2007,7 @@ name|NullStmt
 argument_list|(
 argument|SourceLocation L
 argument_list|,
-argument|SourceLocation LeadingEmptyMacro =SourceLocation()
+argument|bool hasLeadingEmptyMacro = false
 argument_list|)
 operator|:
 name|Stmt
@@ -1998,9 +2020,9 @@ argument_list|(
 name|L
 argument_list|)
 block|,
-name|LeadingEmptyMacro
+name|HasLeadingEmptyMacro
 argument_list|(
-argument|LeadingEmptyMacro
+argument|hasLeadingEmptyMacro
 argument_list|)
 block|{}
 comment|/// \brief Build an empty null statement.
@@ -2012,9 +2034,14 @@ argument_list|)
 operator|:
 name|Stmt
 argument_list|(
-argument|NullStmtClass
+name|NullStmtClass
 argument_list|,
-argument|Empty
+name|Empty
+argument_list|)
+block|,
+name|HasLeadingEmptyMacro
+argument_list|(
+argument|false
 argument_list|)
 block|{ }
 name|SourceLocation
@@ -2042,19 +2069,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|LeadingEmptyMacro
-operator|.
-name|isValid
-argument_list|()
-return|;
-block|}
-name|SourceLocation
-name|getLeadingEmptyMacroLoc
-argument_list|()
-specifier|const
-block|{
-return|return
-name|LeadingEmptyMacro
+name|HasLeadingEmptyMacro
 return|;
 block|}
 name|SourceRange
@@ -2683,6 +2698,35 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_expr_stmt
+name|const_child_range
+name|children
+argument_list|()
+specifier|const
+block|{
+return|return
+name|child_range
+argument_list|(
+operator|&
+name|Body
+index|[
+literal|0
+index|]
+argument_list|,
+operator|&
+name|Body
+index|[
+literal|0
+index|]
+operator|+
+name|CompoundStmtBits
+operator|.
+name|NumStmts
+argument_list|)
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
 unit|};
@@ -6823,7 +6867,7 @@ comment|//// flattening of named references like %[foo] to Operand AsmStringPiec
 name|unsigned
 name|AnalyzeAsmString
 argument_list|(
-argument|llvm::SmallVectorImpl<AsmStringPiece>&Pieces
+argument|SmallVectorImpl<AsmStringPiece>&Pieces
 argument_list|,
 argument|ASTContext&C
 argument_list|,
@@ -6856,8 +6900,6 @@ name|i
 index|]
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getOutputName
 argument_list|(
@@ -6883,8 +6925,6 @@ name|getName
 argument_list|()
 return|;
 return|return
-name|llvm
-operator|::
 name|StringRef
 argument_list|()
 return|;
@@ -6892,8 +6932,6 @@ block|}
 comment|/// getOutputConstraint - Return the constraint string for the specified
 comment|/// output operand.  All output constraints are known to be non-empty (either
 comment|/// '=' or '+').
-name|llvm
-operator|::
 name|StringRef
 name|getOutputConstraint
 argument_list|(
@@ -7019,8 +7057,6 @@ name|NumOutputs
 index|]
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getInputName
 argument_list|(
@@ -7046,16 +7082,12 @@ name|getName
 argument_list|()
 return|;
 return|return
-name|llvm
-operator|::
 name|StringRef
 argument_list|()
 return|;
 block|}
 comment|/// getInputConstraint - Return the specified input constraint.  Unlike output
 comment|/// constraints, these can be empty.
-name|llvm
-operator|::
 name|StringRef
 name|getInputConstraint
 argument_list|(
@@ -7164,7 +7196,7 @@ comment|/// This returns -1 if the operand name is invalid.
 name|int
 name|getNamedOperand
 argument_list|(
-argument|llvm::StringRef SymbolicName
+argument|StringRef SymbolicName
 argument_list|)
 specifier|const
 block|;

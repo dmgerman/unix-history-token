@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_ifndef
@@ -1003,6 +1003,46 @@ value|(UINT16) 0x9293
 end_define
 
 begin_comment
+comment|/*  * Opcodes for "Field" operators  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_FIELD_OFFSET_OP
+value|(UINT8) 0x00
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_FIELD_ACCESS_OP
+value|(UINT8) 0x01
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_FIELD_CONNECTION_OP
+value|(UINT8) 0x02
+end_define
+
+begin_comment
+comment|/* ACPI 5.0 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AML_FIELD_EXT_ACCESS_OP
+value|(UINT8) 0x03
+end_define
+
+begin_comment
+comment|/* ACPI 5.0 */
+end_comment
+
+begin_comment
 comment|/*  * Internal opcodes  * Use only "Unknown" AML opcodes, don't attempt to use  * any valid ACPI ASCII values (A-Z, 0-9, '-')  */
 end_comment
 
@@ -1067,6 +1107,20 @@ define|#
 directive|define
 name|AML_INT_EVAL_SUBTREE_OP
 value|(UINT16) 0x0037
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_INT_CONNECTION_OP
+value|(UINT16) 0x0038
+end_define
+
+begin_define
+define|#
+directive|define
+name|AML_INT_EXTACCESSFIELD_OP
+value|(UINT16) 0x0039
 end_define
 
 begin_define
@@ -2206,33 +2260,45 @@ begin_typedef
 typedef|typedef
 enum|enum
 block|{
-name|AML_FIELD_ATTRIB_SMB_QUICK
+name|AML_FIELD_ATTRIB_QUICK
 init|=
 literal|0x02
 block|,
-name|AML_FIELD_ATTRIB_SMB_SEND_RCV
+name|AML_FIELD_ATTRIB_SEND_RCV
 init|=
 literal|0x04
 block|,
-name|AML_FIELD_ATTRIB_SMB_BYTE
+name|AML_FIELD_ATTRIB_BYTE
 init|=
 literal|0x06
 block|,
-name|AML_FIELD_ATTRIB_SMB_WORD
+name|AML_FIELD_ATTRIB_WORD
 init|=
 literal|0x08
 block|,
-name|AML_FIELD_ATTRIB_SMB_BLOCK
+name|AML_FIELD_ATTRIB_BLOCK
 init|=
 literal|0x0A
 block|,
-name|AML_FIELD_ATTRIB_SMB_WORD_CALL
+name|AML_FIELD_ATTRIB_MULTIBYTE
+init|=
+literal|0x0B
+block|,
+name|AML_FIELD_ATTRIB_WORD_CALL
 init|=
 literal|0x0C
 block|,
-name|AML_FIELD_ATTRIB_SMB_BLOCK_CALL
+name|AML_FIELD_ATTRIB_BLOCK_CALL
 init|=
 literal|0x0D
+block|,
+name|AML_FIELD_ATTRIB_RAW_BYTES
+init|=
+literal|0x0E
+block|,
+name|AML_FIELD_ATTRIB_RAW_PROCESS
+init|=
+literal|0x0F
 block|}
 name|AML_ACCESS_ATTRIBUTE
 typedef|;

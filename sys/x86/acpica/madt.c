@@ -112,8 +112,8 @@ comment|/* These two arrays are indexed by APIC IDs. */
 end_comment
 
 begin_struct
+specifier|static
 struct|struct
-name|ioapic_info
 block|{
 name|void
 modifier|*
@@ -123,16 +123,13 @@ name|UINT32
 name|io_vector
 decl_stmt|;
 block|}
+modifier|*
 name|ioapics
-index|[
-name|MAX_APIC_ID
-operator|+
-literal|1
-index|]
 struct|;
 end_struct
 
 begin_struct
+specifier|static
 struct|struct
 name|lapic_info
 block|{
@@ -186,6 +183,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_MADT
@@ -673,6 +671,29 @@ literal|"Using MADT but ACPI doesn't work"
 argument_list|)
 expr_stmt|;
 block|}
+name|ioapics
+operator|=
+name|malloc
+argument_list|(
+sizeof|sizeof
+argument_list|(
+operator|*
+name|ioapics
+argument_list|)
+operator|*
+operator|(
+name|MAX_APIC_ID
+operator|+
+literal|1
+operator|)
+argument_list|,
+name|M_MADT
+argument_list|,
+name|M_WAITOK
+operator||
+name|M_ZERO
+argument_list|)
+expr_stmt|;
 comment|/* First, we run through adding I/O APIC's. */
 name|madt_walk_table
 argument_list|(
@@ -789,6 +810,17 @@ name|acpi_SetDefaultIntrModel
 argument_list|(
 name|ACPI_INTR_APIC
 argument_list|)
+expr_stmt|;
+name|free
+argument_list|(
+name|ioapics
+argument_list|,
+name|M_MADT
+argument_list|)
+expr_stmt|;
+name|ioapics
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(

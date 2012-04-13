@@ -117,18 +117,21 @@ value|15
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|longopt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|allopt
 decl_stmt|;
 end_decl_stmt
 
 begin_struct
+specifier|static
 struct|struct
 name|host_list
 block|{

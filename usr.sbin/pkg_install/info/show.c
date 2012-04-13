@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 23 Aug 1993  *  * Various display routines for the info module.  *  */
+comment|/*  * FreeBSD install - a package for the installation and maintenance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 23 Aug 1993  *  * Various display routines for the info module.  *  */
 end_comment
 
 begin_include
@@ -893,6 +893,39 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|elide_root
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|dir
+parameter_list|)
+block|{
+if|if
+condition|(
+name|strcmp
+argument_list|(
+name|dir
+argument_list|,
+literal|"/"
+argument_list|)
+operator|==
+literal|0
+condition|)
+return|return
+literal|""
+return|;
+return|return
+name|dir
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/* Show all files in the packing list (except ignored ones) */
 end_comment
@@ -976,7 +1009,10 @@ name|printf
 argument_list|(
 literal|"%s/%s\n"
 argument_list|,
+name|elide_root
+argument_list|(
 name|dir
+argument_list|)
 argument_list|,
 name|p
 operator|->
@@ -1177,7 +1213,10 @@ name|FILENAME_MAX
 argument_list|,
 literal|"%s/%s"
 argument_list|,
+name|elide_root
+argument_list|(
 name|dir
+argument_list|)
 argument_list|,
 name|p
 operator|->
@@ -1457,7 +1496,10 @@ name|FILENAME_MAX
 argument_list|,
 literal|"%s/%s"
 argument_list|,
+name|elide_root
+argument_list|(
 name|dir
+argument_list|)
 argument_list|,
 name|p
 operator|->

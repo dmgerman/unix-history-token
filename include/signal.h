@@ -45,10 +45,10 @@ end_comment
 
 begin_decl_stmt
 specifier|extern
-name|__const
+specifier|const
 name|char
 modifier|*
-name|__const
+specifier|const
 name|sys_signame
 index|[
 name|NSIG
@@ -58,10 +58,10 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|__const
+specifier|const
 name|char
 modifier|*
-name|__const
+specifier|const
 name|sys_siglist
 index|[
 name|NSIG
@@ -71,7 +71,7 @@ end_decl_stmt
 
 begin_decl_stmt
 specifier|extern
-name|__const
+specifier|const
 name|int
 name|sys_nsig
 decl_stmt|;

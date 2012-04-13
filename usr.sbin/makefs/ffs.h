@@ -19,10 +19,29 @@ directive|define
 name|_FFS_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<ufs/ufs/dinode.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<ufs/ffs/fs.h>
+end_include
+
 begin_typedef
 typedef|typedef
 struct|struct
 block|{
+name|char
+name|label
+index|[
+name|MAXVOLLEN
+index|]
+decl_stmt|;
+comment|/* volume name/label */
 name|int
 name|bsize
 decl_stmt|;

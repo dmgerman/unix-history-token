@@ -1857,7 +1857,7 @@ operator|->
 name|lock
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Process any signals we've recieved (but only if we have 	 * somewhere to deliver them to). 	 */
+comment|/* 	 * Process any signals we've received (but only if we have 	 * somewhere to deliver them to). 	 */
 if|if
 condition|(
 operator|(

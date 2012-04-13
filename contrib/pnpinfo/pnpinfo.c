@@ -2902,9 +2902,7 @@ expr_stmt|;
 name|num_pnp_devs
 operator|=
 name|isolation_protocol
-argument_list|(
-name|rd_port
-argument_list|)
+argument_list|()
 expr_stmt|;
 if|if
 condition|(

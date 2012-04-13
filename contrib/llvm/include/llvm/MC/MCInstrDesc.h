@@ -232,6 +232,8 @@ literal|0
 block|,
 name|HasOptionalDef
 block|,
+name|Pseudo
+block|,
 name|Return
 block|,
 name|Call
@@ -269,6 +271,8 @@ block|,
 name|ConvertibleTo3Addr
 block|,
 name|UsesCustomInserter
+block|,
+name|HasPostISelHook
 block|,
 name|Rematerializable
 block|,
@@ -779,6 +783,38 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// isPseudo - Return true if this is a pseudo instruction that doesn't
+end_comment
+
+begin_comment
+comment|/// correspond to a real machine instruction.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isPseudo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|Pseudo
+operator|)
+return|;
+block|}
+end_expr_stmt
+
 begin_expr_stmt
 name|bool
 name|isReturn
@@ -852,6 +888,73 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// findFirstPredOperandIdx() - Find the index of the first operand in the
+end_comment
+
+begin_comment
+comment|/// operand list that is used to represent the predicate. It returns -1 if
+end_comment
+
+begin_comment
+comment|/// none is found.
+end_comment
+
+begin_expr_stmt
+name|int
+name|findFirstPredOperandIdx
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isPredicable
+argument_list|()
+condition|)
+block|{
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|getNumOperands
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+if|if
+condition|(
+name|OpInfo
+index|[
+name|i
+index|]
+operator|.
+name|isPredicate
+argument_list|()
+condition|)
+return|return
+name|i
+return|;
+block|}
+end_expr_stmt
+
+begin_return
+return|return
+operator|-
+literal|1
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// isTerminator - Returns true if this instruction part of the terminator for
 end_comment
 
@@ -875,10 +978,13 @@ begin_comment
 comment|/// but before control flow occurs.
 end_comment
 
-begin_expr_stmt
-name|bool
+begin_macro
+unit|bool
 name|isTerminator
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
@@ -1607,6 +1713,42 @@ operator|<<
 name|MCID
 operator|::
 name|UsesCustomInserter
+operator|)
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// hasPostISelHook - Return true if this instruction requires *adjustment*
+end_comment
+
+begin_comment
+comment|/// after instruction selection by calling a target hook. For example, this
+end_comment
+
+begin_comment
+comment|/// can be used to fill in ARM 's' optional operand depending on whether
+end_comment
+
+begin_comment
+comment|/// the conditional flag register is used.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|hasPostISelHook
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Flags
+operator|&
+operator|(
+literal|1
+operator|<<
+name|MCID
+operator|::
+name|HasPostISelHook
 operator|)
 return|;
 block|}

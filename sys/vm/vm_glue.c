@@ -122,6 +122,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/_kstack_cache.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/eventhandler.h>
 end_include
 
@@ -1238,24 +1244,7 @@ expr_stmt|;
 block|}
 end_function
 
-begin_struct
-struct|struct
-name|kstack_cache_entry
-block|{
-name|vm_object_t
-name|ksobj
-decl_stmt|;
-name|struct
-name|kstack_cache_entry
-modifier|*
-name|next_ks_entry
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
 begin_decl_stmt
-specifier|static
 name|struct
 name|kstack_cache_entry
 modifier|*

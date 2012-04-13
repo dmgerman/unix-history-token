@@ -287,8 +287,8 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 specifier|static
+specifier|inline
 name|unsigned
 name|int
 name|swap
@@ -345,8 +345,8 @@ block|}
 end_function
 
 begin_function
-specifier|inline
 specifier|static
+specifier|inline
 name|void
 name|wait_ready
 parameter_list|()

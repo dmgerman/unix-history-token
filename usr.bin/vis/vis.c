@@ -104,6 +104,7 @@ file|"extern.h"
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|eflags
 decl_stmt|,
@@ -116,12 +117,29 @@ decl_stmt|,
 name|none
 decl_stmt|,
 name|markeol
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|DEBUG
+end_ifdef
+
+begin_decl_stmt
+specifier|static
+name|int
 name|debug
 decl_stmt|;
 end_decl_stmt
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_function_decl
+specifier|static
 name|void
 name|process
 parameter_list|(
@@ -418,6 +436,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|process
 parameter_list|(

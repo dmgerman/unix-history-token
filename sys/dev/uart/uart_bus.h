@@ -266,6 +266,10 @@ decl_stmt|;
 name|int
 name|sc_irid
 decl_stmt|;
+name|struct
+name|callout
+name|sc_timer
+decl_stmt|;
 name|int
 name|sc_callout
 range|:

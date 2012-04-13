@@ -605,7 +605,7 @@ operator|&=
 operator|~
 name|ICANON
 expr_stmt|;
-comment|/* disable canonical operation  */
+comment|/* disable canonical operation */
 name|ntty
 operator|.
 name|c_lflag
@@ -668,7 +668,7 @@ index|]
 operator|=
 literal|0
 expr_stmt|;
-comment|/* timeout value        */
+comment|/* timeout value */
 name|ntty
 operator|.
 name|c_cc
@@ -1629,10 +1629,11 @@ operator|&
 name|fd_s
 argument_list|)
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 if|if
 condition|(

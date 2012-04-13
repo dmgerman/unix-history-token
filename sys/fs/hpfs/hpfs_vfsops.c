@@ -249,7 +249,7 @@ name|void
 modifier|*
 name|data
 parameter_list|,
-name|int
+name|uint64_t
 name|flags
 parameter_list|)
 block|{
@@ -1196,8 +1196,6 @@ name|mp
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|==
 name|vfs_scanopt
 argument_list|(
 name|mp
@@ -1211,6 +1209,8 @@ argument_list|,
 operator|&
 name|v
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|hpmp
 operator|->
@@ -1220,8 +1220,6 @@ name|v
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|==
 name|vfs_scanopt
 argument_list|(
 name|mp
@@ -1235,6 +1233,8 @@ argument_list|,
 operator|&
 name|v
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|hpmp
 operator|->
@@ -1244,8 +1244,6 @@ name|v
 expr_stmt|;
 if|if
 condition|(
-literal|1
-operator|==
 name|vfs_scanopt
 argument_list|(
 name|mp
@@ -1259,6 +1257,8 @@ argument_list|,
 operator|&
 name|v
 argument_list|)
+operator|==
+literal|1
 condition|)
 name|hpmp
 operator|->

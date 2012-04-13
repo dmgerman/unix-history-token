@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/syslog.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/systm.h>
 end_include
 
@@ -126,6 +132,15 @@ literal|1
 block|,
 literal|0
 block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|int
+name|warned
+init|=
+literal|0
 decl_stmt|;
 end_decl_stmt
 
@@ -252,6 +267,10 @@ name|read_func
 operator|=
 name|read_random_phony
 expr_stmt|;
+name|warned
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 
@@ -364,6 +383,24 @@ name|size
 decl_stmt|,
 name|i
 decl_stmt|;
+if|if
+condition|(
+operator|!
+name|warned
+condition|)
+block|{
+name|log
+argument_list|(
+name|LOG_WARNING
+argument_list|,
+literal|"random device not loaded; using insecure entropy\n"
+argument_list|)
+expr_stmt|;
+name|warned
+operator|=
+literal|1
+expr_stmt|;
+block|}
 comment|/* srandom() is called in kern/init_main.c:proc0_post() */
 comment|/* Fill buf[] with random(9) output */
 for|for

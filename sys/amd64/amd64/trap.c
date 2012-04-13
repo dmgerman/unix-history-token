@@ -177,6 +177,36 @@ directive|include
 file|<sys/pmckern.h>
 end_include
 
+begin_expr_stmt
+name|PMC_SOFT_DEFINE
+argument_list|( , ,
+name|page_fault
+argument_list|,
+name|all
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PMC_SOFT_DEFINE
+argument_list|( , ,
+name|page_fault
+argument_list|,
+name|read
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|PMC_SOFT_DEFINE
+argument_list|( , ,
+name|page_fault
+argument_list|,
+name|write
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_endif
 endif|#
 directive|endif
@@ -412,7 +442,7 @@ begin_define
 define|#
 directive|define
 name|MAX_TRAP_MSG
-value|30
+value|33
 end_define
 
 begin_decl_stmt
@@ -516,6 +546,15 @@ comment|/* 29 T_XMMFLT */
 literal|"reserved (unknown) fault"
 block|,
 comment|/* 30 T_RESERVED */
+literal|""
+block|,
+comment|/* 31 unused (reserved) */
+literal|"DTrace pid return trap"
+block|,
+comment|/* 32 T_DTRACE_RET */
+literal|"DTrace fasttrap probe trap"
+block|,
+comment|/* 33 T_DTRACE_PROBE */
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -805,18 +844,8 @@ operator|==
 name|T_MCHK
 condition|)
 block|{
-if|if
-condition|(
-operator|!
 name|mca_intr
 argument_list|()
-condition|)
-name|trap_fatal
-argument_list|(
-name|frame
-argument_list|,
-literal|0
-argument_list|)
 expr_stmt|;
 goto|goto
 name|out
@@ -826,27 +855,6 @@ ifdef|#
 directive|ifdef
 name|KDTRACE_HOOKS
 comment|/* 	 * A trap can occur while DTrace executes a probe. Before 	 * executing the probe, DTrace blocks re-scheduling and sets 	 * a flag in it's per-cpu flags to indicate that it doesn't 	 * want to fault. On returning from the probe, the no-fault 	 * flag is cleared and finally re-scheduling is enabled. 	 * 	 * If the DTrace kernel module has registered a trap handler, 	 * call it and if it returns non-zero, assume that it has 	 * handled the trap and modified the trap frame so that this 	 * function can return normally. 	 */
-if|if
-condition|(
-name|dtrace_trap_func
-operator|!=
-name|NULL
-condition|)
-if|if
-condition|(
-call|(
-modifier|*
-name|dtrace_trap_func
-call|)
-argument_list|(
-name|frame
-argument_list|,
-name|type
-argument_list|)
-condition|)
-goto|goto
-name|out
-goto|;
 if|if
 condition|(
 name|type
@@ -895,6 +903,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+elseif|else
 if|if
 condition|(
 name|type
@@ -916,6 +925,7 @@ condition|)
 goto|goto
 name|out
 goto|;
+elseif|else
 if|if
 condition|(
 name|type
@@ -938,6 +948,25 @@ goto|goto
 name|out
 goto|;
 block|}
+if|if
+condition|(
+name|dtrace_trap_func
+operator|!=
+name|NULL
+operator|&&
+call|(
+modifier|*
+name|dtrace_trap_func
+call|)
+argument_list|(
+name|frame
+argument_list|,
+name|type
+argument_list|)
+condition|)
+goto|goto
+name|out
+goto|;
 endif|#
 directive|endif
 if|if
@@ -1029,45 +1058,6 @@ name|frame
 operator|->
 name|tf_err
 expr_stmt|;
-if|if
-condition|(
-name|type
-operator|==
-name|T_PAGEFLT
-condition|)
-block|{
-comment|/* 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 * 		 * If we get a page fault while holding a non-sleepable 		 * lock, then it is most likely a fatal kernel page fault. 		 * If WITNESS is enabled, then it's going to whine about 		 * bogus LORs with various VM locks, so just skip to the 		 * fatal trap handling directly. 		 */
-if|if
-condition|(
-name|td
-operator|->
-name|td_critnest
-operator|!=
-literal|0
-operator|||
-name|WITNESS_CHECK
-argument_list|(
-name|WARN_SLEEPOK
-operator||
-name|WARN_GIANTOK
-argument_list|,
-name|NULL
-argument_list|,
-literal|"Kernel page fault"
-argument_list|)
-operator|!=
-literal|0
-condition|)
-name|trap_fatal
-argument_list|(
-name|frame
-argument_list|,
-name|frame
-operator|->
-name|tf_addr
-argument_list|)
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|ISPL
@@ -2124,8 +2114,6 @@ name|struct
 name|vmspace
 modifier|*
 name|vm
-init|=
-name|NULL
 decl_stmt|;
 name|vm_map_t
 name|map
@@ -2161,6 +2149,107 @@ name|frame
 operator|->
 name|tf_addr
 decl_stmt|;
+if|if
+condition|(
+name|__predict_false
+argument_list|(
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_NOFAULTING
+operator|)
+operator|!=
+literal|0
+argument_list|)
+condition|)
+block|{
+comment|/* 		 * Due to both processor errata and lazy TLB invalidation when 		 * access restrictions are removed from virtual pages, memory 		 * accesses that are allowed by the physical mapping layer may 		 * nonetheless cause one spurious page fault per virtual page.  		 * When the thread is executing a "no faulting" section that 		 * is bracketed by vm_fault_{disable,enable}_pagefaults(), 		 * every page fault is treated as a spurious page fault, 		 * unless it accesses the same virtual address as the most 		 * recent page fault within the same "no faulting" section. 		 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_spurflt_addr
+operator|!=
+name|eva
+operator|||
+operator|(
+name|td
+operator|->
+name|td_pflags
+operator|&
+name|TDP_RESETSPUR
+operator|)
+operator|!=
+literal|0
+condition|)
+block|{
+comment|/* 			 * Do nothing to the TLB.  A stale TLB entry is 			 * flushed automatically by a page fault. 			 */
+name|td
+operator|->
+name|td_md
+operator|.
+name|md_spurflt_addr
+operator|=
+name|eva
+expr_stmt|;
+name|td
+operator|->
+name|td_pflags
+operator|&=
+operator|~
+name|TDP_RESETSPUR
+expr_stmt|;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+block|}
+else|else
+block|{
+comment|/* 		 * If we get a page fault while in a critical section, then 		 * it is most likely a fatal kernel page fault.  The kernel 		 * is already going to panic trying to get a sleep lock to 		 * do the VM lookup, so just consider it a fatal trap so the 		 * kernel can print out a useful trap message and even get 		 * to the debugger. 		 * 		 * If we get a page fault while holding a non-sleepable 		 * lock, then it is most likely a fatal kernel page fault. 		 * If WITNESS is enabled, then it's going to whine about 		 * bogus LORs with various VM locks, so just skip to the 		 * fatal trap handling directly. 		 */
+if|if
+condition|(
+name|td
+operator|->
+name|td_critnest
+operator|!=
+literal|0
+operator|||
+name|WITNESS_CHECK
+argument_list|(
+name|WARN_SLEEPOK
+operator||
+name|WARN_GIANTOK
+argument_list|,
+name|NULL
+argument_list|,
+literal|"Kernel page fault"
+argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|trap_fatal
+argument_list|(
+name|frame
+argument_list|,
+name|eva
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
+return|;
+block|}
+block|}
 name|va
 operator|=
 name|trunc_page
@@ -2190,22 +2279,20 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 		 * This is a fault on non-kernel virtual memory. 		 * vm is initialized above to NULL. If curproc is NULL 		 * or curproc->p_vmspace is NULL the fault is fatal. 		 */
+comment|/* 		 * This is a fault on non-kernel virtual memory.  If either 		 * p or p->p_vmspace is NULL, then the fault is fatal. 		 */
 if|if
 condition|(
 name|p
-operator|!=
+operator|==
 name|NULL
-condition|)
+operator|||
+operator|(
 name|vm
 operator|=
 name|p
 operator|->
 name|p_vmspace
-expr_stmt|;
-if|if
-condition|(
-name|vm
+operator|)
 operator|==
 name|NULL
 condition|)
@@ -2371,11 +2458,64 @@ name|rv
 operator|==
 name|KERN_SUCCESS
 condition|)
+block|{
+ifdef|#
+directive|ifdef
+name|HWPMC_HOOKS
+if|if
+condition|(
+name|ftype
+operator|==
+name|VM_PROT_READ
+operator|||
+name|ftype
+operator|==
+name|VM_PROT_WRITE
+condition|)
+block|{
+name|PMC_SOFT_CALL_TF
+argument_list|( , ,
+name|page_fault
+argument_list|,
+name|all
+argument_list|,
+name|frame
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ftype
+operator|==
+name|VM_PROT_READ
+condition|)
+name|PMC_SOFT_CALL_TF
+argument_list|( , ,
+name|page_fault
+argument_list|,
+name|read
+argument_list|,
+name|frame
+argument_list|)
+expr_stmt|;
+else|else
+name|PMC_SOFT_CALL_TF
+argument_list|( , ,
+name|page_fault
+argument_list|,
+name|write
+argument_list|,
+name|frame
+argument_list|)
+expr_stmt|;
+block|}
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+block|}
 name|nogo
 label|:
 if|if
@@ -3379,7 +3519,7 @@ file|"../../kern/subr_syscall.c"
 end_include
 
 begin_comment
-comment|/*  *	syscall -	system call request C handler  *  *	A system call is essentially treated as a trap.  */
+comment|/*  * System call handler for native binaries.  The trap frame is already  * set up by the assembler trampoline and a pointer to it is saved in  * td_frame.  */
 end_comment
 
 begin_function
@@ -3533,12 +3673,10 @@ name|td_pcb
 operator|->
 name|pcb_save
 operator|==
-operator|&
+name|get_pcb_user_save_td
+argument_list|(
 name|td
-operator|->
-name|td_pcb
-operator|->
-name|pcb_user_save
+argument_list|)
 argument_list|,
 operator|(
 literal|"System call %s returning with mangled pcb_save"

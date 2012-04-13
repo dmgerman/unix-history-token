@@ -194,6 +194,7 @@ value|"current"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 decl_stmt|,
@@ -2728,16 +2729,31 @@ name|cpa
 name|mnt_argv
 decl_stmt|;
 comment|/* resolve the mountpoint with realpath(3) */
-operator|(
-name|void
-operator|)
+if|if
+condition|(
 name|checkpath
 argument_list|(
 name|name
 argument_list|,
 name|mntpath
 argument_list|)
+operator|!=
+literal|0
+condition|)
+block|{
+name|warn
+argument_list|(
+literal|"%s"
+argument_list|,
+name|mntpath
+argument_list|)
 expr_stmt|;
+return|return
+operator|(
+literal|1
+operator|)
+return|;
+block|}
 name|name
 operator|=
 name|mntpath

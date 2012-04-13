@@ -238,6 +238,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_security_mac
@@ -4209,6 +4210,11 @@ name|mac_biba
 modifier|*
 name|mb
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|dn
+decl_stmt|;
 name|int
 name|biba_type
 decl_stmt|;
@@ -4219,13 +4225,18 @@ argument_list|(
 name|delabel
 argument_list|)
 expr_stmt|;
+name|dn
+operator|=
+name|devtoname
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"null"
 argument_list|)
@@ -4234,9 +4245,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"zero"
 argument_list|)
@@ -4245,9 +4254,7 @@ literal|0
 operator|||
 name|strcmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"random"
 argument_list|)
@@ -4256,9 +4263,7 @@ literal|0
 operator|||
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"fd/"
 argument_list|,
@@ -4282,9 +4287,7 @@ operator|&&
 operator|(
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"ttyp"
 argument_list|,
@@ -4298,9 +4301,7 @@ literal|0
 operator|||
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"pts/"
 argument_list|,
@@ -4314,9 +4315,7 @@ literal|0
 operator|||
 name|strncmp
 argument_list|(
-name|dev
-operator|->
-name|si_name
+name|dn
 argument_list|,
 literal|"ptyp"
 argument_list|,

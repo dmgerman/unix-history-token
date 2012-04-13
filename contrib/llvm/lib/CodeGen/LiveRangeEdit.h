@@ -485,14 +485,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|ArrayRef
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|(
+name|makeArrayRef
+argument_list|(
 name|newRegs_
-operator|)
+argument_list|)
 operator|.
 name|slice
 argument_list|(

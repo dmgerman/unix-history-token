@@ -593,6 +593,46 @@ name|n
 parameter_list|)
 define|\
 value|m(n, UINT8_T,  bmRequestType, ) \   m(n, UINT8_T,  bRequest, ) \   m(n, UINT16_T, wValue, ) \   m(n, UINT16_T, wIndex, ) \   m(n, UINT16_T, wLength, ) \  LIBUSB20_MAKE_STRUCT(LIBUSB20_CONTROL_SETUP);
+define|#
+directive|define
+name|LIBUSB20_SS_ENDPT_COMP_DESC
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|m(n, UINT8_T,  bLength, ) \   m(n, UINT8_T,  bDescriptorType, ) \   m(n, UINT8_T,  bMaxBurst, ) \   m(n, UINT8_T,  bmAttributes, ) \   m(n, UINT16_T, wBytesPerInterval, ) \  LIBUSB20_MAKE_STRUCT(LIBUSB20_SS_ENDPT_COMP_DESC);
+define|#
+directive|define
+name|LIBUSB20_USB_20_DEVCAP_DESC
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|m(n, UINT8_T,  bLength, ) \   m(n, UINT8_T,  bDescriptorType, ) \   m(n, UINT8_T,  bDevCapabilityType, ) \   m(n, UINT32_T, bmAttributes, ) \  LIBUSB20_MAKE_STRUCT(LIBUSB20_USB_20_DEVCAP_DESC);
+define|#
+directive|define
+name|LIBUSB20_SS_USB_DEVCAP_DESC
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|m(n, UINT8_T,  bLength, ) \   m(n, UINT8_T,  bDescriptorType, ) \   m(n, UINT8_T,  bDevCapabilityType, ) \   m(n, UINT8_T,  bmAttributes, ) \   m(n, UINT16_T, wSpeedSupported, ) \   m(n, UINT8_T,  bFunctionalitySupport, ) \   m(n, UINT8_T,  bU1DevExitLat, ) \   m(n, UINT16_T, wU2DevExitLat, ) \  LIBUSB20_MAKE_STRUCT(LIBUSB20_SS_USB_DEVCAP_DESC);
+define|#
+directive|define
+name|LIBUSB20_BOS_DESCRIPTOR
+parameter_list|(
+name|m
+parameter_list|,
+name|n
+parameter_list|)
+define|\
+value|m(n, UINT8_T,  bLength, ) \   m(n, UINT8_T,  bDescriptorType, ) \   m(n, UINT16_T, wTotalLength, ) \   m(n, UINT8_T,  bNumDeviceCapabilities, ) \  LIBUSB20_MAKE_STRUCT(LIBUSB20_BOS_DESCRIPTOR);
 comment|/* standard USB stuff */
 comment|/** \ingroup desc  * Device and/or Interface Class codes */
 enum|enum
@@ -697,6 +737,42 @@ comment|/** Hub descriptor */
 name|LIBUSB20_DT_HUB
 init|=
 literal|0x29
+block|,
+comment|/** Binary Object Store, BOS */
+name|LIBUSB20_DT_BOS
+init|=
+literal|0x0f
+block|,
+comment|/** Device Capability */
+name|LIBUSB20_DT_DEVICE_CAPABILITY
+init|=
+literal|0x10
+block|,
+comment|/** SuperSpeed endpoint companion */
+name|LIBUSB20_DT_SS_ENDPOINT_COMPANION
+init|=
+literal|0x30
+block|, }
+enum|;
+comment|/** \ingroup desc  * Device capability types as defined by the USB specification. */
+enum|enum
+name|libusb20_device_capability_type
+block|{
+name|LIBUSB20_WIRELESS_USB_DEVICE_CAPABILITY
+init|=
+literal|0x1
+block|,
+name|LIBUSB20_USB_2_0_EXTENSION_DEVICE_CAPABILITY
+init|=
+literal|0x2
+block|,
+name|LIBUSB20_SS_USB_DEVICE_CAPABILITY
+init|=
+literal|0x3
+block|,
+name|LIBUSB20_CONTAINER_ID_DEVICE_CAPABILITY
+init|=
+literal|0x4
 block|, }
 enum|;
 comment|/* Descriptor sizes per descriptor type */
@@ -725,6 +801,22 @@ define|#
 directive|define
 name|LIBUSB20_DT_HUB_NONVAR_SIZE
 value|7
+define|#
+directive|define
+name|LIBUSB20_DT_SS_ENDPOINT_COMPANION_SIZE
+value|6
+define|#
+directive|define
+name|LIBUSB20_DT_BOS_SIZE
+value|5
+define|#
+directive|define
+name|LIBUSB20_USB_2_0_EXTENSION_DEVICE_CAPABILITY_SIZE
+value|7
+define|#
+directive|define
+name|LIBUSB20_SS_USB_DEVICE_CAPABILITY_SIZE
+value|10
 define|#
 directive|define
 name|LIBUSB20_ENDPOINT_ADDRESS_MASK

@@ -7426,8 +7426,8 @@ block|}
 end_function
 
 begin_function
-name|__inline
 specifier|static
+specifier|inline
 name|void
 name|tulip_21140_mediainit
 parameter_list|(
@@ -23227,7 +23227,10 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|32
 argument_list|,
@@ -23382,7 +23385,10 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 name|align
 argument_list|,
@@ -23742,7 +23748,10 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|32
 argument_list|,

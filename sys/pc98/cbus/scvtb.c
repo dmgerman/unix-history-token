@@ -1089,8 +1089,8 @@ block|}
 end_function
 
 begin_function
-name|__inline
 specifier|static
+specifier|inline
 name|void
 name|vtb_putc
 parameter_list|(

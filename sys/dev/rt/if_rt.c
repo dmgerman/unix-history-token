@@ -882,6 +882,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -2110,12 +2111,6 @@ operator|->
 name|if_start
 operator|=
 name|rt_start
-expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
 expr_stmt|;
 define|#
 directive|define
@@ -12428,21 +12423,6 @@ argument_list|,
 name|rt_resume
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 ifdef|#
 directive|ifdef
 name|IF_RT_PHY_SUPPORT
@@ -12470,11 +12450,7 @@ argument_list|)
 block|,
 endif|#
 directive|endif
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

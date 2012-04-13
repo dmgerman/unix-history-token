@@ -130,6 +130,9 @@ name|MemoryBuffer
 operator|*
 name|CurBuf
 block|;
+name|bool
+name|isAtStartOfLine
+block|;
 name|void
 name|operator
 operator|=
@@ -189,6 +192,10 @@ block|;
 name|virtual
 name|StringRef
 name|LexUntilEndOfStatement
+argument_list|()
+block|;
+name|StringRef
+name|LexUntilEndOfLine
 argument_list|()
 block|;
 name|bool

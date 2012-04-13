@@ -222,7 +222,7 @@ block|{}
 name|bool
 name|isTracked
 argument_list|(
-argument|const NamedDecl* SD
+argument|const NamedDecl *SD
 argument_list|)
 block|{
 return|return
@@ -811,7 +811,7 @@ block|{}
 name|void
 name|setContext
 argument_list|(
-argument|ASTContext& c
+argument|ASTContext&c
 argument_list|)
 block|{
 name|ctx
@@ -867,7 +867,7 @@ block|}
 name|bool
 name|isTracked
 argument_list|(
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|)
 block|{
 return|return
@@ -889,7 +889,7 @@ block|;
 name|unsigned
 name|getIdx
 argument_list|(
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|)
 specifier|const
 block|{

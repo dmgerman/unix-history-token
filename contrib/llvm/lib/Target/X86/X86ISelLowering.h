@@ -288,8 +288,14 @@ name|PSIGNW
 block|,
 name|PSIGND
 block|,
-comment|/// PBLENDVB - Variable blend
-name|PBLENDVB
+comment|/// BLEND family of opcodes
+name|BLENDV
+block|,
+comment|/// FHADD - Floating point horizontal add.
+name|FHADD
+block|,
+comment|/// FHSUB - Floating point horizontal sub.
+name|FHSUB
 block|,
 comment|/// FMAX, FMIN - Floating point max and min.
 comment|///
@@ -373,6 +379,9 @@ name|XOR
 block|,
 name|AND
 block|,
+name|ANDN
+block|,
+comment|// ANDN - Bitwise AND NOT with FLAGS results.
 name|UMUL
 block|,
 comment|// LOW, HI, FLAGS = umul LHS, RHS
@@ -432,10 +441,6 @@ name|UNPCKLPS
 block|,
 name|UNPCKLPD
 block|,
-name|VUNPCKLPS
-block|,
-name|VUNPCKLPD
-block|,
 name|VUNPCKLPSY
 block|,
 name|VUNPCKLPDY
@@ -443,6 +448,10 @@ block|,
 name|UNPCKHPS
 block|,
 name|UNPCKHPD
+block|,
+name|VUNPCKHPSY
+block|,
+name|VUNPCKHPDY
 block|,
 name|PUNPCKLBW
 block|,
@@ -460,6 +469,18 @@ name|PUNPCKHDQ
 block|,
 name|PUNPCKHQDQ
 block|,
+name|VPERMILPS
+block|,
+name|VPERMILPSY
+block|,
+name|VPERMILPD
+block|,
+name|VPERMILPDY
+block|,
+name|VPERM2F128
+block|,
+name|VBROADCAST
+block|,
 comment|// VASTART_SAVE_XMM_REGS - Save xmm argument registers to the stack,
 comment|// according to %al. An operator is needed so that this can be expanded
 comment|// with control flow.
@@ -467,6 +488,11 @@ name|VASTART_SAVE_XMM_REGS
 block|,
 comment|// WIN_ALLOCA - Windows's _chkstk call to do stack probing.
 name|WIN_ALLOCA
+block|,
+comment|// SEG_ALLOCA - For allocating variable amounts of stack space when using
+comment|// segmented stacks. Check if the current stacklet has enough space, and
+comment|// falls back to heap allocation if not.
+name|SEG_ALLOCA
 block|,
 comment|// Memory barrier
 name|MEMBARRIER
@@ -498,10 +524,12 @@ name|ATOMNAND64_DAG
 block|,
 name|ATOMSWAP64_DAG
 block|,
-comment|// LCMPXCHG_DAG, LCMPXCHG8_DAG - Compare and swap.
+comment|// LCMPXCHG_DAG, LCMPXCHG8_DAG, LCMPXCHG16_DAG - Compare and swap.
 name|LCMPXCHG_DAG
 block|,
 name|LCMPXCHG8_DAG
+block|,
+name|LCMPXCHG16_DAG
 block|,
 comment|// VZEXT_LOAD - Load, scalar_to_vector, and zero extend.
 name|VZEXT_LOAD
@@ -707,6 +735,11 @@ parameter_list|(
 name|ShuffleVectorSDNode
 modifier|*
 name|N
+parameter_list|,
+specifier|const
+name|X86Subtarget
+modifier|*
+name|Subtarget
 parameter_list|)
 function_decl|;
 comment|/// isMOVSLDUPMask - Return true if the specified VECTOR_SHUFFLE operand
@@ -717,22 +750,17 @@ parameter_list|(
 name|ShuffleVectorSDNode
 modifier|*
 name|N
+parameter_list|,
+specifier|const
+name|X86Subtarget
+modifier|*
+name|Subtarget
 parameter_list|)
 function_decl|;
 comment|/// isMOVDDUPMask - Return true if the specified VECTOR_SHUFFLE operand
 comment|/// specifies a shuffle of elements that is suitable for input to MOVDDUP.
 name|bool
 name|isMOVDDUPMask
-parameter_list|(
-name|ShuffleVectorSDNode
-modifier|*
-name|N
-parameter_list|)
-function_decl|;
-comment|/// isPALIGNRMask - Return true if the specified VECTOR_SHUFFLE operand
-comment|/// specifies a shuffle of elements that is suitable for input to PALIGNR.
-name|bool
-name|isPALIGNRMask
 parameter_list|(
 name|ShuffleVectorSDNode
 modifier|*
@@ -972,7 +1000,7 @@ name|virtual
 name|unsigned
 name|getByValTypeAlignment
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -1108,11 +1136,9 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
-comment|/// getSetCCResultType - Return the ISD::SETCC ValueType
+comment|/// getSetCCResultType - Return the value type to use for ISD::SETCC.
 name|virtual
-name|MVT
-operator|::
-name|SimpleValueType
+name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT
@@ -1257,7 +1283,7 @@ name|isLegalAddressingMode
 argument_list|(
 argument|const AddrMode&AM
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -1268,9 +1294,9 @@ name|virtual
 name|bool
 name|isTruncateFree
 argument_list|(
-argument|const Type *Ty1
+argument|Type *Ty1
 argument_list|,
-argument|const Type *Ty2
+argument|Type *Ty2
 argument_list|)
 specifier|const
 block|;
@@ -1296,9 +1322,9 @@ name|virtual
 name|bool
 name|isZExtFree
 argument_list|(
-argument|const Type *Ty1
+argument|Type *Ty1
 argument_list|,
-argument|const Type *Ty2
+argument|Type *Ty2
 argument_list|)
 specifier|const
 block|;
@@ -2111,7 +2137,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerTRAMPOLINE
+name|LowerINIT_TRAMPOLINE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerADJUST_TRAMPOLINE
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2147,7 +2182,25 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerMUL_V2I64
+name|LowerADD
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerSUB
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerMUL
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2202,6 +2255,15 @@ specifier|const
 block|;
 name|SDValue
 name|LowerMEMBARRIER
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerATOMIC_FENCE
 argument_list|(
 argument|SDValue Op
 argument_list|,
@@ -2498,6 +2560,18 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *BB
+argument_list|)
+specifier|const
+block|;
+name|MachineBasicBlock
+operator|*
+name|EmitLoweredSegAlloca
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|MachineBasicBlock *BB
+argument_list|,
+argument|bool Is64Bit
 argument_list|)
 specifier|const
 block|;

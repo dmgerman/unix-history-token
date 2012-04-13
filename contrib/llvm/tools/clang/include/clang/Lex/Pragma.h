@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringMap.h"
 end_include
 
@@ -129,12 +135,9 @@ label|:
 name|explicit
 name|PragmaHandler
 argument_list|(
-name|llvm
-operator|::
-name|StringRef
-name|name
+argument|StringRef name
 argument_list|)
-range|:
+block|:
 name|Name
 argument_list|(
 argument|name
@@ -147,9 +150,7 @@ name|virtual
 operator|~
 name|PragmaHandler
 argument_list|()
-decl_stmt|;
-name|llvm
-operator|::
+expr_stmt|;
 name|StringRef
 name|getName
 argument_list|()
@@ -243,7 +244,7 @@ operator|:
 name|explicit
 name|PragmaNamespace
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|)
 operator|:
 name|PragmaHandler
@@ -264,7 +265,7 @@ name|PragmaHandler
 operator|*
 name|FindHandler
 argument_list|(
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|,
 argument|bool IgnoreNull = true
 argument_list|)

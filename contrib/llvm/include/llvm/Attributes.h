@@ -325,14 +325,13 @@ comment|///0 means unaligned (different from
 comment|///alignstack(1))
 specifier|const
 name|Attributes
-name|Hotpatch
+name|ReturnsTwice
 init|=
 literal|1
 operator|<<
 literal|29
 decl_stmt|;
-comment|///< Function should have special
-comment|///'hotpatch' sequence in prologue
+comment|///< Function can return twice
 specifier|const
 name|Attributes
 name|UWTable
@@ -412,11 +411,11 @@ name|InlineHint
 operator||
 name|StackAlignment
 operator||
-name|Hotpatch
-operator||
 name|UWTable
 operator||
 name|NonLazyBind
+operator||
+name|ReturnsTwice
 decl_stmt|;
 comment|/// @brief Parameter attributes that do not apply to vararg call arguments.
 specifier|const
@@ -459,7 +458,6 @@ comment|/// @brief Which attributes cannot be applied to a type.
 name|Attributes
 name|typeIncompatible
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty

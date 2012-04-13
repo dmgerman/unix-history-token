@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the main body of the create module.  *  */
+comment|/*  * FreeBSD install - a package for the installation and maintenance  * of non-core utilities.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the main body of the create module.  *  */
 end_comment
 
 begin_include
@@ -1066,6 +1066,33 @@ if|if
 condition|(
 name|Prefix
 condition|)
+block|{
+name|char
+name|resolved_prefix
+index|[
+name|PATH_MAX
+index|]
+decl_stmt|;
+if|if
+condition|(
+name|realpath
+argument_list|(
+name|Prefix
+argument_list|,
+name|resolved_prefix
+argument_list|)
+operator|==
+name|NULL
+condition|)
+name|err
+argument_list|(
+name|EXIT_FAILURE
+argument_list|,
+literal|"couldn't resolve path for prefix: %s"
+argument_list|,
+name|Prefix
+argument_list|)
+expr_stmt|;
 name|add_plist_top
 argument_list|(
 operator|&
@@ -1073,9 +1100,10 @@ name|plist
 argument_list|,
 name|PLIST_CWD
 argument_list|,
-name|Prefix
+name|resolved_prefix
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* Add the origin if asked, at the top */
 if|if
 condition|(
@@ -1233,6 +1261,12 @@ comment|/* 			 * Make sure gen'ed directories, files don't have 			 * group or o
 comment|/* copy_plist(home,&plist); */
 comment|/* mark_plist(&plist); */
 comment|/* Now put the release specific items in */
+if|if
+condition|(
+operator|!
+name|Prefix
+condition|)
+block|{
 name|add_plist
 argument_list|(
 operator|&
@@ -1243,6 +1277,7 @@ argument_list|,
 literal|"."
 argument_list|)
 expr_stmt|;
+block|}
 name|write_file
 argument_list|(
 name|COMMENT_FNAME

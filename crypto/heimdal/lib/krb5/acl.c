@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2000 - 2002, 2004 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 2000 - 2002, 2004 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -14,14 +14,6 @@ include|#
 directive|include
 file|<fnmatch.h>
 end_include
-
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: acl.c 22119 2007-12-03 22:02:48Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
 
 begin_struct
 struct|struct
@@ -256,11 +248,18 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|ENOMEM
+argument_list|,
+name|N_
+argument_list|(
 literal|"malloc: out of memory"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|acl_free_list
@@ -377,12 +376,19 @@ expr_stmt|;
 block|}
 else|else
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"acl_parse_format: "
-literal|"unknown format specifier %c"
+name|EINVAL
+argument_list|,
+name|N_
+argument_list|(
+literal|"Unknown format specifier %c while "
+literal|"parsing ACL"
+argument_list|,
+literal|"specifier"
+argument_list|)
 argument_list|,
 operator|*
 name|p
@@ -653,12 +659,13 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * krb5_acl_match_string matches ACL format against a string.  *  * The ACL format has three format specifiers: s, f, and r.  Each  * specifier will retrieve one argument from the variable arguments  * for either matching or storing data.  The input string is split up  * using " " (space) and "\t" (tab) as a delimiter; multiple and "\t"  * in a row are considered to be the same.  *  * List of format specifiers:  * - s Matches a string using strcmp(3) (case sensitive).  * - f Matches the string with fnmatch(3). Theflags  *     argument (the last argument) passed to the fnmatch function is 0.  * - r Returns a copy of the string in the char ** passed in; the copy  *     must be freed with free(3). There is no need to free(3) the  *     string on error: the function will clean up and set the pointer  *     to NULL.  *  * @param context Kerberos 5 context  * @param string string to match with  * @param format format to match  * @param ... parameter to format string  *  * @return Return an error code or 0.  *  *  * @code  * char *s;  *   * ret = krb5_acl_match_string(context, "foo", "s", "foo");  * if (ret)  *     krb5_errx(context, 1, "acl didn't match");  * ret = krb5_acl_match_string(context, "foo foo baz/kaka",  *     "ss", "foo",&s, "foo/\\*");  * if (ret) {  *     // no need to free(s) on error  *     assert(s == NULL);  *     krb5_errx(context, 1, "acl didn't match");  * }  * free(s);  * @endcode  *  * @sa krb5_acl_match_file  * @ingroup krb5_support  */
+comment|/**  * krb5_acl_match_string matches ACL format against a string.  *  * The ACL format has three format specifiers: s, f, and r.  Each  * specifier will retrieve one argument from the variable arguments  * for either matching or storing data.  The input string is split up  * using " " (space) and "\t" (tab) as a delimiter; multiple and "\t"  * in a row are considered to be the same.  *  * List of format specifiers:  * - s Matches a string using strcmp(3) (case sensitive).  * - f Matches the string with fnmatch(3). Theflags  *     argument (the last argument) passed to the fnmatch function is 0.  * - r Returns a copy of the string in the char ** passed in; the copy  *     must be freed with free(3). There is no need to free(3) the  *     string on error: the function will clean up and set the pointer  *     to NULL.  *  * @param context Kerberos 5 context  * @param string string to match with  * @param format format to match  * @param ... parameter to format string  *  * @return Return an error code or 0.  *  *  * @code  * char *s;  *  * ret = krb5_acl_match_string(context, "foo", "s", "foo");  * if (ret)  *     krb5_errx(context, 1, "acl didn't match");  * ret = krb5_acl_match_string(context, "foo foo baz/kaka",  *     "ss", "foo",&s, "foo/\\*");  * if (ret) {  *     // no need to free(s) on error  *     assert(s == NULL);  *     krb5_errx(context, 1, "acl didn't match");  * }  * free(s);  * @endcode  *  * @sa krb5_acl_match_file  * @ingroup krb5_support  */
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_acl_match_string
 parameter_list|(
 name|krb5_context
@@ -754,11 +761,18 @@ return|;
 block|}
 else|else
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EACCES
+argument_list|,
+name|N_
+argument_list|(
 literal|"ACL did not match"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
@@ -773,8 +787,9 @@ comment|/**  * krb5_acl_match_file matches ACL format against each line in a fil
 end_comment
 
 begin_function
-name|krb5_error_code
 name|KRB5_LIB_FUNCTION
+name|krb5_error_code
+name|KRB5_LIB_CALL
 name|krb5_acl_match_file
 parameter_list|(
 name|krb5_context
@@ -838,24 +853,45 @@ name|save_errno
 init|=
 name|errno
 decl_stmt|;
-name|krb5_set_error_string
+name|rk_strerror_r
+argument_list|(
+name|save_errno
+argument_list|,
+name|buf
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|buf
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|save_errno
+argument_list|,
+name|N_
+argument_list|(
 literal|"open(%s): %s"
+argument_list|,
+literal|"file, errno"
+argument_list|)
 argument_list|,
 name|file
 argument_list|,
-name|strerror
-argument_list|(
-name|save_errno
-argument_list|)
+name|buf
 argument_list|)
 expr_stmt|;
 return|return
 name|save_errno
 return|;
 block|}
+name|rk_cloexec_file
+argument_list|(
+name|f
+argument_list|)
+expr_stmt|;
 name|va_start
 argument_list|(
 name|ap
@@ -973,11 +1009,18 @@ return|;
 block|}
 else|else
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|EACCES
+argument_list|,
+name|N_
+argument_list|(
 literal|"ACL did not match"
+argument_list|,
+literal|""
+argument_list|)
 argument_list|)
 expr_stmt|;
 return|return

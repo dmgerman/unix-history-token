@@ -523,7 +523,7 @@ argument_list|(
 operator|(
 name|q
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,

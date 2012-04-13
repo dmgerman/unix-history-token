@@ -67,9 +67,13 @@ name|int
 name|msg_lastpri
 decl_stmt|;
 comment|/* saved priority value */
-name|int
-name|msg_needsnl
+name|u_int
+name|msg_flags
 decl_stmt|;
+define|#
+directive|define
+name|MSGBUF_NEEDNL
+value|0x01
 comment|/* set when newline needed */
 name|struct
 name|mtx

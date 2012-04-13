@@ -984,6 +984,9 @@ index|[
 name|IEEE80211_ADDR_LEN
 index|]
 decl_stmt|;
+name|uint16_t
+name|ah_assocId
+decl_stmt|;
 comment|/* 	 * Runtime state. 	 */
 name|uint32_t
 name|ah_maskReg
@@ -3951,6 +3954,19 @@ begin_function_decl
 specifier|extern
 name|HAL_BOOL
 name|ar5212IsFastClockEnabled
+parameter_list|(
+name|struct
+name|ath_hal
+modifier|*
+name|ah
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+specifier|extern
+name|uint32_t
+name|ar5212Get11nExtBusy
 parameter_list|(
 name|struct
 name|ath_hal

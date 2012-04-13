@@ -57,6 +57,18 @@ end_endif
 begin_include
 include|#
 directive|include
+file|<config.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|"roken.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -77,20 +89,44 @@ comment|/*  * get option letter from argument vector  */
 end_comment
 
 begin_decl_stmt
+name|ROKEN_LIB_VARIABLE
 name|int
 name|opterr
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* if error message should be printed */
+end_comment
+
+begin_decl_stmt
+name|ROKEN_LIB_VARIABLE
+name|int
 name|optind
 init|=
 literal|1
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* index into parent argv vector */
+end_comment
+
+begin_decl_stmt
+name|ROKEN_LIB_VARIABLE
+name|int
 name|optopt
-decl_stmt|,
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* character checked for validity */
+end_comment
+
+begin_decl_stmt
+name|int
 name|optreset
 decl_stmt|;
 end_decl_stmt
@@ -100,6 +136,7 @@ comment|/* reset getopt */
 end_comment
 
 begin_decl_stmt
+name|ROKEN_LIB_VARIABLE
 name|char
 modifier|*
 name|optarg
@@ -132,30 +169,25 @@ value|""
 end_define
 
 begin_function
-name|int
 name|ROKEN_LIB_FUNCTION
+name|int
+name|ROKEN_LIB_CALL
 name|getopt
 parameter_list|(
-name|nargc
-parameter_list|,
-name|nargv
-parameter_list|,
-name|ostr
-parameter_list|)
 name|int
 name|nargc
-decl_stmt|;
+parameter_list|,
 name|char
 modifier|*
 specifier|const
 modifier|*
 name|nargv
-decl_stmt|;
+parameter_list|,
 specifier|const
 name|char
 modifier|*
 name|ostr
-decl_stmt|;
+parameter_list|)
 block|{
 specifier|static
 name|char

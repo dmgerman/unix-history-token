@@ -350,7 +350,7 @@ comment|/* skip lines that are too big */
 if|if
 condition|(
 operator|!
-name|index
+name|strchr
 argument_list|(
 name|line
 argument_list|,

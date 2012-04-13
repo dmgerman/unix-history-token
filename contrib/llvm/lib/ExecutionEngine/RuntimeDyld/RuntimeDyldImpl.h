@@ -619,7 +619,6 @@ name|InputBuffer
 argument_list|)
 return|;
 block|}
-empty_stmt|;
 block|}
 end_decl_stmt
 

@@ -66,6 +66,18 @@ end_define
 begin_include
 include|#
 directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Type.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -183,15 +195,12 @@ comment|///     _Unwind_Exception_Cleanup_Fn exception_cleanup;
 comment|///     uint64 private_1;
 comment|///     uint64 private_2;
 comment|///   };
+name|virtual
 name|unsigned
 name|getSizeOfUnwindException
 argument_list|()
 specifier|const
-block|{
-return|return
-literal|32
-return|;
-block|}
+expr_stmt|;
 comment|/// Controls whether __builtin_extend_pointer should sign-extend
 comment|/// pointers to uint64_t or zero-extend them (the default).  Has
 comment|/// no effect for targets:
@@ -309,7 +318,7 @@ name|adjustInlineAsmType
 argument_list|(
 argument|CodeGen::CodeGenFunction&CGF
 argument_list|,
-argument|llvm::StringRef Constraint
+argument|StringRef Constraint
 argument_list|,
 argument|llvm::Type* Ty
 argument_list|)
@@ -330,8 +339,6 @@ comment|/// a particular instruction sequence.  This functions returns
 comment|/// that instruction sequence in inline assembly, which will be
 comment|/// empty if none is required.
 name|virtual
-name|llvm
-operator|::
 name|StringRef
 name|getARCRetainAutoreleasedReturnValueMarker
 argument_list|()
@@ -341,6 +348,47 @@ return|return
 literal|""
 return|;
 block|}
+comment|/// Determine whether a call to an unprototyped functions under
+comment|/// the given calling convention should use the variadic
+comment|/// convention or the non-variadic convention.
+comment|///
+comment|/// There's a good reason to make a platform's variadic calling
+comment|/// convention be different from its non-variadic calling
+comment|/// convention: the non-variadic arguments can be passed in
+comment|/// registers (better for performance), and the variadic arguments
+comment|/// can be passed on the stack (also better for performance).  If
+comment|/// this is done, however, unprototyped functions *must* use the
+comment|/// non-variadic convention, because C99 states that a call
+comment|/// through an unprototyped function type must succeed if the
+comment|/// function was defined with a non-variadic prototype with
+comment|/// compatible parameters.  Therefore, splitting the conventions
+comment|/// makes it impossible to call a variadic function through an
+comment|/// unprototyped type.  Since function prototypes came out in the
+comment|/// late 1970s, this is probably an acceptable trade-off.
+comment|/// Nonetheless, not all platforms are willing to make it, and in
+comment|/// particularly x86-64 bends over backwards to make the
+comment|/// conventions compatible.
+comment|///
+comment|/// The default is false.  This is correct whenever:
+comment|///   - the conventions are exactly the same, because it does not
+comment|///     matter and the resulting IR will be somewhat prettier in
+comment|///     certain cases; or
+comment|///   - the conventions are substantively different in how they pass
+comment|///     arguments, because in this case using the variadic convention
+comment|///     will lead to C99 violations.
+comment|/// It is not necessarily correct when arguments are passed in the
+comment|/// same way and some out-of-band information is passed for the
+comment|/// benefit of variadic callees, as is the case for x86-64.
+comment|/// In this case the ABI should be consulted.
+name|virtual
+name|bool
+name|isNoProtoCallVariadic
+argument_list|(
+name|CallingConv
+name|CC
+argument_list|)
+decl|const
+decl_stmt|;
 block|}
 empty_stmt|;
 block|}

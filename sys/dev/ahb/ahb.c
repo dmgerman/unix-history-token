@@ -1298,13 +1298,15 @@ goto|;
 block|}
 comment|/* 	 * Create our DMA tags.  These tags define the kinds of device 	 * accessible memory allocations and memory mappings we will  	 * need to perform during normal operation. 	 */
 comment|/* DMA tag for mapping buffers into device visible space. */
-comment|/* XXX Should be a child of the EISA bus dma tag */
 if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent	*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* alignment	*/
 literal|1
@@ -1365,7 +1367,10 @@ condition|(
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent	*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* alignment	*/
 literal|1

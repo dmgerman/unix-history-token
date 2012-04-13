@@ -967,6 +967,7 @@ comment|/* sysctl vars */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -3860,12 +3861,6 @@ argument_list|)
 expr_stmt|;
 name|ifp
 operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
-expr_stmt|;
-name|ifp
-operator|->
 name|if_flags
 operator|=
 name|IFF_BROADCAST
@@ -4141,7 +4136,7 @@ name|NULL
 argument_list|,
 name|r
 argument_list|,
-name|IEEE80211_T_DS
+name|IEEE80211_MODE_AUTO
 argument_list|)
 expr_stmt|;
 if|if
@@ -16315,7 +16310,7 @@ name|status
 operator|.
 name|an_current_tx_rate
 argument_list|,
-name|IEEE80211_T_DS
+name|IEEE80211_MODE_AUTO
 argument_list|)
 expr_stmt|;
 name|imr

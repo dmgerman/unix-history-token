@@ -484,11 +484,11 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|bool
+name|file_err
+decl_stmt|,
 name|first
 decl_stmt|,
 name|matchall
-decl_stmt|,
-name|notfound
 decl_stmt|,
 name|prev
 decl_stmt|;

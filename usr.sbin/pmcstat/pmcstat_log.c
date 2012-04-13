@@ -846,7 +846,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  * A simple implementation of interned strings.  Each interned string  * is assigned a unique address, so that subsequent string compares  * can be done by a simple pointer comparision instead of using  * strcmp().  This speeds up hash table lookups and saves memory if  * duplicate strings are the norm.  */
+comment|/*  * A simple implementation of interned strings.  Each interned string  * is assigned a unique address, so that subsequent string compares  * can be done by a simple pointer comparison instead of using  * strcmp().  This speeds up hash table lookups and saves memory if  * duplicate strings are the norm.  */
 end_comment
 
 begin_struct
@@ -1469,8 +1469,7 @@ name|errx
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"ERROR: a.out kernel modules are "
-literal|"unsupported \"%s\""
+literal|"ERROR: a.out kernel modules are unsupported \"%s\""
 argument_list|,
 name|path
 argument_list|)
@@ -1533,6 +1532,14 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|args
+operator|.
+name|pa_verbosity
+operator|>=
+literal|2
+condition|)
 name|warn
 argument_list|(
 literal|"WARNING: Cannot determine type of \"%s\""
@@ -2462,6 +2469,14 @@ name|ELF_K_ELF
 operator|)
 condition|)
 block|{
+if|if
+condition|(
+name|args
+operator|.
+name|pa_verbosity
+operator|>=
+literal|2
+condition|)
 name|warnx
 argument_list|(
 literal|"WARNING: Cannot determine the type of \"%s\"."
@@ -2489,8 +2504,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Cannot retrieve the ELF Header for "
-literal|"\"%s\": %s."
+literal|"WARNING: Cannot retrieve the ELF Header for \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2584,8 +2598,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Could not determine the number of "
-literal|"program headers in \"%s\": %s."
+literal|"WARNING: Could not determine the number of program headers in \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2634,8 +2647,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Retrieval of PHDR entry #%ju "
-literal|"in \"%s\" failed: %s."
+literal|"WARNING: Retrieval of PHDR entry #%ju in \"%s\" failed: %s."
 argument_list|,
 operator|(
 name|uintmax_t
@@ -2693,8 +2705,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Cannot retrieve the "
-literal|"interpreter for \"%s\": %s."
+literal|"WARNING: Cannot retrieve the interpreter for \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2728,9 +2739,18 @@ name|PT_LOAD
 case|:
 if|if
 condition|(
+operator|(
 name|ph
 operator|.
 name|p_offset
+operator|&
+operator|(
+operator|-
+name|ph
+operator|.
+name|p_align
+operator|)
+operator|)
 operator|==
 literal|0
 condition|)
@@ -2741,6 +2761,13 @@ operator|=
 name|ph
 operator|.
 name|p_vaddr
+operator|&
+operator|(
+operator|-
+name|ph
+operator|.
+name|p_align
+operator|)
 expr_stmt|;
 break|break;
 block|}
@@ -2762,8 +2789,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Could not determine the number of sections "
-literal|"for \"%s\": %s."
+literal|"WARNING: Could not determine the number of sections for \"%s\": %s."
 argument_list|,
 name|buffer
 argument_list|,
@@ -2821,8 +2847,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"WARNING: Could not retrieve section header "
-literal|"#%ju in \"%s\": %s."
+literal|"WARNING: Could not retrieve section header #%ju in \"%s\": %s."
 argument_list|,
 operator|(
 name|uintmax_t
@@ -3624,8 +3649,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot split a map "
-literal|"entry"
+literal|"ERROR: Cannot split a map entry"
 argument_list|)
 expr_stmt|;
 name|pcmnew
@@ -3765,6 +3789,9 @@ name|addr2line_warn
 init|=
 literal|0
 decl_stmt|;
+name|unsigned
+name|l
+decl_stmt|;
 name|char
 modifier|*
 name|sep
@@ -3860,6 +3887,7 @@ argument_list|(
 name|fd
 argument_list|)
 expr_stmt|;
+comment|/* 		 * New addr2line support recursive inline function with -i 		 * but the format does not add a marker when no more entries 		 * are available. 		 */
 name|snprintf
 argument_list|(
 name|cmdline
@@ -3906,8 +3934,7 @@ literal|1
 expr_stmt|;
 name|warnx
 argument_list|(
-literal|"WARNING: addr2line is needed"
-literal|"for source code information."
+literal|"WARNING: addr2line is needed for source code information."
 argument_list|)
 expr_stmt|;
 block|}
@@ -4080,8 +4107,7 @@ name|sep
 operator|=
 literal|'\0'
 expr_stmt|;
-operator|*
-name|sourceline
+name|l
 operator|=
 name|atoi
 argument_list|(
@@ -4092,8 +4118,7 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|*
-name|sourceline
+name|l
 operator|==
 literal|0
 condition|)
@@ -4102,6 +4127,11 @@ operator|(
 literal|0
 operator|)
 return|;
+operator|*
+name|sourceline
+operator|=
+name|l
+expr_stmt|;
 return|return
 operator|(
 literal|1
@@ -5058,8 +5088,7 @@ name|err
 argument_list|(
 name|EX_SOFTWARE
 argument_list|,
-literal|"ERROR: Unsupported executable type for "
-literal|"\"%s\""
+literal|"ERROR: Unsupported executable type for \"%s\""
 argument_list|,
 name|pmcstat_string_unintern
 argument_list|(
@@ -5286,8 +5315,7 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: Log version 0x%x does not "
-literal|"match compiled version 0x%x."
+literal|"WARNING: Log version 0x%x does not match compiled version 0x%x."
 argument_list|,
 name|ev
 operator|.
@@ -5819,6 +5847,33 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|PMCLOG_TYPE_PMCALLOCATEDYN
+case|:
+comment|/* 			 * Record the association pmc id between this 			 * PMC and its name. 			 */
+name|pmcstat_pmcid_add
+argument_list|(
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_ad
+operator|.
+name|pl_pmcid
+argument_list|,
+name|pmcstat_string_intern
+argument_list|(
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_ad
+operator|.
+name|pl_evname
+argument_list|)
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|PMCLOG_TYPE_PROCEXEC
 case|:
 comment|/* 			 * Change the executable image associated with 			 * a process. 			 */
@@ -6071,8 +6126,7 @@ name|err
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"ERROR: event parsing failed (record %jd, "
-literal|"offset 0x%jx)"
+literal|"ERROR: event parsing failed (record %jd, offset 0x%jx)"
 argument_list|,
 operator|(
 name|uintmax_t
@@ -6318,8 +6372,7 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: Log version 0x%x != expected "
-literal|"version 0x%x."
+literal|"WARNING: Log version 0x%x != expected version 0x%x."
 argument_list|,
 name|ev
 operator|.
@@ -6496,6 +6549,41 @@ operator|.
 name|pl_u
 operator|.
 name|pl_a
+operator|.
+name|pl_flags
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|PMCLOG_TYPE_PMCALLOCATEDYN
+case|:
+name|PMCSTAT_PRINT_ENTRY
+argument_list|(
+literal|"allocatedyn"
+argument_list|,
+literal|"0x%x \"%s\" 0x%x"
+argument_list|,
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_ad
+operator|.
+name|pl_pmcid
+argument_list|,
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_ad
+operator|.
+name|pl_evname
+argument_list|,
+name|ev
+operator|.
+name|pl_u
+operator|.
+name|pl_ad
 operator|.
 name|pl_flags
 argument_list|)
@@ -6792,8 +6880,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"ERROR: event parsing failed "
-literal|"(record %jd, offset 0x%jx)."
+literal|"ERROR: event parsing failed (record %jd, offset 0x%jx)."
 argument_list|,
 operator|(
 name|uintmax_t
@@ -6841,7 +6928,7 @@ condition|)
 block|{
 if|if
 condition|(
-name|pmc_flush_logfile
+name|pmc_close_logfile
 argument_list|()
 operator|<
 literal|0

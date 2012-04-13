@@ -965,7 +965,7 @@ argument_list|)
 expr_stmt|;
 name|db_le
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|db_lbuf_start
 argument_list|,

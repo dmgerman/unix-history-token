@@ -244,21 +244,6 @@ directive|include
 file|"miibus_if.h"
 end_include
 
-begin_comment
-comment|/* PHY registers are in the address space of the first mge unit */
-end_comment
-
-begin_decl_stmt
-specifier|static
-name|struct
-name|mge_softc
-modifier|*
-name|sc_mge0
-init|=
-name|NULL
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -2662,7 +2647,12 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 literal|8
@@ -2838,7 +2828,12 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|sc
+operator|->
+name|dev
+argument_list|)
 argument_list|,
 comment|/* parent */
 literal|16
@@ -3634,26 +3629,13 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|sc_mge0
-operator|=
-name|sc
-expr_stmt|;
 comment|/* Set chip version-dependent parameters */
 name|mge_ver_params
 argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* Get phy address from fdt */
+comment|/* Get phy address and used softc from fdt */
 if|if
 condition|(
 name|fdt_get_phyaddr
@@ -3662,8 +3644,22 @@ name|sc
 operator|->
 name|node
 argument_list|,
+name|sc
+operator|->
+name|dev
+argument_list|,
 operator|&
 name|phy
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|sc
+operator|->
+name|phy_sc
 argument_list|)
 operator|!=
 literal|0
@@ -6527,7 +6523,9 @@ argument_list|)
 expr_stmt|;
 name|MGE_WRITE
 argument_list|(
-name|sc_mge0
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|MGE_REG_SMI
 argument_list|,
@@ -6563,7 +6561,9 @@ operator|!
 operator|(
 name|MGE_READ
 argument_list|(
-name|sc_mge0
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|MGE_REG_SMI
 argument_list|)
@@ -6593,7 +6593,9 @@ return|return
 operator|(
 name|MGE_READ
 argument_list|(
-name|sc_mge0
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|MGE_REG_SMI
 argument_list|)
@@ -6639,7 +6641,9 @@ argument_list|)
 expr_stmt|;
 name|MGE_WRITE
 argument_list|(
-name|sc_mge0
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|MGE_REG_SMI
 argument_list|,
@@ -6679,7 +6683,9 @@ name|retries
 operator|&&
 name|MGE_READ
 argument_list|(
-name|sc_mge0
+name|sc
+operator|->
+name|phy_sc
 argument_list|,
 name|MGE_REG_SMI
 argument_list|)

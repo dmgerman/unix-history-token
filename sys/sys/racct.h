@@ -602,6 +602,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|racct_move
+parameter_list|(
+name|struct
+name|racct
+modifier|*
+name|dest
+parameter_list|,
+name|struct
+name|racct
+modifier|*
+name|src
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

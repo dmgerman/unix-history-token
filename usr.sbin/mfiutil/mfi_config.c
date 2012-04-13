@@ -918,16 +918,15 @@ end_expr_stmt
 begin_define
 define|#
 directive|define
-name|MFI_ARRAY_SIZE
-value|288
+name|MAX_DRIVES_PER_ARRAY
+value|MFI_MAX_ROW_SIZE
 end_define
 
 begin_define
 define|#
 directive|define
-name|MAX_DRIVES_PER_ARRAY
-define|\
-value|((MFI_ARRAY_SIZE - sizeof(struct mfi_array)) / 8)
+name|MFI_ARRAY_SIZE
+value|sizeof(struct mfi_array)
 end_define
 
 begin_define
@@ -1371,7 +1370,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Too many drives for a single array: max is %zu"
+literal|"Too many drives for a single array: max is %d"
 argument_list|,
 name|MAX_DRIVES_PER_ARRAY
 argument_list|)
@@ -1560,6 +1559,12 @@ operator|->
 name|drives
 argument_list|)
 expr_stmt|;
+name|info
+operator|->
+name|drives
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1600,6 +1605,12 @@ operator|->
 name|drives
 argument_list|)
 expr_stmt|;
+name|info
+operator|->
+name|drives
+operator|=
+name|NULL
+expr_stmt|;
 return|return
 operator|(
 name|error
@@ -1628,6 +1639,12 @@ name|info
 operator|->
 name|drives
 argument_list|)
+expr_stmt|;
+name|info
+operator|->
+name|drives
+operator|=
+name|NULL
 expr_stmt|;
 return|return
 operator|(
@@ -3831,6 +3848,13 @@ operator|.
 name|arrays
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|arrays
+operator|!=
+name|NULL
+condition|)
+block|{
 for|for
 control|(
 name|i
@@ -3859,6 +3883,7 @@ argument_list|(
 name|arrays
 argument_list|)
 expr_stmt|;
+block|}
 name|close
 argument_list|(
 name|fd

@@ -348,6 +348,79 @@ operator|&
 name|ShuffleMask
 argument_list|)
 decl_stmt|;
+comment|// DecodeVPERMILPSMask - Decodes VPERMILPS permutes for any 128-bit 32-bit
+comment|// elements. For 256-bit vectors, it's considered as two 128 lanes, the
+comment|// referenced elements can't cross lanes and the mask of the first lane must
+comment|// be the same of the second.
+name|void
+name|DecodeVPERMILPSMask
+argument_list|(
+name|unsigned
+name|NElts
+argument_list|,
+name|unsigned
+name|Imm
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+comment|// DecodeVPERMILPDMask - Decodes VPERMILPD permutes for any 128-bit 64-bit
+comment|// elements. For 256-bit vectors, it's considered as two 128 lanes, the
+comment|// referenced elements can't cross lanes but the mask of the first lane can
+comment|// be the different of the second (not like VPERMILPS).
+name|void
+name|DecodeVPERMILPDMask
+argument_list|(
+name|unsigned
+name|NElts
+argument_list|,
+name|unsigned
+name|Imm
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+name|void
+name|DecodeVPERM2F128Mask
+argument_list|(
+name|unsigned
+name|Imm
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
+name|void
+name|DecodeVPERM2F128Mask
+argument_list|(
+name|EVT
+name|VT
+argument_list|,
+name|unsigned
+name|Imm
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|unsigned
+operator|>
+operator|&
+name|ShuffleMask
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

@@ -73,7 +73,7 @@ value|8
 end_define
 
 begin_comment
-comment|/* Minumum size of the data segment */
+comment|/* Minimum size of the data segment */
 end_comment
 
 begin_define
@@ -99,7 +99,7 @@ value|0
 end_define
 
 begin_comment
-comment|/* Minumum timeout value */
+comment|/* Minimum timeout value */
 end_comment
 
 begin_define

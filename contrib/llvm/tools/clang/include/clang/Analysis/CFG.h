@@ -102,6 +102,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/BitVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/AST/Stmt.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Analysis/Support/BumpVector.h"
 end_include
 
@@ -122,16 +134,6 @@ include|#
 directive|include
 file|<iterator>
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
 
 begin_decl_stmt
 name|namespace
@@ -417,6 +419,7 @@ argument_list|,
 argument|S
 argument_list|)
 block|{}
+specifier|const
 name|Stmt
 operator|*
 name|getStmt
@@ -426,6 +429,7 @@ block|{
 return|return
 name|static_cast
 operator|<
+specifier|const
 name|Stmt
 operator|*
 operator|>
@@ -1179,7 +1183,7 @@ argument|size_t Cnt
 argument_list|,
 argument|CFGElement E
 argument_list|,
-argument|BumpVectorContext& C
+argument|BumpVectorContext&C
 argument_list|)
 block|{
 return|return
@@ -1418,6 +1422,20 @@ block|;
 name|AdjacentBlocks
 name|Succs
 block|;
+comment|/// NoReturn - This bit is set when the basic block contains a function call
+comment|/// or implicit destructor that is attributed as 'noreturn'. In that case,
+comment|/// control cannot technically ever proceed past this block. All such blocks
+comment|/// will have a single immediate successor: the exit block. This allows them
+comment|/// to be easily reached from the exit block and using this bit quickly
+comment|/// recognized without scanning the contents of the block.
+comment|///
+comment|/// Optimization Note: This bit could be profitably folded with Terminator's
+comment|/// storage if the memory usage of CFGBlock becomes an issue.
+name|unsigned
+name|HasNoReturnElement
+operator|:
+literal|1
+block|;
 name|public
 operator|:
 name|explicit
@@ -1462,9 +1480,14 @@ argument_list|)
 block|,
 name|Succs
 argument_list|(
-argument|C
+name|C
 argument_list|,
 literal|1
+argument_list|)
+block|,
+name|HasNoReturnElement
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 operator|~
@@ -2429,6 +2452,18 @@ block|}
 end_function
 
 begin_function
+name|void
+name|setHasNoReturnElement
+parameter_list|()
+block|{
+name|HasNoReturnElement
+operator|=
+name|true
+expr_stmt|;
+block|}
+end_function
+
+begin_function
 name|CFGTerminator
 name|getTerminator
 parameter_list|()
@@ -2525,6 +2560,18 @@ block|}
 end_expr_stmt
 
 begin_expr_stmt
+name|bool
+name|hasNoReturnElement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HasNoReturnElement
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|unsigned
 name|getBlockID
 argument_list|()
@@ -2558,8 +2605,6 @@ begin_decl_stmt
 name|void
 name|print
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -2582,8 +2627,6 @@ begin_decl_stmt
 name|void
 name|printTerminator
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -2778,6 +2821,40 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+name|void
+name|appendAutomaticObjDtor
+parameter_list|(
+name|VarDecl
+modifier|*
+name|VD
+parameter_list|,
+name|Stmt
+modifier|*
+name|S
+parameter_list|,
+name|BumpVectorContext
+modifier|&
+name|C
+parameter_list|)
+block|{
+name|Elements
+operator|.
+name|push_back
+argument_list|(
+name|CFGAutomaticObjDtor
+argument_list|(
+name|VD
+argument_list|,
+name|S
+argument_list|)
+argument_list|,
+name|C
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|// Destructors must be inserted in reversed order. So insertion is in two
 end_comment
@@ -2903,6 +2980,11 @@ comment|//===-------------------------------------------------------------------
 name|class
 name|BuildOptions
 block|{
+name|llvm
+operator|::
+name|BitVector
+name|alwaysAddMask
+expr_stmt|;
 name|public
 label|:
 typedef|typedef
@@ -2927,27 +3009,90 @@ name|forcedBlkExprs
 decl_stmt|;
 name|bool
 name|PruneTriviallyFalseEdges
-range|:
-literal|1
 decl_stmt|;
 name|bool
 name|AddEHEdges
-range|:
-literal|1
 decl_stmt|;
 name|bool
 name|AddInitializers
-range|:
-literal|1
 decl_stmt|;
 name|bool
 name|AddImplicitDtors
-range|:
-literal|1
 decl_stmt|;
+name|bool
+name|alwaysAdd
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|stmt
+argument_list|)
+decl|const
+block|{
+return|return
+name|alwaysAddMask
+index|[
+name|stmt
+operator|->
+name|getStmtClass
+argument_list|()
+index|]
+return|;
+block|}
+name|BuildOptions
+modifier|&
+name|setAlwaysAdd
+argument_list|(
+name|Stmt
+operator|::
+name|StmtClass
+name|stmtClass
+argument_list|,
+name|bool
+name|val
+operator|=
+name|true
+argument_list|)
+block|{
+name|alwaysAddMask
+index|[
+name|stmtClass
+index|]
+operator|=
+name|val
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
+name|BuildOptions
+modifier|&
+name|setAllAlwaysAdd
+parameter_list|()
+block|{
+name|alwaysAddMask
+operator|.
+name|set
+argument_list|()
+expr_stmt|;
+return|return
+operator|*
+name|this
+return|;
+block|}
 name|BuildOptions
 argument_list|()
 operator|:
+name|alwaysAddMask
+argument_list|(
+name|Stmt
+operator|::
+name|lastStmtConstant
+argument_list|,
+name|false
+argument_list|)
+operator|,
 name|forcedBlkExprs
 argument_list|(
 literal|0
@@ -3262,6 +3407,60 @@ return|return
 name|IndirectGotoBlock
 return|;
 block|}
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CFGBlock
+operator|*
+operator|>
+operator|::
+name|const_iterator
+name|try_block_iterator
+expr_stmt|;
+name|try_block_iterator
+name|try_blocks_begin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TryDispatchBlocks
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|try_block_iterator
+name|try_blocks_end
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TryDispatchBlocks
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|void
+name|addTryDispatchBlock
+parameter_list|(
+specifier|const
+name|CFGBlock
+modifier|*
+name|block
+parameter_list|)
+block|{
+name|TryDispatchBlocks
+operator|.
+name|push_back
+argument_list|(
+name|block
+argument_list|)
+expr_stmt|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Member templates useful for various batch operations over CFGs.
 comment|//===--------------------------------------------------------------------===//
@@ -3348,10 +3547,17 @@ operator|)
 condition|)
 name|O
 argument_list|(
+name|const_cast
+operator|<
+name|Stmt
+operator|*
+operator|>
+operator|(
 name|stmt
 operator|->
 name|getStmt
 argument_list|()
+operator|)
 argument_list|)
 expr_stmt|;
 block|}
@@ -3422,7 +3628,7 @@ block|;
 name|bool
 name|isBlkExpr
 argument_list|(
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|)
 block|{
 return|return
@@ -3492,7 +3698,7 @@ block|;
 name|void
 name|print
 argument_list|(
-argument|llvm::raw_ostream& OS
+argument|raw_ostream&OS
 argument_list|,
 argument|const LangOptions&LO
 argument_list|)
@@ -3601,6 +3807,18 @@ name|BlkBVC
 block|;
 name|CFGBlockListTy
 name|Blocks
+block|;
+comment|/// C++ 'try' statements are modeled with an indirect dispatch block.
+comment|/// This is the collection of such blocks present in the CFG.
+name|std
+operator|::
+name|vector
+operator|<
+specifier|const
+name|CFGBlock
+operator|*
+operator|>
+name|TryDispatchBlocks
 block|;  }
 expr_stmt|;
 block|}

@@ -110,6 +110,7 @@ file|<string.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|long
 name|flags
 decl_stmt|;
@@ -235,6 +236,7 @@ value|0200000
 end_define
 
 begin_decl_stmt
+specifier|static
 name|short
 modifier|*
 name|colwidths
@@ -242,6 +244,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 modifier|*
 name|cord
@@ -249,6 +252,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 modifier|*
 name|icbd
@@ -256,6 +260,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|short
 modifier|*
 name|ocbd
@@ -263,12 +268,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nelem
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -277,6 +284,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -285,6 +293,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|curline
@@ -292,6 +301,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|allocsize
 init|=
@@ -300,12 +310,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|curlen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|irows
 decl_stmt|,
@@ -314,6 +326,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|orows
 init|=
@@ -326,24 +339,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|maxlen
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|skip
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|propgutter
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|isep
 init|=
@@ -356,6 +373,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|blank
 index|[]
@@ -365,6 +383,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|owidth
 init|=
@@ -377,6 +396,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -390,6 +410,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|getfile
 parameter_list|(
@@ -399,6 +420,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|getline
 parameter_list|(
@@ -408,6 +430,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|getlist
@@ -423,6 +446,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|getnum
@@ -439,6 +463,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -452,6 +477,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|prepfile
 parameter_list|(
@@ -461,6 +487,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|prints
 parameter_list|(
@@ -473,6 +500,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|putfile
 parameter_list|(
@@ -561,6 +589,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|getfile
 parameter_list|(
@@ -914,6 +943,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|putfile
 parameter_list|(
@@ -1051,6 +1081,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|prints
 parameter_list|(
@@ -1175,6 +1206,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|prepfile
 parameter_list|(
@@ -1695,6 +1727,7 @@ value|(LINE_MAX * 2)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|char
 name|ibuf
 index|[
@@ -1704,6 +1737,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|int
 name|getline
 parameter_list|(
@@ -1908,6 +1942,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -1988,6 +2023,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|getargs
 parameter_list|(
@@ -2428,6 +2464,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|getlist
@@ -2652,6 +2689,7 @@ comment|/*  * num = number p points to; if (strict) complain  * returns pointer 
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|getnum

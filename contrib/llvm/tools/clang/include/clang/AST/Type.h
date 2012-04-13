@@ -110,13 +110,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"llvm/Support/type_traits.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/type_traits.h"
+file|"llvm/Support/ErrorHandling.h"
 end_include
 
 begin_include
@@ -149,45 +149,11 @@ directive|include
 file|"llvm/ADT/PointerUnion.h"
 end_include
 
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|isa
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|cast
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|cast_or_null
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast
-expr_stmt|;
-end_expr_stmt
-
-begin_expr_stmt
-name|using
-name|llvm
-operator|::
-name|dyn_cast_or_null
-expr_stmt|;
-end_expr_stmt
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -2282,6 +2248,14 @@ name|getTypePtrOrNull
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// Retrieves a pointer to the name of the base type.
+specifier|const
+name|IdentifierInfo
+operator|*
+name|getBaseTypeIdentifier
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// Divides a QualType into its unqualified type and a set of local
 comment|/// qualifiers.
 name|SplitQualType
@@ -3558,16 +3532,23 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// \brief Determine whether this type has trivial copy-assignment semantics.
+comment|/// \brief Determine whether this type has trivial copy/move-assignment
+end_comment
+
+begin_comment
+comment|///        semantics.
 end_comment
 
 begin_decl_stmt
 name|bool
-name|hasTrivialCopyAssignment
+name|hasTrivialAssignment
 argument_list|(
 name|ASTContext
 operator|&
 name|Context
+argument_list|,
+name|bool
+name|Copying
 argument_list|)
 decl|const
 decl_stmt|;
@@ -5004,6 +4985,13 @@ name|isPlaceholderType
 argument_list|()
 specifier|const
 block|;
+specifier|const
+name|BuiltinType
+operator|*
+name|getAsPlaceholderType
+argument_list|()
+specifier|const
+block|;
 comment|/// isSpecificPlaceholderType - Test for a specific placeholder type.
 name|bool
 name|isSpecificPlaceholderType
@@ -5037,6 +5025,16 @@ specifier|const
 block|;
 name|bool
 name|isWideCharType
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isChar16Type
+argument_list|()
+specifier|const
+block|;
+name|bool
+name|isChar32Type
 argument_list|()
 specifier|const
 block|;
@@ -5092,6 +5090,12 @@ argument_list|()
 specifier|const
 block|;
 comment|// C99 6.2.5p11 (real floating + complex)
+name|bool
+name|isHalfType
+argument_list|()
+specifier|const
+block|;
+comment|// OpenCL 6.1.1.1, NEON (IEEE 754-2008 half)
 name|bool
 name|isRealType
 argument_list|()
@@ -5403,6 +5407,12 @@ argument_list|()
 specifier|const
 block|;
 comment|// C++0x nullptr_t
+name|bool
+name|isAtomicType
+argument_list|()
+specifier|const
+block|;
+comment|// C1X _Atomic()
 comment|/// Determines if this type, which must satisfy
 comment|/// isObjCLifetimeType(), is implicitly __unsafe_unretained rather
 comment|/// than implicitly __strong.
@@ -5421,7 +5431,11 @@ specifier|const
 block|;    enum
 name|ScalarTypeKind
 block|{
-name|STK_Pointer
+name|STK_CPointer
+block|,
+name|STK_BlockPointer
+block|,
+name|STK_ObjCObjectPointer
 block|,
 name|STK_MemberPointer
 block|,
@@ -5965,6 +5979,10 @@ block|,
 name|Int128
 block|,
 comment|// __int128_t
+name|Half
+block|,
+comment|// This is the 'half' type in OpenCL,
+comment|// __fp16 in case of ARM NEON.
 name|Float
 block|,
 name|Double
@@ -6076,7 +6094,7 @@ name|char
 operator|*
 name|getName
 argument_list|(
-argument|const LangOptions&LO
+argument|const PrintingPolicy&Policy
 argument_list|)
 specifier|const
 block|;
@@ -6163,7 +6181,7 @@ return|return
 name|getKind
 argument_list|()
 operator|>=
-name|Float
+name|Half
 operator|&&
 name|getKind
 argument_list|()
@@ -8305,10 +8323,8 @@ argument_list|(
 argument|llvm::FoldingSetNodeID&ID
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Cannot unique VariableArrayTypes."
 argument_list|)
 block|;   }
@@ -9904,8 +9920,6 @@ argument_list|)
 return|;
 block|}
 specifier|static
-name|llvm
-operator|::
 name|StringRef
 name|getNameForCallConv
 argument_list|(
@@ -10189,15 +10203,21 @@ block|;
 name|unsigned
 name|NumExceptions
 block|;
+comment|/// Exceptions - A variable size array after that holds the exception types.
 specifier|const
 name|QualType
 operator|*
 name|Exceptions
 block|;
+comment|/// NoexceptExpr - Instead of Exceptions, there may be a single Expr*
+comment|/// pointing to the expression in the noexcept() specifier.
 name|Expr
 operator|*
 name|NoexceptExpr
 block|;
+comment|/// ConsumedArgs - A variable size array, following Exceptions
+comment|/// and of length NumArgs, holding flags indicating which arguments
+comment|/// are consumed.  This only appears if HasAnyConsumedArgs is true.
 specifier|const
 name|bool
 operator|*
@@ -10285,15 +10305,6 @@ name|HasAnyConsumedArgs
 operator|:
 literal|1
 block|;
-comment|/// ArgInfo - There is an variable size array after the class in memory that
-comment|/// holds the argument types.
-comment|/// Exceptions - There is another variable size array after ArgInfo that
-comment|/// holds the exception types.
-comment|/// NoexceptExpr - Instead of Exceptions, there may be a single Expr* pointing
-comment|/// to the expression in the noexcept() specifier.
-comment|/// ConsumedArgs - A variable size array, following Exceptions
-comment|/// and of length NumArgs, holding flags indicating which arguments
-comment|/// are consumed.  This only appears if HasAnyConsumedArgs is true.
 name|friend
 name|class
 name|ASTContext
@@ -16157,6 +16168,162 @@ return|;
 block|}
 expr|}
 block|;
+name|class
+name|AtomicType
+operator|:
+name|public
+name|Type
+block|,
+name|public
+name|llvm
+operator|::
+name|FoldingSetNode
+block|{
+name|QualType
+name|ValueType
+block|;
+name|AtomicType
+argument_list|(
+argument|QualType ValTy
+argument_list|,
+argument|QualType Canonical
+argument_list|)
+operator|:
+name|Type
+argument_list|(
+name|Atomic
+argument_list|,
+name|Canonical
+argument_list|,
+name|ValTy
+operator|->
+name|isDependentType
+argument_list|()
+argument_list|,
+name|ValTy
+operator|->
+name|isInstantiationDependentType
+argument_list|()
+argument_list|,
+name|ValTy
+operator|->
+name|isVariablyModifiedType
+argument_list|()
+argument_list|,
+name|ValTy
+operator|->
+name|containsUnexpandedParameterPack
+argument_list|()
+argument_list|)
+block|,
+name|ValueType
+argument_list|(
+argument|ValTy
+argument_list|)
+block|{}
+name|friend
+name|class
+name|ASTContext
+block|;
+comment|// ASTContext creates these.
+name|public
+operator|:
+comment|/// getValueType - Gets the type contained by this atomic type, i.e.
+comment|/// the type returned by performing an atomic load of this atomic type.
+name|QualType
+name|getValueType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ValueType
+return|;
+block|}
+name|bool
+name|isSugared
+argument_list|()
+specifier|const
+block|{
+return|return
+name|false
+return|;
+block|}
+name|QualType
+name|desugar
+argument_list|()
+specifier|const
+block|{
+return|return
+name|QualType
+argument_list|(
+name|this
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|)
+block|{
+name|Profile
+argument_list|(
+name|ID
+argument_list|,
+name|getValueType
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|void
+name|Profile
+argument_list|(
+argument|llvm::FoldingSetNodeID&ID
+argument_list|,
+argument|QualType T
+argument_list|)
+block|{
+name|ID
+operator|.
+name|AddPointer
+argument_list|(
+name|T
+operator|.
+name|getAsOpaquePtr
+argument_list|()
+argument_list|)
+block|;   }
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Type *T
+argument_list|)
+block|{
+return|return
+name|T
+operator|->
+name|getTypeClass
+argument_list|()
+operator|==
+name|Atomic
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const AtomicType *
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+expr|}
+block|;
 comment|/// A qualifier set is used to build a set of qualifiers.
 name|class
 name|QualifierCollector
@@ -17682,6 +17849,24 @@ specifier|inline
 name|bool
 name|Type
 operator|::
+name|isAtomicType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|isa
+operator|<
+name|AtomicType
+operator|>
+operator|(
+name|CanonicalType
+operator|)
+return|;
+block|}
+specifier|inline
+name|bool
+name|Type
+operator|::
 name|isObjCQualifiedIdType
 argument_list|()
 specifier|const
@@ -17942,11 +18127,12 @@ name|BuiltinType
 modifier|*
 name|BT
 init|=
-name|getAs
+name|dyn_cast
 operator|<
 name|BuiltinType
 operator|>
 operator|(
+name|this
 operator|)
 condition|)
 return|return
@@ -17957,6 +18143,45 @@ argument_list|()
 return|;
 return|return
 name|false
+return|;
+block|}
+specifier|inline
+specifier|const
+name|BuiltinType
+operator|*
+name|Type
+operator|::
+name|getAsPlaceholderType
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+specifier|const
+name|BuiltinType
+modifier|*
+name|BT
+init|=
+name|dyn_cast
+operator|<
+name|BuiltinType
+operator|>
+operator|(
+name|this
+operator|)
+condition|)
+if|if
+condition|(
+name|BT
+operator|->
+name|isPlaceholderType
+argument_list|()
+condition|)
+return|return
+name|BT
+return|;
+return|return
+literal|0
 return|;
 block|}
 specifier|inline
@@ -18166,7 +18391,7 @@ name|getAsOpaquePtr
 argument_list|()
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_qualtype
 argument_list|)
@@ -18217,7 +18442,7 @@ name|getAsOpaquePtr
 argument_list|()
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_qualtype
 argument_list|)

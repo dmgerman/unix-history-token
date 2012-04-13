@@ -796,7 +796,7 @@ condition|(
 operator|(
 name|ch
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|path
 argument_list|,

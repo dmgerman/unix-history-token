@@ -81,7 +81,7 @@ name|class
 name|LogDiagnosticPrinter
 range|:
 name|public
-name|DiagnosticClient
+name|DiagnosticConsumer
 block|{   struct
 name|DiagEntry
 block|{
@@ -110,14 +110,12 @@ name|unsigned
 name|DiagnosticID
 block|;
 comment|/// The level of the diagnostic.
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Level
 name|DiagnosticLevel
 block|;   }
 block|;
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -143,8 +141,6 @@ name|OwnsOutputStream
 operator|:
 literal|1
 block|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|DiagEntry
@@ -167,7 +163,7 @@ name|public
 operator|:
 name|LogDiagnosticPrinter
 argument_list|(
-argument|llvm::raw_ostream&OS
+argument|raw_ostream&OS
 argument_list|,
 argument|const DiagnosticOptions&Diags
 argument_list|,
@@ -182,7 +178,7 @@ block|;
 name|void
 name|setDwarfDebugFlags
 argument_list|(
-argument|llvm::StringRef Value
+argument|StringRef Value
 argument_list|)
 block|{
 name|DwarfDebugFlags
@@ -210,10 +206,18 @@ name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
-argument|Diagnostic::Level DiagLevel
+argument|DiagnosticsEngine::Level DiagLevel
 argument_list|,
-argument|const DiagnosticInfo&Info
+argument|const Diagnostic&Info
 argument_list|)
+block|;
+name|DiagnosticConsumer
+operator|*
+name|clone
+argument_list|(
+argument|DiagnosticsEngine&Diags
+argument_list|)
+specifier|const
 block|; }
 decl_stmt|;
 block|}

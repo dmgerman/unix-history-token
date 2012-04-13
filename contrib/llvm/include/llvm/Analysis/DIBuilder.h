@@ -137,6 +137,9 @@ name|class
 name|DISubrange
 decl_stmt|;
 name|class
+name|DILexicalBlockFile
+decl_stmt|;
+name|class
 name|DILexicalBlock
 decl_stmt|;
 name|class
@@ -165,6 +168,22 @@ name|MDNode
 modifier|*
 name|TheCU
 decl_stmt|;
+name|MDNode
+modifier|*
+name|TempEnumTypes
+decl_stmt|;
+name|MDNode
+modifier|*
+name|TempRetainTypes
+decl_stmt|;
+name|MDNode
+modifier|*
+name|TempSubprograms
+decl_stmt|;
+name|MDNode
+modifier|*
+name|TempGVs
+decl_stmt|;
 name|Function
 modifier|*
 name|DeclareFn
@@ -175,6 +194,42 @@ modifier|*
 name|ValueFn
 decl_stmt|;
 comment|// llvm.dbg.value
+name|SmallVector
+operator|<
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|AllEnumTypes
+expr_stmt|;
+name|SmallVector
+operator|<
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|AllRetainTypes
+expr_stmt|;
+name|SmallVector
+operator|<
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|AllSubprograms
+expr_stmt|;
+name|SmallVector
+operator|<
+name|Value
+operator|*
+operator|,
+literal|4
+operator|>
+name|AllGVs
+expr_stmt|;
 name|DIBuilder
 argument_list|(
 specifier|const
@@ -223,6 +278,11 @@ block|,
 name|OpDeref
 block|}
 enum|;
+comment|/// finalize - Construct any deferred debug info descriptors.
+name|void
+name|finalize
+parameter_list|()
+function_decl|;
 comment|/// createCompileUnit - A CompileUnit provides an anchor for all debugging
 comment|/// information generated during this instance of compilation.
 comment|/// @param Lang     Source programming language, eg. dwarf::DW_LANG_C99
@@ -283,6 +343,14 @@ name|Name
 parameter_list|,
 name|uint64_t
 name|Val
+parameter_list|)
+function_decl|;
+comment|/// createNullPtrType - Create C++0x nullptr type.
+name|DIType
+name|createNullPtrType
+parameter_list|(
+name|StringRef
+name|Name
 parameter_list|)
 function_decl|;
 comment|/// createBasicType - Create debugging information entry for a basic
@@ -1244,6 +1312,21 @@ name|File
 parameter_list|,
 name|unsigned
 name|LineNo
+parameter_list|)
+function_decl|;
+comment|/// createLexicalBlockFile - This creates a descriptor for a lexical
+comment|/// block with a new file attached. This merely extends the existing
+comment|/// lexical block as it crosses a file.
+comment|/// @param Scope       Lexical block.
+comment|/// @param File        Source file.
+name|DILexicalBlockFile
+name|createLexicalBlockFile
+parameter_list|(
+name|DIDescriptor
+name|Scope
+parameter_list|,
+name|DIFile
+name|File
 parameter_list|)
 function_decl|;
 comment|/// createLexicalBlock - This creates a descriptor for a lexical block

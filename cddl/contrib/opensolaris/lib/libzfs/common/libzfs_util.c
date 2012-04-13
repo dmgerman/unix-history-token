@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1720,6 +1720,9 @@ name|ENXIO
 case|:
 case|case
 name|ENODEV
+case|:
+case|case
+name|EPIPE
 case|:
 name|zfs_verror
 argument_list|(
@@ -5965,6 +5968,12 @@ argument_list|)
 operator|&&
 operator|!
 name|zfs_prop_userquota
+argument_list|(
+name|propname
+argument_list|)
+operator|&&
+operator|!
+name|zfs_prop_written
 argument_list|(
 name|propname
 argument_list|)

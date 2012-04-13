@@ -60,12 +60,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/pc/bios.h>
 end_include
 
@@ -86,16 +80,6 @@ include|#
 directive|include
 file|"btxv86.h"
 end_include
-
-begin_define
-define|#
-directive|define
-name|V86_CY
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_C)
-end_define
 
 begin_struct
 struct|struct

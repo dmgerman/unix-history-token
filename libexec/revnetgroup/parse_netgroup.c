@@ -766,7 +766,7 @@ block|{
 ifdef|#
 directive|ifdef
 name|DEBUG
-comment|/* 		 * This error message is largely superflous since the 		 * code handles the error condition sucessfully, and 		 * spewing it out from inside libc can actually hose 		 * certain programs. 		 */
+comment|/* 		 * This error message is largely superfluous since the 		 * code handles the error condition successfully, and 		 * spewing it out from inside libc can actually hose 		 * certain programs. 		 */
 name|warnx
 argument_list|(
 literal|"cycle in netgroup %s"

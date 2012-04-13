@@ -125,7 +125,7 @@ name|TCB_GET64
 parameter_list|(
 name|name
 parameter_list|)
-value|({					\ 	__tcb_type(name) __result;				\ 								\ 	u_long __i;						\ 	__asm __volatile("movq %%fs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(u_long *)(__tcb_offset(name))));		\ 	__result = (__tcb_type(name))__i;			\ 								\ 	__result;						\ })
+value|({					\ 	__tcb_type(name) __result;				\ 								\ 	u_long __i;						\ 	__asm __volatile("movq %%fs:%1, %0"			\ 	    : "=r" (__i)					\ 	    : "m" (*(volatile u_long *)(__tcb_offset(name))));  \ 	__result = (__tcb_type(name))__i;			\ 								\ 	__result;						\ })
 end_define
 
 begin_function_decl

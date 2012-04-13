@@ -361,7 +361,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/**  * ArchError  *	An error happend while handling an archive. BSDmake traditionally  *	ignored these errors. Now this is dependend on the global arch_fatal  *	which, if true, makes these errors fatal and, if false, just emits an  *	error message.  */
+comment|/**  * ArchError  *	An error happened while handling an archive. BSDmake traditionally  *	ignored these errors. Now this is dependent on the global arch_fatal  *	which, if true, makes these errors fatal and, if false, just emits an  *	error message.  */
 end_comment
 
 begin_define
@@ -1542,7 +1542,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Read the next header from the archive. The return value will be +1 if  * the header is read successfully, 0 on EOF and -1 if an error happend.  * On a successful return sname contains the truncated member name and  * member the full name. hdr contains the member header. For the symbol table  * names of length 0 are returned. The entry for the file name table is never  * returned.  */
+comment|/*  * Read the next header from the archive. The return value will be +1 if  * the header is read successfully, 0 on EOF and -1 if an error happened.  * On a successful return sname contains the truncated member name and  * member the full name. hdr contains the member header. For the symbol table  * names of length 0 are returned. The entry for the file name table is never  * returned.  */
 end_comment
 
 begin_function
@@ -3042,7 +3042,7 @@ operator|>
 literal|0
 condition|)
 block|{
-comment|/* 		 * When comparing there are actually three cases: 		 * (1) the name fits into the limit og af_name, 		 * (2) the name is longer and the archive supports long names, 		 * (3) the name is longer and the archive doesn't support long 		 * names. 		 * Because we don't know whether the archive supports long 		 * names or not we need to be carefull. 		 */
+comment|/* 		 * When comparing there are actually three cases: 		 * (1) the name fits into the limit og af_name, 		 * (2) the name is longer and the archive supports long names, 		 * (3) the name is longer and the archive doesn't support long 		 * names. 		 * Because we don't know whether the archive supports long 		 * names or not we need to be careful. 		 */
 if|if
 condition|(
 name|member
@@ -3461,7 +3461,7 @@ operator|<
 literal|0
 condition|)
 block|{
-comment|/* error happend - throw away everything */
+comment|/* error happened - throw away everything */
 name|Hash_DeleteTable
 argument_list|(
 operator|&

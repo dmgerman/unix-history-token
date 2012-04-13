@@ -208,6 +208,15 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|pmc_close_logfile
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|pmc_detach
 parameter_list|(
 name|pmc_id_t
@@ -446,7 +455,8 @@ name|char
 modifier|*
 name|pmc_name_of_capability
 parameter_list|(
-name|uint32_t
+name|enum
+name|pmc_caps
 name|_c
 parameter_list|)
 function_decl|;

@@ -28,6 +28,10 @@ name|CPUSETBUFSIZ
 value|((2 + sizeof(long) * 2) * _NCPUWORDS)
 end_define
 
+begin_comment
+comment|/*  * Macros addressing word and bit within it, tuned to make compiler  * optimize cases when CPU_SETSIZE fits into single machine word.  */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -35,7 +39,18 @@ name|__cpuset_mask
 parameter_list|(
 name|n
 parameter_list|)
-value|((long)1<< ((n) % _NCPUBITS))
+define|\
+value|((long)1<< ((_NCPUWORDS == 1) ? (__size_t)(n) : ((n) % _NCPUBITS)))
+end_define
+
+begin_define
+define|#
+directive|define
+name|__cpuset_word
+parameter_list|(
+name|n
+parameter_list|)
+value|((_NCPUWORDS == 1) ? 0 : ((n) / _NCPUBITS))
 end_define
 
 begin_define
@@ -47,7 +62,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->__bits[(n)/_NCPUBITS]&= ~__cpuset_mask(n))
+value|((p)->__bits[__cpuset_word(n)]&= ~__cpuset_mask(n))
 end_define
 
 begin_define
@@ -71,7 +86,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|(((p)->__bits[(n)/_NCPUBITS]& __cpuset_mask(n)) != 0)
+value|(((p)->__bits[__cpuset_word(n)]& __cpuset_mask(n)) != 0)
 end_define
 
 begin_define
@@ -83,7 +98,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|((p)->__bits[(n)/_NCPUBITS] |= __cpuset_mask(n))
+value|((p)->__bits[__cpuset_word(n)] |= __cpuset_mask(n))
 end_define
 
 begin_define
@@ -115,7 +130,7 @@ name|n
 parameter_list|,
 name|p
 parameter_list|)
-value|do {					\ 	CPU_ZERO(p);						\ 	((p)->__bits[(n)/_NCPUBITS] = __cpuset_mask(n));	\ } while (0)
+value|do {					\ 	CPU_ZERO(p);						\ 	((p)->__bits[__cpuset_word(n)] = __cpuset_mask(n));	\ } while (0)
 end_define
 
 begin_comment
@@ -240,7 +255,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|atomic_clear_long(&(p)->__bits[(n)/_NCPUBITS], __cpuset_mask(n))
+value|atomic_clear_long(&(p)->__bits[__cpuset_word(n)], __cpuset_mask(n))
 end_define
 
 begin_define
@@ -253,7 +268,7 @@ parameter_list|,
 name|p
 parameter_list|)
 define|\
-value|atomic_set_long(&(p)->__bits[(n)/_NCPUBITS], __cpuset_mask(n))
+value|atomic_set_long(&(p)->__bits[__cpuset_word(n)], __cpuset_mask(n))
 end_define
 
 begin_comment

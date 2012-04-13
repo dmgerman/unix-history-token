@@ -212,6 +212,18 @@ comment|// V,Flag = sra_flag X -> sra X, 1 + save carry out.
 name|RRX
 block|,
 comment|// V = RRX X, Flag     -> srl X, 1 + shift in carry flag.
+name|ADDC
+block|,
+comment|// Add with carry
+name|ADDE
+block|,
+comment|// Add using carry
+name|SUBC
+block|,
+comment|// Sub with carry
+name|SUBE
+block|,
+comment|// Sub using carry
 name|VMOVRRD
 block|,
 comment|// double to two gprs.
@@ -468,6 +480,23 @@ block|,
 name|VST3LN_UPD
 block|,
 name|VST4LN_UPD
+block|,
+comment|// 64-bit atomic ops (value split into two registers)
+name|ATOMADD64_DAG
+block|,
+name|ATOMSUB64_DAG
+block|,
+name|ATOMOR64_DAG
+block|,
+name|ATOMXOR64_DAG
+block|,
+name|ATOMAND64_DAG
+block|,
+name|ATOMNAND64_DAG
+block|,
+name|ATOMSWAP64_DAG
+block|,
+name|ATOMCMPXCHG64_DAG
 block|}
 enum|;
 block|}
@@ -475,28 +504,6 @@ comment|/// Define some predicates that are used for node matching.
 name|namespace
 name|ARM
 block|{
-comment|/// getVFPf32Imm / getVFPf64Imm - If the given fp immediate can be
-comment|/// materialized with a VMOV.f32 / VMOV.f64 (i.e. fconsts / fconstd)
-comment|/// instruction, returns its 8-bit integer representation. Otherwise,
-comment|/// returns -1.
-name|int
-name|getVFPf32Imm
-parameter_list|(
-specifier|const
-name|APFloat
-modifier|&
-name|FPImm
-parameter_list|)
-function_decl|;
-name|int
-name|getVFPf64Imm
-parameter_list|(
-specifier|const
-name|APFloat
-modifier|&
-name|FPImm
-parameter_list|)
-function_decl|;
 name|bool
 name|isBitFieldInvertedMask
 parameter_list|(
@@ -566,6 +573,15 @@ argument|unsigned Opcode
 argument_list|)
 specifier|const
 block|;
+comment|/// getSetCCResultType - Return the value type to use for ISD::SETCC.
+name|virtual
+name|EVT
+name|getSetCCResultType
+argument_list|(
+argument|EVT VT
+argument_list|)
+specifier|const
+block|;
 name|virtual
 name|MachineBasicBlock
 operator|*
@@ -574,6 +590,16 @@ argument_list|(
 argument|MachineInstr *MI
 argument_list|,
 argument|MachineBasicBlock *MBB
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|void
+name|AdjustInstrPostInstrSelection
+argument_list|(
+argument|MachineInstr *MI
+argument_list|,
+argument|SDNode *Node
 argument_list|)
 specifier|const
 block|;
@@ -624,7 +650,7 @@ name|isLegalAddressingMode
 argument_list|(
 argument|const AddrMode&AM
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -1774,6 +1800,36 @@ decl|const
 decl_stmt|;
 name|MachineBasicBlock
 modifier|*
+name|EmitAtomicBinary64
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|BB
+argument_list|,
+name|unsigned
+name|Op1
+argument_list|,
+name|unsigned
+name|Op2
+argument_list|,
+name|bool
+name|NeedsCarry
+operator|=
+name|false
+argument_list|,
+name|bool
+name|IsCmpxchg
+operator|=
+name|false
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
 name|EmitAtomicBinaryMinMax
 argument_list|(
 name|MachineInstr
@@ -1794,6 +1850,57 @@ name|ARMCC
 operator|::
 name|CondCodes
 name|Cond
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|EmitBasePointerRecalculation
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|DispatchBB
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|SetupEntryBlockForSjLj
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|DispatchBB
+argument_list|,
+name|int
+name|FI
+argument_list|)
+decl|const
+decl_stmt|;
+name|MachineBasicBlock
+modifier|*
+name|EmitSjLjDispatchBlock
+argument_list|(
+name|MachineInstr
+operator|*
+name|MI
+argument_list|,
+name|MachineBasicBlock
+operator|*
+name|MBB
 argument_list|)
 decl|const
 decl_stmt|;

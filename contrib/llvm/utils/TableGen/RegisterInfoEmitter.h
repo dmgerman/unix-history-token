@@ -70,7 +70,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"TableGenBackend.h"
+file|"llvm/TableGen/TableGenBackend.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<vector>
 end_include
 
 begin_decl_stmt
@@ -80,6 +86,9 @@ block|{
 name|class
 name|CodeGenRegBank
 decl_stmt|;
+struct_decl|struct
+name|CodeGenRegister
+struct_decl|;
 name|class
 name|CodeGenTarget
 decl_stmt|;
@@ -182,6 +191,30 @@ argument_list|(
 name|raw_ostream
 operator|&
 name|o
+argument_list|)
+block|;
+name|private
+operator|:
+name|void
+name|EmitRegMapping
+argument_list|(
+argument|raw_ostream&o
+argument_list|,
+argument|const std::vector<CodeGenRegister*>&Regs
+argument_list|,
+argument|bool isCtor
+argument_list|)
+block|;
+name|void
+name|EmitRegClasses
+argument_list|(
+name|raw_ostream
+operator|&
+name|OS
+argument_list|,
+name|CodeGenTarget
+operator|&
+name|Target
 argument_list|)
 block|; }
 decl_stmt|;

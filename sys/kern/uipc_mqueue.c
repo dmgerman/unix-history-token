@@ -614,6 +614,7 @@ struct|;
 end_struct
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern
@@ -9472,7 +9473,7 @@ index|]
 operator|!=
 literal|'/'
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|path
 operator|+
@@ -10060,7 +10061,7 @@ index|]
 operator|!=
 literal|'/'
 operator|||
-name|index
+name|strchr
 argument_list|(
 name|path
 operator|+

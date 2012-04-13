@@ -1573,7 +1573,6 @@ label|:
 name|MVT
 name|V
 decl_stmt|;
-specifier|const
 name|Type
 modifier|*
 name|LLVMTy
@@ -1894,6 +1893,79 @@ return|return
 name|MVT
 operator|::
 name|INVALID_SIMPLE_VALUE_TYPE
+return|;
+block|}
+comment|/// changeVectorElementTypeToInteger - Return a vector with the same number
+comment|/// of elements as this vector, but with the element type converted to an
+comment|/// integer type with the same bitwidth.
+name|EVT
+name|changeVectorElementTypeToInteger
+argument_list|()
+decl|const
+block|{
+if|if
+condition|(
+operator|!
+name|isSimple
+argument_list|()
+condition|)
+return|return
+name|changeExtendedVectorElementTypeToInteger
+argument_list|()
+return|;
+name|MVT
+name|EltTy
+init|=
+name|getSimpleVT
+argument_list|()
+operator|.
+name|getVectorElementType
+argument_list|()
+decl_stmt|;
+name|unsigned
+name|BitWidth
+init|=
+name|EltTy
+operator|.
+name|getSizeInBits
+argument_list|()
+decl_stmt|;
+name|MVT
+name|IntTy
+init|=
+name|MVT
+operator|::
+name|getIntegerVT
+argument_list|(
+name|BitWidth
+argument_list|)
+decl_stmt|;
+name|MVT
+name|VecTy
+init|=
+name|MVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|IntTy
+argument_list|,
+name|getVectorNumElements
+argument_list|()
+argument_list|)
+decl_stmt|;
+name|assert
+argument_list|(
+name|VecTy
+operator|!=
+name|MVT
+operator|::
+name|INVALID_SIMPLE_VALUE_TYPE
+operator|&&
+literal|"Simple vector VT not representable by simple integer vector VT!"
+argument_list|)
+expr_stmt|;
+return|return
+name|VecTy
 return|;
 block|}
 comment|/// isSimple - Test if the given EVT is simple (as opposed to being
@@ -3005,7 +3077,6 @@ comment|/// that this will abort for types that cannot be represented.
 end_comment
 
 begin_decl_stmt
-specifier|const
 name|Type
 modifier|*
 name|getTypeForEVT
@@ -3035,7 +3106,6 @@ specifier|static
 name|EVT
 name|getEVT
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -3157,6 +3227,14 @@ end_comment
 begin_comment
 comment|// from having a dependency on Type.h.
 end_comment
+
+begin_expr_stmt
+name|EVT
+name|changeExtendedVectorElementTypeToInteger
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_function_decl
 specifier|static

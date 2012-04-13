@@ -95,6 +95,14 @@ directive|include
 file|<dev/acpica/acpivar.h>
 end_include
 
+begin_if
+if|#
+directive|if
+name|VM_NDOMAIN
+operator|>
+literal|1
+end_if
+
 begin_struct
 struct|struct
 name|cpu_info
@@ -1112,12 +1120,12 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Renumber the memory domains to be compact and zero-based if not  * already.  */
+comment|/*  * Renumber the memory domains to be compact and zero-based if not  * already.  Returns an error if there are too many domains.  */
 end_comment
 
 begin_function
 specifier|static
-name|void
+name|int
 name|renumber_domains
 parameter_list|(
 name|void
@@ -1249,6 +1257,27 @@ index|]
 operator|.
 name|domain
 expr_stmt|;
+name|ndomain
+operator|++
+expr_stmt|;
+if|if
+condition|(
+name|ndomain
+operator|>
+name|VM_NDOMAIN
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"SRAT: Too many memory domains\n"
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|EFBIG
+operator|)
+return|;
+block|}
 block|}
 comment|/* Renumber each domain to its index in the sorted 'domains' list. */
 for|for
@@ -1357,6 +1386,11 @@ operator|=
 name|i
 expr_stmt|;
 block|}
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 block|}
 end_function
 
@@ -1445,6 +1479,11 @@ name|check_phys_avail
 argument_list|()
 operator|!=
 literal|0
+operator|||
+name|renumber_domains
+argument_list|()
+operator|!=
+literal|0
 condition|)
 block|{
 name|srat_physaddr
@@ -1453,9 +1492,6 @@ literal|0
 expr_stmt|;
 return|return;
 block|}
-name|renumber_domains
-argument_list|()
-expr_stmt|;
 comment|/* Point vm_phys at our memory affinity table. */
 name|mem_affinity
 operator|=
@@ -1666,6 +1702,15 @@ name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* VM_NDOMAIN> 1 */
+end_comment
 
 end_unit
 

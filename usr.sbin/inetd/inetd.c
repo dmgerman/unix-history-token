@@ -9370,7 +9370,7 @@ condition|(
 operator|(
 name|versp
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|sep
 operator|->
@@ -10334,7 +10334,7 @@ name|sep
 operator|->
 name|se_server_name
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|sep
 operator|->

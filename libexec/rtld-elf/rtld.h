@@ -181,7 +181,7 @@ name|CNEW
 parameter_list|(
 name|type
 parameter_list|)
-value|((type *) xcalloc(sizeof(type)))
+value|((type *) xcalloc(1, sizeof(type)))
 end_define
 
 begin_comment
@@ -242,6 +242,31 @@ begin_decl_stmt
 specifier|extern
 name|int
 name|tls_max_index
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|main_argc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|main_argv
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|char
+modifier|*
+modifier|*
+name|environ
 decl_stmt|;
 end_decl_stmt
 
@@ -307,6 +332,27 @@ name|InitFunc
 function_decl|)
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|InitArrFunc
+function_decl|)
+parameter_list|(
+name|int
+parameter_list|,
+name|char
+modifier|*
+modifier|*
+parameter_list|,
+name|char
+modifier|*
+modifier|*
 parameter_list|)
 function_decl|;
 end_typedef
@@ -626,6 +672,12 @@ name|size_t
 name|tlsalign
 decl_stmt|;
 comment|/* Alignment of static TLS block */
+name|caddr_t
+name|relro_page
+decl_stmt|;
+name|size_t
+name|relro_size
+decl_stmt|;
 comment|/* Items from the dynamic section. */
 name|Elf_Addr
 modifier|*
@@ -801,6 +853,34 @@ name|Elf_Addr
 name|fini
 decl_stmt|;
 comment|/* Termination function to call */
+name|Elf_Addr
+name|preinit_array
+decl_stmt|;
+comment|/* Pre-initialization array of functions */
+name|Elf_Addr
+name|init_array
+decl_stmt|;
+comment|/* Initialization array of functions */
+name|Elf_Addr
+name|fini_array
+decl_stmt|;
+comment|/* Termination array of functions */
+name|int
+name|preinit_array_num
+decl_stmt|;
+comment|/* Number of entries in preinit_array */
+name|int
+name|init_array_num
+decl_stmt|;
+comment|/* Number of entries in init_array */
+name|int
+name|fini_array_num
+decl_stmt|;
+comment|/* Number of entries in fini_array */
+name|int32_t
+name|osrel
+decl_stmt|;
+comment|/* OSREL note value */
 name|bool
 name|mainprog
 range|:
@@ -813,6 +893,18 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* True if this is the dynamic linker */
+name|bool
+name|relocated
+range|:
+literal|1
+decl_stmt|;
+comment|/* True if processed by relocate_objects() */
+name|bool
+name|ver_checked
+range|:
+literal|1
+decl_stmt|;
+comment|/* True if processed by rtld_verify_object_versions */
 name|bool
 name|textrel
 range|:
@@ -915,6 +1007,24 @@ range|:
 literal|1
 decl_stmt|;
 comment|/* Filtees loaded */
+name|bool
+name|irelative
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object has R_MACHDEP_IRELATIVE relocs */
+name|bool
+name|gnu_ifunc
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object has references to STT_GNU_IFUNC */
+name|bool
+name|crt_no_init
+range|:
+literal|1
+decl_stmt|;
+comment|/* Object' crt does not call _init/_fini */
 name|struct
 name|link_map
 name|linkmap
@@ -940,7 +1050,7 @@ name|void
 modifier|*
 name|priv
 decl_stmt|;
-comment|/* Platform-dependant */
+comment|/* Platform-dependent */
 block|}
 name|Obj_Entry
 typedef|;
@@ -990,7 +1100,18 @@ value|0x02
 end_define
 
 begin_comment
-comment|/* Return newes versioned symbol. Used by 				   dlsym. */
+comment|/* Return newest versioned symbol. Used by 				   dlsym. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SYMLOOK_EARLY
+value|0x04
+end_define
+
+begin_comment
+comment|/* Symlook is done during initialization. */
 end_comment
 
 begin_comment
@@ -1050,6 +1171,17 @@ end_define
 
 begin_comment
 comment|/* Loading filtee. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|RTLD_LO_EARLY
+value|0x20
+end_define
+
+begin_comment
+comment|/* Do not call ctors, postpone it to the 				   initialization during the image start. */
 end_comment
 
 begin_comment
@@ -1170,7 +1302,6 @@ typedef|;
 end_typedef
 
 begin_function_decl
-specifier|extern
 name|void
 name|_rtld_error
 parameter_list|(
@@ -1193,7 +1324,17 @@ empty_stmt|;
 end_empty_stmt
 
 begin_function_decl
-specifier|extern
+specifier|const
+name|char
+modifier|*
+name|rtld_strerror
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|Obj_Entry
 modifier|*
 name|map_object
@@ -1213,18 +1354,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 modifier|*
 name|xcalloc
 parameter_list|(
+name|size_t
+parameter_list|,
 name|size_t
 parameter_list|)
 function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 modifier|*
 name|xmalloc
@@ -1235,7 +1376,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|char
 modifier|*
 name|xstrdup
@@ -1267,7 +1407,6 @@ comment|/* For resolving undefined weak refs. */
 end_comment
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_relocations
 parameter_list|(
@@ -1278,7 +1417,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_obj_relocations
 parameter_list|(
@@ -1289,7 +1427,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_Elf_Rel
 parameter_list|(
@@ -1306,7 +1443,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-specifier|extern
 name|void
 name|dump_Elf_Rela
 parameter_list|(
@@ -1389,6 +1525,20 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|digest_notes
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|Elf_Addr
+parameter_list|,
+name|Elf_Addr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|obj_free
 parameter_list|(
 name|Obj_Entry
@@ -1412,6 +1562,24 @@ name|void
 name|_rtld_bind_start
 parameter_list|(
 name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+modifier|*
+name|rtld_resolve_ifunc
+parameter_list|(
+specifier|const
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+specifier|const
+name|Elf_Sym
+modifier|*
+name|def
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1569,6 +1737,9 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|struct
 name|Struct_RtldLockState
 modifier|*
@@ -1592,6 +1763,40 @@ name|reloc_jmpslots
 parameter_list|(
 name|Obj_Entry
 modifier|*
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|reloc_iresolve
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|reloc_gnu_ifunc
+parameter_list|(
+name|Obj_Entry
+modifier|*
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|struct
 name|Struct_RtldLockState

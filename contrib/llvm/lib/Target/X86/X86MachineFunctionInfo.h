@@ -116,11 +116,6 @@ comment|/// relocation models.
 name|unsigned
 name|GlobalBaseReg
 block|;
-comment|/// ReserveFP - whether the function should reserve the frame pointer
-comment|/// when allocating, even if there may not actually be a frame pointer used.
-name|bool
-name|ReserveFP
-block|;
 comment|/// VarArgsFrameIndex - FrameIndex for start of varargs area.
 name|int
 name|VarArgsFrameIndex
@@ -136,6 +131,11 @@ block|;
 comment|/// VarArgsFPOffset - X86-64 vararg func fp reg offset.
 name|unsigned
 name|VarArgsFPOffset
+block|;
+comment|/// ArgumentStackSize - The number of bytes on stack consumed by the arguments
+comment|/// being passed on the stack.
+name|unsigned
+name|ArgumentStackSize
 block|;
 name|public
 operator|:
@@ -196,6 +196,11 @@ name|VarArgsFPOffset
 argument_list|(
 literal|0
 argument_list|)
+block|,
+name|ArgumentStackSize
+argument_list|(
+literal|0
+argument_list|)
 block|{}
 name|explicit
 name|X86MachineFunctionInfo
@@ -240,11 +245,6 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
-name|ReserveFP
-argument_list|(
-name|false
-argument_list|)
-block|,
 name|VarArgsFrameIndex
 argument_list|(
 literal|0
@@ -261,6 +261,11 @@ literal|0
 argument_list|)
 block|,
 name|VarArgsFPOffset
+argument_list|(
+literal|0
+argument_list|)
+block|,
+name|ArgumentStackSize
 argument_list|(
 literal|0
 argument_list|)
@@ -398,25 +403,6 @@ name|GlobalBaseReg
 operator|=
 name|Reg
 block|; }
-name|bool
-name|getReserveFP
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ReserveFP
-return|;
-block|}
-name|void
-name|setReserveFP
-argument_list|(
-argument|bool reserveFP
-argument_list|)
-block|{
-name|ReserveFP
-operator|=
-name|reserveFP
-block|; }
 name|int
 name|getVarArgsFrameIndex
 argument_list|()
@@ -492,6 +478,25 @@ block|{
 name|VarArgsFPOffset
 operator|=
 name|Offset
+block|; }
+name|unsigned
+name|getArgumentStackSize
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ArgumentStackSize
+return|;
+block|}
+name|void
+name|setArgumentStackSize
+argument_list|(
+argument|unsigned size
+argument_list|)
+block|{
+name|ArgumentStackSize
+operator|=
+name|size
 block|; }
 expr|}
 block|;  }

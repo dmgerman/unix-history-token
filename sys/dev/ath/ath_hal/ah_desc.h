@@ -26,6 +26,28 @@ comment|/* NB: required for AH_SUPPORT_AR5416 */
 end_comment
 
 begin_comment
+comment|/*  * For now, define this for the structure definitions.  * Because of how the HAL / driver module currently builds,  * it's not very feasible to build the module without  * this defined.  The rest of the code (eg in the driver  * body) can work fine with these fields being uninitialised;  * they'll be initialised to 0 anyway.  */
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|AH_SUPPORT_AR5416
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORT_AR5416
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
 comment|/*  * Transmit descriptor status.  This structure is filled  * in only after the tx descriptor process method finds a  * ``done'' descriptor; at which point it returns something  * other than HAL_EINPROGRESS.  *  * Note that ts_antenna may not be valid for all h/w.  It  * should be used only if non-zero.  */
 end_comment
 
@@ -104,6 +126,10 @@ name|uint32_t
 name|ts_ba_high
 decl_stmt|;
 comment|/* blockack bitmap high */
+name|uint8_t
+name|ts_tid
+decl_stmt|;
+comment|/* TID */
 name|uint32_t
 name|ts_evm0
 decl_stmt|;

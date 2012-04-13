@@ -314,6 +314,20 @@ name|xc_cnputc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cn_grab_t
+name|xc_cngrab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_ungrab_t
+name|xc_cnungrab
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define
@@ -659,6 +673,32 @@ modifier|*
 name|cp
 parameter_list|)
 block|{  }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|xc_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|xc_cnungrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
 end_function
 
 begin_function

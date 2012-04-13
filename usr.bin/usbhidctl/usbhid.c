@@ -78,6 +78,7 @@ file|<dev/usb/usbhid.h>
 end_include
 
 begin_struct
+specifier|static
 struct|struct
 name|variable
 block|{
@@ -107,6 +108,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|int
 name|verbose
 init|=
@@ -115,6 +117,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|noname
 init|=
@@ -123,6 +126,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|hexdump
 init|=
@@ -131,6 +135,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|wflag
 init|=
@@ -139,6 +144,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|zflag
 init|=

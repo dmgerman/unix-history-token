@@ -76,6 +76,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/sysctl.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/proc.h>
 end_include
 
@@ -235,6 +241,48 @@ ifdef|#
 directive|ifdef
 name|ISP_TARGET_MODE
 end_ifdef
+
+begin_comment
+comment|/* Not quite right, but there was no bump for this change */
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__FreeBSD_version
+operator|<
+literal|225469
+end_if
+
+begin_define
+define|#
+directive|define
+name|SDFIXED
+parameter_list|(
+name|x
+parameter_list|)
+value|(&x)
+end_define
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_define
+define|#
+directive|define
+name|SDFIXED
+parameter_list|(
+name|x
+parameter_list|)
+value|((struct scsi_sense_data_fixed *)(&x))
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_define
 define|#
@@ -1686,7 +1734,7 @@ name|sense_ptr
 parameter_list|,
 name|slen
 parameter_list|)
-value|do {			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;		\ 		memset(&(xs)->sense_data, 0, sizeof(&(xs)->sense_data));\ 		memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs),\ 		       slen)); 						\ 		if (slen< (xs)->sense_len) 				\ 			(xs)->sense_resid = (xs)->sense_len - slen;	\ 	} while (0);
+value|do {			\ 		(xs)->ccb_h.status |= CAM_AUTOSNS_VALID;		\ 		memset(&(xs)->sense_data, 0, sizeof((xs)->sense_data));	\ 		memcpy(&(xs)->sense_data, sense_ptr, imin(XS_SNSLEN(xs),\ 		       slen)); 						\ 		if (slen< (xs)->sense_len) 				\ 			(xs)->sense_resid = (xs)->sense_len - slen;	\ 	} while (0);
 end_define
 
 begin_define

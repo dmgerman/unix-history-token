@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * FreeBSD install - a package for the installation and maintainance  * of non-core utilities.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the create module.  *  */
+comment|/*  * FreeBSD install - a package for the installation and maintenance  * of non-core utilities.  *  * Jordan K. Hubbard  * 18 July 1993  *  * This is the create module.  *  */
 end_comment
 
 begin_include

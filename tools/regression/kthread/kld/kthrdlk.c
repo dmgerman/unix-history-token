@@ -607,7 +607,7 @@ condition|)
 block|{
 name|panic
 argument_list|(
-literal|"some threads not die! remaing: %d"
+literal|"some threads not die! remaining: %d"
 argument_list|,
 name|test_thrcnt
 argument_list|)

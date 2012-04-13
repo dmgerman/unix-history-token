@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER SART  *  * The contents of this file are subject to th
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -531,6 +531,28 @@ name|size_t
 modifier|*
 parameter_list|)
 function_decl|;
+name|zfs_handle_t
+modifier|*
+name|make_dataset_handle_zc
+parameter_list|(
+name|libzfs_handle_t
+modifier|*
+parameter_list|,
+name|zfs_cmd_t
+modifier|*
+parameter_list|)
+function_decl|;
+name|zfs_handle_t
+modifier|*
+name|make_dataset_simple_handle_zc
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+name|zfs_cmd_t
+modifier|*
+parameter_list|)
+function_decl|;
 name|int
 name|zprop_parse_value
 parameter_list|(
@@ -579,7 +601,12 @@ comment|/*  * Use this changelist_gather() flag to force attempting mounts  * on
 define|#
 directive|define
 name|CL_GATHER_MOUNT_ALWAYS
-value|1
+value|0x01
+comment|/*  * Use this changelist_gather() flag to prevent unmounting of file systems.  */
+define|#
+directive|define
+name|CL_GATHER_DONT_UNMOUNT
+value|0x02
 typedef|typedef
 name|struct
 name|prop_changelist

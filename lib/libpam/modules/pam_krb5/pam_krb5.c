@@ -266,6 +266,23 @@ name|PAM_OPT_REUSE_CCACHE
 value|"reuse_ccache"
 end_define
 
+begin_define
+define|#
+directive|define
+name|PAM_LOG_KRB5_ERR
+parameter_list|(
+name|ctx
+parameter_list|,
+name|rv
+parameter_list|,
+name|fmt
+parameter_list|,
+modifier|...
+parameter_list|)
+define|\
+value|do {								\ 		const char *krb5msg = krb5_get_error_message(ctx, rv);	\ 		PAM_LOG(fmt ": %s", ##__VA_ARGS__, krb5msg);		\ 		krb5_free_error_message(ctx, krb5msg);			\ 	} while (0)
+end_define
+
 begin_comment
 comment|/*  * authentication management  */
 end_comment
@@ -311,6 +328,7 @@ name|krb5_ccache
 name|ccache
 decl_stmt|;
 name|krb5_get_init_creds_opt
+modifier|*
 name|opts
 decl_stmt|;
 name|struct
@@ -492,34 +510,6 @@ argument_list|(
 literal|"Context initialised"
 argument_list|)
 expr_stmt|;
-name|krb5_get_init_creds_opt_init
-argument_list|(
-operator|&
-name|opts
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|openpam_get_option
-argument_list|(
-name|pamh
-argument_list|,
-name|PAM_OPT_FORWARDABLE
-argument_list|)
-condition|)
-name|krb5_get_init_creds_opt_set_forwardable
-argument_list|(
-operator|&
-name|opts
-argument_list|,
-literal|1
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Credentials initialised"
-argument_list|)
-expr_stmt|;
 name|krbret
 operator|=
 name|krb5_cc_register
@@ -627,16 +617,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_parse_name(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_parse_name()"
 argument_list|)
 expr_stmt|;
 name|PAM_VERBOSE_ERROR
@@ -681,16 +668,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_unparse_name(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_unparse_name()"
 argument_list|)
 expr_stmt|;
 name|PAM_VERBOSE_ERROR
@@ -798,16 +782,13 @@ argument_list|(
 literal|"Kerberos 5 error"
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_aname_to_localname(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_aname_to_localname()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -872,6 +853,67 @@ literal|"Done getpwnam()"
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Initialize credentials request options. */
+name|krbret
+operator|=
+name|krb5_get_init_creds_opt_alloc
+argument_list|(
+name|pam_context
+argument_list|,
+operator|&
+name|opts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|krbret
+operator|!=
+literal|0
+condition|)
+block|{
+name|PAM_LOG_KRB5_ERR
+argument_list|(
+name|pam_context
+argument_list|,
+name|krbret
+argument_list|,
+literal|"Error krb5_get_init_creds_opt_alloc()"
+argument_list|)
+expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Kerberos 5 error"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|PAM_SERVICE_ERR
+expr_stmt|;
+goto|goto
+name|cleanup2
+goto|;
+block|}
+if|if
+condition|(
+name|openpam_get_option
+argument_list|(
+name|pamh
+argument_list|,
+name|PAM_OPT_FORWARDABLE
+argument_list|)
+condition|)
+name|krb5_get_init_creds_opt_set_forwardable
+argument_list|(
+name|opts
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+name|PAM_LOG
+argument_list|(
+literal|"Credential options initialised"
+argument_list|)
+expr_stmt|;
 comment|/* Get a TGT */
 name|memset
 argument_list|(
@@ -907,7 +949,13 @@ literal|0
 argument_list|,
 name|NULL
 argument_list|,
-operator|&
+name|opts
+argument_list|)
+expr_stmt|;
+name|krb5_get_init_creds_opt_free
+argument_list|(
+name|pam_context
+argument_list|,
 name|opts
 argument_list|)
 expr_stmt|;
@@ -923,16 +971,13 @@ argument_list|(
 literal|"Kerberos 5 error"
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_get_init_creds_password(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_get_init_creds_password()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -951,12 +996,13 @@ expr_stmt|;
 comment|/* Generate a temporary cache */
 name|krbret
 operator|=
-name|krb5_cc_gen_new
+name|krb5_cc_new_unique
 argument_list|(
 name|pam_context
 argument_list|,
-operator|&
-name|krb5_mcc_ops
+name|krb5_cc_type_memory
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|ccache
@@ -974,16 +1020,13 @@ argument_list|(
 literal|"Kerberos 5 error"
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_gen_new(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_new_unique()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -1017,16 +1060,13 @@ argument_list|(
 literal|"Kerberos 5 error"
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_initialize(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_initialize()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -1061,16 +1101,13 @@ argument_list|(
 literal|"Kerberos 5 error"
 argument_list|)
 expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_store_cred(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_store_cred()"
 argument_list|)
 expr_stmt|;
 name|krb5_cc_destroy
@@ -1681,9 +1718,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
+name|PAM_LOG_KRB5_ERR
 argument_list|(
-literal|"Error krb5_cc_resolve(\"%s\"): %s"
+name|pam_context
+argument_list|,
+name|krbret
+argument_list|,
+literal|"Error krb5_cc_resolve(\"%s\")"
 argument_list|,
 operator|(
 specifier|const
@@ -1691,13 +1732,6 @@ name|char
 operator|*
 operator|)
 name|cache_data
-argument_list|,
-name|krb5_get_err_text
-argument_list|(
-name|pam_context
-argument_list|,
-name|krbret
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|retval
@@ -1982,16 +2016,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_get_principal(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_get_principal()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2021,16 +2052,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_resolve(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_resolve()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2059,16 +2087,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_initialize(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_initialize()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2104,16 +2129,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_start_seq_get(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_start_seq_get()"
 argument_list|)
 expr_stmt|;
 name|krb5_cc_destroy
@@ -2178,16 +2200,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_store_cred(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_store_cred()"
 argument_list|)
 expr_stmt|;
 name|krb5_cc_destroy
@@ -2659,9 +2678,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
+name|PAM_LOG_KRB5_ERR
 argument_list|(
-literal|"Error krb5_cc_resolve(\"%s\"): %s"
+name|pam_context
+argument_list|,
+name|krbret
+argument_list|,
+literal|"Error krb5_cc_resolve(\"%s\")"
 argument_list|,
 operator|(
 specifier|const
@@ -2669,13 +2692,6 @@ name|char
 operator|*
 operator|)
 name|ccache_name
-argument_list|,
-name|krb5_get_err_text
-argument_list|(
-name|pam_context
-argument_list|,
-name|krbret
-argument_list|)
 argument_list|)
 expr_stmt|;
 name|krb5_free_context
@@ -2720,16 +2736,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_cc_get_principal(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_cc_get_principal()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -2844,6 +2857,7 @@ name|krb5_principal
 name|princ
 decl_stmt|;
 name|krb5_get_init_creds_opt
+modifier|*
 name|opts
 decl_stmt|;
 name|krb5_data
@@ -2953,17 +2967,6 @@ argument_list|(
 literal|"Context initialised"
 argument_list|)
 expr_stmt|;
-name|krb5_get_init_creds_opt_init
-argument_list|(
-operator|&
-name|opts
-argument_list|)
-expr_stmt|;
-name|PAM_LOG
-argument_list|(
-literal|"Credentials options initialised"
-argument_list|)
-expr_stmt|;
 comment|/* Get principal name */
 name|krbret
 operator|=
@@ -2989,16 +2992,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_parse_name(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_parse_name()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -3033,16 +3033,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_unparse_name(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_unparse_name()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -3089,6 +3086,51 @@ argument_list|(
 literal|"Got password"
 argument_list|)
 expr_stmt|;
+comment|/* Initialize credentials request options. */
+name|krbret
+operator|=
+name|krb5_get_init_creds_opt_alloc
+argument_list|(
+name|pam_context
+argument_list|,
+operator|&
+name|opts
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|krbret
+operator|!=
+literal|0
+condition|)
+block|{
+name|PAM_LOG_KRB5_ERR
+argument_list|(
+name|pam_context
+argument_list|,
+name|krbret
+argument_list|,
+literal|"Error krb5_get_init_creds_opt_alloc()"
+argument_list|)
+expr_stmt|;
+name|PAM_VERBOSE_ERROR
+argument_list|(
+literal|"Kerberos 5 error"
+argument_list|)
+expr_stmt|;
+name|retval
+operator|=
+name|PAM_SERVICE_ERR
+expr_stmt|;
+goto|goto
+name|cleanup2
+goto|;
+block|}
+name|PAM_LOG
+argument_list|(
+literal|"Credentials options initialised"
+argument_list|)
+expr_stmt|;
 name|memset
 argument_list|(
 operator|&
@@ -3123,7 +3165,13 @@ literal|0
 argument_list|,
 literal|"kadmin/changepw"
 argument_list|,
-operator|&
+name|opts
+argument_list|)
+expr_stmt|;
+name|krb5_get_init_creds_opt_free
+argument_list|(
+name|pam_context
+argument_list|,
 name|opts
 argument_list|)
 expr_stmt|;
@@ -3134,16 +3182,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_get_init_creds_password(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_get_init_creds_password()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -3234,7 +3279,7 @@ goto|;
 block|}
 name|krbret
 operator|=
-name|krb5_change_password
+name|krb5_set_password
 argument_list|(
 name|pam_context
 argument_list|,
@@ -3242,6 +3287,8 @@ operator|&
 name|creds
 argument_list|,
 name|passdup
+argument_list|,
+name|NULL
 argument_list|,
 operator|&
 name|result_code
@@ -3265,16 +3312,13 @@ operator|!=
 literal|0
 condition|)
 block|{
-name|PAM_LOG
-argument_list|(
-literal|"Error krb5_change_password(): %s"
-argument_list|,
-name|krb5_get_err_text
+name|PAM_LOG_KRB5_ERR
 argument_list|(
 name|pam_context
 argument_list|,
 name|krbret
-argument_list|)
+argument_list|,
+literal|"Error krb5_change_password()"
 argument_list|)
 expr_stmt|;
 name|retval
@@ -3545,6 +3589,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|retval
+argument_list|)
+decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -3553,14 +3610,17 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_sname_to_principal()"
 argument_list|,
-name|krb5_get_err_text
+name|msg
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
-name|retval
-argument_list|)
+name|msg
 argument_list|)
 expr_stmt|;
+block|}
 return|return
 operator|-
 literal|1
@@ -3633,6 +3693,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|retval
+argument_list|)
+decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -3641,14 +3714,17 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_kt_read_service_key()"
 argument_list|,
-name|krb5_get_err_text
+name|msg
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
-name|retval
-argument_list|)
+name|msg
 argument_list|)
 expr_stmt|;
+block|}
 name|retval
 operator|=
 literal|0
@@ -3724,6 +3800,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|retval
+argument_list|)
+decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -3732,14 +3821,17 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_mk_req()"
 argument_list|,
-name|krb5_get_err_text
+name|msg
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
-name|retval
-argument_list|)
+name|msg
 argument_list|)
 expr_stmt|;
+block|}
 name|retval
 operator|=
 operator|-
@@ -3780,6 +3872,19 @@ if|if
 condition|(
 name|debug
 condition|)
+block|{
+specifier|const
+name|char
+modifier|*
+name|msg
+init|=
+name|krb5_get_error_message
+argument_list|(
+name|context
+argument_list|,
+name|retval
+argument_list|)
+decl_stmt|;
 name|syslog
 argument_list|(
 name|LOG_DEBUG
@@ -3788,14 +3893,17 @@ literal|"pam_krb5: verify_krb_v5_tgt(): %s: %s"
 argument_list|,
 literal|"krb5_rd_req()"
 argument_list|,
-name|krb5_get_err_text
+name|msg
+argument_list|)
+expr_stmt|;
+name|krb5_free_error_message
 argument_list|(
 name|context
 argument_list|,
-name|retval
-argument_list|)
+name|msg
 argument_list|)
 expr_stmt|;
+block|}
 name|retval
 operator|=
 operator|-

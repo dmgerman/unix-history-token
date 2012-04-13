@@ -109,16 +109,6 @@ end_include
 
 begin_decl_stmt
 name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
-
-begin_decl_stmt
-name|namespace
 name|clang
 block|{
 name|class
@@ -198,6 +188,10 @@ block|,
 comment|/// \brief The entity being initialized is a field of block descriptor for
 comment|/// the copied-in c++ object.
 name|EK_BlockElement
+block|,
+comment|/// \brief The entity being initialized is the real or imaginary part of a
+comment|/// complex number.
+name|EK_ComplexElement
 block|}
 enum|;
 name|private
@@ -259,8 +253,9 @@ comment|/// virtual base.
 name|uintptr_t
 name|Base
 decl_stmt|;
-comment|/// \brief When Kind == EK_ArrayElement or EK_VectorElement, the
-comment|/// index of the array or vector element being initialized.
+comment|/// \brief When Kind == EK_ArrayElement, EK_VectorElement, or
+comment|/// EK_ComplexElement, the index of the array or vector element being
+comment|/// initialized.
 name|unsigned
 name|Index
 decl_stmt|;
@@ -1070,6 +1065,8 @@ name|getKind
 argument_list|()
 operator|==
 name|EK_VectorElement
+operator|||
+name|EK_ComplexElement
 argument_list|)
 expr_stmt|;
 name|this
@@ -1778,8 +1775,11 @@ block|,
 comment|/// \brief Perform an implicit conversion sequence.
 name|SK_ConversionSequence
 block|,
-comment|/// \brief Perform list-initialization
+comment|/// \brief Perform list-initialization without a constructor
 name|SK_ListInitialization
+block|,
+comment|/// \brief Perform list-initialization with a constructor.
+name|SK_ListConstructorCall
 block|,
 comment|/// \brief Perform initialization via a constructor.
 name|SK_ConstructorInitialization
@@ -1830,12 +1830,18 @@ block|{
 comment|/// \brief When Kind == SK_ResolvedOverloadedFunction or Kind ==
 comment|/// SK_UserConversion, the function that the expression should be
 comment|/// resolved to or the conversion function to call, respectively.
+comment|/// When Kind == SK_ConstructorInitialization or SK_ListConstruction,
+comment|/// the constructor to be called.
 comment|///
-comment|/// Always a FunctionDecl.
+comment|/// Always a FunctionDecl, plus a Boolean flag telling if it was
+comment|/// selected from an overloaded set having size greater than 1.
 comment|/// For conversion decls, the naming class is the source type.
 comment|/// For construct decls, the naming class is the target type.
 struct|struct
 block|{
+name|bool
+name|HadMultipleCandidates
+decl_stmt|;
 name|FunctionDecl
 modifier|*
 name|Function
@@ -1868,8 +1874,6 @@ name|SequenceKind
 name|SequenceKind
 decl_stmt|;
 comment|/// \brief Steps taken by this initialization.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Step
@@ -1949,11 +1953,14 @@ name|FK_DefaultInitOfConst
 block|,
 comment|/// \brief Initialization of an incomplete type.
 name|FK_Incomplete
+block|,
+comment|/// \brief List initialization failed at some point.
+name|FK_ListInitializationFailed
 block|}
 enum|;
 name|private
 label|:
-comment|/// \brief The reason why initialization failued.
+comment|/// \brief The reason why initialization failed.
 name|FailureKind
 name|Failure
 decl_stmt|;
@@ -2142,8 +2149,6 @@ name|FailedSequence
 return|;
 block|}
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|Step
@@ -2198,6 +2203,35 @@ name|isConstructorInitialization
 argument_list|()
 specifier|const
 expr_stmt|;
+comment|/// \brief Returns whether the last step in this initialization sequence is a
+comment|/// narrowing conversion, defined by C++0x [dcl.init.list]p7.
+comment|///
+comment|/// If this function returns true, *isInitializerConstant will be set to
+comment|/// describe whether *Initializer was a constant expression.  If
+comment|/// *isInitializerConstant is set to true, *ConstantValue will be set to the
+comment|/// evaluated value of *Initializer.
+name|bool
+name|endsWithNarrowing
+argument_list|(
+name|ASTContext
+operator|&
+name|Ctx
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Initializer
+argument_list|,
+name|bool
+operator|*
+name|isInitializerConstant
+argument_list|,
+name|APValue
+operator|*
+name|ConstantValue
+argument_list|)
+decl|const
+decl_stmt|;
 comment|/// \brief Add a new step in the initialization that resolves the address
 comment|/// of an overloaded function to a specific function declaration.
 comment|///
@@ -2307,7 +2341,7 @@ name|QualType
 name|T
 parameter_list|)
 function_decl|;
-comment|/// \brief Add a list-initialiation step
+comment|/// \brief Add a list-initialiation step.
 name|void
 name|AddListInitializationStep
 parameter_list|(
@@ -2471,8 +2505,6 @@ comment|/// the given stream, for debugging purposes.
 name|void
 name|dump
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS

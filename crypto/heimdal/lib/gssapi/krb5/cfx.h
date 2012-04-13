@@ -4,7 +4,7 @@ comment|/*  * Copyright (c) 2003, PADL Software Pty Ltd.  * All rights reserved.
 end_comment
 
 begin_comment
-comment|/* $Id: cfx.h 19031 2006-11-13 18:02:57Z lha $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef

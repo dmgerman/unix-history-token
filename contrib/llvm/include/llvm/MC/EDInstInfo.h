@@ -83,6 +83,7 @@ name|EDIS_MAX_OPERANDS
 index|]
 decl_stmt|;
 specifier|const
+name|signed
 name|char
 name|operandOrders
 index|[

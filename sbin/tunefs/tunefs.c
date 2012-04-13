@@ -175,6 +175,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<time.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -190,6 +196,7 @@ value|"should optimize for %s with minfree %s %d%%"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|uufsd
 name|disk
@@ -347,8 +354,6 @@ name|tflag
 decl_stmt|;
 name|int
 name|svalue
-decl_stmt|,
-name|Sflag
 decl_stmt|,
 name|Svalue
 decl_stmt|;
@@ -1139,10 +1144,6 @@ name|SUJ_MIN
 argument_list|,
 name|optarg
 argument_list|)
-expr_stmt|;
-name|Sflag
-operator|=
-literal|1
 expr_stmt|;
 break|break;
 case|case
@@ -2721,6 +2722,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|int
 name|blocks
 decl_stmt|;
@@ -4637,6 +4639,9 @@ decl_stmt|;
 name|int
 name|mode
 decl_stmt|;
+name|time_t
+name|utime
+decl_stmt|;
 name|int
 name|i
 decl_stmt|;
@@ -4895,6 +4900,12 @@ name|dp1
 operator|=
 name|ip
 expr_stmt|;
+name|time
+argument_list|(
+operator|&
+name|utime
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|sblock
@@ -4945,6 +4956,24 @@ name|SF_NOUNLINK
 operator||
 name|UF_NODUMP
 expr_stmt|;
+name|dp1
+operator|->
+name|di_atime
+operator|=
+name|utime
+expr_stmt|;
+name|dp1
+operator|->
+name|di_mtime
+operator|=
+name|utime
+expr_stmt|;
+name|dp1
+operator|->
+name|di_ctime
+operator|=
+name|utime
+expr_stmt|;
 block|}
 else|else
 block|{
@@ -4988,6 +5017,30 @@ operator||
 name|SF_NOUNLINK
 operator||
 name|UF_NODUMP
+expr_stmt|;
+name|dp2
+operator|->
+name|di_atime
+operator|=
+name|utime
+expr_stmt|;
+name|dp2
+operator|->
+name|di_mtime
+operator|=
+name|utime
+expr_stmt|;
+name|dp2
+operator|->
+name|di_ctime
+operator|=
+name|utime
+expr_stmt|;
+name|dp2
+operator|->
+name|di_birthtime
+operator|=
+name|utime
 expr_stmt|;
 block|}
 for|for

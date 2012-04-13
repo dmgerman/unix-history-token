@@ -43,15 +43,18 @@ directive|define
 name|LLVM_CLANG_CODEGEN_BACKEND_UTIL_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|llvm
 block|{
 name|class
 name|Module
-decl_stmt|;
-name|class
-name|raw_ostream
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -61,7 +64,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|CodeGenOptions
@@ -97,7 +100,7 @@ enum|;
 name|void
 name|EmitBackendOutput
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diags
 argument_list|,
@@ -125,8 +128,6 @@ argument_list|,
 name|BackendAction
 name|Action
 argument_list|,
-name|llvm
-operator|::
 name|raw_ostream
 operator|*
 name|OS

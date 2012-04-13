@@ -7005,6 +7005,25 @@ block|}
 end_expr_stmt
 
 begin_comment
+comment|/// atBegin - Return true if the current position is the first map entry.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|atBegin
+argument_list|()
+specifier|const
+block|{
+return|return
+name|path
+operator|.
+name|atBegin
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
 comment|/// start - Return the beginning of the current interval.
 end_comment
 

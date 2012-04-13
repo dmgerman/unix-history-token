@@ -68,7 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/GRState.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState.h"
 end_include
 
 begin_decl_stmt
@@ -118,11 +118,11 @@ argument_list|)
 specifier|const
 block|;
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assume
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|DefinedSVal Cond
 argument_list|,
@@ -130,11 +130,11 @@ argument|bool Assumption
 argument_list|)
 block|;
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assume
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|Loc Cond
 argument_list|,
@@ -142,11 +142,11 @@ argument|bool Assumption
 argument_list|)
 block|;
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assume
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|NonLoc Cond
 argument_list|,
@@ -154,11 +154,11 @@ argument|bool Assumption
 argument_list|)
 block|;
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeSymRel
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|const SymExpr *LHS
 argument_list|,
@@ -176,11 +176,11 @@ comment|// Each of these is of the form "$sym+Adj<> V", where "<>" is the compar
 comment|// operation for the method being invoked.
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeSymNE
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -193,11 +193,11 @@ literal|0
 block|;
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeSymEQ
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -210,11 +210,11 @@ literal|0
 block|;
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeSymLT
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -227,11 +227,11 @@ literal|0
 block|;
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeSymGT
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -244,11 +244,11 @@ literal|0
 block|;
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeSymLE
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -261,11 +261,11 @@ literal|0
 block|;
 name|virtual
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeSymGE
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SymbolRef sym
 argument_list|,
@@ -280,11 +280,11 @@ comment|//===------------------------------------------------------------------=
 comment|// Internal implementation.
 comment|//===------------------------------------------------------------------===//
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeAux
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|Loc Cond
 argument_list|,
@@ -292,11 +292,11 @@ argument|bool Assumption
 argument_list|)
 block|;
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|assumeAux
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|NonLoc Cond
 argument_list|,

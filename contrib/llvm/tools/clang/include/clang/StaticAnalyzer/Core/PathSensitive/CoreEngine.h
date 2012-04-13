@@ -90,12 +90,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SubEngine.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/OwningPtr.h"
 end_include
 
@@ -103,6 +97,9 @@ begin_decl_stmt
 name|namespace
 name|clang
 block|{
+name|class
+name|ProgramPointTag
+decl_stmt|;
 name|namespace
 name|ento
 block|{
@@ -239,7 +236,7 @@ modifier|&
 name|Loc
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|State
 parameter_list|,
@@ -497,7 +494,7 @@ name|unsigned
 name|Steps
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|InitState
 parameter_list|)
@@ -514,7 +511,7 @@ name|unsigned
 name|Steps
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|InitState
 parameter_list|,
@@ -687,10 +684,6 @@ name|ExplodedNode
 modifier|*
 name|Pred
 decl_stmt|;
-name|GRStateManager
-modifier|&
-name|Mgr
-decl_stmt|;
 name|public
 label|:
 name|bool
@@ -708,14 +701,9 @@ name|Kind
 name|PointKind
 expr_stmt|;
 specifier|const
-name|void
+name|ProgramPointTag
 modifier|*
 name|Tag
-decl_stmt|;
-specifier|const
-name|GRState
-modifier|*
-name|CleanedState
 decl_stmt|;
 typedef|typedef
 name|llvm
@@ -744,15 +732,13 @@ name|public
 label|:
 name|StmtNodeBuilder
 argument_list|(
-argument|const CFGBlock* b
+argument|const CFGBlock *b
 argument_list|,
 argument|unsigned idx
 argument_list|,
-argument|ExplodedNode* N
+argument|ExplodedNode *N
 argument_list|,
 argument|CoreEngine* e
-argument_list|,
-argument|GRStateManager&mgr
 argument_list|)
 empty_stmt|;
 operator|~
@@ -780,20 +766,6 @@ name|Eng
 operator|.
 name|WList
 return|;
-block|}
-name|void
-name|SetCleanedState
-parameter_list|(
-specifier|const
-name|GRState
-modifier|*
-name|St
-parameter_list|)
-block|{
-name|CleanedState
-operator|=
-name|St
-expr_stmt|;
 block|}
 name|BlockCounter
 name|getBlockCounter
@@ -838,38 +810,6 @@ block|}
 name|ExplodedNode
 modifier|*
 name|generateNode
-parameter_list|(
-name|PostStmt
-name|PP
-parameter_list|,
-specifier|const
-name|GRState
-modifier|*
-name|St
-parameter_list|,
-name|ExplodedNode
-modifier|*
-name|Pred
-parameter_list|)
-block|{
-name|hasGeneratedNode
-operator|=
-name|true
-expr_stmt|;
-return|return
-name|generateNodeInternal
-argument_list|(
-name|PP
-argument_list|,
-name|St
-argument_list|,
-name|Pred
-argument_list|)
-return|;
-block|}
-name|ExplodedNode
-modifier|*
-name|generateNode
 argument_list|(
 specifier|const
 name|Stmt
@@ -877,7 +817,7 @@ operator|*
 name|S
 argument_list|,
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|St
 argument_list|,
@@ -891,7 +831,7 @@ name|Kind
 name|K
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -941,7 +881,7 @@ modifier|*
 name|S
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|St
 parameter_list|,
@@ -950,7 +890,7 @@ modifier|*
 name|Pred
 parameter_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 modifier|*
 name|tag
 init|=
@@ -982,7 +922,7 @@ modifier|&
 name|PP
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|State
 parameter_list|,
@@ -1016,7 +956,7 @@ modifier|&
 name|PP
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|State
 parameter_list|,
@@ -1035,7 +975,7 @@ operator|*
 name|S
 argument_list|,
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|State
 argument_list|,
@@ -1047,13 +987,9 @@ name|ProgramPoint
 operator|::
 name|Kind
 name|K
-operator|=
-name|ProgramPoint
-operator|::
-name|PostStmtKind
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -1120,35 +1056,6 @@ return|return
 name|Idx
 return|;
 block|}
-specifier|const
-name|GRState
-modifier|*
-name|GetState
-argument_list|(
-name|ExplodedNode
-operator|*
-name|Pred
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|Pred
-operator|==
-name|getPredecessor
-argument_list|()
-condition|)
-return|return
-name|CleanedState
-return|;
-else|else
-return|return
-name|Pred
-operator|->
-name|getState
-argument_list|()
-return|;
-block|}
 name|ExplodedNode
 modifier|*
 name|MakeNode
@@ -1167,7 +1074,7 @@ modifier|*
 name|Pred
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|St
 parameter_list|)
@@ -1205,7 +1112,7 @@ operator|*
 name|Pred
 argument_list|,
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|St
 argument_list|,
@@ -1233,7 +1140,7 @@ modifier|*
 name|Pred
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|St
 parameter_list|)
@@ -1299,8 +1206,6 @@ modifier|*
 name|Pred
 decl_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ExplodedNode
@@ -1442,6 +1347,8 @@ name|getBlockCounter
 argument_list|()
 return|;
 block|}
+comment|/// This function generates a new ExplodedNode but not a new
+comment|/// branch(block edge).
 name|ExplodedNode
 modifier|*
 name|generateNode
@@ -1452,7 +1359,7 @@ modifier|*
 name|Condition
 parameter_list|,
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|State
 parameter_list|)
@@ -1462,7 +1369,7 @@ modifier|*
 name|generateNode
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|State
 parameter_list|,
@@ -1531,7 +1438,7 @@ name|InFeasibleFalse
 return|;
 block|}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -1760,9 +1667,9 @@ name|ExplodedNode
 operator|*
 name|generateNode
 argument_list|(
-argument|const iterator& I
+argument|const iterator&I
 argument_list|,
-argument|const GRState* State
+argument|const ProgramState *State
 argument_list|,
 argument|bool isSink = false
 argument_list|)
@@ -1779,7 +1686,7 @@ name|E
 return|;
 block|}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -2036,7 +1943,7 @@ operator|&
 name|I
 argument_list|,
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|State
 argument_list|)
@@ -2045,7 +1952,7 @@ name|ExplodedNode
 operator|*
 name|generateDefaultCaseNode
 argument_list|(
-argument|const GRState* State
+argument|const ProgramState *State
 argument_list|,
 argument|bool isSink = false
 argument_list|)
@@ -2062,7 +1969,7 @@ name|Condition
 return|;
 block|}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -2092,8 +1999,6 @@ block|;
 name|ProgramPoint
 name|pp
 block|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|ExplodedNode
@@ -2107,7 +2012,7 @@ name|ExplodedNode
 operator|*
 name|generateNodeImpl
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|ExplodedNode *pred
 argument_list|,
@@ -2187,8 +2092,6 @@ argument_list|()
 return|;
 block|}
 specifier|const
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|ExplodedNode
@@ -2247,11 +2150,11 @@ name|ExplodedNode
 operator|*
 name|generateNode
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|ExplodedNode *pred
 argument_list|,
-argument|const void *tag
+argument|const ProgramPointTag *tag
 argument_list|,
 argument|bool asSink
 argument_list|)
@@ -2315,7 +2218,8 @@ name|ExplodedNode
 operator|*
 name|Pred
 block|;
-name|void
+specifier|const
+name|ProgramPointTag
 operator|*
 name|Tag
 block|;
@@ -2341,9 +2245,10 @@ name|CoreEngine
 operator|*
 name|e
 argument_list|,
-name|void
+specifier|const
+name|ProgramPointTag
 operator|*
-name|checkerTag
+name|tag
 operator|=
 literal|0
 argument_list|)
@@ -2367,7 +2272,7 @@ argument_list|)
 block|,
 name|Tag
 argument_list|(
-name|checkerTag
+name|tag
 argument_list|)
 block|,
 name|hasGeneratedNode
@@ -2382,7 +2287,7 @@ block|;
 name|EndOfFunctionNodeBuilder
 name|withCheckerTag
 argument_list|(
-argument|void *tag
+argument|const ProgramPointTag *tag
 argument_list|)
 block|{
 return|return
@@ -2467,7 +2372,7 @@ operator|*
 name|generateNode
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|State
 argument_list|,
@@ -2478,7 +2383,7 @@ operator|=
 literal|0
 argument_list|,
 specifier|const
-name|void
+name|ProgramPointTag
 operator|*
 name|tag
 operator|=
@@ -2489,7 +2394,7 @@ name|void
 name|GenerateCallExitNode
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|)
@@ -2507,7 +2412,7 @@ name|B
 return|;
 block|}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -2606,7 +2511,7 @@ argument|idx
 argument_list|)
 block|{}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -2679,7 +2584,7 @@ name|void
 name|generateNode
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|)
@@ -2733,7 +2638,7 @@ name|Pred
 return|;
 block|}
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getState
 argument_list|()
@@ -2750,7 +2655,7 @@ name|void
 name|generateNode
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|)

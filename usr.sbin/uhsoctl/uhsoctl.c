@@ -1558,6 +1558,8 @@ name|syslog
 argument_list|(
 name|pri
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;
@@ -2188,6 +2190,8 @@ operator||
 name|O_CREAT
 operator||
 name|O_NOFOLLOW
+argument_list|,
+literal|0666
 argument_list|)
 expr_stmt|;
 if|if
@@ -6261,6 +6265,8 @@ expr_stmt|;
 name|errx
 argument_list|(
 literal|1
+argument_list|,
+literal|"%s"
 argument_list|,
 name|buf
 index|[

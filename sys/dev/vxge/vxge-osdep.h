@@ -616,12 +616,23 @@ name|u64
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bool_true_false_are_defined
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|boolean_t
 name|bool
 typedef|;
 end_typedef
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

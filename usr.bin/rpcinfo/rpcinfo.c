@@ -57,7 +57,7 @@ comment|/*  * rpcinfo: ping a particular rpc program  * 	or dump the registered 
 end_comment
 
 begin_comment
-comment|/*  * We are for now defining PORTMAP here.  It doesnt even compile  * unless it is defined.  */
+comment|/*  * We are for now defining PORTMAP here.  It doesn't even compile  * unless it is defined.  */
 end_comment
 
 begin_ifndef

@@ -175,7 +175,7 @@ specifier|static
 name|bus_addr_t
 name|uart_parse_addr
 parameter_list|(
-name|__const
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -218,7 +218,7 @@ name|uart_class
 modifier|*
 name|class
 parameter_list|,
-name|__const
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -328,7 +328,7 @@ specifier|static
 name|long
 name|uart_parse_long
 parameter_list|(
-name|__const
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -364,7 +364,7 @@ specifier|static
 name|int
 name|uart_parse_parity
 parameter_list|(
-name|__const
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -500,7 +500,7 @@ specifier|static
 name|int
 name|uart_parse_tag
 parameter_list|(
-name|__const
+specifier|const
 name|char
 modifier|*
 modifier|*
@@ -887,7 +887,7 @@ modifier|*
 name|class
 parameter_list|)
 block|{
-name|__const
+specifier|const
 name|char
 modifier|*
 name|spec

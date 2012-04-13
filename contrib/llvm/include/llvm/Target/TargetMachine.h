@@ -62,6 +62,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/MC/MCCodeGenInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -89,6 +95,9 @@ name|JITCodeEmitter
 decl_stmt|;
 name|class
 name|MCAsmInfo
+decl_stmt|;
+name|class
+name|MCCodeGenInfo
 decl_stmt|;
 name|class
 name|MCContext
@@ -141,43 +150,6 @@ decl_stmt|;
 name|class
 name|raw_ostream
 decl_stmt|;
-comment|// Relocation model types.
-name|namespace
-name|Reloc
-block|{
-enum|enum
-name|Model
-block|{
-name|Default
-block|,
-name|Static
-block|,
-name|PIC_
-block|,
-comment|// Cannot be named PIC due to collision with -DPIC
-name|DynamicNoPIC
-block|}
-enum|;
-block|}
-comment|// Code model types.
-name|namespace
-name|CodeModel
-block|{
-enum|enum
-name|Model
-block|{
-name|Default
-block|,
-name|Small
-block|,
-name|Kernel
-block|,
-name|Medium
-block|,
-name|Large
-block|}
-enum|;
-block|}
 comment|// Code generation optimization level.
 name|namespace
 name|CodeGenOpt
@@ -300,6 +272,12 @@ operator|::
 name|string
 name|TargetFS
 expr_stmt|;
+comment|/// CodeGenInfo - Low level target information such as relocation model.
+specifier|const
+name|MCCodeGenInfo
+modifier|*
+name|CodeGenInfo
+decl_stmt|;
 comment|/// AsmInfo - Contains target specific asm information.
 comment|///
 specifier|const
@@ -683,46 +661,22 @@ expr_stmt|;
 block|}
 comment|/// getRelocationModel - Returns the code generation relocation model. The
 comment|/// choices are static, PIC, and dynamic-no-pic, and target default.
-specifier|static
 name|Reloc
 operator|::
 name|Model
 name|getRelocationModel
 argument_list|()
+specifier|const
 expr_stmt|;
-comment|/// setRelocationModel - Sets the code generation relocation model.
-comment|///
-specifier|static
-name|void
-name|setRelocationModel
-argument_list|(
-name|Reloc
-operator|::
-name|Model
-name|Model
-argument_list|)
-decl_stmt|;
 comment|/// getCodeModel - Returns the code model. The choices are small, kernel,
 comment|/// medium, large, and target default.
-specifier|static
 name|CodeModel
 operator|::
 name|Model
 name|getCodeModel
 argument_list|()
+specifier|const
 expr_stmt|;
-comment|/// setCodeModel - Sets the code model.
-comment|///
-specifier|static
-name|void
-name|setCodeModel
-argument_list|(
-name|CodeModel
-operator|::
-name|Model
-name|Model
-argument_list|)
-decl_stmt|;
 comment|/// getAsmVerbosityDefault - Returns the default value of asm verbosity.
 comment|///
 specifier|static
@@ -909,6 +863,10 @@ argument_list|,
 argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|;
 name|private
@@ -927,16 +885,6 @@ argument|bool DisableVerify
 argument_list|,
 argument|MCContext *&OutCtx
 argument_list|)
-block|;
-name|virtual
-name|void
-name|setCodeModelForJIT
-argument_list|()
-block|;
-name|virtual
-name|void
-name|setCodeModelForStatic
-argument_list|()
 block|;
 name|public
 operator|:

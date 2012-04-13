@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_comment
@@ -130,7 +130,10 @@ name|CVMX_SRIO_DOORBELL_RETRY
 block|,
 comment|/**< The doorbell needs to be retried */
 name|CVMX_SRIO_DOORBELL_ERROR
+block|,
 comment|/**< The doorbell failed with an error */
+name|CVMX_SRIO_DOORBELL_TMOUT
+comment|/**< The doorbell failed due to timeout */
 block|}
 name|cvmx_srio_doorbell_status_t
 typedef|;
@@ -145,11 +148,9 @@ name|u64
 decl_stmt|;
 struct|struct
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|prio
 range|:
@@ -266,11 +267,9 @@ name|u64
 decl_stmt|;
 struct|struct
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|r
 range|:
@@ -455,11 +454,9 @@ name|u64
 decl_stmt|;
 struct|struct
 block|{
-if|#
-directive|if
-name|__BYTE_ORDER
-operator|==
-name|__BIG_ENDIAN
+ifdef|#
+directive|ifdef
+name|__BIG_ENDIAN_BITFIELD
 name|uint64_t
 name|prio
 range|:
@@ -590,6 +587,14 @@ struct|;
 block|}
 name|cvmx_srio_tx_message_header_t
 typedef|;
+comment|/**  * Reset SRIO to link partner  *  * @param srio_port  SRIO port to initialize  *  * @return Zero on success  */
+name|int
+name|cvmx_srio_link_rst
+parameter_list|(
+name|int
+name|srio_port
+parameter_list|)
+function_decl|;
 comment|/**  * Initialize a SRIO port for use.  *  * @param srio_port SRIO port to initialize  * @param flags     Optional flags  *  * @return Zero on success  */
 name|int
 name|cvmx_srio_initialize
@@ -778,6 +783,27 @@ name|uint64_t
 name|size
 parameter_list|)
 function_decl|;
+ifdef|#
+directive|ifdef
+name|CVMX_ENABLE_PKO_FUNCTIONS
+comment|/**  * fill out outbound message descriptor  *  * @param buf_ptr     pointer to a buffer pointer. the buffer pointer points  *                    to a chain of buffers that hold an outbound srio packet.  *                    the packet can take the format of (1) a pip/ipd inbound  *                    message or (2) an application-generated outbound message  * @param desc_ptr    pointer to an outbound message descriptor. should be null  *                    if *buf_ptr is in the format (1)  *  * @return           0 on success; negative of failure.  */
+name|int
+name|cvmx_srio_omsg_desc
+parameter_list|(
+name|uint64_t
+name|port
+parameter_list|,
+name|cvmx_buf_ptr_t
+modifier|*
+name|buf_ptr
+parameter_list|,
+name|cvmx_srio_tx_message_header_t
+modifier|*
+name|desc_ptr
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|__cplusplus

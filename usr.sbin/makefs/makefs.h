@@ -139,6 +139,17 @@ modifier|*
 name|contents
 decl_stmt|;
 comment|/* file to provide contents */
+specifier|const
+name|char
+modifier|*
+name|root
+decl_stmt|;
+comment|/* root path */
+name|char
+modifier|*
+name|path
+decl_stmt|;
+comment|/* directory name */
 name|char
 modifier|*
 name|name
@@ -315,10 +326,6 @@ begin_function_decl
 name|void
 name|dump_fsnodes
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-parameter_list|,
 name|fsnode
 modifier|*
 parameter_list|)
@@ -376,6 +383,13 @@ name|walk_dir
 parameter_list|(
 specifier|const
 name|char
+modifier|*
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|fsnode
 modifier|*
 parameter_list|,
 name|fsnode

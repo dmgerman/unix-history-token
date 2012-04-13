@@ -3269,7 +3269,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Close all the channels, terminate the sender and receiver thread.  * This is an important function because it is used everytime we need  * to wake up all the worker threads to abort the program.  *  * This function accepts an error message that will be printed if the  * multiplexer wasn't already closed.  This is useful because it ensures  * that only the first error message will be printed, and that it will  * be printed before doing the actual shutdown work.  If this is a  * normal shutdown, NULL can be passed instead.  *  * The "status" parameter of the first mux_shutdown() call is retained  * and then returned by mux_close(),  so that the main thread can know  * what type of error happened in the end, if any.  */
+comment|/*  * Close all the channels, terminate the sender and receiver thread.  * This is an important function because it is used every time we need  * to wake up all the worker threads to abort the program.  *  * This function accepts an error message that will be printed if the  * multiplexer wasn't already closed.  This is useful because it ensures  * that only the first error message will be printed, and that it will  * be printed before doing the actual shutdown work.  If this is a  * normal shutdown, NULL can be passed instead.  *  * The "status" parameter of the first mux_shutdown() call is retained  * and then returned by mux_close(),  so that the main thread can know  * what type of error happened in the end, if any.  */
 end_comment
 
 begin_function

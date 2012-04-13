@@ -1236,7 +1236,6 @@ comment|// get index for modifying correct operand
 block|}
 comment|/// getPointerOperandType - Method to return the pointer operand as a
 comment|/// PointerType.
-specifier|const
 name|PointerType
 operator|*
 name|getPointerOperandType
@@ -1246,7 +1245,6 @@ block|{
 return|return
 name|reinterpret_cast
 operator|<
-specifier|const
 name|PointerType
 operator|*
 operator|>

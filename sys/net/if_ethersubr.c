@@ -757,6 +757,7 @@ comment|/* XXX: should be in an arp support file, not here */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_ARPCOM
@@ -2194,8 +2195,6 @@ argument_list|,
 name|m
 argument_list|,
 name|dst
-argument_list|,
-name|NULL
 argument_list|)
 operator|)
 condition|)
@@ -3262,7 +3261,12 @@ operator|.
 name|rcvif
 expr_stmt|;
 else|else
+block|{
+name|CURVNET_RESTORE
+argument_list|()
+expr_stmt|;
 return|return;
+block|}
 block|}
 comment|/* 	 * If the hardware did not process an 802.1Q tag, do this now, 	 * to allow 802.1P priority frames to be passed to the main input 	 * path correctly. 	 * TODO: Deal with Q-in-Q frames, but not arbitrary nesting levels. 	 */
 if|if
@@ -3338,6 +3342,9 @@ name|m_freem
 argument_list|(
 name|m
 argument_list|)
+expr_stmt|;
+name|CURVNET_RESTORE
+argument_list|()
 expr_stmt|;
 return|return;
 block|}

@@ -145,6 +145,12 @@ name|OBJECT_FORMAT_ELF
 value|1
 end_define
 
+begin_undef
+undef|#
+directive|undef
+name|TARGET_ELF
+end_undef
+
 begin_define
 define|#
 directive|define

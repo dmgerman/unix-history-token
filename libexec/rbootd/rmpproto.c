@@ -1187,7 +1187,7 @@ name|madeconn
 init|=
 literal|0
 decl_stmt|;
-comment|/* 	 *  Find the old connection.  If one doesnt exist, create one only 	 *  to return the error code. 	 */
+comment|/* 	 *  Find the old connection.  If one doesn't exist, create one only 	 *  to return the error code. 	 */
 if|if
 condition|(
 operator|(
@@ -1615,7 +1615,7 @@ name|rmp_packet
 modifier|*
 name|rpl
 decl_stmt|;
-comment|/* 	 *  If we cant find the connection, ignore the request. 	 */
+comment|/* 	 *  If we can't find the connection, ignore the request. 	 */
 if|if
 condition|(
 operator|(

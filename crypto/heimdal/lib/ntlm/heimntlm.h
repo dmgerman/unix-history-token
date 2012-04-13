@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: heimntlm.h 22376 2007-12-28 18:38:23Z lha $ */
+comment|/* $Id$ */
 end_comment
 
 begin_ifndef
@@ -50,8 +50,22 @@ end_define
 begin_define
 define|#
 directive|define
+name|NTLM_NEG_OEM
+value|0x00000002
+end_define
+
+begin_define
+define|#
+directive|define
 name|NTLM_NEG_TARGET
 value|0x00000004
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ9
+value|0x00000008
 end_define
 
 begin_define
@@ -71,6 +85,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|NTLM_NEG_DATAGRAM
+value|0x00000040
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_LM_KEY
+value|0x00000080
+end_define
+
+begin_define
+define|#
+directive|define
 name|NTLM_NEG_NTLM
 value|0x00000200
 end_define
@@ -78,29 +106,72 @@ end_define
 begin_define
 define|#
 directive|define
-name|NTLM_SUPPLIED_DOMAIN
+name|NTLM_NEG_ANONYMOUS
+value|0x00000800
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ8
+value|0x00000100
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_NTLM
+value|0x00000200
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_NT_ONLY
+value|0x00000400
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ7
+value|0x00000800
+end_define
+
+begin_comment
+comment|/* anon ? */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|NTLM_OEM_SUPPLIED_DOMAIN
 value|0x00001000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTLM_SUPPLIED_WORKSTAION
+name|NTLM_OEM_SUPPLIED_WORKSTATION
 value|0x00002000
 end_define
 
 begin_define
 define|#
 directive|define
-name|NTLM_NEG_ALWAYS_SIGN
-value|0x00008000
+name|NTLM_MBZ6
+value|0x00004000
 end_define
+
+begin_comment
+comment|/* local call ? */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|NTLM_NEG_NTLM2_SESSION
-value|0x00080000
+name|NTLM_NEG_ALWAYS_SIGN
+value|0x00008000
 end_define
 
 begin_define
@@ -120,6 +191,90 @@ end_define
 begin_define
 define|#
 directive|define
+name|NTLM_TARGET_SHARE
+value|0x00040000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_NTLM2_SESSION
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_NTLM2
+value|0x00080000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_IDENTIFY
+value|0x00100000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ5
+value|0x00200000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NON_NT_SESSION_KEY
+value|0x00400000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_TARGET_INFO
+value|0x00800000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ4
+value|0x01000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_NEG_VERSION
+value|0x02000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ3
+value|0x04000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ2
+value|0x08000000
+end_define
+
+begin_define
+define|#
+directive|define
+name|NTLM_MBZ1
+value|0x10000000
+end_define
+
+begin_define
+define|#
+directive|define
 name|NTLM_ENC_128
 value|0x20000000
 end_define
@@ -131,9 +286,23 @@ name|NTLM_NEG_KEYEX
 value|0x40000000
 end_define
 
+begin_define
+define|#
+directive|define
+name|NTLM_ENC_56
+value|0x80000000
+end_define
+
 begin_comment
 comment|/**  * Struct for the NTLM target info, the strings is assumed to be in  * UTF8.  When filled in by the library it should be freed with  * heim_ntlm_free_targetinfo().  */
 end_comment
+
+begin_define
+define|#
+directive|define
+name|NTLM_TI_AV_FLAG_GUEST
+value|0x00000001
+end_define
 
 begin_struct
 struct|struct
@@ -157,6 +326,15 @@ comment|/**< */
 name|char
 modifier|*
 name|dnsservername
+decl_stmt|;
+comment|/**< */
+name|char
+modifier|*
+name|dnstreename
+decl_stmt|;
+comment|/**< */
+name|uint32_t
+name|avflags
 decl_stmt|;
 comment|/**< */
 block|}
@@ -220,7 +398,7 @@ decl_stmt|;
 comment|/**< */
 name|unsigned
 name|char
-name|challange
+name|challenge
 index|[
 literal|8
 index|]
@@ -296,6 +474,12 @@ comment|/**< */
 block|}
 struct|;
 end_struct
+
+begin_include
+include|#
+directive|include
+file|<ntlm_err.h>
+end_include
 
 begin_include
 include|#

@@ -5352,10 +5352,6 @@ index|[
 name|NI_MAXSERV
 index|]
 decl_stmt|;
-name|alen
-operator|=
-name|alen
-expr_stmt|;
 if|if
 condition|(
 operator|(

@@ -149,16 +149,14 @@ name|NOT_IN_LIST
 enum|;
 end_enum
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|fstypelist
 argument_list|,
 argument|entry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|opthead
 operator|,
 name|selhead
@@ -423,6 +421,11 @@ index|[
 literal|3
 index|]
 decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|etc_fstab
+decl_stmt|;
 name|globopt
 index|[
 literal|0
@@ -449,6 +452,10 @@ operator|&
 name|opthead
 argument_list|)
 expr_stmt|;
+name|etc_fstab
+operator|=
+name|NULL
+expr_stmt|;
 while|while
 condition|(
 operator|(
@@ -460,7 +467,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"BCdvpfFnyl:t:T:"
+literal|"BCdvpfFnyl:t:T:c:"
 argument_list|)
 operator|)
 operator|!=
@@ -644,6 +651,14 @@ name|optarg
 expr_stmt|;
 break|break;
 case|case
+literal|'c'
+case|:
+name|etc_fstab
+operator|=
+name|optarg
+expr_stmt|;
+break|break;
+case|case
 literal|'?'
 case|:
 default|default:
@@ -659,6 +674,17 @@ expr_stmt|;
 name|argv
 operator|+=
 name|optind
+expr_stmt|;
+if|if
+condition|(
+name|etc_fstab
+operator|!=
+name|NULL
+condition|)
+name|setfstab
+argument_list|(
+name|etc_fstab
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -2683,7 +2709,7 @@ name|char
 name|common
 index|[]
 init|=
-literal|"[-Cdfnpvy] [-B | -F] [-T fstype:fsoptions] [-t fstype]"
+literal|"[-Cdfnpvy] [-B | -F] [-T fstype:fsoptions] [-t fstype] [-c fstab]"
 decl_stmt|;
 operator|(
 name|void

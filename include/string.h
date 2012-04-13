@@ -978,6 +978,30 @@ begin_comment
 comment|/* __BSD_VISIBLE */
 end_comment
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+operator|||
+name|defined
+argument_list|(
+name|_XLOCALE_H_
+argument_list|)
+end_if
+
+begin_include
+include|#
+directive|include
+file|<xlocale/_string.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_macro
 name|__END_DECLS
 end_macro

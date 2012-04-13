@@ -127,6 +127,7 @@ comment|/*  * letter frequencies (taken from some unix(tm) documentation)  * (un
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|double
 name|stdf
 index|[
@@ -190,6 +191,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|void
 name|printit
 parameter_list|(
@@ -627,6 +629,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|printit
 parameter_list|(

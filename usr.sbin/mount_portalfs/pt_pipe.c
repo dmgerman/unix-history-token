@@ -333,7 +333,7 @@ operator|(
 name|ENOENT
 operator|)
 return|;
-comment|/* Swap priviledges. */
+comment|/* Swap privileges. */
 if|if
 condition|(
 name|set_user_credentials
@@ -578,7 +578,7 @@ comment|/* NOTREACHED */
 block|}
 name|done
 label|:
-comment|/* Re-establish our priviledges. */
+comment|/* Re-establish our privileges. */
 if|if
 condition|(
 name|restore_credentials

@@ -719,6 +719,7 @@ comment|/*  * The stack of unread directories  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|dirTodoNode
 modifier|*

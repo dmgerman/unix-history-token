@@ -208,6 +208,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -3068,7 +3069,7 @@ end_function
 begin_decl_stmt
 specifier|static
 specifier|const
-name|int32_t
+name|uint32_t
 name|uplcom_rates
 index|[]
 init|=
@@ -3276,10 +3277,12 @@ argument_list|,
 name|sc
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|ls
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(

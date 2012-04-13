@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Test the POSIX shared-memory API.  * Dedicated to tyhe public domain by Garrett A. Wollman, 2000.  * $FreeBSD$  */
+comment|/*  * Test the POSIX shared-memory API.  * Dedicated to the public domain by Garrett A. Wollman, 2000.  * $FreeBSD$  */
 end_comment
 
 begin_include

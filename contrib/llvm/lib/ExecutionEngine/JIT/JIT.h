@@ -332,6 +332,15 @@ name|GVsWithCode
 operator|=
 name|true
 argument_list|,
+name|Reloc
+operator|::
+name|Model
+name|RM
+operator|=
+name|Reloc
+operator|::
+name|Default
+argument_list|,
 name|CodeModel
 operator|::
 name|Model
@@ -339,7 +348,7 @@ name|CMM
 operator|=
 name|CodeModel
 operator|::
-name|Default
+name|JITDefault
 argument_list|)
 block|{
 return|return
@@ -356,6 +365,8 @@ argument_list|,
 name|OptLevel
 argument_list|,
 name|GVsWithCode
+argument_list|,
+name|RM
 argument_list|,
 name|CMM
 argument_list|)

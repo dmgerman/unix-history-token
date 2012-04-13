@@ -88,6 +88,7 @@ file|<unistd.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 specifier|volatile
 name|sig_atomic_t
 name|aborting

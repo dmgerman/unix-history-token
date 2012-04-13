@@ -1746,7 +1746,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Skip if we have an AF_INET6 adress. 			 */
+comment|/* 			 * Skip if we have an AF_INET6 address. 			 */
 if|if
 condition|(
 name|inet_pton
@@ -1802,7 +1802,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/* 			 * Skip if we have an AF_INET adress. 			 */
+comment|/* 			 * Skip if we have an AF_INET address. 			 */
 if|if
 condition|(
 name|inet_pton

@@ -863,7 +863,7 @@ parameter_list|)
 block|{
 name|printf
 argument_list|(
-literal|"%d\n"
+literal|"%td\n"
 argument_list|,
 name|dot
 operator|-

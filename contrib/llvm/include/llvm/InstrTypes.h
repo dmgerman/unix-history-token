@@ -114,7 +114,7 @@ name|protected
 operator|:
 name|TerminatorInst
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|Instruction::TermOps iType
 argument_list|,
@@ -141,7 +141,7 @@ argument_list|)
 block|{}
 name|TerminatorInst
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|Instruction::TermOps iType
 argument_list|,
@@ -342,7 +342,7 @@ name|protected
 operator|:
 name|UnaryInstruction
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|unsigned iType
 argument_list|,
@@ -378,7 +378,7 @@ name|V
 block|;   }
 name|UnaryInstruction
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|unsigned iType
 argument_list|,
@@ -611,7 +611,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|const Twine&Name
 argument_list|,
@@ -626,7 +626,7 @@ argument|Value *S1
 argument_list|,
 argument|Value *S2
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|const Twine&Name
 argument_list|,
@@ -1737,7 +1737,7 @@ operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics for subclasses
 name|CastInst
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|unsigned iType
 argument_list|,
@@ -1769,7 +1769,7 @@ block|;   }
 comment|/// @brief Constructor with insert-at-end-of-block semantics for subclasses
 name|CastInst
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|unsigned iType
 argument_list|,
@@ -1819,7 +1819,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1862,7 +1861,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1891,7 +1889,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1924,7 +1921,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1953,7 +1949,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -1986,7 +1981,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2015,7 +2009,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The pointer value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2044,7 +2037,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The pointer value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2075,7 +2067,7 @@ argument_list|(
 argument|Value *S
 argument_list|,
 comment|///< The pointer value to be casted (operand 0)
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 comment|///< The type to which cast should be made
 argument|bool isSigned
@@ -2099,7 +2091,7 @@ argument_list|(
 argument|Value *S
 argument_list|,
 comment|///< The integer value to be casted (operand 0)
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 comment|///< The integer type to which operand is casted
 argument|bool isSigned
@@ -2123,7 +2115,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The floating point value to be casted
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2156,7 +2147,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The floating point value to be casted
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2185,7 +2175,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2218,7 +2207,6 @@ operator|*
 name|S
 argument_list|,
 comment|///< The value to be casted (operand 0)
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -2241,13 +2229,11 @@ specifier|static
 name|bool
 name|isCastable
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|SrcTy
 argument_list|,
 comment|///< The Type from which the value should be cast.
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -2269,7 +2255,7 @@ comment|///< The value to cast
 argument|bool SrcIsSigned
 argument_list|,
 comment|///< Whether to treat the source as signed
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 comment|///< The Type to which the value should be casted
 argument|bool DstIsSigned
@@ -2312,13 +2298,13 @@ argument_list|(
 argument|Instruction::CastOps Opcode
 argument_list|,
 comment|///< Opcode of cast
-argument|const Type *SrcTy
+argument|Type *SrcTy
 argument_list|,
 comment|///< SrcTy of cast
-argument|const Type *DstTy
+argument|Type *DstTy
 argument_list|,
 comment|///< DstTy of cast
-argument|const Type *IntPtrTy
+argument|Type *IntPtrTy
 comment|///< Integer type corresponding to Ptr types, or null
 argument_list|)
 block|;
@@ -2326,7 +2312,7 @@ comment|/// @brief Determine if this cast is a no-op cast.
 name|bool
 name|isNoopCast
 argument_list|(
-argument|const Type *IntPtrTy
+argument|Type *IntPtrTy
 comment|///< Integer type corresponding to pointer
 argument_list|)
 specifier|const
@@ -2347,16 +2333,16 @@ comment|///< Opcode of first cast
 argument|Instruction::CastOps secondOpcode
 argument_list|,
 comment|///< Opcode of second cast
-argument|const Type *SrcTy
+argument|Type *SrcTy
 argument_list|,
 comment|///< SrcTy of 1st cast
-argument|const Type *MidTy
+argument|Type *MidTy
 argument_list|,
 comment|///< DstTy of 1st cast& SrcTy of 2nd cast
-argument|const Type *DstTy
+argument|Type *DstTy
 argument_list|,
 comment|///< DstTy of 2nd cast
-argument|const Type *IntPtrTy
+argument|Type *IntPtrTy
 comment|///< Integer type corresponding to Ptr types, or null
 argument_list|)
 block|;
@@ -2381,7 +2367,6 @@ argument_list|)
 return|;
 block|}
 comment|/// @brief Return the source type, as a convenience
-specifier|const
 name|Type
 operator|*
 name|getSrcTy
@@ -2399,7 +2384,6 @@ argument_list|()
 return|;
 block|}
 comment|/// @brief Return the destination type, as a convenience
-specifier|const
 name|Type
 operator|*
 name|getDestTy
@@ -2423,7 +2407,7 @@ argument|Instruction::CastOps op
 argument_list|,
 argument|Value *S
 argument_list|,
-argument|const Type *DstTy
+argument|Type *DstTy
 argument_list|)
 block|;
 comment|/// @brief Methods for support type inquiry through isa, cast, and dyn_cast:
@@ -2515,7 +2499,7 @@ name|protected
 operator|:
 name|CmpInst
 argument_list|(
-argument|const Type *ty
+argument|Type *ty
 argument_list|,
 argument|Instruction::OtherOps op
 argument_list|,
@@ -2534,7 +2518,7 @@ argument_list|)
 block|;
 name|CmpInst
 argument_list|(
-argument|const Type *ty
+argument|Type *ty
 argument_list|,
 argument|Instruction::OtherOps op
 argument_list|,
@@ -3164,24 +3148,21 @@ return|;
 block|}
 comment|/// @brief Create a result type for fcmp/icmp
 specifier|static
-specifier|const
 name|Type
 operator|*
 name|makeCmpResultType
 argument_list|(
-argument|const Type* opnd_type
+argument|Type* opnd_type
 argument_list|)
 block|{
 if|if
 condition|(
-specifier|const
 name|VectorType
 modifier|*
 name|vt
 init|=
 name|dyn_cast
 operator|<
-specifier|const
 name|VectorType
 operator|>
 operator|(

@@ -142,7 +142,7 @@ decl_stmt|;
 name|bus_size_t
 name|alignment
 decl_stmt|;
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 decl_stmt|;
 name|bus_addr_t
@@ -292,6 +292,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -626,7 +627,7 @@ name|bus_size_t
 name|len
 parameter_list|)
 block|{
-name|bus_size_t
+name|bus_addr_t
 name|bndy
 decl_stmt|;
 name|int
@@ -857,7 +858,7 @@ parameter_list|,
 name|bus_size_t
 name|alignment
 parameter_list|,
-name|bus_size_t
+name|bus_addr_t
 name|boundary
 parameter_list|,
 name|bus_addr_t

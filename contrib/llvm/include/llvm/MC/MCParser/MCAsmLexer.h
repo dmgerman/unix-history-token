@@ -71,9 +71,6 @@ decl_stmt|;
 name|class
 name|MCInst
 decl_stmt|;
-name|class
-name|Target
-decl_stmt|;
 comment|/// AsmToken - Target independent representation for an assembler token.
 name|class
 name|AsmToken
@@ -99,7 +96,7 @@ block|,
 comment|// Real values.
 name|Real
 block|,
-comment|// Register values (stored in IntVal).  Only used by TargetAsmLexer.
+comment|// Register values (stored in IntVal).  Only used by MCTargetAsmLexer.
 name|Register
 block|,
 comment|// No-value.

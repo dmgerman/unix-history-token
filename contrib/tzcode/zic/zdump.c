@@ -1617,6 +1617,13 @@ name|tm
 modifier|*
 name|newtmp
 decl_stmt|;
+name|progname
+operator|=
+name|argv
+index|[
+literal|0
+index|]
+expr_stmt|;
 name|INITIALIZE
 argument_list|(
 name|cutlotime

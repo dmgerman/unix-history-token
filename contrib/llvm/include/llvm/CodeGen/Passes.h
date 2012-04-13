@@ -92,7 +92,7 @@ name|class
 name|TargetLowering
 decl_stmt|;
 name|class
-name|RegisterCoalescer
+name|TargetRegisterClass
 decl_stmt|;
 name|class
 name|raw_ostream
@@ -192,6 +192,12 @@ name|char
 modifier|&
 name|TwoAddressInstructionPassID
 decl_stmt|;
+comment|/// RegisteCoalescer pass - This pass merges live ranges to eliminate copies.
+specifier|extern
+name|char
+modifier|&
+name|RegisterCoalescerPassID
+decl_stmt|;
 comment|/// SpillPlacement analysis. Suggest optimal placement of spill code between
 comment|/// basic blocks.
 comment|///
@@ -268,14 +274,6 @@ modifier|*
 name|createDefaultPBQPRegisterAllocator
 parameter_list|()
 function_decl|;
-comment|/// RegisterCoalescer Pass - Coalesce all copies possible.  Can run
-comment|/// independently of the register allocator.
-comment|///
-name|RegisterCoalescer
-modifier|*
-name|createRegisterCoalescer
-parameter_list|()
-function_decl|;
 comment|/// PrologEpilogCodeInserter Pass - This pass inserts prolog and epilog code,
 comment|/// and eliminates abstract frame references.
 comment|///
@@ -284,13 +282,12 @@ modifier|*
 name|createPrologEpilogCodeInserter
 parameter_list|()
 function_decl|;
-comment|/// LowerSubregs Pass - This pass lowers subregs to register-register copies
-comment|/// which yields suboptimal, but correct code if the register allocator
-comment|/// cannot coalesce all subreg operations during allocation.
+comment|/// ExpandPostRAPseudos Pass - This pass expands pseudo instructions after
+comment|/// register allocation.
 comment|///
 name|FunctionPass
 modifier|*
-name|createLowerSubregsPass
+name|createExpandPostRAPseudosPass
 parameter_list|()
 function_decl|;
 comment|/// createPostRAScheduler - This pass performs post register allocation
@@ -489,6 +486,22 @@ name|FunctionPass
 modifier|*
 name|createExpandISelPseudosPass
 parameter_list|()
+function_decl|;
+comment|/// createExecutionDependencyFixPass - This pass fixes execution time
+comment|/// problems with dependent instructions, such as switching execution
+comment|/// domains to match.
+comment|///
+comment|/// The pass will examine instructions using and defining registers in RC.
+comment|///
+name|FunctionPass
+modifier|*
+name|createExecutionDependencyFixPass
+parameter_list|(
+specifier|const
+name|TargetRegisterClass
+modifier|*
+name|RC
+parameter_list|)
 function_decl|;
 block|}
 end_decl_stmt

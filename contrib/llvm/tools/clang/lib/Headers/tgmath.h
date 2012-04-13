@@ -5197,7 +5197,8 @@ parameter_list|(
 name|float
 name|__x
 parameter_list|,
-name|float
+name|long
+name|double
 name|__y
 parameter_list|)
 block|{
@@ -5221,6 +5222,7 @@ parameter_list|(
 name|double
 name|__x
 parameter_list|,
+name|long
 name|double
 name|__y
 parameter_list|)
@@ -5278,7 +5280,7 @@ name|__x
 parameter_list|,
 name|__y
 parameter_list|)
-value|__tg_nexttoward(__tg_promote2((__x), (__y))(__x), \                                              __tg_promote2((__x), (__y))(__y))
+value|__tg_nexttoward(__tg_promote1((__x))(__x), (__y))
 end_define
 
 begin_comment

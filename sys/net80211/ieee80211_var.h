@@ -535,6 +535,11 @@ name|task
 name|ic_bmiss_task
 decl_stmt|;
 comment|/* deferred beacon miss hndlr */
+name|struct
+name|task
+name|ic_chw_task
+decl_stmt|;
+comment|/* deferred HT CHW update */
 name|uint32_t
 name|ic_flags
 decl_stmt|;
@@ -842,30 +847,25 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
-name|name
 index|[
 name|IFNAMSIZ
 index|]
 parameter_list|,
 name|int
-name|unit
+parameter_list|,
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
-name|opmode
-parameter_list|,
-name|int
-name|flags
 parameter_list|,
 specifier|const
 name|uint8_t
-name|bssid
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 parameter_list|,
 specifier|const
 name|uint8_t
-name|macaddr
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
@@ -930,6 +930,21 @@ parameter_list|,
 name|struct
 name|ieee80211_channel
 type|[]
+parameter_list|)
+function_decl|;
+name|int
+function_decl|(
+modifier|*
+name|ic_set_quiet
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211_node
+modifier|*
+parameter_list|,
+name|u_int8_t
+modifier|*
+name|quiet_elm
 parameter_list|)
 function_decl|;
 comment|/* send/recv 802.11 management frame */
@@ -1408,6 +1423,18 @@ name|ieee80211_rx_ampdu
 modifier|*
 parameter_list|)
 function_decl|;
+comment|/* The channel width has changed (20<->2040) */
+name|void
+function_decl|(
+modifier|*
+name|ic_update_chw
+function_decl|)
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+parameter_list|)
+function_decl|;
 name|uint64_t
 name|ic_spare
 index|[
@@ -1756,6 +1783,30 @@ name|iv_dtim_count
 decl_stmt|;
 comment|/* DTIM count from last bcn */
 comment|/* set/unset aid pwrsav state */
+name|uint8_t
+name|iv_quiet
+decl_stmt|;
+comment|/* Quiet Element */
+name|uint8_t
+name|iv_quiet_count
+decl_stmt|;
+comment|/* constant count for Quiet Element */
+name|uint8_t
+name|iv_quiet_count_value
+decl_stmt|;
+comment|/* variable count for Quiet Element */
+name|uint8_t
+name|iv_quiet_period
+decl_stmt|;
+comment|/* period for Quiet Element */
+name|uint16_t
+name|iv_quiet_duration
+decl_stmt|;
+comment|/* duration for Quiet Element */
+name|uint16_t
+name|iv_quiet_offset
+decl_stmt|;
+comment|/* offset for Quiet Element */
 name|int
 name|iv_csa_count
 decl_stmt|;
@@ -3489,7 +3540,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int

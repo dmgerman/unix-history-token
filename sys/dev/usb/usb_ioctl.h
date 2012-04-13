@@ -1027,6 +1027,24 @@ value|_IOW ('U', 181, int)
 end_define
 
 begin_comment
+comment|/* GPIO control */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|USB_GET_GPIO
+value|_IOR ('U', 182, int)
+end_define
+
+begin_define
+define|#
+directive|define
+name|USB_SET_GPIO
+value|_IOW ('U', 183, int)
+end_define
+
+begin_comment
 comment|/* USB file system interface */
 end_comment
 

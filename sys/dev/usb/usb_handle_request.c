@@ -1609,9 +1609,6 @@ comment|/* max fragment length */
 name|uint16_t
 name|wValue
 decl_stmt|;
-name|uint16_t
-name|wIndex
-decl_stmt|;
 name|uint8_t
 name|state
 decl_stmt|;
@@ -1831,15 +1828,6 @@ operator|.
 name|wValue
 argument_list|)
 expr_stmt|;
-name|wIndex
-operator|=
-name|UGETW
-argument_list|(
-name|req
-operator|.
-name|wIndex
-argument_list|)
-expr_stmt|;
 name|DPRINTF
 argument_list|(
 literal|"req 0x%02x 0x%02x 0x%04x 0x%04x "
@@ -1855,7 +1843,12 @@ name|bRequest
 argument_list|,
 name|wValue
 argument_list|,
+name|UGETW
+argument_list|(
+name|req
+operator|.
 name|wIndex
+argument_list|)
 argument_list|,
 name|off
 argument_list|,

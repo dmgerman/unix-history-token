@@ -119,6 +119,27 @@ index|[
 literal|2
 index|]
 decl_stmt|;
+name|struct
+name|usb_bus_msg
+name|suspend_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|usb_bus_msg
+name|resume_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
+name|struct
+name|usb_bus_msg
+name|shutdown_msg
+index|[
+literal|2
+index|]
+decl_stmt|;
 comment|/* 	 * This mutex protects the USB hardware: 	 */
 name|struct
 name|mtx
@@ -211,7 +232,11 @@ comment|/* maximum number of USB devices */
 name|uint8_t
 name|do_probe
 decl_stmt|;
-comment|/* set if USB BUS should be re-probed */
+comment|/* set if USB should be re-probed */
+name|uint8_t
+name|no_explore
+decl_stmt|;
+comment|/* don't explore USB ports */
 comment|/*  	 * The scratch area can only be used inside the explore thread 	 * belonging to the give serial bus. 	 */
 union|union
 block|{

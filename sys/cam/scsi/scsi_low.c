@@ -486,6 +486,7 @@ value|0xffff0000
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SCSILOW

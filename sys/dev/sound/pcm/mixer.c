@@ -47,6 +47,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_MIXER
@@ -6629,7 +6630,7 @@ literal|0
 expr_stmt|;
 comment|/** 			 * The only flag for @sa oss_mixerinfo::caps is 			 * currently MIXER_CAP_VIRTUAL, which I'm not sure we 			 * really worry about. 			 */
 comment|/** 			 * Mixer extensions currently aren't supported, so 			 * leave @sa oss_mixerinfo::nrext blank for now. 			 */
-comment|/** 			 * @todo Fill in @sa oss_mixerinfo::priority (requires 			 *       touching drivers?) 			 * @note The priority field is for mixer applets to 			 * determine which mixer should be the default, with 0 			 * being least preferred and 10 being most preferred. 			 * From 4Front:  "OSS drivers like ICH use higher 			 * values (10) because such chips are known to be used 			 * only on motherboards.  Drivers for high end pro 			 * devices use 0 because they will never be the 			 * default mixer. Other devices use values 1 to 9 			 * depending on the estimated probability of being the 			 * default device. 			 * 			 * XXX Described by Hannu@4Front, but not found in 			 *     soundcard.h. 			strlcpy(mi->devnode, d->mixer_dev->si_name, 			sizeof(mi->devnode)); 			mi->legacy_device = i; 			 */
+comment|/** 			 * @todo Fill in @sa oss_mixerinfo::priority (requires 			 *       touching drivers?) 			 * @note The priority field is for mixer applets to 			 * determine which mixer should be the default, with 0 			 * being least preferred and 10 being most preferred. 			 * From 4Front:  "OSS drivers like ICH use higher 			 * values (10) because such chips are known to be used 			 * only on motherboards.  Drivers for high end pro 			 * devices use 0 because they will never be the 			 * default mixer. Other devices use values 1 to 9 			 * depending on the estimated probability of being the 			 * default device. 			 * 			 * XXX Described by Hannu@4Front, but not found in 			 *     soundcard.h. 			strlcpy(mi->devnode, devtoname(d->mixer_dev), 			sizeof(mi->devnode)); 			mi->legacy_device = i; 			 */
 name|mtx_unlock
 argument_list|(
 name|m

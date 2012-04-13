@@ -15,6 +15,13 @@ directive|define
 name|_MACHINE_PMC_MDEP_H_
 end_define
 
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_PPC7450
+value|1
+end_define
+
 begin_union
 union|union
 name|pmc_md_op_pmcallocate
@@ -53,10 +60,26 @@ directive|if
 name|_KERNEL
 end_if
 
+begin_struct
+struct|struct
+name|pmc_md_powerpc_pmc
+block|{
+name|uint32_t
+name|pm_powerpc_evsel
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 begin_union
 union|union
 name|pmc_md_pmc
-block|{ }
+block|{
+name|struct
+name|pmc_md_powerpc_pmc
+name|pm_powerpc
+decl_stmt|;
+block|}
 union|;
 end_union
 

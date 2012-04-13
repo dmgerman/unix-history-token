@@ -65,6 +65,12 @@ directive|include
 file|"clang/Serialization/ASTBitCodes.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/AST/ASTContext.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -103,6 +109,8 @@ operator|>
 name|TypeID
 name|MakeTypeID
 argument_list|(
+argument|ASTContext&Context
+argument_list|,
 argument|QualType T
 argument_list|,
 argument|IdxForTypeTy IdxForType
@@ -180,6 +188,44 @@ return|return
 name|TypeIdxFromBuiltin
 argument_list|(
 name|BT
+argument_list|)
+operator|.
+name|asTypeID
+argument_list|(
+name|FastQuals
+argument_list|)
+return|;
+if|if
+condition|(
+name|T
+operator|==
+name|Context
+operator|.
+name|AutoDeductTy
+condition|)
+return|return
+name|TypeIdx
+argument_list|(
+name|PREDEF_TYPE_AUTO_DEDUCT
+argument_list|)
+operator|.
+name|asTypeID
+argument_list|(
+name|FastQuals
+argument_list|)
+return|;
+if|if
+condition|(
+name|T
+operator|==
+name|Context
+operator|.
+name|AutoRRefDeductTy
+condition|)
+return|return
+name|TypeIdx
+argument_list|(
+name|PREDEF_TYPE_AUTO_RREF_DEDUCT
 argument_list|)
 operator|.
 name|asTypeID

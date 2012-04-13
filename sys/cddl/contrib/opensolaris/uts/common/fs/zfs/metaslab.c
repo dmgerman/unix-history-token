@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2012 by Delphix. All rights reserved.  */
 end_comment
 
 begin_include
@@ -50,7 +50,7 @@ file|<sys/zio.h>
 end_include
 
 begin_comment
-comment|/*  * Allow allocations to switch to gang blocks quickly. We do this to  * avoid having to load lots of space_maps in a given txg. There are,  * however, some cases where we want to avoid "fast" ganging and instead  * we want to do an exhaustive search of all metaslabs on this device.  * Currently we don't allow any gang or dump device related allocations  * to "fast" gang.  */
+comment|/*  * Allow allocations to switch to gang blocks quickly. We do this to  * avoid having to load lots of space_maps in a given txg. There are,  * however, some cases where we want to avoid "fast" ganging and instead  * we want to do an exhaustive search of all metaslabs on this device.  * Currently we don't allow any gang, zil, or dump device related allocations  * to "fast" gang.  */
 end_comment
 
 begin_define

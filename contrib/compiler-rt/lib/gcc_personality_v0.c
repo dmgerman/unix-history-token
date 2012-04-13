@@ -6,24 +6,6 @@ end_comment
 begin_include
 include|#
 directive|include
-file|<stdint.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdio.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<stdlib.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|"int_lib.h"
 end_include
 
@@ -800,7 +782,11 @@ if|if
 condition|(
 name|lsda
 operator|==
-name|NULL
+operator|(
+name|uint8_t
+operator|*
+operator|)
+literal|0
 condition|)
 return|return
 name|_URC_CONTINUE_UNWIND

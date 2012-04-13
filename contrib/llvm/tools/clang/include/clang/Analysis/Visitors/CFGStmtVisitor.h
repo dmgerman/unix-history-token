@@ -180,7 +180,7 @@ block|}
 name|RetTy
 name|Visit
 argument_list|(
-argument|Stmt* S
+argument|Stmt *S
 argument_list|)
 block|{
 if|if
@@ -248,7 +248,7 @@ comment|/// to using StmtVisitor's Visit method.
 name|RetTy
 name|BlockStmt_Visit
 argument_list|(
-argument|Stmt* S
+argument|Stmt *S
 argument_list|)
 block|{
 name|CurrentBlkStmt
@@ -456,7 +456,7 @@ argument_list|)
 name|RetTy
 name|BlockStmt_VisitObjCForCollectionStmt
 argument_list|(
-argument|ObjCForCollectionStmt* S
+argument|ObjCForCollectionStmt *S
 argument_list|)
 block|{
 return|return
@@ -478,7 +478,7 @@ block|}
 name|RetTy
 name|BlockStmt_VisitCXXForRangeStmt
 argument_list|(
-argument|CXXForRangeStmt* S
+argument|CXXForRangeStmt *S
 argument_list|)
 block|{
 return|return
@@ -500,7 +500,7 @@ block|}
 name|RetTy
 name|BlockStmt_VisitImplicitControlFlowExpr
 argument_list|(
-argument|Expr* E
+argument|Expr *E
 argument_list|)
 block|{
 return|return
@@ -522,7 +522,7 @@ block|}
 name|RetTy
 name|BlockStmt_VisitExpr
 argument_list|(
-argument|Expr* E
+argument|Expr *E
 argument_list|)
 block|{
 return|return
@@ -544,7 +544,7 @@ block|}
 name|RetTy
 name|BlockStmt_VisitStmt
 argument_list|(
-argument|Stmt* S
+argument|Stmt *S
 argument_list|)
 block|{
 return|return
@@ -614,7 +614,7 @@ comment|/// VisitChildren: Call "Visit" on each child of S.
 name|void
 name|VisitChildren
 argument_list|(
-argument|Stmt* S
+argument|Stmt *S
 argument_list|)
 block|{
 switch|switch

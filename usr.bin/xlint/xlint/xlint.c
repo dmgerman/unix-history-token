@@ -250,7 +250,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* flags for cc(1), controled by sflag/tflag */
+comment|/* flags for cc(1), controlled by sflag/tflag */
 end_comment
 
 begin_decl_stmt
@@ -3295,12 +3295,12 @@ name|lseek
 argument_list|(
 name|cppoutfd
 argument_list|,
-name|SEEK_SET
-argument_list|,
 operator|(
 name|off_t
 operator|)
 literal|0
+argument_list|,
+name|SEEK_SET
 argument_list|)
 operator|!=
 literal|0

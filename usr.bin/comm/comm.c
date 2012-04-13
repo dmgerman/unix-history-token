@@ -129,12 +129,14 @@ file|<wctype.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|iflag
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -152,6 +154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|FILE
 modifier|*
 name|file
@@ -164,6 +167,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|wchar_t
 modifier|*
 name|convert
@@ -176,6 +180,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|show
 parameter_list|(
@@ -867,6 +872,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|wchar_t
 modifier|*
 name|convert
@@ -1025,6 +1031,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|show
 parameter_list|(
@@ -1144,6 +1151,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|FILE
 modifier|*
 name|file

@@ -724,6 +724,17 @@ value|(1<< 2)
 end_define
 
 begin_comment
+comment|/*  * Sleep flags.  See actypes.h for available flags.  */
+end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|acpi_sleep_flags
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*  * Note that the low ivar values are reserved to provide  * interface compatibility with ISA drivers which can also  * attach to ACPI.  */
 end_comment
 
@@ -1381,18 +1392,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|void
-name|acpi_resync_clock
-parameter_list|(
-name|struct
-name|acpi_softc
-modifier|*
-name|sc
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
 name|int
 name|acpi_wake_set_enable
 parameter_list|(
@@ -1826,6 +1825,37 @@ parameter_list|,
 name|void
 modifier|*
 name|arg
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|struct
+name|resource
+modifier|*
+name|acpi_alloc_sysres
+parameter_list|(
+name|device_t
+name|child
+parameter_list|,
+name|int
+name|type
+parameter_list|,
+name|int
+modifier|*
+name|rid
+parameter_list|,
+name|u_long
+name|start
+parameter_list|,
+name|u_long
+name|end
+parameter_list|,
+name|u_long
+name|count
+parameter_list|,
+name|u_int
+name|flags
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2412,7 +2442,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_DEV_BASE_ORDER
-value|10
+value|100
 end_define
 
 begin_comment

@@ -143,11 +143,15 @@ name|SparcTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|const std::string&TT
+argument|StringRef TT
 argument_list|,
-argument|const std::string&CPU
+argument|StringRef CPU
 argument_list|,
-argument|const std::string&FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|,
 argument|bool is64bit
 argument_list|)
@@ -278,31 +282,17 @@ name|public
 operator|:
 name|SparcV8TargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|; }
 decl_stmt|;
@@ -318,31 +308,17 @@ name|public
 operator|:
 name|SparcV9TargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|; }
 decl_stmt|;

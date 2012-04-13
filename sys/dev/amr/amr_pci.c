@@ -368,25 +368,7 @@ argument_list|,
 name|amr_pci_resume
 argument_list|)
 block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1202,9 +1184,12 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
-comment|/* parent */
+comment|/* PCI parent */
 literal|1
 argument_list|,
 literal|0
@@ -1455,10 +1440,16 @@ expr_stmt|;
 comment|/*      * Build the scatter/gather buffers.      */
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|amr_sglist_map
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out
@@ -1472,10 +1463,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|error
+operator|=
 name|amr_ccb_map
 argument_list|(
 name|sc
 argument_list|)
+operator|)
+operator|!=
+literal|0
 condition|)
 goto|goto
 name|out

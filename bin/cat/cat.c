@@ -167,6 +167,7 @@ file|<stddef.h>
 end_include
 
 begin_decl_stmt
+specifier|static
 name|int
 name|bflag
 decl_stmt|,
@@ -183,12 +184,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|rval
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

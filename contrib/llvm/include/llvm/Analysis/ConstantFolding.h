@@ -105,6 +105,14 @@ decl_stmt|;
 name|class
 name|Type
 decl_stmt|;
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|ArrayRef
+expr_stmt|;
 comment|/// ConstantFoldInstruction - Try to constant fold the specified instruction.
 comment|/// If successful, the constant result is returned, if not, null is returned.
 comment|/// Note that this fails if not all of the operands are constant.  Otherwise,
@@ -155,32 +163,29 @@ comment|///
 name|Constant
 modifier|*
 name|ConstantFoldInstOperands
-parameter_list|(
+argument_list|(
 name|unsigned
 name|Opcode
-parameter_list|,
-specifier|const
+argument_list|,
 name|Type
-modifier|*
+operator|*
 name|DestTy
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|Constant
-modifier|*
-specifier|const
-modifier|*
+operator|*
+operator|>
 name|Ops
-parameter_list|,
-name|unsigned
-name|NumOps
-parameter_list|,
+argument_list|,
 specifier|const
 name|TargetData
-modifier|*
+operator|*
 name|TD
-init|=
+operator|=
 literal|0
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 comment|/// ConstantFoldCompareInstOperands - Attempt to constant fold a compare
 comment|/// instruction (icmp/fcmp) with the specified operands.  If it fails, it
 comment|/// returns a constant expression of the specified operands.
@@ -208,6 +213,28 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// ConstantFoldInsertValueInstruction - Attempt to constant fold an insertvalue
+comment|/// instruction with the specified operands and indices.  The constant result is
+comment|/// returned if successful; if not, null is returned.
+name|Constant
+modifier|*
+name|ConstantFoldInsertValueInstruction
+argument_list|(
+name|Constant
+operator|*
+name|Agg
+argument_list|,
+name|Constant
+operator|*
+name|Val
+argument_list|,
+name|ArrayRef
+operator|<
+name|unsigned
+operator|>
+name|Idxs
+argument_list|)
+decl_stmt|;
 comment|/// ConstantFoldLoadFromConstPtr - Return the value that a load from C would
 comment|/// produce if it is constant and determinable.  If this is not determinable,
 comment|/// return null.
@@ -259,21 +286,19 @@ comment|/// with the specified arguments, returning null if unsuccessful.
 name|Constant
 modifier|*
 name|ConstantFoldCall
-parameter_list|(
+argument_list|(
 name|Function
-modifier|*
+operator|*
 name|F
-parameter_list|,
+argument_list|,
+name|ArrayRef
+operator|<
 name|Constant
-modifier|*
-specifier|const
-modifier|*
+operator|*
+operator|>
 name|Operands
-parameter_list|,
-name|unsigned
-name|NumOperands
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 end_decl_stmt
 

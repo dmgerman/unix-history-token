@@ -144,6 +144,7 @@ file|<opt_ses.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SCSISES
@@ -3100,37 +3101,6 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-operator|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|status
-operator|&
-name|CAM_DEV_QFRZN
-operator|)
-operator|!=
-literal|0
-condition|)
-name|cam_release_devq
-argument_list|(
-name|ccb
-operator|->
-name|ccb_h
-operator|.
-name|path
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-name|FALSE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
 name|error
 condition|)
 block|{
@@ -3242,7 +3212,7 @@ comment|/*  * The code after this point runs on many platforms,  * so forgive th
 end_comment
 
 begin_comment
-comment|/*  * Is this a device that supports enclosure services?  *  * It's a a pretty simple ruleset- if it is device type 0x0D (13), it's  * an SES device. If it happens to be an old UNISYS SEN device, we can  * handle that too.  */
+comment|/*  * Is this a device that supports enclosure services?  *  * It's a pretty simple ruleset- if it is device type 0x0D (13), it's  * an SES device. If it happens to be an old UNISYS SEN device, we can  * handle that too.  */
 end_comment
 
 begin_define

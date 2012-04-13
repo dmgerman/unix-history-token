@@ -154,16 +154,14 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|part
 argument_list|,
 argument|partentry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|badh
 expr_stmt|;
 end_expr_stmt
@@ -200,16 +198,14 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|TAILQ_HEAD
 argument_list|(
 argument|disk
 argument_list|,
 argument|diskentry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|diskh
 expr_stmt|;
 end_expr_stmt

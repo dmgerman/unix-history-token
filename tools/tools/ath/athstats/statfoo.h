@@ -111,6 +111,11 @@ name|int
 name|nstats
 decl_stmt|;
 comment|/* number of stats */
+define|#
+directive|define
+name|FMTS_IS_STAT
+value|0x80
+comment|/* the following two bytes are the stat id */
 name|unsigned
 name|char
 name|fmts

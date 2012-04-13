@@ -135,7 +135,7 @@ name|char
 name|BootFmt
 index|[]
 init|=
-literal|"\t\tRetCode:%u SeqNo:%lx SessID:%x Vers:%u"
+literal|"\t\tRetCode:%u SeqNo:%x SessID:%x Vers:%u"
 decl_stmt|;
 specifier|static
 specifier|const
@@ -143,7 +143,7 @@ name|char
 name|ReadFmt
 index|[]
 init|=
-literal|"\t\tRetCode:%u Offset:%lx SessID:%x\n"
+literal|"\t\tRetCode:%u Offset:%x SessID:%x\n"
 decl_stmt|;
 name|struct
 name|tm
@@ -736,7 +736,7 @@ name|fprintf
 argument_list|(
 name|DbgFp
 argument_list|,
-literal|"\t\tNoOfBytesSent: %d\n"
+literal|"\t\tNoOfBytesSent: %zu\n"
 argument_list|,
 name|rconn
 operator|->

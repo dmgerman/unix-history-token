@@ -4,7 +4,7 @@ comment|// This may look like C code, but it is really -*- C++ -*-
 end_comment
 
 begin_comment
-comment|/*  Copyright (C) 1988, 1992, 2000 Free Software Foundation     written by Doug Lea (dl@rocky.oswego.edu) */
+comment|/*  Copyright (C) 1988, 1992, 2000, 2002 Free Software Foundation     written by Doug Lea<dl@rocky.oswego.edu> */
 end_comment
 
 begin_ifndef
@@ -31,6 +31,7 @@ name|int
 name|hashpjw
 parameter_list|(
 specifier|const
+name|unsigned
 name|char
 modifier|*
 name|string

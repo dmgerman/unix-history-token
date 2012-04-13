@@ -320,25 +320,47 @@ name|IGB_EEPROM_APME
 value|0x400;
 end_define
 
-begin_define
-define|#
-directive|define
-name|IGB_QUEUE_IDLE
-value|0
-end_define
+begin_comment
+comment|/* Queue minimum free for use */
+end_comment
 
 begin_define
 define|#
 directive|define
-name|IGB_QUEUE_WORKING
+name|IGB_QUEUE_THRESHOLD
+value|(adapter->num_tx_desc / 8)
+end_define
+
+begin_comment
+comment|/* Queue bit defines */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_IDLE
 value|1
 end_define
 
 begin_define
 define|#
 directive|define
-name|IGB_QUEUE_HUNG
+name|IGB_QUEUE_WORKING
 value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_HUNG
+value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|IGB_QUEUE_DEPLETED
+value|8
 end_define
 
 begin_comment

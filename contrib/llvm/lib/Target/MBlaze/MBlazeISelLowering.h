@@ -318,9 +318,7 @@ argument_list|)
 specifier|const
 block|;
 comment|/// getSetCCResultType - get the ISD::SETCC result ValueType
-name|MVT
-operator|::
-name|SimpleValueType
+name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT

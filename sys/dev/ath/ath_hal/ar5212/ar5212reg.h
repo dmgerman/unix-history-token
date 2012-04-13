@@ -738,12 +738,34 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_Q_TXE_M
+value|0x000003FF
+end_define
+
+begin_comment
+comment|/* Mask for TXE (QCU 0-9) */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_Q_TXD
 value|0x0880
 end_define
 
 begin_comment
 comment|/* MAC Transmit Queue disable */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_Q_TXD_M
+value|0x000003FF
+end_define
+
+begin_comment
+comment|/* Mask for TXD (QCU 0-9) */
 end_comment
 
 begin_define

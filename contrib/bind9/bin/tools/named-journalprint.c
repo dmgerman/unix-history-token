@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004-2009  Internet Systems Consortium, Inc. ("ISC")
 end_comment
 
 begin_comment
-comment|/* $Id: named-journalprint.c,v 1.2 2009-12-04 21:59:23 marka Exp $ */
+comment|/* $Id: named-journalprint.c,v 1.2 2009/12/04 21:59:23 marka Exp $ */
 end_comment
 
 begin_comment

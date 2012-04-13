@@ -83,6 +83,30 @@ begin_comment
 comment|/* XXX deprecated */
 end_comment
 
+begin_struct
+struct|struct
+name|ieee80211_radiotap_vendor_header
+block|{
+name|uint8_t
+name|vh_oui
+index|[
+literal|3
+index|]
+decl_stmt|;
+comment|/* 3 byte vendor OUI */
+name|uint8_t
+name|vh_sub_ns
+decl_stmt|;
+comment|/* Sub namespace of this section */
+name|uint16_t
+name|vh_skip_len
+decl_stmt|;
+comment|/* Length of this vendor section */
+block|}
+name|__packed
+struct|;
+end_struct
+
 begin_comment
 comment|/*  * The radio capture header precedes the 802.11 header.  *  * Note well: all radiotap fields are little-endian.  */
 end_comment
@@ -179,6 +203,14 @@ comment|/* NB: gap for netbsd definitions */
 name|IEEE80211_RADIOTAP_XCHANNEL
 init|=
 literal|18
+block|,
+name|IEEE80211_RADIOTAP_MCS
+init|=
+literal|19
+block|,
+name|IEEE80211_RADIOTAP_VENDOREXT
+init|=
+literal|30
 block|,
 name|IEEE80211_RADIOTAP_EXT
 init|=

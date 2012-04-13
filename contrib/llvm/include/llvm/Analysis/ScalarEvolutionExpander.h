@@ -214,6 +214,12 @@ comment|/// in a more literal form.
 name|bool
 name|CanonicalMode
 decl_stmt|;
+comment|/// When invoked from LSR, the expander is in "strength reduction" mode. The
+comment|/// only difference is that phi's are only reused if they are already in
+comment|/// "expanded" form.
+name|bool
+name|LSRMode
+decl_stmt|;
 typedef|typedef
 name|IRBuilder
 operator|<
@@ -226,6 +232,16 @@ expr_stmt|;
 name|BuilderType
 name|Builder
 decl_stmt|;
+ifndef|#
+directive|ifndef
+name|NDEBUG
+specifier|const
+name|char
+modifier|*
+name|DebugType
+decl_stmt|;
+endif|#
+directive|endif
 name|friend
 block|struct
 name|SCEVVisitor
@@ -277,13 +293,43 @@ argument_list|(
 name|true
 argument_list|)
 operator|,
+name|LSRMode
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|Builder
 argument_list|(
 argument|se.getContext()
 argument_list|,
 argument|TargetFolder(se.TD)
 argument_list|)
-block|{}
+block|{
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|DebugType
+operator|=
+literal|""
+block|;
+endif|#
+directive|endif
+block|}
+ifndef|#
+directive|ifndef
+name|NDEBUG
+name|void
+name|setDebugType
+argument_list|(
+argument|const char* s
+argument_list|)
+block|{
+name|DebugType
+operator|=
+name|s
+block|; }
+endif|#
+directive|endif
 comment|/// clear - Erase the contents of the InsertedExpressions map so that users
 comment|/// trying to expand the same expression into multiple BasicBlocks or
 comment|/// different places within the same BasicBlock can do so.
@@ -319,12 +365,52 @@ name|Loop
 operator|*
 name|L
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
 argument_list|)
 expr_stmt|;
+comment|/// hoistStep - Utility for hoisting an IV increment.
+specifier|static
+name|bool
+name|hoistStep
+parameter_list|(
+name|Instruction
+modifier|*
+name|IncV
+parameter_list|,
+name|Instruction
+modifier|*
+name|InsertPos
+parameter_list|,
+specifier|const
+name|DominatorTree
+modifier|*
+name|DT
+parameter_list|)
+function_decl|;
+comment|/// replaceCongruentIVs - replace congruent phis with their most canonical
+comment|/// representative. Return the number of phis eliminated.
+name|unsigned
+name|replaceCongruentIVs
+argument_list|(
+name|Loop
+operator|*
+name|L
+argument_list|,
+specifier|const
+name|DominatorTree
+operator|*
+name|DT
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|WeakVH
+operator|>
+operator|&
+name|DeadInsts
+argument_list|)
+decl_stmt|;
 comment|/// expandCodeFor - Insert code to directly compute the specified SCEV
 comment|/// expression into the program.  The inserted code is inserted into the
 comment|/// specified block.
@@ -337,7 +423,6 @@ name|SCEV
 modifier|*
 name|SH
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -433,6 +518,15 @@ operator|=
 name|false
 expr_stmt|;
 block|}
+name|void
+name|enableLSRMode
+parameter_list|()
+block|{
+name|LSRMode
+operator|=
+name|true
+expr_stmt|;
+block|}
 comment|/// clearInsertPoint - Clear the current insertion point. This is useful
 comment|/// if the instruction that had been serving as the insertion point may
 comment|/// have been deleted.
@@ -493,7 +587,6 @@ name|Value
 operator|*
 name|V
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -520,7 +613,6 @@ name|Value
 modifier|*
 name|V
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -546,12 +638,10 @@ specifier|const
 modifier|*
 name|op_end
 parameter_list|,
-specifier|const
 name|PointerType
 modifier|*
 name|PTy
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -584,7 +674,6 @@ name|SCEV
 modifier|*
 name|SH
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|Ty
@@ -776,6 +865,40 @@ name|iterator
 name|I
 argument_list|)
 decl_stmt|;
+name|bool
+name|isNormalAddRecExprPHI
+parameter_list|(
+name|PHINode
+modifier|*
+name|PN
+parameter_list|,
+name|Instruction
+modifier|*
+name|IncV
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|)
+function_decl|;
+name|bool
+name|isExpandedAddRecExprPHI
+parameter_list|(
+name|PHINode
+modifier|*
+name|PN
+parameter_list|,
+name|Instruction
+modifier|*
+name|IncV
+parameter_list|,
+specifier|const
+name|Loop
+modifier|*
+name|L
+parameter_list|)
+function_decl|;
 name|Value
 modifier|*
 name|expandAddRecExprLiterally
@@ -799,12 +922,10 @@ name|Loop
 modifier|*
 name|L
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|ExpandTy
 parameter_list|,
-specifier|const
 name|Type
 modifier|*
 name|IntTy

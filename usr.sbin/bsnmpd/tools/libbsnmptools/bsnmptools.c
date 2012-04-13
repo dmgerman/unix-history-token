@@ -243,7 +243,7 @@ name|SNMP_ERR_WRONG_TYPE
 block|}
 block|,
 block|{
-literal|"Wrong lenght"
+literal|"Wrong length"
 block|,
 name|SNMP_ERR_WRONG_LENGTH
 block|}
@@ -471,6 +471,13 @@ name|snmp_client_init
 argument_list|(
 operator|&
 name|snmp_client
+argument_list|)
+expr_stmt|;
+name|SET_MAXREP
+argument_list|(
+name|snmptoolctx
+argument_list|,
+name|SNMP_MAX_REPETITIONS
 argument_list|)
 expr_stmt|;
 if|if
@@ -1036,7 +1043,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Add a filename to the file list - the initail idea of keeping a list with all  * files to read OIDs from was that an application might want to have loaded in  * memory the OIDs from a single file only and when done with them read the OIDs  * from another file. This is not used yet but might be a good idea at some  * point. Size argument is number of bytes in string including trailing '\0',  * not string lenght.  */
+comment|/*  * Add a filename to the file list - the initial idea of keeping a list with all  * files to read OIDs from was that an application might want to have loaded in  * memory the OIDs from a single file only and when done with them read the OIDs  * from another file. This is not used yet but might be a good idea at some  * point. Size argument is number of bytes in string including trailing '\0',  * not string length.  */
 end_comment
 
 begin_function
@@ -2172,7 +2179,7 @@ index|[
 literal|3
 index|]
 decl_stmt|;
-comment|/* Filter 0x at the beggining */
+comment|/* Filter 0x at the beginning */
 if|if
 condition|(
 operator|(
@@ -2315,7 +2322,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Key %s too long - truncating to %zu octest"
+literal|"Key %s too long - truncating to %zu octets"
 argument_list|,
 name|ascii
 argument_list|,
@@ -7203,7 +7210,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Check a PDU received in responce to a SNMP_PDU_GET/SNMP_PDU_GETBULK request  * but don't compare syntaxes - when sending a request PDU they must be null.  * This is a (almost) complete copy of snmp_pdu_check() - with matching syntaxes  * checks and some other checks skiped.  */
+comment|/*  * Check a PDU received in response to a SNMP_PDU_GET/SNMP_PDU_GETBULK request  * but don't compare syntaxes - when sending a request PDU they must be null.  * This is a (almost) complete copy of snmp_pdu_check() - with matching syntaxes  * checks and some other checks skipped.  */
 end_comment
 
 begin_function
@@ -7664,7 +7671,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Should be called to check a responce to get/getnext/getbulk.  */
+comment|/*  * Should be called to check a response to get/getnext/getbulk.  */
 end_comment
 
 begin_function
@@ -7752,7 +7759,7 @@ condition|)
 block|{
 name|warnx
 argument_list|(
-literal|"Error %d in responce"
+literal|"Error %d in response"
 argument_list|,
 name|resp
 operator|->
@@ -10070,6 +10077,11 @@ name|struct
 name|snmp_pdu
 modifier|*
 name|pdu
+parameter_list|,
+name|struct
+name|asn_oid
+modifier|*
+name|root
 parameter_list|)
 block|{
 name|int32_t
@@ -10088,26 +10100,48 @@ name|struct
 name|snmp_object
 name|object
 decl_stmt|;
-for|for
-control|(
 name|i
 operator|=
-literal|0
-operator|,
 name|error
 operator|=
 literal|0
-init|;
+expr_stmt|;
+while|while
+condition|(
 name|i
 operator|<
 name|pdu
 operator|->
 name|nbindings
-condition|;
-name|i
-operator|++
-control|)
+condition|)
 block|{
+if|if
+condition|(
+name|root
+operator|!=
+name|NULL
+operator|&&
+operator|!
+operator|(
+name|asn_is_suboid
+argument_list|(
+name|root
+argument_list|,
+operator|&
+operator|(
+name|pdu
+operator|->
+name|bindings
+index|[
+name|i
+index|]
+operator|.
+name|var
+operator|)
+argument_list|)
+operator|)
+condition|)
+break|break;
 if|if
 condition|(
 name|GET_OUTPUT
@@ -10207,10 +10241,23 @@ operator|.
 name|info
 argument_list|)
 expr_stmt|;
+name|i
+operator|++
+expr_stmt|;
 block|}
+if|if
+condition|(
+name|error
+condition|)
 return|return
 operator|(
-name|error
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+operator|(
+name|i
 operator|)
 return|;
 block|}

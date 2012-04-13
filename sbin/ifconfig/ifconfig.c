@@ -197,11 +197,22 @@ directive|include
 file|<fcntl.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JAIL
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<jail.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -1097,6 +1108,9 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+ifdef|#
+directive|ifdef
+name|JAIL
 comment|/* 			 * NOTE:  We have to special-case the `-vnet' command 			 * right here as we would otherwise fail when trying 			 * to find the interface as it lives in another vnet. 			 */
 if|if
 condition|(
@@ -1168,6 +1182,8 @@ literal|0
 argument_list|)
 expr_stmt|;
 block|}
+endif|#
+directive|endif
 name|errx
 argument_list|(
 literal|1
@@ -3373,6 +3389,12 @@ expr_stmt|;
 block|}
 end_function
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|JAIL
+end_ifdef
+
 begin_function
 specifier|static
 name|void
@@ -3564,6 +3586,11 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_function
 specifier|static
@@ -5446,6 +5473,63 @@ end_function
 
 begin_function
 name|void
+name|print_vhid
+parameter_list|(
+specifier|const
+name|struct
+name|ifaddrs
+modifier|*
+name|ifa
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|s
+parameter_list|)
+block|{
+name|struct
+name|if_data
+modifier|*
+name|ifd
+decl_stmt|;
+if|if
+condition|(
+name|ifa
+operator|->
+name|ifa_data
+operator|==
+name|NULL
+condition|)
+return|return;
+name|ifd
+operator|=
+name|ifa
+operator|->
+name|ifa_data
+expr_stmt|;
+if|if
+condition|(
+name|ifd
+operator|->
+name|ifi_vhid
+operator|==
+literal|0
+condition|)
+return|return;
+name|printf
+argument_list|(
+literal|"vhid %d "
+argument_list|,
+name|ifd
+operator|->
+name|ifi_vhid
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
 name|ifmaybeload
 parameter_list|(
 specifier|const
@@ -5953,6 +6037,9 @@ argument_list|,
 name|deletetunnel
 argument_list|)
 block|,
+ifdef|#
+directive|ifdef
+name|JAIL
 name|DEF_CMD_ARG
 argument_list|(
 literal|"vnet"
@@ -5967,6 +6054,8 @@ argument_list|,
 name|setifrvnet
 argument_list|)
 block|,
+endif|#
+directive|endif
 name|DEF_CMD
 argument_list|(
 literal|"link0"

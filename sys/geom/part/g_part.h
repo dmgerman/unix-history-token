@@ -635,7 +635,7 @@ parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|static int name##_modevent(module_t mod, int tp, void *d)	\     {								\ 	return (g_part_modevent(mod, tp, d));			\     }								\     static moduledata_t name##_mod = {				\ 	#name,							\ 	name##_modevent,					\&name##_scheme						\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_ANY)
+value|static int name##_modevent(module_t mod, int tp, void *d)	\     {								\ 	return (g_part_modevent(mod, tp, d));			\     }								\     static moduledata_t name##_mod = {				\ 	#name,							\ 	name##_modevent,					\&name##_scheme						\     };								\     DECLARE_MODULE(name, name##_mod, SI_SUB_DRIVERS, SI_ORDER_ANY); \     MODULE_DEPEND(name, g_part, 0, 0, 0)
 end_define
 
 begin_endif

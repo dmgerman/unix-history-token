@@ -76,6 +76,10 @@ name|SFINAE
 parameter_list|,
 name|ACCESS
 parameter_list|,
+name|NOWERROR
+parameter_list|,
+name|SHOWINSYSHEADER
+parameter_list|,
 name|CATEGORY
 parameter_list|,
 name|BRIEF
@@ -97,19 +101,19 @@ block|}
 enum|;
 block|}
 comment|// end namespace diag
-comment|/// \brief Diagnostic argument formatting function for diagnostics that
+comment|/// \brief DiagnosticsEngine argument formatting function for diagnostics that
 comment|/// involve AST nodes.
 comment|///
 comment|/// This function formats diagnostic arguments for various AST nodes,
 comment|/// including types, declaration names, nested name specifiers, and
 comment|/// declaration contexts, into strings that can be printed as part of
 comment|/// diagnostics. It is meant to be used as the argument to
-comment|/// \c Diagnostic::SetArgToStringFn(), where the cookie is an \c ASTContext
-comment|/// pointer.
+comment|/// \c DiagnosticsEngine::SetArgToStringFn(), where the cookie is an \c
+comment|/// ASTContext pointer.
 name|void
 name|FormatASTNodeDiagnosticArgument
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentKind
 name|Kind
@@ -134,7 +138,7 @@ name|unsigned
 name|ArgLen
 argument_list|,
 specifier|const
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentValue
 operator|*
@@ -143,8 +147,6 @@ argument_list|,
 name|unsigned
 name|NumPrevArgs
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -156,8 +158,6 @@ name|void
 operator|*
 name|Cookie
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|intptr_t

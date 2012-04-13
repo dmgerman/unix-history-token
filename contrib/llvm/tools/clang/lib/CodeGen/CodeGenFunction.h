@@ -1534,48 +1534,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// The innermost EH cleanup on the stack.
+comment|/// The innermost EH scope on the stack.
 end_comment
 
 begin_decl_stmt
 name|stable_iterator
-name|InnermostEHCleanup
+name|InnermostEHScope
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|/// The number of catches on the stack.
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|CatchDepth
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// The current EH destination index.  Reset to FirstCatchIndex
-end_comment
-
-begin_comment
-comment|/// whenever the last EH cleanup is popped.
-end_comment
-
-begin_decl_stmt
-name|unsigned
-name|NextEHDestIndex
-decl_stmt|;
-end_decl_stmt
-
-begin_enum
-enum|enum
-block|{
-name|FirstEHDestIndex
-init|=
-literal|1
-block|}
-enum|;
-end_enum
 
 begin_comment
 comment|/// The current set of branch fixups.  A branch fixup is a jump to
@@ -1646,8 +1612,6 @@ comment|///     bar();
 end_comment
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|BranchFixup
@@ -1713,20 +1677,9 @@ name|stable_end
 argument_list|()
 argument_list|)
 operator|,
-name|InnermostEHCleanup
+name|InnermostEHScope
 argument_list|(
-name|stable_end
-argument_list|()
-argument_list|)
-operator|,
-name|CatchDepth
-argument_list|(
-literal|0
-argument_list|)
-operator|,
-name|NextEHDestIndex
-argument_list|(
-argument|FirstEHDestIndex
+argument|stable_end()
 argument_list|)
 block|{}
 operator|~
@@ -2177,11 +2130,7 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Pops a cleanup scope off the stack.  This should only be called
-end_comment
-
-begin_comment
-comment|/// by CodeGenFunction::PopCleanupBlock.
+comment|/// Pops a cleanup scope off the stack.  This is private to CGCleanup.cpp.
 end_comment
 
 begin_function_decl
@@ -2216,7 +2165,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/// Pops a catch scope off the stack.
+comment|/// Pops a catch scope off the stack.  This is private to CGException.cpp.
 end_comment
 
 begin_function_decl
@@ -2300,12 +2249,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-operator|(
-name|CatchDepth
-operator|||
-name|hasEHCleanups
+name|InnermostEHScope
+operator|!=
+name|stable_end
 argument_list|()
-operator|)
 return|;
 block|}
 end_expr_stmt
@@ -2357,60 +2304,25 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
-begin_comment
-comment|// CGException.h
-end_comment
-
-begin_comment
-comment|/// Determines whether there are any EH cleanups on the stack.
-end_comment
-
-begin_expr_stmt
-name|bool
-name|hasEHCleanups
-argument_list|()
-specifier|const
-block|{
-return|return
-name|InnermostEHCleanup
-operator|!=
-name|stable_end
-argument_list|()
-return|;
-block|}
-end_expr_stmt
-
-begin_comment
-comment|/// Returns the innermost EH cleanup on the stack, or stable_end()
-end_comment
-
-begin_comment
-comment|/// if there are no EH cleanups.
-end_comment
-
 begin_expr_stmt
 name|stable_iterator
-name|getInnermostEHCleanup
+name|getInnermostEHScope
 argument_list|()
 specifier|const
 block|{
 return|return
-name|InnermostEHCleanup
+name|InnermostEHScope
 return|;
 block|}
 end_expr_stmt
 
 begin_expr_stmt
 name|stable_iterator
-name|getInnermostActiveEHCleanup
+name|getInnermostActiveEHScope
 argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
-
-begin_comment
-comment|// CGException.h
-end_comment
 
 begin_comment
 comment|/// An unstable reference to a scope-stack depth.  Invalidated by
@@ -2505,25 +2417,6 @@ end_comment
 begin_decl_stmt
 name|stable_iterator
 name|stabilize
-argument_list|(
-name|iterator
-name|it
-argument_list|)
-decl|const
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/// Finds the nearest cleanup enclosing the given iterator.
-end_comment
-
-begin_comment
-comment|/// Returns stable_iterator::invalid() if there are no such cleanups.
-end_comment
-
-begin_decl_stmt
-name|stable_iterator
-name|getEnclosingEHCleanup
 argument_list|(
 name|iterator
 name|it
@@ -2682,22 +2575,6 @@ block|}
 end_function
 
 begin_comment
-comment|/// Gets the next EH destination index.
-end_comment
-
-begin_function
-name|unsigned
-name|getNextEHDestIndex
-parameter_list|()
-block|{
-return|return
-name|NextEHDestIndex
-operator|++
-return|;
-block|}
-end_function
-
-begin_comment
 unit|};
 comment|/// CodeGenFunction - This class organizes the per-function state that is used
 end_comment
@@ -2759,111 +2636,6 @@ literal|0
 argument_list|)
 block|{}
 name|JumpDest
-argument_list|(
-argument|llvm::BasicBlock *Block
-argument_list|,
-argument|EHScopeStack::stable_iterator Depth
-argument_list|,
-argument|unsigned Index
-argument_list|)
-operator|:
-name|Block
-argument_list|(
-name|Block
-argument_list|)
-block|,
-name|ScopeDepth
-argument_list|(
-name|Depth
-argument_list|)
-block|,
-name|Index
-argument_list|(
-argument|Index
-argument_list|)
-block|{}
-name|bool
-name|isValid
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Block
-operator|!=
-literal|0
-return|;
-block|}
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|getBlock
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Block
-return|;
-block|}
-name|EHScopeStack
-operator|::
-name|stable_iterator
-name|getScopeDepth
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ScopeDepth
-return|;
-block|}
-name|unsigned
-name|getDestIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Index
-return|;
-block|}
-name|private
-operator|:
-name|llvm
-operator|::
-name|BasicBlock
-operator|*
-name|Block
-block|;
-name|EHScopeStack
-operator|::
-name|stable_iterator
-name|ScopeDepth
-block|;
-name|unsigned
-name|Index
-block|;   }
-block|;
-comment|/// An unwind destination is an abstract label, branching to which
-comment|/// may require a jump out through EH cleanups.
-block|struct
-name|UnwindDest
-block|{
-name|UnwindDest
-argument_list|()
-operator|:
-name|Block
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|ScopeDepth
-argument_list|()
-block|,
-name|Index
-argument_list|(
-literal|0
-argument_list|)
-block|{}
-name|UnwindDest
 argument_list|(
 argument|llvm::BasicBlock *Block
 argument_list|,
@@ -3084,16 +2856,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// RethrowBlock - Unified rethrow block.
-end_comment
-
-begin_decl_stmt
-name|UnwindDest
-name|RethrowBlock
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 comment|/// AllocaInsertPoint - This is an instruction in the entry block before which
 end_comment
 
@@ -3194,15 +2956,6 @@ name|NormalCleanupDest
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-name|llvm
-operator|::
-name|AllocaInst
-operator|*
-name|EHCleanupDest
-expr_stmt|;
-end_expr_stmt
-
 begin_decl_stmt
 name|unsigned
 name|NextCleanupDestIndex
@@ -3210,11 +2963,24 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// The exception slot.  All landing pads write the current
+comment|/// EHResumeBlock - Unified block containing a call to llvm.eh.resume.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|EHResumeBlock
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// The exception slot.  All landing pads write the current exception pointer
 end_comment
 
 begin_comment
-comment|/// exception pointer into this alloca.
+comment|/// into this alloca.
 end_comment
 
 begin_expr_stmt
@@ -3227,11 +2993,11 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
-comment|/// The selector slot.  Under the MandatoryCleanup model, all
+comment|/// The selector slot.  Under the MandatoryCleanup model, all landing pads
 end_comment
 
 begin_comment
-comment|/// landing pads write the current selector value into this alloca.
+comment|/// write the current selector value into this alloca.
 end_comment
 
 begin_expr_stmt
@@ -3331,8 +3097,6 @@ comment|/// rethrows.
 end_comment
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|llvm
@@ -4387,20 +4151,16 @@ begin_comment
 comment|/// to which we can perform this jump later.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|JumpDest
 name|getJumpDestInCurrentScope
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|Name
-operator|=
-name|llvm
-operator|::
+init|=
 name|StringRef
 argument_list|()
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|getJumpDestInCurrentScope
@@ -4412,7 +4172,7 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// EmitBranchThroughCleanup - Emit a branch from the current insert
@@ -4448,52 +4208,57 @@ begin_comment
 comment|/// a conservatively correct answer for this method.
 end_comment
 
-begin_function
+begin_decl_stmt
 name|bool
 name|isObviouslyBranchWithoutCleanups
-parameter_list|(
+argument_list|(
 name|JumpDest
 name|Dest
-parameter_list|)
-function|const;
-end_function
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
-comment|/// EmitBranchThroughEHCleanup - Emit a branch from the current
+comment|/// popCatchScope - Pops the catch scope at the top of the EHScope
 end_comment
 
 begin_comment
-comment|/// insert block through the EH cleanup handling code (if any) and
+comment|/// stack, emitting any required code (other than the catch handlers
 end_comment
 
 begin_comment
-comment|/// then on to \arg Dest.
+comment|/// themselves).
 end_comment
 
 begin_function_decl
 name|void
-name|EmitBranchThroughEHCleanup
-parameter_list|(
-name|UnwindDest
-name|Dest
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// getRethrowDest - Returns the unified outermost-scope rethrow
-end_comment
-
-begin_comment
-comment|/// destination.
-end_comment
-
-begin_function_decl
-name|UnwindDest
-name|getRethrowDest
+name|popCatchScope
 parameter_list|()
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getEHResumeBlock
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|getEHDispatchBlock
+argument_list|(
+argument|EHScopeStack::stable_iterator scope
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// An object to manage conditionally-evaluated expressions.
@@ -5370,8 +5135,6 @@ struct|;
 end_struct
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|BreakContinue
@@ -5605,7 +5368,6 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -5771,11 +5533,11 @@ block|}
 end_expr_stmt
 
 begin_comment
-comment|/// Returns a pointer to the function's exception object slot, which
+comment|/// Returns a pointer to the function's exception object and selector slot,
 end_comment
 
 begin_comment
-comment|/// is assigned in every landing pad.
+comment|/// which is assigned in every landing pad.
 end_comment
 
 begin_expr_stmt
@@ -5798,12 +5560,20 @@ argument_list|()
 expr_stmt|;
 end_expr_stmt
 
+begin_comment
+comment|/// Returns the contents of the function's exception object and selector
+end_comment
+
+begin_comment
+comment|/// slots.
+end_comment
+
 begin_expr_stmt
 name|llvm
 operator|::
 name|Value
 operator|*
-name|getNormalCleanupDestSlot
+name|getExceptionFromSlot
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -5813,7 +5583,17 @@ name|llvm
 operator|::
 name|Value
 operator|*
-name|getEHCleanupDestSlot
+name|getSelectorFromSlot
+argument_list|()
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|getNormalCleanupDestSlot
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -6287,32 +6067,17 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|GenerateObjCGetterBody
+name|generateObjCGetterBody
 parameter_list|(
-name|ObjCIvarDecl
+specifier|const
+name|ObjCImplementationDecl
 modifier|*
-name|Ivar
+name|classImpl
 parameter_list|,
-name|bool
-name|IsAtomic
-parameter_list|,
-name|bool
-name|IsStrong
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|GenerateObjCAtomicSetterBody
-parameter_list|(
-name|ObjCMethodDecl
+specifier|const
+name|ObjCPropertyImplDecl
 modifier|*
-name|OMD
-parameter_list|,
-name|ObjCIvarDecl
-modifier|*
-name|Ivar
+name|propImpl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6355,6 +6120,23 @@ specifier|const
 name|ObjCPropertyImplDecl
 modifier|*
 name|PID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|generateObjCSetterBody
+parameter_list|(
+specifier|const
+name|ObjCImplementationDecl
+modifier|*
+name|classImpl
+parameter_list|,
+specifier|const
+name|ObjCPropertyImplDecl
+modifier|*
+name|propImpl
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -6423,7 +6205,6 @@ name|CGBlockInfo
 operator|&
 name|Info
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|StructType
@@ -6619,7 +6400,6 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -6957,7 +6737,6 @@ name|Value
 operator|*
 name|This
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -7279,7 +7058,7 @@ name|BasicBlock
 operator|*
 name|createBasicBlock
 argument_list|(
-argument|llvm::StringRef name =
+argument|StringRef name =
 literal|""
 argument_list|,
 argument|llvm::Function *parent =
@@ -7433,6 +7212,27 @@ name|bool
 name|IsFinished
 operator|=
 name|false
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// EmitBlockAfterUses - Emit the given block somewhere hopefully
+end_comment
+
+begin_comment
+comment|/// near its uses, and leave the insertion point in it.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitBlockAfterUses
+argument_list|(
+name|llvm
+operator|::
+name|BasicBlock
+operator|*
+name|BB
 argument_list|)
 decl_stmt|;
 end_decl_stmt
@@ -7648,7 +7448,6 @@ name|AllocaInst
 operator|*
 name|CreateTempAlloca
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -7656,8 +7455,6 @@ operator|*
 name|Ty
 argument_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
 operator|&
 name|Name
@@ -7719,7 +7516,7 @@ name|CreateIRTemp
 argument_list|(
 argument|QualType T
 argument_list|,
-argument|const llvm::Twine&Name =
+argument|const Twine&Name =
 literal|"tmp"
 argument_list|)
 expr_stmt|;
@@ -7742,7 +7539,7 @@ name|CreateMemTemp
 argument_list|(
 argument|QualType T
 argument_list|,
-argument|const llvm::Twine&Name =
+argument|const Twine&Name =
 literal|"tmp"
 argument_list|)
 expr_stmt|;
@@ -7756,22 +7553,20 @@ begin_comment
 comment|/// aggregate type.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|AggValueSlot
 name|CreateAggTemp
-argument_list|(
+parameter_list|(
 name|QualType
 name|T
-argument_list|,
+parameter_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
-operator|&
+modifier|&
 name|Name
-operator|=
+init|=
 literal|"tmp"
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|AggValueSlot
@@ -7790,11 +7585,21 @@ operator|.
 name|getQualifiers
 argument_list|()
 argument_list|,
-name|false
+name|AggValueSlot
+operator|::
+name|IsNotDestructed
+argument_list|,
+name|AggValueSlot
+operator|::
+name|DoesNotNeedGCBarriers
+argument_list|,
+name|AggValueSlot
+operator|::
+name|IsNotAliased
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// Emit a cast to void* in the appropriate address space.
@@ -8906,6 +8711,9 @@ specifier|const
 name|CXXNewExpr
 operator|*
 name|E
+argument_list|,
+name|QualType
+name|elementType
 argument_list|,
 name|llvm
 operator|::
@@ -11243,8 +11051,6 @@ name|Value
 operator|*
 name|Callee
 argument_list|,
-name|llvm
-operator|::
 name|ArrayRef
 operator|<
 name|llvm
@@ -11255,8 +11061,6 @@ operator|>
 name|Args
 argument_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
 operator|&
 name|Name
@@ -11279,8 +11083,6 @@ operator|*
 name|Callee
 argument_list|,
 specifier|const
-name|llvm
-operator|::
 name|Twine
 operator|&
 name|Name
@@ -11308,7 +11110,6 @@ name|Value
 operator|*
 name|This
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -11331,7 +11132,7 @@ argument|CXXDtorType Type
 argument_list|,
 argument|llvm::Value *This
 argument_list|,
-argument|const llvm::Type *Ty
+argument|llvm::Type *Ty
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -11352,7 +11153,6 @@ name|NestedNameSpecifier
 operator|*
 name|Qual
 argument_list|,
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -11499,6 +11299,21 @@ end_function_decl
 
 begin_function_decl
 name|RValue
+name|EmitCUDAKernelCallExpr
+parameter_list|(
+specifier|const
+name|CUDAKernelCallExpr
+modifier|*
+name|E
+parameter_list|,
+name|ReturnValueSlot
+name|ReturnValue
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|RValue
 name|EmitBuiltinExpr
 parameter_list|(
 specifier|const
@@ -11577,7 +11392,7 @@ name|EmitNeonCall
 argument_list|(
 argument|llvm::Function *F
 argument_list|,
-argument|llvm::SmallVectorImpl<llvm::Value*>&O
+argument|SmallVectorImpl<llvm::Value*>&O
 argument_list|,
 argument|const char *name
 argument_list|,
@@ -11620,7 +11435,7 @@ name|EmitNeonShiftVector
 argument_list|(
 argument|llvm::Value *V
 argument_list|,
-argument|const llvm::Type *Ty
+argument|llvm::Type *Ty
 argument_list|,
 argument|bool negateForRightShift
 argument_list|)
@@ -11635,8 +11450,6 @@ operator|*
 name|BuildVector
 argument_list|(
 specifier|const
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|llvm
@@ -11990,11 +11803,9 @@ name|Value
 operator|*
 name|EmitARCRetainBlock
 argument_list|(
-name|llvm
-operator|::
-name|Value
-operator|*
-name|value
+argument|llvm::Value *value
+argument_list|,
+argument|bool mandatory
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12127,6 +11938,21 @@ name|llvm
 operator|::
 name|Value
 operator|*
+name|EmitObjCThrowOperand
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|expr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
 name|EmitObjCProduceObject
 argument_list|(
 argument|QualType T
@@ -12160,6 +11986,21 @@ argument_list|(
 argument|QualType T
 argument_list|,
 argument|llvm::Value *Ptr
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitARCExtendBlockObject
+argument_list|(
+specifier|const
+name|Expr
+operator|*
+name|expr
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -12915,6 +12756,110 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+name|RValue
+name|EmitAtomicExpr
+argument_list|(
+name|AtomicExpr
+operator|*
+name|E
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|Dest
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|//                         Annotations Emission
+end_comment
+
+begin_comment
+comment|//===--------------------------------------------------------------------===//
+end_comment
+
+begin_comment
+comment|/// Emit an annotation call (intrinsic or builtin).
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitAnnotationCall
+argument_list|(
+argument|llvm::Value *AnnotationFn
+argument_list|,
+argument|llvm::Value *AnnotatedVal
+argument_list|,
+argument|llvm::StringRef AnnotationStr
+argument_list|,
+argument|SourceLocation Location
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// Emit local annotations for the local variable V, declared by D.
+end_comment
+
+begin_decl_stmt
+name|void
+name|EmitVarAnnotations
+argument_list|(
+specifier|const
+name|VarDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|V
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// Emit field annotations for the given field& value. Returns the
+end_comment
+
+begin_comment
+comment|/// annotation result.
+end_comment
+
+begin_expr_stmt
+name|llvm
+operator|::
+name|Value
+operator|*
+name|EmitFieldAnnotations
+argument_list|(
+specifier|const
+name|FieldDecl
+operator|*
+name|D
+argument_list|,
+name|llvm
+operator|::
+name|Value
+operator|*
+name|V
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
 begin_comment
 comment|//===--------------------------------------------------------------------===//
 end_comment
@@ -13226,8 +13171,6 @@ argument_list|,
 name|RValue
 name|Src
 argument_list|,
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|llvm
@@ -13626,7 +13569,6 @@ name|ByrefHelpers
 operator|*
 name|buildByrefHelpers
 argument_list|(
-specifier|const
 name|llvm
 operator|::
 name|StructType

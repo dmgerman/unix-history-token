@@ -159,6 +159,20 @@ literal|4
 comment|///< Don't print errors to stderr.
 block|}
 enum|;
+enum|enum
+name|LinkerMode
+block|{
+name|DestroySource
+init|=
+literal|0
+block|,
+comment|// Allow source module to be destroyed.
+name|PreserveSource
+init|=
+literal|1
+comment|// Preserve the source module.
+block|}
+enum|;
 comment|/// @}
 comment|/// @name Constructors
 comment|/// @{
@@ -531,6 +545,10 @@ name|Composite
 argument_list|,
 name|Src
 argument_list|,
+name|Linker
+operator|::
+name|DestroySource
+argument_list|,
 name|ErrorMsg
 argument_list|)
 return|;
@@ -557,6 +575,9 @@ argument_list|,
 name|Module
 operator|*
 name|Src
+argument_list|,
+name|unsigned
+name|Mode
 argument_list|,
 name|std
 operator|::

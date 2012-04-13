@@ -248,8 +248,6 @@ block|,
 operator|.
 name|d_flags
 operator|=
-name|D_PSEUDO
-operator||
 name|D_TRACKCLOSE
 block|,
 operator|.

@@ -56,12 +56,8 @@ parameter_list|)
 block|{
 name|double
 name|a
-init|=
-name|x
 decl_stmt|,
 name|b
-init|=
-name|y
 decl_stmt|,
 name|t1
 decl_stmt|,

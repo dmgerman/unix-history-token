@@ -4,7 +4,7 @@ comment|// Specific definitions for AIX  -*- C++ -*-
 end_comment
 
 begin_comment
-comment|// Copyright (C) 2000, 2002, 2005 Free Software Foundation, Inc.
+comment|// Copyright (C) 2000, 2002, 2005, 2008 Free Software Foundation, Inc.
 end_comment
 
 begin_comment
@@ -154,6 +154,27 @@ begin_define
 define|#
 directive|define
 name|_ALL_SOURCE
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// C99 math
+end_comment
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__COMPATMATH__
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|__COMPATMATH__
 end_define
 
 begin_endif

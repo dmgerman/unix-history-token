@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -872,6 +872,34 @@ argument_list|(
 name|Event
 argument_list|)
 expr_stmt|;
+comment|/* Preprocessor */
+name|Event
+operator|=
+name|UtBeginEvent
+argument_list|(
+literal|"Preprocess input file"
+argument_list|)
+expr_stmt|;
+name|PrDoPreprocess
+argument_list|()
+expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|Gbl_PreprocessOnly
+condition|)
+block|{
+name|CmCleanupAndExit
+argument_list|()
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
 comment|/* Build the parse tree */
 name|Event
 operator|=
@@ -906,13 +934,20 @@ operator|!
 name|RootNode
 condition|)
 block|{
-name|CmCleanupAndExit
-argument_list|()
+name|AslError
+argument_list|(
+name|ASL_ERROR
+argument_list|,
+name|ASL_MSG_COMPILER_INTERNAL
+argument_list|,
+name|NULL
+argument_list|,
+literal|"- Could not resolve parse tree root node"
+argument_list|)
 expr_stmt|;
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 comment|/* Optional parse tree dump, compiler debug output only */
 name|LsDumpParseTree
@@ -1009,6 +1044,11 @@ argument_list|(
 name|Gbl_OutputFilenamePrefix
 argument_list|)
 expr_stmt|;
+name|UtEndEvent
+argument_list|(
+name|Event
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|ACPI_FAILURE
@@ -1027,11 +1067,6 @@ operator|-
 literal|1
 return|;
 block|}
-name|UtEndEvent
-argument_list|(
-name|Event
-argument_list|)
-expr_stmt|;
 comment|/* Interpret and generate all compile-time constants */
 name|Event
 operator|=
@@ -1163,6 +1198,11 @@ name|ASL_FILE_STDERR
 argument_list|)
 expr_stmt|;
 block|}
+name|UtEndEvent
+argument_list|(
+name|FullCompile
+argument_list|)
+expr_stmt|;
 return|return
 literal|0
 return|;
@@ -1196,10 +1236,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 comment|/* Namespace cross-reference */
 name|AslGbl_NamespaceEvent
@@ -1222,10 +1261,9 @@ name|Status
 argument_list|)
 condition|)
 block|{
-return|return
-operator|-
-literal|1
-return|;
+goto|goto
+name|ErrorExit
+goto|;
 block|}
 comment|/* Namespace - Check for non-referenced objects */
 name|LkFindUnreferencedObjects
@@ -1464,6 +1502,22 @@ argument_list|()
 expr_stmt|;
 return|return
 literal|0
+return|;
+name|ErrorExit
+label|:
+name|UtEndEvent
+argument_list|(
+name|FullCompile
+argument_list|)
+expr_stmt|;
+name|CmCleanupAndExit
+argument_list|()
+expr_stmt|;
+return|return
+operator|(
+operator|-
+literal|1
+operator|)
 return|;
 block|}
 end_function
@@ -1847,11 +1901,21 @@ name|ASL_FILE_STDOUT
 argument_list|)
 expr_stmt|;
 comment|/* Close all open files */
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Handle
+operator|=
+name|NULL
+expr_stmt|;
+comment|/* the .i file is same as source file */
 for|for
 control|(
 name|i
 operator|=
-literal|2
+name|ASL_FILE_INPUT
 init|;
 name|i
 operator|<
@@ -1920,6 +1984,52 @@ expr_stmt|;
 name|perror
 argument_list|(
 literal|"Could not delete AML file"
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+comment|/* Delete the preprocessor output file (.i) unless -li flag is set */
+if|if
+condition|(
+operator|!
+name|Gbl_PreprocessorOutputFlag
+operator|&&
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Filename
+condition|)
+block|{
+if|if
+condition|(
+name|remove
+argument_list|(
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Filename
+argument_list|)
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"%s: "
+argument_list|,
+name|Gbl_Files
+index|[
+name|ASL_FILE_PREPROCESSOR
+index|]
+operator|.
+name|Filename
+argument_list|)
+expr_stmt|;
+name|perror
+argument_list|(
+literal|"Could not delete preprocessor .i file"
 argument_list|)
 expr_stmt|;
 block|}

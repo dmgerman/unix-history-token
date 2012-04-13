@@ -504,6 +504,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet6
@@ -974,7 +975,7 @@ name|PIM6CTL_STATS
 argument_list|,
 name|stats
 argument_list|,
-name|CTLFLAG_RD
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|pim6stat

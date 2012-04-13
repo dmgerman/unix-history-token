@@ -782,6 +782,7 @@ comment|/* Router Alert option */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_IGMP
@@ -1325,6 +1326,7 @@ comment|/*  * Non-virtualized sysctls.  */
 end_comment
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet_igmp
@@ -2530,7 +2532,7 @@ operator|==
 name|IGMP_VERSION_3
 condition|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2606,7 +2608,7 @@ name|inm
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -2995,7 +2997,7 @@ name|if_xname
 argument_list|)
 expr_stmt|;
 comment|/* 	 * Start the timers in all of our group records 	 * for the interface on which the query arrived, 	 * except those which are already running. 	 */
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3109,7 +3111,7 @@ case|:
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3351,7 +3353,7 @@ operator|->
 name|if_xname
 argument_list|)
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -3401,7 +3403,7 @@ name|timer
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -6076,9 +6078,6 @@ name|struct
 name|ifmultiaddr
 modifier|*
 name|ifma
-decl_stmt|,
-modifier|*
-name|tifma
 decl_stmt|;
 name|struct
 name|in_multi
@@ -6305,20 +6304,18 @@ name|IGMP_MAX_STATE_CHANGE_PACKETS
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
 argument|&ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
-argument_list|,
-argument|tifma
 argument_list|)
 block|{
 if|if
@@ -6393,7 +6390,7 @@ expr_stmt|;
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7248,6 +7245,9 @@ name|struct
 name|in_multi
 modifier|*
 name|inm
+decl_stmt|,
+modifier|*
+name|tinm
 decl_stmt|;
 name|CTR3
 argument_list|(
@@ -7288,7 +7288,7 @@ name|igi
 operator|->
 name|igi_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7360,20 +7360,17 @@ break|break;
 case|case
 name|IGMP_LEAVING_MEMBER
 case|:
-comment|/* 			 * If we are leaving the group and switching to 			 * compatibility mode, we need to release the final 			 * reference held for issuing the INCLUDE {}, and 			 * transition to REPORTING to ensure the host leave 			 * message is sent upstream to the old querier -- 			 * transition to NOT would lose the leave and race. 			 * 			 * SMPNG: Must drop and re-acquire IF_ADDR_LOCK 			 * around inm_release_locked(), as it is not 			 * a recursive mutex. 			 */
-name|IF_ADDR_UNLOCK
+comment|/* 			 * If we are leaving the group and switching to 			 * compatibility mode, we need to release the final 			 * reference held for issuing the INCLUDE {}, and 			 * transition to REPORTING to ensure the host leave 			 * message is sent upstream to the old querier -- 			 * transition to NOT would lose the leave and race. 			 */
+name|SLIST_INSERT_HEAD
 argument_list|(
-name|ifp
-argument_list|)
-expr_stmt|;
-name|inm_release_locked
-argument_list|(
+operator|&
+name|igi
+operator|->
+name|igi_relinmhead
+argument_list|,
 name|inm
-argument_list|)
-expr_stmt|;
-name|IF_ADDR_LOCK
-argument_list|(
-name|ifp
+argument_list|,
+name|inm_nrele
 argument_list|)
 expr_stmt|;
 comment|/* FALLTHROUGH */
@@ -7422,11 +7419,38 @@ name|inm_scq
 argument_list|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
+name|SLIST_FOREACH_SAFE
+argument_list|(
+argument|inm
+argument_list|,
+argument|&igi->igi_relinmhead
+argument_list|,
+argument|inm_nrele
+argument_list|,
+argument|tinm
+argument_list|)
+block|{
+name|SLIST_REMOVE_HEAD
+argument_list|(
+operator|&
+name|igi
+operator|->
+name|igi_relinmhead
+argument_list|,
+name|inm_nrele
+argument_list|)
+expr_stmt|;
+name|inm_release_locked
+argument_list|(
+name|inm
+argument_list|)
+expr_stmt|;
+block|}
 block|}
 end_function
 
@@ -12577,9 +12601,6 @@ name|struct
 name|ifmultiaddr
 modifier|*
 name|ifma
-decl_stmt|,
-modifier|*
-name|tifma
 decl_stmt|;
 name|struct
 name|ifnet
@@ -12627,20 +12648,18 @@ name|igi
 operator|->
 name|igi_ifp
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|TAILQ_FOREACH_SAFE
+name|TAILQ_FOREACH
 argument_list|(
 argument|ifma
 argument_list|,
 argument|&ifp->if_multiaddrs
 argument_list|,
 argument|ifma_link
-argument_list|,
-argument|tifma
 argument_list|)
 block|{
 if|if
@@ -12763,7 +12782,7 @@ case|:
 break|break;
 block|}
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)

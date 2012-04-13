@@ -71,7 +71,7 @@ begin_define
 define|#
 directive|define
 name|MaybeUInt64_FMT
-value|"%Lu"
+value|"%llu"
 end_define
 
 begin_else

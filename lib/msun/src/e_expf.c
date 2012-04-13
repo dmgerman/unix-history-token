@@ -24,6 +24,12 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
+file|<float.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|"math.h"
 end_include
 
@@ -139,7 +145,6 @@ parameter_list|(
 name|float
 name|x
 parameter_list|)
-comment|/* default IEEE double exp */
 block|{
 name|float
 name|y
@@ -336,11 +341,16 @@ literal|0
 index|]
 expr_stmt|;
 block|}
+name|STRICT_ASSIGN
+argument_list|(
+name|float
+argument_list|,
 name|x
-operator|=
+argument_list|,
 name|hi
 operator|-
 name|lo
+argument_list|)
 expr_stmt|;
 block|}
 elseif|else

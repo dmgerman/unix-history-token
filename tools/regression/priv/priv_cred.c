@@ -4,7 +4,7 @@ comment|/*-  * Copyright (c) 2007 Robert M. M. Watson  * All rights reserved.  *
 end_comment
 
 begin_comment
-comment|/*  * Confirm that various UID/GID/etc-related system calls require root  * privilege in the absense of any saved/real/etc variations in the  * credential.  It would be nice to also check cases where those bits of the  * credential are more interesting.  *  * XXXRW: Add support for testing more diverse real/saved scenarios.  */
+comment|/*  * Confirm that various UID/GID/etc-related system calls require root  * privilege in the absence of any saved/real/etc variations in the  * credential.  It would be nice to also check cases where those bits of the  * credential are more interesting.  *  * XXXRW: Add support for testing more diverse real/saved scenarios.  */
 end_comment
 
 begin_include

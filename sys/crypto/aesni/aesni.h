@@ -216,6 +216,7 @@ name|next
 expr_stmt|;
 name|struct
 name|fpu_kern_ctx
+modifier|*
 name|fpu_ctx
 decl_stmt|;
 block|}

@@ -809,6 +809,16 @@ operator|/
 literal|1000
 expr_stmt|;
 block|}
+comment|/* 	 * The calculation above may set bif->lfcap to zero. This was 	 * seen on a laptop with a broken battery. The result of the 	 * division was rounded to zero. 	 */
+if|if
+condition|(
+operator|!
+name|acpi_battery_bif_valid
+argument_list|(
+name|bif
+argument_list|)
+condition|)
+continue|continue;
 comment|/* Calculate percent capacity remaining. */
 name|bi
 index|[

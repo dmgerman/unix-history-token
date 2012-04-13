@@ -453,6 +453,7 @@ comment|/* Valid changer element types. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|element_type
@@ -505,6 +506,7 @@ comment|/* Valid commands. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|changer_command
@@ -586,6 +588,7 @@ comment|/* Valid special words. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|special_word

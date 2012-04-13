@@ -255,10 +255,11 @@ literal|0
 parameter_list|)
 block|{
 return|return
-operator|(
+name|cast
+operator|<
 name|MDNode
-operator|*
-operator|)
+operator|>
+operator|(
 name|MapValue
 argument_list|(
 operator|(
@@ -274,6 +275,7 @@ name|Flags
 argument_list|,
 name|TypeMapper
 argument_list|)
+operator|)
 return|;
 block|}
 specifier|inline
@@ -303,10 +305,11 @@ literal|0
 parameter_list|)
 block|{
 return|return
-operator|(
+name|cast
+operator|<
 name|Constant
-operator|*
-operator|)
+operator|>
+operator|(
 name|MapValue
 argument_list|(
 operator|(
@@ -322,6 +325,7 @@ name|Flags
 argument_list|,
 name|TypeMapper
 argument_list|)
+operator|)
 return|;
 block|}
 block|}

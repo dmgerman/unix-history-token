@@ -264,6 +264,10 @@ name|key
 operator|.
 name|data
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|VERSION_KEY
 expr_stmt|;
@@ -792,6 +796,10 @@ name|key
 operator|.
 name|data
 operator|=
+operator|(
+name|void
+operator|*
+operator|)
 operator|&
 name|VERSION_KEY
 expr_stmt|;

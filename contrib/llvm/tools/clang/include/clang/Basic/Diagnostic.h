@@ -74,6 +74,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
@@ -112,7 +118,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|DiagnosticClient
+name|DiagnosticConsumer
 decl_stmt|;
 name|class
 name|DiagnosticBuilder
@@ -187,15 +193,13 @@ comment|/// code string at a specific location.
 specifier|static
 name|FixItHint
 name|CreateInsertion
-argument_list|(
+parameter_list|(
 name|SourceLocation
 name|InsertionLoc
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Code
-argument_list|)
+parameter_list|)
 block|{
 name|FixItHint
 name|Hint
@@ -274,15 +278,13 @@ comment|/// source range with the given code string.
 specifier|static
 name|FixItHint
 name|CreateReplacement
-argument_list|(
+parameter_list|(
 name|CharSourceRange
 name|RemoveRange
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Code
-argument_list|)
+parameter_list|)
 block|{
 name|FixItHint
 name|Hint
@@ -306,15 +308,13 @@ block|}
 specifier|static
 name|FixItHint
 name|CreateReplacement
-argument_list|(
+parameter_list|(
 name|SourceRange
 name|RemoveRange
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Code
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|CreateReplacement
@@ -332,20 +332,20 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// Diagnostic - This concrete class is used by the front-end to report
+comment|/// DiagnosticsEngine - This concrete class is used by the front-end to report
 comment|/// problems and issues.  It massages the diagnostics (e.g. handling things like
-comment|/// "report warnings as errors" and passes them off to the DiagnosticClient for
-comment|/// reporting to the user. Diagnostic is tied to one translation unit and
-comment|/// one SourceManager.
+comment|/// "report warnings as errors" and passes them off to the DiagnosticConsumer
+comment|/// for reporting to the user. DiagnosticsEngine is tied to one translation unit
+comment|/// and one SourceManager.
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 range|:
 name|public
 name|llvm
 operator|::
 name|RefCountedBase
 operator|<
-name|Diagnostic
+name|DiagnosticsEngine
 operator|>
 block|{
 name|public
@@ -469,7 +469,11 @@ comment|// Ignore all warnings: -w
 name|bool
 name|WarningsAsErrors
 decl_stmt|;
-comment|// Treat warnings like errors:
+comment|// Treat warnings like errors.
+name|bool
+name|EnableAllWarnings
+decl_stmt|;
+comment|// Enable all warnings.
 name|bool
 name|ErrorsAsFatal
 decl_stmt|;
@@ -507,7 +511,7 @@ name|DiagnosticIDs
 operator|>
 name|Diags
 expr_stmt|;
-name|DiagnosticClient
+name|DiagnosticConsumer
 modifier|*
 name|Client
 decl_stmt|;
@@ -537,7 +541,7 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
-name|unsigned
+name|DiagnosticMappingInfo
 operator|>
 name|DiagMap
 expr_stmt|;
@@ -550,22 +554,35 @@ name|DenseMap
 operator|<
 name|unsigned
 operator|,
+name|DiagnosticMappingInfo
+operator|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+typedef|typedef
+name|llvm
+operator|::
+name|DenseMap
+operator|<
 name|unsigned
+operator|,
+name|DiagnosticMappingInfo
 operator|>
 operator|::
 name|const_iterator
-name|iterator
+name|const_iterator
 expr_stmt|;
 name|void
-name|setMapping
+name|setMappingInfo
 argument_list|(
 name|diag
 operator|::
 name|kind
 name|Diag
 argument_list|,
-name|unsigned
-name|Map
+name|DiagnosticMappingInfo
+name|Info
 argument_list|)
 block|{
 name|DiagMap
@@ -573,55 +590,20 @@ index|[
 name|Diag
 index|]
 operator|=
-name|Map
+name|Info
 expr_stmt|;
 block|}
+name|DiagnosticMappingInfo
+modifier|&
+name|getOrAddMappingInfo
+argument_list|(
 name|diag
 operator|::
-name|Mapping
-name|getMapping
-argument_list|(
-argument|diag::kind Diag
-argument_list|)
-specifier|const
-block|{
-name|iterator
-name|I
-operator|=
-name|DiagMap
-operator|.
-name|find
-argument_list|(
+name|kind
 name|Diag
 argument_list|)
-block|;
-if|if
-condition|(
-name|I
-operator|!=
-name|DiagMap
-operator|.
-name|end
-argument_list|()
-condition|)
-return|return
-operator|(
-name|diag
-operator|::
-name|Mapping
-operator|)
-name|I
-operator|->
-name|second
-return|;
-return|return
-name|diag
-operator|::
-name|Mapping
-argument_list|()
-return|;
-block|}
-name|iterator
+decl_stmt|;
+name|const_iterator
 name|begin
 argument_list|()
 specifier|const
@@ -633,7 +615,7 @@ name|begin
 argument_list|()
 return|;
 block|}
-name|iterator
+name|const_iterator
 name|end
 argument_list|()
 specifier|const
@@ -646,17 +628,8 @@ argument_list|()
 return|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_comment
 comment|/// \brief Keeps and automatically disposes all DiagStates that we create.
-end_comment
-
-begin_expr_stmt
 name|std
 operator|::
 name|list
@@ -665,21 +638,9 @@ name|DiagState
 operator|>
 name|DiagStates
 expr_stmt|;
-end_expr_stmt
-
-begin_comment
 comment|/// \brief Represents a point in source where the diagnostic state was
-end_comment
-
-begin_comment
 comment|/// modified because of a pragma. 'Loc' can be null if the point represents
-end_comment
-
-begin_comment
 comment|/// the diagnostic state modifications done through the command-line.
-end_comment
-
-begin_struct
 struct|struct
 name|DiagStatePoint
 block|{
@@ -753,10 +714,14 @@ name|Loc
 argument_list|)
 return|;
 block|}
-end_struct
+block|}
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_comment
-unit|};
 comment|/// \brief A vector of all DiagStatePoints representing changes in diagnostic
 end_comment
 
@@ -984,7 +949,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief Toggles for DiagnosticErrorTrap to check whether an error occurred
+comment|/// \brief Counts for DiagnosticErrorTrap to check whether an error occurred
 end_comment
 
 begin_comment
@@ -992,14 +957,14 @@ comment|/// during a parsing section, e.g. during parsing a function.
 end_comment
 
 begin_decl_stmt
-name|bool
-name|TrapErrorOccurred
+name|unsigned
+name|TrapNumErrorsOccurred
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|bool
-name|TrapUnrecoverableErrorOccurred
+name|unsigned
+name|TrapNumUnrecoverableErrorsOccurred
 decl_stmt|;
 end_decl_stmt
 
@@ -1126,8 +1091,6 @@ operator|,
 name|unsigned
 name|NumPrevArgs
 operator|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -1139,8 +1102,6 @@ name|void
 operator|*
 name|Cookie
 operator|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|intptr_t
@@ -1213,7 +1174,7 @@ end_label
 
 begin_decl_stmt
 name|explicit
-name|Diagnostic
+name|DiagnosticsEngine
 argument_list|(
 specifier|const
 name|llvm
@@ -1225,7 +1186,7 @@ operator|>
 operator|&
 name|Diags
 argument_list|,
-name|DiagnosticClient
+name|DiagnosticConsumer
 operator|*
 name|client
 operator|=
@@ -1241,7 +1202,7 @@ end_decl_stmt
 
 begin_expr_stmt
 operator|~
-name|Diagnostic
+name|DiagnosticsEngine
 argument_list|()
 expr_stmt|;
 end_expr_stmt
@@ -1266,7 +1227,7 @@ block|}
 end_expr_stmt
 
 begin_function
-name|DiagnosticClient
+name|DiagnosticConsumer
 modifier|*
 name|getClient
 parameter_list|()
@@ -1279,7 +1240,7 @@ end_function
 
 begin_expr_stmt
 specifier|const
-name|DiagnosticClient
+name|DiagnosticConsumer
 operator|*
 name|getClient
 argument_list|()
@@ -1287,6 +1248,22 @@ specifier|const
 block|{
 return|return
 name|Client
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Determine whether this \c DiagnosticsEngine object own its client.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|ownsClient
+argument_list|()
+specifier|const
+block|{
+return|return
+name|OwnsDiagClient
 return|;
 block|}
 end_expr_stmt
@@ -1300,7 +1277,7 @@ comment|/// client.
 end_comment
 
 begin_function
-name|DiagnosticClient
+name|DiagnosticConsumer
 modifier|*
 name|takeClient
 parameter_list|()
@@ -1371,11 +1348,11 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|//  Diagnostic characterization methods, used by a client to customize how
+comment|//  DiagnosticsEngine characterization methods, used by a client to customize
 end_comment
 
 begin_comment
-comment|//  diagnostics are emitted.
+comment|//  how diagnostics are emitted.
 end_comment
 
 begin_comment
@@ -1446,7 +1423,7 @@ begin_function_decl
 name|void
 name|setClient
 parameter_list|(
-name|DiagnosticClient
+name|DiagnosticConsumer
 modifier|*
 name|client
 parameter_list|,
@@ -1555,6 +1532,45 @@ specifier|const
 block|{
 return|return
 name|IgnoreAllWarnings
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// setEnableAllWarnings - When set to true, any unmapped ignored warnings
+end_comment
+
+begin_comment
+comment|/// are no longer ignored.  If this and IgnoreAllWarnings are both set,
+end_comment
+
+begin_comment
+comment|/// then that one wins.
+end_comment
+
+begin_function
+name|void
+name|setEnableAllWarnings
+parameter_list|(
+name|bool
+name|Val
+parameter_list|)
+block|{
+name|EnableAllWarnings
+operator|=
+name|Val
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
+name|getEnableAllWarnngs
+argument_list|()
+specifier|const
+block|{
+return|return
+name|EnableAllWarnings
 return|;
 block|}
 end_expr_stmt
@@ -1920,8 +1936,6 @@ begin_decl_stmt
 name|bool
 name|setDiagnosticGroupMapping
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Group
 argument_list|,
@@ -1936,24 +1950,66 @@ operator|=
 name|SourceLocation
 argument_list|()
 argument_list|)
-block|{
-return|return
-name|Diags
-operator|->
-name|setDiagnosticGroupMapping
-argument_list|(
-name|Group
-argument_list|,
-name|Map
-argument_list|,
-name|Loc
-argument_list|,
-operator|*
-name|this
-argument_list|)
-return|;
-block|}
+decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/// \brief Set the warning-as-error flag for the given diagnostic group. This
+end_comment
+
+begin_comment
+comment|/// function always only operates on the current diagnostic state.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns True if the given group is unknown, false otherwise.
+end_comment
+
+begin_function_decl
+name|bool
+name|setDiagnosticGroupWarningAsError
+parameter_list|(
+name|StringRef
+name|Group
+parameter_list|,
+name|bool
+name|Enabled
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Set the error-as-fatal flag for the given diagnostic group. This
+end_comment
+
+begin_comment
+comment|/// function always only operates on the current diagnostic state.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \returns True if the given group is unknown, false otherwise.
+end_comment
+
+begin_function_decl
+name|bool
+name|setDiagnosticGroupErrorAsFatal
+parameter_list|(
+name|StringRef
+name|Group
+parameter_list|,
+name|bool
+name|Enabled
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_expr_stmt
 name|bool
@@ -2038,18 +2094,16 @@ begin_comment
 comment|/// registered and created, otherwise the existing ID is returned.
 end_comment
 
-begin_decl_stmt
+begin_function
 name|unsigned
 name|getCustomDiagID
-argument_list|(
+parameter_list|(
 name|Level
 name|L
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Message
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|Diags
@@ -2067,7 +2121,7 @@ name|Message
 argument_list|)
 return|;
 block|}
-end_decl_stmt
+end_function
 
 begin_comment
 comment|/// ConvertArgToString - This method converts a diagnostic argument (as an
@@ -2111,8 +2165,6 @@ argument_list|,
 name|unsigned
 name|NumPrevArgs
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -2120,8 +2172,6 @@ operator|>
 operator|&
 name|Output
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|intptr_t
@@ -2202,7 +2252,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// Diagnostic classification and reporting interfaces.
+comment|// DiagnosticsEngine classification and reporting interfaces.
 end_comment
 
 begin_comment
@@ -2210,7 +2260,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|/// \brief Based on the way the client configured the Diagnostic
+comment|/// \brief Based on the way the client configured the DiagnosticsEngine
 end_comment
 
 begin_comment
@@ -2218,7 +2268,7 @@ comment|/// object, classify the specified diagnostic ID into a Level, consumabl
 end_comment
 
 begin_comment
-comment|/// the DiagnosticClient.
+comment|/// the DiagnosticConsumer.
 end_comment
 
 begin_comment
@@ -2242,14 +2292,6 @@ name|DiagID
 argument_list|,
 name|SourceLocation
 name|Loc
-argument_list|,
-name|diag
-operator|::
-name|Mapping
-operator|*
-name|mapping
-operator|=
-literal|0
 argument_list|)
 decl|const
 block|{
@@ -2267,8 +2309,6 @@ name|Loc
 argument_list|,
 operator|*
 name|this
-argument_list|,
-name|mapping
 argument_list|)
 return|;
 block|}
@@ -2415,7 +2455,7 @@ comment|/// diagnostic. A copy of this string will be stored in the
 end_comment
 
 begin_comment
-comment|/// Diagnostic object itself.
+comment|/// DiagnosticsEngine object itself.
 end_comment
 
 begin_comment
@@ -2431,32 +2471,28 @@ comment|/// diagnostic. A copy of this string will be stored in the
 end_comment
 
 begin_comment
-comment|/// Diagnostic object itself.
+comment|/// DiagnosticsEngine object itself.
 end_comment
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|SetDelayedDiagnostic
-argument_list|(
+parameter_list|(
 name|unsigned
 name|DiagID
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Arg1
-operator|=
+init|=
 literal|""
-argument_list|,
-name|llvm
-operator|::
+parameter_list|,
 name|StringRef
 name|Arg2
-operator|=
+init|=
 literal|""
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Clear out the current diagnostic.
@@ -2490,98 +2526,6 @@ name|ReportDelayed
 parameter_list|()
 function_decl|;
 end_function_decl
-
-begin_comment
-comment|/// getDiagnosticMappingInfo - Return the mapping info currently set for the
-end_comment
-
-begin_comment
-comment|/// specified builtin diagnostic.  This returns the high bit encoding, or zero
-end_comment
-
-begin_comment
-comment|/// if the field is completely uninitialized.
-end_comment
-
-begin_expr_stmt
-name|diag
-operator|::
-name|Mapping
-name|getDiagnosticMappingInfo
-argument_list|(
-argument|diag::kind Diag
-argument_list|,
-argument|DiagState *State
-argument_list|)
-specifier|const
-block|{
-return|return
-name|State
-operator|->
-name|getMapping
-argument_list|(
-name|Diag
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_decl_stmt
-name|void
-name|setDiagnosticMappingInternal
-argument_list|(
-name|unsigned
-name|DiagId
-argument_list|,
-name|unsigned
-name|Map
-argument_list|,
-name|DiagState
-operator|*
-name|State
-argument_list|,
-name|bool
-name|isUser
-argument_list|,
-name|bool
-name|isPragma
-argument_list|)
-decl|const
-block|{
-if|if
-condition|(
-name|isUser
-condition|)
-name|Map
-operator||=
-literal|8
-expr_stmt|;
-comment|// Set the high bit for user mappings.
-if|if
-condition|(
-name|isPragma
-condition|)
-name|Map
-operator||=
-literal|0x10
-expr_stmt|;
-comment|// Set the bit for diagnostic pragma mappings.
-name|State
-operator|->
-name|setMapping
-argument_list|(
-operator|(
-name|diag
-operator|::
-name|kind
-operator|)
-name|DiagId
-argument_list|,
-name|Map
-argument_list|)
-expr_stmt|;
-block|}
-end_decl_stmt
 
 begin_comment
 comment|// This is private state used by DiagnosticBuilder.  We put it here instead of
@@ -2624,7 +2568,7 @@ end_decl_stmt
 begin_decl_stmt
 name|friend
 name|class
-name|DiagnosticInfo
+name|Diagnostic
 decl_stmt|;
 end_decl_stmt
 
@@ -2812,7 +2756,7 @@ enum|enum
 block|{
 name|MaxFixItHints
 init|=
-literal|3
+literal|6
 block|}
 enum|;
 end_enum
@@ -2902,16 +2846,22 @@ begin_decl_stmt
 name|class
 name|DiagnosticErrorTrap
 block|{
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|&
 name|Diag
+decl_stmt|;
+name|unsigned
+name|NumErrors
+decl_stmt|;
+name|unsigned
+name|NumUnrecoverableErrors
 decl_stmt|;
 name|public
 label|:
 name|explicit
 name|DiagnosticErrorTrap
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|&
 name|Diag
 argument_list|)
@@ -2934,7 +2884,9 @@ block|{
 return|return
 name|Diag
 operator|.
-name|TrapErrorOccurred
+name|TrapNumErrorsOccurred
+operator|>
+name|NumErrors
 return|;
 block|}
 comment|/// \brief Determine whether any unrecoverable errors have occurred since this
@@ -2947,7 +2899,9 @@ block|{
 return|return
 name|Diag
 operator|.
-name|TrapUnrecoverableErrorOccurred
+name|TrapNumUnrecoverableErrorsOccurred
+operator|>
+name|NumUnrecoverableErrors
 return|;
 block|}
 comment|// Set to initial state of "no errors occurred".
@@ -2955,17 +2909,17 @@ name|void
 name|reset
 parameter_list|()
 block|{
+name|NumErrors
+operator|=
 name|Diag
 operator|.
-name|TrapErrorOccurred
-operator|=
-name|false
+name|TrapNumErrorsOccurred
 expr_stmt|;
+name|NumUnrecoverableErrors
+operator|=
 name|Diag
 operator|.
-name|TrapUnrecoverableErrorOccurred
-operator|=
-name|false
+name|TrapNumUnrecoverableErrorsOccurred
 expr_stmt|;
 block|}
 block|}
@@ -2992,15 +2946,15 @@ comment|/// DiagnosticBuilder - This is a little helper class used to produce
 end_comment
 
 begin_comment
-comment|/// diagnostics.  This is constructed by the Diagnostic::Report method, and
+comment|/// diagnostics.  This is constructed by the DiagnosticsEngine::Report method,
 end_comment
 
 begin_comment
-comment|/// allows insertion of extra information (arguments and source ranges) into the
+comment|/// and allows insertion of extra information (arguments and source ranges) into
 end_comment
 
 begin_comment
-comment|/// currently "in flight" diagnostic.  When the temporary for the builder is
+comment|/// the currently "in flight" diagnostic.  When the temporary for the builder is
 end_comment
 
 begin_comment
@@ -3036,7 +2990,7 @@ name|class
 name|DiagnosticBuilder
 block|{
 name|mutable
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|*
 name|DiagObj
 decl_stmt|;
@@ -3060,12 +3014,12 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT
 name|friend
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|explicit
 name|DiagnosticBuilder
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|*
 name|diagObj
 argument_list|)
@@ -3221,7 +3175,7 @@ argument_list|(
 name|isActive
 argument_list|()
 operator|&&
-literal|"Diagnostic is inactive"
+literal|"DiagnosticsEngine is inactive"
 argument_list|)
 block|;
 return|return
@@ -3255,8 +3209,6 @@ block|}
 name|void
 name|AddString
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|S
 argument_list|)
@@ -3266,7 +3218,7 @@ name|assert
 argument_list|(
 name|NumArgs
 operator|<
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|MaxArguments
 operator|&&
@@ -3285,7 +3237,7 @@ index|[
 name|NumArgs
 index|]
 operator|=
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_std_string
 expr_stmt|;
@@ -3307,7 +3259,7 @@ argument_list|(
 name|intptr_t
 name|V
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentKind
 name|Kind
@@ -3318,7 +3270,7 @@ name|assert
 argument_list|(
 name|NumArgs
 operator|<
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|MaxArguments
 operator|&&
@@ -3414,13 +3366,23 @@ name|assert
 argument_list|(
 name|NumFixItHints
 operator|<
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|MaxFixItHints
 operator|&&
 literal|"Too many fix-it hints!"
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|NumFixItHints
+operator|>=
+name|DiagnosticsEngine
+operator|::
+name|MaxFixItHints
+condition|)
+return|return;
+comment|// Don't crash in release builds
 if|if
 condition|(
 name|DiagObj
@@ -3456,8 +3418,6 @@ name|DiagnosticBuilder
 operator|&
 name|DB
 operator|,
-name|llvm
-operator|::
 name|StringRef
 name|S
 operator|)
@@ -3506,7 +3466,7 @@ operator|(
 name|Str
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_c_string
 argument_list|)
@@ -3540,7 +3500,7 @@ name|AddTaggedVal
 argument_list|(
 name|I
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_sint
 argument_list|)
@@ -3574,7 +3534,7 @@ name|AddTaggedVal
 argument_list|(
 name|I
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_sint
 argument_list|)
@@ -3608,7 +3568,7 @@ name|AddTaggedVal
 argument_list|(
 name|I
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_uint
 argument_list|)
@@ -3650,7 +3610,7 @@ operator|(
 name|II
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_identifierinfo
 argument_list|)
@@ -3729,7 +3689,7 @@ operator|(
 name|DC
 operator|)
 argument_list|,
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_declcontext
 argument_list|)
@@ -3856,7 +3816,7 @@ end_comment
 begin_expr_stmt
 specifier|inline
 name|DiagnosticBuilder
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Report
 argument_list|(
@@ -3895,7 +3855,7 @@ end_expr_stmt
 begin_expr_stmt
 specifier|inline
 name|DiagnosticBuilder
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Report
 argument_list|(
@@ -3919,7 +3879,7 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|// DiagnosticInfo
+comment|// Diagnostic
 end_comment
 
 begin_comment
@@ -3927,38 +3887,36 @@ comment|//===-------------------------------------------------------------------
 end_comment
 
 begin_comment
-comment|/// DiagnosticInfo - This is a little helper class (which is basically a smart
+comment|/// Diagnostic - This is a little helper class (which is basically a smart
 end_comment
 
 begin_comment
-comment|/// pointer that forward info from Diagnostic) that allows clients to enquire
+comment|/// pointer that forward info from DiagnosticsEngine) that allows clients to
 end_comment
 
 begin_comment
-comment|/// about the currently in-flight diagnostic.
+comment|/// enquire about the currently in-flight diagnostic.
 end_comment
 
 begin_decl_stmt
 name|class
-name|DiagnosticInfo
+name|Diagnostic
 block|{
 specifier|const
-name|Diagnostic
+name|DiagnosticsEngine
 modifier|*
 name|DiagObj
 decl_stmt|;
-name|llvm
-operator|::
 name|StringRef
 name|StoredDiagMessage
-expr_stmt|;
+decl_stmt|;
 name|public
 label|:
 name|explicit
-name|DiagnosticInfo
+name|Diagnostic
 argument_list|(
 specifier|const
-name|Diagnostic
+name|DiagnosticsEngine
 operator|*
 name|DO
 argument_list|)
@@ -3968,11 +3926,11 @@ argument_list|(
 argument|DO
 argument_list|)
 block|{}
-name|DiagnosticInfo
+name|Diagnostic
 argument_list|(
-argument|const Diagnostic *DO
+argument|const DiagnosticsEngine *DO
 argument_list|,
-argument|llvm::StringRef storedDiagMessage
+argument|StringRef storedDiagMessage
 argument_list|)
 operator|:
 name|DiagObj
@@ -3986,7 +3944,7 @@ argument|storedDiagMessage
 argument_list|)
 block|{}
 specifier|const
-name|Diagnostic
+name|DiagnosticsEngine
 operator|*
 name|getDiags
 argument_list|()
@@ -4058,7 +4016,7 @@ return|;
 block|}
 comment|/// getArgKind - Return the kind of the specified index.  Based on the kind
 comment|/// of argument, the accessors below can be used to get the value.
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentKind
 name|getArgKind
@@ -4079,7 +4037,7 @@ argument_list|)
 block|;
 return|return
 operator|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ArgumentKind
 operator|)
@@ -4110,7 +4068,7 @@ argument_list|(
 name|Idx
 argument_list|)
 operator|==
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_std_string
 operator|&&
@@ -4144,7 +4102,7 @@ argument_list|(
 name|Idx
 argument_list|)
 operator|==
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_c_string
 operator|&&
@@ -4184,7 +4142,7 @@ argument_list|(
 name|Idx
 argument_list|)
 operator|==
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_sint
 operator|&&
@@ -4219,7 +4177,7 @@ argument_list|(
 name|Idx
 argument_list|)
 operator|==
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_uint
 operator|&&
@@ -4256,7 +4214,7 @@ argument_list|(
 name|Idx
 argument_list|)
 operator|==
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_identifierinfo
 operator|&&
@@ -4295,7 +4253,7 @@ argument_list|(
 name|Idx
 argument_list|)
 operator|!=
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|ak_std_string
 operator|&&
@@ -4413,8 +4371,6 @@ comment|/// array.
 name|void
 name|FormatDiagnostic
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -4439,8 +4395,6 @@ name|char
 operator|*
 name|DiagEnd
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -4468,7 +4422,7 @@ block|{
 name|unsigned
 name|ID
 decl_stmt|;
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Level
 name|Level
@@ -4504,18 +4458,33 @@ argument_list|()
 expr_stmt|;
 name|StoredDiagnostic
 argument_list|(
-argument|Diagnostic::Level Level
+argument|DiagnosticsEngine::Level Level
 argument_list|,
-argument|const DiagnosticInfo&Info
+argument|const Diagnostic&Info
 argument_list|)
 empty_stmt|;
 name|StoredDiagnostic
 argument_list|(
-argument|Diagnostic::Level Level
+argument|DiagnosticsEngine::Level Level
 argument_list|,
 argument|unsigned ID
 argument_list|,
-argument|llvm::StringRef Message
+argument|StringRef Message
+argument_list|)
+empty_stmt|;
+name|StoredDiagnostic
+argument_list|(
+argument|DiagnosticsEngine::Level Level
+argument_list|,
+argument|unsigned ID
+argument_list|,
+argument|StringRef Message
+argument_list|,
+argument|FullSourceLoc Loc
+argument_list|,
+argument|ArrayRef<CharSourceRange> Ranges
+argument_list|,
+argument|ArrayRef<FixItHint> Fixits
 argument_list|)
 empty_stmt|;
 operator|~
@@ -4546,7 +4515,7 @@ return|return
 name|ID
 return|;
 block|}
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Level
 name|getLevel
@@ -4568,8 +4537,6 @@ return|return
 name|Loc
 return|;
 block|}
-name|llvm
-operator|::
 name|StringRef
 name|getMessage
 argument_list|()
@@ -4695,7 +4662,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// DiagnosticClient - This is an abstract interface implemented by clients of
+comment|/// DiagnosticConsumer - This is an abstract interface implemented by clients of
 end_comment
 
 begin_comment
@@ -4704,7 +4671,7 @@ end_comment
 
 begin_decl_stmt
 name|class
-name|DiagnosticClient
+name|DiagnosticConsumer
 block|{
 name|protected
 label|:
@@ -4718,7 +4685,7 @@ decl_stmt|;
 comment|// Number of errors reported
 name|public
 label|:
-name|DiagnosticClient
+name|DiagnosticConsumer
 argument_list|()
 operator|:
 name|NumWarnings
@@ -4751,7 +4718,7 @@ return|;
 block|}
 name|virtual
 operator|~
-name|DiagnosticClient
+name|DiagnosticConsumer
 argument_list|()
 expr_stmt|;
 comment|/// BeginSourceFile - Callback to inform the diagnostic client that processing
@@ -4792,8 +4759,8 @@ parameter_list|()
 block|{}
 comment|/// IncludeInDiagnosticCounts - This method (whose default implementation
 comment|/// returns true) indicates whether the diagnostics handled by this
-comment|/// DiagnosticClient should be included in the number of diagnostics reported
-comment|/// by Diagnostic.
+comment|/// DiagnosticConsumer should be included in the number of diagnostics
+comment|/// reported by DiagnosticsEngine.
 name|virtual
 name|bool
 name|IncludeInDiagnosticCounts
@@ -4809,16 +4776,31 @@ name|virtual
 name|void
 name|HandleDiagnostic
 argument_list|(
-name|Diagnostic
+name|DiagnosticsEngine
 operator|::
 name|Level
 name|DiagLevel
 argument_list|,
 specifier|const
-name|DiagnosticInfo
+name|Diagnostic
 operator|&
 name|Info
 argument_list|)
+decl_stmt|;
+comment|/// \brief Clone the diagnostic consumer, producing an equivalent consumer
+comment|/// that can be used in a different context.
+name|virtual
+name|DiagnosticConsumer
+modifier|*
+name|clone
+argument_list|(
+name|DiagnosticsEngine
+operator|&
+name|Diags
+argument_list|)
+decl|const
+init|=
+literal|0
 decl_stmt|;
 block|}
 end_decl_stmt
@@ -4828,7 +4810,49 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-unit|}
+comment|/// IgnoringDiagConsumer - This is a diagnostic client that just ignores all
+end_comment
+
+begin_comment
+comment|/// diags.
+end_comment
+
+begin_decl_stmt
+name|class
+name|IgnoringDiagConsumer
+range|:
+name|public
+name|DiagnosticConsumer
+block|{
+name|void
+name|HandleDiagnostic
+argument_list|(
+argument|DiagnosticsEngine::Level DiagLevel
+argument_list|,
+argument|const Diagnostic&Info
+argument_list|)
+block|{
+comment|// Just ignore it.
+block|}
+name|DiagnosticConsumer
+operator|*
+name|clone
+argument_list|(
+argument|DiagnosticsEngine&Diags
+argument_list|)
+specifier|const
+block|{
+return|return
+name|new
+name|IgnoringDiagConsumer
+argument_list|()
+return|;
+block|}
+expr|}
+block|;  }
+end_decl_stmt
+
+begin_comment
 comment|// end namespace clang
 end_comment
 

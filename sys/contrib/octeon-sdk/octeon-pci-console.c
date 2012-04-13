@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Networks (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Networks nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM  NETWORKS MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
+comment|/***********************license start***************  * Copyright (c) 2003-2010  Cavium Inc. (support@cavium.com). All rights  * reserved.  *  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions are  * met:  *  *   * Redistributions of source code must retain the above copyright  *     notice, this list of conditions and the following disclaimer.  *  *   * Redistributions in binary form must reproduce the above  *     copyright notice, this list of conditions and the following  *     disclaimer in the documentation and/or other materials provided  *     with the distribution.   *   * Neither the name of Cavium Inc. nor the names of  *     its contributors may be used to endorse or promote products  *     derived from this software without specific prior written  *     permission.   * This Software, including technical data, may be subject to U.S. export  control  * laws, including the U.S. Export Administration Act and its  associated  * regulations, and may be subject to export or import  regulations in other  * countries.   * TO THE MAXIMUM EXTENT PERMITTED BY LAW, THE SOFTWARE IS PROVIDED "AS IS"  * AND WITH ALL FAULTS AND CAVIUM INC. MAKES NO PROMISES, REPRESENTATIONS OR  * WARRANTIES, EITHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, WITH RESPECT TO  * THE SOFTWARE, INCLUDING ITS CONDITION, ITS CONFORMITY TO ANY REPRESENTATION OR  * DESCRIPTION, OR THE EXISTENCE OF ANY LATENT OR PATENT DEFECTS, AND CAVIUM  * SPECIFICALLY DISCLAIMS ALL IMPLIED (IF ANY) WARRANTIES OF TITLE,  * MERCHANTABILITY, NONINFRINGEMENT, FITNESS FOR A PARTICULAR PURPOSE, LACK OF  * VIRUSES, ACCURACY OR COMPLETENESS, QUIET ENJOYMENT, QUIET POSSESSION OR  * CORRESPONDENCE TO DESCRIPTION. THE ENTIRE  RISK ARISING OUT OF USE OR  * PERFORMANCE OF THE SOFTWARE LIES WITH YOU.  ***********************license end**************************************/
 end_comment
 
 begin_define
@@ -75,6 +75,12 @@ directive|include
 file|"cvmx-spinlock.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|MIN
+end_ifndef
+
 begin_define
 define|#
 directive|define
@@ -87,6 +93,11 @@ parameter_list|)
 value|(((a)<(b))?(a):(b))
 end_define
 
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 begin_include
 include|#
 directive|include
@@ -97,6 +108,23 @@ begin_include
 include|#
 directive|include
 file|"octeon-pci-console.h"
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|__U_BOOT__
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<watchdog.h>
 end_include
 
 begin_endif
@@ -295,10 +323,17 @@ argument_list|(
 name|CONFIG_OCTEON_U_BOOT
 argument_list|)
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|CFG_PCI_CONSOLE
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_SYS_PCI_CONSOLE
+argument_list|)
+operator|)
 operator|)
 end_if
 
@@ -1270,10 +1305,17 @@ argument_list|(
 name|CONFIG_OCTEON_U_BOOT
 argument_list|)
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|CFG_PCI_CONSOLE
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_SYS_PCI_CONSOLE
+argument_list|)
+operator|)
 operator|)
 end_if
 
@@ -1561,6 +1603,14 @@ condition|)
 goto|goto
 name|done
 goto|;
+ifdef|#
+directive|ifdef
+name|__U_BOOT__
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
 name|cvmx_wait
 argument_list|(
 literal|1000000
@@ -1743,11 +1793,21 @@ name|input_read_index
 argument_list|)
 operator|)
 condition|)
+block|{
 name|cvmx_wait
 argument_list|(
 literal|1000000
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|__U_BOOT__
+name|WATCHDOG_RESET
+argument_list|()
+expr_stmt|;
+endif|#
+directive|endif
+block|}
 block|}
 name|bytes_read
 operator|=
@@ -1990,25 +2050,18 @@ argument_list|(
 name|CONFIG_OCTEON_U_BOOT
 argument_list|)
 operator|&&
+operator|(
 name|defined
 argument_list|(
 name|CFG_PCI_CONSOLE
 argument_list|)
+operator|||
+name|defined
+argument_list|(
+name|CONFIG_SYS_PCI_CONSOLE
+argument_list|)
+operator|)
 end_if
-
-begin_define
-define|#
-directive|define
-name|DDR0_TOP
-value|0x10000000
-end_define
-
-begin_define
-define|#
-directive|define
-name|DDR2_BASE
-value|0x20000000
-end_define
 
 begin_function
 name|uint64_t
@@ -2064,13 +2117,13 @@ name|cvmx_bootmem_phy_named_block_alloc
 argument_list|(
 name|alloc_size
 argument_list|,
-name|DDR0_TOP
+name|OCTEON_DDR0_SIZE
 operator|-
 name|alloc_size
 operator|-
 literal|128
 argument_list|,
-name|DDR0_TOP
+name|OCTEON_DDR0_SIZE
 argument_list|,
 literal|128
 argument_list|,
@@ -2091,11 +2144,11 @@ name|cvmx_bootmem_phy_named_block_alloc
 argument_list|(
 name|alloc_size
 argument_list|,
-name|DDR2_BASE
+name|OCTEON_DDR2_BASE
 operator|+
 literal|1
 argument_list|,
-name|DDR2_BASE
+name|OCTEON_DDR2_BASE
 operator|+
 name|alloc_size
 operator|+

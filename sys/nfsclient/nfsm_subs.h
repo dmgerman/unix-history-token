@@ -412,6 +412,11 @@ modifier|*
 name|f
 parameter_list|,
 name|struct
+name|vattr
+modifier|*
+name|va
+parameter_list|,
+name|struct
 name|mbuf
 modifier|*
 modifier|*
@@ -506,7 +511,22 @@ parameter_list|,
 name|f
 parameter_list|)
 define|\
-value|do { \ 	int32_t t1; \ 	t1 = nfsm_postop_attr_xx(&v,&f,&md,&dpos); \ 	nfsm_dcheck(t1, mrep); \ } while (0)
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_postop_attr_xx(&v,&f, NULL,&md,&dpos);	\ 	nfsm_dcheck(t1, mrep); \ } while (0)
+end_define
+
+begin_define
+define|#
+directive|define
+name|nfsm_postop_attr_va
+parameter_list|(
+name|v
+parameter_list|,
+name|f
+parameter_list|,
+name|va
+parameter_list|)
+define|\
+value|do { \ 	int32_t t1; \ 	t1 = nfsm_postop_attr_xx(&v,&f, va,&md,&dpos);	\ 	nfsm_dcheck(t1, mrep); \ } while (0)
 end_define
 
 begin_comment

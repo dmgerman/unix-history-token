@@ -2894,14 +2894,11 @@ begin_comment
 comment|/* INET6&& INET */
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
+begin_ifdef
+ifdef|#
+directive|ifdef
 name|INET
-argument_list|)
-end_if
+end_ifdef
 
 begin_comment
 comment|/*  * Check the encapsulated packet to see if we want it  */

@@ -587,6 +587,7 @@ comment|/* global variables */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|debug
 init|=
@@ -595,6 +596,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nodaemon
 init|=
@@ -603,6 +605,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|background
 init|=
@@ -611,6 +614,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|paused
 init|=
@@ -619,6 +623,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|identify
 init|=
@@ -627,6 +632,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|extioctl
 init|=
@@ -635,6 +641,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -645,6 +652,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|pidfh
 modifier|*
@@ -3023,16 +3031,6 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
-begin_function_decl
-specifier|static
-name|int
-name|usbmodule
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
 begin_function
 name|int
 name|main
@@ -4580,13 +4578,6 @@ operator|==
 literal|0
 condition|)
 block|{
-if|if
-condition|(
-name|usbmodule
-argument_list|()
-operator|!=
-literal|0
-condition|)
 name|retry
 operator|=
 literal|5
@@ -5006,33 +4997,6 @@ expr_stmt|;
 block|}
 end_function
 
-begin_function
-specifier|static
-name|int
-name|usbmodule
-parameter_list|(
-name|void
-parameter_list|)
-block|{
-return|return
-operator|(
-name|kld_isloaded
-argument_list|(
-literal|"uhub/ums"
-argument_list|)
-operator|||
-name|kld_load
-argument_list|(
-literal|"ums"
-argument_list|)
-operator|!=
-operator|-
-literal|1
-operator|)
-return|;
-block|}
-end_function
-
 begin_comment
 comment|/*  * Function to calculate linear acceleration.  *  * If there are any rounding errors, the remainder  * is stored in the remainx and remainy variables  * and taken into account upon the next movement.  */
 end_comment
@@ -5397,7 +5361,7 @@ comment|/* original mouse action */
 name|mousestatus_t
 name|action
 decl_stmt|;
-comment|/* interrim buffer */
+comment|/* interim buffer */
 name|mousestatus_t
 name|action2
 decl_stmt|;
@@ -12144,7 +12108,7 @@ break|break;
 case|case
 name|MOUSE_MODEL_NETSCROLL
 case|:
-comment|/* three addtional bytes encode buttons and wheel events */
+comment|/* three additional bytes encode buttons and wheel events */
 name|act
 operator|->
 name|button
@@ -17042,8 +17006,6 @@ decl_stmt|;
 specifier|static
 name|struct
 name|timespec
-name|old
-decl_stmt|,
 name|now
 decl_stmt|;
 name|int
@@ -17284,10 +17246,6 @@ operator|=
 name|y
 expr_stmt|;
 block|}
-name|old
-operator|=
-name|now
-expr_stmt|;
 name|act
 operator|->
 name|dx

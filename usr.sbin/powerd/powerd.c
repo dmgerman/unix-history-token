@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sysexits.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<unistd.h>
 end_include
 
@@ -203,6 +209,7 @@ typedef|;
 end_typedef
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -2712,9 +2719,9 @@ argument_list|)
 condition|)
 name|err
 argument_list|(
-literal|1
+name|EX_UNAVAILABLE
 argument_list|,
-literal|"lookup freq"
+literal|"no cpufreq(4) support -- aborting"
 argument_list|)
 expr_stmt|;
 name|len

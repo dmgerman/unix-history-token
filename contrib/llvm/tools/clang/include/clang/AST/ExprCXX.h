@@ -3479,8 +3479,18 @@ block|;
 name|SourceRange
 name|ParenRange
 block|;
+name|unsigned
+name|NumArgs
+operator|:
+literal|16
+block|;
 name|bool
 name|Elidable
+operator|:
+literal|1
+block|;
+name|bool
+name|HadMultipleCandidates
 operator|:
 literal|1
 block|;
@@ -3498,9 +3508,6 @@ name|Stmt
 operator|*
 operator|*
 name|Args
-block|;
-name|unsigned
-name|NumArgs
 block|;
 name|protected
 operator|:
@@ -3521,6 +3528,8 @@ argument_list|,
 argument|Expr **args
 argument_list|,
 argument|unsigned numargs
+argument_list|,
+argument|bool HadMultipleCandidates
 argument_list|,
 argument|bool ZeroInitialization = false
 argument_list|,
@@ -3549,9 +3558,19 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|NumArgs
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|Elidable
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|HadMultipleCandidates
+argument_list|(
+name|false
 argument_list|)
 block|,
 name|ZeroInitialization
@@ -3565,11 +3584,6 @@ literal|0
 argument_list|)
 block|,
 name|Args
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumArgs
 argument_list|(
 literal|0
 argument_list|)
@@ -3595,9 +3609,19 @@ argument_list|(
 literal|0
 argument_list|)
 block|,
+name|NumArgs
+argument_list|(
+literal|0
+argument_list|)
+block|,
 name|Elidable
 argument_list|(
 literal|0
+argument_list|)
+block|,
+name|HadMultipleCandidates
+argument_list|(
+name|false
 argument_list|)
 block|,
 name|ZeroInitialization
@@ -3611,11 +3635,6 @@ literal|0
 argument_list|)
 block|,
 name|Args
-argument_list|(
-literal|0
-argument_list|)
-block|,
-name|NumArgs
 argument_list|(
 literal|0
 argument_list|)
@@ -3638,6 +3657,8 @@ argument_list|,
 argument|Expr **Args
 argument_list|,
 argument|unsigned NumArgs
+argument_list|,
+argument|bool HadMultipleCandidates
 argument_list|,
 argument|bool ZeroInitialization = false
 argument_list|,
@@ -3706,6 +3727,27 @@ block|{
 name|Elidable
 operator|=
 name|E
+block|; }
+comment|/// \brief Whether the referred constructor was resolved from
+comment|/// an overloaded set having size greater than 1.
+name|bool
+name|hadMultipleCandidates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HadMultipleCandidates
+return|;
+block|}
+name|void
+name|setHadMultipleCandidates
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|HadMultipleCandidates
+operator|=
+name|V
 block|; }
 comment|/// \brief Whether this construction first requires
 comment|/// zero-initialization before the initializer is called.
@@ -4225,6 +4267,8 @@ argument|unsigned NumArgs
 argument_list|,
 argument|SourceRange parenRange
 argument_list|,
+argument|bool HadMultipleCandidates
+argument_list|,
 argument|bool ZeroInitialization = false
 argument_list|)
 block|;
@@ -4467,11 +4511,18 @@ name|UsualArrayDeleteWantsSize
 operator|:
 literal|1
 block|;
+comment|// Whether the referred constructor (if any) was resolved from an
+comment|// overload set having size greater than 1.
+name|bool
+name|HadMultipleCandidates
+operator|:
+literal|1
+block|;
 comment|// The number of placement new arguments.
 name|unsigned
 name|NumPlacementArgs
 operator|:
-literal|14
+literal|13
 block|;
 comment|// The number of constructor arguments. This may be 1 even for non-class
 comment|// types; use the pseudo copy constructor.
@@ -4556,6 +4607,8 @@ argument_list|,
 argument|Expr **constructorArgs
 argument_list|,
 argument|unsigned numConsArgs
+argument_list|,
+argument|bool HadMultipleCandidates
 argument_list|,
 argument|FunctionDecl *operatorDelete
 argument_list|,
@@ -5017,6 +5070,27 @@ index|]
 operator|)
 return|;
 block|}
+comment|/// \brief Whether the new expression refers a constructor that was
+comment|/// resolved from an overloaded set having size greater than 1.
+name|bool
+name|hadMultipleCandidates
+argument_list|()
+specifier|const
+block|{
+return|return
+name|HadMultipleCandidates
+return|;
+block|}
+name|void
+name|setHadMultipleCandidates
+argument_list|(
+argument|bool V
+argument_list|)
+block|{
+name|HadMultipleCandidates
+operator|=
+name|V
+block|; }
 typedef|typedef
 name|ExprIterator
 name|arg_iterator
@@ -7538,14 +7612,14 @@ return|return
 name|HasExplicitTemplateArgs
 return|;
 block|}
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
 block|;
 comment|// defined far below
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -7569,7 +7643,7 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 comment|/// returns null if there are no explicit template arguments.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getOptionalExplicitTemplateArgs
 argument_list|()
@@ -7924,7 +7998,7 @@ block|}
 comment|// Note that, inconsistently with the explicit-template-argument AST
 comment|// nodes, users are *forbidden* from calling these methods on objects
 comment|// without explicit template arguments.
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -7939,7 +8013,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -7951,7 +8025,7 @@ return|;
 block|}
 comment|/// Gets a reference to the explicit template argument list.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -7968,7 +8042,7 @@ operator|*
 name|reinterpret_cast
 operator|<
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -7982,7 +8056,7 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 comment|/// returns null if there are no explicit template arguments.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getOptionalExplicitTemplateArgs
 argument_list|()
@@ -8306,7 +8380,7 @@ block|}
 comment|// Note that, inconsistently with the explicit-template-argument AST
 comment|// nodes, users are *forbidden* from calling these methods on objects
 comment|// without explicit template arguments.
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -8321,7 +8395,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -8333,7 +8407,7 @@ return|;
 block|}
 comment|/// Gets a reference to the explicit template argument list.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -8350,7 +8424,7 @@ operator|*
 name|reinterpret_cast
 operator|<
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -8364,7 +8438,7 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 comment|/// returns null if there are no explicit template arguments.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getOptionalExplicitTemplateArgs
 argument_list|()
@@ -9519,7 +9593,7 @@ return|;
 block|}
 comment|/// \brief Retrieve the explicit template argument list that followed the
 comment|/// member template name, if any.
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -9533,7 +9607,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -9546,7 +9620,7 @@ block|}
 comment|/// \brief Retrieve the explicit template argument list that followed the
 comment|/// member template name, if any.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -9570,7 +9644,7 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 comment|/// returns null if there are no explicit template arguments.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getOptionalExplicitTemplateArgs
 argument_list|()
@@ -10117,7 +10191,7 @@ return|;
 block|}
 comment|/// \brief Retrieve the explicit template argument list that followed the
 comment|/// member template name.
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -10132,7 +10206,7 @@ return|return
 operator|*
 name|reinterpret_cast
 operator|<
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -10145,7 +10219,7 @@ block|}
 comment|/// \brief Retrieve the explicit template argument list that followed the
 comment|/// member template name, if any.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|getExplicitTemplateArgs
 argument_list|()
@@ -10162,7 +10236,7 @@ operator|*
 name|reinterpret_cast
 operator|<
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 operator|>
 operator|(
@@ -10176,7 +10250,7 @@ comment|/// \brief Retrieves the optional explicit template arguments.
 comment|/// This points to the same data as getExplicitTemplateArgs(), but
 comment|/// returns null if there are no explicit template arguments.
 specifier|const
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|*
 name|getOptionalExplicitTemplateArgs
 argument_list|()
@@ -10878,7 +10952,7 @@ block|}
 expr|}
 block|;
 specifier|inline
-name|ExplicitTemplateArgumentList
+name|ASTTemplateArgumentListInfo
 operator|&
 name|OverloadExpr
 operator|::

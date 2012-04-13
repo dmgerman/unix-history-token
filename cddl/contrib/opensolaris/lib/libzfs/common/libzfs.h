@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2010 Nexenta Systems, Inc. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * All rights reserved.  */
 end_comment
 
 begin_ifndef
@@ -759,6 +759,14 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zpool_reguid
+parameter_list|(
+name|zpool_handle_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zpool_vdev_online
 parameter_list|(
 name|zpool_handle_t
@@ -1503,6 +1511,15 @@ name|int
 parameter_list|)
 function_decl|;
 specifier|extern
+name|zfs_handle_t
+modifier|*
+name|zfs_handle_dup
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
 name|void
 name|zfs_close
 parameter_list|(
@@ -1730,6 +1747,65 @@ name|literal
 parameter_list|)
 function_decl|;
 specifier|extern
+name|int
+name|zfs_prop_get_written_int
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+name|zhp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|propname
+parameter_list|,
+name|uint64_t
+modifier|*
+name|propvalue
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_prop_get_written
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+name|zhp
+parameter_list|,
+specifier|const
+name|char
+modifier|*
+name|propname
+parameter_list|,
+name|char
+modifier|*
+name|propbuf
+parameter_list|,
+name|int
+name|proplen
+parameter_list|,
+name|boolean_t
+name|literal
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_get_snapused_int
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+name|firstsnap
+parameter_list|,
+name|zfs_handle_t
+modifier|*
+name|lastsnap
+parameter_list|,
+name|uint64_t
+modifier|*
+name|usedp
+parameter_list|)
+function_decl|;
+specifier|extern
 name|uint64_t
 name|zfs_prop_get_int
 parameter_list|(
@@ -1783,6 +1859,15 @@ specifier|extern
 name|nvlist_t
 modifier|*
 name|zfs_get_recvd_props
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|nvlist_t
+modifier|*
+name|zfs_get_clones_nvl
 parameter_list|(
 name|zfs_handle_t
 modifier|*
@@ -2111,6 +2196,8 @@ parameter_list|(
 name|zfs_handle_t
 modifier|*
 parameter_list|,
+name|boolean_t
+parameter_list|,
 name|zfs_iter_f
 parameter_list|,
 name|void
@@ -2122,6 +2209,23 @@ name|int
 name|zfs_iter_snapshots_sorted
 parameter_list|(
 name|zfs_handle_t
+modifier|*
+parameter_list|,
+name|zfs_iter_f
+parameter_list|,
+name|void
+modifier|*
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
+name|zfs_iter_snapspec
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+specifier|const
+name|char
 modifier|*
 parameter_list|,
 name|zfs_iter_f
@@ -2241,6 +2345,19 @@ parameter_list|)
 function_decl|;
 specifier|extern
 name|int
+name|zfs_destroy_snaps_nvl
+parameter_list|(
+name|zfs_handle_t
+modifier|*
+parameter_list|,
+name|nvlist_t
+modifier|*
+parameter_list|,
+name|boolean_t
+parameter_list|)
+function_decl|;
+specifier|extern
+name|int
 name|zfs_clone
 parameter_list|(
 name|zfs_handle_t
@@ -2284,6 +2401,25 @@ parameter_list|,
 name|boolean_t
 parameter_list|)
 function_decl|;
+typedef|typedef
+struct|struct
+name|renameflags
+block|{
+comment|/* recursive rename */
+name|int
+name|recurse
+range|:
+literal|1
+decl_stmt|;
+comment|/* don't unmount file systems */
+name|int
+name|nounmount
+range|:
+literal|1
+decl_stmt|;
+block|}
+name|renameflags_t
+typedef|;
 specifier|extern
 name|int
 name|zfs_rename
@@ -2295,7 +2431,8 @@ specifier|const
 name|char
 modifier|*
 parameter_list|,
-name|boolean_t
+name|renameflags_t
+name|flags
 parameter_list|)
 function_decl|;
 typedef|typedef
@@ -2303,41 +2440,36 @@ struct|struct
 name|sendflags
 block|{
 comment|/* print informational messages (ie, -v was specified) */
-name|int
+name|boolean_t
 name|verbose
-range|:
-literal|1
 decl_stmt|;
 comment|/* recursive send  (ie, -R) */
-name|int
+name|boolean_t
 name|replicate
-range|:
-literal|1
 decl_stmt|;
 comment|/* for incrementals, do all intermediate snapshots */
-name|int
+name|boolean_t
 name|doall
-range|:
-literal|1
 decl_stmt|;
-comment|/* (ie, -I) */
 comment|/* if dataset is a clone, do incremental from its origin */
-name|int
+name|boolean_t
 name|fromorigin
-range|:
-literal|1
 decl_stmt|;
 comment|/* do deduplication */
-name|int
+name|boolean_t
 name|dedup
-range|:
-literal|1
 decl_stmt|;
 comment|/* send properties (ie, -p) */
-name|int
+name|boolean_t
 name|props
-range|:
-literal|1
+decl_stmt|;
+comment|/* do not send (no-op, ie. -n) */
+name|boolean_t
+name|dryrun
+decl_stmt|;
+comment|/* parsable verbose output (ie. -P) */
+name|boolean_t
+name|parsable
 decl_stmt|;
 block|}
 name|sendflags_t
@@ -2361,35 +2493,28 @@ name|zfs_send
 parameter_list|(
 name|zfs_handle_t
 modifier|*
-name|zhp
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|fromsnap
 parameter_list|,
 specifier|const
 name|char
 modifier|*
-name|tosnap
 parameter_list|,
 name|sendflags_t
-name|flags
+modifier|*
 parameter_list|,
 name|int
-name|outfd
 parameter_list|,
 name|snapfilter_cb_t
-name|filter_func
 parameter_list|,
 name|void
 modifier|*
-name|cb_arg
 parameter_list|,
 name|nvlist_t
 modifier|*
 modifier|*
-name|debugnvp
 parameter_list|)
 function_decl|;
 specifier|extern
@@ -2536,52 +2661,36 @@ struct|struct
 name|recvflags
 block|{
 comment|/* print informational messages (ie, -v was specified) */
-name|int
+name|boolean_t
 name|verbose
-range|:
-literal|1
 decl_stmt|;
 comment|/* the destination is a prefix, not the exact fs (ie, -d) */
-name|int
+name|boolean_t
 name|isprefix
-range|:
-literal|1
 decl_stmt|;
 comment|/* 	 * Only the tail of the sent snapshot path is appended to the 	 * destination to determine the received snapshot name (ie, -e). 	 */
-name|int
+name|boolean_t
 name|istail
-range|:
-literal|1
 decl_stmt|;
 comment|/* do not actually do the recv, just check if it would work (ie, -n) */
-name|int
+name|boolean_t
 name|dryrun
-range|:
-literal|1
 decl_stmt|;
 comment|/* rollback/destroy filesystems as necessary (eg, -F) */
-name|int
+name|boolean_t
 name|force
-range|:
-literal|1
 decl_stmt|;
 comment|/* set "canmount=off" on all modified filesystems */
-name|int
+name|boolean_t
 name|canmountoff
-range|:
-literal|1
 decl_stmt|;
 comment|/* byteswap flag is used internally; callers need not specify */
-name|int
+name|boolean_t
 name|byteswap
-range|:
-literal|1
 decl_stmt|;
 comment|/* do not mount file systems as they are extracted (private) */
-name|int
+name|boolean_t
 name|nomount
-range|:
-literal|1
 decl_stmt|;
 block|}
 name|recvflags_t
@@ -2598,6 +2707,7 @@ name|char
 modifier|*
 parameter_list|,
 name|recvflags_t
+modifier|*
 parameter_list|,
 name|int
 parameter_list|,

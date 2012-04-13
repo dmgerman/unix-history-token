@@ -154,12 +154,12 @@ end_ifdef
 begin_define
 define|#
 directive|define
-name|DEFINE_COMPILERRT_FUNCTION
+name|DECLARE_SYMBOL_VISIBILITY
 parameter_list|(
 name|name
 parameter_list|)
 define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR                       \   HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR             \   SYMBOL_NAME(name):
+value|HIDDEN_DIRECTIVE SYMBOL_NAME(name) SEPARATOR
 end_define
 
 begin_else
@@ -170,18 +170,27 @@ end_else
 begin_define
 define|#
 directive|define
-name|DEFINE_COMPILERRT_FUNCTION
+name|DECLARE_SYMBOL_VISIBILITY
 parameter_list|(
 name|name
 parameter_list|)
-define|\
-value|.globl SYMBOL_NAME(name) SEPARATOR                       \   SYMBOL_NAME(name):
 end_define
 
 begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|DEFINE_COMPILERRT_FUNCTION
+parameter_list|(
+name|name
+parameter_list|)
+define|\
+value|.globl SYMBOL_NAME(name) SEPARATOR                       \   DECLARE_SYMBOL_VISIBILITY(name)                          \   SYMBOL_NAME(name):
+end_define
 
 begin_define
 define|#

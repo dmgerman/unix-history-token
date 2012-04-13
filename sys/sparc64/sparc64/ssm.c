@@ -87,7 +87,7 @@ argument_list|)
 block|,
 comment|/* Bus interface */
 comment|/* ofw_bus interface */
-name|KOBJMETHOD_END
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt

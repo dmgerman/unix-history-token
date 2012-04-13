@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 1997 - 2007 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -18,7 +18,7 @@ end_include
 begin_expr_stmt
 name|RCSID
 argument_list|(
-literal|"$Id: log.c 22211 2007-12-07 19:27:27Z lha $"
+literal|"$Id$"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -254,11 +254,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|errno
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"kadm5_log_init: open %s"
 argument_list|,
@@ -268,7 +274,7 @@ name|log_file
 argument_list|)
 expr_stmt|;
 return|return
-name|errno
+name|ret
 return|;
 block|}
 if|if
@@ -283,11 +289,17 @@ operator|<
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|errno
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"kadm5_log_init: flock %s"
 argument_list|,
@@ -636,7 +648,7 @@ decl_stmt|;
 name|size_t
 name|len
 decl_stmt|;
-name|int
+name|ssize_t
 name|ret
 decl_stmt|;
 name|krb5_storage_to_data
@@ -670,6 +682,13 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+name|ret
+operator|<
+literal|0
+operator|||
+operator|(
+name|size_t
+operator|)
 name|ret
 operator|!=
 name|len
@@ -708,6 +727,9 @@ name|errno
 return|;
 block|}
 comment|/*      * Try to send a signal to any running `ipropd-master'      */
+ifndef|#
+directive|ifndef
+name|NO_UNIX_SOCKETS
 name|sendto
 argument_list|(
 name|log_context
@@ -750,6 +772,47 @@ name|socket_name
 argument_list|)
 argument_list|)
 expr_stmt|;
+else|#
+directive|else
+name|sendto
+argument_list|(
+name|log_context
+operator|->
+name|socket_fd
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|)
+operator|&
+name|log_context
+operator|->
+name|version
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|log_context
+operator|->
+name|version
+argument_list|)
+argument_list|,
+literal|0
+argument_list|,
+name|log_context
+operator|->
+name|socket_info
+operator|->
+name|ai_addr
+argument_list|,
+name|log_context
+operator|->
+name|socket_info
+operator|->
+name|ai_addrlen
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|krb5_data_free
 argument_list|(
 operator|&
@@ -1017,11 +1080,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"out of memory"
 argument_list|)
@@ -1069,11 +1134,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"Unmarshaling hdb entry failed"
 argument_list|)
@@ -1398,11 +1465,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"Failed to read deleted "
 literal|"principal from log version: %ld"
@@ -1821,11 +1890,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"Failed to read renamed "
 literal|"principal in log, version: %ld"
@@ -2330,11 +2401,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"out of memory"
 argument_list|)
@@ -2403,7 +2476,7 @@ name|context
 operator|->
 name|db
 operator|->
-name|hdb_fetch
+name|hdb_fetch_kvno
 argument_list|(
 name|context
 operator|->
@@ -2422,6 +2495,10 @@ argument_list|,
 name|HDB_F_DECRYPT
 operator||
 name|HDB_F_GET_ANY
+operator||
+name|HDB_F_ADMIN_DATA
+argument_list|,
+literal|0
 argument_list|,
 operator|&
 name|ent
@@ -2504,18 +2581,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
 argument_list|,
+name|ret
+argument_list|,
 literal|"out of memory"
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|ENOMEM
 expr_stmt|;
 goto|goto
 name|out
@@ -2608,18 +2687,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
 argument_list|,
+name|ret
+argument_list|,
 literal|"out of memory"
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|ENOMEM
 expr_stmt|;
 goto|goto
 name|out
@@ -2744,18 +2825,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
 argument_list|,
+name|ret
+argument_list|,
 literal|"out of memory"
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|ENOMEM
 expr_stmt|;
 goto|goto
 name|out
@@ -2834,18 +2917,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
 argument_list|,
+name|ret
+argument_list|,
 literal|"out of memory"
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|ENOMEM
 expr_stmt|;
 goto|goto
 name|out
@@ -2884,11 +2969,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"out of memory"
 argument_list|)
@@ -3036,18 +3123,20 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|ret
+operator|=
+name|ENOMEM
+expr_stmt|;
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
 argument_list|,
+name|ret
+argument_list|,
 literal|"out of memory"
 argument_list|)
-expr_stmt|;
-name|ret
-operator|=
-name|ENOMEM
 expr_stmt|;
 goto|goto
 name|out
@@ -3116,7 +3205,7 @@ block|{
 name|size_t
 name|num
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 for|for
@@ -3222,11 +3311,13 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"out of memory"
 argument_list|)
@@ -3289,11 +3380,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"out of memory"
 argument_list|)
@@ -3385,11 +3478,13 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"out of memory"
 argument_list|)
@@ -3866,7 +3961,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Return previous log entry.  *   * The pointer in `sp´ is assumed to be at the top of the entry before  * previous entry. On success, the `sp´ pointer is set to data portion  * of previous entry. In case of error, it's not changed at all.  */
+comment|/*  * Return previous log entry.  *  * The pointer in `spÂ´ is assumed to be at the top of the entry before  * previous entry. On success, the `spÂ´ pointer is set to data portion  * of previous entry. In case of error, it's not changed at all.  */
 end_comment
 
 begin_function
@@ -3962,6 +4057,13 @@ operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|end_of_storage
+goto|;
 operator|*
 name|ver
 operator|=
@@ -4003,6 +4105,9 @@ name|end_of_storage
 goto|;
 if|if
 condition|(
+operator|(
+name|uint32_t
+operator|)
 name|tmp
 operator|!=
 operator|*
@@ -4018,12 +4123,28 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
+name|KADM5_BAD_DB
+argument_list|,
 literal|"kadm5_log_previous: log entry "
-literal|"have consistency failure, version number wrong"
+literal|"have consistency failure, version number wrong "
+literal|"(tmp %lu ver %lu)"
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+name|tmp
+argument_list|,
+operator|(
+name|unsigned
+name|long
+operator|)
+operator|*
+name|ver
 argument_list|)
 expr_stmt|;
 return|return
@@ -4062,6 +4183,13 @@ operator|&
 name|tmp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|ret
+condition|)
+goto|goto
+name|end_of_storage
+goto|;
 operator|*
 name|op
 operator|=
@@ -4086,6 +4214,9 @@ name|end_of_storage
 goto|;
 if|if
 condition|(
+operator|(
+name|uint32_t
+operator|)
 name|tmp
 operator|!=
 operator|*
@@ -4101,9 +4232,11 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|KADM5_BAD_DB
 argument_list|,
 literal|"kadm5_log_previous: log entry "
 literal|"have consistency failure, length wrong"
@@ -4127,9 +4260,11 @@ argument_list|,
 name|SEEK_SET
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"kadm5_log_previous: end of storage "
 literal|"reached before end"
@@ -4249,11 +4384,13 @@ name|sp
 argument_list|)
 return|;
 default|default :
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 operator|->
 name|context
+argument_list|,
+name|KADM5_FAILURE
 argument_list|,
 literal|"Unsupported replay op %d"
 argument_list|,
@@ -4384,6 +4521,12 @@ return|;
 block|}
 end_function
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|NO_UNIX_SOCKETS
+end_ifndef
+
 begin_decl_stmt
 specifier|static
 name|char
@@ -4461,6 +4604,207 @@ argument_list|)
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* NO_UNIX_SOCKETS */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SIGNAL_SOCKET_HOST
+value|"127.0.0.1"
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIGNAL_SOCKET_PORT
+value|"12701"
+end_define
+
+begin_function
+name|kadm5_ret_t
+name|kadm5_log_signal_socket_info
+parameter_list|(
+name|krb5_context
+name|context
+parameter_list|,
+name|int
+name|server_end
+parameter_list|,
+name|struct
+name|addrinfo
+modifier|*
+modifier|*
+name|ret_addrs
+parameter_list|)
+block|{
+name|struct
+name|addrinfo
+name|hints
+decl_stmt|;
+name|struct
+name|addrinfo
+modifier|*
+name|addrs
+init|=
+name|NULL
+decl_stmt|;
+name|kadm5_ret_t
+name|ret
+init|=
+name|KADM5_FAILURE
+decl_stmt|;
+name|int
+name|wsret
+decl_stmt|;
+name|memset
+argument_list|(
+operator|&
+name|hints
+argument_list|,
+literal|0
+argument_list|,
+sizeof|sizeof
+argument_list|(
+name|hints
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|hints
+operator|.
+name|ai_flags
+operator|=
+name|AI_NUMERICHOST
+expr_stmt|;
+if|if
+condition|(
+name|server_end
+condition|)
+name|hints
+operator|.
+name|ai_flags
+operator||=
+name|AI_PASSIVE
+expr_stmt|;
+name|hints
+operator|.
+name|ai_family
+operator|=
+name|AF_INET
+expr_stmt|;
+name|hints
+operator|.
+name|ai_socktype
+operator|=
+name|SOCK_STREAM
+expr_stmt|;
+name|hints
+operator|.
+name|ai_protocol
+operator|=
+name|IPPROTO_TCP
+expr_stmt|;
+name|wsret
+operator|=
+name|getaddrinfo
+argument_list|(
+name|SIGNAL_SOCKET_HOST
+argument_list|,
+name|SIGNAL_SOCKET_PORT
+argument_list|,
+operator|&
+name|hints
+argument_list|,
+operator|&
+name|addrs
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|wsret
+operator|!=
+literal|0
+condition|)
+block|{
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|KADM5_FAILURE
+argument_list|,
+literal|"%s"
+argument_list|,
+name|gai_strerror
+argument_list|(
+name|wsret
+argument_list|)
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+if|if
+condition|(
+name|addrs
+operator|==
+name|NULL
+condition|)
+block|{
+name|krb5_set_error_message
+argument_list|(
+name|context
+argument_list|,
+name|KADM5_FAILURE
+argument_list|,
+literal|"getaddrinfo() failed to return address list"
+argument_list|)
+expr_stmt|;
+goto|goto
+name|done
+goto|;
+block|}
+operator|*
+name|ret_addrs
+operator|=
+name|addrs
+expr_stmt|;
+name|addrs
+operator|=
+name|NULL
+expr_stmt|;
+name|ret
+operator|=
+literal|0
+expr_stmt|;
+name|done
+label|:
+if|if
+condition|(
+name|addrs
+condition|)
+name|freeaddrinfo
+argument_list|(
+name|addrs
+argument_list|)
+expr_stmt|;
+return|return
+name|ret
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 end_unit
 

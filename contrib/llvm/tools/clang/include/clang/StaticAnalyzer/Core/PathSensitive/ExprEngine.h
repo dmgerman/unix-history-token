@@ -88,19 +88,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/GRState.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/TransferFuncs.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/ObjCMessage.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState.h"
 end_include
 
 begin_include
@@ -147,6 +135,12 @@ name|class
 name|AnalysisManager
 decl_stmt|;
 name|class
+name|CallOrObjCMessage
+decl_stmt|;
+name|class
+name|ObjCMessage
+decl_stmt|;
+name|class
 name|ExprEngine
 range|:
 name|public
@@ -171,7 +165,7 @@ operator|*
 name|Builder
 block|;
 comment|/// StateMgr - Object that manages the data for all created states.
-name|GRStateManager
+name|ProgramStateManager
 name|StateMgr
 block|;
 comment|/// SymMgr - Object that manages the symbol information.
@@ -192,7 +186,7 @@ block|;
 comment|/// CleanedState - The state for EntryNode "cleaned" of all dead
 comment|///  variables and symbols (as determined by a liveness analysis).
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|CleanedState
 block|;
@@ -202,12 +196,12 @@ name|Stmt
 operator|*
 name|currentStmt
 block|;
-comment|// Obj-C Class Identifiers.
+comment|/// Obj-C Class Identifiers.
 name|IdentifierInfo
 operator|*
 name|NSExceptionII
 block|;
-comment|// Obj-C Selectors.
+comment|/// Obj-C Selectors.
 name|Selector
 operator|*
 name|NSExceptionInstanceRaiseSelectors
@@ -215,31 +209,23 @@ block|;
 name|Selector
 name|RaiseSel
 block|;
+comment|/// Whether or not GC is enabled in this analysis.
+name|bool
+name|ObjCGCEnabled
+block|;
 comment|/// The BugReporter associated with this engine.  It is important that
 comment|///  this object be placed at the very end of member variables so that its
 comment|///  destructor is called before the rest of the ExprEngine is destroyed.
 name|GRBugReporter
 name|BR
 block|;
-name|llvm
-operator|::
-name|OwningPtr
-operator|<
-name|TransferFuncs
-operator|>
-name|TF
-block|;
 name|public
 operator|:
 name|ExprEngine
 argument_list|(
-name|AnalysisManager
-operator|&
-name|mgr
+argument|AnalysisManager&mgr
 argument_list|,
-name|TransferFuncs
-operator|*
-name|tf
+argument|bool gcEnabled
 argument_list|)
 block|;
 operator|~
@@ -276,7 +262,7 @@ argument|const LocationContext *L
 argument_list|,
 argument|unsigned Steps
 argument_list|,
-argument|const GRState *InitState
+argument|const ProgramState *InitState
 argument_list|,
 argument|ExplodedNodeSet&Dst
 argument_list|)
@@ -341,16 +327,6 @@ return|return
 name|svalBuilder
 return|;
 block|}
-name|TransferFuncs
-operator|&
-name|getTF
-argument_list|()
-block|{
-return|return
-operator|*
-name|TF
-return|;
-block|}
 name|BugReporter
 operator|&
 name|getBugReporter
@@ -375,15 +351,14 @@ operator|*
 name|Builder
 return|;
 block|}
-comment|// FIXME: Remove once TransferFuncs is no longer referenced.
-name|void
-name|setTransferFunction
-argument_list|(
-name|TransferFuncs
-operator|*
-name|tf
-argument_list|)
-block|;
+name|bool
+name|isObjCGCEnabled
+argument_list|()
+block|{
+return|return
+name|ObjCGCEnabled
+return|;
+block|}
 comment|/// ViewGraph - Visualize the ExplodedGraph created by executing the
 comment|///  simulation.
 name|void
@@ -409,7 +384,7 @@ block|;
 comment|/// getInitialState - Return the initial state used for the root vertex
 comment|///  in the ExplodedGraph.
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|getInitialState
 argument_list|(
@@ -600,37 +575,37 @@ block|;
 comment|/// evalAssume - Callback function invoked by the ConstraintManager when
 comment|///  making assumptions about state values.
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|processAssume
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SVal cond
 argument_list|,
 argument|bool assumption
 argument_list|)
 block|;
-comment|/// wantsRegionChangeUpdate - Called by GRStateManager to determine if a
+comment|/// wantsRegionChangeUpdate - Called by ProgramStateManager to determine if a
 comment|///  region change should trigger a processRegionChanges update.
 name|bool
 name|wantsRegionChangeUpdate
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|)
 block|;
-comment|/// processRegionChanges - Called by GRStateManager whenever a change is made
+comment|/// processRegionChanges - Called by ProgramStateManager whenever a change is made
 comment|///  to the store. Used to update checkers that track region values.
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|processRegionChanges
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -641,23 +616,49 @@ name|InvalidatedSymbols
 operator|*
 name|invalidated
 argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
 name|MemRegion
 operator|*
+operator|>
+name|ExplicitRegions
+argument_list|,
+name|ArrayRef
+operator|<
 specifier|const
+name|MemRegion
 operator|*
-name|Begin
+operator|>
+name|Regions
+argument_list|)
+block|;
+comment|/// printState - Called by ProgramStateManager to print checker-specific data.
+name|void
+name|printState
+argument_list|(
+name|raw_ostream
+operator|&
+name|Out
 argument_list|,
 specifier|const
-name|MemRegion
+name|ProgramState
 operator|*
+name|State
+argument_list|,
 specifier|const
+name|char
 operator|*
-name|End
+name|NL
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|Sep
 argument_list|)
 block|;
 name|virtual
-name|GRStateManager
+name|ProgramStateManager
 operator|&
 name|getStateManager
 argument_list|()
@@ -790,46 +791,23 @@ return|return
 name|Engine
 return|;
 block|}
-name|protected
-operator|:
-specifier|const
-name|GRState
-operator|*
-name|GetState
-argument_list|(
-argument|ExplodedNode* N
-argument_list|)
-block|{
-return|return
-name|N
-operator|==
-name|EntryNode
-operator|?
-name|CleanedState
-operator|:
-name|N
-operator|->
-name|getState
-argument_list|()
-return|;
-block|}
 name|public
 operator|:
 name|ExplodedNode
 operator|*
 name|MakeNode
 argument_list|(
-argument|ExplodedNodeSet& Dst
+argument|ExplodedNodeSet&Dst
 argument_list|,
-argument|const Stmt* S
+argument|const Stmt *S
 argument_list|,
-argument|ExplodedNode* Pred
+argument|ExplodedNode *Pred
 argument_list|,
-argument|const GRState* St
+argument|const ProgramState *St
 argument_list|,
 argument|ProgramPoint::Kind K = ProgramPoint::PostStmtKind
 argument_list|,
-argument|const void *tag =
+argument|const ProgramPointTag *tag =
 literal|0
 argument_list|)
 block|;
@@ -891,29 +869,29 @@ block|;
 name|void
 name|VisitAsmStmtHelperOutputs
 argument_list|(
-argument|const AsmStmt* A
+argument|const AsmStmt *A
 argument_list|,
 argument|AsmStmt::const_outputs_iterator I
 argument_list|,
 argument|AsmStmt::const_outputs_iterator E
 argument_list|,
-argument|ExplodedNode* Pred
+argument|ExplodedNode *Pred
 argument_list|,
-argument|ExplodedNodeSet& Dst
+argument|ExplodedNodeSet&Dst
 argument_list|)
 block|;
 name|void
 name|VisitAsmStmtHelperInputs
 argument_list|(
-argument|const AsmStmt* A
+argument|const AsmStmt *A
 argument_list|,
 argument|AsmStmt::const_inputs_iterator I
 argument_list|,
 argument|AsmStmt::const_inputs_iterator E
 argument_list|,
-argument|ExplodedNode* Pred
+argument|ExplodedNode *Pred
 argument_list|,
-argument|ExplodedNodeSet& Dst
+argument|ExplodedNodeSet&Dst
 argument_list|)
 block|;
 comment|/// VisitBlockExpr - Transfer function logic for BlockExprs.
@@ -1151,23 +1129,6 @@ operator|&
 name|Dst
 argument_list|)
 block|;
-name|void
-name|VisitObjCPropertyRefExpr
-argument_list|(
-specifier|const
-name|ObjCPropertyRefExpr
-operator|*
-name|E
-argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
-argument_list|,
-name|ExplodedNodeSet
-operator|&
-name|Dst
-argument_list|)
-block|;
 comment|/// Transfer function logic for computing the lvalue of an Objective-C ivar.
 name|void
 name|VisitLvalObjCIvarRefExpr
@@ -1206,36 +1167,6 @@ name|Dst
 argument_list|)
 block|;
 name|void
-name|VisitObjCForCollectionStmtAux
-argument_list|(
-argument|const ObjCForCollectionStmt* S
-argument_list|,
-argument|ExplodedNode* Pred
-argument_list|,
-argument|ExplodedNodeSet& Dst
-argument_list|,
-argument|SVal ElementV
-argument_list|)
-block|;
-comment|/// VisitObjCMessageExpr - Transfer function for ObjC message expressions.
-name|void
-name|VisitObjCMessageExpr
-argument_list|(
-specifier|const
-name|ObjCMessageExpr
-operator|*
-name|ME
-argument_list|,
-name|ExplodedNode
-operator|*
-name|Pred
-argument_list|,
-name|ExplodedNodeSet
-operator|&
-name|Dst
-argument_list|)
-block|;
-name|void
 name|VisitObjCMessage
 argument_list|(
 specifier|const
@@ -1243,9 +1174,9 @@ name|ObjCMessage
 operator|&
 name|msg
 argument_list|,
-name|ExplodedNodeSet
-operator|&
-name|Src
+name|ExplodedNode
+operator|*
+name|Pred
 argument_list|,
 name|ExplodedNodeSet
 operator|&
@@ -1472,9 +1403,9 @@ name|void
 name|CreateCXXTemporaryObject
 argument_list|(
 specifier|const
-name|Expr
+name|MaterializeTemporaryExpr
 operator|*
-name|Ex
+name|ME
 argument_list|,
 name|ExplodedNode
 operator|*
@@ -1574,6 +1505,21 @@ operator|*
 name|Ex
 argument_list|)
 block|;
+name|std
+operator|::
+name|pair
+operator|<
+specifier|const
+name|ProgramPointTag
+operator|*
+block|,
+specifier|const
+name|ProgramPointTag
+operator|*
+operator|>
+name|getEagerlyAssumeTags
+argument_list|()
+block|;
 name|SVal
 name|evalMinus
 argument_list|(
@@ -1585,7 +1531,7 @@ name|X
 operator|.
 name|isValid
 argument_list|()
-condition|?
+operator|?
 name|svalBuilder
 operator|.
 name|evalMinus
@@ -1598,7 +1544,7 @@ operator|(
 name|X
 operator|)
 argument_list|)
-else|:
+operator|:
 name|X
 return|;
 block|}
@@ -1635,7 +1581,7 @@ operator|:
 name|SVal
 name|evalBinOp
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|BinaryOperator::Opcode op
 argument_list|,
@@ -1666,7 +1612,7 @@ block|}
 name|SVal
 name|evalBinOp
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|BinaryOperator::Opcode op
 argument_list|,
@@ -1710,7 +1656,7 @@ block|}
 name|SVal
 name|evalBinOp
 argument_list|(
-argument|const GRState *ST
+argument|const ProgramState *ST
 argument_list|,
 argument|BinaryOperator::Opcode Op
 argument_list|,
@@ -1743,50 +1689,54 @@ operator|:
 name|void
 name|evalObjCMessage
 argument_list|(
-argument|ExplodedNodeSet& Dst
-argument_list|,
-argument|const ObjCMessage&msg
-argument_list|,
-argument|ExplodedNode* Pred
-argument_list|,
-argument|const GRState *state
-argument_list|)
-block|{
-name|assert
-argument_list|(
-name|Builder
-operator|&&
-literal|"StmtNodeBuilder must be defined."
-argument_list|)
-block|;
-name|getTF
-argument_list|()
-operator|.
-name|evalObjCMessage
-argument_list|(
+name|ExplodedNodeSet
+operator|&
 name|Dst
 argument_list|,
-operator|*
-name|this
-argument_list|,
-operator|*
-name|Builder
-argument_list|,
+specifier|const
+name|ObjCMessage
+operator|&
 name|msg
 argument_list|,
+name|ExplodedNode
+operator|*
 name|Pred
 argument_list|,
+specifier|const
+name|ProgramState
+operator|*
 name|state
 argument_list|)
-block|;   }
+block|;
 specifier|const
-name|GRState
+name|ProgramState
+operator|*
+name|invalidateArguments
+argument_list|(
+specifier|const
+name|ProgramState
+operator|*
+name|State
+argument_list|,
+specifier|const
+name|CallOrObjCMessage
+operator|&
+name|Call
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LC
+argument_list|)
+block|;
+specifier|const
+name|ProgramState
 operator|*
 name|MarkBranch
 argument_list|(
-argument|const GRState* St
+argument|const ProgramState *St
 argument_list|,
-argument|const Stmt* Terminator
+argument|const Stmt *Terminator
 argument_list|,
 argument|bool branchTaken
 argument_list|)
@@ -1796,13 +1746,11 @@ comment|///  This method is used by evalStore, VisitDeclStmt, and others.
 name|void
 name|evalBind
 argument_list|(
-argument|ExplodedNodeSet& Dst
+argument|ExplodedNodeSet&Dst
 argument_list|,
-argument|const Stmt* StoreE
+argument|const Stmt *StoreE
 argument_list|,
-argument|ExplodedNode* Pred
-argument_list|,
-argument|const GRState* St
+argument|ExplodedNode *Pred
 argument_list|,
 argument|SVal location
 argument_list|,
@@ -1822,17 +1770,17 @@ comment|/// Simulate a read of the result of Ex.
 name|void
 name|evalLoad
 argument_list|(
-argument|ExplodedNodeSet& Dst
+argument|ExplodedNodeSet&Dst
 argument_list|,
-argument|const Expr* Ex
+argument|const Expr *Ex
 argument_list|,
-argument|ExplodedNode* Pred
+argument|ExplodedNode *Pred
 argument_list|,
-argument|const GRState* St
+argument|const ProgramState *St
 argument_list|,
 argument|SVal location
 argument_list|,
-argument|const void *tag =
+argument|const ProgramPointTag *tag =
 literal|0
 argument_list|,
 argument|QualType LoadTy = QualType()
@@ -1843,21 +1791,21 @@ comment|// instead.
 name|void
 name|evalStore
 argument_list|(
-argument|ExplodedNodeSet& Dst
+argument|ExplodedNodeSet&Dst
 argument_list|,
-argument|const Expr* AssignE
+argument|const Expr *AssignE
 argument_list|,
-argument|const Expr* StoreE
+argument|const Expr *StoreE
 argument_list|,
-argument|ExplodedNode* Pred
+argument|ExplodedNode *Pred
 argument_list|,
-argument|const GRState* St
+argument|const ProgramState *St
 argument_list|,
 argument|SVal TargetLV
 argument_list|,
 argument|SVal Val
 argument_list|,
-argument|const void *tag =
+argument|const ProgramPointTag *tag =
 literal|0
 argument_list|)
 block|;
@@ -1866,17 +1814,17 @@ operator|:
 name|void
 name|evalLoadCommon
 argument_list|(
-argument|ExplodedNodeSet& Dst
+argument|ExplodedNodeSet&Dst
 argument_list|,
-argument|const Expr* Ex
+argument|const Expr *Ex
 argument_list|,
-argument|ExplodedNode* Pred
+argument|ExplodedNode *Pred
 argument_list|,
-argument|const GRState* St
+argument|const ProgramState *St
 argument_list|,
 argument|SVal location
 argument_list|,
-argument|const void *tag
+argument|const ProgramPointTag *tag
 argument_list|,
 argument|QualType LoadTy
 argument_list|)
@@ -1890,13 +1838,13 @@ argument|ExplodedNodeSet&Dst
 argument_list|,
 argument|const Stmt *S
 argument_list|,
-argument|ExplodedNode* Pred
+argument|ExplodedNode *Pred
 argument_list|,
-argument|const GRState* St
+argument|const ProgramState *St
 argument_list|,
 argument|SVal location
 argument_list|,
-argument|const void *tag
+argument|const ProgramPointTag *tag
 argument_list|,
 argument|bool isLoad
 argument_list|)

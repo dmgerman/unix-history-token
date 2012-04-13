@@ -415,7 +415,7 @@ value|0x0024
 end_define
 
 begin_comment
-comment|/* AR5416 PCI-E (XB) Owl */
+comment|/* AR5418 PCI-E (XB) Owl */
 end_comment
 
 begin_define
@@ -459,7 +459,7 @@ value|0x002a
 end_define
 
 begin_comment
-comment|/* AR9280 PCI-E Merlin */
+comment|/* AR9220 PCI-E Merlin */
 end_comment
 
 begin_define

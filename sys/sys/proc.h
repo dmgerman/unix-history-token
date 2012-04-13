@@ -402,6 +402,12 @@ end_struct_decl
 
 begin_struct_decl
 struct_decl|struct
+name|sbuf
+struct_decl|;
+end_struct_decl
+
+begin_struct_decl
+struct_decl|struct
 name|sleepqueue
 struct_decl|;
 end_struct_decl
@@ -637,6 +643,10 @@ name|short
 name|td_lk_slocks
 decl_stmt|;
 comment|/* (k) Count of lockmgr shared locks. */
+name|short
+name|td_stopsched
+decl_stmt|;
+comment|/* (k) Scheduler stopped. */
 name|struct
 name|turnstile
 modifier|*
@@ -954,6 +964,12 @@ modifier|*
 name|td_intr_frame
 decl_stmt|;
 comment|/* (k) Frame of the current irq */
+name|struct
+name|proc
+modifier|*
+name|td_rfppwait_p
+decl_stmt|;
+comment|/* (k) The vforked child */
 block|}
 struct|;
 end_struct
@@ -1502,6 +1518,17 @@ begin_comment
 comment|/* Stop at the return from fork (child 				      only) */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TDB_CHILD
+value|0x00000100
+end_define
+
+begin_comment
+comment|/* New child indicator for ptrace() */
+end_comment
+
 begin_comment
 comment|/*  * "Private" flags kept in td_pflags:  * These are only written by curthread and thus need no locking.  */
 end_comment
@@ -1630,12 +1657,12 @@ end_comment
 begin_define
 define|#
 directive|define
-name|TDP_UNUSED800
+name|TDP_SYNCIO
 value|0x00000800
 end_define
 
 begin_comment
-comment|/* available. */
+comment|/* Local override, disable async i/o. */
 end_comment
 
 begin_define
@@ -1779,6 +1806,39 @@ end_define
 
 begin_comment
 comment|/* Audit record pending on thread */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_RFPPWAIT
+value|0x02000000
+end_define
+
+begin_comment
+comment|/* Handle RFPPWAIT on syscall exit */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_RESETSPUR
+value|0x04000000
+end_define
+
+begin_comment
+comment|/* Reset spurious page fault history. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|TDP_NERRNO
+value|0x08000000
+end_define
+
+begin_comment
+comment|/* Last errno is already in td_errno */
 end_comment
 
 begin_comment
@@ -2280,10 +2340,6 @@ name|pid_t
 name|p_oppid
 decl_stmt|;
 comment|/* (c + e) Save ppid in ptrace. XXX */
-name|int
-name|p_dbg_child
-decl_stmt|;
-comment|/* (c + e) # of debugged children in 							ptrace. */
 name|struct
 name|vmspace
 modifier|*
@@ -2413,7 +2469,7 @@ comment|/* (c) Trap thread */
 name|int
 name|p_boundary_count
 decl_stmt|;
-comment|/* (c) Num threads at user boundary */
+comment|/* (j) Num threads at user boundary */
 name|int
 name|p_pendingcnt
 decl_stmt|;
@@ -2591,6 +2647,22 @@ modifier|*
 name|p_racct
 decl_stmt|;
 comment|/* (b) Resource accounting. */
+comment|/* 	 * An orphan is the child that has beed re-parented to the 	 * debugger as a result of attaching to it.  Need to keep 	 * track of them for parent to be able to collect the exit 	 * status of what used to be children. 	 */
+name|LIST_ENTRY
+argument_list|(
+argument|proc
+argument_list|)
+name|p_orphan
+expr_stmt|;
+comment|/* (e) List of orphan processes. */
+name|LIST_HEAD
+argument_list|(
+argument_list|,
+argument|proc
+argument_list|)
+name|p_orphans
+expr_stmt|;
+comment|/* (e) Pointer to list of orphans. */
 block|}
 struct|;
 end_struct
@@ -2929,6 +3001,17 @@ end_define
 
 begin_comment
 comment|/* Process is in jail. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|P_ORPHAN
+value|0x2000000
+end_define
+
+begin_comment
+comment|/* Orphaned. */
 end_comment
 
 begin_define
@@ -3690,7 +3773,7 @@ name|_PRELE
 parameter_list|(
 name|p
 parameter_list|)
-value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	(--(p)->p_lock);						\ 	if (((p)->p_flag& P_WEXIT)&& (p)->p_lock == 0)		\ 		wakeup(&(p)->p_lock);					\ } while (0)
+value|do {							\ 	PROC_LOCK_ASSERT((p), MA_OWNED);				\ 	PROC_ASSERT_HELD(p);						\ 	(--(p)->p_lock);						\ 	if (((p)->p_flag& P_WEXIT)&& (p)->p_lock == 0)		\ 		wakeup(&(p)->p_lock);					\ } while (0)
 end_define
 
 begin_define
@@ -4067,6 +4150,102 @@ end_function_decl
 begin_comment
 comment|/* Find zombie process by id. */
 end_comment
+
+begin_comment
+comment|/*  * pget() flags.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_HOLD
+value|0x00001
+end_define
+
+begin_comment
+comment|/* Hold the process. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_CANSEE
+value|0x00002
+end_define
+
+begin_comment
+comment|/* Check against p_cansee(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_CANDEBUG
+value|0x00004
+end_define
+
+begin_comment
+comment|/* Check against p_candebug(). */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_ISCURRENT
+value|0x00008
+end_define
+
+begin_comment
+comment|/* Check that the found process is current. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_NOTWEXIT
+value|0x00010
+end_define
+
+begin_comment
+comment|/* Check that the process is not in P_WEXIT. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_NOTINEXEC
+value|0x00020
+end_define
+
+begin_comment
+comment|/* Check that the process is not in P_INEXEC. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PGET_WANTREAD
+value|(PGET_HOLD | PGET_CANDEBUG | PGET_NOTWEXIT)
+end_define
+
+begin_function_decl
+name|int
+name|pget
+parameter_list|(
+name|pid_t
+name|pid
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+modifier|*
+name|pp
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|void
@@ -4450,6 +4629,50 @@ name|struct
 name|pargs
 modifier|*
 name|pa
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|proc_getargv
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
+name|proc_getenvv
+parameter_list|(
+name|struct
+name|thread
+modifier|*
+name|td
+parameter_list|,
+name|struct
+name|proc
+modifier|*
+name|p
+parameter_list|,
+name|struct
+name|sbuf
+modifier|*
+name|sb
 parameter_list|)
 function_decl|;
 end_function_decl

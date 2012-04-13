@@ -126,6 +126,9 @@ name|CXAvailability_Deprecated
 block|,
 comment|/**    * \brief The entity is not available; any use of it will be an error.    */
 name|CXAvailability_NotAvailable
+block|,
+comment|/**    * \brief The entity is available, but not accessible; any use of it will be    * an error.    */
+name|CXAvailability_NotAccessible
 block|}
 enum|;
 comment|/**  * \defgroup CINDEX_STRING String manipulation routines  *  * @{  */
@@ -238,7 +241,7 @@ parameter_list|)
 function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_LOCATIONS Physical source locations  *  * Clang represents physical source locations in its abstract syntax tree in  * great detail, with file, line, and column information for the majority of  * the tokens parsed in the source code. These data types and functions are  * used to represent source location information, either for a particular  * point in the program or for a range of points in the program, and extract  * specific location information from those data types.  *  * @{  */
-comment|/**  * \brief Identifies a specific source location within a translation  * unit.  *  * Use clang_getInstantiationLocation() or clang_getSpellingLocation()  * to map a source location to a particular file, line, and column.  */
+comment|/**  * \brief Identifies a specific source location within a translation  * unit.  *  * Use clang_getExpansionLocation() or clang_getSpellingLocation()  * to map a source location to a particular file, line, and column.  */
 typedef|typedef
 struct|struct
 block|{
@@ -344,7 +347,74 @@ name|CXSourceLocation
 name|end
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location.  *  * If the location refers into a macro instantiation, retrieves the  * location of the macro instantiation.  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param file [out] if non-NULL, will be set to the file to which the given  * source location points.  *  * \param line [out] if non-NULL, will be set to the line to which the given  * source location points.  *  * \param column [out] if non-NULL, will be set to the column to which the given  * source location points.  *  * \param offset [out] if non-NULL, will be set to the offset into the  * buffer to which the given source location points.  */
+comment|/**  * \brief Determine whether two ranges are equivalent.  *  * \returns non-zero if the ranges are the same, zero if they differ.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_equalRanges
+parameter_list|(
+name|CXSourceRange
+name|range1
+parameter_list|,
+name|CXSourceRange
+name|range2
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns non-zero if \arg range is null.  */
+name|CINDEX_LINKAGE
+name|int
+name|clang_Range_isNull
+parameter_list|(
+name|CXSourceRange
+name|range
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location.  *  * If the location refers into a macro expansion, retrieves the  * location of the macro expansion.  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param file [out] if non-NULL, will be set to the file to which the given  * source location points.  *  * \param line [out] if non-NULL, will be set to the line to which the given  * source location points.  *  * \param column [out] if non-NULL, will be set to the column to which the given  * source location points.  *  * \param offset [out] if non-NULL, will be set to the offset into the  * buffer to which the given source location points.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_getExpansionLocation
+parameter_list|(
+name|CXSourceLocation
+name|location
+parameter_list|,
+name|CXFile
+modifier|*
+name|file
+parameter_list|,
+name|unsigned
+modifier|*
+name|line
+parameter_list|,
+name|unsigned
+modifier|*
+name|column
+parameter_list|,
+name|unsigned
+modifier|*
+name|offset
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the file, line, column, and offset represented by  * the given source location, as specified in a # line directive.  *  * Example: given the following source code in a file somefile.c  *  * #123 "dummy.c" 1  *  * static int func(void)  * {  *     return 0;  * }  *  * the location information returned by this function would be  *  * File: dummy.c Line: 124 Column: 12  *  * whereas clang_getExpansionLocation would have returned  *  * File: somefile.c Line: 3 Column: 12  *  * \param location the location within a source file that will be decomposed  * into its parts.  *  * \param filename [out] if non-NULL, will be set to the filename of the  * source location. Note that filenames returned will be for "virtual" files,  * which don't necessarily exist on the machine running clang - e.g. when  * parsing preprocessed output obtained from a different environment. If  * a non-NULL value is passed in, remember to dispose of the returned value  * using \c clang_disposeString() once you've finished with it. For an invalid  * source location, an empty string is returned.  *  * \param line [out] if non-NULL, will be set to the line number of the  * source location. For an invalid source location, zero is returned.  *  * \param column [out] if non-NULL, will be set to the column number of the  * source location. For an invalid source location, zero is returned.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_getPresumedLocation
+parameter_list|(
+name|CXSourceLocation
+name|location
+parameter_list|,
+name|CXString
+modifier|*
+name|filename
+parameter_list|,
+name|unsigned
+modifier|*
+name|line
+parameter_list|,
+name|unsigned
+modifier|*
+name|column
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Legacy API to retrieve the file, line, column, and offset represented  * by the given source location.  *  * This interface has been replaced by the newer interface  * \see clang_getExpansionLocation(). See that interface's documentation for  * details.  */
 name|CINDEX_LINKAGE
 name|void
 name|clang_getInstantiationLocation
@@ -720,12 +790,12 @@ name|CXTranslationUnit_CacheCompletionResults
 init|=
 literal|0x08
 block|,
-comment|/**    * \brief Enable precompiled preambles in C++.    *    * Note: this is a *temporary* option that is available only while    * we are testing C++ precompiled preamble support.    */
+comment|/**    * \brief DEPRECATED: Enable precompiled preambles in C++.    *    * Note: this is a *temporary* option that is available only while    * we are testing C++ precompiled preamble support. It is deprecated.    */
 name|CXTranslationUnit_CXXPrecompiledPreamble
 init|=
 literal|0x10
 block|,
-comment|/**    * \brief Enabled chained precompiled preambles in C++.    *    * Note: this is a *temporary* option that is available only while    * we are testing C++ precompiled preamble support.    */
+comment|/**    * \brief DEPRECATED: Enabled chained precompiled preambles in C++.    *    * Note: this is a *temporary* option that is available only while    * we are testing C++ precompiled preamble support. It is deprecated.    */
 name|CXTranslationUnit_CXXChainedPCH
 init|=
 literal|0x20
@@ -944,13 +1014,21 @@ name|CXTUResourceUsage_PreprocessingRecord
 init|=
 literal|12
 block|,
+name|CXTUResourceUsage_SourceManager_DataStructures
+init|=
+literal|13
+block|,
+name|CXTUResourceUsage_Preprocessor_HeaderSearch
+init|=
+literal|14
+block|,
 name|CXTUResourceUsage_MEMORY_IN_BYTES_BEGIN
 init|=
 name|CXTUResourceUsage_AST
 block|,
 name|CXTUResourceUsage_MEMORY_IN_BYTES_END
 init|=
-name|CXTUResourceUsage_PreprocessingRecord
+name|CXTUResourceUsage_Preprocessor_HeaderSearch
 block|,
 name|CXTUResourceUsage_First
 init|=
@@ -958,7 +1036,7 @@ name|CXTUResourceUsage_AST
 block|,
 name|CXTUResourceUsage_Last
 init|=
-name|CXTUResourceUsage_PreprocessingRecord
+name|CXTUResourceUsage_Preprocessor_HeaderSearch
 block|}
 enum|;
 comment|/**   * \brief Returns the human-readable null-terminated C string that represents   *  the name of the memory category.  This string should never be freed.   */
@@ -1225,13 +1303,18 @@ name|CXCursor_ObjCDynamicDecl
 init|=
 literal|38
 block|,
+comment|/** \brief An access specifier. */
+name|CXCursor_CXXAccessSpecifier
+init|=
+literal|39
+block|,
 name|CXCursor_FirstDecl
 init|=
 name|CXCursor_UnexposedDecl
 block|,
 name|CXCursor_LastDecl
 init|=
-name|CXCursor_ObjCDynamicDecl
+name|CXCursor_CXXAccessSpecifier
 block|,
 comment|/* References */
 name|CXCursor_FirstRef
@@ -1349,9 +1432,199 @@ name|CXCursor_BlockExpr
 init|=
 literal|105
 block|,
+comment|/** \brief An integer literal.    */
+name|CXCursor_IntegerLiteral
+init|=
+literal|106
+block|,
+comment|/** \brief A floating point number literal.    */
+name|CXCursor_FloatingLiteral
+init|=
+literal|107
+block|,
+comment|/** \brief An imaginary number literal.    */
+name|CXCursor_ImaginaryLiteral
+init|=
+literal|108
+block|,
+comment|/** \brief A string literal.    */
+name|CXCursor_StringLiteral
+init|=
+literal|109
+block|,
+comment|/** \brief A character literal.    */
+name|CXCursor_CharacterLiteral
+init|=
+literal|110
+block|,
+comment|/** \brief A parenthesized expression, e.g. "(1)".    *    * This AST node is only formed if full location information is requested.    */
+name|CXCursor_ParenExpr
+init|=
+literal|111
+block|,
+comment|/** \brief This represents the unary-expression's (except sizeof and    * alignof).    */
+name|CXCursor_UnaryOperator
+init|=
+literal|112
+block|,
+comment|/** \brief [C99 6.5.2.1] Array Subscripting.    */
+name|CXCursor_ArraySubscriptExpr
+init|=
+literal|113
+block|,
+comment|/** \brief A builtin binary operation expression such as "x + y" or    * "x<= y".    */
+name|CXCursor_BinaryOperator
+init|=
+literal|114
+block|,
+comment|/** \brief Compound assignment such as "+=".    */
+name|CXCursor_CompoundAssignOperator
+init|=
+literal|115
+block|,
+comment|/** \brief The ?: ternary operator.    */
+name|CXCursor_ConditionalOperator
+init|=
+literal|116
+block|,
+comment|/** \brief An explicit cast in C (C99 6.5.4) or a C-style cast in C++    * (C++ [expr.cast]), which uses the syntax (Type)expr.    *    * For example: (int)f.    */
+name|CXCursor_CStyleCastExpr
+init|=
+literal|117
+block|,
+comment|/** \brief [C99 6.5.2.5]    */
+name|CXCursor_CompoundLiteralExpr
+init|=
+literal|118
+block|,
+comment|/** \brief Describes an C or C++ initializer list.    */
+name|CXCursor_InitListExpr
+init|=
+literal|119
+block|,
+comment|/** \brief The GNU address of label extension, representing&&label.    */
+name|CXCursor_AddrLabelExpr
+init|=
+literal|120
+block|,
+comment|/** \brief This is the GNU Statement Expression extension: ({int X=4; X;})    */
+name|CXCursor_StmtExpr
+init|=
+literal|121
+block|,
+comment|/** \brief Represents a C1X generic selection.    */
+name|CXCursor_GenericSelectionExpr
+init|=
+literal|122
+block|,
+comment|/** \brief Implements the GNU __null extension, which is a name for a null    * pointer constant that has integral type (e.g., int or long) and is the same    * size and alignment as a pointer.    *    * The __null extension is typically only used by system headers, which define    * NULL as __null in C++ rather than using 0 (which is an integer that may not    * match the size of a pointer).    */
+name|CXCursor_GNUNullExpr
+init|=
+literal|123
+block|,
+comment|/** \brief C++'s static_cast<> expression.    */
+name|CXCursor_CXXStaticCastExpr
+init|=
+literal|124
+block|,
+comment|/** \brief C++'s dynamic_cast<> expression.    */
+name|CXCursor_CXXDynamicCastExpr
+init|=
+literal|125
+block|,
+comment|/** \brief C++'s reinterpret_cast<> expression.    */
+name|CXCursor_CXXReinterpretCastExpr
+init|=
+literal|126
+block|,
+comment|/** \brief C++'s const_cast<> expression.    */
+name|CXCursor_CXXConstCastExpr
+init|=
+literal|127
+block|,
+comment|/** \brief Represents an explicit C++ type conversion that uses "functional"    * notion (C++ [expr.type.conv]).    *    * Example:    * \code    *   x = int(0.5);    * \endcode    */
+name|CXCursor_CXXFunctionalCastExpr
+init|=
+literal|128
+block|,
+comment|/** \brief A C++ typeid expression (C++ [expr.typeid]).    */
+name|CXCursor_CXXTypeidExpr
+init|=
+literal|129
+block|,
+comment|/** \brief [C++ 2.13.5] C++ Boolean Literal.    */
+name|CXCursor_CXXBoolLiteralExpr
+init|=
+literal|130
+block|,
+comment|/** \brief [C++0x 2.14.7] C++ Pointer Literal.    */
+name|CXCursor_CXXNullPtrLiteralExpr
+init|=
+literal|131
+block|,
+comment|/** \brief Represents the "this" expression in C++    */
+name|CXCursor_CXXThisExpr
+init|=
+literal|132
+block|,
+comment|/** \brief [C++ 15] C++ Throw Expression.    *    * This handles 'throw' and 'throw' assignment-expression. When    * assignment-expression isn't present, Op will be null.    */
+name|CXCursor_CXXThrowExpr
+init|=
+literal|133
+block|,
+comment|/** \brief A new expression for memory allocation and constructor calls, e.g:    * "new CXXNewExpr(foo)".    */
+name|CXCursor_CXXNewExpr
+init|=
+literal|134
+block|,
+comment|/** \brief A delete expression for memory deallocation and destructor calls,    * e.g. "delete[] pArray".    */
+name|CXCursor_CXXDeleteExpr
+init|=
+literal|135
+block|,
+comment|/** \brief A unary expression.    */
+name|CXCursor_UnaryExpr
+init|=
+literal|136
+block|,
+comment|/** \brief ObjCStringLiteral, used for Objective-C string literals i.e. "foo".    */
+name|CXCursor_ObjCStringLiteral
+init|=
+literal|137
+block|,
+comment|/** \brief ObjCEncodeExpr, used for in Objective-C.    */
+name|CXCursor_ObjCEncodeExpr
+init|=
+literal|138
+block|,
+comment|/** \brief ObjCSelectorExpr used for in Objective-C.    */
+name|CXCursor_ObjCSelectorExpr
+init|=
+literal|139
+block|,
+comment|/** \brief Objective-C's protocol expression.    */
+name|CXCursor_ObjCProtocolExpr
+init|=
+literal|140
+block|,
+comment|/** \brief An Objective-C "bridged" cast expression, which casts between    * Objective-C pointers and C pointers, transferring ownership in the process.    *    * \code    *   NSString *str = (__bridge_transfer NSString *)CFCreateString();    * \endcode    */
+name|CXCursor_ObjCBridgedCastExpr
+init|=
+literal|141
+block|,
+comment|/** \brief Represents a C++0x pack expansion that produces a sequence of    * expressions.    *    * A pack expansion expression contains a pattern (which itself is an    * expression) followed by an ellipsis. For example:    *    * \code    * template<typename F, typename ...Types>    * void forward(F f, Types&&...args) {    *  f(static_cast<Types&&>(args)...);    * }    * \endcode    */
+name|CXCursor_PackExpansionExpr
+init|=
+literal|142
+block|,
+comment|/** \brief Represents an expression that computes the length of a parameter    * pack.    *    * \code    * template<typename ...Types>    * struct count {    *   static const unsigned value = sizeof...(Types);    * };    * \endcode    */
+name|CXCursor_SizeOfPackExpr
+init|=
+literal|143
+block|,
 name|CXCursor_LastExpr
 init|=
-literal|105
+name|CXCursor_SizeOfPackExpr
 block|,
 comment|/* Statements */
 name|CXCursor_FirstStmt
@@ -1368,9 +1641,154 @@ name|CXCursor_LabelStmt
 init|=
 literal|201
 block|,
+comment|/** \brief A group of statements like { stmt stmt }.    *    * This cursor kind is used to describe compound statements, e.g. function    * bodies.    */
+name|CXCursor_CompoundStmt
+init|=
+literal|202
+block|,
+comment|/** \brief A case statment.    */
+name|CXCursor_CaseStmt
+init|=
+literal|203
+block|,
+comment|/** \brief A default statement.    */
+name|CXCursor_DefaultStmt
+init|=
+literal|204
+block|,
+comment|/** \brief An if statement    */
+name|CXCursor_IfStmt
+init|=
+literal|205
+block|,
+comment|/** \brief A switch statement.    */
+name|CXCursor_SwitchStmt
+init|=
+literal|206
+block|,
+comment|/** \brief A while statement.    */
+name|CXCursor_WhileStmt
+init|=
+literal|207
+block|,
+comment|/** \brief A do statement.    */
+name|CXCursor_DoStmt
+init|=
+literal|208
+block|,
+comment|/** \brief A for statement.    */
+name|CXCursor_ForStmt
+init|=
+literal|209
+block|,
+comment|/** \brief A goto statement.    */
+name|CXCursor_GotoStmt
+init|=
+literal|210
+block|,
+comment|/** \brief An indirect goto statement.    */
+name|CXCursor_IndirectGotoStmt
+init|=
+literal|211
+block|,
+comment|/** \brief A continue statement.    */
+name|CXCursor_ContinueStmt
+init|=
+literal|212
+block|,
+comment|/** \brief A break statement.    */
+name|CXCursor_BreakStmt
+init|=
+literal|213
+block|,
+comment|/** \brief A return statement.    */
+name|CXCursor_ReturnStmt
+init|=
+literal|214
+block|,
+comment|/** \brief A GNU inline assembly statement extension.    */
+name|CXCursor_AsmStmt
+init|=
+literal|215
+block|,
+comment|/** \brief Objective-C's overall @try-@catc-@finall statement.    */
+name|CXCursor_ObjCAtTryStmt
+init|=
+literal|216
+block|,
+comment|/** \brief Objective-C's @catch statement.    */
+name|CXCursor_ObjCAtCatchStmt
+init|=
+literal|217
+block|,
+comment|/** \brief Objective-C's @finally statement.    */
+name|CXCursor_ObjCAtFinallyStmt
+init|=
+literal|218
+block|,
+comment|/** \brief Objective-C's @throw statement.    */
+name|CXCursor_ObjCAtThrowStmt
+init|=
+literal|219
+block|,
+comment|/** \brief Objective-C's @synchronized statement.    */
+name|CXCursor_ObjCAtSynchronizedStmt
+init|=
+literal|220
+block|,
+comment|/** \brief Objective-C's autorelease pool statement.    */
+name|CXCursor_ObjCAutoreleasePoolStmt
+init|=
+literal|221
+block|,
+comment|/** \brief Objective-C's collection statement.    */
+name|CXCursor_ObjCForCollectionStmt
+init|=
+literal|222
+block|,
+comment|/** \brief C++'s catch statement.    */
+name|CXCursor_CXXCatchStmt
+init|=
+literal|223
+block|,
+comment|/** \brief C++'s try statement.    */
+name|CXCursor_CXXTryStmt
+init|=
+literal|224
+block|,
+comment|/** \brief C++'s for (* : *) statement.    */
+name|CXCursor_CXXForRangeStmt
+init|=
+literal|225
+block|,
+comment|/** \brief Windows Structured Exception Handling's try statement.    */
+name|CXCursor_SEHTryStmt
+init|=
+literal|226
+block|,
+comment|/** \brief Windows Structured Exception Handling's except statement.    */
+name|CXCursor_SEHExceptStmt
+init|=
+literal|227
+block|,
+comment|/** \brief Windows Structured Exception Handling's finally statement.    */
+name|CXCursor_SEHFinallyStmt
+init|=
+literal|228
+block|,
+comment|/** \brief The null satement ";": C99 6.8.3p3.    *    * This cursor kind is used to describe the null statement.    */
+name|CXCursor_NullStmt
+init|=
+literal|230
+block|,
+comment|/** \brief Adaptor class for mixing declarations with statements and    * expressions.    */
+name|CXCursor_DeclStmt
+init|=
+literal|231
+block|,
 name|CXCursor_LastStmt
 init|=
-name|CXCursor_LabelStmt
+name|CXCursor_DeclStmt
 block|,
 comment|/**    * \brief Cursor that represents the translation unit itself.    *    * The translation unit cursor exists primarily to act as the root    * cursor for traversing the contents of a translation unit.    */
 name|CXCursor_TranslationUnit
@@ -1399,9 +1817,21 @@ name|CXCursor_IBOutletCollectionAttr
 init|=
 literal|403
 block|,
+name|CXCursor_CXXFinalAttr
+init|=
+literal|404
+block|,
+name|CXCursor_CXXOverrideAttr
+init|=
+literal|405
+block|,
+name|CXCursor_AnnotateAttr
+init|=
+literal|406
+block|,
 name|CXCursor_LastAttr
 init|=
-name|CXCursor_IBOutletCollectionAttr
+name|CXCursor_AnnotateAttr
 block|,
 comment|/* Preprocessing */
 name|CXCursor_PreprocessingDirective
@@ -1441,6 +1871,9 @@ name|enum
 name|CXCursorKind
 name|kind
 decl_stmt|;
+name|int
+name|xdata
+decl_stmt|;
 name|void
 modifier|*
 name|data
@@ -1475,6 +1908,13 @@ name|clang_equalCursors
 parameter_list|(
 name|CXCursor
 parameter_list|,
+name|CXCursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns non-zero if \arg cursor is null.  */
+name|int
+name|clang_Cursor_isNull
+parameter_list|(
 name|CXCursor
 parameter_list|)
 function_decl|;
@@ -1640,6 +2080,14 @@ name|clang_getCursorLanguage
 parameter_list|(
 name|CXCursor
 name|cursor
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the translation unit that a cursor originated from.  */
+name|CINDEX_LINKAGE
+name|CXTranslationUnit
+name|clang_Cursor_getTranslationUnit
+parameter_list|(
+name|CXCursor
 parameter_list|)
 function_decl|;
 comment|/**  * \brief A fast container representing a set of CXCursors.  */
@@ -1955,6 +2403,10 @@ block|,
 name|CXType_FunctionProto
 init|=
 literal|111
+block|,
+name|CXType_ConstantArray
+init|=
+literal|112
 block|}
 enum|;
 comment|/**  * \brief The type of an element in the abstract syntax tree.  *  */
@@ -2096,6 +2548,25 @@ name|CXType
 name|T
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Return the element type of an array type.  *  * If a non-array type is passed in, an invalid type is returned.  */
+name|CINDEX_LINKAGE
+name|CXType
+name|clang_getArrayElementType
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Return the the array size of a constant array.  *  * If a non-array type is passed in, -1 is returned.  */
+name|CINDEX_LINKAGE
+name|long
+name|long
+name|clang_getArraySize
+parameter_list|(
+name|CXType
+name|T
+parameter_list|)
+function_decl|;
 comment|/**  * \brief Returns 1 if the base class specified by the cursor with kind  *   CX_CXXBaseSpecifier is virtual.  */
 name|CINDEX_LINKAGE
 name|unsigned
@@ -2117,7 +2588,7 @@ block|,
 name|CX_CXXPrivate
 block|}
 enum|;
-comment|/**  * \brief Returns the access control level for the C++ base specifier  *  represented by a cursor with kind CX_CXXBaseSpecifier.  */
+comment|/**  * \brief Returns the access control level for the C++ base specifier  * represented by a cursor with kind CXCursor_CXXBaseSpecifier or  * CXCursor_AccessSpecifier.  */
 name|CINDEX_LINKAGE
 name|enum
 name|CX_CXXAccessSpecifier
@@ -2427,6 +2898,40 @@ name|CXCursor
 name|C
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Given a cursor that references something else, return the source range  * covering that reference.  *  * \param C A cursor pointing to a member reference, a declaration reference, or  * an operator call.  * \param NameFlags A bitset with three independent flags:   * CXNameRange_WantQualifier, CXNameRange_WantTemplateArgs, and  * CXNameRange_WantSinglePiece.  * \param PieceIndex For contiguous names or when passing the flag   * CXNameRange_WantSinglePiece, only one piece with index 0 is   * available. When the CXNameRange_WantSinglePiece flag is not passed for a  * non-contiguous names, this index can be used to retreive the individual  * pieces of the name. See also CXNameRange_WantSinglePiece.  *  * \returns The piece of the name pointed to by the given cursor. If there is no  * name, or if the PieceIndex is out-of-range, a null-cursor will be returned.  */
+name|CINDEX_LINKAGE
+name|CXSourceRange
+name|clang_getCursorReferenceNameRange
+parameter_list|(
+name|CXCursor
+name|C
+parameter_list|,
+name|unsigned
+name|NameFlags
+parameter_list|,
+name|unsigned
+name|PieceIndex
+parameter_list|)
+function_decl|;
+enum|enum
+name|CXNameRefFlags
+block|{
+comment|/**    * \brief Include the nested-name-specifier, e.g. Foo:: in x.Foo::y, in the    * range.    */
+name|CXNameRange_WantQualifier
+init|=
+literal|0x1
+block|,
+comment|/**    * \brief Include the explicit template arguments, e.g.<int> in x.f<int>, in     * the range.    */
+name|CXNameRange_WantTemplateArgs
+init|=
+literal|0x2
+block|,
+comment|/**    * \brief If the name is non-contiguous, return the full spanning range.    *    * Non-contiguous names occur in Objective-C when a selector with two or more    * parameters is used, or in C++ when using an operator:    * \code    * [object doSomething:here withValue:there]; // ObjC    * return some_vector[1]; // C++    * \endcode    */
+name|CXNameRange_WantSinglePiece
+init|=
+literal|0x4
+block|}
+enum|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_LEX Token extraction and manipulation  *  * The routines in this group provide access to the tokens within a  * translation unit, along with a semantic mapping of those tokens to  * their corresponding cursors.  *  * @{  */
 comment|/**  * \brief Describes a kind of token.  */
@@ -2756,7 +3261,7 @@ name|unsigned
 name|chunk_number
 parameter_list|)
 function_decl|;
-comment|/**  * \brief Retrieve the completion string associated with a particular chunk  * within a completion string.  *  * \param completion_string the completion string to query.  *  * \param chunk_number the 0-based index of the chunk in the completion string.  *  * \returns the completion string associated with the chunk at index  * \c chunk_number, or NULL if that chunk is not represented by a completion  * string.  */
+comment|/**  * \brief Retrieve the completion string associated with a particular chunk  * within a completion string.  *  * \param completion_string the completion string to query.  *  * \param chunk_number the 0-based index of the chunk in the completion string.  *  * \returns the completion string associated with the chunk at index  * \c chunk_number.  */
 name|CINDEX_LINKAGE
 name|CXCompletionString
 name|clang_getCompletionChunkCompletionString
@@ -2794,6 +3299,36 @@ name|clang_getCompletionAvailability
 parameter_list|(
 name|CXCompletionString
 name|completion_string
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the number of annotations associated with the given  * completion string.  *  * \param completion_string the completion string to query.  *  * \returns the number of annotations associated with the given completion  * string.  */
+name|CINDEX_LINKAGE
+name|unsigned
+name|clang_getCompletionNumAnnotations
+parameter_list|(
+name|CXCompletionString
+name|completion_string
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve the annotation associated with the given completion string.  *  * \param completion_string the completion string to query.  *  * \param annotation_number the 0-based index of the annotation of the  * completion string.  *  * \returns annotation string associated with the completion at index  * \c annotation_number, or a NULL string if that annotation is not available.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_getCompletionAnnotation
+parameter_list|(
+name|CXCompletionString
+name|completion_string
+parameter_list|,
+name|unsigned
+name|annotation_number
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Retrieve a completion string for an arbitrary declaration or macro  * definition cursor.  *  * \param cursor The cursor to query.  *  * \returns A non-context-sensitive completion string for declaration and macro  * definition cursors, or NULL for other kinds of cursors.  */
+name|CINDEX_LINKAGE
+name|CXCompletionString
+name|clang_getCursorCompletionString
+parameter_list|(
+name|CXCursor
+name|cursor
 parameter_list|)
 function_decl|;
 comment|/**  * \brief Contains the results of code-completion.  *  * This data structure contains the results of code completion, as  * produced by \c clang_codeCompleteAt(). Its contents must be freed by  * \c clang_disposeCodeCompleteResults.  */
@@ -3102,6 +3637,41 @@ modifier|*
 name|Results
 parameter_list|)
 function_decl|;
+comment|/**  * \brief Returns the cursor kind for the container for the current code  * completion context. The container is only guaranteed to be set for  * contexts where a container exists (i.e. member accesses or Objective-C  * message sends); if there is not a container, this function will return  * CXCursor_InvalidCode.  *  * \param Results the code completion results to query  *  * \param IsIncomplete on return, this value will be false if Clang has complete  * information about the container. If Clang does not have complete  * information, this value will be true.  *  * \returns the container kind, or CXCursor_InvalidCode if there is not a  * container  */
+name|CINDEX_LINKAGE
+name|enum
+name|CXCursorKind
+name|clang_codeCompleteGetContainerKind
+parameter_list|(
+name|CXCodeCompleteResults
+modifier|*
+name|Results
+parameter_list|,
+name|unsigned
+modifier|*
+name|IsIncomplete
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the USR for the container for the current code completion  * context. If there is not a container for the current context, this  * function will return the empty string.  *  * \param Results the code completion results to query  *  * \returns the USR for the container  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_codeCompleteGetContainerUSR
+parameter_list|(
+name|CXCodeCompleteResults
+modifier|*
+name|Results
+parameter_list|)
+function_decl|;
+comment|/**  * \brief Returns the currently-entered selector for an Objective-C message  * send, formatted like "initWithFoo:bar:". Only guaranteed to return a  * non-empty string for CXCompletionContext_ObjCInstanceMessage and  * CXCompletionContext_ObjCClassMessage.  *  * \param Results the code completion results to query  *  * \returns the selector (or partial selector) that has been entered thus far  * for an Objective-C message send.  */
+name|CINDEX_LINKAGE
+name|CXString
+name|clang_codeCompleteGetObjCSelector
+parameter_list|(
+name|CXCodeCompleteResults
+modifier|*
+name|Results
+parameter_list|)
+function_decl|;
 comment|/**  * @}  */
 comment|/**  * \defgroup CINDEX_MISC Miscellaneous utility functions  *  * @{  */
 comment|/**  * \brief Return a version string, suitable for showing to a user, but not  *        intended to be parsed (the format is not guaranteed to be stable).  */
@@ -3210,6 +3780,94 @@ parameter_list|(
 name|CXRemapping
 parameter_list|)
 function_decl|;
+comment|/**  * @}  */
+comment|/** \defgroup CINDEX_HIGH Higher level API functions  *  * @{  */
+enum|enum
+name|CXVisitorResult
+block|{
+name|CXVisit_Break
+block|,
+name|CXVisit_Continue
+block|}
+enum|;
+typedef|typedef
+struct|struct
+block|{
+name|void
+modifier|*
+name|context
+decl_stmt|;
+name|enum
+name|CXVisitorResult
+function_decl|(
+modifier|*
+name|visit
+function_decl|)
+parameter_list|(
+name|void
+modifier|*
+name|context
+parameter_list|,
+name|CXCursor
+parameter_list|,
+name|CXSourceRange
+parameter_list|)
+function_decl|;
+block|}
+name|CXCursorAndRangeVisitor
+typedef|;
+comment|/**  * \brief Find references of a declaration in a specific file.  *   * \param cursor pointing to a declaration or a reference of one.  *  * \param file to search for references.  *  * \param visitor callback that will receive pairs of CXCursor/CXSourceRange for  * each reference found.  * The CXSourceRange will point inside the file; if the reference is inside  * a macro (and not a macro argument) the CXSourceRange will be invalid.  */
+name|CINDEX_LINKAGE
+name|void
+name|clang_findReferencesInFile
+parameter_list|(
+name|CXCursor
+name|cursor
+parameter_list|,
+name|CXFile
+name|file
+parameter_list|,
+name|CXCursorAndRangeVisitor
+name|visitor
+parameter_list|)
+function_decl|;
+ifdef|#
+directive|ifdef
+name|__has_feature
+if|#
+directive|if
+name|__has_feature
+argument_list|(
+name|blocks
+argument_list|)
+typedef|typedef
+name|enum
+name|CXVisitorResult
+function_decl|(
+modifier|^
+name|CXCursorAndRangeVisitorBlock
+function_decl|)
+parameter_list|(
+name|CXCursor
+parameter_list|,
+name|CXSourceRange
+parameter_list|)
+function_decl|;
+name|CINDEX_LINKAGE
+name|void
+name|clang_findReferencesInFileWithBlock
+parameter_list|(
+name|CXCursor
+parameter_list|,
+name|CXFile
+parameter_list|,
+name|CXCursorAndRangeVisitorBlock
+parameter_list|)
+function_decl|;
+endif|#
+directive|endif
+endif|#
+directive|endif
 comment|/**  * @}  */
 comment|/**  * @}  */
 ifdef|#

@@ -1408,6 +1408,31 @@ expr_stmt|;
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|null_update_chw
+parameter_list|(
+name|struct
+name|ieee80211com
+modifier|*
+name|ic
+parameter_list|)
+block|{
+name|if_printf
+argument_list|(
+name|ic
+operator|->
+name|ic_ifp
+argument_list|,
+literal|"%s: need callback\n"
+argument_list|,
+name|__func__
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Attach/setup the common net80211 state.  Called by  * the driver on attach to prior to creating any vap's.  */
 end_comment
@@ -1514,7 +1539,7 @@ literal|1
 argument_list|,
 name|PI_NET
 argument_list|,
-literal|"%s taskq"
+literal|"%s net80211 taskq"
 argument_list|,
 name|ifp
 operator|->
@@ -1538,6 +1563,12 @@ operator|->
 name|ic_update_promisc
 operator|=
 name|null_update_promisc
+expr_stmt|;
+name|ic
+operator|->
+name|ic_update_chw
+operator|=
+name|null_update_chw
 expr_stmt|;
 name|ic
 operator|->
@@ -1924,7 +1955,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -2208,6 +2240,8 @@ block|}
 break|break;
 endif|#
 directive|endif
+default|default:
+break|break;
 block|}
 comment|/* auto-enable s/w beacon miss support */
 if|if
@@ -4771,8 +4805,6 @@ name|i
 decl_stmt|,
 name|j
 decl_stmt|,
-name|mode
-decl_stmt|,
 name|rate
 decl_stmt|,
 name|maxrate
@@ -4780,6 +4812,10 @@ decl_stmt|,
 name|mword
 decl_stmt|,
 name|r
+decl_stmt|;
+name|enum
+name|ieee80211_phymode
+name|mode
 decl_stmt|;
 specifier|const
 name|struct
@@ -5440,11 +5476,13 @@ decl_stmt|;
 name|int
 name|i
 decl_stmt|,
-name|mode
-decl_stmt|,
 name|rate
 decl_stmt|,
 name|mword
+decl_stmt|;
+name|enum
+name|ieee80211_phymode
+name|mode
 decl_stmt|;
 specifier|const
 name|struct

@@ -130,18 +130,21 @@ value|((void) a)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|tellpt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|off_t
 name|mesgpt
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 name|cstrings
 index|[]
@@ -151,6 +154,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 name|strings
@@ -160,24 +164,28 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|cflg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|vflg
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|readstd
 decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|char
 name|lastchr
 parameter_list|(
@@ -188,6 +196,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|fgetNUL
 parameter_list|(
@@ -203,6 +212,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|istail
 parameter_list|(
@@ -216,6 +226,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|octdigit
 parameter_list|(
@@ -225,6 +236,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|xgetc
 parameter_list|(
@@ -235,6 +247,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|off_t
 name|hashit
 parameter_list|(
@@ -247,6 +260,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|off_t
 name|yankstr
 parameter_list|(
@@ -268,6 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|flushsh
 parameter_list|(
@@ -277,6 +292,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|found
 parameter_list|(
@@ -291,6 +307,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|inithash
 parameter_list|(
@@ -300,6 +317,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|onintr
 parameter_list|(
@@ -309,6 +327,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|process
 parameter_list|(
@@ -320,6 +339,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|prstr
 parameter_list|(
@@ -330,6 +350,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|xsdotc
 parameter_list|(
@@ -642,6 +663,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|char
 name|linebuf
 index|[
@@ -651,6 +673,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
+specifier|static
 name|void
 name|process
 parameter_list|(
@@ -946,6 +969,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|off_t
 name|yankstr
 parameter_list|(
@@ -1236,6 +1260,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|octdigit
 parameter_list|(
@@ -1263,6 +1288,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|inithash
 parameter_list|(
@@ -1341,6 +1367,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|fgetNUL
 parameter_list|(
@@ -1422,6 +1449,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|xgetc
 parameter_list|(
@@ -1452,6 +1480,7 @@ value|128
 end_define
 
 begin_struct
+specifier|static
 struct|struct
 name|hash
 block|{
@@ -1479,6 +1508,7 @@ struct|;
 end_struct
 
 begin_function
+specifier|static
 name|off_t
 name|hashit
 parameter_list|(
@@ -1656,6 +1686,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|flushsh
 parameter_list|(
@@ -1900,6 +1931,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|found
 parameter_list|(
@@ -1967,6 +1999,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|prstr
 parameter_list|(
@@ -2053,6 +2086,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|xsdotc
 parameter_list|(
@@ -2237,6 +2271,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|char
 name|lastchr
 parameter_list|(
@@ -2270,6 +2305,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|istail
 parameter_list|(
@@ -2329,6 +2365,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|onintr
 parameter_list|(

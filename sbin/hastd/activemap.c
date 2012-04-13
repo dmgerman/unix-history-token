@@ -1015,7 +1015,7 @@ operator|!=
 name|NULL
 condition|)
 block|{
-comment|/* 		 * Only move element at the begining. 		 */
+comment|/* 		 * Only move element at the beginning. 		 */
 name|TAILQ_REMOVE
 argument_list|(
 operator|&
@@ -2505,7 +2505,7 @@ literal|2
 expr_stmt|;
 return|return;
 block|}
-comment|/* 	 * Mark that we want to start synchronization from the begining. 	 */
+comment|/* 	 * Mark that we want to start synchronization from the beginning. 	 */
 name|amp
 operator|->
 name|am_syncoff

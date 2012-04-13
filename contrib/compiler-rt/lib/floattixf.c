@@ -15,12 +15,6 @@ directive|include
 file|"int_lib.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<float.h>
-end_include
-
 begin_comment
 comment|/* Returns: convert a to a long double, rounding toward even. */
 end_comment

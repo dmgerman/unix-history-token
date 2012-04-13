@@ -43,23 +43,11 @@ directive|define
 name|CLANG_DRIVER_TOOL_H_
 end_define
 
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|template
-operator|<
-name|typename
-name|T
-operator|,
-name|unsigned
-name|N
-operator|>
-name|class
-name|SmallVector
-expr_stmt|;
-block|}
-end_decl_stmt
+begin_include
+include|#
+directive|include
+file|"clang/Basic/LLVM.h"
+end_include
 
 begin_decl_stmt
 name|namespace
@@ -87,8 +75,6 @@ name|class
 name|ToolChain
 decl_stmt|;
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|InputInfo

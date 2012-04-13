@@ -392,21 +392,6 @@ argument_list|,
 name|hifn_shutdown
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* crypto device methods */
 name|DEVMETHOD
 argument_list|(
@@ -429,11 +414,7 @@ argument_list|,
 name|hifn_process
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1036,6 +1017,7 @@ value|hifn_write_reg_1(sc, reg, val)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -2139,9 +2121,12 @@ if|if
 condition|(
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
-comment|/* parent */
+comment|/* PCI parent */
 literal|1
 argument_list|,
 literal|0

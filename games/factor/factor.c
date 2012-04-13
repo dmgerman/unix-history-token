@@ -1407,6 +1407,8 @@ name|fprintf
 argument_list|(
 name|fp
 argument_list|,
+literal|"%s"
+argument_list|,
 name|buf
 argument_list|)
 expr_stmt|;

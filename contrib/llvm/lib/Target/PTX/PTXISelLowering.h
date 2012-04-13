@@ -95,11 +95,17 @@ name|LOAD_PARAM
 block|,
 name|STORE_PARAM
 block|,
+name|READ_PARAM
+block|,
+name|WRITE_PARAM
+block|,
 name|EXIT
 block|,
 name|RET
 block|,
 name|COPY_ADDRESS
+block|,
+name|CALL
 block|}
 enum|;
 block|}
@@ -191,14 +197,49 @@ argument_list|)
 specifier|const
 block|;
 name|virtual
-name|MVT
-operator|::
-name|SimpleValueType
+name|SDValue
+name|LowerCall
+argument_list|(
+argument|SDValue Chain
+argument_list|,
+argument|SDValue Callee
+argument_list|,
+argument|CallingConv::ID CallConv
+argument_list|,
+argument|bool isVarArg
+argument_list|,
+argument|bool&isTailCall
+argument_list|,
+argument|const SmallVectorImpl<ISD::OutputArg>&Outs
+argument_list|,
+argument|const SmallVectorImpl<SDValue>&OutVals
+argument_list|,
+argument|const SmallVectorImpl<ISD::InputArg>&Ins
+argument_list|,
+argument|DebugLoc dl
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|,
+argument|SmallVectorImpl<SDValue>&InVals
+argument_list|)
+specifier|const
+block|;
+name|virtual
+name|EVT
 name|getSetCCResultType
 argument_list|(
 argument|EVT VT
 argument_list|)
 specifier|const
+block|;
+name|virtual
+name|unsigned
+name|getNumRegisters
+argument_list|(
+argument|LLVMContext&Context
+argument_list|,
+argument|EVT VT
+argument_list|)
 block|;
 name|private
 operator|:

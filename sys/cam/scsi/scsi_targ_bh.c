@@ -132,6 +132,7 @@ file|<cam/scsi/scsi_message.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SCSIBH
@@ -2674,7 +2675,7 @@ argument_list|(
 name|no_lun_inq_data
 argument_list|)
 argument_list|,
-name|SCSI_CDB6_LEN
+name|scsi_2btoul
 argument_list|(
 name|inq
 operator|->

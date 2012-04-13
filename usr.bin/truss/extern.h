@@ -54,7 +54,8 @@ name|char
 modifier|*
 name|ioctlname
 parameter_list|(
-name|register_t
+name|unsigned
+name|long
 name|val
 parameter_list|)
 function_decl|;

@@ -287,28 +287,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_expr_stmt
-specifier|static
-name|VNET_DEFINE
-argument_list|(
-name|int
-argument_list|,
-name|esp_max_ivlen
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_comment
-comment|/* max iv length over all algorithms */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|V_esp_max_ivlen
-value|VNET(esp_max_ivlen)
-end_define
-
 begin_function_decl
 specifier|static
 name|int
@@ -527,7 +505,7 @@ expr|struct
 name|newesp
 argument_list|)
 operator|+
-name|V_esp_max_ivlen
+name|EALG_MAX_BLOCK_LEN
 operator|+
 literal|9
 operator|+
@@ -754,28 +732,6 @@ argument_list|,
 name|M_WAITOK
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|sav
-operator|->
-name|iv
-operator|==
-name|NULL
-condition|)
-block|{
-name|DPRINTF
-argument_list|(
-operator|(
-literal|"%s: no memory for IV\n"
-operator|,
-name|__func__
-operator|)
-argument_list|)
-expr_stmt|;
-return|return
-name|EINVAL
-return|;
-block|}
 name|key_randomfill
 argument_list|(
 name|sav
@@ -2339,18 +2295,14 @@ name|crp_etype
 operator|==
 name|EAGAIN
 condition|)
-block|{
-name|error
-operator|=
+return|return
+operator|(
 name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
-expr_stmt|;
-return|return
-name|error
+operator|)
 return|;
-block|}
 name|V_espstat
 operator|.
 name|esps_noxform
@@ -3165,8 +3117,6 @@ name|hlen
 decl_stmt|,
 name|rlen
 decl_stmt|,
-name|plen
-decl_stmt|,
 name|padding
 decl_stmt|,
 name|blks
@@ -3349,13 +3299,6 @@ operator|)
 operator|+
 literal|2
 expr_stmt|;
-name|plen
-operator|=
-name|rlen
-operator|+
-name|padding
-expr_stmt|;
-comment|/* Padded payload length. */
 if|if
 condition|(
 name|esph
@@ -4409,8 +4352,6 @@ modifier|*
 name|m
 decl_stmt|;
 name|int
-name|err
-decl_stmt|,
 name|error
 decl_stmt|;
 name|tc
@@ -4557,15 +4498,13 @@ argument_list|(
 name|isr
 argument_list|)
 expr_stmt|;
-name|error
-operator|=
+return|return
+operator|(
 name|crypto_dispatch
 argument_list|(
 name|crp
 argument_list|)
-expr_stmt|;
-return|return
-name|error
+operator|)
 return|;
 block|}
 name|V_espstat
@@ -4760,7 +4699,7 @@ block|}
 endif|#
 directive|endif
 comment|/* NB: m is reclaimed by ipsec_process_done. */
-name|err
+name|error
 operator|=
 name|ipsec_process_done
 argument_list|(
@@ -4781,7 +4720,7 @@ name|isr
 argument_list|)
 expr_stmt|;
 return|return
-name|err
+name|error
 return|;
 name|bad
 label|:
@@ -4861,66 +4800,12 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-define|#
-directive|define
-name|MAXIV
-parameter_list|(
-name|xform
-parameter_list|)
-define|\
-value|if (xform.blocksize> V_esp_max_ivlen)		\ 		V_esp_max_ivlen = xform.blocksize	\  	MAXIV(enc_xform_des);
-comment|/* SADB_EALG_DESCBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_3des
-argument_list|)
-expr_stmt|;
-comment|/* SADB_EALG_3DESCBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_rijndael128
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_AES */
-name|MAXIV
-argument_list|(
-name|enc_xform_blf
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_BLOWFISHCBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_cast5
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_CAST128CBC */
-name|MAXIV
-argument_list|(
-name|enc_xform_skipjack
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_SKIPJACK */
-name|MAXIV
-argument_list|(
-name|enc_xform_null
-argument_list|)
-expr_stmt|;
-comment|/* SADB_EALG_NULL */
-name|MAXIV
-argument_list|(
-name|enc_xform_camellia
-argument_list|)
-expr_stmt|;
-comment|/* SADB_X_EALG_CAMELLIACBC */
 name|xform_register
 argument_list|(
 operator|&
 name|esp_xformsw
 argument_list|)
 expr_stmt|;
-undef|#
-directive|undef
-name|MAXIV
 block|}
 end_function
 

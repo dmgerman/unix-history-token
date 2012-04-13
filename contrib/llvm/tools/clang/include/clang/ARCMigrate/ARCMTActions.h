@@ -127,6 +127,14 @@ operator|::
 name|string
 name|MigrateDir
 block|;
+name|std
+operator|::
+name|string
+name|PlistOut
+block|;
+name|bool
+name|EmitPremigrationARCErros
+block|;
 name|protected
 operator|:
 name|virtual
@@ -144,7 +152,11 @@ name|MigrateAction
 argument_list|(
 argument|FrontendAction *WrappedAction
 argument_list|,
-argument|llvm::StringRef migrateDir
+argument|StringRef migrateDir
+argument_list|,
+argument|StringRef plistOut
+argument_list|,
+argument|bool emitPremigrationARCErrors
 argument_list|)
 block|; }
 decl_stmt|;

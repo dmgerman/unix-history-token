@@ -271,7 +271,7 @@ parameter_list|)
 function_decl|const;
 name|Value
 argument_list|(
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|,
 argument|unsigned scid
 argument_list|)
@@ -574,7 +574,7 @@ argument_list|)
 decl|const
 decl_stmt|;
 comment|/// getNumUses - This method computes the number of uses of this Value.  This
-comment|/// is a linear time operation.  Use hasOneUse, hasNUses, or hasMoreThanNUses
+comment|/// is a linear time operation.  Use hasOneUse, hasNUses, or hasNUsesOrMore
 comment|/// to check for specific values.
 name|unsigned
 name|getNumUses

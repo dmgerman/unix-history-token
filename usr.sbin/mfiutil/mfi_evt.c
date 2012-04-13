@@ -2281,7 +2281,7 @@ name|detail
 operator|->
 name|args
 operator|.
-name|ld_prog
+name|ld_strip
 operator|.
 name|ld
 argument_list|)

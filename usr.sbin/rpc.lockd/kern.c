@@ -644,7 +644,7 @@ name|pw
 operator|->
 name|pw_uid
 expr_stmt|;
-comment|/* drop our root priviledges */
+comment|/* drop our root privileges */
 operator|(
 name|void
 operator|)

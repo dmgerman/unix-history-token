@@ -247,6 +247,9 @@ comment|///< Block entry/exit prefers a register.
 name|PrefSpill
 block|,
 comment|///< Block entry/exit prefers a stack slot.
+name|PrefBoth
+block|,
+comment|///< Block entry prefers both register and stack.
 name|MustSpill
 comment|///< A register is impossible, variable must be spilled.
 block|}
@@ -271,7 +274,12 @@ operator|:
 literal|8
 block|;
 comment|///< Constraint on block exit.
-block|}
+comment|/// True when this block changes the value of the live range. This means
+comment|/// the block has a non-PHI def.  When this is false, a live-in value on
+comment|/// the stack can be live-out on the stack without inserting a spill.
+name|bool
+name|ChangesValue
+block|;   }
 block|;
 comment|/// prepare - Reset state and prepare for a new spill placement computation.
 comment|/// @param RegBundles Bit vector to receive the edge bundles where the
@@ -300,6 +308,20 @@ operator|<
 name|BlockConstraint
 operator|>
 name|LiveBlocks
+argument_list|)
+block|;
+comment|/// addPrefSpill - Add PrefSpill constraints to all blocks listed.  This is
+comment|/// equivalent to calling addConstraint with identical BlockConstraints with
+comment|/// Entry = Exit = PrefSpill, and ChangesValue = false.
+comment|///
+comment|/// @param Blocks Array of block numbers that prefer to spill in and out.
+comment|/// @param Strong When true, double the negative bias for these blocks.
+name|void
+name|addPrefSpill
+argument_list|(
+argument|ArrayRef<unsigned> Blocks
+argument_list|,
+argument|bool Strong
 argument_list|)
 block|;
 comment|/// addLinks - Add transparent blocks with the given numbers.

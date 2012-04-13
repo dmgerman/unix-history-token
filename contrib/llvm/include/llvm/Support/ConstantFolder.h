@@ -751,14 +751,12 @@ name|Constant
 operator|*
 name|C
 argument_list|,
+name|ArrayRef
+operator|<
 name|Constant
 operator|*
-specifier|const
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -770,8 +768,6 @@ argument_list|(
 name|C
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|)
 return|;
 block|}
@@ -783,14 +779,40 @@ name|Constant
 operator|*
 name|C
 argument_list|,
+name|Constant
+operator|*
+name|Idx
+argument_list|)
+decl|const
+block|{
+comment|// This form of the function only exists to avoid ambiguous overload
+comment|// warnings about whether to convert Idx to ArrayRef<Constant *> or
+comment|// ArrayRef<Value *>.
+return|return
+name|ConstantExpr
+operator|::
+name|getGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+name|Idx
+argument_list|)
+return|;
+block|}
+name|Constant
+modifier|*
+name|CreateGetElementPtr
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
 name|Value
 operator|*
-specifier|const
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -802,8 +824,6 @@ argument_list|(
 name|C
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|)
 return|;
 block|}
@@ -815,14 +835,12 @@ name|Constant
 operator|*
 name|C
 argument_list|,
+name|ArrayRef
+operator|<
 name|Constant
 operator|*
-specifier|const
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -834,8 +852,6 @@ argument_list|(
 name|C
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|)
 return|;
 block|}
@@ -847,14 +863,40 @@ name|Constant
 operator|*
 name|C
 argument_list|,
+name|Constant
+operator|*
+name|Idx
+argument_list|)
+decl|const
+block|{
+comment|// This form of the function only exists to avoid ambiguous overload
+comment|// warnings about whether to convert Idx to ArrayRef<Constant *> or
+comment|// ArrayRef<Value *>.
+return|return
+name|ConstantExpr
+operator|::
+name|getInBoundsGetElementPtr
+argument_list|(
+name|C
+argument_list|,
+name|Idx
+argument_list|)
+return|;
+block|}
+name|Constant
+modifier|*
+name|CreateInBoundsGetElementPtr
+argument_list|(
+name|Constant
+operator|*
+name|C
+argument_list|,
+name|ArrayRef
+operator|<
 name|Value
 operator|*
-specifier|const
-operator|*
+operator|>
 name|IdxList
-argument_list|,
-name|unsigned
-name|NumIdx
 argument_list|)
 decl|const
 block|{
@@ -866,8 +908,6 @@ argument_list|(
 name|C
 argument_list|,
 name|IdxList
-argument_list|,
-name|NumIdx
 argument_list|)
 return|;
 block|}
@@ -887,7 +927,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -915,7 +954,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -941,7 +979,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -972,7 +1009,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -998,7 +1034,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -1026,7 +1061,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -1054,7 +1088,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -1082,7 +1115,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -1108,7 +1140,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy
@@ -1134,7 +1165,6 @@ name|Constant
 operator|*
 name|C
 argument_list|,
-specifier|const
 name|Type
 operator|*
 name|DestTy

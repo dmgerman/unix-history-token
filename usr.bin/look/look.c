@@ -125,6 +125,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -196,6 +202,7 @@ value|(-1)
 end_define
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dflag
 decl_stmt|,
@@ -204,6 +211,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|binary_search
@@ -223,6 +231,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|compare
 parameter_list|(
@@ -241,6 +250,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|linear_search
@@ -260,6 +270,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|look
 parameter_list|(
@@ -278,6 +289,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|wchar_t
 modifier|*
 name|prepkey
@@ -292,6 +304,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|void
 name|print_from
 parameter_list|(
@@ -555,10 +568,16 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|(
+name|uintmax_t
+operator|)
 name|sb
 operator|.
 name|st_size
 operator|>
+operator|(
+name|uintmax_t
+operator|)
 name|SIZE_T_MAX
 condition|)
 name|errx
@@ -683,6 +702,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|wchar_t
 modifier|*
 name|prepkey
@@ -877,6 +897,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|int
 name|look
 parameter_list|(
@@ -960,6 +981,7 @@ value|while (p< back&& *p++ != '\n');
 end_define
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|binary_search
@@ -1070,6 +1092,7 @@ comment|/*  * Find the first line that starts with string, linearly searching fr
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|linear_search
@@ -1153,6 +1176,7 @@ comment|/*  * Print as many lines as match string, starting at front.  */
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|print_from
 parameter_list|(
@@ -1250,6 +1274,7 @@ comment|/*  * Return LESS, GREATER, or EQUAL depending on how the string1 compar
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|compare
 parameter_list|(

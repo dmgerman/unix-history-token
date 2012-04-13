@@ -62,95 +62,12 @@ directive|include
 file|"opt_pf.h"
 end_include
 
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_BPF
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NBPFILTER
-value|DEV_BPF
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NBPFILTER
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_PFLOG
-end_ifdef
-
-begin_define
-define|#
-directive|define
-name|NPFLOG
-value|DEV_PFLOG
-end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NPFLOG
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|DEV_PFSYNC
-end_ifdef
-
 begin_define
 define|#
 directive|define
 name|NPFSYNC
-value|DEV_PFSYNC
+value|1
 end_define
-
-begin_else
-else|#
-directive|else
-end_else
-
-begin_define
-define|#
-directive|define
-name|NPFSYNC
-value|0
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_ifdef
 ifdef|#
@@ -2035,6 +1952,8 @@ name|pf_addr
 modifier|*
 parameter_list|,
 name|sa_family_t
+parameter_list|,
+name|int
 parameter_list|,
 name|u_int16_t
 parameter_list|)
@@ -7797,15 +7716,15 @@ argument|* hz);
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|sx_slock(&V_pf_consistency_lock); 	PF_LOCK(); 	locked =
+argument|sx_slock(&V_pf_consistency_lock); 		PF_LOCK(); 		locked =
 literal|0
-argument|;  	if (V_pf_end_threads) { 		PF_UNLOCK(); 		sx_sunlock(&V_pf_consistency_lock); 		sx_xlock(&V_pf_consistency_lock); 		PF_LOCK();  		pf_purge_expired_states(V_pf_status.states,
+argument|;  		if (V_pf_end_threads) { 			PF_UNLOCK(); 			sx_sunlock(&V_pf_consistency_lock); 			sx_xlock(&V_pf_consistency_lock); 			PF_LOCK();  			pf_purge_expired_states(V_pf_status.states,
 literal|1
-argument|); 		pf_purge_expired_fragments(); 		pf_purge_expired_src_nodes(
+argument|); 			pf_purge_expired_fragments(); 			pf_purge_expired_src_nodes(
 literal|1
-argument|); 		V_pf_end_threads++;  		sx_xunlock(&V_pf_consistency_lock); 		PF_UNLOCK(); 		wakeup(pf_purge_thread); 		kproc_exit(
+argument|); 			V_pf_end_threads++;  			sx_xunlock(&V_pf_consistency_lock); 			PF_UNLOCK(); 			wakeup(pf_purge_thread); 			kproc_exit(
 literal|0
-argument|); 	}
+argument|); 		}
 endif|#
 directive|endif
 argument|s = splsoftnet();
@@ -7815,15 +7734,15 @@ directive|ifdef
 name|__FreeBSD__
 argument|if (!pf_purge_expired_states(
 literal|1
-argument|+ (V_pf_status.states / 	    V_pf_default_rule.timeout[PFTM_INTERVAL]),
-literal|0
-argument|)) { 		PF_UNLOCK(); 		sx_sunlock(&V_pf_consistency_lock); 		sx_xlock(&V_pf_consistency_lock); 		PF_LOCK(); 		locked =
-literal|1
-argument|;  		pf_purge_expired_states(
-literal|1
 argument|+ (V_pf_status.states / 		    V_pf_default_rule.timeout[PFTM_INTERVAL]),
+literal|0
+argument|)) { 			PF_UNLOCK(); 			sx_sunlock(&V_pf_consistency_lock); 			sx_xlock(&V_pf_consistency_lock); 			PF_LOCK(); 			locked =
 literal|1
-argument|); 	}
+argument|;  			pf_purge_expired_states(
+literal|1
+argument|+ (V_pf_status.states / 			    V_pf_default_rule.timeout[PFTM_INTERVAL]),
+literal|1
+argument|); 		}
 else|#
 directive|else
 argument|pf_purge_expired_states(
@@ -8087,7 +8006,7 @@ literal|0
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (pfsync_state_in_use_ptr != NULL) 		pfsync_state_in_use_ptr(cur);
+argument|if (pfsync_state_in_use_ptr != NULL&& 		pfsync_state_in_use_ptr(cur))
 else|#
 directive|else
 argument|if (pfsync_state_in_use(cur))
@@ -9694,7 +9613,7 @@ argument|]; 			if (optlen<
 literal|2
 argument|) 				optlen =
 literal|2
-argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (mss); }  u_int16_t pf_calc_mss(struct pf_addr *addr, sa_family_t af, u_int16_t offer) {
+argument|; 			hlen -= optlen; 			opt += optlen; 			break; 		} 	} 	return (mss); }  u_int16_t pf_calc_mss(struct pf_addr *addr, sa_family_t af, int rtableid, u_int16_t offer) {
 ifdef|#
 directive|ifdef
 name|INET
@@ -9729,20 +9648,9 @@ argument|case AF_INET: 		hlen = sizeof(struct ip); 		bzero(&ro, sizeof(ro)); 		d
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|RTF_PRCLONING
-argument|rtalloc_ign(&ro, (RTF_CLONING | RTF_PRCLONING));
-else|#
-directive|else
-comment|/* !RTF_PRCLONING */
 argument|in_rtalloc_ign(&ro,
 literal|0
-argument|,
-literal|0
-argument|);
-endif|#
-directive|endif
+argument|, rtableid);
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -9760,18 +9668,9 @@ argument|case AF_INET6: 		hlen = sizeof(struct ip6_hdr); 		bzero(&ro6, sizeof(ro
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-ifdef|#
-directive|ifdef
-name|RTF_PRCLONING
-argument|rtalloc_ign((struct route *)&ro6, 		    (RTF_CLONING | RTF_PRCLONING));
-else|#
-directive|else
-comment|/* !RTF_PRCLONING */
-argument|rtalloc_ign((struct route *)&ro6,
+argument|in6_rtalloc_ign(&ro6,
 literal|0
-argument|);
-endif|#
-directive|endif
+argument|, rtableid);
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -9999,13 +9898,13 @@ argument|case AF_INET6: 				if (PF_ANEQ(saddr,&nk->addr[pd->sidx], AF_INET6)) 		
 endif|#
 directive|endif
 comment|/* INET */
-argument|} 			break; 		} 		if (nr->natpass) 			r = NULL; 		pd->nat_rule = nr; 	}  	while (r != NULL) { 		r->evaluations++; 		if (pfi_kif_match(r->kif, kif) == r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != pd->proto) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, saddr, af, 		    r->src.neg, kif)) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr;
+argument|} 			break; 		} 		if (nr->natpass) 			r = NULL; 		pd->nat_rule = nr; 	}  	while (r != NULL) { 		r->evaluations++; 		if (pfi_kif_match(r->kif, kif) == r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != pd->proto) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, saddr, af, 		    r->src.neg, kif, M_GETFIB(m))) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr;
 comment|/* tcp/udp only. port_op always 0 in other cases */
 argument|else if (r->src.port_op&& !pf_match_port(r->src.port_op, 		    r->src.port[
 literal|0
 argument|], r->src.port[
 literal|1
-argument|], sport)) 			r = r->skip[PF_SKIP_SRC_PORT].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, daddr, af, 		    r->dst.neg, NULL)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr;
+argument|], sport)) 			r = r->skip[PF_SKIP_SRC_PORT].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, daddr, af, 		    r->dst.neg, NULL, M_GETFIB(m))) 			r = r->skip[PF_SKIP_DST_ADDR].ptr;
 comment|/* tcp/udp only. port_op always 0 in other cases */
 argument|else if (r->dst.port_op&& !pf_match_port(r->dst.port_op, 		    r->dst.port[
 literal|0
@@ -10840,7 +10739,7 @@ condition|(
 name|pfsync_defer_ptr
 operator|!=
 name|NULL
-condition|)
+operator|&&
 name|pfsync_defer_ptr
 argument_list|(
 operator|*
@@ -10848,7 +10747,7 @@ name|sm
 argument_list|,
 name|m
 argument_list|)
-expr_stmt|;
+condition|)
 else|#
 directive|else
 if|if
@@ -12405,6 +12304,14 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 comment|/* Find mss option */
+name|int
+name|rtid
+init|=
+name|M_GETFIB
+argument_list|(
+name|m
+argument_list|)
+decl_stmt|;
 name|mss
 operator|=
 name|pf_get_mss
@@ -12434,6 +12341,8 @@ name|pd
 operator|->
 name|af
 argument_list|,
+name|rtid
+argument_list|,
 name|mss
 argument_list|)
 expr_stmt|;
@@ -12448,6 +12357,8 @@ argument_list|,
 name|pd
 operator|->
 name|af
+argument_list|,
+name|rtid
 argument_list|,
 name|mss
 argument_list|)
@@ -12538,7 +12449,7 @@ argument|; 	int			 asd =
 literal|0
 argument|; 	int			 match =
 literal|0
-argument|;  	r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr); 	while (r != NULL) { 		r->evaluations++; 		if (pfi_kif_match(r->kif, kif) == r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != pd->proto) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, pd->src, af, 		    r->src.neg, kif)) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, pd->dst, af, 		    r->dst.neg, NULL)) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (r->tos&& !(r->tos == pd->tos)) 			r = TAILQ_NEXT(r, entries); 		else if (r->os_fingerprint != PF_OSFP_ANY) 			r = TAILQ_NEXT(r, entries); 		else if (pd->proto == IPPROTO_UDP&& 		    (r->src.port_op || r->dst.port_op)) 			r = TAILQ_NEXT(r, entries); 		else if (pd->proto == IPPROTO_TCP&& 		    (r->src.port_op || r->dst.port_op || r->flagset)) 			r = TAILQ_NEXT(r, entries); 		else if ((pd->proto == IPPROTO_ICMP || 		    pd->proto == IPPROTO_ICMPV6)&& 		    (r->type || r->code)) 			r = TAILQ_NEXT(r, entries); 		else if (r->prob&& r->prob<= 		    (arc4random() % (UINT_MAX -
+argument|;  	r = TAILQ_FIRST(pf_main_ruleset.rules[PF_RULESET_FILTER].active.ptr); 	while (r != NULL) { 		r->evaluations++; 		if (pfi_kif_match(r->kif, kif) == r->ifnot) 			r = r->skip[PF_SKIP_IFP].ptr; 		else if (r->direction&& r->direction != direction) 			r = r->skip[PF_SKIP_DIR].ptr; 		else if (r->af&& r->af != af) 			r = r->skip[PF_SKIP_AF].ptr; 		else if (r->proto&& r->proto != pd->proto) 			r = r->skip[PF_SKIP_PROTO].ptr; 		else if (PF_MISMATCHAW(&r->src.addr, pd->src, af, 		    r->src.neg, kif, M_GETFIB(m))) 			r = r->skip[PF_SKIP_SRC_ADDR].ptr; 		else if (PF_MISMATCHAW(&r->dst.addr, pd->dst, af, 		    r->dst.neg, NULL, M_GETFIB(m))) 			r = r->skip[PF_SKIP_DST_ADDR].ptr; 		else if (r->tos&& !(r->tos == pd->tos)) 			r = TAILQ_NEXT(r, entries); 		else if (r->os_fingerprint != PF_OSFP_ANY) 			r = TAILQ_NEXT(r, entries); 		else if (pd->proto == IPPROTO_UDP&& 		    (r->src.port_op || r->dst.port_op)) 			r = TAILQ_NEXT(r, entries); 		else if (pd->proto == IPPROTO_TCP&& 		    (r->src.port_op || r->dst.port_op || r->flagset)) 			r = TAILQ_NEXT(r, entries); 		else if ((pd->proto == IPPROTO_ICMP || 		    pd->proto == IPPROTO_ICMPV6)&& 		    (r->type || r->code)) 			r = TAILQ_NEXT(r, entries); 		else if (r->prob&& r->prob<= 		    (arc4random() % (UINT_MAX -
 literal|1
 argument|) +
 literal|1
@@ -13702,7 +13613,7 @@ argument|case AF_INET6: { 		struct ip6_hdr	*h = mtod(m, struct ip6_hdr *);  		if
 endif|#
 directive|endif
 comment|/* INET6 */
-argument|} 	m_copydata(m, off, len, p); 	return (p); }  int pf_routable(struct pf_addr *addr, sa_family_t af, struct pfi_kif *kif) {
+argument|} 	m_copydata(m, off, len, p); 	return (p); }  int pf_routable(struct pf_addr *addr, sa_family_t af, struct pfi_kif *kif,     int rtableid) {
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -13793,21 +13704,28 @@ argument|if (kif != NULL&& kif->pfik_ifp->if_type == IFT_ENC) 		goto out;
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-comment|/* XXX MRT not always INET */
-comment|/* stick with table 0 though */
+argument|switch (af) {
+ifdef|#
+directive|ifdef
+name|INET6
+argument|case AF_INET6: 		in6_rtalloc_ign(&ro,
+literal|0
+argument|, rtableid); 		break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET
-argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
+argument|case AF_INET: 		in_rtalloc_ign((struct route *)&ro,
 literal|0
-argument|,
-literal|0
-argument|); 	else
+argument|, rtableid); 		break;
 endif|#
 directive|endif
-argument|rtalloc_ign((struct route *)&ro,
+argument|default: 		rtalloc_ign((struct route *)&ro,
 literal|0
 argument|);
+comment|/* No/default FIB. */
+argument|break; 	}
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -13855,7 +13773,7 @@ argument|&& rn != NULL&& ret ==
 literal|0
 argument|); 	} else 		ret =
 literal|0
-argument|; out: 	if (ro.ro_rt != NULL) 		RTFREE(ro.ro_rt); 	return (ret); }  int pf_rtlabel_match(struct pf_addr *addr, sa_family_t af, struct pf_addr_wrap *aw) { 	struct sockaddr_in	*dst;
+argument|; out: 	if (ro.ro_rt != NULL) 		RTFREE(ro.ro_rt); 	return (ret); }  int pf_rtlabel_match(struct pf_addr *addr, sa_family_t af, struct pf_addr_wrap *aw,     int rtableid) { 	struct sockaddr_in	*dst;
 ifdef|#
 directive|ifdef
 name|INET6
@@ -13881,28 +13799,26 @@ argument|); 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
+argument|switch (af) {
 ifdef|#
 directive|ifdef
-name|RTF_PRCLONING
-argument|rtalloc_ign((struct route *)&ro, (RTF_CLONING|RTF_PRCLONING));
-else|#
-directive|else
-comment|/* !RTF_PRCLONING */
+name|INET6
+argument|case AF_INET6: 		in6_rtalloc_ign(&ro,
+literal|0
+argument|, rtableid); 		break;
+endif|#
+directive|endif
 ifdef|#
 directive|ifdef
 name|INET
-argument|if (af == AF_INET) 		in_rtalloc_ign((struct route *)&ro,
+argument|case AF_INET: 		in_rtalloc_ign((struct route *)&ro,
 literal|0
-argument|,
-literal|0
-argument|); 	else
+argument|, rtableid); 		break;
 endif|#
 directive|endif
-argument|rtalloc_ign((struct route *)&ro,
+argument|default: 		rtalloc_ign((struct route *)&ro,
 literal|0
-argument|);
-endif|#
-directive|endif
+argument|); 		break; 	}
 else|#
 directive|else
 comment|/* ! __FreeBSD__ */
@@ -13975,9 +13891,9 @@ argument|)); 		goto bad; 	}  	ip = mtod(m0, struct ip *);  	ro =&iproute; 	bzero
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|in_rtalloc(ro,
+argument|in_rtalloc_ign(ro,
 literal|0
-argument|);
+argument|, M_GETFIB(m0));
 else|#
 directive|else
 argument|rtalloc(ro);
@@ -14667,7 +14583,9 @@ argument|&& 	    !((s&& s->state_flags& PFSTATE_ALLOWOPTS) || r->allow_opts)) { 
 literal|1
 argument|; 		DPFPRINTF(PF_DEBUG_MISC, 		    (
 literal|"pf: dropping packet with ip options\n"
-argument|)); 	}  	if ((s&& s->tag) || r->rtableid)
+argument|)); 	}  	if ((s&& s->tag) || r->rtableid>=
+literal|0
+argument|)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
@@ -14881,13 +14799,19 @@ argument|; 		goto done; 	}
 ifdef|#
 directive|ifdef
 name|__FreeBSD__
-argument|if (pd.pf_mtag->flags& PF_TAG_GENERATED)
+argument|if (pd.pf_mtag->flags& PF_TAG_GENERATED) { 		PF_UNLOCK();
 else|#
 directive|else
 argument|if (m->m_pkthdr.pf.flags& PF_TAG_GENERATED)
 endif|#
 directive|endif
 argument|return (PF_PASS);
+ifdef|#
+directive|ifdef
+name|__FreeBSD__
+argument|}
+endif|#
+directive|endif
 comment|/* We do IP header normalization and packet reassembly here */
 argument|if (pf_normalize_ip6(m0, dir, kif,&reason,&pd) != PF_PASS) { 		action = PF_DROP; 		goto done; 	} 	m = *m0;
 comment|/* pf_normalize messes with m0 */
@@ -15071,7 +14995,9 @@ argument|if (action == PF_PASS&& rh_cnt&& 	    !((s&& s->state_flags& PFSTATE_AL
 literal|1
 argument|; 		DPFPRINTF(PF_DEBUG_MISC, 		    (
 literal|"pf: dropping packet with dangerous v6 headers\n"
-argument|)); 	}  	if ((s&& s->tag) || r->rtableid)
+argument|)); 	}  	if ((s&& s->tag) || r->rtableid>=
+literal|0
+argument|)
 ifdef|#
 directive|ifdef
 name|__FreeBSD__

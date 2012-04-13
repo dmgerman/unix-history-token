@@ -210,7 +210,7 @@ file|"pmcstat.h"
 end_include
 
 begin_comment
-comment|/*  * A given invocation of pmcstat(8) can manage multiple PMCs of both  * the system-wide and per-process variety.  Each of these could be in  * 'counting mode' or in 'sampling mode'.  *  * For 'counting mode' PMCs, pmcstat(8) will periodically issue a  * pmc_read() at the configured time interval and print out the value  * of the requested PMCs.  *  * For 'sampling mode' PMCs it can log to a file for offline analysis,  * or can analyse sampling data "on the fly", either by converting  * samples to printed textual form or by creating gprof(1) compatible  * profiles, one per program executed.  When creating gprof(1)  * profiles it can optionally merge entries from multiple processes  * for a given executable into a single profile file.  *  * pmcstat(8) can also execute a command line and attach PMCs to the  * resulting child process.  The protocol used is as follows:  *  * - parent creates a socketpair for two way communication and  *   fork()s.  * - subsequently:  *  *   /Parent/				/Child/  *  *   - Wait for childs token.  *					- Sends token.  *					- Awaits signal to start.  *  - Attaches PMCs to the child's pid  *    and starts them. Sets up  *    monitoring for the child.  *  - Signals child to start.  *					- Recieves signal, attempts exec().  *  * After this point normal processing can happen.  */
+comment|/*  * A given invocation of pmcstat(8) can manage multiple PMCs of both  * the system-wide and per-process variety.  Each of these could be in  * 'counting mode' or in 'sampling mode'.  *  * For 'counting mode' PMCs, pmcstat(8) will periodically issue a  * pmc_read() at the configured time interval and print out the value  * of the requested PMCs.  *  * For 'sampling mode' PMCs it can log to a file for offline analysis,  * or can analyse sampling data "on the fly", either by converting  * samples to printed textual form or by creating gprof(1) compatible  * profiles, one per program executed.  When creating gprof(1)  * profiles it can optionally merge entries from multiple processes  * for a given executable into a single profile file.  *  * pmcstat(8) can also execute a command line and attach PMCs to the  * resulting child process.  The protocol used is as follows:  *  * - parent creates a socketpair for two way communication and  *   fork()s.  * - subsequently:  *  *   /Parent/				/Child/  *  *   - Wait for childs token.  *					- Sends token.  *					- Awaits signal to start.  *  - Attaches PMCs to the child's pid  *    and starts them. Sets up  *    monitoring for the child.  *  - Signals child to start.  *					- Receives signal, attempts exec().  *  * After this point normal processing can happen.  */
 end_comment
 
 begin_comment
@@ -535,8 +535,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: Illegal CPU specification "
-literal|"\"%s\"."
+literal|"ERROR: Illegal CPU specification \"%s\"."
 argument_list|,
 name|cpuspec
 argument_list|)
@@ -650,8 +649,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot attach pmc "
-literal|"\"%s\" to process %d"
+literal|"ERROR: cannot attach pmc \"%s\" to process %d"
 argument_list|,
 name|ev
 operator|->
@@ -732,8 +730,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot stop pmc 0x%x "
-literal|"\"%s\""
+literal|"ERROR: cannot stop pmc 0x%x \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -759,8 +756,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot release pmc "
-literal|"0x%x \"%s\""
+literal|"ERROR: cannot release pmc 0x%x \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -1896,8 +1892,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot read pmc "
-literal|"\"%s\""
+literal|"ERROR: Cannot read pmc \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -2210,8 +2205,6 @@ name|c
 decl_stmt|,
 name|check_driver_stats
 decl_stmt|,
-name|current_cpu
-decl_stmt|,
 name|current_sampling_count
 decl_stmt|;
 name|int
@@ -2225,6 +2218,8 @@ name|do_logprocexit
 decl_stmt|;
 name|int
 name|do_print
+decl_stmt|,
+name|do_read
 decl_stmt|;
 name|size_t
 name|dummy
@@ -2301,10 +2296,6 @@ name|PATH_MAX
 index|]
 decl_stmt|;
 name|check_driver_stats
-operator|=
-literal|0
-expr_stmt|;
-name|current_cpu
 operator|=
 literal|0
 expr_stmt|;
@@ -2711,8 +2702,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: \"%s\" is not a "
-literal|"directory."
+literal|"ERROR: \"%s\" is not a directory."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3442,6 +3432,18 @@ operator|.
 name|pa_printfile
 operator|!=
 name|NULL
+operator|&&
+name|args
+operator|.
+name|pa_printfile
+operator|!=
+name|stdout
+operator|&&
+name|args
+operator|.
+name|pa_printfile
+operator|!=
+name|stderr
 condition|)
 operator|(
 name|void
@@ -3474,8 +3476,7 @@ name|errx
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot open \"%s\" for "
-literal|"writing."
+literal|"ERROR: cannot open \"%s\" for writing."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3501,8 +3502,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -O may only be "
-literal|"specified once."
+literal|"ERROR: option -O may only be specified once."
 argument_list|)
 expr_stmt|;
 name|args
@@ -3556,8 +3556,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -R may only be "
-literal|"specified once."
+literal|"ERROR: option -R may only be specified once."
 argument_list|)
 expr_stmt|;
 name|args
@@ -3691,8 +3690,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: Illegal wait interval "
-literal|"value \"%s\"."
+literal|"ERROR: Illegal wait interval value \"%s\"."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3760,8 +3758,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: Illegal callchain "
-literal|"depth \"%s\"."
+literal|"ERROR: Illegal callchain depth \"%s\"."
 argument_list|,
 name|optarg
 argument_list|)
@@ -3891,8 +3888,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -O and -R are mutually "
-literal|"exclusive."
+literal|"ERROR: options -O and -R are mutually exclusive."
 argument_list|)
 expr_stmt|;
 comment|/* -m option is allowed with -R only. */
@@ -3940,8 +3936,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -m and -g | -G are mutually "
-literal|"exclusive"
+literal|"ERROR: option -m and -g | -G are mutually exclusive"
 argument_list|)
 expr_stmt|;
 if|if
@@ -4006,8 +4001,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -R may not be used with "
-literal|"%s."
+literal|"ERROR: option -R may not be used with %s."
 argument_list|,
 name|errmsg
 argument_list|)
@@ -4053,8 +4047,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -t requires a process mode PMC "
-literal|"to be specified."
+literal|"ERROR: option -t requires a process mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for process-mode options without a command or -t pid */
@@ -4086,8 +4079,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -d, -E, -p, -P, and -W require "
-literal|"a command line or target process."
+literal|"ERROR: options -d, -E, -p, -P, and -W require a command line or target process."
 argument_list|)
 expr_stmt|;
 comment|/* check for -p | -P without a target process of some sort */
@@ -4123,8 +4115,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -P and -p require a "
-literal|"target process or a command line."
+literal|"ERROR: options -P and -p require a target process or a command line."
 argument_list|)
 expr_stmt|;
 comment|/* check for process-mode options without a process-mode PMC */
@@ -4152,8 +4143,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -d, -E, and -W require a "
-literal|"process mode PMC to be specified."
+literal|"ERROR: options -d, -E, and -W require a process mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for -c cpu with no system mode PMCs or logfile. */
@@ -4191,8 +4181,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -c requires at least one "
-literal|"system mode PMC to be specified."
+literal|"ERROR: option -c requires at least one system mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for counting mode options without a counting PMC */
@@ -4220,8 +4209,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -C, -W and -o require at "
-literal|"least one counting mode PMC to be specified."
+literal|"ERROR: options -C, -W and -o require at least one counting mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check for sampling mode options without a sampling PMC spec */
@@ -4249,8 +4237,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -N, -n and -O require at "
-literal|"least one sampling mode PMC to be specified."
+literal|"ERROR: options -N, -n and -O require at least one sampling mode PMC to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check if -g/-G/-m/-T are being used correctly */
@@ -4281,8 +4268,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: options -g/-G/-m/-T require sampling PMCs "
-literal|"or -R to be specified."
+literal|"ERROR: options -g/-G/-m/-T require sampling PMCs or -R to be specified."
 argument_list|)
 expr_stmt|;
 comment|/* check if -O was spuriously specified */
@@ -4310,8 +4296,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -O is used only with options "
-literal|"-E, -P, -S and -W."
+literal|"ERROR: option -O is used only with options -E, -P, -S and -W."
 argument_list|)
 expr_stmt|;
 comment|/* -k kernel path require -g/-G/-m/-T or -R */
@@ -4451,11 +4436,10 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: option -O is required if counting and "
-literal|"sampling PMCs are specified together."
+literal|"ERROR: option -O is required if counting and sampling PMCs are specified together."
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
+comment|/* 	 * Check if "-k kerneldir" was specified, and if whether 	 * 'kerneldir' actually refers to a file.  If so, use 	 * `dirname path` to determine the kernel directory. 	 */
 if|if
 condition|(
 name|args
@@ -4630,8 +4614,7 @@ name|errx
 argument_list|(
 name|EX_USAGE
 argument_list|,
-literal|"ERROR: \"%s\" is not a "
-literal|"directory."
+literal|"ERROR: \"%s\" is not a directory."
 argument_list|,
 name|buffer
 argument_list|)
@@ -4692,8 +4675,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: cannot open \"%s\" "
-literal|"for writing"
+literal|"ERROR: cannot open \"%s\" for writing"
 argument_list|,
 name|graphfilename
 argument_list|)
@@ -4784,8 +4766,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot determine the number of PMCs "
-literal|"on CPU %d"
+literal|"ERROR: Cannot determine the number of PMCs on CPU %d"
 argument_list|,
 literal|0
 argument_list|)
@@ -5186,8 +5167,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot allocate %s-mode pmc with "
-literal|"specification \"%s\""
+literal|"ERROR: Cannot allocate %s-mode pmc with specification \"%s\""
 argument_list|,
 name|PMC_IS_SYSTEM_MODE
 argument_list|(
@@ -5231,8 +5211,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot set sampling count "
-literal|"for PMC \"%s\""
+literal|"ERROR: Cannot set sampling count for PMC \"%s\""
 argument_list|,
 name|ev
 operator|->
@@ -5448,8 +5427,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot register kevent for "
-literal|"SIGWINCH"
+literal|"ERROR: Cannot register kevent for SIGWINCH"
 argument_list|)
 expr_stmt|;
 name|args
@@ -5732,8 +5710,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot register kevent for "
-literal|"timer"
+literal|"ERROR: Cannot register kevent for timer"
 argument_list|)
 expr_stmt|;
 block|}
@@ -5796,8 +5773,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"ERROR: No matching target "
-literal|"processes."
+literal|"ERROR: No matching target processes."
 argument_list|)
 expr_stmt|;
 if|if
@@ -6042,6 +6018,8 @@ name|PMCSTAT_RUNNING
 expr_stmt|;
 name|do_print
 operator|=
+name|do_read
+operator|=
 literal|0
 expr_stmt|;
 do|do
@@ -6166,11 +6144,17 @@ argument_list|()
 expr_stmt|;
 block|}
 else|else
+block|{
+name|do_read
+operator|=
+literal|0
+expr_stmt|;
 name|runstate
 operator|=
 name|pmcstat_process_log
 argument_list|()
 expr_stmt|;
+block|}
 break|break;
 case|case
 name|EVFILT_SIGNAL
@@ -6243,26 +6227,6 @@ condition|)
 name|pmcstat_kill_process
 argument_list|()
 expr_stmt|;
-comment|/* Close the pipe to self, if present. */
-if|if
-condition|(
-name|args
-operator|.
-name|pa_flags
-operator|&
-name|FLAG_HAS_PIPE
-condition|)
-operator|(
-name|void
-operator|)
-name|close
-argument_list|(
-name|pipefd
-index|[
-name|READPIPEFD
-index|]
-argument_list|)
-expr_stmt|;
 name|runstate
 operator|=
 name|pmcstat_close_log
@@ -6302,8 +6266,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot determine "
-literal|"window size"
+literal|"ERROR: Cannot determine window size"
 argument_list|)
 expr_stmt|;
 name|pmcstat_displayheight
@@ -6334,6 +6297,25 @@ case|case
 name|EVFILT_TIMER
 case|:
 comment|/* print out counting PMCs */
+if|if
+condition|(
+operator|(
+name|args
+operator|.
+name|pa_flags
+operator|&
+name|FLAG_DO_TOP
+operator|)
+operator|&&
+name|pmc_flush_logfile
+argument_list|()
+operator|==
+literal|0
+condition|)
+name|do_read
+operator|=
+literal|1
+expr_stmt|;
 name|do_print
 operator|=
 literal|1
@@ -6343,6 +6325,9 @@ block|}
 if|if
 condition|(
 name|do_print
+operator|&&
+operator|!
+name|do_read
 condition|)
 block|{
 if|if
@@ -6453,7 +6438,7 @@ operator||
 name|FLAG_HAS_PIPE
 operator|)
 condition|)
-name|pmc_flush_logfile
+name|pmc_close_logfile
 argument_list|()
 expr_stmt|;
 name|pmcstat_cleanup
@@ -6486,8 +6471,7 @@ name|err
 argument_list|(
 name|EX_OSERR
 argument_list|,
-literal|"ERROR: Cannot retrieve driver "
-literal|"statistics"
+literal|"ERROR: Cannot retrieve driver statistics"
 argument_list|)
 expr_stmt|;
 if|if
@@ -6508,9 +6492,8 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some samples were dropped.  Please "
-literal|"consider tuning the \"kern.hwpmc.nsamples\" "
-literal|"tunable."
+literal|"WARNING: some samples were dropped.\n"
+literal|"Please consider tuning the \"kern.hwpmc.nsamples\" tunable."
 argument_list|)
 expr_stmt|;
 if|if
@@ -6531,9 +6514,8 @@ literal|0
 condition|)
 name|warnx
 argument_list|(
-literal|"WARNING: some events were discarded.  Please "
-literal|"consider tuning the \"kern.hwpmc.nbuffers\" "
-literal|"tunable."
+literal|"WARNING: some events were discarded.\n"
+literal|"Please consider tuning the \"kern.hwpmc.nbuffers\" tunable."
 argument_list|)
 expr_stmt|;
 block|}

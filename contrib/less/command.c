@@ -535,6 +535,7 @@ modifier|*
 name|prompt
 decl_stmt|;
 name|void
+name|constant
 modifier|*
 name|mlist
 decl_stmt|;
@@ -2300,6 +2301,7 @@ parameter_list|()
 block|{
 specifier|register
 name|char
+name|constant
 modifier|*
 name|p
 decl_stmt|;

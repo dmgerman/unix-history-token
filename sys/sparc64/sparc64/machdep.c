@@ -290,12 +290,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/clock.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<machine/cmt.h>
 end_include
 
@@ -1685,7 +1679,7 @@ name|u_long
 operator|)
 name|vec
 expr_stmt|;
-comment|/* 	 * Parse metadata if present and fetch parameters.  Must be before the 	 * console is inited so cninit gets the right value of boothowto. 	 */
+comment|/* 	 * Parse metadata if present and fetch parameters.  Must be before the 	 * console is inited so cninit() gets the right value of boothowto. 	 */
 if|if
 condition|(
 name|mdp
@@ -1895,8 +1889,12 @@ name|pc_node
 operator|==
 literal|0
 condition|)
-name|OF_exit
-argument_list|()
+name|OF_panic
+argument_list|(
+literal|"%s: cannot find boot CPU node"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 if|if
 condition|(
@@ -1923,19 +1921,12 @@ argument_list|)
 operator|<=
 literal|0
 condition|)
-name|OF_exit
-argument_list|()
-expr_stmt|;
-comment|/* 	 * Provide a DELAY() that works before PCPU_REG is set.  We can't 	 * set PCPU_REG without also taking over the trap table or the 	 * firmware will overwrite it.  Unfortunately, it's way to early 	 * to also take over the trap table at this point. 	 */
-name|clock_boot
-operator|=
-name|pc
-operator|->
-name|pc_clock
-expr_stmt|;
-name|delay_func
-operator|=
-name|delay_boot
+name|OF_panic
+argument_list|(
+literal|"%s: cannot determine boot CPU clock"
+argument_list|,
+name|__func__
+argument_list|)
 expr_stmt|;
 comment|/* 	 * Panic if there is no metadata.  Most likely the kernel was booted 	 * directly, instead of through loader(8). 	 */
 if|if
@@ -1960,17 +1951,14 @@ name|kernel_tlbs
 operator|==
 name|NULL
 condition|)
-block|{
-name|OF_printf
+name|OF_panic
 argument_list|(
-literal|"sparc64_init: missing loader metadata.\n"
-literal|"This probably means you are not using loader(8).\n"
+literal|"%s: missing loader metadata.\nThis probably means "
+literal|"you are not using loader(8)."
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-name|OF_exit
-argument_list|()
-expr_stmt|;
-block|}
 comment|/* 	 * Work around the broken loader behavior of not demapping no 	 * longer used kernel TLB slots when unloading the kernel or 	 * modules. 	 */
 for|for
 control|(
@@ -2004,7 +1992,7 @@ if|if
 condition|(
 name|bootverbose
 condition|)
-name|printf
+name|OF_printf
 argument_list|(
 literal|"demapping unused kernel TLB slot "
 literal|"(va %#lx - %#lx)\n"
@@ -2082,16 +2070,13 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|OF_printf
+name|OF_panic
 argument_list|(
-literal|"sparc64_init: cannot determine number of dTLB slots"
+literal|"%s: cannot determine number of dTLB slots"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-name|OF_exit
-argument_list|()
-expr_stmt|;
-block|}
 if|if
 condition|(
 name|OF_getprop
@@ -2114,17 +2099,14 @@ operator|==
 operator|-
 literal|1
 condition|)
-block|{
-name|OF_printf
+name|OF_panic
 argument_list|(
-literal|"sparc64_init: cannot determine number of iTLB slots"
+literal|"%s: cannot determine number of iTLB slots"
+argument_list|,
+name|__func__
 argument_list|)
 expr_stmt|;
-name|OF_exit
-argument_list|()
-expr_stmt|;
-block|}
-comment|/* 	 * Initialize and enable the caches.  Note that his may include 	 * applying workarounds. 	 */
+comment|/* 	 * Initialize and enable the caches.  Note that this may include 	 * applying workarounds. 	 */
 name|cache_init
 argument_list|(
 name|pc

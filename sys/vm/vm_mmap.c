@@ -231,6 +231,12 @@ directive|include
 file|<vm/vm_page.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<vm/vnode_pager.h>
+end_include
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -297,6 +303,9 @@ name|vm_ooffset_t
 modifier|*
 parameter_list|,
 name|vm_object_t
+modifier|*
+parameter_list|,
+name|boolean_t
 modifier|*
 parameter_list|)
 function_decl|;
@@ -489,10 +498,6 @@ begin_endif
 endif|#
 directive|endif
 end_endif
-
-begin_comment
-comment|/* ARGSUSED */
-end_comment
 
 begin_function
 name|int
@@ -2052,6 +2057,14 @@ operator|(
 name|EBUSY
 operator|)
 return|;
+case|case
+name|KERN_FAILURE
+case|:
+return|return
+operator|(
+name|EIO
+operator|)
+return|;
 default|default:
 return|return
 operator|(
@@ -2790,10 +2803,6 @@ begin_comment
 comment|/*  * MPSAFE  */
 end_comment
 
-begin_comment
-comment|/* ARGSUSED */
-end_comment
-
 begin_function
 name|int
 name|sys_madvise
@@ -3068,10 +3077,6 @@ end_endif
 
 begin_comment
 comment|/*  * MPSAFE  */
-end_comment
-
-begin_comment
-comment|/* ARGSUSED */
 end_comment
 
 begin_function
@@ -3616,6 +3621,23 @@ name|object
 argument_list|,
 name|pindex
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|m
+operator|==
+name|NULL
+operator|&&
+name|vm_page_is_cached
+argument_list|(
+name|object
+argument_list|,
+name|pindex
+argument_list|)
+condition|)
+name|mincoreinfo
+operator|=
+name|MINCORE_INCORE
 expr_stmt|;
 if|if
 condition|(
@@ -4967,7 +4989,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * vm_mmap_vnode()  *  * MPSAFE  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on vnodes.  */
+comment|/*  * vm_mmap_vnode()  *  * Helper function for vm_mmap.  Perform sanity check specific for mmap  * operations on vnodes.  *  * For VCHR vnodes, the vnode lock is held over the call to  * vm_mmap_cdev() to keep vp->v_rdev valid.  */
 end_comment
 
 begin_function
@@ -5005,6 +5027,10 @@ parameter_list|,
 name|vm_object_t
 modifier|*
 name|objp
+parameter_list|,
+name|boolean_t
+modifier|*
+name|writecounted
 parameter_list|)
 block|{
 name|struct
@@ -5031,8 +5057,9 @@ name|int
 name|error
 decl_stmt|,
 name|flags
-decl_stmt|;
-name|int
+decl_stmt|,
+name|locktype
+decl_stmt|,
 name|vfslocked
 decl_stmt|;
 name|mp
@@ -5046,6 +5073,31 @@ operator|=
 name|td
 operator|->
 name|td_ucred
+expr_stmt|;
+if|if
+condition|(
+operator|(
+operator|*
+name|maxprotp
+operator|&
+name|VM_PROT_WRITE
+operator|)
+operator|&&
+operator|(
+operator|*
+name|flagsp
+operator|&
+name|MAP_SHARED
+operator|)
+condition|)
+name|locktype
+operator|=
+name|LK_EXCLUSIVE
+expr_stmt|;
+else|else
+name|locktype
+operator|=
+name|LK_SHARED
 expr_stmt|;
 name|vfslocked
 operator|=
@@ -5063,7 +5115,7 @@ name|vget
 argument_list|(
 name|vp
 argument_list|,
-name|LK_SHARED
+name|locktype
 argument_list|,
 name|td
 argument_list|)
@@ -5149,13 +5201,56 @@ name|obj
 operator|->
 name|handle
 expr_stmt|;
+comment|/* 			 * Bypass filesystems obey the mpsafety of the 			 * underlying fs. 			 */
+name|error
+operator|=
 name|vget
 argument_list|(
 name|vp
 argument_list|,
-name|LK_SHARED
+name|locktype
 argument_list|,
 name|td
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|error
+operator|!=
+literal|0
+condition|)
+block|{
+name|VFS_UNLOCK_GIANT
+argument_list|(
+name|vfslocked
+argument_list|)
+expr_stmt|;
+return|return
+operator|(
+name|error
+operator|)
+return|;
+block|}
+block|}
+if|if
+condition|(
+name|locktype
+operator|==
+name|LK_EXCLUSIVE
+condition|)
+block|{
+operator|*
+name|writecounted
+operator|=
+name|TRUE
+expr_stmt|;
+name|vnode_pager_update_writecount
+argument_list|(
+name|obj
+argument_list|,
+literal|0
+argument_list|,
+name|objsize
 argument_list|)
 expr_stmt|;
 block|}
@@ -5351,9 +5446,7 @@ name|prot
 argument_list|,
 name|foff
 argument_list|,
-name|td
-operator|->
-name|td_ucred
+name|cred
 argument_list|)
 expr_stmt|;
 if|if
@@ -5897,22 +5990,22 @@ name|object
 init|=
 name|NULL
 decl_stmt|;
-name|int
-name|rv
-init|=
-name|KERN_SUCCESS
-decl_stmt|;
-name|int
-name|docow
-decl_stmt|,
-name|error
-decl_stmt|;
 name|struct
 name|thread
 modifier|*
 name|td
 init|=
 name|curthread
+decl_stmt|;
+name|int
+name|docow
+decl_stmt|,
+name|error
+decl_stmt|,
+name|rv
+decl_stmt|;
+name|boolean_t
+name|writecounted
 decl_stmt|;
 if|if
 condition|(
@@ -5932,6 +6025,20 @@ argument_list|(
 name|size
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|map
+operator|==
+operator|&
+name|td
+operator|->
+name|td_proc
+operator|->
+name|p_vmspace
+operator|->
+name|vm_map
+condition|)
+block|{
 name|PROC_LOCK
 argument_list|(
 name|td
@@ -5941,14 +6048,8 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|td
+name|map
 operator|->
-name|td_proc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_map
-operator|.
 name|size
 operator|+
 name|size
@@ -5986,14 +6087,8 @@ name|td_proc
 argument_list|,
 name|RACCT_VMEM
 argument_list|,
-name|td
+name|map
 operator|->
-name|td_proc
-operator|->
-name|p_vmspace
-operator|->
-name|vm_map
-operator|.
 name|size
 operator|+
 name|size
@@ -6020,6 +6115,7 @@ operator|->
 name|td_proc
 argument_list|)
 expr_stmt|;
+block|}
 comment|/* 	 * We currently can only deal with page aligned file offsets. 	 * The check is here rather than in the syscall because the 	 * kernel calls this function internally for other mmaping 	 * operations (such as in exec) and non-aligned offsets will 	 * cause pmap inconsistencies...so we want to be sure to 	 * disallow this in all cases. 	 */
 if|if
 condition|(
@@ -6080,6 +6176,10 @@ operator|=
 name|FALSE
 expr_stmt|;
 block|}
+name|writecounted
+operator|=
+name|FALSE
+expr_stmt|;
 comment|/* 	 * Lookup/allocate object. 	 */
 switch|switch
 condition|(
@@ -6141,6 +6241,9 @@ name|foff
 argument_list|,
 operator|&
 name|object
+argument_list|,
+operator|&
+name|writecounted
 argument_list|)
 expr_stmt|;
 break|break;
@@ -6286,6 +6389,25 @@ name|docow
 operator||=
 name|MAP_DISABLE_COREDUMP
 expr_stmt|;
+comment|/* Shared memory is also shared with children. */
+if|if
+condition|(
+name|flags
+operator|&
+name|MAP_SHARED
+condition|)
+name|docow
+operator||=
+name|MAP_INHERIT_SHARE
+expr_stmt|;
+if|if
+condition|(
+name|writecounted
+condition|)
+name|docow
+operator||=
+name|MAP_VN_WRITECOUNT
+expr_stmt|;
 if|if
 condition|(
 name|flags
@@ -6378,82 +6500,18 @@ expr_stmt|;
 if|if
 condition|(
 name|rv
-operator|!=
-name|KERN_SUCCESS
-condition|)
-block|{
-comment|/* 		 * Lose the object reference. Will destroy the 		 * object if it's an unnamed anonymous mapping 		 * or named anonymous without other references. 		 */
-name|vm_object_deallocate
-argument_list|(
-name|object
-argument_list|)
-expr_stmt|;
-block|}
-elseif|else
-if|if
-condition|(
-name|flags
-operator|&
-name|MAP_SHARED
-condition|)
-block|{
-comment|/* 		 * Shared memory is also shared with children. 		 */
-name|rv
-operator|=
-name|vm_map_inherit
-argument_list|(
-name|map
-argument_list|,
-operator|*
-name|addr
-argument_list|,
-operator|*
-name|addr
-operator|+
-name|size
-argument_list|,
-name|VM_INHERIT_SHARE
-argument_list|)
-expr_stmt|;
-if|if
-condition|(
-name|rv
-operator|!=
-name|KERN_SUCCESS
-condition|)
-operator|(
-name|void
-operator|)
-name|vm_map_remove
-argument_list|(
-name|map
-argument_list|,
-operator|*
-name|addr
-argument_list|,
-operator|*
-name|addr
-operator|+
-name|size
-argument_list|)
-expr_stmt|;
-block|}
-comment|/* 	 * If the process has requested that all future mappings 	 * be wired, then heed this. 	 */
-if|if
-condition|(
-operator|(
-name|rv
 operator|==
 name|KERN_SUCCESS
-operator|)
-operator|&&
-operator|(
+condition|)
+block|{
+comment|/* 		 * If the process has requested that all future mappings 		 * be wired, then heed this. 		 */
+if|if
+condition|(
 name|map
 operator|->
 name|flags
 operator|&
 name|MAP_WIREFUTURE
-operator|)
 condition|)
 name|vm_map_wire
 argument_list|(
@@ -6472,6 +6530,30 @@ operator||
 name|VM_MAP_WIRE_NOHOLES
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+comment|/* 		 * If this mapping was accounted for in the vnode's 		 * writecount, then undo that now. 		 */
+if|if
+condition|(
+name|writecounted
+condition|)
+name|vnode_pager_release_writecount
+argument_list|(
+name|object
+argument_list|,
+literal|0
+argument_list|,
+name|size
+argument_list|)
+expr_stmt|;
+comment|/* 		 * Lose the object reference.  Will destroy the 		 * object if it's an unnamed anonymous mapping 		 * or named anonymous without other references. 		 */
+name|vm_object_deallocate
+argument_list|(
+name|object
+argument_list|)
+expr_stmt|;
+block|}
 return|return
 operator|(
 name|vm_mmap_to_errno
@@ -6482,6 +6564,10 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_comment
+comment|/*  * Translate a Mach VM return code to zero on success or the appropriate errno  * on failure.  */
+end_comment
 
 begin_function
 name|int

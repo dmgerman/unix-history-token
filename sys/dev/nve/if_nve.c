@@ -967,21 +967,6 @@ argument_list|,
 name|nve_shutdown
 argument_list|)
 block|,
-comment|/* Bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -997,11 +982,7 @@ argument_list|,
 name|nve_miibus_writereg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1826,7 +1807,10 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|4
 argument_list|,
@@ -1881,7 +1865,10 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|4
 argument_list|,
@@ -1946,7 +1933,10 @@ name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 literal|4
 argument_list|,
@@ -2795,12 +2785,6 @@ operator|->
 name|if_init
 operator|=
 name|nve_init
-expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
 expr_stmt|;
 name|ifp
 operator|->
@@ -5962,11 +5946,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-name|NVE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_active
@@ -5982,6 +5961,11 @@ operator|=
 name|mii
 operator|->
 name|mii_media_status
+expr_stmt|;
+name|NVE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 return|return;
 block|}

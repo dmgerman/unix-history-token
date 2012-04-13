@@ -81,6 +81,12 @@ name|__be64
 typedef|;
 end_typedef
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__bool_true_false_are_defined
+end_ifndef
+
 begin_typedef
 typedef|typedef
 name|_Bool
@@ -101,6 +107,11 @@ directive|define
 name|false
 value|FALSE
 end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_typedef
 typedef|typedef

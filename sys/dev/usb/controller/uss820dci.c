@@ -242,6 +242,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -6031,6 +6032,7 @@ block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|uss820dci_suspend
 parameter_list|(
@@ -6040,11 +6042,12 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return;
+comment|/* TODO */
 block|}
 end_function
 
 begin_function
+specifier|static
 name|void
 name|uss820dci_resume
 parameter_list|(
@@ -6054,7 +6057,7 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-return|return;
+comment|/* TODO */
 block|}
 end_function
 
@@ -7000,6 +7003,18 @@ block|, }
 decl_stmt|;
 end_decl_stmt
 
+begin_define
+define|#
+directive|define
+name|HSETW
+parameter_list|(
+name|ptr
+parameter_list|,
+name|val
+parameter_list|)
+value|ptr = { (uint8_t)(val), (uint8_t)((val)>> 8) }
+end_define
+
 begin_decl_stmt
 specifier|static
 specifier|const
@@ -7026,33 +7041,17 @@ name|bNbrPorts
 operator|=
 literal|1
 block|,
+name|HSETW
+argument_list|(
 operator|.
 name|wHubCharacteristics
-index|[
-literal|0
-index|]
-operator|=
+argument_list|,
 operator|(
 name|UHD_PWR_NO_SWITCH
 operator||
 name|UHD_OC_INDIVIDUAL
 operator|)
-operator|&
-literal|0xFF
-block|,
-operator|.
-name|wHubCharacteristics
-index|[
-literal|1
-index|]
-operator|=
-operator|(
-name|UHD_PWR_NO_SWITCH
-operator||
-name|UHD_OC_INDIVIDUAL
-operator|)
-operator|>>
-literal|8
+argument_list|)
 block|,
 operator|.
 name|bPwrOn2PwrGood
@@ -8969,6 +8968,68 @@ block|}
 block|}
 end_function
 
+begin_function
+specifier|static
+name|void
+name|uss820dci_set_hw_power_sleep
+parameter_list|(
+name|struct
+name|usb_bus
+modifier|*
+name|bus
+parameter_list|,
+name|uint32_t
+name|state
+parameter_list|)
+block|{
+name|struct
+name|uss820dci_softc
+modifier|*
+name|sc
+init|=
+name|USS820_DCI_BUS2SC
+argument_list|(
+name|bus
+argument_list|)
+decl_stmt|;
+switch|switch
+condition|(
+name|state
+condition|)
+block|{
+case|case
+name|USB_HW_POWER_SUSPEND
+case|:
+name|uss820dci_suspend
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_SHUTDOWN
+case|:
+name|uss820dci_uninit
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|USB_HW_POWER_RESUME
+case|:
+name|uss820dci_resume
+argument_list|(
+name|sc
+argument_list|)
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+block|}
+end_function
+
 begin_decl_stmt
 name|struct
 name|usb_bus_methods
@@ -9022,6 +9083,11 @@ name|xfer_poll
 operator|=
 operator|&
 name|uss820dci_do_poll
+block|,
+operator|.
+name|set_hw_power_sleep
+operator|=
+name|uss820dci_set_hw_power_sleep
 block|, }
 decl_stmt|;
 end_decl_stmt

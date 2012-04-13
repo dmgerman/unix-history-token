@@ -240,6 +240,20 @@ name|mambo_cnputc
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+specifier|static
+name|cn_grab_t
+name|mambo_cngrab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_ungrab_t
+name|mambo_cnungrab
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|CONSOLE_DRIVER
 argument_list|(
@@ -555,6 +569,32 @@ begin_function
 specifier|static
 name|void
 name|mambo_cnterm
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mambo_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|mambo_cnungrab
 parameter_list|(
 name|struct
 name|consdev

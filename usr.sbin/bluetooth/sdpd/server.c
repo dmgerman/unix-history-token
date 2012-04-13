@@ -246,6 +246,7 @@ literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
+operator|*
 name|srv
 argument_list|)
 argument_list|)
@@ -1701,7 +1702,7 @@ argument_list|)
 expr_stmt|;
 return|return;
 block|}
-comment|/* 		 * The maximum size of the L2CAP packet is 65536 bytes. 		 * The minimum L2CAP MTU is 43 bytes. That means we need 		 * 65536 / 43 = ~1524 chunks to transfer maximum packet 		 * size with minimum MTU. The "rsp_cs" field in fd_idx_t 		 * is 11 bit wide that gives us upto 2048 chunks. 		 */
+comment|/* 		 * The maximum size of the L2CAP packet is 65536 bytes. 		 * The minimum L2CAP MTU is 43 bytes. That means we need 		 * 65536 / 43 = ~1524 chunks to transfer maximum packet 		 * size with minimum MTU. The "rsp_cs" field in fd_idx_t 		 * is 11 bits wide, which gives us up to 2048 chunks. 		 */
 if|if
 condition|(
 name|omtu

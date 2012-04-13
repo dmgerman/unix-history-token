@@ -32,8 +32,8 @@ file|"mathimpl.h"
 end_include
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|p1
 init|=
@@ -45,8 +45,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|p2
 init|=
@@ -59,8 +59,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|p3
 init|=
@@ -72,8 +72,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|p4
 init|=
@@ -87,8 +87,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|p5
 init|=
@@ -100,8 +100,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|ln2hi
 init|=
@@ -113,8 +113,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|ln2lo
 init|=
@@ -127,8 +127,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|lnhuge
 init|=
@@ -138,8 +138,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|lntiny
 init|=
@@ -150,8 +150,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
 specifier|static
+specifier|const
 name|double
 name|invln2
 init|=

@@ -209,6 +209,12 @@ modifier|*
 name|imo_mfilters
 decl_stmt|;
 comment|/* source filters */
+name|STAILQ_ENTRY
+argument_list|(
+argument|ip_moptions
+argument_list|)
+name|imo_link
+expr_stmt|;
 block|}
 struct|;
 end_struct

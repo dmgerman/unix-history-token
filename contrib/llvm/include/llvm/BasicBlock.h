@@ -94,6 +94,9 @@ name|namespace
 name|llvm
 block|{
 name|class
+name|LandingPadInst
+decl_stmt|;
+name|class
 name|TerminatorInst
 decl_stmt|;
 name|class
@@ -548,6 +551,32 @@ name|getFirstNonPHIOrDbgOrLifetime
 argument_list|()
 return|;
 block|}
+comment|/// getFirstInsertionPt - Returns an iterator to the first instruction in this
+comment|/// block that is suitable for inserting a non-PHI instruction. In particular,
+comment|/// it skips all PHIs and LandingPad instructions.
+name|iterator
+name|getFirstInsertionPt
+parameter_list|()
+function_decl|;
+name|const_iterator
+name|getFirstInsertionPt
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|BasicBlock
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getFirstInsertionPt
+argument_list|()
+return|;
+block|}
 comment|/// removeFromParent - This method unlinks 'this' from the containing
 comment|/// function, but does not delete it.
 comment|///
@@ -947,6 +976,20 @@ name|BasicBlock
 modifier|*
 name|New
 parameter_list|)
+function_decl|;
+comment|/// isLandingPad - Return true if this basic block is a landing pad. I.e.,
+comment|/// it's the destination of the 'unwind' edge of an invoke instruction.
+name|bool
+name|isLandingPad
+argument_list|()
+specifier|const
+expr_stmt|;
+comment|/// getLandingPadInst() - Return the landingpad instruction associated with
+comment|/// the landing pad.
+name|LandingPadInst
+modifier|*
+name|getLandingPadInst
+parameter_list|()
 function_decl|;
 name|private
 label|:

@@ -124,6 +124,12 @@ literal|1
 decl_stmt|;
 comment|/// Whether ARC should be EH-safe.
 name|unsigned
+name|CUDAIsDevice
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when compiling for CUDA device.
+name|unsigned
 name|CXAAtExit
 range|:
 literal|1
@@ -267,6 +273,12 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// Set when -Wa,--noexecstack is enabled.
+name|unsigned
+name|NoGlobalMerge
+range|:
+literal|1
+decl_stmt|;
+comment|/// Set when -mno-global-merge is enabled.
 name|unsigned
 name|NoImplicitFloat
 range|:
@@ -481,6 +493,10 @@ name|CodeGenOptions
 argument_list|()
 block|{
 name|AsmVerbose
+operator|=
+literal|0
+expr_stmt|;
+name|CUDAIsDevice
 operator|=
 literal|0
 expr_stmt|;

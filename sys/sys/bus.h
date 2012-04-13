@@ -74,6 +74,11 @@ init|=
 literal|20
 block|,
 comment|/**< @brief probe succeeded */
+name|DS_ATTACHING
+init|=
+literal|25
+block|,
+comment|/**< @brief currently attaching */
 name|DS_ATTACHED
 init|=
 literal|30
@@ -2087,6 +2092,16 @@ end_function_decl
 
 begin_function_decl
 name|int
+name|device_delete_children
+parameter_list|(
+name|device_t
+name|dev
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|int
 name|device_attach
 parameter_list|(
 name|device_t
@@ -3248,7 +3263,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/**  * Shorthand for constructing method tables.  */
+comment|/**  * Shorthands for constructing method tables.  */
 end_comment
 
 begin_define
@@ -3256,6 +3271,13 @@ define|#
 directive|define
 name|DEVMETHOD
 value|KOBJMETHOD
+end_define
+
+begin_define
+define|#
+directive|define
+name|DEVMETHOD_END
+value|KOBJMETHOD_END
 end_define
 
 begin_comment

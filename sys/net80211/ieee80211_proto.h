@@ -1254,11 +1254,10 @@ name|ieee80211vap
 modifier|*
 parameter_list|,
 specifier|const
-name|uint8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
+name|struct
+name|ieee80211_frame
+modifier|*
+name|wh
 parameter_list|)
 function_decl|;
 name|int
@@ -2062,6 +2061,11 @@ modifier|*
 name|bo_csa
 decl_stmt|;
 comment|/* start of CSA element */
+name|uint8_t
+modifier|*
+name|bo_quiet
+decl_stmt|;
+comment|/* start of Quiet element */
 name|uint8_t
 modifier|*
 name|bo_meshconf

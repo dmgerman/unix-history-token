@@ -148,43 +148,6 @@ operator|&
 name|tii
 argument_list|)
 block|;
-comment|/// getRegisterNumbering - Given the enum value for some register, e.g.
-comment|/// MBlaze::RA, return the number that it corresponds to (e.g. 31).
-specifier|static
-name|unsigned
-name|getRegisterNumbering
-argument_list|(
-argument|unsigned RegEnum
-argument_list|)
-block|;
-specifier|static
-name|unsigned
-name|getRegisterFromNumbering
-argument_list|(
-argument|unsigned RegEnum
-argument_list|)
-block|;
-specifier|static
-name|unsigned
-name|getSpecialRegisterFromNumbering
-argument_list|(
-argument|unsigned RegEnum
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|isRegister
-argument_list|(
-argument|unsigned RegEnum
-argument_list|)
-block|;
-specifier|static
-name|bool
-name|isSpecialRegister
-argument_list|(
-argument|unsigned RegEnum
-argument_list|)
-block|;
 comment|/// Get PIC indirect call register
 specifier|static
 name|unsigned
@@ -241,11 +204,6 @@ specifier|const
 block|;
 comment|/// Debug information queries.
 name|unsigned
-name|getRARegister
-argument_list|()
-specifier|const
-block|;
-name|unsigned
 name|getFrameRegister
 argument_list|(
 argument|const MachineFunction&MF
@@ -261,24 +219,6 @@ block|;
 name|unsigned
 name|getEHHandlerRegister
 argument_list|()
-specifier|const
-block|;
-name|int
-name|getDwarfRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
-specifier|const
-block|;
-name|int
-name|getLLVMRegNum
-argument_list|(
-argument|unsigned RegNum
-argument_list|,
-argument|bool isEH
-argument_list|)
 specifier|const
 block|; }
 decl_stmt|;

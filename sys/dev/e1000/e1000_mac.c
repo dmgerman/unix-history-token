@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/******************************************************************************    Copyright (c) 2001-2010, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
+comment|/******************************************************************************    Copyright (c) 2001-2011, Intel Corporation    All rights reserved.      Redistribution and use in source and binary forms, with or without    modification, are permitted provided that the following conditions are met:       1. Redistributions of source code must retain the above copyright notice,        this list of conditions and the following disclaimer.       2. Redistributions in binary form must reproduce the above copyright        notice, this list of conditions and the following disclaimer in the        documentation and/or other materials provided with the distribution.       3. Neither the name of the Intel Corporation nor the names of its        contributors may be used to endorse or promote products derived from        this software without specific prior written permission.      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE    ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE    LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF    SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS    INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN    CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   POSSIBILITY OF SUCH DAMAGE.  ******************************************************************************/
 end_comment
 
 begin_comment
@@ -1082,7 +1082,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  *  e1000_init_rx_addrs_generic - Initialize receive address's  *  @hw: pointer to the HW structure  *  @rar_count: receive address registers  *  *  Setups the receive address registers by setting the base receive address  *  register to the devices MAC address and clearing all the other receive  *  address registers to 0.  **/
+comment|/**  *  e1000_init_rx_addrs_generic - Initialize receive address's  *  @hw: pointer to the HW structure  *  @rar_count: receive address registers  *  *  Setup the receive address registers by setting the base receive address  *  register to the devices MAC address and clearing all the other receive  *  address registers to 0.  **/
 end_comment
 
 begin_function
@@ -1249,33 +1249,42 @@ condition|)
 goto|goto
 name|out
 goto|;
-comment|/* Check for LOM (vs. NIC) or one of two valid mezzanine cards */
+comment|/* not supported on older hardware or 82573 */
 if|if
 condition|(
-operator|!
 operator|(
-operator|(
-name|nvm_data
-operator|&
-name|NVM_COMPAT_LOM
+name|hw
+operator|->
+name|mac
+operator|.
+name|type
+operator|<
+name|e1000_82571
 operator|)
 operator|||
 operator|(
 name|hw
 operator|->
-name|device_id
+name|mac
+operator|.
+name|type
 operator|==
-name|E1000_DEV_ID_82571EB_SERDES_DUAL
+name|e1000_82573
 operator|)
-operator|||
-operator|(
+condition|)
+goto|goto
+name|out
+goto|;
+comment|/* 	 * Alternate MAC address is handled by the option ROM for 82580 	 * and newer. SW support not required. 	 */
+if|if
+condition|(
 name|hw
 operator|->
-name|device_id
-operator|==
-name|E1000_DEV_ID_82571EB_SERDES_QUAD
-operator|)
-operator|)
+name|mac
+operator|.
+name|type
+operator|>=
+name|e1000_82580
 condition|)
 goto|goto
 name|out
@@ -1316,16 +1325,22 @@ goto|;
 block|}
 if|if
 condition|(
+operator|(
 name|nvm_alt_mac_addr_offset
 operator|==
 literal|0xFFFF
+operator|)
+operator|||
+operator|(
+name|nvm_alt_mac_addr_offset
+operator|==
+literal|0x0000
+operator|)
 condition|)
-block|{
 comment|/* There is no Alternate MAC Address */
 goto|goto
 name|out
 goto|;
-block|}
 if|if
 condition|(
 name|hw
@@ -1892,7 +1907,7 @@ condition|)
 name|bit_shift
 operator|++
 expr_stmt|;
-comment|/* 	 * The portion of the address that is used for the hash table 	 * is determined by the mc_filter_type setting. 	 * The algorithm is such that there is a total of 8 bits of shifting. 	 * The bit_shift for a mc_filter_type of 0 represents the number of 	 * left-shifts where the MSB of mc_addr[5] would still fall within 	 * the hash_mask.  Case 0 does this exactly.  Since there are a total 	 * of 8 bits of shifting, then mc_addr[4] will shift right the 	 * remaining number of bits. Thus 8 - bit_shift.  The rest of the 	 * cases are a variation of this algorithm...essentially raising the 	 * number of bits to shift mc_addr[5] left, while still keeping the 	 * 8-bit shifting total. 	 * 	 * For example, given the following Destination MAC Address and an 	 * mta register count of 128 (thus a 4096-bit vector and 0xFFF mask), 	 * we can see that the bit_shift for case 0 is 4.  These are the hash 	 * values resulting from each mc_filter_type... 	 * [0] [1] [2] [3] [4] [5] 	 * 01  AA  00  12  34  56 	 * LSB                 MSB 	 * 	 * case 0: hash_value = ((0x34>> 4) | (0x56<< 4))& 0xFFF = 0x563 	 * case 1: hash_value = ((0x34>> 3) | (0x56<< 5))& 0xFFF = 0xAC6 	 * case 2: hash_value = ((0x34>> 2) | (0x56<< 6))& 0xFFF = 0x163 	 * case 3: hash_value = ((0x34>> 0) | (0x56<< 8))& 0xFFF = 0x634 	 */
+comment|/* 	 * The portion of the address that is used for the hash table 	 * is determined by the mc_filter_type setting. 	 * The algorithm is such that there is a total of 8 bits of shifting. 	 * The bit_shift for a mc_filter_type of 0 represents the number of 	 * left-shifts where the MSB of mc_addr[5] would still fall within 	 * the hash_mask.  Case 0 does this exactly.  Since there are a total 	 * of 8 bits of shifting, then mc_addr[4] will shift right the 	 * remaining number of bits. Thus 8 - bit_shift.  The rest of the 	 * cases are a variation of this algorithm...essentially raising the 	 * number of bits to shift mc_addr[5] left, while still keeping the 	 * 8-bit shifting total. 	 * 	 * For example, given the following Destination MAC Address and an 	 * mta register count of 128 (thus a 4096-bit vector and 0xFFF mask), 	 * we can see that the bit_shift for case 0 is 4.  These are the hash 	 * values resulting from each mc_filter_type... 	 * [0] [1] [2] [3] [4] [5] 	 * 01  AA  00  12  34  56 	 * LSB		 MSB 	 * 	 * case 0: hash_value = ((0x34>> 4) | (0x56<< 4))& 0xFFF = 0x563 	 * case 1: hash_value = ((0x34>> 3) | (0x56<< 5))& 0xFFF = 0xAC6 	 * case 2: hash_value = ((0x34>> 2) | (0x56<< 6))& 0xFFF = 0x163 	 * case 3: hash_value = ((0x34>> 0) | (0x56<< 8))& 0xFFF = 0x634 	 */
 switch|switch
 condition|(
 name|hw
@@ -3162,8 +3177,7 @@ name|TRUE
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"SERDES: Link up - autoneg "
-literal|"completed sucessfully.\n"
+literal|"SERDES: Link up - autoneg completed successfully.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -3177,8 +3191,7 @@ name|FALSE
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"SERDES: Link down - invalid"
-literal|"codewords detected in autoneg.\n"
+literal|"SERDES: Link down - invalid codewords detected in autoneg.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4439,8 +4452,7 @@ condition|)
 block|{
 name|DEBUGOUT
 argument_list|(
-literal|"Copper PHY and Auto Neg "
-literal|"has not completed.\n"
+literal|"Copper PHY and Auto Neg has not completed.\n"
 argument_list|)
 expr_stmt|;
 goto|goto
@@ -4514,7 +4526,7 @@ name|NWAY_LPAR_PAUSE
 operator|)
 condition|)
 block|{
-comment|/* 			 * Now we need to check if the user selected Rx ONLY 			 * of pause frames.  In this case, we had to advertise 			 * FULL flow control because we could not advertise Rx 			 * ONLY. Hence, we must now check to see if we need to 			 * turn OFF  the TRANSMISSION of PAUSE frames. 			 */
+comment|/* 			 * Now we need to check if the user selected Rx ONLY 			 * of pause frames.  In this case, we had to advertise 			 * FULL flow control because we could not advertise Rx 			 * ONLY. Hence, we must now check to see if we need to 			 * turn OFF the TRANSMISSION of PAUSE frames. 			 */
 if|if
 condition|(
 name|hw
@@ -4536,7 +4548,7 @@ name|e1000_fc_full
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Flow Control = FULL.\r\n"
+literal|"Flow Control = FULL.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4552,8 +4564,7 @@ name|e1000_fc_rx_pause
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Flow Control = "
-literal|"Rx PAUSE frames only.\r\n"
+literal|"Flow Control = Rx PAUSE frames only.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4598,7 +4609,7 @@ name|e1000_fc_tx_pause
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Flow Control = Tx PAUSE frames only.\r\n"
+literal|"Flow Control = Tx PAUSE frames only.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4642,7 +4653,7 @@ name|e1000_fc_rx_pause
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Flow Control = Rx PAUSE frames only.\r\n"
+literal|"Flow Control = Rx PAUSE frames only.\n"
 argument_list|)
 expr_stmt|;
 block|}
@@ -4659,7 +4670,7 @@ name|e1000_fc_none
 expr_stmt|;
 name|DEBUGOUT
 argument_list|(
-literal|"Flow Control = NONE.\r\n"
+literal|"Flow Control = NONE.\n"
 argument_list|)
 expr_stmt|;
 block|}

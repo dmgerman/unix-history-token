@@ -8281,18 +8281,12 @@ name|xvfsconf
 name|vfc
 decl_stmt|;
 name|char
-modifier|*
-name|dirp
-decl_stmt|;
-name|char
 name|errmsg
 index|[
 literal|255
 index|]
 decl_stmt|;
 name|int
-name|dirplen
-decl_stmt|,
 name|num
 decl_stmt|,
 name|i
@@ -8330,14 +8324,6 @@ operator|.
 name|ex_flags
 operator|=
 name|MNT_DELEXPORT
-expr_stmt|;
-name|dirp
-operator|=
-name|NULL
-expr_stmt|;
-name|dirplen
-operator|=
-literal|0
 expr_stmt|;
 name|iov
 operator|=
@@ -15794,7 +15780,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Compare two sockaddrs according to a specified mask. Return zero if  * `sa1' matches `sa2' when filtered by the netmask in `samask'.  * If samask is NULL, perform a full comparision.  */
+comment|/*  * Compare two sockaddrs according to a specified mask. Return zero if  * `sa1' matches `sa2' when filtered by the netmask in `samask'.  * If samask is NULL, perform a full comparison.  */
 end_comment
 
 begin_function

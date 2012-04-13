@@ -401,6 +401,7 @@ file|<machine/vmparam.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw
@@ -419,6 +420,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_machdep
@@ -1124,7 +1126,7 @@ name|cpu_freq
 condition|)
 name|printf
 argument_list|(
-literal|"%u Mhz "
+literal|"%u MHz "
 argument_list|,
 name|cpu_freq
 argument_list|)

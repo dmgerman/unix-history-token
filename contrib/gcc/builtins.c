@@ -38453,7 +38453,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|MODE_HAS_INFINITIES
+name|HONOR_INFINITIES
 argument_list|(
 name|TYPE_MODE
 argument_list|(
@@ -38529,7 +38529,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|MODE_HAS_NANS
+name|HONOR_NANS
 argument_list|(
 name|TYPE_MODE
 argument_list|(
@@ -38541,7 +38541,7 @@ argument_list|)
 argument_list|)
 operator|&&
 operator|!
-name|MODE_HAS_INFINITIES
+name|HONOR_INFINITIES
 argument_list|(
 name|TYPE_MODE
 argument_list|(
@@ -38557,7 +38557,7 @@ name|omit_one_operand
 argument_list|(
 name|type
 argument_list|,
-name|integer_zero_node
+name|integer_one_node
 argument_list|,
 name|arg
 argument_list|)
@@ -38606,7 +38606,7 @@ case|:
 if|if
 condition|(
 operator|!
-name|MODE_HAS_NANS
+name|HONOR_NANS
 argument_list|(
 name|TYPE_MODE
 argument_list|(
@@ -38971,7 +38971,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|MODE_HAS_NANS
+name|HONOR_NANS
 argument_list|(
 name|TYPE_MODE
 argument_list|(
@@ -39009,7 +39009,7 @@ return|;
 block|}
 name|code
 operator|=
-name|MODE_HAS_NANS
+name|HONOR_NANS
 argument_list|(
 name|TYPE_MODE
 argument_list|(

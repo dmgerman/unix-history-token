@@ -2208,6 +2208,10 @@ literal|0
 decl_stmt|;
 name|char
 modifier|*
+name|cryptpw
+decl_stmt|;
+name|char
+modifier|*
 name|oldshell
 init|=
 name|NULL
@@ -2562,10 +2566,8 @@ name|size
 argument_list|)
 expr_stmt|;
 comment|/* Step 2: check that the supplied oldpass is valid. */
-if|if
-condition|(
-name|strcmp
-argument_list|(
+name|cryptpw
+operator|=
 name|crypt
 argument_list|(
 name|argp
@@ -2576,6 +2578,16 @@ name|yp_password
 operator|.
 name|pw_passwd
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cryptpw
+operator|==
+name|NULL
+operator|||
+name|strcmp
+argument_list|(
+name|cryptpw
 argument_list|,
 name|yp_password
 operator|.

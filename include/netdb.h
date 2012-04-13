@@ -1586,7 +1586,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|__const
+specifier|const
 name|char
 modifier|*
 name|hstrerror

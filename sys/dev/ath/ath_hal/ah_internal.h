@@ -69,6 +69,24 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
+name|AH_SUPPORT_AR5416
+end_ifndef
+
+begin_define
+define|#
+directive|define
+name|AH_SUPPORT_AR5416
+value|1
+end_define
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|NBBY
 end_ifndef
 
@@ -756,6 +774,14 @@ literal|1
 decl_stmt|,
 comment|/* Hardware supports 5ghz fast clock; check eeprom/channel before using */
 name|halHasLongRxDescTsf
+range|:
+literal|1
+decl_stmt|,
+name|halHasBBReadWar
+range|:
+literal|1
+decl_stmt|,
+name|halSerialiseRegWar
 range|:
 literal|1
 decl_stmt|;
@@ -1958,6 +1984,21 @@ name|_f
 parameter_list|)
 define|\
 value|OS_REG_WRITE(_a, _r, OS_REG_READ(_a, _r)&~ (_f))
+end_define
+
+begin_define
+define|#
+directive|define
+name|OS_REG_IS_BIT_SET
+parameter_list|(
+name|_a
+parameter_list|,
+name|_r
+parameter_list|,
+name|_f
+parameter_list|)
+define|\
+value|((OS_REG_READ(_a, _r)& (_f)) != 0)
 end_define
 
 begin_comment

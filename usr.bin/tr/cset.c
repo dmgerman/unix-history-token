@@ -607,6 +607,7 @@ name|csc
 operator|->
 name|csc_invert
 operator|^
+operator|(
 name|iswctype
 argument_list|(
 name|ch
@@ -617,6 +618,7 @@ name|csc_type
 argument_list|)
 operator|!=
 literal|0
+operator|)
 condition|)
 return|return
 operator|(
@@ -655,6 +657,7 @@ name|cs
 operator|->
 name|cs_invert
 operator|^
+operator|(
 name|cset_rangecmp
 argument_list|(
 name|cs
@@ -665,6 +668,7 @@ name|ch
 argument_list|)
 operator|==
 literal|0
+operator|)
 operator|)
 return|;
 block|}

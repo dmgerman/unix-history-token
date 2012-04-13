@@ -1402,6 +1402,7 @@ argument_list|,
 name|M_DONTWAIT
 argument_list|)
 expr_stmt|;
+comment|/* FIB is also copied over. */
 if|if
 condition|(
 name|m
@@ -2288,6 +2289,7 @@ argument_list|,
 name|n0
 argument_list|)
 expr_stmt|;
+comment|/* FIB copied. */
 if|if
 condition|(
 name|n
@@ -6300,7 +6302,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-comment|/* just for recvif */
+comment|/* just for recvif and FIB */
 if|if
 condition|(
 name|replylen
@@ -7659,33 +7661,20 @@ block|}
 name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
-for|for
-control|(
-name|ifp
-operator|=
-name|TAILQ_FIRST
+name|TAILQ_FOREACH
 argument_list|(
-operator|&
-name|V_ifnet
-argument_list|)
-init|;
-name|ifp
-condition|;
-name|ifp
-operator|=
-name|TAILQ_NEXT
-argument_list|(
-name|ifp
+argument|ifp
 argument_list|,
-name|if_list
+argument|&V_ifnet
+argument_list|,
+argument|if_list
 argument_list|)
-control|)
 block|{
 name|addrsofif
 operator|=
 literal|0
 expr_stmt|;
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7859,7 +7848,7 @@ operator|++
 expr_stmt|;
 comment|/* count the address */
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -7927,16 +7916,6 @@ name|struct
 name|ifnet
 modifier|*
 name|ifp
-init|=
-name|ifp0
-condition|?
-name|ifp0
-else|:
-name|TAILQ_FIRST
-argument_list|(
-operator|&
-name|V_ifnet
-argument_list|)
 decl_stmt|;
 name|struct
 name|in6_ifaddr
@@ -8010,6 +7989,18 @@ comment|/* needless to copy */
 name|IFNET_RLOCK_NOSLEEP
 argument_list|()
 expr_stmt|;
+name|ifp
+operator|=
+name|ifp0
+condition|?
+name|ifp0
+else|:
+name|TAILQ_FIRST
+argument_list|(
+operator|&
+name|V_ifnet
+argument_list|)
+expr_stmt|;
 name|again
 label|:
 for|for
@@ -8027,7 +8018,7 @@ name|if_list
 argument_list|)
 control|)
 block|{
-name|IF_ADDR_LOCK
+name|IF_ADDR_RLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8235,7 +8226,7 @@ name|u_int32_t
 argument_list|)
 condition|)
 block|{
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -8391,7 +8382,7 @@ argument_list|)
 operator|)
 expr_stmt|;
 block|}
-name|IF_ADDR_UNLOCK
+name|IF_ADDR_RUNLOCK
 argument_list|(
 name|ifp
 argument_list|)
@@ -9721,33 +9712,6 @@ block|}
 block|}
 if|if
 condition|(
-operator|(
-name|srcp
-operator|!=
-name|NULL
-operator|)
-operator|&&
-operator|(
-name|in6_addrscope
-argument_list|(
-name|srcp
-argument_list|)
-operator|!=
-name|in6_addrscope
-argument_list|(
-operator|&
-name|ip6
-operator|->
-name|ip6_src
-argument_list|)
-operator|)
-condition|)
-name|srcp
-operator|=
-name|NULL
-expr_stmt|;
-if|if
-condition|(
 name|srcp
 operator|==
 name|NULL
@@ -10256,17 +10220,6 @@ name|lladdrlen
 init|=
 literal|0
 decl_stmt|;
-name|u_char
-modifier|*
-name|redirhdr
-init|=
-name|NULL
-decl_stmt|;
-name|int
-name|redirhdrlen
-init|=
-literal|0
-decl_stmt|;
 name|struct
 name|rtentry
 modifier|*
@@ -10306,12 +10259,28 @@ index|[
 name|INET6_ADDRSTRLEN
 index|]
 decl_stmt|;
-if|if
-condition|(
-operator|!
+name|M_ASSERTPKTHDR
+argument_list|(
 name|m
-condition|)
-return|return;
+argument_list|)
+expr_stmt|;
+name|KASSERT
+argument_list|(
+name|m
+operator|->
+name|m_pkthdr
+operator|.
+name|rcvif
+operator|!=
+name|NULL
+argument_list|,
+operator|(
+literal|"%s: no rcvif"
+operator|,
+name|__func__
+operator|)
+argument_list|)
+expr_stmt|;
 name|ifp
 operator|=
 name|m
@@ -10320,12 +10289,6 @@ name|m_pkthdr
 operator|.
 name|rcvif
 expr_stmt|;
-if|if
-condition|(
-operator|!
-name|ifp
-condition|)
-return|return;
 comment|/* XXX if we are router, we don't update route by icmp6 redirect */
 if|if
 condition|(
@@ -10574,7 +10537,7 @@ argument_list|)
 expr_stmt|;
 name|rt
 operator|=
-name|rtalloc1
+name|in6_rtalloc1
 argument_list|(
 operator|(
 expr|struct
@@ -10587,6 +10550,8 @@ argument_list|,
 literal|0
 argument_list|,
 literal|0UL
+argument_list|,
+name|RT_DEFAULT_FIB
 argument_list|)
 expr_stmt|;
 if|if
@@ -10906,8 +10871,9 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"icmp6_redirect_input: "
-literal|"invalid ND option, rejected: %s\n"
+literal|"%s: invalid ND option, rejected: %s\n"
+operator|,
+name|__func__
 operator|,
 name|icmp6_redirect_diag
 argument_list|(
@@ -10962,37 +10928,6 @@ expr_stmt|;
 block|}
 if|if
 condition|(
-name|ndopts
-operator|.
-name|nd_opts_rh
-condition|)
-block|{
-name|redirhdrlen
-operator|=
-name|ndopts
-operator|.
-name|nd_opts_rh
-operator|->
-name|nd_opt_rh_len
-expr_stmt|;
-name|redirhdr
-operator|=
-operator|(
-name|u_char
-operator|*
-operator|)
-operator|(
-name|ndopts
-operator|.
-name|nd_opts_rh
-operator|+
-literal|1
-operator|)
-expr_stmt|;
-comment|/* xxx */
-block|}
-if|if
-condition|(
 name|lladdr
 operator|&&
 operator|(
@@ -11018,8 +10953,10 @@ argument_list|(
 operator|(
 name|LOG_INFO
 operator|,
-literal|"icmp6_redirect_input: lladdrlen mismatch for %s "
+literal|"%s: lladdrlen mismatch for %s "
 literal|"(if %d, icmp6 packet %d): %s\n"
+operator|,
+name|__func__
 operator|,
 name|ip6_sprintf
 argument_list|(
@@ -11095,6 +11032,9 @@ decl_stmt|;
 name|struct
 name|sockaddr_in6
 name|ssrc
+decl_stmt|;
+name|u_int
+name|fibnum
 decl_stmt|;
 name|bzero
 argument_list|(
@@ -11212,7 +11152,20 @@ name|in6_addr
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|rtredirect
+for|for
+control|(
+name|fibnum
+operator|=
+literal|0
+init|;
+name|fibnum
+operator|<
+name|rt_numfibs
+condition|;
+name|fibnum
+operator|++
+control|)
+name|in6_rtredirect
 argument_list|(
 operator|(
 expr|struct
@@ -11248,6 +11201,8 @@ operator|*
 operator|)
 operator|&
 name|ssrc
+argument_list|,
+name|fibnum
 argument_list|)
 expr_stmt|;
 block|}
@@ -11628,6 +11583,15 @@ condition|)
 goto|goto
 name|fail
 goto|;
+name|M_SETFIB
+argument_list|(
+name|m
+argument_list|,
+name|rt
+operator|->
+name|rt_fibnum
+argument_list|)
+expr_stmt|;
 name|m
 operator|->
 name|m_pkthdr

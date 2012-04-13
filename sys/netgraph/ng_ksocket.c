@@ -132,13 +132,14 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_KSOCKET
 argument_list|,
 literal|"netgraph_ksock"
 argument_list|,
-literal|"netgraph ksock node "
+literal|"netgraph ksock node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1005,7 +1006,7 @@ condition|(
 operator|(
 name|t
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s
 operator|+
@@ -2577,7 +2578,7 @@ condition|(
 operator|(
 name|s2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s1
 argument_list|,
@@ -2630,7 +2631,7 @@ condition|(
 operator|(
 name|s2
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|s1
 argument_list|,

@@ -123,12 +123,6 @@ decl_stmt|;
 name|uint32_t
 name|i_next_alloc_goal
 decl_stmt|;
-name|uint32_t
-name|i_prealloc_block
-decl_stmt|;
-name|uint32_t
-name|i_prealloc_count
-decl_stmt|;
 comment|/* Fields from struct dinode in UFS. */
 name|uint16_t
 name|i_mode
@@ -147,15 +141,7 @@ name|i_atime
 decl_stmt|;
 comment|/* Last access time. */
 name|int32_t
-name|i_atimensec
-decl_stmt|;
-comment|/* Last access time. */
-name|int32_t
 name|i_mtime
-decl_stmt|;
-comment|/* Last modified time. */
-name|int32_t
-name|i_mtimensec
 decl_stmt|;
 comment|/* Last modified time. */
 name|int32_t
@@ -163,9 +149,25 @@ name|i_ctime
 decl_stmt|;
 comment|/* Last inode change time. */
 name|int32_t
+name|i_birthtime
+decl_stmt|;
+comment|/* Inode creation time. */
+name|int32_t
+name|i_mtimensec
+decl_stmt|;
+comment|/* Last modified time. */
+name|int32_t
+name|i_atimensec
+decl_stmt|;
+comment|/* Last access time. */
+name|int32_t
 name|i_ctimensec
 decl_stmt|;
 comment|/* Last inode change time. */
+name|int32_t
+name|i_birthnsec
+decl_stmt|;
+comment|/* Inode creation time. */
 name|int32_t
 name|i_db
 index|[
@@ -564,20 +566,6 @@ parameter_list|(
 name|ip
 parameter_list|)
 value|((ip)->i_vnode)
-end_define
-
-begin_comment
-comment|/* Check whether the MNTK_ASYNC flag has been set for a mount point */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|DOINGASYNC
-parameter_list|(
-name|vp
-parameter_list|)
-value|((vp)->v_mount->mnt_kern_flag& MNTK_ASYNC)
 end_define
 
 begin_comment

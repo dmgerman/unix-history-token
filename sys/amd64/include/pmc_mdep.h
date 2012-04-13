@@ -75,49 +75,49 @@ begin_define
 define|#
 directive|define
 name|PMC_MDEP_CLASS_INDEX_TSC
-value|0
+value|1
 end_define
 
 begin_define
 define|#
 directive|define
 name|PMC_MDEP_CLASS_INDEX_K8
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMC_MDEP_CLASS_INDEX_P4
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMC_MDEP_CLASS_INDEX_IAP
-value|1
-end_define
-
-begin_define
-define|#
-directive|define
-name|PMC_MDEP_CLASS_INDEX_IAF
 value|2
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_MDEP_CLASS_INDEX_UCP
+name|PMC_MDEP_CLASS_INDEX_P4
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_IAP
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_IAF
 value|3
 end_define
 
 begin_define
 define|#
 directive|define
-name|PMC_MDEP_CLASS_INDEX_UCF
+name|PMC_MDEP_CLASS_INDEX_UCP
 value|4
+end_define
+
+begin_define
+define|#
+directive|define
+name|PMC_MDEP_CLASS_INDEX_UCF
+value|5
 end_define
 
 begin_comment
@@ -347,6 +347,21 @@ parameter_list|(
 name|va
 parameter_list|)
 value|((va)<= VM_MAXUSER_ADDRESS)
+end_define
+
+begin_comment
+comment|/* Build a fake kernel trapframe from current instruction pointer. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|PMC_FAKE_TRAPFRAME
+parameter_list|(
+name|TF
+parameter_list|)
+define|\
+value|do {								\ 	(TF)->tf_cs = 0; (TF)->tf_rflags = 0;				\ 	__asm __volatile("movq %%rbp,%0" : "=r" ((TF)->tf_rbp));	\ 	__asm __volatile("movq %%rsp,%0" : "=r" ((TF)->tf_rsp));	\ 	__asm __volatile("call 1f \n\t1: pop %0" : "=r"((TF)->tf_rip));	\ 	} while (0)
 end_define
 
 begin_comment

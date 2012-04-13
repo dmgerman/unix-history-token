@@ -218,6 +218,12 @@ literal|0
 expr_stmt|;
 name|GIANT_REQUIRED
 expr_stmt|;
+name|pmap_page_init
+argument_list|(
+operator|&
+name|m
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 name|uio

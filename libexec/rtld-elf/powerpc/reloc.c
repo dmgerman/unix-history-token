@@ -333,6 +333,12 @@ name|r_info
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|req
+operator|.
+name|flags
+operator|=
+name|SYMLOOK_EARLY
+expr_stmt|;
 for|for
 control|(
 name|srcobj
@@ -634,6 +640,9 @@ name|SymCache
 modifier|*
 name|cache
 parameter_list|,
+name|int
+name|flags
+parameter_list|,
 name|RtldLockState
 modifier|*
 name|lockstate
@@ -708,7 +717,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -853,7 +862,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -902,7 +911,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -1017,7 +1026,7 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|false
+name|flags
 argument_list|,
 name|cache
 argument_list|,
@@ -1103,6 +1112,9 @@ parameter_list|,
 name|Obj_Entry
 modifier|*
 name|obj_rtld
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|RtldLockState
 modifier|*
@@ -1207,6 +1219,8 @@ name|rela
 argument_list|,
 name|cache
 argument_list|,
+name|flags
+argument_list|,
 name|lockstate
 argument_list|)
 operator|<
@@ -1231,6 +1245,18 @@ condition|)
 name|free
 argument_list|(
 name|cache
+argument_list|)
+expr_stmt|;
+comment|/* Synchronize icache for text seg in case we made any changes */
+name|__syncicache
+argument_list|(
+name|obj
+operator|->
+name|mapbase
+argument_list|,
+name|obj
+operator|->
+name|textsize
 argument_list|)
 expr_stmt|;
 return|return
@@ -1483,7 +1509,7 @@ operator|=
 literal|0x4e800420
 expr_stmt|;
 block|}
-comment|/* 	 * The icache will be sync'd in init_pltgot, which is called 	 * after all the slots have been updated 	 */
+comment|/* 	 * The icache will be sync'd in reloc_plt, which is called 	 * after all the slots have been updated 	 */
 return|return
 operator|(
 literal|0
@@ -1514,6 +1540,18 @@ specifier|const
 name|Elf_Rela
 modifier|*
 name|rela
+decl_stmt|;
+name|int
+name|N
+init|=
+name|obj
+operator|->
+name|pltrelasize
+operator|/
+sizeof|sizeof
+argument_list|(
+name|Elf_Rela
+argument_list|)
 decl_stmt|;
 if|if
 condition|(
@@ -1594,6 +1632,29 @@ return|;
 block|}
 block|}
 block|}
+comment|/* 	 * Sync the icache for the byte range represented by the 	 * trampoline routines and call slots. 	 */
+if|if
+condition|(
+name|obj
+operator|->
+name|pltgot
+operator|!=
+name|NULL
+condition|)
+name|__syncicache
+argument_list|(
+name|obj
+operator|->
+name|pltgot
+argument_list|,
+name|JMPTAB_BASE
+argument_list|(
+name|N
+argument_list|)
+operator|*
+literal|4
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
 literal|0
@@ -1613,6 +1674,9 @@ parameter_list|(
 name|Obj_Entry
 modifier|*
 name|obj
+parameter_list|,
+name|int
+name|flags
 parameter_list|,
 name|RtldLockState
 modifier|*
@@ -1727,7 +1791,9 @@ argument_list|,
 operator|&
 name|defobj
 argument_list|,
-name|true
+name|SYMLOOK_IN_PLT
+operator||
+name|flags
 argument_list|,
 name|NULL
 argument_list|,
@@ -2055,6 +2121,55 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|reloc_iresolve
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|reloc_gnu_ifunc
+parameter_list|(
+name|Obj_Entry
+modifier|*
+name|obj
+parameter_list|,
+name|int
+name|flags
+parameter_list|,
+name|struct
+name|Struct_RtldLockState
+modifier|*
+name|lockstate
+parameter_list|)
+block|{
+comment|/* XXX not implemented */
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+end_function
+
 begin_comment
 comment|/*  * Setup the plt glue routines.  */
 end_comment
@@ -2275,21 +2390,7 @@ argument_list|(
 name|obj
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Sync the icache for the byte range represented by the 	 * trampoline routines and call slots. 	 */
-name|__syncicache
-argument_list|(
-name|obj
-operator|->
-name|pltgot
-argument_list|,
-name|JMPTAB_BASE
-argument_list|(
-name|N
-argument_list|)
-operator|*
-literal|4
-argument_list|)
-expr_stmt|;
+comment|/* 	 * The icache will be sync'd in reloc_plt, which is called 	 * after all the slots have been updated 	 */
 block|}
 end_function
 

@@ -84,8 +84,6 @@ block|{
 comment|/// Fields - Contains all FieldDecls collected during parsing of a C++
 comment|/// class. When a nested class is entered, its fields are appended to the
 comment|/// fields of its parent class, when it is exited its fields are removed.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|FieldDecl
@@ -98,8 +96,6 @@ expr_stmt|;
 comment|/// FieldCount - Each entry represents the number of fields collected during
 comment|/// the parsing of a C++ class. When a nested class is entered, a new field
 comment|/// count is pushed, when it is exited, the field count is popped.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|size_t

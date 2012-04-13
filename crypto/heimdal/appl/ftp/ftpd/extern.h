@@ -167,6 +167,7 @@ begin_function_decl
 name|void
 name|cwd
 parameter_list|(
+specifier|const
 name|char
 modifier|*
 parameter_list|)
@@ -801,6 +802,13 @@ end_decl_stmt
 begin_decl_stmt
 specifier|extern
 name|int
+name|dochroot
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
 name|logging
 decl_stmt|;
 end_decl_stmt
@@ -899,6 +907,13 @@ specifier|extern
 name|char
 name|tmpline
 index|[]
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|paranoid
 decl_stmt|;
 end_decl_stmt
 

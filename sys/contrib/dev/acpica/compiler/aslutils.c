@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -94,6 +94,52 @@ block|,
 literal|'E'
 block|,
 literal|'F'
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Table below must match ASL_FILE_TYPES in asltypes.h */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AslFileTypeNames
+index|[
+name|ASL_NUM_FILES
+index|]
+init|=
+block|{
+literal|"stdout:       "
+block|,
+literal|"stderr:       "
+block|,
+literal|"Table Input:  "
+block|,
+literal|"Binary Output:"
+block|,
+literal|"Source Output:"
+block|,
+literal|"Preprocessor: "
+block|,
+literal|"Listing File: "
+block|,
+literal|"Hex Dump:     "
+block|,
+literal|"Namespace:    "
+block|,
+literal|"Debug File:   "
+block|,
+literal|"ASM Source:   "
+block|,
+literal|"C Source:     "
+block|,
+literal|"ASM Include:  "
+block|,
+literal|"C Include:    "
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -917,6 +963,9 @@ name|UINT32
 name|FileId
 parameter_list|)
 block|{
+name|UINT32
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|FileId
@@ -929,7 +978,7 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"%s version %X%s\n"
+literal|"%s version %X%s\n\n"
 argument_list|,
 name|ASL_COMPILER_NAME
 argument_list|,
@@ -942,6 +991,7 @@ name|ACPI_WIDTH
 argument_list|)
 expr_stmt|;
 block|}
+comment|/* Summary of main input and output files */
 if|if
 condition|(
 name|Gbl_FileType
@@ -953,7 +1003,9 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Table Input:   %s - %u lines, %u bytes, %u fields\n"
+literal|"%-14s %s - %u lines, %u bytes, %u fields\n"
+argument_list|,
+literal|"Table Input:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -989,7 +1041,9 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Binary Output: %s - %u bytes\n\n"
+literal|"%-14s %s - %u bytes\n"
+argument_list|,
+literal|"Binary Output:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1005,12 +1059,13 @@ block|}
 block|}
 else|else
 block|{
-comment|/* Input/Output summary */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"ASL Input:  %s - %u lines, %u bytes, %u keywords\n"
+literal|"%-14s %s - %u lines, %u bytes, %u keywords\n"
+argument_list|,
+literal|"ASL Input:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1047,7 +1102,9 @@ name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"AML Output: %s - %u bytes, %u named objects, %u executable opcodes\n\n"
+literal|"%-14s %s - %u bytes, %u named objects, %u executable opcodes\n"
+argument_list|,
+literal|"AML Output:"
 argument_list|,
 name|Gbl_Files
 index|[
@@ -1065,12 +1122,107 @@ argument_list|)
 expr_stmt|;
 block|}
 block|}
+comment|/* Display summary of any optional files */
+for|for
+control|(
+name|i
+operator|=
+name|ASL_FILE_SOURCE_OUTPUT
+init|;
+name|i
+operator|<=
+name|ASL_MAX_FILE_TYPE
+condition|;
+name|i
+operator|++
+control|)
+block|{
+if|if
+condition|(
+operator|!
+name|Gbl_Files
+index|[
+name|i
+index|]
+operator|.
+name|Filename
+operator|||
+operator|!
+name|Gbl_Files
+index|[
+name|i
+index|]
+operator|.
+name|Handle
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/* .SRC is a temp file unless specifically requested */
+if|if
+condition|(
+operator|(
+name|i
+operator|==
+name|ASL_FILE_SOURCE_OUTPUT
+operator|)
+operator|&&
+operator|(
+operator|!
+name|Gbl_SourceOutputFlag
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+comment|/* .I is a temp file unless specifically requested */
+if|if
+condition|(
+operator|(
+name|i
+operator|==
+name|ASL_FILE_PREPROCESSOR
+operator|)
+operator|&&
+operator|(
+operator|!
+name|Gbl_PreprocessorOutputFlag
+operator|)
+condition|)
+block|{
+continue|continue;
+block|}
+name|FlPrintFile
+argument_list|(
+name|FileId
+argument_list|,
+literal|"%14s %s - %u bytes\n"
+argument_list|,
+name|AslFileTypeNames
+index|[
+name|i
+index|]
+argument_list|,
+name|Gbl_Files
+index|[
+name|i
+index|]
+operator|.
+name|Filename
+argument_list|,
+name|FlGetFileSize
+argument_list|(
+name|i
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Error summary */
 name|FlPrintFile
 argument_list|(
 name|FileId
 argument_list|,
-literal|"Compilation complete. %u Errors, %u Warnings, %u Remarks"
+literal|"\nCompilation complete. %u Errors, %u Warnings, %u Remarks"
 argument_list|,
 name|Gbl_ExceptionCount
 index|[

@@ -310,15 +310,13 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|STAILQ_HEAD
 argument_list|(
 argument_list|,
 argument|editentry
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|editlist
 expr_stmt|;
 end_expr_stmt
@@ -328,6 +326,7 @@ comment|/* List of page entries. */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|int
 name|editlist_changed
 init|=
@@ -360,15 +359,13 @@ block|}
 struct|;
 end_struct
 
-begin_macro
+begin_expr_stmt
+specifier|static
 name|SLIST_HEAD
 argument_list|(
 argument_list|,
 argument|pagename
 argument_list|)
-end_macro
-
-begin_expr_stmt
 name|namelist
 expr_stmt|;
 end_expr_stmt
@@ -3868,11 +3865,6 @@ name|MAX_COMMAND_SIZE
 index|]
 decl_stmt|;
 comment|/* Buffer to hold sense data. */
-name|u_int8_t
-modifier|*
-name|mode_pars
-decl_stmt|;
-comment|/* Pointer to modepage params. */
 name|struct
 name|scsi_mode_header_6
 modifier|*
@@ -4012,13 +4004,6 @@ argument_list|)
 operator|+
 name|len
 operator|)
-expr_stmt|;
-name|mode_pars
-operator|=
-name|MODE_PAGE_DATA
-argument_list|(
-name|mph
-argument_list|)
 expr_stmt|;
 name|mph
 operator|->

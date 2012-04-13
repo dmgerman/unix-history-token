@@ -236,6 +236,7 @@ expr_stmt|;
 comment|/// The order in which operands from the InstInfo's operand information appear
 comment|/// in String
 specifier|const
+name|signed
 name|char
 modifier|*
 name|OperandOrder

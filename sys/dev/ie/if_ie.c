@@ -258,6 +258,23 @@ comment|/* length of transmit buffer */
 end_comment
 
 begin_comment
+comment|/* XXX this driver uses `volatile' and `caddr_t' to a fault. */
+end_comment
+
+begin_typedef
+typedef|typedef
+specifier|volatile
+name|char
+modifier|*
+name|v_caddr_t
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* core address, pointer to volatile */
+end_comment
+
+begin_comment
 comment|/* Forward declaration */
 end_comment
 
@@ -1165,12 +1182,6 @@ argument_list|(
 name|dev
 argument_list|)
 argument_list|)
-expr_stmt|;
-name|ifp
-operator|->
-name|if_mtu
-operator|=
-name|ETHERMTU
 expr_stmt|;
 name|ifp
 operator|->

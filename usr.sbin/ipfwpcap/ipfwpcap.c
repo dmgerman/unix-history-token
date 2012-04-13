@@ -326,7 +326,7 @@ condition|)
 block|{
 name|p
 operator|=
-name|rindex
+name|strrchr
 argument_list|(
 name|prog
 argument_list|,

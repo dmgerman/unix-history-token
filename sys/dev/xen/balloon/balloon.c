@@ -102,6 +102,7 @@ file|<vm/vm_page.h>
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_BALLOON
@@ -222,6 +223,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_dev_xen
@@ -567,7 +569,7 @@ name|free
 argument_list|(
 name|entry
 argument_list|,
-name|M_DEVBUF
+name|M_BALLOON
 argument_list|)
 expr_stmt|;
 name|bs
@@ -1211,11 +1213,6 @@ name|i
 operator|++
 control|)
 block|{
-name|int
-name|color
-init|=
-literal|0
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -1225,8 +1222,7 @@ name|vm_page_alloc
 argument_list|(
 name|NULL
 argument_list|,
-name|color
-operator|++
+literal|0
 argument_list|,
 name|VM_ALLOC_NORMAL
 operator||

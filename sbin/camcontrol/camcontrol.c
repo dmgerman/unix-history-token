@@ -288,6 +288,10 @@ block|,
 name|CAM_CMD_SMP_MANINFO
 init|=
 literal|0x0000001b
+block|,
+name|CAM_CMD_DOWNLOAD_FW
+init|=
+literal|0x0000001c
 block|}
 name|cam_cmdmask
 typedef|;
@@ -531,6 +535,7 @@ directive|endif
 end_endif
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|camcontrol_opts
 name|option_table
@@ -894,6 +899,16 @@ block|,
 literal|""
 block|}
 block|,
+block|{
+literal|"fwdownload"
+block|,
+name|CAM_CMD_DOWNLOAD_FW
+block|,
+name|CAM_ARG_NONE
+block|,
+literal|"f:ys"
+block|}
+block|,
 endif|#
 directive|endif
 comment|/* MINIMALISTIC */
@@ -1007,12 +1022,14 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|cam_cmdmask
 name|cmdlist
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|cam_argmask
 name|arglist
 decl_stmt|;
@@ -1129,37 +1146,6 @@ name|startstop
 parameter_list|,
 name|int
 name|loadeject
-parameter_list|,
-name|int
-name|retry_count
-parameter_list|,
-name|int
-name|timeout
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-specifier|static
-name|int
-name|scsidoinquiry
-parameter_list|(
-name|struct
-name|cam_device
-modifier|*
-name|device
-parameter_list|,
-name|int
-name|argc
-parameter_list|,
-name|char
-modifier|*
-modifier|*
-name|argv
-parameter_list|,
-name|char
-modifier|*
-name|combinedopt
 parameter_list|,
 name|int
 name|retry_count
@@ -3692,7 +3678,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|int
 name|scsidoinquiry
 parameter_list|(
@@ -12685,8 +12670,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -17292,9 +17277,6 @@ block|{
 name|int
 name|prelim_sync_period
 decl_stmt|;
-name|u_int
-name|freq
-decl_stmt|;
 if|if
 condition|(
 operator|(
@@ -17358,15 +17340,6 @@ operator|=
 name|scsi_calc_syncparam
 argument_list|(
 name|prelim_sync_period
-argument_list|)
-expr_stmt|;
-name|freq
-operator|=
-name|scsi_calc_syncsrate
-argument_list|(
-name|spi
-operator|->
-name|sync_period
 argument_list|)
 expr_stmt|;
 name|didsettings
@@ -17957,10 +17930,6 @@ name|error
 init|=
 literal|0
 decl_stmt|,
-name|response
-init|=
-literal|0
-decl_stmt|,
 name|retval
 init|=
 literal|0
@@ -18177,101 +18146,11 @@ operator|==
 literal|0
 condition|)
 block|{
-do|do
-block|{
-name|char
-name|str
-index|[
-literal|1024
-index|]
-decl_stmt|;
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"Are you SURE you want to do "
-literal|"this? (yes/no) "
-argument_list|)
-expr_stmt|;
 if|if
 condition|(
-name|fgets
-argument_list|(
-name|str
-argument_list|,
-sizeof|sizeof
-argument_list|(
-name|str
-argument_list|)
-argument_list|,
-name|stdin
-argument_list|)
-operator|!=
-name|NULL
-condition|)
-block|{
-if|if
-condition|(
-name|strncasecmp
-argument_list|(
-name|str
-argument_list|,
-literal|"yes"
-argument_list|,
-literal|3
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|response
-operator|=
-literal|1
-expr_stmt|;
-elseif|else
-if|if
-condition|(
-name|strncasecmp
-argument_list|(
-name|str
-argument_list|,
-literal|"no"
-argument_list|,
-literal|2
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|response
-operator|=
-operator|-
-literal|1
-expr_stmt|;
-else|else
-block|{
-name|fprintf
-argument_list|(
-name|stdout
-argument_list|,
-literal|"Please answer"
-literal|" \"yes\" or \"no\"\n"
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-block|}
-do|while
-condition|(
-name|response
-operator|==
-literal|0
-condition|)
-do|;
-if|if
-condition|(
-name|response
-operator|==
-operator|-
-literal|1
+operator|!
+name|get_confirmation
+argument_list|()
 condition|)
 block|{
 name|error
@@ -20031,8 +19910,6 @@ name|RPL_LUNDATA_ATYP_EXTLUN
 case|:
 block|{
 name|int
-name|field_len
-decl_stmt|,
 name|field_len_code
 decl_stmt|,
 name|eam_code
@@ -20072,12 +19949,6 @@ name|RPL_LUNDATA_EXT_LEN_MASK
 operator|)
 operator|>>
 literal|4
-expr_stmt|;
-name|field_len
-operator|=
-name|field_len_code
-operator|*
-literal|2
 expr_stmt|;
 if|if
 condition|(
@@ -20839,8 +20710,19 @@ argument_list|,
 comment|/*pmi*/
 literal|0
 argument_list|,
+comment|/*rcap_buf*/
+operator|(
+name|uint8_t
+operator|*
+operator|)
 operator|&
 name|rcaplong
+argument_list|,
+comment|/*rcap_buf_len*/
+sizeof|sizeof
+argument_list|(
+name|rcaplong
+argument_list|)
 argument_list|,
 comment|/*sense_len*/
 name|SSD_FULL_SIZE
@@ -21874,8 +21756,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -22431,8 +22313,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -22649,6 +22531,7 @@ block|}
 end_function
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|camcontrol_opts
 name|phy_ops
@@ -23690,8 +23573,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -24031,8 +23914,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -25883,8 +25766,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -26283,8 +26166,8 @@ condition|)
 block|{
 specifier|const
 name|char
-modifier|*
 name|warnstr
+index|[]
 init|=
 literal|"error sending command"
 decl_stmt|;
@@ -27294,6 +27177,7 @@ literal|"        camcontrol format     [dev_id][generic args][-q][-r][-w][-y]\n"
 literal|"        camcontrol idle       [dev_id][generic args][-t time]\n"
 literal|"        camcontrol standby    [dev_id][generic args][-t time]\n"
 literal|"        camcontrol sleep      [dev_id][generic args]\n"
+literal|"        camcontrol fwdownload [dev_id][generic args]<-f fw_image> [-y][-s]\n"
 endif|#
 directive|endif
 comment|/* MINIMALISTIC */
@@ -27342,6 +27226,7 @@ literal|"format      send the SCSI FORMAT UNIT command to the named device\n"
 literal|"idle        send the ATA IDLE command to the named device\n"
 literal|"standby     send the ATA STANDBY command to the named device\n"
 literal|"sleep       send the ATA SLEEP command to the named device\n"
+literal|"fwdownload  program firmware of the named device with the given image"
 literal|"help        this message\n"
 literal|"Device Identifiers:\n"
 literal|"bus:target        specify the bus and target, lun defaults to 0\n"
@@ -27364,7 +27249,7 @@ literal|"-P pgctl          page control field 0-3\n"
 literal|"defects arguments:\n"
 literal|"-f format         specify defect list format (block, bfi or phys)\n"
 literal|"-G                get the grown defect list\n"
-literal|"-P                get the permanant defect list\n"
+literal|"-P                get the permanent defect list\n"
 literal|"inquiry arguments:\n"
 literal|"-D                get the standard inquiry data\n"
 literal|"-S                get the serial number\n"
@@ -27434,6 +27319,11 @@ literal|"-w                don't send immediate format command\n"
 literal|"-y                don't ask any questions\n"
 literal|"idle/standby arguments:\n"
 literal|"-t<arg>          number of seconds before respective state.\n"
+literal|"fwdownload arguments:\n"
+literal|"-f fw_image       path to firmware image file\n"
+literal|"-y                don't ask any questions\n"
+literal|"-s                run in simulation mode\n"
+literal|"-v                print info for every firmware segment sent to device\n"
 argument_list|)
 expr_stmt|;
 endif|#
@@ -28637,6 +28527,31 @@ argument_list|,
 name|argv
 argument_list|,
 name|combinedopt
+argument_list|,
+name|retry_count
+argument_list|,
+name|timeout
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|CAM_CMD_DOWNLOAD_FW
+case|:
+name|error
+operator|=
+name|fwdownload
+argument_list|(
+name|cam_dev
+argument_list|,
+name|argc
+argument_list|,
+name|argv
+argument_list|,
+name|combinedopt
+argument_list|,
+name|arglist
+operator|&
+name|CAM_ARG_VERBOSE
 argument_list|,
 name|retry_count
 argument_list|,

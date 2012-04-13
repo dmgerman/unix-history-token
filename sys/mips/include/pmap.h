@@ -269,7 +269,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|vm_offset_t
+name|vm_paddr_t
 name|pmap_kextract
 parameter_list|(
 name|vm_offset_t
@@ -638,15 +638,6 @@ name|pmap_kenter_temporary_free
 parameter_list|(
 name|vm_paddr_t
 name|pa
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|int
-name|pmap_compute_pages_to_dump
-parameter_list|(
-name|void
 parameter_list|)
 function_decl|;
 end_function_decl

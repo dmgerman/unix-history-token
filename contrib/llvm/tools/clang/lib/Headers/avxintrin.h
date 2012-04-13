@@ -2066,7 +2066,7 @@ parameter_list|,
 name|mask
 parameter_list|)
 define|\
-value|(__builtin_shufflevector((__v8sf)(a), (__v8sf)(b), \         (mask)& 0x3,                ((mask)& 0xc)>> 2, \         (((mask)& 0x30)>> 4) + 8,  (((mask)& 0xc0)>> 6) + 8, \         (mask)& 0x3 + 4,            (((mask)& 0xc)>> 2) + 4, \         (((mask)& 0x30)>> 4) + 12, (((mask)& 0xc0)>> 6) + 12))
+value|(__builtin_shufflevector((__v8sf)(a), (__v8sf)(b), \         (mask)& 0x3,                ((mask)& 0xc)>> 2, \         (((mask)& 0x30)>> 4) + 8,  (((mask)& 0xc0)>> 6) + 8, \         ((mask)& 0x3) + 4,          (((mask)& 0xc)>> 2) + 4, \         (((mask)& 0x30)>> 4) + 12, (((mask)& 0xc0)>> 6) + 12))
 end_define
 
 begin_define

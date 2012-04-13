@@ -74,6 +74,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/StringSet.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<vector>
 end_include
 
@@ -132,6 +144,18 @@ name|Resolved
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether this is a header inside a framework that is currently
+comment|/// being built.
+comment|///
+comment|/// When a framework is being built, the headers have not yet been placed
+comment|/// into the appropriate framework subdirectories, and therefore are
+comment|/// provided via a header map. This bit indicates when this is one of
+comment|/// those framework headers.
+name|unsigned
+name|IndexHeaderMapHeader
+range|:
+literal|1
+decl_stmt|;
 comment|/// NumIncludes - This is the number of times the file has been included
 comment|/// already.
 name|unsigned
@@ -159,6 +183,11 @@ name|IdentifierInfo
 modifier|*
 name|ControllingMacro
 decl_stmt|;
+comment|/// \brief If this header came from a framework include, this is the name
+comment|/// of the framework.
+name|StringRef
+name|Framework
+decl_stmt|;
 name|HeaderFileInfo
 argument_list|()
 operator|:
@@ -185,6 +214,11 @@ name|false
 argument_list|)
 operator|,
 name|Resolved
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|IndexHeaderMapHeader
 argument_list|(
 name|false
 argument_list|)
@@ -300,6 +334,18 @@ decl_stmt|;
 name|bool
 name|NoCurDirSearch
 decl_stmt|;
+comment|/// \brief The path to the module cache.
+name|std
+operator|::
+name|string
+name|ModuleCachePath
+expr_stmt|;
+comment|/// \brief The name of the module we're building.
+name|std
+operator|::
+name|string
+name|BuildingModule
+expr_stmt|;
 comment|/// FileInfo - This contains all of the preprocessor-specific data about files
 comment|/// that are included.  The vector is indexed by the FileEntry's UID.
 comment|///
@@ -329,7 +375,11 @@ name|unsigned
 operator|,
 name|unsigned
 operator|>
-expr|>
+operator|,
+name|llvm
+operator|::
+name|BumpPtrAllocator
+operator|>
 name|LookupFileCache
 expr_stmt|;
 comment|/// FrameworkMap - This is a collection mapping a framework or subframework
@@ -341,6 +391,10 @@ operator|<
 specifier|const
 name|DirectoryEntry
 operator|*
+operator|,
+name|llvm
+operator|::
+name|BumpPtrAllocator
 operator|>
 name|FrameworkMap
 expr_stmt|;
@@ -364,6 +418,18 @@ operator|*
 operator|>
 expr|>
 name|HeaderMaps
+expr_stmt|;
+comment|/// \brief Uniqued set of framework names, which is used to track which
+comment|/// headers were included as framework headers.
+name|llvm
+operator|::
+name|StringSet
+operator|<
+name|llvm
+operator|::
+name|BumpPtrAllocator
+operator|>
+name|FrameworkNames
 expr_stmt|;
 comment|/// \brief Entity used to resolve the identifier IDs of controlling
 comment|/// macros into IdentifierInfo pointers, as needed.
@@ -492,6 +558,29 @@ name|noCurDirSearch
 expr_stmt|;
 comment|//LookupFileCache.clear();
 block|}
+comment|/// \brief Set the path to the module cache and the name of the module
+comment|/// we're building
+name|void
+name|configureModules
+parameter_list|(
+name|StringRef
+name|CachePath
+parameter_list|,
+name|StringRef
+name|BuildingModule
+parameter_list|)
+block|{
+name|ModuleCachePath
+operator|=
+name|CachePath
+expr_stmt|;
+name|this
+operator|->
+name|BuildingModule
+operator|=
+name|BuildingModule
+expr_stmt|;
+block|}
 comment|/// ClearFileInfo - Forget everything we know about headers so far.
 name|void
 name|ClearFileInfo
@@ -561,13 +650,15 @@ comment|///
 comment|/// \param RelativePath If non-null, will be set to the path relative to
 comment|/// SearchPath at which the file was found. This only differs from the
 comment|/// Filename for framework includes.
+comment|///
+comment|/// \param SuggestedModule If non-null, and the file found is semantically
+comment|/// part of a known module, this will be set to the name of the module that
+comment|/// could be imported instead of preprocessing/parsing the file found.
 specifier|const
 name|FileEntry
 modifier|*
 name|LookupFile
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Filename
 argument_list|,
@@ -590,8 +681,6 @@ name|FileEntry
 operator|*
 name|CurFileEnt
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -599,14 +688,16 @@ operator|>
 operator|*
 name|SearchPath
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
 operator|>
 operator|*
 name|RelativePath
+argument_list|,
+name|StringRef
+operator|*
+name|SuggestedModule
 argument_list|)
 decl_stmt|;
 comment|/// LookupSubframeworkHeader - Look up a subframework for the specified
@@ -619,8 +710,6 @@ name|FileEntry
 modifier|*
 name|LookupSubframeworkHeader
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Filename
 argument_list|,
@@ -629,8 +718,6 @@ name|FileEntry
 operator|*
 name|RelativeFileEnt
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -638,8 +725,6 @@ operator|>
 operator|*
 name|SearchPath
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -656,12 +741,10 @@ name|DirectoryEntry
 modifier|*
 modifier|&
 name|LookupFrameworkCache
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|StringRef
 name|FWName
-argument_list|)
+parameter_list|)
 block|{
 return|return
 name|FrameworkMap
@@ -844,6 +927,44 @@ modifier|*
 name|FE
 parameter_list|)
 function_decl|;
+comment|/// \brief Search in the module cache path for a module with the given
+comment|/// name.
+comment|///
+comment|/// \param If non-NULL, will be set to the module file name we expected to
+comment|/// find (regardless of whether it was actually found or not).
+comment|///
+comment|/// \param UmbrellaHeader If non-NULL, and no module was found in the module
+comment|/// cache, this routine will search in the framework paths to determine
+comment|/// whether a module can be built from an umbrella header. If so, the pointee
+comment|/// will be set to the path of the umbrella header.
+comment|///
+comment|/// \returns A file describing the named module, if available, or NULL to
+comment|/// indicate that the module could not be found.
+specifier|const
+name|FileEntry
+modifier|*
+name|lookupModule
+argument_list|(
+name|StringRef
+name|ModuleName
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|ModuleFileName
+operator|=
+literal|0
+argument_list|,
+name|std
+operator|::
+name|string
+operator|*
+name|UmbrellaHeader
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 name|void
 name|IncrementFrameworkLookupCount
 parameter_list|()
@@ -1038,10 +1159,23 @@ name|end
 argument_list|()
 return|;
 block|}
+comment|/// \brief Retrieve a uniqued framework name.
+name|StringRef
+name|getUniqueFrameworkName
+parameter_list|(
+name|StringRef
+name|Framework
+parameter_list|)
+function_decl|;
 name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+name|size_t
+name|getTotalMemory
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
 comment|/// getFileInfo - Return the HeaderFileInfo structure for the specified

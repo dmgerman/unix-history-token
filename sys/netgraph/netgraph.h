@@ -84,6 +84,12 @@ directive|include
 file|"opt_netgraph.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"opt_kdb.h"
+end_include
+
 begin_endif
 endif|#
 directive|endif
@@ -1098,7 +1104,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Accessing freed hook "
+literal|"Accessing freed "
 argument_list|)
 expr_stmt|;
 name|dumphook
@@ -2100,7 +2106,7 @@ argument|ng_node
 argument_list|)
 name|nd_nodes
 expr_stmt|;
-comment|/* linked list of all nodes */
+comment|/* name hash collision list */
 name|LIST_ENTRY
 argument_list|(
 argument|ng_node
@@ -2842,7 +2848,7 @@ condition|)
 block|{
 name|printf
 argument_list|(
-literal|"Accessing freed node "
+literal|"Accessing freed "
 argument_list|)
 expr_stmt|;
 name|dumpnode
@@ -5792,6 +5798,7 @@ parameter_list|,
 name|item_p
 name|item
 parameter_list|,
+specifier|const
 name|char
 modifier|*
 name|address
@@ -6369,32 +6376,6 @@ name|meta
 parameter_list|)
 value|NULL
 end_define
-
-begin_comment
-comment|/* Hash related definitions */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_ID_HASH_SIZE
-value|128
-end_define
-
-begin_comment
-comment|/* most systems wont need even this many */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|NG_NAME_HASH_SIZE
-value|128
-end_define
-
-begin_comment
-comment|/* most systems wont need even this many */
-end_comment
 
 begin_comment
 comment|/*  * Mark the current thread when called from the outbound path of the  * network stack, in order to enforce queuing on ng nodes calling into  * the inbound network stack path.  */

@@ -6212,7 +6212,7 @@ block|}
 end_function
 
 begin_comment
-comment|/*  * Insert a delta into the correct place in branch. A trunk branch will have  * different ordering scheme and be sorted by revision number, but a normal  * branch will be sorted by date to maintain compability with branches that is  * "hand-hacked".  */
+comment|/*  * Insert a delta into the correct place in branch. A trunk branch will have  * different ordering scheme and be sorted by revision number, but a normal  * branch will be sorted by date to maintain compatibility with branches that  * is "hand-hacked".  */
 end_comment
 
 begin_function

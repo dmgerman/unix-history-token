@@ -666,6 +666,14 @@ argument_list|,
 name|AR_EEP_OL_PWRCTRL
 argument_list|)
 operator|)
+operator|||
+operator|(
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_force_full_reset
+operator|)
 condition|)
 name|tsf
 operator|=
@@ -1232,7 +1240,7 @@ argument_list|,
 name|saveDefAntenna
 argument_list|)
 expr_stmt|;
-comment|/* then our BSSID */
+comment|/* then our BSSID and associate id */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -1261,6 +1269,16 @@ name|ah_bssid
 operator|+
 literal|4
 argument_list|)
+operator||
+operator|(
+name|ahp
+operator|->
+name|ah_assocId
+operator|&
+literal|0x3fff
+operator|)
+operator|<<
+name|AR_BSS_ID1_AID_S
 argument_list|)
 expr_stmt|;
 comment|/* Restore bmiss rssi& count thresholds */
@@ -1541,9 +1559,6 @@ argument_list|,
 literal|8
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|AH_AR5416_INTERRUPT_MITIGATION
 comment|/* 	 * Disable the "general" TX/RX mitigation timers. 	 */
 name|OS_REG_WRITE
 argument_list|(
@@ -1554,6 +1569,9 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|AH_AR5416_INTERRUPT_MITIGATION
 comment|/* 	 * This initialises the RX interrupt mitigation timers. 	 * 	 * The mitigation timers begin at idle and are triggered 	 * upon the RXOK of a single frame (or sub-frame, for A-MPDU.) 	 * Then, the RX mitigation interrupt will fire: 	 * 	 * + 250uS after the last RX'ed frame, or 	 * + 700uS after the first RX'ed frame 	 * 	 * Thus, the LAST field dictates the extra latency 	 * induced by the RX mitigation method and the FIRST 	 * field dictates how long to delay before firing an 	 * RX mitigation interrupt. 	 * 	 * Please note this only seems to be for RXOK frames; 	 * not CRC or PHY error frames. 	 * 	 */
 name|OS_REG_RMW_FIELD
 argument_list|(
@@ -2191,11 +2209,7 @@ name|ahp
 operator|->
 name|ah_maskReg
 operator||=
-name|AR_IMR_TXINTM
-operator||
 name|AR_IMR_RXINTM
-operator||
-name|AR_IMR_TXMINTR
 operator||
 name|AR_IMR_RXMINTR
 expr_stmt|;
@@ -2205,12 +2219,16 @@ name|ahp
 operator|->
 name|ah_maskReg
 operator||=
-name|AR_IMR_TXOK
-operator||
 name|AR_IMR_RXOK
 expr_stmt|;
 endif|#
 directive|endif
+name|ahp
+operator|->
+name|ah_maskReg
+operator||=
+name|AR_IMR_TXOK
+expr_stmt|;
 if|if
 condition|(
 name|opmode
@@ -2668,6 +2686,30 @@ else|:
 name|AR_PHY_MODE_RF2GHZ
 expr_stmt|;
 block|}
+comment|/* 	 * Set half/quarter mode flags if required. 	 * 	 * This doesn't change the IFS timings at all; that needs to 	 * be done as part of the MAC setup.  Similarly, the PLL 	 * configuration also needs some changes for the half/quarter 	 * rate clock. 	 */
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_HALF
+argument_list|(
+name|chan
+argument_list|)
+condition|)
+name|rfMode
+operator||=
+name|AR_PHY_MODE_HALF
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|IEEE80211_IS_CHAN_QUARTER
+argument_list|(
+name|chan
+argument_list|)
+condition|)
+name|rfMode
+operator||=
+name|AR_PHY_MODE_QUARTER
+expr_stmt|;
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -2715,7 +2757,7 @@ else|:
 literal|0
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Warm reset is optimistic. 	 */
+comment|/* 	 * Warm reset is optimistic for open-loop TX power control. 	 */
 if|if
 condition|(
 name|AR_SREV_MERLIN
@@ -2729,6 +2771,30 @@ name|ah
 argument_list|,
 name|AR_EEP_OL_PWRCTRL
 argument_list|)
+condition|)
+block|{
+if|if
+condition|(
+operator|!
+name|ar5416SetResetReg
+argument_list|(
+name|ah
+argument_list|,
+name|HAL_RESET_POWER_ON
+argument_list|)
+condition|)
+return|return
+name|AH_FALSE
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ah
+operator|->
+name|ah_config
+operator|.
+name|ah_force_full_reset
 condition|)
 block|{
 if|if
@@ -4553,7 +4619,9 @@ name|ah
 parameter_list|)
 block|{
 return|return
+operator|(
 name|HAL_RFGAIN_INACTIVE
+operator|)
 return|;
 block|}
 end_function
@@ -4575,7 +4643,7 @@ block|{
 if|if
 condition|(
 operator|!
-name|ar5212SetPowerMode
+name|ar5416SetPowerMode
 argument_list|(
 name|ah
 argument_list|,
@@ -4613,7 +4681,9 @@ name|AH_NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AH_TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -4658,7 +4728,9 @@ name|AH_NULL
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|AH_TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -4680,6 +4752,18 @@ name|uint32_t
 name|type
 parameter_list|)
 block|{
+comment|/* 	 * Set force wake 	 */
+name|OS_REG_WRITE
+argument_list|(
+name|ah
+argument_list|,
+name|AR_RTC_FORCE_WAKE
+argument_list|,
+name|AR_RTC_FORCE_WAKE_EN
+operator||
+name|AR_RTC_FORCE_WAKE_ON_INT
+argument_list|)
+expr_stmt|;
 switch|switch
 condition|(
 name|type
@@ -4745,7 +4829,7 @@ operator||
 name|AR_RTC_FORCE_WAKE_ON_INT
 argument_list|)
 expr_stmt|;
-comment|/*      * RTC reset and clear      */
+comment|/*      * PowerOn reset can be used in open loop power control or failure recovery.      * If we do RTC reset while DMA is still running, hardware may corrupt memory.      * Therefore, we need to reset AHB first to stop DMA.      */
 if|if
 condition|(
 operator|!
@@ -4763,6 +4847,7 @@ argument_list|,
 name|AR_RC_AHB
 argument_list|)
 expr_stmt|;
+comment|/*      * RTC reset and clear      */
 name|OS_REG_WRITE
 argument_list|(
 name|ah
@@ -4974,7 +5059,7 @@ block|{
 endif|#
 directive|endif
 comment|/* AH_SUPPORT_AR9130 */
-comment|/*          * Reset AHB          */
+comment|/*          * Reset AHB          *          * (In case the last interrupt source was a bus timeout.)          * XXX TODO: this is not the way to do it! It should be recorded          * XXX by the interrupt handler and passed _into_ the          * XXX reset path routine so this occurs.          */
 name|tmpReg
 operator|=
 name|OS_REG_READ
@@ -6877,7 +6962,9 @@ argument_list|)
 expr_stmt|;
 block|}
 return|return
+operator|(
 name|AH_TRUE
+operator|)
 return|;
 block|}
 end_function
@@ -11994,7 +12081,7 @@ name|AR_PCU_MISC_MODE2_HWWAR1
 expr_stmt|;
 if|if
 condition|(
-name|AR_SREV_KIWI_11_OR_LATER
+name|AR_SREV_KIWI_10_OR_LATER
 argument_list|(
 name|ah
 argument_list|)

@@ -1398,10 +1398,7 @@ name|pass
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|pass
-argument_list|)
+literal|256
 argument_list|)
 expr_stmt|;
 name|telnet_gets

@@ -1000,7 +1000,7 @@ specifier|static
 name|int
 name|Compat_RunCommand
 parameter_list|(
-name|char
+name|LstNode
 modifier|*
 parameter_list|,
 name|struct
@@ -1874,9 +1874,9 @@ specifier|static
 name|int
 name|JobPrintCommand
 parameter_list|(
-name|char
+name|LstNode
 modifier|*
-name|cmd
+name|cmdNode
 parameter_list|,
 name|Job
 modifier|*
@@ -1907,14 +1907,9 @@ decl_stmt|;
 comment|/* Template to use when printing the command */
 name|char
 modifier|*
-name|cmdStart
+name|cmd
 decl_stmt|;
-comment|/* Start of expanded command */
-name|LstNode
-modifier|*
-name|cmdNode
-decl_stmt|;
-comment|/* Node for replacing the command */
+comment|/* Expanded command */
 name|noSpecials
 operator|=
 operator|(
@@ -1932,6 +1927,36 @@ name|OP_MAKE
 operator|)
 operator|)
 expr_stmt|;
+define|#
+directive|define
+name|DBPRINTF
+parameter_list|(
+name|fmt
+parameter_list|,
+name|arg
+parameter_list|)
+define|\
+value|DEBUGF(JOB, (fmt, arg));		\ 	fprintf(job->cmdFILE, fmt, arg);	\ 	fflush(job->cmdFILE);
+comment|/* 	 * For debugging, we replace each command with the result of expanding 	 * the variables in the command. 	 */
+name|cmd
+operator|=
+name|Buf_Peel
+argument_list|(
+name|Var_Subst
+argument_list|(
+name|Lst_Datum
+argument_list|(
+name|cmdNode
+argument_list|)
+argument_list|,
+name|job
+operator|->
+name|node
+argument_list|,
+name|FALSE
+argument_list|)
+argument_list|)
+expr_stmt|;
 if|if
 condition|(
 name|strcmp
@@ -1944,6 +1969,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
 name|job
 operator|->
 name|node
@@ -1971,17 +2001,7 @@ name|tailCmds
 operator|=
 name|Lst_Succ
 argument_list|(
-name|Lst_Member
-argument_list|(
-operator|&
-name|job
-operator|->
-name|node
-operator|->
-name|commands
-argument_list|,
-name|cmd
-argument_list|)
+name|cmdNode
 argument_list|)
 expr_stmt|;
 return|return
@@ -1996,65 +2016,12 @@ literal|0
 operator|)
 return|;
 block|}
-define|#
-directive|define
-name|DBPRINTF
-parameter_list|(
-name|fmt
-parameter_list|,
-name|arg
-parameter_list|)
-define|\
-value|DEBUGF(JOB, (fmt, arg));		\ 	fprintf(job->cmdFILE, fmt, arg);	\ 	fflush(job->cmdFILE);
-name|numCommands
-operator|+=
-literal|1
-expr_stmt|;
-comment|/* 	 * For debugging, we replace each command with the result of expanding 	 * the variables in the command. 	 */
-name|cmdNode
-operator|=
-name|Lst_Member
-argument_list|(
-operator|&
-name|job
-operator|->
-name|node
-operator|->
-name|commands
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
-name|cmd
-operator|=
-name|Buf_Peel
-argument_list|(
-name|Var_Subst
-argument_list|(
-name|cmd
-argument_list|,
-name|job
-operator|->
-name|node
-argument_list|,
-name|FALSE
-argument_list|)
-argument_list|)
-expr_stmt|;
-name|cmdStart
-operator|=
-name|cmd
-expr_stmt|;
 name|Lst_Replace
 argument_list|(
 name|cmdNode
 argument_list|,
-name|cmdStart
+name|cmd
 argument_list|)
-expr_stmt|;
-name|cmdTemplate
-operator|=
-literal|"%s\n"
 expr_stmt|;
 comment|/* 	 * Check for leading @', -' or +'s to control echoing, error checking, 	 * and execution on -n. 	 */
 while|while
@@ -2115,7 +2082,7 @@ block|{
 comment|/* 				 * We're not actually exececuting anything... 				 * but this one needs to be - use compat mode 				 * just for it. 				 */
 name|Compat_RunCommand
 argument_list|(
-name|cmd
+name|cmdNode
 argument_list|,
 name|job
 operator|->
@@ -2148,6 +2115,29 @@ argument_list|)
 condition|)
 name|cmd
 operator|++
+expr_stmt|;
+comment|/* 	 * Ignore empty commands 	 */
+if|if
+condition|(
+operator|*
+name|cmd
+operator|==
+literal|'\0'
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
+name|cmdTemplate
+operator|=
+literal|"%s\n"
+expr_stmt|;
+name|numCommands
+operator|+=
+literal|1
 expr_stmt|;
 if|if
 condition|(
@@ -2854,7 +2844,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Completed successfully\n"
+literal|"*** [%s] Completed successfully\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -2892,7 +2888,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Error code %d%s\n"
+literal|"*** [%s] Error code %d%s\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|,
 name|WEXITSTATUS
 argument_list|(
@@ -2908,7 +2910,7 @@ operator|&
 name|JOB_IGNERR
 operator|)
 condition|?
-literal|"(ignored)"
+literal|" (ignored)"
 else|:
 literal|""
 argument_list|)
@@ -3073,7 +3075,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Continued\n"
+literal|"*** [%s] Continued\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|)
 expr_stmt|;
 block|}
@@ -3205,7 +3213,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Signal %d\n"
+literal|"*** [%s] Signal %d\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|,
 name|WTERMSIG
 argument_list|(
@@ -3323,7 +3337,13 @@ name|fprintf
 argument_list|(
 name|out
 argument_list|,
-literal|"*** Stopped -- signal %d\n"
+literal|"*** [%s] Stopped -- signal %d\n"
+argument_list|,
+name|job
+operator|->
+name|node
+operator|->
+name|name
 argument_list|,
 name|WSTOPSIG
 argument_list|(
@@ -5479,12 +5499,9 @@ name|NULL
 operator|||
 name|JobPrintCommand
 argument_list|(
-name|Lst_Datum
-argument_list|(
 name|gn
 operator|->
 name|compat_command
-argument_list|)
 argument_list|,
 name|job
 argument_list|)
@@ -5533,10 +5550,7 @@ if|if
 condition|(
 name|JobPrintCommand
 argument_list|(
-name|Lst_Datum
-argument_list|(
 name|ln
-argument_list|)
 argument_list|,
 name|job
 argument_list|)
@@ -5607,10 +5621,7 @@ if|if
 condition|(
 name|JobPrintCommand
 argument_list|(
-name|Lst_Datum
-argument_list|(
 name|ln
-argument_list|)
 argument_list|,
 name|job
 argument_list|)
@@ -6245,7 +6256,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * JobDoOutput  *	This function is called at different times depending on  *	whether the user has specified that output is to be collected  *	via pipes or temporary files. In the former case, we are called  *	whenever there is something to read on the pipe. We collect more  *	output from the given job and store it in the job's outBuf. If  *	this makes up a line, we print it tagged by the job's identifier,  *	as necessary.  *	If output has been collected in a temporary file, we open the  *	file and read it line by line, transfering it to our own  *	output channel until the file is empty. At which point we  *	remove the temporary file.  *	In both cases, however, we keep our figurative eye out for the  *	'noPrint' line for the shell from which the output came. If  *	we recognize a line, we don't print it. If the command is not  *	alone on the line (the character after it is not \0 or \n), we  *	do print whatever follows it.  *  * Side Effects:  *	curPos may be shifted as may the contents of outBuf.  */
+comment|/**  * JobDoOutput  *	This function is called at different times depending on  *	whether the user has specified that output is to be collected  *	via pipes or temporary files. In the former case, we are called  *	whenever there is something to read on the pipe. We collect more  *	output from the given job and store it in the job's outBuf. If  *	this makes up a line, we print it tagged by the job's identifier,  *	as necessary.  *	If output has been collected in a temporary file, we open the  *	file and read it line by line, transferring it to our own  *	output channel until the file is empty. At which point we  *	remove the temporary file.  *	In both cases, however, we keep our figurative eye out for the  *	'noPrint' line for the shell from which the output came. If  *	we recognize a line, we don't print it. If the command is not  *	alone on the line (the character after it is not \0 or \n), we  *	do print whatever follows it.  *  * Side Effects:  *	curPos may be shifted as may the contents of outBuf.  */
 end_comment
 
 begin_function
@@ -9380,10 +9391,7 @@ if|if
 condition|(
 name|Compat_RunCommand
 argument_list|(
-name|Lst_Datum
-argument_list|(
 name|ln
-argument_list|)
 argument_list|,
 name|gn
 argument_list|)
@@ -9596,9 +9604,9 @@ specifier|static
 name|int
 name|Compat_RunCommand
 parameter_list|(
-name|char
+name|LstNode
 modifier|*
-name|cmd
+name|cmdNode
 parameter_list|,
 name|GNode
 modifier|*
@@ -9610,9 +9618,9 @@ name|aa
 decl_stmt|;
 name|char
 modifier|*
-name|cmdStart
+name|cmd
 decl_stmt|;
-comment|/* Start of expanded command */
+comment|/* Expanded command */
 name|Boolean
 name|silent
 decl_stmt|;
@@ -9633,11 +9641,6 @@ name|int
 name|status
 decl_stmt|;
 comment|/* Description of child's death */
-name|LstNode
-modifier|*
-name|cmdNode
-decl_stmt|;
-comment|/* Node where current cmd is located */
 name|char
 modifier|*
 modifier|*
@@ -9670,71 +9673,21 @@ name|doit
 operator|=
 name|FALSE
 expr_stmt|;
-name|cmdNode
-operator|=
-name|Lst_Member
-argument_list|(
-operator|&
-name|gn
-operator|->
-name|commands
-argument_list|,
 name|cmd
-argument_list|)
-expr_stmt|;
-name|cmdStart
 operator|=
 name|Buf_Peel
 argument_list|(
 name|Var_Subst
 argument_list|(
-name|cmd
+name|Lst_Datum
+argument_list|(
+name|cmdNode
+argument_list|)
 argument_list|,
 name|gn
 argument_list|,
 name|FALSE
 argument_list|)
-argument_list|)
-expr_stmt|;
-comment|/* 	 * brk_string will return an argv with a NULL in av[0], thus causing 	 * execvp() to choke and die horribly. Besides, how can we execute a 	 * null command? In any case, we warn the user that the command 	 * expanded to nothing (is this the right thing to do?). 	 */
-if|if
-condition|(
-operator|*
-name|cmdStart
-operator|==
-literal|'\0'
-condition|)
-block|{
-name|free
-argument_list|(
-name|cmdStart
-argument_list|)
-expr_stmt|;
-name|Error
-argument_list|(
-literal|"%s expands to empty string"
-argument_list|,
-name|cmd
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
-block|}
-else|else
-block|{
-name|cmd
-operator|=
-name|cmdStart
-expr_stmt|;
-block|}
-name|Lst_Replace
-argument_list|(
-name|cmdNode
-argument_list|,
-name|cmdStart
 argument_list|)
 expr_stmt|;
 if|if
@@ -9761,7 +9714,7 @@ name|ENDNode
 operator|->
 name|commands
 argument_list|,
-name|cmdStart
+name|cmd
 argument_list|)
 expr_stmt|;
 return|return
@@ -9775,7 +9728,7 @@ if|if
 condition|(
 name|strcmp
 argument_list|(
-name|cmdStart
+name|cmd
 argument_list|,
 literal|"..."
 argument_list|)
@@ -9783,6 +9736,11 @@ operator|==
 literal|0
 condition|)
 block|{
+name|free
+argument_list|(
+name|cmd
+argument_list|)
+expr_stmt|;
 name|gn
 operator|->
 name|type
@@ -9795,6 +9753,13 @@ literal|0
 operator|)
 return|;
 block|}
+name|Lst_Replace
+argument_list|(
+name|cmdNode
+argument_list|,
+name|cmd
+argument_list|)
+expr_stmt|;
 while|while
 condition|(
 operator|*
@@ -9870,6 +9835,21 @@ condition|)
 name|cmd
 operator|++
 expr_stmt|;
+comment|/* 	 * Ignore empty commands 	 */
+if|if
+condition|(
+operator|*
+name|cmd
+operator|==
+literal|'\0'
+condition|)
+block|{
+return|return
+operator|(
+literal|0
+operator|)
+return|;
+block|}
 comment|/* 	 * Print the command before echoing if we're not supposed to be quiet 	 * for this one. We also print the command if -n given, but not if '+'. 	 */
 if|if
 condition|(
@@ -10169,7 +10149,17 @@ condition|)
 block|{
 name|free
 argument_list|(
-name|cmdStart
+name|Lst_Datum
+argument_list|(
+name|cmdNode
+argument_list|)
+argument_list|)
+expr_stmt|;
+name|Lst_Replace
+argument_list|(
+name|cmdNode
+argument_list|,
+name|NULL
 argument_list|)
 expr_stmt|;
 block|}
@@ -10224,7 +10214,11 @@ else|else
 block|{
 name|printf
 argument_list|(
-literal|"*** Error code %d"
+literal|"*** [%s] Error code %d"
+argument_list|,
+name|gn
+operator|->
+name|name
 argument_list|,
 name|status
 argument_list|)
@@ -10259,7 +10253,11 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"*** Signal %d"
+literal|"*** [%s] Signal %d"
+argument_list|,
+name|gn
+operator|->
+name|name
 argument_list|,
 name|status
 argument_list|)
@@ -10589,10 +10587,7 @@ if|if
 condition|(
 name|Compat_RunCommand
 argument_list|(
-name|Lst_Datum
-argument_list|(
 name|ln
-argument_list|)
 argument_list|,
 name|gn
 argument_list|)
@@ -11108,10 +11103,7 @@ if|if
 condition|(
 name|Compat_RunCommand
 argument_list|(
-name|Lst_Datum
-argument_list|(
 name|ln
-argument_list|)
 argument_list|,
 name|gn
 argument_list|)
@@ -11244,10 +11236,7 @@ if|if
 condition|(
 name|Compat_RunCommand
 argument_list|(
-name|Lst_Datum
-argument_list|(
 name|ln
-argument_list|)
 argument_list|,
 name|ENDNode
 argument_list|)

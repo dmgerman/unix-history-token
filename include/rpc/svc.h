@@ -672,7 +672,7 @@ value|((auth)->svc_ah_ops->svc_ah_unwrap(auth, xdrs, xfunc, xwhere))
 end_define
 
 begin_comment
-comment|/*  * Service registration  *  * svc_reg(xprt, prog, vers, dispatch, nconf)  *	const SVCXPRT *xprt;  *	const rpcprog_t prog;  *	const rpcvers_t vers;  *	const void (*dispatch)();  *	const struct netconfig *nconf;  */
+comment|/*  * Service registration  *  * svc_reg(xprt, prog, vers, dispatch, nconf)  *	const SVCXPRT *xprt;  *	const rpcprog_t prog;  *	const rpcvers_t vers;  *	const void (*dispatch)(struct svc_req *, SVCXPRT *);  *	const struct netconfig *nconf;  */
 end_comment
 
 begin_function_decl
@@ -892,7 +892,7 @@ end_function_decl
 
 begin_decl_stmt
 name|__END_DECLS
-comment|/*  * Lowest level dispatching -OR- who owns this process anyway.  * Somebody has to wait for incoming requests and then call the correct  * service routine.  The routine svc_run does infinite waiting; i.e.,  * svc_run never returns.  * Since another (co-existant) package may wish to selectively wait for  * incoming calls or other events outside of the rpc architecture, the  * routine svc_getreq is provided.  It must be passed readfds, the  * "in-place" results of a select system call (see select, section 2).  */
+comment|/*  * Lowest level dispatching -OR- who owns this process anyway.  * Somebody has to wait for incoming requests and then call the correct  * service routine.  The routine svc_run does infinite waiting; i.e.,  * svc_run never returns.  * Since another (co-existent) package may wish to selectively wait for  * incoming calls or other events outside of the rpc architecture, the  * routine svc_getreq is provided.  It must be passed readfds, the  * "in-place" results of a select system call (see select, section 2).  */
 comment|/*  * Global keeper of rpc service descriptors in use  * dynamic; must be inspected before each call to select  */
 specifier|extern
 name|int
@@ -1111,7 +1111,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*  *      void (*dispatch)();             -- dispatch routine  *      const rpcprog_t prognum;        -- program number  *      const rpcvers_t versnum;        -- version number  *      const char *nettype;            -- network type  */
+comment|/*  *      void (*dispatch)(struct svc_req *, SVCXPRT *);  *      const rpcprog_t prognum;        -- program number  *      const rpcvers_t versnum;        -- version number  *      const char *nettype;            -- network type  */
 end_comment
 
 begin_comment
@@ -1152,7 +1152,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/*          * void (*dispatch)();            -- dispatch routine          * const rpcprog_t prognum;       -- program number          * const rpcvers_t versnum;       -- version number          * const struct netconfig *nconf; -- netconfig structure          */
+comment|/*          * void (*dispatch)(struct svc_req *, SVCXPRT *);          * const rpcprog_t prognum;       -- program number          * const rpcvers_t versnum;       -- version number          * const struct netconfig *nconf; -- netconfig structure          */
 end_comment
 
 begin_comment

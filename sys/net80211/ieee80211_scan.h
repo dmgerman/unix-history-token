@@ -747,6 +747,10 @@ name|csa
 decl_stmt|;
 name|uint8_t
 modifier|*
+name|quiet
+decl_stmt|;
+name|uint8_t
+modifier|*
 name|meshid
 decl_stmt|;
 name|uint8_t

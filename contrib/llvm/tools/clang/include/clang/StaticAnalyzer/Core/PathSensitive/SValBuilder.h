@@ -101,7 +101,7 @@ name|namespace
 name|ento
 block|{
 name|class
-name|GRState
+name|ProgramState
 decl_stmt|;
 name|class
 name|SValBuilder
@@ -124,7 +124,7 @@ comment|/// Manages the creation of memory regions.
 name|MemRegionManager
 name|MemMgr
 decl_stmt|;
-name|GRStateManager
+name|ProgramStateManager
 modifier|&
 name|StateMgr
 decl_stmt|;
@@ -182,7 +182,7 @@ name|ASTContext
 operator|&
 name|context
 argument_list|,
-name|GRStateManager
+name|ProgramStateManager
 operator|&
 name|stateMgr
 argument_list|)
@@ -272,7 +272,7 @@ name|SVal
 name|evalBinOpNN
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -298,7 +298,7 @@ name|SVal
 name|evalBinOpLL
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -324,7 +324,7 @@ name|SVal
 name|evalBinOpLN
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -355,7 +355,7 @@ name|APSInt
 operator|*
 name|getKnownValue
 argument_list|(
-argument|const GRState *state
+argument|const ProgramState *state
 argument_list|,
 argument|SVal val
 argument_list|)
@@ -366,7 +366,7 @@ name|SVal
 name|evalBinOp
 argument_list|(
 specifier|const
-name|GRState
+name|ProgramState
 operator|*
 name|state
 argument_list|,
@@ -389,7 +389,7 @@ name|DefinedOrUnknownSVal
 name|evalEQ
 parameter_list|(
 specifier|const
-name|GRState
+name|ProgramState
 modifier|*
 name|state
 parameter_list|,
@@ -420,7 +420,7 @@ return|return
 name|Context
 return|;
 block|}
-name|GRStateManager
+name|ProgramStateManager
 modifier|&
 name|getStateManager
 parameter_list|()
@@ -597,7 +597,7 @@ name|DefinedOrUnknownSVal
 name|getRegionValueSymbolVal
 parameter_list|(
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 modifier|*
 name|region
 parameter_list|)
@@ -646,7 +646,7 @@ name|SymbolRef
 name|parentSymbol
 parameter_list|,
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 modifier|*
 name|region
 parameter_list|)
@@ -742,7 +742,7 @@ modifier|&
 name|store
 parameter_list|,
 specifier|const
-name|TypedRegion
+name|TypedValueRegion
 modifier|*
 name|region
 parameter_list|)
@@ -1308,7 +1308,7 @@ name|ASTContext
 operator|&
 name|context
 argument_list|,
-name|GRStateManager
+name|ProgramStateManager
 operator|&
 name|stateMgr
 argument_list|)

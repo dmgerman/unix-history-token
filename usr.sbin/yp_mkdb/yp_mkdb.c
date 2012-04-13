@@ -38,6 +38,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<stdint.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<stdio.h>
 end_include
 
@@ -284,6 +290,9 @@ name|printf
 argument_list|(
 literal|"%.*s %.*s\n"
 argument_list|,
+operator|(
+name|int
+operator|)
 name|key
 operator|.
 name|size
@@ -292,6 +301,9 @@ name|key
 operator|.
 name|data
 argument_list|,
+operator|(
+name|int
+operator|)
 name|data
 operator|.
 name|size
@@ -890,8 +902,11 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%lu"
+literal|"%jd"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|time
 argument_list|(
 name|NULL

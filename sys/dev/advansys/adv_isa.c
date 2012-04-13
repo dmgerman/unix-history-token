@@ -777,13 +777,15 @@ argument_list|)
 expr_stmt|;
 block|}
 comment|/* 		 * Allocate a parent dmatag for all tags created 		 * by the MI portions of the advansys driver 		 */
-comment|/* XXX Should be a child of the ISA bus dma tag */
 name|error
 operator|=
 name|bus_dma_tag_create
 argument_list|(
 comment|/* parent	*/
-name|NULL
+name|bus_get_dma_tag
+argument_list|(
+name|dev
+argument_list|)
 argument_list|,
 comment|/* alignemnt	*/
 literal|1

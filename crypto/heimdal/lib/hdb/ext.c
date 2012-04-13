@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 - 2005 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2004 - 2005 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_include
@@ -15,14 +15,6 @@ directive|include
 file|<der.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: ext.c 21113 2007-06-18 12:59:32Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
 begin_function
 name|krb5_error_code
 name|hdb_entry_check_mandatory
@@ -36,7 +28,7 @@ modifier|*
 name|ent
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -50,7 +42,7 @@ condition|)
 return|return
 literal|0
 return|;
-comment|/*       * check for unknown extensions and if they where tagged mandatory      */
+comment|/*      * check for unknown extensions and if they where tagged mandatory      */
 for|for
 control|(
 name|i
@@ -101,9 +93,11 @@ operator|.
 name|mandatory
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|HDB_ERR_MANDATORY_OPTION
 argument_list|,
 literal|"Principal have unknown "
 literal|"mandatory extension"
@@ -134,7 +128,7 @@ name|int
 name|type
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -180,6 +174,9 @@ name|data
 operator|.
 name|element
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|type
 condition|)
 return|return
@@ -270,9 +267,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)
@@ -310,7 +309,7 @@ expr_stmt|;
 block|}
 else|else
 block|{
-comment|/*  	 * This is an unknown extention, and we are asked to replace a 	 * possible entry in `entry' that is of the same type. This 	 * might seem impossible, but ASN.1 CHOICE comes to our 	 * rescue. The first tag in each branch in the CHOICE is 	 * unique, so just find the element in the list that have the 	 * same tag was we are putting into the list. 	 */
+comment|/* 	 * This is an unknown extention, and we are asked to replace a 	 * possible entry in `entry' that is of the same type. This 	 * might seem impossible, but ASN.1 CHOICE comes to our 	 * rescue. The first tag in each branch in the CHOICE is 	 * unique, so just find the element in the list that have the 	 * same tag was we are putting into the list. 	 */
 name|Der_class
 name|replace_class
 decl_stmt|,
@@ -330,7 +329,7 @@ decl_stmt|;
 name|size_t
 name|size
 decl_stmt|;
-name|int
+name|size_t
 name|i
 decl_stmt|;
 name|ret
@@ -375,9 +374,11 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"hdb: failed to decode "
 literal|"replacement hdb extention"
@@ -472,9 +473,11 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"hdb: failed to decode "
 literal|"present hdb extention"
@@ -536,9 +539,11 @@ if|if
 condition|(
 name|ret
 condition|)
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"hdb: failed to copy replacement "
 literal|"hdb extention"
@@ -588,9 +593,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)
@@ -642,9 +649,11 @@ name|len
 operator|++
 expr_stmt|;
 else|else
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"hdb: failed to copy new extension"
 argument_list|)
@@ -670,7 +679,7 @@ name|int
 name|type
 parameter_list|)
 block|{
-name|int
+name|size_t
 name|i
 decl_stmt|;
 if|if
@@ -717,6 +726,9 @@ name|data
 operator|.
 name|element
 operator|==
+operator|(
+name|unsigned
+operator|)
 name|type
 condition|)
 block|{
@@ -949,6 +961,64 @@ end_function
 
 begin_function
 name|krb5_error_code
+name|hdb_entry_get_pkinit_cert
+parameter_list|(
+specifier|const
+name|hdb_entry
+modifier|*
+name|entry
+parameter_list|,
+specifier|const
+name|HDB_Ext_PKINIT_cert
+modifier|*
+modifier|*
+name|a
+parameter_list|)
+block|{
+specifier|const
+name|HDB_extension
+modifier|*
+name|ext
+decl_stmt|;
+name|ext
+operator|=
+name|hdb_find_extension
+argument_list|(
+name|entry
+argument_list|,
+name|choice_HDB_extension_data_pkinit_cert
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|ext
+condition|)
+operator|*
+name|a
+operator|=
+operator|&
+name|ext
+operator|->
+name|data
+operator|.
+name|u
+operator|.
+name|pkinit_cert
+expr_stmt|;
+else|else
+operator|*
+name|a
+operator|=
+name|NULL
+expr_stmt|;
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_function
+name|krb5_error_code
 name|hdb_entry_get_pw_change_time
 parameter_list|(
 specifier|const
@@ -1119,7 +1189,7 @@ name|ext
 condition|)
 block|{
 name|heim_utf8_string
-name|str
+name|xstr
 decl_stmt|;
 name|heim_octet_string
 name|pw
@@ -1170,9 +1240,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|HDB_ERR_NO_MKEY
 argument_list|,
 literal|"master key %d missing"
 argument_list|,
@@ -1258,7 +1330,7 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -1267,7 +1339,7 @@ return|return
 name|ret
 return|;
 block|}
-name|str
+name|xstr
 operator|=
 name|pw
 operator|.
@@ -1275,7 +1347,7 @@ name|data
 expr_stmt|;
 if|if
 condition|(
-name|str
+name|xstr
 index|[
 name|pw
 operator|.
@@ -1287,11 +1359,13 @@ operator|!=
 literal|'\0'
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"password malformated"
+name|EINVAL
+argument_list|,
+literal|"malformed password"
 argument_list|)
 expr_stmt|;
 return|return
@@ -1303,7 +1377,7 @@ name|p
 operator|=
 name|strdup
 argument_list|(
-name|str
+name|xstr
 argument_list|)
 expr_stmt|;
 name|der_free_octet_string
@@ -1320,9 +1394,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)
@@ -1356,11 +1432,13 @@ operator|==
 literal|0
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
 argument_list|,
-literal|"no password attributefor %s"
+name|ENOENT
+argument_list|,
+literal|"no password attribute for %s"
 argument_list|,
 name|str
 argument_list|)
@@ -1372,7 +1450,7 @@ argument_list|)
 expr_stmt|;
 block|}
 else|else
-name|krb5_clear_error_string
+name|krb5_clear_error_message
 argument_list|(
 name|context
 argument_list|)
@@ -1452,9 +1530,11 @@ operator|==
 name|NULL
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|HDB_ERR_NO_MKEY
 argument_list|,
 literal|"hdb_entry_set_password: "
 literal|"failed to find masterkey"
@@ -1550,9 +1630,11 @@ operator|&
 name|ext
 argument_list|)
 expr_stmt|;
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ENOMEM
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)
@@ -1622,9 +1704,11 @@ condition|(
 name|ret
 condition|)
 block|{
-name|krb5_set_error_string
+name|krb5_set_error_message
 argument_list|(
 name|context
+argument_list|,
+name|ret
 argument_list|,
 literal|"malloc: out of memory"
 argument_list|)

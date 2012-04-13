@@ -695,7 +695,8 @@ if|if
 condition|(
 name|dev
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -923,7 +924,8 @@ if|if
 condition|(
 name|chosen
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(

@@ -1411,7 +1411,7 @@ begin_define
 define|#
 directive|define
 name|AR_MAC_LED_ASSOC_NONE
-value|0x00000000
+value|0x0
 end_define
 
 begin_comment
@@ -1422,7 +1422,7 @@ begin_define
 define|#
 directive|define
 name|AR_MAC_LED_ASSOC_ACTIVE
-value|0x00000400
+value|0x1
 end_define
 
 begin_comment
@@ -1433,7 +1433,7 @@ begin_define
 define|#
 directive|define
 name|AR_MAC_LED_ASSOC_PEND
-value|0x00000800
+value|0x2
 end_define
 
 begin_comment
@@ -1490,6 +1490,17 @@ end_comment
 begin_define
 define|#
 directive|define
+name|AR_WA_D3_L1_DISABLE
+value|0x00800000
+end_define
+
+begin_comment
+comment|/* bit 23 */
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_WA_DEFAULT
 value|0x0000073f
 end_define
@@ -1498,8 +1509,12 @@ begin_define
 define|#
 directive|define
 name|AR9280_WA_DEFAULT
-value|0x0040073f
+value|0x0040073b
 end_define
+
+begin_comment
+comment|/* disable bit 2, see commit */
+end_comment
 
 begin_define
 define|#
@@ -1852,8 +1867,70 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR_ISR_S5_GENTIMER7
+value|0x00000080
+end_define
+
+begin_comment
+comment|// Mask for timer 7 trigger
+end_comment
+
+begin_define
+define|#
+directive|define
 name|AR_ISR_S5_TIM_TIMER
 value|0x00000010
+end_define
+
+begin_comment
+comment|// TIM Timer ISR
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_DTIM_TIMER
+value|0x00000020
+end_define
+
+begin_comment
+comment|// DTIM Timer ISR
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_TRIG
+value|0x0000FF80
+end_define
+
+begin_comment
+comment|// ISR for generic timer trigger 7-15
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_TRIG_S
+value|0
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_THRESH
+value|0xFF800000
+end_define
+
+begin_comment
+comment|// ISR for generic timer threshold 7-15
+end_comment
+
+begin_define
+define|#
+directive|define
+name|AR_ISR_S5_GENTIMER_THRESH_S
+value|16
 end_define
 
 begin_define
@@ -3310,6 +3387,20 @@ end_define
 begin_define
 define|#
 directive|define
+name|AR9287_GPIO_IN_VAL
+value|0x003FF800
+end_define
+
+begin_define
+define|#
+directive|define
+name|AR9287_GPIO_IN_VAL_S
+value|11
+end_define
+
+begin_define
+define|#
+directive|define
 name|AR_GPIO_OE_OUT_DRV
 value|0x3
 end_define
@@ -3955,12 +4046,20 @@ name|AR_XSREV_REVISION_KIWI_10
 value|0
 end_define
 
+begin_comment
+comment|/* Kiwi 1.0 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_XSREV_REVISION_KIWI_11
 value|1
 end_define
+
+begin_comment
+comment|/* Kiwi 1.1 */
+end_comment
 
 begin_define
 define|#
@@ -3969,12 +4068,20 @@ name|AR_XSREV_REVISION_KIWI_12
 value|2
 end_define
 
+begin_comment
+comment|/* Kiwi 1.2 */
+end_comment
+
 begin_define
 define|#
 directive|define
 name|AR_XSREV_REVISION_KIWI_13
 value|3
 end_define
+
+begin_comment
+comment|/* Kiwi 1.3 */
+end_comment
 
 begin_comment
 comment|/* Owl (AR5416) */
@@ -4214,6 +4321,21 @@ parameter_list|)
 define|\
 value|(AH_PRIVATE((_ah))->ah_macVersion == AR_XSREV_VERSION_KIWI)
 end_define
+
+begin_define
+define|#
+directive|define
+name|AR_SREV_KIWI_10_OR_LATER
+parameter_list|(
+name|_ah
+parameter_list|)
+define|\
+value|(AH_PRIVATE((_ah))->ah_macVersion>= AR_XSREV_VERSION_KIWI)
+end_define
+
+begin_comment
+comment|/* XXX TODO: make these handle macVersion> Kiwi */
+end_comment
 
 begin_define
 define|#

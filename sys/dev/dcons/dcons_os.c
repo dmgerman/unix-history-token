@@ -295,6 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_kern
@@ -415,6 +416,20 @@ begin_decl_stmt
 specifier|static
 name|cn_putc_t
 name|dcons_cnputc
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_grab_t
+name|dcons_cngrab
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|cn_ungrab_t
+name|dcons_cnungrab
 decl_stmt|;
 end_decl_stmt
 
@@ -1070,6 +1085,32 @@ begin_function
 specifier|static
 name|void
 name|dcons_cnterm
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dcons_cngrab
+parameter_list|(
+name|struct
+name|consdev
+modifier|*
+name|cp
+parameter_list|)
+block|{ }
+end_function
+
+begin_function
+specifier|static
+name|void
+name|dcons_cnungrab
 parameter_list|(
 name|struct
 name|consdev

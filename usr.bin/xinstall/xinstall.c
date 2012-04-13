@@ -242,6 +242,7 @@ value|".old"
 end_define
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|passwd
 modifier|*
@@ -250,6 +251,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|group
 modifier|*
@@ -258,18 +260,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|gid_t
 name|gid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|uid_t
 name|uid
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|dobackup
 decl_stmt|,
@@ -290,6 +295,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|mode_t
 name|mode
 init|=
@@ -306,6 +312,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*

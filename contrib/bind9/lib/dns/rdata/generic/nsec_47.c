@@ -4,7 +4,7 @@ comment|/*  * Copyright (C) 2004, 2007-2009, 2011  Internet Systems Consortium, 
 end_comment
 
 begin_comment
-comment|/* $Id: nsec_47.c,v 1.15 2011-01-13 04:59:26 tbox Exp $ */
+comment|/* $Id: nsec_47.c,v 1.15 2011/01/13 04:59:26 tbox Exp $ */
 end_comment
 
 begin_comment

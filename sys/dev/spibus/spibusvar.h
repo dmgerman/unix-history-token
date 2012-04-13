@@ -66,7 +66,7 @@ parameter_list|,
 name|T
 parameter_list|)
 define|\
-value|__inline static int							\ spibus_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev,		\ 	    SPIBUS_IVAR_ ## B, (uintptr_t *) t);			\ }
+value|static inline int							\ spibus_get_ ## A(device_t dev, T *t)					\ {									\ 	return BUS_READ_IVAR(device_get_parent(dev), dev,		\ 	    SPIBUS_IVAR_ ## B, (uintptr_t *) t);			\ }
 end_define
 
 begin_macro

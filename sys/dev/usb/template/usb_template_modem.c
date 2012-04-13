@@ -331,26 +331,28 @@ index|[
 name|USB_SPEED_LOW
 index|]
 operator|=
-literal|10
+literal|8
 block|,
+comment|/* 8ms */
 operator|.
 name|bInterval
 index|[
 name|USB_SPEED_FULL
 index|]
 operator|=
-literal|10
+literal|8
 block|,
+comment|/* 8ms */
 operator|.
 name|bInterval
 index|[
 name|USB_SPEED_HIGH
 index|]
 operator|=
-literal|10
-operator|*
-literal|8
-block|, }
+literal|7
+block|,
+comment|/* 8ms */
+block|}
 decl_stmt|;
 end_decl_stmt
 

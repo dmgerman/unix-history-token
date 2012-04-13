@@ -48,12 +48,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<openssl/md5.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdio.h>
 end_include
 
@@ -1477,10 +1471,7 @@ name|secret
 argument_list|,
 literal|0
 argument_list|,
-sizeof|sizeof
-argument_list|(
-name|secret
-argument_list|)
+name|MD5_CHARS_MAX
 argument_list|)
 expr_stmt|;
 name|strcpy
@@ -1664,7 +1655,7 @@ operator|=
 name|getppid
 argument_list|()
 expr_stmt|;
-name|srand
+name|srandom
 argument_list|(
 name|tv
 operator|.
@@ -1748,7 +1739,7 @@ argument_list|(
 name|buf
 argument_list|)
 argument_list|,
-literal|"%s:%ld:%ld:%ld:%d:%d"
+literal|"%s:%jd:%ld:%ld:%d:%d"
 argument_list|,
 name|inet_ntoa
 argument_list|(
@@ -1757,6 +1748,9 @@ operator|.
 name|sin_addr
 argument_list|)
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|tv
 operator|.
 name|tv_sec

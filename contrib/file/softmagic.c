@@ -8971,6 +8971,8 @@ name|file_printf
 argument_list|(
 name|ms
 argument_list|,
+literal|"%s"
+argument_list|,
 name|m
 operator|->
 name|desc

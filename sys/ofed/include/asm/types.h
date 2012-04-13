@@ -25,7 +25,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__signed__
+name|signed
 name|char
 name|__s8
 typedef|;
@@ -41,7 +41,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__signed__
+name|signed
 name|short
 name|__s16
 typedef|;
@@ -57,7 +57,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|__signed__
+name|signed
 name|int
 name|__s32
 typedef|;
@@ -86,7 +86,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__signed__
+name|signed
 name|long
 name|long
 name|__s64

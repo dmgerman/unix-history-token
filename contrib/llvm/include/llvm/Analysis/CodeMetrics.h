@@ -73,6 +73,9 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
+name|class
+name|TargetData
+decl_stmt|;
 comment|// CodeMetrics - Calculate size and a few similar metrics for a set of
 comment|// basic blocks.
 struct|struct
@@ -197,6 +200,13 @@ specifier|const
 name|BasicBlock
 operator|*
 name|BB
+argument_list|,
+specifier|const
+name|TargetData
+operator|*
+name|TD
+operator|=
+literal|0
 argument_list|)
 expr_stmt|;
 comment|/// analyzeFunction - Add information about the specified function
@@ -207,6 +217,13 @@ parameter_list|(
 name|Function
 modifier|*
 name|F
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 comment|/// CountCodeReductionForConstant - Figure out an approximation for how

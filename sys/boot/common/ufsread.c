@@ -287,6 +287,7 @@ modifier|*
 name|ino
 parameter_list|)
 block|{
+specifier|static
 name|char
 name|buf
 index|[
@@ -427,6 +428,7 @@ modifier|*
 name|path
 parameter_list|)
 block|{
+specifier|static
 name|char
 name|name
 index|[
@@ -694,6 +696,9 @@ name|struct
 name|ufs1_dinode
 name|dp1
 decl_stmt|;
+name|ufs1_daddr_t
+name|addr1
+decl_stmt|;
 endif|#
 directive|endif
 ifndef|#
@@ -707,6 +712,11 @@ decl_stmt|;
 endif|#
 directive|endif
 specifier|static
+name|struct
+name|fs
+name|fs
+decl_stmt|;
+specifier|static
 name|ino_t
 name|inomap
 decl_stmt|;
@@ -717,10 +727,6 @@ decl_stmt|;
 name|void
 modifier|*
 name|indbuf
-decl_stmt|;
-name|struct
-name|fs
-name|fs
 decl_stmt|;
 name|char
 modifier|*
@@ -741,7 +747,7 @@ name|ufs_lbn_t
 name|lbn
 decl_stmt|;
 name|ufs2_daddr_t
-name|addr
+name|addr2
 decl_stmt|,
 name|vbaddr
 decl_stmt|;
@@ -1187,7 +1193,7 @@ operator|<
 name|NDADDR
 condition|)
 block|{
-name|addr
+name|addr2
 operator|=
 name|DIP
 argument_list|(
@@ -1220,7 +1226,7 @@ operator|&
 name|fs
 argument_list|)
 expr_stmt|;
-name|addr
+name|addr2
 operator|=
 name|DIP
 argument_list|(
@@ -1252,7 +1258,7 @@ argument_list|(
 operator|&
 name|fs
 argument_list|,
-name|addr
+name|addr2
 argument_list|)
 operator|+
 name|u
@@ -1307,7 +1313,7 @@ argument_list|)
 name|memcpy
 argument_list|(
 operator|&
-name|addr
+name|addr1
 argument_list|,
 operator|(
 name|ufs1_daddr_t
@@ -1323,6 +1329,10 @@ name|ufs1_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|addr2
+operator|=
+name|addr1
+expr_stmt|;
 elif|#
 directive|elif
 name|defined
@@ -1332,7 +1342,7 @@ argument_list|)
 name|memcpy
 argument_list|(
 operator|&
-name|addr
+name|addr2
 argument_list|,
 operator|(
 name|ufs2_daddr_t
@@ -1358,10 +1368,11 @@ name|fs_magic
 operator|==
 name|FS_UFS1_MAGIC
 condition|)
+block|{
 name|memcpy
 argument_list|(
 operator|&
-name|addr
+name|addr1
 argument_list|,
 operator|(
 name|ufs1_daddr_t
@@ -1377,11 +1388,16 @@ name|ufs1_daddr_t
 argument_list|)
 argument_list|)
 expr_stmt|;
+name|addr2
+operator|=
+name|addr1
+expr_stmt|;
+block|}
 else|else
 name|memcpy
 argument_list|(
 operator|&
-name|addr
+name|addr2
 argument_list|,
 operator|(
 name|ufs2_daddr_t
@@ -1401,12 +1417,10 @@ endif|#
 directive|endif
 block|}
 else|else
-block|{
 return|return
 operator|-
 literal|1
 return|;
-block|}
 name|vbaddr
 operator|=
 name|fsbtodb
@@ -1414,7 +1428,7 @@ argument_list|(
 operator|&
 name|fs
 argument_list|,
-name|addr
+name|addr2
 argument_list|)
 operator|+
 operator|(

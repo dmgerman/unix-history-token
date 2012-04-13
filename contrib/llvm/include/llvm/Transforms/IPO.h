@@ -130,16 +130,6 @@ name|createStripDeadDebugInfoPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// createLowerSetJmpPass - This function lowers the setjmp/longjmp intrinsics
-comment|/// to invoke/unwind instructions.  This should really be part of the C/C++
-comment|/// front-end, but it's so much easier to write transformations in LLVM proper.
-comment|///
-name|ModulePass
-modifier|*
-name|createLowerSetJmpPass
-parameter_list|()
-function_decl|;
-comment|//===----------------------------------------------------------------------===//
 comment|/// createConstantMergePass - This function returns a new pass that merges
 comment|/// duplicate global constants together into a single constant that is shared.
 comment|/// This is useful because some passes (ie TraceValues) insert a lot of string
@@ -170,7 +160,7 @@ name|createGlobalDCEPass
 parameter_list|()
 function_decl|;
 comment|//===----------------------------------------------------------------------===//
-comment|/// createGVExtractionPass - If deleteFn is true, this pass deletes as
+comment|/// createGVExtractionPass - If deleteFn is true, this pass deletes
 comment|/// the specified global values. Otherwise, it deletes as much of the module as
 comment|/// possible, except for the global values specified.
 comment|///

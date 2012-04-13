@@ -240,7 +240,7 @@ name|isLegalAddressingMode
 argument_list|(
 argument|const AddrMode&AM
 argument_list|,
-argument|const Type *Ty
+argument|Type *Ty
 argument_list|)
 specifier|const
 block|;
@@ -461,7 +461,16 @@ argument_list|)
 specifier|const
 block|;
 name|SDValue
-name|LowerTRAMPOLINE
+name|LowerINIT_TRAMPOLINE
+argument_list|(
+argument|SDValue Op
+argument_list|,
+argument|SelectionDAG&DAG
+argument_list|)
+specifier|const
+block|;
+name|SDValue
+name|LowerADJUST_TRAMPOLINE
 argument_list|(
 argument|SDValue Op
 argument_list|,

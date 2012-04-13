@@ -582,7 +582,6 @@ comment|/// @brief Determine if this type could be losslessly bitcast to Ty
 name|bool
 name|canLosslesslyBitCastTo
 argument_list|(
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -766,9 +765,8 @@ comment|/// getPrimitiveSizeInBits value for the element type. Otherwise return 
 comment|/// getPrimitiveSizeInBits value for this type.
 name|unsigned
 name|getScalarSizeInBits
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// getFPMantissaWidth - Return the width of the mantissa of this type.  This
 comment|/// is only valid on floating point types.  If the FP type does not
 comment|/// have a stable mantissa (e.g. ppc long double), this method returns -1.
@@ -779,13 +777,11 @@ specifier|const
 expr_stmt|;
 comment|/// getScalarType - If this is a vector type, return the element type,
 comment|/// otherwise return 'this'.
-specifier|const
 name|Type
-operator|*
+modifier|*
 name|getScalarType
-argument_list|()
-specifier|const
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Type Iteration support.
 comment|//
@@ -1239,14 +1235,13 @@ comment|/// to PointerType::get(Foo, AddrSpace).
 name|PointerType
 modifier|*
 name|getPointerTo
-argument_list|(
+parameter_list|(
 name|unsigned
 name|AddrSpace
-operator|=
+init|=
 literal|0
-argument_list|)
-decl|const
-decl_stmt|;
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// isSizedDerivedType - Derived types like structures and arrays are sized
@@ -1280,7 +1275,6 @@ name|raw_ostream
 operator|&
 name|OS
 operator|,
-specifier|const
 name|Type
 operator|&
 name|T
@@ -1469,8 +1463,7 @@ name|NodeType
 modifier|*
 name|getEntryNode
 parameter_list|(
-specifier|const
-name|Type
+name|NodeType
 modifier|*
 name|T
 parameter_list|)

@@ -376,6 +376,7 @@ literal|0
 return|;
 block|}
 comment|/// Returns true if one or more kills are PHI nodes.
+comment|/// Obsolete, do not use!
 name|bool
 name|hasPHIKill
 argument_list|()
@@ -1315,7 +1316,6 @@ return|;
 block|}
 comment|/// RenumberValues - Renumber all values in order of appearance and remove
 comment|/// unused values.
-comment|/// Recalculate phi-kill flags in case any phi-def values were removed.
 name|void
 name|RenumberValues
 parameter_list|(
@@ -1714,6 +1714,42 @@ operator|->
 name|valno
 return|;
 block|}
+comment|/// getVNInfoBefore - Return the VNInfo that is live up to but not
+comment|/// necessarilly including Idx, or NULL. Use this to find the reaching def
+comment|/// used by an instruction at this SlotIndex position.
+name|VNInfo
+modifier|*
+name|getVNInfoBefore
+argument_list|(
+name|SlotIndex
+name|Idx
+argument_list|)
+decl|const
+block|{
+name|const_iterator
+name|I
+init|=
+name|FindLiveRangeContaining
+argument_list|(
+name|Idx
+operator|.
+name|getPrevSlot
+argument_list|()
+argument_list|)
+decl_stmt|;
+return|return
+name|I
+operator|==
+name|end
+argument_list|()
+condition|?
+literal|0
+else|:
+name|I
+operator|->
+name|valno
+return|;
+block|}
 comment|/// FindLiveRangeContaining - Return an iterator to the live range that
 comment|/// contains the specified index, or end() if there is none.
 name|iterator
@@ -1878,9 +1914,9 @@ argument_list|()
 argument_list|)
 expr_stmt|;
 block|}
-comment|/// extendInBlock - If this interval is live before UseIdx in the basic
-comment|/// block that starts at StartIdx, extend it to be live at UseIdx and return
-comment|/// the value. If there is no live range before UseIdx, return NULL.
+comment|/// extendInBlock - If this interval is live before Kill in the basic block
+comment|/// that starts at StartIdx, extend it to be live up to Kill, and return
+comment|/// the value. If there is no live range before Kill, return NULL.
 name|VNInfo
 modifier|*
 name|extendInBlock
@@ -1889,7 +1925,7 @@ name|SlotIndex
 name|StartIdx
 parameter_list|,
 name|SlotIndex
-name|UseIdx
+name|Kill
 parameter_list|)
 function_decl|;
 comment|/// join - Join two live intervals (this, and other) together.  This applies

@@ -601,7 +601,8 @@ literal|"/chosen"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -642,7 +643,8 @@ name|buf
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -790,7 +792,7 @@ name|di
 operator|->
 name|baudrate
 operator|=
-literal|0
+name|br
 expr_stmt|;
 name|di
 operator|->

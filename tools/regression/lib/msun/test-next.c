@@ -1317,6 +1317,11 @@ argument_list|,
 name|ex_over
 argument_list|)
 expr_stmt|;
+if|#
+directive|if
+name|LDBL_MANT_DIG
+operator|>
+literal|53
 name|test
 argument_list|(
 name|idd
@@ -1336,6 +1341,8 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+endif|#
+directive|endif
 name|testf
 argument_list|(
 name|idf

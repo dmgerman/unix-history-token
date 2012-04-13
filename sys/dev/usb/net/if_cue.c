@@ -449,6 +449,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -2189,7 +2190,10 @@ if|if
 condition|(
 name|actlen
 operator|<=
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 literal|2
 operator|+
 sizeof|sizeof
@@ -2197,7 +2201,7 @@ argument_list|(
 expr|struct
 name|ether_header
 argument_list|)
-operator|)
+argument_list|)
 condition|)
 block|{
 name|ifp

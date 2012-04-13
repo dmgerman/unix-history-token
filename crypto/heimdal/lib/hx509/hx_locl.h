@@ -1,28 +1,17 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 2004 - 2006 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).   * All rights reserved.   *  * Redistribution and use in source and binary forms, with or without   * modification, are permitted provided that the following conditions   * are met:   *  * 1. Redistributions of source code must retain the above copyright   *    notice, this list of conditions and the following disclaimer.   *  * 2. Redistributions in binary form must reproduce the above copyright   *    notice, this list of conditions and the following disclaimer in the   *    documentation and/or other materials provided with the distribution.   *  * 3. Neither the name of the Institute nor the names of its contributors   *    may be used to endorse or promote products derived from this software   *    without specific prior written permission.   *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE   * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE   * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL   * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS   * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)   * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT   * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY   * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF   * SUCH DAMAGE.   */
+comment|/*  * Copyright (c) 2004 - 2006 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
 
 begin_comment
-comment|/* $Id: hx_locl.h 21083 2007-06-13 02:11:19Z lha $ */
+comment|/* $Id$ */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
 directive|include
 file|<config.h>
 end_include
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 begin_include
 include|#
@@ -48,11 +37,22 @@ directive|include
 file|<errno.h>
 end_include
 
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|HAVE_STRINGS_H
+end_ifdef
+
 begin_include
 include|#
 directive|include
 file|<strings.h>
 end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -75,6 +75,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|<limits.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<roken.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<getarg.h>
 end_include
 
@@ -88,12 +100,6 @@ begin_include
 include|#
 directive|include
 file|<hex.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<roken.h>
 end_include
 
 begin_include
@@ -180,6 +186,12 @@ directive|include
 file|<der.h>
 end_include
 
+begin_define
+define|#
+directive|define
+name|HC_DEPRECATED_CRYPTO
+end_define
+
 begin_include
 include|#
 directive|include
@@ -236,13 +248,11 @@ parameter_list|)
 function_decl|;
 end_typedef
 
-begin_typedef
-typedef|typedef
-name|struct
-name|hx509_private_key_ops
-name|hx509_private_key_ops
-typedef|;
-end_typedef
+begin_include
+include|#
+directive|include
+file|"sel.h"
+end_include
 
 begin_include
 include|#
@@ -432,8 +442,16 @@ name|HX509_QUERY_MATCH_TIME
 value|0x200000
 define|#
 directive|define
+name|HX509_QUERY_MATCH_EKU
+value|0x400000
+define|#
+directive|define
+name|HX509_QUERY_MATCH_EXPR
+value|0x800000
+define|#
+directive|define
 name|HX509_QUERY_MASK
-value|0x3fffff
+value|0xffffff
 name|Certificate
 modifier|*
 name|subject
@@ -476,10 +494,12 @@ modifier|*
 name|cmp_func
 function_decl|)
 parameter_list|(
-name|void
-modifier|*
+name|hx509_context
 parameter_list|,
 name|hx509_cert
+parameter_list|,
+name|void
+modifier|*
 parameter_list|)
 function_decl|;
 name|void
@@ -492,6 +512,15 @@ name|keyhash_sha1
 decl_stmt|;
 name|time_t
 name|timenow
+decl_stmt|;
+name|heim_oid
+modifier|*
+name|eku
+decl_stmt|;
+name|struct
+name|hx_expr
+modifier|*
+name|expr
 decl_stmt|;
 block|}
 struct|;
@@ -801,6 +830,49 @@ directive|define
 name|HX509_CALCULATE_PATH_NO_ANCHOR
 value|1
 end_define
+
+begin_comment
+comment|/* environment */
+end_comment
+
+begin_struct
+struct|struct
+name|hx509_env_data
+block|{
+enum|enum
+block|{
+name|env_string
+block|,
+name|env_list
+block|}
+name|type
+enum|;
+name|char
+modifier|*
+name|name
+decl_stmt|;
+name|struct
+name|hx509_env_data
+modifier|*
+name|next
+decl_stmt|;
+union|union
+block|{
+name|char
+modifier|*
+name|string
+decl_stmt|;
+name|struct
+name|hx509_env_data
+modifier|*
+name|list
+decl_stmt|;
+block|}
+name|u
+union|;
+block|}
+struct|;
+end_struct
 
 begin_decl_stmt
 specifier|extern

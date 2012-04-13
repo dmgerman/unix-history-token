@@ -41,20 +41,17 @@ begin_comment
 comment|/* not lint */
 end_comment
 
+begin_define
+define|#
+directive|define
+name|TSPTYPES
+end_define
+
 begin_include
 include|#
 directive|include
 file|"globals.h"
 end_include
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|tsptype
-index|[]
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * LOOKAT checks if the message is of the requested type and comes from  * the right machine, returning 1 in case of affirmative answer  */
@@ -725,8 +722,11 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"readmsg: wait %ld.%6ld at %s\n"
+literal|"readmsg: wait %jd.%6ld at %s\n"
 argument_list|,
+operator|(
+name|intmax_t
+operator|)
 name|rwait
 operator|.
 name|tv_sec
@@ -904,7 +904,7 @@ name|syslog
 argument_list|(
 name|LOG_NOTICE
 argument_list|,
-literal|"short packet (%u/%u bytes) from %s"
+literal|"short packet (%zd/%zu bytes) from %s"
 argument_list|,
 name|n
 argument_list|,
@@ -1947,7 +1947,7 @@ name|fprintf
 argument_list|(
 name|fd
 argument_list|,
-literal|"%s %d %-6u (%ld,%ld) %-15s %s\n"
+literal|"%s %d %-6u (%d,%d) %-15s %s\n"
 argument_list|,
 name|tsptype
 index|[

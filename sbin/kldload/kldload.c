@@ -77,6 +77,12 @@ directive|include
 file|<unistd.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|<errno.h>
+end_include
+
 begin_define
 define|#
 directive|define
@@ -561,7 +567,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: kldload [-qv] file ...\n"
+literal|"usage: kldload [-nqv] file ...\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -600,6 +606,9 @@ decl_stmt|;
 name|int
 name|quiet
 decl_stmt|;
+name|int
+name|check_loaded
+decl_stmt|;
 name|errors
 operator|=
 literal|0
@@ -609,6 +618,10 @@ operator|=
 literal|0
 expr_stmt|;
 name|quiet
+operator|=
+literal|0
+expr_stmt|;
+name|check_loaded
 operator|=
 literal|0
 expr_stmt|;
@@ -623,7 +636,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"qv"
+literal|"nqv"
 argument_list|)
 operator|)
 operator|!=
@@ -658,6 +671,14 @@ expr_stmt|;
 name|quiet
 operator|=
 literal|0
+expr_stmt|;
+break|break;
+case|case
+literal|'n'
+case|:
+name|check_loaded
+operator|=
+literal|1
 expr_stmt|;
 break|break;
 default|default:
@@ -723,6 +744,35 @@ operator|<
 literal|0
 condition|)
 block|{
+if|if
+condition|(
+name|check_loaded
+operator|!=
+literal|0
+operator|&&
+name|errno
+operator|==
+name|EEXIST
+condition|)
+block|{
+if|if
+condition|(
+name|verbose
+condition|)
+name|printf
+argument_list|(
+literal|"%s is already "
+literal|"loaded\n"
+argument_list|,
+name|argv
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+block|}
+else|else
+block|{
 name|warn
 argument_list|(
 literal|"can't load %s"
@@ -736,6 +786,7 @@ expr_stmt|;
 name|errors
 operator|++
 expr_stmt|;
+block|}
 block|}
 else|else
 block|{

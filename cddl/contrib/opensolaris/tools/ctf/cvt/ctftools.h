@@ -1174,6 +1174,11 @@ directive|define
 name|CTF_KEEP_STABS
 value|0x8
 comment|/* keep .stabs sections */
+define|#
+directive|define
+name|CTF_SWAP_BYTES
+value|0x10
+comment|/* target byte order is different from host */
 name|void
 name|write_ctf
 parameter_list|(

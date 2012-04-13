@@ -393,7 +393,7 @@ value|(BRIDGE_RTHASH_SIZE - 1)
 end_define
 
 begin_comment
-comment|/*  * Maximum number of addresses to cache.  */
+comment|/*  * Default maximum number of addresses to cache.  */
 end_comment
 
 begin_ifndef
@@ -406,7 +406,7 @@ begin_define
 define|#
 directive|define
 name|BRIDGE_RTABLE_MAX
-value|100
+value|2000
 end_define
 
 begin_endif
@@ -1926,6 +1926,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_link
@@ -2048,6 +2049,17 @@ comment|/* share MAC with first bridge member */
 end_comment
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_onlyip"
+argument_list|,
+operator|&
+name|pfil_onlyip
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2064,6 +2076,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Only pass IP packets when pfil is enabled"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.ipfw_arp"
+argument_list|,
+operator|&
+name|pfil_ipfw_arp
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2090,6 +2113,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_bridge"
+argument_list|,
+operator|&
+name|pfil_bridge
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2106,6 +2140,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Packet filter on the bridge interface"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_member"
+argument_list|,
+operator|&
+name|pfil_member
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -2132,6 +2177,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.pfil_local_phys"
+argument_list|,
+operator|&
+name|pfil_local_phys
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2153,6 +2209,17 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.log_stp"
+argument_list|,
+operator|&
+name|log_stp
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
 name|SYSCTL_INT
 argument_list|(
 name|_net_link_bridge
@@ -2169,6 +2236,17 @@ argument_list|,
 literal|0
 argument_list|,
 literal|"Log STP state changes"
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|TUNABLE_INT
+argument_list|(
+literal|"net.link.bridge.inherit_mac"
+argument_list|,
+operator|&
+name|bridge_inherit_mac
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -3677,11 +3755,9 @@ argument_list|(
 name|ifp
 argument_list|)
 expr_stmt|;
-name|if_free_type
+name|if_free
 argument_list|(
 name|ifp
-argument_list|,
-name|IFT_ETHER
 argument_list|)
 expr_stmt|;
 comment|/* Tear down the routing table. */
@@ -10442,8 +10518,6 @@ operator|==
 literal|0
 condition|)
 block|{
-name|m
-operator|=
 name|bstp_input
 argument_list|(
 operator|&
@@ -10456,13 +10530,7 @@ argument_list|,
 name|m
 argument_list|)
 expr_stmt|;
-if|if
-condition|(
-name|m
-operator|==
-name|NULL
-condition|)
-block|{
+comment|/* consumes mbuf */
 name|BRIDGE_UNLOCK
 argument_list|(
 name|sc
@@ -10473,7 +10541,6 @@ operator|(
 name|NULL
 operator|)
 return|;
-block|}
 block|}
 if|if
 condition|(

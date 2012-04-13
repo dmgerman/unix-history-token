@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|<machine/psl.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<stdarg.h>
 end_include
 
@@ -1308,13 +1302,12 @@ argument_list|()
 expr_stmt|;
 name|result
 operator|=
-operator|(
+name|V86_CY
+argument_list|(
 name|v86
 operator|.
 name|efl
-operator|&
-name|PSL_C
-operator|)
+argument_list|)
 expr_stmt|;
 if|if
 condition|(

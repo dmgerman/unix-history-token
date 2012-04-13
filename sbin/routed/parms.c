@@ -756,8 +756,6 @@ control|)
 block|{
 if|if
 condition|(
-literal|0
-operator|==
 name|fgets
 argument_list|(
 name|lbuf
@@ -769,6 +767,8 @@ argument_list|)
 argument_list|,
 name|fp
 argument_list|)
+operator|==
+name|NULL
 condition|)
 break|break;
 name|lptr

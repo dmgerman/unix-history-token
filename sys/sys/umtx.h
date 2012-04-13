@@ -296,6 +296,10 @@ name|UMTX_OP_MUTEX_WAKE
 value|18
 end_define
 
+begin_comment
+comment|/* deprecated */
+end_comment
+
 begin_define
 define|#
 directive|define
@@ -320,8 +324,15 @@ end_define
 begin_define
 define|#
 directive|define
-name|UMTX_OP_MAX
+name|UMTX_OP_MUTEX_WAKE2
 value|22
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_OP_MAX
+value|23
 end_define
 
 begin_comment
@@ -347,6 +358,13 @@ define|#
 directive|define
 name|CVWAIT_CLOCKID
 value|0x04
+end_define
+
+begin_define
+define|#
+directive|define
+name|UMTX_ABSTIME
+value|0x01
 end_define
 
 begin_define
@@ -985,6 +1003,21 @@ operator|)
 return|;
 block|}
 end_function
+
+begin_function_decl
+name|int
+name|umtx_copyin_timeout
+parameter_list|(
+specifier|const
+name|void
+modifier|*
+parameter_list|,
+name|struct
+name|timespec
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_function_decl
 name|int

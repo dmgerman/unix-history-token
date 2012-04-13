@@ -32,6 +32,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/cpuset.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<sys/kthread.h>
 end_include
 
@@ -431,6 +437,16 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 comment|/* call the processes' main()... */
 name|cpu_set_fork_handler
 argument_list|(
@@ -439,6 +455,16 @@ argument_list|,
 name|func
 argument_list|,
 name|arg
+argument_list|)
+expr_stmt|;
+comment|/* Avoid inheriting affinity from a random parent. */
+name|cpuset_setthread
+argument_list|(
+name|td
+operator|->
+name|td_tid
+argument_list|,
+name|cpuset_root
 argument_list|)
 expr_stmt|;
 name|thread_lock
@@ -1170,6 +1196,16 @@ argument_list|(
 name|newtd
 argument_list|)
 expr_stmt|;
+comment|/* Avoid inheriting affinity from a random parent. */
+name|cpuset_setthread
+argument_list|(
+name|newtd
+operator|->
+name|td_tid
+argument_list|,
+name|cpuset_root
+argument_list|)
+expr_stmt|;
 comment|/* Delay putting it on the run queue until now. */
 if|if
 condition|(
@@ -1729,6 +1765,16 @@ argument_list|(
 name|ap
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|KTR
+name|sched_clear_tdname
+argument_list|(
+name|td
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 return|return
 operator|(
 literal|0

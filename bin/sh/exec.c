@@ -353,6 +353,22 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+specifier|static
+name|void
+name|addcmdentry
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+parameter_list|,
+name|struct
+name|cmdentry
+modifier|*
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Exec a program.  Never returns.  If you change this routine, you may  * have to change the find_command routine as well.  *  * The argv array may be changed and element argv[-1] should be writable.  */
 end_comment
@@ -949,6 +965,13 @@ name|char
 modifier|*
 name|name
 decl_stmt|;
+name|int
+name|errors
+decl_stmt|;
+name|errors
+operator|=
+literal|0
+expr_stmt|;
 name|verbose
 operator|=
 literal|0
@@ -1105,19 +1128,22 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
-name|verbose
-condition|)
-block|{
-if|if
-condition|(
 name|entry
 operator|.
 name|cmdtype
-operator|!=
+operator|==
 name|CMDUNKNOWN
 condition|)
+name|errors
+operator|=
+literal|1
+expr_stmt|;
+elseif|else
+if|if
+condition|(
+name|verbose
+condition|)
 block|{
-comment|/* if no error msg */
 name|cmdp
 operator|=
 name|cmdlookup
@@ -1141,6 +1167,7 @@ name|verbose
 argument_list|)
 expr_stmt|;
 else|else
+block|{
 name|outfmt
 argument_list|(
 name|out2
@@ -1149,6 +1176,10 @@ literal|"%s: not found\n"
 argument_list|,
 name|name
 argument_list|)
+expr_stmt|;
+name|errors
+operator|=
+literal|1
 expr_stmt|;
 block|}
 name|flushall
@@ -1160,7 +1191,7 @@ operator|++
 expr_stmt|;
 block|}
 return|return
-literal|0
+name|errors
 return|;
 block|}
 end_function
@@ -2206,6 +2237,7 @@ specifier|const
 name|char
 modifier|*
 name|newval
+name|__unused
 parameter_list|)
 block|{
 name|clearcmdentry
@@ -2558,6 +2590,7 @@ comment|/*  * Add a new command entry, replacing any existing command entry for 
 end_comment
 
 begin_function
+specifier|static
 name|void
 name|addcmdentry
 parameter_list|(

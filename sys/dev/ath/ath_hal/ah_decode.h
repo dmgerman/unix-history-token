@@ -24,6 +24,9 @@ struct|struct
 name|athregrec
 block|{
 name|uint32_t
+name|threadid
+decl_stmt|;
+name|uint32_t
 name|op
 range|:
 literal|8

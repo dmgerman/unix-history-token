@@ -323,8 +323,6 @@ comment|/// a recursive struct conversion, set this to true.
 name|bool
 name|SkippedLayout
 decl_stmt|;
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const
@@ -540,7 +538,6 @@ function_decl|;
 comment|/// GetFunctionTypeForVTable - Get the LLVM function type for use in a vtable,
 comment|/// given a CXXMethodDecl. If the method to has an incomplete return type,
 comment|/// and/or incomplete argument types, this will return the opaque type.
-specifier|const
 name|llvm
 operator|::
 name|Type
@@ -783,8 +780,6 @@ name|CanQualType
 name|RetTy
 argument_list|,
 specifier|const
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|CanQualType
@@ -833,8 +828,6 @@ name|StructType
 operator|*
 name|Ty
 argument_list|,
-name|llvm
-operator|::
 name|StringRef
 name|suffix
 argument_list|)
@@ -864,8 +857,6 @@ argument_list|(
 name|QualType
 name|type
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|llvm

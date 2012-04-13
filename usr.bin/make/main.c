@@ -652,6 +652,40 @@ begin_comment
 comment|/* .DEFAULT node */
 end_comment
 
+begin_struct
+specifier|static
+struct|struct
+block|{
+specifier|const
+name|char
+modifier|*
+name|foreign_name
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|freebsd_name
+decl_stmt|;
+block|}
+name|arch_aliases
+index|[]
+init|=
+block|{
+block|{
+literal|"x86_64"
+block|,
+literal|"amd64"
+block|}
+block|,
+block|{
+literal|"mipsel"
+block|,
+literal|"mips"
+block|}
+block|, }
+struct|;
+end_struct
+
 begin_comment
 comment|/**  * Exit with usage message.  */
 end_comment
@@ -1157,7 +1191,7 @@ argument_list|,
 name|fname
 argument_list|)
 expr_stmt|;
-comment|/* 			 * XXX The realpath stuff breaks relative includes 			 * XXX in some cases.   The problem likely is in 			 * XXX parse.c where it does special things in 			 * XXX ParseDoInclude if the file is relateive 			 * XXX or absolute and not a system file.  There 			 * XXX it assumes that if the current file that's 			 * XXX being included is absolute, that any files 			 * XXX that it includes shouldn't do the -I path 			 * XXX stuff, which is inconsistant with historical 			 * XXX behavior.  However, I can't pentrate the mists 			 * XXX further, so I'm putting this workaround in 			 * XXX here until such time as the underlying bug 			 * XXX can be fixed. 			 */
+comment|/* 			 * XXX The realpath stuff breaks relative includes 			 * XXX in some cases.   The problem likely is in 			 * XXX parse.c where it does special things in 			 * XXX ParseDoInclude if the file is relative 			 * XXX or absolute and not a system file.  There 			 * XXX it assumes that if the current file that's 			 * XXX being included is absolute, that any files 			 * XXX that it includes shouldn't do the -I path 			 * XXX stuff, which is inconsistent with historical 			 * XXX behavior.  However, I can't penetrate the mists 			 * XXX further, so I'm putting this workaround in 			 * XXX here until such time as the underlying bug 			 * XXX can be fixed. 			 */
 if|#
 directive|if
 name|THIS_BREAKS_THINGS
@@ -2679,7 +2713,7 @@ block|}
 end_function
 
 begin_comment
-comment|/**  * In lieu of a good way to prevent every possible looping in make(1), stop  * there from being more than MKLVL_MAXVAL processes forked by make(1), to  * prevent a forkbomb from happening, in a dumb and mechanical way.  *  * Side Effects:  *	Creates or modifies enviornment variable MKLVL_ENVVAR via setenv().  */
+comment|/**  * In lieu of a good way to prevent every possible looping in make(1), stop  * there from being more than MKLVL_MAXVAL processes forked by make(1), to  * prevent a forkbomb from happening, in a dumb and mechanical way.  *  * Side Effects:  *	Creates or modifies environment variable MKLVL_ENVVAR via setenv().  */
 end_comment
 
 begin_function
@@ -3636,6 +3670,10 @@ name|struct
 name|utsname
 name|utsname
 decl_stmt|;
+name|unsigned
+name|int
+name|i
+decl_stmt|;
 if|if
 condition|(
 name|uname
@@ -3660,6 +3698,58 @@ name|utsname
 operator|.
 name|machine
 expr_stmt|;
+comment|/* Canonicalize non-FreeBSD naming conventions */
+for|for
+control|(
+name|i
+operator|=
+literal|0
+init|;
+name|i
+operator|<
+sizeof|sizeof
+argument_list|(
+name|arch_aliases
+argument_list|)
+operator|/
+sizeof|sizeof
+argument_list|(
+name|arch_aliases
+index|[
+literal|0
+index|]
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+if|if
+condition|(
+operator|!
+name|strcmp
+argument_list|(
+name|machine
+argument_list|,
+name|arch_aliases
+index|[
+name|i
+index|]
+operator|.
+name|foreign_name
+argument_list|)
+condition|)
+block|{
+name|machine
+operator|=
+name|arch_aliases
+index|[
+name|i
+index|]
+operator|.
+name|freebsd_name
+expr_stmt|;
+break|break;
+block|}
 block|}
 if|if
 condition|(
@@ -3691,7 +3781,7 @@ expr_stmt|;
 endif|#
 directive|endif
 block|}
-comment|/* 	 * Set machine_cpu to the minumum supported CPU revision based 	 * on the target architecture, if not already set. 	 */
+comment|/* 	 * Set machine_cpu to the minimum supported CPU revision based 	 * on the target architecture, if not already set. 	 */
 if|if
 condition|(
 operator|(
@@ -3931,7 +4021,7 @@ name|curdir
 argument_list|)
 expr_stmt|;
 block|}
-comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. PATH_OBJDIR.${MACHINE} 	 *	4. PATH_OBJDIR 	 *	5. PATH_OBJDIRPREFIX`cwd` 	 * 	 * If one of the first two fails, use the current directory. 	 * If the remaining three all fail, use the current directory. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles apropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
+comment|/* 	 * The object directory location is determined using the 	 * following order of preference: 	 * 	 *	1. MAKEOBJDIRPREFIX`cwd` 	 *	2. MAKEOBJDIR 	 *	3. PATH_OBJDIR.${MACHINE} 	 *	4. PATH_OBJDIR 	 *	5. PATH_OBJDIRPREFIX`cwd` 	 * 	 * If one of the first two fails, use the current directory. 	 * If the remaining three all fail, use the current directory. 	 * 	 * Once things are initted, 	 * have to add the original directory to the search path, 	 * and modify the paths for the Makefiles appropriately.  The 	 * current directory is also placed as a variable for make scripts. 	 */
 if|if
 condition|(
 operator|!

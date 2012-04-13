@@ -270,7 +270,7 @@ condition|(
 operator|(
 name|p
 operator|=
-name|index
+name|strchr
 argument_list|(
 name|buf
 argument_list|,
@@ -474,7 +474,7 @@ continue|continue;
 block|}
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|p
 argument_list|,

@@ -73,7 +73,7 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
+file|<sys/param.h>
 end_include
 
 begin_include
@@ -1702,9 +1702,11 @@ name|FTS_WHITEOUT
 expr_stmt|;
 endif|#
 directive|endif
-comment|/* If -l or -s, figure out block size. */
+comment|/* If -i, -l or -s, figure out block size. */
 if|if
 condition|(
+name|f_inode
+operator|||
 name|f_longform
 operator|||
 name|f_size
@@ -3730,7 +3732,12 @@ literal|0
 argument_list|,
 literal|"%lu"
 argument_list|,
+name|howmany
+argument_list|(
 name|maxblock
+argument_list|,
+name|blocksize
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|d

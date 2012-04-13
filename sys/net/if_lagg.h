@@ -19,6 +19,12 @@ directive|define
 name|_NET_LAGG_H
 end_define
 
+begin_include
+include|#
+directive|include
+file|<sys/sysctl.h>
+end_include
+
 begin_comment
 comment|/*  * Global definitions  */
 end_comment
@@ -55,6 +61,50 @@ end_define
 begin_comment
 comment|/* maximum number of stacked laggs */
 end_comment
+
+begin_comment
+comment|/* Lagg flags */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAGG_F_HASHL2
+value|0x00000001
+end_define
+
+begin_comment
+comment|/* hash layer 2 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAGG_F_HASHL3
+value|0x00000002
+end_define
+
+begin_comment
+comment|/* hash layer 3 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAGG_F_HASHL4
+value|0x00000004
+end_define
+
+begin_comment
+comment|/* hash layer 4 */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|LAGG_F_HASHMASK
+value|0x00000007
+end_define
 
 begin_comment
 comment|/* Port flags */
@@ -441,6 +491,39 @@ name|SIOCSLAGG
 value|_IOW('i', 144, struct lagg_reqall)
 end_define
 
+begin_struct
+struct|struct
+name|lagg_reqflags
+block|{
+name|char
+name|rf_ifname
+index|[
+name|IFNAMSIZ
+index|]
+decl_stmt|;
+comment|/* name of the lagg */
+name|uint32_t
+name|rf_flags
+decl_stmt|;
+comment|/* lagg protocol */
+block|}
+struct|;
+end_struct
+
+begin_define
+define|#
+directive|define
+name|SIOCGLAGGFLAGS
+value|_IOWR('i', 145, struct lagg_reqflags)
+end_define
+
+begin_define
+define|#
+directive|define
+name|SIOCSLAGGHASH
+value|_IOW('i', 146, struct lagg_reqflags)
+end_define
+
 begin_ifdef
 ifdef|#
 directive|ifdef
@@ -682,6 +765,9 @@ name|uint32_t
 name|sc_seq
 decl_stmt|;
 comment|/* sequence counter */
+name|uint32_t
+name|sc_flags
+decl_stmt|;
 name|SLIST_HEAD
 argument_list|(
 argument|__tplhd
@@ -863,6 +949,15 @@ name|vlan_detach
 decl_stmt|;
 endif|#
 directive|endif
+name|struct
+name|sysctl_ctx_list
+name|ctx
+decl_stmt|;
+comment|/* sysctl variables */
+name|int
+name|use_flowid
+decl_stmt|;
+comment|/* use M_FLOWID */
 block|}
 struct|;
 end_struct
@@ -1113,6 +1208,10 @@ begin_function_decl
 name|uint32_t
 name|lagg_hashmbuf
 parameter_list|(
+name|struct
+name|lagg_softc
+modifier|*
+parameter_list|,
 name|struct
 name|mbuf
 modifier|*

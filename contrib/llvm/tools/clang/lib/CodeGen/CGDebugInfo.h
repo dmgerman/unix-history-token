@@ -203,6 +203,7 @@ operator|::
 name|DIType
 name|BlockLiteralGeneric
 expr_stmt|;
+comment|// LexicalBlockStack - Keep track of our current nested lexical block.
 name|std
 operator|::
 name|vector
@@ -216,7 +217,7 @@ operator|::
 name|MDNode
 operator|>
 expr|>
-name|RegionStack
+name|LexicalBlockStack
 expr_stmt|;
 name|llvm
 operator|::
@@ -232,9 +233,9 @@ name|WeakVH
 operator|>
 name|RegionMap
 expr_stmt|;
-comment|// FnBeginRegionCount - Keep track of RegionStack counter at the beginning
-comment|// of a function. This is used to pop unbalanced regions at the end of a
-comment|// function.
+comment|// FnBeginRegionCount - Keep track of LexicalBlockStack counter at the
+comment|// beginning of a function. This is used to pop unbalanced regions at
+comment|// the end of a function.
 name|std
 operator|::
 name|vector
@@ -243,18 +244,6 @@ name|unsigned
 operator|>
 name|FnBeginRegionCount
 expr_stmt|;
-comment|/// LineDirectiveFiles - This stack is used to keep track of
-comment|/// scopes introduced by #line directives.
-name|std
-operator|::
-name|vector
-operator|<
-specifier|const
-name|char
-operator|*
-operator|>
-name|LineDirectiveFiles
-expr_stmt|;
 comment|/// DebugInfoNames - This is a storage for names that are
 comment|/// constructed on demand. For example, C++ destructors, C++ operators etc..
 name|llvm
@@ -262,11 +251,9 @@ operator|::
 name|BumpPtrAllocator
 name|DebugInfoNames
 expr_stmt|;
-name|llvm
-operator|::
 name|StringRef
 name|CWDName
-expr_stmt|;
+decl_stmt|;
 name|llvm
 operator|::
 name|DenseMap
@@ -487,6 +474,16 @@ expr_stmt|;
 name|llvm
 operator|::
 name|DIType
+name|CreateType
+argument_list|(
+argument|const AtomicType *Ty
+argument_list|,
+argument|llvm::DIFile F
+argument_list|)
+expr_stmt|;
+name|llvm
+operator|::
+name|DIType
 name|CreateEnumType
 argument_list|(
 specifier|const
@@ -585,8 +582,6 @@ operator|::
 name|DIFile
 name|F
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|llvm
@@ -616,8 +611,6 @@ operator|::
 name|DIFile
 name|F
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|llvm
@@ -647,8 +640,6 @@ operator|::
 name|DIFile
 name|F
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|llvm
@@ -702,11 +693,11 @@ operator|::
 name|DIType
 name|createFieldType
 argument_list|(
-argument|llvm::StringRef name
+argument|StringRef name
 argument_list|,
 argument|QualType type
 argument_list|,
-argument|Expr *bitWidth
+argument|uint64_t sizeInBitsOverride
 argument_list|,
 argument|SourceLocation loc
 argument_list|,
@@ -732,8 +723,6 @@ operator|::
 name|DIFile
 name|F
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|llvm
@@ -763,8 +752,6 @@ operator|::
 name|DIFile
 name|F
 argument_list|,
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|llvm
@@ -776,6 +763,15 @@ operator|&
 name|EltTys
 argument_list|)
 decl_stmt|;
+comment|// CreateLexicalBlock - Create a new lexical block node and push it on
+comment|// the stack.
+name|void
+name|CreateLexicalBlock
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|CGDebugInfo
@@ -789,6 +785,16 @@ operator|~
 name|CGDebugInfo
 argument_list|()
 expr_stmt|;
+name|void
+name|finalize
+parameter_list|()
+block|{
+name|DBuilder
+operator|.
+name|finalize
+argument_list|()
+expr_stmt|;
+block|}
 comment|/// setLocation - Update the current source location. If \arg loc is
 comment|/// invalid it is ignored.
 name|void
@@ -798,14 +804,17 @@ name|SourceLocation
 name|Loc
 parameter_list|)
 function_decl|;
-comment|/// EmitStopPoint - Emit a call to llvm.dbg.stoppoint to indicate a change of
-comment|/// source line.
+comment|/// EmitLocation - Emit metadata to indicate a change in line/column
+comment|/// information in the source file.
 name|void
-name|EmitStopPoint
+name|EmitLocation
 parameter_list|(
 name|CGBuilderTy
 modifier|&
 name|Builder
+parameter_list|,
+name|SourceLocation
+name|Loc
 parameter_list|)
 function_decl|;
 comment|/// EmitFunctionStart - Emit a call to llvm.dbg.function.start to indicate
@@ -839,16 +848,6 @@ modifier|&
 name|Builder
 parameter_list|)
 function_decl|;
-comment|/// UpdateLineDirectiveRegion - Update region stack only if #line directive
-comment|/// has introduced scope change.
-name|void
-name|UpdateLineDirectiveRegion
-parameter_list|(
-name|CGBuilderTy
-modifier|&
-name|Builder
-parameter_list|)
-function_decl|;
 comment|/// UpdateCompletedType - Update type cache because the type is now
 comment|/// translated.
 name|void
@@ -860,24 +859,30 @@ modifier|*
 name|TD
 parameter_list|)
 function_decl|;
-comment|/// EmitRegionStart - Emit a call to llvm.dbg.region.start to indicate start
-comment|/// of a new block.
+comment|/// EmitLexicalBlockStart - Emit metadata to indicate the beginning of a
+comment|/// new lexical block and push the block onto the stack.
 name|void
-name|EmitRegionStart
+name|EmitLexicalBlockStart
 parameter_list|(
 name|CGBuilderTy
 modifier|&
 name|Builder
+parameter_list|,
+name|SourceLocation
+name|Loc
 parameter_list|)
 function_decl|;
-comment|/// EmitRegionEnd - Emit call to llvm.dbg.region.end to indicate end of a
-comment|/// block.
+comment|/// EmitLexicalBlockEnd - Emit metadata to indicate the end of a new lexical
+comment|/// block and pop the current block.
 name|void
-name|EmitRegionEnd
+name|EmitLexicalBlockEnd
 parameter_list|(
 name|CGBuilderTy
 modifier|&
 name|Builder
+parameter_list|,
+name|SourceLocation
+name|Loc
 parameter_list|)
 function_decl|;
 comment|/// EmitDeclareOfAutoVariable - Emit call to llvm.dbg.declare for an automatic
@@ -1089,12 +1094,10 @@ name|Decl
 argument_list|)
 expr_stmt|;
 comment|/// getCurrentDirname - Return current directory name.
-name|llvm
-operator|::
 name|StringRef
 name|getCurrentDirname
-argument_list|()
-expr_stmt|;
+parameter_list|()
+function_decl|;
 comment|/// CreateCompileUnit - Create new compile unit.
 name|void
 name|CreateCompileUnit
@@ -1150,7 +1153,7 @@ argument|llvm::DIFile Unit
 argument_list|,
 argument|QualType FType
 argument_list|,
-argument|llvm::StringRef Name
+argument|StringRef Name
 argument_list|,
 argument|uint64_t *Offset
 argument_list|)
@@ -1171,63 +1174,54 @@ expr_stmt|;
 comment|/// getFunctionName - Get function name for the given FunctionDecl. If the
 comment|/// name is constructred on demand (e.g. C++ destructor) then the name
 comment|/// is stored on the side.
-name|llvm
-operator|::
 name|StringRef
 name|getFunctionName
-argument_list|(
+parameter_list|(
 specifier|const
 name|FunctionDecl
-operator|*
+modifier|*
 name|FD
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getObjCMethodName - Returns the unmangled name of an Objective-C method.
 comment|/// This is the display name for the debugging info.
-name|llvm
-operator|::
 name|StringRef
 name|getObjCMethodName
-argument_list|(
+parameter_list|(
 specifier|const
 name|ObjCMethodDecl
-operator|*
+modifier|*
 name|FD
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getSelectorName - Return selector name. This is used for debugging
 comment|/// info.
-name|llvm
-operator|::
 name|StringRef
 name|getSelectorName
-argument_list|(
-argument|Selector S
-argument_list|)
-expr_stmt|;
+parameter_list|(
+name|Selector
+name|S
+parameter_list|)
+function_decl|;
 comment|/// getClassName - Get class name including template argument list.
-name|llvm
-operator|::
 name|StringRef
 name|getClassName
-argument_list|(
+parameter_list|(
 name|RecordDecl
-operator|*
+modifier|*
 name|RD
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getVTableName - Get vtable name for the given Class.
-name|llvm
-operator|::
 name|StringRef
 name|getVTableName
-argument_list|(
+parameter_list|(
 specifier|const
 name|CXXRecordDecl
-operator|*
+modifier|*
 name|Decl
-argument_list|)
-expr_stmt|;
+parameter_list|)
+function_decl|;
 comment|/// getLineNumber - Get line number for the location. If location is invalid
 comment|/// then use current location.
 name|unsigned

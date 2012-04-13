@@ -73,7 +73,7 @@ name|cdev
 block|{
 name|void
 modifier|*
-name|__si_reserved
+name|si_spare0
 decl_stmt|;
 name|u_int
 name|si_flags
@@ -191,9 +191,10 @@ name|cdev
 modifier|*
 name|si_parent
 decl_stmt|;
-name|char
+name|struct
+name|mount
 modifier|*
-name|si_name
+name|si_mountpt
 decl_stmt|;
 name|void
 modifier|*
@@ -228,7 +229,7 @@ block|}
 name|__si_u
 union|;
 name|char
-name|__si_namebuf
+name|si_name
 index|[
 name|SPECNAMELEN
 operator|+
@@ -691,17 +692,6 @@ end_define
 
 begin_comment
 comment|/* special treatment in vm_mmap.c */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|D_PSEUDO
-value|0x00200000
-end_define
-
-begin_comment
-comment|/* make_dev() can return NULL */
 end_comment
 
 begin_define

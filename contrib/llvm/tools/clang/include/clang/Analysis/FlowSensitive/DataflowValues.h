@@ -291,7 +291,7 @@ name|ValTy
 operator|&
 name|getEdgeData
 argument_list|(
-argument|const BlockEdge& E
+argument|const BlockEdge&E
 argument_list|)
 block|{
 name|typename

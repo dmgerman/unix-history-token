@@ -1074,7 +1074,7 @@ name|spxs_sndvoid
 argument_list|,
 literal|"request"
 argument_list|,
-literal|" to send a non-existant packet"
+literal|" to send a non-existent packet"
 argument_list|)
 expr_stmt|;
 name|ANYl

@@ -149,6 +149,7 @@ value|rw_assert(&sdp_lock, RW_LOCKED)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_SDP
@@ -3554,8 +3555,9 @@ argument_list|)
 expr_stmt|;
 name|SBLASTRECORDCHK
 argument_list|(
-argument|sb
+name|sb
 argument_list|)
+expr_stmt|;
 name|KASSERT
 argument_list|(
 name|mb
@@ -8310,6 +8312,7 @@ block|}
 end_function
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_net_inet

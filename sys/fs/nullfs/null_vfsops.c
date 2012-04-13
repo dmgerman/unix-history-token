@@ -70,6 +70,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<sys/jail.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<fs/nullfs/null.h>
 end_include
 
@@ -187,6 +193,13 @@ name|null_mount
 modifier|*
 name|xmp
 decl_stmt|;
+name|struct
+name|thread
+modifier|*
+name|td
+init|=
+name|curthread
+decl_stmt|;
 name|char
 modifier|*
 name|target
@@ -219,6 +232,23 @@ operator|)
 name|mp
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|prison_allow
+argument_list|(
+name|td
+operator|->
+name|td_ucred
+argument_list|,
+name|PR_ALLOW_MOUNT_NULLFS
+argument_list|)
+condition|)
+return|return
+operator|(
+name|EPERM
+operator|)
+return|;
 if|if
 condition|(
 name|mp
@@ -311,7 +341,7 @@ operator|(
 name|EINVAL
 operator|)
 return|;
-comment|/* 	 * Unlock lower node to avoid deadlock. 	 * (XXX) VOP_ISLOCKED is needed? 	 */
+comment|/* 	 * Unlock lower node to avoid possible deadlock. 	 */
 if|if
 condition|(
 operator|(
@@ -331,6 +361,8 @@ name|mp
 operator|->
 name|mnt_vnodecovered
 argument_list|)
+operator|==
+name|LK_EXCLUSIVE
 condition|)
 block|{
 name|VOP_UNLOCK
@@ -376,14 +408,6 @@ comment|/* 	 * Re-lock vnode. 	 */
 if|if
 condition|(
 name|isvnunlocked
-operator|&&
-operator|!
-name|VOP_ISLOCKED
-argument_list|(
-name|mp
-operator|->
-name|mnt_vnodecovered
-argument_list|)
 condition|)
 name|vn_lock
 argument_list|(
@@ -499,18 +523,6 @@ condition|(
 name|error
 condition|)
 block|{
-name|VOP_UNLOCK
-argument_list|(
-name|vp
-argument_list|,
-literal|0
-argument_list|)
-expr_stmt|;
-name|vrele
-argument_list|(
-name|lowerrootvp
-argument_list|)
-expr_stmt|;
 name|free
 argument_list|(
 name|xmp
@@ -518,7 +530,6 @@ argument_list|,
 name|M_NULLFSMNT
 argument_list|)
 expr_stmt|;
-comment|/* XXX */
 return|return
 operator|(
 name|error
@@ -596,7 +607,11 @@ name|v_mount
 operator|->
 name|mnt_kern_flag
 operator|&
+operator|(
 name|MNTK_MPSAFE
+operator||
+name|MNTK_SHARED_WRITES
+operator|)
 expr_stmt|;
 name|MNT_IUNLOCK
 argument_list|(
@@ -735,7 +750,7 @@ name|mp
 operator|->
 name|mnt_data
 operator|=
-literal|0
+name|NULL
 expr_stmt|;
 name|free
 argument_list|(
@@ -832,23 +847,13 @@ argument_list|(
 name|vp
 argument_list|)
 expr_stmt|;
-ifdef|#
-directive|ifdef
-name|NULLFS_DEBUG
-if|if
-condition|(
-name|VOP_ISLOCKED
+name|ASSERT_VOP_UNLOCKED
 argument_list|(
 name|vp
-argument_list|)
-condition|)
-name|panic
-argument_list|(
-literal|"root vnode is locked.\n"
+argument_list|,
+literal|"root vnode is locked"
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 name|vn_lock
 argument_list|(
 name|vp
@@ -1158,6 +1163,30 @@ block|{
 name|int
 name|error
 decl_stmt|;
+name|KASSERT
+argument_list|(
+operator|(
+name|flags
+operator|&
+name|LK_TYPE_MASK
+operator|)
+operator|!=
+literal|0
+argument_list|,
+operator|(
+literal|"nullfs_vget: no lock requested"
+operator|)
+argument_list|)
+expr_stmt|;
+name|flags
+operator|&=
+operator|~
+name|LK_TYPE_MASK
+expr_stmt|;
+name|flags
+operator||=
+name|LK_EXCLUSIVE
+expr_stmt|;
 name|error
 operator|=
 name|VFS_VGET
@@ -1412,6 +1441,8 @@ argument_list|,
 name|nullfs
 argument_list|,
 name|VFCF_LOOPBACK
+operator||
+name|VFCF_JAIL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

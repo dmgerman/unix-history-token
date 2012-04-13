@@ -122,6 +122,9 @@ operator|>
 name|class
 name|SmallPtrSet
 expr_stmt|;
+name|class
+name|TargetData
+decl_stmt|;
 name|namespace
 name|InlineConstants
 block|{
@@ -452,6 +455,11 @@ parameter_list|(
 name|Function
 modifier|*
 name|F
+parameter_list|,
+specifier|const
+name|TargetData
+modifier|*
+name|TD
 parameter_list|)
 function_decl|;
 comment|/// NeverInline - Returns true if the function should never be
@@ -474,6 +482,12 @@ name|FunctionInfo
 operator|>
 name|CachedFunctionInfo
 expr_stmt|;
+comment|// TargetData if available, or null.
+specifier|const
+name|TargetData
+modifier|*
+name|TD
+decl_stmt|;
 name|int
 name|CountBonusForConstant
 parameter_list|(
@@ -523,27 +537,38 @@ parameter_list|)
 function_decl|;
 name|public
 label|:
+name|InlineCostAnalyzer
+argument_list|()
+operator|:
+name|TD
+argument_list|(
+literal|0
+argument_list|)
+block|{}
+name|void
+name|setTargetData
+argument_list|(
+argument|const TargetData *TData
+argument_list|)
+block|{
+name|TD
+operator|=
+name|TData
+block|; }
 comment|/// getInlineCost - The heuristic used to determine if we should inline the
 comment|/// function call or not.
 comment|///
 name|InlineCost
 name|getInlineCost
 argument_list|(
-name|CallSite
-name|CS
+argument|CallSite CS
 argument_list|,
-name|SmallPtrSet
-operator|<
-specifier|const
-name|Function
-operator|*
+argument|SmallPtrSet<const Function *
 argument_list|,
 literal|16
-operator|>
-operator|&
-name|NeverInline
+argument|>&NeverInline
 argument_list|)
-decl_stmt|;
+expr_stmt|;
 comment|/// getCalledFunction - The heuristic used to determine if we should inline
 comment|/// the function call or not.  The callee is explicitly specified, to allow
 comment|/// you to calculate the cost of inlining a function via a pointer.  The

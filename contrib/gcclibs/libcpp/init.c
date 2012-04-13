@@ -1439,6 +1439,13 @@ argument_list|,
 name|BT_INCLUDE_LEVEL
 argument_list|)
 block|,
+name|B
+argument_list|(
+literal|"__COUNTER__"
+argument_list|,
+name|BT_COUNTER
+argument_list|)
+block|,
 comment|/* Keep builtins not used for -traditional-cpp at the end, and      update init_builtins() if any more are added.  */
 name|B
 argument_list|(

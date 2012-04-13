@@ -144,8 +144,6 @@ range|:
 literal|1
 decl_stmt|;
 comment|/// The argument values, as C strings.
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const
@@ -336,8 +334,6 @@ name|N
 index|]
 return|;
 block|}
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 specifier|const
@@ -355,8 +351,6 @@ block|}
 name|bool
 name|containsValue
 argument_list|(
-name|llvm
-operator|::
 name|StringRef
 name|Value
 argument_list|)

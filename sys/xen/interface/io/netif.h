@@ -32,7 +32,7 @@ comment|/*  * Notifications after enqueuing any type of message should be condit
 end_comment
 
 begin_comment
-comment|/*  * This is the 'wire' format for packets:  *  Request 1: netif_tx_request -- NETTXF_* (any flags)  * [Request 2: netif_tx_extra]  (only if request 1 has NETTXF_extra_info)  * [Request 3: netif_tx_extra]  (only if request 2 has XEN_NETIF_EXTRA_MORE)  *  Request 4: netif_tx_request -- NETTXF_more_data  *  Request 5: netif_tx_request -- NETTXF_more_data  *  ...  *  Request N: netif_tx_request -- 0  */
+comment|/*  * This is the 'wire' format for packets:  *  Request 1: netif_tx_request -- NETTXF_* (any flags)  * [Request 2: netif_tx_extra]  (only if request 1 has NETTXF_extra_info)  * [Request 3: netif_tx_extra] (only if request 2 has XEN_NETIF_EXTRA_FLAG_MORE)  *  Request 4: netif_tx_request -- NETTXF_more_data  *  Request 5: netif_tx_request -- NETTXF_more_data  *  ...  *  Request N: netif_tx_request -- 0  */
 end_comment
 
 begin_comment
@@ -130,7 +130,7 @@ comment|/* Echoed in response message. */
 name|uint16_t
 name|size
 decl_stmt|;
-comment|/* Packet size in bytes.       */
+comment|/* For the first request in a packet, the packet  			      size in bytes.  For subsequent requests, the  			      size of that request's associated data in bytes*/
 block|}
 struct|;
 end_struct
@@ -422,6 +422,24 @@ name|NETRXF_extra_info
 value|(1U<<_NETRXF_extra_info)
 end_define
 
+begin_comment
+comment|/* GSO Prefix descriptor. */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|_NETRXF_gso_prefix
+value|(4)
+end_define
+
+begin_define
+define|#
+directive|define
+name|NETRXF_gso_prefix
+value|(1U<<_NETRXF_gso_prefix)
+end_define
+
 begin_struct
 struct|struct
 name|netif_rx_response
@@ -440,7 +458,7 @@ comment|/* NETRXF_* */
 name|int16_t
 name|status
 decl_stmt|;
-comment|/* -ve: BLKIF_RSP_* ; +ve: Rx'ed pkt size. */
+comment|/* -ve: NETIF_RSP_* ; +ve: Rx'ed response size. */
 block|}
 struct|;
 end_struct

@@ -220,6 +220,24 @@ function_decl|)
 parameter_list|()
 parameter_list|)
 function_decl|;
+comment|///===---------------------------------------------------------------------===//
+comment|/// AddExtraVersionPrinter - Add an extra printer to use in addition to the
+comment|///                          default one. This can be called multiple times,
+comment|///                          and each time it adds a new function to the list
+comment|///                          which will be called after the basic LLVM version
+comment|///                          printing is complete. Each can then add additional
+comment|///                          information specific to the tool.
+name|void
+name|AddExtraVersionPrinter
+parameter_list|(
+name|void
+function_decl|(
+modifier|*
+name|func
+function_decl|)
+parameter_list|()
+parameter_list|)
+function_decl|;
 comment|// PrintOptionValues - Print option values.
 comment|// With -print-options print the difference between option values and defaults.
 comment|// With -print-all-options print all option values.
@@ -3415,6 +3433,105 @@ unit|};
 name|EXTERN_TEMPLATE_INSTANTIATION
 argument_list|(
 argument|class basic_parser<unsigned>
+argument_list|)
+end_macro
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|//--------------------------------------------------
+end_comment
+
+begin_comment
+comment|// parser<unsigned long long>
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+operator|>
+name|class
+name|parser
+operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+operator|:
+name|public
+name|basic_parser
+operator|<
+name|unsigned
+name|long
+name|long
+operator|>
+block|{
+name|public
+operator|:
+comment|// parse - Return true on error.
+name|bool
+name|parse
+argument_list|(
+argument|Option&O
+argument_list|,
+argument|StringRef ArgName
+argument_list|,
+argument|StringRef Arg
+argument_list|,
+argument|unsigned long long&Val
+argument_list|)
+block|;
+comment|// getValueName - Overload in subclass to provide a better default value.
+name|virtual
+specifier|const
+name|char
+operator|*
+name|getValueName
+argument_list|()
+specifier|const
+block|{
+return|return
+literal|"uint"
+return|;
+block|}
+name|void
+name|printOptionDiff
+argument_list|(
+argument|const Option&O
+argument_list|,
+argument|unsigned long long V
+argument_list|,
+argument|OptVal Default
+argument_list|,
+argument|size_t GlobalWidth
+argument_list|)
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// An out-of-line virtual method to provide a 'home' for this class.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|anchor
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_macro
+unit|};
+name|EXTERN_TEMPLATE_INSTANTIATION
+argument_list|(
+argument|class basic_parser<unsigned long long>
 argument_list|)
 end_macro
 

@@ -162,7 +162,6 @@ return|return
 name|V
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getType
@@ -224,7 +223,6 @@ name|SCEV
 operator|*
 name|Op
 block|;
-specifier|const
 name|Type
 operator|*
 name|Ty
@@ -237,7 +235,7 @@ argument|unsigned SCEVTy
 argument_list|,
 argument|const SCEV *op
 argument_list|,
-argument|const Type *ty
+argument|Type *ty
 argument_list|)
 block|;
 name|public
@@ -253,7 +251,6 @@ return|return
 name|Op
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getType
@@ -330,7 +327,7 @@ argument|const FoldingSetNodeIDRef ID
 argument_list|,
 argument|const SCEV *op
 argument_list|,
-argument|const Type *ty
+argument|Type *ty
 argument_list|)
 block|;
 name|public
@@ -387,7 +384,7 @@ argument|const FoldingSetNodeIDRef ID
 argument_list|,
 argument|const SCEV *op
 argument_list|,
-argument|const Type *ty
+argument|Type *ty
 argument_list|)
 block|;
 name|public
@@ -444,7 +441,7 @@ argument|const FoldingSetNodeIDRef ID
 argument_list|,
 argument|const SCEV *op
 argument_list|,
-argument|const Type *ty
+argument|Type *ty
 argument_list|)
 block|;
 name|public
@@ -599,7 +596,6 @@ operator|+
 name|NumOperands
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getType
@@ -829,7 +825,6 @@ argument_list|)
 block|{     }
 name|public
 operator|:
-specifier|const
 name|Type
 operator|*
 name|getType
@@ -1024,7 +1019,6 @@ return|return
 name|RHS
 return|;
 block|}
-specifier|const
 name|Type
 operator|*
 name|getType
@@ -1627,27 +1621,26 @@ comment|/// where it isn't absolutely required for these to succeed.
 name|bool
 name|isSizeOf
 argument_list|(
-argument|const Type *&AllocTy
+argument|Type *&AllocTy
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isAlignOf
 argument_list|(
-argument|const Type *&AllocTy
+argument|Type *&AllocTy
 argument_list|)
 specifier|const
 block|;
 name|bool
 name|isOffsetOf
 argument_list|(
-argument|const Type *&STy
+argument|Type *&STy
 argument_list|,
 argument|Constant *&FieldNo
 argument_list|)
 specifier|const
 block|;
-specifier|const
 name|Type
 operator|*
 name|getType

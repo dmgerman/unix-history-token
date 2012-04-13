@@ -299,6 +299,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -341,6 +342,16 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_define
+define|#
+directive|define
+name|N
+parameter_list|(
+name|a
+parameter_list|)
+value|((int)(sizeof (a) / sizeof ((a)[0])))
+end_define
 
 begin_decl_stmt
 specifier|static
@@ -800,30 +811,25 @@ modifier|*
 parameter_list|,
 specifier|const
 name|char
-name|name
 index|[
 name|IFNAMSIZ
 index|]
 parameter_list|,
 name|int
-name|unit
+parameter_list|,
+name|enum
+name|ieee80211_opmode
 parameter_list|,
 name|int
-name|opmode
-parameter_list|,
-name|int
-name|flags
 parameter_list|,
 specifier|const
 name|uint8_t
-name|bssid
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
 parameter_list|,
 specifier|const
 name|uint8_t
-name|mac
 index|[
 name|IEEE80211_ADDR_LEN
 index|]
@@ -3936,7 +3942,8 @@ parameter_list|,
 name|int
 name|unit
 parameter_list|,
-name|int
+name|enum
+name|ieee80211_opmode
 name|opmode
 parameter_list|,
 name|int
@@ -5006,11 +5013,14 @@ name|m_pkthdr
 operator|.
 name|len
 operator|>
-operator|(
+call|(
+name|int
+call|)
+argument_list|(
 name|MCLBYTES
 operator|+
 name|RT2573_TX_DESC_SIZE
-operator|)
+argument_list|)
 condition|)
 block|{
 name|DPRINTFN
@@ -5413,9 +5423,14 @@ if|if
 condition|(
 name|len
 operator|<
+call|(
+name|int
+call|)
+argument_list|(
 name|RT2573_RX_DESC_SIZE
 operator|+
 name|IEEE80211_MIN_LEN
+argument_list|)
 condition|)
 block|{
 name|DPRINTF
@@ -8310,6 +8325,9 @@ decl_stmt|;
 name|usb_error_t
 name|error
 decl_stmt|;
+name|size_t
+name|offset
+decl_stmt|;
 name|req
 operator|.
 name|bmRequestType
@@ -8331,6 +8349,22 @@ argument_list|,
 literal|0
 argument_list|)
 expr_stmt|;
+comment|/* write at most 64 bytes at a time */
+for|for
+control|(
+name|offset
+operator|=
+literal|0
+init|;
+name|offset
+operator|<
+name|len
+condition|;
+name|offset
+operator|+=
+literal|64
+control|)
+block|{
 name|USETW
 argument_list|(
 name|req
@@ -8338,6 +8372,8 @@ operator|.
 name|wIndex
 argument_list|,
 name|reg
+operator|+
+name|offset
 argument_list|)
 expr_stmt|;
 name|USETW
@@ -8346,7 +8382,14 @@ name|req
 operator|.
 name|wLength
 argument_list|,
+name|MIN
+argument_list|(
 name|len
+operator|-
+name|offset
+argument_list|,
+literal|64
+argument_list|)
 argument_list|)
 expr_stmt|;
 name|error
@@ -8358,7 +8401,13 @@ argument_list|,
 operator|&
 name|req
 argument_list|,
+operator|(
+name|char
+operator|*
+operator|)
 name|buf
+operator|+
+name|offset
 argument_list|)
 expr_stmt|;
 if|if
@@ -8382,10 +8431,16 @@ name|error
 argument_list|)
 argument_list|)
 expr_stmt|;
-block|}
 return|return
 operator|(
 name|error
+operator|)
+return|;
+block|}
+block|}
+return|return
+operator|(
+name|USB_ERR_NORMAL_COMPLETION
 operator|)
 return|;
 block|}
@@ -11126,13 +11181,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|int
 name|i
 decl_stmt|,
@@ -11311,9 +11359,6 @@ block|}
 return|return
 literal|0
 return|;
-undef|#
-directive|undef
-name|N
 block|}
 end_function
 
@@ -11328,13 +11373,6 @@ modifier|*
 name|sc
 parameter_list|)
 block|{
-define|#
-directive|define
-name|N
-parameter_list|(
-name|a
-parameter_list|)
-value|(sizeof (a) / sizeof ((a)[0]))
 name|struct
 name|ifnet
 modifier|*

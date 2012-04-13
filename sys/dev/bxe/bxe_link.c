@@ -11687,7 +11687,7 @@ name|sc
 argument_list|,
 name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"Reading from eeprom is is limited to 0xf\n"
+literal|"Reading from eeprom is limited to 0xf\n"
 argument_list|)
 expr_stmt|;
 return|return
@@ -12032,7 +12032,7 @@ name|sc
 argument_list|,
 name|BXE_VERBOSE_PHY
 argument_list|,
-literal|"Reading from eeprom is is limited to 0xf\n"
+literal|"Reading from eeprom is limited to 0xf\n"
 argument_list|)
 expr_stmt|;
 return|return

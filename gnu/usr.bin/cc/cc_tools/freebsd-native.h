@@ -22,14 +22,14 @@ begin_define
 define|#
 directive|define
 name|FBSD_MAJOR
-value|8
+value|10
 end_define
 
 begin_define
 define|#
 directive|define
 name|FBSD_CC_VER
-value|800001
+value|1000001
 end_define
 
 begin_comment

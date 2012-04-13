@@ -724,21 +724,13 @@ end_comment
 
 begin_decl_stmt
 name|bool
-name|notfound
+name|file_err
 decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* file not found */
+comment|/* file reading error */
 end_comment
-
-begin_decl_stmt
-specifier|extern
-name|char
-modifier|*
-name|__progname
-decl_stmt|;
-end_decl_stmt
 
 begin_comment
 comment|/*  * Prints usage information and returns 2.  */
@@ -761,19 +753,8 @@ argument_list|(
 literal|4
 argument_list|)
 argument_list|,
-name|__progname
-argument_list|)
-expr_stmt|;
-name|fprintf
-argument_list|(
-name|stderr
-argument_list|,
-literal|"%s"
-argument_list|,
-name|getstr
-argument_list|(
-literal|5
-argument_list|)
+name|getprogname
+argument_list|()
 argument_list|)
 expr_stmt|;
 name|fprintf
@@ -832,6 +813,8 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
+specifier|const
 name|struct
 name|option
 name|long_options
@@ -1889,10 +1872,12 @@ name|eopts
 decl_stmt|;
 name|char
 modifier|*
-name|pn
-decl_stmt|,
-modifier|*
 name|ep
+decl_stmt|;
+specifier|const
+name|char
+modifier|*
+name|pn
 decl_stmt|;
 name|unsigned
 name|long
@@ -1942,7 +1927,8 @@ directive|endif
 comment|/* Check what is the program name of the binary.  In this 	   way we can have all the funcionalities in one binary 	   without the need of scripting and using ugly hacks. */
 name|pn
 operator|=
-name|__progname
+name|getprogname
+argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -2800,6 +2786,22 @@ break|break;
 case|case
 literal|'J'
 case|:
+ifdef|#
+directive|ifdef
+name|WITHOUT_BZIP2
+name|errno
+operator|=
+name|EOPNOTSUPP
+expr_stmt|;
+name|err
+argument_list|(
+literal|2
+argument_list|,
+literal|"bzip2 support was disabled at compile-time"
+argument_list|)
+expr_stmt|;
+endif|#
+directive|endif
 name|filebehave
 operator|=
 name|FILE_BZIP
@@ -3026,7 +3028,8 @@ argument_list|(
 literal|9
 argument_list|)
 argument_list|,
-name|__progname
+name|getprogname
+argument_list|()
 argument_list|,
 name|VERSION
 argument_list|)
@@ -3759,7 +3762,7 @@ argument_list|(
 name|c
 condition|?
 operator|(
-name|notfound
+name|file_err
 condition|?
 operator|(
 name|qflag
@@ -3773,7 +3776,7 @@ literal|0
 operator|)
 else|:
 operator|(
-name|notfound
+name|file_err
 condition|?
 literal|2
 else|:

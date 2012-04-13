@@ -2599,7 +2599,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|u_int
+name|u_long
 name|read_rflags
 parameter_list|(
 name|void

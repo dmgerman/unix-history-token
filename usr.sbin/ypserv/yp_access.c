@@ -1072,7 +1072,7 @@ condition|)
 block|{
 endif|#
 directive|endif
-comment|/* 	 * One of the following two events occured: 	 * 	 * (1) The /var/yp/securenets exists and the remote host does not 	 *     match any of the networks specified in it. 	 * (2) The hosts.allow file has denied access and TCP_WRAPPER is 	 *     defined. 	 * 	 * In either case deny access. 	 */
+comment|/* 	 * One of the following two events occurred: 	 * 	 * (1) The /var/yp/securenets exists and the remote host does not 	 *     match any of the networks specified in it. 	 * (2) The hosts.allow file has denied access and TCP_WRAPPER is 	 *     defined. 	 * 	 * In either case deny access. 	 */
 if|if
 condition|(
 name|rqhost

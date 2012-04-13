@@ -282,6 +282,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -3620,9 +3621,10 @@ literal|2
 argument_list|,
 literal|"%s fflags=0x%08x\n"
 argument_list|,
+name|devtoname
+argument_list|(
 name|dev
-operator|->
-name|si_name
+argument_list|)
 argument_list|,
 name|fflags
 argument_list|)
@@ -6952,7 +6954,7 @@ parameter_list|,
 name|uint16_t
 name|unit
 parameter_list|,
-name|uint16_t
+name|int16_t
 name|subunit
 parameter_list|,
 name|uint8_t
@@ -7311,8 +7313,8 @@ block|}
 if|if
 condition|(
 name|subunit
-operator|==
-literal|0xFFFF
+operator|<
+literal|0
 condition|)
 block|{
 if|if
@@ -7371,7 +7373,7 @@ argument_list|(
 name|devname
 argument_list|)
 argument_list|,
-literal|"%s%u.%u%s"
+literal|"%s%u.%d%s"
 argument_list|,
 name|pm
 operator|->
@@ -7627,12 +7629,14 @@ name|NULL
 expr_stmt|;
 block|}
 comment|/* reset queues */
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|f
 operator|->
 name|free_q
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -7642,12 +7646,14 @@ name|free_q
 argument_list|)
 argument_list|)
 expr_stmt|;
-name|bzero
+name|memset
 argument_list|(
 operator|&
 name|f
 operator|->
 name|used_q
+argument_list|,
+literal|0
 argument_list|,
 sizeof|sizeof
 argument_list|(
@@ -8035,13 +8041,13 @@ operator|->
 name|cur_data_len
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
-name|ptr
-argument_list|,
 name|m
 operator|->
 name|cur_data_ptr
+argument_list|,
+name|ptr
 argument_list|,
 name|io_len
 argument_list|)
@@ -8564,13 +8570,13 @@ operator|->
 name|cur_data_len
 argument_list|)
 expr_stmt|;
-name|bcopy
+name|memcpy
 argument_list|(
+name|ptr
+argument_list|,
 name|m
 operator|->
 name|cur_data_ptr
-argument_list|,
-name|ptr
 argument_list|,
 name|io_len
 argument_list|)

@@ -303,13 +303,15 @@ enum|;
 end_enum
 
 begin_struct
+specifier|static
 struct|struct
 name|t_op
 block|{
-specifier|const
 name|char
-modifier|*
 name|op_text
+index|[
+literal|4
+index|]
 decl_stmt|;
 name|short
 name|op_num
@@ -644,7 +646,7 @@ name|PAREN
 block|}
 block|,
 block|{
-literal|0
+literal|""
 block|,
 literal|0
 block|,
@@ -655,6 +657,7 @@ struct|;
 end_struct
 
 begin_decl_stmt
+specifier|static
 name|struct
 name|t_op
 specifier|const
@@ -664,12 +667,14 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|nargc
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|char
 modifier|*
 modifier|*
@@ -678,6 +683,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
+specifier|static
 name|int
 name|parenlevel
 decl_stmt|;
@@ -2194,6 +2200,7 @@ return|;
 block|}
 while|while
 condition|(
+operator|*
 name|op
 operator|->
 name|op_text
@@ -2354,6 +2361,7 @@ operator|)
 expr_stmt|;
 while|while
 condition|(
+operator|*
 name|op
 operator|->
 name|op_text
@@ -2478,6 +2486,7 @@ literal|0
 return|;
 while|while
 condition|(
+operator|*
 name|op
 operator|->
 name|op_text

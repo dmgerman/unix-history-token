@@ -2965,6 +2965,7 @@ decl_stmt|;
 name|u_int16_t
 name|xl_did
 decl_stmt|;
+specifier|const
 name|char
 modifier|*
 name|xl_name
@@ -2972,64 +2973,6 @@ decl_stmt|;
 block|}
 struct|;
 end_struct
-
-begin_struct
-struct|struct
-name|xl_mii_frame
-block|{
-name|u_int8_t
-name|mii_stdelim
-decl_stmt|;
-name|u_int8_t
-name|mii_opcode
-decl_stmt|;
-name|u_int8_t
-name|mii_phyaddr
-decl_stmt|;
-name|u_int8_t
-name|mii_regaddr
-decl_stmt|;
-name|u_int8_t
-name|mii_turnaround
-decl_stmt|;
-name|u_int16_t
-name|mii_data
-decl_stmt|;
-block|}
-struct|;
-end_struct
-
-begin_comment
-comment|/*  * MII constants  */
-end_comment
-
-begin_define
-define|#
-directive|define
-name|XL_MII_STARTDELIM
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|XL_MII_READOP
-value|0x02
-end_define
-
-begin_define
-define|#
-directive|define
-name|XL_MII_WRITEOP
-value|0x01
-end_define
-
-begin_define
-define|#
-directive|define
-name|XL_MII_TURNAROUND
-value|0x02
-end_define
 
 begin_comment
 comment|/*  * The 3C905B adapters implement a few features that we want to  * take advantage of, namely the multicast hash filter. With older  * chips, you only have the option of turning on reception of all  * multicast frames, which is kind of lame.  *  * We also use this to decide on a transmit strategy. For the 3c90xB  * cards, we can use polled descriptor mode, which reduces CPU overhead.  */
@@ -3449,12 +3392,28 @@ end_define
 begin_define
 define|#
 directive|define
+name|CSR_BARRIER
+parameter_list|(
+name|sc
+parameter_list|,
+name|reg
+parameter_list|,
+name|length
+parameter_list|,
+name|flags
+parameter_list|)
+define|\
+value|bus_space_barrier(sc->xl_btag, sc->xl_bhandle, reg, length, flags)
+end_define
+
+begin_define
+define|#
+directive|define
 name|XL_SEL_WIN
 parameter_list|(
 name|x
 parameter_list|)
-define|\
-value|CSR_WRITE_2(sc, XL_COMMAND, XL_CMD_WINSEL | x)
+value|do {						\ 	CSR_BARRIER(sc, XL_COMMAND, 2,					\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE);		\ 	CSR_WRITE_2(sc, XL_COMMAND, XL_CMD_WINSEL | x);			\ 	CSR_BARRIER(sc, XL_COMMAND, 2,					\ 	    BUS_SPACE_BARRIER_READ | BUS_SPACE_BARRIER_WRITE);		\ } while (0)
 end_define
 
 begin_define

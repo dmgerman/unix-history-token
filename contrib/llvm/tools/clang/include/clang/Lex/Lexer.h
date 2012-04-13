@@ -94,7 +94,7 @@ name|namespace
 name|clang
 block|{
 name|class
-name|Diagnostic
+name|DiagnosticsEngine
 decl_stmt|;
 name|class
 name|SourceManager
@@ -105,6 +105,23 @@ decl_stmt|;
 name|class
 name|DiagnosticBuilder
 decl_stmt|;
+comment|/// ConflictMarkerKind - Kinds of conflict marker which the lexer might be
+comment|/// recovering from.
+enum|enum
+name|ConflictMarkerKind
+block|{
+comment|/// Not within a conflict marker.
+name|CMK_None
+block|,
+comment|/// A normal or diff3 conflict marker, initiated by at least 7<s,
+comment|/// separated by at least 7 =s or |s, and terminated by at least 7>s.
+name|CMK_Normal
+block|,
+comment|/// A Perforce-style conflict marker, initiated by 4>s, separated by 4 =s,
+comment|/// and terminated by 4<s.
+name|CMK_Perforce
+block|}
+enum|;
 comment|/// Lexer - This provides a simple interface that turns a text buffer into a
 comment|/// stream of tokens.  This provides no support for file reading or buffering,
 comment|/// or buffering/seeking of tokens, only forward lexing is supported.  It relies
@@ -139,16 +156,8 @@ block|;
 comment|// Features enabled by this language (cache).
 name|bool
 name|Is_PragmaLexer
-operator|:
-literal|1
 block|;
 comment|// True if lexer for _Pragma handling.
-name|bool
-name|IsInConflictMarker
-operator|:
-literal|1
-block|;
-comment|// True if in a VCS conflict marker '<<<<<<<'
 comment|//===--------------------------------------------------------------------===//
 comment|// Context-specific lexing flags set by the preprocessor.
 comment|//
@@ -178,6 +187,10 @@ comment|// IsAtStartOfLine - True if the next lexed token should get the "start 
 comment|// line" flag set on it.
 name|bool
 name|IsAtStartOfLine
+block|;
+comment|// CurrentConflictMarkerState - The kind of conflict marker we are handling.
+name|ConflictMarkerKind
+name|CurrentConflictMarkerState
 block|;
 name|Lexer
 argument_list|(
@@ -576,8 +589,6 @@ specifier|static
 name|void
 name|Stringify
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|char
@@ -670,14 +681,12 @@ comment|/// This method lexes at the expansion depth of the given
 comment|/// location and does not jump to the expansion or spelling
 comment|/// location.
 specifier|static
-name|llvm
-operator|::
 name|StringRef
 name|getSpelling
 argument_list|(
 argument|SourceLocation loc
 argument_list|,
-argument|llvm::SmallVectorImpl<char>&buffer
+argument|SmallVectorImpl<char>&buffer
 argument_list|,
 argument|const SourceManager&SourceMgr
 argument_list|,
@@ -815,6 +824,8 @@ operator|>
 name|ComputePreamble
 argument_list|(
 argument|const llvm::MemoryBuffer *Buffer
+argument_list|,
+argument|const LangOptions&Features
 argument_list|,
 argument|unsigned MaxLines =
 literal|0
@@ -1210,6 +1221,37 @@ modifier|*
 name|P
 parameter_list|)
 function_decl|;
+comment|/// \brief Checks that the given token is the first token that occurs after
+comment|/// the given location (this excludes comments and whitespace). Returns the
+comment|/// location immediately after the specified token. If the token is not found
+comment|/// or the location is inside a macro, the returned source location will be
+comment|/// invalid.
+specifier|static
+name|SourceLocation
+name|findLocationAfterToken
+argument_list|(
+name|SourceLocation
+name|loc
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|TKind
+argument_list|,
+specifier|const
+name|SourceManager
+operator|&
+name|SM
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LangOpts
+argument_list|,
+name|bool
+name|SkipTrailingWhitespaceAndNewLine
+argument_list|)
+decl_stmt|;
 name|private
 label|:
 comment|/// getCharAndSizeSlowNoWarn - Same as getCharAndSizeSlow, but never emits a
@@ -1274,20 +1316,40 @@ parameter_list|)
 function_decl|;
 name|void
 name|LexStringLiteral
-parameter_list|(
+argument_list|(
 name|Token
-modifier|&
+operator|&
 name|Result
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|CurPtr
-parameter_list|,
-name|bool
-name|Wide
-parameter_list|)
-function_decl|;
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+argument_list|)
+decl_stmt|;
+name|void
+name|LexRawStringLiteral
+argument_list|(
+name|Token
+operator|&
+name|Result
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|CurPtr
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+argument_list|)
+decl_stmt|;
 name|void
 name|LexAngledStringLiteral
 parameter_list|(
@@ -1303,17 +1365,22 @@ parameter_list|)
 function_decl|;
 name|void
 name|LexCharConstant
-parameter_list|(
+argument_list|(
 name|Token
-modifier|&
+operator|&
 name|Result
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|CurPtr
-parameter_list|)
-function_decl|;
+argument_list|,
+name|tok
+operator|::
+name|TokenKind
+name|Kind
+argument_list|)
+decl_stmt|;
 name|bool
 name|LexEndOfFile
 parameter_list|(
@@ -1397,6 +1464,25 @@ modifier|*
 name|CurPtr
 parameter_list|)
 function_decl|;
+name|bool
+name|isCodeCompletionPoint
+argument_list|(
+specifier|const
+name|char
+operator|*
+name|CurPtr
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|cutOffLexing
+parameter_list|()
+block|{
+name|BufferPtr
+operator|=
+name|BufferEnd
+expr_stmt|;
+block|}
 block|}
 end_decl_stmt
 

@@ -80,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"PTXSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"PTXSubtarget.h"
 end_include
 
@@ -127,6 +133,9 @@ block|;
 name|PTXInstrInfo
 name|InstrInfo
 block|;
+name|PTXSelectionDAGInfo
+name|TSInfo
+block|;
 name|PTXTargetLowering
 name|TLInfo
 block|;
@@ -136,11 +145,15 @@ name|PTXTargetMachine
 argument_list|(
 argument|const Target&T
 argument_list|,
-argument|const std::string&TT
+argument|StringRef TT
 argument_list|,
-argument|const std::string&CPU
+argument|StringRef CPU
 argument_list|,
-argument|const std::string&FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|,
 argument|bool is64Bit
 argument_list|)
@@ -215,6 +228,19 @@ return|;
 block|}
 name|virtual
 specifier|const
+name|PTXSelectionDAGInfo
+operator|*
+name|getSelectionDAGInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|&
+name|TSInfo
+return|;
+block|}
+name|virtual
+specifier|const
 name|PTXSubtarget
 operator|*
 name|getSubtargetImpl
@@ -243,6 +269,80 @@ argument|PassManagerBase&PM
 argument_list|,
 argument|CodeGenOpt::Level OptLevel
 argument_list|)
+block|;
+comment|// We override this method to supply our own set of codegen passes.
+name|virtual
+name|bool
+name|addPassesToEmitFile
+argument_list|(
+name|PassManagerBase
+operator|&
+argument_list|,
+name|formatted_raw_ostream
+operator|&
+argument_list|,
+name|CodeGenFileType
+argument_list|,
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|,
+name|bool
+operator|=
+name|true
+argument_list|)
+block|;
+comment|// Emission of machine code through JITCodeEmitter is not supported.
+name|virtual
+name|bool
+name|addPassesToEmitMachineCode
+argument_list|(
+argument|PassManagerBase&
+argument_list|,
+argument|JITCodeEmitter&
+argument_list|,
+argument|CodeGenOpt::Level
+argument_list|,
+argument|bool = true
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+comment|// Emission of machine code through MCJIT is not supported.
+name|virtual
+name|bool
+name|addPassesToEmitMC
+argument_list|(
+argument|PassManagerBase&
+argument_list|,
+argument|MCContext *&
+argument_list|,
+argument|raw_ostream&
+argument_list|,
+argument|CodeGenOpt::Level
+argument_list|,
+argument|bool = true
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|private
+operator|:
+name|bool
+name|addCommonCodeGenPasses
+argument_list|(
+argument|PassManagerBase&
+argument_list|,
+argument|CodeGenOpt::Level
+argument_list|,
+argument|bool DisableVerify
+argument_list|,
+argument|MCContext *&OutCtx
+argument_list|)
 block|; }
 decl_stmt|;
 comment|// class PTXTargetMachine
@@ -256,31 +356,17 @@ name|public
 operator|:
 name|PTX32TargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|; }
 decl_stmt|;
@@ -295,31 +381,17 @@ name|public
 operator|:
 name|PTX64TargetMachine
 argument_list|(
-specifier|const
-name|Target
-operator|&
-name|T
+argument|const Target&T
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|TT
+argument|StringRef TT
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|CPU
+argument|StringRef CPU
 argument_list|,
-specifier|const
-name|std
-operator|::
-name|string
-operator|&
-name|FS
+argument|StringRef FS
+argument_list|,
+argument|Reloc::Model RM
+argument_list|,
+argument|CodeModel::Model CM
 argument_list|)
 block|; }
 decl_stmt|;

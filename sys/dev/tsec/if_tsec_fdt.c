@@ -198,15 +198,6 @@ name|TSEC_RID_ERRIRQ
 value|2
 end_define
 
-begin_decl_stmt
-specifier|extern
-name|struct
-name|tsec_softc
-modifier|*
-name|tsec0_sc
-decl_stmt|;
-end_decl_stmt
-
 begin_function_decl
 specifier|static
 name|int
@@ -356,21 +347,6 @@ argument_list|,
 name|tsec_resume
 argument_list|)
 block|,
-comment|/* Bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
-name|DEVMETHOD
-argument_list|(
-name|bus_driver_added
-argument_list|,
-name|bus_generic_driver_added
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -393,11 +369,7 @@ argument_list|,
 name|tsec_miibus_statchg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -715,20 +687,6 @@ argument_list|(
 name|dev
 argument_list|)
 expr_stmt|;
-comment|/* XXX add comment on weird FSL's MII registers access design */
-if|if
-condition|(
-name|device_get_unit
-argument_list|(
-name|dev
-argument_list|)
-operator|==
-literal|0
-condition|)
-name|tsec0_sc
-operator|=
-name|sc
-expr_stmt|;
 comment|/* Get phy address from fdt */
 if|if
 condition|(
@@ -738,10 +696,24 @@ name|sc
 operator|->
 name|node
 argument_list|,
+name|sc
+operator|->
+name|dev
+argument_list|,
 operator|&
 name|sc
 operator|->
 name|phyaddr
+argument_list|,
+operator|(
+name|void
+operator|*
+operator|*
+operator|)
+operator|&
+name|sc
+operator|->
+name|phy_sc
 argument_list|)
 operator|!=
 literal|0

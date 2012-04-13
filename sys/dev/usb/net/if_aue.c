@@ -204,6 +204,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -1370,14 +1371,6 @@ argument_list|,
 name|aue_detach
 argument_list|)
 block|,
-comment|/* bus interface */
-name|DEVMETHOD
-argument_list|(
-name|bus_print_child
-argument_list|,
-name|bus_generic_print_child
-argument_list|)
-block|,
 comment|/* MII interface */
 name|DEVMETHOD
 argument_list|(
@@ -1400,11 +1393,7 @@ argument_list|,
 name|aue_miibus_statchg
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -3741,6 +3730,9 @@ operator|)
 operator|&&
 name|actlen
 operator|>=
+operator|(
+name|int
+operator|)
 sizeof|sizeof
 argument_list|(
 name|pkt
@@ -3979,12 +3971,17 @@ if|if
 condition|(
 name|actlen
 operator|<=
+call|(
+name|int
+call|)
+argument_list|(
 sizeof|sizeof
 argument_list|(
 name|stat
 argument_list|)
 operator|+
 name|ETHER_CRC_LEN
+argument_list|)
 condition|)
 block|{
 name|ifp
@@ -4952,11 +4949,6 @@ argument_list|(
 name|mii
 argument_list|)
 expr_stmt|;
-name|AUE_UNLOCK
-argument_list|(
-name|sc
-argument_list|)
-expr_stmt|;
 name|ifmr
 operator|->
 name|ifm_active
@@ -4972,6 +4964,11 @@ operator|=
 name|mii
 operator|->
 name|mii_media_status
+expr_stmt|;
+name|AUE_UNLOCK
+argument_list|(
+name|sc
+argument_list|)
 expr_stmt|;
 block|}
 end_function

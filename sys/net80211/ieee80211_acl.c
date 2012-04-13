@@ -216,6 +216,7 @@ value|(((const uint8_t *)(addr))[IEEE80211_ADDR_LEN - 1] % ACL_HASHSIZE)
 end_define
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_80211_ACL
@@ -528,11 +529,10 @@ modifier|*
 name|vap
 parameter_list|,
 specifier|const
-name|uint8_t
-name|mac
-index|[
-name|IEEE80211_ADDR_LEN
-index|]
+name|struct
+name|ieee80211_frame
+modifier|*
+name|wh
 parameter_list|)
 block|{
 name|struct
@@ -568,7 +568,9 @@ name|_find_acl
 argument_list|(
 name|as
 argument_list|,
-name|mac
+name|wh
+operator|->
+name|i_addr2
 argument_list|)
 operator|!=
 name|NULL
@@ -581,7 +583,9 @@ name|_find_acl
 argument_list|(
 name|as
 argument_list|,
-name|mac
+name|wh
+operator|->
+name|i_addr2
 argument_list|)
 operator|==
 name|NULL

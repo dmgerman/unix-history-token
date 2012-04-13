@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -425,6 +425,36 @@ comment|/* ACPI_MADT_TYPE_LOCAL_X2APIC */
 literal|"Local x2APIC NMI"
 block|,
 comment|/* ACPI_MADT_TYPE_LOCAL_X2APIC_NMI */
+literal|"Generic Interrupt Controller"
+block|,
+comment|/* ACPI_MADT_GENERIC_INTERRUPT */
+literal|"Generic Interrupt Distributor"
+block|,
+comment|/* ACPI_MADT_GENERIC_DISTRIBUTOR */
+literal|"Unknown SubTable Type"
+comment|/* Reserved */
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|AcpiDmPmttSubnames
+index|[]
+init|=
+block|{
+literal|"Socket"
+block|,
+comment|/* ACPI_PMTT_TYPE_SOCKET */
+literal|"Memory Controller"
+block|,
+comment|/* ACPI_PMTT_TYPE_CONTROLLER */
+literal|"Physical Component (DIMM)"
+block|,
+comment|/* ACPI_PMTT_TYPE_DIMM  */
 literal|"Unknown SubTable Type"
 comment|/* Reserved */
 block|}
@@ -494,7 +524,7 @@ begin_define
 define|#
 directive|define
 name|ACPI_FADT_PM_RESERVED
-value|8
+value|9
 end_define
 
 begin_decl_stmt
@@ -521,6 +551,8 @@ block|,
 literal|"Appliance PC"
 block|,
 literal|"Performance Server"
+block|,
+literal|"Tablet"
 block|,
 literal|"Unknown Profile Type"
 block|}
@@ -608,6 +640,20 @@ block|,
 name|TemplateBert
 block|,
 literal|"Boot Error Record Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_BGRT
+block|,
+name|AcpiDmTableInfoBgrt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateBgrt
+block|,
+literal|"Boot Graphics Resource Table"
 block|}
 block|,
 block|{
@@ -709,6 +755,34 @@ literal|"Fixed ACPI Description Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_FPDT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpFpdt
+block|,
+name|DtCompileFpdt
+block|,
+name|TemplateFpdt
+block|,
+literal|"Firmware Performance Data Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_GTDT
+block|,
+name|AcpiDmTableInfoGtdt
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateGtdt
+block|,
+literal|"Generic Timer Description Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_HEST
 block|,
 name|NULL
@@ -793,6 +867,20 @@ literal|"Management Controller Host Interface table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_MPST
+block|,
+name|AcpiDmTableInfoMpst
+block|,
+name|AcpiDmDumpMpst
+block|,
+name|DtCompileMpst
+block|,
+name|TemplateMpst
+block|,
+literal|"Memory Power State Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_MSCT
 block|,
 name|NULL
@@ -807,6 +895,34 @@ literal|"Maximum System Characteristics Table"
 block|}
 block|,
 block|{
+name|ACPI_SIG_PCCT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpPcct
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+literal|"Platform Communications Channel Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_PMTT
+block|,
+name|NULL
+block|,
+name|AcpiDmDumpPmtt
+block|,
+name|DtCompilePmtt
+block|,
+name|TemplatePmtt
+block|,
+literal|"Platform Memory Topology Table"
+block|}
+block|,
+block|{
 name|ACPI_SIG_RSDT
 block|,
 name|NULL
@@ -818,6 +934,20 @@ block|,
 name|TemplateRsdt
 block|,
 literal|"Root System Description Table"
+block|}
+block|,
+block|{
+name|ACPI_SIG_S3PT
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|NULL
+block|,
+name|TemplateS3pt
+block|,
+literal|"S3 Performance Table"
 block|}
 block|,
 block|{
@@ -1180,7 +1310,7 @@ condition|)
 block|{
 return|return;
 block|}
-comment|/*      * Handle tables that don't use the common ACPI table header structure.      * Currently, these are the FACS and RSDP.      */
+comment|/*      * Handle tables that don't use the common ACPI table header structure.      * Currently, these are the FACS, RSDP, and S3PT.      */
 if|if
 condition|(
 name|ACPI_COMPARE_NAME
@@ -1229,6 +1359,27 @@ block|{
 name|Length
 operator|=
 name|AcpiDmDumpRsdp
+argument_list|(
+name|Table
+argument_list|)
+expr_stmt|;
+block|}
+elseif|else
+if|if
+condition|(
+name|ACPI_COMPARE_NAME
+argument_list|(
+name|Table
+operator|->
+name|Signature
+argument_list|,
+name|ACPI_SIG_S3PT
+argument_list|)
+condition|)
+block|{
+name|Length
+operator|=
+name|AcpiDmDumpS3pt
 argument_list|(
 name|Table
 argument_list|)
@@ -1818,6 +1969,9 @@ case|case
 name|ACPI_DMT_MADT
 case|:
 case|case
+name|ACPI_DMT_PMTT
+case|:
+case|case
 name|ACPI_DMT_SRAT
 case|:
 case|case
@@ -1885,6 +2039,17 @@ operator|=
 literal|4
 expr_stmt|;
 break|break;
+case|case
+name|ACPI_DMT_UINT40
+case|:
+name|ByteLength
+operator|=
+literal|5
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_UINT48
+case|:
 case|case
 name|ACPI_DMT_NAME6
 case|:
@@ -2033,6 +2198,26 @@ name|AE_BAD_DATA
 operator|)
 return|;
 block|}
+if|if
+condition|(
+name|Info
+operator|->
+name|Opcode
+operator|==
+name|ACPI_DMT_EXTRA_TEXT
+condition|)
+block|{
+name|AcpiOsPrintf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|Info
+operator|->
+name|Name
+argument_list|)
+expr_stmt|;
+continue|continue;
+block|}
 comment|/* Start a new line and decode the opcode */
 name|AcpiDmLineHeader
 argument_list|(
@@ -2110,6 +2295,24 @@ argument_list|)
 expr_stmt|;
 break|break;
 case|case
+name|ACPI_DMT_FLAGS1
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+name|Target
+operator|>>
+literal|1
+operator|)
+operator|&
+literal|0x03
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
 name|ACPI_DMT_FLAGS2
 case|:
 name|AcpiOsPrintf
@@ -2127,88 +2330,65 @@ literal|0x03
 argument_list|)
 expr_stmt|;
 break|break;
-comment|/* Standard Data Types */
+case|case
+name|ACPI_DMT_FLAGS4
+case|:
+name|AcpiOsPrintf
+argument_list|(
+literal|"%1.1X\n"
+argument_list|,
+operator|(
+operator|*
+name|Target
+operator|>>
+literal|4
+operator|)
+operator|&
+literal|0x03
+argument_list|)
+expr_stmt|;
+break|break;
+comment|/* Integer Data Types */
 case|case
 name|ACPI_DMT_UINT8
 case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"%2.2X\n"
-argument_list|,
-operator|*
-name|Target
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|ACPI_DMT_UINT16
 case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"%4.4X\n"
-argument_list|,
-name|ACPI_GET16
-argument_list|(
-name|Target
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|ACPI_DMT_UINT24
 case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"%2.2X%2.2X%2.2X\n"
-argument_list|,
-operator|*
-name|Target
-argument_list|,
-operator|*
-operator|(
-name|Target
-operator|+
-literal|1
-operator|)
-argument_list|,
-operator|*
-operator|(
-name|Target
-operator|+
-literal|2
-operator|)
-argument_list|)
-expr_stmt|;
-break|break;
 case|case
 name|ACPI_DMT_UINT32
 case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"%8.8X\n"
-argument_list|,
-name|ACPI_GET32
-argument_list|(
-name|Target
-argument_list|)
-argument_list|)
-expr_stmt|;
-break|break;
+case|case
+name|ACPI_DMT_UINT40
+case|:
+case|case
+name|ACPI_DMT_UINT48
+case|:
 case|case
 name|ACPI_DMT_UINT56
 case|:
+case|case
+name|ACPI_DMT_UINT64
+case|:
+comment|/*              * Dump bytes - high byte first, low byte last.              * Note: All ACPI tables are little-endian.              */
 for|for
 control|(
 name|Temp8
 operator|=
-literal|0
+operator|(
+name|UINT8
+operator|)
+name|ByteLength
 init|;
 name|Temp8
-operator|<
-literal|7
+operator|>
+literal|0
 condition|;
 name|Temp8
-operator|++
+operator|--
 control|)
 block|{
 name|AcpiOsPrintf
@@ -2218,6 +2398,8 @@ argument_list|,
 name|Target
 index|[
 name|Temp8
+operator|-
+literal|1
 index|]
 argument_list|)
 expr_stmt|;
@@ -2225,23 +2407,6 @@ block|}
 name|AcpiOsPrintf
 argument_list|(
 literal|"\n"
-argument_list|)
-expr_stmt|;
-break|break;
-case|case
-name|ACPI_DMT_UINT64
-case|:
-name|AcpiOsPrintf
-argument_list|(
-literal|"%8.8X%8.8X\n"
-argument_list|,
-name|ACPI_FORMAT_UINT64
-argument_list|(
-name|ACPI_GET64
-argument_list|(
-name|Target
-argument_list|)
-argument_list|)
 argument_list|)
 expr_stmt|;
 break|break;
@@ -3024,6 +3189,41 @@ operator|*
 name|Target
 argument_list|,
 name|AcpiDmMadtSubnames
+index|[
+name|Temp8
+index|]
+argument_list|)
+expr_stmt|;
+break|break;
+case|case
+name|ACPI_DMT_PMTT
+case|:
+comment|/* PMTT subtable types */
+name|Temp8
+operator|=
+operator|*
+name|Target
+expr_stmt|;
+if|if
+condition|(
+name|Temp8
+operator|>
+name|ACPI_PMTT_TYPE_RESERVED
+condition|)
+block|{
+name|Temp8
+operator|=
+name|ACPI_PMTT_TYPE_RESERVED
+expr_stmt|;
+block|}
+name|AcpiOsPrintf
+argument_list|(
+name|UINT8_FORMAT
+argument_list|,
+operator|*
+name|Target
+argument_list|,
+name|AcpiDmPmttSubnames
 index|[
 name|Temp8
 index|]

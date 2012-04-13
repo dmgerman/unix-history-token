@@ -381,6 +381,10 @@ define|#
 directive|define
 name|CAM_SIM_ON_DONEQ
 value|0x04
+define|#
+directive|define
+name|CAM_SIM_POLLED
+value|0x08
 name|struct
 name|callout
 name|callout

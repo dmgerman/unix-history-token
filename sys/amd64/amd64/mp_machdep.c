@@ -408,8 +408,14 @@ name|pcb
 modifier|*
 modifier|*
 name|susppcbs
-init|=
-name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+modifier|*
+modifier|*
+name|suspfpusave
 decl_stmt|;
 end_decl_stmt
 
@@ -3240,7 +3246,7 @@ comment|/*******************************************************************  * 
 end_comment
 
 begin_comment
-comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  * We also do not tell it about the BSP since it tells itself about  * the BSP internally to work with UP kernels and on UP machines.  */
+comment|/*  * We tell the I/O APIC code about all the CPUs we want to receive  * interrupts.  If we don't want certain CPUs to receive IRQs we  * can simply not tell the I/O APIC code about them in this function.  */
 end_comment
 
 begin_function
@@ -3283,16 +3289,6 @@ name|apic_id
 operator|==
 operator|-
 literal|1
-condition|)
-continue|continue;
-if|if
-condition|(
-name|cpu_info
-index|[
-name|apic_id
-index|]
-operator|.
-name|cpu_bsp
 condition|)
 continue|continue;
 if|if
@@ -4291,6 +4287,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug
@@ -5833,11 +5830,6 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
-name|register_t
-name|cr3
-decl_stmt|,
-name|rf
-decl_stmt|;
 name|u_int
 name|cpu
 decl_stmt|;
@@ -5847,16 +5839,6 @@ name|PCPU_GET
 argument_list|(
 name|cpuid
 argument_list|)
-expr_stmt|;
-name|rf
-operator|=
-name|intr_disable
-argument_list|()
-expr_stmt|;
-name|cr3
-operator|=
-name|rcr3
-argument_list|()
 expr_stmt|;
 if|if
 condition|(
@@ -5869,6 +5851,14 @@ index|]
 argument_list|)
 condition|)
 block|{
+name|ctx_fpusave
+argument_list|(
+name|suspfpusave
+index|[
+name|cpu
+index|]
+argument_list|)
+expr_stmt|;
 name|wbinvd
 argument_list|()
 expr_stmt|;
@@ -5884,6 +5874,19 @@ block|}
 else|else
 block|{
 name|pmap_init_pat
+argument_list|()
+expr_stmt|;
+name|load_cr3
+argument_list|(
+name|susppcbs
+index|[
+name|cpu
+index|]
+operator|->
+name|pcb_cr3
+argument_list|)
+expr_stmt|;
+name|initializecpu
 argument_list|()
 expr_stmt|;
 name|PCPU_SET
@@ -5932,23 +5935,13 @@ operator|&
 name|stopped_cpus
 argument_list|)
 expr_stmt|;
-comment|/* Restore CR3 and enable interrupts */
-name|load_cr3
-argument_list|(
-name|cr3
-argument_list|)
-expr_stmt|;
+comment|/* Resume MCA and local APIC */
 name|mca_resume
 argument_list|()
 expr_stmt|;
 name|lapic_setup
 argument_list|(
 literal|0
-argument_list|)
-expr_stmt|;
-name|intr_restore
-argument_list|(
-name|rf
 argument_list|)
 expr_stmt|;
 block|}

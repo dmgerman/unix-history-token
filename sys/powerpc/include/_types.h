@@ -38,7 +38,7 @@ end_comment
 
 begin_typedef
 typedef|typedef
-name|__signed
+name|signed
 name|char
 name|__int8_t
 typedef|;
@@ -192,7 +192,7 @@ end_typedef
 
 begin_typedef
 typedef|typedef
-name|double
+name|float
 name|__float_t
 typedef|;
 end_typedef

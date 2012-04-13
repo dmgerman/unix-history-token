@@ -92,13 +92,14 @@ file|"opt_netgraph.h"
 end_include
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_DEFLATE
 argument_list|,
 literal|"netgraph_deflate"
 argument_list|,
-literal|"netgraph deflate node "
+literal|"netgraph deflate node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

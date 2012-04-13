@@ -369,6 +369,17 @@ directive|endif
 end_endif
 
 begin_comment
+comment|/* Enable debug and informational printfs */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|CVMX_CONFIG_ENABLE_DEBUG_PRINTS
+value|1
+end_define
+
+begin_comment
 comment|/************************* Config Specific Defines ************************/
 end_comment
 

@@ -66,13 +66,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/Support/Casting.h"
+file|"clang/StaticAnalyzer/Core/PathSensitive/SymbolManager.h"
 end_include
 
 begin_include
@@ -80,16 +80,6 @@ include|#
 directive|include
 file|"llvm/ADT/ImmutableList.h"
 end_include
-
-begin_decl_stmt
-name|namespace
-name|llvm
-block|{
-name|class
-name|raw_ostream
-decl_stmt|;
-block|}
-end_decl_stmt
 
 begin_comment
 comment|//==------------------------------------------------------------------------==//
@@ -117,7 +107,7 @@ name|class
 name|LazyCompoundValData
 decl_stmt|;
 name|class
-name|GRState
+name|ProgramState
 decl_stmt|;
 name|class
 name|BasicValueFactory
@@ -132,7 +122,7 @@ name|class
 name|MemRegionManager
 decl_stmt|;
 name|class
-name|GRStateManager
+name|ProgramStateManager
 decl_stmt|;
 name|class
 name|SValBuilder
@@ -197,7 +187,7 @@ decl_stmt|;
 name|explicit
 name|SVal
 argument_list|(
-argument|const void* d
+argument|const void *d
 argument_list|,
 argument|bool isLoc
 argument_list|,
@@ -219,7 +209,7 @@ name|SVal
 argument_list|(
 argument|BaseKind k
 argument_list|,
-argument|const void* D = NULL
+argument|const void *D = NULL
 argument_list|)
 operator|:
 name|Data
@@ -254,8 +244,6 @@ argument_list|()
 block|{}
 comment|/// BufferTy - A temporary buffer to hold a set of SVals.
 typedef|typedef
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 name|SVal
@@ -516,8 +504,6 @@ expr_stmt|;
 name|void
 name|dumpToStream
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
@@ -532,8 +518,6 @@ comment|// Iterators.
 name|class
 name|symbol_iterator
 block|{
-name|llvm
-operator|::
 name|SmallVector
 operator|<
 specifier|const
@@ -739,7 +723,7 @@ operator|:
 name|explicit
 name|DefinedOrUnknownSVal
 argument_list|(
-argument|const void* d
+argument|const void *d
 argument_list|,
 argument|bool isLoc
 argument_list|,
@@ -857,7 +841,7 @@ operator|:
 name|explicit
 name|DefinedSVal
 argument_list|(
-argument|const void* d
+argument|const void *d
 argument_list|,
 argument|bool isLoc
 argument_list|,
@@ -907,7 +891,7 @@ name|NonLoc
 argument_list|(
 argument|unsigned SubKind
 argument_list|,
-argument|const void* d
+argument|const void *d
 argument_list|)
 operator|:
 name|DefinedSVal
@@ -924,7 +908,7 @@ operator|:
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& Out
+argument|raw_ostream&Out
 argument_list|)
 specifier|const
 block|;
@@ -961,7 +945,7 @@ name|Loc
 argument_list|(
 argument|unsigned SubKind
 argument_list|,
-argument|const void* D
+argument|const void *D
 argument_list|)
 operator|:
 name|DefinedSVal
@@ -978,7 +962,7 @@ operator|:
 name|void
 name|dumpToStream
 argument_list|(
-argument|llvm::raw_ostream& Out
+argument|raw_ostream&Out
 argument_list|)
 specifier|const
 block|;
@@ -2221,15 +2205,11 @@ name|llvm
 block|{
 specifier|static
 specifier|inline
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|operator
 operator|<<
 operator|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|os

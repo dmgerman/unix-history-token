@@ -29,7 +29,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_ADVISORY_INFO
-value|-1
+value|200112L
 end_define
 
 begin_define
@@ -50,14 +50,14 @@ begin_define
 define|#
 directive|define
 name|_POSIX_CLOCK_SELECTION
-value|-1
+value|(-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|_POSIX_CPUTIME
-value|-1
+value|(-1)
 end_define
 
 begin_define
@@ -92,7 +92,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_MEMLOCK
-value|-1
+value|(-1)
 end_define
 
 begin_define
@@ -134,7 +134,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_PRIORITIZED_IO
-value|-1
+value|(-1)
 end_define
 
 begin_define
@@ -176,14 +176,14 @@ begin_define
 define|#
 directive|define
 name|_POSIX_SPORADIC_SERVER
-value|-1
+value|(-1)
 end_define
 
 begin_define
 define|#
 directive|define
 name|_POSIX_SYNCHRONIZED_IO
-value|-1
+value|(-1)
 end_define
 
 begin_define
@@ -204,7 +204,7 @@ begin_define
 define|#
 directive|define
 name|_POSIX_TYPED_MEMORY_OBJECTS
-value|-1
+value|(-1)
 end_define
 
 begin_define
@@ -231,7 +231,7 @@ begin_define
 define|#
 directive|define
 name|_XOPEN_STREAMS
-value|-1
+value|(-1)
 end_define
 
 begin_endif

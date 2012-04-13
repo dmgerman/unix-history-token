@@ -74,18 +74,24 @@ name|CreateASTConsumer
 argument_list|(
 argument|CompilerInstance&CI
 argument_list|,
-argument|llvm::StringRef InFile
+argument|StringRef InFile
 argument_list|)
 block|; }
 decl_stmt|;
 name|void
 name|printCheckerHelp
 argument_list|(
-name|llvm
-operator|::
 name|raw_ostream
 operator|&
 name|OS
+argument_list|,
+name|ArrayRef
+operator|<
+name|std
+operator|::
+name|string
+operator|>
+name|plugins
 argument_list|)
 decl_stmt|;
 block|}

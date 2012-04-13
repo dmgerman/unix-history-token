@@ -755,6 +755,11 @@ operator|&&
 literal|"Register is not used by this instruction!"
 argument_list|)
 expr_stmt|;
+operator|(
+name|void
+operator|)
+name|Removed
+expr_stmt|;
 return|return
 name|true
 return|;
@@ -923,6 +928,11 @@ name|Removed
 operator|&&
 literal|"Register is not defined by this instruction!"
 argument_list|)
+expr_stmt|;
+operator|(
+name|void
+operator|)
+name|Removed
 expr_stmt|;
 return|return
 name|true

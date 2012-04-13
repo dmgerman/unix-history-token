@@ -66,7 +66,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/LLVMContext.h"
+file|"clang/Basic/LLVM.h"
 end_include
 
 begin_include
@@ -189,7 +189,7 @@ name|MDNode
 operator|*
 name|getTBAAInfoForNamedType
 argument_list|(
-argument|llvm::StringRef NameStr
+argument|StringRef NameStr
 argument_list|,
 argument|llvm::MDNode *Parent
 argument_list|,

@@ -7669,8 +7669,9 @@ expr_stmt|;
 if|if
 condition|(
 name|node
-operator|<=
-literal|0
+operator|==
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -8046,7 +8047,8 @@ literal|"sram"
 argument_list|)
 operator|)
 operator|!=
-literal|0
+operator|-
+literal|1
 condition|)
 if|if
 condition|(
@@ -8071,7 +8073,8 @@ literal|"/"
 argument_list|)
 operator|)
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 return|return
 operator|(
@@ -8232,7 +8235,8 @@ if|if
 condition|(
 name|node
 operator|==
-literal|0
+operator|-
+literal|1
 condition|)
 name|panic
 argument_list|(

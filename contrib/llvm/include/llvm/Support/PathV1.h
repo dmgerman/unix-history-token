@@ -1668,6 +1668,9 @@ comment|///< Mach-O Bundle file
 name|Mach_O_DynamicallyLinkedSharedLibStub_FileType
 block|,
 comment|///< Mach-O Shared lib stub
+name|Mach_O_DSYMCompanion_FileType
+block|,
+comment|///< Mach-O dSYM companion file
 name|COFF_FileType
 comment|///< COFF object file or lib
 block|}

@@ -730,6 +730,7 @@ comment|/* Look up hook by name */
 end_comment
 
 begin_function
+specifier|static
 name|hook_p
 name|ng_ipfw_findhook
 parameter_list|(
@@ -961,7 +962,7 @@ name|NULL
 condition|)
 return|return
 operator|(
-name|EINVAL
+name|ENOBUFS
 operator|)
 return|;
 name|ip
@@ -1015,7 +1016,11 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-break|break;
+return|return
+operator|(
+literal|0
+operator|)
+return|;
 endif|#
 directive|endif
 ifdef|#
@@ -1031,26 +1036,14 @@ argument_list|(
 name|m
 argument_list|)
 expr_stmt|;
-break|break;
-endif|#
-directive|endif
-default|default:
-name|NG_FREE_M
-argument_list|(
-name|m
-argument_list|)
-expr_stmt|;
-return|return
-operator|(
-name|EINVAL
-operator|)
-return|;
-block|}
 return|return
 operator|(
 literal|0
 operator|)
 return|;
+endif|#
+directive|endif
+block|}
 block|}
 else|else
 block|{
@@ -1122,14 +1115,19 @@ operator|)
 return|;
 endif|#
 directive|endif
-default|default:
+block|}
+block|}
+comment|/* unknown IP protocol version */
+name|NG_FREE_M
+argument_list|(
+name|m
+argument_list|)
+expr_stmt|;
 return|return
 operator|(
-name|EINVAL
+name|EPROTONOSUPPORT
 operator|)
 return|;
-block|}
-block|}
 block|}
 end_function
 

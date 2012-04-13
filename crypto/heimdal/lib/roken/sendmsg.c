@@ -1,13 +1,7 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska Högskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *   * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *   * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *   * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *   * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *   * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
+comment|/*  * Copyright (c) 1995, 1996, 1997, 1998, 1999 Kungliga Tekniska HÃ¶gskolan  * (Royal Institute of Technology, Stockholm, Sweden).  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions and the following disclaimer.  *  * 2. Redistributions in binary form must reproduce the above copyright  *    notice, this list of conditions and the following disclaimer in the  *    documentation and/or other materials provided with the distribution.  *  * 3. Neither the name of the Institute nor the names of its contributors  *    may be used to endorse or promote products derived from this software  *    without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE INSTITUTE AND CONTRIBUTORS ``AS IS'' AND  * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE  * ARE DISCLAIMED.  IN NO EVENT SHALL THE INSTITUTE OR CONTRIBUTORS BE LIABLE  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT  * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF  * SUCH DAMAGE.  */
 end_comment
-
-begin_ifdef
-ifdef|#
-directive|ifdef
-name|HAVE_CONFIG_H
-end_ifdef
 
 begin_include
 include|#
@@ -15,31 +9,25 @@ directive|include
 file|<config.h>
 end_include
 
-begin_expr_stmt
-name|RCSID
-argument_list|(
-literal|"$Id: sendmsg.c 14773 2005-04-12 11:29:18Z lha $"
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
 begin_include
 include|#
 directive|include
 file|"roken.h"
 end_include
 
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|_WIN32
+end_ifndef
+
 begin_function
-name|ssize_t
 name|ROKEN_LIB_FUNCTION
+name|ssize_t
+name|ROKEN_LIB_CALL
 name|sendmsg
 parameter_list|(
-name|int
+name|rk_socket_t
 name|s
 parameter_list|,
 specifier|const
@@ -210,6 +198,104 @@ name|ret
 return|;
 block|}
 end_function
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_comment
+comment|/* _WIN32 */
+end_comment
+
+begin_comment
+comment|/***********************************************************************  * Copyright (c) 2009, Secure Endpoints Inc.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  *  * - Redistributions of source code must retain the above copyright  *   notice, this list of conditions and the following disclaimer.  *  * - Redistributions in binary form must reproduce the above copyright  *   notice, this list of conditions and the following disclaimer in  *   the documentation and/or other materials provided with the  *   distribution.  *  * - Neither the name of Secure Endpoints Inc. nor the names of its  *   contributors may be used to endorse or promote products derived  *   from this software without specific prior written permission.  *  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS  * FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE  * COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT,  * INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED  * OF THE POSSIBILITY OF SUCH DAMAGE.  *  **********************************************************************/
+end_comment
+
+begin_comment
+comment|/**  * Implementation of sendmsg() for WIN32  *  * We are using a contrived definition of msghdr which actually uses  * an array of ::_WSABUF structures instead of ::iovec .  This allows  * us to call WSASend directly using the given ::msghdr instead of  * having to allocate another array of ::_WSABUF and copying data for  * each call.  *  * Limitations:  *  * - msg->msg_name is ignored.  So is msg->control.  * - WSASend() only supports ::MSG_DONTROUTE, ::MSG_OOB and  *   ::MSG_PARTIAL.  *  * @param[in] s The socket to use.  * @param[in] msg The message  * @param[in] flags Flags.  A combination of ::MSG_DONTROUTE,  *  ::MSG_OOB and ::MSG_PARTIAL  *  * @return The number of bytes sent, on success.  Or -1 on error.  */
+end_comment
+
+begin_function
+name|ROKEN_LIB_FUNCTION
+name|ssize_t
+name|ROKEN_LIB_CALL
+name|sendmsg_w32
+parameter_list|(
+name|rk_socket_t
+name|s
+parameter_list|,
+specifier|const
+name|struct
+name|msghdr
+modifier|*
+name|msg
+parameter_list|,
+name|int
+name|flags
+parameter_list|)
+block|{
+name|int
+name|srv
+decl_stmt|;
+name|DWORD
+name|num_bytes_sent
+init|=
+literal|0
+decl_stmt|;
+comment|/* TODO: For _WIN32_WINNT>= 0x0600 we can use WSASendMsg using        WSAMSG which is a much more direct analogue to sendmsg(). */
+name|srv
+operator|=
+name|WSASend
+argument_list|(
+name|s
+argument_list|,
+name|msg
+operator|->
+name|msg_iov
+argument_list|,
+name|msg
+operator|->
+name|msg_iovlen
+argument_list|,
+operator|&
+name|num_bytes_sent
+argument_list|,
+name|flags
+argument_list|,
+name|NULL
+argument_list|,
+name|NULL
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|srv
+operator|==
+literal|0
+condition|)
+return|return
+operator|(
+name|int
+operator|)
+name|num_bytes_sent
+return|;
+comment|/* srv == SOCKET_ERROR and WSAGetLastError() == WSA_IO_PENDING        indicates that a non-blocking transfer has been scheduled.        We'll have to check for that if we ever support non-blocking        I/O. */
+return|return
+operator|-
+literal|1
+return|;
+block|}
+end_function
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* !_WIN32 */
+end_comment
 
 end_unit
 

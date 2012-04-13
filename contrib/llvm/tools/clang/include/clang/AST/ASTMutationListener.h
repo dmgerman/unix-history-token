@@ -87,6 +87,12 @@ decl_stmt|;
 name|class
 name|FunctionTemplateDecl
 decl_stmt|;
+name|class
+name|ObjCCategoryDecl
+decl_stmt|;
+name|class
+name|ObjCInterfaceDecl
+decl_stmt|;
 comment|/// \brief An abstract interface that should be implemented by listeners
 comment|/// that want to be notified when an AST entity gets modified after its
 comment|/// initial creation.
@@ -197,6 +203,22 @@ specifier|const
 name|VarDecl
 modifier|*
 name|D
+parameter_list|)
+block|{}
+comment|/// \brief A new objc category class was added for an interface.
+name|virtual
+name|void
+name|AddedObjCCategoryToInterface
+parameter_list|(
+specifier|const
+name|ObjCCategoryDecl
+modifier|*
+name|CatD
+parameter_list|,
+specifier|const
+name|ObjCInterfaceDecl
+modifier|*
+name|IFD
 parameter_list|)
 block|{}
 block|}

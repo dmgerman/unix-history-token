@@ -380,9 +380,45 @@ endif|#
 directive|endif
 end_endif
 
+begin_if
+if|#
+directive|if
+name|__POSIX_VISIBLE
+operator|>=
+literal|200809
+end_if
+
+begin_define
+define|#
+directive|define
+name|_XLOCALE_WCTYPES
+value|1
+end_define
+
+begin_include
+include|#
+directive|include
+file|<xlocale/_ctype.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __POSIX_VISIBLE>= 200809 */
+end_comment
+
 begin_macro
 name|__END_DECLS
 end_macro
+
+begin_ifndef
+ifndef|#
+directive|ifndef
+name|__cplusplus
+end_ifndef
 
 begin_define
 define|#
@@ -616,6 +652,19 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|/* __BSD_VISIBLE */
+end_comment
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|/* __cplusplus */
+end_comment
 
 begin_endif
 endif|#

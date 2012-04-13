@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  */
 end_comment
 
 begin_include
@@ -4859,7 +4859,7 @@ modifier|*
 name|spa
 parameter_list|)
 block|{
-comment|/* 	 * If we fail to parse the config during spa_load(), we can go through 	 * the error path (which posts an ereport) and end up here with no root 	 * vdev.  We stash the original pool guid in 'spa_load_guid' to handle 	 * this case. 	 */
+comment|/* 	 * If we fail to parse the config during spa_load(), we can go through 	 * the error path (which posts an ereport) and end up here with no root 	 * vdev.  We stash the original pool guid in 'spa_config_guid' to handle 	 * this case. 	 */
 if|if
 condition|(
 name|spa
@@ -4878,6 +4878,26 @@ name|vdev_guid
 operator|)
 return|;
 else|else
+return|return
+operator|(
+name|spa
+operator|->
+name|spa_config_guid
+operator|)
+return|;
+block|}
+end_function
+
+begin_function
+name|uint64_t
+name|spa_load_guid
+parameter_list|(
+name|spa_t
+modifier|*
+name|spa
+parameter_list|)
+block|{
+comment|/* 	 * This is a GUID that exists solely as a reference for the 	 * purposes of the arc.  It is generated at load time, and 	 * is never written to persistent storage. 	 */
 return|return
 operator|(
 name|spa

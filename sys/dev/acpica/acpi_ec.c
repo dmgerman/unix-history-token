@@ -483,6 +483,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_debug_acpi
@@ -1172,7 +1173,7 @@ name|BUS_ADD_CHILD
 argument_list|(
 name|parent
 argument_list|,
-literal|0
+literal|3
 argument_list|,
 literal|"acpi_ec"
 argument_list|,

@@ -192,6 +192,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
+specifier|static
 name|SYSCTL_NODE
 argument_list|(
 name|_hw_usb
@@ -2449,6 +2450,15 @@ argument_list|)
 block|,
 name|U3G_DEV
 argument_list|(
+name|QUALCOMM2
+argument_list|,
+name|VW110L
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
 name|QUALCOMMINC
 argument_list|,
 name|AC2726
@@ -3063,6 +3073,15 @@ name|U3G_DEV
 argument_list|(
 name|QUALCOMMINC
 argument_list|,
+name|K3772_Z
+argument_list|,
+name|U3GINIT_SCSIEJECT
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|QUALCOMMINC
+argument_list|,
 name|MF626
 argument_list|,
 literal|0
@@ -3145,6 +3164,15 @@ argument_list|(
 name|SIERRA
 argument_list|,
 name|AC595U
+argument_list|,
+literal|0
+argument_list|)
+block|,
+name|U3G_DEV
+argument_list|(
+name|SIERRA
+argument_list|,
+name|AC313U
 argument_list|,
 literal|0
 argument_list|)

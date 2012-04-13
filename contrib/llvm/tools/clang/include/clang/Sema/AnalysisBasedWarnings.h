@@ -120,6 +120,11 @@ name|enableCheckUnreachable
 range|:
 literal|1
 decl_stmt|;
+name|unsigned
+name|enableThreadSafetyAnalysis
+range|:
+literal|1
+decl_stmt|;
 name|public
 label|:
 name|Policy

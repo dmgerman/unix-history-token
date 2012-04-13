@@ -2161,7 +2161,7 @@ name|char
 modifier|*
 name|pos1
 decl_stmt|;
-comment|/* 	 * If a function definition is available (def != NULL), we compair the 	 * function call (call) with the definition. Otherwise, if a function 	 * definition is available and it is not an old style definition 	 * (decl != NULL&& TP(decl->s_type)->t_proto), we compair the call 	 * with this declaration. Otherwise we compair it with the first 	 * call we have found (call1). 	 */
+comment|/* 	 * If a function definition is available (def != NULL), we compare the 	 * function call (call) with the definition. Otherwise, if a function 	 * definition is available and it is not an old style definition 	 * (decl != NULL&& TP(decl->s_type)->t_proto), we compare the call 	 * with this declaration. Otherwise we compare it with the first 	 * call we have found (call1). 	 */
 comment|/* arg1 must be promoted if it stems from an old style definition */
 name|promote
 operator|=
@@ -2226,7 +2226,7 @@ name|warn
 operator|)
 condition|)
 return|return;
-comment|/* 	 * Other lint implementations print warnings as soon as the type 	 * of an argument does not match exactly the expected type. The 	 * result are lots of warnings which are really not necessary. 	 * We print a warning only if 	 *   (0) at least one type is not an interger type and types differ 	 *   (1) hflag is set and types differ 	 *   (2) types differ, except in signedness 	 * If the argument is an integer constant whose msb is not set, 	 * signedness is ignored (e.g. 0 matches both signed and unsigned 	 * int). This is with and without hflag. 	 * If the argument is an integer constant with value 0 and the 	 * expected argument is of type pointer and the width of the 	 * interger constant is the same as the width of the pointer, 	 * no warning is printed. 	 */
+comment|/* 	 * Other lint implementations print warnings as soon as the type 	 * of an argument does not match exactly the expected type. The 	 * result are lots of warnings which are really not necessary. 	 * We print a warning only if 	 *   (0) at least one type is not an integer type and types differ 	 *   (1) hflag is set and types differ 	 *   (2) types differ, except in signedness 	 * If the argument is an integer constant whose msb is not set, 	 * signedness is ignored (e.g. 0 matches both signed and unsigned 	 * int). This is with and without hflag. 	 * If the argument is an integer constant with value 0 and the 	 * expected argument is of type pointer and the width of the 	 * integer constant is the same as the width of the pointer, 	 * no warning is printed. 	 */
 name|t1
 operator|=
 name|arg1
@@ -2267,7 +2267,7 @@ condition|(
 name|promote
 condition|)
 block|{
-comment|/* 			 * XXX Here is a problem: Althrough it is possible to 			 * pass an int where a char/short it expected, there 			 * may be loss in significant digits. We should first 			 * check for const arguments if they can be converted 			 * into the original parameter type. 			 */
+comment|/* 			 * XXX Here is a problem: Although it is possible to 			 * pass an int where a char/short it expected, there 			 * may be loss in significant digits. We should first 			 * check for const arguments if they can be converted 			 * into the original parameter type. 			 */
 if|if
 condition|(
 name|t1

@@ -3083,6 +3083,11 @@ name|mask
 decl_stmt|,
 name|mask2
 decl_stmt|;
+name|int
+name|error
+decl_stmt|;
+name|error
+operator|=
 name|BUS_SETUP_INTR
 argument_list|(
 name|device_get_parent
@@ -3105,6 +3110,15 @@ argument_list|,
 name|cookiep
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|error
+condition|)
+return|return
+operator|(
+name|error
+operator|)
+return|;
 name|get_masks
 argument_list|(
 name|res

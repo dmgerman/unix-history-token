@@ -114,7 +114,7 @@ end_endif
 
 begin_function
 specifier|static
-name|int
+name|void
 name|hast_crc32_checksum
 parameter_list|(
 specifier|const
@@ -170,11 +170,6 @@ argument_list|(
 name|crc
 argument_list|)
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -186,7 +181,7 @@ end_ifdef
 
 begin_function
 specifier|static
-name|int
+name|void
 name|hast_sha256_checksum
 parameter_list|(
 specifier|const
@@ -240,11 +235,6 @@ name|hsizep
 operator|=
 name|SHA256_DIGEST_LENGTH
 expr_stmt|;
-return|return
-operator|(
-literal|0
-operator|)
-return|;
 block|}
 end_function
 
@@ -345,9 +335,6 @@ decl_stmt|;
 name|size_t
 name|hsize
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 switch|switch
 condition|(
 name|res
@@ -366,8 +353,6 @@ return|;
 case|case
 name|HAST_CHECKSUM_CRC32
 case|:
-name|ret
-operator|=
 name|hast_crc32_checksum
 argument_list|(
 operator|*
@@ -389,8 +374,6 @@ name|HAVE_CRYPTO
 case|case
 name|HAST_CHECKSUM_SHA256
 case|:
-name|ret
-operator|=
 name|hast_sha256_checksum
 argument_list|(
 operator|*
@@ -419,17 +402,6 @@ name|hr_checksum
 argument_list|)
 expr_stmt|;
 block|}
-if|if
-condition|(
-name|ret
-operator|!=
-literal|0
-condition|)
-return|return
-operator|(
-name|ret
-operator|)
-return|;
 name|nv_add_string
 argument_list|(
 name|nv
@@ -541,9 +513,6 @@ name|char
 modifier|*
 name|algo
 decl_stmt|;
-name|int
-name|ret
-decl_stmt|;
 name|algo
 operator|=
 name|nv_get_string
@@ -608,8 +577,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|ret
-operator|=
 name|hast_crc32_checksum
 argument_list|(
 operator|*
@@ -639,8 +606,6 @@ argument_list|)
 operator|==
 literal|0
 condition|)
-name|ret
-operator|=
 name|hast_sha256_checksum
 argument_list|(
 operator|*

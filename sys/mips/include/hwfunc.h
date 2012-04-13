@@ -23,39 +23,13 @@ end_include
 
 begin_struct_decl
 struct_decl|struct
-name|trapframe
-struct_decl|;
-end_struct_decl
-
-begin_struct_decl
-struct_decl|struct
 name|timecounter
 struct_decl|;
 end_struct_decl
 
 begin_comment
-comment|/*  * Hooks downward into hardware functionality.  */
+comment|/*  * Hooks downward into platform functionality.  */
 end_comment
-
-begin_function_decl
-name|void
-name|platform_halt
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|platform_intr
-parameter_list|(
-name|struct
-name|trapframe
-modifier|*
-parameter_list|)
-function_decl|;
-end_function_decl
 
 begin_function_decl
 name|void
@@ -121,15 +95,6 @@ end_comment
 begin_function_decl
 name|void
 name|platform_cpu_init
-parameter_list|(
-name|void
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
-name|void
-name|platform_secondary_init
 parameter_list|(
 name|void
 parameter_list|)

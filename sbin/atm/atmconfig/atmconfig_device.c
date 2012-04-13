@@ -333,6 +333,7 @@ comment|/*  * Read ATM hardware table  */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|struct
 name|snmp_table

@@ -4402,7 +4402,7 @@ literal|0
 init|;
 name|i
 operator|<
-sizeof|sizeof
+name|N
 argument_list|(
 name|bwi_phy_noise_11g
 argument_list|)

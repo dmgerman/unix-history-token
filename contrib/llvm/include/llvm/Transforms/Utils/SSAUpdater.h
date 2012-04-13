@@ -124,7 +124,6 @@ modifier|*
 name|AV
 decl_stmt|;
 comment|/// ProtoType holds the type of the values being rewritten.
-specifier|const
 name|Type
 modifier|*
 name|ProtoType
@@ -172,7 +171,6 @@ comment|/// updates with type 'Ty'.  PHI nodes get a name based on 'Name'.
 name|void
 name|Initialize
 parameter_list|(
-specifier|const
 name|Type
 modifier|*
 name|Ty

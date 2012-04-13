@@ -520,7 +520,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* string begining of a block */
+comment|/* string beginning of a block */
 end_comment
 
 begin_decl_stmt

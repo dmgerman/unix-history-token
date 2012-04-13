@@ -12369,6 +12369,16 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+name|spa_version
+argument_list|(
+name|spa
+argument_list|)
+operator|>=
+name|SPA_VERSION_DEADLISTS
+condition|)
+block|{
 operator|(
 name|void
 operator|)
@@ -12389,6 +12399,7 @@ argument_list|,
 name|NULL
 argument_list|)
 expr_stmt|;
+block|}
 if|if
 condition|(
 name|dump_opt

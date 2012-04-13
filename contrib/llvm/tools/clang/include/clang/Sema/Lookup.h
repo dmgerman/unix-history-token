@@ -685,13 +685,44 @@ name|D
 argument_list|)
 decl|const
 block|{
-return|return
+if|if
+condition|(
+operator|!
 name|D
 operator|->
 name|isInIdentifierNamespace
 argument_list|(
 name|IDNS
 argument_list|)
+condition|)
+return|return
+name|false
+return|;
+comment|// So long as this declaration is not module-private or was parsed as
+comment|// part of this translation unit (i.e., in the module), we're allowed to
+comment|// find it.
+if|if
+condition|(
+operator|!
+name|D
+operator|->
+name|isModulePrivate
+argument_list|()
+operator|||
+operator|!
+name|D
+operator|->
+name|isFromASTFile
+argument_list|()
+condition|)
+return|return
+name|true
+return|;
+comment|// FIXME: We should be allowed to refer to a module-private name from
+comment|// within the same module, e.g., during template instantiation.
+comment|// This requires us know which module a particular declaration came from.
+return|return
+name|false
 return|;
 block|}
 comment|/// \brief Returns the identifier namespace mask for this lookup.
@@ -715,31 +746,6 @@ return|return
 name|NamingClass
 operator|!=
 literal|0
-return|;
-block|}
-comment|/// \brief Set whether the name lookup is triggered by a
-comment|/// using declaration.
-name|void
-name|setUsingDeclaration
-parameter_list|(
-name|bool
-name|U
-parameter_list|)
-block|{
-name|UsingDeclaration
-operator|=
-name|U
-expr_stmt|;
-block|}
-comment|/// \brief Returns whether the name lookup is triggered by a
-comment|/// using declaration.
-name|bool
-name|isUsingDeclaration
-argument_list|()
-specifier|const
-block|{
-return|return
-name|UsingDeclaration
 return|;
 block|}
 comment|/// \brief Returns the 'naming class' for this lookup, i.e. the
@@ -1335,17 +1341,15 @@ expr_stmt|;
 block|}
 end_decl_stmt
 
-begin_decl_stmt
+begin_function_decl
 name|void
 name|print
-argument_list|(
-name|llvm
-operator|::
+parameter_list|(
 name|raw_ostream
-operator|&
-argument_list|)
-decl_stmt|;
-end_decl_stmt
+modifier|&
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// Suppress the diagnostics that would normally fire because of this
@@ -1991,20 +1995,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// \brief True if the lookup is triggered by a using declaration.
-end_comment
-
-begin_comment
-comment|/// Necessary to handle a MSVC bug.
-end_comment
-
-begin_decl_stmt
-name|bool
-name|UsingDeclaration
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
 unit|};
 comment|/// \brief Consumes visible declarations found when searching for
 end_comment
@@ -2049,6 +2039,8 @@ comment|///
 comment|/// \param Hiding a declaration that hides the declaration \p ND,
 comment|/// or NULL if no such declaration exists.
 comment|///
+comment|/// \param Ctx the original context from which the lookup started.
+comment|///
 comment|/// \param InBaseClass whether this declaration was found in base
 comment|/// class of the context we searched.
 name|virtual
@@ -2062,6 +2054,10 @@ parameter_list|,
 name|NamedDecl
 modifier|*
 name|Hiding
+parameter_list|,
+name|DeclContext
+modifier|*
+name|Ctx
 parameter_list|,
 name|bool
 name|InBaseClass

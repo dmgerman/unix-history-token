@@ -248,6 +248,7 @@ begin_function_decl
 name|void
 name|_lockmgr_assert
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -399,6 +400,7 @@ begin_function_decl
 name|void
 name|lockmgr_printinfo
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*
@@ -411,6 +413,7 @@ begin_function_decl
 name|int
 name|lockstatus
 parameter_list|(
+specifier|const
 name|struct
 name|lock
 modifier|*

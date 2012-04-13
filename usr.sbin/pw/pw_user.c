@@ -6156,6 +6156,10 @@ operator|+
 literal|1
 index|]
 decl_stmt|;
+name|char
+modifier|*
+name|cryptpw
+decl_stmt|;
 specifier|static
 name|char
 name|buf
@@ -6202,17 +6206,34 @@ index|]
 operator|=
 literal|'\0'
 expr_stmt|;
-return|return
-name|strcpy
-argument_list|(
-name|buf
-argument_list|,
+name|cryptpw
+operator|=
 name|crypt
 argument_list|(
 name|password
 argument_list|,
 name|salt
 argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cryptpw
+operator|==
+name|NULL
+condition|)
+name|errx
+argument_list|(
+name|EX_CONFIG
+argument_list|,
+literal|"crypt(3) failure"
+argument_list|)
+expr_stmt|;
+return|return
+name|strcpy
+argument_list|(
+name|buf
+argument_list|,
+name|cryptpw
 argument_list|)
 return|;
 block|}
@@ -7181,7 +7202,7 @@ name|errx
 argument_list|(
 name|EX_DATAERR
 argument_list|,
-literal|"invalid character %s at position %d in %s"
+literal|"invalid character %s at position %td in %s"
 argument_list|,
 name|showch
 argument_list|,

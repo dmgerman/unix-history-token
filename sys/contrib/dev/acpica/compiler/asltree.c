@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -17,6 +17,12 @@ begin_include
 include|#
 directive|include
 file|"aslcompiler.y.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|<contrib/dev/acpica/include/acapps.h>
 end_include
 
 begin_include
@@ -525,14 +531,6 @@ literal|"NODE_METHOD_TYPED"
 operator|)
 return|;
 case|case
-name|NODE_IS_BIT_OFFSET
-case|:
-return|return
-operator|(
-literal|"NODE_IS_BIT_OFFSET"
-operator|)
-return|;
-case|case
 name|NODE_COMPILE_TIME_CONST
 case|:
 return|return
@@ -761,6 +759,14 @@ name|char
 modifier|*
 name|TimeString
 decl_stmt|;
+name|char
+modifier|*
+name|Path
+decl_stmt|;
+name|char
+modifier|*
+name|Filename
+decl_stmt|;
 switch|switch
 condition|(
 name|ParseOpcode
@@ -792,7 +798,7 @@ name|LineNumber
 expr_stmt|;
 break|break;
 case|case
-name|PARSEOP___FILE__
+name|PARSEOP___PATH__
 case|:
 name|Op
 operator|=
@@ -814,6 +820,48 @@ name|Op
 operator|->
 name|Asl
 operator|.
+name|Filename
+expr_stmt|;
+break|break;
+case|case
+name|PARSEOP___FILE__
+case|:
+name|Op
+operator|=
+name|TrAllocateNode
+argument_list|(
+name|PARSEOP_STRING_LITERAL
+argument_list|)
+expr_stmt|;
+comment|/* Get the simple filename from the full path */
+name|FlSplitInputPathname
+argument_list|(
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Filename
+argument_list|,
+operator|&
+name|Path
+argument_list|,
+operator|&
+name|Filename
+argument_list|)
+expr_stmt|;
+name|ACPI_FREE
+argument_list|(
+name|Path
+argument_list|)
+expr_stmt|;
+name|Op
+operator|->
+name|Asl
+operator|.
+name|Value
+operator|.
+name|String
+operator|=
 name|Filename
 expr_stmt|;
 break|break;

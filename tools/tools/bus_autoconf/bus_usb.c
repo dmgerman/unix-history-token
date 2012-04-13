@@ -1813,7 +1813,7 @@ expr_stmt|;
 block|}
 name|printf
 argument_list|(
-literal|"	action \"kldload %s\";\n"
+literal|"	action \"kldload -n %s\";\n"
 literal|"};\n\n"
 argument_list|,
 name|id

@@ -382,10 +382,6 @@ name|t
 operator|=
 name|strtok
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|" \t,"
@@ -417,10 +413,6 @@ name|t
 operator|=
 name|strtok
 argument_list|(
-operator|(
-name|char
-operator|*
-operator|)
 name|NULL
 argument_list|,
 literal|" \t,"

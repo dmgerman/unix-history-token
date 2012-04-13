@@ -62,16 +62,6 @@ end_include
 begin_define
 define|#
 directive|define
-name|V86_ZR
-parameter_list|(
-name|x
-parameter_list|)
-value|((x)& PSL_Z)
-end_define
-
-begin_define
-define|#
-directive|define
 name|SECOND
 value|18
 end_define

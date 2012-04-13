@@ -784,7 +784,7 @@ expr_stmt|;
 comment|/* If it's an absolute or relative path name, it's easy. */
 if|if
 condition|(
-name|index
+name|strchr
 argument_list|(
 name|name
 argument_list|,

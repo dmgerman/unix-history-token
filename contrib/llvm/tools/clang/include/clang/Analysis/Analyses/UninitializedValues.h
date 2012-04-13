@@ -95,6 +95,7 @@ operator|~
 name|UninitVariablesHandler
 argument_list|()
 expr_stmt|;
+comment|/// Called when the uninitialized variable is used at the given expression.
 name|virtual
 name|void
 name|handleUseOfUninitVariable
@@ -111,6 +112,19 @@ name|vd
 parameter_list|,
 name|bool
 name|isAlwaysUninit
+parameter_list|)
+block|{}
+comment|/// Called when the uninitialized variable analysis detects the
+comment|/// idiom 'int x = x'.  All other uses of 'x' within the initializer
+comment|/// are handled by handleUseOfUninitVariable.
+name|virtual
+name|void
+name|handleSelfInit
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|vd
 parameter_list|)
 block|{}
 block|}

@@ -71,6 +71,10 @@ name|buggy
 operator|=
 literal|0
 expr_stmt|;
+name|total
+operator|=
+literal|0
+expr_stmt|;
 name|error
 operator|=
 name|pipe
@@ -100,7 +104,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|0
+literal|1
 init|;
 name|i
 operator|<

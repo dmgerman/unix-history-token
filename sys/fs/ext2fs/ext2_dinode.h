@@ -182,6 +182,41 @@ comment|/* do not update atime */
 end_comment
 
 begin_comment
+comment|/*  * Definitions for nanosecond timestamps.  * Ext3 inode versioning, 2006-12-13.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|EXT3_EPOCH_BITS
+value|2
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT3_EPOCH_MASK
+value|((1<< EXT3_EPOCH_BITS) - 1)
+end_define
+
+begin_define
+define|#
+directive|define
+name|EXT3_NSEC_MASK
+value|(~0UL<< EXT3_EPOCH_BITS)
+end_define
+
+begin_define
+define|#
+directive|define
+name|E2DI_HAS_XTIME
+parameter_list|(
+name|ip
+parameter_list|)
+value|(EXT2_INODE_SIZE((ip)->i_e2fs)> \ 				    E2FS_REV0_INODE_SIZE)
+end_define
+
+begin_comment
 comment|/*  * Structure of an inode on the disk  */
 end_comment
 
@@ -208,7 +243,7 @@ comment|/*	 8: Access time */
 name|uint32_t
 name|e2di_ctime
 decl_stmt|;
-comment|/*	12: Create time */
+comment|/*	12: Change time */
 name|uint32_t
 name|e2di_mtime
 decl_stmt|;
@@ -234,9 +269,9 @@ name|e2di_flags
 decl_stmt|;
 comment|/*  32: Status flags (chflags) */
 name|uint32_t
-name|e2di_linux_reserved1
+name|e2di_version
 decl_stmt|;
-comment|/* 36 */
+comment|/*  36: Low 32 bits inode version */
 name|uint32_t
 name|e2di_blocks
 index|[
@@ -284,6 +319,36 @@ name|uint32_t
 name|e2di_linux_reserved3
 decl_stmt|;
 comment|/* 124 */
+name|uint16_t
+name|e2di_extra_isize
+decl_stmt|;
+name|uint16_t
+name|e2di_pad1
+decl_stmt|;
+name|uint32_t
+name|e2di_ctime_extra
+decl_stmt|;
+comment|/* Extra change time */
+name|uint32_t
+name|e2di_mtime_extra
+decl_stmt|;
+comment|/* Extra modification time */
+name|uint32_t
+name|e2di_atime_extra
+decl_stmt|;
+comment|/* Extra access time */
+name|uint32_t
+name|e2di_crtime
+decl_stmt|;
+comment|/* Creation (birth)time */
+name|uint32_t
+name|e2di_crtime_extra
+decl_stmt|;
+comment|/* Extra creation (birth)time */
+name|uint32_t
+name|e2di_version_hi
+decl_stmt|;
+comment|/* High 30 bits of inode version */
 block|}
 struct|;
 end_struct

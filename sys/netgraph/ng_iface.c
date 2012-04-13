@@ -192,13 +192,14 @@ name|NG_SEPARATE_MALLOC
 end_ifdef
 
 begin_expr_stmt
+specifier|static
 name|MALLOC_DEFINE
 argument_list|(
 name|M_NETGRAPH_IFACE
 argument_list|,
 literal|"netgraph_iface"
 argument_list|,
-literal|"netgraph iface node "
+literal|"netgraph iface node"
 argument_list|)
 expr_stmt|;
 end_expr_stmt

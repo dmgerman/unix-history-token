@@ -194,9 +194,20 @@ name|TargetRegisterInfo
 modifier|&
 name|TRI
 decl_stmt|;
+comment|/// The position of the last instruction for materializing constants
+comment|/// for use in the current block. It resets to EmitStartPt when it
+comment|/// makes sense (for example, it's usually profitable to avoid function
+comment|/// calls between the definition and the use)
 name|MachineInstr
 modifier|*
 name|LastLocalValue
+decl_stmt|;
+comment|/// The top most instruction in the current block that is allowed for
+comment|/// emitting local variables. LastLocalValue resets to EmitStartPt when
+comment|/// it makes sense (for example, on function calls)
+name|MachineInstr
+modifier|*
+name|EmitStartPt
 decl_stmt|;
 name|public
 label|:
@@ -221,6 +232,10 @@ modifier|*
 name|I
 parameter_list|)
 block|{
+name|EmitStartPt
+operator|=
+name|I
+expr_stmt|;
 name|LastLocalValue
 operator|=
 name|I
@@ -1091,6 +1106,13 @@ parameter_list|,
 name|MVT
 name|VT
 parameter_list|)
+function_decl|;
+comment|/// flushLocalValueMap - clears LocalValueMap and moves the area for the
+comment|/// new local variables to the beginning of the block. It helps to avoid
+comment|/// spilling cached variables across heavy instructions like calls.
+name|void
+name|flushLocalValueMap
+parameter_list|()
 function_decl|;
 comment|/// hasTrivialKill - Test whether the given value has exactly one use.
 name|bool

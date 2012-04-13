@@ -101,6 +101,12 @@ directive|include
 file|<vm/pmap.h>
 end_include
 
+begin_include
+include|#
+directive|include
+file|"hwpmc_soft.h"
+end_include
+
 begin_comment
 comment|/*  * Attempt to walk a user call stack using a too-simple algorithm.  * In the general case we need unwind information associated with  * the executable to be able to walk the user stack.  *  * We are handed a trap frame laid down at the time the PMC interrupt  * was taken.  If the application is using frame pointers, the saved  * PC value could be:  * a. at the beginning of a function before the stack frame is laid  *    down,  * b. just before a 'ret', after the stack frame has been taken off,  * c. somewhere else in the function with a valid stack frame being  *    present,  *  * If the application is not using frame pointers, this algorithm will  * fail to yield an interesting call chain.  *  * TODO: figure out a way to use unwind information.  */
 end_comment
@@ -905,6 +911,10 @@ return|;
 comment|/* disallow sampling if we do not have an LAPIC */
 if|if
 condition|(
+name|md
+operator|!=
+name|NULL
+operator|&&
 operator|!
 name|lapic_enable_pmc
 argument_list|()
@@ -913,7 +923,7 @@ for|for
 control|(
 name|i
 operator|=
-literal|1
+literal|0
 init|;
 name|i
 operator|<
@@ -924,6 +934,14 @@ condition|;
 name|i
 operator|++
 control|)
+block|{
+if|if
+condition|(
+name|i
+operator|==
+name|PMC_CLASS_INDEX_SOFT
+condition|)
+continue|continue;
 name|md
 operator|->
 name|pmd_classdep
@@ -936,6 +954,7 @@ operator|&=
 operator|~
 name|PMC_CAP_INTERRUPT
 expr_stmt|;
+block|}
 return|return
 operator|(
 name|md

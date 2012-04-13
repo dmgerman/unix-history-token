@@ -1902,7 +1902,7 @@ argument|tstp
 argument_list|,
 argument|&new_clp->lc_stateid[i]
 argument_list|,
-argument|ls_list
+argument|ls_hash
 argument_list|)
 name|tstp
 operator|->
@@ -2248,7 +2248,7 @@ argument|tstp
 argument_list|,
 argument|&new_clp->lc_stateid[i]
 argument_list|,
-argument|ls_list
+argument|ls_hash
 argument_list|)
 name|tstp
 operator|->
@@ -18471,7 +18471,7 @@ name|off
 init|=
 literal|0
 decl_stmt|;
-name|int
+name|ssize_t
 name|aresid
 decl_stmt|,
 name|len

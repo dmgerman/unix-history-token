@@ -203,21 +203,7 @@ operator|.
 name|d_name
 operator|=
 literal|"gpioc"
-block|,
-if|#
-directive|if
-name|__FreeBSD_version
-operator|>=
-literal|800039
-operator|.
-name|d_flags
-operator|=
-name|D_PSEUDO
-operator||
-name|D_NEEDMINOR
-endif|#
-directive|endif
-block|}
+block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -406,7 +392,6 @@ name|sc
 operator|->
 name|sc_ctl_dev
 condition|)
-empty_stmt|;
 name|destroy_dev
 argument_list|(
 name|sc

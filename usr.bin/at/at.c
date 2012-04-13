@@ -312,6 +312,7 @@ comment|/* File scope variables */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -338,6 +339,33 @@ init|=
 literal|0
 decl_stmt|;
 end_decl_stmt
+
+begin_decl_stmt
+specifier|static
+name|char
+modifier|*
+name|atinput
+init|=
+name|NULL
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* where to get input from */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|char
+name|atqueue
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* which queue to examine for jobs (atq) */
+end_comment
 
 begin_comment
 comment|/* External variables */
@@ -367,35 +395,6 @@ name|ATJOB_DIR
 literal|"12345678901234"
 decl_stmt|;
 end_decl_stmt
-
-begin_decl_stmt
-name|char
-modifier|*
-name|atinput
-init|=
-operator|(
-name|char
-operator|*
-operator|)
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* where to get input from */
-end_comment
-
-begin_decl_stmt
-name|char
-name|atqueue
-init|=
-literal|0
-decl_stmt|;
-end_decl_stmt
-
-begin_comment
-comment|/* which queue to examine for jobs (atq) */
-end_comment
 
 begin_decl_stmt
 name|char

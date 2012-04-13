@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright (c) 2011 Pawel Jakub Dawidek<pawel@dawidek.net>.  * All rights reserved.  */
 end_comment
 
 begin_include
@@ -96,6 +96,23 @@ include|#
 directive|include
 file|<sys/zvol.h>
 end_include
+
+begin_ifdef
+ifdef|#
+directive|ifdef
+name|_KERNEL
+end_ifdef
+
+begin_include
+include|#
+directive|include
+file|<sys/zfs_vfsops.h>
+end_include
+
+begin_endif
+endif|#
+directive|endif
+end_endif
 
 begin_include
 include|#
@@ -6326,6 +6343,9 @@ name|char
 modifier|*
 name|mynewname
 decl_stmt|;
+name|boolean_t
+name|allowmounted
+decl_stmt|;
 block|}
 struct|;
 end_struct
@@ -6383,9 +6403,14 @@ decl_stmt|;
 name|uint64_t
 name|val
 decl_stmt|;
-comment|/* 	 * There should only be one reference, from dmu_objset_rename(). 	 * Fleeting holds are also possible (eg, from "zfs list" getting 	 * stats), but any that are present in open context will likely 	 * be gone by syncing context, so only fail from syncing 	 * context. 	 */
+comment|/* 	 * There should only be one reference, from dmu_objset_rename(). 	 * Fleeting holds are also possible (eg, from "zfs list" getting 	 * stats), but any that are present in open context will likely 	 * be gone by syncing context, so only fail from syncing 	 * context. 	 * Don't check if we allow renaming of busy (mounted) dataset. 	 */
 if|if
 condition|(
+operator|!
+name|ra
+operator|->
+name|allowmounted
+operator|&&
 name|dmu_tx_is_syncing
 argument_list|(
 name|tx
@@ -6400,11 +6425,13 @@ argument_list|)
 operator|>
 literal|1
 condition|)
+block|{
 return|return
 operator|(
 name|EBUSY
 operator|)
 return|;
+block|}
 comment|/* check for existing name */
 name|err
 operator|=
@@ -6597,6 +6624,10 @@ name|err
 decl_stmt|;
 name|ASSERT
 argument_list|(
+name|ra
+operator|->
+name|allowmounted
+operator|||
 name|dmu_buf_refcount
 argument_list|(
 name|dd
@@ -6905,6 +6936,13 @@ expr_stmt|;
 ifdef|#
 directive|ifdef
 name|_KERNEL
+name|zfsvfs_update_fromname
+argument_list|(
+name|oldname
+argument_list|,
+name|newname
+argument_list|)
+expr_stmt|;
 name|zvol_rename_minors
 argument_list|(
 name|oldname
@@ -6950,6 +6988,9 @@ specifier|const
 name|char
 modifier|*
 name|newname
+parameter_list|,
+name|int
+name|flags
 parameter_list|)
 block|{
 name|struct
@@ -7028,6 +7069,18 @@ goto|goto
 name|out
 goto|;
 block|}
+name|ra
+operator|.
+name|allowmounted
+operator|=
+operator|!
+operator|!
+operator|(
+name|flags
+operator|&
+name|ZFS_RENAME_ALLOW_MOUNTED
+operator|)
+expr_stmt|;
 name|err
 operator|=
 name|dsl_sync_task_do

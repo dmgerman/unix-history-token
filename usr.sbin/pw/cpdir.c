@@ -432,7 +432,7 @@ operator|.
 name|st_flags
 argument_list|)
 expr_stmt|;
-comment|/* propogate flags */
+comment|/* propagate flags */
 block|}
 elseif|else
 if|if
@@ -457,6 +457,8 @@ sizeof|sizeof
 argument_list|(
 name|lnk
 argument_list|)
+operator|-
+literal|1
 argument_list|)
 operator|)
 operator|!=
@@ -487,7 +489,7 @@ argument_list|,
 name|gid
 argument_list|)
 expr_stmt|;
-comment|/* 							 * Note: don't propogate special attributes 							 * but do propogate file flags 							 */
+comment|/* 							 * Note: don't propagate special attributes 							 * but do propagate file flags 							 */
 block|}
 elseif|else
 if|if
@@ -600,7 +602,7 @@ argument_list|(
 name|infd
 argument_list|)
 expr_stmt|;
-comment|/* 								 * Propogate special filesystem flags 								 */
+comment|/* 								 * Propagate special filesystem flags 								 */
 name|fchown
 argument_list|(
 name|outfd

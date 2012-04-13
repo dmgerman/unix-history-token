@@ -4,7 +4,7 @@ comment|/*  * CDDL HEADER START  *  * The contents of this file are subject to t
 end_comment
 
 begin_comment
-comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  */
+comment|/*  * Copyright (c) 2005, 2010, Oracle and/or its affiliates. All rights reserved.  * Copyright 2011 Nexenta Systems, Inc.  All rights reserved.  * Copyright (c) 2011 by Delphix. All rights reserved.  */
 end_comment
 
 begin_comment
@@ -1435,7 +1435,7 @@ name|OID_AUTO
 argument_list|,
 name|arc_meta_used
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RD
 argument_list|,
 operator|&
 name|arc_meta_used
@@ -1456,7 +1456,7 @@ name|OID_AUTO
 argument_list|,
 name|arc_meta_limit
 argument_list|,
-name|CTLFLAG_RDTUN
+name|CTLFLAG_RW
 argument_list|,
 operator|&
 name|arc_meta_limit
@@ -6361,7 +6361,7 @@ name|hdr
 operator|->
 name|b_spa
 operator|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -10283,7 +10283,7 @@ name|spa
 condition|)
 name|guid
 operator|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -13426,7 +13426,7 @@ decl_stmt|;
 name|uint64_t
 name|guid
 init|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)
@@ -14371,6 +14371,18 @@ argument_list|,
 name|misses
 argument_list|)
 expr_stmt|;
+ifdef|#
+directive|ifdef
+name|_KERNEL
+name|curthread
+operator|->
+name|td_ru
+operator|.
+name|ru_inblock
+operator|++
+expr_stmt|;
+endif|#
+directive|endif
 if|if
 condition|(
 name|vd
@@ -20461,7 +20473,7 @@ decl_stmt|;
 name|uint64_t
 name|guid
 init|=
-name|spa_guid
+name|spa_load_guid
 argument_list|(
 name|spa
 argument_list|)

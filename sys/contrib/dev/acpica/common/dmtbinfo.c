@@ -4,7 +4,7 @@ comment|/***********************************************************************
 end_comment
 
 begin_comment
-comment|/*  * Copyright (C) 2000 - 2011, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
+comment|/*  * Copyright (C) 2000 - 2012, Intel Corp.  * All rights reserved.  *  * Redistribution and use in source and binary forms, with or without  * modification, are permitted provided that the following conditions  * are met:  * 1. Redistributions of source code must retain the above copyright  *    notice, this list of conditions, and the following disclaimer,  *    without modification.  * 2. Redistributions in binary form must reproduce at minimum a disclaimer  *    substantially similar to the "NO WARRANTY" disclaimer below  *    ("Disclaimer") and any redistribution must be conditioned upon  *    including a substantially similar Disclaimer requirement for further  *    binary redistribution.  * 3. Neither the names of the above-listed copyright holders nor the names  *    of any contributors may be used to endorse or promote products derived  *    from this software without specific prior written permission.  *  * Alternatively, this software may be distributed under the terms of the  * GNU General Public License ("GPL") version 2 as published by the Free  * Software Foundation.  *  * NO WARRANTY  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT  * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTIBILITY AND FITNESS FOR  * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT  * HOLDERS OR CONTRIBUTORS BE LIABLE FOR SPECIAL, EXEMPLARY, OR CONSEQUENTIAL  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS  * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)  * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING  * IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE  * POSSIBILITY OF SUCH DAMAGES.  */
 end_comment
 
 begin_include
@@ -58,7 +58,7 @@ name|ACPI_FACS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_FACS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_FACS,f)
 end_define
 
 begin_define
@@ -68,7 +68,7 @@ name|ACPI_GAS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_GENERIC_ADDRESS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_GENERIC_ADDRESS,f)
 end_define
 
 begin_define
@@ -78,7 +78,7 @@ name|ACPI_HDR_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_HEADER,f)
 end_define
 
 begin_define
@@ -88,17 +88,7 @@ name|ACPI_RSDP_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_RSDP,f)
-end_define
-
-begin_define
-define|#
-directive|define
-name|ACPI_BOOT_OFFSET
-parameter_list|(
-name|f
-parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_BOOT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_RSDP,f)
 end_define
 
 begin_define
@@ -108,7 +98,27 @@ name|ACPI_BERT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_BERT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_BERT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BGRT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_BGRT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_BOOT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_BOOT,f)
 end_define
 
 begin_define
@@ -118,7 +128,7 @@ name|ACPI_CPEP_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_CPEP,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_CPEP,f)
 end_define
 
 begin_define
@@ -128,7 +138,7 @@ name|ACPI_DBGP_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_DBGP,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_DBGP,f)
 end_define
 
 begin_define
@@ -138,7 +148,17 @@ name|ACPI_DMAR_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_DMAR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_DMAR,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DRTM_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_DRTM,f)
 end_define
 
 begin_define
@@ -148,7 +168,7 @@ name|ACPI_ECDT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_ECDT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_ECDT,f)
 end_define
 
 begin_define
@@ -158,7 +178,7 @@ name|ACPI_EINJ_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_EINJ,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_EINJ,f)
 end_define
 
 begin_define
@@ -168,7 +188,17 @@ name|ACPI_ERST_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_ERST,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_ERST,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GTDT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_GTDT,f)
 end_define
 
 begin_define
@@ -178,7 +208,7 @@ name|ACPI_HEST_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HEST,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_HEST,f)
 end_define
 
 begin_define
@@ -188,7 +218,7 @@ name|ACPI_HPET_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_HPET,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_HPET,f)
 end_define
 
 begin_define
@@ -198,7 +228,7 @@ name|ACPI_IVRS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_IVRS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_IVRS,f)
 end_define
 
 begin_define
@@ -208,7 +238,7 @@ name|ACPI_MADT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MADT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MADT,f)
 end_define
 
 begin_define
@@ -218,7 +248,7 @@ name|ACPI_MCFG_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MCFG,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MCFG,f)
 end_define
 
 begin_define
@@ -228,7 +258,17 @@ name|ACPI_MCHI_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MCHI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MCHI,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MPST,f)
 end_define
 
 begin_define
@@ -238,7 +278,37 @@ name|ACPI_MSCT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_MSCT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_MSCT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCCT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_PCCT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PMTT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_PMTT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_S3PT_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_S3PT,f)
 end_define
 
 begin_define
@@ -248,7 +318,7 @@ name|ACPI_SBST_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SBST,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SBST,f)
 end_define
 
 begin_define
@@ -258,7 +328,7 @@ name|ACPI_SLIT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SLIT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SLIT,f)
 end_define
 
 begin_define
@@ -268,7 +338,7 @@ name|ACPI_SPCR_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SPCR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SPCR,f)
 end_define
 
 begin_define
@@ -278,7 +348,7 @@ name|ACPI_SPMI_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SPMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SPMI,f)
 end_define
 
 begin_define
@@ -288,7 +358,7 @@ name|ACPI_SRAT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_SRAT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_SRAT,f)
 end_define
 
 begin_define
@@ -298,7 +368,7 @@ name|ACPI_TCPA_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_TCPA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_TCPA,f)
 end_define
 
 begin_define
@@ -308,7 +378,7 @@ name|ACPI_UEFI_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_UEFI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_UEFI,f)
 end_define
 
 begin_define
@@ -318,7 +388,7 @@ name|ACPI_WAET_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WAET,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WAET,f)
 end_define
 
 begin_define
@@ -328,7 +398,7 @@ name|ACPI_WDAT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDAT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WDAT,f)
 end_define
 
 begin_define
@@ -338,7 +408,7 @@ name|ACPI_WDDT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDDT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WDDT,f)
 end_define
 
 begin_define
@@ -348,7 +418,7 @@ name|ACPI_WDRT_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_TABLE_WDRT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_TABLE_WDRT,f)
 end_define
 
 begin_comment
@@ -362,7 +432,7 @@ name|ACPI_ASF0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_INFO,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_INFO,f)
 end_define
 
 begin_define
@@ -372,7 +442,7 @@ name|ACPI_ASF1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_ALERT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_ALERT,f)
 end_define
 
 begin_define
@@ -382,7 +452,7 @@ name|ACPI_ASF1a_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_ALERT_DATA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_ALERT_DATA,f)
 end_define
 
 begin_define
@@ -392,7 +462,7 @@ name|ACPI_ASF2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_REMOTE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_REMOTE,f)
 end_define
 
 begin_define
@@ -402,7 +472,7 @@ name|ACPI_ASF2a_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_CONTROL_DATA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_CONTROL_DATA,f)
 end_define
 
 begin_define
@@ -412,7 +482,7 @@ name|ACPI_ASF3_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_RMCP,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_RMCP,f)
 end_define
 
 begin_define
@@ -422,7 +492,7 @@ name|ACPI_ASF4_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_ASF_ADDRESS,f)
+value|(UINT16) ACPI_OFFSET (ACPI_ASF_ADDRESS,f)
 end_define
 
 begin_define
@@ -432,7 +502,7 @@ name|ACPI_CPEP0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_CPEP_POLLING,f)
+value|(UINT16) ACPI_OFFSET (ACPI_CPEP_POLLING,f)
 end_define
 
 begin_define
@@ -442,7 +512,7 @@ name|ACPI_DMARS_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_DEVICE_SCOPE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_DEVICE_SCOPE,f)
 end_define
 
 begin_define
@@ -452,7 +522,7 @@ name|ACPI_DMAR0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_HARDWARE_UNIT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_HARDWARE_UNIT,f)
 end_define
 
 begin_define
@@ -462,7 +532,7 @@ name|ACPI_DMAR1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_RESERVED_MEMORY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_RESERVED_MEMORY,f)
 end_define
 
 begin_define
@@ -472,7 +542,7 @@ name|ACPI_DMAR2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_ATSR,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_ATSR,f)
 end_define
 
 begin_define
@@ -482,7 +552,7 @@ name|ACPI_DMAR3_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_DMAR_RHSA,f)
+value|(UINT16) ACPI_OFFSET (ACPI_DMAR_RHSA,f)
 end_define
 
 begin_define
@@ -492,7 +562,7 @@ name|ACPI_EINJ0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
 end_define
 
 begin_define
@@ -502,7 +572,37 @@ name|ACPI_ERST0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_WHEA_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FPDTH_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FPDT0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_BOOT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_FPDT1_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_FPDT_S3PT_PTR,f)
 end_define
 
 begin_define
@@ -512,7 +612,7 @@ name|ACPI_HEST0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_MACHINE_CHECK,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_MACHINE_CHECK,f)
 end_define
 
 begin_define
@@ -522,7 +622,7 @@ name|ACPI_HEST1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_CORRECTED,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_CORRECTED,f)
 end_define
 
 begin_define
@@ -532,7 +632,7 @@ name|ACPI_HEST2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_NMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_NMI,f)
 end_define
 
 begin_define
@@ -542,7 +642,7 @@ name|ACPI_HEST6_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER_ROOT,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_AER_ROOT,f)
 end_define
 
 begin_define
@@ -552,7 +652,7 @@ name|ACPI_HEST7_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_AER,f)
 end_define
 
 begin_define
@@ -562,7 +662,7 @@ name|ACPI_HEST8_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_AER_BRIDGE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_AER_BRIDGE,f)
 end_define
 
 begin_define
@@ -572,7 +672,7 @@ name|ACPI_HEST9_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_GENERIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_GENERIC,f)
 end_define
 
 begin_define
@@ -582,7 +682,7 @@ name|ACPI_HESTN_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_NOTIFY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_NOTIFY,f)
 end_define
 
 begin_define
@@ -592,7 +692,7 @@ name|ACPI_HESTB_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_HEST_IA_ERROR_BANK,f)
+value|(UINT16) ACPI_OFFSET (ACPI_HEST_IA_ERROR_BANK,f)
 end_define
 
 begin_define
@@ -602,7 +702,7 @@ name|ACPI_IVRSH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_HEADER,f)
 end_define
 
 begin_define
@@ -612,7 +712,7 @@ name|ACPI_IVRS0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_HARDWARE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_HARDWARE,f)
 end_define
 
 begin_define
@@ -622,7 +722,7 @@ name|ACPI_IVRS1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_MEMORY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_MEMORY,f)
 end_define
 
 begin_define
@@ -632,7 +732,7 @@ name|ACPI_IVRSD_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DE_HEADER,f)
 end_define
 
 begin_define
@@ -642,7 +742,7 @@ name|ACPI_IVRS8A_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8A,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DEVICE8A,f)
 end_define
 
 begin_define
@@ -652,7 +752,7 @@ name|ACPI_IVRS8B_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8B,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DEVICE8B,f)
 end_define
 
 begin_define
@@ -662,7 +762,7 @@ name|ACPI_IVRS8C_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_IVRS_DEVICE8C,f)
+value|(UINT16) ACPI_OFFSET (ACPI_IVRS_DEVICE8C,f)
 end_define
 
 begin_define
@@ -672,7 +772,7 @@ name|ACPI_MADT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC,f)
 end_define
 
 begin_define
@@ -682,7 +782,7 @@ name|ACPI_MADT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_IO_APIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_IO_APIC,f)
 end_define
 
 begin_define
@@ -692,7 +792,7 @@ name|ACPI_MADT2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_INTERRUPT_OVERRIDE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_INTERRUPT_OVERRIDE,f)
 end_define
 
 begin_define
@@ -702,7 +802,7 @@ name|ACPI_MADT3_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_NMI_SOURCE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_NMI_SOURCE,f)
 end_define
 
 begin_define
@@ -712,7 +812,7 @@ name|ACPI_MADT4_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_NMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_NMI,f)
 end_define
 
 begin_define
@@ -722,7 +822,7 @@ name|ACPI_MADT5_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_OVERRIDE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_APIC_OVERRIDE,f)
 end_define
 
 begin_define
@@ -732,7 +832,7 @@ name|ACPI_MADT6_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_IO_SAPIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_IO_SAPIC,f)
 end_define
 
 begin_define
@@ -742,7 +842,7 @@ name|ACPI_MADT7_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_SAPIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_SAPIC,f)
 end_define
 
 begin_define
@@ -752,7 +852,7 @@ name|ACPI_MADT8_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_INTERRUPT_SOURCE,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_INTERRUPT_SOURCE,f)
 end_define
 
 begin_define
@@ -762,7 +862,7 @@ name|ACPI_MADT9_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC,f)
 end_define
 
 begin_define
@@ -772,7 +872,27 @@ name|ACPI_MADT10_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC_NMI,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_LOCAL_X2APIC_NMI,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT11_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_GENERIC_INTERRUPT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MADT12_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MADT_GENERIC_DISTRIBUTOR,f)
 end_define
 
 begin_define
@@ -782,7 +902,7 @@ name|ACPI_MADTH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
 end_define
 
 begin_define
@@ -792,7 +912,57 @@ name|ACPI_MCFG0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MCFG_ALLOCATION,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MCFG_ALLOCATION,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_POWER_NODE,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST0A_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_POWER_STATE,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST0B_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_COMPONENT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST1_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_DATA_HDR,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST2_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_MPST_POWER_DATA,f)
 end_define
 
 begin_define
@@ -802,7 +972,97 @@ name|ACPI_MSCT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_MSCT_PROXIMITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_MSCT_PROXIMITY,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCCT0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_PCCT_SUBSPACE,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PMTT0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_SOCKET,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PMTT1_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_CONTROLLER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PMTT1A_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_DOMAIN,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PMTT2_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_PHYSICAL_COMPONENT,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PMTTH_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_PMTT_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_S3PTH_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_S3PT_HEADER,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_S3PT0_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_S3PT_RESUME,f)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_S3PT1_OFFSET
+parameter_list|(
+name|f
+parameter_list|)
+value|(UINT16) ACPI_OFFSET (ACPI_S3PT_SUSPEND,f)
 end_define
 
 begin_define
@@ -812,7 +1072,7 @@ name|ACPI_SLICH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SLIC_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SLIC_HEADER,f)
 end_define
 
 begin_define
@@ -822,7 +1082,7 @@ name|ACPI_SLIC0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SLIC_KEY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SLIC_KEY,f)
 end_define
 
 begin_define
@@ -832,7 +1092,7 @@ name|ACPI_SLIC1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SLIC_MARKER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SLIC_MARKER,f)
 end_define
 
 begin_define
@@ -842,7 +1102,7 @@ name|ACPI_SRATH_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SUBTABLE_HEADER,f)
 end_define
 
 begin_define
@@ -852,7 +1112,7 @@ name|ACPI_SRAT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SRAT_CPU_AFFINITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SRAT_CPU_AFFINITY,f)
 end_define
 
 begin_define
@@ -862,7 +1122,7 @@ name|ACPI_SRAT1_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SRAT_MEM_AFFINITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SRAT_MEM_AFFINITY,f)
 end_define
 
 begin_define
@@ -872,7 +1132,7 @@ name|ACPI_SRAT2_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f)
 end_define
 
 begin_define
@@ -882,7 +1142,7 @@ name|ACPI_WDAT0_OFFSET
 parameter_list|(
 name|f
 parameter_list|)
-value|(UINT8) ACPI_OFFSET (ACPI_WDAT_ENTRY,f)
+value|(UINT16) ACPI_OFFSET (ACPI_WDAT_ENTRY,f)
 end_define
 
 begin_comment
@@ -900,7 +1160,7 @@ name|f
 parameter_list|,
 name|o
 parameter_list|)
-value|(UINT8) (ACPI_OFFSET (d,f) + o)
+value|(UINT16) (ACPI_OFFSET (d,f) + o)
 end_define
 
 begin_comment
@@ -977,6 +1237,18 @@ parameter_list|,
 name|o
 parameter_list|)
 value|ACPI_FLAG_OFFSET (ACPI_SRAT_X2APIC_CPU_AFFINITY,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_GTDT_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_TABLE_GTDT,f,o)
 end_define
 
 begin_define
@@ -1090,6 +1362,66 @@ end_define
 begin_define
 define|#
 directive|define
+name|ACPI_MADT11_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_MADT_GENERIC_INTERRUPT,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST0_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_MPST_POWER_NODE,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_MPST2_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_MPST_POWER_DATA,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PCCT_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_TABLE_PCCT,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_PMTTH_FLAG_OFFSET
+parameter_list|(
+name|f
+parameter_list|,
+name|o
+parameter_list|)
+value|ACPI_FLAG_OFFSET (ACPI_PMTT_HEADER,f,o)
+end_define
+
+begin_define
+define|#
+directive|define
 name|ACPI_WDDT_FLAG_OFFSET
 parameter_list|(
 name|f
@@ -1168,6 +1500,13 @@ define|#
 directive|define
 name|ACPI_DMT_TERMINATOR
 value|{ACPI_DMT_EXIT, 0, NULL, 0}
+end_define
+
+begin_define
+define|#
+directive|define
+name|ACPI_DMT_NEW_LINE
+value|{ACPI_DMT_EXTRA_TEXT, 0, "\n", 0}
 end_define
 
 begin_comment
@@ -2309,6 +2648,21 @@ literal|0
 block|}
 block|,
 block|{
+name|ACPI_DMT_FLAG5
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|BootFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"CMOS RTC Not Present (V5)"
+block|,
+literal|0
+block|}
+block|,
+block|{
 name|ACPI_DMT_UINT8
 block|,
 name|ACPI_FADT_OFFSET
@@ -2637,6 +2991,36 @@ block|,
 literal|0
 block|}
 block|,
+block|{
+name|ACPI_DMT_FLAG4
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+block|,
+literal|"Hardware Reduced (V5)"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG5
+block|,
+name|ACPI_FADT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|2
+argument_list|)
+block|,
+literal|"Low Power S0 Idle (V5)"
+block|,
+literal|0
+block|}
+block|,
 name|ACPI_DMT_TERMINATOR
 block|}
 decl_stmt|;
@@ -2700,7 +3084,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* ACPI 2.0+ Extensions (FADT version 3+) */
+comment|/* ACPI 2.0+ Extensions (FADT version 3 and 4) */
 end_comment
 
 begin_decl_stmt
@@ -2877,6 +3261,47 @@ name|XGpe1Block
 argument_list|)
 block|,
 literal|"GPE1 Block"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* ACPI 5.0 Extensions (FADT version 5) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoFadt5
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_FADT_OFFSET
+argument_list|(
+name|SleepControl
+argument_list|)
+block|,
+literal|"Sleep Control Register"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_FADT_OFFSET
+argument_list|(
+name|SleepStatus
+argument_list|)
+block|,
+literal|"Sleep Status Register"
 block|,
 literal|0
 block|}
@@ -3601,6 +4026,99 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * BGRT -  Boot Graphics Resource Table (ACPI 5.0)  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoBgrt
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_BGRT_OFFSET
+argument_list|(
+name|Version
+argument_list|)
+block|,
+literal|"Version"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_BGRT_OFFSET
+argument_list|(
+name|Status
+argument_list|)
+block|,
+literal|"Status"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_BGRT_OFFSET
+argument_list|(
+name|ImageType
+argument_list|)
+block|,
+literal|"Image Type"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_BGRT_OFFSET
+argument_list|(
+name|ImageAddress
+argument_list|)
+block|,
+literal|"Image Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_BGRT_OFFSET
+argument_list|(
+name|ImageOffsetX
+argument_list|)
+block|,
+literal|"Image OffsetX"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_BGRT_OFFSET
+argument_list|(
+name|ImageOffsetY
+argument_list|)
+block|,
+literal|"Image OffsetY"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * BOOT - Simple Boot Flag Table  *  ******************************************************************************/
 end_comment
 
@@ -4222,6 +4740,21 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * DRTM - Dynamic Root of Trust for Measurement table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoDrtm
+index|[]
+init|=
+block|{
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * ECDT - Embedded Controller Boot Resources Table  *  ******************************************************************************/
 end_comment
 
@@ -4653,6 +5186,490 @@ name|Mask
 argument_list|)
 block|,
 literal|"Mask"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * FPDT - Firmware Performance Data Table (ACPI 5.0)  *  ******************************************************************************/
+end_comment
+
+begin_comment
+comment|/* Main table consists of only the standard ACPI header - subtables follow */
+end_comment
+
+begin_comment
+comment|/* FPDT subtable header */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoFpdtHdr
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_FPDTH_OFFSET
+argument_list|(
+name|Type
+argument_list|)
+block|,
+literal|"Subtable Type"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_FPDTH_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|,
+name|DT_LENGTH
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_FPDTH_OFFSET
+argument_list|(
+name|Revision
+argument_list|)
+block|,
+literal|"Revision"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0: Firmware Basic Boot Performance Record */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoFpdt0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_FPDT0_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_FPDT0_OFFSET
+argument_list|(
+name|ResetEnd
+argument_list|)
+block|,
+literal|"Reset End"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_FPDT0_OFFSET
+argument_list|(
+name|LoadStart
+argument_list|)
+block|,
+literal|"Load Image Start"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_FPDT0_OFFSET
+argument_list|(
+name|StartupStart
+argument_list|)
+block|,
+literal|"Start Image Start"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_FPDT0_OFFSET
+argument_list|(
+name|ExitServicesEntry
+argument_list|)
+block|,
+literal|"Exit Services Entry"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_FPDT0_OFFSET
+argument_list|(
+name|ExitServicesExit
+argument_list|)
+block|,
+literal|"Exit Services Exit"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1: S3 Performance Table Pointer Record */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoFpdt1
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_FPDT1_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_FPDT1_OFFSET
+argument_list|(
+name|Address
+argument_list|)
+block|,
+literal|"S3PT Address"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * GTDT - Generic Timer Description Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoGtdt
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|Address
+argument_list|)
+block|,
+literal|"Timer Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Memory Present"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_NEW_LINE
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|SecurePl1Interrupt
+argument_list|)
+block|,
+literal|"Secure PL1 Interrupt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|SecurePl1Flags
+argument_list|)
+block|,
+literal|"SPL1 Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|SecurePl1Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Trigger Mode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|SecurePl1Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Polarity"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_NEW_LINE
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|NonSecurePl1Interrupt
+argument_list|)
+block|,
+literal|"Non-Secure PL1 Interrupt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|NonSecurePl1Flags
+argument_list|)
+block|,
+literal|"NSPL1 Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|NonSecurePl1Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Trigger Mode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|NonSecurePl1Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Polarity"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_NEW_LINE
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|VirtualTimerInterrupt
+argument_list|)
+block|,
+literal|"Virtual Timer Interrupt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|VirtualTimerFlags
+argument_list|)
+block|,
+literal|"VT Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|VirtualTimerFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Trigger Mode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|VirtualTimerFlags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Polarity"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_NEW_LINE
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|NonSecurePl2Interrupt
+argument_list|)
+block|,
+literal|"Non-Secure PL2 Interrupt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_GTDT_OFFSET
+argument_list|(
+name|NonSecurePl2Flags
+argument_list|)
+block|,
+literal|"NSPL2 Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|NonSecurePl2Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Trigger Mode"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_GTDT_FLAG_OFFSET
+argument_list|(
+name|NonSecurePl2Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Polarity"
 block|,
 literal|0
 block|}
@@ -7181,6 +8198,220 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* 11: Generic Interrupt Controller (ACPI 5.0) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMadt11
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|GicId
+argument_list|)
+block|,
+literal|"Local GIC Hardware ID"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|Uid
+argument_list|)
+block|,
+literal|"Processor UID"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_MADT11_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Processor Enabled"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|ParkingVersion
+argument_list|)
+block|,
+literal|"Parking Protocol Version"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|PerformanceInterrupt
+argument_list|)
+block|,
+literal|"Performance Interrupt"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|ParkedAddress
+argument_list|)
+block|,
+literal|"Parked Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MADT11_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 12: Generic Interrupt Distributor (ACPI 5.0) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMadt12
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MADT12_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT12_OFFSET
+argument_list|(
+name|GicId
+argument_list|)
+block|,
+literal|"Local GIC Hardware ID"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MADT12_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT12_OFFSET
+argument_list|(
+name|GlobalIrqBase
+argument_list|)
+block|,
+literal|"Interrupt Base"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MADT12_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * MCFG - PCI Memory Mapped Configuration table and Subtable  *  ******************************************************************************/
 end_comment
 
@@ -7459,6 +8690,502 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/*******************************************************************************  *  * MPST - Memory Power State Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMpst
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MPST_OFFSET
+argument_list|(
+name|Reserved1
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST_OFFSET
+argument_list|(
+name|ChannelId
+argument_list|)
+block|,
+literal|"Channel ID"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MPST_OFFSET
+argument_list|(
+name|PowerNodeCount
+argument_list|)
+block|,
+literal|"Power Node Count"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* MPST subtables */
+end_comment
+
+begin_comment
+comment|/* 0: Memory Power Node Structure */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMpst0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_MPST0_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Node Enabled"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_MPST0_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Power Managed"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG2
+block|,
+name|ACPI_MPST0_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Hot Plug Capable"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|Reserved1
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|NodeId
+argument_list|)
+block|,
+literal|"Node ID"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|,
+name|DT_LENGTH
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|RangeAddress
+argument_list|)
+block|,
+literal|"Range Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|RangeLength
+argument_list|)
+block|,
+literal|"Range Length"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|NumPowerStates
+argument_list|)
+block|,
+literal|"Num Power States"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|NumPhysicalComponents
+argument_list|)
+block|,
+literal|"Num Physical Components"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MPST0_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0A: Sub-subtable - Memory Power State Structure (follows Memory Power Node above) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMpst0A
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST0A_OFFSET
+argument_list|(
+name|PowerState
+argument_list|)
+block|,
+literal|"Power State"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST0A_OFFSET
+argument_list|(
+name|InfoIndex
+argument_list|)
+block|,
+literal|"InfoIndex"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0B: Sub-subtable - Physical Component ID Structure (follows Memory Power State(s) above) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMpst0B
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MPST0B_OFFSET
+argument_list|(
+name|ComponentId
+argument_list|)
+block|,
+literal|"Component Id"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 01: Power Characteristics Count (follows all Power Node(s) above) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMpst1
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MPST1_OFFSET
+argument_list|(
+name|CharacteristicsCount
+argument_list|)
+block|,
+literal|"Characteristics Count"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 02: Memory Power State Characteristics Structure */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoMpst2
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST2_OFFSET
+argument_list|(
+name|Revision
+argument_list|)
+block|,
+literal|"Revision"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_MPST2_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_MPST2_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Memory Preserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_MPST2_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Auto Entry"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG2
+block|,
+name|ACPI_MPST2_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Auto Exit"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_MPST2_OFFSET
+argument_list|(
+name|Reserved1
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MPST2_OFFSET
+argument_list|(
+name|AveragePower
+argument_list|)
+block|,
+literal|"Average Power"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_MPST2_OFFSET
+argument_list|(
+name|PowerSaving
+argument_list|)
+block|,
+literal|"Power Saving"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MPST2_OFFSET
+argument_list|(
+name|ExitLatency
+argument_list|)
+block|,
+literal|"Exit Latency"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_MPST2_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/*******************************************************************************  *  * MSCT - Maximum System Characteristics Table (ACPI 4.0)  *  ******************************************************************************/
 end_comment
 
@@ -7609,6 +9336,810 @@ name|MemoryCapacity
 argument_list|)
 block|,
 literal|"Memory Capacity"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * PCCT - Platform Communications Channel Table (ACPI 5.0)  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcct
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_PCCT_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Doorbell"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT_OFFSET
+argument_list|(
+name|Latency
+argument_list|)
+block|,
+literal|"Command Latency"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PCCT_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PCCT subtables */
+end_comment
+
+begin_comment
+comment|/* 0: Generic Communications Subspace */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPcct0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|Header
+operator|.
+name|Type
+argument_list|)
+block|,
+literal|"Subtable Type"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|Header
+operator|.
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|,
+name|DT_LENGTH
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT48
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|Reserved
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|BaseAddress
+argument_list|)
+block|,
+literal|"Base Address"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Address Length"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_GAS
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|DoorbellRegister
+argument_list|)
+block|,
+literal|"Doorbell Register"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|PreserveMask
+argument_list|)
+block|,
+literal|"Preserve Mask"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_PCCT0_OFFSET
+argument_list|(
+name|WriteMask
+argument_list|)
+block|,
+literal|"Write Mask"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * PMTT - Platform Memory Topology Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPmtt
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* Common Subtable header (one per Subtable) */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPmttHdr
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_PMTT
+block|,
+name|ACPI_PMTTH_OFFSET
+argument_list|(
+name|Type
+argument_list|)
+block|,
+literal|"Subtable Type"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_PMTTH_OFFSET
+argument_list|(
+name|Reserved1
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTTH_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|,
+name|DT_LENGTH
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTTH_OFFSET
+argument_list|(
+name|Flags
+argument_list|)
+block|,
+literal|"Flags (decoded below)"
+block|,
+name|DT_FLAG
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG0
+block|,
+name|ACPI_PMTTH_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Top-level Device"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAG1
+block|,
+name|ACPI_PMTTH_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Physical Element"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_FLAGS2
+block|,
+name|ACPI_PMTTH_FLAG_OFFSET
+argument_list|(
+name|Flags
+argument_list|,
+literal|0
+argument_list|)
+block|,
+literal|"Memory Type"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTTH_OFFSET
+argument_list|(
+name|Reserved2
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* PMTT Subtables */
+end_comment
+
+begin_comment
+comment|/* 0: Socket */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPmtt0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT0_OFFSET
+argument_list|(
+name|SocketId
+argument_list|)
+block|,
+literal|"Socket ID"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT0_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1: Memory Controller */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPmtt1
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|ReadLatency
+argument_list|)
+block|,
+literal|"Read Latency"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|WriteLatency
+argument_list|)
+block|,
+literal|"Write Latency"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|ReadBandwidth
+argument_list|)
+block|,
+literal|"Read Bandwidth"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|WriteBandwidth
+argument_list|)
+block|,
+literal|"Write Bandwidth"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|AccessWidth
+argument_list|)
+block|,
+literal|"Access Width"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|Alignment
+argument_list|)
+block|,
+literal|"Alignment"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT1_OFFSET
+argument_list|(
+name|DomainCount
+argument_list|)
+block|,
+literal|"Domain Count"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1a: Proximity Domain */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPmtt1a
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT1A_OFFSET
+argument_list|(
+name|ProximityDomain
+argument_list|)
+block|,
+literal|"Proximity Domain"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 2: Physical Component */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoPmtt2
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT2_OFFSET
+argument_list|(
+name|ComponentId
+argument_list|)
+block|,
+literal|"Component ID"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_PMTT2_OFFSET
+argument_list|(
+name|Reserved
+argument_list|)
+block|,
+literal|"Reserved"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT2_OFFSET
+argument_list|(
+name|MemorySize
+argument_list|)
+block|,
+literal|"Memory Size"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_PMTT2_OFFSET
+argument_list|(
+name|BiosHandle
+argument_list|)
+block|,
+literal|"Bios Handle"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/*******************************************************************************  *  * S3PT - S3 Performance Table  *  ******************************************************************************/
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoS3pt
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_SIG
+block|,
+name|ACPI_S3PT_OFFSET
+argument_list|(
+name|Signature
+index|[
+literal|0
+index|]
+argument_list|)
+block|,
+literal|"Signature"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_S3PT_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|,
+name|DT_LENGTH
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* S3PT subtable header */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoS3ptHdr
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT16
+block|,
+name|ACPI_S3PTH_OFFSET
+argument_list|(
+name|Type
+argument_list|)
+block|,
+literal|"Type"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_S3PTH_OFFSET
+argument_list|(
+name|Length
+argument_list|)
+block|,
+literal|"Length"
+block|,
+name|DT_LENGTH
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT8
+block|,
+name|ACPI_S3PTH_OFFSET
+argument_list|(
+name|Revision
+argument_list|)
+block|,
+literal|"Revision"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 0: Basic S3 Resume Performance Record */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoS3pt0
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT32
+block|,
+name|ACPI_S3PT0_OFFSET
+argument_list|(
+name|ResumeCount
+argument_list|)
+block|,
+literal|"Resume Count"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_S3PT0_OFFSET
+argument_list|(
+name|FullResume
+argument_list|)
+block|,
+literal|"Full Resume"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_S3PT0_OFFSET
+argument_list|(
+name|AverageResume
+argument_list|)
+block|,
+literal|"Average Resume"
+block|,
+literal|0
+block|}
+block|,
+name|ACPI_DMT_TERMINATOR
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* 1: Basic S3 Suspend Performance Record */
+end_comment
+
+begin_decl_stmt
+name|ACPI_DMTABLE_INFO
+name|AcpiDmTableInfoS3pt1
+index|[]
+init|=
+block|{
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_S3PT1_OFFSET
+argument_list|(
+name|SuspendStart
+argument_list|)
+block|,
+literal|"Suspend Start"
+block|,
+literal|0
+block|}
+block|,
+block|{
+name|ACPI_DMT_UINT64
+block|,
+name|ACPI_S3PT1_OFFSET
+argument_list|(
+name|SuspendEnd
+argument_list|)
+block|,
+literal|"Suspend End"
 block|,
 literal|0
 block|}
@@ -9775,7 +12306,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/*  * Generic types (used in UEFI)  *  * Examples:  *  *     Buffer : cc 04 ff bb  *      UINT8 : 11  *     UINT16 : 1122  *     UINT24 : 112233  *     UINT32 : 11223344  *     UINT56 : 11223344556677  *     UINT64 : 1122334455667788  *  *     String : "This is string"  *    Unicode : "This string encoded to Unicode"  *  *       GUID : 11223344-5566-7788-99aa-bbccddeeff00  * DevicePath : "\PciRoot(0)\Pci(0x1f,1)\Usb(0,0)"  */
+comment|/*! [Begin] no source code translation */
+end_comment
+
+begin_comment
+comment|/*  * Generic types (used in UEFI and custom tables)  *  * Examples:  *  *     Buffer : cc 04 ff bb  *      UINT8 : 11  *     UINT16 : 1122  *     UINT24 : 112233  *     UINT32 : 11223344  *     UINT56 : 11223344556677  *     UINT64 : 1122334455667788  *  *     String : "This is string"  *    Unicode : "This string encoded to Unicode"  *  *       GUID : 11223344-5566-7788-99aa-bbccddeeff00  * DevicePath : "\PciRoot(0)\Pci(0x1f,1)\Usb(0,0)"  */
 end_comment
 
 begin_define
@@ -9826,6 +12361,20 @@ argument_list|(
 name|ACPI_DMT_UINT32
 argument_list|,
 literal|"UINT32"
+argument_list|)
+block|,
+name|ACPI_DM_GENERIC_ENTRY
+argument_list|(
+name|ACPI_DMT_UINT40
+argument_list|,
+literal|"UINT40"
+argument_list|)
+block|,
+name|ACPI_DM_GENERIC_ENTRY
+argument_list|(
+name|ACPI_DMT_UINT48
+argument_list|,
+literal|"UINT48"
 argument_list|)
 block|,
 name|ACPI_DM_GENERIC_ENTRY
@@ -9890,6 +12439,10 @@ block|}
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|/*! [End] no source code translation !*/
+end_comment
 
 end_unit
 

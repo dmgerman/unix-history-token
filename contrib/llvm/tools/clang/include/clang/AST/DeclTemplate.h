@@ -1014,7 +1014,7 @@ argument|TemplateSpecializationKind TSK
 argument_list|,
 argument|const TemplateArgumentList *TemplateArgs
 argument_list|,
-argument|const TemplateArgumentListInfo *TemplateArgsAsWritten
+argument|const ASTTemplateArgumentListInfo *TemplateArgsAsWritten
 argument_list|,
 argument|SourceLocation POI
 argument_list|)
@@ -1069,28 +1069,7 @@ argument|const TemplateArgumentListInfo *TemplateArgsAsWritten
 argument_list|,
 argument|SourceLocation POI
 argument_list|)
-block|{
-return|return
-name|new
-argument_list|(
-argument|C
-argument_list|)
-name|FunctionTemplateSpecializationInfo
-argument_list|(
-name|FD
-argument_list|,
-name|Template
-argument_list|,
-name|TSK
-argument_list|,
-name|TemplateArgs
-argument_list|,
-name|TemplateArgsAsWritten
-argument_list|,
-name|POI
-argument_list|)
-return|;
-block|}
+block|;
 comment|/// \brief The function template specialization that this structure
 comment|/// describes.
 name|FunctionDecl
@@ -1121,7 +1100,7 @@ name|TemplateArguments
 block|;
 comment|/// \brief The template arguments as written in the sources, if provided.
 specifier|const
-name|TemplateArgumentListInfo
+name|ASTTemplateArgumentListInfo
 operator|*
 name|TemplateArgumentsAsWritten
 block|;
@@ -3144,7 +3123,7 @@ argument_list|(
 literal|0
 argument_list|)
 block|{
-comment|/* assert(0&& "Cannot create positionless template parameter"); */
+comment|/* llvm_unreachable("Cannot create positionless template parameter"); */
 block|}
 name|TemplateParmPosition
 argument_list|(
@@ -6331,8 +6310,6 @@ comment|/// \brief Retrieve the partial specializations as an ordered list.
 name|void
 name|getPartialSpecializations
 argument_list|(
-name|llvm
-operator|::
 name|SmallVectorImpl
 operator|<
 name|ClassTemplatePartialSpecializationDecl
@@ -7226,6 +7203,226 @@ end_decl_stmt
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|/// Declaration of a function specialization at template class scope.
+end_comment
+
+begin_comment
+comment|/// This is a non standard extension needed to support MSVC.
+end_comment
+
+begin_comment
+comment|/// For example:
+end_comment
+
+begin_comment
+comment|/// template<class T>
+end_comment
+
+begin_comment
+comment|/// class A {
+end_comment
+
+begin_comment
+comment|///    template<class U> void foo(U a) { }
+end_comment
+
+begin_comment
+comment|///    template<> void foo(int a) { }
+end_comment
+
+begin_comment
+comment|/// }
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// "template<> foo(int a)" will be saved in Specialization as a normal
+end_comment
+
+begin_comment
+comment|/// CXXMethodDecl. Then during an instantiation of class A, it will be
+end_comment
+
+begin_comment
+comment|/// transformed into an actual function specialization.
+end_comment
+
+begin_decl_stmt
+name|class
+name|ClassScopeFunctionSpecializationDecl
+range|:
+name|public
+name|Decl
+block|{
+name|private
+operator|:
+name|ClassScopeFunctionSpecializationDecl
+argument_list|(
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|CXXMethodDecl *FD
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+name|Decl
+operator|::
+name|ClassScopeFunctionSpecialization
+argument_list|,
+name|DC
+argument_list|,
+name|Loc
+argument_list|)
+block|,
+name|Specialization
+argument_list|(
+argument|FD
+argument_list|)
+block|{}
+name|ClassScopeFunctionSpecializationDecl
+argument_list|(
+argument|EmptyShell Empty
+argument_list|)
+operator|:
+name|Decl
+argument_list|(
+argument|Decl::ClassScopeFunctionSpecialization
+argument_list|,
+argument|Empty
+argument_list|)
+block|{}
+name|CXXMethodDecl
+operator|*
+name|Specialization
+block|;
+name|public
+operator|:
+name|CXXMethodDecl
+operator|*
+name|getSpecialization
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Specialization
+return|;
+block|}
+specifier|static
+name|ClassScopeFunctionSpecializationDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&C
+argument_list|,
+argument|DeclContext *DC
+argument_list|,
+argument|SourceLocation Loc
+argument_list|,
+argument|CXXMethodDecl *FD
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+argument|C
+argument_list|)
+name|ClassScopeFunctionSpecializationDecl
+argument_list|(
+name|DC
+argument_list|,
+name|Loc
+argument_list|,
+name|FD
+argument_list|)
+return|;
+block|}
+specifier|static
+name|ClassScopeFunctionSpecializationDecl
+operator|*
+name|Create
+argument_list|(
+argument|ASTContext&Context
+argument_list|,
+argument|EmptyShell Empty
+argument_list|)
+block|{
+return|return
+name|new
+argument_list|(
+argument|Context
+argument_list|)
+name|ClassScopeFunctionSpecializationDecl
+argument_list|(
+literal|0
+argument_list|,
+name|SourceLocation
+argument_list|()
+argument_list|,
+literal|0
+argument_list|)
+return|;
+block|}
+comment|// Implement isa/cast/dyncast/etc.
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const Decl *D
+argument_list|)
+block|{
+return|return
+name|classofKind
+argument_list|(
+name|D
+operator|->
+name|getKind
+argument_list|()
+argument_list|)
+return|;
+block|}
+specifier|static
+name|bool
+name|classofKind
+argument_list|(
+argument|Kind K
+argument_list|)
+block|{
+return|return
+name|K
+operator|==
+name|Decl
+operator|::
+name|ClassScopeFunctionSpecialization
+return|;
+block|}
+specifier|static
+name|bool
+name|classof
+argument_list|(
+argument|const ClassScopeFunctionSpecializationDecl *D
+argument_list|)
+block|{
+return|return
+name|true
+return|;
+block|}
+name|friend
+name|class
+name|ASTDeclReader
+block|;
+name|friend
+name|class
+name|ASTDeclWriter
+block|; }
+decl_stmt|;
+end_decl_stmt
 
 begin_comment
 comment|/// Implementation of inline functions that require the template declarations

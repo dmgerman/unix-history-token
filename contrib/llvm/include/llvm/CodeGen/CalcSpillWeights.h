@@ -166,25 +166,16 @@ argument_list|(
 argument|loops
 argument_list|)
 block|{}
-comment|/// CalculateRegClass - recompute the register class for reg from its uses.
-comment|/// Since the register class can affect the allocation hint, this function
-comment|/// should be called before CalculateWeightAndHint if both are called.
-name|void
-name|CalculateRegClass
-argument_list|(
-argument|unsigned reg
-argument_list|)
-expr_stmt|;
 comment|/// CalculateWeightAndHint - (re)compute li's spill weight and allocation
 comment|/// hint.
 name|void
 name|CalculateWeightAndHint
-parameter_list|(
+argument_list|(
 name|LiveInterval
-modifier|&
+operator|&
 name|li
-parameter_list|)
-function_decl|;
+argument_list|)
+expr_stmt|;
 block|}
 empty_stmt|;
 comment|/// CalculateSpillWeights - Compute spill weights for all virtual register

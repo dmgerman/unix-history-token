@@ -136,6 +136,7 @@ comment|/* Globals */
 end_comment
 
 begin_decl_stmt
+specifier|static
 specifier|const
 name|char
 modifier|*
@@ -150,6 +151,7 @@ comment|/* default */
 end_comment
 
 begin_decl_stmt
+specifier|static
 name|char
 name|default_format
 index|[]
@@ -169,6 +171,7 @@ comment|/* Prototypes */
 end_comment
 
 begin_function_decl
+specifier|static
 name|double
 name|e_atof
 parameter_list|(
@@ -180,6 +183,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|decimal_places
 parameter_list|(
@@ -191,19 +195,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|int
-name|main
-parameter_list|(
-name|int
-parameter_list|,
-name|char
-modifier|*
-index|[]
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_function_decl
+specifier|static
 name|int
 name|numeric
 parameter_list|(
@@ -215,6 +207,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|int
 name|valid_format
 parameter_list|(
@@ -226,6 +219,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|generate_format
@@ -244,6 +238,7 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+specifier|static
 name|char
 modifier|*
 name|unescape
@@ -772,6 +767,7 @@ comment|/*  * numeric - verify that string is numeric  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|numeric
 parameter_list|(
@@ -927,6 +923,7 @@ comment|/*  * valid_format - validate user specified format string  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|valid_format
 parameter_list|(
@@ -1087,6 +1084,7 @@ comment|/*  * unescape - handle C escapes in a string  */
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|unescape
@@ -1451,6 +1449,7 @@ comment|/*  * e_atof - convert an ASCII string to a double  *	exit if string is 
 end_comment
 
 begin_function
+specifier|static
 name|double
 name|e_atof
 parameter_list|(
@@ -1540,6 +1539,7 @@ comment|/*  * decimal_places - count decimal places in a number (string)  */
 end_comment
 
 begin_function
+specifier|static
 name|int
 name|decimal_places
 parameter_list|(
@@ -1610,6 +1610,7 @@ comment|/*  * generate_format - create a format string  *  * XXX to be bug for b
 end_comment
 
 begin_function
+specifier|static
 name|char
 modifier|*
 name|generate_format

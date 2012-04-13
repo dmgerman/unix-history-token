@@ -492,6 +492,18 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|__syncicache
+parameter_list|(
+name|void
+modifier|*
+parameter_list|,
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|/*  * Open Firmware interface functions  */
 end_comment
@@ -2590,6 +2602,15 @@ operator|-
 name|ph
 operator|.
 name|p_filesz
+argument_list|)
+expr_stmt|;
+name|__syncicache
+argument_list|(
+name|p
+argument_list|,
+name|ph
+operator|.
+name|p_memsz
 argument_list|)
 expr_stmt|;
 block|}

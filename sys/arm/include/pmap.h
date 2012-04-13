@@ -1473,7 +1473,7 @@ parameter_list|(
 name|pte
 parameter_list|)
 define|\
-value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 	}\ } while (
+value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), sizeof(pt_entry_t));\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define
@@ -1492,7 +1492,7 @@ value|do {									\ 	if (PMAP_NEEDS_PTE_SYNC) {					\ 		cpu_dcache_wb_range((vm
 comment|/* * sizeof(pt_entry_t) */
 value|\ 		cpu_l2cache_wb_range((vm_offset_t)(pte), 		\ 		    (cnt)<< 2);
 comment|/* * sizeof(pt_entry_t) */
-value|\ 	}								\ } while (
+value|\ 	} else								\ 		cpu_drain_writebuf();					\ } while (
 comment|/*CONSTCOND*/
 value|0)
 end_define

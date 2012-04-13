@@ -23,6 +23,16 @@ directive|define
 name|_EXTERNALIZE_CTYPE_INLINES_
 end_define
 
+begin_comment
+comment|/*  * Also make sure<runetype.h> does not generate an inline definition  * of __getCurrentRuneLocale().  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|__RUNETYPE_INTERNAL
+end_define
+
 begin_include
 include|#
 directive|include

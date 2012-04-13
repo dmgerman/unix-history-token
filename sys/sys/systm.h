@@ -337,31 +337,7 @@ name|CTASSERT
 parameter_list|(
 name|x
 parameter_list|)
-value|_CTASSERT(x, __LINE__)
-end_define
-
-begin_define
-define|#
-directive|define
-name|_CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|__CTASSERT(x, y)
-end_define
-
-begin_define
-define|#
-directive|define
-name|__CTASSERT
-parameter_list|(
-name|x
-parameter_list|,
-name|y
-parameter_list|)
-value|typedef char __assert ## y[(x) ? 1 : -1]
+value|_Static_assert(x, "compile-time assertion failed")
 end_define
 
 begin_endif
@@ -384,6 +360,18 @@ name|msg
 parameter_list|)
 define|\
 value|KASSERT(sizeof(var) == sizeof(void *)&&			\ 	    ((uintptr_t)&(var)& (sizeof(void *) - 1)) == 0, msg)
+end_define
+
+begin_comment
+comment|/*  * If we have already panic'd and this is the thread that called  * panic(), then don't block on any mutexes but silently succeed.  * Otherwise, the kernel will deadlock since the scheduler isn't  * going to run the thread that holds any lock we need.  */
+end_comment
+
+begin_define
+define|#
+directive|define
+name|SCHEDULER_STOPPED
+parameter_list|()
+value|__predict_false(curthread->td_stopsched)
 end_define
 
 begin_comment
@@ -479,6 +467,20 @@ end_decl_stmt
 begin_comment
 comment|/* address space maps to a zeroed page	*/
 end_comment
+
+begin_decl_stmt
+specifier|extern
+name|int
+name|iosize_max_clamp
+decl_stmt|;
+end_decl_stmt
+
+begin_define
+define|#
+directive|define
+name|IOSIZE_MAX
+value|(iosize_max_clamp ? INT_MAX : SSIZE_MAX)
+end_define
 
 begin_comment
 comment|/*  * General function declarations.  */
@@ -1909,7 +1911,7 @@ end_function_decl
 
 begin_function_decl
 name|void
-name|hardclock_anycpu
+name|hardclock_cnt
 parameter_list|(
 name|int
 name|cnt
@@ -1962,8 +1964,37 @@ end_function_decl
 
 begin_function_decl
 name|void
+name|statclock_cnt
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
+name|int
+name|usermode
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
 name|profclock
 parameter_list|(
+name|int
+name|usermode
+parameter_list|,
+name|uintfptr_t
+name|pc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|profclock_cnt
+parameter_list|(
+name|int
+name|cnt
+parameter_list|,
 name|int
 name|usermode
 parameter_list|,

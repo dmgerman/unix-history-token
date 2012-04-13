@@ -386,6 +386,10 @@ name|dof_probe_t
 operator|*
 operator|)
 operator|(
+name|void
+operator|*
+operator|)
+operator|(
 name|buf
 operator|+
 name|sec

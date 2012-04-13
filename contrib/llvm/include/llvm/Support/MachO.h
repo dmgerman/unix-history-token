@@ -479,6 +479,26 @@ init|=
 literal|0x80000023u
 block|,
 comment|// LC_LOAD_UPWARD_DYLIB
+name|LoadCommandVersionMinMacOSX
+init|=
+literal|0x00000024u
+block|,
+comment|// LC_VERSION_MIN_MACOSX
+name|LoadCommandVersionMinIPhoneOS
+init|=
+literal|0x00000025u
+block|,
+comment|// LC_VERSION_MIN_IPHONEOS
+name|LoadCommandFunctionStarts
+init|=
+literal|0x00000026u
+block|,
+comment|// LC_FUNCTION_STARTS
+name|LoadCommandDyldEnvironment
+init|=
+literal|0x00000027u
+block|,
+comment|// LC_DYLD_ENVIRONMENT
 comment|// Constant bits for the "flags" field in llvm::MachO::segment_command
 name|SegmentCommandFlagBitHighVM
 init|=
@@ -1882,6 +1902,23 @@ name|cryptsize
 decl_stmt|;
 name|uint32_t
 name|cryptid
+decl_stmt|;
+block|}
+struct|;
+struct|struct
+name|version_min_command
+block|{
+name|uint32_t
+name|cmd
+decl_stmt|;
+name|uint32_t
+name|cmdsize
+decl_stmt|;
+name|uint32_t
+name|version
+decl_stmt|;
+name|uint32_t
+name|reserved
 decl_stmt|;
 block|}
 struct|;
