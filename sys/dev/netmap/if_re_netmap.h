@@ -1357,9 +1357,7 @@ decl_stmt|;
 name|int
 name|cmd
 init|=
-name|na
-operator|->
-name|buff_size
+name|NETMAP_BUF_SIZE
 operator||
 name|RL_RDESC_CMD_OWN
 decl_stmt|;
@@ -1999,9 +1997,7 @@ argument_list|)
 expr_stmt|;
 name|cmdstat
 operator|=
-name|na
-operator|->
-name|buff_size
+name|NETMAP_BUF_SIZE
 expr_stmt|;
 if|if
 condition|(
