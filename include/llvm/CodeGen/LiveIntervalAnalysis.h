@@ -242,15 +242,62 @@ comment|/// allocatableRegs_ - A bit vector of allocatable registers.
 name|BitVector
 name|allocatableRegs_
 decl_stmt|;
-comment|/// CloneMIs - A list of clones as result of re-materialization.
+comment|/// reservedRegs_ - A bit vector of reserved registers.
+name|BitVector
+name|reservedRegs_
+decl_stmt|;
+comment|/// RegMaskSlots - Sorted list of instructions with register mask operands.
+comment|/// Always use the 'r' slot, RegMasks are normal clobbers, not early
+comment|/// clobbers.
+name|SmallVector
+operator|<
+name|SlotIndex
+operator|,
+literal|8
+operator|>
+name|RegMaskSlots
+expr_stmt|;
+comment|/// RegMaskBits - This vector is parallel to RegMaskSlots, it holds a
+comment|/// pointer to the corresponding register mask.  This pointer can be
+comment|/// recomputed as:
+comment|///
+comment|///   MI = Indexes->getInstructionFromIndex(RegMaskSlot[N]);
+comment|///   unsigned OpNum = findRegMaskOperand(MI);
+comment|///   RegMaskBits[N] = MI->getOperand(OpNum).getRegMask();
+comment|///
+comment|/// This is kept in a separate vector partly because some standard
+comment|/// libraries don't support lower_bound() with mixed objects, partly to
+comment|/// improve locality when searching in RegMaskSlots.
+comment|/// Also see the comment in LiveInterval::find().
+name|SmallVector
+operator|<
+specifier|const
+name|uint32_t
+operator|*
+operator|,
+literal|8
+operator|>
+name|RegMaskBits
+expr_stmt|;
+comment|/// For each basic block number, keep (begin, size) pairs indexing into the
+comment|/// RegMaskSlots and RegMaskBits arrays.
+comment|/// Note that basic block numbers may not be layout contiguous, that's why
+comment|/// we can't just keep track of the first register mask in each basic
+comment|/// block.
+name|SmallVector
+operator|<
 name|std
 operator|::
-name|vector
+name|pair
 operator|<
-name|MachineInstr
-operator|*
+name|unsigned
+operator|,
+name|unsigned
 operator|>
-name|CloneMIs
+operator|,
+literal|8
+operator|>
+name|RegMaskBlocks
 expr_stmt|;
 name|public
 label|:
@@ -477,6 +524,25 @@ name|reg
 argument_list|)
 return|;
 block|}
+comment|/// isReserved - is the physical register reg reserved in the current
+comment|/// function
+name|bool
+name|isReserved
+argument_list|(
+name|unsigned
+name|reg
+argument_list|)
+decl|const
+block|{
+return|return
+name|reservedRegs_
+operator|.
+name|test
+argument_list|(
+name|reg
+argument_list|)
+return|;
+block|}
 comment|/// getScaledIntervalSize - get the size of an interval in "units,"
 comment|/// where every function is composed of one thousand units.  This
 comment|/// measure scales properly with empty index slots in the function.
@@ -551,50 +617,6 @@ argument_list|()
 argument_list|)
 return|;
 block|}
-comment|/// conflictsWithPhysReg - Returns true if the specified register is used or
-comment|/// defined during the duration of the specified interval. Copies to and
-comment|/// from li.reg are allowed. This method is only able to analyze simple
-comment|/// ranges that stay within a single basic block. Anything else is
-comment|/// considered a conflict.
-name|bool
-name|conflictsWithPhysReg
-parameter_list|(
-specifier|const
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-name|VirtRegMap
-modifier|&
-name|vrm
-parameter_list|,
-name|unsigned
-name|reg
-parameter_list|)
-function_decl|;
-comment|/// conflictsWithAliasRef - Similar to conflictsWithPhysRegRef except
-comment|/// it checks for alias uses and defs.
-name|bool
-name|conflictsWithAliasRef
-argument_list|(
-name|LiveInterval
-operator|&
-name|li
-argument_list|,
-name|unsigned
-name|Reg
-argument_list|,
-name|SmallPtrSet
-operator|<
-name|MachineInstr
-operator|*
-argument_list|,
-literal|32
-operator|>
-operator|&
-name|JoinedCopies
-argument_list|)
-decl_stmt|;
 comment|// Interval creation
 name|LiveInterval
 modifier|&
@@ -751,30 +773,6 @@ return|return
 name|indexes_
 return|;
 block|}
-name|SlotIndex
-name|getZeroIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|indexes_
-operator|->
-name|getZeroIndex
-argument_list|()
-return|;
-block|}
-name|SlotIndex
-name|getInvalidIndex
-argument_list|()
-specifier|const
-block|{
-return|return
-name|indexes_
-operator|->
-name|getInvalidIndex
-argument_list|()
-return|;
-block|}
 comment|/// isNotInMIMap - returns true if the specified machine instr has been
 comment|/// removed or was never entered in the map.
 name|bool
@@ -903,32 +901,6 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|LiveRange
-modifier|*
-name|findEnteringRange
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-specifier|const
-name|MachineBasicBlock
-modifier|*
-name|mbb
-parameter_list|)
-block|{
-return|return
-name|li
-operator|.
-name|getLiveRangeContaining
-argument_list|(
-name|getMBBStartIdx
-argument_list|(
-name|mbb
-argument_list|)
-argument_list|)
-return|;
-block|}
 name|bool
 name|isLiveOutOfMBB
 argument_list|(
@@ -948,35 +920,6 @@ return|return
 name|li
 operator|.
 name|liveAt
-argument_list|(
-name|getMBBEndIdx
-argument_list|(
-name|mbb
-argument_list|)
-operator|.
-name|getPrevSlot
-argument_list|()
-argument_list|)
-return|;
-block|}
-name|LiveRange
-modifier|*
-name|findExitingRange
-parameter_list|(
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-specifier|const
-name|MachineBasicBlock
-modifier|*
-name|mbb
-parameter_list|)
-block|{
-return|return
-name|li
-operator|.
-name|getLiveRangeContaining
 argument_list|(
 name|getMBBEndIdx
 argument_list|(
@@ -1061,22 +1004,6 @@ name|NewMI
 argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|InsertMBBInMaps
-parameter_list|(
-name|MachineBasicBlock
-modifier|*
-name|MBB
-parameter_list|)
-block|{
-name|indexes_
-operator|->
-name|insertMBBInMaps
-argument_list|(
-name|MBB
-argument_list|)
-expr_stmt|;
-block|}
 name|bool
 name|findLiveInMBBs
 argument_list|(
@@ -1108,16 +1035,6 @@ argument_list|,
 name|MBBs
 argument_list|)
 return|;
-block|}
-name|void
-name|renumber
-parameter_list|()
-block|{
-name|indexes_
-operator|->
-name|renumberIndexes
-argument_list|()
-expr_stmt|;
 block|}
 name|VNInfo
 operator|::
@@ -1171,61 +1088,6 @@ literal|0
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// addIntervalsForSpills - Create new intervals for spilled defs / uses of
-comment|/// the given interval. FIXME: It also returns the weight of the spill slot
-comment|/// (if any is created) by reference. This is temporary.
-name|std
-operator|::
-name|vector
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-name|addIntervalsForSpills
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|i
-argument_list|,
-specifier|const
-name|SmallVectorImpl
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|*
-name|SpillIs
-argument_list|,
-specifier|const
-name|MachineLoopInfo
-operator|*
-name|loopInfo
-argument_list|,
-name|VirtRegMap
-operator|&
-name|vrm
-argument_list|)
-expr_stmt|;
-comment|/// spillPhysRegAroundRegDefsUses - Spill the specified physical register
-comment|/// around all defs and uses of the specified interval. Return true if it
-comment|/// was able to cut its interval.
-name|bool
-name|spillPhysRegAroundRegDefsUses
-parameter_list|(
-specifier|const
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-name|unsigned
-name|PhysReg
-parameter_list|,
-name|VirtRegMap
-modifier|&
-name|vrm
-parameter_list|)
-function_decl|;
 comment|/// isReMaterializable - Returns true if every definition of MI of every
 comment|/// val# of the specified interval is re-materializable. Also returns true
 comment|/// by reference if all of the defs are load instructions.
@@ -1251,82 +1113,202 @@ operator|&
 name|isLoad
 argument_list|)
 decl_stmt|;
-comment|/// isReMaterializable - Returns true if the definition MI of the specified
-comment|/// val# of the specified interval is re-materializable.
-name|bool
-name|isReMaterializable
-parameter_list|(
-specifier|const
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-specifier|const
-name|VNInfo
+comment|/// intervalIsInOneMBB - If LI is confined to a single basic block, return
+comment|/// a pointer to that block.  If LI is live in to or out of any block,
+comment|/// return NULL.
+name|MachineBasicBlock
 modifier|*
-name|ValNo
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|)
-function_decl|;
-comment|/// getRepresentativeReg - Find the largest super register of the specified
-comment|/// physical register.
-name|unsigned
-name|getRepresentativeReg
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// getNumConflictsWithPhysReg - Return the number of uses and defs of the
-comment|/// specified interval that conflicts with the specified physical register.
-name|unsigned
-name|getNumConflictsWithPhysReg
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|li
-argument_list|,
-name|unsigned
-name|PhysReg
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// intervalIsInOneMBB - Returns true if the specified interval is entirely
-comment|/// within a single basic block.
-name|bool
 name|intervalIsInOneMBB
 argument_list|(
 specifier|const
 name|LiveInterval
 operator|&
-name|li
+name|LI
 argument_list|)
 decl|const
 decl_stmt|;
-comment|/// getLastSplitPoint - Return the last possible insertion point in mbb for
-comment|/// spilling and splitting code. This is the first terminator, or the call
-comment|/// instruction if li is live into a landing pad successor.
-name|MachineBasicBlock
-operator|::
-name|iterator
-name|getLastSplitPoint
-argument_list|(
-argument|const LiveInterval&li
-argument_list|,
-argument|MachineBasicBlock *mbb
-argument_list|)
-specifier|const
-expr_stmt|;
 comment|/// addKillFlags - Add kill flags to any instruction that kills a virtual
 comment|/// register.
 name|void
 name|addKillFlags
 parameter_list|()
+function_decl|;
+comment|/// handleMove - call this method to notify LiveIntervals that
+comment|/// instruction 'mi' has been moved within a basic block. This will update
+comment|/// the live intervals for all operands of mi. Moves between basic blocks
+comment|/// are not supported.
+name|void
+name|handleMove
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|)
+function_decl|;
+comment|/// moveIntoBundle - Update intervals for operands of MI so that they
+comment|/// begin/end on the SlotIndex for BundleStart.
+comment|///
+comment|/// Requires MI and BundleStart to have SlotIndexes, and assumes
+comment|/// existing liveness is accurate. BundleStart should be the first
+comment|/// instruction in the Bundle.
+name|void
+name|handleMoveIntoBundle
+parameter_list|(
+name|MachineInstr
+modifier|*
+name|MI
+parameter_list|,
+name|MachineInstr
+modifier|*
+name|BundleStart
+parameter_list|)
+function_decl|;
+comment|// Register mask functions.
+comment|//
+comment|// Machine instructions may use a register mask operand to indicate that a
+comment|// large number of registers are clobbered by the instruction.  This is
+comment|// typically used for calls.
+comment|//
+comment|// For compile time performance reasons, these clobbers are not recorded in
+comment|// the live intervals for individual physical registers.  Instead,
+comment|// LiveIntervalAnalysis maintains a sorted list of instructions with
+comment|// register mask operands.
+comment|/// getRegMaskSlots - Returns a sorted array of slot indices of all
+comment|/// instructions with register mask operands.
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|getRegMaskSlots
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegMaskSlots
+return|;
+block|}
+comment|/// getRegMaskSlotsInBlock - Returns a sorted array of slot indices of all
+comment|/// instructions with register mask operands in the basic block numbered
+comment|/// MBBNum.
+name|ArrayRef
+operator|<
+name|SlotIndex
+operator|>
+name|getRegMaskSlotsInBlock
+argument_list|(
+argument|unsigned MBBNum
+argument_list|)
+specifier|const
+block|{
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|P
+operator|=
+name|RegMaskBlocks
+index|[
+name|MBBNum
+index|]
+block|;
+return|return
+name|getRegMaskSlots
+argument_list|()
+operator|.
+name|slice
+argument_list|(
+name|P
+operator|.
+name|first
+argument_list|,
+name|P
+operator|.
+name|second
+argument_list|)
+return|;
+block|}
+comment|/// getRegMaskBits() - Returns an array of register mask pointers
+comment|/// corresponding to getRegMaskSlots().
+name|ArrayRef
+operator|<
+specifier|const
+name|uint32_t
+operator|*
+operator|>
+name|getRegMaskBits
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RegMaskBits
+return|;
+block|}
+comment|/// getRegMaskBitsInBlock - Returns an array of mask pointers corresponding
+comment|/// to getRegMaskSlotsInBlock(MBBNum).
+name|ArrayRef
+operator|<
+specifier|const
+name|uint32_t
+operator|*
+operator|>
+name|getRegMaskBitsInBlock
+argument_list|(
+argument|unsigned MBBNum
+argument_list|)
+specifier|const
+block|{
+name|std
+operator|::
+name|pair
+operator|<
+name|unsigned
+block|,
+name|unsigned
+operator|>
+name|P
+operator|=
+name|RegMaskBlocks
+index|[
+name|MBBNum
+index|]
+block|;
+return|return
+name|getRegMaskBits
+argument_list|()
+operator|.
+name|slice
+argument_list|(
+name|P
+operator|.
+name|first
+argument_list|,
+name|P
+operator|.
+name|second
+argument_list|)
+return|;
+block|}
+comment|/// checkRegMaskInterference - Test if LI is live across any register mask
+comment|/// instructions, and compute a bit mask of physical registers that are not
+comment|/// clobbered by any of them.
+comment|///
+comment|/// Returns false if LI doesn't cross any register mask instructions. In
+comment|/// that case, the bit vector is not filled in.
+name|bool
+name|checkRegMaskInterference
+parameter_list|(
+name|LiveInterval
+modifier|&
+name|LI
+parameter_list|,
+name|BitVector
+modifier|&
+name|UsableRegs
+parameter_list|)
 function_decl|;
 name|private
 label|:
@@ -1432,10 +1414,6 @@ argument_list|,
 name|LiveInterval
 operator|&
 name|interval
-argument_list|,
-name|MachineInstr
-operator|*
-name|CopyMI
 argument_list|)
 decl_stmt|;
 comment|/// handleLiveInRegister - Create interval for a livein register.
@@ -1452,11 +1430,6 @@ parameter_list|,
 name|LiveInterval
 modifier|&
 name|interval
-parameter_list|,
-name|bool
-name|isAlias
-init|=
-name|false
 parameter_list|)
 function_decl|;
 comment|/// getReMatImplicitUse - If the remat definition MI has one (for now, we
@@ -1530,495 +1503,6 @@ operator|&
 name|isLoad
 argument_list|)
 decl_stmt|;
-comment|/// tryFoldMemoryOperand - Attempts to fold either a spill / restore from
-comment|/// slot / to reg or any rematerialized load into ith operand of specified
-comment|/// MI. If it is successul, MI is updated with the newly created MI and
-comment|/// returns true.
-name|bool
-name|tryFoldMemoryOperand
-argument_list|(
-name|MachineInstr
-operator|*
-operator|&
-name|MI
-argument_list|,
-name|VirtRegMap
-operator|&
-name|vrm
-argument_list|,
-name|MachineInstr
-operator|*
-name|DefMI
-argument_list|,
-name|SlotIndex
-name|InstrIdx
-argument_list|,
-name|SmallVector
-operator|<
-name|unsigned
-argument_list|,
-literal|2
-operator|>
-operator|&
-name|Ops
-argument_list|,
-name|bool
-name|isSS
-argument_list|,
-name|int
-name|FrameIndex
-argument_list|,
-name|unsigned
-name|Reg
-argument_list|)
-decl_stmt|;
-comment|/// canFoldMemoryOperand - Return true if the specified load / store
-comment|/// folding is possible.
-name|bool
-name|canFoldMemoryOperand
-argument_list|(
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|SmallVector
-operator|<
-name|unsigned
-argument_list|,
-literal|2
-operator|>
-operator|&
-name|Ops
-argument_list|,
-name|bool
-name|ReMatLoadSS
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// anyKillInMBBAfterIdx - Returns true if there is a kill of the specified
-comment|/// VNInfo that's after the specified index but is within the basic block.
-name|bool
-name|anyKillInMBBAfterIdx
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|li
-argument_list|,
-specifier|const
-name|VNInfo
-operator|*
-name|VNI
-argument_list|,
-name|MachineBasicBlock
-operator|*
-name|MBB
-argument_list|,
-name|SlotIndex
-name|Idx
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// hasAllocatableSuperReg - Return true if the specified physical register
-comment|/// has any super register that's allocatable.
-name|bool
-name|hasAllocatableSuperReg
-argument_list|(
-name|unsigned
-name|Reg
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// SRInfo - Spill / restore info.
-struct|struct
-name|SRInfo
-block|{
-name|SlotIndex
-name|index
-decl_stmt|;
-name|unsigned
-name|vreg
-decl_stmt|;
-name|bool
-name|canFold
-decl_stmt|;
-name|SRInfo
-argument_list|(
-argument|SlotIndex i
-argument_list|,
-argument|unsigned vr
-argument_list|,
-argument|bool f
-argument_list|)
-block|:
-name|index
-argument_list|(
-name|i
-argument_list|)
-operator|,
-name|vreg
-argument_list|(
-name|vr
-argument_list|)
-operator|,
-name|canFold
-argument_list|(
-argument|f
-argument_list|)
-block|{}
-block|}
-struct|;
-name|bool
-name|alsoFoldARestore
-argument_list|(
-name|int
-name|Id
-argument_list|,
-name|SlotIndex
-name|index
-argument_list|,
-name|unsigned
-name|vr
-argument_list|,
-name|BitVector
-operator|&
-name|RestoreMBBs
-argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SRInfo
-operator|>
-expr|>
-operator|&
-name|RestoreIdxes
-argument_list|)
-decl_stmt|;
-name|void
-name|eraseRestoreInfo
-argument_list|(
-name|int
-name|Id
-argument_list|,
-name|SlotIndex
-name|index
-argument_list|,
-name|unsigned
-name|vr
-argument_list|,
-name|BitVector
-operator|&
-name|RestoreMBBs
-argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SRInfo
-operator|>
-expr|>
-operator|&
-name|RestoreIdxes
-argument_list|)
-decl_stmt|;
-comment|/// handleSpilledImpDefs - Remove IMPLICIT_DEF instructions which are being
-comment|/// spilled and create empty intervals for their uses.
-name|void
-name|handleSpilledImpDefs
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|li
-argument_list|,
-name|VirtRegMap
-operator|&
-name|vrm
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|rc
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|&
-name|NewLIs
-argument_list|)
-decl_stmt|;
-comment|/// rewriteImplicitOps - Rewrite implicit use operands of MI (i.e. uses of
-comment|/// interval on to-be re-materialized operands of MI) with new register.
-name|void
-name|rewriteImplicitOps
-parameter_list|(
-specifier|const
-name|LiveInterval
-modifier|&
-name|li
-parameter_list|,
-name|MachineInstr
-modifier|*
-name|MI
-parameter_list|,
-name|unsigned
-name|NewVReg
-parameter_list|,
-name|VirtRegMap
-modifier|&
-name|vrm
-parameter_list|)
-function_decl|;
-comment|/// rewriteInstructionForSpills, rewriteInstructionsForSpills - Helper
-comment|/// functions for addIntervalsForSpills to rewrite uses / defs for the given
-comment|/// live range.
-name|bool
-name|rewriteInstructionForSpills
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|li
-argument_list|,
-specifier|const
-name|VNInfo
-operator|*
-name|VNI
-argument_list|,
-name|bool
-name|TrySplit
-argument_list|,
-name|SlotIndex
-name|index
-argument_list|,
-name|SlotIndex
-name|end
-argument_list|,
-name|MachineInstr
-operator|*
-name|MI
-argument_list|,
-name|MachineInstr
-operator|*
-name|OrigDefMI
-argument_list|,
-name|MachineInstr
-operator|*
-name|DefMI
-argument_list|,
-name|unsigned
-name|Slot
-argument_list|,
-name|int
-name|LdSlot
-argument_list|,
-name|bool
-name|isLoad
-argument_list|,
-name|bool
-name|isLoadSS
-argument_list|,
-name|bool
-name|DefIsReMat
-argument_list|,
-name|bool
-name|CanDelete
-argument_list|,
-name|VirtRegMap
-operator|&
-name|vrm
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|rc
-argument_list|,
-name|SmallVector
-operator|<
-name|int
-argument_list|,
-literal|4
-operator|>
-operator|&
-name|ReMatIds
-argument_list|,
-specifier|const
-name|MachineLoopInfo
-operator|*
-name|loopInfo
-argument_list|,
-name|unsigned
-operator|&
-name|NewVReg
-argument_list|,
-name|unsigned
-name|ImpUse
-argument_list|,
-name|bool
-operator|&
-name|HasDef
-argument_list|,
-name|bool
-operator|&
-name|HasUse
-argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|unsigned
-operator|>
-operator|&
-name|MBBVRegsMap
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|&
-name|NewLIs
-argument_list|)
-decl_stmt|;
-name|void
-name|rewriteInstructionsForSpills
-argument_list|(
-specifier|const
-name|LiveInterval
-operator|&
-name|li
-argument_list|,
-name|bool
-name|TrySplit
-argument_list|,
-name|LiveInterval
-operator|::
-name|Ranges
-operator|::
-name|const_iterator
-operator|&
-name|I
-argument_list|,
-name|MachineInstr
-operator|*
-name|OrigDefMI
-argument_list|,
-name|MachineInstr
-operator|*
-name|DefMI
-argument_list|,
-name|unsigned
-name|Slot
-argument_list|,
-name|int
-name|LdSlot
-argument_list|,
-name|bool
-name|isLoad
-argument_list|,
-name|bool
-name|isLoadSS
-argument_list|,
-name|bool
-name|DefIsReMat
-argument_list|,
-name|bool
-name|CanDelete
-argument_list|,
-name|VirtRegMap
-operator|&
-name|vrm
-argument_list|,
-specifier|const
-name|TargetRegisterClass
-operator|*
-name|rc
-argument_list|,
-name|SmallVector
-operator|<
-name|int
-argument_list|,
-literal|4
-operator|>
-operator|&
-name|ReMatIds
-argument_list|,
-specifier|const
-name|MachineLoopInfo
-operator|*
-name|loopInfo
-argument_list|,
-name|BitVector
-operator|&
-name|SpillMBBs
-argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SRInfo
-operator|>
-expr|>
-operator|&
-name|SpillIdxes
-argument_list|,
-name|BitVector
-operator|&
-name|RestoreMBBs
-argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|SRInfo
-operator|>
-expr|>
-operator|&
-name|RestoreIdxes
-argument_list|,
-name|DenseMap
-operator|<
-name|unsigned
-argument_list|,
-name|unsigned
-operator|>
-operator|&
-name|MBBVRegsMap
-argument_list|,
-name|std
-operator|::
-name|vector
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|&
-name|NewLIs
-argument_list|)
-decl_stmt|;
 specifier|static
 name|LiveInterval
 modifier|*
@@ -2042,6 +1526,9 @@ name|dumpInstrs
 argument_list|()
 specifier|const
 expr_stmt|;
+name|class
+name|HMEditor
+decl_stmt|;
 block|}
 end_decl_stmt
 

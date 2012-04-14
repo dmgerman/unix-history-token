@@ -68,19 +68,7 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/LLVMContext.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/ADT/StringMap.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/ADT/SmallVector.h"
 end_include
 
 begin_include
@@ -92,19 +80,54 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm-c/lto.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<string>
 end_include
 
+begin_decl_stmt
+name|namespace
+name|llvm
+block|{
+name|class
+name|LLVMContext
+decl_stmt|;
+name|class
+name|GlobalValue
+decl_stmt|;
+name|class
+name|Mangler
+decl_stmt|;
+name|class
+name|MemoryBuffer
+decl_stmt|;
+name|class
+name|TargetMachine
+decl_stmt|;
+name|class
+name|raw_ostream
+decl_stmt|;
+block|}
+end_decl_stmt
+
 begin_comment
-comment|//
+comment|//===----------------------------------------------------------------------===//
 end_comment
 
 begin_comment
-comment|// C++ class which implements the opaque lto_code_gen_t
+comment|/// LTOCodeGenerator - C++ class which implements the opaque lto_code_gen_t
 end_comment
 
 begin_comment
-comment|//
+comment|/// type.
+end_comment
+
+begin_comment
+comment|///
 end_comment
 
 begin_struct
@@ -169,9 +192,14 @@ parameter_list|(
 specifier|const
 name|char
 modifier|*
-name|cpu
+name|mCpu
 parameter_list|)
-function_decl|;
+block|{
+name|_mCpu
+operator|=
+name|mCpu
+expr_stmt|;
+block|}
 name|void
 name|addMustPreserveSymbol
 parameter_list|(
@@ -180,7 +208,15 @@ name|char
 modifier|*
 name|sym
 parameter_list|)
-function_decl|;
+block|{
+name|_mustPreserveSymbols
+index|[
+name|sym
+index|]
+operator|=
+literal|1
+expr_stmt|;
+block|}
 name|bool
 name|writeMergedModules
 argument_list|(
@@ -237,6 +273,15 @@ modifier|*
 name|opts
 parameter_list|)
 function_decl|;
+name|void
+name|enableInternalizePass
+parameter_list|()
+block|{
+name|_runInternalizePass
+operator|=
+name|true
+expr_stmt|;
+block|}
 name|private
 label|:
 name|bool
@@ -342,6 +387,9 @@ decl_stmt|;
 name|bool
 name|_scopeRestrictionsDone
 decl_stmt|;
+name|bool
+name|_runInternalizePass
+decl_stmt|;
 name|lto_codegen_model
 name|_codeModel
 decl_stmt|;
@@ -361,7 +409,6 @@ name|std
 operator|::
 name|vector
 operator|<
-specifier|const
 name|char
 operator|*
 operator|>

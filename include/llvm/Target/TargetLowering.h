@@ -112,12 +112,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/SmallPtrSet.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/CodeGen/SelectionDAGNodes.h"
 end_include
 
@@ -168,19 +162,10 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|AllocaInst
-decl_stmt|;
-name|class
-name|APFloat
-decl_stmt|;
-name|class
 name|CallInst
 decl_stmt|;
 name|class
 name|CCState
-decl_stmt|;
-name|class
-name|Function
 decl_stmt|;
 name|class
 name|FastISel
@@ -192,13 +177,13 @@ name|class
 name|ImmutableCallSite
 decl_stmt|;
 name|class
+name|IntrinsicInst
+decl_stmt|;
+name|class
 name|MachineBasicBlock
 decl_stmt|;
 name|class
 name|MachineFunction
-decl_stmt|;
-name|class
-name|MachineFrameInfo
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -212,15 +197,6 @@ decl_stmt|;
 name|class
 name|MCExpr
 decl_stmt|;
-name|class
-name|SDNode
-decl_stmt|;
-name|class
-name|SDValue
-decl_stmt|;
-name|class
-name|SelectionDAG
-decl_stmt|;
 name|template
 operator|<
 name|typename
@@ -233,9 +209,6 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
-name|TargetMachine
-decl_stmt|;
-name|class
 name|TargetRegisterClass
 decl_stmt|;
 name|class
@@ -244,33 +217,32 @@ decl_stmt|;
 name|class
 name|Value
 decl_stmt|;
-comment|// FIXME: should this be here?
 name|namespace
-name|TLSModel
+name|Sched
 block|{
 enum|enum
-name|Model
+name|Preference
 block|{
-name|GeneralDynamic
+name|None
 block|,
-name|LocalDynamic
+comment|// No preference
+name|Source
 block|,
-name|InitialExec
+comment|// Follow source order.
+name|RegPressure
 block|,
-name|LocalExec
+comment|// Scheduling for lowest register pressure.
+name|Hybrid
+block|,
+comment|// Scheduling for both latency and register pressure.
+name|ILP
+block|,
+comment|// Scheduling for ILP in low register pressure mode.
+name|VLIW
+comment|// Scheduling for VLIW targets.
 block|}
 enum|;
 block|}
-name|TLSModel
-operator|::
-name|Model
-name|getTLSModel
-argument_list|(
-argument|const GlobalValue *GV
-argument_list|,
-argument|Reloc::Model reloc
-argument_list|)
-expr_stmt|;
 comment|//===----------------------------------------------------------------------===//
 comment|/// TargetLowering - This class defines information used to lower LLVM code to
 comment|/// legal SelectionDAG operators that the target instruction selector can accept
@@ -320,7 +292,7 @@ name|Custom
 comment|// Use the LowerOperation hook to implement custom lowering.
 block|}
 enum|;
-comment|/// LegalizeAction - This enum indicates whether a types are legal for a
+comment|/// LegalizeTypeAction - This enum indicates whether a types are legal for a
 comment|/// target, and if not, what action should be used to make them valid.
 enum|enum
 name|LegalizeTypeAction
@@ -378,14 +350,6 @@ condition|(
 name|Content
 condition|)
 block|{
-default|default:
-name|assert
-argument_list|(
-name|false
-operator|&&
-literal|"Unknown BooleanContent!"
-argument_list|)
-expr_stmt|;
 case|case
 name|UndefinedBooleanContent
 case|:
@@ -414,6 +378,11 @@ operator|::
 name|SIGN_EXTEND
 return|;
 block|}
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid content kind"
+argument_list|)
+expr_stmt|;
 block|}
 comment|/// NOTE: The constructor takes ownership of TLOF.
 name|explicit
@@ -633,6 +602,7 @@ block|}
 comment|/// getRegClassFor - Return the register class that should be used for the
 comment|/// specified value type.
 name|virtual
+specifier|const
 name|TargetRegisterClass
 modifier|*
 name|getRegClassFor
@@ -652,6 +622,7 @@ operator|&&
 literal|"getRegClassFor called on illegal type!"
 argument_list|)
 expr_stmt|;
+specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
@@ -1036,21 +1007,13 @@ argument_list|)
 expr_stmt|;
 break|break;
 default|default:
-name|assert
+name|llvm_unreachable
 argument_list|(
-name|false
-operator|&&
 literal|"Type is not legal nor is it to be expanded!"
 argument_list|)
 expr_stmt|;
-return|return
-name|VT
-return|;
 block|}
 block|}
-return|return
-name|VT
-return|;
 block|}
 comment|/// getVectorTypeBreakdown - Vector types are broken down into some number of
 comment|/// legal first class types.  For example, EVT::v8f32 maps to 2 EVT::v4f32
@@ -2092,9 +2055,96 @@ name|false
 argument_list|)
 decl|const
 block|{
-name|EVT
-name|VT
+comment|// Lower scalar pointers to native pointer types.
+if|if
+condition|(
+name|Ty
+operator|->
+name|isPointerTy
+argument_list|()
+condition|)
+return|return
+name|PointerTy
+return|;
+if|if
+condition|(
+name|Ty
+operator|->
+name|isVectorTy
+argument_list|()
+condition|)
+block|{
+name|VectorType
+modifier|*
+name|VTy
 init|=
+name|cast
+operator|<
+name|VectorType
+operator|>
+operator|(
+name|Ty
+operator|)
+decl_stmt|;
+name|Type
+modifier|*
+name|Elm
+init|=
+name|VTy
+operator|->
+name|getElementType
+argument_list|()
+decl_stmt|;
+comment|// Lower vectors of pointers to native pointer types.
+if|if
+condition|(
+name|Elm
+operator|->
+name|isPointerTy
+argument_list|()
+condition|)
+name|Elm
+operator|=
+name|EVT
+argument_list|(
+name|PointerTy
+argument_list|)
+operator|.
+name|getTypeForEVT
+argument_list|(
+name|Ty
+operator|->
+name|getContext
+argument_list|()
+argument_list|)
+expr_stmt|;
+return|return
+name|EVT
+operator|::
+name|getVectorVT
+argument_list|(
+name|Ty
+operator|->
+name|getContext
+argument_list|()
+argument_list|,
+name|EVT
+operator|::
+name|getEVT
+argument_list|(
+name|Elm
+argument_list|,
+name|false
+argument_list|)
+argument_list|,
+name|VTy
+operator|->
+name|getNumElements
+argument_list|()
+argument_list|)
+return|;
+block|}
+return|return
 name|EVT
 operator|::
 name|getEVT
@@ -2103,17 +2153,6 @@ name|Ty
 argument_list|,
 name|AllowUnknown
 argument_list|)
-decl_stmt|;
-return|return
-name|VT
-operator|==
-name|MVT
-operator|::
-name|iPTR
-condition|?
-name|PointerTy
-else|:
-name|VT
 return|;
 block|}
 comment|/// getByValTypeAlignment - Return the desired alignment for ByVal aggregate
@@ -2273,22 +2312,11 @@ argument_list|)
 argument_list|)
 return|;
 block|}
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unsupported extended type!"
 argument_list|)
 expr_stmt|;
-return|return
-name|EVT
-argument_list|(
-name|MVT
-operator|::
-name|Other
-argument_list|)
-return|;
-comment|// Not reached
 block|}
 comment|/// getNumRegisters - Return the number of registers that this ValueType will
 comment|/// eventually require.  This is one for any types promoted to live in larger
@@ -2418,17 +2446,11 @@ operator|/
 name|RegWidth
 return|;
 block|}
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Unsupported extended type!"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
-comment|// Not reached
 block|}
 comment|/// ShouldShrinkFPConstant - If true, then instruction selection should
 comment|/// seek to shrink the FP constant of the specified type to a smaller type
@@ -2590,7 +2612,7 @@ comment|/// lowering. If DstAlign is zero that means it's safe to destination
 comment|/// alignment can satisfy any constraint. Similarly if SrcAlign is zero it
 comment|/// means there isn't a need to check it against alignment requirement,
 comment|/// probably because the source does not need to be loaded. If
-comment|/// 'NonScalarIntSafe' is true, that means it's safe to return a
+comment|/// 'IsZeroVal' is true, that means it's safe to return a
 comment|/// non-scalar-integer type, e.g. empty string source, constant, or loaded
 comment|/// from memory. 'MemcpyStrSrc' indicates whether the memcpy source is
 comment|/// constant so it does not need to be loaded.
@@ -2610,7 +2632,7 @@ name|unsigned
 comment|/*SrcAlign*/
 argument_list|,
 name|bool
-comment|/*NonScalarIntSafe*/
+comment|/*IsZeroVal*/
 argument_list|,
 name|bool
 comment|/*MemcpyStrSrc*/
@@ -2661,11 +2683,11 @@ return|return
 name|StackPointerRegisterToSaveRestore
 return|;
 block|}
-comment|/// getExceptionAddressRegister - If a physical register, this returns
+comment|/// getExceptionPointerRegister - If a physical register, this returns
 comment|/// the register that receives the exception address on entry to a landing
 comment|/// pad.
 name|unsigned
-name|getExceptionAddressRegister
+name|getExceptionPointerRegister
 argument_list|()
 specifier|const
 block|{
@@ -2883,16 +2905,11 @@ comment|/*Ctx*/
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Need to implement this hook if target has custom JTIs"
 argument_list|)
 expr_stmt|;
-return|return
-literal|0
-return|;
 block|}
 comment|/// getPICJumpTableRelocaBase - Returns relocation base for the given PIC
 comment|/// jumptable.
@@ -3158,11 +3175,6 @@ argument_list|(
 specifier|const
 name|SDValue
 name|Op
-argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Mask
 argument_list|,
 name|APInt
 operator|&
@@ -3718,6 +3730,7 @@ parameter_list|(
 name|EVT
 name|VT
 parameter_list|,
+specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RC
@@ -4287,7 +4300,8 @@ operator|=
 name|Align
 expr_stmt|;
 block|}
-comment|/// setMinFunctionAlignment - Set the target's minimum function alignment.
+comment|/// setMinFunctionAlignment - Set the target's minimum function alignment (in
+comment|/// log2(bytes))
 name|void
 name|setMinFunctionAlignment
 parameter_list|(
@@ -4302,7 +4316,7 @@ expr_stmt|;
 block|}
 comment|/// setPrefFunctionAlignment - Set the target's preferred function alignment.
 comment|/// This should be set if there is a performance benefit to
-comment|/// higher-than-minimum alignment
+comment|/// higher-than-minimum alignment (in log2(bytes))
 name|void
 name|setPrefFunctionAlignment
 parameter_list|(
@@ -4317,6 +4331,7 @@ expr_stmt|;
 block|}
 comment|/// setPrefLoopAlignment - Set the target's preferred loop alignment. Default
 comment|/// alignment is zero, it means the target does not care about loop alignment.
+comment|/// The alignment is specified in log2(bytes).
 name|void
 name|setPrefLoopAlignment
 parameter_list|(
@@ -4330,7 +4345,7 @@ name|Align
 expr_stmt|;
 block|}
 comment|/// setMinStackArgumentAlignment - Set the minimum stack alignment of an
-comment|/// argument.
+comment|/// argument (in log2(bytes)).
 name|void
 name|setMinStackArgumentAlignment
 parameter_list|(
@@ -4425,18 +4440,11 @@ comment|/*InVals*/
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Not Implemented"
 argument_list|)
 expr_stmt|;
-return|return
-name|SDValue
-argument_list|()
-return|;
-comment|// this is here to silence compiler errors
 block|}
 comment|/// LowerCallTo - This function lowers an abstract call to a function into an
 comment|/// actual call.  This returns a pair of operands.  The first element is the
@@ -4563,6 +4571,8 @@ argument|CallingConv::ID CallConv
 argument_list|,
 argument|bool isTailCall
 argument_list|,
+argument|bool doesNotRet
+argument_list|,
 argument|bool isReturnValueUsed
 argument_list|,
 argument|SDValue Callee
@@ -4598,6 +4608,9 @@ comment|/*CallConv*/
 argument_list|,
 name|bool
 comment|/*isVarArg*/
+argument_list|,
+name|bool
+comment|/*doesNotRet*/
 argument_list|,
 name|bool
 operator|&
@@ -4647,18 +4660,11 @@ comment|/*InVals*/
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Not Implemented"
 argument_list|)
 expr_stmt|;
-return|return
-name|SDValue
-argument_list|()
-return|;
-comment|// this is here to silence compiler errors
 block|}
 comment|/// HandleByVal - Target-specific cleanup for formal ByVal parameters.
 name|virtual
@@ -4761,21 +4767,16 @@ comment|/*DAG*/
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"Not Implemented"
 argument_list|)
 expr_stmt|;
-return|return
-name|SDValue
-argument_list|()
-return|;
-comment|// this is here to silence compiler errors
 block|}
 comment|/// isUsedByReturnOnly - Return true if result of the specified node is used
-comment|/// by a return node only. This is used to determine whether it is possible
+comment|/// by a return node only. It also compute and return the input chain for the
+comment|/// tail call.
+comment|/// This is used to determine whether it is possible
 comment|/// to codegen a libcall as tail call at legalization time.
 name|virtual
 name|bool
@@ -4783,6 +4784,10 @@ name|isUsedByReturnOnly
 argument_list|(
 name|SDNode
 operator|*
+argument_list|,
+name|SDValue
+operator|&
+name|Chain
 argument_list|)
 decl|const
 block|{
@@ -4936,10 +4941,8 @@ comment|/*DAG*/
 argument_list|)
 decl|const
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"ReplaceNodeResults not implemented for this target!"
 argument_list|)
 expr_stmt|;
@@ -5460,6 +5463,38 @@ argument_list|)
 block|{}
 block|}
 struct|;
+comment|/// GetAddrModeArguments - CodeGenPrepare sinks address calculations into the
+comment|/// same BB as Load/Store instructions reading the address.  This allows as
+comment|/// much computation as possible to be done in the address mode for that
+comment|/// operand.  This hook lets targets also pass back when this should be done
+comment|/// on intrinsics which load/store.
+name|virtual
+name|bool
+name|GetAddrModeArguments
+argument_list|(
+name|IntrinsicInst
+operator|*
+name|I
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Value
+operator|*
+operator|>
+operator|&
+name|Ops
+argument_list|,
+name|Type
+operator|*
+operator|&
+name|AccessTy
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// isLegalAddressingMode - Return true if the addressing mode represented by
 comment|/// AM is legal for this target, for a load/store of the specified type.
 comment|/// The type may be VoidTy, in which case only return true if the addressing
@@ -5591,6 +5626,34 @@ return|return
 name|false
 return|;
 block|}
+comment|/// isFNegFree - Return true if an fneg operation is free to the point where
+comment|/// it is never worthwhile to replace it with a bitwise operation.
+name|virtual
+name|bool
+name|isFNegFree
+argument_list|(
+name|EVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
+comment|/// isFAbsFree - Return true if an fneg operation is free to the point where
+comment|/// it is never worthwhile to replace it with a bitwise operation.
+name|virtual
+name|bool
+name|isFAbsFree
+argument_list|(
+name|EVT
+argument_list|)
+decl|const
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|/// isNarrowingProfitable - Return true if it's profitable to narrow
 comment|/// operations of type VT1 to VT2. e.g. on x86, it's profitable to narrow
 comment|/// from i32 to i8 but not from i32 to i16.
@@ -5642,6 +5705,9 @@ name|SelectionDAG
 operator|&
 name|DAG
 argument_list|,
+name|bool
+name|IsAfterLegalization
+argument_list|,
 name|std
 operator|::
 name|vector
@@ -5664,6 +5730,9 @@ argument_list|,
 name|SelectionDAG
 operator|&
 name|DAG
+argument_list|,
+name|bool
+name|IsAfterLegalization
 argument_list|,
 name|std
 operator|::
@@ -5961,6 +6030,7 @@ name|ExceptionSelectorRegister
 decl_stmt|;
 comment|/// RegClassForVT - This indicates the default register class to use for
 comment|/// each ValueType the target supports natively.
+specifier|const
 name|TargetRegisterClass
 modifier|*
 name|RegClassForVT
@@ -6694,21 +6764,6 @@ argument_list|,
 name|NVT
 argument_list|)
 return|;
-name|assert
-argument_list|(
-name|false
-operator|&&
-literal|"Unable to handle this kind of vector type"
-argument_list|)
-expr_stmt|;
-return|return
-name|LegalizeKind
-argument_list|(
-name|TypeLegal
-argument_list|,
-name|VT
-argument_list|)
-return|;
 block|}
 name|std
 operator|::
@@ -6720,6 +6775,7 @@ name|pair
 operator|<
 name|EVT
 operator|,
+specifier|const
 name|TargetRegisterClass
 operator|*
 operator|>

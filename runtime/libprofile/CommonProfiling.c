@@ -187,6 +187,11 @@ index|]
 decl_stmt|;
 name|memmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|argv
 index|[
@@ -251,6 +256,11 @@ argument_list|)
 expr_stmt|;
 name|memmove
 argument_list|(
+operator|(
+name|char
+operator|*
+operator|*
+operator|)
 operator|&
 name|argv
 index|[

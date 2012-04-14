@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- PPCInstrInfo.h - PowerPC Instruction Information ---------*- C++ -*-===//
+comment|//===-- PPCInstrInfo.h - PowerPC Instruction Information --------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -50,13 +50,13 @@ end_comment
 begin_ifndef
 ifndef|#
 directive|ifndef
-name|POWERPC32_INSTRUCTIONINFO_H
+name|POWERPC_INSTRUCTIONINFO_H
 end_ifndef
 
 begin_define
 define|#
 directive|define
-name|POWERPC32_INSTRUCTIONINFO_H
+name|POWERPC_INSTRUCTIONINFO_H
 end_define
 
 begin_include
@@ -68,13 +68,13 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"PPCRegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"PPCRegisterInfo.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_define
@@ -230,7 +230,7 @@ argument|SmallVectorImpl<MachineInstr*>&NewMIs
 argument_list|)
 specifier|const
 block|;
-name|void
+name|bool
 name|LoadRegFromStackSlot
 argument_list|(
 argument|MachineFunction&MF
@@ -278,6 +278,16 @@ operator|*
 name|CreateTargetHazardRecognizer
 argument_list|(
 argument|const TargetMachine *TM
+argument_list|,
+argument|const ScheduleDAG *DAG
+argument_list|)
+specifier|const
+block|;
+name|ScheduleHazardRecognizer
+operator|*
+name|CreateTargetPostRAHazardRecognizer
+argument_list|(
+argument|const InstrItineraryData *II
 argument_list|,
 argument|const ScheduleDAG *DAG
 argument_list|)

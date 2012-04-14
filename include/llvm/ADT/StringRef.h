@@ -46,6 +46,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Support/type_traits.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|<cassert>
 end_include
 
@@ -58,13 +64,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|<utility>
+file|<limits>
 end_include
 
 begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -82,6 +94,44 @@ expr_stmt|;
 name|class
 name|APInt
 decl_stmt|;
+name|class
+name|hash_code
+decl_stmt|;
+name|class
+name|StringRef
+decl_stmt|;
+comment|/// Helper functions for StringRef::getAsInteger.
+name|bool
+name|getAsUnsignedInteger
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|,
+name|unsigned
+name|Radix
+parameter_list|,
+name|unsigned
+name|long
+name|long
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
+name|bool
+name|getAsSignedInteger
+parameter_list|(
+name|StringRef
+name|Str
+parameter_list|,
+name|unsigned
+name|Radix
+parameter_list|,
+name|long
+name|long
+modifier|&
+name|Result
+parameter_list|)
+function_decl|;
 comment|/// StringRef - Represent a constant reference to a string, i.e. a character
 comment|/// array and a length, which need not be null terminated.
 comment|///
@@ -1087,95 +1137,298 @@ comment|/// extended C rules: 0 is octal, 0x is hex, 0b is binary.
 comment|///
 comment|/// If the string is invalid or if only a subset of the string is valid,
 comment|/// this returns true to signify the error.  The string is considered
-comment|/// erroneous if empty.
+comment|/// erroneous if empty or if it overflows T.
 comment|///
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|enable_if_c
+operator|<
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+operator|,
 name|bool
+operator|>
+operator|::
+name|type
 name|getAsInteger
 argument_list|(
-name|unsigned
+argument|unsigned Radix
+argument_list|,
+argument|T&Result
+argument_list|)
+specifier|const
+block|{
+name|long
+name|long
+name|LLVal
+block|;
+if|if
+condition|(
+name|getAsSignedInteger
+argument_list|(
+operator|*
+name|this
+argument_list|,
 name|Radix
 argument_list|,
-name|long
-name|long
-operator|&
-name|Result
+name|LLVal
 argument_list|)
-decl|const
-decl_stmt|;
+operator|||
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|LLVal
+operator|)
+operator|!=
+name|LLVal
+condition|)
+return|return
+name|true
+return|;
+name|Result
+operator|=
+name|LLVal
+expr_stmt|;
+return|return
+name|false
+return|;
+block|}
+end_decl_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|typename
+name|enable_if_c
+operator|<
+operator|!
+name|std
+operator|::
+name|numeric_limits
+operator|<
+name|T
+operator|>
+operator|::
+name|is_signed
+operator|,
 name|bool
+operator|>
+operator|::
+name|type
 name|getAsInteger
 argument_list|(
-name|unsigned
-name|Radix
+argument|unsigned Radix
 argument_list|,
+argument|T&Result
+argument_list|)
+specifier|const
+block|{
 name|unsigned
 name|long
 name|long
-operator|&
-name|Result
-argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|getAsInteger
+name|ULLVal
+block|;
+if|if
+condition|(
+name|getAsUnsignedInteger
 argument_list|(
-name|unsigned
+operator|*
+name|this
+argument_list|,
 name|Radix
 argument_list|,
-name|int
-operator|&
-name|Result
+name|ULLVal
 argument_list|)
-decl|const
-decl_stmt|;
-name|bool
-name|getAsInteger
-argument_list|(
-name|unsigned
-name|Radix
-argument_list|,
-name|unsigned
-operator|&
+operator|||
+name|static_cast
+operator|<
+name|T
+operator|>
+operator|(
+name|ULLVal
+operator|)
+operator|!=
+name|ULLVal
+condition|)
+return|return
+name|true
+return|;
 name|Result
-argument_list|)
-decl|const
-decl_stmt|;
-comment|// TODO: Provide overloads for int/unsigned that check for overflow.
+operator|=
+name|ULLVal
+expr_stmt|;
+end_expr_stmt
+
+begin_return
+return|return
+name|false
+return|;
+end_return
+
+begin_comment
+unit|}
 comment|/// getAsInteger - Parse the current string as an integer of the
+end_comment
+
+begin_comment
 comment|/// specified radix, or of an autosensed radix if the radix given
+end_comment
+
+begin_comment
 comment|/// is 0.  The current value in Result is discarded, and the
+end_comment
+
+begin_comment
 comment|/// storage is changed to be wide enough to store the parsed
+end_comment
+
+begin_comment
 comment|/// integer.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Returns true if the string does not solely consist of a valid
+end_comment
+
+begin_comment
 comment|/// non-empty number in the appropriate base.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// APInt::fromString is superficially similar but assumes the
+end_comment
+
+begin_comment
 comment|/// string is well-formed in the given radix.
-name|bool
+end_comment
+
+begin_macro
+unit|bool
 name|getAsInteger
 argument_list|(
-name|unsigned
-name|Radix
+argument|unsigned Radix
 argument_list|,
-name|APInt
-operator|&
-name|Result
+argument|APInt&Result
 argument_list|)
-decl|const
+end_macro
+
+begin_decl_stmt
+specifier|const
 decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/// @}
-comment|/// @name Substring Operations
+end_comment
+
+begin_comment
+comment|/// @name String Operations
+end_comment
+
+begin_comment
 comment|/// @{
+end_comment
+
+begin_comment
+comment|// lower - Convert the given ASCII string to lowercase.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|lower
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// upper - Convert the given ASCII string to uppercase.
+end_comment
+
+begin_expr_stmt
+name|std
+operator|::
+name|string
+name|upper
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|/// @}
+end_comment
+
+begin_comment
+comment|/// @name Substring Operations
+end_comment
+
+begin_comment
+comment|/// @{
+end_comment
+
+begin_comment
 comment|/// substr - Return a reference to the substring from [Start, Start + N).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Start - The index of the starting character in the substring; if
+end_comment
+
+begin_comment
 comment|/// the index is npos or greater than the length of the string then the
+end_comment
+
+begin_comment
 comment|/// empty substring will be returned.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param N - The number of characters to included in the substring. If N
+end_comment
+
+begin_comment
 comment|/// exceeds the number of characters remaining in the string, the string
+end_comment
+
+begin_comment
 comment|/// suffix (starting with \arg Start) will be returned.
+end_comment
+
+begin_decl_stmt
 name|StringRef
 name|substr
 argument_list|(
@@ -1216,16 +1469,130 @@ argument_list|)
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
+comment|/// drop_front - Return a StringRef equal to 'this' but with the first
+end_comment
+
+begin_comment
+comment|/// elements dropped.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|drop_front
+argument_list|(
+name|unsigned
+name|N
+operator|=
+literal|1
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|size
+argument_list|()
+operator|>=
+name|N
+operator|&&
+literal|"Dropping more elements than exist"
+argument_list|)
+expr_stmt|;
+return|return
+name|substr
+argument_list|(
+name|N
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
+comment|/// drop_back - Return a StringRef equal to 'this' but with the last
+end_comment
+
+begin_comment
+comment|/// elements dropped.
+end_comment
+
+begin_decl_stmt
+name|StringRef
+name|drop_back
+argument_list|(
+name|unsigned
+name|N
+operator|=
+literal|1
+argument_list|)
+decl|const
+block|{
+name|assert
+argument_list|(
+name|size
+argument_list|()
+operator|>=
+name|N
+operator|&&
+literal|"Dropping more elements than exist"
+argument_list|)
+expr_stmt|;
+return|return
+name|substr
+argument_list|(
+literal|0
+argument_list|,
+name|size
+argument_list|()
+operator|-
+name|N
+argument_list|)
+return|;
+block|}
+end_decl_stmt
+
+begin_comment
 comment|/// slice - Return a reference to the substring from [Start, End).
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Start - The index of the starting character in the substring; if
+end_comment
+
+begin_comment
 comment|/// the index is npos or greater than the length of the string then the
+end_comment
+
+begin_comment
 comment|/// empty substring will be returned.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param End - The index following the last character to include in the
+end_comment
+
+begin_comment
 comment|/// substring. If this is npos, or less than \arg Start, or exceeds the
+end_comment
+
+begin_comment
 comment|/// number of characters remaining in the string, the string suffix
+end_comment
+
+begin_comment
 comment|/// (starting with \arg Start) will be returned.
+end_comment
+
+begin_decl_stmt
 name|StringRef
 name|slice
 argument_list|(
@@ -1273,16 +1640,49 @@ name|Start
 argument_list|)
 return|;
 block|}
+end_decl_stmt
+
+begin_comment
 comment|/// split - Split into two substrings around the first occurrence of a
+end_comment
+
+begin_comment
 comment|/// separator character.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// If \arg Separator is in the string, then the result is a pair (LHS, RHS)
+end_comment
+
+begin_comment
 comment|/// such that (*this == LHS + Separator + RHS) is true and RHS is
+end_comment
+
+begin_comment
 comment|/// maximal. If \arg Separator is not in the string, then the result is a
+end_comment
+
+begin_comment
 comment|/// pair (LHS, RHS) where (*this == LHS) and (RHS == "").
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// \param Separator - The character to split on.
+end_comment
+
+begin_comment
 comment|/// \return - The split substrings.
+end_comment
+
+begin_expr_stmt
 name|std
 operator|::
 name|pair
@@ -1323,6 +1723,9 @@ name|StringRef
 argument_list|()
 argument_list|)
 return|;
+end_expr_stmt
+
+begin_return
 return|return
 name|std
 operator|::
@@ -1345,10 +1748,10 @@ name|npos
 argument_list|)
 argument_list|)
 return|;
-block|}
-end_decl_stmt
+end_return
 
 begin_comment
+unit|}
 comment|/// split - Split into two substrings around the first occurrence of a
 end_comment
 
@@ -1389,7 +1792,7 @@ comment|/// \return - The split substrings.
 end_comment
 
 begin_expr_stmt
-name|std
+unit|std
 operator|::
 name|pair
 operator|<
@@ -1863,6 +2266,20 @@ end_expr_stmt
 begin_comment
 comment|/// @}
 end_comment
+
+begin_comment
+comment|/// \brief Compute a hash_code for a StringRef.
+end_comment
+
+begin_function_decl
+name|hash_code
+name|hash_value
+parameter_list|(
+name|StringRef
+name|S
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|// StringRefs can be treated like a POD type.

@@ -258,6 +258,11 @@ name|getLoc
 argument_list|()
 specifier|const
 expr_stmt|;
+name|SMLoc
+name|getEndLoc
+argument_list|()
+specifier|const
+expr_stmt|;
 comment|/// getStringContents - Get the contents of a string token (without quotes).
 name|StringRef
 name|getStringContents

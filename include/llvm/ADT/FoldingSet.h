@@ -428,6 +428,9 @@ name|FoldingSetNodeID
 operator|&
 name|ID
 argument_list|,
+name|unsigned
+name|IDHash
+argument_list|,
 name|FoldingSetNodeID
 operator|&
 name|TempID
@@ -436,7 +439,7 @@ decl|const
 init|=
 literal|0
 decl_stmt|;
-comment|/// NodeEquals - Instantiations of the FoldingSet template implement
+comment|/// ComputeNodeHash - Instantiations of the FoldingSet template implement
 comment|/// this function to compute a hash value for the given node.
 name|virtual
 name|unsigned
@@ -517,18 +520,13 @@ specifier|inline
 name|bool
 name|Equals
 argument_list|(
-name|T
-operator|&
-name|X
+argument|T&X
 argument_list|,
-specifier|const
-name|FoldingSetNodeID
-operator|&
-name|ID
+argument|const FoldingSetNodeID&ID
 argument_list|,
-name|FoldingSetNodeID
-operator|&
-name|TempID
+argument|unsigned IDHash
+argument_list|,
+argument|FoldingSetNodeID&TempID
 argument_list|)
 block|;
 comment|// ComputeHash - Compute a hash value for X, using TempID to
@@ -624,6 +622,8 @@ argument_list|(
 argument|T&X
 argument_list|,
 argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|unsigned IDHash
 argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|,
@@ -1000,6 +1000,8 @@ argument|T&X
 argument_list|,
 argument|const FoldingSetNodeID&ID
 argument_list|,
+argument|unsigned IDHash
+argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
 block|{
@@ -1081,6 +1083,8 @@ argument_list|(
 argument|T&X
 argument_list|,
 argument|const FoldingSetNodeID&ID
+argument_list|,
+argument|unsigned IDHash
 argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|,
@@ -1224,6 +1228,8 @@ argument|Node *N
 argument_list|,
 argument|const FoldingSetNodeID&ID
 argument_list|,
+argument|unsigned IDHash
+argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
 specifier|const
@@ -1254,11 +1260,13 @@ name|TN
 argument_list|,
 name|ID
 argument_list|,
+name|IDHash
+argument_list|,
 name|TempID
 argument_list|)
 return|;
 block|}
-comment|/// NodeEquals - Instantiations may optionally provide a way to compute a
+comment|/// ComputeNodeHash - Instantiations may optionally provide a way to compute a
 comment|/// hash value directly from a node.
 name|virtual
 name|unsigned
@@ -1615,6 +1623,8 @@ argument|FoldingSetImpl::Node *N
 argument_list|,
 argument|const FoldingSetNodeID&ID
 argument_list|,
+argument|unsigned IDHash
+argument_list|,
 argument|FoldingSetNodeID&TempID
 argument_list|)
 specifier|const
@@ -1646,6 +1656,8 @@ operator|*
 name|TN
 argument_list|,
 name|ID
+argument_list|,
+name|IDHash
 argument_list|,
 name|TempID
 argument_list|,

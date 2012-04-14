@@ -83,12 +83,6 @@ directive|include
 file|"llvm/CodeGen/LiveInterval.h"
 end_include
 
-begin_include
-include|#
-directive|include
-file|<algorithm>
-end_include
-
 begin_decl_stmt
 name|namespace
 name|llvm

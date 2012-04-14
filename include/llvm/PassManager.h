@@ -163,16 +163,6 @@ argument_list|)
 block|;
 name|private
 operator|:
-comment|/// addImpl - Add a pass to the queue of passes to run, without
-comment|/// checking whether to add a printer pass.
-name|void
-name|addImpl
-argument_list|(
-name|Pass
-operator|*
-name|P
-argument_list|)
-block|;
 comment|/// PassManagerImpl_New is the actual class. PassManager is just the
 comment|/// wraper to publish simple pass manager interface
 name|PassManagerImpl
@@ -206,7 +196,7 @@ block|;
 comment|/// add - Add a pass to the queue of passes to run.  This passes
 comment|/// ownership of the Pass to the PassManager.  When the
 comment|/// PassManager_X is destroyed, the pass will be destroyed as well, so
-comment|/// there is no need to delete the pass. (TODO delete passes.)
+comment|/// there is no need to delete the pass.
 comment|/// This implies that all passes MUST be allocated with 'new'.
 name|void
 name|add
@@ -242,16 +232,6 @@ argument_list|()
 block|;
 name|private
 operator|:
-comment|/// addImpl - Add a pass to the queue of passes to run, without
-comment|/// checking whether to add a printer pass.
-name|void
-name|addImpl
-argument_list|(
-name|Pass
-operator|*
-name|P
-argument_list|)
-block|;
 name|FunctionPassManagerImpl
 operator|*
 name|FPM

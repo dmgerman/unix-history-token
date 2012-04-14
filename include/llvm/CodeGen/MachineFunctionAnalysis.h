@@ -93,11 +93,6 @@ name|TargetMachine
 operator|&
 name|TM
 block|;
-name|CodeGenOpt
-operator|::
-name|Level
-name|OptLevel
-block|;
 name|MachineFunction
 operator|*
 name|MF
@@ -114,9 +109,10 @@ block|;
 name|explicit
 name|MachineFunctionAnalysis
 argument_list|(
-argument|const TargetMachine&tm
-argument_list|,
-argument|CodeGenOpt::Level OL = CodeGenOpt::Default
+specifier|const
+name|TargetMachine
+operator|&
+name|tm
 argument_list|)
 block|;
 operator|~
@@ -132,17 +128,6 @@ block|{
 return|return
 operator|*
 name|MF
-return|;
-block|}
-name|CodeGenOpt
-operator|::
-name|Level
-name|getOptLevel
-argument_list|()
-specifier|const
-block|{
-return|return
-name|OptLevel
 return|;
 block|}
 name|virtual

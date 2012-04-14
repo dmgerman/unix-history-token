@@ -242,10 +242,8 @@ argument_list|(
 argument|SDNode *
 argument_list|)
 block|{
-name|assert
+name|llvm_unreachable
 argument_list|(
-literal|0
-operator|&&
 literal|"ilist_traits<SDNode> shouldn't see a deleteNode call!"
 argument_list|)
 block|;   }
@@ -547,14 +545,13 @@ begin_enum
 enum|enum
 name|CombineLevel
 block|{
-name|Unrestricted
+name|BeforeLegalizeTypes
 block|,
-comment|// Combine may create illegal operations and illegal types.
-name|NoIllegalTypes
+name|AfterLegalizeTypes
 block|,
-comment|// Combine may create illegal operations but no illegal types.
-name|NoIllegalOperations
-comment|// Combine may only create legal operations and types.
+name|AfterLegalizeVectorOps
+block|,
+name|AfterLegalizeDAG
 block|}
 enum|;
 end_enum
@@ -660,6 +657,11 @@ name|LLVMContext
 modifier|*
 name|Context
 decl_stmt|;
+name|CodeGenOpt
+operator|::
+name|Level
+name|OptLevel
+expr_stmt|;
 comment|/// EntryNode - The starting token.
 name|SDNode
 name|EntryNode
@@ -783,13 +785,19 @@ name|public
 label|:
 name|explicit
 name|SelectionDAG
-parameter_list|(
+argument_list|(
 specifier|const
 name|TargetMachine
-modifier|&
+operator|&
 name|TM
-parameter_list|)
-function_decl|;
+argument_list|,
+name|llvm
+operator|::
+name|CodeGenOpt
+operator|::
+name|Level
+argument_list|)
+decl_stmt|;
 operator|~
 name|SelectionDAG
 argument_list|()
@@ -1927,6 +1935,15 @@ name|Reg
 parameter_list|,
 name|EVT
 name|VT
+parameter_list|)
+function_decl|;
+name|SDValue
+name|getRegisterMask
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
 parameter_list|)
 function_decl|;
 name|SDValue
@@ -3676,6 +3693,9 @@ parameter_list|,
 name|bool
 name|isNonTemporal
 parameter_list|,
+name|bool
+name|isInvariant
+parameter_list|,
 name|unsigned
 name|Alignment
 parameter_list|,
@@ -3683,6 +3703,13 @@ specifier|const
 name|MDNode
 modifier|*
 name|TBAAInfo
+init|=
+literal|0
+parameter_list|,
+specifier|const
+name|MDNode
+modifier|*
+name|Ranges
 init|=
 literal|0
 parameter_list|)
@@ -3791,6 +3818,9 @@ argument_list|,
 name|bool
 name|isNonTemporal
 argument_list|,
+name|bool
+name|isInvariant
+argument_list|,
 name|unsigned
 name|Alignment
 argument_list|,
@@ -3798,6 +3828,13 @@ specifier|const
 name|MDNode
 operator|*
 name|TBAAInfo
+operator|=
+literal|0
+argument_list|,
+specifier|const
+name|MDNode
+operator|*
+name|Ranges
 operator|=
 literal|0
 argument_list|)
@@ -5580,11 +5617,6 @@ argument_list|(
 name|SDValue
 name|Op
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Mask
-argument_list|,
 name|APInt
 operator|&
 name|KnownZero
@@ -5796,6 +5828,18 @@ name|void
 modifier|*
 modifier|&
 name|InsertPos
+parameter_list|)
+function_decl|;
+name|SDNode
+modifier|*
+name|UpdadeDebugLocOnMergedSDNode
+parameter_list|(
+name|SDNode
+modifier|*
+name|N
+parameter_list|,
+name|DebugLoc
+name|loc
 parameter_list|)
 function_decl|;
 name|void

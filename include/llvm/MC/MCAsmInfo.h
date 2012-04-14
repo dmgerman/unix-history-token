@@ -142,20 +142,6 @@ name|ByteAlignment
 block|}
 enum|;
 block|}
-name|namespace
-name|Structors
-block|{
-enum|enum
-name|OutputOrder
-block|{
-name|None
-block|,
-name|PriorityOrder
-block|,
-name|ReversePriorityOrder
-block|}
-enum|;
-block|}
 comment|/// MCAsmInfo - This class is intended to be used as a base class for asm
 comment|/// properties and features specific to the target.
 name|class
@@ -199,15 +185,6 @@ name|bool
 name|HasMachoTBSSDirective
 decl_stmt|;
 comment|// Default is false.
-comment|/// StructorOutputOrder - Whether the static ctor/dtor list should be output
-comment|/// in no particular order, in order of increasing priority or the reverse:
-comment|/// in order of decreasing priority (the default).
-name|Structors
-operator|::
-name|OutputOrder
-name|StructorOutputOrder
-expr_stmt|;
-comment|// Default is reverse order.
 comment|/// HasStaticCtorDtorReferenceInStaticMode - True if the compiler should
 comment|/// emit a ".reference .constructors_used" or ".reference .destructors_used"
 comment|/// directive after the a static ctor/dtor list.  This directive is only
@@ -347,6 +324,11 @@ comment|/// symbol names.  This defaults to true.
 name|bool
 name|AllowPeriodsInName
 decl_stmt|;
+comment|/// AllowUTF8 - This is true if the assembler accepts UTF-8 input.
+comment|// FIXME: Make this a more general encoding setting?
+name|bool
+name|AllowUTF8
+decl_stmt|;
 comment|//===--- Data Emission Directives -------------------------------------===//
 comment|/// ZeroDirective - this should be set to the directive used to get some
 comment|/// number of zero bytes emitted to the current section.  Common cases are
@@ -440,6 +422,15 @@ comment|// Defaults to "$a."
 name|bool
 name|SupportsDataRegions
 decl_stmt|;
+comment|/// GPRel64Directive - if non-null, a directive that is used to emit a word
+comment|/// which should be relocated as a 64-bit GP-relative offset, e.g. .gpdword
+comment|/// on Mips.
+specifier|const
+name|char
+modifier|*
+name|GPRel64Directive
+decl_stmt|;
+comment|// Defaults to NULL.
 comment|/// GPRel32Directive - if non-null, a directive that is used to emit a word
 comment|/// which should be relocated as a 32-bit GP-relative offset, e.g. .gpword
 comment|/// on Mips or .gprel32 on Alpha.
@@ -668,15 +659,20 @@ name|DwarfSectionOffsetDirective
 decl_stmt|;
 comment|// Defaults to NULL
 comment|/// DwarfRequiresRelocationForSectionOffset - True if we need to produce a
-comment|// relocation when we want a section offset in dwarf.
+comment|/// relocation when we want a section offset in dwarf.
 name|bool
 name|DwarfRequiresRelocationForSectionOffset
 decl_stmt|;
 comment|// Defaults to true;
-comment|// DwarfUsesLabelOffsetDifference - True if Dwarf2 output can
-comment|// use EmitLabelOffsetDifference.
+comment|/// DwarfUsesLabelOffsetDifference - True if Dwarf2 output can
+comment|/// use EmitLabelOffsetDifference.
 name|bool
 name|DwarfUsesLabelOffsetForRanges
+decl_stmt|;
+comment|/// DwarfUsesRelocationsForStringPool - True if this Dwarf output must use
+comment|/// relocations to refer to entries in the string pool.
+name|bool
+name|DwarfUsesRelocationsForStringPool
 decl_stmt|;
 comment|/// DwarfRegNumForCFI - True if dwarf register numbers are printed
 comment|/// instead of symbolic register names in .cfi_* directives.
@@ -882,6 +878,17 @@ block|}
 specifier|const
 name|char
 operator|*
+name|getGPRel64Directive
+argument_list|()
+specifier|const
+block|{
+return|return
+name|GPRel64Directive
+return|;
+block|}
+specifier|const
+name|char
+operator|*
 name|getGPRel32Directive
 argument_list|()
 specifier|const
@@ -1058,17 +1065,6 @@ specifier|const
 block|{
 return|return
 name|HasMachoTBSSDirective
-return|;
-block|}
-name|Structors
-operator|::
-name|OutputOrder
-name|getStructorOutputOrder
-argument_list|()
-specifier|const
-block|{
-return|return
-name|StructorOutputOrder
 return|;
 block|}
 name|bool
@@ -1273,6 +1269,15 @@ specifier|const
 block|{
 return|return
 name|AllowPeriodsInName
+return|;
+block|}
+name|bool
+name|doesAllowUTF8
+argument_list|()
+specifier|const
+block|{
+return|return
+name|AllowUTF8
 return|;
 block|}
 specifier|const
@@ -1563,7 +1568,7 @@ operator|)
 return|;
 block|}
 name|bool
-name|doesDwarfUsesInlineInfoSection
+name|doesDwarfUseInlineInfoSection
 argument_list|()
 specifier|const
 block|{
@@ -1592,12 +1597,21 @@ name|DwarfRequiresRelocationForSectionOffset
 return|;
 block|}
 name|bool
-name|doesDwarfUsesLabelOffsetForRanges
+name|doesDwarfUseLabelOffsetForRanges
 argument_list|()
 specifier|const
 block|{
 return|return
 name|DwarfUsesLabelOffsetForRanges
+return|;
+block|}
+name|bool
+name|doesDwarfUseRelocationsForStringPool
+argument_list|()
+specifier|const
+block|{
+return|return
+name|DwarfUsesRelocationsForStringPool
 return|;
 block|}
 name|bool

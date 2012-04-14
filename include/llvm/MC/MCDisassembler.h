@@ -221,6 +221,7 @@ comment|/// @return         - An array of instruction information, with one entr
 comment|///                   each MCInst opcode this disassembler returns.
 comment|///                   NULL if there is no info for this target.
 name|virtual
+specifier|const
 name|EDInstInfo
 operator|*
 name|getEDInfo

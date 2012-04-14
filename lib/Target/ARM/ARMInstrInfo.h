@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- ARMInstrInfo.h - ARM Instruction Information -------------*- C++ -*-===//
+comment|//===-- ARMInstrInfo.h - ARM Instruction Information ------------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,7 +62,7 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"ARM.h"
 end_include
 
 begin_include
@@ -81,12 +81,6 @@ begin_include
 include|#
 directive|include
 file|"ARMSubtarget.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"ARM.h"
 end_include
 
 begin_decl_stmt
@@ -115,6 +109,14 @@ name|ARMSubtarget
 operator|&
 name|STI
 argument_list|)
+block|;
+comment|/// getNoopForMachoTarget - Return the noop instruction to use for a noop.
+name|void
+name|getNoopForMachoTarget
+argument_list|(
+argument|MCInst&NopInst
+argument_list|)
+specifier|const
 block|;
 comment|// Return the non-pre/post incrementing version of 'Opc'. Return 0
 comment|// if there is not such an opcode.

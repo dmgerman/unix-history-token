@@ -95,7 +95,17 @@ name|T
 operator|,
 name|unsigned
 name|N
+operator|,
+name|typename
+name|C
+operator|=
+name|std
+operator|::
+name|less
+operator|<
+name|T
 operator|>
+expr|>
 name|class
 name|SmallSet
 block|{
@@ -115,6 +125,8 @@ operator|::
 name|set
 operator|<
 name|T
+block|,
+name|C
 operator|>
 name|Set
 block|;

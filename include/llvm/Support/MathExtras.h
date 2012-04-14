@@ -243,6 +243,47 @@ operator|==
 name|x
 return|;
 block|}
+comment|/// isShiftedInt<N,S> - Checks if a signed integer is an N bit number shifted
+comment|///                     left by S.
+name|template
+operator|<
+name|unsigned
+name|N
+operator|,
+name|unsigned
+name|S
+operator|>
+specifier|inline
+name|bool
+name|isShiftedInt
+argument_list|(
+argument|int64_t x
+argument_list|)
+block|{
+return|return
+name|isInt
+operator|<
+name|N
+operator|+
+name|S
+operator|>
+operator|(
+name|x
+operator|)
+operator|&&
+operator|(
+name|x
+operator|%
+operator|(
+literal|1
+operator|<<
+name|S
+operator|)
+operator|==
+literal|0
+operator|)
+return|;
+block|}
 comment|/// isUInt - Checks if an unsigned integer fits into the given bit width.
 name|template
 operator|<
@@ -350,6 +391,47 @@ name|x
 operator|)
 operator|==
 name|x
+return|;
+block|}
+comment|/// isShiftedUInt<N,S> - Checks if a unsigned integer is an N bit number shifted
+comment|///                     left by S.
+name|template
+operator|<
+name|unsigned
+name|N
+operator|,
+name|unsigned
+name|S
+operator|>
+specifier|inline
+name|bool
+name|isShiftedUInt
+argument_list|(
+argument|uint64_t x
+argument_list|)
+block|{
+return|return
+name|isUInt
+operator|<
+name|N
+operator|+
+name|S
+operator|>
+operator|(
+name|x
+operator|)
+operator|&&
+operator|(
+name|x
+operator|%
+operator|(
+literal|1
+operator|<<
+name|S
+operator|)
+operator|==
+literal|0
+operator|)
 return|;
 block|}
 comment|/// isUIntN - Checks if an unsigned integer fits into the given (dynamic)

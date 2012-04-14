@@ -528,6 +528,16 @@ decl_stmt|;
 comment|// DO NOT IMPLEMENT.
 name|protected
 label|:
+comment|/// swap - Swaps the elements of two sets.
+comment|/// Note: This method assumes that both sets have the same small size.
+name|void
+name|swap
+parameter_list|(
+name|SmallPtrSetImpl
+modifier|&
+name|RHS
+parameter_list|)
+function_decl|;
 name|void
 name|CopyFrom
 parameter_list|(
@@ -1229,8 +1239,74 @@ return|;
 block|}
 end_expr_stmt
 
+begin_comment
+comment|/// swap - Swaps the elements of two sets.
+end_comment
+
+begin_decl_stmt
+name|void
+name|swap
+argument_list|(
+name|SmallPtrSet
+operator|<
+name|PtrType
+argument_list|,
+name|SmallSize
+operator|>
+operator|&
+name|RHS
+argument_list|)
+block|{
+name|SmallPtrSetImpl
+operator|::
+name|swap
+argument_list|(
+name|RHS
+argument_list|)
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_macro
+unit|};  }  namespace
+name|std
+end_macro
+
+begin_block
+block|{
+comment|/// Implement std::swap in terms of SmallPtrSet swap.
+name|template
+operator|<
+name|class
+name|T
+operator|,
+name|unsigned
+name|N
+operator|>
+specifier|inline
+name|void
+name|swap
+argument_list|(
+argument|llvm::SmallPtrSet<T
+argument_list|,
+argument|N>&LHS
+argument_list|,
+argument|llvm::SmallPtrSet<T
+argument_list|,
+argument|N>&RHS
+argument_list|)
+block|{
+name|LHS
+operator|.
+name|swap
+argument_list|(
+name|RHS
+argument_list|)
+block|;   }
+block|}
+end_block
+
 begin_endif
-unit|};  }
 endif|#
 directive|endif
 end_endif

@@ -1732,6 +1732,11 @@ operator|:
 name|public
 name|UnaryInstruction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 comment|/// @brief Constructor with insert-before-instruction semantics for subclasses

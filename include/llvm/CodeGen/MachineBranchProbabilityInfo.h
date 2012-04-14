@@ -93,6 +93,11 @@ range|:
 name|public
 name|ImmutablePass
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|// Default weight value. Used when we don't have information about the edge.
 comment|// TODO: DEFAULT_WEIGHT makes sense during static predication, when none of
 comment|// the successors have a weight yet. But it doesn't make sense when providing
@@ -105,14 +110,6 @@ name|uint32_t
 name|DEFAULT_WEIGHT
 operator|=
 literal|16
-block|;
-comment|// Get sum of the block successors' weights.
-name|uint32_t
-name|getSumForBlock
-argument_list|(
-argument|MachineBasicBlock *MBB
-argument_list|)
-specifier|const
 block|;
 name|public
 operator|:
@@ -160,9 +157,21 @@ comment|// DEFAULT_WEIGHT.
 name|uint32_t
 name|getEdgeWeight
 argument_list|(
-argument|MachineBasicBlock *Src
+argument|const MachineBasicBlock *Src
 argument_list|,
-argument|MachineBasicBlock *Dst
+argument|const MachineBasicBlock *Dst
+argument_list|)
+specifier|const
+block|;
+comment|// Get sum of the block successors' weights, potentially scaling them to fit
+comment|// within 32-bits. If scaling is required, sets Scale based on the necessary
+comment|// adjustment. Any edge weights used with the sum should be divided by Scale.
+name|uint32_t
+name|getSumForBlock
+argument_list|(
+argument|const MachineBasicBlock *MBB
+argument_list|,
+argument|uint32_t&Scale
 argument_list|)
 specifier|const
 block|;
@@ -177,6 +186,7 @@ argument_list|)
 specifier|const
 block|;
 comment|// Return a hot successor for the block BB or null if there isn't one.
+comment|// NB: This routine's complexity is linear on the number of successors.
 name|MachineBasicBlock
 operator|*
 name|getHotSucc
@@ -188,6 +198,9 @@ block|;
 comment|// Return a probability as a fraction between 0 (0% probability) and
 comment|// 1 (100% probability), however the value is never equal to 0, and can be 1
 comment|// only iff SRC block has only one successor.
+comment|// NB: This routine's complexity is linear on the number of successors of
+comment|// Src. Querying sequentially for each successor's probability is a quadratic
+comment|// query pattern.
 name|BranchProbability
 name|getEdgeProbability
 argument_list|(

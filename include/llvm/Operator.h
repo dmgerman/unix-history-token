@@ -1236,25 +1236,18 @@ comment|// get index for modifying correct operand
 block|}
 comment|/// getPointerOperandType - Method to return the pointer operand as a
 comment|/// PointerType.
-name|PointerType
+name|Type
 operator|*
 name|getPointerOperandType
 argument_list|()
 specifier|const
 block|{
 return|return
-name|reinterpret_cast
-operator|<
-name|PointerType
-operator|*
-operator|>
-operator|(
 name|getPointerOperand
 argument_list|()
 operator|->
 name|getType
 argument_list|()
-operator|)
 return|;
 block|}
 name|unsigned

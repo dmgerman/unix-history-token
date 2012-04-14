@@ -1283,6 +1283,13 @@ name|TD
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|DominatorTree
+modifier|*
+name|DT
+decl_stmt|;
+end_decl_stmt
+
 begin_expr_stmt
 name|OwningPtr
 operator|<
@@ -1795,6 +1802,27 @@ name|P
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_expr_stmt
+name|AliasAnalysis
+operator|::
+name|ModRefResult
+name|getModRefInfo
+argument_list|(
+specifier|const
+name|Instruction
+operator|*
+name|Inst
+argument_list|,
+specifier|const
+name|AliasAnalysis
+operator|::
+name|Location
+operator|&
+name|Loc
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// verifyRemoved - Verify that the specified instruction does not occur

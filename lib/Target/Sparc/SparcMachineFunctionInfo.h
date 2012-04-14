@@ -75,6 +75,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|private
 operator|:
 name|unsigned

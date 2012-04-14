@@ -62,18 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetMachine.h"
-end_include
-
-begin_include
-include|#
-directive|include
-file|"llvm/Target/TargetData.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"XCoreFrameLowering.h"
 end_include
 
@@ -99,6 +87,18 @@ begin_include
 include|#
 directive|include
 file|"XCoreSelectionDAGInfo.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetMachine.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Target/TargetData.h"
 end_include
 
 begin_decl_stmt
@@ -143,9 +143,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 block|;
 name|virtual
@@ -244,12 +248,13 @@ return|;
 block|}
 comment|// Pass Pipeline Configuration
 name|virtual
-name|bool
-name|addInstSelector
+name|TargetPassConfig
+operator|*
+name|createPassConfig
 argument_list|(
-argument|PassManagerBase&PM
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
+name|PassManagerBase
+operator|&
+name|PM
 argument_list|)
 block|; }
 decl_stmt|;

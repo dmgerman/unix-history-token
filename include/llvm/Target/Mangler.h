@@ -70,13 +70,7 @@ name|namespace
 name|llvm
 block|{
 name|class
-name|StringRef
-decl_stmt|;
-name|class
 name|Twine
-decl_stmt|;
-name|class
-name|Value
 decl_stmt|;
 name|class
 name|GlobalValue

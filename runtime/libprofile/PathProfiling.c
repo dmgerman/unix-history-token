@@ -84,31 +84,6 @@ file|<stdio.h>
 end_include
 
 begin_comment
-comment|/* Must use __inline in Microsoft C */
-end_comment
-
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|_MSC_VER
-argument_list|)
-end_if
-
-begin_define
-define|#
-directive|define
-name|inline
-value|__inline
-end_define
-
-begin_endif
-endif|#
-directive|endif
-end_endif
-
-begin_comment
 comment|/* note that this is used for functions with large path counts,          but it is unlikely those paths will ALL be executed */
 end_comment
 
@@ -459,7 +434,6 @@ end_function
 
 begin_function
 specifier|static
-specifier|inline
 name|uint32_t
 name|hash
 parameter_list|(
@@ -651,7 +625,6 @@ end_comment
 
 begin_function
 specifier|static
-specifier|inline
 name|uint32_t
 modifier|*
 name|getPathCounter

@@ -480,6 +480,29 @@ operator|&
 name|ArgValues
 argument_list|)
 decl_stmt|;
+name|virtual
+name|void
+modifier|*
+name|getPointerToNamedFunction
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|Name
+argument_list|,
+name|bool
+name|AbortOnFailure
+operator|=
+name|true
+argument_list|)
+block|{
+comment|// FIXME: not implemented.
+return|return
+literal|0
+return|;
+block|}
 comment|/// recompileAndRelinkFunction - For the interpreter, functions are always
 comment|/// up-to-date.
 comment|///
@@ -785,14 +808,6 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 block|}
-name|void
-name|visitUnwindInst
-parameter_list|(
-name|UnwindInst
-modifier|&
-name|I
-parameter_list|)
-function_decl|;
 name|void
 name|visitUnreachableInst
 parameter_list|(

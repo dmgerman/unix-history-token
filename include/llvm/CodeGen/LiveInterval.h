@@ -157,29 +157,19 @@ name|HAS_PHI_KILL
 init|=
 literal|1
 block|,
-name|REDEF_BY_EC
-init|=
-literal|1
-operator|<<
-literal|1
-block|,
 name|IS_PHI_DEF
 init|=
 literal|1
 operator|<<
-literal|2
+literal|1
 block|,
 name|IS_UNUSED
 init|=
 literal|1
 operator|<<
-literal|3
+literal|2
 block|}
 enum|;
-name|MachineInstr
-modifier|*
-name|copy
-decl_stmt|;
 name|unsigned
 name|char
 name|flags
@@ -194,7 +184,7 @@ comment|/// The ID number of this value.
 name|unsigned
 name|id
 decl_stmt|;
-comment|/// The index of the defining instruction (if isDefAccurate() returns true).
+comment|/// The index of the defining instruction.
 name|SlotIndex
 name|def
 decl_stmt|;
@@ -204,15 +194,8 @@ argument_list|(
 argument|unsigned i
 argument_list|,
 argument|SlotIndex d
-argument_list|,
-argument|MachineInstr *c
 argument_list|)
 block|:
-name|copy
-argument_list|(
-name|c
-argument_list|)
-operator|,
 name|flags
 argument_list|(
 literal|0
@@ -236,13 +219,6 @@ argument_list|,
 argument|const VNInfo&orig
 argument_list|)
 operator|:
-name|copy
-argument_list|(
-name|orig
-operator|.
-name|copy
-argument_list|)
-operator|,
 name|flags
 argument_list|(
 name|orig
@@ -272,12 +248,6 @@ operator|=
 name|src
 operator|.
 name|flags
-block|;
-name|copy
-operator|=
-name|src
-operator|.
-name|copy
 block|;
 name|def
 operator|=
@@ -333,48 +303,6 @@ operator|~
 name|IS_UNUSED
 expr_stmt|;
 block|}
-comment|/// For a register interval, if this VN was definied by a copy instr
-comment|/// getCopy() returns a pointer to it, otherwise returns 0.
-comment|/// For a stack interval the behaviour of this method is undefined.
-name|MachineInstr
-operator|*
-name|getCopy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|copy
-return|;
-block|}
-comment|/// For a register interval, set the copy member.
-comment|/// This method should not be called on stack intervals as it may lead to
-comment|/// undefined behavior.
-name|void
-name|setCopy
-parameter_list|(
-name|MachineInstr
-modifier|*
-name|c
-parameter_list|)
-block|{
-name|copy
-operator|=
-name|c
-expr_stmt|;
-block|}
-comment|/// isDefByCopy - Return true when this value was defined by a copy-like
-comment|/// instruction as determined by MachineInstr::isCopyLike.
-name|bool
-name|isDefByCopy
-argument_list|()
-specifier|const
-block|{
-return|return
-name|copy
-operator|!=
-literal|0
-return|;
-block|}
 comment|/// Returns true if one or more kills are PHI nodes.
 comment|/// Obsolete, do not use!
 name|bool
@@ -409,42 +337,6 @@ name|flags
 operator|&=
 operator|~
 name|HAS_PHI_KILL
-expr_stmt|;
-block|}
-comment|/// Returns true if this value is re-defined by an early clobber somewhere
-comment|/// during the live range.
-name|bool
-name|hasRedefByEC
-argument_list|()
-specifier|const
-block|{
-return|return
-name|flags
-operator|&
-name|REDEF_BY_EC
-return|;
-block|}
-comment|/// Set the "redef by early clobber" flag on this value.
-name|void
-name|setHasRedefByEC
-parameter_list|(
-name|bool
-name|hasRedef
-parameter_list|)
-block|{
-if|if
-condition|(
-name|hasRedef
-condition|)
-name|flags
-operator||=
-name|REDEF_BY_EC
-expr_stmt|;
-else|else
-name|flags
-operator|&=
-operator|~
-name|REDEF_BY_EC
 expr_stmt|;
 block|}
 comment|/// Returns true if this value is defined by a PHI instruction (or was,
@@ -1218,10 +1110,6 @@ argument_list|(
 name|SlotIndex
 name|def
 argument_list|,
-name|MachineInstr
-operator|*
-name|CopyMI
-argument_list|,
 name|VNInfo
 operator|::
 name|Allocator
@@ -1248,8 +1136,6 @@ name|size
 argument_list|()
 argument_list|,
 name|def
-argument_list|,
-name|CopyMI
 argument_list|)
 decl_stmt|;
 name|valnos
@@ -1587,8 +1473,10 @@ name|find
 argument_list|(
 name|index
 operator|.
-name|getUseIndex
-argument_list|()
+name|getRegSlot
+argument_list|(
+name|true
+argument_list|)
 argument_list|)
 decl_stmt|;
 return|return
@@ -1681,6 +1569,44 @@ else|:
 operator|&
 operator|*
 name|I
+return|;
+block|}
+specifier|const
+name|LiveRange
+modifier|*
+name|getLiveRangeBefore
+argument_list|(
+name|SlotIndex
+name|Idx
+argument_list|)
+decl|const
+block|{
+return|return
+name|getLiveRangeContaining
+argument_list|(
+name|Idx
+operator|.
+name|getPrevSlot
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|LiveRange
+modifier|*
+name|getLiveRangeBefore
+parameter_list|(
+name|SlotIndex
+name|Idx
+parameter_list|)
+block|{
+return|return
+name|getLiveRangeContaining
+argument_list|(
+name|Idx
+operator|.
+name|getPrevSlot
+argument_list|()
+argument_list|)
 return|;
 block|}
 comment|/// getVNInfoAt - Return the VNInfo that is live at Idx, or NULL.

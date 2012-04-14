@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MBlazeRelocations.h - MBlaze Code Relocations ------------*- C++ -*-===//
+comment|//===-- MBlazeRelocations.h - MBlaze Code Relocations -----------*- C++ -*-===//
 end_comment
 
 begin_comment

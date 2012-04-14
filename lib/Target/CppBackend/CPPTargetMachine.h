@@ -94,9 +94,13 @@ argument|StringRef CPU
 argument_list|,
 argument|StringRef FS
 argument_list|,
+argument|const TargetOptions&Options
+argument_list|,
 argument|Reloc::Model RM
 argument_list|,
 argument|CodeModel::Model CM
+argument_list|,
+argument|CodeGenOpt::Level OL
 argument_list|)
 operator|:
 name|TargetMachine
@@ -108,6 +112,8 @@ argument_list|,
 argument|CPU
 argument_list|,
 argument|FS
+argument_list|,
+argument|Options
 argument_list|)
 block|{}
 name|virtual
@@ -119,8 +125,6 @@ argument_list|,
 argument|formatted_raw_ostream&Out
 argument_list|,
 argument|CodeGenFileType FileType
-argument_list|,
-argument|CodeGenOpt::Level OptLevel
 argument_list|,
 argument|bool DisableVerify
 argument_list|)

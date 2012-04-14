@@ -1602,7 +1602,7 @@ argument|const GraphType&G
 argument_list|,
 argument|bool ShortNames = false
 argument_list|,
-argument|const std::string&Title =
+argument|const Twine&Title =
 literal|""
 argument_list|)
 block|{
@@ -1626,6 +1626,9 @@ operator|.
 name|writeGraph
 argument_list|(
 name|Title
+operator|.
+name|str
+argument_list|()
 argument_list|)
 block|;
 return|return
@@ -1647,11 +1650,11 @@ name|WriteGraph
 argument_list|(
 argument|const GraphType&G
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|bool ShortNames = false
 argument_list|,
-argument|const std::string&Title =
+argument|const Twine&Title =
 literal|""
 argument_list|)
 block|{
@@ -1700,9 +1703,14 @@ name|Filename
 operator|.
 name|appendComponent
 argument_list|(
+operator|(
 name|Name
 operator|+
 literal|".dot"
+operator|)
+operator|.
+name|str
+argument_list|()
 argument_list|)
 expr_stmt|;
 end_expr_stmt
@@ -1856,11 +1864,11 @@ name|ViewGraph
 argument_list|(
 argument|const GraphType&G
 argument_list|,
-argument|const std::string&Name
+argument|const Twine&Name
 argument_list|,
 argument|bool ShortNames = false
 argument_list|,
-argument|const std::string&Title =
+argument|const Twine&Title =
 literal|""
 argument_list|,
 argument|GraphProgram::Name Program = GraphProgram::DOT

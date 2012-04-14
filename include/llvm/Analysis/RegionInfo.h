@@ -2280,7 +2280,7 @@ operator|>
 operator|(
 operator|)
 operator|->
-name|getNameStr
+name|getName
 argument_list|()
 return|;
 block|}

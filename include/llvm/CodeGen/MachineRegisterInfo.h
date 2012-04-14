@@ -68,6 +68,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/CodeGen/MachineInstrBundle.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/BitVector.h"
 end_include
 
@@ -103,6 +109,12 @@ comment|/// IsSSA - True when the machine function is in SSA form and virtual
 comment|/// registers have a single def.
 name|bool
 name|IsSSA
+decl_stmt|;
+comment|/// TracksLiveness - True while register liveness is being tracked accurately.
+comment|/// Basic block live-in lists, kill flags, and implicit defs may not be
+comment|/// accurate when after this flag is cleared.
+name|bool
+name|TracksLiveness
 decl_stmt|;
 comment|/// VRegInfo - Information we keep for each virtual register.
 comment|///
@@ -160,8 +172,26 @@ comment|/// register allocator, and must be kept up to date by passes that run a
 comment|/// register allocation (though most don't modify this).  This is used
 comment|/// so that the code generator knows which callee save registers to save and
 comment|/// for other target specific uses.
+comment|/// This vector only has bits set for registers explicitly used, not their
+comment|/// aliases.
 name|BitVector
 name|UsedPhysRegs
+decl_stmt|;
+comment|/// UsedPhysRegMask - Additional used physregs, but including aliases.
+name|BitVector
+name|UsedPhysRegMask
+decl_stmt|;
+comment|/// ReservedRegs - This is a bit vector of reserved registers.  The target
+comment|/// may change its mind about which registers should be reserved.  This
+comment|/// vector is the frozen set of reserved registers when register allocation
+comment|/// started.
+name|BitVector
+name|ReservedRegs
+decl_stmt|;
+comment|/// AllocatableRegs - From TRI->getAllocatableSet.
+name|mutable
+name|BitVector
+name|AllocatableRegs
 decl_stmt|;
 comment|/// LiveIns/LiveOuts - Keep track of the physical registers that are
 comment|/// livein/liveout of the function.  Live in values are typically arguments in
@@ -249,6 +279,37 @@ name|leaveSSA
 parameter_list|()
 block|{
 name|IsSSA
+operator|=
+name|false
+expr_stmt|;
+block|}
+comment|/// tracksLiveness - Returns true when tracking register liveness accurately.
+comment|///
+comment|/// While this flag is true, register liveness information in basic block
+comment|/// live-in lists and machine instruction operands is accurate. This means it
+comment|/// can be used to change the code in ways that affect the values in
+comment|/// registers, for example by the register scavenger.
+comment|///
+comment|/// When this flag is false, liveness is no longer reliable.
+name|bool
+name|tracksLiveness
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TracksLiveness
+return|;
+block|}
+comment|/// invalidateLiveness - Indicates that register liveness is no longer being
+comment|/// tracked accurately.
+comment|///
+comment|/// This should be called by late passes that invalidate the liveness
+comment|/// information.
+name|void
+name|invalidateLiveness
+parameter_list|()
+block|{
+name|TracksLiveness
 operator|=
 name|false
 expr_stmt|;
@@ -609,6 +670,14 @@ decl_stmt|;
 comment|/// replaceRegWith - Replace all instances of FromReg with ToReg in the
 comment|/// machine function.  This is like llvm-level X->replaceAllUsesWith(Y),
 comment|/// except that it also changes any definitions of the register as well.
+comment|///
+comment|/// Note that it is usually necessary to first constrain ToReg's register
+comment|/// class to match the FromReg constraints using:
+comment|///
+comment|///   constrainRegClass(ToReg, getRegClass(FromReg))
+comment|///
+comment|/// That function will return NULL if the virtual registers have incompatible
+comment|/// constraints.
 name|void
 name|replaceRegWith
 parameter_list|(
@@ -724,6 +793,22 @@ decl|const
 decl_stmt|;
 endif|#
 directive|endif
+comment|/// isConstantPhysReg - Returns true if PhysReg is unallocatable and constant
+comment|/// throughout the function.  It is safe to move instructions that read such
+comment|/// a physreg.
+name|bool
+name|isConstantPhysReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|,
+specifier|const
+name|MachineFunction
+operator|&
+name|MF
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//===--------------------------------------------------------------------===//
 comment|// Virtual Register Info
 comment|//===--------------------------------------------------------------------===//
@@ -833,6 +918,11 @@ name|size
 argument_list|()
 return|;
 block|}
+comment|/// clearVirtRegs - Remove all virtual registers (after physreg assignment).
+name|void
+name|clearVirtRegs
+parameter_list|()
+function_decl|;
 comment|/// setRegAllocationHint - Specify a register allocation hint for the
 comment|/// specified virtual register.
 name|void
@@ -942,9 +1032,77 @@ decl|const
 block|{
 return|return
 name|UsedPhysRegs
-index|[
+operator|.
+name|test
+argument_list|(
 name|Reg
-index|]
+argument_list|)
+operator|||
+name|UsedPhysRegMask
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+return|;
+block|}
+comment|/// isPhysRegOrOverlapUsed - Return true if Reg or any overlapping register
+comment|/// is used in this function.
+name|bool
+name|isPhysRegOrOverlapUsed
+argument_list|(
+name|unsigned
+name|Reg
+argument_list|)
+decl|const
+block|{
+if|if
+condition|(
+name|UsedPhysRegMask
+operator|.
+name|test
+argument_list|(
+name|Reg
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+for|for
+control|(
+specifier|const
+name|uint16_t
+modifier|*
+name|AI
+init|=
+name|TRI
+operator|->
+name|getOverlaps
+argument_list|(
+name|Reg
+argument_list|)
+init|;
+operator|*
+name|AI
+condition|;
+operator|++
+name|AI
+control|)
+if|if
+condition|(
+name|UsedPhysRegs
+operator|.
+name|test
+argument_list|(
+operator|*
+name|AI
+argument_list|)
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|false
 return|;
 block|}
 comment|/// setPhysRegUsed - Mark the specified register used in this function.
@@ -957,11 +1115,11 @@ name|Reg
 parameter_list|)
 block|{
 name|UsedPhysRegs
-index|[
+operator|.
+name|set
+argument_list|(
 name|Reg
-index|]
-operator|=
-name|true
+argument_list|)
 expr_stmt|;
 block|}
 comment|/// addPhysRegsUsed - Mark the specified registers used in this function.
@@ -980,6 +1138,25 @@ operator||=
 name|Regs
 expr_stmt|;
 block|}
+comment|/// addPhysRegsUsedFromRegMask - Mark any registers not in RegMask as used.
+comment|/// This corresponds to the bit mask attached to register mask operands.
+name|void
+name|addPhysRegsUsedFromRegMask
+parameter_list|(
+specifier|const
+name|uint32_t
+modifier|*
+name|RegMask
+parameter_list|)
+block|{
+name|UsedPhysRegMask
+operator|.
+name|setBitsNotInMask
+argument_list|(
+name|RegMask
+argument_list|)
+expr_stmt|;
+block|}
 comment|/// setPhysRegUnused - Mark the specified register unused in this function.
 comment|/// This should only be called during and after register allocation.
 name|void
@@ -990,23 +1167,80 @@ name|Reg
 parameter_list|)
 block|{
 name|UsedPhysRegs
-index|[
+operator|.
+name|reset
+argument_list|(
 name|Reg
-index|]
-operator|=
-name|false
+argument_list|)
+expr_stmt|;
+name|UsedPhysRegMask
+operator|.
+name|reset
+argument_list|(
+name|Reg
+argument_list|)
 expr_stmt|;
 block|}
-comment|/// closePhysRegsUsed - Expand UsedPhysRegs to its transitive closure over
-comment|/// subregisters. That means that if R is used, so are all subregisters.
+comment|//===--------------------------------------------------------------------===//
+comment|// Reserved Register Info
+comment|//===--------------------------------------------------------------------===//
+comment|//
+comment|// The set of reserved registers must be invariant during register
+comment|// allocation.  For example, the target cannot suddenly decide it needs a
+comment|// frame pointer when the register allocator has already used the frame
+comment|// pointer register for something else.
+comment|//
+comment|// These methods can be used by target hooks like hasFP() to avoid changing
+comment|// the reserved register set during register allocation.
+comment|/// freezeReservedRegs - Called by the register allocator to freeze the set
+comment|/// of reserved registers before allocation begins.
 name|void
-name|closePhysRegsUsed
+name|freezeReservedRegs
 parameter_list|(
 specifier|const
-name|TargetRegisterInfo
+name|MachineFunction
 modifier|&
 parameter_list|)
 function_decl|;
+comment|/// reservedRegsFrozen - Returns true after freezeReservedRegs() was called
+comment|/// to ensure the set of reserved registers stays constant.
+name|bool
+name|reservedRegsFrozen
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|ReservedRegs
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// canReserveReg - Returns true if PhysReg can be used as a reserved
+comment|/// register.  Any register can be reserved before freezeReservedRegs() is
+comment|/// called.
+name|bool
+name|canReserveReg
+argument_list|(
+name|unsigned
+name|PhysReg
+argument_list|)
+decl|const
+block|{
+return|return
+operator|!
+name|reservedRegsFrozen
+argument_list|()
+operator|||
+name|ReservedRegs
+operator|.
+name|test
+argument_list|(
+name|PhysReg
+argument_list|)
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// LiveIn/LiveOut Management
 comment|//===--------------------------------------------------------------------===//
@@ -1567,6 +1801,55 @@ return|return
 name|MI
 return|;
 block|}
+name|MachineInstr
+modifier|*
+name|skipBundle
+parameter_list|()
+block|{
+if|if
+condition|(
+operator|!
+name|Op
+condition|)
+return|return
+literal|0
+return|;
+name|MachineInstr
+modifier|*
+name|MI
+init|=
+name|getBundleStart
+argument_list|(
+name|Op
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+decl_stmt|;
+do|do
+operator|++
+operator|*
+name|this
+expr_stmt|;
+do|while
+condition|(
+name|Op
+operator|&&
+name|getBundleStart
+argument_list|(
+name|Op
+operator|->
+name|getParent
+argument_list|()
+argument_list|)
+operator|==
+name|MI
+condition|)
+do|;
+return|return
+name|MI
+return|;
+block|}
 name|MachineOperand
 operator|&
 name|getOperand
@@ -1663,7 +1946,7 @@ block|}
 end_decl_stmt
 
 begin_comment
-unit|};    };  }
+unit|};  };  }
 comment|// End llvm namespace
 end_comment
 

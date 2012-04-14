@@ -152,6 +152,9 @@ name|class
 name|DITemplateValueParameter
 decl_stmt|;
 name|class
+name|DIObjCProperty
+decl_stmt|;
+name|class
 name|DIBuilder
 block|{
 name|private
@@ -590,6 +593,83 @@ init|=
 literal|0
 parameter_list|)
 function_decl|;
+comment|/// createObjCIVar - Create debugging information entry for Objective-C
+comment|/// instance variable.
+comment|/// @param Name         Member name.
+comment|/// @param File         File where this member is defined.
+comment|/// @param LineNo       Line number.
+comment|/// @param SizeInBits   Member size.
+comment|/// @param AlignInBits  Member alignment.
+comment|/// @param OffsetInBits Member offset.
+comment|/// @param Flags        Flags to encode member attribute, e.g. private
+comment|/// @param Ty           Parent type.
+comment|/// @param Property     Property associated with this ivar.
+name|DIType
+name|createObjCIVar
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|DIFile
+name|File
+parameter_list|,
+name|unsigned
+name|LineNo
+parameter_list|,
+name|uint64_t
+name|SizeInBits
+parameter_list|,
+name|uint64_t
+name|AlignInBits
+parameter_list|,
+name|uint64_t
+name|OffsetInBits
+parameter_list|,
+name|unsigned
+name|Flags
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|,
+name|MDNode
+modifier|*
+name|PropertyNode
+parameter_list|)
+function_decl|;
+comment|/// createObjCProperty - Create debugging information entry for Objective-C
+comment|/// property.
+comment|/// @param Name         Property name.
+comment|/// @param File         File where this property is defined.
+comment|/// @param LineNumber   Line number.
+comment|/// @param GetterName   Name of the Objective C property getter selector.
+comment|/// @param SetterName   Name of the Objective C property setter selector.
+comment|/// @param PropertyAttributes Objective C property attributes.
+comment|/// @param Ty           Type.
+name|DIObjCProperty
+name|createObjCProperty
+parameter_list|(
+name|StringRef
+name|Name
+parameter_list|,
+name|DIFile
+name|File
+parameter_list|,
+name|unsigned
+name|LineNumber
+parameter_list|,
+name|StringRef
+name|GetterName
+parameter_list|,
+name|StringRef
+name|SetterName
+parameter_list|,
+name|unsigned
+name|PropertyAttributes
+parameter_list|,
+name|DIType
+name|Ty
+parameter_list|)
+function_decl|;
 comment|/// createClassType - Create debugging information entry for a class.
 comment|/// @param Scope        Scope in which this class is defined.
 comment|/// @param Name         class name.
@@ -925,6 +1005,28 @@ name|DIFile
 name|F
 parameter_list|)
 function_decl|;
+comment|/// createForwardDecl - Create a temporary forward-declared type.
+name|DIType
+name|createForwardDecl
+parameter_list|(
+name|unsigned
+name|Tag
+parameter_list|,
+name|StringRef
+name|Name
+parameter_list|,
+name|DIFile
+name|F
+parameter_list|,
+name|unsigned
+name|Line
+parameter_list|,
+name|unsigned
+name|RuntimeLang
+init|=
+literal|0
+parameter_list|)
+function_decl|;
 comment|/// retainType - Retain DIType in a module even if it is not referenced
 comment|/// through debug info anchors.
 name|void
@@ -1146,6 +1248,7 @@ comment|/// @param LineNo        Line number.
 comment|/// @param Ty            Function type.
 comment|/// @param isLocalToUnit True if this function is not externally visible..
 comment|/// @param isDefinition  True if this is a function definition.
+comment|/// @param ScopeLine     Set to the beginning of the scope this starts
 comment|/// @param Flags         e.g. is this function prototyped or not.
 comment|///                      This flags are used to emit dwarf attributes.
 comment|/// @param isOptimized   True if optimization is ON.
@@ -1177,6 +1280,9 @@ name|isLocalToUnit
 parameter_list|,
 name|bool
 name|isDefinition
+parameter_list|,
+name|unsigned
+name|ScopeLine
 parameter_list|,
 name|unsigned
 name|Flags

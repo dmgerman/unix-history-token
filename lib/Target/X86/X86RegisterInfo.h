@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- X86RegisterInfo.h - X86 Register Information Impl --------*- C++ -*-===//
+comment|//===-- X86RegisterInfo.h - X86 Register Information Impl -------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -252,12 +252,21 @@ block|;
 comment|/// getCalleeSavedRegs - Return a null-terminated list of all of the
 comment|/// callee-save registers on this target.
 specifier|const
-name|unsigned
+name|uint16_t
 operator|*
 name|getCalleeSavedRegs
 argument_list|(
 argument|const MachineFunction* MF =
 literal|0
+argument_list|)
+specifier|const
+block|;
+specifier|const
+name|uint32_t
+operator|*
+name|getCallPreservedMask
+argument_list|(
+argument|CallingConv::ID
 argument_list|)
 specifier|const
 block|;

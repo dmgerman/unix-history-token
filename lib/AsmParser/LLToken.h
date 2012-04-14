@@ -182,6 +182,8 @@ name|kw_target
 block|,
 name|kw_triple
 block|,
+name|kw_unwind
+block|,
 name|kw_deplibs
 block|,
 name|kw_datalayout
@@ -305,6 +307,8 @@ block|,
 name|kw_naked
 block|,
 name|kw_nonlazybind
+block|,
+name|kw_address_safety
 block|,
 name|kw_type
 block|,
@@ -455,8 +459,6 @@ block|,
 name|kw_indirectbr
 block|,
 name|kw_invoke
-block|,
-name|kw_unwind
 block|,
 name|kw_resume
 block|,

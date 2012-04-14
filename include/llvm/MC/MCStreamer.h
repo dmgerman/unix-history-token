@@ -103,9 +103,6 @@ name|class
 name|MCAsmBackend
 decl_stmt|;
 name|class
-name|MCAsmInfo
-decl_stmt|;
-name|class
 name|MCCodeEmitter
 decl_stmt|;
 name|class
@@ -128,9 +125,6 @@ name|MCSymbol
 decl_stmt|;
 name|class
 name|StringRef
-decl_stmt|;
-name|class
-name|TargetLoweringObjectFile
 decl_stmt|;
 name|class
 name|Twine
@@ -312,6 +306,40 @@ specifier|const
 name|MCExpr
 modifier|*
 name|Expr
+parameter_list|)
+function_decl|;
+name|void
+name|RecordProcStart
+parameter_list|(
+name|MCDwarfFrameInfo
+modifier|&
+name|Frame
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|EmitCFIStartProcImpl
+parameter_list|(
+name|MCDwarfFrameInfo
+modifier|&
+name|Frame
+parameter_list|)
+function_decl|;
+name|void
+name|RecordProcEnd
+parameter_list|(
+name|MCDwarfFrameInfo
+modifier|&
+name|Frame
+parameter_list|)
+function_decl|;
+name|virtual
+name|void
+name|EmitCFIEndProcImpl
+parameter_list|(
+name|MCDwarfFrameInfo
+modifier|&
+name|CurFrame
 parameter_list|)
 function_decl|;
 name|void
@@ -1330,6 +1358,31 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// EmitCOFFSecRel32 - Emits a COFF section relative relocation.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// @param Symbol - Symbol the section relative realocation should point to.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCOFFSecRel32
+parameter_list|(
+name|MCSymbol
+specifier|const
+modifier|*
+name|Symbol
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// EmitELFSize - Emit an ELF .size directive.
 end_comment
 
@@ -1799,6 +1852,11 @@ name|unsigned
 name|AddrSpace
 init|=
 literal|0
+parameter_list|,
+name|unsigned
+name|Padding
+init|=
+literal|0
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -1850,6 +1908,39 @@ name|unsigned
 name|AddrSpace
 init|=
 literal|0
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// EmitGPRel64Value - Emit the expression @p Value into the output as a
+end_comment
+
+begin_comment
+comment|/// gprel64 (64-bit GP relative) value.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// This is used to implement assembler directives such as .gpdword on
+end_comment
+
+begin_comment
+comment|/// targets that support them.
+end_comment
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitGPRel64Value
+parameter_list|(
+specifier|const
+name|MCExpr
+modifier|*
+name|Value
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -2133,9 +2224,13 @@ begin_comment
 comment|/// @param Value - The value to use when filling bytes.
 end_comment
 
+begin_comment
+comment|/// @return false on success, true if the offset was invalid.
+end_comment
+
 begin_function_decl
 name|virtual
-name|void
+name|bool
 name|EmitValueToOffset
 parameter_list|(
 specifier|const
@@ -2198,6 +2293,9 @@ name|EmitDwarfFileDirective
 parameter_list|(
 name|unsigned
 name|FileNo
+parameter_list|,
+name|StringRef
+name|Directory
 parameter_list|,
 name|StringRef
 name|Filename
@@ -2330,7 +2428,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|virtual
 name|void
 name|EmitCFIStartProc
 parameter_list|()
@@ -2338,7 +2435,6 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
-name|virtual
 name|void
 name|EmitCFIEndProc
 parameter_list|()
@@ -2457,6 +2553,17 @@ end_function_decl
 begin_function_decl
 name|virtual
 name|void
+name|EmitCFIRestore
+parameter_list|(
+name|int64_t
+name|Register
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
 name|EmitCFIRelOffset
 parameter_list|(
 name|int64_t
@@ -2476,6 +2583,25 @@ parameter_list|(
 name|int64_t
 name|Adjustment
 parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCFIEscape
+parameter_list|(
+name|StringRef
+name|Values
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|EmitCFISignalFrame
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -2791,16 +2917,27 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/// Finish - Finish emission of machine code.
+comment|/// FinishImpl - Streamer specific finalization.
 end_comment
 
 begin_function_decl
 name|virtual
 name|void
-name|Finish
+name|FinishImpl
 parameter_list|()
 init|=
 literal|0
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// Finish - Finish emission of machine code.
+end_comment
+
+begin_function_decl
+name|void
+name|Finish
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -2926,6 +3063,9 @@ name|useLoc
 parameter_list|,
 name|bool
 name|useCFI
+parameter_list|,
+name|bool
+name|useDwarfDirectory
 parameter_list|,
 name|MCInstPrinter
 modifier|*
@@ -3077,38 +3217,6 @@ name|RelaxAll
 parameter_list|,
 name|bool
 name|NoExecStack
-parameter_list|)
-function_decl|;
-end_function_decl
-
-begin_comment
-comment|/// createLoggingStreamer - Create a machine code streamer which just logs the
-end_comment
-
-begin_comment
-comment|/// API calls and then dispatches to another streamer.
-end_comment
-
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// The new streamer takes ownership of the \arg Child.
-end_comment
-
-begin_function_decl
-name|MCStreamer
-modifier|*
-name|createLoggingStreamer
-parameter_list|(
-name|MCStreamer
-modifier|*
-name|Child
-parameter_list|,
-name|raw_ostream
-modifier|&
-name|OS
 parameter_list|)
 function_decl|;
 end_function_decl

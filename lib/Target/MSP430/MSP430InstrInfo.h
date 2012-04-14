@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|//===- MSP430InstrInfo.h - MSP430 Instruction Information -------*- C++ -*-===//
+comment|//===-- MSP430InstrInfo.h - MSP430 Instruction Information ------*- C++ -*-===//
 end_comment
 
 begin_comment
@@ -62,13 +62,13 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/Target/TargetInstrInfo.h"
+file|"MSP430RegisterInfo.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"MSP430RegisterInfo.h"
+file|"llvm/Target/TargetInstrInfo.h"
 end_include
 
 begin_define

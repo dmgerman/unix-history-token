@@ -340,7 +340,7 @@ comment|// [o] class PassManagerImpl : public Pass, public PMDataManager,
 end_comment
 
 begin_comment
-comment|//                             public PMDTopLevelManager
+comment|//                             public PMTopLevelManager
 end_comment
 
 begin_comment
@@ -676,16 +676,18 @@ parameter_list|()
 function_decl|;
 name|private
 label|:
-comment|/// This is implemented by top level pass manager and used by
-comment|/// schedulePass() to add analysis info passes that are not available.
 name|virtual
-name|void
-name|addTopLevelPass
-parameter_list|(
-name|Pass
+name|PMDataManager
 modifier|*
-name|P
-parameter_list|)
+name|getAsPMDataManager
+parameter_list|()
+init|=
+literal|0
+function_decl|;
+name|virtual
+name|PassManagerType
+name|getTopLevelPassManagerType
+parameter_list|()
 init|=
 literal|0
 function_decl|;

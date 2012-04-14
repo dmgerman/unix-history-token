@@ -66,6 +66,12 @@ end_define
 begin_include
 include|#
 directive|include
+file|"llvm/Config/config.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/DataTypes.h"
 end_include
 
@@ -90,6 +96,12 @@ name|Function
 decl_stmt|;
 name|class
 name|MachineFunction
+decl_stmt|;
+name|class
+name|OProfileWrapper
+decl_stmt|;
+name|class
+name|IntelJITEventsWrapper
 decl_stmt|;
 comment|/// JITEvent_EmittedFunctionDetails - Helper struct for containing information
 comment|/// about a generated machine code function.
@@ -161,19 +173,15 @@ parameter_list|(
 specifier|const
 name|Function
 modifier|&
-name|F
 parameter_list|,
 name|void
 modifier|*
-name|Code
 parameter_list|,
 name|size_t
-name|Size
 parameter_list|,
 specifier|const
 name|EmittedFunctionDetails
 modifier|&
-name|Details
 parameter_list|)
 block|{}
 comment|/// NotifyFreeingMachineCode - Called from freeMachineCodeForFunction(), after
@@ -190,17 +198,110 @@ name|NotifyFreeingMachineCode
 parameter_list|(
 name|void
 modifier|*
-name|OldPtr
 parameter_list|)
 block|{}
+if|#
+directive|if
+name|LLVM_USE_INTEL_JITEVENTS
+comment|// Construct an IntelJITEventListener
+specifier|static
+name|JITEventListener
+modifier|*
+name|createIntelJITEventListener
+parameter_list|()
+function_decl|;
+comment|// Construct an IntelJITEventListener with a test Intel JIT API implementation
+specifier|static
+name|JITEventListener
+modifier|*
+name|createIntelJITEventListener
+parameter_list|(
+name|IntelJITEventsWrapper
+modifier|*
+name|AlternativeImpl
+parameter_list|)
+function_decl|;
+else|#
+directive|else
+specifier|static
+name|JITEventListener
+modifier|*
+name|createIntelJITEventListener
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
 block|}
-empty_stmt|;
-comment|// This returns NULL if support isn't available.
+specifier|static
+name|JITEventListener
+modifier|*
+name|createIntelJITEventListener
+parameter_list|(
+name|IntelJITEventsWrapper
+modifier|*
+name|AlternativeImpl
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
+comment|// USE_INTEL_JITEVENTS
+if|#
+directive|if
+name|LLVM_USE_OPROFILE
+comment|// Construct an OProfileJITEventListener
+specifier|static
 name|JITEventListener
 modifier|*
 name|createOProfileJITEventListener
 parameter_list|()
 function_decl|;
+comment|// Construct an OProfileJITEventListener with a test opagent implementation
+specifier|static
+name|JITEventListener
+modifier|*
+name|createOProfileJITEventListener
+parameter_list|(
+name|OProfileWrapper
+modifier|*
+name|AlternativeImpl
+parameter_list|)
+function_decl|;
+else|#
+directive|else
+specifier|static
+name|JITEventListener
+modifier|*
+name|createOProfileJITEventListener
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+specifier|static
+name|JITEventListener
+modifier|*
+name|createOProfileJITEventListener
+parameter_list|(
+name|OProfileWrapper
+modifier|*
+name|AlternativeImpl
+parameter_list|)
+block|{
+return|return
+literal|0
+return|;
+block|}
+endif|#
+directive|endif
+comment|// USE_OPROFILE
+block|}
+empty_stmt|;
 block|}
 end_decl_stmt
 
@@ -212,6 +313,10 @@ begin_endif
 endif|#
 directive|endif
 end_endif
+
+begin_comment
+comment|// defined LLVM_EXECUTION_ENGINE_JIT_EVENTLISTENER_H
+end_comment
 
 end_unit
 

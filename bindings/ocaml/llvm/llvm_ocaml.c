@@ -42,12 +42,6 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Config/config.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|<assert.h>
 end_include
 
@@ -5887,7 +5881,7 @@ name|assert
 argument_list|(
 name|o
 operator|<=
-name|LLVMUnwind
+name|LLVMLandingPad
 argument_list|)
 expr_stmt|;
 return|return

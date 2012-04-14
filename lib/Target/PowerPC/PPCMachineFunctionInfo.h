@@ -77,8 +77,11 @@ range|:
 name|public
 name|MachineFunctionInfo
 block|{
-name|private
-operator|:
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 comment|/// FramePointerSaveIndex - Frame index of where the old frame pointer is
 comment|/// stored.  Also used as an anchor for instructions that need to be altered
 comment|/// when using frame pointers (dyna_add, dyna_sub.)

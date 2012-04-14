@@ -193,12 +193,6 @@ decl_stmt|;
 name|class
 name|Spiller
 decl_stmt|;
-comment|// Forward declare a priority queue of live virtual registers. If an
-comment|// implementation needs to prioritize by anything other than spill weight, then
-comment|// this will become an abstract base class with virtual calls to push/get.
-name|class
-name|LiveVirtRegQueue
-decl_stmt|;
 comment|/// RegAllocBase provides the register allocation driver and interface that can
 comment|/// be extended to add interesting heuristics.
 comment|///
@@ -218,8 +212,6 @@ comment|// registers may have changed.
 name|unsigned
 name|UserTag
 decl_stmt|;
-name|protected
-label|:
 comment|// Array of LiveIntervalUnions indexed by physical register.
 name|class
 name|LiveUnionArray
@@ -305,6 +297,21 @@ return|;
 block|}
 block|}
 empty_stmt|;
+name|LiveUnionArray
+name|PhysReg2LiveUnion
+decl_stmt|;
+comment|// Current queries, one per physreg. They must be reinitialized each time we
+comment|// query on a new live virtual register.
+name|OwningArrayPtr
+operator|<
+name|LiveIntervalUnion
+operator|::
+name|Query
+operator|>
+name|Queries
+expr_stmt|;
+name|protected
+label|:
 specifier|const
 name|TargetRegisterInfo
 modifier|*
@@ -325,19 +332,6 @@ decl_stmt|;
 name|RegisterClassInfo
 name|RegClassInfo
 decl_stmt|;
-name|LiveUnionArray
-name|PhysReg2LiveUnion
-decl_stmt|;
-comment|// Current queries, one per physreg. They must be reinitialized each time we
-comment|// query on a new live virtual register.
-name|OwningArrayPtr
-operator|<
-name|LiveIntervalUnion
-operator|::
-name|Query
-operator|>
-name|Queries
-expr_stmt|;
 name|RegAllocBase
 argument_list|()
 operator|:
@@ -425,6 +419,22 @@ name|PhysReg
 index|]
 return|;
 block|}
+comment|// Get direct access to the underlying LiveIntervalUnion for PhysReg.
+name|LiveIntervalUnion
+modifier|&
+name|getLiveUnion
+parameter_list|(
+name|unsigned
+name|PhysReg
+parameter_list|)
+block|{
+return|return
+name|PhysReg2LiveUnion
+index|[
+name|PhysReg
+index|]
+return|;
+block|}
 comment|// Invalidate all cached information about virtual registers - live ranges may
 comment|// have changed.
 name|void
@@ -437,10 +447,6 @@ expr_stmt|;
 block|}
 comment|// The top-level driver. The output is a VirtRegMap that us updated with
 comment|// physical register assignments.
-comment|//
-comment|// If an implementation wants to override the LiveInterval comparator, we
-comment|// should modify this interface to allow passing in an instance derived from
-comment|// LiveVirtRegQueue.
 name|void
 name|allocatePhysRegs
 parameter_list|()
@@ -545,28 +551,6 @@ name|unsigned
 name|PhysReg
 parameter_list|)
 function_decl|;
-comment|// Helper for spilling all live virtual registers currently unified under preg
-comment|// that interfere with the most recently queried lvr.  Return true if spilling
-comment|// was successful, and append any new spilled/split intervals to splitLVRs.
-name|bool
-name|spillInterferences
-argument_list|(
-name|LiveInterval
-operator|&
-name|VirtReg
-argument_list|,
-name|unsigned
-name|PhysReg
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|&
-name|SplitVRegs
-argument_list|)
-decl_stmt|;
 comment|/// addMBBLiveIns - Add physreg liveins to basic blocks.
 name|void
 name|addMBBLiveIns
@@ -605,25 +589,6 @@ name|void
 name|seedLiveRegs
 parameter_list|()
 function_decl|;
-name|void
-name|spillReg
-argument_list|(
-name|LiveInterval
-operator|&
-name|VirtReg
-argument_list|,
-name|unsigned
-name|PhysReg
-argument_list|,
-name|SmallVectorImpl
-operator|<
-name|LiveInterval
-operator|*
-operator|>
-operator|&
-name|SplitVRegs
-argument_list|)
-decl_stmt|;
 block|}
 empty_stmt|;
 block|}

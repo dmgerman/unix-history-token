@@ -102,13 +102,7 @@ name|class
 name|FunctionPass
 decl_stmt|;
 name|class
-name|formatted_raw_ostream
-decl_stmt|;
-name|class
 name|JITCodeEmitter
-decl_stmt|;
-name|class
-name|Target
 decl_stmt|;
 name|class
 name|MachineInstr
@@ -118,9 +112,6 @@ name|AsmPrinter
 decl_stmt|;
 name|class
 name|MCInst
-decl_stmt|;
-name|class
-name|TargetMachine
 decl_stmt|;
 name|FunctionPass
 modifier|*

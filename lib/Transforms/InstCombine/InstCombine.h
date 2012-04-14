@@ -102,6 +102,9 @@ name|class
 name|TargetData
 decl_stmt|;
 name|class
+name|TargetLibraryInfo
+decl_stmt|;
+name|class
 name|DbgDeclareInst
 decl_stmt|;
 name|class
@@ -311,6 +314,10 @@ name|TargetData
 modifier|*
 name|TD
 decl_stmt|;
+name|TargetLibraryInfo
+modifier|*
+name|TLI
+decl_stmt|;
 name|bool
 name|MadeIRChange
 decl_stmt|;
@@ -409,6 +416,16 @@ specifier|const
 block|{
 return|return
 name|TD
+return|;
+block|}
+name|TargetLibraryInfo
+operator|*
+name|getTargetLibraryInfo
+argument_list|()
+specifier|const
+block|{
+return|return
+name|TLI
 return|;
 block|}
 comment|// Visitation implementation - Implement instruction combining for different
@@ -1775,11 +1792,6 @@ name|Value
 operator|*
 name|V
 argument_list|,
-specifier|const
-name|APInt
-operator|&
-name|Mask
-argument_list|,
 name|APInt
 operator|&
 name|KnownZero
@@ -1801,8 +1813,6 @@ operator|::
 name|ComputeMaskedBits
 argument_list|(
 name|V
-argument_list|,
-name|Mask
 argument_list|,
 name|KnownZero
 argument_list|,

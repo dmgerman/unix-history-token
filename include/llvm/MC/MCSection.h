@@ -62,12 +62,6 @@ end_define
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/StringRef.h"
-end_include
-
-begin_include
-include|#
-directive|include
 file|"llvm/MC/SectionKind.h"
 end_include
 
@@ -81,9 +75,6 @@ begin_decl_stmt
 name|namespace
 name|llvm
 block|{
-name|class
-name|MCContext
-decl_stmt|;
 name|class
 name|MCAsmInfo
 decl_stmt|;

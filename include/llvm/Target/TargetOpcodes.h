@@ -165,6 +165,11 @@ comment|/// used to copy between subregisters of virtual registers.
 name|COPY
 init|=
 literal|13
+block|,
+comment|/// BUNDLE - This instruction represents an instruction bundle. Instructions
+comment|/// which immediately follow a BUNDLE instruction which are marked with
+comment|/// 'InsideBundle' flag are inside the bundle.
+name|BUNDLE
 block|}
 enum|;
 block|}

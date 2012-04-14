@@ -118,48 +118,64 @@ operator|~
 name|RTDyldMemoryManager
 argument_list|()
 expr_stmt|;
-comment|// Allocate ActualSize bytes, or more, for the named function. Return
-comment|// a pointer to the allocated memory and update Size to reflect how much
-comment|// memory was acutally allocated.
+comment|/// allocateCodeSection - Allocate a memory block of (at least) the given
+comment|/// size suitable for executable code.
 name|virtual
 name|uint8_t
 modifier|*
-name|startFunctionBody
+name|allocateCodeSection
 parameter_list|(
-specifier|const
-name|char
-modifier|*
-name|Name
-parameter_list|,
 name|uintptr_t
-modifier|&
 name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|,
+name|unsigned
+name|SectionID
 parameter_list|)
 init|=
 literal|0
 function_decl|;
-comment|// Mark the end of the function, including how much of the allocated
-comment|// memory was actually used.
+comment|/// allocateDataSection - Allocate a memory block of (at least) the given
+comment|/// size suitable for data.
+name|virtual
+name|uint8_t
+modifier|*
+name|allocateDataSection
+parameter_list|(
+name|uintptr_t
+name|Size
+parameter_list|,
+name|unsigned
+name|Alignment
+parameter_list|,
+name|unsigned
+name|SectionID
+parameter_list|)
+init|=
+literal|0
+function_decl|;
 name|virtual
 name|void
-name|endFunctionBody
-parameter_list|(
+modifier|*
+name|getPointerToNamedFunction
+argument_list|(
 specifier|const
-name|char
-modifier|*
+name|std
+operator|::
+name|string
+operator|&
 name|Name
-parameter_list|,
-name|uint8_t
-modifier|*
-name|FunctionStart
-parameter_list|,
-name|uint8_t
-modifier|*
-name|FunctionEnd
-parameter_list|)
+argument_list|,
+name|bool
+name|AbortOnFailure
+operator|=
+name|true
+argument_list|)
 init|=
 literal|0
-function_decl|;
+decl_stmt|;
 block|}
 empty_stmt|;
 name|class
@@ -193,6 +209,20 @@ name|RTDyldMemoryManager
 modifier|*
 name|MM
 decl_stmt|;
+name|protected
+label|:
+comment|// Change the address associated with a section when resolving relocations.
+comment|// Any relocations already associated with the symbol will be re-resolved.
+name|void
+name|reassignSectionAddress
+parameter_list|(
+name|unsigned
+name|SectionID
+parameter_list|,
+name|uint64_t
+name|Addr
+parameter_list|)
+function_decl|;
 name|public
 label|:
 name|RuntimeDyld
@@ -229,17 +259,19 @@ name|void
 name|resolveRelocations
 parameter_list|()
 function_decl|;
-comment|// Change the address associated with a symbol when resolving relocations.
-comment|// Any relocations already associated with the symbol will be re-resolved.
+comment|/// mapSectionAddress - map a section to its target address space value.
+comment|/// Map the address of a JIT section as returned from the memory manager
+comment|/// to the address in the target process as the running code will see it.
+comment|/// This is the address which will be used for relocation resolution.
 name|void
-name|reassignSymbolAddress
+name|mapSectionAddress
 parameter_list|(
-name|StringRef
-name|Name
-parameter_list|,
-name|uint8_t
+name|void
 modifier|*
-name|Addr
+name|LocalAddress
+parameter_list|,
+name|uint64_t
+name|TargetAddress
 parameter_list|)
 function_decl|;
 name|StringRef

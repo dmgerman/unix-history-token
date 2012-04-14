@@ -1133,9 +1133,7 @@ operator|&
 name|symbols
 argument_list|,
 comment|///< Symbols to be sought
-name|std
-operator|::
-name|set
+name|SmallVectorImpl
 operator|<
 name|Module
 operator|*
