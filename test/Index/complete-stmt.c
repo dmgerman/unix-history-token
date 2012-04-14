@@ -24,7 +24,7 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: c-index-test -code-completion-at=%s:7:4 %s | FileCheck -check-prefix=CHECK-IF-ELSE %s
+comment|// RUN: env CINDEXTEST_CODE_COMPLETE_PATTERNS=1 c-index-test -code-completion-at=%s:7:4 %s | FileCheck -check-prefix=CHECK-IF-ELSE %s
 end_comment
 
 begin_comment
@@ -33,6 +33,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-IF-ELSE: NotImplemented:{TypedText else}{HorizontalSpace  }{Text if}{HorizontalSpace  }{LeftParen (}{Placeholder expression}{RightParen )}{HorizontalSpace  }{LeftBrace {}{VerticalSpace  }{Placeholder statements}{VerticalSpace  }{RightBrace }} (40)
+end_comment
+
+begin_comment
+comment|// RUN: c-index-test -code-completion-at=%s:7:4 %s | FileCheck -check-prefix=CHECK-IF-ELSE-SIMPLE %s
+end_comment
+
+begin_comment
+comment|// CHECK-IF-ELSE-SIMPLE: NotImplemented:{TypedText else} (40)
+end_comment
+
+begin_comment
+comment|// CHECK-IF-ELSE-SIMPLE: NotImplemented:{TypedText else}{HorizontalSpace  }{Text if}{HorizontalSpace  }{LeftParen (}{Placeholder expression}{RightParen )} (40)
 end_comment
 
 end_unit

@@ -158,7 +158,7 @@ name|LocInfo
 operator|&&
 literal|"LocInfo didn't fit in TC?"
 argument_list|)
-block|;     }
+block|;   }
 name|friend
 name|class
 name|Sema

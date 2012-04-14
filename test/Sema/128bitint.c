@@ -91,5 +91,34 @@ literal|1
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// PR11916: Support for libstdc++ 4.7
+end_comment
+
+begin_decl_stmt
+name|__int128
+name|i
+init|=
+operator|(
+name|__int128
+operator|)
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|unsigned
+name|__int128
+name|u
+init|=
+operator|(
+name|unsigned
+name|__int128
+operator|)
+operator|-
+literal|1
+decl_stmt|;
+end_decl_stmt
+
 end_unit
 

@@ -117,6 +117,12 @@ directive|include
 file|"llvm/ADT/SmallVector.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Allocator.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -314,6 +320,25 @@ name|ImplicitConversionKind
 name|Kind
 parameter_list|)
 function_decl|;
+comment|/// NarrowingKind - The kind of narrowing conversion being performed by a
+comment|/// standard conversion sequence according to C++11 [dcl.init.list]p7.
+enum|enum
+name|NarrowingKind
+block|{
+comment|/// Not a narrowing conversion.
+name|NK_Not_Narrowing
+block|,
+comment|/// A narrowing conversion by virtue of the source and destination types.
+name|NK_Type_Narrowing
+block|,
+comment|/// A narrowing conversion, because a constant expression got narrowed.
+name|NK_Constant_Narrowing
+block|,
+comment|/// A narrowing conversion, because a non-constant-expression variable might
+comment|/// have got narrowed.
+name|NK_Variable_Narrowing
+block|}
+enum|;
 comment|/// StandardConversionSequence - represents a standard conversion
 comment|/// sequence (C++ 13.3.3.1.1). A standard conversion sequence
 comment|/// contains between zero and three conversions. If a particular
@@ -595,6 +620,28 @@ name|getRank
 argument_list|()
 specifier|const
 expr_stmt|;
+name|NarrowingKind
+name|getNarrowingKind
+argument_list|(
+name|ASTContext
+operator|&
+name|Context
+argument_list|,
+specifier|const
+name|Expr
+operator|*
+name|Converted
+argument_list|,
+name|APValue
+operator|&
+name|ConstantValue
+argument_list|,
+name|QualType
+operator|&
+name|ConstantType
+argument_list|)
+decl|const
+decl_stmt|;
 name|bool
 name|isPointerConversionToBool
 argument_list|()
@@ -621,9 +668,10 @@ comment|/// conversion sequence (C++ 13.3.3.1.2).
 struct|struct
 name|UserDefinedConversionSequence
 block|{
-comment|/// Before - Represents the standard conversion that occurs before
-comment|/// the actual user-defined conversion. (C++ 13.3.3.1.2p1):
+comment|/// \brief Represents the standard conversion that occurs before
+comment|/// the actual user-defined conversion.
 comment|///
+comment|/// C++11 13.3.3.1.2p1:
 comment|///   If the user-defined conversion is specified by a constructor
 comment|///   (12.3.1), the initial standard conversion sequence converts
 comment|///   the source type to the type required by the argument of the
@@ -659,7 +707,8 @@ name|StandardConversionSequence
 name|After
 decl_stmt|;
 comment|/// ConversionFunction - The function that will perform the
-comment|/// user-defined conversion.
+comment|/// user-defined conversion. Null if the conversion is an
+comment|/// aggregate initialization from an initializer list.
 name|FunctionDecl
 modifier|*
 name|ConversionFunction
@@ -1130,6 +1179,21 @@ enum|;
 comment|/// ConversionKind - The kind of implicit conversion sequence.
 name|unsigned
 name|ConversionKind
+range|:
+literal|30
+decl_stmt|;
+comment|/// \brief Whether the argument is an initializer list.
+name|bool
+name|ListInitializationSequence
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Whether the target is really a std::initializer_list, and the
+comment|/// sequence only represents the worst element conversion.
+name|bool
+name|StdInitializerListElement
+range|:
+literal|1
 decl_stmt|;
 name|void
 name|setKind
@@ -1193,7 +1257,17 @@ argument_list|()
 operator|:
 name|ConversionKind
 argument_list|(
-argument|Uninitialized
+name|Uninitialized
+argument_list|)
+operator|,
+name|ListInitializationSequence
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|StdInitializerListElement
+argument_list|(
+argument|false
 argument_list|)
 block|{}
 operator|~
@@ -1213,7 +1287,21 @@ argument_list|)
 operator|:
 name|ConversionKind
 argument_list|(
-argument|Other.ConversionKind
+name|Other
+operator|.
+name|ConversionKind
+argument_list|)
+operator|,
+name|ListInitializationSequence
+argument_list|(
+name|Other
+operator|.
+name|ListInitializationSequence
+argument_list|)
+operator|,
+name|StdInitializerListElement
+argument_list|(
+argument|Other.StdInitializerListElement
 argument_list|)
 block|{
 switch|switch
@@ -1368,9 +1456,11 @@ return|return
 literal|3
 return|;
 block|}
-return|return
-literal|3
-return|;
+name|llvm_unreachable
+argument_list|(
+literal|"Invalid ImplicitConversionSequence::Kind!"
+argument_list|)
+expr_stmt|;
 block|}
 name|bool
 name|isBad
@@ -1577,6 +1667,51 @@ name|construct
 argument_list|()
 expr_stmt|;
 block|}
+comment|/// \brief Whether this sequence was created by the rules of
+comment|/// list-initialization sequences.
+name|bool
+name|isListInitializationSequence
+argument_list|()
+specifier|const
+block|{
+return|return
+name|ListInitializationSequence
+return|;
+block|}
+name|void
+name|setListInitializationSequence
+parameter_list|()
+block|{
+name|ListInitializationSequence
+operator|=
+name|true
+expr_stmt|;
+block|}
+comment|/// \brief Whether the target is really a std::initializer_list, and the
+comment|/// sequence only represents the worst element conversion.
+name|bool
+name|isStdInitializerListElement
+argument_list|()
+specifier|const
+block|{
+return|return
+name|StdInitializerListElement
+return|;
+block|}
+name|void
+name|setStdInitializerListElement
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
+block|{
+name|StdInitializerListElement
+operator|=
+name|V
+expr_stmt|;
+block|}
 comment|// The result of a comparison between implicit conversion
 comment|// sequences. Use Sema::CompareImplicitConversionSequences to
 comment|// actually perform the comparison.
@@ -1692,18 +1827,20 @@ modifier|*
 name|Surrogate
 decl_stmt|;
 comment|/// Conversions - The conversion sequences used to convert the
-comment|/// function arguments to the function parameters.
-name|SmallVector
-operator|<
+comment|/// function arguments to the function parameters, the pointer points to a
+comment|/// fixed size array with NumConversions elements. The memory is owned by
+comment|/// the OverloadCandidateSet.
 name|ImplicitConversionSequence
-operator|,
-literal|4
-operator|>
+modifier|*
 name|Conversions
-expr_stmt|;
+decl_stmt|;
 comment|/// The FixIt hints which can be used to fix the Bad candidate.
 name|ConversionFixItGenerator
 name|Fix
+decl_stmt|;
+comment|/// NumConversions - The number of elements in the Conversions array.
+name|unsigned
+name|NumConversions
 decl_stmt|;
 comment|/// Viable - True to indicate that this overload candidate is viable.
 name|bool
@@ -1810,39 +1947,31 @@ specifier|const
 block|{
 for|for
 control|(
-name|SmallVectorImpl
-operator|<
-name|ImplicitConversionSequence
-operator|>
-operator|::
-name|const_iterator
-name|I
-operator|=
-name|Conversions
-operator|.
-name|begin
-argument_list|()
-operator|,
-name|E
-operator|=
-name|Conversions
-operator|.
-name|end
-argument_list|()
+name|unsigned
+name|i
+init|=
+literal|0
+init|,
+name|e
+init|=
+name|NumConversions
 init|;
-name|I
+name|i
 operator|!=
-name|E
+name|e
 condition|;
 operator|++
-name|I
+name|i
 control|)
 block|{
 if|if
 condition|(
 operator|!
-name|I
-operator|->
+name|Conversions
+index|[
+name|i
+index|]
+operator|.
 name|isInitialized
 argument_list|()
 condition|)
@@ -1851,8 +1980,11 @@ name|false
 return|;
 if|if
 condition|(
-name|I
-operator|->
+name|Conversions
+index|[
+name|i
+index|]
+operator|.
 name|isAmbiguous
 argument_list|()
 condition|)
@@ -1935,21 +2067,14 @@ comment|/// OverloadCandidateSet - A set of overload candidates, used in C++
 comment|/// overload resolution (C++ 13.3).
 name|class
 name|OverloadCandidateSet
-range|:
-name|public
-name|SmallVector
-operator|<
-name|OverloadCandidate
-decl_stmt|, 16>
 block|{
-typedef|typedef
 name|SmallVector
 operator|<
 name|OverloadCandidate
 operator|,
 literal|16
 operator|>
-name|inherited
+name|Candidates
 expr_stmt|;
 name|llvm
 operator|::
@@ -1962,8 +2087,29 @@ literal|16
 operator|>
 name|Functions
 expr_stmt|;
+comment|// Allocator for OverloadCandidate::Conversions. We store the first few
+comment|// elements inline to avoid allocation for small sets.
+name|llvm
+operator|::
+name|BumpPtrAllocator
+name|ConversionSequenceAllocator
+expr_stmt|;
 name|SourceLocation
 name|Loc
+decl_stmt|;
+name|unsigned
+name|NumInlineSequences
+decl_stmt|;
+name|char
+name|InlineSpace
+index|[
+literal|16
+operator|*
+sizeof|sizeof
+argument_list|(
+name|ImplicitConversionSequence
+argument_list|)
+index|]
 decl_stmt|;
 name|OverloadCandidateSet
 argument_list|(
@@ -1991,9 +2137,70 @@ argument_list|)
 block|:
 name|Loc
 argument_list|(
-argument|Loc
+name|Loc
+argument_list|)
+operator|,
+name|NumInlineSequences
+argument_list|(
+literal|0
 argument_list|)
 block|{}
+operator|~
+name|OverloadCandidateSet
+argument_list|()
+block|{
+for|for
+control|(
+name|iterator
+name|i
+init|=
+name|begin
+argument_list|()
+init|,
+name|e
+init|=
+name|end
+argument_list|()
+init|;
+name|i
+operator|!=
+name|e
+condition|;
+operator|++
+name|i
+control|)
+for|for
+control|(
+name|unsigned
+name|ii
+init|=
+literal|0
+init|,
+name|ie
+init|=
+name|i
+operator|->
+name|NumConversions
+init|;
+name|ii
+operator|!=
+name|ie
+condition|;
+operator|++
+name|ii
+control|)
+name|i
+operator|->
+name|Conversions
+index|[
+name|ii
+index|]
+operator|.
+operator|~
+name|ImplicitConversionSequence
+argument_list|()
+expr_stmt|;
+block|}
 name|SourceLocation
 name|getLocation
 argument_list|()
@@ -2030,6 +2237,178 @@ name|void
 name|clear
 parameter_list|()
 function_decl|;
+typedef|typedef
+name|SmallVector
+operator|<
+name|OverloadCandidate
+operator|,
+literal|16
+operator|>
+operator|::
+name|iterator
+name|iterator
+expr_stmt|;
+name|iterator
+name|begin
+parameter_list|()
+block|{
+return|return
+name|Candidates
+operator|.
+name|begin
+argument_list|()
+return|;
+block|}
+name|iterator
+name|end
+parameter_list|()
+block|{
+return|return
+name|Candidates
+operator|.
+name|end
+argument_list|()
+return|;
+block|}
+name|size_t
+name|size
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Candidates
+operator|.
+name|size
+argument_list|()
+return|;
+block|}
+name|bool
+name|empty
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Candidates
+operator|.
+name|empty
+argument_list|()
+return|;
+block|}
+comment|/// \brief Add a new candidate with NumConversions conversion sequence slots
+comment|/// to the overload set.
+name|OverloadCandidate
+modifier|&
+name|addCandidate
+parameter_list|(
+name|unsigned
+name|NumConversions
+init|=
+literal|0
+parameter_list|)
+block|{
+name|Candidates
+operator|.
+name|push_back
+argument_list|(
+name|OverloadCandidate
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|OverloadCandidate
+modifier|&
+name|C
+init|=
+name|Candidates
+operator|.
+name|back
+argument_list|()
+decl_stmt|;
+comment|// Assign space from the inline array if there are enough free slots
+comment|// available.
+if|if
+condition|(
+name|NumConversions
+operator|+
+name|NumInlineSequences
+operator|<=
+literal|16
+condition|)
+block|{
+name|ImplicitConversionSequence
+modifier|*
+name|I
+init|=
+operator|(
+name|ImplicitConversionSequence
+operator|*
+operator|)
+name|InlineSpace
+decl_stmt|;
+name|C
+operator|.
+name|Conversions
+operator|=
+operator|&
+name|I
+index|[
+name|NumInlineSequences
+index|]
+expr_stmt|;
+name|NumInlineSequences
+operator|+=
+name|NumConversions
+expr_stmt|;
+block|}
+else|else
+block|{
+comment|// Otherwise get memory from the allocator.
+name|C
+operator|.
+name|Conversions
+operator|=
+name|ConversionSequenceAllocator
+operator|.
+name|Allocate
+operator|<
+name|ImplicitConversionSequence
+operator|>
+operator|(
+name|NumConversions
+operator|)
+expr_stmt|;
+block|}
+comment|// Construct the new objects.
+for|for
+control|(
+name|unsigned
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|!=
+name|NumConversions
+condition|;
+operator|++
+name|i
+control|)
+name|new
+argument_list|(
+argument|&C.Conversions[i]
+argument_list|)
+name|ImplicitConversionSequence
+argument_list|()
+expr_stmt|;
+name|C
+operator|.
+name|NumConversions
+operator|=
+name|NumConversions
+expr_stmt|;
+return|return
+name|C
+return|;
+block|}
 comment|/// Find the best viable function on this overload set, if it exists.
 name|OverloadingResult
 name|BestViableFunction
@@ -2055,36 +2434,37 @@ argument_list|)
 decl_stmt|;
 name|void
 name|NoteCandidates
-parameter_list|(
+argument_list|(
 name|Sema
-modifier|&
+operator|&
 name|S
-parameter_list|,
+argument_list|,
 name|OverloadCandidateDisplayKind
 name|OCD
-parameter_list|,
+argument_list|,
+name|llvm
+operator|::
+name|ArrayRef
+operator|<
 name|Expr
-modifier|*
-modifier|*
+operator|*
+operator|>
 name|Args
-parameter_list|,
-name|unsigned
-name|NumArgs
-parameter_list|,
+argument_list|,
 specifier|const
 name|char
-modifier|*
+operator|*
 name|Opc
-init|=
+operator|=
 literal|0
-parameter_list|,
+argument_list|,
 name|SourceLocation
 name|Loc
-init|=
+operator|=
 name|SourceLocation
 argument_list|()
-parameter_list|)
-function_decl|;
+argument_list|)
+decl_stmt|;
 block|}
 empty_stmt|;
 name|bool

@@ -86,6 +86,106 @@ block|}
 end_function
 
 begin_comment
+comment|// __int128 is a keyword
+end_comment
+
+begin_function
+name|int
+name|c
+parameter_list|()
+block|{
+name|__int128
+name|i
+decl_stmt|;
+name|unsigned
+name|__int128
+name|j
+decl_stmt|;
+name|long
+name|unsigned
+name|__int128
+name|k
+decl_stmt|;
+comment|// expected-error {{'long __int128' is invalid}}
+name|int
+name|__int128
+decl_stmt|;
+comment|// expected-error {{cannot combine with previous}} expected-warning {{does not declare anything}}
+block|}
+end_function
+
+begin_comment
+comment|// __int128_t is __int128; __uint128_t is unsigned __int128.
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__int128
+name|check_int_128
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-note {{here}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__int128_t
+name|check_int_128
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-note {{here}} expected-warning {{redefinition}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|check_int_128
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error {{different types ('int' vs '__int128_t' (aka '__int128'))}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|unsigned
+name|__int128
+name|check_uint_128
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-note {{here}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|__uint128_t
+name|check_uint_128
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-note {{here}} expected-warning {{redefinition}}
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+name|check_uint_128
+typedef|;
+end_typedef
+
+begin_comment
+comment|// expected-error {{different types ('int' vs '__uint128_t' (aka 'unsigned __int128'))}}
+end_comment
+
+begin_comment
 comment|// Array type merging should convert array size to whatever matches the target
 end_comment
 

@@ -1020,5 +1020,47 @@ block|}
 block|}
 end_decl_stmt
 
+begin_comment
+comment|//<rdar://problem/11112464>
+end_comment
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+operator|>
+name|class
+name|Foo
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|template
+operator|<
+name|typename
+name|T
+operator|>
+name|class
+name|Foo
+operator|:
+name|protected
+name|T
+block|{
+name|public
+operator|:
+name|Foo
+operator|&
+name|operator
+operator|=
+operator|(
+specifier|const
+name|Foo
+operator|&
+name|other
+operator|)
+block|; }
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

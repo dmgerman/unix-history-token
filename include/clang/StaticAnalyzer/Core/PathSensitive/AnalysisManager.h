@@ -113,11 +113,13 @@ range|:
 name|public
 name|BugReporterData
 block|{
-name|AnalysisContextManager
-name|AnaCtxMgr
+name|virtual
+name|void
+name|anchor
+argument_list|()
 block|;
-name|LocationContextManager
-name|LocCtxMgr
+name|AnalysisDeclContextManager
+name|AnaCtxMgr
 block|;
 name|ASTContext
 operator|&
@@ -130,10 +132,8 @@ block|;
 specifier|const
 name|LangOptions
 operator|&
-name|LangInfo
+name|LangOpts
 block|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|PathDiagnosticConsumer
@@ -168,11 +168,11 @@ name|ScopeDecl
 block|}
 name|AScope
 block|;
-comment|// The maximum number of exploded nodes the analyzer will generate.
+comment|/// \brief The maximum number of exploded nodes the analyzer will generate.
 name|unsigned
 name|MaxNodes
 block|;
-comment|// The maximum number of times the analyzer visit a block.
+comment|/// \brief The maximum number of times the analyzer visits a block.
 name|unsigned
 name|MaxVisit
 block|;
@@ -185,13 +185,16 @@ block|;
 name|AnalysisPurgeMode
 name|PurgeDead
 block|;
-comment|/// EargerlyAssume - A flag indicating how the engine should handle
-comment|//   expressions such as: 'x = (y != 0)'.  When this flag is true then
-comment|//   the subexpression 'y != 0' will be eagerly assumed to be true or false,
-comment|//   thus evaluating it to the integers 0 or 1 respectively.  The upside
-comment|//   is that this can increase analysis precision until we have a better way
-comment|//   to lazily evaluate such logic.  The downside is that it eagerly
-comment|//   bifurcates paths.
+comment|/// \brief The flag regulates if we should eagerly assume evaluations of
+comment|/// conditionals, thus, bifurcating the path.
+comment|///
+comment|/// EagerlyAssume - A flag indicating how the engine should handle
+comment|///   expressions such as: 'x = (y != 0)'.  When this flag is true then
+comment|///   the subexpression 'y != 0' will be eagerly assumed to be true or false,
+comment|///   thus evaluating it to the integers 0 or 1 respectively.  The upside
+comment|///   is that this can increase analysis precision until we have a better way
+comment|///   to lazily evaluate such logic.  The downside is that it eagerly
+comment|///   bifurcates paths.
 name|bool
 name|EagerlyAssume
 block|;
@@ -199,10 +202,31 @@ name|bool
 name|TrimGraph
 block|;
 name|bool
-name|InlineCall
-block|;
-name|bool
 name|EagerlyTrimEGraph
+block|;
+name|public
+operator|:
+comment|// \brief inter-procedural analysis mode.
+name|AnalysisIPAMode
+name|IPAMode
+block|;
+comment|// Settings for inlining tuning.
+comment|/// \brief The inlining stack depth limit.
+name|unsigned
+name|InlineMaxStackDepth
+block|;
+comment|/// \brief The max number of basic blocks in a function being inlined.
+name|unsigned
+name|InlineMaxFunctionSize
+block|;
+comment|/// \brief The mode of function selection used during inlining.
+name|AnalysisInliningMode
+name|InliningMode
+block|;
+comment|/// \brief Do not re-analyze paths leading to exhausted nodes with a different
+comment|/// strategy. We get better code coverage when retry is enabled.
+name|bool
+name|NoRetryExhausted
 block|;
 name|public
 operator|:
@@ -238,8 +262,6 @@ argument|bool eager
 argument_list|,
 argument|bool trim
 argument_list|,
-argument|bool inlinecall
-argument_list|,
 argument|bool useUnoptimizedCFG
 argument_list|,
 argument|bool addImplicitDtors
@@ -247,6 +269,16 @@ argument_list|,
 argument|bool addInitializers
 argument_list|,
 argument|bool eagerlyTrimEGraph
+argument_list|,
+argument|AnalysisIPAMode ipa
+argument_list|,
+argument|unsigned inlineMaxStack
+argument_list|,
+argument|unsigned inlineMaxFunctionSize
+argument_list|,
+argument|AnalysisInliningMode inliningMode
+argument_list|,
+argument|bool NoRetry
 argument_list|)
 block|;
 comment|/// Construct a clone of the given AnalysisManager with the given ASTContext
@@ -277,19 +309,14 @@ name|void
 name|ClearContexts
 argument_list|()
 block|{
-name|LocCtxMgr
-operator|.
-name|clear
-argument_list|()
-block|;
 name|AnaCtxMgr
 operator|.
 name|clear
 argument_list|()
 block|;   }
-name|AnalysisContextManager
+name|AnalysisDeclContextManager
 operator|&
-name|getAnalysisContextManager
+name|getAnalysisDeclContextManager
 argument_list|()
 block|{
 return|return
@@ -371,12 +398,12 @@ block|}
 specifier|const
 name|LangOptions
 operator|&
-name|getLangOptions
+name|getLangOpts
 argument_list|()
 specifier|const
 block|{
 return|return
-name|LangInfo
+name|LangOpts
 return|;
 block|}
 name|virtual
@@ -406,7 +433,9 @@ condition|)
 name|PD
 operator|->
 name|FlushDiagnostics
-argument_list|()
+argument_list|(
+literal|0
+argument_list|)
 expr_stmt|;
 block|}
 name|unsigned
@@ -498,7 +527,11 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|InlineCall
+operator|(
+name|IPAMode
+operator|==
+name|Inlining
+operator|)
 return|;
 block|}
 name|bool
@@ -512,9 +545,9 @@ operator|!=
 literal|0
 return|;
 block|}
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
-name|getAnalysisContextInAnotherTU
+name|getAnalysisDeclContextInAnotherTU
 argument_list|(
 specifier|const
 name|Decl
@@ -588,9 +621,9 @@ name|getParentMap
 argument_list|()
 return|;
 block|}
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|(
 argument|const Decl *D
 argument_list|)
@@ -604,9 +637,9 @@ name|D
 argument_list|)
 return|;
 block|}
-name|AnalysisContext
+name|AnalysisDeclContext
 operator|*
-name|getAnalysisContext
+name|getAnalysisDeclContext
 argument_list|(
 argument|const Decl *D
 argument_list|,
@@ -621,119 +654,12 @@ argument_list|(
 name|D
 argument_list|,
 name|TU
-argument_list|)
-return|;
-block|}
-specifier|const
-name|StackFrameContext
-operator|*
-name|getStackFrame
-argument_list|(
-argument|AnalysisContext *Ctx
-argument_list|,
-argument|LocationContext const *Parent
-argument_list|,
-argument|const Stmt *S
-argument_list|,
-argument|const CFGBlock *Blk
-argument_list|,
-argument|unsigned Idx
-argument_list|)
-block|{
-return|return
-name|LocCtxMgr
-operator|.
-name|getStackFrame
-argument_list|(
-name|Ctx
-argument_list|,
-name|Parent
-argument_list|,
-name|S
-argument_list|,
-name|Blk
-argument_list|,
-name|Idx
-argument_list|)
-return|;
-block|}
-comment|// Get the top level stack frame.
-specifier|const
-name|StackFrameContext
-operator|*
-name|getStackFrame
-argument_list|(
-argument|Decl const *D
-argument_list|,
-argument|idx::TranslationUnit *TU
-argument_list|)
-block|{
-return|return
-name|LocCtxMgr
-operator|.
-name|getStackFrame
-argument_list|(
-name|AnaCtxMgr
-operator|.
-name|getContext
-argument_list|(
-name|D
-argument_list|,
-name|TU
-argument_list|)
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|,
-literal|0
-argument_list|)
-return|;
-block|}
-comment|// Get a stack frame with parent.
-name|StackFrameContext
-specifier|const
-operator|*
-name|getStackFrame
-argument_list|(
-argument|const Decl *D
-argument_list|,
-argument|LocationContext const *Parent
-argument_list|,
-argument|const Stmt *S
-argument_list|,
-argument|const CFGBlock *Blk
-argument_list|,
-argument|unsigned Idx
-argument_list|)
-block|{
-return|return
-name|LocCtxMgr
-operator|.
-name|getStackFrame
-argument_list|(
-name|AnaCtxMgr
-operator|.
-name|getContext
-argument_list|(
-name|D
-argument_list|)
-argument_list|,
-name|Parent
-argument_list|,
-name|S
-argument_list|,
-name|Blk
-argument_list|,
-name|Idx
 argument_list|)
 return|;
 block|}
 expr|}
 block|;  }
-comment|// end GR namespace
+comment|// enAnaCtxMgrspace
 block|}
 end_decl_stmt
 

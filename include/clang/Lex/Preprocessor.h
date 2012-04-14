@@ -169,6 +169,21 @@ end_include
 
 begin_decl_stmt
 name|namespace
+name|llvm
+block|{
+name|template
+operator|<
+name|unsigned
+name|InternalLen
+operator|>
+name|class
+name|SmallString
+expr_stmt|;
+block|}
+end_decl_stmt
+
+begin_decl_stmt
+name|namespace
 name|clang
 block|{
 name|class
@@ -225,8 +240,6 @@ name|class
 name|Preprocessor
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|Preprocessor
@@ -238,7 +251,7 @@ name|Diags
 block|;
 name|LangOptions
 operator|&
-name|Features
+name|LangOpts
 block|;
 specifier|const
 name|TargetInfo
@@ -272,8 +285,6 @@ name|ExternalSource
 block|;
 comment|/// PTH - An optional PTHManager object used for getting tokens from
 comment|///  a token cache rather than lexing the original source file.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|PTHManager
@@ -405,11 +416,6 @@ name|SuppressIncludeNotFoundError
 operator|:
 literal|1
 block|;
-name|bool
-name|AutoModuleImport
-operator|:
-literal|1
-block|;
 comment|// State that changes while the preprocessor runs:
 name|bool
 name|InMacroArgs
@@ -435,6 +441,10 @@ name|bool
 name|ReadMacrosFromExternalSource
 operator|:
 literal|1
+block|;
+comment|/// \brief True if we are pre-expanding macro arguments.
+name|bool
+name|InMacroArgPreExpansion
 block|;
 comment|/// Identifiers - This is mapping/lookup information for all identifiers in
 comment|/// the program, including program keywords.
@@ -475,6 +485,11 @@ operator|*
 operator|>
 name|CommentHandlers
 block|;
+comment|/// \brief True if we want to ignore EOF token and continue later on (thus
+comment|/// avoid tearing the Lexer and etc. down).
+name|bool
+name|IncrementalProcessing
+block|;
 comment|/// \brief The code-completion handler.
 name|CodeCompletionHandler
 operator|*
@@ -501,10 +516,34 @@ comment|/// for preprocessing.
 name|SourceLocation
 name|CodeCompletionFileLoc
 block|;
-comment|/// \brief The source location of the __import_module__ keyword we just
+comment|/// \brief The source location of the 'import' contextual keyword we just
 comment|/// lexed, if any.
 name|SourceLocation
 name|ModuleImportLoc
+block|;
+comment|/// \brief The module import path that we're currently processing.
+name|llvm
+operator|::
+name|SmallVector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|IdentifierInfo
+operator|*
+block|,
+name|SourceLocation
+operator|>
+block|,
+literal|2
+operator|>
+name|ModuleImportPath
+block|;
+comment|/// \brief Whether the module import expectes an identifier next. Otherwise,
+comment|/// it expects a '.' or ';'.
+name|bool
+name|ModuleImportExpectsIdentifier
 block|;
 comment|/// \brief The source location of the currently-active
 comment|/// #pragma clang arc_cf_code_audited begin.
@@ -532,8 +571,6 @@ block|;
 comment|/// CurLexer - This is the current top of the stack that we're lexing from if
 comment|/// not expanding a macro and we are lexing directly from source code.
 comment|///  Only one of CurLexer, CurPTHLexer, or CurTokenLexer will be non-null.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|Lexer
@@ -543,8 +580,6 @@ block|;
 comment|/// CurPTHLexer - This is the current top of stack that we're lexing from if
 comment|///  not expanding from a macro and we are lexing from a PTH cache.
 comment|///  Only one of CurLexer, CurPTHLexer, or CurTokenLexer will be non-null.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|PTHLexer
@@ -568,8 +603,6 @@ name|CurDirLookup
 block|;
 comment|/// CurTokenLexer - This is the current macro we are expanding, if we are
 comment|/// expanding a macro.  One of CurLexer and CurTokenLexer must be null.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|TokenLexer
@@ -951,6 +984,8 @@ argument_list|,
 argument|bool OwnsHeaderSearch = false
 argument_list|,
 argument|bool DelayInitialization = false
+argument_list|,
+argument|bool IncrProcessing = false
 argument_list|)
 empty_stmt|;
 operator|~
@@ -998,12 +1033,12 @@ block|}
 specifier|const
 name|LangOptions
 operator|&
-name|getLangOptions
+name|getLangOpts
 argument_list|()
 specifier|const
 block|{
 return|return
-name|Features
+name|LangOpts
 return|;
 block|}
 specifier|const
@@ -1198,23 +1233,6 @@ return|return
 name|SuppressIncludeNotFoundError
 return|;
 block|}
-comment|/// \brief Specify whether automatic module imports are enabled.
-name|void
-name|setAutoModuleImport
-parameter_list|(
-name|bool
-name|AutoModuleImport
-init|=
-name|true
-parameter_list|)
-block|{
-name|this
-operator|->
-name|AutoModuleImport
-operator|=
-name|AutoModuleImport
-expr_stmt|;
-block|}
 comment|/// isCurrentLexer - Return true if we are lexing directly from the specified
 comment|/// lexer.
 name|bool
@@ -1337,6 +1355,11 @@ parameter_list|,
 name|MacroInfo
 modifier|*
 name|MI
+parameter_list|,
+name|bool
+name|LoadedFromAST
+init|=
+name|false
 parameter_list|)
 function_decl|;
 comment|/// macro_iterator/macro_begin/macro_end - This allows you to walk the current
@@ -1588,7 +1611,7 @@ name|void
 name|createPreprocessingRecord
 parameter_list|(
 name|bool
-name|IncludeNestedMacroExpansions
+name|RecordConditionalDirectives
 parameter_list|)
 function_decl|;
 comment|/// EnterMainSourceFile - Enter the specified FileID as the main source file,
@@ -2114,6 +2137,37 @@ operator|=
 name|Tok
 expr_stmt|;
 block|}
+comment|/// \brief Recompute the current lexer kind based on the CurLexer/CurPTHLexer/
+comment|/// CurTokenLexer pointers.
+name|void
+name|recomputeCurLexerKind
+parameter_list|()
+function_decl|;
+comment|/// \brief Returns true if incremental processing is enabled
+name|bool
+name|isIncrementalProcessingEnabled
+argument_list|()
+specifier|const
+block|{
+return|return
+name|IncrementalProcessing
+return|;
+block|}
+comment|/// \brief Enables the incremental processing
+name|void
+name|enableIncrementalProcessing
+parameter_list|(
+name|bool
+name|value
+init|=
+name|true
+parameter_list|)
+block|{
+name|IncrementalProcessing
+operator|=
+name|value
+expr_stmt|;
+block|}
 comment|/// \brief Specify the point at which code-completion will be performed.
 comment|///
 comment|/// \param File the file in which code completion should occur. If
@@ -2364,7 +2418,7 @@ name|buffer
 argument_list|,
 name|SourceMgr
 argument_list|,
-name|Features
+name|LangOpts
 argument_list|,
 name|invalid
 argument_list|)
@@ -2398,7 +2452,7 @@ name|Tok
 argument_list|,
 name|SourceMgr
 argument_list|,
-name|Features
+name|LangOpts
 argument_list|,
 name|Invalid
 argument_list|)
@@ -2447,7 +2501,7 @@ name|Buffer
 argument_list|,
 name|SourceMgr
 argument_list|,
-name|Features
+name|LangOpts
 argument_list|,
 name|Invalid
 argument_list|)
@@ -2563,6 +2617,34 @@ name|Invalid
 argument_list|)
 return|;
 block|}
+comment|/// \brief Retrieve the name of the immediate macro expansion.
+comment|///
+comment|/// This routine starts from a source location, and finds the name of the macro
+comment|/// responsible for its immediate expansion. It looks through any intervening
+comment|/// macro argument expansions to compute this. It returns a StringRef which
+comment|/// refers to the SourceManager-owned buffer of the source where that macro
+comment|/// name is spelled. Thus, the result shouldn't out-live the SourceManager.
+name|StringRef
+name|getImmediateMacroName
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|)
+block|{
+return|return
+name|Lexer
+operator|::
+name|getImmediateMacroName
+argument_list|(
+name|Loc
+argument_list|,
+name|SourceMgr
+argument_list|,
+name|getLangOpts
+argument_list|()
+argument_list|)
+return|;
+block|}
 comment|/// CreateString - Plop the specified string into a scratch buffer and set the
 comment|/// specified token's location and length to it.  If specified, the source
 comment|/// location provides a location of the expansion point of the token.
@@ -2632,17 +2714,26 @@ name|Offset
 argument_list|,
 name|SourceMgr
 argument_list|,
-name|Features
+name|LangOpts
 argument_list|)
 return|;
 block|}
 comment|/// \brief Returns true if the given MacroID location points at the first
 comment|/// token of the macro expansion.
+comment|///
+comment|/// \param MacroBegin If non-null and function returns true, it is set to
+comment|/// begin location of the macro.
 name|bool
 name|isAtStartOfMacroExpansion
 argument_list|(
 name|SourceLocation
 name|loc
+argument_list|,
+name|SourceLocation
+operator|*
+name|MacroBegin
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -2655,17 +2746,28 @@ name|loc
 argument_list|,
 name|SourceMgr
 argument_list|,
-name|Features
+name|LangOpts
+argument_list|,
+name|MacroBegin
 argument_list|)
 return|;
 block|}
 comment|/// \brief Returns true if the given MacroID location points at the last
 comment|/// token of the macro expansion.
+comment|///
+comment|/// \param MacroBegin If non-null and function returns true, it is set to
+comment|/// end location of the macro.
 name|bool
 name|isAtEndOfMacroExpansion
 argument_list|(
 name|SourceLocation
 name|loc
+argument_list|,
+name|SourceLocation
+operator|*
+name|MacroEnd
+operator|=
+literal|0
 argument_list|)
 decl|const
 block|{
@@ -2678,7 +2780,9 @@ name|loc
 argument_list|,
 name|SourceMgr
 argument_list|,
-name|Features
+name|LangOpts
+argument_list|,
+name|MacroEnd
 argument_list|)
 return|;
 block|}
@@ -2741,7 +2845,7 @@ name|Char
 argument_list|,
 name|SourceMgr
 argument_list|,
-name|Features
+name|LangOpts
 argument_list|)
 return|;
 block|}
@@ -2884,6 +2988,7 @@ name|private
 label|:
 comment|/// Identifiers used for SEH handling in Borland. These are only
 comment|/// allowed in particular circumstances
+comment|// __except block
 name|IdentifierInfo
 modifier|*
 name|Ident__exception_code
@@ -2894,7 +2999,7 @@ decl_stmt|,
 modifier|*
 name|Ident_GetExceptionCode
 decl_stmt|;
-comment|// __except block
+comment|// __except filter expression
 name|IdentifierInfo
 modifier|*
 name|Ident__exception_info
@@ -2905,7 +3010,7 @@ decl_stmt|,
 modifier|*
 name|Ident_GetExceptionInfo
 decl_stmt|;
-comment|// __except filter expression
+comment|// __finally
 name|IdentifierInfo
 modifier|*
 name|Ident__abnormal_termination
@@ -2916,7 +3021,6 @@ decl_stmt|,
 modifier|*
 name|Ident_AbnormalTermination
 decl_stmt|;
-comment|// __finally
 name|public
 label|:
 name|void
@@ -3043,6 +3147,12 @@ operator|=
 name|V
 expr_stmt|;
 block|}
+comment|/// \brief Retrieves the module that we're currently building, if any.
+name|Module
+modifier|*
+name|getCurrentModule
+parameter_list|()
+function_decl|;
 comment|/// AllocateMacroInfo - Allocate a new MacroInfo object with the provide
 comment|///  SourceLocation.
 name|MacroInfo
@@ -3120,9 +3230,15 @@ operator|>
 operator|*
 name|RelativePath
 argument_list|,
-name|StringRef
+name|Module
+operator|*
 operator|*
 name|SuggestedModule
+argument_list|,
+name|bool
+name|SkipCache
+operator|=
+name|false
 argument_list|)
 decl_stmt|;
 comment|/// GetCurLookup - The DirectoryLookup structure used to find the current
@@ -3158,8 +3274,6 @@ comment|/// and consumes the EOD marker.
 name|bool
 name|ConcatenateIncludeName
 argument_list|(
-name|llvm
-operator|::
 name|SmallString
 operator|<
 literal|128
@@ -3331,14 +3445,19 @@ parameter_list|)
 function_decl|;
 comment|/// ReadMacroDefinitionArgList - The ( starting an argument list of a macro
 comment|/// definition has just been read.  Lex the rest of the arguments and the
-comment|/// closing ), updating MI with what we learn.  Return true if an error occurs
-comment|/// parsing the arg list.
+comment|/// closing ), updating MI with what we learn and saving in LastTok the
+comment|/// last token read.
+comment|/// Return true if an error occurs parsing the arg list.
 name|bool
 name|ReadMacroDefinitionArgList
 parameter_list|(
 name|MacroInfo
 modifier|*
 name|MI
+parameter_list|,
+name|Token
+modifier|&
+name|LastTok
 parameter_list|)
 function_decl|;
 comment|/// SkipExcludedConditionalBlock - We just read a #if or related directive and
@@ -3715,7 +3834,15 @@ name|Tok
 parameter_list|)
 function_decl|;
 name|void
-name|HandleMacroExportDirective
+name|HandleMacroPublicDirective
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+name|void
+name|HandleMacroPrivateDirective
 parameter_list|(
 name|Token
 modifier|&
@@ -3774,6 +3901,14 @@ parameter_list|(
 name|SourceLocation
 name|HashLoc
 parameter_list|,
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+name|void
+name|HandleMicrosoftImportDirective
+parameter_list|(
 name|Token
 modifier|&
 name|Tok
@@ -3918,6 +4053,14 @@ parameter_list|)
 function_decl|;
 name|void
 name|HandlePragmaPopMacro
+parameter_list|(
+name|Token
+modifier|&
+name|Tok
+parameter_list|)
+function_decl|;
+name|void
+name|HandlePragmaIncludeAlias
 parameter_list|(
 name|Token
 modifier|&

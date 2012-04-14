@@ -48,13 +48,53 @@ block|}
 struct|;
 end_struct
 
-begin_comment
-comment|// Not working; complex constants are broken
-end_comment
+begin_decl_stmt
+specifier|_Complex
+name|double
+modifier|*
+name|x
+init|=
+operator|&
+operator|(
+specifier|_Complex
+name|double
+operator|)
+block|{
+literal|1.0f
+block|}
+decl_stmt|;
+end_decl_stmt
 
-begin_comment
-comment|// _Complex double * x =&(_Complex double){1.0f};
-end_comment
+begin_typedef
+typedef|typedef
+name|int
+name|v4i32
+name|__attribute
+typedef|((
+name|vector_size
+typedef|(16)));
+end_typedef
+
+begin_decl_stmt
+name|v4i32
+modifier|*
+name|y
+init|=
+operator|&
+operator|(
+name|v4i32
+operator|)
+block|{
+literal|1
+block|,
+literal|2
+block|,
+literal|3
+block|,
+literal|4
+block|}
+decl_stmt|;
+end_decl_stmt
 
 begin_function
 name|void

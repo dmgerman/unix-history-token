@@ -28,7 +28,7 @@ comment|// RUN: %clang -MD -MF - %s -fsyntax-only -I a/b | FileCheck -check-pref
 end_comment
 
 begin_comment
-comment|// CHECK-ONE: {{ }}a/b/x.h
+comment|// CHECK-ONE: {{ }}a/b{{[/\\]}}x.h
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// RUN: %clang -MD -MF - %s -fsyntax-only -I ./a/b | FileCheck -check-pr
 end_comment
 
 begin_comment
-comment|// CHECK-THREE: {{ }}a/b/x.h
+comment|// CHECK-THREE: {{ }}a/b{{[/\\]}}x.h
 end_comment
 
 begin_comment
@@ -60,7 +60,7 @@ comment|// RUN: %clang -MD -MF - %s -fsyntax-only -I .//./a/b/ | FileCheck -chec
 end_comment
 
 begin_comment
-comment|// CHECK-FOUR: {{ }}a/b/x.h
+comment|// CHECK-FOUR: {{ }}a/b{{[/\\]}}x.h
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// RUN: %clang -MD -MF - %s -fsyntax-only -I a/b/. | FileCheck -check-pr
 end_comment
 
 begin_comment
-comment|// CHECK-FIVE: {{ }}a/b/./x.h
+comment|// CHECK-FIVE: {{ }}a/b/.{{[/\\]}}x.h
 end_comment
 
 begin_comment

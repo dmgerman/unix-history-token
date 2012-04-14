@@ -130,6 +130,17 @@ name|x
 decl_stmt|;
 end_decl_stmt
 
+begin_struct
+struct|struct
+name|union_crash
+block|{
+union|union
+block|{     }
+union|;
+block|}
+struct|;
+end_struct
+
 begin_function
 name|int
 name|test
@@ -154,6 +165,18 @@ name|int
 operator|+
 expr_stmt|;
 comment|// expected-error {{expected identifier or '('}}
+name|struct
+name|union_crash
+name|u
+init|=
+block|{
+operator|.
+name|d
+operator|=
+literal|1
+block|}
+decl_stmt|;
+comment|// expected-error {{field designator 'd' does not refer to any field in type 'struct union_crash'}}
 block|}
 end_function
 

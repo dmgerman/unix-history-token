@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 --relocatable-pch -o %t \
+comment|// RUN: %clang -target x86_64-apple-darwin10 --relocatable-pch -o %t \
 end_comment
 
 begin_comment
@@ -8,7 +8,7 @@ comment|// RUN:   -isysroot %S/libroot %S/libroot/usr/include/reloc.h
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -fsyntax-only \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -fsyntax-only \
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN:   -include-pch %t -isysroot %S/libroot %s -Xclang -verify
 end_comment
 
 begin_comment
-comment|// RUN: not %clang -ccc-host-triple x86_64-apple-darwin10 -include-pch %t %s
+comment|// RUN: not %clang -target x86_64-apple-darwin10 -include-pch %t %s
 end_comment
 
 begin_include

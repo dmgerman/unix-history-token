@@ -399,6 +399,11 @@ comment|/// \brief The nested-name-specifier that precedes the template name.
 name|CXXScopeSpec
 name|SS
 decl_stmt|;
+comment|/// TemplateKWLoc - The location of the template keyword within the
+comment|/// source.
+name|SourceLocation
+name|TemplateKWLoc
+decl_stmt|;
 comment|/// TemplateNameLoc - The location of the template name within the
 comment|/// source.
 name|SourceLocation

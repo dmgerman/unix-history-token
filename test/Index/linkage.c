@@ -69,6 +69,23 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function_decl
+name|void
+name|ena
+parameter_list|(
+name|int
+function_decl|(
+modifier|*
+name|dio
+function_decl|)
+parameter_list|(
+name|int
+name|tria
+parameter_list|)
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_comment
 comment|// CHECK: EnumDecl=Baz:3:6 (Definition)linkage=External
 end_comment
@@ -114,7 +131,19 @@ comment|// CHECK: FunctionDecl=wibble:12:12linkage=Internal
 end_comment
 
 begin_comment
-comment|// CHECL: ParmDecl=:12:22 (Definition)linkage=NoLinkage
+comment|// CHECK: ParmDecl=:12:22 (Definition)linkage=NoLinkage
+end_comment
+
+begin_comment
+comment|// CHECK: FunctionDecl=ena:14:6linkage=External
+end_comment
+
+begin_comment
+comment|// CHECK: ParmDecl=dio:14:16 (Definition)linkage=NoLinkage
+end_comment
+
+begin_comment
+comment|// CHECK: ParmDecl=tria:14:25 (Definition)linkage=NoLinkage
 end_comment
 
 end_unit

@@ -22,7 +22,7 @@ index|]
 init|=
 literal|"\u1120\u0220\U00102030"
 decl_stmt|;
-comment|// CHECK: private unnamed_addr constant [6 x i8] c"A\00B\00\00\00"
+comment|// CHECK: private unnamed_addr constant [3 x i16] [i16 65, i16 66, i16 0]
 specifier|const
 name|wchar_t
 modifier|*
@@ -31,7 +31,7 @@ init|=
 literal|L"AB"
 decl_stmt|;
 comment|// This should convert to utf16.
-comment|// CHECK: private unnamed_addr constant [10 x i8] c" \11 \02\C8\DB0\DC\00\00"
+comment|// CHECK: private unnamed_addr constant [5 x i16] [i16 4384, i16 544, i16 -9272, i16 -9168, i16 0]
 specifier|const
 name|wchar_t
 modifier|*
@@ -68,26 +68,6 @@ name|wc
 init|=
 literal|L'
 expr|\uF00B'
-decl_stmt|;
-comment|// Should take lower word of the 4byte UNC sequence. This does not match
-comment|// gcc. I don't understand what gcc does (it looks like it converts to utf16,
-comment|// then takes the second (!) utf16 word, swaps the lower two nibbles, and
-comment|// stores that?).
-comment|// CHECK: store i16 -4085
-name|wchar_t
-name|wd
-init|=
-literal|L'
-expr|\U0010F00B'
-decl_stmt|;
-comment|// has utf16 encoding dbc8 dcb0
-comment|// Should pick second character. (gcc: -9205)
-comment|// CHECK: store i16 -4085
-name|wchar_t
-name|we
-init|=
-literal|L'
-expr|\u1234\U0010F00B'
 decl_stmt|;
 block|}
 end_function

@@ -138,7 +138,7 @@ block|,
 comment|/// BlockScope - This is a scope that corresponds to a block/closure object.
 comment|/// Blocks serve as top-level scopes for some objects like labels, they
 comment|/// also prevent things like break and continue.  BlockScopes always have
-comment|/// the FnScope, BreakScope, ContinueScope, and DeclScope flags set as well.
+comment|/// the FnScope and DeclScope flags set as well.
 name|BlockScope
 init|=
 literal|0x40
@@ -225,22 +225,16 @@ name|Scope
 modifier|*
 name|FnParent
 decl_stmt|;
-comment|/// BreakParent/ContinueParent - This is a direct link to the immediately
-comment|/// preceding BreakParent/ContinueParent if this scope is not one, or null if
-comment|/// there is no containing break/continue scope.
+comment|/// BreakParent/ContinueParent - This is a direct link to the innermost
+comment|/// BreakScope/ContinueScope which contains the contents of this scope
+comment|/// for control flow purposes (and might be this scope itself), or null
+comment|/// if there is no such scope.
 name|Scope
 modifier|*
 name|BreakParent
 decl_stmt|,
 modifier|*
 name|ContinueParent
-decl_stmt|;
-comment|/// ControlParent - This is a direct link to the immediately
-comment|/// preceding ControlParent if this scope is not one, or null if
-comment|/// there is no containing control scope.
-name|Scope
-modifier|*
-name|ControlParent
 decl_stmt|;
 comment|/// BlockParent - This is a direct link to the immediately containing
 comment|/// BlockScope if this scope is not one, or null if there is none.
@@ -406,28 +400,14 @@ name|FnParent
 return|;
 block|}
 comment|/// getContinueParent - Return the closest scope that a continue statement
-comment|/// would be affected by.  If the closest scope is a closure scope, we know
-comment|/// that there is no loop *inside* the closure.
+comment|/// would be affected by.
 name|Scope
 modifier|*
 name|getContinueParent
 parameter_list|()
 block|{
-if|if
-condition|(
-name|ContinueParent
-operator|&&
-operator|!
-name|ContinueParent
-operator|->
-name|isBlockScope
-argument_list|()
-condition|)
 return|return
 name|ContinueParent
-return|;
-return|return
-literal|0
 return|;
 block|}
 specifier|const
@@ -452,28 +432,14 @@ argument_list|()
 return|;
 block|}
 comment|/// getBreakParent - Return the closest scope that a break statement
-comment|/// would be affected by.  If the closest scope is a block scope, we know
-comment|/// that there is no loop *inside* the block.
+comment|/// would be affected by.
 name|Scope
 modifier|*
 name|getBreakParent
 parameter_list|()
 block|{
-if|if
-condition|(
-name|BreakParent
-operator|&&
-operator|!
-name|BreakParent
-operator|->
-name|isBlockScope
-argument_list|()
-condition|)
 return|return
 name|BreakParent
-return|;
-return|return
-literal|0
 return|;
 block|}
 specifier|const
@@ -495,26 +461,6 @@ operator|)
 operator|->
 name|getBreakParent
 argument_list|()
-return|;
-block|}
-name|Scope
-modifier|*
-name|getControlParent
-parameter_list|()
-block|{
-return|return
-name|ControlParent
-return|;
-block|}
-specifier|const
-name|Scope
-operator|*
-name|getControlParent
-argument_list|()
-specifier|const
-block|{
-return|return
-name|ControlParent
 return|;
 block|}
 name|Scope
@@ -965,6 +911,13 @@ operator|::
 name|TryScope
 return|;
 block|}
+comment|/// containedInPrototypeScope - Return true if this or a parent scope
+comment|/// is a FunctionPrototypeScope.
+name|bool
+name|containedInPrototypeScope
+argument_list|()
+specifier|const
+expr_stmt|;
 typedef|typedef
 name|UsingDirectivesTy
 operator|::

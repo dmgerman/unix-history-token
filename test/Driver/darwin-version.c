@@ -4,7 +4,7 @@ comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.1 \
 end_comment
 
 begin_comment
-comment|// RUN:   %clang -ccc-host-triple i386-apple-darwin9 -DTEST0 -E %s
+comment|// RUN:   %clang -target i386-apple-darwin9 -DTEST0 -E %s
 end_comment
 
 begin_ifdef
@@ -42,7 +42,7 @@ comment|// RUN: env IPHONEOS_DEPLOYMENT_TARGET=2.0 \
 end_comment
 
 begin_comment
-comment|// RUN:   %clang -ccc-host-triple i386-apple-darwin9 -DTEST1 -E %s
+comment|// RUN:   %clang -target i386-apple-darwin9 -DTEST1 -E %s
 end_comment
 
 begin_ifdef
@@ -80,7 +80,7 @@ comment|// RUN: env IPHONEOS_DEPLOYMENT_TARGET=2.3.1 \
 end_comment
 
 begin_comment
-comment|// RUN:   %clang -ccc-host-triple i386-apple-darwin9 -DTEST2 -E %s
+comment|// RUN:   %clang -target i386-apple-darwin9 -DTEST2 -E %s
 end_comment
 
 begin_ifdef
@@ -118,7 +118,7 @@ comment|// RUN: env MACOSX_DEPLOYMENT_TARGET=10.4.10 \
 end_comment
 
 begin_comment
-comment|// RUN:   %clang -ccc-host-triple i386-apple-darwin9 -DTEST3 -E %s
+comment|// RUN:   %clang -target i386-apple-darwin9 -DTEST3 -E %s
 end_comment
 
 begin_ifdef

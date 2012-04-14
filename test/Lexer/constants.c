@@ -280,7 +280,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{character unicode escape sequence too long for its type}}
+comment|// expected-error {{character too large for enclosing character literal type}}
 end_comment
 
 end_unit

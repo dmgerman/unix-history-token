@@ -31,8 +31,8 @@ name|M2
 argument_list|)
 expr_stmt|;
 comment|// CHECK: :7:{{[0-9]+}}: warning: expression result unused
-comment|// CHECK: :4:{{[0-9]+}}: note: expanded from:
-comment|// CHECK: :3:{{[0-9]+}}: note: expanded from:
+comment|// CHECK: :4:{{[0-9]+}}: note: expanded from macro 'M2'
+comment|// CHECK: :3:{{[0-9]+}}: note: expanded from macro 'M1'
 block|}
 end_function
 
@@ -65,9 +65,9 @@ block|{
 name|C
 expr_stmt|;
 comment|// CHECK: :17:3: warning: expression result unused
-comment|// CHECK: :15:11: note: expanded from:
-comment|// CHECK: :14:11: note: expanded from:
-comment|// CHECK: :13:11: note: expanded from:
+comment|// CHECK: :15:11: note: expanded from macro 'C'
+comment|// CHECK: :14:11: note: expanded from macro 'B'
+comment|// CHECK: :13:11: note: expanded from macro 'A'
 block|}
 end_function
 
@@ -202,9 +202,9 @@ comment|// Also check that the 'caret' printing agrees with the location here wh
 comment|// its easy to FileCheck.
 comment|// CHECK-NEXT: macro_args3(1);
 comment|// CHECK-NEXT: ~~~~~~~~~~~~^~
-comment|// CHECK: {{.*}}:36:36: note: expanded from:
-comment|// CHECK: {{.*}}:35:36: note: expanded from:
-comment|// CHECK: {{.*}}:34:24: note: expanded from:
+comment|// CHECK: {{.*}}:36:36: note: expanded from macro 'macro_args3'
+comment|// CHECK: {{.*}}:35:36: note: expanded from macro 'macro_args2'
+comment|// CHECK: {{.*}}:34:24: note: expanded from macro 'macro_args1'
 name|macro_many_args3
 argument_list|(
 literal|1
@@ -215,9 +215,9 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: {{.*}}:55:5: warning: expression result unused
-comment|// CHECK: {{.*}}:40:55: note: expanded from:
-comment|// CHECK: {{.*}}:39:55: note: expanded from:
-comment|// CHECK: {{.*}}:38:35: note: expanded from:
+comment|// CHECK: {{.*}}:40:55: note: expanded from macro 'macro_many_args3'
+comment|// CHECK: {{.*}}:39:55: note: expanded from macro 'macro_many_args2'
+comment|// CHECK: {{.*}}:38:35: note: expanded from macro 'macro_many_args1'
 name|macro_many_args3
 argument_list|(
 literal|1
@@ -228,10 +228,10 @@ literal|3
 argument_list|)
 expr_stmt|;
 comment|// CHECK: {{.*}}:64:5: warning: expression result unused
-comment|// CHECK: {{.*}}:4:12: note: expanded from:
-comment|// CHECK: {{.*}}:40:55: note: expanded from:
-comment|// CHECK: {{.*}}:39:55: note: expanded from:
-comment|// CHECK: {{.*}}:38:35: note: expanded from:
+comment|// CHECK: {{.*}}:4:12: note: expanded from macro 'M2'
+comment|// CHECK: {{.*}}:40:55: note: expanded from macro 'macro_many_args3'
+comment|// CHECK: {{.*}}:39:55: note: expanded from macro 'macro_many_args2'
+comment|// CHECK: {{.*}}:38:35: note: expanded from macro 'macro_many_args1'
 name|macro_many_args3
 argument_list|(
 literal|1
@@ -249,11 +249,11 @@ comment|// This caret location needs to be printed *inside* a different macro's
 comment|// arguments.
 comment|// CHECK-NEXT: macro_args2(2),
 comment|// CHECK-NEXT: ~~~~~~~~~~~~^~~
-comment|// CHECK: {{.*}}:35:36: note: expanded from:
-comment|// CHECK: {{.*}}:34:24: note: expanded from:
-comment|// CHECK: {{.*}}:40:55: note: expanded from:
-comment|// CHECK: {{.*}}:39:55: note: expanded from:
-comment|// CHECK: {{.*}}:38:35: note: expanded from:
+comment|// CHECK: {{.*}}:35:36: note: expanded from macro 'macro_args2'
+comment|// CHECK: {{.*}}:34:24: note: expanded from macro 'macro_args1'
+comment|// CHECK: {{.*}}:40:55: note: expanded from macro 'macro_many_args3'
+comment|// CHECK: {{.*}}:39:55: note: expanded from macro 'macro_many_args2'
+comment|// CHECK: {{.*}}:38:35: note: expanded from macro 'macro_many_args1'
 block|}
 end_function
 
@@ -316,9 +316,9 @@ expr_stmt|;
 comment|// CHECK: {{.*}}:93:21: warning: expression result unused
 comment|// CHECK-NEXT: variadic_args3(1, 2, 3, 4);
 comment|// CHECK-NEXT: ~~~~~~~~~~~~~~~~~~^~~~~~~~
-comment|// CHECK: {{.*}}:90:53: note: expanded from:
-comment|// CHECK: {{.*}}:89:50: note: expanded from:
-comment|// CHECK: {{.*}}:88:35: note: expanded from:
+comment|// CHECK: {{.*}}:90:53: note: expanded from macro 'variadic_args3'
+comment|// CHECK: {{.*}}:89:50: note: expanded from macro 'variadic_args2'
+comment|// CHECK: {{.*}}:88:35: note: expanded from macro 'variadic_args1'
 block|}
 end_function
 
@@ -407,9 +407,9 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// CHECK: {{.*}}:109:32: warning: expression result unused
-comment|// CHECK: {{.*}}:105:72: note: expanded from:
-comment|// CHECK: {{.*}}:103:68: note: expanded from:
-comment|// CHECK: {{.*}}:102:41: note: expanded from:
+comment|// CHECK: {{.*}}:105:72: note: expanded from macro 'variadic_pasting_args3'
+comment|// CHECK: {{.*}}:103:68: note: expanded from macro 'variadic_pasting_args2'
+comment|// CHECK: {{.*}}:102:41: note: expanded from macro 'variadic_pasting_args1'
 name|variadic_pasting_args3a
 argument_list|(
 literal|1
@@ -422,9 +422,9 @@ literal|4
 argument_list|)
 expr_stmt|;
 comment|// CHECK: {{.*}}:115:30: warning: expression result unused
-comment|// CHECK: {{.*}}:106:71: note: expanded from:
-comment|// CHECK: {{.*}}:104:70: note: expanded from:
-comment|// CHECK: {{.*}}:102:41: note: expanded from:
+comment|// CHECK: {{.*}}:106:71: note: expanded from macro 'variadic_pasting_args3a'
+comment|// CHECK: {{.*}}:104:70: note: expanded from macro 'variadic_pasting_args2a'
+comment|// CHECK: {{.*}}:102:41: note: expanded from macro 'variadic_pasting_args1'
 block|}
 end_function
 

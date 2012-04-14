@@ -116,7 +116,7 @@ comment|// CHECK-CC2-NEXT: COMPLETION: Red : [#enum Color#]Red
 end_comment
 
 begin_comment
-comment|// CHECK-CC2-NEXT: COMPLETION: Pattern : sizeof(<#expression-or-type#>)
+comment|// CHECK-CC2-NEXT: COMPLETION: Pattern : [#size_t#]sizeof(<#expression-or-type#>)
 end_comment
 
 begin_comment

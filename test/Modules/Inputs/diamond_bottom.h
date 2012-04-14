@@ -1,12 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_decl_stmt
-name|__import_module__
+unit|@
+name|__experimental_modules_import
 name|diamond_left
 decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-name|__import_module__
+unit|@
+name|__experimental_modules_import
 name|diamond_right
 decl_stmt|;
 end_decl_stmt

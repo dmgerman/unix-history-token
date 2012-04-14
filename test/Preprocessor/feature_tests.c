@@ -69,6 +69,13 @@ argument_list|)
 operator|||
 expr|\
 operator|!
+name|__has_builtin
+argument_list|(
+name|__c11_atomic_init
+argument_list|)
+operator|||
+expr|\
+operator|!
 name|__has_feature
 argument_list|(
 name|attribute_analyzer_noreturn
@@ -106,6 +113,27 @@ begin_error
 error|#
 directive|error
 error|Clang should not have this
+end_error
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_if
+if|#
+directive|if
+operator|!
+name|__has_feature
+argument_list|(
+name|__attribute_deprecated_with_message__
+argument_list|)
+end_if
+
+begin_error
+error|#
+directive|error
+error|Feature name in double underscores does not work
 end_error
 
 begin_endif

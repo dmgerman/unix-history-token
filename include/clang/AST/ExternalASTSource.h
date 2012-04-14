@@ -69,6 +69,18 @@ directive|include
 file|"clang/AST/DeclBase.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/AST/CharUnits.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -380,6 +392,31 @@ name|Result
 argument_list|)
 return|;
 block|}
+comment|/// \brief Get the decls that are contained in a file in the Offset/Length
+comment|/// range. \arg Length can be 0 to indicate a point at \arg Offset instead of
+comment|/// a range.
+name|virtual
+name|void
+name|FindFileRegionDecls
+argument_list|(
+name|FileID
+name|File
+argument_list|,
+name|unsigned
+name|Offset
+argument_list|,
+name|unsigned
+name|Length
+argument_list|,
+name|SmallVectorImpl
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|&
+name|Decls
+argument_list|)
+block|{}
 comment|/// \brief Gives the external AST source an opportunity to complete
 comment|/// an incomplete type.
 name|virtual
@@ -447,6 +484,94 @@ name|void
 name|PrintStats
 parameter_list|()
 function_decl|;
+comment|/// \brief Perform layout on the given record.
+comment|///
+comment|/// This routine allows the external AST source to provide an specific
+comment|/// layout for a record, overriding the layout that would normally be
+comment|/// constructed. It is intended for clients who receive specific layout
+comment|/// details rather than source code (such as LLDB). The client is expected
+comment|/// to fill in the field offsets, base offsets, virtual base offsets, and
+comment|/// complete object size.
+comment|///
+comment|/// \param Record The record whose layout is being requested.
+comment|///
+comment|/// \param Size The final size of the record, in bits.
+comment|///
+comment|/// \param Alignment The final alignment of the record, in bits.
+comment|///
+comment|/// \param FieldOffsets The offset of each of the fields within the record,
+comment|/// expressed in bits. All of the fields must be provided with offsets.
+comment|///
+comment|/// \param BaseOffsets The offset of each of the direct, non-virtual base
+comment|/// classes. If any bases are not given offsets, the bases will be laid
+comment|/// out according to the ABI.
+comment|///
+comment|/// \param VirtualBaseOffsets The offset of each of the virtual base classes
+comment|/// (either direct or not). If any bases are not given offsets, the bases will be laid
+comment|/// out according to the ABI.
+comment|///
+comment|/// \returns true if the record layout was provided, false otherwise.
+name|virtual
+name|bool
+name|layoutRecordType
+argument_list|(
+specifier|const
+name|RecordDecl
+operator|*
+name|Record
+argument_list|,
+name|uint64_t
+operator|&
+name|Size
+argument_list|,
+name|uint64_t
+operator|&
+name|Alignment
+argument_list|,
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|FieldDecl
+operator|*
+argument_list|,
+name|uint64_t
+operator|>
+operator|&
+name|FieldOffsets
+argument_list|,
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+argument_list|,
+name|CharUnits
+operator|>
+operator|&
+name|BaseOffsets
+argument_list|,
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|CXXRecordDecl
+operator|*
+argument_list|,
+name|CharUnits
+operator|>
+operator|&
+name|VirtualBaseOffsets
+argument_list|)
+block|{
+return|return
+name|false
+return|;
+block|}
 comment|//===--------------------------------------------------------------------===//
 comment|// Queries for performance analysis.
 comment|//===--------------------------------------------------------------------===//

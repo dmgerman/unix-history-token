@@ -484,6 +484,7 @@ name|x
 operator|=
 literal|12.3
 block|,
+comment|// expected-warning {{implicit conversion turns literal floating-point number into integer}}
 literal|3.5
 block|}
 struct|;

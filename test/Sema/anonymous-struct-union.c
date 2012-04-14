@@ -378,5 +378,28 @@ begin_comment
 comment|// expected-error {{initializing 'int' with an expression of incompatible type 'a_struct'}}
 end_comment
 
+begin_comment
+comment|// This example comes out of the C11 standard; make sure we don't accidentally reject it.
+end_comment
+
+begin_struct
+struct|struct
+name|s
+block|{
+struct|struct
+block|{
+name|int
+name|i
+decl_stmt|;
+block|}
+struct|;
+name|int
+name|a
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
 end_unit
 

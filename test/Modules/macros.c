@@ -1,72 +1,27 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -emit-module -o %t/macros.pcm -DMODULE %s
+comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -verify -fmodule-cache-path %t -fdisable-module-hash %s
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=macros %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E -fmodule-cache-path %t -fdisable-module-hash %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -verify -fmodule-cache-path %t %s
 end_comment
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|MODULE
-argument_list|)
-end_if
+begin_comment
+comment|// RUN: %clang_cc1 -E -fmodules -x objective-c -fmodule-cache-path %t %s | FileCheck -check-prefix CHECK-PREPROCESSED %s
+end_comment
 
-begin_define
-define|#
-directive|define
-name|INTEGER
-parameter_list|(
-name|X
-parameter_list|)
-value|int
-end_define
-
-begin_define
-define|#
-directive|define
-name|FLOAT
-value|float
-end_define
-
-begin_define
-define|#
-directive|define
-name|DOUBLE
-value|double
-end_define
-
-begin_empty
-empty|#__export_macro__ INTEGER
-end_empty
-
-begin_empty
-empty|#__export_macro__ DOUBLE
-end_empty
-
-begin_expr_stmt
-name|int
-argument_list|(
-name|INTEGER
-argument_list|)
-expr_stmt|;
-end_expr_stmt
-
-begin_else
-else|#
-directive|else
-end_else
+begin_comment
+comment|// FIXME: When we have a syntax for modules in C, use that.
+end_comment
 
 begin_decl_stmt
-name|__import_module__
+unit|@
+name|__experimental_modules_import
 name|macros
 decl_stmt|;
 end_decl_stmt
@@ -143,11 +98,11 @@ decl_stmt|;
 end_decl_stmt
 
 begin_empty
-empty|#__export_macro__ WIBBLE
+empty|#__public_macro WIBBLE
 end_empty
 
 begin_comment
-comment|// expected-error{{no macro named 'WIBBLE' to export}}
+comment|// expected-error{{no macro named 'WIBBLE'}}
 end_comment
 
 begin_function
@@ -164,11 +119,6 @@ decl_stmt|;
 comment|// the value was exported, the macro was not.
 block|}
 end_function
-
-begin_endif
-endif|#
-directive|endif
-end_endif
 
 end_unit
 

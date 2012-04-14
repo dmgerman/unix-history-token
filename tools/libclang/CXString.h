@@ -93,8 +93,6 @@ block|{
 struct|struct
 name|CXStringBuf
 block|{
-name|llvm
-operator|::
 name|SmallString
 operator|<
 literal|128

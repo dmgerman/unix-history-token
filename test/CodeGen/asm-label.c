@@ -22,23 +22,51 @@ decl_stmt|;
 end_decl_stmt
 
 begin_function
-name|void
+name|int
+name|x
+asm|__asm("foo");
+name|int
+modifier|*
 name|test
 parameter_list|(
 name|void
 parameter_list|)
 block|{
+specifier|static
+name|int
+name|y
+asm|__asm("bar");
 name|strerror
 argument_list|(
 operator|-
 literal|1
 argument_list|)
-expr_stmt|;
+decl_stmt|;
+return|return
+operator|&
+name|y
+return|;
 block|}
 end_function
 
 begin_comment
+comment|// LINUX: @bar = internal global i32 0
+end_comment
+
+begin_comment
+comment|// LINUX: @foo = common global i32 0
+end_comment
+
+begin_comment
 comment|// LINUX: declare i8* @alias(i32)
+end_comment
+
+begin_comment
+comment|// DARWIN: @"\01bar" = internal global i32 0
+end_comment
+
+begin_comment
+comment|// DARWIN: @"\01foo" = common global i32 0
 end_comment
 
 begin_comment

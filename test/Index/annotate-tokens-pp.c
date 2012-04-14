@@ -573,7 +573,7 @@ comment|// FIXME: The token below should really be annotated as "macro expansion
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [16:28 - 16:29] VarDecl=k:16:7 (Definition)
+comment|// CHECK: Punctuation: ")" [16:28 - 16:29] DeclStmt=
 end_comment
 
 begin_comment
@@ -617,7 +617,7 @@ comment|// FIXME: The token below should really be annotated as "macro expansion
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [17:28 - 17:29] VarDecl=j:17:7 (Definition)
+comment|// CHECK: Punctuation: ")" [17:28 - 17:29] DeclStmt=
 end_comment
 
 begin_comment
@@ -833,7 +833,11 @@ comment|// CHECK: Punctuation: "}" [25:46 - 25:47] CompoundStmt=
 end_comment
 
 begin_comment
-comment|// CHECK: Punctuation: ")" [25:47 - 25:48] DoStmt=
+comment|// FIXME: The token below should really be annotated as "macro expansion=fun_with_macro_bodies:21:9"
+end_comment
+
+begin_comment
+comment|// CHECK: Punctuation: ")" [25:47 - 25:48] CompoundStmt=
 end_comment
 
 begin_comment

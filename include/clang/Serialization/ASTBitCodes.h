@@ -433,7 +433,7 @@ name|NUM_PREDEF_IDENT_IDS
 init|=
 literal|1
 decl_stmt|;
-comment|/// \brief An ID number that refers to an ObjC selctor in an AST file.
+comment|/// \brief An ID number that refers to an ObjC selector in an AST file.
 typedef|typedef
 name|uint32_t
 name|SelectorID
@@ -458,6 +458,19 @@ typedef|typedef
 name|uint32_t
 name|PreprocessedEntityID
 typedef|;
+comment|/// \brief An ID number that refers to a submodule in a module file.
+typedef|typedef
+name|uint32_t
+name|SubmoduleID
+typedef|;
+comment|/// \brief The number of predefined submodule IDs.
+specifier|const
+name|unsigned
+name|int
+name|NUM_PREDEF_SUBMODULE_IDS
+init|=
+literal|1
+decl_stmt|;
 comment|/// \brief Source range/offset of a preprocessed entity.
 struct|struct
 name|PPEntityOffset
@@ -510,6 +523,66 @@ argument_list|)
 block|{ }
 block|}
 struct|;
+comment|/// \brief Source range/offset of a preprocessed entity.
+struct|struct
+name|DeclOffset
+block|{
+comment|/// \brief Raw source location.
+name|unsigned
+name|Loc
+decl_stmt|;
+comment|/// \brief Offset in the AST file.
+name|uint32_t
+name|BitOffset
+decl_stmt|;
+name|DeclOffset
+argument_list|()
+operator|:
+name|Loc
+argument_list|(
+literal|0
+argument_list|)
+operator|,
+name|BitOffset
+argument_list|(
+literal|0
+argument_list|)
+block|{ }
+name|DeclOffset
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|uint32_t BitOffset
+argument_list|)
+operator|:
+name|Loc
+argument_list|(
+name|Loc
+operator|.
+name|getRawEncoding
+argument_list|()
+argument_list|)
+operator|,
+name|BitOffset
+argument_list|(
+argument|BitOffset
+argument_list|)
+block|{ }
+name|void
+name|setLocation
+argument_list|(
+argument|SourceLocation L
+argument_list|)
+block|{
+name|Loc
+operator|=
+name|L
+operator|.
+name|getRawEncoding
+argument_list|()
+block|;       }
+block|}
+struct|;
 comment|/// \brief The number of predefined preprocessed entity IDs.
 specifier|const
 name|unsigned
@@ -550,6 +623,9 @@ name|DECL_UPDATES_BLOCK_ID
 block|,
 comment|/// \brief The block containing the detailed preprocessing record.
 name|PREPROCESSOR_DETAIL_BLOCK_ID
+block|,
+comment|/// \brief The block containing the submodule structure.
+name|SUBMODULE_BLOCK_ID
 block|}
 enum|;
 comment|/// \brief Record types that occur within the AST block itself.
@@ -767,9 +843,10 @@ name|TU_UPDATE_LEXICAL
 init|=
 literal|28
 block|,
-comment|/// \brief Record code for an update to first decls pointing to the
-comment|/// latest redeclarations.
-name|REDECLS_UPDATE_LATEST
+comment|/// \brief Record code for the array describing the locations (in the
+comment|/// LOCAL_REDECLARATIONS record) of the redeclaration chains, indexed by
+comment|/// the first known ID.
+name|LOCAL_REDECLARATIONS_MAP
 init|=
 literal|29
 block|,
@@ -883,9 +960,42 @@ name|SOURCE_MANAGER_LINE_TABLE
 init|=
 literal|48
 block|,
-comment|/// \brief Record code for ObjC categories in a module that are chained to
-comment|/// an interface.
-name|OBJC_CHAINED_CATEGORIES
+comment|/// \brief Record code for map of Objective-C class definition IDs to the
+comment|/// ObjC categories in a module that are attached to that class.
+name|OBJC_CATEGORIES_MAP
+init|=
+literal|49
+block|,
+comment|/// \brief Record code for a file sorted array of DeclIDs in a module.
+name|FILE_SORTED_DECLS
+init|=
+literal|50
+block|,
+comment|/// \brief Record code for an array of all of the (sub)modules that were
+comment|/// imported by the AST file.
+name|IMPORTED_MODULES
+init|=
+literal|51
+block|,
+comment|/// \brief Record code for the set of merged declarations in an AST file.
+name|MERGED_DECLARATIONS
+init|=
+literal|52
+block|,
+comment|/// \brief Record code for the array of redeclaration chains.
+comment|///
+comment|/// This array can only be interpreted properly using the local
+comment|/// redeclarations map.
+name|LOCAL_REDECLARATIONS
+init|=
+literal|53
+block|,
+comment|/// \brief Record code for the array of Objective-C categories (including
+comment|/// extensions).
+comment|///
+comment|/// This array can only be interpreted properly using the Objective-C
+comment|/// categories map.
+name|OBJC_CATEGORIES
 block|}
 enum|;
 comment|/// \brief Record types used within a source manager block.
@@ -906,7 +1016,8 @@ literal|2
 block|,
 comment|/// \brief Describes a blob that contains the data for a buffer
 comment|/// entry. This kind of record always directly follows a
-comment|/// SM_SLOC_BUFFER_ENTRY record.
+comment|/// SM_SLOC_BUFFER_ENTRY record or a SM_SLOC_FILE_ENTRY with an
+comment|/// overridden buffer.
 name|SM_SLOC_BUFFER_BLOB
 init|=
 literal|3
@@ -963,6 +1074,55 @@ comment|/// record.
 name|PPD_INCLUSION_DIRECTIVE
 init|=
 literal|2
+block|}
+enum|;
+comment|/// \brief Record types used within a submodule description block.
+enum|enum
+name|SubmoduleRecordTypes
+block|{
+comment|/// \brief Metadata for submodules as a whole.
+name|SUBMODULE_METADATA
+init|=
+literal|0
+block|,
+comment|/// \brief Defines the major attributes of a submodule, including its
+comment|/// name and parent.
+name|SUBMODULE_DEFINITION
+init|=
+literal|1
+block|,
+comment|/// \brief Specifies the umbrella header used to create this module,
+comment|/// if any.
+name|SUBMODULE_UMBRELLA_HEADER
+init|=
+literal|2
+block|,
+comment|/// \brief Specifies a header that falls into this (sub)module.
+name|SUBMODULE_HEADER
+init|=
+literal|3
+block|,
+comment|/// \brief Specifies an umbrella directory.
+name|SUBMODULE_UMBRELLA_DIR
+init|=
+literal|4
+block|,
+comment|/// \brief Specifies the submodules that are imported by this
+comment|/// submodule.
+name|SUBMODULE_IMPORTS
+init|=
+literal|5
+block|,
+comment|/// \brief Specifies the submodules that are re-exported from this
+comment|/// submodule.
+name|SUBMODULE_EXPORTS
+init|=
+literal|6
+block|,
+comment|/// \brief Specifies a required feature.
+name|SUBMODULE_REQUIRES
+init|=
+literal|7
 block|}
 enum|;
 comment|/// \defgroup ASTAST AST file AST constants
@@ -1150,6 +1310,16 @@ comment|/// \brief The OpenCL 'half' / ARM NEON __fp16 type.
 name|PREDEF_TYPE_HALF_ID
 init|=
 literal|33
+block|,
+comment|/// \brief ARC's unbridged-cast placeholder type.
+name|PREDEF_TYPE_ARC_UNBRIDGED_CAST
+init|=
+literal|34
+block|,
+comment|/// \brief The pseudo-object placeholder type.
+name|PREDEF_TYPE_PSEUDO_OBJECT
+init|=
+literal|35
 block|}
 enum|;
 comment|/// \brief The number of predefined type IDs that are reserved for
@@ -1388,43 +1558,43 @@ name|SPECIAL_TYPE_BUILTIN_VA_LIST
 init|=
 literal|0
 block|,
-comment|/// \brief Objective-C Protocol type
-name|SPECIAL_TYPE_OBJC_PROTOCOL
-init|=
-literal|1
-block|,
 comment|/// \brief CFConstantString type
 name|SPECIAL_TYPE_CF_CONSTANT_STRING
 init|=
-literal|2
+literal|1
 block|,
 comment|/// \brief C FILE typedef type
 name|SPECIAL_TYPE_FILE
 init|=
-literal|3
+literal|2
 block|,
 comment|/// \brief C jmp_buf typedef type
-name|SPECIAL_TYPE_jmp_buf
+name|SPECIAL_TYPE_JMP_BUF
 init|=
-literal|4
+literal|3
 block|,
 comment|/// \brief C sigjmp_buf typedef type
-name|SPECIAL_TYPE_sigjmp_buf
+name|SPECIAL_TYPE_SIGJMP_BUF
 init|=
-literal|5
+literal|4
 block|,
 comment|/// \brief Objective-C "id" redefinition type
 name|SPECIAL_TYPE_OBJC_ID_REDEFINITION
 init|=
-literal|6
+literal|5
 block|,
 comment|/// \brief Objective-C "Class" redefinition type
 name|SPECIAL_TYPE_OBJC_CLASS_REDEFINITION
 init|=
-literal|7
+literal|6
 block|,
 comment|/// \brief Objective-C "SEL" redefinition type
 name|SPECIAL_TYPE_OBJC_SEL_REDEFINITION
+init|=
+literal|7
+block|,
+comment|/// \brief C ucontext_t typedef type
+name|SPECIAL_TYPE_UCONTEXT_T
 init|=
 literal|8
 block|}
@@ -1434,7 +1604,7 @@ specifier|const
 name|unsigned
 name|NumSpecialTypeIDs
 init|=
-literal|0
+literal|9
 decl_stmt|;
 comment|/// \brief Predefined declaration IDs.
 comment|///
@@ -1470,20 +1640,25 @@ name|PREDEF_DECL_OBJC_CLASS_ID
 init|=
 literal|4
 block|,
+comment|/// \brief The Objective-C 'Protocol' type.
+name|PREDEF_DECL_OBJC_PROTOCOL_ID
+init|=
+literal|5
+block|,
 comment|/// \brief The signed 128-bit integer type.
 name|PREDEF_DECL_INT_128_ID
 init|=
-literal|5
+literal|6
 block|,
 comment|/// \brief The unsigned 128-bit integer type.
 name|PREDEF_DECL_UNSIGNED_INT_128_ID
 init|=
-literal|6
+literal|7
 block|,
 comment|/// \brief The internal 'instancetype' typedef.
 name|PREDEF_DECL_OBJC_INSTANCETYPE_ID
 init|=
-literal|7
+literal|8
 block|}
 enum|;
 comment|/// \brief The number of declaration IDs that are predefined.
@@ -1495,7 +1670,7 @@ name|unsigned
 name|int
 name|NUM_PREDEF_DECL_IDS
 init|=
-literal|8
+literal|9
 decl_stmt|;
 comment|/// \brief Record codes for each kind of declaration.
 comment|///
@@ -1540,12 +1715,6 @@ name|DECL_OBJC_IVAR
 block|,
 comment|/// \brief A ObjCAtDefsFieldDecl record.
 name|DECL_OBJC_AT_DEFS_FIELD
-block|,
-comment|/// \brief A ObjCClassDecl record.
-name|DECL_OBJC_CLASS
-block|,
-comment|/// \brief A ObjCForwardProtocolDecl record.
-name|DECL_OBJC_FORWARD_PROTOCOL
 block|,
 comment|/// \brief A ObjCCategoryDecl record.
 name|DECL_OBJC_CATEGORY
@@ -1693,6 +1862,9 @@ block|,
 comment|/// \brief A ClassScopeFunctionSpecializationDecl record a class scope
 comment|/// function specialization. (Microsoft extension).
 name|DECL_CLASS_SCOPE_FUNCTION_SPECIALIZATION
+block|,
+comment|/// \brief An ImportDecl recording a module import.
+name|DECL_IMPORT
 block|}
 enum|;
 comment|/// \brief Record codes for each kind of statement or expression.
@@ -1713,6 +1885,9 @@ literal|100
 block|,
 comment|/// \brief A NULL expression.
 name|STMT_NULL_PTR
+block|,
+comment|/// \brief A reference to a previously [de]serialized Stmt record.
+name|STMT_REF_PTR
 block|,
 comment|/// \brief A NullStmt record.
 name|STMT_NULL
@@ -1861,11 +2036,11 @@ block|,
 comment|/// \brief BlockExpr
 name|EXPR_BLOCK
 block|,
-comment|/// \brief A BlockDeclRef record.
-name|EXPR_BLOCK_DECL_REF
-block|,
 comment|/// \brief A GenericSelectionExpr record.
 name|EXPR_GENERIC_SELECTION
+block|,
+comment|/// \brief A PseudoObjectExpr record.
+name|EXPR_PSEUDO_OBJECT
 block|,
 comment|/// \brief An AtomicExpr record.
 name|EXPR_ATOMIC
@@ -1873,6 +2048,12 @@ block|,
 comment|// Objective-C
 comment|/// \brief An ObjCStringLiteral record.
 name|EXPR_OBJC_STRING_LITERAL
+block|,
+name|EXPR_OBJC_NUMERIC_LITERAL
+block|,
+name|EXPR_OBJC_ARRAY_LITERAL
+block|,
+name|EXPR_OBJC_DICTIONARY_LITERAL
 block|,
 comment|/// \brief An ObjCEncodeExpr record.
 name|EXPR_OBJC_ENCODE
@@ -1888,6 +2069,9 @@ name|EXPR_OBJC_IVAR_REF_EXPR
 block|,
 comment|/// \brief An ObjCPropertyRefExpr record.
 name|EXPR_OBJC_PROPERTY_REF_EXPR
+block|,
+comment|/// \brief An ObjCSubscriptRefExpr record.
+name|EXPR_OBJC_SUBSCRIPT_REF_EXPR
 block|,
 comment|/// \brief UNUSED
 name|EXPR_OBJC_KVC_REF_EXPR
@@ -1921,6 +2105,9 @@ name|STMT_OBJC_AT_THROW
 block|,
 comment|/// \brief An ObjCAutoreleasePoolStmt record.
 name|STMT_OBJC_AUTORELEASE_POOL
+block|,
+comment|/// \brief A ObjCBoolLiteralExpr record.
+name|EXPR_OBJC_BOOL_LITERAL
 block|,
 comment|// C++
 comment|/// \brief A CXXCatchStmt record.
@@ -1958,6 +2145,9 @@ name|EXPR_CXX_CONST_CAST
 block|,
 comment|/// \brief A CXXFunctionalCastExpr record.
 name|EXPR_CXX_FUNCTIONAL_CAST
+block|,
+comment|/// \brief A UserDefinedLiteral record.
+name|EXPR_USER_DEFINED_LITERAL
 block|,
 comment|/// \brief A CXXBoolLiteralExpr record.
 name|EXPR_CXX_BOOL_LITERAL
@@ -2031,6 +2221,9 @@ comment|// BinaryConditionalOperator
 name|EXPR_BINARY_TYPE_TRAIT
 block|,
 comment|// BinaryTypeTraitExpr
+name|EXPR_TYPE_TRAIT
+block|,
+comment|// TypeTraitExpr
 name|EXPR_ARRAY_TYPE_TRAIT
 block|,
 comment|// ArrayTypeTraitIntExpr
@@ -2075,7 +2268,13 @@ block|,
 comment|// SEHTryStmt
 comment|// ARC
 name|EXPR_OBJC_BRIDGED_CAST
+block|,
 comment|// ObjCBridgedCastExpr
+name|STMT_MS_DEPENDENT_EXISTS
+block|,
+comment|// MSDependentExistsStmt
+name|EXPR_LAMBDA
+comment|// LambdaExpr
 block|}
 enum|;
 comment|/// \brief The kinds of designators that can occur in a
@@ -2119,6 +2318,242 @@ block|,
 name|CTOR_INITIALIZER_INDIRECT_MEMBER
 block|}
 enum|;
+comment|/// \brief Describes the redeclarations of a declaration.
+struct|struct
+name|LocalRedeclarationsInfo
+block|{
+name|DeclID
+name|FirstID
+decl_stmt|;
+comment|// The ID of the first declaration
+name|unsigned
+name|Offset
+decl_stmt|;
+comment|// Offset into the array of redeclaration chains.
+name|friend
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|FirstID
+operator|<
+name|Y
+operator|.
+name|FirstID
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|>
+operator|(
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|FirstID
+operator|>
+name|Y
+operator|.
+name|FirstID
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|<=
+operator|(
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|FirstID
+operator|<=
+name|Y
+operator|.
+name|FirstID
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|>=
+operator|(
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|LocalRedeclarationsInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|FirstID
+operator|>=
+name|Y
+operator|.
+name|FirstID
+return|;
+block|}
+block|}
+struct|;
+comment|/// \brief Describes the categories of an Objective-C class.
+struct|struct
+name|ObjCCategoriesInfo
+block|{
+name|DeclID
+name|DefinitionID
+decl_stmt|;
+comment|// The ID of the definition
+name|unsigned
+name|Offset
+decl_stmt|;
+comment|// Offset into the array of category lists.
+name|friend
+name|bool
+name|operator
+operator|<
+operator|(
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|DefinitionID
+operator|<
+name|Y
+operator|.
+name|DefinitionID
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|>
+operator|(
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|DefinitionID
+operator|>
+name|Y
+operator|.
+name|DefinitionID
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|<=
+operator|(
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|DefinitionID
+operator|<=
+name|Y
+operator|.
+name|DefinitionID
+return|;
+block|}
+name|friend
+name|bool
+name|operator
+operator|>=
+operator|(
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|X
+operator|,
+specifier|const
+name|ObjCCategoriesInfo
+operator|&
+name|Y
+operator|)
+block|{
+return|return
+name|X
+operator|.
+name|DefinitionID
+operator|>=
+name|Y
+operator|.
+name|DefinitionID
+return|;
+block|}
+block|}
+struct|;
 comment|/// @}
 block|}
 block|}

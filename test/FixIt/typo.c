@@ -135,7 +135,7 @@ init|=
 operator|&
 name|r1
 decl_stmt|;
-comment|// expected-error{{ unknown type name 'rectangle'; did you mean 'Rectangle'?}}
+comment|// expected-error{{unknown type name 'rectangle'; did you mean 'Rectangle'?}}
 name|r2
 operator|->
 name|top_left

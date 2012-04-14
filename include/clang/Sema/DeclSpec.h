@@ -116,6 +116,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/Lambda.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Basic/OperatorKinds.h"
 end_include
 
@@ -129,6 +135,12 @@ begin_include
 include|#
 directive|include
 file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -837,6 +849,15 @@ init|=
 name|clang
 operator|::
 name|TST_int
+decl_stmt|;
+specifier|static
+specifier|const
+name|TST
+name|TST_int128
+init|=
+name|clang
+operator|::
+name|TST_int128
 decl_stmt|;
 specifier|static
 specifier|const
@@ -1782,9 +1803,36 @@ operator|&
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|Range
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
 return|;
 block|}
 name|SourceLocation
@@ -2762,6 +2810,20 @@ block|{
 return|return
 name|ConstexprLoc
 return|;
+block|}
+name|void
+name|ClearConstexprSpec
+parameter_list|()
+block|{
+name|Constexpr_specified
+operator|=
+name|false
+expr_stmt|;
+name|ConstexprLoc
+operator|=
+name|SourceLocation
+argument_list|()
+expr_stmt|;
 block|}
 name|AttributePool
 operator|&
@@ -3775,6 +3837,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -3783,6 +3846,26 @@ name|StartLocation
 argument_list|,
 name|EndLocation
 argument_list|)
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|StartLocation
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|EndLocation
 return|;
 block|}
 block|}
@@ -4072,6 +4155,18 @@ comment|/// If this is an invalid location, there is no ref-qualifier.
 name|unsigned
 name|RefQualifierLoc
 block|;
+comment|/// \brief The location of the const-qualifier, if any.
+comment|///
+comment|/// If this is an invalid location, there is no const-qualifier.
+name|unsigned
+name|ConstQualifierLoc
+block|;
+comment|/// \brief The location of the volatile-qualifier, if any.
+comment|///
+comment|/// If this is an invalid location, there is no volatile-qualifier.
+name|unsigned
+name|VolatileQualifierLoc
+block|;
 comment|/// \brief The location of the 'mutable' qualifer in a lambda-declarator, if
 comment|/// any.
 name|unsigned
@@ -4218,6 +4313,36 @@ operator|::
 name|getFromRawEncoding
 argument_list|(
 name|RefQualifierLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Retrieve the location of the ref-qualifier, if any.
+name|SourceLocation
+name|getConstQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|ConstQualifierLoc
+argument_list|)
+return|;
+block|}
+comment|/// \brief Retrieve the location of the ref-qualifier, if any.
+name|SourceLocation
+name|getVolatileQualifierLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|SourceLocation
+operator|::
+name|getFromRawEncoding
+argument_list|(
+name|VolatileQualifierLoc
 argument_list|)
 return|;
 block|}
@@ -4419,12 +4544,6 @@ condition|(
 name|Kind
 condition|)
 block|{
-default|default:
-name|llvm_unreachable
-argument_list|(
-literal|"Unknown decl type!"
-argument_list|)
-expr_stmt|;
 case|case
 name|DeclaratorChunk
 operator|::
@@ -4781,6 +4900,10 @@ argument|bool RefQualifierIsLvalueRef
 argument_list|,
 argument|SourceLocation RefQualifierLoc
 argument_list|,
+argument|SourceLocation ConstQualifierLoc
+argument_list|,
+argument|SourceLocation VolatileQualifierLoc
+argument_list|,
 argument|SourceLocation MutableLoc
 argument_list|,
 argument|ExceptionSpecificationType ESpecType
@@ -4951,6 +5074,20 @@ return|;
 block|}
 expr|}
 block|;
+comment|/// \brief Described the kind of function definition (if any) provided for
+comment|/// a function.
+block|enum
+name|FunctionDefinitionKind
+block|{
+name|FDK_Declaration
+block|,
+name|FDK_Definition
+block|,
+name|FDK_Defaulted
+block|,
+name|FDK_Deleted
+block|}
+block|;
 comment|/// Declarator - Information about one declarator, including the parsed type
 comment|/// information and the identifier.  When the declarator is fully formed, this
 comment|/// is turned into the appropriate Decl object.
@@ -5014,14 +5151,20 @@ comment|// Objective-C catch exception-declaration
 name|BlockLiteralContext
 block|,
 comment|// Block literal declarator.
+name|LambdaExprContext
+block|,
+comment|// Lambda-expression declarator.
+name|TrailingReturnContext
+block|,
+comment|// C++11 trailing-type-specifier.
 name|TemplateTypeArgContext
 block|,
 comment|// Template type argument.
 name|AliasDeclContext
 block|,
-comment|// C++0x alias-declaration.
+comment|// C++11 alias-declaration.
 name|AliasTemplateContext
-comment|// C++0x alias-declaration template.
+comment|// C++11 alias-declaration template.
 block|}
 block|;
 name|private
@@ -5069,11 +5212,14 @@ name|GroupingParens
 operator|:
 literal|1
 block|;
-comment|/// FunctionDefinition - Is this Declarator for a function or member defintion
-name|bool
+comment|/// FunctionDefinition - Is this Declarator for a function or member
+comment|/// definition and, if so, what kind?
+comment|///
+comment|/// Actually a FunctionDefinitionKind.
+name|unsigned
 name|FunctionDefinition
 operator|:
-literal|1
+literal|2
 block|;
 comment|// Redeclaration - Is this Declarator is a redeclaration.
 name|bool
@@ -5109,6 +5255,11 @@ name|bool
 name|Extension
 operator|:
 literal|1
+block|;
+comment|/// \brief If this is the second or subsequent declarator in this declaration,
+comment|/// the location of the comma before this declarator.
+name|SourceLocation
+name|CommaLoc
 block|;
 comment|/// \brief If provided, the source location of the ellipsis used to describe
 comment|/// this declarator as a parameter pack.
@@ -5165,7 +5316,7 @@ argument_list|)
 block|,
 name|FunctionDefinition
 argument_list|(
-name|false
+name|FDK_Declaration
 argument_list|)
 block|,
 name|Redeclaration
@@ -5322,9 +5473,36 @@ operator|&
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|Range
+return|;
+block|}
+name|SourceLocation
+name|getLocStart
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getBegin
+argument_list|()
+return|;
+block|}
+name|SourceLocation
+name|getLocEnd
+argument_list|()
+specifier|const
+name|LLVM_READONLY
+block|{
+return|return
+name|Range
+operator|.
+name|getEnd
+argument_list|()
 return|;
 block|}
 name|void
@@ -5513,6 +5691,16 @@ block|;
 name|InlineParamsUsed
 operator|=
 name|false
+block|;
+name|CommaLoc
+operator|=
+name|SourceLocation
+argument_list|()
+block|;
+name|EllipsisLoc
+operator|=
+name|SourceLocation
+argument_list|()
 block|;   }
 comment|/// mayOmitIdentifier - Return true if the identifier is either optional or
 comment|/// not allowed.  This is true for typenames, prototypes, and template
@@ -5582,7 +5770,13 @@ case|case
 name|BlockLiteralContext
 case|:
 case|case
+name|LambdaExprContext
+case|:
+case|case
 name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
 case|:
 return|return
 name|true
@@ -5662,7 +5856,13 @@ case|case
 name|BlockLiteralContext
 case|:
 case|case
+name|LambdaExprContext
+case|:
+case|case
 name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
 case|:
 return|return
 name|false
@@ -5689,6 +5889,55 @@ condition|)
 return|return
 name|false
 return|;
+if|if
+condition|(
+name|getDeclSpec
+argument_list|()
+operator|.
+name|getStorageClassSpec
+argument_list|()
+operator|==
+name|DeclSpec
+operator|::
+name|SCS_typedef
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|getDeclSpec
+argument_list|()
+operator|.
+name|getStorageClassSpec
+argument_list|()
+operator|==
+name|DeclSpec
+operator|::
+name|SCS_extern
+operator|&&
+name|Context
+operator|!=
+name|FileContext
+condition|)
+return|return
+name|false
+return|;
+comment|// Special names can't have direct initializers.
+if|if
+condition|(
+name|Name
+operator|.
+name|getKind
+argument_list|()
+operator|!=
+name|UnqualifiedId
+operator|::
+name|IK_Identifier
+condition|)
+return|return
+name|false
+return|;
 switch|switch
 condition|(
 name|Context
@@ -5707,13 +5956,19 @@ return|return
 name|true
 return|;
 case|case
+name|ConditionContext
+case|:
+comment|// This may not be followed by a direct initializer, but it can't be a
+comment|// function declaration either, and we'd prefer to perform a tentative
+comment|// parse in order to produce the right diagnostic.
+return|return
+name|true
+return|;
+case|case
 name|KNRTypeListContext
 case|:
 case|case
 name|MemberContext
-case|:
-case|case
-name|ConditionContext
 case|:
 case|case
 name|PrototypeContext
@@ -5749,7 +6004,13 @@ case|case
 name|BlockLiteralContext
 case|:
 case|case
+name|LambdaExprContext
+case|:
+case|case
 name|TemplateTypeArgContext
+case|:
+case|case
+name|TrailingReturnContext
 case|:
 return|return
 name|false
@@ -6236,12 +6497,6 @@ argument_list|)
 expr_stmt|;
 end_expr_stmt
 
-begin_return
-return|return
-name|false
-return|;
-end_return
-
 begin_expr_stmt
 unit|}     return
 name|false
@@ -6361,12 +6616,6 @@ literal|"Invalid type chunk"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
-
-begin_return
-return|return
-name|false
-return|;
-end_return
 
 begin_expr_stmt
 unit|}     return
@@ -6831,6 +7080,49 @@ end_expr_stmt
 
 begin_expr_stmt
 name|bool
+name|isFirstDeclarator
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|!
+name|CommaLoc
+operator|.
+name|isValid
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|SourceLocation
+name|getCommaLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CommaLoc
+return|;
+block|}
+end_expr_stmt
+
+begin_function
+name|void
+name|setCommaLoc
+parameter_list|(
+name|SourceLocation
+name|CL
+parameter_list|)
+block|{
+name|CommaLoc
+operator|=
+name|CL
+expr_stmt|;
+block|}
+end_function
+
+begin_expr_stmt
+name|bool
 name|hasEllipsis
 argument_list|()
 specifier|const
@@ -6873,9 +7165,9 @@ end_function
 
 begin_function
 name|void
-name|setFunctionDefinition
+name|setFunctionDefinitionKind
 parameter_list|(
-name|bool
+name|FunctionDefinitionKind
 name|Val
 parameter_list|)
 block|{
@@ -6893,6 +7185,24 @@ argument_list|()
 specifier|const
 block|{
 return|return
+name|getFunctionDefinitionKind
+argument_list|()
+operator|!=
+name|FDK_Declaration
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|FunctionDefinitionKind
+name|getFunctionDefinitionKind
+argument_list|()
+specifier|const
+block|{
+return|return
+operator|(
+name|FunctionDefinitionKind
+operator|)
 name|FunctionDefinition
 return|;
 block|}
@@ -7101,48 +7411,6 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|/// LambdaCaptureDefault - The default, if any, capture method for a
-end_comment
-
-begin_comment
-comment|/// lambda expression.
-end_comment
-
-begin_enum
-enum|enum
-name|LambdaCaptureDefault
-block|{
-name|LCD_None
-block|,
-name|LCD_ByCopy
-block|,
-name|LCD_ByRef
-block|}
-enum|;
-end_enum
-
-begin_comment
-comment|/// LambdaCaptureKind - The different capture forms in a lambda
-end_comment
-
-begin_comment
-comment|/// introducer: 'this' or a copied or referenced variable.
-end_comment
-
-begin_enum
-enum|enum
-name|LambdaCaptureKind
-block|{
-name|LCK_This
-block|,
-name|LCK_ByCopy
-block|,
-name|LCK_ByRef
-block|}
-enum|;
-end_enum
-
-begin_comment
 comment|/// LambdaCapture - An individual capture in a lambda introducer.
 end_comment
 
@@ -7160,6 +7428,9 @@ name|IdentifierInfo
 modifier|*
 name|Id
 decl_stmt|;
+name|SourceLocation
+name|EllipsisLoc
+decl_stmt|;
 name|LambdaCapture
 argument_list|(
 argument|LambdaCaptureKind Kind
@@ -7168,6 +7439,8 @@ argument|SourceLocation Loc
 argument_list|,
 argument|IdentifierInfo* Id =
 literal|0
+argument_list|,
+argument|SourceLocation EllipsisLoc = SourceLocation()
 argument_list|)
 block|:
 name|Kind
@@ -7182,7 +7455,12 @@ argument_list|)
 operator|,
 name|Id
 argument_list|(
-argument|Id
+name|Id
+argument_list|)
+operator|,
+name|EllipsisLoc
+argument_list|(
+argument|EllipsisLoc
 argument_list|)
 block|{}
 block|}
@@ -7199,6 +7477,9 @@ name|LambdaIntroducer
 block|{
 name|SourceRange
 name|Range
+decl_stmt|;
+name|SourceLocation
+name|DefaultLoc
 decl_stmt|;
 name|LambdaCaptureDefault
 name|Default
@@ -7231,6 +7512,8 @@ argument|SourceLocation Loc
 argument_list|,
 argument|IdentifierInfo* Id =
 literal|0
+argument_list|,
+argument|SourceLocation EllipsisLoc = SourceLocation()
 argument_list|)
 block|{
 name|Captures
@@ -7244,6 +7527,8 @@ argument_list|,
 name|Loc
 argument_list|,
 name|Id
+argument_list|,
+name|EllipsisLoc
 argument_list|)
 argument_list|)
 block|;   }

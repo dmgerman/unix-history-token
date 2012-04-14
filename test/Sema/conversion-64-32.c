@@ -63,5 +63,22 @@ return|;
 block|}
 end_function
 
+begin_function
+name|int
+name|test2
+parameter_list|(
+name|long
+name|v
+parameter_list|)
+block|{
+return|return
+name|v
+operator|/
+literal|2
+return|;
+comment|// expected-warning {{implicit conversion loses integer precision: 'long' to 'int'}}
+block|}
+end_function
+
 end_unit
 

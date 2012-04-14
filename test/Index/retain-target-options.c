@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: c-index-test -test-load-source all -ccc-host-triple x86_64-apple-darwin10.0.0 -msse4.1 %s 2>&1 | FileCheck %s
+comment|// RUN: c-index-test -test-load-source all -target x86_64-apple-darwin10.0.0 -msse4.1 %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-source-reparse 1 all -ccc-host-triple x86_64-apple-darwin10.0.0 -msse4.1 %s 2>&1 | FileCheck %s
+comment|// RUN: c-index-test -test-load-source-reparse 1 all -target x86_64-apple-darwin10.0.0 -msse4.1 %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: c-index-test -test-load-source-reparse 5 all -ccc-host-triple x86_64-apple-darwin10.0.0 -msse4.1 %s 2>&1 | FileCheck %s
+comment|// RUN: c-index-test -test-load-source-reparse 5 all -target x86_64-apple-darwin10.0.0 -msse4.1 %s 2>&1 | FileCheck %s
 end_comment
 
 begin_comment
-comment|// CHECK: error: #error SSE4_1 used
+comment|// CHECK: error: SSE4_1 used
 end_comment
 
 begin_if

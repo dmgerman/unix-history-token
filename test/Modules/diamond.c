@@ -4,7 +4,8 @@ comment|// in diamond-bottom.h: expected-note{{passing argument to parameter 'x'
 end_comment
 
 begin_decl_stmt
-name|__import_module__
+unit|@
+name|__experimental_modules_import
 name|diamond_bottom
 decl_stmt|;
 end_decl_stmt
@@ -84,23 +85,31 @@ block|}
 end_function
 
 begin_comment
-comment|// RUN: %clang_cc1 -emit-module -o %T/diamond_top.pcm %S/Inputs/diamond_top.h
+comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodule-cache-path %T -fdisable-module-hash -emit-module -o %T/diamond_left.pcm %S/Inputs/diamond_left.h
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_top %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodule-cache-path %T -fdisable-module-hash -emit-module -o %T/diamond_right.pcm %S/Inputs/diamond_right.h
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_left %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodule-cache-path %T -fdisable-module-hash -emit-module -o %T/diamond_bottom.pcm %S/Inputs/diamond_bottom.h
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_right %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodule-cache-path %T -fdisable-module-hash %s -verify
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -emit-module -fmodule-cache-path %t -fmodule-name=diamond_bottom %S/Inputs/module.map
+end_comment
+
+begin_comment
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodule-cache-path %t %s -verify
+end_comment
+
+begin_comment
+comment|// FIXME: When we have a syntax for modules in C, use that.
 end_comment
 
 end_unit

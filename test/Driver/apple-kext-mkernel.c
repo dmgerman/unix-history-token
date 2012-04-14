@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 \
+comment|// RUN: %clang -target x86_64-apple-darwin10 \
 end_comment
 
 begin_comment
@@ -28,7 +28,7 @@ comment|// CHECK-X86: "-fno-common"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 \
+comment|// RUN: %clang -target x86_64-apple-darwin10 \
 end_comment
 
 begin_comment
@@ -57,6 +57,18 @@ end_comment
 
 begin_comment
 comment|// CHECK-ARM: "-fno-common"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -target x86_64-apple-darwin10 \
+end_comment
+
+begin_comment
+comment|// RUN:   -Werror -fno-builtin -fno-exceptions -fno-common -fno-rtti \
+end_comment
+
+begin_comment
+comment|// RUN:   -mkernel -fsyntax-only %s
 end_comment
 
 end_unit

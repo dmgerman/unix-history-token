@@ -4,7 +4,7 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin10 -S -g -dA %s -o - | FileCheck %s
+comment|// RUN: %clang -target i386-apple-darwin10 -flto -S -g %s -o - | FileCheck %s
 end_comment
 
 begin_decl_stmt
@@ -12,14 +12,6 @@ name|int
 name|global
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// CHECK: ascii   "localstatic"          ## DW_AT_name
-end_comment
-
-begin_comment
-comment|// CHECK: asciz   "global" ## External Name
-end_comment
 
 begin_function
 name|int
@@ -35,6 +27,14 @@ literal|0
 return|;
 block|}
 end_function
+
+begin_comment
+comment|// CHECK: !14 = metadata !{i32 {{.*}}, i32 0, metadata !5, metadata !"localstatic", metadata !"localstatic", metadata !"", metadata !6, i32 5, metadata !9, i32 1, i32 1, i32* @main.localstatic} ; [ DW_TAG_variable ]
+end_comment
+
+begin_comment
+comment|// CHECK: !15 = metadata !{i32 {{.*}}, i32 0, null, metadata !"global", metadata !"global", metadata !"", metadata !6, i32 3, metadata !9, i32 0, i32 1, i32* @global} ; [ DW_TAG_variable ]
+end_comment
 
 end_unit
 

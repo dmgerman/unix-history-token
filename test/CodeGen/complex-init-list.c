@@ -70,5 +70,47 @@ begin_comment
 comment|// CHECK: alloca { float, float }
 end_comment
 
+begin_comment
+comment|// CHECK: alloca { float, float }
+end_comment
+
+begin_function
+specifier|_Complex
+name|float
+name|f2
+parameter_list|(
+name|float
+name|x
+parameter_list|,
+name|float
+name|y
+parameter_list|)
+block|{
+return|return
+operator|(
+specifier|_Complex
+name|float
+operator|)
+block|{
+name|x
+block|,
+name|y
+block|}
+return|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: define<2 x float> @f2
+end_comment
+
+begin_comment
+comment|// CHECK: alloca { float, float }
+end_comment
+
+begin_comment
+comment|// CHECK: alloca { float, float }
+end_comment
+
 end_unit
 

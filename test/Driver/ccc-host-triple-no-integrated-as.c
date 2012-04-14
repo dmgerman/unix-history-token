@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// Check that -no-integrated-as works when -ccc-host-triple i386-pc-win32-macho or
+comment|// Check that -no-integrated-as works when -target i386-pc-win32-macho or
 end_comment
 
 begin_comment
-comment|// -ccc-host-triple x86_64-pc-win32-macho is specified.
+comment|// -target x86_64-pc-win32-macho is specified.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -ccc-host-triple i386-pc-win32-macho -no-integrated-as %s 2> %t1
+comment|// RUN: %clang -### -c -target i386-pc-win32-macho -no-integrated-as %s 2> %t1
 end_comment
 
 begin_comment
@@ -16,7 +16,7 @@ comment|// RUN: FileCheck -check-prefix=X86< %t1 %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -c -ccc-host-triple x86_64-pc-win32-macho -no-integrated-as %s 2> %t2
+comment|// RUN: %clang -### -c -target x86_64-pc-win32-macho -no-integrated-as %s 2> %t2
 end_comment
 
 begin_comment

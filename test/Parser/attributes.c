@@ -470,5 +470,76 @@ argument_list|()
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+name|int
+name|aligned
+parameter_list|(
+name|int
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|int
+name|__attribute__
+argument_list|(
+operator|(
+name|vec_type_hint
+argument_list|(
+name|char
+argument_list|,
+name|aligned
+argument_list|(
+literal|16
+argument_list|)
+argument_list|)
+operator|)
+name|missing_rparen_1
+argument_list|;
+comment|// expected-error {{expected ')'}}
+name|int
+name|__attribute__
+argument_list|(
+argument|(mode(x aligned(
+literal|16
+argument|) )) missing_rparen_2;
+comment|// expected-error {{expected ')'}}
+argument|int __attribute__((format(printf,
+literal|0
+argument|aligned(
+literal|16
+argument|) )) missing_rparen_3;
+comment|// expected-error {{expected ')'}}
+argument|int testFundef1(int *a) __attribute__((nonnull(
+literal|1
+argument|))) {
+comment|// \
+comment|// expected-warning {{GCC does not allow nonnull attribute in this position on a function definition}}
+argument|return *a; }
+comment|// noreturn is lifted to type qualifier
+argument|void testFundef2() __attribute__((noreturn)) {
+comment|// \
+comment|// expected-warning {{GCC does not allow noreturn attribute in this position on a function definition}}
+argument|testFundef2(); }  int testFundef3(int *a) __attribute__((nonnull(
+literal|1
+argument|),
+comment|// \
+comment|// expected-warning {{GCC does not allow nonnull attribute in this position on a function definition}}
+argument|pure)) {
+comment|// \
+comment|// expected-warning {{GCC does not allow pure attribute in this position on a function definition}}
+argument|return *a; }  int testFundef4(int *a) __attribute__((nonnull(
+literal|1
+argument|)))
+comment|// \
+comment|// expected-warning {{GCC does not allow nonnull attribute in this position on a function definition}}
+argument|__attribute((pure)) {
+comment|// \
+comment|// expected-warning {{GCC does not allow pure attribute in this position on a function definition}}
+argument|return *a; }
+comment|// GCC allows these
+argument|void testFundef5() __attribute__(()) { }  __attribute__((pure)) int testFundef6(int a) { return a; }
+end_decl_stmt
+
 end_unit
 

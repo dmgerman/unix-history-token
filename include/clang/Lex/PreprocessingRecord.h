@@ -84,13 +84,31 @@ end_include
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/SmallVector.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
 include|#
 directive|include
+file|"llvm/ADT/Optional.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/Support/Allocator.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
 end_include
 
 begin_include
@@ -264,6 +282,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|Range
@@ -946,7 +965,35 @@ argument|SourceRange Range
 argument_list|)
 operator|=
 literal|0
-block|;   }
+block|;
+comment|/// \brief Optionally returns true or false if the preallocated preprocessed
+comment|/// entity with index \arg Index came from file \arg FID.
+name|virtual
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|bool
+operator|>
+name|isPreprocessedEntityInFileID
+argument_list|(
+argument|unsigned Index
+argument_list|,
+argument|FileID FID
+argument_list|)
+block|{
+return|return
+name|llvm
+operator|::
+name|Optional
+operator|<
+name|bool
+operator|>
+operator|(
+operator|)
+return|;
+block|}
+expr|}
 block|;
 comment|/// \brief A record of the steps taken while preprocessing a source file,
 comment|/// including the various preprocessing directives processed, macros
@@ -960,11 +1007,6 @@ block|{
 name|SourceManager
 operator|&
 name|SourceMgr
-block|;
-comment|/// \brief Whether we should include nested macro expansions in
-comment|/// the preprocessing record.
-name|bool
-name|IncludeNestedMacroExpansions
 block|;
 comment|/// \brief Allocator used to store preprocessing objects.
 name|llvm
@@ -996,6 +1038,203 @@ name|PreprocessedEntity
 operator|*
 operator|>
 name|LoadedPreprocessedEntities
+block|;
+name|bool
+name|RecordCondDirectives
+block|;
+name|unsigned
+name|CondDirectiveNextIdx
+block|;
+name|SmallVector
+operator|<
+name|unsigned
+block|,
+literal|6
+operator|>
+name|CondDirectiveStack
+block|;
+name|class
+name|CondDirectiveLoc
+block|{
+name|SourceLocation
+name|Loc
+block|;
+name|unsigned
+name|Idx
+block|;
+name|public
+operator|:
+name|CondDirectiveLoc
+argument_list|(
+argument|SourceLocation Loc
+argument_list|,
+argument|unsigned Idx
+argument_list|)
+operator|:
+name|Loc
+argument_list|(
+name|Loc
+argument_list|)
+block|,
+name|Idx
+argument_list|(
+argument|Idx
+argument_list|)
+block|{}
+name|SourceLocation
+name|getLoc
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Loc
+return|;
+block|}
+name|unsigned
+name|getIdx
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Idx
+return|;
+block|}
+name|class
+name|Comp
+block|{
+name|SourceManager
+operator|&
+name|SM
+block|;
+name|public
+operator|:
+name|explicit
+name|Comp
+argument_list|(
+name|SourceManager
+operator|&
+name|SM
+argument_list|)
+operator|:
+name|SM
+argument_list|(
+argument|SM
+argument_list|)
+block|{}
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|CondDirectiveLoc
+operator|&
+name|LHS
+expr|,
+specifier|const
+name|CondDirectiveLoc
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|SM
+operator|.
+name|isBeforeInTranslationUnit
+argument_list|(
+name|LHS
+operator|.
+name|getLoc
+argument_list|()
+argument_list|,
+name|RHS
+operator|.
+name|getLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+name|bool
+name|operator
+argument_list|()
+operator|(
+specifier|const
+name|CondDirectiveLoc
+operator|&
+name|LHS
+expr|,
+name|SourceLocation
+name|RHS
+operator|)
+block|{
+return|return
+name|SM
+operator|.
+name|isBeforeInTranslationUnit
+argument_list|(
+name|LHS
+operator|.
+name|getLoc
+argument_list|()
+argument_list|,
+name|RHS
+argument_list|)
+return|;
+block|}
+name|bool
+name|operator
+argument_list|()
+operator|(
+name|SourceLocation
+name|LHS
+expr|,
+specifier|const
+name|CondDirectiveLoc
+operator|&
+name|RHS
+operator|)
+block|{
+return|return
+name|SM
+operator|.
+name|isBeforeInTranslationUnit
+argument_list|(
+name|LHS
+argument_list|,
+name|RHS
+operator|.
+name|getLoc
+argument_list|()
+argument_list|)
+return|;
+block|}
+expr|}
+block|;     }
+block|;
+typedef|typedef
+name|std
+operator|::
+name|vector
+operator|<
+name|CondDirectiveLoc
+operator|>
+name|CondDirectiveLocsTy
+expr_stmt|;
+comment|/// \brief The locations of conditional directives in source order.
+name|CondDirectiveLocsTy
+name|CondDirectiveLocs
+block|;
+name|void
+name|addCondDirectiveLoc
+argument_list|(
+argument|CondDirectiveLoc DirLoc
+argument_list|)
+block|;
+name|unsigned
+name|findCondDirectiveIdx
+argument_list|(
+argument|SourceLocation Loc
+argument_list|)
+specifier|const
 block|;
 comment|/// \brief Global (loaded or local) ID for a preprocessed entity.
 comment|/// Negative values are used to indicate preprocessed entities
@@ -1137,7 +1376,7 @@ name|PreprocessingRecord
 argument_list|(
 argument|SourceManager&SM
 argument_list|,
-argument|bool IncludeNestedMacroExpansions
+argument|bool RecordConditionalDirectives
 argument_list|)
 block|;
 comment|/// \brief Allocate memory in the preprocessing record.
@@ -1241,7 +1480,7 @@ name|Self
 argument_list|(
 literal|0
 argument_list|)
-operator|,
+block|,
 name|Position
 argument_list|(
 literal|0
@@ -1251,17 +1490,17 @@ name|iterator
 argument_list|(
 argument|PreprocessingRecord *Self
 argument_list|,
-argument|int Position
+argument|PPEntityID Position
 argument_list|)
 operator|:
 name|Self
 argument_list|(
 name|Self
 argument_list|)
-operator|,
+decl_stmt|,
 name|Position
 argument_list|(
-argument|Position
+name|Position
 argument_list|)
 block|{ }
 name|value_type
@@ -1666,6 +1905,10 @@ return|return
 name|X
 return|;
 block|}
+name|friend
+name|class
+name|PreprocessingRecord
+decl_stmt|;
 block|}
 end_decl_stmt
 
@@ -1781,6 +2024,18 @@ begin_comment
 comment|/// that source range \arg R encompasses.
 end_comment
 
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// \param R the range to look for preprocessed entities.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
 begin_expr_stmt
 name|std
 operator|::
@@ -1798,11 +2053,52 @@ expr_stmt|;
 end_expr_stmt
 
 begin_comment
+comment|/// \brief Returns true if the preprocessed entity that \arg PPEI iterator
+end_comment
+
+begin_comment
+comment|/// points to is coming from the file \arg FID.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Can be used to avoid implicit deserializations of preallocated
+end_comment
+
+begin_comment
+comment|/// preprocessed entities if we only care about entities of a specific file
+end_comment
+
+begin_comment
+comment|/// and not from files #included in the range given at
+end_comment
+
+begin_comment
+comment|/// \see getPreprocessedEntitiesInRange.
+end_comment
+
+begin_function_decl
+name|bool
+name|isEntityInFileID
+parameter_list|(
+name|iterator
+name|PPEI
+parameter_list|,
+name|FileID
+name|FID
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// \brief Add a new preprocessed entity to this record.
 end_comment
 
 begin_function_decl
-name|void
+name|PPEntityID
 name|addPreprocessedEntity
 parameter_list|(
 name|PreprocessedEntity
@@ -1811,6 +2107,83 @@ name|Entity
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// \brief Returns true if this PreprocessingRecord is keeping track of
+end_comment
+
+begin_comment
+comment|/// conditional directives locations.
+end_comment
+
+begin_expr_stmt
+name|bool
+name|isRecordingConditionalDirectives
+argument_list|()
+specifier|const
+block|{
+return|return
+name|RecordCondDirectives
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Returns true if the given range intersects with a conditional
+end_comment
+
+begin_comment
+comment|/// directive. if a #if/#endif block is fully contained within the range,
+end_comment
+
+begin_comment
+comment|/// this function will return false.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|rangeIntersectsConditionalDirective
+argument_list|(
+name|SourceRange
+name|Range
+argument_list|)
+decl|const
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/// \brief Returns true if the given locations are in different regions,
+end_comment
+
+begin_comment
+comment|/// separated by conditional directive blocks.
+end_comment
+
+begin_decl_stmt
+name|bool
+name|areInDifferentConditionalDirectiveRegion
+argument_list|(
+name|SourceLocation
+name|LHS
+argument_list|,
+name|SourceLocation
+name|RHS
+argument_list|)
+decl|const
+block|{
+return|return
+name|findCondDirectiveIdx
+argument_list|(
+name|LHS
+argument_list|)
+operator|!=
+name|findCondDirectiveIdx
+argument_list|(
+name|RHS
+argument_list|)
+return|;
+block|}
+end_decl_stmt
 
 begin_comment
 comment|/// \brief Set the external source for preprocessed entities.
@@ -1864,6 +2237,11 @@ name|MI
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_label
+name|private
+label|:
+end_label
 
 begin_function_decl
 name|virtual
@@ -1957,6 +2335,142 @@ name|RelativePath
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|If
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceRange
+name|ConditionRange
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|Elif
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceRange
+name|ConditionRange
+parameter_list|,
+name|SourceLocation
+name|IfLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|Ifdef
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|Token
+modifier|&
+name|MacroNameTok
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|Ifndef
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+specifier|const
+name|Token
+modifier|&
+name|MacroNameTok
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|Else
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceLocation
+name|IfLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|virtual
+name|void
+name|Endif
+parameter_list|(
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|SourceLocation
+name|IfLoc
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/// \brief Cached result of the last \see getPreprocessedEntitiesInRange
+end_comment
+
+begin_comment
+comment|/// query.
+end_comment
+
+begin_struct
+struct|struct
+block|{
+name|SourceRange
+name|Range
+decl_stmt|;
+name|std
+operator|::
+name|pair
+operator|<
+name|PPEntityID
+operator|,
+name|PPEntityID
+operator|>
+name|Result
+expr_stmt|;
+block|}
+name|CachedRangeQuery
+struct|;
+end_struct
+
+begin_expr_stmt
+name|std
+operator|::
+name|pair
+operator|<
+name|PPEntityID
+operator|,
+name|PPEntityID
+operator|>
+name|getPreprocessedEntitiesInRangeSlow
+argument_list|(
+argument|SourceRange R
+argument_list|)
+expr_stmt|;
+end_expr_stmt
 
 begin_decl_stmt
 name|friend

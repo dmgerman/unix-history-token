@@ -12,10 +12,6 @@ comment|// RUN: %clang_cc1 -triple arm %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple bfin %s -emit-llvm -o - | FileCheck %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -triple cellspu %s -emit-llvm -o - | FileCheck %s
 end_comment
 
@@ -37,10 +33,6 @@ end_comment
 
 begin_comment
 comment|// RUN: %clang_cc1 -triple powerpc64 %s -emit-llvm -o - | FileCheck %s
-end_comment
-
-begin_comment
-comment|// RUN: %clang_cc1 -triple s390x %s -emit-llvm -o - | FileCheck %s
 end_comment
 
 begin_comment

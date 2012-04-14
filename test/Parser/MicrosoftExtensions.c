@@ -353,6 +353,71 @@ block|}
 empty_stmt|;
 end_typedef
 
+begin_function
+name|enum
+name|__declspec
+function|(
+name|deprecated
+function|) E2
+block|{
+name|i
+operator|,
+name|j
+operator|,
+name|k
+block|}
+end_function
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
+
+begin_expr_stmt
+name|__declspec
+argument_list|(
+name|deprecated
+argument_list|)
+expr|enum
+name|E3
+block|{
+name|a
+block|,
+name|b
+block|,
+name|c
+block|}
+name|e
+expr_stmt|;
+end_expr_stmt
+
+begin_function
+name|void
+name|deprecated_enum_test
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+comment|// Test to make sure the deprecated warning follows the right thing
+name|enum
+name|E2
+name|e1
+decl_stmt|;
+comment|// expected-warning {{'E2' is deprecated}}
+name|enum
+name|E3
+name|e2
+decl_stmt|;
+comment|// No warning expected, the deprecation follows the variable
+name|enum
+name|E3
+name|e3
+init|=
+name|e
+decl_stmt|;
+comment|// expected-warning {{'e' is deprecated}}
+block|}
+end_function
+
 begin_comment
 comment|/* Microsoft attribute tests */
 end_comment

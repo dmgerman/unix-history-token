@@ -1,5 +1,9 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
+comment|// RUN: %clang_cc1 -pedantic -Wunused-label -verify -x c %s
+end_comment
+
+begin_comment
 comment|// RUN: cp %s %t
 end_comment
 
@@ -57,6 +61,10 @@ begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
 
+begin_comment
+comment|// expected-warning {{';'}}
+end_comment
+
 begin_struct
 struct|struct
 name|s
@@ -67,6 +75,7 @@ decl_stmt|,
 name|y
 decl_stmt|;
 empty_stmt|;
+comment|// expected-warning {{extra ';'}}
 block|}
 struct|;
 end_struct
@@ -80,6 +89,10 @@ specifier|_Complex
 name|cd
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|// expected-warning {{assuming '_Complex double'}}
+end_comment
 
 begin_comment
 comment|// CHECK: struct s s0 = { .y = 5 };
@@ -97,6 +110,10 @@ literal|5
 block|}
 decl_stmt|;
 end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{GNU old-style}}
+end_comment
 
 begin_comment
 comment|// CHECK: int array0[5] = { [3] = 3 };
@@ -118,6 +135,18 @@ block|}
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// expected-warning {{GNU 'missing ='}}
+end_comment
+
+begin_comment
+comment|// CHECK: int x
+end_comment
+
+begin_comment
+comment|// CHECK: int y
+end_comment
+
 begin_function
 name|void
 name|f1
@@ -126,6 +155,7 @@ name|x
 parameter_list|,
 name|y
 parameter_list|)
+comment|// expected-warning 2{{defaulting to type 'int'}}
 block|{ }
 end_function
 
@@ -164,6 +194,7 @@ name|int
 name|fooBar
 parameter_list|)
 block|{
+comment|// expected-note {{here}}
 comment|// CHECK: int x = y ? 1 : 4+fooBar;
 name|int
 name|x
@@ -175,6 +206,7 @@ literal|4
 operator|+
 name|foobar
 decl_stmt|;
+comment|// expected-error {{expected ':'}} expected-error {{undeclared identifier}} expected-note {{to match}}
 comment|// CHECK: x = y ? ONE : TWO;
 name|x
 operator|=
@@ -183,6 +215,7 @@ condition|?
 name|ONE
 name|TWO
 expr_stmt|;
+comment|// expected-error {{':'}} expected-note {{to match}}
 return|return
 name|x
 return|;
@@ -190,8 +223,12 @@ block|}
 end_function
 
 begin_comment
-comment|// CHECK: typedef int int_t;
+comment|// CHECK: const typedef int int_t;
 end_comment
+
+begin_expr_stmt
+specifier|const
+end_expr_stmt
 
 begin_typedef
 typedef|typedef
@@ -200,6 +237,10 @@ name|int
 name|int_t
 typedef|;
 end_typedef
+
+begin_comment
+comment|// expected-warning {{duplicate 'typedef'}}
+end_comment
 
 begin_comment
 comment|//<rdar://problem/7159693>
@@ -252,6 +293,7 @@ label|:
 name|c
 operator|++
 expr_stmt|;
+comment|// expected-warning {{unused label}}
 name|removeUnusedLabels
 argument_list|(
 name|c
@@ -259,6 +301,7 @@ argument_list|)
 expr_stmt|;
 name|L1
 label|:
+comment|// expected-warning {{unused label}}
 name|c
 operator|++
 expr_stmt|;
@@ -268,7 +311,9 @@ label|:
 name|c
 operator|++
 expr_stmt|;
+comment|// expected-warning {{unused label}}
 name|LL
+comment|// expected-warning {{unused label}}
 label|:
 name|c
 operator|++
@@ -282,6 +327,126 @@ expr_stmt|;
 name|L4
 label|:
 return|return;
+comment|// expected-warning {{unused label}}
+block|}
+end_function
+
+begin_decl_stmt
+name|int
+name|oopsAComma
+init|=
+literal|0
+decl_stmt|,
+comment|// expected-error {{';'}}
+name|void
+name|oopsMoreCommas
+argument_list|()
+block|{
+specifier|static
+name|int
+name|a
+index|[]
+init|=
+block|{
+literal|0
+block|,
+literal|1
+block|,
+literal|2
+block|}
+decl_stmt|,
+comment|// expected-error {{';'}}
+decl_stmt|static
+name|int
+name|b
+index|[]
+init|=
+block|{
+literal|3
+block|,
+literal|4
+block|,
+literal|5
+block|}
+decl_stmt|,
+comment|// expected-error {{';'}}
+modifier|&
+name|a
+decl|==
+modifier|&
+name|b
+decl|?
+name|oopsMoreCommas
+argument_list|()
+range|:
+name|removeUnusedLabels
+argument_list|(
+name|a
+index|[
+literal|0
+index|]
+argument_list|)
+decl_stmt|;
+block|}
+end_decl_stmt
+
+begin_function
+name|int
+name|noSemiAfterLabel
+parameter_list|(
+name|int
+name|n
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|n
+condition|)
+block|{
+default|default:
+return|return
+name|n
+operator|%
+literal|4
+return|;
+case|case
+literal|0
+case|:
+case|case
+literal|1
+case|:
+case|case
+literal|2
+case|:
+comment|// CHECK: /*FOO*/ case 3: ;
+comment|/*FOO*/
+case|case
+literal|3
+case|:
+comment|// expected-error {{expected statement}}
+block|}
+switch|switch
+condition|(
+name|n
+condition|)
+block|{
+case|case
+literal|1
+case|:
+case|case
+literal|2
+case|:
+return|return
+literal|0
+return|;
+comment|// CHECK: /*BAR*/ default: ;
+comment|/*BAR*/
+default|default:
+comment|// expected-error {{expected statement}}
+block|}
+return|return
+literal|1
+return|;
 block|}
 end_function
 

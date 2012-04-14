@@ -352,5 +352,32 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_comment
+comment|// Constant-folding with init list.
+end_comment
+
+begin_decl_stmt
+specifier|_Complex
+name|float
+name|x
+init|=
+literal|2
+operator|+
+operator|(
+specifier|_Complex
+name|float
+operator|)
+block|{
+literal|1
+block|,
+literal|2
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{specifying real and imaginary components is an extension}}
+end_comment
+
 end_unit
 

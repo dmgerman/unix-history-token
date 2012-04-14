@@ -85,6 +85,12 @@ directive|include
 file|"clang/Rewrite/Rewriter.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"clang/Edit/EditedSource.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -100,6 +106,24 @@ name|FixItOptions
 block|{
 name|public
 label|:
+name|FixItOptions
+argument_list|()
+operator|:
+name|FixWhatYouCan
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|FixOnlyWarnings
+argument_list|(
+name|false
+argument_list|)
+operator|,
+name|Silent
+argument_list|(
+argument|false
+argument_list|)
+block|{ }
 name|virtual
 operator|~
 name|FixItOptions
@@ -107,6 +131,11 @@ argument_list|()
 expr_stmt|;
 comment|/// \brief This file is about to be rewritten. Return the name of the file
 comment|/// that is okay to write to.
+comment|///
+comment|/// \param fd out parameter for file descriptor. After the call it may be set
+comment|/// to an open file descriptor for the returned filename, or it will be -1
+comment|/// otherwise.
+comment|///
 name|virtual
 name|std
 operator|::
@@ -119,6 +148,10 @@ operator|::
 name|string
 operator|&
 name|Filename
+argument_list|,
+name|int
+operator|&
+name|fd
 argument_list|)
 operator|=
 literal|0
@@ -126,6 +159,16 @@ expr_stmt|;
 comment|/// \brief Whether to abort fixing a file when not all errors could be fixed.
 name|bool
 name|FixWhatYouCan
+decl_stmt|;
+comment|/// \brief Whether to only fix warnings and not errors.
+name|bool
+name|FixOnlyWarnings
+decl_stmt|;
+comment|/// \brief If true, only pass the diagnostic to the actual diagnostic consumer
+comment|/// if it is an error or a fixit was applied as part of the diagnostic.
+comment|/// It basically silences warnings without accompanying fixits.
+name|bool
+name|Silent
 decl_stmt|;
 block|}
 empty_stmt|;
@@ -140,6 +183,11 @@ name|DiagnosticsEngine
 operator|&
 name|Diags
 block|;
+name|edit
+operator|::
+name|EditedSource
+name|Editor
+block|;
 comment|/// \brief The rewriter used to perform the various code
 comment|/// modifications.
 name|Rewriter
@@ -151,6 +199,9 @@ name|DiagnosticConsumer
 operator|*
 name|Client
 block|;
+name|bool
+name|OwnsClient
+block|;
 comment|/// \brief Turn an input path into an output path. NULL implies overwriting
 comment|/// the original.
 name|FixItOptions
@@ -160,6 +211,10 @@ block|;
 comment|/// \brief The number of rewriter failures.
 name|unsigned
 name|NumFailures
+block|;
+comment|/// \brief Whether the previous diagnostic was not passed to the consumer.
+name|bool
+name|PrevDiagSilenced
 block|;
 name|public
 operator|:
@@ -257,8 +312,30 @@ comment|///
 comment|/// \returns true if there was an error, false otherwise.
 name|bool
 name|WriteFixedFiles
-parameter_list|()
-function_decl|;
+argument_list|(
+name|std
+operator|::
+name|vector
+operator|<
+name|std
+operator|::
+name|pair
+operator|<
+name|std
+operator|::
+name|string
+argument_list|,
+name|std
+operator|::
+name|string
+operator|>
+expr|>
+operator|*
+name|RewrittenFiles
+operator|=
+literal|0
+argument_list|)
+decl_stmt|;
 comment|/// IncludeInDiagnosticCounts - This method (whose default implementation
 comment|/// returns true) indicates whether the diagnostics handled by this
 comment|/// DiagnosticConsumer should be included in the number of diagnostics

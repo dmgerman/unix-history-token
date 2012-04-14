@@ -43,8 +43,8 @@ index|]
 init|=
 literal|"\u1120\u0220\U00102030"
 decl_stmt|;
-comment|// CHECK-C: private unnamed_addr constant [12 x i8] c"A\00\00\00B\00\00\00\00\00\00\00", align 4
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"A\00\00\00B\00\00\00\00\00\00\00", align 4
+comment|// CHECK-C: private unnamed_addr constant [3 x i32] [i32 65, i32 66, i32 0], align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 65, i32 66, i32 0], align 4
 specifier|const
 name|wchar_t
 modifier|*
@@ -52,8 +52,8 @@ name|foo
 init|=
 literal|L"AB"
 decl_stmt|;
-comment|// CHECK-C: private unnamed_addr constant [12 x i8] c"4\12\00\00\0B\F0\10\00\00\00\00\00", align 4
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"4\12\00\00\0B\F0\10\00\00\00\00\00", align 4
+comment|// CHECK-C: private unnamed_addr constant [3 x i32] [i32 4660, i32 1110027, i32 0], align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 4660, i32 1110027, i32 0], align 4
 specifier|const
 name|wchar_t
 modifier|*
@@ -61,8 +61,8 @@ name|bar
 init|=
 literal|L"\u1234\U0010F00B"
 decl_stmt|;
-comment|// CHECK-C: private unnamed_addr constant [12 x i8] c"4\12\00\00\0C\F0\10\00\00\00\00\00", align 4
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"4\12\00\00\0C\F0\10\00\00\00\00\00", align 4
+comment|// CHECK-C: private unnamed_addr constant [3 x i32] [i32 4660, i32 1110028, i32 0], align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 4660, i32 1110028, i32 0], align 4
 specifier|const
 name|wchar_t
 modifier|*
@@ -76,7 +76,7 @@ directive|if
 name|__cplusplus
 operator|>=
 literal|201103L
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"C\00\00\00D\00\00\00\00\00\00\00", align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 67, i32 68, i32 0], align 4
 specifier|const
 name|char32_t
 modifier|*
@@ -84,7 +84,7 @@ name|c
 init|=
 literal|U"CD"
 decl_stmt|;
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"5\12\00\00\0C\F0\10\00\00\00\00\00", align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 4661, i32 1110028, i32 0], align 4
 specifier|const
 name|char32_t
 modifier|*
@@ -92,7 +92,7 @@ name|d
 init|=
 literal|U"\u1235\U0010F00C"
 decl_stmt|;
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"5\12\00\00\0B\F0\10\00\00\00\00\00", align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 4661, i32 1110027, i32 0], align 4
 specifier|const
 name|char32_t
 modifier|*
@@ -101,7 +101,7 @@ init|=
 literal|"\u1235"
 literal|U"\U0010F00B"
 decl_stmt|;
-comment|// CHECK-CPP0X: private unnamed_addr constant [6 x i8] c"E\00F\00\00\00", align 2
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i16] [i16 69, i16 70, i16 0], align 2
 specifier|const
 name|char16_t
 modifier|*
@@ -110,7 +110,7 @@ init|=
 literal|u"EF"
 decl_stmt|;
 comment|// This should convert to utf16.
-comment|// CHECK-CPP0X: private unnamed_addr constant [10 x i8] c" \11 \02\C8\DB0\DC\00\00", align 2
+comment|// CHECK-CPP0X: private unnamed_addr constant [5 x i16] [i16 4384, i16 544, i16 -9272, i16 -9168, i16 0], align 2
 specifier|const
 name|char16_t
 modifier|*
@@ -119,7 +119,7 @@ init|=
 literal|u"\u1120\u0220\U00102030"
 decl_stmt|;
 comment|// This should convert to utf16.
-comment|// CHECK-CPP0X: private unnamed_addr constant [10 x i8] c" \11 \03\C8\DB0\DC\00\00", align 2
+comment|// CHECK-CPP0X: private unnamed_addr constant [5 x i16] [i16 4384, i16 800, i16 -9272, i16 -9168, i16 0], align 2
 specifier|const
 name|char16_t
 modifier|*
@@ -154,7 +154,7 @@ init|=
 name|u8R
 literal|"bar(jkl)bar"
 decl_stmt|;
-comment|// CHECK-CPP0X: private unnamed_addr constant [6 x i8] c"G\00H\00\00\00", align 2
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i16] [i16 71, i16 72, i16 0], align 2
 specifier|const
 name|char16_t
 modifier|*
@@ -163,7 +163,7 @@ init|=
 name|uR
 literal|"foo(GH)foo"
 decl_stmt|;
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"I\00\00\00J\00\00\00\00\00\00\00", align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 73, i32 74, i32 0], align 4
 specifier|const
 name|char32_t
 modifier|*
@@ -172,7 +172,7 @@ init|=
 name|UR
 literal|"bar(IJ)bar"
 decl_stmt|;
-comment|// CHECK-CPP0X: private unnamed_addr constant [12 x i8] c"K\00\00\00L\00\00\00\00\00\00\00", align 4
+comment|// CHECK-CPP0X: private unnamed_addr constant [3 x i32] [i32 75, i32 76, i32 0], align 4
 specifier|const
 name|wchar_t
 modifier|*

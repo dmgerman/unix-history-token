@@ -155,6 +155,11 @@ argument_list|(
 name|false
 argument_list|)
 operator|,
+name|SuppressUnwrittenScope
+argument_list|(
+name|false
+argument_list|)
+operator|,
 name|SuppressInitializers
 argument_list|(
 name|false
@@ -243,6 +248,13 @@ decl_stmt|;
 comment|/// \brief Suppresses printing of scope specifiers.
 name|bool
 name|SuppressScope
+range|:
+literal|1
+decl_stmt|;
+comment|/// \brief Suppress printing parts of scope specifiers that don't need
+comment|/// to be written, e.g., for inline or anonymous namespaces.
+name|bool
+name|SuppressUnwrittenScope
 range|:
 literal|1
 decl_stmt|;

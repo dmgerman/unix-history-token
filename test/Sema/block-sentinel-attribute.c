@@ -65,7 +65,29 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning {{sentinel' attribute only supported for variadic blocks}}
+comment|// expected-warning {{'sentinel' attribute only supported for variadic blocks}}
+end_comment
+
+begin_expr_stmt
+name|bbad
+operator|=
+operator|^
+name|void
+argument_list|(
+argument|int arg
+argument_list|,
+argument|const char * format
+argument_list|)
+name|__attribute__
+argument_list|(
+argument|(__sentinel__)
+argument_list|)
+block|{}
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-warning {{'sentinel' attribute only supported for variadic blocks}}
 end_comment
 
 begin_function_decl

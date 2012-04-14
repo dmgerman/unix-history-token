@@ -148,7 +148,7 @@ block|,
 literal|10
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to 2}}
+comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to -2}}
 name|struct
 name|A
 name|b
@@ -164,7 +164,7 @@ block|,
 literal|0
 block|}
 decl_stmt|;
-comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to 2}}
+comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 10 to -2}}
 name|struct
 name|A
 name|c
@@ -259,6 +259,136 @@ name|b
 operator|=
 literal|100
 expr_stmt|;
+block|}
+end_function
+
+begin_function
+name|void
+name|test6
+parameter_list|()
+block|{
+comment|// Test that unreachable code doesn't trigger the truncation warning.
+name|unsigned
+name|char
+name|x
+init|=
+literal|0
+condition|?
+literal|65535
+else|:
+literal|1
+decl_stmt|;
+comment|// no-warning
+name|unsigned
+name|char
+name|y
+init|=
+literal|1
+condition|?
+literal|65535
+else|:
+literal|1
+decl_stmt|;
+comment|// expected-warning {{changes value}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test7
+parameter_list|()
+block|{
+struct|struct
+block|{
+name|unsigned
+name|int
+name|twoBits1
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|int
+name|twoBits2
+range|:
+literal|2
+decl_stmt|;
+name|unsigned
+name|int
+name|reserved
+range|:
+literal|28
+decl_stmt|;
+block|}
+name|f
+struct|;
+name|f
+operator|.
+name|twoBits1
+operator|=
+operator|~
+literal|1
+expr_stmt|;
+comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from -2 to 2}}
+name|f
+operator|.
+name|twoBits2
+operator|=
+operator|~
+literal|2
+expr_stmt|;
+comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from -3 to 1}}
+name|f
+operator|.
+name|twoBits1
+operator|&=
+operator|~
+literal|1
+expr_stmt|;
+comment|// no-warning
+name|f
+operator|.
+name|twoBits2
+operator|&=
+operator|~
+literal|2
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|test8
+parameter_list|()
+block|{
+enum|enum
+name|E
+block|{
+name|A
+block|,
+name|B
+block|,
+name|C
+block|}
+enum|;
+struct|struct
+block|{
+name|enum
+name|E
+name|x
+range|:
+literal|1
+decl_stmt|;
+block|}
+name|f
+struct|;
+name|f
+operator|.
+name|x
+operator|=
+name|C
+expr_stmt|;
+comment|// expected-warning {{implicit truncation from 'int' to bitfield changes value from 2 to 0}}
 block|}
 end_function
 

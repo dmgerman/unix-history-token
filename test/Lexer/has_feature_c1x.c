@@ -12,6 +12,47 @@ if|#
 directive|if
 name|__has_feature
 argument_list|(
+name|c_atomic
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_atomic
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|no_atomic
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK-1X: has_atomic
+end_comment
+
+begin_comment
+comment|// CHECK-NO-1X: no_atomic
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_feature
+argument_list|(
 name|c_static_assert
 argument_list|)
 end_if
@@ -128,6 +169,46 @@ end_comment
 
 begin_comment
 comment|// CHECK-NO-1X: no_alignas
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__STDC_VERSION__
+operator|>
+literal|199901L
+end_if
+
+begin_function_decl
+name|int
+name|is_c1x
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_else
+else|#
+directive|else
+end_else
+
+begin_function_decl
+name|int
+name|is_not_c1x
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
+begin_comment
+comment|// CHECK-1X: is_c1x
+end_comment
+
+begin_comment
+comment|// CHECK-NO-1X: is_not_c1x
 end_comment
 
 end_unit

@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -triple x86_64-apple-darwin -Os -S -g  -o - %s | FileCheck %s
 end_comment
 
+begin_comment
+comment|// REQUIRES: x86-registered-target
+end_comment
+
 begin_function_decl
 name|int
 name|calculate
@@ -215,7 +219,7 @@ argument_list|,
 name|Array
 argument_list|)
 expr_stmt|;
-comment|//CHECK:	.loc	2 30 8
+comment|//CHECK:	.loc	2 31 8
 for|for
 control|(
 name|i

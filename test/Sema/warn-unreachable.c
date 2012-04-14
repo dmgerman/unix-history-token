@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang %s -fsyntax-only -Xclang -verify -fblocks -Wunreachable-code -Wno-unused-value
+comment|// RUN: %clang %s -fsyntax-only -Xclang -verify -fblocks -Wunreachable-code -Wno-unused-value -Wno-covered-switch-default
 end_comment
 
 begin_function_decl
@@ -413,6 +413,61 @@ argument_list|)
 expr_stmt|;
 return|return;
 comment|// no-warning
+block|}
+end_function
+
+begin_comment
+comment|// Test case for PR 9774.  Tests that dead code in macros aren't warned about.
+end_comment
+
+begin_define
+define|#
+directive|define
+name|MY_MAX
+parameter_list|(
+name|a
+parameter_list|,
+name|b
+parameter_list|)
+value|((a)>= (b) ? (a) : (b))
+end_define
+
+begin_function
+name|void
+name|PR9774
+parameter_list|(
+name|int
+modifier|*
+name|s
+parameter_list|)
+block|{
+for|for
+control|(
+name|int
+name|i
+init|=
+literal|0
+init|;
+name|i
+operator|<
+name|MY_MAX
+argument_list|(
+literal|2
+argument_list|,
+literal|3
+argument_list|)
+condition|;
+name|i
+operator|++
+control|)
+comment|// no-warning
+name|s
+index|[
+name|i
+index|]
+operator|=
+literal|0
+expr_stmt|;
 block|}
 end_function
 

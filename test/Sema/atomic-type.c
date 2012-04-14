@@ -207,7 +207,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{_Atomic cannot be applied to incomplete type}}
+comment|// expected-error {{_Atomic cannot be applied to incomplete type}} expected-note {{forward declaration}}
 end_comment
 
 begin_decl_stmt

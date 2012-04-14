@@ -944,7 +944,7 @@ block|{
 goto|goto
 name|L0
 goto|;
-comment|// expected-error {{illegal goto into protected scope}}
+comment|// expected-error {{goto into protected scope}}
 specifier|__block
 name|int
 name|x

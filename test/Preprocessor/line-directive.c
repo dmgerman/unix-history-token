@@ -4,11 +4,11 @@ comment|// RUN: %clang_cc1 -fsyntax-only -verify -pedantic %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E %s 2>&1 | grep 'blonk.c:92:2: error: #error ABC'
+comment|// RUN: %clang_cc1 -E %s 2>&1 | grep 'blonk.c:92:2: error: ABC'
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -E %s 2>&1 | grep 'blonk.c:93:2: error: #error DEF'
+comment|// RUN: %clang_cc1 -E %s 2>&1 | grep 'blonk.c:93:2: error: DEF'
 end_comment
 
 begin_line
@@ -257,7 +257,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error {{redefinition of typedef 'x' is invalid in C}}
+comment|// expected-warning {{redefinition of typedef 'x' is a C11 feature}}
 end_comment
 
 begin_empty
@@ -391,7 +391,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// expected-error {{redefinition of typedef 'w' is invalid in C}}
+comment|// expected-warning {{redefinition of typedef 'w' is a C11 feature}}
 end_comment
 
 begin_typedef

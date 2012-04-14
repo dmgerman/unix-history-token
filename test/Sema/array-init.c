@@ -329,10 +329,11 @@ literal|1.0
 block|,
 literal|"abc"
 block|,
+comment|// expected-warning{{incompatible pointer to integer conversion initializing 'long' with an expression of type 'char [4]'}}
 literal|5.8
 block|}
 decl_stmt|;
-comment|// expected-warning{{incompatible pointer to integer conversion initializing 'long' with an expression of type 'char [4]'}}
+comment|// expected-warning {{implicit conversion turns literal floating-point number into integer}}
 block|}
 end_function
 
@@ -1103,7 +1104,7 @@ index|]
 init|=
 literal|"foo"
 decl_stmt|;
-comment|//expected-error{{array initializer must be an initializer list or string literal}}
+comment|//expected-error{{variable-sized object may not be initialized}}
 name|int
 name|b
 index|[
@@ -1676,7 +1677,7 @@ block|}
 end_function
 
 begin_comment
-comment|//expected-warning{{empty struct (accepted as an extension) has size 0 in C, size 1 in C++}} \
+comment|//expected-warning{{empty struct is a GNU extension}} \
 end_comment
 
 begin_comment
@@ -1838,7 +1839,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|//expected-warning{{empty struct (accepted as an extension) has size 0 in C, size 1 in C++}} \
+comment|//expected-warning{{empty struct is a GNU extension}} \
 end_comment
 
 begin_comment
@@ -1867,7 +1868,7 @@ struct|;
 end_struct
 
 begin_comment
-comment|//expected-warning{{anonymous unions are a GNU extension in C}}
+comment|//expected-warning{{anonymous unions are a C11 extension}}
 end_comment
 
 begin_typedef
@@ -2213,6 +2214,57 @@ end_decl_stmt
 begin_comment
 comment|// expected-error{{initializer element is not a compile-time constant}}
 end_comment
+
+begin_comment
+comment|//<rdar://problem/10636946>
+end_comment
+
+begin_macro
+name|__attribute__
+argument_list|(
+argument|(weak)
+argument_list|)
+end_macro
+
+begin_decl_stmt
+specifier|const
+name|unsigned
+name|int
+name|test10_bound
+init|=
+literal|10
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|test10_global
+index|[
+name|test10_bound
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{variable length array declaration not allowed at file scope}}
+end_comment
+
+begin_function
+name|void
+name|test10
+parameter_list|()
+block|{
+name|char
+name|test10_local
+index|[
+name|test10_bound
+index|]
+init|=
+literal|"help"
+decl_stmt|;
+comment|// expected-error {{variable-sized object may not be initialized}}
+block|}
+end_function
 
 end_unit
 

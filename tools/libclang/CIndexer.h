@@ -98,6 +98,12 @@ block|}
 end_decl_stmt
 
 begin_decl_stmt
+name|namespace
+name|clang
+block|{
+name|class
+name|ASTUnit
+decl_stmt|;
 name|class
 name|CIndexer
 block|{
@@ -107,6 +113,10 @@ decl_stmt|;
 name|bool
 name|DisplayDiagnostics
 decl_stmt|;
+name|unsigned
+name|Options
+decl_stmt|;
+comment|// CXGlobalOptFlags.
 name|llvm
 operator|::
 name|sys
@@ -131,7 +141,12 @@ argument_list|)
 operator|,
 name|DisplayDiagnostics
 argument_list|(
-argument|false
+name|false
+argument_list|)
+operator|,
+name|Options
+argument_list|(
+argument|CXGlobalOpt_None
 argument_list|)
 block|{ }
 comment|/// \brief Whether we only want to see "local" declarations (that did not
@@ -183,6 +198,41 @@ operator|=
 name|Display
 expr_stmt|;
 block|}
+name|unsigned
+name|getCXGlobalOptFlags
+argument_list|()
+specifier|const
+block|{
+return|return
+name|Options
+return|;
+block|}
+name|void
+name|setCXGlobalOptFlags
+parameter_list|(
+name|unsigned
+name|options
+parameter_list|)
+block|{
+name|Options
+operator|=
+name|options
+expr_stmt|;
+block|}
+name|bool
+name|isOptEnabled
+argument_list|(
+name|CXGlobalOptFlags
+name|opt
+argument_list|)
+decl|const
+block|{
+return|return
+name|Options
+operator|&
+name|opt
+return|;
+block|}
 comment|/// \brief Get the path of the clang resource files.
 name|std
 operator|::
@@ -220,16 +270,7 @@ name|Dir
 expr_stmt|;
 block|}
 block|}
-end_decl_stmt
-
-begin_empty_stmt
 empty_stmt|;
-end_empty_stmt
-
-begin_decl_stmt
-name|namespace
-name|clang
-block|{
 comment|/**    * \brief Given a set of "unsaved" files, create temporary files and     * construct the clang -cc1 argument list needed to perform the remapping.    *    * \returns true if an error occurred.    */
 name|bool
 name|RemapFiles
@@ -314,6 +355,12 @@ operator|=
 literal|0
 argument_list|)
 decl_stmt|;
+comment|/// \brief Set the thread priority to background.
+comment|/// FIXME: Move to llvm/Support.
+name|void
+name|setThreadBackgroundPriority
+parameter_list|()
+function_decl|;
 comment|/// \brief Print libclang's resource usage to standard error.
 name|void
 name|PrintLibclangResourceUsage
@@ -322,6 +369,18 @@ name|CXTranslationUnit
 name|TU
 parameter_list|)
 function_decl|;
+name|namespace
+name|cxindex
+block|{
+name|void
+name|printDiagsToStderr
+parameter_list|(
+name|ASTUnit
+modifier|*
+name|Unit
+parameter_list|)
+function_decl|;
+block|}
 block|}
 end_decl_stmt
 

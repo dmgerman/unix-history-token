@@ -102,11 +102,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// CHECK-DAR: private unnamed_addr constant [72 x i8] c"
+comment|// CHECK-DAR: private unnamed_addr constant [18 x i32] [i32 84,
 end_comment
 
 begin_comment
-comment|// CHECK-WIN: private unnamed_addr constant [36 x i8] c"
+comment|// CHECK-WIN: private unnamed_addr constant [18 x i16] [i16 84,
 end_comment
 
 begin_function_decl

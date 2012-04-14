@@ -1396,7 +1396,7 @@ name|p
 condition|)
 name|WARN
 expr_stmt|;
-comment|// expected-warning{{}}
+comment|// no-warning
 if|if
 condition|(
 operator|&

@@ -71,6 +71,12 @@ directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
+begin_include
+include|#
+directive|include
+file|"llvm/Support/Compiler.h"
+end_include
+
 begin_decl_stmt
 name|namespace
 name|clang
@@ -706,6 +712,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 name|void
 name|print

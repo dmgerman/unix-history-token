@@ -27,6 +27,8 @@ name|int
 name|c
 parameter_list|)
 block|{
+comment|// FIXME: The "incompatible result type" error is due to pr10112 and should
+comment|// be removed when that is fixed.
 return|return
 name|_mm_alignr_pi8
 argument_list|(
@@ -37,7 +39,7 @@ argument_list|,
 name|c
 argument_list|)
 return|;
-comment|// expected-error {{argument to '__builtin_ia32_palignr' must be a constant integer}}
+comment|// expected-error {{argument to '__builtin_ia32_palignr' must be a constant integer}} expected-error {{incompatible result type}}
 block|}
 end_function
 

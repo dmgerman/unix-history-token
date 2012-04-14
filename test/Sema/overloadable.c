@@ -240,7 +240,7 @@ argument_list|(
 name|f2
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{no matching function for call to 'accept_funcptr'; candidates are:}}
+comment|// expected-error{{no matching function for call to 'accept_funcptr'}}
 block|}
 end_function
 

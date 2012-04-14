@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -Wswitch-enum -Wcovered-switch-default %s
 end_comment
 
 begin_function
@@ -102,7 +102,9 @@ condition|(
 literal|0
 condition|)
 empty_stmt|;
-comment|// expected-warning {{no case matching constant switch condition '0'}}
+comment|// expected-warning {{no case matching constant switch condition '0'}} \
+comment|// expected-warning {{switch statement has empty body}} \
+comment|// expected-note{{put the semicolon on a separate line to silence this warning}}
 block|}
 end_function
 
@@ -186,10 +188,10 @@ block|{
 case|case
 name|g
 argument_list|()
+comment|// expected-error {{expression is not an integer constant expression}}
 operator|&&
 literal|0
 case|:
-comment|// expected-error {{expression is not an integer constant expression}} // expected-note {{subexpression not valid in an integer constant expression}}
 break|break;
 block|}
 switch|switch
@@ -202,10 +204,10 @@ literal|0
 operator|...
 name|g
 argument_list|()
+comment|// expected-error {{expression is not an integer constant expression}}
 operator|||
 literal|1
 case|:
-comment|// expected-error {{expression is not an integer constant expression}} // expected-note {{subexpression not valid in an integer constant expression}}
 break|break;
 block|}
 block|}
@@ -345,7 +347,7 @@ case|:
 case|case
 literal|3
 case|:
-comment|// expected-warning{{case value not in enumerated type ''}}
+comment|// expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -362,10 +364,10 @@ case|:
 case|case
 literal|3
 operator|...
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 literal|4
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -390,7 +392,7 @@ literal|0
 operator|...
 literal|2
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -403,7 +405,7 @@ literal|1
 operator|...
 literal|3
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 break|break;
 block|}
 switch|switch
@@ -414,10 +416,10 @@ block|{
 case|case
 literal|0
 operator|...
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 literal|3
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 break|break;
 block|}
 block|}
@@ -505,21 +507,21 @@ block|{
 case|case
 literal|0
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 case|case
 literal|1
 case|:
 case|case
 literal|2
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 case|case
 literal|3
 case|:
 case|case
 literal|4
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 break|break;
 block|}
 block|}
@@ -558,10 +560,10 @@ block|{
 case|case
 literal|0
 operator|...
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 literal|1
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 case|case
 literal|2
 operator|...
@@ -570,10 +572,10 @@ case|:
 case|case
 literal|5
 operator|...
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 literal|9
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 case|case
 literal|10
 operator|...
@@ -582,10 +584,10 @@ case|:
 case|case
 literal|13
 operator|...
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 literal|16
 case|:
-comment|//expected-warning{{case value not in enumerated type ''}}
+comment|//expected-warning{{case value not in enumerated type 'enum<anonymous enum}}
 break|break;
 block|}
 block|}
@@ -628,6 +630,7 @@ condition|(
 name|a
 condition|)
 block|{
+comment|//expected-warning{{enumeration value 'A' not explicitly handled in switch}}
 case|case
 name|B
 case|:
@@ -902,6 +905,97 @@ case|case
 literal|0
 case|:
 return|return;
+block|}
+block|}
+end_function
+
+begin_function
+name|int
+name|test18
+parameter_list|()
+block|{
+enum|enum
+block|{
+name|A
+block|,
+name|B
+block|}
+name|a
+enum|;
+switch|switch
+condition|(
+name|a
+condition|)
+block|{
+case|case
+name|A
+case|:
+return|return
+literal|0
+return|;
+case|case
+name|B
+case|:
+return|return
+literal|1
+return|;
+case|case
+literal|7
+case|:
+return|return
+literal|1
+return|;
+comment|// expected-warning {{case value not in enumerated type}}
+default|default:
+return|return
+literal|2
+return|;
+comment|// expected-warning {{default label in switch which covers all enumeration values}}
+block|}
+block|}
+end_function
+
+begin_comment
+comment|// rdar://110822110
+end_comment
+
+begin_typedef
+typedef|typedef
+enum|enum
+block|{
+name|kOne
+init|=
+literal|1
+block|, }
+name|Ints
+typedef|;
+end_typedef
+
+begin_function
+name|void
+name|rdar110822110
+parameter_list|(
+name|Ints
+name|i
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|i
+condition|)
+block|{
+case|case
+name|kOne
+case|:
+break|break;
+case|case
+literal|2
+case|:
+comment|// expected-warning {{case value not in enumerated type 'Ints'}}
+break|break;
+default|default:
+comment|// expected-warning {{default label in switch which covers all enumeration values}}
+break|break;
 block|}
 block|}
 end_function

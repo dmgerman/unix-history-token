@@ -46,7 +46,7 @@ name|FLOAT_TO_SHORT_FIXED
 argument_list|(
 literal|0.1
 argument_list|)
-comment|// expected-warning{{expression is not integer constant expression}}
+comment|// expected-warning{{expression is not an integer constant expression}}
 block|}
 enum|;
 end_enum

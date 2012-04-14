@@ -181,6 +181,26 @@ begin_comment
 comment|// !__has_feature(blocks)
 end_comment
 
+begin_comment
+comment|/// \brief The result of comparing two source ranges.
+end_comment
+
+begin_enum
+enum|enum
+name|RangeComparisonResult
+block|{
+comment|/// \brief Either the ranges overlap or one of the ranges is invalid.
+name|RangeOverlap
+block|,
+comment|/// \brief The first range ends before the second range starts.
+name|RangeBefore
+block|,
+comment|/// \brief The first range starts after the second range ends.
+name|RangeAfter
+block|}
+enum|;
+end_enum
+
 begin_endif
 endif|#
 directive|endif

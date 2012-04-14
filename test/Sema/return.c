@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang %s -fsyntax-only -Wignored-qualifiers -Wreturn-type -Xclang -verify -fblocks -Wno-unreachable-code -Wno-unused-value
+comment|// RUN: %clang %s -fsyntax-only -Wignored-qualifiers -Wno-error=return-type -Xclang -verify -fblocks -Wno-unreachable-code -Wno-unused-value
 end_comment
 
 begin_comment
@@ -1204,6 +1204,46 @@ end_function
 begin_comment
 comment|// no-warning
 end_comment
+
+begin_comment
+comment|// PR12318 - Don't give a may reach end of non-void function warning.
+end_comment
+
+begin_function
+name|int
+name|test34
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+if|if
+condition|(
+name|x
+operator|==
+literal|1
+condition|)
+block|{
+return|return
+literal|3
+return|;
+block|}
+elseif|else
+if|if
+condition|(
+name|x
+operator|==
+literal|2
+operator|||
+literal|1
+condition|)
+block|{
+return|return
+literal|5
+return|;
+block|}
+block|}
+end_function
 
 end_unit
 

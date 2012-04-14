@@ -39,7 +39,7 @@ end_else
 begin_include
 include|#
 directive|include
-file|<smmintrin.h>
+file|<xmmintrin.h>
 end_include
 
 begin_decl_stmt

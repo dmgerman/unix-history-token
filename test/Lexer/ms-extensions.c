@@ -3,6 +3,10 @@ begin_comment
 comment|// RUN: %clang_cc1 -fsyntax-only -verify -fms-extensions %s
 end_comment
 
+begin_comment
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -fms-compatibility %s
+end_comment
+
 begin_decl_stmt
 name|__int8
 name|x1

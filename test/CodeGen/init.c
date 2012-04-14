@@ -727,5 +727,45 @@ name|test12g
 struct|;
 end_struct
 
+begin_function
+name|void
+name|test13
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+struct|struct
+name|X
+block|{
+name|int
+name|a
+decl_stmt|;
+name|int
+name|b
+range|:
+literal|10
+decl_stmt|;
+name|int
+name|c
+decl_stmt|;
+block|}
+struct|;
+name|struct
+name|X
+name|y
+init|=
+block|{
+operator|.
+name|c
+operator|=
+name|x
+block|}
+decl_stmt|;
+comment|// CHECK: @test13
+comment|// CHECK: and i32 {{.*}}, -1024
+block|}
+end_function
+
 end_unit
 

@@ -104,13 +104,6 @@ comment|/// an r-value from the operand gl-value.  The result of an r-value
 comment|/// conversion is always unqualified.
 name|CK_LValueToRValue
 block|,
-comment|/// CK_GetObjCProperty - A conversion which calls an Objective-C
-comment|/// property getter.  The operand is an OK_ObjCProperty l-value; the
-comment|/// result will generally be an r-value, but could be an ordinary
-comment|/// gl-value if the property reference is to an implicit property
-comment|/// for a method that returns a reference type.
-name|CK_GetObjCProperty
-block|,
 comment|/// CK_NoOp - A conversion which does not affect the type other than
 comment|/// (possibly) adding qualifiers.
 comment|///   int    -> int
@@ -175,6 +168,15 @@ block|,
 comment|/// CK_MemberPointerToBoolean - Member pointer to boolean.  A check
 comment|/// against the null member pointer.
 name|CK_MemberPointerToBoolean
+block|,
+comment|/// CK_ReinterpretMemberPointer - Reinterpret a member pointer as a
+comment|/// different kind of member pointer.  C++ forbids this from
+comment|/// crossing between function and object types, but otherwise does
+comment|/// not restrict it.  However, the only operation that is permitted
+comment|/// on a "punned" member pointer is casting it back to the original
+comment|/// type, which is required to be a lossless operation (although
+comment|/// many ABIs do not guarantee this on all possible intermediate types).
+name|CK_ReinterpretMemberPointer
 block|,
 comment|/// CK_UserDefinedConversion - Conversion using a user defined type
 comment|/// conversion function.
@@ -327,6 +329,19 @@ comment|/// in ARC cause blocks to be copied; this is for cases where that
 comment|/// would not otherwise be guaranteed, such as when casting to a
 comment|/// non-block pointer type.
 name|CK_ARCExtendBlockObject
+block|,
+comment|/// \brief Converts from _Atomic(T) to T.
+name|CK_AtomicToNonAtomic
+block|,
+comment|/// \brief Converts from T to _Atomic(T).
+name|CK_NonAtomicToAtomic
+block|,
+comment|/// \brief Causes a block literal to by copied to the heap and then
+comment|/// autoreleased.
+comment|///
+comment|/// This particular cast kind is used for the conversion from a C++11
+comment|/// lambda expression to a block pointer.
+name|CK_CopyAndAutoreleaseBlockObject
 block|}
 enum|;
 define|#

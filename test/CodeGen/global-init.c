@@ -130,7 +130,7 @@ comment|// PR6766
 end_comment
 
 begin_comment
-comment|// CHECK: @l = global { [24 x i8], i32 } { [24 x i8] c"f\00\00\00o\00\00\00o\00\00\00\00\00\00\00\00\00\00\00\00\00\00\00", i32 1 }
+comment|// CHECK: @l = global %struct.K { [6 x i32] [i32 102, i32 111, i32 111, i32 0, i32 0, i32 0], i32 1 }
 end_comment
 
 begin_typedef

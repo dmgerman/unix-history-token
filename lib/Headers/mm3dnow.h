@@ -627,7 +627,7 @@ return|return
 operator|(
 name|__m64
 operator|)
-name|__builtin_ia32_pfrsqrtit1
+name|__builtin_ia32_pfrsqit1
 argument_list|(
 operator|(
 name|__v2sf

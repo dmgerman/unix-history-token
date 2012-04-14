@@ -147,6 +147,9 @@ decl_stmt|;
 name|class
 name|TypeDecl
 decl_stmt|;
+name|class
+name|VarDecl
+decl_stmt|;
 name|namespace
 name|cxcursor
 block|{
@@ -269,6 +272,7 @@ comment|/// \brief Create an Objective-C protocol reference at the given locatio
 name|CXCursor
 name|MakeCursorObjCProtocolRef
 parameter_list|(
+specifier|const
 name|ObjCProtocolDecl
 modifier|*
 name|Proto
@@ -300,6 +304,7 @@ comment|/// \brief Create an Objective-C class reference at the given location.
 name|CXCursor
 name|MakeCursorObjCClassRef
 parameter_list|(
+specifier|const
 name|ObjCInterfaceDecl
 modifier|*
 name|Class
@@ -331,6 +336,7 @@ comment|/// \brief Create a type reference at the given location.
 name|CXCursor
 name|MakeCursorTypeRef
 parameter_list|(
+specifier|const
 name|TypeDecl
 modifier|*
 name|Type
@@ -362,6 +368,7 @@ comment|/// \brief Create a reference to a template at the given location.
 name|CXCursor
 name|MakeCursorTemplateRef
 parameter_list|(
+specifier|const
 name|TemplateDecl
 modifier|*
 name|Template
@@ -394,6 +401,7 @@ comment|/// location.
 name|CXCursor
 name|MakeCursorNamespaceRef
 parameter_list|(
+specifier|const
 name|NamedDecl
 modifier|*
 name|NS
@@ -421,10 +429,43 @@ argument_list|(
 argument|CXCursor C
 argument_list|)
 expr_stmt|;
+comment|/// \brief Create a reference to a variable at the given location.
+name|CXCursor
+name|MakeCursorVariableRef
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|Var
+parameter_list|,
+name|SourceLocation
+name|Loc
+parameter_list|,
+name|CXTranslationUnit
+name|TU
+parameter_list|)
+function_decl|;
+comment|/// \brief Unpack a VariableRef cursor into the variable it references and the
+comment|/// location where the where the reference occurred.
+name|std
+operator|::
+name|pair
+operator|<
+name|VarDecl
+operator|*
+operator|,
+name|SourceLocation
+operator|>
+name|getCursorVariableRef
+argument_list|(
+argument|CXCursor C
+argument_list|)
+expr_stmt|;
 comment|/// \brief Create a reference to a field at the given location.
 name|CXCursor
 name|MakeCursorMemberRef
 parameter_list|(
+specifier|const
 name|FieldDecl
 modifier|*
 name|Field
@@ -456,6 +497,7 @@ comment|/// \brief Create a CXX base specifier cursor.
 name|CXCursor
 name|MakeCursorCXXBaseSpecifier
 parameter_list|(
+specifier|const
 name|CXXBaseSpecifier
 modifier|*
 name|B
@@ -842,6 +884,7 @@ comment|/// false otherwise.
 name|bool
 name|getDeclCursorUSR
 argument_list|(
+specifier|const
 name|Decl
 operator|*
 name|D

@@ -60,7 +60,31 @@ comment|// RUN: grep "define i32 @test6" %t
 end_comment
 
 begin_comment
-comment|// RUN: echo "\nC99 tests:"
+comment|// RUN: grep "define void @test7" %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "define i.. @strlcpy" %t
+end_comment
+
+begin_comment
+comment|// RUN: not grep test9 %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "define void @testA" %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "define void @testB" %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "define void @testC" %t
+end_comment
+
+begin_comment
+comment|// RUN: echo "C99 tests:"
 end_comment
 
 begin_comment
@@ -120,11 +144,31 @@ comment|// RUN: grep "define i32 @test6" %t
 end_comment
 
 begin_comment
+comment|// RUN: grep "define void @test7" %t
+end_comment
+
+begin_comment
 comment|// RUN: grep "define available_externally i.. @strlcpy" %t
 end_comment
 
 begin_comment
-comment|// RUN: echo "\nC++ tests:"
+comment|// RUN: grep "define void @test9" %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "define void @testA" %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "define void @testB" %t
+end_comment
+
+begin_comment
+comment|// RUN: grep "define void @testC" %t
+end_comment
+
+begin_comment
+comment|// RUN: echo "C++ tests:"
 end_comment
 
 begin_comment
@@ -540,6 +584,81 @@ argument_list|)
 expr_stmt|;
 block|}
 end_function
+
+begin_comment
+comment|// PR10657; the test crashed in C99 mode
+end_comment
+
+begin_function
+specifier|extern
+specifier|inline
+name|void
+name|test9
+parameter_list|()
+block|{ }
+end_function
+
+begin_function_decl
+name|void
+name|test9
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|inline
+name|void
+name|testA
+parameter_list|()
+block|{}
+end_function
+
+begin_function_decl
+name|void
+name|testA
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|testB
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|inline
+name|void
+name|testB
+parameter_list|()
+block|{}
+end_function
+
+begin_function_decl
+specifier|extern
+name|void
+name|testB
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+specifier|extern
+specifier|inline
+name|void
+name|testC
+parameter_list|()
+block|{}
+end_function
+
+begin_function_decl
+specifier|inline
+name|void
+name|testC
+parameter_list|()
+function_decl|;
+end_function_decl
 
 end_unit
 

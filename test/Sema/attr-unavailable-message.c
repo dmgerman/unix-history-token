@@ -244,11 +244,12 @@ begin_enum
 enum|enum
 name|fee
 block|{
-comment|// expected-note 2 {{declaration has been explicitly marked unavailable here}}
+comment|// expected-note {{declaration has been explicitly marked unavailable here}}
 name|r
 init|=
 literal|1
 block|,
+comment|// expected-note {{declaration has been explicitly marked unavailable here}}
 name|s
 init|=
 literal|2
@@ -273,13 +274,13 @@ name|fee
 name|f
 parameter_list|()
 block|{
-comment|// expected-error {{error: 'fee' is unavailable}}
+comment|// expected-error {{'fee' is unavailable}}
 name|int
 name|i
 init|=
 name|a
 decl_stmt|;
-comment|// expected-warning {{'foo' is deprecated }}
+comment|// expected-warning {{'a' is deprecated}}
 name|i
 operator|=
 name|b
@@ -288,7 +289,7 @@ comment|// expected-warning {{'b' is deprecated}}
 return|return
 name|r
 return|;
-comment|// expected-error {{'fee' is unavailable}}
+comment|// expected-error {{'r' is unavailable}}
 block|}
 end_function
 

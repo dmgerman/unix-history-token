@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -verify -fsyntax-only -Wvector-conversions
+comment|// RUN: %clang_cc1 %s -verify -fsyntax-only -Wvector-conversion
 end_comment
 
 begin_typedef
@@ -88,6 +88,15 @@ expr_stmt|;
 comment|// expected-error{{invalid argument type 'v2f' to unary}}
 comment|// Comparison operators
 name|v2ua
+operator|=
+operator|(
+name|v2ua
+operator|==
+name|v2sa
+operator|)
+expr_stmt|;
+comment|// expected-warning{{incompatible vector types assigning to 'v2u' from 'int  __attribute__((ext_vector_type(2)))'}}
+name|v2sa
 operator|=
 operator|(
 name|v2ua

@@ -80,13 +80,19 @@ end_include
 begin_include
 include|#
 directive|include
-file|"llvm/Support/PrettyStackTrace.h"
+file|"llvm/ADT/PointerUnion.h"
 end_include
 
 begin_include
 include|#
 directive|include
-file|"llvm/ADT/PointerUnion.h"
+file|"llvm/Support/Compiler.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/Support/PrettyStackTrace.h"
 end_include
 
 begin_decl_stmt
@@ -456,15 +462,46 @@ init|=
 literal|0x20
 block|}
 enum|;
-name|private
+name|protected
 label|:
-comment|/// NextDeclInContext - The next declaration within the same lexical
+comment|// Enumeration values used in the bits stored in NextInContextAndBits.
+enum|enum
+block|{
+comment|/// \brief Whether this declaration is a top-level declaration (function,
+comment|/// global variable, etc.) that is lexically inside an objc container
+comment|/// definition.
+name|TopLevelDeclInObjCContainerFlag
+init|=
+literal|0x01
+block|,
+comment|/// \brief Whether this declaration is private to the module in which it was
+comment|/// defined.
+name|ModulePrivateFlag
+init|=
+literal|0x02
+block|}
+enum|;
+comment|/// \brief The next declaration within the same lexical
 comment|/// DeclContext. These pointers form the linked list that is
 comment|/// traversed via DeclContext's decls_begin()/decls_end().
+comment|///
+comment|/// The extra two bits are used for the TopLevelDeclInObjCContainer and
+comment|/// ModulePrivate bits.
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|Decl
-modifier|*
-name|NextDeclInContext
-decl_stmt|;
+operator|*
+operator|,
+literal|2
+operator|,
+name|unsigned
+operator|>
+name|NextInContextAndBits
+expr_stmt|;
+name|private
+label|:
 name|friend
 name|class
 name|DeclContext
@@ -626,6 +663,11 @@ name|Referenced
 range|:
 literal|1
 decl_stmt|;
+comment|/// \brief Whether statistic collection is enabled.
+specifier|static
+name|bool
+name|StatisticsEnabled
+decl_stmt|;
 name|protected
 label|:
 comment|/// Access - Used by C++ decls for the access specifier.
@@ -645,16 +687,11 @@ name|FromASTFile
 range|:
 literal|1
 decl_stmt|;
-comment|/// ChangedAfterLoad - if this declaration has changed since being loaded
+comment|/// \brief Whether this declaration is hidden from normal name lookup, e.g.,
+comment|/// because it is was loaded from an AST file is either module-private or
+comment|/// because its submodule has not been made visible.
 name|unsigned
-name|ChangedAfterLoad
-range|:
-literal|1
-decl_stmt|;
-comment|/// \brief Whether this declaration is private to the module in which it was
-comment|/// defined.
-name|unsigned
-name|ModulePrivate
+name|Hidden
 range|:
 literal|1
 decl_stmt|;
@@ -690,6 +727,10 @@ name|friend
 name|class
 name|ASTDeclReader
 decl_stmt|;
+name|friend
+name|class
+name|ASTReader
+decl_stmt|;
 name|private
 label|:
 name|void
@@ -708,10 +749,8 @@ argument_list|,
 argument|SourceLocation L
 argument_list|)
 block|:
-name|NextDeclInContext
-argument_list|(
-literal|0
-argument_list|)
+name|NextInContextAndBits
+argument_list|()
 operator|,
 name|DeclCtx
 argument_list|(
@@ -763,12 +802,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|ChangedAfterLoad
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ModulePrivate
+name|Hidden
 argument_list|(
 literal|0
 argument_list|)
@@ -788,10 +822,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|Decl
-operator|::
-name|CollectingStats
-argument_list|()
+name|StatisticsEnabled
 condition|)
 name|add
 argument_list|(
@@ -806,10 +837,8 @@ argument_list|,
 argument|EmptyShell Empty
 argument_list|)
 block|:
-name|NextDeclInContext
-argument_list|(
-literal|0
-argument_list|)
+name|NextInContextAndBits
+argument_list|()
 operator|,
 name|DeclKind
 argument_list|(
@@ -851,12 +880,7 @@ argument_list|(
 literal|0
 argument_list|)
 operator|,
-name|ChangedAfterLoad
-argument_list|(
-name|false
-argument_list|)
-operator|,
-name|ModulePrivate
+name|Hidden
 argument_list|(
 literal|0
 argument_list|)
@@ -876,10 +900,7 @@ argument_list|)
 block|{
 if|if
 condition|(
-name|Decl
-operator|::
-name|CollectingStats
-argument_list|()
+name|StatisticsEnabled
 condition|)
 name|add
 argument_list|(
@@ -892,6 +913,31 @@ operator|~
 name|Decl
 argument_list|()
 expr_stmt|;
+comment|/// \brief Allocate memory for a deserialized declaration.
+comment|///
+comment|/// This routine must be used to allocate memory for any declaration that is
+comment|/// deserialized from a module file.
+comment|///
+comment|/// \param Context The context in which we will allocate memory.
+comment|/// \param ID The global ID of the deserialized declaration.
+comment|/// \param Size The size of the allocated object.
+specifier|static
+name|void
+modifier|*
+name|AllocateDeserializedDecl
+parameter_list|(
+specifier|const
+name|ASTContext
+modifier|&
+name|Context
+parameter_list|,
+name|unsigned
+name|ID
+parameter_list|,
+name|unsigned
+name|Size
+parameter_list|)
+function_decl|;
 name|public
 label|:
 comment|/// \brief Source range that this declaration covers.
@@ -900,6 +946,7 @@ name|SourceRange
 name|getSourceRange
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|SourceRange
@@ -916,6 +963,7 @@ name|SourceLocation
 name|getLocStart
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|getSourceRange
@@ -929,6 +977,7 @@ name|SourceLocation
 name|getLocEnd
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 block|{
 return|return
 name|getSourceRange
@@ -987,7 +1036,10 @@ name|getNextDeclInContext
 parameter_list|()
 block|{
 return|return
-name|NextDeclInContext
+name|NextInContextAndBits
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 specifier|const
@@ -998,7 +1050,10 @@ argument_list|()
 specifier|const
 block|{
 return|return
-name|NextDeclInContext
+name|NextInContextAndBits
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 name|DeclContext
@@ -1107,6 +1162,7 @@ operator|&
 name|getASTContext
 argument_list|()
 specifier|const
+name|LLVM_READONLY
 expr_stmt|;
 name|void
 name|setAccess
@@ -1165,7 +1221,17 @@ name|AttrVec
 modifier|&
 name|Attrs
 parameter_list|)
-function_decl|;
+block|{
+return|return
+name|setAttrsImpl
+argument_list|(
+name|Attrs
+argument_list|,
+name|getASTContext
+argument_list|()
+argument_list|)
+return|;
+block|}
 name|AttrVec
 modifier|&
 name|getAttrs
@@ -1600,6 +1666,153 @@ operator|=
 name|R
 expr_stmt|;
 block|}
+comment|/// \brief Whether this declaration is a top-level declaration (function,
+comment|/// global variable, etc.) that is lexically inside an objc container
+comment|/// definition.
+name|bool
+name|isTopLevelDeclInObjCContainer
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextInContextAndBits
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|TopLevelDeclInObjCContainerFlag
+return|;
+block|}
+name|void
+name|setTopLevelDeclInObjCContainer
+parameter_list|(
+name|bool
+name|V
+init|=
+name|true
+parameter_list|)
+block|{
+name|unsigned
+name|Bits
+init|=
+name|NextInContextAndBits
+operator|.
+name|getInt
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|V
+condition|)
+name|Bits
+operator||=
+name|TopLevelDeclInObjCContainerFlag
+expr_stmt|;
+else|else
+name|Bits
+operator|&=
+operator|~
+name|TopLevelDeclInObjCContainerFlag
+expr_stmt|;
+name|NextInContextAndBits
+operator|.
+name|setInt
+argument_list|(
+name|Bits
+argument_list|)
+expr_stmt|;
+block|}
+name|protected
+label|:
+comment|/// \brief Whether this declaration was marked as being private to the
+comment|/// module in which it was defined.
+name|bool
+name|isModulePrivate
+argument_list|()
+specifier|const
+block|{
+return|return
+name|NextInContextAndBits
+operator|.
+name|getInt
+argument_list|()
+operator|&
+name|ModulePrivateFlag
+return|;
+block|}
+comment|/// \brief Specify whether this declaration was marked as being private
+comment|/// to the module in which it was defined.
+name|void
+name|setModulePrivate
+parameter_list|(
+name|bool
+name|MP
+init|=
+name|true
+parameter_list|)
+block|{
+name|unsigned
+name|Bits
+init|=
+name|NextInContextAndBits
+operator|.
+name|getInt
+argument_list|()
+decl_stmt|;
+if|if
+condition|(
+name|MP
+condition|)
+name|Bits
+operator||=
+name|ModulePrivateFlag
+expr_stmt|;
+else|else
+name|Bits
+operator|&=
+operator|~
+name|ModulePrivateFlag
+expr_stmt|;
+name|NextInContextAndBits
+operator|.
+name|setInt
+argument_list|(
+name|Bits
+argument_list|)
+expr_stmt|;
+block|}
+comment|/// \brief Set the owning module ID.
+name|void
+name|setOwningModuleID
+parameter_list|(
+name|unsigned
+name|ID
+parameter_list|)
+block|{
+name|assert
+argument_list|(
+name|isFromASTFile
+argument_list|()
+operator|&&
+literal|"Only works on a deserialized declaration"
+argument_list|)
+expr_stmt|;
+operator|*
+operator|(
+operator|(
+name|unsigned
+operator|*
+operator|)
+name|this
+operator|-
+literal|2
+operator|)
+operator|=
+name|ID
+expr_stmt|;
+block|}
+name|public
+label|:
 comment|/// \brief Determine the availability of the given declaration.
 comment|///
 comment|/// This routine will determine the most restrictive availability of
@@ -1714,43 +1927,93 @@ return|return
 name|FromASTFile
 return|;
 block|}
-comment|/// \brief Query whether this declaration was changed in a significant way
-comment|/// since being loaded from an AST file.
-comment|///
-comment|/// In an epic violation of layering, what is "significant" is entirely
-comment|/// up to the serialization system, but implemented in AST and Sema.
-name|bool
-name|isChangedSinceDeserialization
+comment|/// \brief Retrieve the global declaration ID associated with this
+comment|/// declaration, which specifies where in the
+name|unsigned
+name|getGlobalID
 argument_list|()
 specifier|const
 block|{
+if|if
+condition|(
+name|isFromASTFile
+argument_list|()
+condition|)
 return|return
-name|ChangedAfterLoad
+operator|*
+operator|(
+operator|(
+specifier|const
+name|unsigned
+operator|*
+operator|)
+name|this
+operator|-
+literal|1
+operator|)
+return|;
+return|return
+literal|0
 return|;
 block|}
-comment|/// \brief Mark this declaration as having changed since deserialization, or
-comment|/// reset the flag.
-name|void
-name|setChangedSinceDeserialization
-parameter_list|(
-name|bool
-name|Changed
-parameter_list|)
-block|{
-name|ChangedAfterLoad
-operator|=
-name|Changed
-expr_stmt|;
-block|}
+end_block
+
+begin_comment
+comment|/// \brief Retrieve the global ID of the module that owns this particular
+end_comment
+
+begin_comment
+comment|/// declaration.
+end_comment
+
+begin_expr_stmt
 name|unsigned
+name|getOwningModuleID
+argument_list|()
+specifier|const
+block|{
+if|if
+condition|(
+name|isFromASTFile
+argument_list|()
+condition|)
+return|return
+operator|*
+operator|(
+operator|(
+specifier|const
+name|unsigned
+operator|*
+operator|)
+name|this
+operator|-
+literal|2
+operator|)
+return|;
+end_expr_stmt
+
+begin_return
+return|return
+literal|0
+return|;
+end_return
+
+begin_macro
+unit|}      unsigned
 name|getIdentifierNamespace
 argument_list|()
+end_macro
+
+begin_expr_stmt
 specifier|const
 block|{
 return|return
 name|IdentifierNamespace
 return|;
 block|}
+end_expr_stmt
+
+begin_decl_stmt
 name|bool
 name|isInIdentifierNamespace
 argument_list|(
@@ -1766,6 +2029,9 @@ operator|&
 name|NS
 return|;
 block|}
+end_decl_stmt
+
+begin_function_decl
 specifier|static
 name|unsigned
 name|getIdentifierNamespaceForKind
@@ -1774,6 +2040,9 @@ name|Kind
 name|DK
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_expr_stmt
 name|bool
 name|hasTagIdentifierNamespace
 argument_list|()
@@ -1787,6 +2056,9 @@ argument_list|()
 argument_list|)
 return|;
 block|}
+end_expr_stmt
+
+begin_function
 specifier|static
 name|bool
 name|isTagIdentifierNamespace
@@ -1811,16 +2083,49 @@ name|IDNS_Type
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// getLexicalDeclContext - The declaration context where this Decl was
+end_comment
+
+begin_comment
 comment|/// lexically declared (LexicalDC). May be different from
+end_comment
+
+begin_comment
 comment|/// getDeclContext() (SemanticDC).
+end_comment
+
+begin_comment
 comment|/// e.g.:
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|///   namespace A {
+end_comment
+
+begin_comment
 comment|///      void f(); // SemanticDC == LexicalDC == 'namespace A'
+end_comment
+
+begin_comment
 comment|///   }
+end_comment
+
+begin_comment
 comment|///   void A::f(); // SemanticDC == namespace 'A'
+end_comment
+
+begin_comment
 comment|///                // LexicalDC == global namespace
+end_comment
+
+begin_function
 name|DeclContext
 modifier|*
 name|getLexicalDeclContext
@@ -1842,6 +2147,9 @@ operator|->
 name|LexicalDC
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|DeclContext
 operator|*
@@ -1863,6 +2171,9 @@ name|getLexicalDeclContext
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|virtual
 name|bool
 name|isOutOfLine
@@ -1877,8 +2188,17 @@ name|getDeclContext
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// setDeclContext - Set both the semantic and lexical DeclContext
+end_comment
+
+begin_comment
 comment|/// to DC.
+end_comment
+
+begin_function_decl
 name|void
 name|setDeclContext
 parameter_list|(
@@ -1887,6 +2207,9 @@ modifier|*
 name|DC
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|setLexicalDeclContext
 parameter_list|(
@@ -1895,10 +2218,25 @@ modifier|*
 name|DC
 parameter_list|)
 function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// isDefinedOutsideFunctionOrMethod - This predicate returns true if this
+end_comment
+
+begin_comment
 comment|/// scoped decl is defined outside the current function or method.  This is
+end_comment
+
+begin_comment
 comment|/// roughly global variables and functions, but also handles enums (which
+end_comment
+
+begin_comment
 comment|/// could be defined inside or outside a function etc).
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isDefinedOutsideFunctionOrMethod
 argument_list|()
@@ -1911,8 +2249,17 @@ operator|==
 literal|0
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief If this decl is defined inside a function/method/block it returns
+end_comment
+
+begin_comment
 comment|/// the corresponding DeclContext, otherwise it returns null.
+end_comment
+
+begin_expr_stmt
 specifier|const
 name|DeclContext
 operator|*
@@ -1920,6 +2267,9 @@ name|getParentFunctionOrMethod
 argument_list|()
 specifier|const
 expr_stmt|;
+end_expr_stmt
+
+begin_function
 name|DeclContext
 modifier|*
 name|getParentFunctionOrMethod
@@ -1947,7 +2297,13 @@ argument_list|()
 operator|)
 return|;
 block|}
+end_function
+
+begin_comment
 comment|/// \brief Retrieves the "canonical" declaration of the given declaration.
+end_comment
+
+begin_function
 name|virtual
 name|Decl
 modifier|*
@@ -1958,6 +2314,9 @@ return|return
 name|this
 return|;
 block|}
+end_function
+
+begin_expr_stmt
 specifier|const
 name|Decl
 operator|*
@@ -1979,7 +2338,13 @@ name|getCanonicalDecl
 argument_list|()
 return|;
 block|}
+end_expr_stmt
+
+begin_comment
 comment|/// \brief Whether this particular Decl is a canonical one.
+end_comment
+
+begin_expr_stmt
 name|bool
 name|isCanonicalDecl
 argument_list|()
@@ -1992,12 +2357,30 @@ operator|==
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_label
 name|protected
 label|:
+end_label
+
+begin_comment
 comment|/// \brief Returns the next redeclaration or itself if this is the only decl.
+end_comment
+
+begin_comment
 comment|///
+end_comment
+
+begin_comment
 comment|/// Decl subclasses that can be redeclared should override this method so that
+end_comment
+
+begin_comment
 comment|/// Decl::redecl_iterator can iterate over them.
+end_comment
+
+begin_function
 name|virtual
 name|Decl
 modifier|*
@@ -2008,9 +2391,60 @@ return|return
 name|this
 return|;
 block|}
+end_function
+
+begin_comment
+comment|/// \brief Implementation of getPreviousDecl(), to be overridden by any
+end_comment
+
+begin_comment
+comment|/// subclass that has a redeclaration chain.
+end_comment
+
+begin_function
+name|virtual
+name|Decl
+modifier|*
+name|getPreviousDeclImpl
+parameter_list|()
+block|{
+return|return
+literal|0
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Implementation of getMostRecentDecl(), to be overridden by any
+end_comment
+
+begin_comment
+comment|/// subclass that has a redeclaration chain.
+end_comment
+
+begin_function
+name|virtual
+name|Decl
+modifier|*
+name|getMostRecentDeclImpl
+parameter_list|()
+block|{
+return|return
+name|this
+return|;
+block|}
+end_function
+
+begin_label
 name|public
 label|:
+end_label
+
+begin_comment
 comment|/// \brief Iterates through all the redeclarations of the same decl.
+end_comment
+
+begin_decl_stmt
 name|class
 name|redecl_iterator
 block|{
@@ -2100,6 +2534,9 @@ return|return
 name|Current
 return|;
 block|}
+end_decl_stmt
+
+begin_expr_stmt
 name|redecl_iterator
 operator|&
 name|operator
@@ -2148,6 +2585,9 @@ operator|*
 name|this
 return|;
 block|}
+end_expr_stmt
+
+begin_expr_stmt
 name|redecl_iterator
 name|operator
 operator|++
@@ -2172,58 +2612,60 @@ return|return
 name|tmp
 return|;
 block|}
-name|friend
-name|bool
-name|operator
-operator|==
-operator|(
-name|redecl_iterator
-name|x
-operator|,
-name|redecl_iterator
-name|y
-operator|)
-block|{
-return|return
-name|x
-operator|.
-name|Current
-operator|==
-name|y
-operator|.
-name|Current
-return|;
-block|}
-name|friend
-name|bool
-name|operator
-operator|!=
-operator|(
-name|redecl_iterator
-name|x
-operator|,
-name|redecl_iterator
-name|y
-operator|)
-block|{
-return|return
-name|x
-operator|.
-name|Current
-operator|!=
-name|y
-operator|.
-name|Current
-return|;
-block|}
-block|}
-end_block
+end_expr_stmt
 
-begin_empty_stmt
-empty_stmt|;
-end_empty_stmt
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|==
+operator|(
+name|redecl_iterator
+name|x
+operator|,
+name|redecl_iterator
+name|y
+operator|)
+block|{
+return|return
+name|x
+operator|.
+name|Current
+operator|==
+name|y
+operator|.
+name|Current
+return|;
+block|}
+end_expr_stmt
+
+begin_expr_stmt
+name|friend
+name|bool
+name|operator
+operator|!=
+operator|(
+name|redecl_iterator
+name|x
+operator|,
+name|redecl_iterator
+name|y
+operator|)
+block|{
+return|return
+name|x
+operator|.
+name|Current
+operator|!=
+name|y
+operator|.
+name|Current
+return|;
+block|}
+end_expr_stmt
 
 begin_comment
+unit|};
 comment|/// \brief Returns iterator for all the redeclarations of the same decl.
 end_comment
 
@@ -2261,6 +2703,112 @@ specifier|const
 block|{
 return|return
 name|redecl_iterator
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the previous declaration that declares the same entity
+end_comment
+
+begin_comment
+comment|/// as this declaration, or NULL if there is no previous declaration.
+end_comment
+
+begin_function
+name|Decl
+modifier|*
+name|getPreviousDecl
+parameter_list|()
+block|{
+return|return
+name|getPreviousDeclImpl
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Retrieve the most recent declaration that declares the same entity
+end_comment
+
+begin_comment
+comment|/// as this declaration, or NULL if there is no previous declaration.
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|Decl
+operator|*
+name|getPreviousDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getPreviousDeclImpl
+argument_list|()
+return|;
+block|}
+end_expr_stmt
+
+begin_comment
+comment|/// \brief Retrieve the most recent declaration that declares the same entity
+end_comment
+
+begin_comment
+comment|/// as this declaration (which may be this declaration).
+end_comment
+
+begin_function
+name|Decl
+modifier|*
+name|getMostRecentDecl
+parameter_list|()
+block|{
+return|return
+name|getMostRecentDeclImpl
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
+comment|/// \brief Retrieve the most recent declaration that declares the same entity
+end_comment
+
+begin_comment
+comment|/// as this declaration (which may be this declaration).
+end_comment
+
+begin_expr_stmt
+specifier|const
+name|Decl
+operator|*
+name|getMostRecentDecl
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|Decl
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getMostRecentDeclImpl
 argument_list|()
 return|;
 block|}
@@ -2349,14 +2897,9 @@ end_function_decl
 
 begin_function_decl
 specifier|static
-name|bool
-name|CollectingStats
-parameter_list|(
-name|bool
-name|Enable
-init|=
-name|false
-parameter_list|)
+name|void
+name|EnableStatistics
+parameter_list|()
 function_decl|;
 end_function_decl
 
@@ -2840,6 +3383,7 @@ function_decl|;
 end_function_decl
 
 begin_expr_stmt
+name|LLVM_ATTRIBUTE_USED
 name|void
 name|dump
 argument_list|()
@@ -2848,6 +3392,7 @@ expr_stmt|;
 end_expr_stmt
 
 begin_expr_stmt
+name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpXML
 argument_list|()
@@ -2882,6 +3427,41 @@ specifier|const
 expr_stmt|;
 end_expr_stmt
 
+begin_function_decl
+name|void
+name|setAttrsImpl
+parameter_list|(
+specifier|const
+name|AttrVec
+modifier|&
+name|Attrs
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|setDeclContextsImpl
+parameter_list|(
+name|DeclContext
+modifier|*
+name|SemaDC
+parameter_list|,
+name|DeclContext
+modifier|*
+name|LexicalDC
+parameter_list|,
+name|ASTContext
+modifier|&
+name|Ctx
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_label
 name|protected
 label|:
@@ -2898,6 +3478,60 @@ end_expr_stmt
 
 begin_comment
 unit|};
+comment|/// \brief Determine whether two declarations declare the same entity.
+end_comment
+
+begin_function
+specifier|inline
+name|bool
+name|declaresSameEntity
+parameter_list|(
+specifier|const
+name|Decl
+modifier|*
+name|D1
+parameter_list|,
+specifier|const
+name|Decl
+modifier|*
+name|D2
+parameter_list|)
+block|{
+if|if
+condition|(
+operator|!
+name|D1
+operator|||
+operator|!
+name|D2
+condition|)
+return|return
+name|false
+return|;
+if|if
+condition|(
+name|D1
+operator|==
+name|D2
+condition|)
+return|return
+name|true
+return|;
+return|return
+name|D1
+operator|->
+name|getCanonicalDecl
+argument_list|()
+operator|==
+name|D2
+operator|->
+name|getCanonicalDecl
+argument_list|()
+return|;
+block|}
+end_function
+
+begin_comment
 comment|/// PrettyStackTraceDecl - If a crash occurs, indicate that it happened when
 end_comment
 
@@ -3288,12 +3922,24 @@ literal|1
 decl_stmt|;
 comment|/// \brief Pointer to the data structure used to lookup declarations
 comment|/// within this context (or a DependentStoredDeclsMap if this is a
-comment|/// dependent context).
+comment|/// dependent context), and a bool indicating whether we have lazily
+comment|/// omitted any declarations from the map. We maintain the invariant
+comment|/// that, if the map contains an entry for a DeclarationName, then it
+comment|/// contains all relevant entries for that name.
 name|mutable
+name|llvm
+operator|::
+name|PointerIntPair
+operator|<
 name|StoredDeclsMap
-modifier|*
+operator|*
+operator|,
+literal|1
+operator|,
+name|bool
+operator|>
 name|LookupPtr
-decl_stmt|;
+expr_stmt|;
 name|protected
 label|:
 comment|/// FirstDecl - The first declaration stored within this declaration
@@ -3316,6 +3962,10 @@ name|friend
 name|class
 name|ExternalASTSource
 decl_stmt|;
+name|friend
+name|class
+name|ASTWriter
+decl_stmt|;
 comment|/// \brief Build up a chain of declarations.
 comment|///
 comment|/// \returns the first/last pair of declarations.
@@ -3332,7 +3982,7 @@ operator|*
 operator|>
 name|BuildDeclChain
 argument_list|(
-argument|const SmallVectorImpl<Decl*>&Decls
+argument|ArrayRef<Decl*> Decls
 argument_list|,
 argument|bool FieldsAlreadyLoaded
 argument_list|)
@@ -3360,6 +4010,8 @@ operator|,
 name|LookupPtr
 argument_list|(
 literal|0
+argument_list|,
+name|false
 argument_list|)
 operator|,
 name|FirstDecl
@@ -3773,6 +4425,35 @@ name|DC
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Find the nearest non-closure ancestor of this context,
+comment|/// i.e. the innermost semantic parent of this context which is not
+comment|/// a closure.  A context may be its own non-closure ancestor.
+name|DeclContext
+modifier|*
+name|getNonClosureAncestor
+parameter_list|()
+function_decl|;
+specifier|const
+name|DeclContext
+operator|*
+name|getNonClosureAncestor
+argument_list|()
+specifier|const
+block|{
+return|return
+name|const_cast
+operator|<
+name|DeclContext
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getNonClosureAncestor
+argument_list|()
+return|;
+block|}
 comment|/// getPrimaryContext - There may be many different
 comment|/// declarations of the same entity (including forward declarations
 comment|/// of classes, multiple definitions of namespaces, etc.), each with
@@ -3869,35 +4550,51 @@ comment|/// The enclosing namespace set of a namespace is the namespace and, if 
 comment|/// inline, its enclosing namespace, recursively.
 name|bool
 name|InEnclosingNamespaceSetOf
-parameter_list|(
+argument_list|(
 specifier|const
 name|DeclContext
-modifier|*
+operator|*
 name|NS
-parameter_list|)
-function|const;
-comment|/// getNextContext - If this is a DeclContext that may have other
-comment|/// DeclContexts that are semantically connected but syntactically
-comment|/// different, such as C++ namespaces, this routine retrieves the
-comment|/// next DeclContext in the link. Iteration through the chain of
-comment|/// DeclContexts should begin at the primary DeclContext and
-comment|/// continue until this function returns NULL. For example, given:
-comment|/// @code
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// \\brief Collects all of the declaration contexts that are semantically
+comment|/// connected to this declaration context.
+comment|///
+comment|/// For declaration contexts that have multiple semantically connected but
+comment|/// syntactically distinct contexts, such as C++ namespaces, this routine
+comment|/// retrieves the complete set of such declaration contexts in source order.
+comment|/// For example, given:
+comment|///
+comment|/// \code
 comment|/// namespace N {
 comment|///   int x;
 comment|/// }
 comment|/// namespace N {
 comment|///   int y;
 comment|/// }
-comment|/// @endcode
-comment|/// The first occurrence of namespace N will be the primary
-comment|/// DeclContext. Its getNextContext will return the second
-comment|/// occurrence of namespace N.
+comment|/// \endcode
+comment|///
+comment|/// The \c Contexts parameter will contain both definitions of N.
+comment|///
+comment|/// \param Contexts Will be cleared and set to the set of declaration
+comment|/// contexts that are semanticaly connected to this declaration context,
+comment|/// in source order, including this context (which may be the only result,
+comment|/// for non-namespace contexts).
+name|void
+name|collectAllContexts
+argument_list|(
+name|llvm
+operator|::
+name|SmallVectorImpl
+operator|<
 name|DeclContext
-modifier|*
-name|getNextContext
-parameter_list|()
-function_decl|;
+operator|*
+operator|>
+operator|&
+name|Contexts
+argument_list|)
+decl_stmt|;
 comment|/// decl_iterator - Iterates through the declarations stored
 comment|/// within this context.
 name|class
@@ -4832,6 +5529,49 @@ function_decl|;
 end_function_decl
 
 begin_comment
+comment|/// @brief Add the declaration D into this context, but suppress
+end_comment
+
+begin_comment
+comment|/// searches for external declarations with the same name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Although analogous in function to addDecl, this removes an
+end_comment
+
+begin_comment
+comment|/// important check.  This is only useful if the Decl is being
+end_comment
+
+begin_comment
+comment|/// added in response to an external search; in all other cases,
+end_comment
+
+begin_comment
+comment|/// addDecl() is the right function to use.
+end_comment
+
+begin_comment
+comment|/// See the ASTImporter for use cases.
+end_comment
+
+begin_function_decl
+name|void
+name|addDeclInternal
+parameter_list|(
+name|Decl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
 comment|/// @brief Add the declaration D to this context without modifying
 end_comment
 
@@ -5071,22 +5811,6 @@ begin_comment
 comment|/// replaced with D.
 end_comment
 
-begin_comment
-comment|///
-end_comment
-
-begin_comment
-comment|/// @param Recoverable true if it's okay to not add this decl to
-end_comment
-
-begin_comment
-comment|/// the lookup tables because it can be easily recovered by walking
-end_comment
-
-begin_comment
-comment|/// the declaration chains.
-end_comment
-
 begin_function_decl
 name|void
 name|makeDeclVisibleInContext
@@ -5094,14 +5818,39 @@ parameter_list|(
 name|NamedDecl
 modifier|*
 name|D
-parameter_list|,
-name|bool
-name|Recoverable
-init|=
-name|true
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_comment
+comment|/// all_lookups_iterator - An iterator that provides a view over the results
+end_comment
+
+begin_comment
+comment|/// of looking up every possible name.
+end_comment
+
+begin_decl_stmt
+name|class
+name|all_lookups_iterator
+decl_stmt|;
+end_decl_stmt
+
+begin_expr_stmt
+name|all_lookups_iterator
+name|lookups_begin
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
+
+begin_expr_stmt
+name|all_lookups_iterator
+name|lookups_end
+argument_list|()
+specifier|const
+expr_stmt|;
+end_expr_stmt
 
 begin_comment
 comment|/// udir_iterator - Iterates through the using-directives stored
@@ -5209,6 +5958,10 @@ begin_comment
 comment|/// \brief Retrieve the internal representation of the lookup structure.
 end_comment
 
+begin_comment
+comment|/// This may omit some names if we are lazily building the structure.
+end_comment
+
 begin_expr_stmt
 name|StoredDeclsMap
 operator|*
@@ -5218,9 +5971,24 @@ specifier|const
 block|{
 return|return
 name|LookupPtr
+operator|.
+name|getPointer
+argument_list|()
 return|;
 block|}
 end_expr_stmt
+
+begin_comment
+comment|/// \brief Ensure the lookup structure is fully-built and return it.
+end_comment
+
+begin_function_decl
+name|StoredDeclsMap
+modifier|*
+name|buildLookup
+parameter_list|()
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|/// \brief Whether this DeclContext has external storage containing
@@ -5337,7 +6105,10 @@ operator|&&
 operator|(
 name|D
 operator|->
-name|NextDeclInContext
+name|NextInContextAndBits
+operator|.
+name|getPointer
+argument_list|()
 operator|||
 name|D
 operator|==
@@ -5410,6 +6181,7 @@ file|"clang/AST/DeclNodes.inc"
 end_include
 
 begin_expr_stmt
+name|LLVM_ATTRIBUTE_USED
 name|void
 name|dumpDeclContext
 argument_list|()
@@ -5429,6 +6201,41 @@ argument_list|()
 specifier|const
 expr_stmt|;
 end_expr_stmt
+
+begin_comment
+comment|/// @brief Makes a declaration visible within this context, but
+end_comment
+
+begin_comment
+comment|/// suppresses searches for external declarations with the same
+end_comment
+
+begin_comment
+comment|/// name.
+end_comment
+
+begin_comment
+comment|///
+end_comment
+
+begin_comment
+comment|/// Analogous to makeDeclVisibleInContext, but for the exclusive
+end_comment
+
+begin_comment
+comment|/// use of addDeclInternal().
+end_comment
+
+begin_function_decl
+name|void
+name|makeDeclVisibleInContextInternal
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_decl_stmt
 name|friend
@@ -5452,11 +6259,28 @@ end_decl_stmt
 
 begin_function_decl
 name|void
-name|buildLookup
+name|buildLookupImpl
 parameter_list|(
 name|DeclContext
 modifier|*
 name|DCtx
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|makeDeclVisibleInContextWithFlags
+parameter_list|(
+name|NamedDecl
+modifier|*
+name|D
+parameter_list|,
+name|bool
+name|Internal
+parameter_list|,
+name|bool
+name|Rediscoverable
 parameter_list|)
 function_decl|;
 end_function_decl
@@ -5468,6 +6292,9 @@ parameter_list|(
 name|NamedDecl
 modifier|*
 name|D
+parameter_list|,
+name|bool
+name|Internal
 parameter_list|)
 function_decl|;
 end_function_decl

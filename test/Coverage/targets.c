@@ -8,10 +8,6 @@ comment|// RUN: %clang_cc1 -g -triple armv6-unknown-unknown -emit-llvm -o %t %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -g -triple bfin-unknown-unknown -emit-llvm -o %t %s
-end_comment
-
-begin_comment
 comment|// RUN: %clang_cc1 -g -triple i686-apple-darwin9 -emit-llvm -o %t %s
 end_comment
 
@@ -72,7 +68,7 @@ comment|//<rdar://problem/7181838> clang 1.0 fails to compile Python 2.6
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin9 -### -S %s -mmacosx-version-min=10.4
+comment|// RUN: %clang -target x86_64-apple-darwin9 -### -S %s -mmacosx-version-min=10.4
 end_comment
 
 end_unit

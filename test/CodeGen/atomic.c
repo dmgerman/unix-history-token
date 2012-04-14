@@ -40,6 +40,10 @@ name|cmp
 init|=
 literal|0
 decl_stmt|;
+name|int
+modifier|*
+name|ptrval
+decl_stmt|;
 name|old
 operator|=
 name|__sync_fetch_and_add
@@ -313,7 +317,14 @@ operator|&
 name|val
 argument_list|)
 expr_stmt|;
-comment|// CHECK: store atomic {{.*}} release, align 4
+comment|// CHECK: store atomic i32 0, {{.*}} release, align 4
+name|__sync_lock_release
+argument_list|(
+operator|&
+name|ptrval
+argument_list|)
+expr_stmt|;
+comment|// CHECK: store atomic i32 0, {{.*}} release, align 4
 name|__sync_synchronize
 argument_list|()
 expr_stmt|;

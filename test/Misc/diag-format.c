@@ -8,7 +8,7 @@ comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=clang %s 2>&1 | FileCh
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=clang -ccc-host-triple x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=DEFAULT
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=clang -target x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=DEFAULT
 end_comment
 
 begin_comment
@@ -20,11 +20,11 @@ comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc  %s 2>&1 | FileCh
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -ccc-host-triple x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=MSVC
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -target x86_64-pc-win32 %s 2>&1 | FileCheck %s -check-prefix=MSVC
 end_comment
 
 begin_comment
-comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -ccc-host-triple x86_64-pc-win32 -fshow-column %s 2>&1 | FileCheck %s -check-prefix=MSVC
+comment|// RUN: %clang -fsyntax-only -fdiagnostics-format=msvc -target x86_64-pc-win32 -fshow-column %s 2>&1 | FileCheck %s -check-prefix=MSVC
 end_comment
 
 begin_comment

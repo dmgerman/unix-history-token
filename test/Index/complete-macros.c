@@ -110,6 +110,20 @@ modifier|...
 parameter_list|)
 end_define
 
+begin_define
+define|#
+directive|define
+name|variadic5
+parameter_list|(
+name|first
+parameter_list|,
+name|second
+parameter_list|,
+name|args
+modifier|...
+parameter_list|)
+end_define
+
 begin_function
 name|void
 name|test_variadic
@@ -158,7 +172,7 @@ comment|// CHECK-CC3: macro definition:{TypedText nil} (65)
 end_comment
 
 begin_comment
-comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:24:2 %s | FileCheck -check-prefix=CHECK-VARIADIC %s
+comment|// RUN: env CINDEXTEST_EDITING=1 CINDEXTEST_COMPLETION_CACHING=1 c-index-test -code-completion-at=%s:25:2 %s | FileCheck -check-prefix=CHECK-VARIADIC %s
 end_comment
 
 begin_comment
@@ -174,7 +188,11 @@ comment|// CHECK-VARIADIC: macro definition:{TypedText variadic3}{LeftParen (}{P
 end_comment
 
 begin_comment
-comment|// CHECK-VARIADIC: macro definition:{TypedText variadic4}{LeftParen (}{Placeholder first}{Comma , }{Placeholder second...}{Placeholder first, second...}{RightParen )} (70)
+comment|// CHECK-VARIADIC: macro definition:{TypedText variadic4}{LeftParen (}{Placeholder first}{Comma , }{Placeholder second}{Comma , }{Placeholder args, ...}{RightParen )} (70)
+end_comment
+
+begin_comment
+comment|// CHECK-VARIADIC: macro definition:{TypedText variadic5}{LeftParen (}{Placeholder first}{Comma , }{Placeholder second}{Comma , }{Placeholder args...}{RightParen )} (70)
 end_comment
 
 end_unit

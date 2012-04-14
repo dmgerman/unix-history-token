@@ -510,5 +510,30 @@ argument_list|)
 decl_stmt|;
 end_decl_stmt
 
+begin_function
+name|int
+name|test5
+parameter_list|()
+block|{
+return|return
+name|__builtin_offsetof
+argument_list|(
+name|Array
+argument_list|,
+name|array
+index|[
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+literal|0
+index|]
+argument_list|)
+return|;
+comment|// expected-warning{{indirection of non-volatile null pointer}} expected-note{{__builtin_trap}}
+block|}
+end_function
+
 end_unit
 

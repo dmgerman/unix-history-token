@@ -611,7 +611,7 @@ end_comment
 
 begin_function
 name|void
-name|test
+name|t25
 parameter_list|(
 name|void
 parameter_list|)
@@ -619,6 +619,36 @@ block|{
 asm|__asm__
 specifier|__volatile__
 asm|(					   \ 		       "finit"				   \ 		       :				   \ 		       :				   \ 		       :"st","st(1)","st(2)","st(3)",	   \ 			"st(4)","st(5)","st(6)","st(7)",   \ 			"fpsr","fpcr"			   \ 							   );
+block|}
+end_function
+
+begin_comment
+comment|// rdar://10510405 - AVX registers
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|__m256i
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(32)));
+end_typedef
+
+begin_function
+name|void
+name|t26
+parameter_list|(
+name|__m256i
+modifier|*
+name|p
+parameter_list|)
+block|{
+asm|__asm__
+specifier|volatile
+asm|("vmovaps  %0, %%ymm0" :: "m" (*(__m256i*)p) : "ymm0");
 block|}
 end_function
 

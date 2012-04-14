@@ -155,6 +155,7 @@ block|,
 literal|0.169
 block|}
 block|,
+comment|// expected-warning 6 {{implicit conversion turns literal floating-point number into integer}}
 block|{
 literal|0.831
 block|,
@@ -174,6 +175,7 @@ literal|0.805
 block|}
 block|}
 decl_stmt|;
+comment|// expected-warning 6 {{implicit conversion turns literal floating-point number into integer}}
 name|int
 name|a
 decl_stmt|;

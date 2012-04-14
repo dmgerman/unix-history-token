@@ -430,5 +430,54 @@ comment|// expected-error {{variable length array must be bound in function defi
 block|{ }
 end_function
 
+begin_comment
+comment|// Make sure this isn't treated as an error
+end_comment
+
+begin_function
+name|int
+name|TransformBug
+parameter_list|(
+name|int
+name|a
+parameter_list|)
+block|{
+return|return
+expr|sizeof
+operator|(
+operator|*
+operator|(
+name|int
+argument_list|(
+operator|*
+argument_list|)
+index|[
+operator|(
+block|{
+expr|goto
+name|v
+expr|;
+name|v
+operator|:
+name|a
+expr|;
+block|}
+end_function
+
+begin_expr_stmt
+unit|)])
+literal|0
+end_expr_stmt
+
+begin_empty_stmt
+unit|)
+empty_stmt|;
+end_empty_stmt
+
+begin_comment
+comment|// expected-warning {{use of GNU statement expression extension}}
+end_comment
+
+unit|}
 end_unit
 

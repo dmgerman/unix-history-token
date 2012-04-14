@@ -16,7 +16,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|/* expected-warning {{ hexadecimal floating constants are a C99 feature }} */
+comment|/* expected-warning {{hexadecimal floating constants are a C99 feature}} */
 end_comment
 
 end_unit

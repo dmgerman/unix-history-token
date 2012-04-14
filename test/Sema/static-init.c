@@ -93,7 +93,7 @@ begin_struct
 struct|struct
 name|foo
 block|{
-name|unsigned
+name|short
 name|ptr
 decl_stmt|;
 block|}
@@ -125,7 +125,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// no-error
+comment|// expected-error {{initializer element is not a compile-time constant}}
 end_comment
 
 begin_decl_stmt
@@ -144,6 +144,21 @@ end_decl_stmt
 
 begin_comment
 comment|// expected-error {{initializer element is not a compile-time constant}}
+end_comment
+
+begin_decl_stmt
+name|intptr_t
+name|z
+init|=
+operator|(
+name|intptr_t
+operator|)
+name|u
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// no-error
 end_comment
 
 end_unit

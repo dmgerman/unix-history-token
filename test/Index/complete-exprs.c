@@ -193,7 +193,7 @@ comment|// CHECK-CC1: ParmDecl:{ResultType int}{TypedText j} (8)
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (40)
+comment|// CHECK-CC1: NotImplemented:{ResultType size_t}{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (40)
 end_comment
 
 begin_comment
@@ -225,7 +225,7 @@ comment|// CHECK-CC3: ParmDecl:{ResultType int}{TypedText j} (34)
 end_comment
 
 begin_comment
-comment|// CHECK-CC3: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expressio
+comment|// CHECK-CC3: NotImplemented:{ResultType size_t}{TypedText sizeof}{LeftParen (}{Placeholder expressio
 end_comment
 
 begin_comment
@@ -257,7 +257,7 @@ comment|// CHECK-CC2: ParmDecl:{ResultType int}{TypedText j} (34)
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: NotImplemented:{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (40)
+comment|// CHECK-CC2: NotImplemented:{ResultType size_t}{TypedText sizeof}{LeftParen (}{Placeholder expression-or-type}{RightParen )} (40)
 end_comment
 
 begin_comment

@@ -64,6 +64,7 @@ modifier|*
 name|addr2
 parameter_list|)
 block|{
+comment|// CHECK: @t1
 comment|// CHECK: call<4 x float> @llvm.arm.neon.vld1.v4f32(i8* %{{.*}}, i32 16)
 name|float32x4_t
 name|a
@@ -79,6 +80,42 @@ argument_list|(
 name|addr2
 argument_list|,
 name|a
+argument_list|)
+expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Radar 10538555: Make sure unaligned load/stores do not gain alignment.
+end_comment
+
+begin_function
+name|void
+name|t2
+parameter_list|(
+name|char
+modifier|*
+name|addr
+parameter_list|)
+block|{
+comment|// CHECK: @t2
+comment|// CHECK: load i32* %{{.*}}, align 1
+name|int32x2_t
+name|vec
+init|=
+name|vld1_dup_s32
+argument_list|(
+name|addr
+argument_list|)
+decl_stmt|;
+comment|// CHECK: store i32 %{{.*}}, i32* {{.*}}, align 1
+name|vst1_lane_s32
+argument_list|(
+name|addr
+argument_list|,
+name|vec
+argument_list|,
+literal|1
 argument_list|)
 expr_stmt|;
 block|}

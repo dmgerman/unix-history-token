@@ -301,6 +301,7 @@ parameter_list|(
 name|void
 parameter_list|)
 block|{
+comment|// This block is a global since it has no captures.
 name|ComparatorBlock
 name|b
 init|=
@@ -324,7 +325,45 @@ decl_stmt|;
 return|return
 name|b
 return|;
-comment|// expected-warning{{Address of stack-allocated block declared on line 60 returned to caller}}
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|ComparatorBlock
+name|test_return_block_with_capture
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+comment|// This block is stack allocated because it has captures.
+name|ComparatorBlock
+name|b
+init|=
+lambda|^
+name|int
+parameter_list|(
+name|int
+name|a
+parameter_list|,
+name|int
+name|b
+parameter_list|)
+block|{
+return|return
+name|a
+operator|>
+name|b
+operator|+
+name|x
+return|;
+block|}
+decl_stmt|;
+return|return
+name|b
+return|;
+comment|// expected-warning{{Address of stack-allocated block}}
 block|}
 end_function
 
@@ -383,6 +422,60 @@ end_function
 begin_empty_stmt
 empty_stmt|;
 end_empty_stmt
+
+begin_comment
+comment|// Handle blocks that have no captures or are otherwise declared 'static'.
+end_comment
+
+begin_comment
+comment|//<rdar://problem/10348049>
+end_comment
+
+begin_typedef
+typedef|typedef
+name|int
+function_decl|(
+modifier|^
+name|RDar10348049
+function_decl|)
+parameter_list|(
+name|int
+name|value
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function
+name|RDar10348049
+name|test_rdar10348049
+parameter_list|(
+name|void
+parameter_list|)
+block|{
+specifier|static
+name|RDar10348049
+name|b
+init|=
+lambda|^
+name|int
+parameter_list|(
+name|int
+name|x
+parameter_list|)
+block|{
+return|return
+name|x
+operator|+
+literal|2
+return|;
+block|}
+decl_stmt|;
+return|return
+name|b
+return|;
+comment|// no-warning
+block|}
+end_function
 
 end_unit
 

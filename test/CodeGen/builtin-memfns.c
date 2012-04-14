@@ -288,5 +288,68 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test7
+end_comment
+
+begin_comment
+comment|// PR12094
+end_comment
+
+begin_function
+name|int
+name|test7
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+name|struct
+name|snd_pcm_hw_params_t
+modifier|*
+name|hwparams
+decl_stmt|;
+comment|// incomplete type.
+comment|// CHECK: call void @llvm.memset{{.*}}256, i32 4, i1 false)
+name|__builtin_memset
+argument_list|(
+name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|256
+argument_list|)
+expr_stmt|;
+comment|// Should be alignment = 4
+comment|// CHECK: call void @llvm.memset{{.*}}256, i32 1, i1 false)
+name|__builtin_memset
+argument_list|(
+operator|(
+name|char
+operator|*
+operator|)
+name|p
+argument_list|,
+literal|0
+argument_list|,
+literal|256
+argument_list|)
+expr_stmt|;
+comment|// Should be alignment = 1
+name|__builtin_memset
+argument_list|(
+name|hwparams
+argument_list|,
+literal|0
+argument_list|,
+literal|256
+argument_list|)
+expr_stmt|;
+comment|// No crash alignment = 1
+comment|// CHECK: call void @llvm.memset{{.*}}256, i32 1, i1 false)
+block|}
+end_function
+
 end_unit
 

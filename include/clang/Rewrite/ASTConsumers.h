@@ -117,6 +117,34 @@ name|bool
 name|SilenceRewriteMacroWarning
 argument_list|)
 decl_stmt|;
+name|ASTConsumer
+modifier|*
+name|CreateModernObjCRewriter
+argument_list|(
+specifier|const
+name|std
+operator|::
+name|string
+operator|&
+name|InFile
+argument_list|,
+name|raw_ostream
+operator|*
+name|OS
+argument_list|,
+name|DiagnosticsEngine
+operator|&
+name|Diags
+argument_list|,
+specifier|const
+name|LangOptions
+operator|&
+name|LOpts
+argument_list|,
+name|bool
+name|SilenceRewriteMacroWarning
+argument_list|)
+decl_stmt|;
 comment|/// CreateHTMLPrinter - Create an AST consumer which rewrites source code to
 comment|/// HTML with syntax highlighting suitable for viewing in a web-browser.
 name|ASTConsumer

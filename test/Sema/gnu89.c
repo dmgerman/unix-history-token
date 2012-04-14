@@ -13,5 +13,16 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_function
+name|void
+name|main
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|// expected-warning {{return type of 'main' is not 'int'}}
+end_comment
+
 end_unit
 

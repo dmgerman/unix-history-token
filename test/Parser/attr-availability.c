@@ -235,8 +235,86 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning{{warning: 'unavailable' availability overrides all other availability information}}
+comment|// expected-warning{{'unavailable' availability overrides all other availability information}}
 end_comment
+
+begin_comment
+comment|// rdar://10095131
+end_comment
+
+begin_enum
+enum|enum
+name|E
+block|{
+name|gorf
+name|__attribute__
+argument_list|(
+operator|(
+name|availability
+argument_list|(
+name|macosx
+argument_list|,
+name|introduced
+operator|=
+literal|8.5
+argument_list|,
+name|message
+operator|=
+literal|10.0
+argument_list|)
+operator|)
+argument_list|)
+block|,
+comment|// expected-error {{expected string literal}}
+name|garf
+name|__attribute__
+argument_list|(
+operator|(
+name|availability
+argument_list|(
+name|macosx
+argument_list|,
+name|introduced
+operator|=
+literal|8.5
+argument_list|,
+name|message
+argument_list|)
+operator|)
+argument_list|)
+block|,
+comment|// expected-error {{expected '=' after 'message'}}
+name|foo
+name|__attribute__
+argument_list|(
+operator|(
+name|availability
+argument_list|(
+name|macosx
+argument_list|,
+name|introduced
+operator|=
+literal|8.5
+argument_list|,
+name|deprecated
+operator|=
+literal|9.0
+argument_list|,
+name|message
+operator|=
+literal|"Use CTFontCopyPostScriptName()"
+argument_list|,
+name|deprecated
+operator|=
+literal|10.0
+argument_list|)
+operator|)
+argument_list|)
+comment|// expected-error {{expected ')'}} \
+comment|// expected-note {{to match this '('}}
+block|}
+enum|;
+end_enum
 
 end_unit
 

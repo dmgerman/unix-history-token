@@ -10,29 +10,40 @@ end_comment
 begin_define
 define|#
 directive|define
-name|FILE_HEADER_NAME
-value|"pp-record.h"
+name|STRINGIZE
+parameter_list|(
+name|text
+parameter_list|)
+value|STRINGIZE_I(text)
 end_define
 
-begin_if
-if|#
-directive|if
-name|defined
-argument_list|(
-name|FILE_HEADER_NAME
-argument_list|)
-end_if
+begin_define
+define|#
+directive|define
+name|STRINGIZE_I
+parameter_list|(
+name|text
+parameter_list|)
+value|#text
+end_define
+
+begin_define
+define|#
+directive|define
+name|INC
+value|pp-record.h
+end_define
 
 begin_include
 include|#
 directive|include
-include|FILE_HEADER_NAME
+include|STRINGIZE(INC)
 end_include
 
-begin_endif
-endif|#
-directive|endif
-end_endif
+begin_expr_stmt
+name|CAKE
+expr_stmt|;
+end_expr_stmt
 
 end_unit
 

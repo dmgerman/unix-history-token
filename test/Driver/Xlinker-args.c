@@ -8,7 +8,7 @@ comment|// was a collect2 argument.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin9 -### \
+comment|// RUN: %clang -target i386-apple-darwin9 -### \
 end_comment
 
 begin_comment

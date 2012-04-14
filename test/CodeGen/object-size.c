@@ -238,8 +238,7 @@ block|{
 name|int
 name|i
 decl_stmt|;
-comment|// CHECK-NOT:   __strcpy_chk
-comment|// CHECK:       = call i8* @__inline_strcpy_chk(i8* getelementptr inbounds ([63 x i8]* @gbuf, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8]* @.str, i32 0, i32 0))
+comment|// CHECK:     = call i64 @llvm.objectsize.i64(i8* {{.*}}@gbuf{{.*}}, i1 false)
 name|strcpy
 argument_list|(
 operator|(

@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only -verify %s
+comment|// RUN: %clang_cc1 -fsyntax-only -verify -triple i686-linux %s
 end_comment
 
 begin_define
@@ -170,7 +170,7 @@ argument_list|)
 end_macro
 
 begin_comment
-comment|// FIXME: This should give an error
+comment|// expected-error {{must have a constant size}}
 end_comment
 
 begin_macro
@@ -193,6 +193,10 @@ argument|x ||
 literal|3.0
 argument_list|)
 end_macro
+
+begin_comment
+comment|// expected-error {{must have a constant size}}
+end_comment
 
 begin_decl_stmt
 name|unsigned
@@ -242,7 +246,6 @@ operator|&
 name|a
 argument_list|)
 expr_stmt|;
-comment|// expected-error {{fields must have a constant size}}
 block|}
 end_function
 
@@ -804,6 +807,23 @@ argument_list|)
 end_macro
 
 begin_comment
+comment|// From gcc testsuite
+end_comment
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|41
+argument_list|,
+argument|(int)(
+literal|1
+argument|+(_Complex unsigned)
+literal|2
+argument|)
+argument_list|)
+end_macro
+
+begin_comment
 comment|// rdar://8875946
 end_comment
 
@@ -826,6 +846,284 @@ name|P
 decl_stmt|;
 block|}
 end_function
+
+begin_decl_stmt
+name|double
+name|d
+init|=
+operator|(
+name|d
+operator|=
+literal|0.0
+operator|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{not a compile-time constant}}
+end_comment
+
+begin_decl_stmt
+name|double
+name|d2
+init|=
+operator|++
+name|d
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{not a compile-time constant}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|n
+init|=
+literal|2
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|intLvalue
+index|[
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+operator|(
+name|long
+operator|)
+operator|&
+name|n
+condition|?
+else|:
+literal|1
+operator|)
+index|]
+init|=
+block|{
+literal|1
+block|,
+literal|2
+block|}
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{variable length array}}
+end_comment
+
+begin_union
+union|union
+name|u
+block|{
+name|int
+name|a
+decl_stmt|;
+name|char
+name|b
+index|[
+literal|4
+index|]
+decl_stmt|;
+block|}
+union|;
+end_union
+
+begin_decl_stmt
+name|char
+name|c
+init|=
+operator|(
+operator|(
+expr|union
+name|u
+operator|)
+operator|(
+literal|123456
+operator|)
+operator|)
+operator|.
+name|b
+index|[
+literal|0
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{not a compile-time constant}}
+end_comment
+
+begin_decl_stmt
+specifier|extern
+specifier|const
+name|int
+name|weak_int
+name|__attribute__
+argument_list|(
+operator|(
+name|weak
+operator|)
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|int
+name|weak_int
+init|=
+literal|42
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|weak_int_test
+init|=
+name|weak_int
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{not a compile-time constant}}
+end_comment
+
+begin_decl_stmt
+name|int
+name|literalVsNull1
+init|=
+literal|"foo"
+operator|==
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|int
+name|literalVsNull2
+init|=
+literal|0
+operator|==
+literal|"foo"
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// PR11385.
+end_comment
+
+begin_decl_stmt
+name|int
+name|castViaInt
+index|[
+operator|*
+operator|(
+name|int
+operator|*
+operator|)
+operator|(
+name|unsigned
+name|long
+operator|)
+literal|"test"
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{variable length array}}
+end_comment
+
+begin_comment
+comment|// PR11391.
+end_comment
+
+begin_struct
+struct|struct
+name|PR11391
+block|{
+specifier|_Complex
+name|float
+name|f
+decl_stmt|;
+block|}
+name|pr11391
+struct|;
+end_struct
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|42
+argument_list|,
+argument|__builtin_constant_p(pr11391.f =
+literal|1
+argument|)
+argument_list|)
+end_macro
+
+begin_comment
+comment|// PR12043
+end_comment
+
+begin_decl_stmt
+name|float
+name|varfloat
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+specifier|const
+name|float
+name|constfloat
+init|=
+literal|0
+decl_stmt|;
+end_decl_stmt
+
+begin_macro
+name|EVAL_EXPR
+argument_list|(
+literal|43
+argument_list|,
+argument|varfloat&& constfloat
+argument_list|)
+end_macro
+
+begin_comment
+comment|// expected-error {{must have a constant size}}
+end_comment
+
+begin_comment
+comment|//<rdar://problem/11205586>
+end_comment
+
+begin_comment
+comment|// (Make sure we continue to reject this.)
+end_comment
+
+begin_expr_stmt
+name|EVAL_EXPR
+argument_list|(
+literal|44
+argument_list|,
+literal|"x"
+index|[
+literal|0
+index|]
+argument_list|)
+expr_stmt|;
+end_expr_stmt
+
+begin_comment
+comment|// expected-error {{variable length array}}
+end_comment
 
 end_unit
 

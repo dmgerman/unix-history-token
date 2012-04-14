@@ -4,7 +4,7 @@ comment|// REQUIRES: x86-registered-target
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin -S -o - %s | \
+comment|// RUN: %clang -target i386-apple-darwin -S -o - %s | \
 end_comment
 
 begin_comment
@@ -36,7 +36,7 @@ comment|// DARWIN: ret
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-pc-linux-gnu -S -o - %s | \
+comment|// RUN: %clang -target i386-pc-linux-gnu -S -o - %s | \
 end_comment
 
 begin_comment
@@ -68,7 +68,7 @@ comment|// LINUX: ret
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-darwin -S -o - -fomit-frame-pointer %s | \
+comment|// RUN: %clang -target i386-darwin -S -o - -fomit-frame-pointer %s | \
 end_comment
 
 begin_comment
@@ -100,7 +100,7 @@ comment|// OMIT_ALL: ret
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-darwin -S -o - -momit-leaf-frame-pointer %s | \
+comment|// RUN: %clang -target i386-darwin -S -o - -momit-leaf-frame-pointer %s | \
 end_comment
 
 begin_comment

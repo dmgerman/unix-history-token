@@ -130,7 +130,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{[previous definition is here}}
+comment|// expected-note {{previous definition is here}}
 end_comment
 
 begin_decl_stmt
@@ -150,7 +150,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-note {{[previous definition is here}}
+comment|// expected-note {{previous definition is here}}
 end_comment
 
 begin_decl_stmt

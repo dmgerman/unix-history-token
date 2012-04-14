@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -ccc-print-phases \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-phases \
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -ccc-print-bindings \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-bindings \
 end_comment
 
 begin_comment
@@ -96,7 +96,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -ccc-print-bindings \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-bindings \
 end_comment
 
 begin_comment
@@ -132,7 +132,7 @@ comment|// RUN: touch %t.o
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -ccc-print-bindings \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-bindings \
 end_comment
 
 begin_comment
@@ -148,7 +148,7 @@ comment|// Check that we put the .dSYM in the right place.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -ccc-print-bindings \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -ccc-print-bindings \
 end_comment
 
 begin_comment

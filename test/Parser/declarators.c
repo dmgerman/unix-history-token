@@ -555,5 +555,43 @@ begin_comment
 comment|// expected-error {{'long struct' is invalid}}
 end_comment
 
+begin_function
+name|void
+name|test16
+parameter_list|(
+name|i
+parameter_list|)
+name|int
+name|i
+name|j
+decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|// expected-error {{expected ';' at end of declaration}}
+end_comment
+
+begin_function
+name|void
+name|test17
+parameter_list|(
+name|i
+parameter_list|,
+name|j
+parameter_list|)
+name|int
+name|i
+decl_stmt|,
+name|j
+name|k
+decl_stmt|;
+block|{ }
+end_function
+
+begin_comment
+comment|// expected-error {{expected ';' at end of declaration}}
+end_comment
+
 end_unit
 

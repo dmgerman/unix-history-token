@@ -177,7 +177,7 @@ argument_list|()
 argument_list|,
 name|Context
 operator|.
-name|getLangOptions
+name|getLangOpts
 argument_list|()
 argument_list|,
 name|Loc
@@ -233,7 +233,7 @@ argument_list|()
 argument_list|,
 name|Context
 operator|.
-name|getLangOptions
+name|getLangOpts
 argument_list|()
 argument_list|,
 name|CharSourceRange

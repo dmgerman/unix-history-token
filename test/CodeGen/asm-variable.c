@@ -303,5 +303,28 @@ begin_comment
 comment|// CHECK: call i64 asm "call *$1", "={rax},r,{xmm0},{xmm1},{xmm2},{xmm3},{xmm4},{xmm5},{xmm6},{xmm7},~{dirflag},~{fpsr},~{flags}
 end_comment
 
+begin_decl_stmt
+name|int
+name|randomvar
+name|asm
+argument_list|(
+literal|"randomvar"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|foo3
+parameter_list|()
+block|{
+asm|asm("vartest %0" : : "r"(randomvar));
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: call void asm sideeffect "vartest $0", "r,~{dirflag},~{fpsr},~{flags}"
+end_comment
+
 end_unit
 

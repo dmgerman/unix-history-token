@@ -74,7 +74,7 @@ comment|// CHECK: VarDecl=p:2:6 typekind=Pointer [isPOD=1]
 end_comment
 
 begin_comment
-comment|// CHECK: FunctionDecl=f:3:6 (Definition) typekind=FunctionProto [canonical=FunctionProto] [result=Pointer] [isPOD=0]
+comment|// CHECK: FunctionDecl=f:3:6 (Definition) typekind=FunctionProto [canonical=FunctionProto] [result=Pointer] [args= Pointer Pointer Typedef] [isPOD=0]
 end_comment
 
 begin_comment

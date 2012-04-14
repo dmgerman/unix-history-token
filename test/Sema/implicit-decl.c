@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -verify -fsyntax-only
+comment|// RUN: %clang_cc1 %s -verify -fsyntax-only -Werror
 end_comment
 
 begin_typedef
@@ -17,6 +17,26 @@ name|char
 name|Boolean
 typedef|;
 end_typedef
+
+begin_function_decl
+specifier|extern
+name|int
+name|printf
+parameter_list|(
+name|__const
+name|char
+modifier|*
+name|__restrict
+name|__format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note{{'printf' declared here}}
+end_comment
 
 begin_function
 name|void
@@ -59,7 +79,7 @@ block|{
 comment|// expected-note {{previous implicit declaration is here}} \
 name|expected
 operator|-
-name|warning
+name|error
 block|{
 block|{
 name|implicit
@@ -74,6 +94,21 @@ name|C99
 block|}
 block|}
 block|}
+name|printg
+argument_list|(
+literal|"Hello, World!\n"
+argument_list|)
+expr_stmt|;
+comment|// expected-error{{implicit declaration of function 'printg' is invalid in C99}} \
+comment|// expected-note{{did you mean 'printf'?}}
+name|__builtin_is_les
+argument_list|(
+literal|1
+argument_list|,
+literal|3
+argument_list|)
+expr_stmt|;
+comment|// expected-error{{use of unknown builtin '__builtin_is_les'}}
 block|}
 end_function
 
@@ -99,6 +134,54 @@ comment|// expected-error{{conflicting types for '_CFCalendarDecomposeAbsoluteTi
 return|return
 literal|0
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// Test the typo-correction callback in Sema::ImplicitlyDefineFunction
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|sformatf
+parameter_list|(
+name|char
+modifier|*
+name|str
+parameter_list|,
+name|__const
+name|char
+modifier|*
+name|__restrict
+name|__format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|// expected-note{{'sformatf' declared here}}
+end_comment
+
+begin_function
+name|void
+name|test_implicit
+parameter_list|()
+block|{
+name|int
+name|formats
+init|=
+literal|0
+decl_stmt|;
+name|formatd
+argument_list|(
+literal|"Hello, World!\n"
+argument_list|)
+expr_stmt|;
+comment|// expected-error{{implicit declaration of function 'formatd' is invalid in C99}} \
+comment|// expected-note{{did you mean 'sformatf'?}}
 block|}
 end_function
 

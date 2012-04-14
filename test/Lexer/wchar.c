@@ -13,14 +13,14 @@ name|void
 operator|)
 literal|L"\U00010000"
 expr_stmt|;
-comment|// expected-warning {{character unicode escape sequence too long for its type}}
+comment|// unicode escape produces UTF-16 sequence, so no warning
 operator|(
 name|void
 operator|)
 literal|L'
 expr|\U00010000'
 expr_stmt|;
-comment|// expected-warning {{character unicode escape sequence too long for its type}}
+comment|// expected-error {{character too large for enclosing character literal type}}
 operator|(
 name|void
 operator|)

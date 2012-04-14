@@ -347,5 +347,43 @@ return|;
 block|}
 end_function
 
+begin_comment
+comment|// CHECK: @test13
+end_comment
+
+begin_comment
+comment|// CHECK: call {{.*}} @f2(
+end_comment
+
+begin_function_decl
+name|int
+name|f2
+parameter_list|(
+name|void
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test13
+parameter_list|()
+block|{
+name|f2
+argument_list|()
+condition|?
+operator|(
+name|void
+operator|)
+literal|0
+else|:
+operator|(
+name|void
+operator|)
+literal|0
+expr_stmt|;
+block|}
+end_function
+
 end_unit
 

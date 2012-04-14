@@ -165,6 +165,37 @@ end_function
 
 begin_function
 name|int
+name|test7b
+parameter_list|(
+name|int
+name|y
+parameter_list|)
+block|{
+name|int
+name|x
+init|=
+name|x
+decl_stmt|;
+comment|// expected-note{{variable 'x' is declared here}}
+if|if
+condition|(
+name|y
+condition|)
+name|x
+operator|=
+literal|1
+expr_stmt|;
+comment|// Warn with "may be uninitialized" here (not "is uninitialized"), since the
+comment|// self-initialization is intended to suppress a -Wuninitialized warning.
+return|return
+name|x
+return|;
+comment|// expected-warning{{variable 'x' may be uninitialized when used here}}
+block|}
+end_function
+
+begin_function
+name|int
 name|test8
 parameter_list|(
 name|int

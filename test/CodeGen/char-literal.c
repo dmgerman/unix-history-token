@@ -29,13 +29,37 @@ name|a
 init|=
 literal|'a'
 decl_stmt|;
-comment|// Should pick second character.
+comment|// Should truncate value (equal to last character).
 comment|// CHECK-C: store i8 98
 comment|// CHECK-CPP0X: store i8 98
 name|char
 name|b
 init|=
 literal|'ab'
+decl_stmt|;
+comment|// Should get concatenated characters
+comment|// CHECK-C: store i32 24930
+comment|// CHECK-CPP0X: store i32 24930
+name|int
+name|b1
+init|=
+literal|'ab'
+decl_stmt|;
+comment|// Should get concatenated characters
+comment|// CHECK-C: store i32 808464432
+comment|// CHECK-CPP0X: store i32 808464432
+name|int
+name|b2
+init|=
+literal|'0000'
+decl_stmt|;
+comment|// Should get truncated value (last four characters concatenated)
+comment|// CHECK-C: store i32 1919512167
+comment|// CHECK-CPP0X: store i32 1919512167
+name|int
+name|b3
+init|=
+literal|'somesillylongstring'
 decl_stmt|;
 comment|// CHECK-C: store i32 97
 comment|// CHECK-CPP0X: store i32 97
@@ -66,14 +90,6 @@ init|=
 literal|u'
 expr|a'
 decl_stmt|;
-comment|// Should pick second character.
-comment|// CHECK-CPP0X: store i16 98
-name|char16_t
-name|ub
-init|=
-literal|u'
-expr|ab'
-decl_stmt|;
 comment|// CHECK-CPP0X: store i32 97
 name|char32_t
 name|Ua
@@ -81,27 +97,50 @@ init|=
 literal|U'
 expr|a'
 decl_stmt|;
-comment|// Should pick second character.
-comment|// CHECK-CPP0X: store i32 98
+comment|// CHECK-CPP0X: store i16 1047
+name|char16_t
+name|ua1
+init|=
+literal|u'
+expr|Ð'
+decl_stmt|;
+comment|// CHECK-CPP0X: store i16 12538
+name|char16_t
+name|ua2
+init|=
+literal|u'
+expr|ãº'
+decl_stmt|;
+comment|// CHECK-CPP0X: store i16 -27177
+name|char16_t
+name|ua3
+init|=
+literal|u'
+expr|é'
+decl_stmt|;
+comment|// CHECK-CPP0X: store i32 181
 name|char32_t
-name|Ub
+name|Ua1
 init|=
 literal|U'
-expr|ab'
+expr|Âµ'
+decl_stmt|;
+comment|// CHECK-CPP0X: store i32 38359
+name|char32_t
+name|Ua2
+init|=
+literal|U'
+expr|é'
+decl_stmt|;
+comment|// CHECK-CPP0X: store i32 128128
+name|char32_t
+name|Ua3
+init|=
+literal|U'
+expr|ð'
 decl_stmt|;
 endif|#
 directive|endif
-comment|// Should pick last character and store its lowest byte.
-comment|// This does not match gcc, which takes the last character, converts it to
-comment|// utf8, and then picks the second-lowest byte of that (they probably store
-comment|// the utf8 in uint16_ts internally and take the lower byte of that).
-comment|// CHECK-C: store i8 48
-comment|// CHECK-CPP0X: store i8 48
-name|char
-name|c
-init|=
-literal|'\u1120\u0220\U00102030'
-decl_stmt|;
 comment|// CHECK-C: store i32 61451
 comment|// CHECK-CPP0X: store i32 61451
 name|wchar_t
@@ -145,18 +184,6 @@ directive|if
 name|__cplusplus
 operator|>=
 literal|201103L
-comment|// Should take lower word of the 4byte UNC sequence. This does not match
-comment|// gcc. I don't understand what gcc does (it looks like it converts to utf16,
-comment|// then takes the second (!) utf16 word, swaps the lower two nibbles, and
-comment|// stores that?).
-comment|// CHECK-CPP0X: store i16 -4085
-name|char16_t
-name|ud
-init|=
-literal|u'
-expr|\U0010F00B'
-decl_stmt|;
-comment|// has utf16 encoding dbc8 dcb0
 comment|// CHECK-CPP0X: store i32 1110027
 name|char32_t
 name|Ud
@@ -175,29 +202,6 @@ init|=
 literal|L'
 expr|\u1234\U0010F00B'
 decl_stmt|;
-if|#
-directive|if
-name|__cplusplus
-operator|>=
-literal|201103L
-comment|// Should pick second character.
-comment|// CHECK-CPP0X: store i16 -4085
-name|char16_t
-name|ue
-init|=
-literal|u'
-expr|\u1234\U0010F00B'
-decl_stmt|;
-comment|// Should pick second character.
-comment|// CHECK-CPP0X: store i32 1110027
-name|char32_t
-name|Ue
-init|=
-literal|U'
-expr|\u1234\U0010F00B'
-decl_stmt|;
-endif|#
-directive|endif
 block|}
 end_function
 

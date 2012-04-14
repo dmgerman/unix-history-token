@@ -2686,5 +2686,50 @@ expr_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// PR11572
+end_comment
+
+begin_struct
+struct|struct
+name|test11S
+block|{
+name|unsigned
+name|x
+range|:
+literal|30
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|int
+name|test11
+parameter_list|(
+name|unsigned
+name|y
+parameter_list|,
+name|struct
+name|test11S
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+name|y
+operator|>
+operator|(
+name|p
+operator|->
+name|x
+operator|>>
+literal|24
+operator|)
+return|;
+comment|// no-warning
+block|}
+end_function
+
 end_unit
 

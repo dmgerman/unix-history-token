@@ -157,6 +157,11 @@ comment|/// Result files which should be removed on failure.
 name|ArgStringList
 name|ResultFiles
 decl_stmt|;
+comment|/// Result files which are generated correctly on failure, and which should
+comment|/// only be removed if we crash.
+name|ArgStringList
+name|FailureResultFiles
+decl_stmt|;
 comment|/// Redirection for stdout, stderr, etc.
 specifier|const
 name|llvm
@@ -319,6 +324,17 @@ return|return
 name|ResultFiles
 return|;
 block|}
+specifier|const
+name|ArgStringList
+operator|&
+name|getFailureResultFiles
+argument_list|()
+specifier|const
+block|{
+return|return
+name|FailureResultFiles
+return|;
+block|}
 comment|/// getArgsForToolChain - Return the derived argument list for the
 comment|/// tool chain \arg TC (or the default tool chain, if TC is not
 comment|/// specified).
@@ -378,6 +394,30 @@ name|Name
 parameter_list|)
 block|{
 name|ResultFiles
+operator|.
+name|push_back
+argument_list|(
+name|Name
+argument_list|)
+expr_stmt|;
+return|return
+name|Name
+return|;
+block|}
+comment|/// addFailureResultFile - Add a file to remove if we crash, and returns its
+comment|/// argument.
+specifier|const
+name|char
+modifier|*
+name|addFailureResultFile
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+name|Name
+parameter_list|)
+block|{
+name|FailureResultFiles
 operator|.
 name|push_back
 argument_list|(

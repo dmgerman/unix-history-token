@@ -38,7 +38,7 @@ comment|// CHECK: fatal error: file {{.*}} has been modified since the precompil
 end_comment
 
 begin_comment
-comment|// DISABLE: win32
+comment|// REQUIRES: shell
 end_comment
 
 end_unit

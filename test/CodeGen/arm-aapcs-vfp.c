@@ -50,12 +50,13 @@ struct|;
 end_struct
 
 begin_comment
-comment|// CHECK: define arm_aapcs_vfpcc void @test_struct(float %{{.*}}, float %{{.*}}, float %{{.*}}, float %{{.*}})
+comment|// CHECK: define arm_aapcs_vfpcc %struct.homogeneous_struct @test_struct(float %{{.*}}, float %{{.*}}, float %{{.*}}, float %{{.*}})
 end_comment
 
 begin_function_decl
 specifier|extern
-name|void
+name|struct
+name|homogeneous_struct
 name|struct_callee
 parameter_list|(
 name|struct
@@ -65,7 +66,8 @@ function_decl|;
 end_function_decl
 
 begin_function
-name|void
+name|struct
+name|homogeneous_struct
 name|test_struct
 parameter_list|(
 name|struct
@@ -73,11 +75,12 @@ name|homogeneous_struct
 name|arg
 parameter_list|)
 block|{
+return|return
 name|struct_callee
 argument_list|(
 name|arg
 argument_list|)
-expr_stmt|;
+return|;
 block|}
 end_function
 

@@ -20,7 +20,7 @@ comment|// RUN: FileCheck< %t.err -check-prefix=CHECK-REPARSE-SOURCE-CRASH %s
 end_comment
 
 begin_comment
-comment|// RUN: rm %t-preamble.pch
+comment|// RUN: test ! -e $t-preamble.pch
 end_comment
 
 begin_comment
@@ -33,6 +33,10 @@ end_comment
 
 begin_comment
 comment|// REQUIRES: crash-recovery
+end_comment
+
+begin_comment
+comment|// REQUIRES: shell
 end_comment
 
 begin_warning

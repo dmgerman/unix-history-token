@@ -7,20 +7,29 @@ begin_comment
 comment|// matter in this test.
 end_comment
 
-begin_enum
-enum|enum
+begin_decl_stmt
+name|enum
+name|__attribute__
+argument_list|(
+operator|(
+name|deprecated
+operator|)
+argument_list|)
 name|Color
 block|{
 name|Color_Red
-init|=
+operator|=
 literal|17
-block|,
+operator|,
 name|Color_Green
-block|,
+operator|,
 name|Color_Blue
 block|}
-enum|;
-end_enum
+end_decl_stmt
+
+begin_empty_stmt
+empty_stmt|;
+end_empty_stmt
 
 begin_function_decl
 name|int
@@ -33,6 +42,7 @@ begin_function
 name|void
 name|f
 parameter_list|(
+name|enum
 name|Color
 name|color
 parameter_list|)
@@ -54,7 +64,7 @@ comment|// RUN: c-index-test -code-completion-at=%s:11:1 %s | FileCheck -check-p
 end_comment
 
 begin_comment
-comment|// CHECK-CC1: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Red}
+comment|// CHECK-CC1: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Red} (65) (deprecated)
 end_comment
 
 begin_comment
@@ -62,15 +72,15 @@ comment|// RUN: c-index-test -code-completion-at=%s:12:8 %s | FileCheck -check-p
 end_comment
 
 begin_comment
-comment|// CHECK-CC2: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Blue} (7)
+comment|// CHECK-CC2: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Blue} (7) (deprecated)
 end_comment
 
 begin_comment
-comment|// CHECK-CC2-NEXT: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Green} (7)
+comment|// CHECK-CC2-NEXT: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Green} (7) (deprecated)
 end_comment
 
 begin_comment
-comment|// CHECK-CC2-NEXT: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Red} (7)
+comment|// CHECK-CC2-NEXT: EnumConstantDecl:{ResultType enum Color}{TypedText Color_Red} (7) (deprecated)
 end_comment
 
 end_unit

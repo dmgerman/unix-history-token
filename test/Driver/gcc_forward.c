@@ -8,7 +8,7 @@ comment|//
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple powerpc-unknown-unknown \
+comment|// RUN: %clang -target powerpc-unknown-unknown \
 end_comment
 
 begin_comment

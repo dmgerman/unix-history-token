@@ -12,7 +12,7 @@ comment|// RUN:     CC_LOG_DIAGNOSTICS=1 CC_LOG_DIAGNOSTICS_FILE=%t.log \
 end_comment
 
 begin_comment
-comment|// RUN: %clang -Wfoobar -no-canonical-prefixes -ccc-host-triple x86_64-apple-darwin10 -fsyntax-only %s
+comment|// RUN: %clang -Wfoobar -no-canonical-prefixes -target x86_64-apple-darwin10 -fsyntax-only %s
 end_comment
 
 begin_comment
@@ -71,7 +71,7 @@ comment|// CHECK:<key>message</key>
 end_comment
 
 begin_comment
-comment|// CHECK:<string>unknown warning option&apos;-Wfoobar&apos;</string>
+comment|// CHECK:<string>unknown warning option&apos;-Wfoobar&apos;; did you mean&apos;-W{{.*}}&apos;?</string>
 end_comment
 
 begin_comment

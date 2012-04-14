@@ -185,5 +185,38 @@ endif|#
 directive|endif
 end_endif
 
+begin_comment
+comment|// Arbitrary feature to test that the extension name can be surrounded with
+end_comment
+
+begin_comment
+comment|// double underscores.
+end_comment
+
+begin_comment
+comment|// CHECK-PED-NONE: has_double_underscores
+end_comment
+
+begin_if
+if|#
+directive|if
+name|__has_extension
+argument_list|(
+name|__c_alignas__
+argument_list|)
+end_if
+
+begin_function_decl
+name|int
+name|has_double_underscores
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_endif
+endif|#
+directive|endif
+end_endif
+
 end_unit
 

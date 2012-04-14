@@ -37,5 +37,23 @@ begin_comment
 comment|// expected-error {{expected '(' after 'asm'}}
 end_comment
 
+begin_comment
+comment|//<rdar://problem/10465079> - Don't crash on wide string literals in 'asm'.
+end_comment
+
+begin_decl_stmt
+name|int
+name|foo
+name|asm
+argument_list|(
+literal|L"bar"
+argument_list|)
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-error {{cannot use wide string literal in 'asm'}}
+end_comment
+
 end_unit
 

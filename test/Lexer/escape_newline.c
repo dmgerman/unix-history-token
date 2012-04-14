@@ -12,6 +12,10 @@ comment|// RUN: %clang_cc1 -E -trigraphs %s 2>&1 | grep 'trigraph converted'
 end_comment
 
 begin_comment
+comment|// RUN: %clang_cc1 -E -CC -trigraphs %s
+end_comment
+
+begin_comment
 comment|// This is an ugly way to spell a -> token.
 end_comment
 
@@ -21,6 +25,10 @@ operator|??
 operator|/
 operator|>
 end_expr_stmt
+
+begin_comment
+comment|// \
+end_comment
 
 end_unit
 

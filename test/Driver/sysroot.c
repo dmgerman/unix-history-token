@@ -4,7 +4,7 @@ comment|// Check that --sysroot= also applies to header search paths.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-unk-unk --sysroot=/FOO -### -E %s 2> %t1
+comment|// RUN: %clang -target i386-unk-unk --sysroot=/FOO -### -E %s 2> %t1
 end_comment
 
 begin_comment
@@ -24,7 +24,7 @@ comment|// RUN: touch %t2.o
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin10 \
+comment|// RUN: %clang -target i386-apple-darwin10 \
 end_comment
 
 begin_comment
@@ -48,7 +48,7 @@ comment|// RUN: touch %t3.o
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple i386-apple-darwin10 \
+comment|// RUN: %clang -target i386-apple-darwin10 \
 end_comment
 
 begin_comment

@@ -236,6 +236,7 @@ switch|switch
 condition|(
 name|bit
 condition|)
+comment|// expected-warning {{switch statement has empty body}} expected-note {{put the semicolon on a separate line to silence this warning}}
 switch|switch
 condition|(
 name|env

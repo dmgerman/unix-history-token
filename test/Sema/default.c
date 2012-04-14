@@ -18,7 +18,6 @@ condition|)
 default|default:
 comment|// expected-error {{not in switch statement}}
 empty_stmt|;
-comment|// expected-warning {{if statement has empty body}}
 block|}
 end_function
 

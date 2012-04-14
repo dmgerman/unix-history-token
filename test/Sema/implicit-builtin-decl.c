@@ -22,7 +22,7 @@ operator|*
 literal|10
 argument_list|)
 decl_stmt|;
-comment|// expected-warning{{implicitly declaring C library function 'malloc' with type}} \
+comment|// expected-warning{{implicitly declaring library function 'malloc' with type}} \
 comment|// expected-note{{please include the header<stdlib.h> or explicitly provide a declaration for 'malloc'}} \
 comment|// expected-note{{'malloc' is a builtin with type 'void *}}
 block|}

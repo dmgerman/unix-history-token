@@ -110,6 +110,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"CodeGenFunction.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"CGBuilder.h"
 end_include
 
@@ -598,11 +604,11 @@ block|{
 name|public
 label|:
 comment|/// Name - The name of the block, kindof.
-specifier|const
-name|char
-modifier|*
+name|llvm
+operator|::
+name|StringRef
 name|Name
-decl_stmt|;
+expr_stmt|;
 comment|/// The field index of 'this' within the block, if there is one.
 name|unsigned
 name|CXXThisIndex
@@ -613,6 +619,11 @@ block|{
 name|uintptr_t
 name|Data
 decl_stmt|;
+name|EHScopeStack
+operator|::
+name|stable_iterator
+name|Cleanup
+expr_stmt|;
 name|public
 label|:
 name|bool
@@ -685,6 +696,43 @@ name|Data
 operator|)
 return|;
 block|}
+name|EHScopeStack
+operator|::
+name|stable_iterator
+name|getCleanup
+argument_list|()
+specifier|const
+block|{
+name|assert
+argument_list|(
+name|isIndex
+argument_list|()
+argument_list|)
+block|;
+return|return
+name|Cleanup
+return|;
+block|}
+name|void
+name|setCleanup
+argument_list|(
+name|EHScopeStack
+operator|::
+name|stable_iterator
+name|cleanup
+argument_list|)
+block|{
+name|assert
+argument_list|(
+name|isIndex
+argument_list|()
+argument_list|)
+expr_stmt|;
+name|Cleanup
+operator|=
+name|cleanup
+expr_stmt|;
+block|}
 specifier|static
 name|Capture
 name|makeIndex
@@ -744,19 +792,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-comment|/// The mapping of allocated indexes within the block.
-name|llvm
-operator|::
-name|DenseMap
-operator|<
-specifier|const
-name|VarDecl
-operator|*
-operator|,
-name|Capture
-operator|>
-name|Captures
-expr_stmt|;
 comment|/// CanBeGlobal - True if the block can be global, i.e. it has
 comment|/// no non-constant captures.
 name|bool
@@ -785,6 +820,25 @@ name|UsesStret
 range|:
 literal|1
 decl_stmt|;
+comment|/// The mapping of allocated indexes within the block.
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|VarDecl
+operator|*
+operator|,
+name|Capture
+operator|>
+name|Captures
+expr_stmt|;
+name|llvm
+operator|::
+name|AllocaInst
+operator|*
+name|Address
+expr_stmt|;
 name|llvm
 operator|::
 name|StructType
@@ -792,15 +846,36 @@ operator|*
 name|StructureType
 expr_stmt|;
 specifier|const
-name|BlockExpr
+name|BlockDecl
 modifier|*
 name|Block
+decl_stmt|;
+specifier|const
+name|BlockExpr
+modifier|*
+name|BlockExpression
 decl_stmt|;
 name|CharUnits
 name|BlockSize
 decl_stmt|;
 name|CharUnits
 name|BlockAlign
+decl_stmt|;
+comment|/// An instruction which dominates the full-expression that the
+comment|/// block is inside.
+name|llvm
+operator|::
+name|Instruction
+operator|*
+name|DominatingIP
+expr_stmt|;
+comment|/// The next block in the block-info chain.  Invalid if this block
+comment|/// info is not part of the CGF's block-info chain, which is true
+comment|/// if it corresponds to a global block or a block whose expression
+comment|/// has been encountered.
+name|CGBlockInfo
+modifier|*
+name|NextBlockInfo
 decl_stmt|;
 specifier|const
 name|Capture
@@ -814,6 +889,32 @@ name|var
 argument_list|)
 decl|const
 block|{
+return|return
+name|const_cast
+operator|<
+name|CGBlockInfo
+operator|*
+operator|>
+operator|(
+name|this
+operator|)
+operator|->
+name|getCapture
+argument_list|(
+name|var
+argument_list|)
+return|;
+block|}
+name|Capture
+modifier|&
+name|getCapture
+parameter_list|(
+specifier|const
+name|VarDecl
+modifier|*
+name|var
+parameter_list|)
+block|{
 name|llvm
 operator|::
 name|DenseMap
@@ -825,7 +926,7 @@ operator|,
 name|Capture
 operator|>
 operator|::
-name|const_iterator
+name|iterator
 name|it
 operator|=
 name|Captures
@@ -862,9 +963,6 @@ specifier|const
 block|{
 return|return
 name|Block
-operator|->
-name|getBlockDecl
-argument_list|()
 return|;
 block|}
 specifier|const
@@ -874,23 +972,32 @@ name|getBlockExpr
 argument_list|()
 specifier|const
 block|{
-return|return
+name|assert
+argument_list|(
+name|BlockExpression
+argument_list|)
+block|;
+name|assert
+argument_list|(
+name|BlockExpression
+operator|->
+name|getBlockDecl
+argument_list|()
+operator|==
 name|Block
+argument_list|)
+block|;
+return|return
+name|BlockExpression
 return|;
 block|}
 name|CGBlockInfo
 argument_list|(
-specifier|const
-name|BlockExpr
-operator|*
-name|blockExpr
+argument|const BlockDecl *blockDecl
 argument_list|,
-specifier|const
-name|char
-operator|*
-name|Name
+argument|llvm::StringRef Name
 argument_list|)
-expr_stmt|;
+empty_stmt|;
 block|}
 end_decl_stmt
 

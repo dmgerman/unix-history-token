@@ -1,14 +1,14 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,deadcode.IdempotentOperations -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,experimental.deadcode.IdempotentOperations -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,deadcode.IdempotentOperations -analyzer-store=region -analyzer-constraints=basic -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,experimental.deadcode.IdempotentOperations -analyzer-store=region -analyzer-constraints=basic -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,deadcode.IdempotentOperations -analyzer-store=region -analyzer-constraints=range -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
+comment|// RUN: %clang_cc1 -Wunused-variable -analyze -analyzer-checker=core,deadcode.DeadStores,experimental.deadcode.IdempotentOperations -analyzer-store=region -analyzer-constraints=range -fblocks -verify -Wno-unreachable-code -analyzer-opt-analyze-nested-blocks %s
 end_comment
 
 begin_function
@@ -76,7 +76,7 @@ argument_list|,
 name|c
 argument_list|)
 expr_stmt|;
-comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (const char *, ...)'}} \
+comment|// expected-warning{{implicitly declaring library function 'printf' with type 'int (const char *, ...)'}} \
 comment|// expected-note{{please include the header<stdio.h> or explicitly provide a declaration for 'printf'}}
 block|}
 end_function
@@ -2663,6 +2663,95 @@ argument_list|(
 name|i
 argument_list|)
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// Look through chains of assignements, e.g.: int x = y = 0, when employing
+end_comment
+
+begin_comment
+comment|// silencing heuristics.
+end_comment
+
+begin_function
+name|int
+name|radar11185138_foo
+parameter_list|()
+block|{
+name|int
+name|x
+decl_stmt|,
+name|y
+decl_stmt|;
+name|x
+operator|=
+name|y
+operator|=
+literal|0
+expr_stmt|;
+comment|// expected-warning {{never read}}
+return|return
+name|y
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+name|rdar11185138_bar
+parameter_list|()
+block|{
+name|int
+name|y
+decl_stmt|;
+name|int
+name|x
+init|=
+name|y
+operator|=
+literal|0
+decl_stmt|;
+comment|// no-warning
+name|x
+operator|=
+literal|2
+expr_stmt|;
+name|y
+operator|=
+literal|2
+expr_stmt|;
+return|return
+name|x
+operator|+
+name|y
+return|;
+block|}
+end_function
+
+begin_function
+name|int
+modifier|*
+name|radar11185138_baz
+parameter_list|()
+block|{
+name|int
+modifier|*
+name|x
+decl_stmt|,
+modifier|*
+name|y
+decl_stmt|;
+name|x
+operator|=
+name|y
+operator|=
+literal|0
+expr_stmt|;
+comment|// no-warning
+return|return
+name|y
+return|;
 block|}
 end_function
 

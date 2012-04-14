@@ -119,6 +119,12 @@ name|string
 operator|>
 name|Targets
 expr_stmt|;
+comment|/// \brief The file to write GraphViz-formatted header dependencies to.
+name|std
+operator|::
+name|string
+name|DOTOutputFile
+expr_stmt|;
 name|public
 label|:
 name|DependencyOutputOptions

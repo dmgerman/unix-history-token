@@ -106,6 +106,34 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
+begin_decl_stmt
+name|int
+name|implicitConversion
+init|=
+literal|1.0
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|char
+name|floatArith
+index|[
+call|(
+name|int
+call|)
+argument_list|(
+literal|1.0
+operator|+
+literal|2.0
+argument_list|)
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|// expected-warning {{must be an integer constant expression}}
+end_comment
+
 begin_comment
 comment|// __builtin_constant_p as the condition of ?: allows arbitrary foldable
 end_comment
@@ -153,7 +181,6 @@ name|int
 name|a
 range|:
 operator|(
-comment|// expected-error {{expression is not an integer constant expression}}
 name|__builtin_constant_p
 argument_list|(
 call|(
@@ -173,7 +200,7 @@ argument_list|(
 literal|1.0
 operator|+
 name|expr
-comment|// expected-note {{subexpression not valid in an integer constant expression}}
+comment|// expected-error {{expression is not an integer constant expression}}
 argument_list|)
 else|:
 operator|-
@@ -396,10 +423,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// expected-warning {{expression result unused}}
-end_comment
-
 begin_decl_stmt
 name|int
 name|comma2
@@ -414,10 +437,6 @@ operator|)
 index|]
 decl_stmt|;
 end_decl_stmt
-
-begin_comment
-comment|// expected-warning {{expression result unused}} \
-end_comment
 
 begin_comment
 comment|// expected-warning {{use of logical '||' with constant operand}} \
@@ -441,11 +460,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{size of static array must be an integer constant expression}} \
-end_comment
-
-begin_comment
-comment|// expected-warning {{expression result unused}}
+comment|// expected-warning {{size of static array must be an integer constant expression}}
 end_comment
 
 begin_comment
@@ -489,10 +504,6 @@ index|]
 decl_stmt|;
 end_decl_stmt
 
-begin_comment
-comment|// expected-warning {{division by zero is undefined}}
-end_comment
-
 begin_decl_stmt
 name|int
 name|illegaldiv1b
@@ -507,7 +518,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{division by zero is undefined}} expected-error{{variable length array declaration not allowed at file scope}}
+comment|//expected-error{{variable length array declaration not allowed at file scope}}
 end_comment
 
 begin_decl_stmt
@@ -522,11 +533,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-error {{variable length array declaration not allowed at file scope}} \
-end_comment
-
-begin_comment
-comment|// expected-warning {{division by zero is undefined}}
+comment|// expected-error {{variable length array declaration not allowed at file scope}}
 end_comment
 
 begin_decl_stmt
@@ -565,7 +572,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
-comment|// expected-warning {{division by zero is undefined}} expected-error {{variable length array declaration not allowed at file scope}}
+comment|// expected-error {{variable length array declaration not allowed at file scope}}
 end_comment
 
 begin_decl_stmt

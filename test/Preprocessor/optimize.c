@@ -124,11 +124,11 @@ endif|#
 directive|endif
 end_endif
 
-begin_ifdef
-ifdef|#
-directive|ifdef
+begin_ifndef
+ifndef|#
+directive|ifndef
 name|__OPTIMIZE_SIZE__
-end_ifdef
+end_ifndef
 
 begin_error
 error|#

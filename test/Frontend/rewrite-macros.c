@@ -44,7 +44,7 @@ comment|// RUN: grep "//#warning eek" %t
 end_comment
 
 begin_comment
-comment|/* expected-warning {{#warning eek}} */
+comment|/* expected-warning {{eek}} */
 end_comment
 
 begin_warning

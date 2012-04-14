@@ -6,7 +6,8 @@ name|NONEXISTENT
 end_ifdef
 
 begin_decl_stmt
-name|__import_module__
+unit|@
+name|__experimental_modules_import
 name|load_nonexistent
 decl_stmt|;
 end_decl_stmt
@@ -23,7 +24,8 @@ name|FAILURE
 end_ifdef
 
 begin_decl_stmt
-name|__import_module__
+unit|@
+name|__experimental_modules_import
 name|load_failure
 decl_stmt|;
 end_decl_stmt
@@ -34,23 +36,27 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// RUN: %clang_cc1 -x c++ -emit-module -o %T/load_failure.pcm %S/Inputs/load_failure.h
+comment|// RUN: rm -rf %t
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -fmodule-cache-path %T -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
+comment|// RUN: %clang_cc1 -fmodules -x objective-c++ -fmodule-cache-path %t -fdisable-module-hash -emit-module -fmodule-name=load_failure %S/Inputs/module.map
 end_comment
 
 begin_comment
-comment|// CHECK-NONEXISTENT: load_failure.c:2:19: fatal error: module 'load_nonexistent' not found
+comment|// RUN: %clang_cc1 -fmodules -x objective-c -fmodule-cache-path %t -fdisable-module-hash %s -DNONEXISTENT 2>&1 | FileCheck -check-prefix=CHECK-NONEXISTENT %s
 end_comment
 
 begin_comment
-comment|// RUN: not %clang_cc1 -fmodule-cache-path %T -fdisable-module-hash %s -DFAILURE 2> %t
+comment|// CHECK-NONEXISTENT: load_failure.c:2:32: fatal error: module 'load_nonexistent' not found
 end_comment
 
 begin_comment
-comment|// RUN: FileCheck -check-prefix=CHECK-FAILURE %s< %t
+comment|// RUN: not %clang_cc1 -fmodules -x objective-c -fmodule-cache-path %t -fdisable-module-hash %s -DFAILURE 2> %t.out
+end_comment
+
+begin_comment
+comment|// RUN: FileCheck -check-prefix=CHECK-FAILURE %s< %t.out
 end_comment
 
 begin_comment
@@ -59,6 +65,10 @@ end_comment
 
 begin_comment
 comment|// CHECK-FAILURE: error: C99 was disabled in PCH file but is currently enabled
+end_comment
+
+begin_comment
+comment|// FIXME: When we have a syntax for modules in C, use that.
 end_comment
 
 end_unit

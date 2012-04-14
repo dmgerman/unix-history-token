@@ -217,17 +217,14 @@ begin_comment
 comment|// Aligned struct.
 end_comment
 
-begin_macro
+begin_struct
+struct|struct
 name|__attribute__
 argument_list|(
 argument|(aligned(
 literal|16
 argument|))
 argument_list|)
-end_macro
-
-begin_struct
-struct|struct
 name|A
 block|{
 name|char

@@ -661,7 +661,7 @@ block|}
 end_function
 
 begin_comment
-comment|// rdar://9289524 - Check that the empty cases don't produce an empty block.
+comment|// Verify that case 42 only calls test14 once.
 end_comment
 
 begin_comment
@@ -669,15 +669,27 @@ comment|// CHECK: @test13
 end_comment
 
 begin_comment
-comment|// CHECK: switch
+comment|// CHECK: call void @test13(i32 97)
 end_comment
 
 begin_comment
-comment|// CHECK:     i32 42, label [[EPILOG:%[0-9.a-z]+]]
+comment|// CHECK-NEXT: br label %[[EPILOG2:[0-9.a-z]+]]
 end_comment
 
 begin_comment
-comment|// CHECK:     i32 11, label [[EPILOG]]
+comment|// CHECK: [[EPILOG2]]
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: br label [[EPILOG:%[0-9.a-z]+]]
+end_comment
+
+begin_comment
+comment|// CHECK: call void @test13(i32 42)
+end_comment
+
+begin_comment
+comment|// CHECK-NEXT: br label [[EPILOG]]
 end_comment
 
 begin_function
@@ -696,65 +708,7 @@ block|{
 case|case
 literal|42
 case|:
-break|break;
-comment|// No empty block please.
-case|case
-literal|11
-case|:
-break|break;
-comment|// No empty block please.
-default|default:
 name|test13
-argument_list|(
-literal|42
-argument_list|)
-expr_stmt|;
-break|break;
-block|}
-block|}
-end_function
-
-begin_comment
-comment|// Verify that case 42 only calls test14 once.
-end_comment
-
-begin_comment
-comment|// CHECK: @test14
-end_comment
-
-begin_comment
-comment|// CHECK: call void @test14(i32 97)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: br label [[EPILOG2:%[0-9.a-z]+]]
-end_comment
-
-begin_comment
-comment|// CHECK: call void @test14(i32 42)
-end_comment
-
-begin_comment
-comment|// CHECK-NEXT: br label [[EPILOG2]]
-end_comment
-
-begin_function
-name|void
-name|test14
-parameter_list|(
-name|int
-name|x
-parameter_list|)
-block|{
-switch|switch
-condition|(
-name|x
-condition|)
-block|{
-case|case
-literal|42
-case|:
-name|test14
 argument_list|(
 literal|97
 argument_list|)
@@ -765,7 +719,7 @@ literal|11
 case|:
 break|break;
 default|default:
-name|test14
+name|test13
 argument_list|(
 literal|42
 argument_list|)

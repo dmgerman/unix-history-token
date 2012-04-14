@@ -109,7 +109,8 @@ comment|/// Direct - Pass the argument directly using the normal converted LLVM
 comment|/// type, or by coercing to another specified type stored in
 comment|/// 'CoerceToType').  If an offset is specified (in UIntData), then the
 comment|/// argument passed is offset by some number of bytes in the memory
-comment|/// representation.
+comment|/// representation. A dummy argument is emitted before the real argument
+comment|/// if the specified type stored in "PaddingType" is not zero.
 name|Direct
 block|,
 comment|/// Extend - Valid only for integer argument types. Same as 'direct'
@@ -150,6 +151,13 @@ name|Type
 operator|*
 name|TypeData
 expr_stmt|;
+name|llvm
+operator|::
+name|Type
+operator|*
+name|PaddingType
+expr_stmt|;
+comment|// Currently allowed only for Direct.
 name|unsigned
 name|UIntData
 decl_stmt|;
@@ -172,6 +180,9 @@ argument_list|,
 argument|bool B0 = false
 argument_list|,
 argument|bool B1 = false
+argument_list|,
+argument|llvm::Type* P =
+literal|0
 argument_list|)
 block|:
 name|TheKind
@@ -182,6 +193,11 @@ operator|,
 name|TypeData
 argument_list|(
 name|TD
+argument_list|)
+operator|,
+name|PaddingType
+argument_list|(
+name|P
 argument_list|)
 operator|,
 name|UIntData
@@ -228,6 +244,9 @@ literal|0
 argument_list|,
 argument|unsigned Offset =
 literal|0
+argument_list|,
+argument|llvm::Type *Padding =
+literal|0
 argument_list|)
 block|{
 return|return
@@ -238,6 +257,12 @@ argument_list|,
 name|T
 argument_list|,
 name|Offset
+argument_list|,
+name|false
+argument_list|,
+name|false
+argument_list|,
+name|Padding
 argument_list|)
 return|;
 block|}
@@ -422,6 +447,18 @@ argument_list|)
 block|;
 return|return
 name|UIntData
+return|;
+block|}
+name|llvm
+operator|::
+name|Type
+operator|*
+name|getPaddingType
+argument_list|()
+specifier|const
+block|{
+return|return
+name|PaddingType
 return|;
 block|}
 name|llvm

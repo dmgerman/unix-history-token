@@ -52,7 +52,25 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Basic/SourceManager.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"clang/Lex/ModuleLoader.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/ArrayRef.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"llvm/ADT/DenseMap.h"
 end_include
 
 begin_include
@@ -89,6 +107,12 @@ begin_include
 include|#
 directive|include
 file|<string>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<utility>
 end_include
 
 begin_decl_stmt
@@ -130,10 +154,16 @@ name|class
 name|ExternalASTSource
 decl_stmt|;
 name|class
+name|FileEntry
+decl_stmt|;
+name|class
 name|FileManager
 decl_stmt|;
 name|class
 name|FrontendAction
+decl_stmt|;
+name|class
+name|Module
 decl_stmt|;
 name|class
 name|Preprocessor
@@ -172,8 +202,6 @@ name|public
 name|ModuleLoader
 block|{
 comment|/// The options used in this compiler instance.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|CompilerInvocation
@@ -181,8 +209,6 @@ operator|>
 name|Invocation
 block|;
 comment|/// The diagnostics engine instance.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticsEngine
@@ -190,8 +216,6 @@ operator|>
 name|Diagnostics
 block|;
 comment|/// The target being compiled for.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|TargetInfo
@@ -199,8 +223,6 @@ operator|>
 name|Target
 block|;
 comment|/// The file manager.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|FileManager
@@ -208,8 +230,6 @@ operator|>
 name|FileMgr
 block|;
 comment|/// The source manager.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|SourceManager
@@ -217,8 +237,6 @@ operator|>
 name|SourceMgr
 block|;
 comment|/// The preprocessor.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|Preprocessor
@@ -226,8 +244,6 @@ operator|>
 name|PP
 block|;
 comment|/// The AST context.
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|ASTContext
@@ -235,8 +251,6 @@ operator|>
 name|Context
 block|;
 comment|/// The AST consumer.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|ASTConsumer
@@ -244,8 +258,6 @@ operator|>
 name|Consumer
 block|;
 comment|/// The code completion consumer.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|CodeCompleteConsumer
@@ -253,8 +265,6 @@ operator|>
 name|CompletionConsumer
 block|;
 comment|/// \brief The semantic analysis object.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|Sema
@@ -262,8 +272,6 @@ operator|>
 name|TheSema
 block|;
 comment|/// \brief The frontend timer
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|llvm
@@ -276,6 +284,32 @@ comment|/// \brief Non-owning reference to the ASTReader, if one exists.
 name|ASTReader
 operator|*
 name|ModuleManager
+block|;
+comment|/// \brief The set of top-level modules that has already been loaded,
+comment|/// along with the module map
+name|llvm
+operator|::
+name|DenseMap
+operator|<
+specifier|const
+name|IdentifierInfo
+operator|*
+block|,
+name|Module
+operator|*
+operator|>
+name|KnownModules
+block|;
+comment|/// \brief The location of the module-import keyword for the last module
+comment|/// import.
+name|SourceLocation
+name|LastModuleImportLoc
+block|;
+comment|/// \brief The result of the last module import.
+comment|///
+name|Module
+operator|*
+name|LastModuleImportResult
 block|;
 comment|/// \brief Holds information about the output file.
 comment|///
@@ -632,6 +666,7 @@ name|getLangOpts
 argument_list|()
 block|{
 return|return
+operator|*
 name|Invocation
 operator|->
 name|getLangOpts
@@ -646,6 +681,7 @@ argument_list|()
 specifier|const
 block|{
 return|return
+operator|*
 name|Invocation
 operator|->
 name|getLangOpts
@@ -1337,8 +1373,6 @@ comment|/// used by some diagnostics printers (for logging purposes only).
 comment|///
 comment|/// \return The new object on success, or null on failure.
 specifier|static
-name|llvm
-operator|::
 name|IntrusiveRefCntPtr
 operator|<
 name|DiagnosticsEngine
@@ -1398,6 +1432,8 @@ argument|bool DisablePCHValidation
 argument_list|,
 argument|bool DisableStatCache
 argument_list|,
+argument|bool AllowPCHWithCompilerErrors
+argument_list|,
 argument|void *DeserializationListener
 argument_list|)
 block|;
@@ -1416,6 +1452,8 @@ argument_list|,
 argument|bool DisablePCHValidation
 argument_list|,
 argument|bool DisableStatCache
+argument_list|,
+argument|bool AllowPCHWithCompilerErrors
 argument_list|,
 argument|Preprocessor&PP
 argument_list|,
@@ -1475,6 +1513,10 @@ block|;
 comment|/// Create the default output file (from the invocation's options) and add it
 comment|/// to the list of tracked output files.
 comment|///
+comment|/// The files created by this function always use temporary files to write to
+comment|/// their result (that is, the data is written to a temporary file which will
+comment|/// atomically replace the target output on success).
+comment|///
 comment|/// \return - Null on error.
 name|llvm
 operator|::
@@ -1514,6 +1556,8 @@ argument|StringRef Extension =
 literal|""
 argument_list|,
 argument|bool UseTemporary = false
+argument_list|,
+argument|bool CreateMissingDirectories = false
 argument_list|)
 block|;
 comment|/// Create a new output file, optionally deriving the output path name.
@@ -1534,7 +1578,9 @@ comment|/// \param RemoveFileOnSignal - Whether the file should be registered wi
 comment|/// llvm::sys::RemoveFileOnSignal. Note that this is not safe for
 comment|/// multithreaded use, as the underlying signal mechanism is not reentrant
 comment|/// \param UseTemporary - Create a new temporary file that must be renamed to
-comment|///         OutputPath in the end
+comment|/// OutputPath in the end.
+comment|/// \param CreateMissingDirectories - When \arg UseTemporary is true, create
+comment|/// missing directories in the output path.
 comment|/// \param ResultPathName [out] - If given, the result path name will be
 comment|/// stored here on success.
 comment|/// \param TempPathName [out] - If given, the temporary file path name
@@ -1562,6 +1608,8 @@ literal|""
 argument_list|,
 argument|bool UseTemporary = false
 argument_list|,
+argument|bool CreateMissingDirectories = false
+argument_list|,
 argument|std::string *ResultPathName =
 literal|0
 argument_list|,
@@ -1580,6 +1628,8 @@ name|bool
 name|InitializeSourceManager
 argument_list|(
 argument|StringRef InputFile
+argument_list|,
+argument|SrcMgr::CharacteristicKind Kind = SrcMgr::C_User
 argument_list|)
 block|;
 comment|/// InitializeSourceManager - Initialize the source manager to set InputFile
@@ -1592,6 +1642,8 @@ name|InitializeSourceManager
 argument_list|(
 argument|StringRef InputFile
 argument_list|,
+argument|SrcMgr::CharacteristicKind Kind
+argument_list|,
 argument|DiagnosticsEngine&Diags
 argument_list|,
 argument|FileManager&FileMgr
@@ -1603,14 +1655,17 @@ argument_list|)
 block|;
 comment|/// }
 name|virtual
-name|ModuleKey
+name|Module
+operator|*
 name|loadModule
 argument_list|(
 argument|SourceLocation ImportLoc
 argument_list|,
-argument|IdentifierInfo&ModuleName
+argument|ModuleIdPath Path
 argument_list|,
-argument|SourceLocation ModuleNameLoc
+argument|Module::NameVisibilityKind Visibility
+argument_list|,
+argument|bool IsInclusionDirective
 argument_list|)
 block|; }
 decl_stmt|;

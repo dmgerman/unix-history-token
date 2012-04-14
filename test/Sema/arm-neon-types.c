@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple thumbv7-apple-darwin10 -target-cpu cortex-a8 -fsyntax-only -Wvector-conversions -ffreestanding -verify %s
+comment|// RUN: %clang_cc1 -triple thumbv7-apple-darwin10 -target-cpu cortex-a8 -fsyntax-only -Wvector-conversion -ffreestanding -verify %s
 end_comment
 
 begin_include
@@ -117,6 +117,53 @@ name|b
 operator|+=
 name|a
 return|;
+block|}
+end_function
+
+begin_comment
+comment|// Warn for incompatible pointer types used with vld/vst intrinsics.
+end_comment
+
+begin_function
+name|int16x8_t
+name|test5
+parameter_list|(
+name|int
+modifier|*
+name|p
+parameter_list|)
+block|{
+return|return
+name|vld1q_s16
+argument_list|(
+name|p
+argument_list|)
+return|;
+comment|// expected-warning {{incompatible pointer types}}
+block|}
+end_function
+
+begin_function
+name|void
+name|test6
+parameter_list|(
+name|float
+modifier|*
+name|p
+parameter_list|,
+name|int32x2_t
+name|v
+parameter_list|)
+block|{
+return|return
+name|vst1_s32
+argument_list|(
+name|p
+argument_list|,
+name|v
+argument_list|)
+return|;
+comment|// expected-warning {{incompatible pointer types}}
 block|}
 end_function
 

@@ -58,6 +58,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/Frontend/FrontendOptions.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/StringRef.h"
 end_include
 
@@ -95,53 +101,14 @@ decl_stmt|;
 name|class
 name|CompilerInstance
 decl_stmt|;
-enum|enum
-name|InputKind
-block|{
-name|IK_None
-block|,
-name|IK_Asm
-block|,
-name|IK_C
-block|,
-name|IK_CXX
-block|,
-name|IK_ObjC
-block|,
-name|IK_ObjCXX
-block|,
-name|IK_PreprocessedC
-block|,
-name|IK_PreprocessedCXX
-block|,
-name|IK_PreprocessedObjC
-block|,
-name|IK_PreprocessedObjCXX
-block|,
-name|IK_OpenCL
-block|,
-name|IK_CUDA
-block|,
-name|IK_AST
-block|,
-name|IK_LLVM_IR
-block|}
-enum|;
 comment|/// FrontendAction - Abstract base class for actions which can be performed by
 comment|/// the frontend.
 name|class
 name|FrontendAction
 block|{
-name|std
-operator|::
-name|string
-name|CurrentFile
-expr_stmt|;
-name|InputKind
-name|CurrentFileKind
+name|FrontendInputFile
+name|CurrentInput
 decl_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|ASTUnit
@@ -261,7 +228,7 @@ literal|0
 function_decl|;
 comment|/// EndSourceFileAction - Callback at the end of processing a single input;
 comment|/// this is guaranteed to only be called following a successful call to
-comment|/// BeginSourceFileAction (and BeingSourceFile).
+comment|/// BeginSourceFileAction (and BeginSourceFile).
 name|virtual
 name|void
 name|EndSourceFileAction
@@ -322,7 +289,9 @@ block|{
 name|assert
 argument_list|(
 operator|!
-name|CurrentFile
+name|CurrentInput
+operator|.
+name|File
 operator|.
 name|empty
 argument_list|()
@@ -337,6 +306,17 @@ literal|0
 return|;
 block|}
 specifier|const
+name|FrontendInputFile
+operator|&
+name|getCurrentInput
+argument_list|()
+specifier|const
+block|{
+return|return
+name|CurrentInput
+return|;
+block|}
+specifier|const
 name|std
 operator|::
 name|string
@@ -348,7 +328,9 @@ block|{
 name|assert
 argument_list|(
 operator|!
-name|CurrentFile
+name|CurrentInput
+operator|.
+name|File
 operator|.
 name|empty
 argument_list|()
@@ -357,7 +339,9 @@ literal|"No current file!"
 argument_list|)
 block|;
 return|return
-name|CurrentFile
+name|CurrentInput
+operator|.
+name|File
 return|;
 block|}
 name|InputKind
@@ -368,7 +352,9 @@ block|{
 name|assert
 argument_list|(
 operator|!
-name|CurrentFile
+name|CurrentInput
+operator|.
+name|File
 operator|.
 name|empty
 argument_list|()
@@ -377,7 +363,9 @@ literal|"No current file!"
 argument_list|)
 block|;
 return|return
-name|CurrentFileKind
+name|CurrentInput
+operator|.
+name|Kind
 return|;
 block|}
 name|ASTUnit
@@ -411,13 +399,12 @@ argument_list|()
 return|;
 block|}
 name|void
-name|setCurrentFile
+name|setCurrentInput
 parameter_list|(
-name|StringRef
-name|Value
-parameter_list|,
-name|InputKind
-name|Kind
+specifier|const
+name|FrontendInputFile
+modifier|&
+name|CurrentInput
 parameter_list|,
 name|ASTUnit
 modifier|*
@@ -510,10 +497,7 @@ comment|/// \param CI - The compiler instance this action is being run from. The
 comment|/// action may store and use this object up until the matching EndSourceFile
 comment|/// action.
 comment|///
-comment|/// \param Filename - The input filename, which will be made available to
-comment|/// clients via \see getCurrentFile().
-comment|///
-comment|/// \param InputKind - The type of input. Some input kinds are handled
+comment|/// \param Input - The input filename and kind. Some input kinds are handled
 comment|/// specially, for example AST inputs, since the AST file itself contains
 comment|/// several objects which would normally be owned by the
 comment|/// CompilerInstance. When processing AST input files, these objects should
@@ -521,8 +505,8 @@ comment|/// generally not be initialized in the CompilerInstance -- they will
 comment|/// automatically be shared with the AST file in between \see
 comment|/// BeginSourceFile() and \see EndSourceFile().
 comment|///
-comment|/// \return True on success; the compilation of this file should be aborted
-comment|/// and neither Execute nor EndSourceFile should be called.
+comment|/// \return True on success; on failure the compilation of this file should
+comment|/// be aborted and neither Execute nor EndSourceFile should be called.
 name|bool
 name|BeginSourceFile
 parameter_list|(
@@ -530,11 +514,10 @@ name|CompilerInstance
 modifier|&
 name|CI
 parameter_list|,
-name|StringRef
-name|Filename
-parameter_list|,
-name|InputKind
-name|Kind
+specifier|const
+name|FrontendInputFile
+modifier|&
+name|Input
 parameter_list|)
 function_decl|;
 comment|/// Execute - Set the source managers main input file, and run the action.
@@ -591,6 +574,11 @@ operator|:
 name|public
 name|ASTFrontendAction
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|protected
 operator|:
 name|virtual
@@ -685,8 +673,6 @@ operator|:
 name|public
 name|FrontendAction
 block|{
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|FrontendAction

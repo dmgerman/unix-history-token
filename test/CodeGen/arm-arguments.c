@@ -922,5 +922,63 @@ parameter_list|()
 block|{}
 end_function
 
+begin_comment
+comment|// PR11905
+end_comment
+
+begin_struct
+struct|struct
+name|s31
+block|{
+name|char
+name|x
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_function
+name|void
+name|f31
+parameter_list|(
+name|struct
+name|s31
+name|s
+parameter_list|)
+block|{ }
+end_function
+
+begin_comment
+comment|// AAPCS: @f31([1 x i32] %s.coerce)
+end_comment
+
+begin_comment
+comment|// AAPCS: %s = alloca %struct.s31, align 4
+end_comment
+
+begin_comment
+comment|// AAPCS: alloca [1 x i32]
+end_comment
+
+begin_comment
+comment|// AAPCS: store [1 x i32] %s.coerce, [1 x i32]*
+end_comment
+
+begin_comment
+comment|// APCS-GNU: @f31([1 x i32] %s.coerce)
+end_comment
+
+begin_comment
+comment|// APCS-GNU: %s = alloca %struct.s31, align 4
+end_comment
+
+begin_comment
+comment|// APCS-GNU: alloca [1 x i32]
+end_comment
+
+begin_comment
+comment|// APCS-GNU: store [1 x i32] %s.coerce, [1 x i32]*
+end_comment
+
 end_unit
 

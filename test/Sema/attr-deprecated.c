@@ -238,7 +238,6 @@ end_comment
 
 begin_decl_stmt
 name|struct
-name|bar_dep
 name|__attribute__
 argument_list|(
 operator|(
@@ -247,6 +246,7 @@ operator|,
 name|invalid_attribute
 operator|)
 argument_list|)
+name|bar_dep
 decl_stmt|;
 end_decl_stmt
 
@@ -657,7 +657,7 @@ name|f
 operator|=
 name|test20_b
 expr_stmt|;
-comment|// expected-warning {{'Test20' is deprecated}}
+comment|// expected-warning {{'test20_b' is deprecated}}
 block|}
 end_function
 

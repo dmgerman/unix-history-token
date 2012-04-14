@@ -92,6 +92,18 @@ end_include
 begin_include
 include|#
 directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/ProgramState_Fwd.h"
+end_include
+
+begin_include
+include|#
+directive|include
+file|"clang/StaticAnalyzer/Core/PathSensitive/TaintTag.h"
+end_include
+
+begin_include
+include|#
+directive|include
 file|"llvm/ADT/PointerIntPair.h"
 end_include
 
@@ -131,7 +143,7 @@ name|namespace
 name|ento
 block|{
 name|class
-name|ProgramStateManager
+name|CallOrObjCMessage
 decl_stmt|;
 typedef|typedef
 name|ConstraintManager
@@ -242,9 +254,6 @@ return|;
 block|}
 block|}
 empty_stmt|;
-name|class
-name|ProgramStateManager
-decl_stmt|;
 comment|/// \class ProgramState
 comment|/// ProgramState - This class encapsulates:
 comment|///
@@ -339,9 +348,7 @@ name|refCount
 decl_stmt|;
 comment|/// makeWithStore - Return a ProgramState with the same values as the current
 comment|///  state with the exception of using the specified Store.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|makeWithStore
 argument_list|(
 specifier|const
@@ -398,18 +405,6 @@ block|{
 return|return
 operator|*
 name|stateMgr
-return|;
-block|}
-comment|/// Return true if this state is referenced by a persistent ExplodedNode.
-name|bool
-name|referencedByExplodedNode
-argument_list|()
-specifier|const
-block|{
-return|return
-name|refCount
-operator|>
-literal|0
 return|;
 block|}
 comment|/// getEnvironment - Return the environment associated with this state.
@@ -563,9 +558,7 @@ comment|//
 comment|// The output of "assume*" is a new ProgramState object with the added constraints.
 comment|// If no new state is feasible, NULL is returned.
 comment|//
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|assume
 argument_list|(
 name|DefinedOrUnknownSVal
@@ -583,13 +576,9 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 operator|,
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 operator|>
 name|assume
 argument_list|(
@@ -597,9 +586,7 @@ argument|DefinedOrUnknownSVal cond
 argument_list|)
 specifier|const
 expr_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|assumeInBound
 argument_list|(
 name|DefinedOrUnknownSVal
@@ -610,6 +597,12 @@ name|upperBound
 argument_list|,
 name|bool
 name|assumption
+argument_list|,
+name|QualType
+name|IndexType
+operator|=
+name|QualType
+argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
@@ -636,9 +629,7 @@ comment|// Binding and retrieving values to/from the environment and symbolic st
 comment|//==---------------------------------------------------------------------==//
 comment|/// BindCompoundLiteral - Return the state that has the bindings currently
 comment|///  in this state plus the bindings for the CompoundLiteral.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|bindCompoundLiteral
 argument_list|(
 specifier|const
@@ -658,15 +649,18 @@ decl|const
 decl_stmt|;
 comment|/// Create a new state by binding the value 'V' to the statement 'S' in the
 comment|/// state's environment.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|BindExpr
 argument_list|(
 specifier|const
 name|Stmt
 operator|*
 name|S
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|,
 name|SVal
 name|V
@@ -680,15 +674,18 @@ decl|const
 decl_stmt|;
 comment|/// Create a new state by binding the value 'V' and location 'locaton' to the
 comment|/// statement 'S' in the state's environment.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|bindExprAndLocation
 argument_list|(
 specifier|const
 name|Stmt
 operator|*
 name|S
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|,
 name|SVal
 name|location
@@ -698,9 +695,7 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|bindDecl
 argument_list|(
 specifier|const
@@ -713,9 +708,7 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|bindDeclWithNoInit
 argument_list|(
 specifier|const
@@ -725,9 +718,7 @@ name|VR
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|bindLoc
 argument_list|(
 name|Loc
@@ -738,9 +729,7 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|bindLoc
 argument_list|(
 name|SVal
@@ -751,9 +740,7 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|bindDefault
 argument_list|(
 name|SVal
@@ -764,9 +751,7 @@ name|V
 argument_list|)
 decl|const
 decl_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|unbindLoc
 argument_list|(
 name|Loc
@@ -777,9 +762,7 @@ decl_stmt|;
 comment|/// invalidateRegions - Returns the state with bindings for the given regions
 comment|///  cleared from the store. The regions are provided as a continuous array
 comment|///  from Begin to End. Optionally invalidates global regions as well.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|invalidateRegions
 argument_list|(
 name|ArrayRef
@@ -798,6 +781,11 @@ argument_list|,
 name|unsigned
 name|BlockCount
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
 name|StoreManager
 operator|::
 name|InvalidatedSymbols
@@ -806,24 +794,29 @@ name|IS
 operator|=
 literal|0
 argument_list|,
-name|bool
-name|invalidateGlobals
+specifier|const
+name|CallOrObjCMessage
+operator|*
+name|Call
 operator|=
-name|false
+literal|0
 argument_list|)
 decl|const
 decl_stmt|;
 comment|/// enterStackFrame - Returns the state for entry to the given stack frame,
 comment|///  preserving the current state.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|enterStackFrame
 argument_list|(
 specifier|const
+name|LocationContext
+operator|*
+name|callerCtx
+argument_list|,
+specifier|const
 name|StackFrameContext
 operator|*
-name|frame
+name|calleeCtx
 argument_list|)
 decl|const
 decl_stmt|;
@@ -840,17 +833,6 @@ specifier|const
 name|LocationContext
 operator|*
 name|LC
-argument_list|)
-decl|const
-decl_stmt|;
-comment|/// Get the lvalue for a StringLiteral.
-name|Loc
-name|getLValue
-argument_list|(
-specifier|const
-name|StringLiteral
-operator|*
-name|literal
 argument_list|)
 decl|const
 decl_stmt|;
@@ -932,6 +914,11 @@ name|Stmt
 operator|*
 name|S
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
 name|bool
 name|useOnlyDirectBindings
 operator|=
@@ -946,9 +933,16 @@ specifier|const
 name|Stmt
 operator|*
 name|Ex
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return the value bound to the specified location.
+comment|/// Returns UnknownVal() if none found.
 name|SVal
 name|getSVal
 argument_list|(
@@ -978,6 +972,8 @@ argument_list|()
 argument_list|)
 decl|const
 decl_stmt|;
+comment|/// \brief Return the value bound to the specified location.
+comment|/// Returns UnknownVal() if none found.
 name|SVal
 name|getSVal
 argument_list|(
@@ -1103,6 +1099,119 @@ argument|const MemRegion * const *end
 argument_list|)
 specifier|const
 expr_stmt|;
+comment|/// Create a new state in which the statement is marked as tainted.
+name|ProgramStateRef
+name|addTaint
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|S
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Create a new state in which the symbol is marked as tainted.
+name|ProgramStateRef
+name|addTaint
+argument_list|(
+name|SymbolRef
+name|S
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Create a new state in which the region symbol is marked as tainted.
+name|ProgramStateRef
+name|addTaint
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|R
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
+comment|/// Check if the statement is tainted in the current state.
+name|bool
+name|isTainted
+argument_list|(
+specifier|const
+name|Stmt
+operator|*
+name|S
+argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|isTainted
+argument_list|(
+name|SVal
+name|V
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|isTainted
+argument_list|(
+name|SymbolRef
+name|Sym
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
+name|bool
+name|isTainted
+argument_list|(
+specifier|const
+name|MemRegion
+operator|*
+name|Reg
+argument_list|,
+name|TaintTagType
+name|Kind
+operator|=
+name|TaintTagGeneric
+argument_list|)
+decl|const
+decl_stmt|;
 comment|//==---------------------------------------------------------------------==//
 comment|// Accessing the Generic Data Map (GDM).
 comment|//==---------------------------------------------------------------------==//
@@ -1123,9 +1232,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|add
 argument_list|(
 argument|typename ProgramStateTrait<T>::key_type K
@@ -1247,9 +1354,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|remove
 argument_list|(
 argument|typename ProgramStateTrait<T>::key_type K
@@ -1261,9 +1366,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|remove
 argument_list|(
 argument|typename ProgramStateTrait<T>::key_type K
@@ -1277,9 +1380,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|remove
 argument_list|()
 specifier|const
@@ -1289,9 +1390,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|set
 argument_list|(
 argument|typename ProgramStateTrait<T>::data_type D
@@ -1303,9 +1402,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|set
 argument_list|(
 argument|typename ProgramStateTrait<T>::key_type K
@@ -1319,9 +1416,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|set
 argument_list|(
 argument|typename ProgramStateTrait<T>::key_type K
@@ -1391,9 +1486,37 @@ name|raw_ostream
 operator|&
 name|Out
 argument_list|,
-name|CFG
+specifier|const
+name|char
+operator|*
+name|nl
+operator|=
+literal|"\n"
+argument_list|,
+specifier|const
+name|char
+operator|*
+name|sep
+operator|=
+literal|""
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|printDOT
+argument_list|(
+name|raw_ostream
 operator|&
-name|C
+name|Out
+argument_list|)
+decl|const
+decl_stmt|;
+name|void
+name|printTaint
+argument_list|(
+name|raw_ostream
+operator|&
+name|Out
 argument_list|,
 specifier|const
 name|char
@@ -1412,57 +1535,38 @@ argument_list|)
 decl|const
 decl_stmt|;
 name|void
-name|printStdErr
-argument_list|(
-name|CFG
-operator|&
-name|C
-argument_list|)
-decl|const
-decl_stmt|;
+name|dump
+argument_list|()
+specifier|const
+expr_stmt|;
 name|void
-name|printDOT
-argument_list|(
-name|raw_ostream
-operator|&
-name|Out
-argument_list|,
-name|CFG
-operator|&
-name|C
-argument_list|)
-decl|const
-decl_stmt|;
+name|dumpTaint
+argument_list|()
+specifier|const
+expr_stmt|;
 name|private
 label|:
-comment|/// Increments the number of times this state is referenced by ExplodeNodes.
+name|friend
 name|void
-name|incrementReferenceCount
-parameter_list|()
-block|{
-operator|++
-name|refCount
-expr_stmt|;
-block|}
-comment|/// Decrement the number of times this state is referenced by ExplodeNodes.
-name|void
-name|decrementReferenceCount
-parameter_list|()
-block|{
-name|assert
-argument_list|(
-name|refCount
-operator|>
-literal|0
-argument_list|)
-expr_stmt|;
-operator|--
-name|refCount
-expr_stmt|;
-block|}
+name|ProgramStateRetain
+parameter_list|(
 specifier|const
 name|ProgramState
 modifier|*
+name|state
+parameter_list|)
+function_decl|;
+name|friend
+name|void
+name|ProgramStateRelease
+parameter_list|(
+specifier|const
+name|ProgramState
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
+name|ProgramStateRef
 name|invalidateRegionsImpl
 argument_list|(
 name|ArrayRef
@@ -1481,189 +1585,24 @@ argument_list|,
 name|unsigned
 name|BlockCount
 argument_list|,
+specifier|const
+name|LocationContext
+operator|*
+name|LCtx
+argument_list|,
 name|StoreManager
 operator|::
 name|InvalidatedSymbols
 operator|&
 name|IS
 argument_list|,
-name|bool
-name|invalidateGlobals
+specifier|const
+name|CallOrObjCMessage
+operator|*
+name|Call
 argument_list|)
 decl|const
 decl_stmt|;
-block|}
-empty_stmt|;
-name|class
-name|ProgramStateSet
-block|{
-typedef|typedef
-name|llvm
-operator|::
-name|SmallPtrSet
-operator|<
-specifier|const
-name|ProgramState
-operator|*
-operator|,
-literal|5
-operator|>
-name|ImplTy
-expr_stmt|;
-name|ImplTy
-name|Impl
-decl_stmt|;
-name|public
-label|:
-name|ProgramStateSet
-argument_list|()
-block|{}
-specifier|inline
-name|void
-name|Add
-parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
-name|St
-parameter_list|)
-block|{
-name|Impl
-operator|.
-name|insert
-argument_list|(
-name|St
-argument_list|)
-expr_stmt|;
-block|}
-typedef|typedef
-name|ImplTy
-operator|::
-name|const_iterator
-name|iterator
-expr_stmt|;
-specifier|inline
-name|unsigned
-name|size
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Impl
-operator|.
-name|size
-argument_list|()
-return|;
-block|}
-specifier|inline
-name|bool
-name|empty
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Impl
-operator|.
-name|empty
-argument_list|()
-return|;
-block|}
-specifier|inline
-name|iterator
-name|begin
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Impl
-operator|.
-name|begin
-argument_list|()
-return|;
-block|}
-specifier|inline
-name|iterator
-name|end
-argument_list|()
-specifier|const
-block|{
-return|return
-name|Impl
-operator|.
-name|end
-argument_list|()
-return|;
-block|}
-name|class
-name|AutoPopulate
-block|{
-name|ProgramStateSet
-modifier|&
-name|S
-decl_stmt|;
-name|unsigned
-name|StartSize
-decl_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
-name|St
-decl_stmt|;
-name|public
-label|:
-name|AutoPopulate
-argument_list|(
-name|ProgramStateSet
-operator|&
-name|s
-argument_list|,
-specifier|const
-name|ProgramState
-operator|*
-name|st
-argument_list|)
-operator|:
-name|S
-argument_list|(
-name|s
-argument_list|)
-operator|,
-name|StartSize
-argument_list|(
-name|S
-operator|.
-name|size
-argument_list|()
-argument_list|)
-operator|,
-name|St
-argument_list|(
-argument|st
-argument_list|)
-block|{}
-operator|~
-name|AutoPopulate
-argument_list|()
-block|{
-if|if
-condition|(
-name|StartSize
-operator|==
-name|S
-operator|.
-name|size
-argument_list|()
-condition|)
-name|S
-operator|.
-name|Add
-argument_list|(
-name|St
-argument_list|)
-expr_stmt|;
-block|}
-block|}
-empty_stmt|;
 block|}
 empty_stmt|;
 comment|//===----------------------------------------------------------------------===//
@@ -1676,6 +1615,16 @@ name|friend
 name|class
 name|ProgramState
 decl_stmt|;
+name|friend
+name|void
+name|ProgramStateRelease
+parameter_list|(
+specifier|const
+name|ProgramState
+modifier|*
+name|state
+parameter_list|)
+function_decl|;
 name|private
 label|:
 comment|/// Eng - The SubEngine that owns this state manager.
@@ -1687,16 +1636,12 @@ comment|/* Can be null. */
 name|EnvironmentManager
 name|EnvMgr
 decl_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|StoreManager
 operator|>
 name|StoreMgr
 expr_stmt|;
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|ConstraintManager
@@ -1751,8 +1696,6 @@ operator|>
 name|StateSet
 expr_stmt|;
 comment|/// Object that manages the data for all created SVals.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|SValBuilder
@@ -1765,17 +1708,6 @@ operator|::
 name|BumpPtrAllocator
 operator|&
 name|Alloc
-expr_stmt|;
-comment|/// A vector of recently allocated ProgramStates that can potentially be
-comment|/// reused.
-name|std
-operator|::
-name|vector
-operator|<
-name|ProgramState
-operator|*
-operator|>
-name|recentlyAllocatedStates
 expr_stmt|;
 comment|/// A vector of ProgramStates that we can reuse.
 name|std
@@ -1935,9 +1867,7 @@ operator|~
 name|ProgramStateManager
 argument_list|()
 expr_stmt|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|getInitialState
 parameter_list|(
 specifier|const
@@ -2100,14 +2030,10 @@ return|return
 name|Eng
 return|;
 block|}
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|removeDeadBindings
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|St
 parameter_list|,
 specifier|const
@@ -2122,14 +2048,10 @@ parameter_list|)
 function_decl|;
 comment|/// Marshal a new state for the callee in another translation unit.
 comment|/// 'state' is owned by the caller's engine.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|MarshalState
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 specifier|const
@@ -2157,14 +2079,10 @@ argument_list|)
 return|;
 block|}
 comment|// Methods that manipulate the GDM.
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|addGDM
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|St
 parameter_list|,
 name|void
@@ -2176,14 +2094,10 @@ modifier|*
 name|Data
 parameter_list|)
 function_decl|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|removeGDM
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 name|void
@@ -2195,9 +2109,7 @@ comment|// Methods that query& manipulate the Store.
 name|void
 name|iterBindings
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|state
 argument_list|,
 name|StoreManager
@@ -2220,9 +2132,7 @@ name|F
 argument_list|)
 expr_stmt|;
 block|}
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|getPersistentState
 parameter_list|(
 name|ProgramState
@@ -2230,33 +2140,23 @@ modifier|&
 name|Impl
 parameter_list|)
 function_decl|;
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|getPersistentStateWithGDM
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|FromState
 parameter_list|,
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|GDMState
 parameter_list|)
 function_decl|;
 name|bool
 name|haveEqualEnvironments
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|S1
 parameter_list|,
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|S2
 parameter_list|)
 block|{
@@ -2273,14 +2173,10 @@ block|}
 name|bool
 name|haveEqualStores
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|S1
 parameter_list|,
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|S2
 parameter_list|)
 block|{
@@ -2294,12 +2190,6 @@ operator|->
 name|store
 return|;
 block|}
-comment|/// Periodically called by ExprEngine to recycle ProgramStates that were
-comment|/// created but never used for creating an ExplodedNode.
-name|void
-name|recycleUnusedStates
-parameter_list|()
-function_decl|;
 comment|//==---------------------------------------------------------------------==//
 comment|// Generic Data Map methods.
 comment|//==---------------------------------------------------------------------==//
@@ -2323,12 +2213,10 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|set
 argument_list|(
-argument|const ProgramState *st
+argument|ProgramStateRef st
 argument_list|,
 argument|typename ProgramStateTrait<T>::data_type D
 argument_list|)
@@ -2363,12 +2251,10 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|set
 argument_list|(
-argument|const ProgramState *st
+argument|ProgramStateRef st
 argument_list|,
 argument|typename ProgramStateTrait<T>::key_type K
 argument_list|,
@@ -2428,12 +2314,10 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|add
 argument_list|(
-argument|const ProgramState *st
+argument|ProgramStateRef st
 argument_list|,
 argument|typename ProgramStateTrait<T>::key_type K
 argument_list|,
@@ -2489,12 +2373,10 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|remove
 argument_list|(
-argument|const ProgramState *st
+argument|ProgramStateRef st
 argument_list|,
 argument|typename ProgramStateTrait<T>::key_type K
 argument_list|,
@@ -2550,12 +2432,10 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|remove
 argument_list|(
-argument|const ProgramState *st
+argument|ProgramStateRef st
 argument_list|)
 block|{
 return|return
@@ -2668,7 +2548,7 @@ name|APSInt
 operator|*
 name|getSymVal
 argument_list|(
-argument|const ProgramState *St
+argument|ProgramStateRef St
 argument_list|,
 argument|SymbolRef sym
 argument_list|)
@@ -2687,9 +2567,7 @@ block|}
 name|void
 name|EndPath
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|St
 parameter_list|)
 block|{
@@ -2736,9 +2614,7 @@ argument_list|)
 return|;
 block|}
 specifier|inline
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|assume
@@ -2789,13 +2665,9 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 operator|,
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 operator|>
 name|ProgramState
 operator|::
@@ -2848,9 +2720,7 @@ end_return
 
 begin_expr_stmt
 unit|}  inline
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|bindLoc
@@ -2913,31 +2783,6 @@ argument_list|(
 name|VD
 argument_list|,
 name|LC
-argument_list|)
-return|;
-block|}
-end_expr_stmt
-
-begin_expr_stmt
-specifier|inline
-name|Loc
-name|ProgramState
-operator|::
-name|getLValue
-argument_list|(
-argument|const StringLiteral *literal
-argument_list|)
-specifier|const
-block|{
-return|return
-name|getStateManager
-argument_list|()
-operator|.
-name|StoreMgr
-operator|->
-name|getLValueString
-argument_list|(
-name|literal
 argument_list|)
 return|;
 block|}
@@ -3123,6 +2968,8 @@ name|getSVal
 argument_list|(
 argument|const Stmt *Ex
 argument_list|,
+argument|const LocationContext *LCtx
+argument_list|,
 argument|bool useOnlyDirectBindings
 argument_list|)
 specifier|const
@@ -3132,7 +2979,12 @@ name|Env
 operator|.
 name|getSVal
 argument_list|(
+name|EnvironmentEntry
+argument_list|(
 name|Ex
+argument_list|,
+name|LCtx
+argument_list|)
 argument_list|,
 operator|*
 name|getStateManager
@@ -3154,6 +3006,8 @@ operator|::
 name|getSValAsScalarOrLoc
 argument_list|(
 argument|const Stmt *S
+argument_list|,
+argument|const LocationContext *LCtx
 argument_list|)
 specifier|const
 block|{
@@ -3204,6 +3058,8 @@ return|return
 name|getSVal
 argument_list|(
 name|S
+argument_list|,
+name|LCtx
 argument_list|)
 return|;
 block|}
@@ -3235,7 +3091,7 @@ argument_list|()
 operator|.
 name|StoreMgr
 operator|->
-name|Retrieve
+name|getBinding
 argument_list|(
 name|getStore
 argument_list|()
@@ -3265,7 +3121,7 @@ argument_list|()
 operator|.
 name|StoreMgr
 operator|->
-name|Retrieve
+name|getBinding
 argument_list|(
 name|getStore
 argument_list|()
@@ -3327,9 +3183,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|add
@@ -3401,9 +3255,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|remove
@@ -3442,9 +3294,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|remove
@@ -3480,9 +3330,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|remove
@@ -3510,9 +3358,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|set
@@ -3544,9 +3390,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|set
@@ -3589,9 +3433,7 @@ operator|<
 name|typename
 name|T
 operator|>
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|ProgramState
 operator|::
 name|set
@@ -3756,6 +3598,11 @@ name|SubRegionMap
 operator|::
 name|Visitor
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 typedef|typedef
 name|llvm
 operator|::
@@ -3775,9 +3622,7 @@ decl_stmt|;
 end_decl_stmt
 
 begin_decl_stmt
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 decl_stmt|;
 end_decl_stmt
@@ -3790,8 +3635,6 @@ decl_stmt|;
 end_decl_stmt
 
 begin_expr_stmt
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|SubRegionMap
@@ -3805,19 +3648,17 @@ name|public
 label|:
 end_label
 
-begin_expr_stmt
+begin_macro
 name|ScanReachableSymbols
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
-name|st
+argument|ProgramStateRef st
 argument_list|,
-name|SymbolVisitor
-operator|&
-name|v
+argument|SymbolVisitor& v
 argument_list|)
-operator|:
+end_macro
+
+begin_expr_stmt
+unit|:
 name|state
 argument_list|(
 name|st

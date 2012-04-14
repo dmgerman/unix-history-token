@@ -24,7 +24,7 @@ comment|// produce the final binary.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -ccc-host-triple x86_64-unknown-linux-gnu \
+comment|// RUN: %clang -### -target x86_64-unknown-linux-gnu \
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// -isysroot.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -ccc-host-triple x86_64-unknown-linux-gnu -isysroot /baz \
+comment|// RUN: %clang -### -target x86_64-unknown-linux-gnu -isysroot /baz \
 end_comment
 
 begin_comment
@@ -76,7 +76,7 @@ comment|// Check that omitting the equals works as well.
 end_comment
 
 begin_comment
-comment|// RUN: %clang -### -ccc-host-triple x86_64-unknown-linux-gnu \
+comment|// RUN: %clang -### -target x86_64-unknown-linux-gnu \
 end_comment
 
 begin_comment

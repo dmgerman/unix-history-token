@@ -125,6 +125,10 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_comment
+comment|// expected-note{{declared here}}
+end_comment
+
 begin_function_decl
 name|DWORD
 name|FilterExceptionInformation
@@ -191,7 +195,8 @@ argument_list|(
 argument|FilterExpression()
 argument_list|)
 block|{
-comment|// expected-error{{}}
+comment|// expected-warning{{implicit declaration of function '__except' is invalid in C99}} \
+comment|// expected-error{{too few arguments to function call, expected 1, have 0}}
 block|}
 block|}
 end_function

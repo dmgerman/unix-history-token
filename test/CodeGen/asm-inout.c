@@ -53,6 +53,10 @@ begin_comment
 comment|// PR7338
 end_comment
 
+begin_comment
+comment|// CHECK: @test3
+end_comment
+
 begin_function
 name|void
 name|test3
@@ -66,12 +70,16 @@ name|vin
 parameter_list|)
 block|{
 comment|// CHECK: call void asm "opr $0,$1", "=*r|m|r,r|m|r,~{edi},~{dirflag},~{fpsr},~{flags}"
-asm|asm( 		"opr %[vout],%[vin]" 		: [vout] "=r,=m,=r" (*vout) 		: [vin] "r,m,r" (vin) 		: "edi" 		);
+asm|asm ("opr %[vout],%[vin]"        : [vout] "=r,=m,=r" (*vout)        : [vin] "r,m,r" (vin)        : "edi");
 block|}
 end_function
 
 begin_comment
 comment|// PR8959 - This should implicitly truncate the immediate to a byte.
+end_comment
+
+begin_comment
+comment|// CHECK: @test4
 end_comment
 
 begin_function
@@ -88,6 +96,7 @@ name|unsigned
 name|char
 name|oldval
 decl_stmt|;
+comment|// CHECK: call i8 asm "frob $0", "=r,0{{.*}}"(i8 -1)
 asm|__asm__ ("frob %0" : "=r"(oldval) : "0"(0xff));
 return|return
 operator|(
@@ -95,7 +104,44 @@ name|int
 operator|)
 name|oldval
 return|;
-comment|// CHECK: call i8 asm "frob $0", "=r,0{{.*}}"(i8 -1)
+block|}
+end_function
+
+begin_comment
+comment|//<rdar://problem/10919182> - This should have both inputs be of type x86_mmx.
+end_comment
+
+begin_comment
+comment|// CHECK: @test5
+end_comment
+
+begin_typedef
+typedef|typedef
+name|long
+name|long
+name|__m64
+name|__attribute__
+typedef|((
+name|__vector_size__
+typedef|(8)));
+end_typedef
+
+begin_function
+name|__m64
+name|test5
+parameter_list|(
+name|__m64
+name|__A
+parameter_list|,
+name|__m64
+name|__B
+parameter_list|)
+block|{
+comment|// CHECK: call x86_mmx asm "pmulhuw $1, $0\0A\09", "=y,y,0,~{dirflag},~{fpsr},~{flags}"(x86_mmx %{{.*}}, x86_mmx %{{.*}})
+asm|asm ("pmulhuw %1, %0\n\t" : "+y" (__A) : "y" (__B));
+return|return
+name|__A
+return|;
 block|}
 end_function
 

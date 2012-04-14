@@ -151,7 +151,7 @@ condition|(
 literal|0
 condition|)
 empty_stmt|;
-comment|// expected-warning {{if statement has empty body}}
+comment|// expected-warning {{if statement has empty body}} expected-note {{put the semicolon on a separate line to silence this warning}}
 name|int
 name|X
 decl_stmt|;
@@ -163,7 +163,7 @@ condition|(
 literal|0
 condition|)
 empty_stmt|;
-comment|// expected-warning {{if statement has empty body}}
+comment|// expected-warning {{if statement has empty body}} expected-note {{put the semicolon on a separate line to silence this warning}}
 block|}
 end_function
 
@@ -184,7 +184,7 @@ condition|(
 literal|0
 condition|)
 empty_stmt|;
-comment|// expected-warning {{if statement has empty body}}
+comment|// expected-warning {{if statement has empty body}} expected-note {{put the semicolon on a separate line to silence this warning}}
 name|t
 name|x
 init|=
@@ -195,7 +195,7 @@ condition|(
 literal|0
 condition|)
 empty_stmt|;
-comment|// expected-warning {{if statement has empty body}}
+comment|// expected-warning {{if statement has empty body}} expected-note {{put the semicolon on a separate line to silence this warning}}
 block|}
 end_function
 

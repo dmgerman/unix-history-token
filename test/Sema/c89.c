@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|/* RUN: %clang_cc1 %s -std=c89 -pedantic -fsyntax-only -verify  */
+comment|/* RUN: %clang_cc1 %s -std=c89 -pedantic -fsyntax-only -verify -Wimplicit-function-declaration  */
 end_comment
 
 begin_function
@@ -282,7 +282,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* expected-warning {{variable length arrays are a C99 feature, accepted as an extension}} */
+comment|/* expected-warning {{variable length arrays are a C99 feature}} */
 end_comment
 
 begin_function_decl
@@ -300,7 +300,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|/* expected-warning {{use of C99-specific array features}} */
+comment|/* expected-warning {{static array size is a C99 feature}} */
 end_comment
 
 begin_function
@@ -315,7 +315,7 @@ literal|4
 index|]
 parameter_list|)
 block|{
-comment|/* expected-warning {{use of C99-specific array features}} */
+comment|/* expected-warning {{qualifier in array size is a C99 feature}} */
 name|int
 name|Y
 index|[
@@ -325,7 +325,7 @@ literal|1
 index|]
 index|]
 decl_stmt|;
-comment|/* expected-warning {{variable length arrays are a C99 feature, accepted as an extension}} */
+comment|/* expected-warning {{variable length arrays are a C99 feature}} */
 block|}
 end_function
 
@@ -420,6 +420,189 @@ end_decl_stmt
 
 begin_comment
 comment|/* expected-warning {{designated initializers are a C99 feature}} */
+end_comment
+
+begin_function_decl
+specifier|extern
+name|int
+name|printf
+parameter_list|(
+name|__const
+name|char
+modifier|*
+name|__restrict
+name|__format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_comment
+comment|/* Warn, but don't suggest typo correction. */
+end_comment
+
+begin_function
+name|void
+name|test16
+parameter_list|()
+block|{
+name|printg
+argument_list|(
+literal|"Hello, world!\n"
+argument_list|)
+expr_stmt|;
+comment|/* expected-warning {{implicit declaration of function 'printg'}} */
+block|}
+end_function
+
+begin_struct
+struct|struct
+name|x
+block|{
+name|int
+name|x
+decl_stmt|,
+name|y
+index|[]
+decl_stmt|;
+block|}
+struct|;
+end_struct
+
+begin_comment
+comment|/* expected-warning {{Flexible array members are a C99-specific feature}} */
+end_comment
+
+begin_comment
+comment|/* Duplicated type-qualifiers aren't allowed by C90 */
+end_comment
+
+begin_decl_stmt
+specifier|const
+specifier|const
+name|int
+name|c_i
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected-warning {{duplicate 'const' declaration specifier}} */
+end_comment
+
+begin_typedef
+typedef|typedef
+specifier|volatile
+name|int
+name|vol_int
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|volatile
+name|vol_int
+name|volvol_i
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected-warning {{duplicate 'volatile' declaration specifier}} */
+end_comment
+
+begin_typedef
+typedef|typedef
+specifier|volatile
+name|vol_int
+name|volvol_int
+typedef|;
+end_typedef
+
+begin_comment
+comment|/* expected-warning {{duplicate 'volatile' declaration specifier}} */
+end_comment
+
+begin_decl_stmt
+specifier|const
+name|int
+modifier|*
+specifier|const
+name|c
+decl_stmt|;
+end_decl_stmt
+
+begin_typedef
+typedef|typedef
+specifier|const
+name|int
+name|CI
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|const
+name|CI
+name|mine1
+index|[
+literal|5
+index|]
+index|[
+literal|5
+index|]
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected-warning {{duplicate 'const' declaration specifier}} */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|CI
+name|array_of_CI
+index|[
+literal|5
+index|]
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|const
+name|array_of_CI
+name|mine2
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* expected-warning {{duplicate 'const' declaration specifier}} */
+end_comment
+
+begin_typedef
+typedef|typedef
+name|CI
+modifier|*
+name|array_of_pointer_to_CI
+index|[
+literal|5
+index|]
+typedef|;
+end_typedef
+
+begin_decl_stmt
+specifier|const
+name|array_of_pointer_to_CI
+name|mine3
+decl_stmt|;
+end_decl_stmt
+
+begin_function
+name|void
+name|main
+parameter_list|()
+block|{}
+end_function
+
+begin_comment
+comment|/* expected-error {{'main' must return 'int'}} */
 end_comment
 
 end_unit

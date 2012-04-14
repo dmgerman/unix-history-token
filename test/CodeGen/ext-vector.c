@@ -993,6 +993,9 @@ init|=
 operator|*
 name|bp
 decl_stmt|;
+name|int4
+name|d
+decl_stmt|;
 comment|// CHECK: udiv<4 x i32>
 comment|// CHECK: urem<4 x i32>
 name|a
@@ -1027,42 +1030,79 @@ comment|// CHECK: icmp ugt
 comment|// CHECK: icmp uge
 comment|// CHECK: icmp eq
 comment|// CHECK: icmp ne
-name|a
+name|d
 operator|=
 name|a
 operator|<
 name|b
 expr_stmt|;
-name|a
+name|d
 operator|=
 name|a
 operator|<=
 name|b
 expr_stmt|;
-name|a
+name|d
 operator|=
 name|a
 operator|>
 name|b
 expr_stmt|;
-name|a
+name|d
 operator|=
 name|a
 operator|>=
 name|b
 expr_stmt|;
-name|a
+name|d
 operator|=
 name|a
 operator|==
 name|b
 expr_stmt|;
-name|a
+name|d
 operator|=
 name|a
 operator|!=
 name|b
 expr_stmt|;
+block|}
+end_function
+
+begin_comment
+comment|// CHECK: @test15
+end_comment
+
+begin_function
+name|int4
+name|test15
+parameter_list|(
+name|uint4
+name|V0
+parameter_list|)
+block|{
+comment|// CHECK: icmp eq<4 x i32>
+name|int4
+name|V
+init|=
+operator|!
+name|V0
+decl_stmt|;
+name|V
+operator|=
+name|V
+operator|&&
+name|V
+expr_stmt|;
+name|V
+operator|=
+name|V
+operator|||
+name|V
+expr_stmt|;
+return|return
+name|V
+return|;
 block|}
 end_function
 

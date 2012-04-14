@@ -89,12 +89,6 @@ name|namespace
 name|ento
 block|{
 name|class
-name|ProgramState
-decl_stmt|;
-name|class
-name|ProgramStateManager
-decl_stmt|;
-name|class
 name|SubEngine
 decl_stmt|;
 name|class
@@ -108,14 +102,10 @@ name|ConstraintManager
 argument_list|()
 expr_stmt|;
 name|virtual
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|assume
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 name|DefinedSVal
@@ -131,22 +121,27 @@ name|std
 operator|::
 name|pair
 operator|<
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 operator|,
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 operator|>
 name|assumeDual
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|DefinedSVal Cond
 argument_list|)
 block|{
-return|return
+name|std
+operator|::
+name|pair
+operator|<
+name|ProgramStateRef
+block|,
+name|ProgramStateRef
+operator|>
+name|res
+operator|=
 name|std
 operator|::
 name|make_pair
@@ -169,6 +164,27 @@ argument_list|,
 name|false
 argument_list|)
 argument_list|)
+block|;
+name|assert
+argument_list|(
+operator|!
+operator|(
+operator|!
+name|res
+operator|.
+name|first
+operator|&&
+operator|!
+name|res
+operator|.
+name|second
+operator|)
+operator|&&
+literal|"System is over constrained."
+argument_list|)
+block|;
+return|return
+name|res
 return|;
 block|}
 name|virtual
@@ -179,7 +195,7 @@ name|APSInt
 operator|*
 name|getSymVal
 argument_list|(
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolRef sym
 argument_list|)
@@ -191,9 +207,7 @@ name|virtual
 name|bool
 name|isEqual
 argument_list|(
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|state
 argument_list|,
 name|SymbolRef
@@ -211,14 +225,10 @@ init|=
 literal|0
 decl_stmt|;
 name|virtual
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|removeDeadBindings
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 name|SymbolReaper
@@ -232,9 +242,7 @@ name|virtual
 name|void
 name|print
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|,
 name|raw_ostream
@@ -258,12 +266,12 @@ name|virtual
 name|void
 name|EndPath
 parameter_list|(
-specifier|const
-name|ProgramState
-modifier|*
+name|ProgramStateRef
 name|state
 parameter_list|)
 block|{}
+name|protected
+label|:
 comment|/// canReasonAbout - Not all ConstraintManagers can accurately reason about
 comment|///  all SVal values.  This method returns true if the ConstraintManager can
 comment|///  reasonably handle a given SVal value.  This is typically queried by

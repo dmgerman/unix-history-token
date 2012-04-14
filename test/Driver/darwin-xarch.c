@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -### \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -### \
 end_comment
 
 begin_comment
@@ -32,7 +32,7 @@ comment|// CHECK-COMPILE: clang{{.*}}" "-cc1" "-triple" "x86_64-apple-macosx10.5
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -### \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -### \
 end_comment
 
 begin_comment
@@ -52,7 +52,7 @@ comment|// CHECK-LINK: ld{{.*}} "-arch" "i386"{{.*}} "-some-linker-arg"
 end_comment
 
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-apple-darwin10 -### \
+comment|// RUN: %clang -target x86_64-apple-darwin10 -### \
 end_comment
 
 begin_comment

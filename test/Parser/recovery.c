@@ -87,7 +87,7 @@ end_comment
 
 begin_comment
 unit|}
-comment|// expected-error {{expected external declaration}}
+comment|// expected-error {{extraneous closing brace ('}')}}
 end_comment
 
 begin_comment
@@ -215,7 +215,7 @@ empty_stmt|;
 end_empty_stmt
 
 begin_comment
-comment|// expected-warning {{ISO C does not allow an extra ';' outside of a function}}
+comment|// expected-warning {{extra ';' outside of a function}}
 end_comment
 
 begin_struct

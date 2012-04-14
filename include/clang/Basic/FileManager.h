@@ -515,8 +515,6 @@ name|class
 name|FileManager
 range|:
 name|public
-name|llvm
-operator|::
 name|RefCountedBase
 operator|<
 name|FileManager
@@ -531,7 +529,8 @@ block|;
 name|class
 name|UniqueFileContainer
 block|;
-comment|/// UniqueRealDirs/UniqueRealFiles - Cache for existing real directories/files.
+comment|/// UniqueRealDirs/UniqueRealFiles - Cache for existing real
+comment|/// directories/files.
 comment|///
 name|UniqueDirContainer
 operator|&
@@ -613,8 +612,6 @@ block|,
 name|NumFileCacheMisses
 block|;
 comment|// Caching.
-name|llvm
-operator|::
 name|OwningPtr
 operator|<
 name|FileSystemStatCache

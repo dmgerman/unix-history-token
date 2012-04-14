@@ -1,18 +1,18 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,experimental.unix.CString,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -analyzer-checker=core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,experimental.unix.CString,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -analyzer-checker=core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,experimental.unix.CString,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DVARIANT -analyzer-checker=core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=core,experimental.unix.CString,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
+comment|// RUN: %clang_cc1 -analyze -DUSE_BUILTINS -DVARIANT -analyzer-checker=experimental.security.taint,core,unix.cstring,experimental.unix.cstring,experimental.deadcode.UnreachableCode -analyzer-store=region -Wno-null-dereference -verify %s
 end_comment
 
 begin_comment
@@ -119,6 +119,21 @@ argument_list|)
 name|size_t
 expr_stmt|;
 end_typedef
+
+begin_function_decl
+name|int
+name|scanf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+specifier|restrict
+name|format
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
 
 begin_comment
 comment|//===----------------------------------------------------------------------===
@@ -718,6 +733,83 @@ operator|*
 argument_list|)
 decl_stmt|;
 name|use_string_ptr
+argument_list|(
+name|p2
+argument_list|)
+expr_stmt|;
+name|size_t
+name|c
+init|=
+name|strlen
+argument_list|(
+name|x
+argument_list|)
+decl_stmt|;
+if|if
+condition|(
+name|a
+operator|==
+literal|0
+operator|&&
+name|c
+operator|!=
+literal|0
+condition|)
+operator|(
+name|void
+operator|)
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|// expected-warning{{null}}
+block|}
+end_function
+
+begin_function
+name|void
+name|strlen_indirect2
+parameter_list|(
+name|char
+modifier|*
+name|x
+parameter_list|)
+block|{
+name|size_t
+name|a
+init|=
+name|strlen
+argument_list|(
+name|x
+argument_list|)
+decl_stmt|;
+name|char
+modifier|*
+name|p
+init|=
+name|x
+decl_stmt|;
+name|char
+modifier|*
+modifier|*
+name|p2
+init|=
+operator|&
+name|p
+decl_stmt|;
+specifier|extern
+name|void
+name|use_string_ptr2
+argument_list|(
+name|char
+operator|*
+operator|*
+argument_list|)
+decl_stmt|;
+name|use_string_ptr2
 argument_list|(
 name|p2
 argument_list|)
@@ -1690,6 +1782,32 @@ end_function
 
 begin_function
 name|void
+name|strcpy_fn_const
+parameter_list|(
+name|char
+modifier|*
+name|x
+parameter_list|)
+block|{
+name|strcpy
+argument_list|(
+name|x
+argument_list|,
+operator|(
+specifier|const
+name|char
+operator|*
+operator|)
+operator|&
+name|strcpy_fn
+argument_list|)
+expr_stmt|;
+comment|// expected-warning{{Argument to string copy function is the address of the function 'strcpy_fn', which is not a null-terminated string}}
+block|}
+end_function
+
+begin_function
+name|void
 name|strcpy_effects
 parameter_list|(
 name|char
@@ -2591,6 +2709,53 @@ argument_list|(
 name|dst
 argument_list|,
 name|src
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|strlen
+argument_list|(
+name|dst
+argument_list|)
+operator|<
+literal|4
+condition|)
+operator|(
+name|void
+operator|)
+operator|*
+operator|(
+name|char
+operator|*
+operator|)
+literal|0
+expr_stmt|;
+comment|// no-warning
+block|}
+end_function
+
+begin_function
+name|void
+name|strcat_symbolic_dst_length_taint
+parameter_list|(
+name|char
+modifier|*
+name|dst
+parameter_list|)
+block|{
+name|scanf
+argument_list|(
+literal|"%s"
+argument_list|,
+name|dst
+argument_list|)
+expr_stmt|;
+comment|// Taint data.
+name|strcat
+argument_list|(
+name|dst
+argument_list|,
+literal|"1234"
 argument_list|)
 expr_stmt|;
 if|if

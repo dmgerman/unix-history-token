@@ -39,8 +39,8 @@ asm|asm ("nop" : : : "0", "%0", "#0");
 asm|asm ("nop" : : : "foo");
 comment|// expected-error {{unknown register name 'foo' in asm}}
 asm|asm ("nop" : : : "52");
-asm|asm ("nop" : : : "54");
-comment|// expected-error {{unknown register name '54' in asm}}
+asm|asm ("nop" : : : "104");
+comment|// expected-error {{unknown register name '104' in asm}}
 asm|asm ("nop" : : : "-1");
 comment|// expected-error {{unknown register name '-1' in asm}}
 asm|asm ("nop" : : : "+1");

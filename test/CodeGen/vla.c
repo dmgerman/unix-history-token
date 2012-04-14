@@ -471,8 +471,6 @@ comment|// VLA captures.
 comment|// CHECK-NEXT: [[DIM0:%.*]] = load i32* [[N]], align 4
 comment|// CHECK-NEXT: [[T0:%.*]] = load i32* [[N]], align 4
 comment|// CHECK-NEXT: [[DIM1:%.*]] = add i32 [[T0]], 1
-comment|// __typeof.  FIXME: does this really need to be loaded?
-comment|// CHECK-NEXT: load [6 x i8]** [[P]]
 comment|// CHECK-NEXT: [[T0:%.*]] = load [6 x i8]** [[P]], align 4
 comment|// CHECK-NEXT: [[T1:%.*]] = load i32* [[N]], align 4
 comment|// CHECK-NEXT: [[T2:%.*]] = udiv i32 [[T1]], 2

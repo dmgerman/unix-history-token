@@ -180,7 +180,7 @@ typedef|;
 end_typedef
 
 begin_comment
-comment|// -expected-warning{{empty struct (accepted as an extension) has size 0 in C, size 1 in C++}}
+comment|// -expected-warning{{empty struct is a GNU extension}}
 end_comment
 
 begin_decl_stmt

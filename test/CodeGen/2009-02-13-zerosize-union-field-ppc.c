@@ -1,14 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 %s -m32 -emit-llvm -o - | grep {i32 32} | count 3
+comment|// RUN: %clang_cc1 %s -triple powerpc-pc-linux -emit-llvm -o - | grep {i32 32} | count 3
 end_comment
 
 begin_comment
 comment|// XFAIL: *
-end_comment
-
-begin_comment
-comment|// XTARGET: powerpc
 end_comment
 
 begin_comment

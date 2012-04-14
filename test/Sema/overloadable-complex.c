@@ -297,7 +297,7 @@ argument_list|(
 name|fc
 argument_list|)
 decl_stmt|;
-comment|// expected-error{{call to 'promote_or_convert' is ambiguous; candidates are:}}
+comment|// expected-error{{call to 'promote_or_convert' is ambiguous}}
 name|int
 modifier|*
 name|ip2
@@ -307,7 +307,7 @@ argument_list|(
 name|f
 argument_list|)
 decl_stmt|;
-comment|// expected-error{{call to 'promote_or_convert' is ambiguous; candidates are:}}
+comment|// expected-error{{call to 'promote_or_convert' is ambiguous}}
 block|}
 end_function
 

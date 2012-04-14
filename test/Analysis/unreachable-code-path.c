@@ -435,5 +435,68 @@ empty_stmt|;
 block|}
 end_function
 
+begin_comment
+comment|// test11: we can actually end up in the default case, even if it is not
+end_comment
+
+begin_comment
+comment|// obvious: there might be something wrong with the given argument.
+end_comment
+
+begin_enum
+enum|enum
+name|foobar
+block|{
+name|FOO
+block|,
+name|BAR
+block|}
+enum|;
+end_enum
+
+begin_function_decl
+specifier|extern
+name|void
+name|error
+parameter_list|()
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|test11
+parameter_list|(
+name|enum
+name|foobar
+name|fb
+parameter_list|)
+block|{
+switch|switch
+condition|(
+name|fb
+condition|)
+block|{
+case|case
+name|FOO
+case|:
+break|break;
+case|case
+name|BAR
+case|:
+break|break;
+default|default:
+name|error
+argument_list|()
+expr_stmt|;
+comment|// no-warning
+return|return;
+name|error
+argument_list|()
+expr_stmt|;
+comment|// expected-warning {{never executed}}
+block|}
+block|}
+end_function
+
 end_unit
 

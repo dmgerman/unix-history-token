@@ -39,7 +39,7 @@ name|x
 parameter_list|)
 block|{
 comment|// CHECK: error: no member named 'wobble' in 'struct X'; did you mean 'wibble'?
-comment|// CHECK-NOT: FIX-IT
+comment|// CHECK: FIX-IT: Replace [13:12 - 13:18] with "wibble"
 comment|// CHECK: note: 'wibble' declared here
 name|MACRO
 argument_list|(
@@ -58,6 +58,44 @@ operator|->
 name|wabble
 operator|=
 literal|17
+expr_stmt|;
+block|}
+end_function
+
+begin_function_decl
+name|int
+name|printf
+parameter_list|(
+specifier|const
+name|char
+modifier|*
+specifier|restrict
+parameter_list|,
+modifier|...
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function
+name|void
+name|f2
+parameter_list|()
+block|{
+name|unsigned
+name|long
+name|index
+decl_stmt|;
+comment|// CHECK: warning: format specifies type 'int' but the argument has type 'unsigned long'
+comment|// CHECK: FIX-IT: Replace [26:17 - 26:19] with "%ld"
+name|MACRO
+argument_list|(
+name|printf
+argument_list|(
+literal|"%d"
+argument_list|,
+name|index
+argument_list|)
+argument_list|)
 expr_stmt|;
 block|}
 end_function

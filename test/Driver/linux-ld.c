@@ -16,7 +16,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux \
+comment|// RUN:     -target i386-unknown-linux \
 end_comment
 
 begin_comment
@@ -64,7 +64,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple x86_64-unknown-linux \
+comment|// RUN:     -target x86_64-unknown-linux \
 end_comment
 
 begin_comment
@@ -112,7 +112,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux -m32 \
+comment|// RUN:     -target i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -176,7 +176,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux -m64 \
+comment|// RUN:     -target i386-unknown-linux -m64 \
 end_comment
 
 begin_comment
@@ -244,7 +244,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple x86_64-unknown-linux -m64 \
+comment|// RUN:     -target x86_64-unknown-linux -m64 \
 end_comment
 
 begin_comment
@@ -308,7 +308,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple x86_64-unknown-linux -m32 \
+comment|// RUN:     -target x86_64-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -376,7 +376,63 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux -m32 \
+comment|// RUN:     -target x86_64-unknown-linux -m32 \
+end_comment
+
+begin_comment
+comment|// RUN:     -gcc-toolchain %S/Inputs/multilib_64bit_linux_tree/usr \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/multilib_32bit_linux_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-64-TO-32-SYSROOT %s
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "{{.*}}/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "-L{{[^"]*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0/32"
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "-L[[SYSROOT]]/lib/../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "-L[[SYSROOT]]/usr/lib/../lib32"
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "-L{{[^"]*}}/Inputs/multilib_64bit_linux_tree/usr/lib/gcc/x86_64-unknown-linux/4.6.0"
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-64-TO-32-SYSROOT: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -420,7 +476,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple x86_64-unknown-linux -m64 \
+comment|// RUN:     -target x86_64-unknown-linux -m64 \
 end_comment
 
 begin_comment
@@ -464,7 +520,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux -m32 \
+comment|// RUN:     -target i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -496,7 +552,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux -m32 \
+comment|// RUN:     -target i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -528,7 +584,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux -m32 \
+comment|// RUN:     -target i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -560,7 +616,7 @@ comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
 end_comment
 
 begin_comment
-comment|// RUN:     -ccc-host-triple i386-unknown-linux -m32 \
+comment|// RUN:     -target i386-unknown-linux -m32 \
 end_comment
 
 begin_comment
@@ -585,6 +641,442 @@ end_comment
 
 begin_comment
 comment|// CHECK-GCC-VERSION4: "-L{{.*}}/Inputs/gcc_version_parsing4/bin/../lib/gcc/i386-unknown-linux/4.7.99"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Test a very broken version of multiarch that shipped in Ubuntu 11.04.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i386-unknown-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/ubuntu_11.04_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-UBUNTU-11-04 %s
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "{{.*}}/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "-L[[SYSROOT]]/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "-L[[SYSROOT]]/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/../../../../i386-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "-L[[SYSROOT]]/usr/lib/i386-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "-L[[SYSROOT]]/usr/lib/i386-linux-gnu/gcc/i686-linux-gnu/4.5/../../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-UBUNTU-11-04: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Test the setup that shipped in SUSE 10.3 on ppc64.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64-suse-linux \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/suse_10.3_ppc64_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-SUSE-10-3-PPC64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-SUSE-10-3-PPC64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-SUSE-10-3-PPC64: "{{.*}}/usr/lib/gcc/powerpc64-suse-linux/4.1.2/64/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-SUSE-10-3-PPC64: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64-suse-linux/4.1.2/64"
+end_comment
+
+begin_comment
+comment|// CHECK-SUSE-10-3-PPC64: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64-suse-linux/4.1.2/../../../../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-SUSE-10-3-PPC64: "-L[[SYSROOT]]/lib/../lib64"
+end_comment
+
+begin_comment
+comment|// CHECK-SUSE-10-3-PPC64: "-L[[SYSROOT]]/usr/lib/../lib64"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Check that we do not pass --hash-style=gnu and --hash-style=both to linker
+end_comment
+
+begin_comment
+comment|// and provide correct path to the dynamic linker and emulation mode when build
+end_comment
+
+begin_comment
+comment|// for MIPS platforms.
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips-linux-gnu -ccc-clang-archs mips \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-m" "elf32btsmip"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS: "-dynamic-linker" "{{.*}}/lib/ld.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mipsel-linux-gnu -ccc-clang-archs mipsel \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPSEL %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPSEL: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPSEL: "-m" "elf32ltsmip"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPSEL: "-dynamic-linker" "{{.*}}/lib/ld.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPSEL-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64-linux-gnu -ccc-clang-archs mips64 \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64: "-m" "elf64btsmip"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64: "-dynamic-linker" "{{.*}}/lib64/ld.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|// RUN: %clang %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target mips64el-linux-gnu -ccc-clang-archs mips64el \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-MIPS64EL %s
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL: "{{.*}}ld{{(.exe)?}}"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL: "-m" "elf64ltsmip"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL: "-dynamic-linker" "{{.*}}/lib64/ld.so.1"
+end_comment
+
+begin_comment
+comment|// CHECK-MIPS64EL-NOT: "--hash-style={{gnu|both}}"
+end_comment
+
+begin_comment
+comment|//
+end_comment
+
+begin_comment
+comment|// Thoroughly exercise the Debian multiarch environment.
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target i686-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-X86 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "{{.*}}/usr/lib/gcc/i686-linux-gnu/4.5/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "-L[[SYSROOT]]/usr/lib/gcc/i686-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "-L[[SYSROOT]]/usr/lib/gcc/i686-linux-gnu/4.5/../../../i386-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "-L[[SYSROOT]]/usr/lib/i386-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "-L[[SYSROOT]]/usr/lib/gcc/i686-linux-gnu/4.5/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target x86_64-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-X86-64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "{{.*}}/usr/lib/gcc/x86_64-linux-gnu/4.5/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-linux-gnu/4.5/../../../x86_64-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "-L[[SYSROOT]]/usr/lib/x86_64-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "-L[[SYSROOT]]/usr/lib/gcc/x86_64-linux-gnu/4.5/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-X86-64: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-PPC %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "{{.*}}/usr/lib/gcc/powerpc-linux-gnu/4.5/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "-L[[SYSROOT]]/usr/lib/gcc/powerpc-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "-L[[SYSROOT]]/usr/lib/gcc/powerpc-linux-gnu/4.5/../../../powerpc-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "-L[[SYSROOT]]/usr/lib/powerpc-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "-L[[SYSROOT]]/usr/lib/gcc/powerpc-linux-gnu/4.5/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|// RUN: %clang -no-canonical-prefixes %s -### -o %t.o 2>&1 \
+end_comment
+
+begin_comment
+comment|// RUN:     -target powerpc64-linux-gnu \
+end_comment
+
+begin_comment
+comment|// RUN:     --sysroot=%S/Inputs/debian_multiarch_tree \
+end_comment
+
+begin_comment
+comment|// RUN:   | FileCheck --check-prefix=CHECK-DEBIAN-PPC64 %s
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "{{.*}}ld{{(.exe)?}}" "--sysroot=[[SYSROOT:[^"]+]]"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "{{.*}}/usr/lib/gcc/powerpc64-linux-gnu/4.5/crtbegin.o"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64-linux-gnu/4.5"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64-linux-gnu/4.5/../../../powerpc64-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "-L[[SYSROOT]]/usr/lib/powerpc64-linux-gnu"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "-L[[SYSROOT]]/usr/lib/gcc/powerpc64-linux-gnu/4.5/../../.."
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "-L[[SYSROOT]]/lib"
+end_comment
+
+begin_comment
+comment|// CHECK-DEBIAN-PPC64: "-L[[SYSROOT]]/usr/lib"
+end_comment
+
+begin_comment
+comment|//
 end_comment
 
 end_unit

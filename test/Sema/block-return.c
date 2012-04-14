@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -fsyntax-only %s -verify -fblocks
+comment|// RUN: %clang_cc1 -pedantic -fsyntax-only %s -verify -fblocks
 end_comment
 
 begin_typedef
@@ -65,7 +65,7 @@ return|return;
 return|return
 literal|1
 return|;
-comment|// expected-error {{void block should not return a value}}
+comment|// expected-error {{return type 'int' must match previous return type 'void' when block literal has unspecified explicit return type}}
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -97,7 +97,7 @@ return|return;
 end_if
 
 begin_comment
-comment|// expected-error {{non-void block should return a value}}
+comment|// expected-error {{return type 'void' must match previous return type 'int' when block literal has unspecified explicit return type}}
 end_comment
 
 begin_function_decl
@@ -177,11 +177,19 @@ literal|2.0
 return|;
 end_if
 
+begin_comment
+comment|// expected-error {{return type 'double' must match previous return type 'float' when block literal has unspecified explicit return type}}
+end_comment
+
 begin_return
 return|return
 literal|1
 return|;
 end_return
+
+begin_comment
+comment|// expected-error {{return type 'int' must match previous return type 'float' when block literal has unspecified explicit return type}}
+end_comment
 
 begin_function_decl
 unit|};
@@ -214,7 +222,7 @@ return|;
 end_if
 
 begin_comment
-comment|// expected-warning {{incompatible integer to pointer conversion returning 'int' from a function with result type 'char *'}}
+comment|// expected-error {{return type 'int' must match previous return type 'char *' when block literal has unspecified explicit return type}}
 end_comment
 
 begin_return
@@ -553,7 +561,7 @@ end_return
 
 begin_comment
 unit|};
-comment|// expected-warning{{implicitly declaring C library function 'printf' with type 'int (const char *, ...)'}} \
+comment|// expected-warning{{implicitly declaring library function 'printf' with type 'int (const char *, ...)'}} \
 end_comment
 
 begin_comment
@@ -1060,6 +1068,33 @@ name|cint
 return|;
 end_return
 
+begin_comment
 unit|}; }
+comment|// rdar://11069896
+end_comment
+
+begin_expr_stmt
+unit|void
+call|(
+modifier|^
+name|blk
+call|)
+argument_list|(
+name|void
+argument_list|)
+operator|=
+lambda|^
+block|{
+return|return
+operator|(
+name|void
+operator|)
+literal|0
+return|;
+comment|// expected-warning {{void block literal should not return void expression}}
+block|}
+expr_stmt|;
+end_expr_stmt
+
 end_unit
 

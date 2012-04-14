@@ -34,8 +34,22 @@ end_endif
 begin_define
 define|#
 directive|define
+name|NS_RETURNS_RETAINED
+value|__attribute__((ns_returns_retained))
+end_define
+
+begin_define
+define|#
+directive|define
 name|CF_CONSUMED
 value|__attribute__((cf_consumed))
+end_define
+
+begin_define
+define|#
+directive|define
+name|NS_INLINE
+value|static __inline__ __attribute__((always_inline))
 end_define
 
 begin_define
@@ -115,6 +129,31 @@ name|cf
 parameter_list|)
 function_decl|;
 end_function_decl
+
+begin_function_decl
+name|id
+name|CFBridgingRelease
+parameter_list|(
+name|CFTypeRef
+name|CF_CONSUMED
+name|X
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_decl_stmt
+name|NS_INLINE
+name|NS_RETURNS_RETAINED
+name|id
+name|NSMakeCollectable
+argument_list|(
+name|CFTypeRef
+name|CF_CONSUMED
+name|cf
+argument_list|)
+name|NS_AUTOMATED_REFCOUNT_UNAVAILABLE
+decl_stmt|;
+end_decl_stmt
 
 begin_expr_stmt
 unit|@

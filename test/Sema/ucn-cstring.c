@@ -95,7 +95,7 @@ argument_list|,
 literal|"\u0001"
 argument_list|)
 expr_stmt|;
-comment|// expected-error{{invalid universal character}}
+comment|// expected-error{{universal character name refers to a control character}}
 return|return
 literal|0
 return|;

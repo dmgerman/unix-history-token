@@ -4,10 +4,10 @@ comment|// RUN: %clang_cc1 %s -fsyntax-only -verify -pedantic
 end_comment
 
 begin_comment
-comment|// PR1892
+comment|// PR1892, PR11354
 end_comment
 
-begin_function_decl
+begin_function
 name|void
 name|f
 parameter_list|(
@@ -20,29 +20,21 @@ index|[
 literal|5
 index|]
 parameter_list|)
-function_decl|;
-end_function_decl
+block|{
+name|__typeof
+argument_list|(
+argument|a
+argument_list|)
+name|x
+operator|=
+literal|10
+expr_stmt|;
+block|}
+end_function
 
 begin_comment
-comment|// should promote to restrict ptr.
+comment|// expected-warning {{(aka 'double (*restrict)[5]')}}
 end_comment
-
-begin_decl_stmt
-name|void
-name|f
-argument_list|(
-name|double
-argument_list|(
-operator|*
-specifier|restrict
-name|a
-argument_list|)
-index|[
-literal|5
-index|]
-argument_list|)
-decl_stmt|;
-end_decl_stmt
 
 begin_function_decl
 name|int
@@ -540,6 +532,31 @@ end_function
 begin_comment
 comment|// expected-error {{requires a comma}}
 end_comment
+
+begin_decl_stmt
+name|int
+name|n
+decl_stmt|;
+end_decl_stmt
+
+begin_decl_stmt
+name|void
+name|t21
+argument_list|(
+name|int
+name|n
+argument_list|,
+name|int
+argument_list|(
+operator|*
+name|array
+argument_list|)
+index|[
+name|n
+index|]
+argument_list|)
+decl_stmt|;
+end_decl_stmt
 
 end_unit
 

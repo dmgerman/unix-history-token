@@ -962,9 +962,7 @@ name|_checkEndPath
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|EndOfFunctionNodeBuilder&B
-argument_list|,
-argument|ExprEngine&Eng
+argument|CheckerContext&C
 argument_list|)
 block|{
 operator|(
@@ -978,9 +976,7 @@ operator|)
 operator|->
 name|checkEndPath
 argument_list|(
-name|B
-argument_list|,
-name|Eng
+name|C
 argument_list|)
 block|;   }
 name|public
@@ -1032,11 +1028,9 @@ name|_checkBranchCondition
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const Stmt *condition
+argument|const Stmt *Condition
 argument_list|,
-argument|BranchNodeBuilder&B
-argument_list|,
-argument|ExprEngine&Eng
+argument|CheckerContext& C
 argument_list|)
 block|{
 operator|(
@@ -1050,11 +1044,9 @@ operator|)
 operator|->
 name|checkBranchCondition
 argument_list|(
-name|condition
+name|Condition
 argument_list|,
-name|B
-argument_list|,
-name|Eng
+name|C
 argument_list|)
 block|;   }
 name|public
@@ -1106,7 +1098,7 @@ name|_checkLiveSymbols
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|SymbolReaper&SR
 argument_list|)
@@ -1241,20 +1233,20 @@ name|typename
 name|CHECKER
 operator|>
 specifier|static
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|_checkRegionChanges
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|const StoreManager::InvalidatedSymbols *invalidated
 argument_list|,
 argument|ArrayRef<const MemRegion *> Explicits
 argument_list|,
 argument|ArrayRef<const MemRegion *> Regions
+argument_list|,
+argument|const CallOrObjCMessage *Call
 argument_list|)
 block|{
 return|return
@@ -1276,6 +1268,8 @@ argument_list|,
 name|Explicits
 argument_list|,
 name|Regions
+argument_list|,
+name|Call
 argument_list|)
 return|;
 block|}
@@ -1290,7 +1284,7 @@ name|_wantsRegionChangeUpdate
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|)
 block|{
 return|return
@@ -1449,14 +1443,12 @@ name|typename
 name|CHECKER
 operator|>
 specifier|static
-specifier|const
-name|ProgramState
-operator|*
+name|ProgramStateRef
 name|_evalAssume
 argument_list|(
 argument|void *checker
 argument_list|,
-argument|const ProgramState *state
+argument|ProgramStateRef state
 argument_list|,
 argument|const SVal&cond
 argument_list|,
@@ -1691,7 +1683,7 @@ name|printState
 argument_list|(
 argument|raw_ostream&Out
 argument_list|,
-argument|const ProgramState *State
+argument|ProgramStateRef State
 argument_list|,
 argument|const char *NL
 argument_list|,
@@ -1810,6 +1802,20 @@ operator|=
 name|check
 operator|::
 name|_VoidCheck
+block|,
+name|typename
+name|CHECK17
+operator|=
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|typename
+name|CHECK18
+operator|=
+name|check
+operator|::
+name|_VoidCheck
 operator|>
 name|class
 name|Checker
@@ -1820,6 +1826,14 @@ operator|>
 name|class
 name|Checker
 operator|<
+name|check
+operator|::
+name|_VoidCheck
+block|,
+name|check
+operator|::
+name|_VoidCheck
+block|,
 name|check
 operator|::
 name|_VoidCheck
@@ -1888,6 +1902,11 @@ operator|:
 name|public
 name|CheckerBase
 block|{
+name|virtual
+name|void
+name|anchor
+argument_list|()
+block|;
 name|public
 operator|:
 specifier|static
@@ -1950,6 +1969,12 @@ name|CHECK15
 block|,
 name|typename
 name|CHECK16
+block|,
+name|typename
+name|CHECK17
+block|,
+name|typename
+name|CHECK18
 operator|>
 name|class
 name|Checker
@@ -1989,6 +2014,10 @@ block|,
 name|CHECK15
 block|,
 name|CHECK16
+block|,
+name|CHECK17
+block|,
+name|CHECK18
 operator|>
 block|{
 name|public
@@ -2047,6 +2076,10 @@ block|,
 name|CHECK15
 block|,
 name|CHECK16
+block|,
+name|CHECK17
+block|,
+name|CHECK18
 operator|>
 operator|::
 name|_register

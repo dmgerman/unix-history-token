@@ -46,19 +46,11 @@ directive|endif
 end_endif
 
 begin_comment
-comment|// CHECK-FATAL: translation errors
-end_comment
-
-begin_comment
 comment|// RUN: c-index-test -write-pch %t.pch -Werror %s
 end_comment
 
 begin_comment
-comment|// RUN: not c-index-test -write-pch %t.pch -DFATAL -Werror %s 2>%t.err
-end_comment
-
-begin_comment
-comment|// RUN: FileCheck -check-prefix=CHECK-FATAL %s< %t.err
+comment|// RUN: c-index-test -write-pch %t.pch -DFATAL -Werror %s
 end_comment
 
 end_unit

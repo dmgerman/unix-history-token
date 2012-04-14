@@ -1,10 +1,10 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,experimental.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -analyzer-purge=none -verify %s -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,experimental.deadcode.IdempotentOperations,experimental.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -analyzer-purge=none -verify %s -Wno-error=return-type
 end_comment
 
 begin_comment
-comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,experimental.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -verify %s -Wreturn-type
+comment|// RUN: %clang_cc1 -triple i386-apple-darwin10 -analyze -analyzer-checker=core,deadcode,experimental.deadcode.IdempotentOperations,experimental.core -std=gnu99 -analyzer-store=region -analyzer-constraints=range -verify %s -Wno-error=return-type
 end_comment
 
 begin_typedef
@@ -1023,8 +1023,9 @@ condition|(
 operator|!
 name|p
 condition|)
-return|return;
-comment|// expected-warning {{non-void function 'f10' should return a value}}
+return|return
+literal|0
+return|;
 operator|*
 name|p
 operator|=
@@ -1340,6 +1341,135 @@ name|p
 argument_list|)
 expr_stmt|;
 comment|// expected-warning{{Function call argument is an uninitialized value}}
+block|}
+end_function
+
+begin_comment
+comment|// Relax function call arguments invalidation to be aware of const
+end_comment
+
+begin_comment
+comment|// arguments. Test with function pointers. radar://10595327
+end_comment
+
+begin_function_decl
+name|void
+name|ttt
+parameter_list|(
+specifier|const
+name|int
+modifier|*
+name|nptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
+name|void
+name|ttt2
+parameter_list|(
+specifier|const
+name|int
+modifier|*
+name|nptr
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_typedef
+typedef|typedef
+name|void
+function_decl|(
+modifier|*
+name|NoConstType
+function_decl|)
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+end_typedef
+
+begin_function
+name|int
+name|foo10595327
+parameter_list|(
+name|int
+name|b
+parameter_list|)
+block|{
+name|void
+function_decl|(
+modifier|*
+name|fp
+function_decl|)
+parameter_list|(
+name|int
+modifier|*
+parameter_list|)
+function_decl|;
+comment|// We use path sensitivity to get the function declaration. Even when the
+comment|// function pointer is cast to non pointer-to-const parameter type, we can
+comment|// find the right function declaration.
+if|if
+condition|(
+name|b
+operator|>
+literal|5
+condition|)
+name|fp
+operator|=
+operator|(
+name|NoConstType
+operator|)
+name|ttt2
+expr_stmt|;
+else|else
+name|fp
+operator|=
+operator|(
+name|NoConstType
+operator|)
+name|ttt
+expr_stmt|;
+name|int
+name|x
+init|=
+literal|3
+decl_stmt|;
+name|int
+name|y
+init|=
+name|x
+operator|+
+literal|1
+decl_stmt|;
+name|int
+modifier|*
+name|p
+init|=
+literal|0
+decl_stmt|;
+name|fp
+argument_list|(
+operator|&
+name|y
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|x
+operator|==
+name|y
+condition|)
+return|return
+operator|*
+name|p
+return|;
+comment|// no-warning
+return|return
+literal|0
+return|;
 block|}
 end_function
 

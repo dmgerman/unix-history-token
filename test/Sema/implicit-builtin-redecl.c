@@ -56,7 +56,7 @@ function_decl|;
 end_function_decl
 
 begin_comment
-comment|// expected-warning{{incompatible redeclaration of library function 'calloc' will be ignored}} \
+comment|// expected-warning{{incompatible redeclaration of library function 'calloc'}} \
 end_comment
 
 begin_comment

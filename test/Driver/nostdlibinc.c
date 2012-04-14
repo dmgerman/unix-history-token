@@ -1,6 +1,6 @@
 begin_unit|revision:0.9.5;language:C;cregit-version:0.0.1
 begin_comment
-comment|// RUN: %clang -ccc-host-triple x86_64-unknown-unknown \
+comment|// RUN: %clang -target x86_64-unknown-unknown \
 end_comment
 
 begin_comment

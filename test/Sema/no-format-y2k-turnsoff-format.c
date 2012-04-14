@@ -49,7 +49,7 @@ argument_list|,
 name|a
 argument_list|)
 expr_stmt|;
-comment|// expected-warning {{conversion specifies type 'char *' but the argument has type 'unsigned int'}}
+comment|// expected-warning {{format specifies type 'char *' but the argument has type 'unsigned int'}}
 block|}
 end_function
 
