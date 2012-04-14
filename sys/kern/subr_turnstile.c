@@ -359,7 +359,7 @@ name|turnstile_max_depth
 argument_list|,
 literal|0
 argument_list|,
-literal|"maxmimum depth achieved of a single chain"
+literal|"maximum depth achieved of a single chain"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
