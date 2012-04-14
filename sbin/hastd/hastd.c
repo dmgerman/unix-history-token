@@ -207,6 +207,19 @@ decl_stmt|;
 end_decl_stmt
 
 begin_comment
+comment|/* Path to pidfile. */
+end_comment
+
+begin_decl_stmt
+specifier|static
+specifier|const
+name|char
+modifier|*
+name|pidfile
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
 comment|/* PID file handle. */
 end_comment
 
@@ -2717,6 +2730,10 @@ if|if
 condition|(
 operator|!
 name|foreground
+operator|&&
+name|pidfile
+operator|==
+name|NULL
 operator|&&
 name|strcmp
 argument_list|(
@@ -5827,11 +5844,6 @@ name|hastd_listen
 modifier|*
 name|lst
 decl_stmt|;
-specifier|const
-name|char
-modifier|*
-name|pidfile
-decl_stmt|;
 name|pid_t
 name|otherpid
 decl_stmt|;
@@ -5848,10 +5860,6 @@ expr_stmt|;
 name|debuglevel
 operator|=
 literal|0
-expr_stmt|;
-name|pidfile
-operator|=
-name|NULL
 expr_stmt|;
 for|for
 control|(
@@ -6054,6 +6062,10 @@ block|}
 block|}
 if|if
 condition|(
+name|pidfile
+operator|!=
+name|NULL
+operator|||
 operator|!
 name|foreground
 condition|)
@@ -6383,6 +6395,17 @@ argument_list|(
 name|PJDLOG_MODE_SYSLOG
 argument_list|)
 expr_stmt|;
+block|}
+if|if
+condition|(
+name|pidfile
+operator|!=
+name|NULL
+operator|||
+operator|!
+name|foreground
+condition|)
+block|{
 comment|/* Write PID to a file. */
 if|if
 condition|(
