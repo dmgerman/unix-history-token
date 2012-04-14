@@ -2744,8 +2744,6 @@ name|how
 parameter_list|)
 block|{
 name|int
-name|addrs
-decl_stmt|,
 name|af
 decl_stmt|,
 name|inskip
@@ -2786,10 +2784,6 @@ condition|?
 literal|0
 else|:
 literal|1
-expr_stmt|;
-name|addrs
-operator|=
-literal|0
 expr_stmt|;
 for|for
 control|(
