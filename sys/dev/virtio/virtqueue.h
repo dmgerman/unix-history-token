@@ -246,6 +246,18 @@ function_decl|;
 end_function_decl
 
 begin_function_decl
+name|int
+name|virtqueue_postpone_intr
+parameter_list|(
+name|struct
+name|virtqueue
+modifier|*
+name|vq
+parameter_list|)
+function_decl|;
+end_function_decl
+
+begin_function_decl
 name|void
 name|virtqueue_disable_intr
 parameter_list|(
