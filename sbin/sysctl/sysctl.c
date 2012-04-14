@@ -2007,7 +2007,7 @@ argument_list|)
 expr_stmt|;
 name|printf
 argument_list|(
-literal|"Free Memory Pages:\t%dK\n"
+literal|"Free Memory:\t%dK\n"
 argument_list|,
 name|v
 operator|->
