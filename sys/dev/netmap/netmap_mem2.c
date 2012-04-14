@@ -307,16 +307,13 @@ return|;
 block|}
 name|D
 argument_list|(
-literal|"invalid ofs 0x%jx out of 0x%jx 0x%jx 0x%jx"
+literal|"invalid ofs 0x%x out of 0x%x 0x%x 0x%x"
 argument_list|,
 operator|(
-name|uintmax_t
+name|u_int
 operator|)
 name|o
 argument_list|,
-operator|(
-name|uintmax_t
-operator|)
 name|p
 index|[
 literal|0
@@ -324,10 +321,6 @@ index|]
 operator|->
 name|_memtotal
 argument_list|,
-call|(
-name|uintmax_t
-call|)
-argument_list|(
 name|p
 index|[
 literal|0
@@ -341,12 +334,7 @@ literal|1
 index|]
 operator|->
 name|_memtotal
-argument_list|)
 argument_list|,
-call|(
-name|uintmax_t
-call|)
-argument_list|(
 name|p
 index|[
 literal|0
@@ -367,7 +355,6 @@ literal|2
 index|]
 operator|->
 name|_memtotal
-argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
