@@ -1445,7 +1445,7 @@ name|at91_pmc_clock
 modifier|*
 name|clk
 parameter_list|)
-block|{ }
+block|{  }
 end_function
 
 begin_function
@@ -1910,6 +1910,9 @@ if|if
 condition|(
 name|at91_is_sam9
 argument_list|()
+operator|||
+name|at91_is_sam9xe
+argument_list|()
 condition|)
 block|{
 name|uhpck
@@ -2121,6 +2124,9 @@ if|if
 condition|(
 name|at91_is_sam9
 argument_list|()
+operator|||
+name|at91_is_sam9xe
+argument_list|()
 condition|)
 block|{
 if|if
@@ -2305,7 +2311,6 @@ name|mem_res
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
