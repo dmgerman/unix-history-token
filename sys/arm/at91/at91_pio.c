@@ -511,15 +511,17 @@ name|struct
 name|at91_pio_softc
 modifier|*
 name|sc
-init|=
-name|device_get_softc
-argument_list|(
-name|dev
-argument_list|)
 decl_stmt|;
 name|int
 name|err
 decl_stmt|;
+name|sc
+operator|=
+name|device_get_softc
+argument_list|(
+name|dev
+argument_list|)
+expr_stmt|;
 name|sc
 operator|->
 name|dev
@@ -580,7 +582,7 @@ argument_list|(
 name|sc
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Activate the interrupt, but disable all interrupts in the hardware 	 */
+comment|/* 	 * Activate the interrupt, but disable all interrupts in the hardware. 	 */
 name|WR4
 argument_list|(
 name|sc
@@ -939,7 +941,6 @@ name|irq_res
 operator|=
 literal|0
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -964,7 +965,7 @@ if|#
 directive|if
 literal|0
 block|uint32_t status;
-comment|/* Reading the status also clears the interrupt */
+comment|/* Reading the status also clears the interrupt. */
 block|status = RD4(sc, PIO_SR); 	if (status == 0) 		return; 	AT91_PIO_LOCK(sc); 	AT91_PIO_UNLOCK(sc);
 endif|#
 directive|endif
@@ -1041,7 +1042,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|// Enable interrupts
+comment|/* Enable interrupts. */
 endif|#
 directive|endif
 block|}
@@ -1107,7 +1108,7 @@ expr_stmt|;
 if|#
 directive|if
 literal|0
-comment|// Disable interrupts
+comment|/* Disable interrupts. */
 endif|#
 directive|endif
 name|AT91_PIO_UNLOCK
@@ -1612,7 +1613,6 @@ index|]
 operator|=
 name|data_mask
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1667,7 +1667,6 @@ index|]
 operator|=
 name|data_mask
 expr_stmt|;
-return|return;
 block|}
 end_function
 
@@ -1693,7 +1692,7 @@ operator|+
 name|pio
 operator|)
 decl_stmt|;
-comment|/* reading this register will clear the interrupts */
+comment|/* Reading this register will clear the interrupts. */
 return|return
 operator|(
 name|PIO
@@ -1736,11 +1735,7 @@ argument_list|,
 name|at91_pio_detach
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
-block|}
+name|DEVMETHOD_END
 block|}
 decl_stmt|;
 end_decl_stmt
@@ -1775,9 +1770,9 @@ name|at91_pio_driver
 argument_list|,
 name|at91_pio_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

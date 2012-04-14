@@ -992,7 +992,7 @@ name|dev
 operator|=
 name|dev
 expr_stmt|;
-comment|/*  	 * XXX These values work for the RM9200, SAM926[01], and SAM9260 	 * will have to fix this when we want to support anything else. XXX 	 */
+comment|/* 	 * XXX These values work for the RM9200, SAM926[01], and SAM9260 	 * will have to fix this when we want to support anything else. XXX 	 */
 if|if
 condition|(
 name|bus_space_subregion
@@ -1422,7 +1422,7 @@ argument_list|(
 name|clk
 argument_list|)
 expr_stmt|;
-comment|/* 	 * Fudge MAX pll in frequence down below 3.0 Mhz to ensure  	 * PMC alogrithm choose the divisor that causes the input clock  	 * to be near the optimal 2 Mhz per datasheet. We know 	 * we are going to be using this for the USB clock at 96 Mhz. 	 * Causes no extra frequency deviation for all recomended crystal values. 	 */
+comment|/* 	 * Fudge MAX pll in frequence down below 3.0 MHz to ensure 	 * PMC alogrithm choose the divisor that causes the input clock 	 * to be near the optimal 2 MHz per datasheet.  We know 	 * we are going to be using this for the USB clock at 96 MHz. 	 * Causes no extra frequency deviation for all recomended crystal 	 * values. 	 */
 name|clk
 operator|=
 name|at91_pmc_clock_ref
@@ -1536,12 +1536,8 @@ argument_list|,
 name|at91_identify
 argument_list|)
 block|,
-block|{
-literal|0
-block|,
-literal|0
+name|DEVMETHOD_END
 block|}
-block|, }
 decl_stmt|;
 end_decl_stmt
 
@@ -1582,9 +1578,9 @@ name|at91sam9260_driver
 argument_list|,
 name|at91sam9260_devclass
 argument_list|,
-literal|0
+name|NULL
 argument_list|,
-literal|0
+name|NULL
 argument_list|)
 expr_stmt|;
 end_expr_stmt

@@ -226,6 +226,13 @@ end_define
 begin_define
 define|#
 directive|define
+name|AT91_ARCH_SAM9XE
+value|(0x29)
+end_define
+
+begin_define
+define|#
+directive|define
 name|AT91_ARCH_RM92
 value|(0x92)
 end_define
