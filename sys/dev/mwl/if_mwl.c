@@ -17765,12 +17765,9 @@ name|ni
 operator|->
 name|ni_macaddr
 argument_list|,
-name|WME_AC_TO_TID
-argument_list|(
 name|tap
 operator|->
-name|txa_ac
-argument_list|)
+name|txa_tid
 argument_list|,
 name|ni
 operator|->
@@ -17961,13 +17958,13 @@ name|sc
 argument_list|,
 name|MWL_DEBUG_AMPDU
 argument_list|,
-literal|"%s: no BA stream allocated, AC %d\n"
+literal|"%s: no BA stream allocated, TID %d\n"
 argument_list|,
 name|__func__
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|)
 expr_stmt|;
 name|sc
@@ -18082,7 +18079,7 @@ name|sc
 argument_list|,
 name|MWL_DEBUG_AMPDU
 argument_list|,
-literal|"%s: create failed, error %d, bufsiz %d AC %d "
+literal|"%s: create failed, error %d, bufsiz %d TID %d "
 literal|"htparam 0x%x\n"
 argument_list|,
 name|__func__
@@ -18093,7 +18090,7 @@ name|bufsiz
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|ni
 operator|->
@@ -18118,7 +18115,7 @@ name|bas
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|bas
 operator|->
@@ -18133,7 +18130,7 @@ name|sc
 argument_list|,
 name|MWL_DEBUG_AMPDU
 argument_list|,
-literal|"%s: bastream %p assigned to txq %d AC %d bufsiz %d "
+literal|"%s: bastream %p assigned to txq %d TID %d bufsiz %d "
 literal|"htparam 0x%x\n"
 argument_list|,
 name|__func__
@@ -18148,7 +18145,7 @@ name|txq
 argument_list|,
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
 argument_list|,
 name|bufsiz
 argument_list|,

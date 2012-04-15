@@ -975,9 +975,12 @@ name|IEEE80211_AGGR_BITS
 argument_list|,
 name|ieee80211_wme_acnames
 index|[
+name|TID_TO_WME_AC
+argument_list|(
 name|tap
 operator|->
-name|txa_ac
+name|txa_tid
+argument_list|)
 index|]
 argument_list|)
 expr_stmt|;
@@ -1664,7 +1667,7 @@ literal|0
 init|;
 name|i
 operator|<
-name|WME_NUM_AC
+name|WME_NUM_TID
 condition|;
 name|i
 operator|++
