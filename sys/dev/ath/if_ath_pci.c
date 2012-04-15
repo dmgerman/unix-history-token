@@ -226,6 +226,13 @@ name|PCIR_CFG_PMCSR
 value|0x48
 end_define
 
+begin_define
+define|#
+directive|define
+name|DEFAULT_CACHESIZE
+value|32
+end_define
+
 begin_function
 specifier|static
 name|void
@@ -235,9 +242,43 @@ name|device_t
 name|dev
 parameter_list|)
 block|{
-ifdef|#
-directive|ifdef
-name|ATH_PCI_LATENCY_WAR
+name|uint8_t
+name|cz
+decl_stmt|;
+comment|/* XXX TODO: need to override the _system_ saved copies of this */
+comment|/* 	 * If the cache line size is 0, force it to a reasonable 	 * value. 	 */
+name|cz
+operator|=
+name|pci_read_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_CACHELNSZ
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+if|if
+condition|(
+name|cz
+operator|==
+literal|0
+condition|)
+block|{
+name|pci_write_config
+argument_list|(
+name|dev
+argument_list|,
+name|PCIR_CACHELNSZ
+argument_list|,
+name|DEFAULT_CACHESIZE
+operator|/
+literal|4
+argument_list|,
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 comment|/* Override the system latency timer */
 name|pci_write_config
 argument_list|(
@@ -245,13 +286,11 @@ name|dev
 argument_list|,
 name|PCIR_LATTIMER
 argument_list|,
-literal|0x80
+literal|0xa8
 argument_list|,
 literal|1
 argument_list|)
 expr_stmt|;
-endif|#
-directive|endif
 comment|/* If a PCI NIC, force wakeup */
 ifdef|#
 directive|ifdef
