@@ -170,8 +170,6 @@ parameter_list|)
 block|{
 name|int
 name|i
-init|=
-literal|0
 decl_stmt|;
 for|for
 control|(
@@ -511,10 +509,11 @@ name|data
 operator|->
 name|d_buf
 expr_stmt|;
-while|while
-condition|(
-literal|1
-condition|)
+for|for
+control|(
+init|;
+condition|;
+control|)
 block|{
 name|memcpy
 argument_list|(
