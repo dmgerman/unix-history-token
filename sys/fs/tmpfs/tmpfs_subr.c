@@ -275,7 +275,7 @@ name|sysctl_mem_reserved
 argument_list|,
 literal|"L"
 argument_list|,
-literal|"reserved memory"
+literal|"Amount of available memory and swap below which tmpfs growth stops"
 argument_list|)
 expr_stmt|;
 end_expr_stmt
