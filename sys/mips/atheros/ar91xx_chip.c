@@ -146,6 +146,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<mips/atheros/ar71xx_chip.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<mips/atheros/ar91xxreg.h>
 end_include
 
@@ -357,22 +363,6 @@ operator|==
 name|mask
 operator|)
 return|;
-block|}
-end_function
-
-begin_function
-specifier|static
-name|void
-name|ar91xx_chip_set_mii_speed
-parameter_list|(
-name|uint32_t
-name|unit
-parameter_list|,
-name|uint32_t
-name|speed
-parameter_list|)
-block|{
-comment|/* XXX TODO */
 block|}
 end_function
 
@@ -653,7 +643,7 @@ operator|&
 name|ar91xx_chip_set_pll_ge
 block|,
 operator|&
-name|ar91xx_chip_set_mii_speed
+name|ar71xx_chip_set_mii_speed
 block|,
 operator|&
 name|ar91xx_chip_ddr_flush_ge

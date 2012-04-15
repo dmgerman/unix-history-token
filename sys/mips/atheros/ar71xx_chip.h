@@ -27,6 +27,20 @@ name|ar71xx_chip_def
 decl_stmt|;
 end_decl_stmt
 
+begin_function_decl
+specifier|extern
+name|void
+name|ar71xx_chip_set_mii_speed
+parameter_list|(
+name|uint32_t
+name|unit
+parameter_list|,
+name|uint32_t
+name|speed
+parameter_list|)
+function_decl|;
+end_function_decl
+
 begin_endif
 endif|#
 directive|endif

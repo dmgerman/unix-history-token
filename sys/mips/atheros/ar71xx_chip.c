@@ -495,7 +495,6 @@ block|}
 end_function
 
 begin_function
-specifier|static
 name|void
 name|ar71xx_chip_set_mii_speed
 parameter_list|(
