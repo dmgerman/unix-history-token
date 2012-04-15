@@ -485,6 +485,13 @@ parameter_list|)
 function_decl|;
 end_function_decl
 
+begin_decl_stmt
+specifier|extern
+name|int
+name|exit_code
+decl_stmt|;
+end_decl_stmt
+
 begin_define
 define|#
 directive|define

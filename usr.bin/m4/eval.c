@@ -1059,6 +1059,7 @@ if|if
 condition|(
 name|mimic_gnu
 condition|)
+block|{
 name|warn
 argument_list|(
 literal|"%s at line %lu: include(%s)"
@@ -1073,6 +1074,11 @@ literal|2
 index|]
 argument_list|)
 expr_stmt|;
+name|exit_code
+operator|=
+literal|1
+expr_stmt|;
+block|}
 else|else
 name|err
 argument_list|(
