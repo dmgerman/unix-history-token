@@ -70,7 +70,7 @@ begin_define
 define|#
 directive|define
 name|ATH_TXBUF
-value|512
+value|128
 end_define
 
 begin_define
