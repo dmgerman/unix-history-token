@@ -557,9 +557,6 @@ index|[
 literal|100
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FSIRAND
 specifier|static
 name|int
 name|randinit
@@ -582,14 +579,6 @@ name|srandomdev
 argument_list|()
 expr_stmt|;
 block|}
-else|#
-directive|else
-comment|/* not FSIRAND */
-name|DBG_ENTER
-expr_stmt|;
-endif|#
-directive|endif
-comment|/* FSIRAND */
 name|time
 argument_list|(
 operator|&
@@ -1394,22 +1383,19 @@ name|cbase
 decl_stmt|,
 name|dmax
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FSIRAND
 name|struct
 name|ufs1_dinode
 modifier|*
 name|dp1
 decl_stmt|;
-endif|#
-directive|endif
 name|struct
 name|csum
 modifier|*
 name|cs
 decl_stmt|;
 name|uint
+name|j
+decl_stmt|,
 name|d
 decl_stmt|,
 name|dupper
@@ -1974,9 +1960,6 @@ operator|.
 name|fs_frag
 control|)
 block|{
-ifdef|#
-directive|ifdef
-name|FSIRAND
 name|dp1
 operator|=
 operator|(
@@ -2019,8 +2002,6 @@ name|dp1
 operator|++
 expr_stmt|;
 block|}
-endif|#
-directive|endif
 name|wtfs
 argument_list|(
 name|fsbtodb
@@ -5999,15 +5980,9 @@ index|[
 literal|5
 index|]
 decl_stmt|;
-ifdef|#
-directive|ifdef
-name|FSMAXSNAP
 name|int
 name|j
 decl_stmt|;
-endif|#
-directive|endif
-comment|/* FSMAXSNAP */
 name|DBG_ENTER
 expr_stmt|;
 while|while
@@ -6591,9 +6566,6 @@ name|fs_size
 argument_list|)
 expr_stmt|;
 block|}
-ifdef|#
-directive|ifdef
-name|FSMAXSNAP
 comment|/* 	 * Check if we find an active snapshot. 	 */
 if|if
 condition|(
@@ -6650,8 +6622,6 @@ comment|/* list is dense */
 break|break;
 block|}
 block|}
-endif|#
-directive|endif
 if|if
 condition|(
 name|ExpertFlag
