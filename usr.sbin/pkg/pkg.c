@@ -20,18 +20,6 @@ end_expr_stmt
 begin_include
 include|#
 directive|include
-file|<sys/types.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<sys/wait.h>
-end_include
-
-begin_include
-include|#
-directive|include
 file|<sys/param.h>
 end_include
 
@@ -45,6 +33,12 @@ begin_include
 include|#
 directive|include
 file|<sys/endian.h>
+end_include
+
+begin_include
+include|#
+directive|include
+file|<sys/wait.h>
 end_include
 
 begin_include
@@ -86,6 +80,12 @@ end_include
 begin_include
 include|#
 directive|include
+file|<fetch.h>
+end_include
+
+begin_include
+include|#
+directive|include
 file|<gelf.h>
 end_include
 
@@ -117,12 +117,6 @@ begin_include
 include|#
 directive|include
 file|<unistd.h>
-end_include
-
-begin_include
-include|#
-directive|include
-file|<fetch.h>
 end_include
 
 begin_include
@@ -312,8 +306,10 @@ argument_list|)
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -338,8 +334,10 @@ literal|"open()"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1075,7 +1073,9 @@ name|a
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 name|ret
+operator|)
 return|;
 block|}
 end_function
@@ -1145,7 +1145,6 @@ argument_list|(
 literal|1
 argument_list|)
 expr_stmt|;
-comment|/* NOT REACHED */
 default|default:
 break|break;
 block|}
@@ -1297,8 +1296,10 @@ literal|"fail to determine my abi"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 if|if
@@ -1404,8 +1405,10 @@ literal|"mkstemp()"
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 operator|-
 literal|1
+operator|)
 return|;
 block|}
 while|while
@@ -1629,7 +1632,9 @@ name|tmppkg
 argument_list|)
 expr_stmt|;
 return|return
+operator|(
 literal|0
+operator|)
 return|;
 block|}
 end_function
@@ -1699,7 +1704,7 @@ argument_list|)
 expr_stmt|;
 return|return
 operator|(
-name|EXIT_SUCCESS
+name|EXIT_FAILURE
 operator|)
 return|;
 block|}
