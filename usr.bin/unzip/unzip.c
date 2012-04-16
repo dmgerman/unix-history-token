@@ -241,6 +241,17 @@ begin_comment
 comment|/* verbose/list */
 end_comment
 
+begin_decl_stmt
+specifier|static
+name|int
+name|Z1_opt
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zipinfo mode list files only */
+end_comment
+
 begin_comment
 comment|/* time when unzip started */
 end_comment
@@ -260,6 +271,17 @@ begin_decl_stmt
 specifier|static
 name|int
 name|unzip_debug
+decl_stmt|;
+end_decl_stmt
+
+begin_comment
+comment|/* zipinfo mode */
+end_comment
+
+begin_decl_stmt
+specifier|static
+name|int
+name|zipinfo_mode
 decl_stmt|;
 end_decl_stmt
 
@@ -3324,6 +3346,12 @@ argument_list|)
 expr_stmt|;
 if|if
 condition|(
+operator|!
+name|zipinfo_mode
+condition|)
+block|{
+if|if
+condition|(
 name|v_opt
 operator|==
 literal|1
@@ -3381,6 +3409,24 @@ argument_list|,
 name|buf
 argument_list|,
 literal|0U
+argument_list|,
+name|archive_entry_pathname
+argument_list|(
+name|e
+argument_list|)
+argument_list|)
+expr_stmt|;
+block|}
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|Z1_opt
+condition|)
+name|printf
+argument_list|(
+literal|"%s\n"
 argument_list|,
 name|archive_entry_pathname
 argument_list|(
@@ -3631,6 +3677,12 @@ expr_stmt|;
 if|if
 condition|(
 operator|!
+name|zipinfo_mode
+condition|)
+block|{
+if|if
+condition|(
+operator|!
 name|p_opt
 operator|&&
 operator|!
@@ -3680,6 +3732,7 @@ literal|"--------  ------  ------- -----   ----   ----   ------    ----\n"
 argument_list|)
 expr_stmt|;
 block|}
+block|}
 name|total_size
 operator|=
 literal|0
@@ -3720,6 +3773,12 @@ argument_list|(
 name|ret
 argument_list|)
 expr_stmt|;
+if|if
+condition|(
+operator|!
+name|zipinfo_mode
+condition|)
+block|{
 if|if
 condition|(
 name|t_opt
@@ -3767,6 +3826,21 @@ argument_list|,
 name|e
 argument_list|)
 expr_stmt|;
+block|}
+else|else
+block|{
+if|if
+condition|(
+name|Z1_opt
+condition|)
+name|list
+argument_list|(
+name|a
+argument_list|,
+name|e
+argument_list|)
+expr_stmt|;
+block|}
 name|total_size
 operator|+=
 name|archive_entry_size
@@ -3778,6 +3852,11 @@ operator|++
 name|file_count
 expr_stmt|;
 block|}
+if|if
+condition|(
+name|zipinfo_mode
+condition|)
+block|{
 if|if
 condition|(
 name|v_opt
@@ -3840,6 +3919,7 @@ else|:
 literal|""
 argument_list|)
 expr_stmt|;
+block|}
 block|}
 name|ac
 argument_list|(
@@ -3923,7 +4003,7 @@ name|fprintf
 argument_list|(
 name|stderr
 argument_list|,
-literal|"usage: unzip [-aCcfjLlnopqtuv] [-d dir] [-x pattern] zipfile\n"
+literal|"usage: unzip [-aCcfjLlnopqtuvZ1] [-d dir] [-x pattern] zipfile\n"
 argument_list|)
 expr_stmt|;
 name|exit
@@ -3968,7 +4048,7 @@ name|argc
 argument_list|,
 name|argv
 argument_list|,
-literal|"aCcd:fjLlnopqtuvx:"
+literal|"aCcd:fjLlnopqtuvx:Z1"
 argument_list|)
 operator|)
 operator|!=
@@ -3980,6 +4060,14 @@ condition|(
 name|opt
 condition|)
 block|{
+case|case
+literal|'1'
+case|:
+name|Z1_opt
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 case|case
 literal|'a'
 case|:
@@ -4122,6 +4210,14 @@ name|optarg
 argument_list|)
 expr_stmt|;
 break|break;
+case|case
+literal|'Z'
+case|:
+name|zipinfo_mode
+operator|=
+literal|1
+expr_stmt|;
+break|break;
 default|default:
 name|usage
 argument_list|()
@@ -4226,6 +4322,26 @@ argument_list|,
 name|argv
 argument_list|)
 expr_stmt|;
+comment|/*  	 * When more of the zipinfo mode options are implemented, this 	 * will need to change. 	 */
+if|if
+condition|(
+name|zipinfo_mode
+operator|&&
+operator|!
+name|Z1_opt
+condition|)
+block|{
+name|printf
+argument_list|(
+literal|"Zipinfo mode needs additional options\n"
+argument_list|)
+expr_stmt|;
+name|exit
+argument_list|(
+literal|1
+argument_list|)
+expr_stmt|;
+block|}
 if|if
 condition|(
 name|argc
