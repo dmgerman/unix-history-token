@@ -1461,7 +1461,7 @@ name|p
 operator|->
 name|pipefds
 expr_stmt|;
-comment|/* l_ulong * */
+comment|/* l_int * */
 operator|*
 name|n_args
 operator|=
@@ -10945,10 +10945,40 @@ case|case
 literal|331
 case|:
 block|{
+name|struct
+name|linux_pipe2_args
+modifier|*
+name|p
+init|=
+name|params
+decl_stmt|;
+name|uarg
+index|[
+literal|0
+index|]
+operator|=
+operator|(
+name|intptr_t
+operator|)
+name|p
+operator|->
+name|pipefds
+expr_stmt|;
+comment|/* l_int * */
+name|iarg
+index|[
+literal|1
+index|]
+operator|=
+name|p
+operator|->
+name|flags
+expr_stmt|;
+comment|/* l_int */
 operator|*
 name|n_args
 operator|=
-literal|0
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -12193,7 +12223,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"l_ulong *"
+literal|"l_int *"
 expr_stmt|;
 break|break;
 default|default:
@@ -18737,6 +18767,31 @@ comment|/* linux_pipe2 */
 case|case
 literal|331
 case|:
+switch|switch
+condition|(
+name|ndx
+condition|)
+block|{
+case|case
+literal|0
+case|:
+name|p
+operator|=
+literal|"l_int *"
+expr_stmt|;
+break|break;
+case|case
+literal|1
+case|:
+name|p
+operator|=
+literal|"l_int"
+expr_stmt|;
+break|break;
+default|default:
+break|break;
+block|}
+empty_stmt|;
 break|break;
 comment|/* linux_inotify_init1 */
 case|case
@@ -23299,6 +23354,21 @@ comment|/* linux_pipe2 */
 case|case
 literal|331
 case|:
+if|if
+condition|(
+name|ndx
+operator|==
+literal|0
+operator|||
+name|ndx
+operator|==
+literal|1
+condition|)
+name|p
+operator|=
+literal|"int"
+expr_stmt|;
+break|break;
 comment|/* linux_inotify_init1 */
 case|case
 literal|332
