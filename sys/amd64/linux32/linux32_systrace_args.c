@@ -6787,7 +6787,7 @@ name|p
 operator|->
 name|filename
 expr_stmt|;
-comment|/* char * */
+comment|/* const char * */
 name|uarg
 index|[
 literal|1
@@ -6801,20 +6801,10 @@ operator|->
 name|statbuf
 expr_stmt|;
 comment|/* struct l_stat64 * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|flags
-expr_stmt|;
-comment|/* l_long */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -6842,7 +6832,7 @@ name|p
 operator|->
 name|filename
 expr_stmt|;
-comment|/* char * */
+comment|/* const char * */
 name|uarg
 index|[
 literal|1
@@ -6856,20 +6846,10 @@ operator|->
 name|statbuf
 expr_stmt|;
 comment|/* struct l_stat64 * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|flags
-expr_stmt|;
-comment|/* l_long */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -6894,7 +6874,7 @@ name|p
 operator|->
 name|fd
 expr_stmt|;
-comment|/* l_ulong */
+comment|/* l_int */
 name|uarg
 index|[
 literal|1
@@ -6908,20 +6888,10 @@ operator|->
 name|statbuf
 expr_stmt|;
 comment|/* struct l_stat64 * */
-name|iarg
-index|[
-literal|2
-index|]
-operator|=
-name|p
-operator|->
-name|flags
-expr_stmt|;
-comment|/* l_long */
 operator|*
 name|n_args
 operator|=
-literal|3
+literal|2
 expr_stmt|;
 break|break;
 block|}
@@ -15330,7 +15300,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -15339,14 +15309,6 @@ case|:
 name|p
 operator|=
 literal|"struct l_stat64 *"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"l_long"
 expr_stmt|;
 break|break;
 default|default:
@@ -15368,7 +15330,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"char *"
+literal|"const char *"
 expr_stmt|;
 break|break;
 case|case
@@ -15377,14 +15339,6 @@ case|:
 name|p
 operator|=
 literal|"struct l_stat64 *"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"l_long"
 expr_stmt|;
 break|break;
 default|default:
@@ -15406,7 +15360,7 @@ literal|0
 case|:
 name|p
 operator|=
-literal|"l_ulong"
+literal|"l_int"
 expr_stmt|;
 break|break;
 case|case
@@ -15415,14 +15369,6 @@ case|:
 name|p
 operator|=
 literal|"struct l_stat64 *"
-expr_stmt|;
-break|break;
-case|case
-literal|2
-case|:
-name|p
-operator|=
-literal|"l_long"
 expr_stmt|;
 break|break;
 default|default:
